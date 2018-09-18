@@ -39,7 +39,6 @@
 
 // Lain: added
 #include "../xrEngine/IGame_Level.h"
-#include "../xrCore/_vector3d_ext.h"
 #include "../xrPhysics/IPHWorld.h"
 
 #ifdef DEBUG
@@ -223,7 +222,7 @@ void CCustomMonster::shedule_Update	( u32 DT )
 	// *** general stuff
 	if (g_Alive())
 	{
-		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CCustomMonster::Exec_Visibility));
+		Device.seqParallel.emplace_back(this, &CCustomMonster::Exec_Visibility);
 		memory().update(dt);
 	}
 	inherited::shedule_Update	(DT);
@@ -320,21 +319,11 @@ void CCustomMonster::UpdateCL	()
 
 #ifdef DEBUG
 	if( animation_movement() )
-				animation_movement()->DBG_verify_position_not_chaged();
+		animation_movement()->DBG_verify_position_not_chaged();
 #endif
 
 	CScriptEntity::process_sound_callbacks();
-
-	/*	//. hack just to skip 'CalculateBones'
-	if (sound().need_bone_data()) {
-		// we do this because we know here would be virtual function call
-		IKinematics					*kinematics = smart_cast<IKinematics*>(Visual());
-		VERIFY						(kinematics);
-		kinematics->CalculateBones	();
-	}
-	*/
-
-	Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(this,&CCustomMonster::update_sound_player));
+	Device.seqParallel.emplace_back	(this,&CCustomMonster::update_sound_player);
 
 
 	START_PROFILE("CustomMonster/client_update/network extrapolation")
@@ -467,33 +456,18 @@ void CCustomMonster::eye_pp_s0			( )
 	VERIFY									(_valid(eye_matrix));
 }
 
-void CCustomMonster::update_range_fov	(float &new_range, float &new_fov, float start_range, float start_fov)
+void CCustomMonster::update_range_fov(float &new_range, float &new_fov, float start_range, float start_fov)
 {
-	const float	standard_far_plane			= eye_range;
+	const float	standard_far_plane = eye_range;
 
-	float	current_fog_density				= GamePersistent().Environment().CurrentEnv->fog_density	;	
+	float	current_fog_density = GamePersistent().Environment().CurrentEnv->fog_density;
 	// 0=no_fog, 1=full_fog, >1 = super-fog
-	float	current_far_plane				= GamePersistent().Environment().CurrentEnv->far_plane	;	
+	float	current_far_plane = GamePersistent().Environment().CurrentEnv->far_plane;
 	// 300=standart, 50=super-fog
 
-	new_fov									= start_fov;
-	new_range								= 
-		start_range
-		*
-		(
-            std::min(m_far_plane_factor*current_far_plane,standard_far_plane)
-			/
-			standard_far_plane
-		)
-		*
-		(
-			1.f
-			/
-			(
-				1.f + m_fog_density_factor*current_fog_density
-			)
-		)
-	;
+	new_fov = start_fov;
+	new_range = start_range * (std::min(m_far_plane_factor*current_far_plane, standard_far_plane) / standard_far_plane) *
+		(1.f / (1.f + m_fog_density_factor * current_fog_density));
 }
 
 void CCustomMonster::eye_pp_s1			()
@@ -659,8 +633,7 @@ void CCustomMonster::Exec_Action(float /**dt/**/)
 {
 }
 
-//void CCustomMonster::Hit(float P, Fvector &dir,CObject* who, s16 element,Fvector position_in_object_space, float impulse, ALife::EHitType hit_type)
-void			CCustomMonster::Hit					(SHit* pHDS)
+void CCustomMonster::Hit(SHit* pHDS)
 {
 	if (!invulnerable())
 		inherited::Hit		(pHDS);
@@ -678,18 +651,8 @@ void CCustomMonster::net_Destroy()
 	sound().unload				();
 	movement().net_Destroy		();
 	
-	Device.remove_from_seq_parallel	(
-		fastdelegate::FastDelegate0<>(
-			this,
-			&CCustomMonster::update_sound_player
-		)
-	);
-	Device.remove_from_seq_parallel	(
-		fastdelegate::FastDelegate0<>(
-			this,
-			&CCustomMonster::Exec_Visibility
-		)
-	);
+	Device.remove_from_seq_parallel	(fastdelegate::FastDelegate0<>(this, &CCustomMonster::update_sound_player));
+	Device.remove_from_seq_parallel	(fastdelegate::FastDelegate0<>(this, &CCustomMonster::Exec_Visibility));
 	
 #ifdef DEBUG
 	DBG().on_destroy_object(this);

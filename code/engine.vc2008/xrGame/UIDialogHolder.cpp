@@ -5,7 +5,7 @@
 #include "UICursor.h"
 #include "level.h"
 #include "actor.h"
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "../xrEngine/CustomHud.h"
 
 dlgItem::dlgItem(CUIWindow* pWnd)
@@ -60,7 +60,7 @@ void CDialogHolder::StartMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
 
 		if (bDoHideIndicators)
 		{
-			psHUD_Flags.set(HUD_CROSSHAIR_RT, FALSE);
+			psHUD_Flags.set(HUD_CROSSHAIR_RT, false);
 			GameUI()->ShowGameIndicators(false);
 		}
 	}
@@ -208,7 +208,7 @@ void CDialogHolder::SetMainInputReceiver(CUIDialogWnd* ir, bool _find_remove)
 	}
 	else
 	{
-		m_input_receivers.push_back(recvItem(ir));
+		m_input_receivers.emplace_back(ir);
 	}
 };
 
@@ -267,6 +267,12 @@ void CDialogHolder::CleanInternals()
 
 bool CDialogHolder::IR_UIOnKeyboardPress(int dik)
 {
+    EGameActions GameAction = get_binded_action(dik);
+    if (GameAction == kUSE)
+    {
+        g_actor->m_bPickupMode = true;
+    }
+
 	CUIDialogWnd *TIR = TopInputReceiver();
 
 	if (!TIR)
@@ -307,6 +313,16 @@ bool CDialogHolder::IR_UIOnKeyboardPress(int dik)
 
 bool CDialogHolder::IR_UIOnKeyboardRelease(int dik)
 {
+    /// We must disable that here, because of two reasons:
+    /// 1. Keyboard releases not working when actor speaking. That's means, if we enter to pickup mode, and release the kUSE button, we still be in pickup mode, because
+    /// Actor doesn't know about that
+    /// 2. Pickup mode is more HUD functionality
+    EGameActions GameAction = get_binded_action(dik);
+    if (GameAction == kUSE)
+    {
+        g_actor->m_bPickupMode = false;
+    }
+
 	CUIDialogWnd *TIR = TopInputReceiver();
 
 	if (!TIR)
@@ -335,7 +351,7 @@ bool CDialogHolder::IR_UIOnKeyboardRelease(int dik)
 			IInputReceiver*		IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
 
 			if (IR)
-				IR->IR_OnKeyboardRelease(get_binded_action(dik));
+				IR->IR_OnKeyboardRelease(GameAction);
 
 			return (false);
 		}

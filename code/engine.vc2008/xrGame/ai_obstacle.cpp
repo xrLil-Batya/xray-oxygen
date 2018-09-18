@@ -37,7 +37,7 @@ extern MagicBox3 MagicMinBox (int iQuantity, const Fvector* akPoint);
 
 struct merge_predicate {
 public:
-	typedef moving_objects::AREA	AREA;
+	using AREA = moving_objects::AREA;
 
 public:
 	ai_obstacle					*m_object;
@@ -68,8 +68,8 @@ IC	Fvector construct_position	(u32 level_vertex_id, float x, float z)
 
 IC	bool ai_obstacle::inside	(const Fvector &position, const float &radius) const
 {
-	for (u32 i=0; i<PLANE_COUNT; ++i) {
-		if (m_box.m_planes[i].classify(position) > radius)
+	for (Fplane plane : m_box.m_planes) {
+		if (plane.classify(position) > radius)
 			return				(false);
 	}
 	return						(true);
@@ -208,63 +208,63 @@ void ai_obstacle::correct_position	(Fvector &position)
 	position.z					= std::min(position.z,box.max.z);
 }
 
-void ai_obstacle::compute_impl		()
+void ai_obstacle::compute_impl() noexcept
 {
-//	VERIFY						(m_object->is_ai_obstacle());
+	using CPosition = CLevelGraph::CPosition;
+	using const_iterator = CLevelGraph::const_vertex_iterator;
 
-	typedef CLevelGraph::CPosition				CPosition;
-	typedef CLevelGraph::const_vertex_iterator	const_iterator;
+	Fvector min_position;
+	Fvector max_position;
+	prepare_inside(min_position, max_position);
 
-	Fvector						min_position;
-	Fvector						max_position;
-	prepare_inside				(min_position,max_position);
+	correct_position(min_position);
+	correct_position(max_position);
 
-	correct_position			(min_position);
-	correct_position			(max_position);
+	const CLevelGraph &level_graph = ai().level_graph();
+	const CPosition &min_vertex_position = level_graph.vertex_position(min_position);
+	const CPosition &max_vertex_position = level_graph.vertex_position(max_position);
 
-	const CLevelGraph			&level_graph = ai().level_graph();
-	const CPosition				&min_vertex_position = level_graph.vertex_position(min_position);
-	const CPosition				&max_vertex_position = level_graph.vertex_position(max_position);
+	u32 x_min, z_min;
+	level_graph.unpack_xz(min_vertex_position, x_min, z_min);
 
-	u32							x_min, z_min;
-	level_graph.unpack_xz		(min_vertex_position,x_min,z_min);
+	u32 x_max, z_max;
+	level_graph.unpack_xz(max_vertex_position, x_max, z_max);
 
-	u32							x_max, z_max;
-	level_graph.unpack_xz		(max_vertex_position,x_max,z_max);
+	u32 row_length = level_graph.row_length();
+	const_iterator B = level_graph.begin();
+	const_iterator E = level_graph.end();
 
-	u32							row_length = level_graph.row_length();
-	const_iterator				B = level_graph.begin();
-	const_iterator				E = level_graph.end();
-
-	m_area.clear				();
-	merge_predicate				predicate(this,m_area);
+	m_area.clear();
+	merge_predicate predicate(this, m_area);
 	for (u32 x = x_min; x <= x_max; ++x)
 	{
-		for (u32 z=z_min; z<=z_max; ++z)
+		for (u32 z = z_min; z <= z_max; ++z)
 		{
-			u32					xz = x*row_length + z;
-			const_iterator		I = std::lower_bound(B,E,xz);
+			u32					xz = x * row_length + z;
+			const_iterator		I = std::lower_bound(B, E, xz);
 			if ((I == E) || ((*I).position().xz() != xz))
 				continue;
 
-			predicate			(*I);
+			predicate(*I);
 
 			for (++I; I != E; ++I)
 			{
 				if ((*I).position().xz() != xz)
 					break;
-				
-				predicate		(*I);
+
+				predicate(*I);
 			}
 		}
 	}
 
-	if (m_area.empty()) {
-		m_crc					= 0;
-		return;
+	if (m_area.empty())
+	{
+		m_crc = 0;
 	}
-
-	m_crc = crc32(m_area.data(), m_area.size());
+	else
+	{
+		m_crc = crc32(m_area.data(), (u32)m_area.size());
+	}
 }
 
 void ai_obstacle::on_move			()

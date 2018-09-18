@@ -1,5 +1,6 @@
 #pragma once
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
+#include "luabind/luabind.hpp"
 
 class CUIWindow;
 class CUIStatic;
@@ -28,24 +29,24 @@ public:
 
 	void Destroy();				//be careful
 
-	virtual void	_BCL	OnFrame();
-	virtual void OnRender();
+	void	_BCL	OnFrame() override;
+	void OnRender() override;
 	CUIWindow* MainWnd() { return m_UIWindow; }
 	bool IsActive() { return !!m_flags.test(etsActive); }
 
 	//IInputReceiver
-	virtual void IR_OnMousePress(int btn);
-	virtual void IR_OnMouseRelease(int btn);
-	virtual void IR_OnMouseHold(int btn);
-	virtual void IR_OnMouseMove(int x, int y);
-	virtual void IR_OnMouseStop(int x, int y);
+	void IR_OnMousePress(int btn) override;
+	void IR_OnMouseRelease(int btn) override;
+	void IR_OnMouseHold(int btn) override;
+	void IR_OnMouseMove(int x, int y) override;
+	void IR_OnMouseStop(int x, int y) override;
 
-	virtual void IR_OnKeyboardPress(int dik);
-	virtual void IR_OnKeyboardRelease(int dik);
-	virtual void IR_OnKeyboardHold(int dik);
+	void IR_OnKeyboardPress(int dik) override;
+	void IR_OnKeyboardRelease(int dik) override;
+	void IR_OnKeyboardHold(int dik) override;
 
-	virtual void IR_OnMouseWheel(int direction);
-	virtual void IR_OnActivate(void);
+	void IR_OnMouseWheel(int direction) override;
+	void IR_OnActivate() override;
 	bool Persistent() { return !!m_flags.test(etsPersistent); }
 
 	fastdelegate::FastDelegate0<> m_on_destroy_event;
@@ -111,7 +112,7 @@ public:
 
 class CUISequenceSimpleItem : public CUISequenceItem
 {
-	typedef CUISequenceItem	inherited;
+	using inherited = CUISequenceItem;
 	struct SSubItem
 	{
 		CUIStatic *m_wnd;
@@ -147,33 +148,33 @@ public:
 public:
 	CUISequenceSimpleItem(CUISequencer* owner) :CUISequenceItem(owner) {}
 	virtual ~CUISequenceSimpleItem();
-	virtual void Load(CUIXml* xml, int idx);
+	void Load(CUIXml* xml, int idx) override;
 
-	virtual void Start();
-	virtual bool Stop(bool bForce = false);
+	void Start() override;
+	bool Stop(bool bForce = false) override;
 
-	virtual void Update();
-	virtual void OnRender();
-	virtual void OnKeyboardPress(int dik);
-	virtual void OnMousePress(int btn);
+	void Update() override;
+	void OnRender() override;
+	void OnKeyboardPress(int dik) override;
+	void OnMousePress(int btn) override;
 
-	virtual bool IsPlaying();
+	bool IsPlaying() override;
 
 protected:
-	virtual float current_factor();
+	float current_factor() override;
 };
 
 class CUISequenceVideoItem : public CUISequenceItem
 {
-	typedef CUISequenceItem	inherited;
+	using inherited = CUISequenceItem;
 	ref_sound m_sound;
 	FactoryPtr<IUISequenceVideoItem> m_texture;
 
 	enum {
-		etiPlaying = (1 << (eti_last + 0)),
-		etiNeedStart = (1 << (eti_last + 1)),
-		etiDelayed = (1 << (eti_last + 2)),
-		etiBackVisible = (1 << (eti_last + 3)),
+		etiPlaying		= (1 << (eti_last + 0)),
+		etiNeedStart	= (1 << (eti_last + 1)),
+		etiDelayed		= (1 << (eti_last + 2)),
+		etiBackVisible  = (1 << (eti_last + 3)),
 	};
 
 	float m_delay;
@@ -185,15 +186,15 @@ class CUISequenceVideoItem : public CUISequenceItem
 public:
 	CUISequenceVideoItem(CUISequencer* owner);
 	virtual ~CUISequenceVideoItem();
-	virtual void Load(CUIXml* xml, int idx);
+	void Load(CUIXml* xml, int idx) override;
 
-	virtual void Start();
-	virtual bool Stop(bool bForce = false);
+	void Start() override;
+	bool Stop(bool bForce = false) override;
 
-	virtual void Update();
-	virtual void OnRender();
-	virtual void OnKeyboardPress(int dik) {}
-	virtual void OnMousePress(int btn) {};
+	void Update() override;
+	void OnRender() override;
+	void OnKeyboardPress(int dik) override {}
+	void OnMousePress(int btn) override {};
 
-	virtual bool IsPlaying();
+	bool IsPlaying() override;
 };

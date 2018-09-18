@@ -29,8 +29,14 @@ void CCar::SCarSound::Init()
 		volume  			= ini->r_float("car_sound","snd_volume");
 
 		snd_engine.create		(ini->r_string("car_sound","snd_name"),st_Effect,sg_SourceType);//
-		snd_engine_start.create	(ini->r_string("car_sound","snd_start_name"),st_Effect,sg_SourceType);
-		snd_engine_stop.create	(ini->r_string("car_sound","snd_stop_name"),st_Effect,sg_SourceType);
+        if (ini->line_exist("car_sound", "snd_start_name"))
+        {
+		    snd_engine_start.create	(ini->r_string("car_sound","snd_start_name"),st_Effect,sg_SourceType);
+        }
+        if (ini->line_exist("car_sound", "snd_stop_name"))
+        {
+		    snd_engine_stop.create	(ini->r_string("car_sound","snd_stop_name"),st_Effect,sg_SourceType);
+        }
 		float fengine_start_delay=ini->r_float("car_sound","engine_sound_start_dellay");
 		engine_start_delay=iFloor((snd_engine_start._handle() ? iFloor(snd_engine_start.get_length_sec()*1000.0f) : 1.f)*fengine_start_delay);
 		if(ini->line_exist("car_sound","relative_pos"))

@@ -168,7 +168,7 @@ bool CInventoryItem::install_upgrade_impl( LPCSTR section, bool test )
 	bool result2 = false;
 	if ( BaseSlot() != NO_ACTIVE_SLOT )
 	{
-		BOOL value = m_flags.test( FRuckDefault );
+		bool value = m_flags.test( FRuckDefault );
 		result2 = process_if_exists_set( section, "default_to_ruck", &CInifile::r_bool, value, test );
 		if ( result2 && !test )
 		{

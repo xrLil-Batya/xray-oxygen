@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////
 // MercuryBall.cpp
-// MercuryBall - переливающийся и колыхающийся шар
-// перекатывается с места на место
+// MercuryBall - РїРµСЂРµР»РёРІР°СЋС‰РёР№СЃСЏ Рё РєРѕР»С‹С…Р°СЋС‰РёР№СЃСЏ С€Р°СЂ
+// РїРµСЂРµРєР°С‚С‹РІР°РµС‚СЃСЏ СЃ РјРµСЃС‚Р° РЅР° РјРµСЃС‚Рѕ
 ///////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -9,7 +9,7 @@
 #include "../xrphysics/PhysicsShell.h"
 
 
-CMercuryBall::CMercuryBall(void) 
+CMercuryBall::CMercuryBall() 
 {
 	m_timeLastUpdate = 0;
 	m_timeToUpdate = 1000;
@@ -18,7 +18,7 @@ CMercuryBall::CMercuryBall(void)
 	m_fImpulseMax = 90.f;
 }
 
-CMercuryBall::~CMercuryBall(void) 
+CMercuryBall::~CMercuryBall() 
 {
 }
 

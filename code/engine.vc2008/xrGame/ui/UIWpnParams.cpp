@@ -2,12 +2,13 @@
 #include "UIWpnParams.h"
 #include "UIXmlInit.h"
 #include "../level.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "../ai_space.h"
 #include "../../xrServerEntities/script_engine.h"
 #include "inventory_item_object.h"
 #include "UIInventoryUtilities.h"
 #include "Weapon.h"
+#include <luabind/luabind.hpp>
 
 struct SLuaWpnParams
 {

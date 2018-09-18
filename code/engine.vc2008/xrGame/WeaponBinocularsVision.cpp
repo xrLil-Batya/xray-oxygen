@@ -9,7 +9,7 @@
 #include "relation_registry.h"
 #include "object_broker.h"
 
-#include "game_base_space.h"
+#include "game_base.h"
 #include "Level.h"
 #include "game_cl_base.h"
 #include "AI/Monsters/BaseMonster/base_monster.h"
@@ -71,7 +71,7 @@ void SBinocVisibleObj::Update()
 {
 	if (!psActorFlags.test(AF_HARDCORE))
 	{
-		m_flags.set(flVisObjNotValid, TRUE);
+		m_flags.set(flVisObjNotValid, true);
 
 		if (!m_object->Visual())			return;
 
@@ -123,11 +123,11 @@ void SBinocVisibleObj::Update()
 			cur_rect.rb.y += (mx.y - cur_rect.rb.y)*m_upd_speed*Device.fTimeDelta;
 			if (mn.similar(cur_rect.lt, 2.f) && mx.similar(cur_rect.rb, 2.f)) {
 				// target locked
-				m_flags.set(flTargetLocked, TRUE);
+				m_flags.set(flTargetLocked, true);
 				u32 clr = subst_alpha(m_lt.GetTextureColor(), 255);
 
 				//-----------------------------------------------------
-				CActor* pActor = NULL;
+				CActor* pActor = nullptr;
 				pActor = Actor();
 				if (pActor)
 				{
@@ -163,7 +163,7 @@ void SBinocVisibleObj::Update()
 		m_rt.SetWndPos(Fvector2().set((cur_rect.rb.x), (cur_rect.lt.y)));
 		m_rb.SetWndPos(Fvector2().set((cur_rect.rb.x), (cur_rect.rb.y)));
 
-		m_flags.set(flVisObjNotValid, FALSE);
+		m_flags.set(flVisObjNotValid, false);
 	}
 }
 
@@ -191,7 +191,7 @@ void CBinocularsVision::Update()
 		const CVisualMemoryManager::VISIBLES& vVisibles = pActor->memory().visual().objects();
 
 		for (SBinocVisibleObj* it : m_active_objects)
-			it->m_flags.set(flVisObjNotValid, TRUE);
+			it->m_flags.set(flVisObjNotValid, true);
 
 		for (CVisibleObject v_it : vVisibles)
 		{
@@ -211,21 +211,21 @@ void CBinocularsVision::Update()
 			found = std::find_if(m_active_objects.begin(), m_active_objects.end(), f);
 
 			if (found != m_active_objects.end())
-				(*found)->m_flags.set(flVisObjNotValid, FALSE);
+				(*found)->m_flags.set(flVisObjNotValid, false);
 			else {
 				m_active_objects.push_back(xr_new<SBinocVisibleObj>());
 				SBinocVisibleObj* new_vis_obj = m_active_objects.back();
-				new_vis_obj->m_flags.set(flVisObjNotValid, FALSE);
+				new_vis_obj->m_flags.set(flVisObjNotValid, false);
 				new_vis_obj->m_object = object_;
 				new_vis_obj->create_default(m_frame_color.get());
 				new_vis_obj->m_upd_speed = m_rotating_speed;
 
-				m_sounds.PlaySound("found_snd", Fvector().set(0, 0, 0), NULL, true);
+				m_sounds.PlaySound("found_snd", Fvector().set(0, 0, 0), nullptr, true);
 			}
 		}
 		std::sort(m_active_objects.begin(), m_active_objects.end());
 
-		while (m_active_objects.size() && m_active_objects.back()->m_flags.test(flVisObjNotValid)) {
+		while (!m_active_objects.empty() && m_active_objects.back()->m_flags.test(flVisObjNotValid)) {
 			xr_delete(m_active_objects.back());
 			m_active_objects.pop_back();
 		}
@@ -237,7 +237,7 @@ void CBinocularsVision::Update()
 			visObj->Update();
 
 			if (bLocked != visObj->m_flags.test(flTargetLocked))
-				m_sounds.PlaySound("catch_snd", Fvector().set(0, 0, 0), NULL, true);
+				m_sounds.PlaySound("catch_snd", Fvector().set(0, 0, 0), nullptr, true);
 		}
 	}
 }

@@ -1,15 +1,13 @@
 // xrCDB.cpp : Defines the entry point for the DLL application.
-//
-
 #include "stdafx.h"
 #pragma hdrstop
 #include "xrCDB.h"
 
-namespace Opcode {
-#	include "../../3rd-party/OPCODE/Opcode.h"
-#	include "../../3rd-party/OPCODE/OPC_TreeBuilders.h"
-#	include "../../3rd-party/OPCODE/OPC_Model.h"
-} // namespace Opcode
+#include "../FrayBuildConfig.hpp"
+#include "../../3rd-party/OPCODE/Opcode.h"
+#include "../../3rd-party/OPCODE/OPC_TreeBuilders.h"
+#include "../../3rd-party/OPCODE/OPC_Model.h"
+#include "xrCDB_Model.h"
 
 using namespace CDB;
 using namespace Opcode;
@@ -30,10 +28,10 @@ bool APIENTRY DllMain(HANDLE hModule, u32  ul_reason_for_call, LPVOID lpReserved
 // Model building
 MODEL::MODEL()
 {
-	tree = 0;
-	tris = 0;
+	tree = nullptr;
+	tris = nullptr;
 	tris_count = 0;
-	verts = 0;
+	verts = nullptr;
 	verts_count = 0;
 	status = S_INIT;
 }
@@ -48,14 +46,16 @@ MODEL::~MODEL()
 
 struct	BTHREAD_params
 {
-	MODEL*				M;
-	Fvector*			V;
-	int					Vcnt;
-	TRI*				T;
-	int					Tcnt;
-	build_callback*		BC;
-	void*				BCP;
-    bool                rebuildTrisRequired;
+	MODEL*			M;
+	Fvector*		V;
+	int				Vcnt;
+	TRI*			T;
+	int				Tcnt;
+	void*			pCache;
+	bool			isCacheReader;
+	build_callback*	BC;
+	void*			BCP;
+    bool            rebuildTrisRequired;
 };
 
 void MODEL::build_thread(void *params)
@@ -64,11 +64,11 @@ void MODEL::build_thread(void *params)
 	FPU::m64r();
 	BTHREAD_params	P = *((BTHREAD_params*)params);
 	std::lock_guard<std::recursive_mutex> lock(P.M->cs);
-	P.M->build_internal(P.V, P.Vcnt, P.T, P.Tcnt, P.BC, P.BCP, P.rebuildTrisRequired);
+	P.M->build_internal(P.V, P.Vcnt, P.T, P.Tcnt, P.pCache, P.isCacheReader, P.BC, P.BCP, P.rebuildTrisRequired);
 	P.M->status = S_READY;
 }
 
-void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
+void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isCacheReader, build_callback* bc, void* bcp, bool rebuildTrisRequired)
 {
 	R_ASSERT(S_INIT == status);
 	R_ASSERT((Vcnt >= 4) && (Tcnt >= 2));
@@ -76,23 +76,19 @@ void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=n
 
 	const unsigned cpu_thrd = CPU::Info.n_threads;
 
-	if (cpu_thrd > 1)
+	BTHREAD_params P = { this, V, Vcnt, T, Tcnt, pCache, isCacheReader, bc, bcp, rebuildTrisRequired };
+#ifdef CD_BUILDER_DEBUG
+	build_thread((void*)&P);
+#else
+	thread_spawn(build_thread, "CDB-construction", 0, &P);
+	while (S_INIT == status)
 	{
-		BTHREAD_params P = { this, V, Vcnt, T, Tcnt, bc, bcp, rebuildTrisRequired };
-		thread_spawn(build_thread, "CDB-construction", 0, &P);
-		while (S_INIT == status)
-		{
-			Sleep(5);
-		}
+		Sleep(5);
 	}
-	else
-	{
-		build_internal(V, Vcnt, T, Tcnt, bc, bcp, rebuildTrisRequired);
-		status = S_READY;
-	}
+#endif
 }
 
-void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
+void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isCacheReader, build_callback* bc, void* bcp, bool rebuildTrisRequired)
 {
 	// verts
 	verts_count = Vcnt;
@@ -103,10 +99,8 @@ void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callbac
 	tris_count = Tcnt;
 	tris = CALLOC(TRI, tris_count);
 
-#if defined(_M_X64)
     if (rebuildTrisRequired)
     {
-
         TRI_DEPRECATED* realT = reinterpret_cast<TRI_DEPRECATED*> (T);
         for (int triIter = 0; triIter < tris_count; ++triIter)
         {
@@ -116,25 +110,40 @@ void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callbac
         }
     }
     else
-#endif
     {
         std::memcpy(tris, T, tris_count * sizeof(TRI));
     }
 
 	// callback
-	if (bc)		bc(verts, Vcnt, tris, Tcnt, bcp);
+	if (bc)
+	{
+		bc(verts, Vcnt, tris, Tcnt, bcp);
+	}
 
 	// Release data pointers
 	status = S_BUILD;
 
+	// Try restore from cache. If successfull - don't rebuild collision DB
+	if (pCache && isCacheReader)
+	{
+		IReader* pReader = (IReader*)(pCache);
+		tree = xr_new<CDB_Model>();
+		if (tree->Restore(pReader))
+			return;
+		else
+			Msg("* Level collision DB cache missing, rebuilding...");
+	}
+
 	// Allocate temporary "OPCODE" tris + convert tris to 'pointer' form
-	u32*		temp_tris = CALLOC(u32, tris_count * 3);
-	if (!temp_tris) {
+	u32* temp_tris = CALLOC(u32, tris_count * 3);
+	if (!temp_tris)
+	{
 		xr_free(verts);
 		xr_free(tris);
 		return;
 	}
-	u32*		temp_ptr = temp_tris;
+
+	u32* temp_ptr = temp_tris;
 	for (int i = 0; i<tris_count; i++)
 	{
 		*temp_ptr++ = tris[i].verts[0];
@@ -154,18 +163,28 @@ void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callbac
 	OPCC.mQuantized = false;
 	OPCC.mNoLeaf = true;
 
-	tree = CNEW(Model)();
+    // Can be not nullptr, since we can fail restoring from cache file
+    xr_delete(tree);
+	tree = CNEW(CDB_Model)();
+	
 	if (!tree->Build(OPCC)) 
 	{
 		xr_free(verts);
 		xr_free(tris);
 		xr_free(temp_tris);
 		return;
-	};
+	}
+	
+	// Write cache
+	if (pCache && !isCacheReader)
+	{
+		IWriter* pWritter = (IWriter*)(pCache);
+		tree->Store(pWritter);
+		FS.w_close(pWritter);
+	}
 
 	// Free temporary tris
 	xr_free(temp_tris);
-	return;
 }
 
 size_t MODEL::memory()
@@ -196,7 +215,7 @@ COLLIDER::~COLLIDER()
 
 RESULT& COLLIDER::r_add()
 {
-	rd.push_back(RESULT());
+	rd.emplace_back();
 	return rd.back();
 }
 

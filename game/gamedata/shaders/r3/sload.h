@@ -112,10 +112,8 @@ void UpdateTC( inout p_bumped I)
 								 I.M1.y, I.M2.y, I.M3.y,
 								 I.M1.z, I.M2.z, I.M3.z), -I.position.xyz);
 								 
-	float	height	= s_bumpX.Sample( smp_base, I.tcdh).w;	//
-			//height  /= 2;
-			//height  *= 0.8;
-			height	= height*(parallax.x) + (parallax.y);	//
+	float	height	= s_bumpX.Sample( smp_base, I.tcdh).w;
+			height	= height*(parallax.x) - (parallax.x/2.0f);
 	float2	new_tc  = I.tcdh + height * normalize(eye);	//
 
 	//	Output the result
@@ -143,7 +141,7 @@ surface_bumped sload_i( p_bumped I)
 	S.base		= tbase(I.tcdh);				//	IN:  rgb.a
 	S.normal	= Nu.wzy + (NuE.xyz - 1.0f);	//	(Nu.wzyx - .5h) + (E-.5)
 	S.gloss		= Nu.x*Nu.x;					//	S.gloss = Nu.x*Nu.x;
-	S.height	= NuE.z;
+	S.height	= NuE.w;
 	//S.height	= 0;
 
 #ifdef        USE_TDETAIL
@@ -185,7 +183,7 @@ surface_bumped sload_i( p_bumped I, float2 pixeloffset )
 	S.base		= tbase(I.tcdh);				//	IN:  rgb.a
 	S.normal	= Nu.wzyx + (NuE.xyz - 1.0f);	//	(Nu.wzyx - .5h) + (E-.5)
 	S.gloss		= Nu.x*Nu.x;					//	S.gloss = Nu.x*Nu.x;
-	S.height	= NuE.z;
+	S.height	= NuE.w;
 	//S.height	= 0;
 
 #ifdef        USE_TDETAIL

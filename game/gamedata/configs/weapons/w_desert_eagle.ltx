@@ -29,23 +29,23 @@ bullet_speed		 	= 275
 rpm                     = 145
 rpm_empty_click 	 	= 120
 
-use_aim_bullet					= false		;Поддерживается ли первая суппер пуля
+use_aim_bullet					= false		;РџРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ Р»Рё РїРµСЂРІР°СЏ СЃСѓРїРїРµСЂ РїСѓР»СЏ
 time_to_aim						= 1.0
 
 hud                     	= wpn_desert_eagle_hud
 
-misfire_probability        = 0.005 ;вероятность осечки при максимальном износе  !!!old - now not working
-;изношенность, при которой появляется шанс осечки
+misfire_probability        = 0.005 ;РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РѕСЃРµС‡РєРё РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РёР·РЅРѕСЃРµ  !!!old - now not working
+;РёР·РЅРѕС€РµРЅРЅРѕСЃС‚СЊ, РїСЂРё РєРѕС‚РѕСЂРѕР№ РїРѕСЏРІР»СЏРµС‚СЃСЏ С€Р°РЅСЃ РѕСЃРµС‡РєРё
 misfire_start_condition		= 0.6
-;изношеность при которой шанс осечки становится константным
+;РёР·РЅРѕС€РµРЅРѕСЃС‚СЊ РїСЂРё РєРѕС‚РѕСЂРѕР№ С€Р°РЅСЃ РѕСЃРµС‡РєРё СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚РЅС‹Рј
 misfire_end_condition		= 0.1
-;шанс осечки при изношености больше чем misfireStartCondition
+;С€Р°РЅСЃ РѕСЃРµС‡РєРё РїСЂРё РёР·РЅРѕС€РµРЅРѕСЃС‚Рё Р±РѕР»СЊС€Рµ С‡РµРј misfireStartCondition
 misfire_start_prob	     	= 0.01
-;шанс осечки при изношености больше чем misfireEndCondition
+;С€Р°РЅСЃ РѕСЃРµС‡РєРё РїСЂРё РёР·РЅРѕС€РµРЅРѕСЃС‚Рё Р±РѕР»СЊС€Рµ С‡РµРј misfireEndCondition
 misfire_end_prob	     	= 0.1
-;увеличение изношености при одиночном выстреле
+;СѓРІРµР»РёС‡РµРЅРёРµ РёР·РЅРѕС€РµРЅРѕСЃС‚Рё РїСЂРё РѕРґРёРЅРѕС‡РЅРѕРј РІС‹СЃС‚СЂРµР»Рµ
 condition_shot_dec      	= 0.0045
-;увеличение изношености при выстреле очередью
+;СѓРІРµР»РёС‡РµРЅРёРµ РёР·РЅРѕС€РµРЅРѕСЃС‚Рё РїСЂРё РІС‹СЃС‚СЂРµР»Рµ РѕС‡РµСЂРµРґСЊСЋ
 condition_queue_shot_dec	= 0.0045
 
 
@@ -60,20 +60,20 @@ single_handed			= 1
 zoom_dof					= -1000, 1.0, 1000
 reload_dof				= 0.0, 0.5, 5, 1.7
 
-;--дисперсия----------------------------------------------------------------------------
-;базовая дисперсия
-fire_dispersion_base		= 0.18 			;угол (в градусах) базовой дисперсии оружия (оружия зажатого в тисках)
+;--РґРёСЃРїРµСЂСЃРёСЏ----------------------------------------------------------------------------
+;Р±Р°Р·РѕРІР°СЏ РґРёСЃРїРµСЂСЃРёСЏ
+fire_dispersion_base		= 0.18 			;СѓРіРѕР» (РІ РіСЂР°РґСѓСЃР°С…) Р±Р°Р·РѕРІРѕР№ РґРёСЃРїРµСЂСЃРёРё РѕСЂСѓР¶РёСЏ (РѕСЂСѓР¶РёСЏ Р·Р°Р¶Р°С‚РѕРіРѕ РІ С‚РёСЃРєР°С…)
 control_inertion_factor		= 1.1
 crosshair_inertion			= 4
 
-;отдача
+;РѕС‚РґР°С‡Р°
 cam_return					= 0
-cam_relax_speed         	= 6			;скорость возврата в исходное положение
+cam_relax_speed         	= 6			;СЃРєРѕСЂРѕСЃС‚СЊ РІРѕР·РІСЂР°С‚Р° РІ РёСЃС…РѕРґРЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ
 cam_relax_speed_ai      	= 120.75
-cam_dispersion          	= 1.8		;увеличения угла (в градусах) с каждым выстрелом
-cam_dispersion_inc			= 1.8		;увеличениe cam_dispersion с каждым выстрелом
-cam_dispersion_frac			= 1.0		;ствол будет подыматься на cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
-cam_max_angle				= 15.0		;максимальный угол отдачи
+cam_dispersion          	= 1.8		;СѓРІРµР»РёС‡РµРЅРёСЏ СѓРіР»Р° (РІ РіСЂР°РґСѓСЃР°С…) СЃ РєР°Р¶РґС‹Рј РІС‹СЃС‚СЂРµР»РѕРј
+cam_dispersion_inc			= 1.8		;СѓРІРµР»РёС‡РµРЅРёe cam_dispersion СЃ РєР°Р¶РґС‹Рј РІС‹СЃС‚СЂРµР»РѕРј
+cam_dispersion_frac			= 1.0		;СЃС‚РІРѕР» Р±СѓРґРµС‚ РїРѕРґС‹РјР°С‚СЊСЃСЏ РЅР° cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
+cam_max_angle				= 15.0		;РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СѓРіРѕР» РѕС‚РґР°С‡Рё
 cam_max_angle_horz			= 15.0		;(degree) maximum shot horizontal degree
 cam_step_angle_horz			= 1.0		;(degree) size of step camera moved in horizontal position while shooting
 
@@ -83,11 +83,11 @@ PDM_disp_accel_factor 		= 1.1
 PDM_disp_crouch	 				= 1.0
 PDM_disp_crouch_no_acc 			= 1.0
 
-fire_dispersion_condition_factor = 12		;увеличение дисперсии в процентах при максимальном износе
+fire_dispersion_condition_factor = 12		;СѓРІРµР»РёС‡РµРЅРёРµ РґРёСЃРїРµСЂСЃРёРё РІ РїСЂРѕС†РµРЅС‚Р°С… РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РёР·РЅРѕСЃРµ
 
 ;----------------------------------------------------------------
-holder_range_modifier	= 1.0               ; во сколько раз увеличивается eye_range
-holder_fov_modifier		= 1.0              ; во сколько раз увеличивается eye_fov
+holder_range_modifier	= 1.0               ; РІРѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ eye_range
+holder_fov_modifier		= 1.0              ; РІРѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ eye_fov
 
 min_radius              	= 0
 max_radius              	= 50
@@ -161,7 +161,7 @@ zoom_enabled					= true
 zoom_rotate_time				= 0.25
 scope_zoom_factor	    		= 55
 
-;звуки
+;Р·РІСѓРєРё
 snd_draw							= weapons\fort_draw
 snd_holster						= weapons\generic_holster
 snd_shoot						= weapons\n_desert_eagle_shot
@@ -253,7 +253,7 @@ aim_hud_offset_pos_16x9				= -0.120501,0.033000,0.000000
 aim_hud_offset_rot_16x9				= -0.017500,-0.010000,-0.010000
 
 ;-----------------------------------------------------------------------------
-; Уникальнvе
+; РЈРЅРёРєР°Р»СЊРЅvРµ
 ;-----------------------------------------------------------------------------
 [wpn_desert_eagle_nimble]:wpn_desert_eagle
 $spawn                  	= "weapons\wpn_desert_eagle_nimble"

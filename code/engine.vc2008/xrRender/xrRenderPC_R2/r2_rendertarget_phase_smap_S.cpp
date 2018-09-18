@@ -17,8 +17,9 @@ void	CRenderTarget::phase_smap_spot		(light* L)
 	RCache.set_Stencil					( FALSE		);
 	// no transparency
 	#pragma todo("can optimize for multi-lights covering more than say 50%...")
-	if (RImplementation.o.HW_smap)		RCache.set_ColorWriteEnable	(FALSE);
-	CHK_DX								(HW.pDevice->Clear( 0L, NULL, D3DCLEAR_ZBUFFER,	0xffffffff,	1.0f, 0L));
+	if (RImplementation.o.HW_smap)
+		RCache.set_ColorWriteEnable	(FALSE);
+	RCache.Clear(0L, nullptr, D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0L);
 }
 
 void	CRenderTarget::phase_smap_spot_tsh	(light* L)
@@ -27,7 +28,7 @@ void	CRenderTarget::phase_smap_spot_tsh	(light* L)
 	RCache.set_ColorWriteEnable		();
 	if (IRender_Light::OMNIPART == L->flags.type)	{
 		// omni-part
-		CHK_DX							(HW.pDevice->Clear( 0L, NULL, D3DCLEAR_TARGET,	0xffffffff,	1.0f, 0L));
+		RCache.Clear(0L, nullptr, D3DCLEAR_TARGET, 0xffffffff, 1.0f, 0L);
 	} else {
 		// real-spot
 		// Select color-mask

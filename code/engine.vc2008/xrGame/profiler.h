@@ -51,8 +51,8 @@ private:
 		}
 	};
 protected:
-	typedef xr_vector<CProfileResultPortion>		PORTIONS;
-	typedef xr_map<shared_str,CProfileStats,pred_rstr>	TIMERS;
+	using PORTIONS = xr_vector<CProfileResultPortion>;
+	using TIMERS = xr_map<shared_str,CProfileStats,pred_rstr>;
 
 protected:
 	PORTIONS			m_portions;

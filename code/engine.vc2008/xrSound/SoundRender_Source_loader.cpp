@@ -71,7 +71,7 @@ void CSoundRender_Source::LoadWave(const char* pName)
 
 	// Load file into memory and parse WAV-format
 	OggVorbis_File ovf;
-	ov_callbacks ovc = { ov_read_func,ov_seek_func,ov_close_func,ov_tell_func };
+	ov_callbacks ovc = { ov_read_func, ov_seek_func, ov_close_func, ov_tell_func };
 	IReader* wave = FS.r_open(pname.c_str());
 	R_ASSERT3(wave&&wave->length(), "Can't open wave file:", pname.c_str());
 	ov_open_callbacks(wave, &ovf, nullptr, 0, ovc);
@@ -106,33 +106,32 @@ void CSoundRender_Source::LoadWave(const char* pName)
 	if (ovm->comments)
 	{
 		IReader F(ovm->user_comments[0], ovm->comment_lengths[0]);
+
 		u32 vers = F.r_u32();
-		if (vers == 0x0001)
+		m_fMinDist = F.r_float();
+		m_fMaxDist = F.r_float();
+
+		switch (vers)
 		{
-			m_fMinDist = F.r_float();
-			m_fMaxDist = F.r_float();
+		case 0x0001:
 			m_fBaseVolume = 1.f;
 			m_uGameType = F.r_u32();
 			m_fMaxAIDist = m_fMaxDist;
-		}
-		else if (vers == 0x0002)
-		{
-			m_fMinDist = F.r_float();
-			m_fMaxDist = F.r_float();
+			break;
+		case 0x0002:
 			m_fBaseVolume = F.r_float();
 			m_uGameType = F.r_u32();
 			m_fMaxAIDist = m_fMaxDist;
-		}
-		else if (vers == OGG_COMMENT_VERSION)
-		{
-			m_fMinDist = F.r_float();
-			m_fMaxDist = F.r_float();
+			break;
+		case OGG_COMMENT_VERSION:
 			m_fBaseVolume = F.r_float();
 			m_uGameType = F.r_u32();
 			m_fMaxAIDist = F.r_float();
-		}
-		else
+			break;
+		default:
 			Log("! Invalid ogg-comment version, file: ", pName);
+			break;
+		}
 	}
 	else
 		Log("! Missing ogg-comment, file: ", pName);

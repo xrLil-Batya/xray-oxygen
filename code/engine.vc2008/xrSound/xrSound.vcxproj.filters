@@ -28,11 +28,14 @@
     <Filter Include="Cache">
       <UniqueIdentifier>{ec8dc0e3-300c-4d6a-a2e7-27dcb1eee367}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\XAudio2">
+      <UniqueIdentifier>{81f6c9ed-41c4-4f8b-abe2-79a0c818829e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Target\XAudio2">
+      <UniqueIdentifier>{9ca61a2a-3158-4b7f-a974-850ae9efe063}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cl_intersect.h">
-      <Filter>Kernel</Filter>
-    </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>Kernel</Filter>
     </ClInclude>
@@ -68,6 +71,12 @@
     </ClInclude>
     <ClInclude Include="SoundRender_Cache.h">
       <Filter>Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="XAudioCore.h">
+      <Filter>Core\XAudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="XAudioTarget.h">
+      <Filter>Target\XAudio2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,5 +135,11 @@
       <Filter>Cache</Filter>
     </ClCompile>
     <ClCompile Include="guids.cpp" />
+    <ClCompile Include="XAudioCore.cpp">
+      <Filter>Core\XAudio2</Filter>
+    </ClCompile>
+    <ClCompile Include="XAudioTarget.cpp">
+      <Filter>Target\XAudio2</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

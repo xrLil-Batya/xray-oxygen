@@ -53,19 +53,19 @@ void	CRenderTarget::phase_vol_accumulator()
 	{
 		m_bHasActiveVolumetric = true;
 		if( !RImplementation.o.dx10_msaa )
-			u_setrt								(rt_Generic_2,		NULL,NULL,HW.pBaseZB);
+			u_setrt								(rt_Volumetric,		NULL,NULL,HW.pBaseZB);
 		else
-			u_setrt								(rt_Generic_2,		NULL,NULL,RImplementation.Target->rt_MSAADepth->pZRT);
+			u_setrt								(rt_Volumetric,		NULL,NULL,RImplementation.Target->rt_MSAADepth->pZRT);
 
 		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		HW.pDevice->ClearRenderTargetView( rt_Generic_2->pRT, ColorRGBA);
+		HW.pDevice->ClearRenderTargetView(rt_Volumetric->pRT, ColorRGBA);
 	}
 	else
 	{
 		if( !RImplementation.o.dx10_msaa )
-			u_setrt								(rt_Generic_2,		NULL,NULL,HW.pBaseZB);
+			u_setrt								(rt_Volumetric,		NULL,NULL,HW.pBaseZB);
 		else
-			u_setrt								(rt_Generic_2,		NULL,NULL,RImplementation.Target->rt_MSAADepth->pZRT);
+			u_setrt								(rt_Volumetric,		NULL,NULL,RImplementation.Target->rt_MSAADepth->pZRT);
 	}
 
 	RCache.set_Stencil							(FALSE);

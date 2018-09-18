@@ -7,9 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-extern "C" {
-	#include "lua/lua.h"
-};
+#include <luabind/lua_include.hpp>
 #include "script_engine.h"
 #include "script_thread.h"
 #include "ai_space.h"
@@ -20,7 +18,7 @@ const LPCSTR main_function = "console_command_run_string_main_thread_function";
 
 CScriptThread::CScriptThread(LPCSTR caNamespaceName, bool do_string, bool reload)
 {
-	m_virtual_machine		= 0;
+	m_virtual_machine		= nullptr;
 	m_active				= false;
 
 	try {
@@ -108,10 +106,10 @@ bool CScriptThread::update()
 			else VERIFY2(!lua_gettop(lua()), "Do not pass any value to coroutine.yield()!");
 		}
 
-		ai().script_engine().current_thread(0);
+		ai().script_engine().current_thread(nullptr);
 	}
 	catch (...) {
-		ai().script_engine().current_thread(0);
+		ai().script_engine().current_thread(nullptr);
 		m_active = false;
 	}
 	return (m_active);

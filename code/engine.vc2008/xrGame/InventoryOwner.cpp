@@ -11,7 +11,7 @@
 #include "script_engine.h"
 #include "AI_PhraseDialogManager.h"
 #include "level.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "PhraseDialog.h"
 #include "xrserver.h"
 #include "xrServer_Objects_ALife_Monsters.h"
@@ -30,8 +30,8 @@
 
 CInventoryOwner::CInventoryOwner			()
 {
-	m_pTrade					= NULL;
-	m_trade_parameters			= 0;
+	m_pTrade					= nullptr;
+	m_trade_parameters			= nullptr;
 
 	m_inventory					= xr_new<CInventory>();
 	m_pCharacterInfo			= xr_new<CCharacterInfo>();
@@ -91,7 +91,7 @@ void CInventoryOwner::reload				(LPCSTR section)
 	m_money						= 0;
 	m_bTrading					= false;
 	m_bTalking					= false;
-	m_pTalkPartner				= NULL;
+	m_pTalkPartner				= nullptr;
 
 	CAttachmentOwner::reload	(section);
 }
@@ -114,19 +114,19 @@ BOOL CInventoryOwner::net_Spawn(CSE_Abstract* DC)
 
 	m_trade_parameters = xr_new<CTradeParameters>(trade_section());
 
-	//получить указатель на объект, InventoryOwner
+	//РїРѕР»СѓС‡РёС‚СЊ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РѕР±СЉРµРєС‚, InventoryOwner
 	//m_inventory->setSlotsBlocked(false);
 	CGameObject			*pThis = smart_cast<CGameObject*>(this);
 	if (!pThis) return FALSE;
 	CSE_Abstract* E = (CSE_Abstract*)(DC);
 
-	CSE_ALifeTraderAbstract* pTrader = NULL;
+	CSE_ALifeTraderAbstract* pTrader = nullptr;
 	if (E) pTrader = smart_cast<CSE_ALifeTraderAbstract*>(E);
 	if (!pTrader) return FALSE;
 
 	R_ASSERT(pTrader->character_profile().size());
 
-	//синхронизируем параметры персонажа с серверным объектом
+	//СЃРёРЅС…СЂРѕРЅРёР·РёСЂСѓРµРј РїР°СЂР°РјРµС‚СЂС‹ РїРµСЂСЃРѕРЅР°Р¶Р° СЃ СЃРµСЂРІРµСЂРЅС‹Рј РѕР±СЉРµРєС‚РѕРј
 	CharacterInfo().Init(pTrader);
 
 	//-------------------------------------
@@ -194,7 +194,7 @@ void CInventoryOwner::UpdateInventoryOwner(u32 deltaT)
 	}
 	if (IsTrading())
 	{
-		//если мы умерли, то нет "trade"
+		//РµСЃР»Рё РјС‹ СѓРјРµСЂР»Рё, С‚Рѕ РЅРµС‚ "trade"
 		if (!is_alive())
 		{
 			StopTrading();
@@ -203,14 +203,14 @@ void CInventoryOwner::UpdateInventoryOwner(u32 deltaT)
 
 	if (IsTalking())
 	{
-		//если наш собеседник перестал говорить с нами,
-		//то и нам нечего ждать.
-		if (!m_pTalkPartner->IsTalking())
+		//РµСЃР»Рё РЅР°С€ СЃРѕР±РµСЃРµРґРЅРёРє РїРµСЂРµСЃС‚Р°Р» РіРѕРІРѕСЂРёС‚СЊ СЃ РЅР°РјРё РёР»Рё СѓРјРµСЂ,
+		//С‚Рѕ Рё РЅР°Рј РЅРµС‡РµРіРѕ Р¶РґР°С‚СЊ.
+		if (!m_pTalkPartner->IsTalking() || !m_pTalkPartner->is_alive())
 		{
 			StopTalk();
 		}
 
-		//если мы умерли, то тоже не говорить
+		//РµСЃР»Рё РјС‹ СѓРјРµСЂР»Рё, С‚Рѕ С‚РѕР¶Рµ РЅРµ РіРѕРІРѕСЂРёС‚СЊ
 		if (!is_alive())
 		{
 			StopTalk();
@@ -219,7 +219,7 @@ void CInventoryOwner::UpdateInventoryOwner(u32 deltaT)
 }
 
 
-//достать PDA из специального слота инвентаря
+//РґРѕСЃС‚Р°С‚СЊ PDA РёР· СЃРїРµС†РёР°Р»СЊРЅРѕРіРѕ СЃР»РѕС‚Р° РёРЅРІРµРЅС‚Р°СЂСЏ
 CPda* CInventoryOwner::GetPDA() const
 {
 	return (CPda*)(m_inventory->ItemFromSlot(PDA_SLOT));
@@ -232,16 +232,16 @@ CTrade* CInventoryOwner::GetTrade()
 }
 
 
-//состояние диалога
+//СЃРѕСЃС‚РѕСЏРЅРёРµ РґРёР°Р»РѕРіР°
 
-//нам предлагают поговорить,
-//проверяем наше отношение 
-//и если не враг начинаем разговор
+//РЅР°Рј РїСЂРµРґР»Р°РіР°СЋС‚ РїРѕРіРѕРІРѕСЂРёС‚СЊ,
+//РїСЂРѕРІРµСЂСЏРµРј РЅР°С€Рµ РѕС‚РЅРѕС€РµРЅРёРµ 
+//Рё РµСЃР»Рё РЅРµ РІСЂР°Рі РЅР°С‡РёРЅР°РµРј СЂР°Р·РіРѕРІРѕСЂ
 bool CInventoryOwner::OfferTalk(CInventoryOwner* talk_partner)
 {
 	if(!IsTalkEnabled()) return false;
 
-	//проверить отношение к собеседнику
+	//РїСЂРѕРІРµСЂРёС‚СЊ РѕС‚РЅРѕС€РµРЅРёРµ Рє СЃРѕР±РµСЃРµРґРЅРёРєСѓ
 	CEntityAlive* pPartnerEntityAlive = smart_cast<CEntityAlive*>(talk_partner);
 	R_ASSERT(pPartnerEntityAlive);
 	
@@ -301,10 +301,10 @@ void CInventoryOwner::renderable_Render		()
 {
 	if (inventory().ActiveItem())
 		inventory().ActiveItem()->renderable_Render();
-#ifdef DEAD_BODY_WEAPON
+
 	if (inventory().ItemFromSlot(INV_SLOT_3))
 		inventory().ItemFromSlot(INV_SLOT_3)->renderable_Render();
-#endif
+
 	CAttachmentOwner::renderable_Render();
 }
 
@@ -328,13 +328,13 @@ void CInventoryOwner::OnItemTake(CInventoryItem *inventory_item)
 	}
 }
 
-//возвращает текуший разброс стрельбы с учетом движения (в радианах)
+//РІРѕР·РІСЂР°С‰Р°РµС‚ С‚РµРєСѓС€РёР№ СЂР°Р·Р±СЂРѕСЃ СЃС‚СЂРµР»СЊР±С‹ СЃ СѓС‡РµС‚РѕРј РґРІРёР¶РµРЅРёСЏ (РІ СЂР°РґРёР°РЅР°С…)
 float CInventoryOwner::GetWeaponAccuracy	() const
 {
 	return 0.f;
 }
 
-//максимальный переносимы вес
+//РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ РїРµСЂРµРЅРѕСЃРёРјС‹ РІРµСЃ
 float  CInventoryOwner::MaxCarryWeight () const
 {
 	float ret =  inventory().GetMaxWeight();
@@ -369,7 +369,7 @@ void CInventoryOwner::spawn_supplies		()
 	}
 }
 
-//игровое имя 
+//РёРіСЂРѕРІРѕРµ РёРјСЏ 
 LPCSTR	CInventoryOwner::Name () const
 {
 //	return CharacterInfo().Name();
@@ -390,15 +390,16 @@ void CInventoryOwner::LostPdaContact	(CInventoryOwner* pInvOwner)
 }
 
 //////////////////////////////////////////////////////////////////////////
-//для работы с relation system
+//РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ relation system
 u16 CInventoryOwner::object_id	()  const
 {
-	return smart_cast<const CGameObject*>(this)->ID();
+	const CGameObject* pObject = smart_cast<const CGameObject*>(this);
+	return pObject ? pObject->ID() : u16(-1);
 }
 
 
 //////////////////////////////////////////////////////////////////////////
-//установка группировки на клиентском и серверном объкте
+//СѓСЃС‚Р°РЅРѕРІРєР° РіСЂСѓРїРїРёСЂРѕРІРєРё РЅР° РєР»РёРµРЅС‚СЃРєРѕРј Рё СЃРµСЂРІРµСЂРЅРѕРј РѕР±СЉРєС‚Рµ
 
 void CInventoryOwner::SetCommunity	(CHARACTER_COMMUNITY_INDEX new_community)
 {
@@ -561,7 +562,7 @@ bool CInventoryOwner::AllowItemToTrade 			(CInventoryItem const * item, const SI
 {
 	return						(
 		trade_parameters().enabled(
-			CTradeParameters::action_sell(0),
+			CTradeParameters::action_sell(nullptr),
 			item->object().cNameSect()
 		)
 	);
@@ -635,4 +636,14 @@ void CInventoryOwner::deadbody_closed( bool status )
 	P.w_u8( (m_deadbody_can_take)? 1 : 0 );
 	P.w_u8( (m_deadbody_closed)? 1 : 0 );
 	CGameObject::u_EventSend( P );
+}
+
+void CInventoryOwner::set_name(LPCSTR name)
+{
+	m_game_name = name;
+
+	NET_Packet P;
+	CGameObject::u_EventGen(P, GE_INV_OWNER_SETNAME, object_id());
+	P.w_stringZ(name);
+	CGameObject::u_EventSend(P);
 }

@@ -15,7 +15,6 @@
 #pragma warning(disable:4237)
 
 #include <d3d10_1.h>
-#include <d3d11.h>
 #include <D3Dx10core.h>
 #include <D3DCompiler.h>
 
@@ -48,12 +47,8 @@
 #include "../xrRender/xrRender_console.h"
 #include "r3.h"
 
-IC	void	jitter(CBlender_Compile& C)
+inline void jitter(CBlender_Compile& C)
 {
-//	C.r_Sampler	("jitter0",	JITTER(0), true, D3DTADDRESS_WRAP, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
-//	C.r_Sampler	("jitter1",	JITTER(1), true, D3DTADDRESS_WRAP, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
-//	C.r_Sampler	("jitter2",	JITTER(2), true, D3DTADDRESS_WRAP, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
-//	C.r_Sampler	("jitter3",	JITTER(3), true, D3DTADDRESS_WRAP, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
 	C.r_dx10Texture	("jitter0",	JITTER(0));
 	C.r_dx10Texture	("jitter1",	JITTER(1));
 	C.r_dx10Texture	("jitter2",	JITTER(2));
@@ -62,3 +57,6 @@ IC	void	jitter(CBlender_Compile& C)
 	C.r_dx10Texture	("jitterMipped",	r2_jitter_mipped);
 	C.r_dx10Sampler	("smp_jitter");
 }
+
+extern D3D10_USAGE CurrUsageVer;
+extern UINT CurrBindFlag;

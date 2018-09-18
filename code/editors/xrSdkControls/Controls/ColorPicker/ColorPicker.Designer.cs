@@ -82,7 +82,7 @@
             // chkHexadecimal
             // 
             this.chkHexadecimal.AutoSize = true;
-            this.chkHexadecimal.Location = new System.Drawing.Point(3, 115);
+            this.chkHexadecimal.Location = new System.Drawing.Point(3, 120);
             this.chkHexadecimal.Name = "chkHexadecimal";
             this.chkHexadecimal.Size = new System.Drawing.Size(87, 17);
             this.chkHexadecimal.TabIndex = 13;
@@ -93,7 +93,7 @@
             // 
             this.tbHexColor.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbHexColor.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tbHexColor.Location = new System.Drawing.Point(167, 113);
+            this.tbHexColor.Location = new System.Drawing.Point(113, 116);
             this.tbHexColor.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.tbHexColor.MaxLength = 8;
             this.tbHexColor.Name = "tbHexColor";
@@ -105,7 +105,7 @@
             // lHexColor
             // 
             this.lHexColor.AutoSize = true;
-            this.lHexColor.Location = new System.Drawing.Point(150, 116);
+            this.lHexColor.Location = new System.Drawing.Point(96, 119);
             this.lHexColor.Name = "lHexColor";
             this.lHexColor.Size = new System.Drawing.Size(14, 13);
             this.lHexColor.TabIndex = 15;
@@ -118,7 +118,7 @@
             this.pbColor.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pbColor.BackgroundImage")));
             this.pbColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pbColor.ColorSample = System.Drawing.Color.Empty;
-            this.pbColor.Location = new System.Drawing.Point(149, 9);
+            this.pbColor.Location = new System.Drawing.Point(274, 9);
             this.pbColor.Name = "pbColor";
             this.pbColor.Size = new System.Drawing.Size(98, 98);
             this.pbColor.TabIndex = 8;
@@ -129,29 +129,13 @@
             this.nslRed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nslRed.BackColor = System.Drawing.SystemColors.Window;
-            this.nslRed.DecimalPlaces = 0;
-            this.nslRed.Hexadecimal = false;
             this.nslRed.Location = new System.Drawing.Point(17, 9);
-            this.nslRed.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
             this.nslRed.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslRed.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nslRed.MinimumSize = new System.Drawing.Size(100, 21);
             this.nslRed.Name = "nslRed";
-            this.nslRed.Size = new System.Drawing.Size(128, 21);
-            this.nslRed.SliderPrecision = 100;
-            this.nslRed.SpinnerWidth = 44;
+            this.nslRed.Size = new System.Drawing.Size(253, 21);
             this.nslRed.TabIndex = 16;
-            this.nslRed.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.nslRed.TickFrequency = 64;
-            this.nslRed.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.nslRed.Tag = "red";
             this.nslRed.Value = new decimal(new int[] {
             0,
             0,
@@ -163,29 +147,13 @@
             this.nslGreen.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nslGreen.BackColor = System.Drawing.SystemColors.Window;
-            this.nslGreen.DecimalPlaces = 0;
-            this.nslGreen.Hexadecimal = false;
             this.nslGreen.Location = new System.Drawing.Point(17, 35);
-            this.nslGreen.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
             this.nslGreen.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslGreen.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nslGreen.MinimumSize = new System.Drawing.Size(100, 21);
             this.nslGreen.Name = "nslGreen";
-            this.nslGreen.Size = new System.Drawing.Size(128, 21);
-            this.nslGreen.SliderPrecision = 100;
-            this.nslGreen.SpinnerWidth = 44;
+            this.nslGreen.Size = new System.Drawing.Size(253, 21);
             this.nslGreen.TabIndex = 17;
-            this.nslGreen.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.nslGreen.TickFrequency = 64;
-            this.nslGreen.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.nslGreen.Tag = "green";
             this.nslGreen.Value = new decimal(new int[] {
             0,
             0,
@@ -197,29 +165,13 @@
             this.nslBlue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nslBlue.BackColor = System.Drawing.SystemColors.Window;
-            this.nslBlue.DecimalPlaces = 0;
-            this.nslBlue.Hexadecimal = false;
             this.nslBlue.Location = new System.Drawing.Point(17, 61);
-            this.nslBlue.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
             this.nslBlue.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslBlue.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nslBlue.MinimumSize = new System.Drawing.Size(100, 21);
             this.nslBlue.Name = "nslBlue";
-            this.nslBlue.Size = new System.Drawing.Size(128, 21);
-            this.nslBlue.SliderPrecision = 100;
-            this.nslBlue.SpinnerWidth = 44;
+            this.nslBlue.Size = new System.Drawing.Size(253, 21);
             this.nslBlue.TabIndex = 18;
-            this.nslBlue.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.nslBlue.TickFrequency = 64;
-            this.nslBlue.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.nslBlue.Tag = "blue";
             this.nslBlue.Value = new decimal(new int[] {
             0,
             0,
@@ -231,31 +183,15 @@
             this.nslAlpha.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.nslAlpha.BackColor = System.Drawing.SystemColors.Window;
-            this.nslAlpha.DecimalPlaces = 0;
-            this.nslAlpha.Hexadecimal = false;
             this.nslAlpha.Location = new System.Drawing.Point(17, 87);
-            this.nslAlpha.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
             this.nslAlpha.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslAlpha.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nslAlpha.MinimumSize = new System.Drawing.Size(100, 21);
             this.nslAlpha.Name = "nslAlpha";
-            this.nslAlpha.Size = new System.Drawing.Size(128, 21);
-            this.nslAlpha.SliderPrecision = 100;
-            this.nslAlpha.SpinnerWidth = 44;
+            this.nslAlpha.Size = new System.Drawing.Size(253, 21);
             this.nslAlpha.TabIndex = 19;
-            this.nslAlpha.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.nslAlpha.TickFrequency = 64;
-            this.nslAlpha.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.nslAlpha.Tag = "alpha";
             this.nslAlpha.Value = new decimal(new int[] {
-            255,
+            0,
             0,
             0,
             0});
@@ -280,7 +216,7 @@
             this.MaximumSize = new System.Drawing.Size(9000, 144);
             this.MinimumSize = new System.Drawing.Size(256, 144);
             this.Name = "ColorPicker";
-            this.Size = new System.Drawing.Size(256, 144);
+            this.Size = new System.Drawing.Size(381, 144);
             this.ResumeLayout(false);
             this.PerformLayout();
 

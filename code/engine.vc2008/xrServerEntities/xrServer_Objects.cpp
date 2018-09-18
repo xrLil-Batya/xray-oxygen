@@ -8,7 +8,7 @@
 
 #include "stdafx.h"
 #include "xrServer_Objects.h"
-#include "game_base_space.h"
+#include "../xrGame/game_base.h"
 
 ////////////////////////////////////////////////////////////////////////////
 // CSE_Shape
@@ -46,9 +46,8 @@ void CSE_Shape::cform_read					(NET_Packet	&tNetPacket)
 void CSE_Shape::cform_write					(NET_Packet	&tNetPacket)
 {
 	tNetPacket.w_u8				(u8(shapes.size()));
-	for (u32 i=0; i<shapes.size(); ++i) 
+	for (shape_def				&S : shapes) 
 	{
-		shape_def				&S = shapes[i];
 		tNetPacket.w_u8			(S.type);
 		switch (S.type) 
 		{
@@ -203,7 +202,7 @@ void CSE_PHSkeleton::STATE_Write		(NET_Packet	&tNetPacket)
 void CSE_PHSkeleton::data_load(NET_Packet &tNetPacket)
 {
 	saved_bones.net_Load(tNetPacket);
-	_flags.set(flSavedData,TRUE);
+	_flags.set(flSavedData,true);
 }
 
 void CSE_PHSkeleton::data_save(NET_Packet &tNetPacket)

@@ -8,15 +8,16 @@
 
 #pragma once
 
+#include "luabind/wrapper_base.hpp"
 #include "property_evaluator.h"
 
 class CScriptGameObject;
 
-typedef CPropertyEvaluator<CScriptGameObject> CScriptPropertyEvaluator;
+using CScriptPropertyEvaluator = CPropertyEvaluator<CScriptGameObject>;
 
 class CScriptPropertyEvaluatorWrapper : public CScriptPropertyEvaluator, public luabind::wrap_base {
 public:
-	IC					CScriptPropertyEvaluatorWrapper	(CScriptGameObject *object = 0, LPCSTR evaluator_name = "");
+	IC					CScriptPropertyEvaluatorWrapper	(CScriptGameObject *object = nullptr, LPCSTR evaluator_name = "");
 	virtual void		setup						(CScriptGameObject *object, CPropertyStorage *storage);
 	static	void		setup_static				(CScriptPropertyEvaluator *evaluator, CScriptGameObject *object, CPropertyStorage *storage);
 	virtual bool		evaluate					();

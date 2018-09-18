@@ -1,13 +1,5 @@
-prefetch("_G")
-
-function cs_register(factory,client_object_class,server_object_class,clsid,script_clsid)
-	factory:register	(client_object_class,server_object_class,clsid,script_clsid)
-end
-
-function c_register(factory,client_object_class,clsid,script_clsid)
-	if (editor() == false) then
-		factory:register(client_object_class,clsid,script_clsid)
-	end
+local function cs_register(factory, ...)
+	factory:register(...)
 end
 
 function s_register(factory,server_object_class,clsid,script_clsid)
@@ -17,7 +9,7 @@ end
 function register(object_factory)
 
 	-- GENERAL ---------------------------------------------------------------------------------------------------------------------------
-	c_register	(object_factory, "ui_main_menu.main_menu",												"MAIN_MNU", 		"main_menu")
+	cs_register	(object_factory, "ui_main_menu.main_menu",												"MAIN_MNU", 		"main_menu")
 	cs_register	(object_factory, "ce_smart_zone", 				"smart_terrain.se_smart_terrain",		"SMRTTRRN",			"smart_terrain")
 	cs_register	(object_factory, "CLevelChanger",				"se_level_changer.se_level_changer",	"LVL_CHNG", 		"level_changer_s")
 	cs_register	(object_factory, "CActor", 						"se_actor.se_actor",					"S_ACTOR",			"script_actor")
@@ -70,7 +62,6 @@ function register(object_factory)
 	cs_register	(object_factory, "CHelmet",  					"se_item.se_helmet",					"E_HLMET",			"equ_helmet_s")
 
 	-- WEAPONS ----------------------------------------------------------------------------------------------------------------------------
-	cs_register	(object_factory, "CWeaponMagazinedWGrenade",	"se_item.se_weapon_magazined_w_gl",		"WP_AUTOGRN",		"wpn_wmaggl_s")
 	cs_register	(object_factory, "CWeaponMagazined",			"se_item.se_weapon_magazined",			"WP_MAGAZ",			"wpn_magazined_s")
 	cs_register	(object_factory, "CWeaponBinoculars",			"se_item.se_weapon_magazined",			"WP_BINOC",			"wpn_binocular_s")
 	cs_register	(object_factory, "CWeaponKnife",				"se_item.se_weapon",					"WP_KNIFE",			"wpn_knife_s")

@@ -18,6 +18,9 @@
 	<string id="Low">
 		<text>low</text>
 	</string>
+	<string id="ui_mm_glows">
+		<text>Statics Glows</text>
+	</string>
 	<string id="Minimum">
 		<text>minimal</text>
 	</string>
@@ -561,9 +564,6 @@
 	<string id="ui_mm_novice">
 		<text>Rookie</text>
 	</string>
-	<string id="ui_mm_npc_torch">
-		<text>NPC flashlights</text>
-	</string>
 	<string id="ui_mm_options">
 		<text>OPTIONS</text>
 	</string>
@@ -672,8 +672,17 @@
 	<string id="ui_mm_supersample">
 		<text>Antialiasing</text>
 	</string>
-	<string id="ui_mm_switch_torch">
-		<text>AI uses flashlights</text>
+	<string id="ui_mm_aa_mode">
+		<text>Antialiasing</text>
+	</string>
+	<string id="st_opt_fxaa">
+		<text>FXAA</text>
+	</string>
+	<string id="st_opt_smaa">
+		<text>SMAA</text>
+	</string>
+	<string id="ui_mm_rain_drops">
+		<text>Rain drops on lens</text>
 	</string>
 	<string id="ui_mm_texture_quality">
 		<text>Texture detail</text>
@@ -695,6 +704,9 @@
 	</string>
 	<string id="ui_mm_vsync">
 		<text>Vertical sync</text>
+	</string>
+	<string id="ui_mm_triple_buffering">
+		<text>Triple buffering</text>
 	</string>
 	<string id="ui_mp_gamespy_changing_unique_nick">
 		<text>Change unique name</text>
@@ -936,11 +948,11 @@
 	<string id="volumetric">
 		<text>Volumetric</text>
 	</string>
-	<string id="screen_space">
-		<text>Screen Space</text>
+	<string id="ss_ogse">
+		<text>Screen space (OGSE)</text>
 	</string>
-	<string id="manowar_ssss">
-		<text>Mrmnwar SS</text>
+	<string id="ss_manowar">
+		<text>Screen space (Mrmnwar)</text>
 	</string>
 	<string id="ui_mm_windowtype">
 		<text>Window type</text>
@@ -974,5 +986,11 @@
 	</string>
 	<string id="ui_mm_120_hz">
 		<text>Frequency 120Hz</text>
+	</string>
+	<string id="ui_st_loadingscreen_custom">
+		<text>Loading Screen V.2</text>
+	</string>
+	<string id="ui_mm_language">
+		<text>Language</text>
 	</string>
 </string_table>

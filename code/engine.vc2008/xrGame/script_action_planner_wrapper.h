@@ -9,13 +9,13 @@
 #pragma once
 
 #include "action_planner.h"
+#include <luabind/wrapper_base.hpp>
 
-class CScriptActionPlannerWrapper : public CScriptActionPlanner, public luabind::wrap_base {
+class CScriptActionPlannerWrapper : public CScriptActionPlanner, public luabind::wrap_base
+{
 public:
 	virtual void		setup						(CScriptGameObject *object);
 	static	void		setup_static				(CScriptActionPlanner *planner, CScriptGameObject *object);
 	virtual void		update						();
 	static	void		update_static				(CScriptActionPlanner *planner);
 };
-
-#include "script_action_planner_wrapper_inline.h"

@@ -11,6 +11,9 @@
 #include "ai_space.h"
 #include "../xrScripts/import_ses.hpp"
 
+#include <luabind/luabind.hpp>
+#include <luabind/operator.hpp>
+
 using namespace luabind;
 
 void ErrorLog(LPCSTR caMessage)
@@ -59,6 +62,13 @@ void Lua_CrashGame()
 
 	int* pSuicidePtr = nullptr;
 	*pSuicidePtr = 42;
+}
+
+void Lua_Object_Info()
+{
+    CScriptEngine& scriptEngine = ai().script_engine();
+    scriptEngine.LogVariable(scriptEngine.lua(), "[lua_object_info]", 1, true, 1);
+    scriptEngine.ClearDumpedObjects();
 }
 
 void prefetch_module(LPCSTR file_name)
@@ -155,8 +165,8 @@ void CScriptEngine::script_register(lua_State *L)
 			.def("time",&profile_timer_script::time)
 	];
 	
-    function    (L, "to_log",							(void(*)(const char*)) &Log);
-    function    (L, "log",								(void(*)(const char*)) &Log);
+    function    (L, "to_log",							(void(*)(const char*)) &import_ses::LuaLog);
+    function    (L, "log",								(void(*)(const char*)) &import_ses::LuaLog);
 	function	(L,	"error_log",						ErrorLog);
 	function	(L,	"flush",							FlushLogs);
 	function	(L,	"prefetch",							prefetch_module);
@@ -167,12 +177,13 @@ void CScriptEngine::script_register(lua_State *L)
 	function	(L, "time_global_async",				script_time_global_async);
     function    (L, "debuggerTrigger",                  Lua_DebugBreak);
     function    (L, "crashGame",						Lua_CrashGame);
+    function    (L, "lua_object_info",                  Lua_Object_Info);
 	//function	(L, "LoadModule", load_modules);
 #ifdef XRGAME_EXPORTS
 	function	(L,	"device",							get_device);
 	function	(L,	"is_enough_address_space_available",is_enough_address_space_available_impl);
 
-	//FX: подгрузка любых модулей
+	//FX: РїРѕРґРіСЂСѓР·РєР° Р»СЋР±С‹С… РјРѕРґСѓР»РµР№
 #pragma todo("FX to FX: update load modules code...")
 /*	{
 		luabind::functor<LPCSTR> module_init;

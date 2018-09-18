@@ -99,6 +99,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 				return true;
 			}
 			SendEvent_Item_Drop		(CurrentIItem(), m_pActorInvOwner->object_id());
+			itm->OwnerList()->RemoveItem(itm, false);
 			SetCurrentItem			(NULL);
 		}break;
 	case iActorSlot:
@@ -165,7 +166,7 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 	{
 	case iActorSlot:
 		{
-			if ( m_currMenuMode == mmDeadBodySearch )
+			if ( m_currMenuMode == mmDeadBodyOrContainerSearch )
 				ToDeadBodyBag	( itm, false );
 			else
 				ToBag			( itm, false );
@@ -178,12 +179,12 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 				ToActorTrade( itm, false );
 				break;
 			}else
-				if ( m_currMenuMode == mmDeadBodySearch )
+				if ( m_currMenuMode == mmDeadBodyOrContainerSearch )
 				{
 					ToDeadBodyBag( itm, false );
 					break;
 				}
-				if(m_currMenuMode!=mmUpgrade && TryUseItem( itm ))
+				if(m_currMenuMode!=mmUpgrade && TryUseFoodItem( itm ))
 				{
 					break;
 				}
@@ -368,7 +369,7 @@ void CUIActorMenu::OnPressUserKey()
 	case mmUpgrade:			
 		TrySetCurUpgrade();
 		break;
-	case mmDeadBodySearch:	
+	case mmDeadBodyOrContainerSearch:	
 		TakeAllFromPartner( this, 0 );
 		break;
 	default:
@@ -404,7 +405,7 @@ void CUIActorMenu::OnMesBoxYes( CUIWindow*, void* )
 			m_pUpgradeWnd->OnMesBoxYes();
 		}
 		break;
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		break;
 	default:
 		R_ASSERT(0);
@@ -426,7 +427,7 @@ void CUIActorMenu::OnMesBoxNo(CUIWindow*, void*)
 	case mmUpgrade:
 		m_repair_mode = false;
 		break;
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		break;
 	default:
 		R_ASSERT(0);

@@ -8,7 +8,7 @@
 
 #include "stdafx.h"
 #include "object_broker.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 
 #include "UIInvUpgrade.h"
 

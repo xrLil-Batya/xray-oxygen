@@ -8,6 +8,7 @@
 #include "stdafx.h"
 #include "igame_level.h"
 #include "igame_persistent.h"
+#include "ILoadingScreen.h"
 #include "xr_input.h"
 #include "xr_ioconsole.h"
 #include "x_ray.h"
@@ -19,38 +20,34 @@
 #include "Text_Console.h"
 #include <process.h>
 #include <locale.h>
+#include "DynamicSplash.h"
+
 
 #include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni = nullptr;
 volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
-#ifdef SPAWN_ANTIFREEZE
-ENGINE_API bool g_bootComplete = false;
-#endif
-
-#ifdef MASTER_GOLD
-#	define NO_MULTI_INSTANCES
-#endif // #ifdef MASTER_GOLD
-
+ENGINE_API BOOL g_appLoaded = FALSE;
+extern ENGINE_API DSplashScreen splashScreen;
+bool bEngineloaded = false;
 //---------------------------------------------------------------------
 // 2446363
 // umbt@ukr.net
 //////////////////////////////////////////////////////////////////////////
-struct _SoundProcessor	: public pureFrame
+struct _SoundProcessor : public pureFrame
 {
-	virtual void	_BCL	OnFrame	( )
+	virtual void _BCL OnFrame()
 	{
 		Device.Statistic->Sound.Begin();
-		::Sound->update				(Device.vCameraPosition,Device.vCameraDirection,Device.vCameraTop);
-		Device.Statistic->Sound.End	();
+		::Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+		Device.Statistic->Sound.End();
 	}
 }	SoundProcessor;
 
 //////////////////////////////////////////////////////////////////////////
 // global variables
 ENGINE_API	CApplication*	pApp			= NULL;
-static		HWND			logoWindow		= NULL;
 
 			void			doBenchmark		(LPCSTR name);
 ENGINE_API	bool			g_bBenchmark	= false;
@@ -65,23 +62,22 @@ ENGINE_API	string_path		g_sLaunchWorkingFolder;
 void InitEngine()
 {
 	Engine.Initialize();
-	while (!g_bIntroFinished)	Sleep(100);
+	while (!g_bIntroFinished)	
+		Sleep(100);
 	Device.Initialize();
 }
 
 ENGINE_API void InitSettings	()
 {
-	string_path					fname; 
-	FS.update_path				(fname,"$game_config$","system.ltx");
+	string_path fname;
+	FS.update_path(fname, "$game_config$", "system.ltx");
 
-	pSettings					= xr_new<CInifile>	(fname,TRUE);
-	CHECK_OR_EXIT				(0!=pSettings->section_count(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
+	pSettings = xr_new<CInifile>(fname, TRUE);
+	CHECK_OR_EXIT(!pSettings->sections().empty(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.", fname));
 
-	CInifile::allow_include_func_t	tmp_functor;
-	tmp_functor.bind([](LPCSTR) { return true; });
-	FS.update_path				(fname,"$game_config$","game.ltx");
-	pGameIni					= xr_new<CInifile>	(fname,TRUE);
-	CHECK_OR_EXIT				(0!=pGameIni->section_count(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
+	FS.update_path(fname, "$game_config$", "game.ltx");
+	pGameIni = xr_new<CInifile>(fname, TRUE);
+	CHECK_OR_EXIT(!pGameIni->sections().empty(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.", fname));
 }
 
 ENGINE_API void InitConsole	()
@@ -115,157 +111,121 @@ ENGINE_API void InitSound1()
 	CSound_manager_interface::_create(0);
 }
 
-ENGINE_API void InitSound2		()
+ENGINE_API void InitSound2()
 {
 	CSound_manager_interface::_create(1);
 }
 
 inline void destroySound()
 {
-	CSound_manager_interface::_destroy( );
+	CSound_manager_interface::_destroy();
 }
 
 void destroySettings()
 {
-	CInifile** s				= (CInifile**)(&pSettings);
-	xr_delete					( *s		);
-	xr_delete					( pGameIni		);
+	CInifile** s = (CInifile**)(&pSettings);
+	xr_delete(*s);
+	xr_delete(pGameIni);
 }
 
-void destroyConsole	()
+void destroyConsole()
 {
-	Console->Execute			("cfg_save");
-	Console->Destroy			();
-	xr_delete					(Console);
+	Console->Execute("cfg_save");
+	Console->Destroy();
+	xr_delete(Console);
 }
 
-void destroyEngine	()
+void destroyEngine()
 {
-	Device.Destroy				( );
-	Engine.Destroy				( );
+	Device.Destroy();
+	Engine.Destroy();
 }
 
-void execUserScript				( )
+void execUserScript()
 {
-	Console->Execute			("default_controls");
-	Console->ExecuteScript		(Console->ConfigFile);
-}
-
-void slowdownthread	( void* )
-{
-	for (;;)
-	{
-		if (Device.Statistic->fFPS < 30)	Sleep(1);
-		if (Device.mt_bMustExit)		return;
-		if (!pSettings)				return;
-		if (!Console)					return;
-		if (!pInput)					return;
-		if (!pApp)					return;
-	}
-}
-void CheckPrivilegySlowdown		( )
-{
-#ifdef DEBUG
-	if	(strstr(Core.Params,"-slowdown"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
-	}
-	if	(strstr(Core.Params,"-slowdown2x"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
-		thread_spawn(slowdownthread,"slowdown",0,0);
-	}
-#endif // DEBUG
+	Console->Execute("default_controls");
+	Console->ExecuteScript(Console->ConfigFile);
 }
 
 void Startup()
 {
+	splashScreen.SetProgressPosition(60, "Init sound");
 	InitSound1		();
+	splashScreen.SetProgressPosition(65, "Init user scripts");
 	execUserScript	();
+	splashScreen.SetProgressPosition(70, "Init sound (2-part)");
 	InitSound2		();
 
 	// ...command line for auto start
 	{
-		LPCSTR	pStartup			= strstr				(Core.Params,"-start ");
-		if (pStartup)				Console->Execute		(pStartup+1);
-	}
-	{
-		LPCSTR	pStartup			= strstr				(Core.Params,"-load ");
-		if (pStartup)				Console->Execute		(pStartup+1);
+		LPCSTR	pStart = strstr(Core.Params, "-start ");
+		LPCSTR	pLoad = strstr(Core.Params, "-load ");
+		if (pStart) { Console->Execute(pStart + 1); }
+		if (pLoad) { Console->Execute(pLoad + 1); }
 	}
 
 	if (strstr(Core.Params, "-$"))
 	{
-		string256                buf, cmd, param;
-		sscanf(strstr(Core.Params, "-$")
-			+ 2,
-			"%[^ ] %[^ ] ",
-			cmd,
-			param);
-		strconcat(sizeof(buf),
-			buf,
-			cmd,
-			" ",
-			param);
+		string256 buf, cmd, param;
+		sscanf(strstr(Core.Params, "-$") + 2, "%[^ ] %[^ ] ", cmd, param);
+		strconcat(sizeof(buf), buf, cmd, " ", param);
 		Console->Execute(buf);
 	}
-	/////////////////////////////////////////////
+	
 	// Initialize APP
 	ShowWindow(Device.m_hWnd, SW_SHOWNORMAL);
-	/////////////////////////////////////////////
-	Device.Create				();
-	LALib.OnCreate				();
-	pApp						= xr_new<CApplication>	();
-	g_pGamePersistent			= (IGame_Persistent*) NEW_INSTANCE (CLSID_GAME_PERSISTANT);
-	g_SpatialSpace				= xr_new<ISpatial_DB>	();
-	g_SpatialSpacePhysic		= xr_new<ISpatial_DB>	();
-	/////////////////////////////////////////////
-	// Destroy LOGO
-	if (!strstr(Core.Params, "-nologo")) 
-	{
-		DestroyWindow(logoWindow);
-		logoWindow = NULL;
-	}
-	/////////////////////////////////////////////
+	
+	splashScreen.SetProgressPosition(90, "Creating animation library");
+	LALib.OnCreate();
+	
 	// Main cycle
+	splashScreen.SetProgressPosition(100, "Engine loaded.");
+	bEngineloaded = true;
+	Device.UpdateWindowPropStyle();
+	splashScreen.HideSplash();
+	Device.Create();
+
+	pApp = xr_new<CApplication>();
+	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);
+	g_SpatialSpace = xr_new<ISpatial_DB>();
+	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
+
 	Memory.mem_usage();
-	Device.Run					( );
-	/////////////////////////////////////////////
+	Device.Run();
+	
 	// Destroy APP
-	xr_delete					( g_SpatialSpacePhysic	);
-	xr_delete					( g_SpatialSpace		);
-	DEL_INSTANCE				( g_pGamePersistent		);
-	xr_delete					( pApp					);
-	Engine.Event.Dump			( );
-	/////////////////////////////////////////////
+	xr_delete(g_SpatialSpacePhysic);
+	xr_delete(g_SpatialSpace);
+	DEL_INSTANCE(g_pGamePersistent);
+	xr_delete(pApp);
+	Engine.Event.Dump();
+
 	// Destroying
 	destroyInput();
-	if (!g_bBenchmark)
-	{
-		destroySettings();
-	}
-	LALib.OnDestroy				( );
-	if (!g_bBenchmark)
-		destroyConsole();
-	else
-		Console->Destroy();
-	/////////////////////////////////////////////
+	if (!g_bBenchmark) { destroySettings(); }		//#DELETE:
+	LALib.OnDestroy();
+	if (!g_bBenchmark) { destroyConsole(); }		//#DELETE:
+	else { Console->Destroy(); }
+	
 	destroySound();
 	destroyEngine();
 }
 
 static INT_PTR CALLBACK logDlgProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
-	switch( msg ){
-		case WM_DESTROY:
-			break;
-		case WM_CLOSE:
-			DestroyWindow( hw );
-			break;
-		case WM_COMMAND:
-			if( LOWORD(wp)==IDCANCEL )
-				DestroyWindow( hw );
-			break;
-		default:
-			return FALSE;
+	switch (msg) 
+	{
+	case WM_DESTROY:
+		break;
+	case WM_CLOSE:
+		DestroyWindow(hw);
+		break;
+	case WM_COMMAND:
+		if (LOWORD(wp) == IDCANCEL)
+			DestroyWindow(hw);
+		break;
+	default:
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -276,92 +236,94 @@ extern void	testbed	(void);
 #define dwFilterKeysStructSize sizeof( FILTERKEYS )
 #define dwToggleKeysStructSize sizeof( TOGGLEKEYS )
 
-struct damn_keys_filter {
+struct damn_keys_filter 
+{
 	BOOL bScreenSaverState;
 
 	// Sticky & Filter & Toggle keys
 
-	STICKYKEYS StickyKeysStruct;
-	FILTERKEYS FilterKeysStruct;
-	TOGGLEKEYS ToggleKeysStruct;
+	STICKYKEYS StickyKeysStruct = { NULL };
+	FILTERKEYS FilterKeysStruct = { NULL };
+	TOGGLEKEYS ToggleKeysStruct = { NULL };
 
-	DWORD dwStickyKeysFlags,
-		dwFilterKeysFlags,
-		dwToggleKeysFlags;
+	DWORD dwStickyKeysFlags; 
+	DWORD dwFilterKeysFlags;
+	DWORD dwToggleKeysFlags;
 
-	damn_keys_filter	()
+	damn_keys_filter()
 	{
 		// Screen saver stuff
 		bScreenSaverState = FALSE;
 
 		// Saveing current state
-		SystemParametersInfo( SPI_GETSCREENSAVEACTIVE , 0 , ( PVOID ) &bScreenSaverState , 0 );
+		SystemParametersInfoA(SPI_GETSCREENSAVEACTIVE, 0, (PVOID)&bScreenSaverState, 0);
 
-		if (bScreenSaverState)
-			// Disable screensaver
-			SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, NULL, 0);
+		if (bScreenSaverState)		
+			SystemParametersInfoA(SPI_SETSCREENSAVEACTIVE, FALSE, NULL, 0);		// Disable screensaver
 
 		dwStickyKeysFlags = 0;
 		dwFilterKeysFlags = 0;
 		dwToggleKeysFlags = 0;
-
-		std::memset(&StickyKeysStruct, 0, dwStickyKeysStructSize);
-		std::memset(&FilterKeysStruct, 0, dwFilterKeysStructSize);
-		std::memset(&ToggleKeysStruct, 0, dwToggleKeysStructSize);
 
 		StickyKeysStruct.cbSize = dwStickyKeysStructSize;
 		FilterKeysStruct.cbSize = dwFilterKeysStructSize;
 		ToggleKeysStruct.cbSize = dwToggleKeysStructSize;
 
 		// Saving current state
-		SystemParametersInfo( SPI_GETSTICKYKEYS , dwStickyKeysStructSize , ( PVOID ) &StickyKeysStruct , 0 );
-		SystemParametersInfo( SPI_GETFILTERKEYS , dwFilterKeysStructSize , ( PVOID ) &FilterKeysStruct , 0 );
-		SystemParametersInfo( SPI_GETTOGGLEKEYS , dwToggleKeysStructSize , ( PVOID ) &ToggleKeysStruct , 0 );
+		SystemParametersInfoA(SPI_GETSTICKYKEYS, dwStickyKeysStructSize, (PVOID)&StickyKeysStruct, 0);
+		SystemParametersInfoA(SPI_GETFILTERKEYS, dwFilterKeysStructSize, (PVOID)&FilterKeysStruct, 0);
+		SystemParametersInfoA(SPI_GETTOGGLEKEYS, dwToggleKeysStructSize, (PVOID)&ToggleKeysStruct, 0);
 
-		if ( StickyKeysStruct.dwFlags & SKF_AVAILABLE ) {
+		if ( StickyKeysStruct.dwFlags & SKF_AVAILABLE ) 
+		{
 			// Disable StickyKeys feature
 			dwStickyKeysFlags = StickyKeysStruct.dwFlags;
 			StickyKeysStruct.dwFlags = 0;
-			SystemParametersInfo( SPI_SETSTICKYKEYS , dwStickyKeysStructSize , ( PVOID ) &StickyKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETSTICKYKEYS, dwStickyKeysStructSize, (PVOID)&StickyKeysStruct, 0);
 		}
 
-		if ( FilterKeysStruct.dwFlags & FKF_AVAILABLE ) {
+		if ( FilterKeysStruct.dwFlags & FKF_AVAILABLE ) 
+		{
 			// Disable FilterKeys feature
 			dwFilterKeysFlags = FilterKeysStruct.dwFlags;
 			FilterKeysStruct.dwFlags = 0;
-			SystemParametersInfo( SPI_SETFILTERKEYS , dwFilterKeysStructSize , ( PVOID ) &FilterKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETFILTERKEYS, dwFilterKeysStructSize, (PVOID)&FilterKeysStruct, 0);
 		}
 
-		if ( ToggleKeysStruct.dwFlags & TKF_AVAILABLE ) {
+		if ( ToggleKeysStruct.dwFlags & TKF_AVAILABLE ) 
+		{
 			// Disable FilterKeys feature
 			dwToggleKeysFlags = ToggleKeysStruct.dwFlags;
 			ToggleKeysStruct.dwFlags = 0;
-			SystemParametersInfo( SPI_SETTOGGLEKEYS , dwToggleKeysStructSize , ( PVOID ) &ToggleKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETTOGGLEKEYS, dwToggleKeysStructSize, (PVOID)&ToggleKeysStruct, 0);
 		}
 	}
 
 	~damn_keys_filter	()
 	{
-		if ( bScreenSaverState )
+		if (bScreenSaverState)
 			// Restoring screen saver
-			SystemParametersInfo( SPI_SETSCREENSAVEACTIVE , TRUE , NULL , 0 );
+			SystemParametersInfoA(SPI_SETSCREENSAVEACTIVE, TRUE, NULL, 0);
 
-		if ( dwStickyKeysFlags) {
+		if (dwStickyKeysFlags) 
+		{
 			// Restore StickyKeys feature
 			StickyKeysStruct.dwFlags = dwStickyKeysFlags;
-			SystemParametersInfo( SPI_SETSTICKYKEYS , dwStickyKeysStructSize , ( PVOID ) &StickyKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETSTICKYKEYS, dwStickyKeysStructSize, (PVOID)&StickyKeysStruct, 0);
 		}
 
-		if ( dwFilterKeysFlags ) {
+		if (dwFilterKeysFlags) 
+		{
 			// Restore FilterKeys feature
 			FilterKeysStruct.dwFlags = dwFilterKeysFlags;
-			SystemParametersInfo( SPI_SETFILTERKEYS , dwFilterKeysStructSize , ( PVOID ) &FilterKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETFILTERKEYS, dwFilterKeysStructSize, (PVOID)&FilterKeysStruct, 0);
 		}
 
-		if ( dwToggleKeysFlags ) {
+		if (dwToggleKeysFlags) 
+		{
 			// Restore FilterKeys feature
 			ToggleKeysStruct.dwFlags = dwToggleKeysFlags;
-			SystemParametersInfo( SPI_SETTOGGLEKEYS , dwToggleKeysStructSize , ( PVOID ) &ToggleKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETTOGGLEKEYS, dwToggleKeysStructSize, (PVOID)&ToggleKeysStruct, 0);
 		}
 
 	}
@@ -372,111 +334,72 @@ struct damn_keys_filter {
 #undef dwToggleKeysStructSize
 
 #include "xr_ioc_cmd.h"
-
-ENGINE_API int RunApplication(LPCSTR commandLine)
+extern "C"
 {
-	if (!IsDebuggerPresent()) 
-	{
-		size_t HeapFragValue = 2;
-		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
-	}
+void ENGINE_API RunApplication(LPCSTR commandLine)
+{
+	gMainThreadId = GetCurrentThreadId();
+	Debug.set_mainThreadId(gMainThreadId);
 
-    gMainThreadId = GetCurrentThreadId();
-    Debug.set_mainThreadId(gMainThreadId);
-	// Check for another instance
-#ifdef NO_MULTI_INSTANCES
-	#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
-	
-	HANDLE hCheckPresenceMutex = OpenMutex( READ_CONTROL , FALSE ,  STALKER_PRESENCE_MUTEX );
-	if ( hCheckPresenceMutex == NULL ) 
-	{
-		hCheckPresenceMutex = CreateMutex( NULL , FALSE , STALKER_PRESENCE_MUTEX );	// New mutex
-		if ( hCheckPresenceMutex == NULL )
-			return 2;
-	} 
-	else
-	{
-		CloseHandle( hCheckPresenceMutex );		// Already running
-		return 1;
-	}
-#endif
-
-	//////////////////////////////////////////
 	// Title window
-	//////////////////////////////////////////
 	HWND logoInsertPos = HWND_TOPMOST;
-	if (IsDebuggerPresent())
-	{
-		logoInsertPos = HWND_NOTOPMOST;
-	}
-	//////////////////////////////////////////
-	if (!strstr(Core.Params, "-nologo"))
-	{
-		logoWindow					= CreateDialog(GetModuleHandle(NULL),	MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc );
-		HWND logoPicture			= GetDlgItem(logoWindow, IDC_STATIC_LOGO);
-		RECT logoRect;
-		//////////////////////////////////////////
-		GetWindowRect(logoPicture, &logoRect);
-		SetWindowPos(logoWindow, logoInsertPos, 0, 0, logoRect.right - logoRect.left, logoRect.bottom - logoRect.top, SWP_NOMOVE | SWP_SHOWWINDOW);
-		UpdateWindow(logoWindow);
-	}
-	//////////////////////////////////////////
+	if (IsDebuggerPresent()) { logoInsertPos = HWND_NOTOPMOST; }
+
+	InitSplash(GetModuleHandle(NULL), "OXYGEN_SPLASH", logDlgProc);
+	splashScreen.SetProgressColor(RGB(0x5B, 0xA5, 0xC1));
+
 	// AVI
-	g_bIntroFinished			= true;
+	g_bIntroFinished = true;
 
-	g_sLaunchOnExit_app[0]		= 0;
-	g_sLaunchOnExit_params[0]	= 0;
+	g_sLaunchOnExit_app[0] = 0;
+	g_sLaunchOnExit_params[0] = 0;
 
+	splashScreen.SetProgressPosition(15, "Init settings");
+	InitSettings();
+	
 
-	InitSettings				();
-
-    if (strstr(Core.Params, "-renderdebug"))
-    {
-        isGraphicDebugging	= TRUE;
-    }
+	if (strstr(Core.Params, "-renderdebug"))
+	{
+		isGraphicDebugging = TRUE;
+	}
 
 	// Adjust player & computer name for Asian
-	if ( pSettings->line_exist( "string_table" , "no_native_input" ) ) {
-			xr_strcpy( Core.UserName , sizeof( Core.UserName ) , "Player" );
-			xr_strcpy( Core.CompName , sizeof( Core.CompName ) , "Computer" );
-	}
-
+	if (pSettings->line_exist("string_table", "no_native_input"))
 	{
-		FPU::m24r				();
-		InitEngine				();
-		InitInput				();
-		InitConsole				();
-
-		Engine.External.Initialize	( );
-
-		//Console->Execute			("stat_memory");
-
-		/////////////////////////////////////////////
-		// Exeption debug
-		///xrCore* crash_me = nullptr;
-		///crash_me->SetPluginMode();
-
-		Startup	 					( );
-		Core._destroy				( );
-#ifdef NO_MULTI_INSTANCES		
-		// Delete application presence mutex
-		CloseHandle( hCheckPresenceMutex );
-#endif
+		xr_strcpy(Core.UserName, sizeof(Core.UserName), "Player");
+		xr_strcpy(Core.CompName, sizeof(Core.CompName), "Computer");
 	}
-	return 0;
-}
 
+	splashScreen.SetProgressPosition(20, "FPU m24r");
+	FPU::m24r();
+	splashScreen.SetProgressPosition(35, "Init engine");
+	InitEngine();
+	splashScreen.SetProgressPosition(40, "Init input");
+	InitInput();
+	splashScreen.SetProgressPosition(45, "Init console");
+	InitConsole();
+
+	splashScreen.SetProgressPosition(50, "Init render");
+	Engine.External.Initialize();
+
+	Startup();
+	Core._destroy();
+}
+}
 LPCSTR _GetFontTexName (LPCSTR section)
 {
-	static char* tex_names[]={"texture800","texture","texture1600"};
-	int def_idx		= 1;//default 1024x768
+	static char* tex_names[] = { "texture800","texture","texture1600" };
+	int def_idx		= 1;	//default 1024x768
 	int idx			= def_idx;
 
 	u32 h = Device.dwHeight;
 
-	if(h<=600)		idx = 0;
-	else if(h<1024)	idx = 1;
-	else 			idx = 2;
+	if (h <= 600)		
+		idx = 0;
+	else if (h < 1024)	
+		idx = 1;
+	else 			
+		idx = 2;
 	
 	while(idx>=0)
 	{
@@ -492,19 +415,22 @@ void _InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 	LPCSTR font_tex_name = _GetFontTexName(section);
 	R_ASSERT(font_tex_name);
 
-	LPCSTR sh_name = pSettings->r_string(section,"shader");
-	if(!F){
-		F = xr_new<CGameFont> (sh_name, font_tex_name, flags);
-	}else
+	LPCSTR sh_name = pSettings->r_string(section, "shader");
+	if (!F) 
+	{
+		F = xr_new<CGameFont>(sh_name, font_tex_name, flags);
+	}
+	else
 		F->Initialize(sh_name, font_tex_name);
 
-	if (pSettings->line_exist(section,"size")){
-		float sz = pSettings->r_float(section,"size");
+	if (pSettings->line_exist(section, "size")) 
+	{
+		float sz = pSettings->r_float(section, "size");
 		if (flags&CGameFont::fsDeviceIndependent)	F->SetHeightI(sz);
 		else										F->SetHeight(sz);
 	}
-	if (pSettings->line_exist(section,"interval"))
-		F->SetInterval(pSettings->r_fvector2(section,"interval"));
+	if (pSettings->line_exist(section, "interval"))
+		F->SetInterval(pSettings->r_fvector2(section, "interval"));
 
 }
 
@@ -535,37 +461,35 @@ CApplication::CApplication()
 	Console->Show				( );
 
 	// App Title
-//	app_title[ 0 ] = '\0';
-	ls_header[ 0 ] = '\0';
-	ls_tip_number[ 0 ] = '\0';
-	ls_tip[ 0 ] = '\0';
+	loadingScreen = nullptr;
 }
 
 CApplication::~CApplication()
 {
-	Console->Hide				( );
+	Console->Hide();
 
 	// font
-	xr_delete					( pFontSystem		);
+	xr_delete(pFontSystem);
 
-	Device.seqFrameMT.Remove	(&SoundProcessor);
-	Device.seqFrame.Remove		(this);
+	Device.seqFrameMT.Remove(&SoundProcessor);
+	Device.seqFrame.Remove(this);
 
 
 	// events
-	Engine.Event.Handler_Detach	(eConsole,this);
-	Engine.Event.Handler_Detach	(eDisconnect,this);
-	Engine.Event.Handler_Detach	(eStartLoad,this);
-	Engine.Event.Handler_Detach	(eStart,this);
-	Engine.Event.Handler_Detach	(eQuit,this);
+	Engine.Event.Handler_Detach(eConsole, this);
+	Engine.Event.Handler_Detach(eDisconnect, this);
+	Engine.Event.Handler_Detach(eStartLoad, this);
+	Engine.Event.Handler_Detach(eStart, this);
+	Engine.Event.Handler_Detach(eQuit, this);
 	
 }
 
 extern CRenderDevice Device;
+ENGINE_API int ps_rs_loading_stages = 0;
 
 void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 {
-	if (E==eQuit)
+	if (E == eQuit)
 	{
 		PostQuitMessage	(0);
 		
@@ -575,7 +499,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 			xr_free(Levels[i].name);
 		}
 	}
-	else if(E==eStart) 
+	else if(E == eStart) 
 	{
 		LPSTR		op_server		= LPSTR	(P1);
 		LPSTR		op_client		= LPSTR	(P2);
@@ -601,9 +525,6 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 	} 
 	else if (E==eDisconnect) 
 	{
-		ls_header[0] = '\0';
-		ls_tip_number[0] = '\0';
-		ls_tip[0] = '\0';
 
 		if (g_pGameLevel) 
 		{
@@ -630,7 +551,6 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 }
 
 static	CTimer	phase_timer;
-extern	ENGINE_API BOOL g_appLoaded = FALSE;
 
 void CApplication::LoadBegin()
 {
@@ -638,12 +558,8 @@ void CApplication::LoadBegin()
 	if (1==dwLoadReference)	
 	{
 		g_appLoaded			= FALSE;
-#ifdef SPAWN_ANTIFREEZE
-		g_bootComplete		= false;
-#endif
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
-		m_pRender->LoadBegin();
 		phase_timer.Start	();
 		load_stage			= 0;
 	}
@@ -659,12 +575,20 @@ void CApplication::LoadEnd()
 	}
 }
 
-void CApplication::destroy_loading_shaders()
+void CApplication::SetLoadingScreen(ILoadingScreen* newScreen)
 {
-	m_pRender->destroy_loading_shaders();
-#ifdef SPAWN_ANTIFREEZE
-	g_bootComplete = true;
-#endif
+	if (loadingScreen)
+    {
+        Log("! Trying to create new loading screen, but there is already one..");
+        DestroyLoadingScreen();
+    }
+
+	loadingScreen = newScreen;
+}
+
+void CApplication::DestroyLoadingScreen()
+{
+	xr_delete(loadingScreen);
 }
 
 ENGINE_API void CApplication::LoadDraw		()
@@ -677,20 +601,25 @@ ENGINE_API void CApplication::LoadDraw		()
 	Device.End					();
 }
 
+void CApplication::LoadForceFinish()
+{
+	if (loadingScreen)
+		loadingScreen->ForceFinish();
+}
+
 void CApplication::SetLoadStageTitle(const char* _ls_title)
 {
-	xr_strcpy(ls_title, _ls_title);
+	if (ps_rs_loading_stages && loadingScreen)
+		 loadingScreen->SetStageTitle(_ls_title);
 }
 
 void CApplication::LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3)
 {
-	xr_strcpy(ls_header, str1);
-	xr_strcpy(ls_tip_number, str2);
-	xr_strcpy(ls_tip, str3);
+	if (loadingScreen)
+		loadingScreen->SetStageTip(str1, str2, str3);
 }
 void CApplication::LoadStage()
 {
-	load_stage++;
 	VERIFY(dwLoadReference);
 	Msg("* phase time: %d ms",phase_timer.GetElapsed_ms());
 	phase_timer.Start();
@@ -698,6 +627,8 @@ void CApplication::LoadStage()
 	max_load_stage = 19;
 
 	LoadDraw();
+
+	++load_stage;
 }
 
 void CApplication::LoadSwitch	()
@@ -764,11 +695,11 @@ void gen_logo_name(string_path& dest, LPCSTR level_name, int num)
 	xr_strcat(dest, sizeof(dest), "_");
 	xr_strcat(dest, sizeof(dest), itoa(num+1, buff, 10));
 }
-
+ 
 void CApplication::Level_Set(u32 L)
 {
-	if (L >= Levels.size())	return;
-	FS.get_path("$level$")->_set(Levels[L].folder);
+    if (L >= Levels.size())	return;
+    FS.get_path("$level$")->_set(Levels[L].folder);
 
 	static string_path			path;
 
@@ -796,8 +727,8 @@ void CApplication::Level_Set(u32 L)
 		}
 	}
 
-	if (path[0])
-		m_pRender->setLevelLogo(path);
+	if (path[0] && loadingScreen)
+		loadingScreen->SetLevelLogo(path);
 
 }
 
@@ -871,5 +802,6 @@ void CApplication::LoadAllArchives()
 #pragma optimize("g", off)
 void CApplication::load_draw_internal()
 {
-	m_pRender->load_draw_internal(*this);
+	if (loadingScreen)
+		loadingScreen->Update(load_stage, max_load_stage);
 }

@@ -24,23 +24,23 @@ hit_power       = 0.52, 0.52, 0.52, 0.52
 hit_impulse     = 100
 hit_type 		= fire_wound
 fire_distance           = 100
-bullet_speed         	= 240 ;начальная скорость пули
+bullet_speed         	= 240 ;РЅР°С‡Р°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РїСѓР»Рё
 rpm                     = 1000
 
 hud                        = wpn_toz34_hud
 
-misfire_probability        = 0.005 ;вероятность осечки при максимальном износе  !!!old - now not working
-;изношенность, при которой появляется шанс осечки
+misfire_probability        = 0.005 ;РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РѕСЃРµС‡РєРё РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РёР·РЅРѕСЃРµ  !!!old - now not working
+;РёР·РЅРѕС€РµРЅРЅРѕСЃС‚СЊ, РїСЂРё РєРѕС‚РѕСЂРѕР№ РїРѕСЏРІР»СЏРµС‚СЃСЏ С€Р°РЅСЃ РѕСЃРµС‡РєРё
 misfire_start_condition		= 0.6
-;изношеность при которой шанс осечки становится константным
+;РёР·РЅРѕС€РµРЅРѕСЃС‚СЊ РїСЂРё РєРѕС‚РѕСЂРѕР№ С€Р°РЅСЃ РѕСЃРµС‡РєРё СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚РЅС‹Рј
 misfire_end_condition		= 0.1
-;шанс осечки при изношености больше чем misfireStartCondition
+;С€Р°РЅСЃ РѕСЃРµС‡РєРё РїСЂРё РёР·РЅРѕС€РµРЅРѕСЃС‚Рё Р±РѕР»СЊС€Рµ С‡РµРј misfireStartCondition
 misfire_start_prob	     	= 0.002
-;шанс осечки при изношености больше чем misfireEndCondition
+;С€Р°РЅСЃ РѕСЃРµС‡РєРё РїСЂРё РёР·РЅРѕС€РµРЅРѕСЃС‚Рё Р±РѕР»СЊС€Рµ С‡РµРј misfireEndCondition
 misfire_end_prob	     	= 0.03
-;увеличение изношености при одиночном выстреле
+;СѓРІРµР»РёС‡РµРЅРёРµ РёР·РЅРѕС€РµРЅРѕСЃС‚Рё РїСЂРё РѕРґРёРЅРѕС‡РЅРѕРј РІС‹СЃС‚СЂРµР»Рµ
 condition_shot_dec      	= 0.0045
-;увеличение изношености при выстреле очередью
+;СѓРІРµР»РёС‡РµРЅРёРµ РёР·РЅРѕС€РµРЅРѕСЃС‚Рё РїСЂРё РІС‹СЃС‚СЂРµР»Рµ РѕС‡РµСЂРµРґСЊСЋ
 condition_queue_shot_dec	= 0.0045
 
 tri_state_reload			= off
@@ -50,20 +50,20 @@ ammo_mag_size      			= 2
 ammo_class		 			= ammo_12x70_buck, ammo_12x76_zhekan
 fire_modes                  = 1
 
-;---дисперсия---------------------------------------------------------------------------
-;базовая дисперсия
-fire_dispersion_base    = 0.2  ;угол (в градусах) базовой дисперсии оружия (оружия зажатого в тисках)
+;---РґРёСЃРїРµСЂСЃРёСЏ---------------------------------------------------------------------------
+;Р±Р°Р·РѕРІР°СЏ РґРёСЃРїРµСЂСЃРёСЏ
+fire_dispersion_base    = 0.2  ;СѓРіРѕР» (РІ РіСЂР°РґСѓСЃР°С…) Р±Р°Р·РѕРІРѕР№ РґРёСЃРїРµСЂСЃРёРё РѕСЂСѓР¶РёСЏ (РѕСЂСѓР¶РёСЏ Р·Р°Р¶Р°С‚РѕРіРѕ РІ С‚РёСЃРєР°С…)
 control_inertion_factor = 1.5f
 crosshair_inertion		= 7.5
 
-;отдача
+;РѕС‚РґР°С‡Р°
 cam_return				= 1
-cam_relax_speed         = 5.0 ;скорость возврата в исходное положение
+cam_relax_speed         = 5.0 ;СЃРєРѕСЂРѕСЃС‚СЊ РІРѕР·РІСЂР°С‚Р° РІ РёСЃС…РѕРґРЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ
 cam_relax_speed_ai      = 360
-cam_dispersion          = 5.0 ;увеличения угла (в градусах) с каждым выстрелом
-cam_dispersion_inc      = 5.0 ;увеличениe cam_dispersion с каждым выстрелом
-cam_dispersion_frac		= 0.7	;ствол будет подыматься на cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
-cam_max_angle        	= 10.0 ;максимальный угол отдачи
+cam_dispersion          = 5.0 ;СѓРІРµР»РёС‡РµРЅРёСЏ СѓРіР»Р° (РІ РіСЂР°РґСѓСЃР°С…) СЃ РєР°Р¶РґС‹Рј РІС‹СЃС‚СЂРµР»РѕРј
+cam_dispersion_inc      = 5.0 ;СѓРІРµР»РёС‡РµРЅРёe cam_dispersion СЃ РєР°Р¶РґС‹Рј РІС‹СЃС‚СЂРµР»РѕРј
+cam_dispersion_frac		= 0.7	;СЃС‚РІРѕР» Р±СѓРґРµС‚ РїРѕРґС‹РјР°С‚СЊСЃСЏ РЅР° cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
+cam_max_angle        	= 10.0 ;РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СѓРіРѕР» РѕС‚РґР°С‡Рё
 cam_max_angle_horz      = 10.0   ;(degree) maximum shot horizontal degree
 cam_step_angle_horz     = 1.0 ;(degree) size of step camera moved in horizontal position while shooting
 
@@ -82,14 +82,14 @@ zoom_cam_max_angle          = 10.0
 zoom_cam_max_angle_horz     = 10.0
 zoom_cam_step_angle_horz    = 1.0
 
-fire_dispersion_condition_factor = 1.5	;увеличение дисперсии в процентах при максимальном износе
+fire_dispersion_condition_factor = 1.5	;СѓРІРµР»РёС‡РµРЅРёРµ РґРёСЃРїРµСЂСЃРёРё РІ РїСЂРѕС†РµРЅС‚Р°С… РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РёР·РЅРѕСЃРµ
 
 ;---DOF-------------------------------------------------------------------------
 zoom_dof				= 0.5, 1.0, 180
 ;reload_dof				= 0.0, 0.5, 5, 3.2
 ;-------------------------------------------------------------------------------
-holder_range_modifier	= 1.0               ; во сколько раз увеличивается eye_range
-holder_fov_modifier		= 1.0              ; во сколько раз увеличивается eye_fov
+holder_range_modifier	= 1.0               ; РІРѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ eye_range
+holder_fov_modifier		= 1.0              ; РІРѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ eye_fov
 
 min_radius               	= 0
 max_radius               	= 50
@@ -101,7 +101,7 @@ hit_probability_gd_master	= 0.80
 
 ;-------------------------------------------------------------------------------
 position                   = -0.023, -0.14, 0.00 ;-0.026, -0.117, 0.0
-orientation                = 0, 30, 0      ;значение устанавливается в градусах
+orientation                = 0, 30, 0      ;Р·РЅР°С‡РµРЅРёРµ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ РіСЂР°РґСѓСЃР°С…
 
 shell_point      = 0.0, 0.183, 0.07
 fire_point       = 0.0, 0.168, 0.755
@@ -136,7 +136,7 @@ smoke_particles		   	= weapons\generic_shoot_00
 rpm_empty_click 	   	= 200
 
 ;--STRAP PARAMETERS-----------------------------------------------------------------
-;под мишкой
+;РїРѕРґ РјРёС€РєРѕР№
 strap_position             = -0.26,-0.11,0.15         ; position (offset) and orientation of the weapon when it is strapped
 strap_orientation      		= -15,-9,110				; (3rd person view in degrees)
 strap_bone0					= bip01_spine2
@@ -161,7 +161,7 @@ grenade_launcher_status		= 0
 zoom_enabled				= true
 scope_zoom_factor	    	= 55
 
-;звуки
+;Р·РІСѓРєРё
 snd_draw						= weapons\generic_draw
 snd_holster					= weapons\generic_holster
 snd_shoot         		= weapons\n_toz34_shot
@@ -238,5 +238,5 @@ aim_hud_offset_pos_16x9				= -0.072000,0.030000,-0.008500
 aim_hud_offset_rot_16x9				= 0.015000,-0.000000,-0.007500
 
 ;-----------------------------------------------------------------------------
-; Уникальные
+; РЈРЅРёРєР°Р»СЊРЅС‹Рµ
 ;-----------------------------------------------------------------------------

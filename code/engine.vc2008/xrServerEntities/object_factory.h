@@ -14,14 +14,14 @@
 class CObjectFactory {
 public:
 #ifndef NO_XR_GAME
-	typedef ObjectFactory::CLIENT_BASE_CLASS			CLIENT_BASE_CLASS;
+	using CLIENT_BASE_CLASS = ObjectFactory::CLIENT_BASE_CLASS;
 #endif
-	typedef ObjectFactory::SERVER_BASE_CLASS			SERVER_BASE_CLASS;
+	using SERVER_BASE_CLASS = ObjectFactory::SERVER_BASE_CLASS;
 
 #ifndef NO_XR_GAME
-	typedef ObjectFactory::CLIENT_SCRIPT_BASE_CLASS	CLIENT_SCRIPT_BASE_CLASS;
+	using CLIENT_SCRIPT_BASE_CLASS = ObjectFactory::CLIENT_SCRIPT_BASE_CLASS;
 #endif
-	typedef ObjectFactory::SERVER_SCRIPT_BASE_CLASS	SERVER_SCRIPT_BASE_CLASS;
+	using SERVER_SCRIPT_BASE_CLASS = ObjectFactory::SERVER_SCRIPT_BASE_CLASS;
 
 protected:
 	struct CObjectItemPredicate {
@@ -44,16 +44,16 @@ protected:
 	};
 
 public:
-	typedef xr_vector<CObjectItemAbstract*>		OBJECT_ITEM_STORAGE;
-	typedef OBJECT_ITEM_STORAGE::iterator		iterator;
-	typedef OBJECT_ITEM_STORAGE::const_iterator	const_iterator;
+	using OBJECT_ITEM_STORAGE = xr_vector<CObjectItemAbstract*>;
+	using iterator = OBJECT_ITEM_STORAGE::iterator;
+	using const_iterator = OBJECT_ITEM_STORAGE::const_iterator;
 
 protected:
 	mutable OBJECT_ITEM_STORAGE			m_clsids;
 	mutable bool						m_actual;
 
 protected:
-			void						register_classes				();
+			void						register_classes				() noexcept;
 	IC		void						add								(CObjectItemAbstract *item);
 	IC		const OBJECT_ITEM_STORAGE	&clsids							() const;
 	IC		void						actualize						() const;
@@ -84,15 +84,12 @@ public:
 			void						register_script_class			(LPCSTR client_class, LPCSTR server_class, LPCSTR clsid, LPCSTR script_clsid);
 			void						register_script_class			(LPCSTR unknown_class, LPCSTR clsid, LPCSTR script_clsid);
 			void						register_script_classes			();
-#ifndef DEDICATED_SERVER_ONLY
+
 		DECLARE_SCRIPT_REGISTER_FUNCTION
 	};
 	add_to_type_list(CObjectFactory)
 #	undef script_type_list
 #	define script_type_list save_type_list(CObjectFactory)
-#else // #ifndef DEDICATED_SERVER_ONLY
-	};
-#endif // #ifndef DEDICATED_SERVER_ONLY
 
 extern CObjectFactory *g_object_factory;
 

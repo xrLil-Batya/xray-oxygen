@@ -76,6 +76,8 @@ CPHReqComparerHasShell::CPHReqComparerHasShell(IPhysicsShellEx	*shell)
 	m_shell=shell;
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

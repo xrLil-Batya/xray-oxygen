@@ -2,6 +2,7 @@
 #include "UIOptionsItem.h"
 #include "UIOptionsManagerScript.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 void CUIOptionsManagerScript::SetCurrentValues(const char* group){

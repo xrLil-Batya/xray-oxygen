@@ -1,9 +1,9 @@
 --[[ ----------------------------------------------------------------------------------------------- 
  File       : ui_main_menu.script
  Description: Main Menu Dialog for STALKER
- Copyright  : 2004 © GSC Game World
+ Copyright  : 2004 В© GSC Game World
  Author     : Serhiy Vynnychenko (narrator@gsc-game.kiev.ua)
- Last edit  : 03.06.2018 (Viнt@rь)
+ Last edit  : 03.06.2018 (ViРЅt@rСЊ)
 --]] -----------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------
 class "main_menu" (CUIScriptWnd)
@@ -270,15 +270,15 @@ function main_menu:OnKeyboard(dik, keyboard_action)  -- virtual function
 			end
 		end
 		
-		if dik == DIK_keys.DIK_F1 then -- спавн меню		
+		if dik == DIK_keys.DIK_F1 then -- СЃРїР°РІРЅ РјРµРЅСЋ		
 			__cheat_menu.GetCheatDialog():Show()
 		end
 		
-		if dik == DIK_keys.DIK_F2 then -- опции
+		if dik == DIK_keys.DIK_F2 then -- РѕРїС†РёРё
 			self:OnButton_dbg_options_clicked()
 		end
 		
-		if dik == DIK_keys.DIK_F3 then -- редакторы
+		if dik == DIK_keys.DIK_F3 then -- СЂРµРґР°РєС‚РѕСЂС‹
 			self.OnButton_return_game()
 			--ui_editors.bool_is_editor_show = true
 			--ui_editors.waypoint_editor():ShowDialog(true)

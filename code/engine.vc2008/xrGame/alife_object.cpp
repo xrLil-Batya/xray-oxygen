@@ -56,7 +56,7 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 				j = atoi(_GetItem(V, 0, buf));
 				if (!j)	j = 1;
 
-				if (NULL != strstr(V, "scope="))
+				if (nullptr != strstr(V, "scope="))
 				{
 					st = strstr(V, "scope=");
 					st.erase(0, 6);
@@ -64,23 +64,23 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 				}
 				else
 				{
-					bScope = (NULL != strstr(V, "scope"));
+					bScope = (nullptr != strstr(V, "scope"));
 				}
 
 				//bScope				= (NULL!=strstr(V,"scope"));
-				bSilencer			= (NULL!=strstr(V,"silencer"));
-				bLauncher			= (NULL!=strstr(V,"launcher"));
+				bSilencer			= (nullptr!=strstr(V,"silencer"));
+				bLauncher			= (nullptr!=strstr(V,"launcher"));
 				//probability
-				if(NULL!=strstr(V,"prob="))
+				if(nullptr!=strstr(V,"prob="))
 					p				= (float)atof(strstr(V,"prob=")+5);
 				if (fis_zero(p)) p	= 1.0f;
-				if(NULL!=strstr(V,"cond="))
+				if(nullptr!=strstr(V,"cond="))
 					f_cond			= (float)atof(strstr(V,"cond=")+5);
 			}
 			for (u32 i=0; i<j; ++i) {
 				if (randF(1.f) < p) {
 					CSE_Abstract* E = alife().spawn_item	(N,o_Position,m_tNodeID,m_tGraphID,ID);
-					//ïîäñîåäèíèòü àääîíû ê îðóæèþ, åñëè âêëþ÷åíû ñîîòâåòñòâóþùèå ôëàæêè
+					//Ð¿Ð¾Ð´ÑÐ¾ÐµÐ´Ð¸Ð½Ð¸Ñ‚ÑŒ Ð°Ð´Ð´Ð¾Ð½Ñ‹ Ðº Ð¾Ñ€ÑƒÐ¶Ð¸ÑŽ, ÐµÑÐ»Ð¸ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ñ‹ ÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÑƒÑŽÑ‰Ð¸Ðµ Ñ„Ð»Ð°Ð¶ÐºÐ¸
 					CSE_ALifeItemWeapon* W =  smart_cast<CSE_ALifeItemWeapon*>(E);
 					if (W) {
 						if (alt_scope)

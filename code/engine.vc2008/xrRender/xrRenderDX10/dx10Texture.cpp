@@ -24,15 +24,13 @@ void fix_texture_name(LPSTR fn)
 int get_texture_load_lod(LPCSTR fn)
 {
 	CInifile::Sect& sect = pSettings->r_section("reduce_lod_texture_list");
-	CInifile::SectCIt it = sect.Data.begin();
-	CInifile::SectCIt it_e = sect.Data.end();
 
 	ENGINE_API bool is_enough_address_space_available();
 	static bool enough_address_space_available = is_enough_address_space_available();
 
-	for (; it != it_e; ++it)
+	for (CInifile::Item Itm: sect.Data)
 	{
-		if (strstr(fn, it->first.c_str()))
+		if (strstr(fn, Itm.first.c_str()))
 		{
 			if (psTextureLOD < 1) {
 				if (enough_address_space_available)
@@ -77,33 +75,6 @@ IC u32 GetPowerOf2Plus1	(u32 v)
 	while (v) {v>>=1; cnt++; };
 	return cnt;
 }
-IC void	Reduce				(int& w, int& h, int& l, int& skip)
-{
-	while ((l>1) && skip)
-	{
-		w /= 2;
-		h /= 2;
-		l -= 1;
-
-		skip--;
-	}
-	if (w<1)	w=1;
-	if (h<1)	h=1;
-}
-
-IC void	Reduce(UINT& w, UINT& h, int l, int skip)
-{
-	while ((l>1) && skip)
-	{
-		w /= 2;
-		h /= 2;
-		l -= 1;
-
-		skip--;
-	}
-	if (w<1)	w=1;
-	if (h<1)	h=1;
-}
 
 void				TW_Save	(ID3DTexture2D* T, LPCSTR name, LPCSTR prefix, LPCSTR postfix)
 {
@@ -140,16 +111,19 @@ ID3DBaseTexture*	CRender::texture_load(LPCSTR fRName, u32& ret_msize, bool bStag
 	u32						mip_cnt=u32(-1);
 
 	// validation
-	R_ASSERT				(fRName);
-	R_ASSERT				(fRName[0]);
+	if (!fRName || !fRName[0])
+	{
+		return pTexture2D;
+	}
 
 	// make file name
 	string_path				fname;
 	xr_strcpy(fname,fRName); //. andy if (strext(fname)) *strext(fname)=0;
 	fix_texture_name		(fname);
 	IReader* S				= NULL;
-	if (!FS.exist(fn,"$game_textures$",	fname,	".dds")	&& strstr(fname,"_bump"))	goto _BUMP_from_base;
-	if (FS.exist(fn,"$level$",			fname,	".dds"))							goto _DDS;
+	if (!FS.exist(fn, "$game_textures$", fname, ".dds") && strstr(fname,"_bump"))	goto _BUMP_from_base;
+	if (FS.exist(fn, "$level_textures$", fname, ".dds"))							goto _DDS;
+	if (FS.exist(fn, "$level$", fname,	".dds"))									goto _DDS;
 	if (FS.exist(fn,"$game_saves$",		fname,	".dds"))							goto _DDS;
 	if (FS.exist(fn,"$game_textures$",	fname,	".dds"))							goto _DDS;
 
@@ -224,16 +198,10 @@ _DDS_2D:
 			D3DX10_IMAGE_LOAD_INFO LoadInfo;
 #endif
 
-#ifdef R34_USE_FIRSTMIPLEVEL
 			LoadInfo.FirstMipLevel = img_loaded_lod;
-#endif
 			LoadInfo.Width	= IMG.Width;
 			LoadInfo.Height	= IMG.Height;
 
-#ifndef R34_USE_FIRSTMIPLEVEL
-			if (img_loaded_lod)
-				Reduce(LoadInfo.Width, LoadInfo.Height, IMG.MipLevels, img_loaded_lod);
-#endif
 			if (bStaging)
 			{
 				LoadInfo.Usage = D3D_USAGE_STAGING;
@@ -286,5 +254,5 @@ _BUMP_from_base:
 		//////////////////
 	}
 
-	return 0;
+	return pTexture2D;
 }

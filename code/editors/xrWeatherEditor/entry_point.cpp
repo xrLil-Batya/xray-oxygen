@@ -32,19 +32,15 @@ public:
 	}
 
 protected:
-	virtual void	WndProc				(Message %m) override
+	virtual void WndProc(Message %m) override
 	{
-		LONG_PTR result;
-		
-		if (m_engine && 
-#ifdef _M_X64 // [FX]: Однако, m.LParam слишком большой, чтоб пихать его в int и вызывать исключение. Long long для него само-то
-			m_engine->on_message((HWND)m.HWnd.ToInt32(), m.Msg, m.WParam.ToInt64(), m.LParam.ToInt64(), result))
-#else
-			m_engine->on_message((HWND)m.HWnd.ToInt32(), m.Msg, m.WParam.ToInt32(), m.LParam.ToInt32(), result))
-#endif
+		long long result;
+
+		// [FX]: РћРґРЅР°РєРѕ, m.LParam СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РѕР№, С‡С‚РѕР± РїРёС…Р°С‚СЊ РµРіРѕ РІ int Рё РІС‹Р·С‹РІР°С‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ. Long long РґР»СЏ РЅРµРіРѕ СЃР°РјРѕ-С‚Рѕ
+		if (m_engine && m_engine->on_message((HWND)m.HWnd.ToInt64(), m.Msg, m.WParam.ToInt64(), m.LParam.ToInt64(), result))
 			return;
 
-		editor::window_ide::WndProc		(m);
+		editor::window_ide::WndProc(m);
 	}
 
 private:
@@ -79,7 +75,7 @@ static void initialize_impl							(editor::ide*& ide, editor::engine* engine)
 WINOLEAPI  CoInitializeEx(IN LPVOID pvReserved, IN DWORD dwCoInit);
 #pragma comment(lib,"ole32.lib")
 
-//#VERTVER: Компилятор Visual C++ иногда без этого дефайна будет кидать забавные лулзы
+//#VERTVER: РљРѕРјРїРёР»СЏС‚РѕСЂ Visual C++ РёРЅРѕРіРґР° Р±РµР· СЌС‚РѕРіРѕ РґРµС„Р°Р№РЅР° Р±СѓРґРµС‚ РєРёРґР°С‚СЊ Р·Р°Р±Р°РІРЅС‹Рµ Р»СѓР»Р·С‹
 #ifdef CXX
 extern "C" __declspec(dllexport)	void initialize	(editor::ide*& ide, editor::engine* engine)
 {

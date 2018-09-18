@@ -23,7 +23,7 @@ p_particle 	main	( vv I )
 	O.N 		= normalize (eye_position-w_pos	);
 	float3	Pe	= mul		(m_WV, 		I.P		);
 	O.tcdh 		= float4	(I.tc.xyyy			);
-	O.position	= float4	(Pe, 		.2h		);
+	O.position	= float4	(Pe, 		.2f		);
 
 #ifdef 	USE_TDETAIL
 	O.tcdbump	= O.tcdh * dt_params;			// dt tc

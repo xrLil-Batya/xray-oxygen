@@ -7,9 +7,9 @@ local TAG = 0
 function xml.xr_load(root_alias, local_path)
 	local fs   = getFS()
 	local path = fs:update_path(root_alias, local_path)
-	if file_exists(path) then -- файл существует в распакованном виде на диске, можно использовать xml.load
-		return xml.load(path) -- загрузить .xml файл книги
-	elseif fs:exist(path) then -- файл существует, но в архиве
+	if file_exists(path) then -- С„Р°Р№Р» СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ СЂР°СЃРїР°РєРѕРІР°РЅРЅРѕРј РІРёРґРµ РЅР° РґРёСЃРєРµ, РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ xml.load
+		return xml.load(path) -- Р·Р°РіСЂСѓР·РёС‚СЊ .xml С„Р°Р№Р» РєРЅРёРіРё
+	elseif fs:exist(path) then -- С„Р°Р№Р» СЃСѓС‰РµСЃС‚РІСѓРµС‚, РЅРѕ РІ Р°СЂС…РёРІРµ
 		local f = fs:r_open(path)
 		local chars = {}
 		local counter = 1

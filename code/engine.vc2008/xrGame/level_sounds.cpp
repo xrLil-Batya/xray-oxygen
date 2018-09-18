@@ -39,7 +39,7 @@ void SStaticSound::Update(u32 game_time, u32 global_time)
 		{
 			if ((!m_PauseTime.x) && (!m_PauseTime.y)) 
 			{
-				m_Source.play_at_pos(0, m_Position, sm_Looped);
+				m_Source.play_at_pos(nullptr, m_Position, sm_Looped);
 				m_Source.set_volume(vol);
 				m_Source.set_frequency(m_Freq);
 				m_StopTime = 0xFFFFFFFF;
@@ -47,7 +47,7 @@ void SStaticSound::Update(u32 game_time, u32 global_time)
 			else if (global_time >= m_NextTime) 
 			{
 				bool bFullPlay = (0 == m_PlayTime.x) && (0 == m_PlayTime.y);
-				m_Source.play_at_pos(0, m_Position, bFullPlay ? 0 : sm_Looped);
+				m_Source.play_at_pos(nullptr, m_Position, bFullPlay ? 0 : sm_Looped);
 				m_Source.set_volume(vol);
 				m_Source.set_frequency(m_Freq);
 				if (bFullPlay) 
@@ -107,14 +107,14 @@ BOOL SMusicTrack::in(u32 game_time)
 
 void SMusicTrack::Play()
 {
-	m_SourceStereo.play_at_pos	(0,Fvector().set(0.0f,0.0f,0.0f),sm_2D);
+	m_SourceStereo.play_at_pos	(nullptr,Fvector().set(0.0f,0.0f,0.0f),sm_2D);
 	SetVolume					(1.0f);
 }
 
 BOOL SMusicTrack::IsPlaying()
 {
 //	BOOL  ret = (NULL!=m_SourceStereo._feedback());
-	return (0 != m_SourceStereo._feedback());
+	return (nullptr != m_SourceStereo._feedback());
 }
 
 void SMusicTrack::SetVolume(float volume)
@@ -144,7 +144,7 @@ void CLevelSoundManager::Load()
 		IReader *F		= FS.r_open	(fn);
 		u32				chunk = 0;
 		for (IReader *OBJ = F->open_chunk_iterator(chunk); OBJ; OBJ = F->open_chunk_iterator(chunk,OBJ)) {
-			m_StaticSounds.push_back	(SStaticSound());
+			m_StaticSounds.emplace_back	();
 			m_StaticSounds.back().Load	(*OBJ);
 		}
 		FS.r_close				(F);
@@ -152,22 +152,22 @@ void CLevelSoundManager::Load()
 
 	// music
 	m_CurrentTrack		= -1;
-
 	CInifile& gameLtx	= *pGameIni;
 
-	if (gameLtx.section_exist(Level().name())){
-		if (gameLtx.line_exist(Level().name(),"music_tracks")){
+	if (gameLtx.section_exist(Level().name()))
+	{
+		if (gameLtx.line_exist(Level().name(),"music_tracks"))
+		{
 			LPCSTR music_sect		= gameLtx.r_string(Level().name(),"music_tracks");
-			if (music_sect && music_sect[0]){
-//#ifdef DEBUG
-//				Msg("- Loading music tracks from '%s'...",music_sect);
-//#endif // #ifdef DEBUG
+			if (music_sect && music_sect[0])
+			{
 				CInifile::Sect&	S	= gameLtx.r_section	(music_sect);
-				CInifile::SectCIt it	= S.Data.begin(), end = S.Data.end();
+				auto it	= S.Data.begin(), end = S.Data.end();
 				m_MusicTracks.reserve	(S.Data.size());
-				for (;it!=end; it++){
-					m_MusicTracks.push_back	(SMusicTrack());
-					m_MusicTracks.back().Load(*it->first,*it->second);
+				for (;it!=end; it++)
+				{
+					m_MusicTracks.emplace_back	();
+					m_MusicTracks.back().Load(it->first.c_str(),it->second.c_str());
 				}
 			}
 		}
@@ -189,9 +189,8 @@ void CLevelSoundManager::Update()
 	u32 game_time						= Level().GetGameDayTimeMS();
 	u32 engine_time						= Device.dwTimeGlobal;
 	
-	for (u32 k=0; k<m_StaticSounds.size(); ++k)
+	for (SStaticSound& s : m_StaticSounds)
 	{
-		SStaticSound& s			= m_StaticSounds[k];
 		s.Update				(game_time,engine_time);
 	}
 
@@ -213,7 +212,7 @@ void CLevelSoundManager::Update()
 			if (!indices.empty())
 			{
 				u32 idx			= Random.randI((u32)indices.size());
-				m_CurrentTrack	= indices[idx];
+				m_CurrentTrack	= (int)indices[idx];
 				SMusicTrack& T	= m_MusicTracks[m_CurrentTrack];
 				T.Play			();
 			}

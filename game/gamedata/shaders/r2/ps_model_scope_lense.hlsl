@@ -3,8 +3,8 @@
 struct 	v2p
 {
  	float2 	tc0: 		TEXCOORD0;	// base
- 	half3 	tc1: 		TEXCOORD1;	// environment
-  	half4	c0:			COLOR0;		// sun.(fog*fog)
+ 	float3 	tc1: 		TEXCOORD1;	// environment
+  	float4	c0:			COLOR0;		// sun.(fog*fog)
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -28,15 +28,15 @@ float random(float2 co)
       return 0.5+(frac(sin(dot(co.xy ,float2(12.9898,78.233))) * 43758.5453))*0.5;
 };
 
-half4 	main	( v2p I )	: COLOR
+float4 	main	( v2p I )	: COLOR
 {
-	half4	t_base 		= tex2D		(s_base,	I.tc0);		// Текстура сетки
-	half4	t_skymap 	= tex2D		(s_skymap,	I.tc0);		// Карта отражения неба
+	float4	t_base 		= tex2D		(s_base,	I.tc0);		// Текстура сетки
+	float4	t_skymap 	= tex2D		(s_skymap,	I.tc0);		// Карта отражения неба
 	
 	// Растягиваем картинку в линзе так, чтобы на любом разрешении экрана были правильные пропорции
 	I.tc0.x = resize(I.tc0.x, screen_res.x/screen_res.y, 0);	
-	half4	t_vp2	 = tex2D		(s_vp2, I.tc0);			// Изображение со второго вьюпорта
-	half3	final	 = half3(0, 0, 0);
+	float4	t_vp2	 = tex2D		(s_vp2, I.tc0);			// Изображение со второго вьюпорта
+	float3	final	 = float3(0, 0, 0);
 	
 	if (m_blender_mode.x == 1.f)
 	{	//** Ночной режим **//
@@ -49,7 +49,7 @@ half4 	main	( v2p I )	: COLOR
 		
 		// Обесцвечиваем пиксель
 		float gray = ((t_vp2.r + t_vp2.g + t_vp2.b)/3);
-		t_vp2.rgb = half3(gray, gray, gray);
+		t_vp2.rgb = float3(gray, gray, gray);
 		
 		// Добавляем зелёный оттенок
 		t_vp2.g += (0.4 + noise);
@@ -61,16 +61,16 @@ half4 	main	( v2p I )	: COLOR
 	{	//** Стандартный режим **//
 	
 		// Текущая и следующая текстура неба
-		half3	env0		= texCUBE	(s_env0, I.tc1);
-		half3	env1		= texCUBE	(s_env1, I.tc1);
-		half3	env			= lerp		(env0, env1, L_ambient.w);	// Их миксовка
+		float3	env0		= texCUBE	(s_env0, I.tc1);
+		float3	env1		= texCUBE	(s_env1, I.tc1);
+		float3	env			= lerp		(env0, env1, L_ambient.w);	// Их миксовка
 		
 		// Миксуем всё и собираем финальную картинку
-		half3 	base	= lerp	(t_vp2, t_base, t_base.a);		// Сетку с вьюпортом
+		float3 	base	= lerp	(t_vp2, t_base, t_base.a);		// Сетку с вьюпортом
 		//		final	= lerp	(base,  env,    t_skymap.a);	// base c небом
 		final	= base;
 	}
 	
 	// out
-	return  half4	(final.r, final.g, final.b, m_hud_params.x);
+	return  float4	(final.r, final.g, final.b, m_hud_params.x);
 }

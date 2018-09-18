@@ -26,39 +26,18 @@ IPHWorld * __stdcall physics_world()
 	return ph_world;
 }
 
-void	__stdcall create_physics_world(bool mt, CObjectSpace *os, CObjectList *lo, CRenderDeviceBase *dv)
-//IPHWorldUpdateCallbck &commander,
+void __stdcall create_physics_world(CObjectSpace *os, CObjectList *lo, CRenderDeviceBase *dv)
 {
-	ph_world = xr_new<CPHWorld>(); //&commander
+	ph_world = xr_new<CPHWorld>();
 	VERIFY(os);
 	VERIFY(dv);
-	ph_world->Create(mt, os, lo, dv);
+	ph_world->Create(os, lo, dv);
 }
 
 void	__stdcall	destroy_physics_world()
 {
 	ph_world->Destroy();
 	xr_delete(ph_world);
-}
-
-CObjectSpace* __stdcall create_object_space()
-{
-	//CFileReader* fr =	xr_new<CFileReader>("D:/STALKER/resources/gamedata/levels/stohe_selo/level.cform");
-	CFileReader* fr = xr_new<CFileReader>("ActorEditorLevel.cform");
-	CObjectSpace* os = xr_new<CObjectSpace>();
-	g_SpatialSpace = xr_new<ISpatial_DB>();
-	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
-	os->Load(fr, 0);
-	//xr_delete(fr);
-	return os;
-}
-CObjectSpace*	__stdcall	mesh_create_object_space(Fvector* verts, CDB::TRI* tris, const hdrCFORM &H, CDB::build_callback build_callback)
-{
-	CObjectSpace* os = xr_new<CObjectSpace>();
-	g_SpatialSpace = xr_new<ISpatial_DB>();
-	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
-	os->Create(verts, tris, H, build_callback);
-	return os;
 }
 
 void __stdcall	set_mtl_lib(CGameMtlLibrary * l)
@@ -104,7 +83,7 @@ static struct sempty_update_callback : public IPHWorldUpdateCallbck
 	void phys_shell_relcase(IPhysicsShellEx* sh) {};
 } empty_update_callback;
 
-CPHWorld::CPHWorld() : // IPHWorldUpdateCallbck		*_update_callback
+CPHWorld::CPHWorld() : 
 	m_update_callback(&empty_update_callback),
 	m_default_contact_shotmark(0),
 	m_default_character_contact_shotmark(0),
@@ -145,7 +124,7 @@ void CPHWorld::SetStep(float s)
 		ph_world->m_frame_time = frame_time;
 	}
 }
-void CPHWorld::Create(bool mt, CObjectSpace * os, CObjectList *lo, CRenderDeviceBase *dv)
+void CPHWorld::Create(CObjectSpace * os, CObjectList *lo, CRenderDeviceBase *dv)
 {
 	LoadParams();
 	dWorldID phWorld = 0;
@@ -153,14 +132,9 @@ void CPHWorld::Create(bool mt, CObjectSpace * os, CObjectList *lo, CRenderDevice
 	m_level_objects = lo;
 	m_device = dv;
 
-	Device().AddSeqFrame(this, mt);
-
-#ifdef ODE_SLOW_SOLVER
-#else
+	Device().AddSeqFrame(this, true);
 
 	dWorldSetAutoEnableDepthSF1(phWorld, 100000000);
-
-#endif
 	ContactGroup = dJointGroupCreate(0);
 	dWorldSetGravity(phWorld, 0, -Gravity(), 0);//-2.f*9.81f
 	Mesh.Create(0, phWorld);

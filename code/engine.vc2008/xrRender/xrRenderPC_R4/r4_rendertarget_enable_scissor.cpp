@@ -1,12 +1,4 @@
 #include "stdafx.h"
-#include "../../xrEngine/cl_intersect.h"
-#include "../xrRender/du_cone.h"
-
-BOOL	tri_vs_sphere_intersect			(Fvector& SC, float R, Fvector& v0, Fvector& v1, Fvector& v2)
-{
-	Fvector	e0,e1;
-	return	CDB::TestSphereTri	(SC,R,v0,e0.sub(v1,v0),e1.sub(v2,v0));
-}
 
 BOOL CRenderTarget::enable_scissor		(light* L)		// true if intersects near plane
 {
@@ -26,11 +18,10 @@ BOOL CRenderTarget::enable_scissor		(light* L)		// true if intersects near plane
 		near_intersect					= (p_dist<=0);
 	}
 #ifdef DEBUG
-	if (1)
-	{
-		Fsphere		S;	S.set	(L->spatial.sphere.P,L->spatial.sphere.R);
-		dbg_spheres.push_back	(std::make_pair(S,L->color));
-	}
+	
+	Fsphere		S;	S.set	(L->spatial.sphere.P,L->spatial.sphere.R);
+	dbg_spheres.push_back	(std::make_pair(S,L->color));
+	
 #endif
 
 	return		near_intersect;

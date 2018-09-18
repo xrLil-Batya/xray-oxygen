@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ai_space.h"
+#include "luabind/luabind.hpp"
 #include "../xrServerEntities/script_engine.h"
 
 IC bool compare_safe(const luabind::object& o1, const luabind::object& o2) {
@@ -24,9 +25,9 @@ public:
     using return_type = _return_type;
 
 private:
-    typedef luabind::functor<_return_type> functor_type;
-    typedef luabind::object object_type;
-    typedef bool (CScriptCallbackEx_::*unspecified_bool_type)() const;
+    using functor_type = luabind::functor<_return_type>;
+    using object_type = luabind::object;
+    using unspecified_bool_type = bool (CScriptCallbackEx_::*)() const;
 
 protected:
     functor_type m_functor;
@@ -117,12 +118,12 @@ public:
                 ai().script_engine().print_output(ai().script_engine().lua(), "", 2);
             }
         }
-#if XRAY_EXCEPTIONS
-        catch (luabind::error& e) 
-		{
-                ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
-        }
-#endif
+// #if XRAY_EXCEPTIONS
+//         catch (luabind::error& e) 
+// 		{
+//                 ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
+//         }
+// #endif
         catch (...) {
             const_cast<CScriptCallbackEx<return_type>*>(this)->clear();
         }
@@ -145,12 +146,12 @@ public:
                 ai().script_engine().print_output(ai().script_engine().lua(), "", 2);
             }
         }
-#if XRAY_EXCEPTIONS
-        catch (luabind::error& e) 
-		{
-                ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
-        }
-#endif
+// #if XRAY_EXCEPTIONS
+//         catch (luabind::error& e) 
+// 		{
+//                 ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
+//         }
+// #endif
         catch (...) {
             const_cast<CScriptCallbackEx<return_type>*>(this)->clear();
         }

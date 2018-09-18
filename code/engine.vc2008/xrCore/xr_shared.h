@@ -35,24 +35,30 @@ public:
 	}
 	virtual void			clean				(bool force_destroy)
 	{
-		SharedMapIt it			= container.begin();
-		SharedMapIt _E			= container.end();
-		if (force_destroy){
-			for (; it!=_E; it++){
-				T*	sv			= it->second;
-				xr_delete		(sv);
+		if (force_destroy)
+		{
+			for (auto it: container)
+			{
+				T* sv = it->second;
+				xr_delete(sv);
 			}
-			container.clear		();
-		}else{
-			for (; it!=_E; )	{
-				T*	sv			= it->second;
-				if (0==sv->m_ref_cnt){
-					SharedMapIt	i_current	= it;
-					SharedMapIt	i_next		= ++it;
-					xr_delete			(sv);
-					container.erase		(i_current);
-					it					= i_next;
-				}else{
+			container.clear();
+		}
+		else
+		{
+			for (auto it : container)	
+			{
+				T* sv = it->second;
+				if (!sv->m_ref_cnt)
+				{
+					SharedMapIt	i_current = it;
+					SharedMapIt	i_next = ++it;
+					xr_delete(sv);
+					container.erase(i_current);
+					it = i_next;
+				}
+				else
+				{
 					it++;
 				}
 			}

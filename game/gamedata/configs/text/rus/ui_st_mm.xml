@@ -249,9 +249,6 @@
 	<string id="ui_mm_novice">
 		<text>Новичок</text>
 	</string>
-	<string id="ui_mm_npc_torch">
-		<text>Свет фонариков NPC</text>
-	</string>
 	<string id="ui_mm_options">
 		<text>ОПЦИИ</text>
 	</string>
@@ -384,8 +381,17 @@
 	<string id="ui_mm_supersample">
 		<text>Сглаживание</text>
 	</string>
-	<string id="ui_mm_switch_torch">
-		<text>Использование фонариков AI</text>
+	<string id="ui_mm_aa_mode">
+		<text>Сглаживание</text>
+	</string>
+	<string id="st_opt_fxaa">
+		<text>FXAA</text>
+	</string>
+	<string id="st_opt_smaa">
+		<text>SMAA</text>
+	</string>
+	<string id="ui_mm_rain_drops">
+		<text>Капли дождя на линзе</text>
 	</string>
 	<string id="ui_mm_texture_quality">
 		<text>Качество текстур</text>
@@ -407,6 +413,12 @@
 	</string>
 	<string id="ui_mm_vsync">
 		<text>Верт. синхронизация</text>
+	</string>
+	<string id="ui_mm_triple_buffering">
+		<text>Тройная буферизация</text>
+	</string>
+	<string id="ui_mm_glows">
+		<text>Статические Glows</text>
 	</string>
 	<string id="ui_mp_gamespy_changing_unique_nick">
 		<text>Изменение уникального имени...</text>
@@ -648,11 +660,11 @@
 	<string id="volumetric">
 		<text>Volumetric</text>
 	</string>
-	<string id="screen_space">
-		<text>Screen Space</text>
+	<string id="ss_ogse">
+		<text>Screen space (OGSE)</text>
 	</string>
-	<string id="manowar_ssss">
-		<text>Mrmnwar SS</text>
+	<string id="ss_manowar">
+		<text>Screen space (Mrmnwar)</text>
 	</string>
 	<string id="ui_mm_windowtype">
 		<text>Тип окна</text>
@@ -686,5 +698,11 @@
 	</string>
 	<string id="ui_mm_120_hz">
 		<text>Частота 120Гц</text>
+	</string>
+	<string id="ui_st_loadingscreen_custom">
+		<text>Загрузочный экран V.2</text>
+	</string>
+	<string id="ui_mm_language">
+		<text>Язык</text>
 	</string>
 </string_table>

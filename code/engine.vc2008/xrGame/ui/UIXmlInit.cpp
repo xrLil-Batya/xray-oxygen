@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "UIXmlInit.h"
 #include "../level.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 #include "UIFrameWindow.h"
 #include "UICheckButton.h"
 #include "UICustomSpin.h"
@@ -15,14 +15,12 @@
 #include "UIComboBox.h"
 #include "UITrackBar.h"
 #include "UIHint.h"
-#include "game_base_space.h"
+#include "game_base.h"
 
 #include "UITextureMaster.h"
 #include "UIDragDropListEx.h"
 #include "UIDragDropReferenceList.h"
 #include "UILines.h"
-
-extern int keyname_to_dik(LPCSTR);
 
 #define DI_FONT_NAME			"di"
 
@@ -42,6 +40,7 @@ extern int keyname_to_dik(LPCSTR);
 #define LETTERICA25_FONT_NAME	"letterica25"
 
 #define ELECTRON18_FONT_NAME	"electron18"
+#define ROBOTO16_FONT_NAME		"roboto16"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -380,7 +379,6 @@ bool CUIXmlInit::InitText(CUIXml& xml_doc, LPCSTR path, int index, CUILines* pLi
 	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
-extern int keyname_to_dik(LPCSTR);
 
 bool CUIXmlInit::Init3tButton(CUIXml& xml_doc, LPCSTR path, int index, CUI3tButton* pWnd)
 {
@@ -557,10 +555,12 @@ bool CUIXmlInit::InitProgressBar(CUIXml& xml_doc, LPCSTR path,
 	{
 		mode = CUIProgressBar::om_horz;
 	}
-	else if (stricmp(mode_str, "horz") == 0) { mode = CUIProgressBar::om_horz; }
-	else if (stricmp(mode_str, "vert") == 0) { mode = CUIProgressBar::om_vert; }
-	else if (stricmp(mode_str, "back") == 0) { mode = CUIProgressBar::om_back; }
-	else if (stricmp(mode_str, "down") == 0) { mode = CUIProgressBar::om_down; }
+	else if (stricmp(mode_str, "horz") == 0)			{ mode = CUIProgressBar::om_horz; }
+	else if (stricmp(mode_str, "vert") == 0)			{ mode = CUIProgressBar::om_vert; }
+	else if (stricmp(mode_str, "back") == 0)			{ mode = CUIProgressBar::om_back; }
+	else if (stricmp(mode_str, "down") == 0)			{ mode = CUIProgressBar::om_down; }
+	else if (stricmp(mode_str, "from_center") == 0)		{ mode = CUIProgressBar::om_fromcenter;}
+	else if (stricmp(mode_str, "vert_from_center") == 0){ mode = CUIProgressBar::om_vfromcenter; }
 
 	pWnd->InitProgressBar(pos, size, mode);
 
@@ -571,6 +571,7 @@ bool CUIXmlInit::InitProgressBar(CUIXml& xml_doc, LPCSTR path,
 	pWnd->SetRange(min, max);
 	pWnd->SetProgressPos(ppos);
 	pWnd->m_inertion = xml_doc.ReadAttribFlt(path, index, "inertion", 0.0f);
+	pWnd->colorSmoothing = xml_doc.ReadAttribInt(path, index, "color_smoothing");
 	// progress
 	strconcat(sizeof(buf), buf, path, ":progress");
 
@@ -785,6 +786,10 @@ bool CUIXmlInit::InitFont(CUIXml &xml_doc, LPCSTR path, int index, u32 &color, C
 		else if (!xr_strcmp(font_name, ELECTRON18_FONT_NAME))
 		{
 			pFnt = UI().Font().pFontElectron18;
+		}
+		else if (!xr_strcmp(font_name, ROBOTO16_FONT_NAME))
+		{
+			pFnt = UI().Font().pFontRoboto16;
 		}
 		else if (!xr_strcmp(font_name, DI_FONT_NAME))
 		{

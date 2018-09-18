@@ -86,10 +86,12 @@ void CBaseMonster::Load(LPCSTR section)
 
 	m_rank							= (pSettings->line_exist(section,"rank")) ? int(pSettings->r_u32(section,"rank")) : 0;
 
-//	if (pSettings->line_exist(section,"Spawn_Inventory_Item_Section")) {
-//		m_item_section					= pSettings->r_string(section,"Spawn_Inventory_Item_Section");
-//		m_spawn_probability				= pSettings->r_float(section,"Spawn_Inventory_Item_Probability");
-//	} else m_spawn_probability			= 0.f;
+	if (pSettings->line_exist(section,"Spawn_Inventory_Item_Section")) 
+	{
+		m_item_section					= pSettings->r_string(section,"Spawn_Inventory_Item_Section");
+		m_spawn_probability				= pSettings->r_float(section,"Spawn_Inventory_Item_Probability");
+	} 
+	else m_spawn_probability			= 0.f;
 
 	m_melee_rotation_factor			= READ_IF_EXISTS(pSettings,r_float,section,"Melee_Rotation_Factor", 1.5f);
 	berserk_always					= !!READ_IF_EXISTS(pSettings,r_bool,section,"berserk_always", false);
@@ -228,10 +230,8 @@ void CBaseMonster::reload	(LPCSTR section)
 	if (!CCustomMonster::use_simplified_visual())
 		CStepManager::reload	(section);
 
-#ifdef MONSTER_INV
 	CInventoryOwner::reload(section);
 	inventory().SetSlotsUseful(false);
-#endif
 
 	movement().reload	(section);
 
@@ -271,9 +271,7 @@ void CBaseMonster::reinit()
 {
 	inherited::reinit					();
 
-#ifdef MONSTER_INV
 	CInventoryOwner::reinit();
-#endif 
 
 	EnemyMemory.clear					();
 	SoundMemory.clear					();
@@ -336,12 +334,6 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 	if (!inherited::net_Spawn(DC))
 		return(FALSE);
 
-#ifdef MONSTER_INV
-	CHARACTER_COMMUNITY community;
-	community.set("monster");
-	CInventoryOwner::SetCommunity(community.index());
-#endif
-
 	CSE_Abstract							*e	= (CSE_Abstract*)(DC);
 	R_ASSERT2								(ai().get_level_graph() && ai().get_cross_table() && (ai().level_graph().level_id() != u32(-1)),"There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!");
 	monster_squad().register_member			((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(), this);
@@ -357,20 +349,39 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 	control().update_frame();
 	control().update_schedule();
 
+	// spawn inventory item
+	if (ai().get_alife() && m_spawn_probability != 0.f)
+	{
+		float prob = Random.randF();
+		if ((prob < m_spawn_probability) || fsimilar(m_spawn_probability, 1.f))
+		{
+			CSE_Abstract *object = Level().spawn_item(m_item_section, Position(), ai_location().level_vertex_id(), ID(), true);
+			CSE_ALifeObject	*alife_object = smart_cast<CSE_ALifeObject*>(object);
+			if (alife_object)
+				alife_object->m_flags.set(CSE_ALifeObject::flCanSave, FALSE);
+
+			{
+				NET_Packet P;
+				object->Spawn_Write(P, TRUE);
+				Level().Send(P);
+				F_entity_Destroy(object);
+			}
+
+		}
+	}
+
 	return(TRUE);
 }
 
 void CBaseMonster::net_Destroy()
 {
-	// ôóíêöèÿ äîëæåíà áûòü âûçâàíà ïåðåä inherited
+	// Ñ„ÑƒÐ½ÐºÑ†Ð¸Ñ Ð´Ð¾Ð»Ð¶ÐµÐ½Ð° Ð±Ñ‹Ñ‚ÑŒ Ð²Ñ‹Ð·Ð²Ð°Ð½Ð° Ð¿ÐµÑ€ÐµÐ´ inherited
 	if (m_controlled) m_controlled->on_destroy	();
 	if (StateMan) StateMan->critical_finalize	();
 
 	inherited::net_Destroy();
 
-#ifdef MONSTER_INV
 	CInventoryOwner::net_Destroy();
-#endif
 	m_pPhysics_support->in_NetDestroy();
 
 	monster_squad().remove_member		((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(),this);
@@ -386,7 +397,7 @@ void CBaseMonster::net_Destroy()
 	else if (ltx->line_exist(section,name)) var = ltx->method(section,name);\
 }
 
-void CBaseMonster::settings_read(CInifile const * ini, LPCSTR section, SMonsterSettings &data)
+void CBaseMonster::settings_read(CInifile* ini, LPCSTR section, SMonsterSettings &data)
 {
 	READ_SETTINGS(data.m_fSoundThreshold, "SoundThreshold", r_float, ini, section);
 
@@ -506,19 +517,13 @@ void CBaseMonster::load_critical_wound_bones()
 
 void CBaseMonster::fill_bones_body_parts	(LPCSTR body_part, CriticalWoundType wound_type)
 {
-	LPCSTR					body_parts_section = pSettings->r_string(cNameSect(),body_part);
+	LPCSTR body_parts_section = pSettings->r_string(cNameSect(),body_part);
 
-	IKinematics				*kinematics	= smart_cast<IKinematics*>(Visual());
-	VERIFY					(kinematics);
+	IKinematics *kinematics	= smart_cast<IKinematics*>(Visual());
+	VERIFY(kinematics);
 
-	CInifile::Sect			&body_part_section = pSettings->r_section(body_parts_section);
-	CInifile::SectCIt		I = body_part_section.Data.begin();
-	CInifile::SectCIt		E = body_part_section.Data.end();
-	for ( ; I != E; ++I)
-		m_bones_body_parts.insert	(
-			std::make_pair(
-				kinematics->LL_BoneID((*I).first),
-				u32(wound_type)
-			)
-		);
+	CInifile::Sect &body_part_section = pSettings->r_section(body_parts_section);
+	
+	for(CInifile::Item itm: body_part_section.Data)
+		m_bones_body_parts.insert(std::make_pair(kinematics->LL_BoneID(itm.first), u32(wound_type)));
 }

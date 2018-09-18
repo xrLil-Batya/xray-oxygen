@@ -10,15 +10,10 @@
 #include "xrLauncherWnd.h"
 #include "../xrCore/xrCore.h"
 ////////////////////////////////////
-#pragma comment(lib, "xrEngine.lib")
-#define DLL_API __declspec(dllimport)
-////////////////////////////////////
 
 void CreateRendererList();					// In RenderList.cpp
 
-/// <summary>
-/// Method for init launcher
-/// </summary>
+/// <summary> Method for init launcher </summary>
 int RunXRLauncher()
 {
 	// Get initialize launcher
@@ -28,25 +23,39 @@ int RunXRLauncher()
 	return xrPlay::ret_values.type_ptr;
 }
 
-
-/// <summary>
-/// Return the list of parameters
-/// </summary>
+/// <summary> Return the list of parameters </summary>
 const char* GetParams()
 {
 	return xrPlay::ret_values.params_list;
 }
 
+/// <summary> Dll import </summary>
+using IsRunFunc = void(__cdecl*)(const char*);
 
-/// <summary>
-/// Dll import
-/// </summary>
-DLL_API int RunApplication(LPCSTR commandLine);
+/// <summary> Start engine or install OpenAL </summary>
+void CheckOpenAL(const char* params)
+{
+	DWORD dwOpenALInstalled = GetFileAttributes("C:\\Windows\\System32\\OpenAL32.dll");
+	if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
+	{
+		std::string StrCmd = "/select, " + std::string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
+		StrCmd[11] = '\\';
+		//WinExec(StrCmd.c_str(), 1);
+		ShellExecute(NULL, NULL, "explorer.exe", StrCmd.c_str(), NULL, SW_SHOWNORMAL);
+		system(StrCmd.c_str());
+		MessageBox(0, "ENG: Click just after installing OpenAL. \n"
+					  "RUS: Нажмите после установки OpenAL.", "OpenAL Not Found!", MB_OK);
+	}
 
+	HMODULE hLib = LoadLibrary("xrEngine.dll");
+	IsRunFunc RunFunc = (IsRunFunc)GetProcAddress(hLib, "RunApplication");
+	if (RunFunc)
+	{
+		RunFunc(params);
+	}
+}
 
-/// <summary>
-/// Main method for initialize xrEngine
-/// </summary>
+/// <summary> Main method for initialize xrEngine </summary>
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	////////////////////////////////////////////////////
@@ -61,7 +70,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	catch (...)
 	{
-		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
+		MessageBoxA(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONHAND);
 	}
 
 	////////////////////////////////////////////////////
@@ -80,20 +89,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Checking for SSE3
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
 		{
-			MessageBox(NULL,
-				"It's can affect on the stability of the game.",
-				"SSE3 isn't supported on your CPU",
-				MB_OK | MB_ICONASTERISK);
+			MessageBox(NULL, "It's can affect on the stability of the game.", "SSE3 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 		// Checking for AVX
 #ifndef RELEASE_IA32
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
-			MessageBox(NULL,
-				"It's can affect on the stability of the game.",
-				"AVX isn't supported on your CPU!",
-				MB_OK | MB_ICONWARNING);
+			MessageBox(NULL, "It's can affect on the stability of the game.", "AVX isn't supported on your CPU!", MB_OK | MB_ICONWARNING);
 		}
 #endif
 	}
@@ -111,6 +114,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		params = GetParams();
 	}
 
+	if (!IsDebuggerPresent())
+	{
+		size_t HeapFragValue = 2;
+		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
+	}
+	// Check for another instance
+#ifdef NO_MULTI_INSTANCES
+#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
+
+	HANDLE hCheckPresenceMutex = OpenMutex(READ_CONTROL, FALSE, STALKER_PRESENCE_MUTEX);
+	if (hCheckPresenceMutex == NULL)
+	{
+		hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX);	// New mutex
+		if (hCheckPresenceMutex == NULL)
+			return 2;
+	}
+	else
+	{
+		CloseHandle(hCheckPresenceMutex);		// Already running
+		return 1;
+	}
+#endif
 	CreateRendererList();
-	return RunApplication(params);
+	CheckOpenAL(params);
+
+#ifdef NO_MULTI_INSTANCES		
+	// Delete application presence mutex
+	CloseHandle(hCheckPresenceMutex);
+#endif
+	return 0;
 }

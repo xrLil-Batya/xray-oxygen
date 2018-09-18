@@ -1,9 +1,9 @@
 --[[ ------------------------------------------------------------------------------------------------
  File       : _s_options.script
- Description: Debug functions(скрипт в релиз не совать!)
- Copyright  : 2012-2014 © FrostyTech
- Author     : Viнt@rь   
- Last edit  : 04.06.2018 (Viнt@rь)
+ Description: Debug functions(СЃРєСЂРёРїС‚ РІ СЂРµР»РёР· РЅРµ СЃРѕРІР°С‚СЊ!)
+ Copyright  : 2012-2014 В© FrostyTech
+ Author     : ViРЅt@rСЊ   
+ Last edit  : 04.06.2018 (ViРЅt@rСЊ)
 --]] ------------------------------------------------------------------------------------------------
 class "CDebugOptions" (CUIScriptWnd)
 function CDebugOptions:__init(owner) super()

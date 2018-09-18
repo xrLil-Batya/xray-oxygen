@@ -1,7 +1,7 @@
  /*	
   *		Streams.h - stream family for MAXScript
   *
-  *			Copyright © John Wainwright 1996
+  *			Copyright Â© John Wainwright 1996
   *
   */
  

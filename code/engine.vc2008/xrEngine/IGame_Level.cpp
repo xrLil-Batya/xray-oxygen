@@ -30,7 +30,6 @@ IGame_Level::IGame_Level	()
 IGame_Level::~IGame_Level	()
 {
 	if(strstr(Core.Params,"-nes_texture_storing") )
-		//Device.Resources->StoreNecessaryTextures();
 		Device.m_pRender->ResourcesStoreNecessaryTextures();
 	xr_delete					( pLevel		);
 
@@ -94,27 +93,31 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	g_pGamePersistent->SetLoadStageTitle	("st_loading_cform");
 	g_pGamePersistent->LoadTitle	();
 	ObjectSpace.Load			( build_callback );
-	//Sound->set_geometry_occ		( &Static );
 	Sound->set_geometry_occ		(ObjectSpace.GetStaticModel	());
 	Sound->set_handler			( _sound_event );
 
 	pApp->LoadSwitch			();
 
-
 	// HUD + Environment
 	if(!g_hud)
-		g_hud					= (CCustomHUD*)NEW_INSTANCE	(CLSID_HUDMANAGER);
+		g_hud = (CCustomHUD*)NEW_INSTANCE	(CLSID_HUDMANAGER);
 
 	// Render-level Load
+	try
+	{
+		// Попробуем выгрузить старые данные, если получится. 
+		Render->level_Unload();
+	}
+	catch (...) 
+	{
+		Msg("Level data empty: %s", temp);
+	}
 	Render->level_Load			(LL_Stream);
-	// tscreate.FrameEnd			();
-	// Msg						("* S-CREATE: %f ms, %d times",tscreate.result,tscreate.count);
 
 	// Objects
 	g_pGamePersistent->Environment().mods_load	();
 	R_ASSERT					(Load_GameSpecific_Before());
 	Objects.Load				();
-//. ANDY	R_ASSERT					(Load_GameSpecific_After ());
 
 	// Done
 	FS.r_close					( LL_Stream );
@@ -131,30 +134,18 @@ BOOL IGame_Level::Load			(u32 dwNum)
 #include "../xrCore/threadpool/ttapi.h"
 #endif
 
-void	IGame_Level::OnRender()
+void IGame_Level::OnRender()
 {
-#ifdef _GPA_ENABLED	
-	TAL_ID rtID = TAL_MakeID(1, Core.dwFrame, 0);
-	TAL_CreateID(rtID);
-	TAL_BeginNamedVirtualTaskWithID("GameRenderFrame", rtID);
-	TAL_Parami("Frame#", Device.dwFrame);
-	TAL_EndVirtualTask();
-#endif // _GPA_ENABLED
-
     Render->Calculate();
     Render->Render();
-
-#ifdef _GPA_ENABLED	
-	TAL_RetireID(rtID);
-#endif // _GPA_ENABLED
 }
 
-void	IGame_Level::OnFrame		( ) 
+void	IGame_Level::OnFrame()
 {
 	// Update all objects
-	VERIFY						(bReady);
-	Objects.Update				(false);
-	g_hud->OnFrame				();
+	VERIFY(bReady);
+	Objects.Update(false);
+	g_hud->OnFrame();
 
 	// Ambience
 	if (Sounds_Random.size() && (Device.dwTimeGlobal > Sounds_Random_dwNextTime))
@@ -220,29 +211,36 @@ void	IGame_Level::SoundEvent_Register	( ref_sound_data_ptr S, float range )
 	g_SpatialSpace->q_box	(snd_ER,0,STYPE_REACTTOSOUND,snd_position,bb_size);
 
 	// Iterate
-	xr_vector<ISpatial*>::iterator	it	= snd_ER.begin	();
-	xr_vector<ISpatial*>::iterator	end	= snd_ER.end	();
-	for (; it!=end; it++)	{
-		Feel::Sound* L		= (*it)->dcast_FeelSound	();
-		if (0==L)			continue;
-		CObject* CO = (*it)->dcast_CObject();	VERIFY(CO);
-		if (CO->getDestroy()) continue;
+	for (ISpatial* pSpatial : snd_ER)
+	{
+		Feel::Sound* L = pSpatial->dcast_FeelSound();
+		if (0 == L)		
+			continue;
+
+		CObject* CO = pSpatial->dcast_CObject();	VERIFY(CO);
+		if (CO->getDestroy()) 
+			continue;
 
 		// Energy and signal
-		VERIFY				(_valid((*it)->spatial.sphere.P));
-		float dist			= snd_position.distance_to((*it)->spatial.sphere.P);
-		if (dist>p->max_ai_distance) continue;
-		VERIFY				(_valid(dist));
-		VERIFY2				(!fis_zero(p->max_ai_distance), S->handle->file_name());
-		float Power			= (1.f-dist/p->max_ai_distance)*p->volume;
-		VERIFY				(_valid(Power));
-		if (Power>EPS_S)	{
-			float occ		= Sound->get_occlusion_to((*it)->spatial.sphere.P,snd_position);
-			VERIFY			(_valid(occ))	;
-			Power			*= occ;
-			if (Power>EPS_S)	{
-				_esound_delegate	D	=	{ L, S, Power };
-				snd_Events.push_back	(D)	;
+		VERIFY(_valid(pSpatial->spatial.sphere.P));
+		float dist = snd_position.distance_to(pSpatial->spatial.sphere.P);
+		if (dist > p->max_ai_distance) continue;
+
+		VERIFY(_valid(dist));
+		VERIFY2(!fis_zero(p->max_ai_distance), S->handle->file_name());
+
+		float Power = (1.f - dist / p->max_ai_distance)*p->volume;
+		VERIFY(_valid(Power));
+		if (Power > EPS_S) 
+		{
+			float occ = Sound->get_occlusion_to(pSpatial->spatial.sphere.P, snd_position);
+			VERIFY(_valid(occ));
+			Power *= occ;
+
+			if (Power > EPS_S)
+			{
+				_esound_delegate	D = { L, S, Power };
+				snd_Events.push_back(D);
 			}
 		}
 	}

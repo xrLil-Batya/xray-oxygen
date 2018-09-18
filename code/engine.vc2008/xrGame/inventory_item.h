@@ -95,19 +95,19 @@ public:
 	
 	virtual void				OnEvent				(NET_Packet& P, u16 type);
 	
-	virtual bool				Useful				() const;									// !!! Переопределить. (см. в Inventory.cpp)
+	virtual bool				Useful				() const;									// !!! РџРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ. (СЃРј. РІ Inventory.cpp)
 	virtual bool				Attach				(PIItem pIItem, bool b_send_event) {return false;}
 	virtual bool				Detach				(PIItem pIItem) {return false;}
-	//при детаче спаунится новая вещь при заданно названии секции
+	//РїСЂРё РґРµС‚Р°С‡Рµ СЃРїР°СѓРЅРёС‚СЃСЏ РЅРѕРІР°СЏ РІРµС‰СЊ РїСЂРё Р·Р°РґР°РЅРЅРѕ РЅР°Р·РІР°РЅРёРё СЃРµРєС†РёРё
 	virtual bool				Detach				(const char* item_section_name, bool b_spawn_item);
 	virtual bool				CanAttach			(PIItem pIItem) {return false;}
 	virtual bool				CanDetach			(LPCSTR item_section_name) {return false;}
 
 	virtual EHandDependence		HandDependence		()	const	{return hd1Hand;};
 	virtual bool				IsSingleHanded		()	const	{return true;};	
-	virtual bool				ActivateItem		();									// !!! Переопределить. (см. в Inventory.cpp)
-	virtual void				DeactivateItem		();								// !!! Переопределить. (см. в Inventory.cpp)
-	virtual bool				Action				(u16 cmd, u32 flags) {return false;}	// true если известная команда, иначе false
+	virtual bool				ActivateItem		();									// !!! РџРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ. (СЃРј. РІ Inventory.cpp)
+	virtual void				DeactivateItem		();								// !!! РџРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ. (СЃРј. РІ Inventory.cpp)
+	virtual bool				Action				(u16 cmd, u32 flags) {return false;}	// true РµСЃР»Рё РёР·РІРµСЃС‚РЅР°СЏ РєРѕРјР°РЅРґР°, РёРЅР°С‡Рµ false
 	virtual void				DiscardState		() {};
 
 	virtual void				OnH_B_Chield		();
@@ -158,7 +158,7 @@ public:
 	IC		float				GetCondition		() const					{return m_fCondition;}
 	virtual	float				GetConditionToShow	() const					{return GetCondition();}
 	IC		void				SetCondition		(float val)					{m_fCondition = val;}
-			void				ChangeCondition		(float fDeltaCondition);
+	virtual		void				ChangeCondition		(float fDeltaCondition);
 
 			u16					BaseSlot			()  const					{return m_ItemCurrPlace.base_slot_id;}
 			u16					CurrSlot			()  const					{return m_ItemCurrPlace.slot_id;}
@@ -280,8 +280,6 @@ public:
 #endif // DEBUG
 
 	IC Upgrades_type const& upgardes	() const;
-	virtual void	Interpolate			();
-	float	interpolate_states			(net_update_IItem const & first, net_update_IItem const & last, SPHNetState & current);
 
 protected:
 	virtual	void	net_Spawn_install_upgrades	( Upgrades_type saved_upgrades );

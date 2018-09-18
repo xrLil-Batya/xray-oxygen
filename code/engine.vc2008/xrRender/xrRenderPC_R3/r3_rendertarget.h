@@ -48,10 +48,8 @@ public:
 	IBlender*					b_accum_reflected_msaa[8];
 	IBlender*					b_ssao;
 	IBlender*					b_ssao_msaa[8];
-	IBlender*					b_fxaa;
-	IBlender*					b_rain_drops;
-	IBlender*					b_sunshafts;
-	IBlender*					b_ogse_sunshafts;
+	IBlender*					b_ssss_mrmnwar;
+	IBlender*					b_ssss_ogse;
 	
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -76,27 +74,27 @@ public:
 	ref_rt						rt_Accumulator_temp;// only for HW which doesn't feature fp16 blend
 	ref_rt						rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	ref_rt						rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
+	ref_rt						rt_Generic_2;		// 32bit		(r,g,b,a)				// post-process, intermediate results, etc.
+	ref_rt						rt_Volumetric;		// 64bit		(r,g,b,a)				// for volumetric lights
 
-	//  Second viewport
-    ref_rt                      rt_secondVP;        // 32bit		(r,g,b,a) +SecondVP+
-	//	Igor: for volumetric lights
-	ref_rt						rt_Generic_2;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	ref_rt						rt_Bloom_1;			// 32bit, dim/4	(r,g,b,?)
 	ref_rt						rt_Bloom_2;			// 32bit, dim/4	(r,g,b,?)
 	ref_rt						rt_LUM_64;			// 64bit, 64x64,	log-average in all components
 	ref_rt						rt_LUM_8;			// 64bit, 8x8,		log-average in all components
 
-	ref_rt						rt_LUM_pool[CHWCaps::MAX_GPUS*2]	;	// 1xfp32,1x1,		exp-result -> scaler
-	ref_texture				t_LUM_src		;	// source
-	ref_texture				t_LUM_dest		;	// destination & usage for current frame
+	ref_rt                      rt_secondVP;        // 32bit		(r,g,b,a) +SecondVP+
+
+	ref_rt						rt_LUM_pool[CHWCaps::MAX_GPUS*2];	// 1xfp32,1x1,		exp-result -> scaler
+	ref_texture					t_LUM_src;			// source
+	ref_texture					t_LUM_dest;			// destination & usage for current frame
 
 	// env
-	ref_texture				t_envmap_0		;	// env-0
-	ref_texture				t_envmap_1		;	// env-1
+	ref_texture					t_envmap_0;			// env-0
+	ref_texture					t_envmap_1;			// env-1
 
 	// smap
-	ref_rt						rt_smap_surf;	// 32bit,		color
-	ref_rt						rt_smap_depth;	// 24(32) bit,	depth 
+	ref_rt						rt_smap_surf;		// 32bit,		color
+	ref_rt						rt_smap_depth;		// 24(32) bit,	depth 
 	ref_rt						rt_smap_depth_minmax;	//	is used for min/max sm
 
 	ref_rt						rt_sunshafts_0;		// ss0
@@ -104,9 +102,6 @@ public:
 	ref_rt						rt_SunShaftsMask;
 	ref_rt						rt_SunShaftsMaskSmoothed;
 	ref_rt						rt_SunShaftsPass0;
-
-	//	Igor: for async screenshots
-	ID3DTexture2D*			t_ss_async;				//32bit		(r,g,b,a) is situated in the system memory
 
 	// Textures
 	ID3DTexture3D*			t_material_surf;
@@ -118,12 +113,16 @@ public:
 	ref_texture					t_noise_mipped;
 
 private:
+	// For gamma correction in windowed mode
+	ref_rt						rt_GammaLUT;		// 24bit, 256x1 (r,g,b)
+	ref_shader					s_gamma;
+
 	// OCCq
 	ref_shader					s_occq;
 
 	// SUNSHAFTS
-	ref_shader					s_SunShafts;
-	ref_shader					s_ogse_sunshafts;
+	ref_shader					s_ssss_mrmnwar;
+	ref_shader					s_ssss_ogse;
 
 	// RAIN DROPS
 	ref_shader					s_rain_drops;
@@ -146,8 +145,7 @@ private:
 	ref_shader					s_accum_reflected;
 	ref_shader					s_accum_volume;
 
-    ref_shader s_fxaa;
-    ref_geom					g_fxaa;	
+    ref_shader					s_pp_antialiasing;
 	
 	//	generate min/max
 	ref_shader					s_create_minmax_sm;
@@ -196,12 +194,10 @@ private:
 	float						f_luminance_adapt;
 
 	// Combine
-	ref_geom				g_KD;
 	ref_geom				g_combine;
 	ref_geom				g_combine_VP;		// xy=p,zw=tc
 	ref_geom				g_combine_2UV;
 	ref_geom				g_combine_cuboid;
-	ref_geom				g_aa_blur;
 	ref_geom				g_aa_AA;
 	ref_shader				s_combine_dbg_0;
 	ref_shader				s_combine_dbg_1;
@@ -262,8 +258,8 @@ public:
 	BOOL						u_need_PP				();
 	bool						u_need_CM				();
 	
-	void						phase_rain_drops        ();
-    void						phase_fxaa              ();	
+	void						PhaseSSSS				();
+	void						PhaseRainDrops			();
 	void						phase_scene_prepare		();
 	void						phase_scene_begin		();
 	void						phase_scene_end			();
@@ -278,10 +274,16 @@ public:
 	void						phase_smap_spot_tsh		(light* L);
 	void						phase_accumulator		();
 	void						phase_vol_accumulator	();
-	void						shadow_direct			(light* L, u32 dls_phase);
-	void						phase_ogse_sunshafts	();
-	void						phase_SunShafts			();
+	void						PhaseAA					();
+	void						ProcessFXAA				();
+	void						ProcessSMAA				();
+	void						PhaseGammaGenerateLUT	();
+	void						PhaseGammaApply			();
+	void						SaveGammaLUT			();
+
 	void						phase_puddles			();
+
+	void						shadow_direct			(light* L, u32 dls_phase);
 
 	//	Generates min/max sm
 	void						create_minmax_SM();
@@ -339,8 +341,6 @@ public:
 	void						reset_light_marker( bool bResetStencil = false);
 	void						increment_light_marker();
 
-	void						DoAsyncScreenshot		();
-
 #ifdef DEBUG
 	IC void						dbg_addline				(Fvector& P0, Fvector& P1, u32 c)					{
 		dbg_lines.push_back		(dbg_line_t());
@@ -355,4 +355,7 @@ public:
 	IC void						dbg_addline				(Fvector& P0, Fvector& P1, u32 c)					{}
 	IC void						dbg_addplane			(Fplane& P0,  u32 c)								{}
 #endif
+private:
+	void						RenderScreenQuad		(u32 w, u32 h, ID3DRenderTargetView* rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
+	void						RenderScreenQuad		(u32 w, u32 h, ref_rt &rt,				 ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
 };

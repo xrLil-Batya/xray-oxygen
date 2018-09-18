@@ -42,10 +42,16 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 	g_exclusive = !!bExclusive;
 
 	Log("Starting INPUT device...");
-
+#ifdef RAW_INPUT_USE
+	char inputBuffer[sizeof(RAWINPUT)] = {};
+	UINT inputBufferSize = sizeof(RAWINPUT);
+	GetRawInputData(DataInput, RID_INPUT, inputBuffer, &inputBufferSize, sizeof(RAWINPUTHEADER));
+	pDI = reinterpret_cast<RAWINPUT*>(inputBuffer);
+#else
 	pDI = NULL;
 	pMouse = NULL;
 	pKeyboard = NULL;
+#endif
 
 	//=====================Mouse
 	mouse_property.mouse_dt = 25;
@@ -59,8 +65,9 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 	//===================== Dummy pack
 	iCapture(&dummyController);
 
+#ifndef RAW_INPUT_USE
 	if (!pDI) CHK_DX(DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&pDI, NULL));
-
+#endif
 	u32 kb_input_flags = ((bExclusive) ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND;
 	u32 mouse_input_flags = ((bExclusive) ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY;
 
@@ -108,6 +115,20 @@ CInput::~CInput(void)
 // Name: CreateInputDevice()
 // Desc: Create a DirectInput device.
 //-----------------------------------------------------------------------------
+#ifdef RAW_INPUT_USE
+HRESULT CInput::CreateInputDevice(RAWINPUTDEVICE* device, GUID guidDevice, const RID_DEVICE_INFO* pdidDataFormat, u32 dwFlags, u32 buf_size)
+{
+	// Obtain an interface to the input device
+	GetRegisteredRawInputDevices(device, 0, buf_size);
+
+	// Set the device data format. Note: a data format specifies which
+	// controls on a device we are interested in, and how they should be
+	// reported.
+
+	GetRawInputDeviceInfo(pdidDataFormat, 0, 0, (u32*)buf_size);
+	return S_OK;
+}
+#else
 HRESULT CInput::CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice, const DIDATAFORMAT* pdidDataFormat, u32 dwFlags, u32 buf_size)
 {
 	// Obtain an interface to the input device
@@ -142,6 +163,7 @@ HRESULT CInput::CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice,
 	return S_OK;
 }
 
+#endif
 //-----------------------------------------------------------------------
 
 void CInput::SetAllAcquire(BOOL bAcquire)
@@ -413,7 +435,6 @@ void CInput::MouseUpdate()
 		}
 	}
 
-#ifdef CHECK_MOUSE_STATE
 	DIMOUSESTATE2 MouseState;
 	hr = pMouse->GetDeviceState(sizeof(MouseState), &MouseState);
 
@@ -437,7 +458,6 @@ void CInput::MouseUpdate()
 		RecheckMouseButtonFunc(1);
 		RecheckMouseButtonFunc(2);
 	}
-#endif
 	
 	for (u32 i = 0; i < 3; i++)
 		if (mouseState[i] && mouse_prev[i])

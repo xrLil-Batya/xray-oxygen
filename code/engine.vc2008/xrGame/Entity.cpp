@@ -24,7 +24,8 @@ const u32 BODY_REMOVE_TIME = 600000;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CEntity::CEntity(): m_registered_member(false)
+CEntity::CEntity(): m_registered_member(false),
+    id_Team(0), id_Squad(0), id_Group(0)
 {
 }
 
@@ -101,8 +102,10 @@ void CEntity::Hit(SHit* pHDS)
 	mInvXForm.transform_dir	(vLocalDir,pHDS->dir);
 	vLocalDir.invert		();
 
-	// hit impulse
-	if(pHDS->impulse) HitImpulse				(pHDS->impulse,pHDS->dir,vLocalDir); // @@@: WT
+	// Hit impulse
+	//#TODO: Function commented. Check if it needs to be restored.
+	if (pHDS->impulse)
+		HitImpulse(pHDS->impulse, pHDS->dir, vLocalDir); // @@@: WT
 	
 	// Calc amount (correct only on local player)
 	float lost_health = CalcCondition(pHDS->damage());
@@ -201,7 +204,7 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 
 //	SetfHealth			(E->fHealth);
 	IKinematics* pKinematics=smart_cast<IKinematics*>(Visual());
-	CInifile* ini = NULL;
+	CInifile* ini = nullptr;
 
 	if(pKinematics) ini = pKinematics->LL_UserData();
 	if (ini) {
@@ -267,7 +270,7 @@ DLL_Pure *CEntity::_construct	()
 {
 	inherited::_construct		();
 	CDamageManager::_construct	();
-	m_entity_condition			= create_entity_condition(NULL);
+	m_entity_condition			= create_entity_condition(nullptr);
 	return						(this);
 }
 

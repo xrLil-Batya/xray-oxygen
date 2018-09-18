@@ -41,7 +41,7 @@ ALDeviceList::ALDeviceList()
  */
 ALDeviceList::~ALDeviceList()
 {
-	for (int i = 0; snd_devices_token[i].name; ++i)
+	for (u32 i = 0; snd_devices_token[i].name; ++i)
 	{
 		xr_free(snd_devices_token[i].name);
 	}

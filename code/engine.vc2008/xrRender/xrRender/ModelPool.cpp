@@ -167,7 +167,7 @@ void CModelPool::Destroy()
 	while(!Registry.empty()){
 		REGISTRY_IT it	= Registry.begin();
 		dxRender_Visual* V=(dxRender_Visual*)it->first;
-#ifdef _DEBUG
+#ifdef DEBUG
 		Msg				("ModelPool: Destroy object: '%s'",*V->dbg_name);
 #endif
 		DeleteInternal	(V,TRUE);
@@ -369,7 +369,6 @@ void	CModelPool::Discard	(dxRender_Visual* &V, BOOL b_complete)
 	V	=	nullptr;
 }
 
-#include <ppl.h>
 void CModelPool::Prefetch()
 {
 	Logging(FALSE);
@@ -378,13 +377,10 @@ void CModelPool::Prefetch()
 	strconcat(sizeof(section), section, "prefetch_visuals_", g_pGamePersistent->m_game_params.m_game_type);
 	CInifile::Sect& sect = pSettings->r_section(section);
 
-	// Test parallel for
-	concurrency::parallel_for_each(sect.Data.begin(), sect.Data.end(), [this](const CInifile::Item &it)
-	{
-		dxRender_Visual* V = Create(it.first.c_str());
-		Delete(V);
-	});
-	// End
+    for (const CInifile::Item &it : sect.Data)
+    {
+        dxRender_Visual* V = Create(it.first.c_str());
+    }
 
 	Logging(TRUE);
 }

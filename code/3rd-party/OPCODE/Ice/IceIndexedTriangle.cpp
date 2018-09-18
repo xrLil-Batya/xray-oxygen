@@ -272,9 +272,9 @@ float IndexedTriangle::ComputeOcclusionPotential(const Point* verts, const Point
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool IndexedTriangle::ReplaceVertex(uqword oldref, uqword newref)
 {
-			if(mVRef[0]==oldref)	{ mVRef[0] = newref; return true; }
-	else	if(mVRef[1]==oldref)	{ mVRef[1] = newref; return true; }
-	else	if(mVRef[2]==oldref)	{ mVRef[2] = newref; return true; }
+			if(mVRef[0]==(udword)oldref)	{ mVRef[0] = (udword)newref; return true; }
+	else	if(mVRef[1]==(udword)oldref)	{ mVRef[1] = (udword)newref; return true; }
+	else	if(mVRef[2]==(udword)oldref)	{ mVRef[2] = (udword)newref; return true; }
 	return false;
 }
 

@@ -1,7 +1,7 @@
 /*	
  *		class_ids.h - OLE Automation class id defs for MAXScript
  *
- *			Copyright © John Wainwright 1996
+ *			Copyright Â© John Wainwright 1996
  *
  */
 #include <Guiddef.h>

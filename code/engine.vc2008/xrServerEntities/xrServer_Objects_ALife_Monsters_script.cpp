@@ -5,14 +5,24 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Server monsters for ALife simulator, script export
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "xrServer_script_macroses.h"
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
-LPCSTR profile_name_script (CSE_ALifeTraderAbstract* ta)
+void set_character_name_script(CSE_ALifeTraderAbstract* ta, const char* name) 
+{
+	ta->m_character_name = name;
+}
+
+const char* character_name_script(CSE_ALifeTraderAbstract* ta)
+{
+	return ta->m_character_name.c_str();
+}
+
+const char* profile_name_script (CSE_ALifeTraderAbstract* ta)
 {
 	return *ta->character_profile();
 }
@@ -20,15 +30,16 @@ LPCSTR profile_name_script (CSE_ALifeTraderAbstract* ta)
 #pragma optimize("s",on)
 void CSE_ALifeTraderAbstract::script_register(lua_State *L)
 {
-	module(L)[
-		class_<CSE_ALifeTraderAbstract>
-			("cse_alife_trader_abstract")
-//			.def(		constructor<LPCSTR>())
+	module(L)
+	[
+		class_<CSE_ALifeTraderAbstract>("cse_alife_trader_abstract")
 #ifdef XRGAME_EXPORTS
 			.def("community",		&CommunityName)
 			.def("profile_name",	&profile_name_script)
 			.def("rank",			&Rank)
 			.def("reputation",		&Reputation)
+			
+			.property("character_name", &character_name_script, &set_character_name_script)
 #endif // XRGAME_EXPORTS
 	];
 }
@@ -65,9 +76,6 @@ void CSE_ALifeAnomalousZone::script_register(lua_State *L)
 			"cse_anomalous_zone",
 			CSE_ALifeCustomZone
 		)
-#ifdef XRGAME_EXPORTS
-//.		.def("spawn_artefacts",	&CSE_ALifeAnomalousZone::spawn_artefacts)
-#endif
 	];
 }
 

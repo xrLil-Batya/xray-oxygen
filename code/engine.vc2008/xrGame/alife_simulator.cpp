@@ -22,6 +22,7 @@
 #ifdef DEBUG
 #	include "moving_objects.h"
 #endif // DEBUG
+#include <luabind/luabind.hpp>
 
 const char* alife_section = "alife";
 extern void destroy_lua_wpn_params();
@@ -29,21 +30,18 @@ extern void destroy_lua_wpn_params();
 CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) : 
 	CALifeUpdateManager(server, alife_section), CALifeSimulatorBase(server, alife_section)
 {
-    if (strstr(Core.Params, "-keep_lua"))
-    {
-        destroy_lua_wpn_params();
-        MainMenu()->DestroyInternal(true);
-        xr_delete(g_object_factory);
-        ai().script_engine().init();
+    destroy_lua_wpn_params();
+    MainMenu()->DestroyInternal(true);
+    xr_delete(g_object_factory);
+    ai().script_engine().init();
 
 #ifdef DEBUG
-        ai().moving_objects().clear();
+    ai().moving_objects().clear();
 #endif // DEBUG
-    }
 
 	ai().set_alife				(this);
 
-	typedef IGame_Persistent::params params;
+	using params = IGame_Persistent::params;
 	params &p = g_pGamePersistent->m_game_params;
 	
 	R_ASSERT2(xr_strlen(p.m_game_or_spawn) && !xr_strcmp(p.m_alife,"alife") && !xr_strcmp(p.m_game_type,"single"), "Invalid server options!");
@@ -60,14 +58,14 @@ CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) :
 	luabind::functor<void> functor;
 	R_ASSERT2(ai().script_engine().functor(start_game_callback,functor),"Failed to get start game callback");
 
-	try
-	{
+ 	try
+ 	{
 		functor();
-	}
-	catch (luabind::error err)
-	{
-		R_ASSERT3(false, "Failed call start game callback. %s", err.what());
-	}
+ 	}
+ 	catch (/* luabind::error err */...)
+ 	{
+ 		R_ASSERT3(false, "Failed call start game callback. %s", /* err.what() */ "");
+ 	}
 
 	load(p.m_game_or_spawn,!xr_strcmp(p.m_new_or_load,"load") ? false : true, !xr_strcmp(p.m_new_or_load,"new"));
 }
@@ -84,7 +82,7 @@ void CALifeSimulator::destroy()
 {
 	CALifeUpdateManager::destroy();
 	VERIFY						(ai().get_alife());
-	ai().set_alife				(0);
+	ai().set_alife				(nullptr);
 }
 
 void CALifeSimulator::kill_entity(CSE_ALifeMonsterAbstract *l_tpALifeMonsterAbstract, const u16 &l_tGraphID, CSE_ALifeSchedulable *schedulable)
@@ -144,7 +142,7 @@ IReader const* CALifeSimulator::get_config(shared_str config) const
 	string_path						file_name;
 	FS.update_path(file_name, "$game_config$", config.c_str());
 	if (!FS.exist(file_name))
-		return						0;
+		return						nullptr;
 
 	m_configs_lru.insert(m_configs_lru.begin(), std::make_pair(config, FS.r_open(file_name)));
 	return							m_configs_lru.front().second;
@@ -157,7 +155,7 @@ namespace detail
 	{
 		if (ai().get_alife())
 		{
-			return ai().alife().objects().object((ALife::_OBJECT_ID)id, true) != 0;
+			return ai().alife().objects().object((ALife::_OBJECT_ID)id, true) != nullptr;
 		}
 		return false;
 	}
@@ -176,8 +174,8 @@ namespace detail
 
 using namespace luabind;
 
-typedef xr_vector<std::pair<shared_str, int> >	STORY_PAIRS;
-typedef STORY_PAIRS								SPAWN_STORY_PAIRS;
+using STORY_PAIRS = xr_vector<std::pair<shared_str, int> >;
+using SPAWN_STORY_PAIRS = STORY_PAIRS;
 LPCSTR											_INVALID_STORY_ID = "INVALID_STORY_ID";
 LPCSTR											_INVALID_SPAWN_STORY_ID = "INVALID_SPAWN_STORY_ID";
 STORY_PAIRS										story_ids;
@@ -221,7 +219,7 @@ CSE_ALifeDynamicObject *alife_object(const CALifeSimulator *self, ALife::_OBJECT
 	return			(self->objects().object(id, no_assert));
 }
 
-const xr_map<u16, CSE_ALifeDynamicObject*>& alife_objects(const CALifeSimulator *self)
+const CALifeObjectRegistry::OBJECT_REGISTRY& alife_objects(const CALifeSimulator *self)
 {
 	VERIFY(self);
 	return self->objects().objects();
@@ -264,7 +262,7 @@ void generate_story_ids(
 		for (; I != E; ++I)
 			R_ASSERT3((*I).first != temp, duplicated_id_description, *temp);
 
-		result.push_back(std::make_pair(*temp, atoi(N)));
+		result.emplace_back(*temp, atoi(N));
 	}
 
 	result.push_back(std::make_pair(INVALID_ID_STRING, INVALID_ID));
@@ -272,12 +270,12 @@ void generate_story_ids(
 
 void kill_entity0(CALifeSimulator *alife, CSE_ALifeMonsterAbstract *monster, const GameGraph::_GRAPH_ID &game_vertex_id)
 {
-	alife->kill_entity(monster, game_vertex_id, 0);
+	alife->kill_entity(monster, game_vertex_id, nullptr);
 }
 
 void kill_entity1(CALifeSimulator *alife, CSE_ALifeMonsterAbstract *monster)
 {
-	alife->kill_entity(monster, monster->m_tGraphID, 0);
+	alife->kill_entity(monster, monster->m_tGraphID, nullptr);
 }
 
 void add_in_restriction(CALifeSimulator *alife, CSE_ALifeMonsterAbstract *monster, ALife::_OBJECT_ID id)
@@ -333,40 +331,37 @@ CSE_Abstract *CALifeSimulator__spawn_item2(CALifeSimulator *self, LPCSTR section
 	CSE_ALifeDynamicObject				*object = ai().alife().objects().object(id_parent, true);
 	if (!object) {
 		Msg("! invalid parent id [%d] specified", id_parent);
-		return							(0);
+		return							(nullptr);
 	}
 
 	if (!object->m_bOnline)
-		return							(self->spawn_item(section, position, level_vertex_id, game_vertex_id, id_parent));
+		return (self->spawn_item(section, position, level_vertex_id, game_vertex_id, id_parent));
 
 	NET_Packet							packet;
 	packet.w_begin(M_SPAWN);
 	packet.w_stringZ(section);
 
-	CSE_Abstract						*item = self->spawn_item(section, position, level_vertex_id, game_vertex_id, id_parent, false);
+	CSE_Abstract *item = self->spawn_item(section, position, level_vertex_id, game_vertex_id, id_parent, false);
 	item->Spawn_Write(packet, FALSE);
 	self->server().FreeID(item->ID, 0);
 	F_entity_Destroy(item);
 
-	ClientID							clientID;
-	clientID.set(0xffff);
-
-	u16									dummy;
+	u16 dummy;
 	packet.r_begin(dummy);
 	VERIFY(dummy == M_SPAWN);
-	return								(self->server().Process_spawn(packet, clientID));
+	return (self->server().Process_spawn(packet));
 }
 
 CSE_Abstract *CALifeSimulator__spawn_ammo(CALifeSimulator *self, LPCSTR section, const Fvector &position, u32 level_vertex_id, GameGraph::_GRAPH_ID game_vertex_id, ALife::_OBJECT_ID id_parent, int ammo_to_spawn)
 {
-	//	if (id_parent == ALife::_OBJECT_ID(-1))
-	//		return							(self->spawn_item(section,position,level_vertex_id,game_vertex_id,id_parent));
-	CSE_ALifeDynamicObject				*object = 0;
-	if (id_parent != ALife::_OBJECT_ID(-1)) {
+	CSE_ALifeDynamicObject *object = nullptr;
+	if (id_parent != ALife::_OBJECT_ID(-1)) 
+	{
 		object = ai().alife().objects().object(id_parent, true);
-		if (!object) {
+		if (!object)
+		{
 			Msg("! invalid parent id [%d] specified", id_parent);
-			return						(0);
+			return (nullptr);
 		}
 	}
 
@@ -399,21 +394,20 @@ CSE_Abstract *CALifeSimulator__spawn_ammo(CALifeSimulator *self, LPCSTR section,
 	ClientID							clientID;
 	clientID.set(0xffff);
 
-	u16									dummy;
+	u16 dummy;
 	packet.r_begin(dummy);
 	VERIFY(dummy == M_SPAWN);
-	return								(self->server().Process_spawn(packet, clientID));
+	return								(self->server().Process_spawn(packet));
 }
 
 ALife::_SPAWN_ID CALifeSimulator__spawn_id(CALifeSimulator *self, ALife::_SPAWN_STORY_ID spawn_story_id)
 {
-	return								(((const CALifeSimulator *)self)->spawns().spawn_id(spawn_story_id));
+	return ((const CALifeSimulator*)self)->spawns().spawn_id(spawn_story_id);
 }
 
 void CALifeSimulator__release(CALifeSimulator *self, CSE_Abstract *object, bool)
 {
 	VERIFY(self);
-	//	self->release						(object,true);
 
 	THROW(object);
 	CSE_ALifeObject						*alife_object = smart_cast<CSE_ALifeObject*>(object);
@@ -466,42 +460,50 @@ bool dont_has_info(const CALifeSimulator *self, const ALife::_OBJECT_ID &id, LPC
 	return								(!has_info(self, id, info_id));
 }
 
+xr_vector<u16>& get_children(const CALifeSimulator *self, CSE_Abstract *object)
+{
+	VERIFY(self);
+	return object->children;
+}
+
+#include "../../SDK/include/luabind/iterator_policy.hpp"
+
 #pragma optimize("s",on)
 void CALifeSimulator::script_register(lua_State *L)
 {
 	module(L)
 		[
 		class_<CALifeSimulator>("alife_simulator")
-			.def("valid_object_id", &valid_object_id)
-			.def("level_id", &get_level_id)
-			.def("level_name", &get_level_name)
-			//.def("objects", &alife_objects, &return_stl_pair_iterator)
-			.def("object", (CSE_ALifeDynamicObject *(*) (const CALifeSimulator *, ALife::_OBJECT_ID))(alife_object))
-			.def("object", (CSE_ALifeDynamicObject *(*) (const CALifeSimulator *, ALife::_OBJECT_ID, bool))(alife_object))
-			.def("story_object", (CSE_ALifeDynamicObject *(*) (const CALifeSimulator *, ALife::_STORY_ID))(alife_story_object))
-			.def("set_switch_online", (void (CALifeSimulator::*) (ALife::_OBJECT_ID, bool))(&CALifeSimulator::set_switch_online))
-			.def("set_switch_offline", (void (CALifeSimulator::*) (ALife::_OBJECT_ID, bool))(&CALifeSimulator::set_switch_offline))
-			.def("set_interactive", (void (CALifeSimulator::*) (ALife::_OBJECT_ID, bool))(&CALifeSimulator::set_interactive))
-			.def("kill_entity", &CALifeSimulator::kill_entity)
-			.def("kill_entity", &kill_entity0)
-			.def("kill_entity", &kill_entity1)
-			.def("add_in_restriction", &add_in_restriction)
-			.def("add_out_restriction", &add_out_restriction)
-			.def("remove_in_restriction", &remove_in_restriction)
-			.def("remove_out_restriction", &remove_out_restriction)
-			.def("remove_all_restrictions", &CALifeSimulator::remove_all_restrictions)
-			.def("create", &CALifeSimulator__create)
-			.def("create", &CALifeSimulator__spawn_item2)
-			.def("create", &CALifeSimulator__spawn_item)
-			.def("create_ammo", &CALifeSimulator__spawn_ammo)
-			.def("release", &CALifeSimulator__release)
-			.def("spawn_id", &CALifeSimulator__spawn_id)
-			.def("actor", &get_actor)
-			.def("has_info", &has_info)
-			.def("dont_has_info", &dont_has_info)
-			.def("switch_distance", &CALifeSimulator::switch_distance)
-			.def("set_switch_distance", &CALifeSimulator::set_switch_distance)
-			
+				.def("valid_object_id", &valid_object_id)
+				.def("level_id", &get_level_id)
+				.def("level_name", &get_level_name)
+				.def("object", (CSE_ALifeDynamicObject *(*) (const CALifeSimulator *, ALife::_OBJECT_ID))(alife_object))
+				.def("object", (CSE_ALifeDynamicObject *(*) (const CALifeSimulator *, ALife::_OBJECT_ID, bool))(alife_object))
+				.def("story_object", (CSE_ALifeDynamicObject *(*) (const CALifeSimulator *, ALife::_STORY_ID))(alife_story_object))
+				.def("set_switch_online", (void (CALifeSimulator::*) (ALife::_OBJECT_ID, bool))(&CALifeSimulator::set_switch_online))
+				.def("set_switch_offline", (void (CALifeSimulator::*) (ALife::_OBJECT_ID, bool))(&CALifeSimulator::set_switch_offline))
+				.def("set_interactive", (void (CALifeSimulator::*) (ALife::_OBJECT_ID, bool))(&CALifeSimulator::set_interactive))
+				.def("kill_entity", &CALifeSimulator::kill_entity)
+				.def("kill_entity", &kill_entity0)
+				.def("kill_entity", &kill_entity1)
+				.def("add_in_restriction", &add_in_restriction)
+				.def("add_out_restriction", &add_out_restriction)
+				.def("remove_in_restriction", &remove_in_restriction)
+				.def("remove_out_restriction", &remove_out_restriction)
+				.def("remove_all_restrictions", &CALifeSimulator::remove_all_restrictions)
+				.def("create", &CALifeSimulator__create)
+				.def("create", &CALifeSimulator__spawn_item2)
+				.def("create", &CALifeSimulator__spawn_item)
+				.def("create_ammo", &CALifeSimulator__spawn_ammo)
+				.def("release", &CALifeSimulator__release)
+				.def("spawn_id", &CALifeSimulator__spawn_id)
+				.def("actor", &get_actor)
+				.def("has_info", &has_info)
+				.def("dont_has_info", &dont_has_info)
+				.def("switch_distance", &CALifeSimulator::switch_distance)
+				.def("set_switch_distance", &CALifeSimulator::set_switch_distance)
+				.def("get_children", &get_children, return_stl_iterator)
+//				.def("objects", &alife_objects, &return_stl_pair_iterator)
 			, def("alife", &alife)
 		];
 

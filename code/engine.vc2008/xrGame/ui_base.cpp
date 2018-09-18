@@ -30,9 +30,9 @@ void C2DFrustum::CreateFromRect(const Frect& rect)
 sPoly2D* C2DFrustum::ClipPoly(sPoly2D& S, sPoly2D& D) const
 {
 	bool bFullTest = false;
-	for (u32 j = 0; j < S.size(); ++j)
+	for (sPoly2D::value_type & j : S)
 	{
-		if (!m_rect.in(S[j].pt))
+		if (!m_rect.in(j.pt))
 		{
 			bFullTest = true;
 			break;
@@ -45,10 +45,9 @@ sPoly2D* C2DFrustum::ClipPoly(sPoly2D& S, sPoly2D& D) const
 	if (!bFullTest)
 		return dest;
 
-	for (u32 i = 0; i < planes.size(); ++i)
+	for (const Fplane2 &P : planes)
 	{
 		// cache plane and swap lists
-		const Fplane2 &P = planes[i];
 		std::swap(src, dest);
 		dest->clear();
 
@@ -108,7 +107,7 @@ sPoly2D* C2DFrustum::ClipPoly(sPoly2D& S, sPoly2D& D) const
 
 		// here we end up with complete polygon in 'dest' which is inside plane #i
 		if (dest->size() < 3)
-			return 0;
+			return nullptr;
 	}
 	return dest;
 }
@@ -195,7 +194,7 @@ void ui_core::PopScissor()
 	m_Scissors.pop();
 
 	if (m_Scissors.empty())
-		UIRender->SetScissor(NULL);
+		UIRender->SetScissor(nullptr);
 	else {
 		const Frect& top = m_Scissors.top();
 		Irect tgt;
@@ -272,7 +271,7 @@ shared_str	ui_core::get_xml_name(LPCSTR fn)
 	if (!is_widescreen())
 	{
 		xr_sprintf(str, "%s", fn);
-		if (NULL == strext(fn)) xr_strcat(str, ".xml");
+		if (nullptr == strext(fn)) xr_strcat(str, ".xml");
 	}
 	else
 	{
@@ -286,10 +285,10 @@ shared_str	ui_core::get_xml_name(LPCSTR fn)
 		else
 			xr_sprintf(str, "%s_16", fn);
 
-		if (NULL == FS.exist(str_, "$game_config$", "ui\\", str))
+		if (nullptr == FS.exist(str_, "$game_config$", "ui\\", str))
 		{
 			xr_sprintf(str, "%s", fn);
-			if (NULL == strext(fn)) xr_strcat(str, ".xml");
+			if (nullptr == strext(fn)) xr_strcat(str, ".xml");
 		}
 	}
 
@@ -310,7 +309,7 @@ shared_str	ui_core::get_xml_name(LPCSTR fn)
 #include "UI/UIComboBox.h"
 #include "ui/UIOptionsManagerScript.h"
 #include "ScriptXmlInit.h"
-
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 CMainMenu* MainMenu();
@@ -334,23 +333,23 @@ void UIRegistrator::script_register(lua_State *L)
 	CUIGame::script_register(L);
 
 	module(L)
+	[
+		class_<CGameFont>("CGameFont")
+		.enum_("EAligment")
 		[
-
-			class_<CGameFont>("CGameFont")
-			.enum_("EAligment")
-		[
-			value("alLeft", int(CGameFont::alLeft)),
-			value("alRight", int(CGameFont::alRight)),
-			value("alCenter", int(CGameFont::alCenter))
+			value("alLeft",		u32(CGameFont::alLeft)),
+			value("alRight",	u32(CGameFont::alRight)),
+			value("alCenter",	u32(CGameFont::alCenter))
 		],
+
 		class_<CMainMenu>("CMainMenu")
-		.def("GetEngineBuild", &CMainMenu::GetEngineBuild)
-		.def("GetEngineBuildDate", &CMainMenu::GetEngineBuildDate)
-		.def("GetGSVer", &CMainMenu::GetGSVer)
-		];
+			.def("GetEngineBuild",		&CMainMenu::GetEngineBuild)
+			.def("GetEngineBuildDate",	&CMainMenu::GetEngineBuildDate)
+			.def("GetGSVer",			&CMainMenu::GetGSVer)
+	];
 
 	module(L, "main_menu")
-		[
-			def("get_main_menu", &MainMenu)
-		];
+	[
+		def("get_main_menu", &MainMenu)
+	];
 }

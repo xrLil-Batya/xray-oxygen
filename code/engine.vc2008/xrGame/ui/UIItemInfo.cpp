@@ -10,7 +10,7 @@
 
 #include "ai_space.h"
 #include "alife_simulator.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 #include "../Inventory_Item.h"
 #include "UIInventoryUtilities.h"
 #include "../PhysicsShellHolder.h"
@@ -185,8 +185,13 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 
 	PIItem pInvItem = (PIItem)pCellItem->m_pData;
 	m_pInvItem = pInvItem;
-	Enable(NULL != m_pInvItem);
-	if (!m_pInvItem)			return;
+
+    if (m_pInvItem == nullptr)
+    {
+        Enable(false);
+        return;
+    }
+    Enable(true);
 
 	Fvector2				pos;	pos.set(0.0f, 0.0f);
 	string256				str;
@@ -225,7 +230,8 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 	}
 	if (UICost && item_price != u32(-1))
 	{
-		xr_sprintf(str, "%d RU", item_price);// will be overwritten in multiplayer
+		LPCSTR currency_str = CStringTable().translate("st_currency").c_str();
+		xr_sprintf(str, "%d %s", item_price, currency_str );// will be overwritten in multiplayer
 		UICost->SetText(str);
 		pos.x = UICost->GetWndPos().x;
 		if (m_complex_desc)
@@ -306,7 +312,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 	}
 	if (UIItemImage)
 	{
-		// Çàãðóæàåì êàðòèíêó
+		// Ð—Ð°Ð³Ñ€ÑƒÐ¶Ð°ÐµÐ¼ ÐºÐ°Ñ€Ñ‚Ð¸Ð½ÐºÑƒ
 		UIItemImage->SetShader(InventoryUtilities::GetEquipmentIconsShader());
 
 		Irect item_grid_rect = pInvItem->GetInvGridRect();

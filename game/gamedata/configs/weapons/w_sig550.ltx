@@ -28,27 +28,27 @@ hit_power				= 0.33, 0.33, 0.33, 0.33
 hit_impulse				= 100
 hit_type				= fire_wound
 fire_distance           = 200
-bullet_speed            = 550         ;начальная скорость пули
+bullet_speed            = 550         ;РЅР°С‡Р°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РїСѓР»Рё
 rpm                     = 590
 rpm_empty_click         = 200
 
-use_aim_bullet          = false                ;Поддерживается ли первая суппер пуля
+use_aim_bullet          = false                ;РџРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ Р»Рё РїРµСЂРІР°СЏ СЃСѓРїРїРµСЂ РїСѓР»СЏ
 time_to_aim             = 3.0
 
 hud                     = wpn_sig550_hud
 
-misfire_probability        = 0.005 ;вероятность осечки при максимальном износе  !!!old - now not working
-;изношенность, при которой появляется шанс осечки
+misfire_probability        = 0.005 ;РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РѕСЃРµС‡РєРё РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РёР·РЅРѕСЃРµ  !!!old - now not working
+;РёР·РЅРѕС€РµРЅРЅРѕСЃС‚СЊ, РїСЂРё РєРѕС‚РѕСЂРѕР№ РїРѕСЏРІР»СЏРµС‚СЃСЏ С€Р°РЅСЃ РѕСЃРµС‡РєРё
 misfire_start_condition		= 0.6
-;изношеность при которой шанс осечки становится константным
+;РёР·РЅРѕС€РµРЅРѕСЃС‚СЊ РїСЂРё РєРѕС‚РѕСЂРѕР№ С€Р°РЅСЃ РѕСЃРµС‡РєРё СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚РЅС‹Рј
 misfire_end_condition		= 0.1
-;шанс осечки при изношености больше чем misfireStartCondition
+;С€Р°РЅСЃ РѕСЃРµС‡РєРё РїСЂРё РёР·РЅРѕС€РµРЅРѕСЃС‚Рё Р±РѕР»СЊС€Рµ С‡РµРј misfireStartCondition
 misfire_start_prob	     	= 0.003
-;шанс осечки при изношености больше чем misfireEndCondition
+;С€Р°РЅСЃ РѕСЃРµС‡РєРё РїСЂРё РёР·РЅРѕС€РµРЅРѕСЃС‚Рё Р±РѕР»СЊС€Рµ С‡РµРј misfireEndCondition
 misfire_end_prob	     	= 0.045
-;увеличение изношености при одиночном выстреле
+;СѓРІРµР»РёС‡РµРЅРёРµ РёР·РЅРѕС€РµРЅРѕСЃС‚Рё РїСЂРё РѕРґРёРЅРѕС‡РЅРѕРј РІС‹СЃС‚СЂРµР»Рµ
 condition_shot_dec      	= 0.0010
-;увеличение изношености при выстреле очередью
+;СѓРІРµР»РёС‡РµРЅРёРµ РёР·РЅРѕС€РµРЅРѕСЃС‚Рё РїСЂРё РІС‹СЃС‚СЂРµР»Рµ РѕС‡РµСЂРµРґСЊСЋ
 condition_queue_shot_dec	= 0.0011
 
 ammo_elapsed            = 30
@@ -61,20 +61,20 @@ launch_speed            = 0
 hand_dependence         = 1
 single_handed           = 0
 
-;-дисперсия-----------------------------------------------------------------------------
-;базовая дисперсия
-fire_dispersion_base    = 0.23        ;угол (в градусах) базовой дисперсии оружия (оружия зажатого в тисках)
+;-РґРёСЃРїРµСЂСЃРёСЏ-----------------------------------------------------------------------------
+;Р±Р°Р·РѕРІР°СЏ РґРёСЃРїРµСЂСЃРёСЏ
+fire_dispersion_base    = 0.23        ;СѓРіРѕР» (РІ РіСЂР°РґСѓСЃР°С…) Р±Р°Р·РѕРІРѕР№ РґРёСЃРїРµСЂСЃРёРё РѕСЂСѓР¶РёСЏ (РѕСЂСѓР¶РёСЏ Р·Р°Р¶Р°С‚РѕРіРѕ РІ С‚РёСЃРєР°С…)
 control_inertion_factor = 1.5f
 crosshair_inertion		= 7.25
 
-;отдача
+;РѕС‚РґР°С‡Р°
 cam_return				= 0
-cam_relax_speed         = 5		; скорость возврата в исходное положение
-cam_relax_speed_ai      = 360	; скорость возврата в исходное положение для AI
-cam_dispersion          = 0.5       ; увеличения угла (в градусах) при первом выстреле
-cam_dispersion_inc      = 0.25       ; увеличениe cam_dispersion с каждым выстрелом
+cam_relax_speed         = 5		; СЃРєРѕСЂРѕСЃС‚СЊ РІРѕР·РІСЂР°С‚Р° РІ РёСЃС…РѕРґРЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ
+cam_relax_speed_ai      = 360	; СЃРєРѕСЂРѕСЃС‚СЊ РІРѕР·РІСЂР°С‚Р° РІ РёСЃС…РѕРґРЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ РґР»СЏ AI
+cam_dispersion          = 0.5       ; СѓРІРµР»РёС‡РµРЅРёСЏ СѓРіР»Р° (РІ РіСЂР°РґСѓСЃР°С…) РїСЂРё РїРµСЂРІРѕРј РІС‹СЃС‚СЂРµР»Рµ
+cam_dispersion_inc      = 0.25       ; СѓРІРµР»РёС‡РµРЅРёe cam_dispersion СЃ РєР°Р¶РґС‹Рј РІС‹СЃС‚СЂРµР»РѕРј
 cam_dispersion_frac     = 1.0       ; frac * angle + rand(-1,1)*(1-frac) * angle
-cam_max_angle           = 50.0       ; максимальный угол отдачи
+cam_max_angle           = 50.0       ; РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СѓРіРѕР» РѕС‚РґР°С‡Рё
 cam_max_angle_horz      = 50.0       ; (degree) maximum shot horizontal degree
 cam_step_angle_horz     = 1.5       ; (degree) size of step camera moved in horizontal position while shooting
 
@@ -93,14 +93,14 @@ zoom_cam_max_angle           = 50.0
 zoom_cam_max_angle_horz      = 50.0
 zoom_cam_step_angle_horz     = 1.3
 
-fire_dispersion_condition_factor = 7        ;увеличение дисперсии в процентах при максимальном износе
+fire_dispersion_condition_factor = 7        ;СѓРІРµР»РёС‡РµРЅРёРµ РґРёСЃРїРµСЂСЃРёРё РІ РїСЂРѕС†РµРЅС‚Р°С… РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РёР·РЅРѕСЃРµ
 ;---DOF-------------------------------------------------------------------------
 zoom_dof				= 0.5, 1.0, 180
 reload_dof				= 0.0, 0.5, 5, 2
 
 ;-------------------------------------------------------------------------------
-holder_range_modifier   = 1.0                       ; во сколько раз увеличивается eye_range
-holder_fov_modifier     = 1.0              ; во сколько раз увеличивается eye_fov
+holder_range_modifier   = 1.0                       ; РІРѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ eye_range
+holder_fov_modifier     = 1.0              ; РІРѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ eye_fov
 
 min_radius              = 30
 max_radius              = 100
@@ -150,7 +150,7 @@ shell_dir               = 0.0, 0.0, 0.4
 shell_particles         = weapons\generic_shells
 
 ;--STRAP PARAMETERS-----------------------------------------------------------------
-;под мишкой
+;РїРѕРґ РјРёС€РєРѕР№
 strap_position          = -0.26,-0.11,0.25                        	; position (offset) and orientation of the weapon when it is strapped
 strap_orientation       = -15,-9,110                                	; (3rd person view in degrees)
 strap_bone0             = bip01_spine2
@@ -185,7 +185,7 @@ grenade_launcher_x      = 109
 grenade_launcher_y      = 30
 scopes_sect				   = scope_susat_sig, scope_susat_x1.6_sig, scope_susat_custom_sig, scope_susat_dusk_sig, scope_susat_night_sig
 
-;звуки
+;Р·РІСѓРєРё
 snd_draw                = weapons\ak74_draw
 snd_holster             = weapons\generic_holster
 snd_shoot		= weapons\n_sig550_shot
@@ -198,7 +198,7 @@ snd_switch              = weapons\groza_switch, 1.0, 0.5
 snd_bore				= weapons\draw_silent
 snd_bore1				= weapons\mp5_bore
 
-;настройки для глушителя
+;РЅР°СЃС‚СЂРѕР№РєРё РґР»СЏ РіР»СѓС€РёС‚РµР»СЏ
 silencer_hit_power      = 0.31, 0.31, 0.31, 0.31
 silencer_hit_impulse    = 100
 silencer_fire_distance  = 200
@@ -319,7 +319,7 @@ scope_x                 = 78
 scope_y                 = 0
 
 ;-----------------------------------------------------------------------------
-; Уникальные
+; РЈРЅРёРєР°Р»СЊРЅС‹Рµ
 ;-----------------------------------------------------------------------------
 
 [wpn_sig550_luckygun]:wpn_sig550

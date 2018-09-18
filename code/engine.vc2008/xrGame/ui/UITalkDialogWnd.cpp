@@ -36,27 +36,31 @@ void CUITalkDialogWnd::InitTalkDialogWnd()
 	CUIXmlInit					ml_init;
 
 	CUIXmlInit::InitWindow		(*m_uiXml, "main", 0, this);
-#ifdef SOC_TALK_WND
-	CUIXmlInit::InitStatic(*m_uiXml, "right_character_icon", 0, &UIOurIcon);
-	CUIXmlInit::InitStatic(*m_uiXml, "left_character_icon", 0, &UIOthersIcon);
 
-	UIOurIcon.AttachChild(&UICharacterInfoLeft);
-	UICharacterInfoLeft.InitCharacterInfo(Fvector2().set(0, 0), UIOurIcon.GetWndSize(), "talk_character.xml");
+    // Display character icons on left and right side of dialog screen, line in Shadow of Chernobyl
+    if (g_extraFeatures.is(GAME_EXTRA_SOC_WND))
+    {
+        CUIXmlInit::InitStatic(*m_uiXml, "right_character_icon", 0, &UIOurIcon);
+        CUIXmlInit::InitStatic(*m_uiXml, "left_character_icon", 0, &UIOthersIcon);
 
-	UIOthersIcon.AttachChild(&UICharacterInfoRight);
-	UICharacterInfoRight.InitCharacterInfo(Fvector2().set(0, 0), UIOthersIcon.GetWndSize(), "talk_character.xml");
+        UIOurIcon.AttachChild(&UICharacterInfoLeft);
+        UICharacterInfoLeft.InitCharacterInfo(Fvector2().set(0, 0), UIOurIcon.GetWndSize(), "talk_character.xml");
 
-	AttachChild(&UIOurIcon);
-	AttachChild(&UIOthersIcon);
-#endif
-	//Ответы
+        UIOthersIcon.AttachChild(&UICharacterInfoRight);
+        UICharacterInfoRight.InitCharacterInfo(Fvector2().set(0, 0), UIOthersIcon.GetWndSize(), "talk_character.xml");
+
+        AttachChild(&UIOurIcon);
+        AttachChild(&UIOthersIcon);
+    }
+
+	//РћС‚РІРµС‚С‹
 	UIAnswersList				= xr_new<CUIScrollView>();
 	UIAnswersList->SetAutoDelete(true);
 	AttachChild(UIAnswersList);
 	CUIXmlInit::InitScrollView	(*m_uiXml, "answers_list", 0, UIAnswersList);
 	UIAnswersList->SetWindowName("---UIAnswersList");
 
-	//Вопросы
+	//Р’РѕРїСЂРѕСЃС‹
 	UIQuestionsList				= xr_new<CUIScrollView>();
 	UIQuestionsList->SetAutoDelete(true);
 	AttachChild(UIQuestionsList);
@@ -64,11 +68,11 @@ void CUITalkDialogWnd::InitTalkDialogWnd()
 	UIQuestionsList->SetWindowName("---UIQuestionsList");
 
 
-	//кнопка перехода в режим торговли
+	//РєРЅРѕРїРєР° РїРµСЂРµС…РѕРґР° РІ СЂРµР¶РёРј С‚РѕСЂРіРѕРІР»Рё
 	AttachChild					(&UIToTradeButton);
 	CUIXmlInit::Init3tButton	(*m_uiXml, "button", 0, &UIToTradeButton);
 
-	// шрифт для индикации имени персонажа в окне разговора
+	// С€СЂРёС„С‚ РґР»СЏ РёРЅРґРёРєР°С†РёРё РёРјРµРЅРё РїРµСЂСЃРѕРЅР°Р¶Р° РІ РѕРєРЅРµ СЂР°Р·РіРѕРІРѕСЂР°
 	CUIXmlInit::InitFont		(*m_uiXml, "font", 0, m_iNameTextColor, m_pNameTextFont);
 
 	CGameFont * pFont			= NULL;
@@ -135,8 +139,8 @@ void CUITalkDialogWnd::SetTradeMode()
 	OnTradeClicked( &UIToTradeButton, 0 );
 }
 
-//пересылаем сообщение родительскому окну для обработки
-//и фильтруем если оно пришло от нашего дочернего окна
+//РїРµСЂРµСЃС‹Р»Р°РµРј СЃРѕРѕР±С‰РµРЅРёРµ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРјСѓ РѕРєРЅСѓ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё
+//Рё С„РёР»СЊС‚СЂСѓРµРј РµСЃР»Рё РѕРЅРѕ РїСЂРёС€Р»Рѕ РѕС‚ РЅР°С€РµРіРѕ РґРѕС‡РµСЂРЅРµРіРѕ РѕРєРЅР°
 void CUITalkDialogWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
@@ -222,10 +226,12 @@ void CUITalkDialogWnd::AddIconedAnswer(LPCSTR caption, LPCSTR text, LPCSTR textu
 
 void CUITalkDialogWnd::SetOsoznanieMode(bool b)
 {
-#ifdef SOC_TALK_WND
-	UIOurIcon.Show(!b);
-	UIOthersIcon.Show(!b);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_SOC_WND))
+    {
+        UIOurIcon.Show(!b);
+        UIOthersIcon.Show(!b);
+    }
+
 	UIAnswersList->Show	(!b);
 
 	UIToTradeButton.Show(!b);

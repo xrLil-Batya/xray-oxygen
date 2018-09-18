@@ -30,12 +30,17 @@
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
 #include "UI/UIGameTutorial.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "ui/UIInventoryUtilities.h"
 #include "alife_object_registry.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "hudmanager.h"
 #include "raypick.h"
+#include "HUDManager.h"
+#include "UIZoneMap.h"
+#include "ui/UIMainIngameWnd.h"
+#include "ui/UIMap.h"
+#include "ui/UIMotionIcon.h"
 
 
 using namespace luabind;
@@ -89,29 +94,24 @@ CScriptGameObject *tpfGetActor()
 	if (l_tpActor)
 		return	(smart_cast<CGameObject*>(l_tpActor)->lua_game_object());
 	else
-		return	(0);
+		return	(nullptr);
 }
+#endif
 
 CScriptGameObject *get_object_by_name(LPCSTR caObjectName)
 {
-	static bool first_time = true;
-	if (first_time)
-		ai().script_engine().script_log(eLuaMessageTypeError,"Do not use level.object function!");
-	first_time = false;
-	
-	CGameObject		*l_tpGameObject	= smart_cast<CGameObject*>(Level().Objects.FindObjectByName(caObjectName));
+	CGameObject		*l_tpGameObject = smart_cast<CGameObject*>(Level().Objects.FindObjectByName(caObjectName));
 	if (l_tpGameObject)
 		return		(l_tpGameObject->lua_game_object());
 	else
-		return		(0);
+		return		(nullptr);
 }
-#endif
 
 CScriptGameObject *get_object_by_id(u16 id)
 {
 	CGameObject* pGameObject = smart_cast<CGameObject*>(Level().Objects.net_Find(id));
 	if(!pGameObject)
-		return NULL;
+		return nullptr;
 
 	return pGameObject->lua_game_object();
 }
@@ -252,7 +252,7 @@ u32	vertex_in_direction(u32 level_vertex_id, Fvector direction, float max_distan
 	Fvector			start_position = ai().level_graph().vertex_position(level_vertex_id);
 	Fvector			finish_position = Fvector(start_position).add(direction);
 	u32				result = u32(-1);
-	ai().level_graph().farthest_vertex_in_direction(level_vertex_id,start_position,finish_position,result,0);
+	ai().level_graph().farthest_vertex_in_direction(level_vertex_id,start_position,finish_position,result,nullptr);
 	return			(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
 }
 
@@ -534,21 +534,6 @@ void set_snd_volume(float v)
 	psSoundVFactor = v;
 	clamp(psSoundVFactor,0.0f,1.0f);
 }
-#include "actor_statistic_mgr.h"
-void add_actor_points(LPCSTR sect, LPCSTR detail_key, int cnt, int pts)
-{
-	return Actor()->StatisticMgr().AddPoints(sect, detail_key, cnt, pts);
-}
-
-void add_actor_points_str(LPCSTR sect, LPCSTR detail_key, LPCSTR str_value)
-{
-	return Actor()->StatisticMgr().AddPoints(sect, detail_key, str_value);
-}
-
-int get_actor_points(LPCSTR sect)
-{
-	return Actor()->StatisticMgr().GetSectionPoints(sect);
-}
 
 #include "ActorEffector.h"
 void add_complex_effector(LPCSTR section, int id)
@@ -687,7 +672,7 @@ LPCSTR translate_string(LPCSTR str)
 
 bool has_active_tutotial()
 {
-	return (g_tutorial!=NULL);
+	return (g_tutorial!=nullptr);
 }
 
 void g_send(NET_Packet& P)
@@ -711,6 +696,16 @@ void spawn_section(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 P
 	Level().spawn_item(sSection, vPosition, LevelVertexID, ParentID, bReturnItem);
 }
 
+void show_minimap(bool bShow)
+{
+    CUIGame* GameUI = HUD().GetGameUI();
+    GameUI->UIMainIngameWnd->ShowZoneMap(bShow);
+    if (g_pMotionIcon != nullptr)
+    {
+        g_pMotionIcon->bVisible = bShow;
+    }
+}
+
 //ability to get the target game_object at crosshair
 CScriptGameObject* g_get_target_obj()
 {
@@ -721,7 +716,7 @@ CScriptGameObject* g_get_target_obj()
 		if (game_object)
 			return game_object->lua_game_object();
 	}
-	return (0);
+	return (nullptr);
 }
 
 float g_get_target_dist()
@@ -762,9 +757,18 @@ CScriptGameObject* get_view_entity_script()
 {
 	CGameObject* pGameObject = smart_cast<CGameObject*>(Level().CurrentViewEntity());
 	if (!pGameObject)
-		return (0);
+		return (nullptr);
 
 	return pGameObject->lua_game_object();
+}
+
+void iterate_online_objects(luabind::functor<bool> functor)
+{
+	for (u16 i=0; i < 0xffff; i++) 
+	{
+		CGameObject		*pGameObject = smart_cast<CGameObject*>(Level().Objects.net_Find(i));
+		if (pGameObject && functor(pGameObject->lua_game_object())) return;
+	}
 }
 
 void set_view_entity_script(CScriptGameObject* go)
@@ -779,6 +783,19 @@ xrTime get_start_time()
 	return (xrTime(Level().GetStartGameTime()));
 }
 
+u8 get_level_id(CLevelGraph *graph) 
+{ 
+	return graph->level_id(); 
+}
+
+u32 get_vertex_count(CLevelGraph *graph)
+{ 
+	return graph->header().vertex_count(); 
+}
+
+#include "../../SDK/include/luabind/operator.hpp"
+#include "../../SDK/include/luabind/out_value_policy.hpp"
+
 #pragma optimize("s",on)
 void CLevel::script_register(lua_State *L)
 {
@@ -791,6 +808,11 @@ void CLevel::script_register(lua_State *L)
 
 	module(L,"level")
 	[
+		class_<CLevelGraph>("CLevelGraph")
+			.def(constructor<>())
+			.property("level_id", &get_level_id)
+			.property("vertices_count", &get_vertex_count),
+
 		def("u_event_gen", &u_event_gen), //Send events via packet
 		def("u_event_send", &u_event_send),
 	    def("send", &g_send),
@@ -807,8 +829,8 @@ void CLevel::script_register(lua_State *L)
 		
 		// obsolete\deprecated
 		def("object_by_id",						get_object_by_id),
-#ifdef DEBUG
 		def("debug_object",						get_object_by_name),
+#ifdef DEBUG
 		def("debug_actor",						tpfGetActor),
 		def("check_object",						check_object),
 #endif
@@ -888,18 +910,11 @@ void CLevel::script_register(lua_State *L)
 
 		def("add_complex_effector",				&add_complex_effector),
 		def("remove_complex_effector",			&remove_complex_effector),
+		def("iterate_online_objects", 			&iterate_online_objects),
 		
 		def("vertex_id",						&vertex_id),
-
 		def("game_id",							&GameID)
 	],
-	
-	module(L,"actor_stats")
-	[
-		def("add_points",						&add_actor_points),
-		def("add_points_str",					&add_actor_points_str),
-		def("get_points",						&get_actor_points)
-	];
 	
 	module(L)
 	[
@@ -997,7 +1012,7 @@ void CLevel::script_register(lua_State *L)
 	    def("start_tutorial",		&start_tutorial),
 	    def("stop_tutorial",		&stop_tutorial),
 	    def("has_active_tutorial",	&has_active_tutotial),
-	    def("translate_string",		&translate_string)
-
+	    def("translate_string",		&translate_string),
+        def("show_minimap",         &show_minimap)
 	];
 }

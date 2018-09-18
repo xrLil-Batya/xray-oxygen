@@ -30,7 +30,7 @@ BONE_P_MAP CCar::bone_map = BONE_P_MAP();
 
 CCar::CCar()
 {
-	m_memory = NULL;
+	m_memory = nullptr;
 	m_driver_anim_type = 0;
 	m_bone_steer = BI_NONE;
 
@@ -60,7 +60,7 @@ CCar::CCar()
 	m_breaks_to_back_rate = 1.f;
 
 	b_exploded = false;
-	m_car_weapon = NULL;
+	m_car_weapon = nullptr;
 	m_power_neutral_factor = 0.25f;
 	m_steer_angle = 0.f;
 #ifdef DEBUG
@@ -68,7 +68,7 @@ CCar::CCar()
 #endif
 }
 
-CCar::~CCar(void)
+CCar::~CCar()
 {
 	xr_delete(camera[0]);
 	xr_delete(camera[1]);
@@ -684,17 +684,25 @@ void CCar::ParseDefinitions()
 	CExplosive::Load(ini, "explosion");
 
 	m_camera_position_1st = ini->r_fvector3("car_definition", "camera_pos");
-	m_camera_position_2nd = ini->r_fvector3("car_definition", "camera_pos_2nd");
-	m_camera_position_3rd = ini->r_fvector3("car_definition", "camera_pos_3rd");
+
+    if (ini->line_exist("car_definition", "camera_pos_2nd"))
+    {
+	    m_camera_position_2nd = ini->r_fvector3("car_definition", "camera_pos_2nd");
+    }
+
+    if (ini->line_exist("car_definition", "camera_pos_3rd"))
+    {
+        m_camera_position_3rd = ini->r_fvector3("car_definition", "camera_pos_3rd");
+    }
 	///////////////////////////car definition///////////////////////////////////////////////////
 	fill_wheel_vector(ini->r_string("car_definition", "driving_wheels"), m_driving_wheels);
 	fill_wheel_vector(ini->r_string("car_definition", "steering_wheels"), m_steering_wheels);
 	fill_wheel_vector(ini->r_string("car_definition", "breaking_wheels"), m_breaking_wheels);
 	fill_exhaust_vector(ini->r_string("car_definition", "exhausts"), m_exhausts);
 	fill_doors_map(ini->r_string("car_definition", "doors"), m_doors);
-
+     
 	///////////////////////////car properties///////////////////////////////
-	active_camera = 0;
+	active_camera = nullptr;
 	camera[ectFirst] = xr_new<CCameraFirstEye>(this, CCameraBase::flRelativeLink | CCameraBase::flPositionRigid);
 	camera[ectFirst]->tag = ectFirst;
 	camera[ectFirst]->Load(ini->r_string("car_definition", "car_first_eye_cam"));
@@ -915,10 +923,10 @@ void CCar::Init()
 	if (ini->section_exist("damage_items"))
 	{
 		CInifile::Sect& data = ini->r_section("damage_items");
-		for (CInifile::SectCIt I = data.Data.begin(); I != data.Data.end(); I++) {
-			const CInifile::Item& item = *I;
+		for (CInifile::Item item : data.Data)
+		{
 			u16 index = pKinematics->LL_BoneID(*item.first);
-			R_ASSERT3(index != BI_NONE, "Wrong bone name", *item.first);
+			R_ASSERT3(index != BI_NONE, "Wrong bone name", item.first.c_str());
 			xr_map   <u16, SWheel>::iterator i = m_wheels_map.find(index);
 
 			if (i != m_wheels_map.end())
@@ -1754,7 +1762,7 @@ IC void CCar::fill_exhaust_vector(LPCSTR S, xr_vector<SExhaust>& exhausts)
 
 		u16 bone_id = pKinematics->LL_BoneID(S1);
 
-		exhausts.push_back(SExhaust(this));
+		exhausts.emplace_back(this);
 		SExhaust& exhaust = exhausts.back();
 		exhaust.bone_id = bone_id;
 
@@ -1844,7 +1852,7 @@ void CCar::ASCUpdate()
 
 void CCar::ASCUpdate(EAsyncCalls c)
 {
-	async_calls.set(u16(c), FALSE);
+	async_calls.set(u16(c), false);
 	switch (c) {
 	case ascSndTransmission:m_car_sound->TransmissionSwitch(); break;
 	case ascSndStall:m_car_sound->Stop(); break;
@@ -1855,7 +1863,7 @@ void CCar::ASCUpdate(EAsyncCalls c)
 
 void CCar::AscCall(EAsyncCalls c)
 {
-	async_calls.set(u16(c), TRUE);
+	async_calls.set(u16(c), true);
 }
 
 bool CCar::CanRemoveObject()

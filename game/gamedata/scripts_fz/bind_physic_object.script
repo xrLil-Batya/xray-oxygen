@@ -1,17 +1,17 @@
 --[[ -----------------------------------------------------------------------------------------------------------------
  File       : bind_physic_object.script
  Description: Physic objects binder
- Copyright  : 2004 © GSC Game World
+ Copyright  : 2004 В© GSC Game World
  Author     : Evgeniy Negrobov (Jon) jon@gsc-game.kiev.ua [+ Andrey Fidrya (Zmey) af@svitonline.com]
- Last edit  : 23.10.2012 (by Viнt@rь)
+ Last edit  : 23.10.2012 (by ViРЅt@rСЊ)
 --]] -----------------------------------------------------------------------------------------------------------------
 --/														Initialize
 --]] -----------------------------------------------------------------------------------------------------------------
 function init(oObj)
 	local ini = oObj:spawn_ini()
-	-- Биндить предмет нет смысла, если у него нет секции logic
+	-- Р‘РёРЅРґРёС‚СЊ РїСЂРµРґРјРµС‚ РЅРµС‚ СЃРјС‹СЃР»Р°, РµСЃР»Рё Сѓ РЅРµРіРѕ РЅРµС‚ СЃРµРєС†РёРё logic
 	if not (ini and ini:section_exist("logic")) then
-		-- Прожектор нужно биндить даже без logic
+		-- РџСЂРѕР¶РµРєС‚РѕСЂ РЅСѓР¶РЅРѕ Р±РёРЅРґРёС‚СЊ РґР°Р¶Рµ Р±РµР· logic
 		if oObj:clsid() ~= clsid.inventory_box then
 			return
 		end

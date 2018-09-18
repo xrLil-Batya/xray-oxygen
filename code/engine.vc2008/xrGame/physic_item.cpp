@@ -33,7 +33,7 @@ CPhysicItem::~CPhysicItem	()
 
 void CPhysicItem::init		()
 {
-	m_pPhysicsShell			= 0;
+	m_pPhysicsShell			= nullptr;
 }
 
 void CPhysicItem::reinit	()
@@ -104,33 +104,26 @@ void CPhysicItem::net_Destroy		()
 
 void CPhysicItem::UpdateCL()
 {
-//	if (!xr_strcmp("bolt",cName()))
-//		Log					("--- B - CBolt",renderable.xform);
-
     //That is a visual position update from physics proxy object
     if (!H_Parent() && m_pPhysicsShell && m_pPhysicsShell->isActive())
         m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
 
-//	if (!xr_strcmp("bolt",cName()))
-//		Log						("--- C - CBolt",renderable.xform);
 	inherited::UpdateCL		();
-//	if (!xr_strcmp("bolt",cName()))
-//		Log						("--- D - CBolt",renderable.xform);
 }
 
 void CPhysicItem::activate_physic_shell()
 {
-	CObject						*object = smart_cast<CObject*>(H_Parent());
-	R_ASSERT					(object);
-	XFORM().set					(object->XFORM());
+	CObject *object = smart_cast<CObject*>(H_Parent());
+	R_ASSERT(object);
+
+	XFORM().set(object->XFORM());
 	inherited::activate_physic_shell();
-	IKinematics* K=smart_cast<IKinematics*>(Visual());
-	if(K)
+	IKinematics* pKinematics = smart_cast<IKinematics*>(Visual());
+	if (pKinematics)
 	{
-		K->CalculateBones_Invalidate();
-		K->CalculateBones(TRUE);
+		pKinematics->CalculateBones_Invalidate();
+		pKinematics->CalculateBones(TRUE);
 	}
-	///m_pPhysicsShell->Update		();	
 }
 
 void CPhysicItem::setup_physic_shell	()
@@ -142,8 +135,6 @@ void CPhysicItem::setup_physic_shell	()
 		K->CalculateBones_Invalidate();
 		K->CalculateBones(TRUE);
 	}
-
-	//m_pPhysicsShell->Update		();
 }
 
 void CPhysicItem::create_box_physic_shell	()
@@ -162,8 +153,6 @@ void CPhysicItem::create_box_physic_shell	()
 	R_ASSERT(m_pPhysicsShell);
 	m_pPhysicsShell->add_Element(E);
 	m_pPhysicsShell->setDensity(2000.f);
-	
-
 }
 
 void CPhysicItem::create_box2sphere_physic_shell()
@@ -206,6 +195,5 @@ void CPhysicItem::create_box2sphere_physic_shell()
 
 void CPhysicItem::create_physic_shell()
 {
-	///create_box_physic_shell();
 	inherited::create_physic_shell();
 }

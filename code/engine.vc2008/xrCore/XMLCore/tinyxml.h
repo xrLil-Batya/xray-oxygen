@@ -1745,7 +1745,7 @@ public:
         return _errorStr2;
     }
     /// If there is an error, print it to stdout.
-    void PrintError() const;
+    void DumpError(string4096& OutBuffer, LPCSTR strXmlFilename = nullptr) const;
     
     /// Clear the document, resetting it to the initial state.
     void Clear();

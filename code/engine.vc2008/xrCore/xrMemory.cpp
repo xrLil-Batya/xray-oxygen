@@ -64,7 +64,7 @@ XRCORE_API bool is_stack_ptr(void* _ptr)
 
 extern "C"
 {
-    XRCORE_API void*	xr_malloc_C(size_t size)
+    XRCORE_API void* xr_malloc_C(size_t size)
     {
         return Memory.mem_alloc(size);
     }
@@ -74,7 +74,7 @@ extern "C"
         Memory.mem_free(ptr);
     }
 
-    XRCORE_API void*	xr_realloc_C(void* ptr, size_t size)
+    XRCORE_API void* xr_realloc_C(void* ptr, size_t size)
     {
         return Memory.mem_realloc(ptr, size);
     }

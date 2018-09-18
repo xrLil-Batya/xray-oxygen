@@ -57,7 +57,6 @@ public:
 	virtual void					set_color			(float r, float g, float b)			= 0;
 	virtual void					set_hud_mode		(bool b)							= 0;
 	virtual bool					get_hud_mode		()									= 0;
-	virtual void					set_flare           (bool b)                            = 0;
 	virtual ~IRender_Light()		;
 };
 struct ENGINE_API		resptrcode_light	: public resptr_base<IRender_Light>
@@ -150,11 +149,10 @@ class	ENGINE_API	IRender_interface
 public:
 	enum ScreenshotMode
 	{
-		SM_NORMAL					= 0,		// jpeg,	name ignored
-		SM_FOR_CUBEMAP				= 1,		// tga,		name used as postfix
+		SM_NORMAL					= 0,		// png,		name ignored
+		SM_FOR_CUBEMAP				= 1,		// bmp,		name used as postfix
 		SM_FOR_GAMESAVE				= 2,		// dds/dxt1,name used as full-path
-		SM_FOR_LEVELMAP				= 3,		// tga,		name used as postfix (level_name)
-		SM_FOR_MPSENDING			= 4,
+		SM_FOR_LEVELMAP				= 3,		// bmp,		name used as postfix (level_name)
 		SM_forcedword				= u32(-1)
 	};
 public:
@@ -248,13 +246,10 @@ public:
 	// Main
 	virtual void					Calculate				()											= 0;
 	virtual void					Render					()											= 0;
-	virtual void                    BeforeWorldRender       ()                                          = 0; // Перед рендерингом мира
-	virtual void                    AfterWorldRender        ()                                         = 0; // После рендеринга мира (до UI)
-	
-	virtual void					Screenshot				(ScreenshotMode mode=SM_NORMAL, LPCSTR name = 0) = 0;
-	virtual	void					Screenshot				(ScreenshotMode mode, CMemoryWriter& memory_writer) = 0;
-	virtual void					ScreenshotAsyncBegin	() = 0;
-	virtual void					ScreenshotAsyncEnd		(CMemoryWriter& memory_writer) = 0;
+	virtual void                    BeforeWorldRender       ()                                          = 0; // РџРµСЂРµРґ СЂРµРЅРґРµСЂРёРЅРіРѕРј РјРёСЂР°
+	virtual void                    AfterWorldRender        ()											= 0; // РџРѕСЃР»Рµ СЂРµРЅРґРµСЂРёРЅРіР° РјРёСЂР° (РґРѕ UI)
+
+	virtual void					Screenshot				(ScreenshotMode mode = SM_NORMAL, LPCSTR name = nullptr) = 0;
 
 	// Render mode
 	virtual void					rmNear					()											= 0;
@@ -265,10 +260,6 @@ public:
 
 	// Constructor/destructor
 	virtual ~IRender_interface();
-protected:
-	virtual	void					ScreenshotImpl			(ScreenshotMode mode, LPCSTR name, CMemoryWriter* memory_writer) = 0;
 };
-
-//extern ENGINE_API	IRender_interface*	Render;
 
 #endif

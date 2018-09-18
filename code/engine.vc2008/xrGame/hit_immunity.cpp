@@ -1,10 +1,8 @@
-// hit_immunity.cpp:	êëàññ äëÿ òåõ îáúåêòîâ, êîòîðûå ïîääåðæèâàþò
-//						êîýôôèöèåíòû èììóíèòåòà äëÿ ðàçíûõ òèïîâ õèòîâ
+// hit_immunity.cpp:	ÐºÐ»Ð°ÑÑ Ð´Ð»Ñ Ñ‚ÐµÑ… Ð¾Ð±ÑŠÐµÐºÑ‚Ð¾Ð², ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð¿Ð¾Ð´Ð´ÐµÑ€Ð¶Ð¸Ð²Ð°ÑŽÑ‚
+//						ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚Ñ‹ Ð¸Ð¼Ð¼ÑƒÐ½Ð¸Ñ‚ÐµÑ‚Ð° Ð´Ð»Ñ Ñ€Ð°Ð·Ð½Ñ‹Ñ… Ñ‚Ð¸Ð¿Ð¾Ð² Ñ…Ð¸Ñ‚Ð¾Ð²
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "hit_immunity.h"
-
 
 CHitImmunity::CHitImmunity()
 {
@@ -13,11 +11,11 @@ CHitImmunity::CHitImmunity()
 		m_HitImmunityKoefs[i] = 1.0f;
 }
 
-
 CHitImmunity::~CHitImmunity()
 {
 }
-void CHitImmunity::LoadImmunities(LPCSTR imm_sect, CInifile const * ini)
+
+void CHitImmunity::LoadImmunities(LPCSTR imm_sect, CInifile* ini)
 {
 	R_ASSERT2	(ini->section_exist(imm_sect), imm_sect);
 
@@ -30,11 +28,10 @@ void CHitImmunity::LoadImmunities(LPCSTR imm_sect, CInifile const * ini)
 	m_HitImmunityKoefs[ALife::eHitTypeChemicalBurn] = ini->r_float(imm_sect,"chemical_burn_immunity");
 	m_HitImmunityKoefs[ALife::eHitTypeExplosion]	= ini->r_float(imm_sect,"explosion_immunity");
 	m_HitImmunityKoefs[ALife::eHitTypeFireWound]	= ini->r_float(imm_sect,"fire_wound_immunity");
-//	m_HitImmunityKoefs[ALife::eHitTypePhysicStrike]	= READ_IF_EXISTS(ini, r_float, imm_sect,"physic_strike_wound_immunity", 1.0f);
 	m_HitImmunityKoefs[ALife::eHitTypeLightBurn]	= m_HitImmunityKoefs[ALife::eHitTypeBurn];
 }
 
-void CHitImmunity::AddImmunities(LPCSTR imm_sect, CInifile const * ini)
+void CHitImmunity::AddImmunities(LPCSTR imm_sect, CInifile* ini)
 {
 	R_ASSERT2	(ini->section_exist(imm_sect), imm_sect);
 
@@ -47,6 +44,5 @@ void CHitImmunity::AddImmunities(LPCSTR imm_sect, CInifile const * ini)
 	m_HitImmunityKoefs[ALife::eHitTypeChemicalBurn] += READ_IF_EXISTS(ini, r_float, imm_sect,"chemical_burn_immunity", 0.0f);
 	m_HitImmunityKoefs[ALife::eHitTypeExplosion]	+= READ_IF_EXISTS(ini, r_float, imm_sect,"explosion_immunity", 0.0f);
 	m_HitImmunityKoefs[ALife::eHitTypeFireWound]	+= READ_IF_EXISTS(ini, r_float, imm_sect,"fire_wound_immunity", 0.0f);
-//	m_HitImmunityKoefs[ALife::eHitTypePhysicStrike]	+= READ_IF_EXISTS(ini, r_float, imm_sect,"physic_strike_wound_immunity", 0.0f);
 	m_HitImmunityKoefs[ALife::eHitTypeLightBurn]	= m_HitImmunityKoefs[ALife::eHitTypeBurn];
 }

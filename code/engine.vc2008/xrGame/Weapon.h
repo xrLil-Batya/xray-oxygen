@@ -1,6 +1,6 @@
 #pragma once
-
-#include "../xrphysics/PhysicsShell.h"
+#include "../xrPhysics/IPhysicalWeaponObject.h"
+#include "../xrPhysics/PhysicsShell.h"
 #include "weaponammo.h"
 #include "PHShellCreator.h"
 
@@ -15,6 +15,8 @@
 #include "CameraRecoil.h"
 #include "actor.h"
 
+#include "CMagazine.h"
+
 class CEntity;
 class ENGINE_API CMotionDef;
 class CSE_ALifeItemWeapon;
@@ -24,10 +26,8 @@ class CParticlesObject;
 class CUIWindow;
 class CBinocularsVision;
 class CNightVisionEffector;
-class Magazine;
 
-class CWeapon : public CHudItemObject,
-				public CShootingObject
+class CWeapon : public CHudItemObject, public CShootingObject, public IWeaponObject, public CMagazine
 {
 private:
 	typedef CHudItemObject inherited;
@@ -44,6 +44,7 @@ public:
 	virtual void			net_Export			(NET_Packet& P);
 	
 	virtual CWeapon			*cast_weapon			()					{return this;}
+	virtual CMagazine		*cast_magazine			()					{return 0;}
 	virtual CWeaponMagazined*cast_weapon_magazined	()					{return 0;}
 
 
@@ -66,7 +67,7 @@ public:
 	virtual void			OnH_A_Chield		();
 	virtual void			OnH_B_Independent	(bool just_before_destroy);
 	virtual void			OnH_A_Independent	();
-	virtual void			OnEvent				(NET_Packet& P, u16 type);// {inherited::OnEvent(P,type);}
+	virtual void			OnEvent				(NET_Packet& P, u16 type);
 
 	virtual	void			Hit					(SHit* pHDS);
 
@@ -138,7 +139,7 @@ protected:
 	virtual bool			AllowBore		();
 public:
 			bool IsGrenadeLauncherAttached	() const;
-			bool IsScopeAttached			() const;
+	virtual bool IsScopeAttached			() const;
 			bool IsSilencerAttached			() const;
 
 	virtual bool GrenadeLauncherAttachable();
@@ -167,15 +168,15 @@ public:
 	float GetHudFov();
 
 	//для отоброажения иконок апгрейдов в интерфейсе
-	int	GetScopeX() {return pSettings->r_s32Std(m_scopes[m_cur_scope], "scope_x");}
-	int	GetScopeY() {return pSettings->r_s32Std(m_scopes[m_cur_scope], "scope_y");}
+	int	GetScopeX() {return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_x");}
+	int	GetScopeY() {return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_y");}
 	int	GetSilencerX() {return m_iSilencerX;}
 	int	GetSilencerY() {return m_iSilencerY;}
 	int	GetGrenadeLauncherX() {return m_iGrenadeLauncherX;}
 	int	GetGrenadeLauncherY() {return m_iGrenadeLauncherY;}
 
 	const std::string& GetGrenadeLauncherName	() const{return m_sGrenadeLauncherName;}
-	const std::string GetScopeName				() const{return pSettings->r_stringStd(m_scopes[m_cur_scope], "scope_name");}
+	const std::string GetScopeName				() const{return pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");}
 	const std::string& GetSilencerName			() const{return m_sSilencerName;}
 
 	IC void	ForceUpdateAmmo						()		{ m_BriefInfo_CalcFrame = 0; }
@@ -222,7 +223,7 @@ protected:
 		
 		Fvector			m_ZoomDof;
 		Fvector4		m_ReloadDof;
-		BOOL			m_bUseDynamicZoom;
+		bool			m_bUseDynamicZoom;
 		shared_str		m_sUseZoomPostprocess;
 		shared_str		m_sUseBinocularVision;
 		CBinocularsVision*		m_pVision;
@@ -239,7 +240,7 @@ public:
 	virtual	void			ZoomDec				();
 	virtual void			OnZoomIn			();
 	virtual void			OnZoomOut			();
-	IC		bool			IsZoomed			()	const		{return m_zoom_params.m_bIsZoomModeNow;};
+	virtual	bool			IsZoomed			()	const		{return m_zoom_params.m_bIsZoomModeNow;};
 	CUIWindow*				ZoomTexture			();	
 
 
@@ -395,11 +396,6 @@ protected:
 	//для отдачи оружия
 	Fvector					m_vRecoilDeltaAngle;
 
-	//для сталкеров, чтоб они знали эффективные границы использования 
-	//оружия
-	float					m_fMinRadius;
-	float					m_fMaxRadius;
-
 protected:	
 	//для второго ствола
 			void			StartFlameParticles2();
@@ -446,35 +442,28 @@ public:
 			float			GetFirstBulletDisp	()	const	{ return m_first_bullet_controller.get_fire_dispertion(); };
 
 protected:
-	// Текущее количество патронов в магазине оружия
-	int						iAmmoElapsed;
+	
+	
 
-	// Вместительность патронов в магазине
-	int						iMagazineSize;
+	
 
 	//для подсчета в GetSuitableAmmoTotal
-	mutable int				m_iAmmoCurrentTotal;
+	
 	mutable u32				m_BriefInfo_CalcFrame;	//кадр на котором просчитали кол-во патронов
 	bool					m_bAmmoWasSpawned;
 
 	virtual bool			IsNecessaryItem	    (const shared_str& item_sect);
 
 public:
-	xr_vector<shared_str>	m_ammoTypes;
+	
 
-	using SCOPES_VECTOR = xr_vector<std::string>;
+	using SCOPES_VECTOR = xr_vector<xr_string>;
 	SCOPES_VECTOR			m_scopes;
 	u8						m_cur_scope;
 
-	CWeaponAmmo*			m_pCurrentAmmo;
-	u8						m_ammoType;
-	bool					m_bHasTracers;
-	u8						m_u8TracerColorID;
 	u8						m_set_next_ammoType_on_reload;
-	// Multitype ammo support
-	xr_vector<CCartridge>	m_magazine;
-	CCartridge				m_DefaultCartridge;
-	float					m_fCurrentCartirdgeDisp;
+	
+
 
 protected:
 	u32						m_ef_main_weapon_type;
@@ -487,8 +476,7 @@ public:
 	// Тип оружия
 	virtual u32				ef_weapon_type		() const;
 
-	// Получаем вес обоймы
-	float					GetMagazineWeight	(const decltype(m_magazine)& mag) const;
+	
 
 	// Получаем флаг бесконечных патрон
 	bool					unlimited_ammo		();

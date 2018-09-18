@@ -5,10 +5,10 @@
 class CRadioactiveZone : public CCustomZone
 {
 private:
-	typedef	CCustomZone	inherited;
+	using inherited =	CCustomZone;
 public:
-	CRadioactiveZone(void);
-	virtual ~CRadioactiveZone(void);
+	CRadioactiveZone();
+	virtual ~CRadioactiveZone();
 
 	virtual void Load					(LPCSTR section);
 	virtual void Affect					(SZoneObjectInfo* O);

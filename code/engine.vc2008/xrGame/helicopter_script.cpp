@@ -2,6 +2,7 @@
 #include "helicopter.h"
 #include "script_game_object.h"
 
+#include <luabind/luabind.hpp>
 int CHelicopter::GetMovementState()
 {
 	return m_movement.type;

@@ -5,57 +5,21 @@ void	CRenderTarget::phase_scene_prepare()
 {
 	PIX_EVENT(phase_scene_prepare);
 
-	//thx to K.D.
-	// we need to clean up G-buffer every frame to avoid "ghosting" on sky
-	u_setrt(rt_Position, rt_Normal, rt_Color, 0);
-	float ColorRGBA[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
-
-	CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-	float fValue = E.m_fSunShaftsIntensity;
-	//	TODO: add multiplication by sun color here
-
-	//	TODO: DX10: Check if complete clear of _ALL_ rendertargets will increase
-	//	FPS. Make check for SLI configuration.
-	if (RImplementation.o.advancedpp &&
-		(
-			ps_r_flags.test(R_FLAG_SOFT_PARTICLES) || ps_r_bokeh_quality > 0 ||
-			((ps_r_sun_shafts>0) && (fValue >= 0.0001)) ||
-			(ps_r_ssao>0)
-			)
-		)
+	// Thx to K.D.
+	// We need to clean up G-buffer every frame to avoid "ghosting" on sky
 	{
-		//	TODO: DX10: Check if we need to set RT here.
-		if (!RImplementation.o.dx10_msaa)
-			u_setrt(Device.dwWidth, Device.dwHeight, rt_Position->pRT, NULL, NULL, HW.pBaseZB);
-		else
-			u_setrt(Device.dwWidth, Device.dwHeight, rt_Position->pRT, NULL, NULL, rt_MSAADepth->pZRT);
-
 		float ColorRGBA[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		HW.pDevice->ClearRenderTargetView(rt_Position->pRT, ColorRGBA);
-		if (!RImplementation.o.dx10_msaa)
-			HW.pDevice->ClearDepthStencilView(HW.pBaseZB, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0);
-		else
-		{
-			HW.pDevice->ClearRenderTargetView(rt_Color->pRT, ColorRGBA);
-			HW.pDevice->ClearRenderTargetView(rt_Accumulator->pRT, ColorRGBA);
-			HW.pDevice->ClearDepthStencilView(rt_MSAADepth->pZRT, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0);
-			HW.pDevice->ClearDepthStencilView(HW.pBaseZB, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0);
-		}
-	}
-	else
-	{
-		//	TODO: DX10: Check if we need to set RT here.
-		if (!RImplementation.o.dx10_msaa)
-		{
-			u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
-			HW.pDevice->ClearDepthStencilView(HW.pBaseZB, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0);
-		}
-		else
-		{
-			u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, rt_MSAADepth->pZRT);
-			HW.pDevice->ClearDepthStencilView(rt_MSAADepth->pZRT, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0);
-		}
+
+		HW.pContext->ClearRenderTargetView(rt_Position->pRT,	ColorRGBA);
+		HW.pContext->ClearRenderTargetView(rt_Color->pRT,		ColorRGBA);
+		HW.pContext->ClearRenderTargetView(rt_Accumulator->pRT, ColorRGBA);
+		HW.pContext->ClearDepthStencilView(HW.pBaseZB, D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
+
+		if (!RImplementation.o.dx10_gbuffer_opt)
+			HW.pContext->ClearRenderTargetView(rt_Normal->pRT, ColorRGBA);
+
+		if (RImplementation.o.dx10_msaa)
+			HW.pContext->ClearDepthStencilView(rt_MSAADepth->pZRT, D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
 	}
 
 	//	Igor: for volumetric lights
@@ -66,6 +30,9 @@ void	CRenderTarget::phase_scene_prepare()
 // begin
 void	CRenderTarget::phase_scene_begin()
 {
+	// Enable ANISO
+	SSManager.SetMaxAnisotropy(ps_r_tf_Anisotropic);
+
 	ID3DDepthStencilView* pZB = HW.pBaseZB;
 
 	if (RImplementation.o.dx10_msaa)
@@ -95,7 +62,7 @@ void	CRenderTarget::phase_scene_begin()
 void	CRenderTarget::disable_aniso()
 {
 	// Disable ANISO
-	// TODO: DX10: disable aniso here
+	SSManager.SetMaxAnisotropy(1);
 }
 
 void	CRenderTarget::phase_scene_end()

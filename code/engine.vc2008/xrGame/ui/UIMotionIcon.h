@@ -7,8 +7,6 @@ class CUIMotionIcon: public CUIWindow
 	using inherited = CUIWindow;
 
 private:
-	CUIProgressBar		m_luminosity_bar;
-	CUIProgressBar		m_noise_bar;
 	CUIProgressShape 	m_luminosity_shape;
 	CUIProgressShape 	m_noise_shape;
 
@@ -31,6 +29,10 @@ private:
 	float						cur_pos;
 
 public:
+
+    bool                    bVisible;
+
+public:
 	virtual					~CUIMotionIcon		();
 							CUIMotionIcon		();
 	virtual	void			Update				();
@@ -41,3 +43,5 @@ public:
 			void			SetActorVisibility	(u16 who_id, float value);
 			void			ResetVisibility		();
 };
+
+extern CUIMotionIcon* g_pMotionIcon;

@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include <dinput.h>
 #include "key_binding_registrator.h"
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 int dik_to_bind(int dik){
@@ -35,10 +36,7 @@ void key_binding_registrator::script_register(lua_State *L)
 				value("kCAM_1",						int(kCAM_1)),
 				value("kCAM_2",						int(kCAM_2)),
 				value("kCAM_3",						int(kCAM_3)),
-				value("kCAM_ZOOM_IN",				int(kCAM_ZOOM_IN)),
-				value("kCAM_ZOOM_OUT",				int(kCAM_ZOOM_OUT)),
 				value("kTORCH",						int(kTORCH)),
-				value("kTORCH_MODE",				int(kTORCH_MODE)),
 				value("kNIGHT_VISION",				int(kNIGHT_VISION)),
 				value("kWPN_1",						int(kWPN_1)),
 				value("kWPN_2",						int(kWPN_2)),
@@ -56,7 +54,16 @@ void key_binding_registrator::script_register(lua_State *L)
 				value("kSCORES",					int(kSCORES)),
 				value("kSCREENSHOT",				int(kSCREENSHOT)),
 				value("kQUIT",						int(kQUIT)),
+				value("kDEV_NOCLIP",				int(kDEV_NOCLIP)),
+				value("kDEV_ACTION1",				int(kDEV_ACTION1)),
+				value("kDEV_ACTION2",				int(kDEV_ACTION2)),
+				value("kDEV_ACTION3",				int(kDEV_ACTION3)),
+				value("kDEV_ACTION4",				int(kDEV_ACTION4)),
 				value("kCONSOLE",					int(kCONSOLE)),
+				value("kQUICK_USE_1",				int(kQUICK_USE_1)),
+				value("kQUICK_USE_2",				int(kQUICK_USE_2)),
+				value("kQUICK_USE_3",				int(kQUICK_USE_3)),
+				value("kQUICK_USE_4",				int(kQUICK_USE_4)),
 				value("kINVENTORY",					int(kINVENTORY))
 			],
 		class_<key_binding_registrator >("DIK_keys")

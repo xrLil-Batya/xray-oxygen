@@ -13,7 +13,7 @@ void 	XRCORE_API		Log			(const char* msg, const Fmatrix& dop);
 void 	XRCORE_API 		Log			(const char* msg, const unsigned long long dop);
 void 	XRCORE_API		LogWinErr	(const char* msg, long 			err_code);
 void	XRCORE_API		LogXrayOffset(const char* key, LPVOID base, LPVOID pval); //luaicp only
-typedef void	( * LogCallback)	(const char* string);
+using LogCallback = void	( *)	(const char* string);
 LogCallback	XRCORE_API			SetLogCB	(LogCallback cb);
 void 	XRCORE_API				CreateLog	(BOOL no_log=FALSE);
 void 	XRCORE_API				InitLog		();

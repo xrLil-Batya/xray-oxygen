@@ -3,6 +3,7 @@
 
 #include "xrCDB.h"
 #include "frustum.h"
+#include "xrCDB_Model.h"
 
 using namespace CDB;
 using namespace Opcode;

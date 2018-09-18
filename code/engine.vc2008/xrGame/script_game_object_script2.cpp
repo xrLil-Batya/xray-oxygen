@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "luabind/luabind.hpp"
 #include "script_game_object.h"
 #include "alife_space.h"
 #include "script_entity_space.h"
@@ -27,6 +28,8 @@
 #include "danger_object.h"
 #include "smart_cover_object.h"
 
+#include "../../SDK/include/luabind/adopt_policy.hpp"
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 extern CScriptActionPlanner *script_action_planner(CScriptGameObject *obj);
@@ -72,6 +75,8 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.property("psy_health",				&CScriptGameObject::GetPsyHealth,		&CScriptGameObject::SetPsyHealth)
 		.property("power",					&CScriptGameObject::GetPower,			&CScriptGameObject::SetPower)
 		.property("satiety",				&CScriptGameObject::GetSatiety,			&CScriptGameObject::ChangeSatiety)
+		.property("alcohol",                &CScriptGameObject::GetAlcohol,         &CScriptGameObject::ChangeAlcohol)
+		.property("thirst",                 &CScriptGameObject::GetThirst,          &CScriptGameObject::ChangeThirst)
 		.property("radiation",				&CScriptGameObject::GetRadiation,		&CScriptGameObject::SetRadiation)
 		.property("morale",					&CScriptGameObject::GetMorale,			&CScriptGameObject::SetMorale)
 		.property("bleeding",				&CScriptGameObject::GetBleeding,		&CScriptGameObject::SetBleeding)
@@ -217,7 +222,7 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("deadbody_closed_status",		&CScriptGameObject::deadbody_closed_status)
 		.def("deadbody_can_take",			&CScriptGameObject::deadbody_can_take)
 		.def("deadbody_can_take_status",	&CScriptGameObject::deadbody_can_take_status)
-
+		.def("set_actor_name", 				&CScriptGameObject::set_actor_name)
 		.def("can_select_weapon",			(bool (CScriptGameObject::*)() const)&CScriptGameObject::can_select_weapon)
 		.def("can_select_weapon",			(void (CScriptGameObject::*)(bool))&CScriptGameObject::can_select_weapon)
 		// searchlight

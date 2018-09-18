@@ -10,7 +10,7 @@
 CHelmet::CHelmet()
     : m_binocularVision(nullptr)
 {
-	m_flags.set(FUsingCondition, TRUE);
+	m_flags.set(FUsingCondition, true);
 	m_HitTypeProtection.resize(ALife::eHitTypeMax);
 	for(int i=0; i<ALife::eHitTypeMax; i++)
 		m_HitTypeProtection[i] = 1.0f;
@@ -149,7 +149,7 @@ float CHelmet::GetBoneArmor(s16 element)
 	return m_boneProtection->getBoneArmor(element);
 }
 
-bool CHelmet::install_upgrade_impl( LPCSTR section, bool test )
+bool CHelmet::install_upgrade_impl( const char* section, bool test )
 {
 	bool result = inherited::install_upgrade_impl( section, test );
 
@@ -225,9 +225,9 @@ float CHelmet::HitThroughArmor(float hit_power, s16 element, float ap, bool& add
 			VERIFY(NewHitPower>=0.0f);
 		else
 		{
-			//пуля НЕ пробила бронь
+			//РїСѓР»СЏ РќР• РїСЂРѕР±РёР»Р° Р±СЂРѕРЅСЊ
 			NewHitPower *= m_boneProtection->m_fHitFracActor;
-			add_wound = false; 	//раны нет
+			add_wound = false; 	//СЂР°РЅС‹ РЅРµС‚
 		}
 	}
 	else
@@ -246,7 +246,7 @@ float CHelmet::HitThroughArmor(float hit_power, s16 element, float ap, bool& add
 		if(NewHitPower < 0.f)
 			NewHitPower = 0.f;
 	}
-	//увеличить изношенность шлема
+	//СѓРІРµР»РёС‡РёС‚СЊ РёР·РЅРѕС€РµРЅРЅРѕСЃС‚СЊ С€Р»РµРјР°
 	Hit(hit_power, hit_type);
 
 	return NewHitPower;

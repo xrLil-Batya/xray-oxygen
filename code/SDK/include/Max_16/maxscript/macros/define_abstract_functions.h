@@ -28,7 +28,7 @@
  *  represented by instances of the Primitive class and declared using
  *  these same def macro headers & corresponding def_primitive macros.
  *	
- *	Copyright © John Wainwright 1996
+ *	Copyright Â© John Wainwright 1996
  *
  */
 

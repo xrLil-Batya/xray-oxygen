@@ -21,7 +21,7 @@ public:
 
 	void		set	(u32 ltType, float x, float y, float z)
 	{
-        std::memset(this,0,sizeof(Flight));
+		memset(this, 0, sizeof(Flight));
 		type=ltType;
 		diffuse.set(1.0f, 1.0f, 1.0f, 1.0f);
 		specular.set(diffuse);
@@ -58,7 +58,7 @@ public:
 
 	void		set	(float r, float g, float b)
 	{
-        std::memset(this,0,sizeof(Fmaterial));
+        memset(this,0,sizeof(Fmaterial));
 		diffuse.r = ambient.r = r;
 		diffuse.g = ambient.g = g;
 		diffuse.b = ambient.b = b;
@@ -68,7 +68,7 @@ public:
 
 	void	set(float r, float g, float b, float a)
 	{
-        std::memset(this,0,sizeof(Fmaterial));
+        memset(this,0,sizeof(Fmaterial));
 		diffuse.r = ambient.r = r;
 		diffuse.g = ambient.g = g;
 		diffuse.b = ambient.b = b;
@@ -98,25 +98,27 @@ public:
 #ifndef NO_XR_VDECLARATOR
 struct	VDeclarator	: public svector<D3DVERTEXELEMENT9, MAXD3DDECLLENGTH+1>
 {
-	void	set		(u32 FVF)
+	void set(u32 FVF)
 	{
-		D3DXDeclaratorFromFVF	(FVF,begin());
-		resize					(D3DXGetDeclLength(begin())+1);
+		D3DXDeclaratorFromFVF(FVF, begin());
+		resize(D3DXGetDeclLength(begin()) + 1);
 	}
-	void	set		(D3DVERTEXELEMENT9* dcl)
+	void set(D3DVERTEXELEMENT9* dcl)
 	{
-		resize					(D3DXGetDeclLength(dcl)+1);
-        std::memcpy(begin(),dcl,size()*sizeof(D3DVERTEXELEMENT9));
+		resize(D3DXGetDeclLength(dcl) + 1);
+		memcpy(begin(), dcl, size() * sizeof(D3DVERTEXELEMENT9));
 	}
-	void	set		(const VDeclarator& d)
+	void set(const VDeclarator& d)
 	{
-		*this		= d;
+		*this = d;
 	}
-	u32		vertex	()				{ return D3DXGetDeclVertexSize(begin(),0);	}
-	BOOL	equal	(VDeclarator& d)
+	u32 vertex() { return D3DXGetDeclVertexSize(begin(), 0); }
+	BOOL equal(VDeclarator& d)
 	{
-		if (size()!=d.size())	return false;
-		else					return 0==memcmp(begin(),d.begin(),size()*sizeof(D3DVERTEXELEMENT9));
+		if (size() != d.size())	
+			return false;
+		else 
+			return !memcmp(begin(), d.begin(), size() * sizeof(D3DVERTEXELEMENT9));
 	}
 };
 #endif

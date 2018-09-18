@@ -9,6 +9,10 @@
 #include "stdafx.h"
 #include "script_ini_file.h"
 
+#include <luabind/luabind.hpp>
+#include <luabind/adopt_policy.hpp>
+#include <luabind/out_value_policy.hpp>
+
 using namespace luabind;
 
 CScriptIniFile *get_system_ini()

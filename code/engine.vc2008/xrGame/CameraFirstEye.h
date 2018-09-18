@@ -5,7 +5,7 @@
 
 class CCameraFirstEye : public CCameraBase
 {
-	typedef CCameraBase inherited;
+	using inherited = CCameraBase;
 	Fvector			lookat_point;
 	bool			lookat_active;
 	void			UpdateLookat	();

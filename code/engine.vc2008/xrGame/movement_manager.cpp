@@ -84,7 +84,6 @@ void CMovementManager::reinit		()
 	m_path_type						= ePathTypeNoPath;
 	m_path_state					= ePathStateDummy;
 	m_path_actuality				= true;
-	m_speed							= 0.f;
 	m_old_desirable_speed			= 0.f;
 	m_build_at_once					= false;
 

@@ -5,7 +5,7 @@
 #include "UIXmlInit.h"
 #include "object_broker.h"
 #include "../../xrEngine/xr_input.h"
-#include "../xr_level_controller.h"
+#include "../xrEngine/xr_level_controller.h"
 #include "../UIGame.h"
 #include "../level.h"
 #include "UIPdaWnd.h"
@@ -238,10 +238,10 @@ void CUISequenceSimpleItem::Start()
 	}
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		Device.Pause(false, true, false, "simpleitem_start");
+		Device.Pause(false, true, false, "simpleitem_startPauseState");
 
 	if (m_flags.test(etiNeedPauseSound))
-		Device.Pause(true, false, true, "simpleitem_start");
+		Device.Pause(true, false, true, "simpleitem_startSound");
 
 	if (m_desired_cursor_pos.x && m_desired_cursor_pos.y)
 		GetUICursor().SetUICursorPosition(m_desired_cursor_pos);
@@ -295,10 +295,10 @@ bool CUISequenceSimpleItem::Stop(bool bForce)
 		Device.Pause(false, false, false, "simpleitem_stop");
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		Device.Pause(true, true, false, "simpleitem_stop");
+		Device.Pause(true, true, false, "simpleitem_stopPauseState");
 
 	if (m_flags.test(etiNeedPauseSound))
-		Device.Pause(false, false, true, "simpleitem_stop");
+		Device.Pause(false, true, true, "simpleitem_stopSound");
 
 	if (g_pGameLevel)
 	{
@@ -309,6 +309,7 @@ bool CUISequenceSimpleItem::Stop(bool bForce)
 	return true;
 }
 
+#include <luabind/luabind.hpp>
 void CUISequenceSimpleItem::OnKeyboardPress(int dik)
 {
 	if (!m_flags.test(etiCanBeStopped))

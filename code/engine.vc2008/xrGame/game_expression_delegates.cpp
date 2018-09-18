@@ -37,7 +37,7 @@ float GetHelmet##protectionType##Protection() \
     CHelmet* helmet = smart_cast<CHelmet*>(itm); \
     if (helmet != nullptr) \
     { \
-        helmet->GetDefHitTypeProtection(ALife::protectionType); \
+        return helmet->GetDefHitTypeProtection(ALife::protectionType); \
     } \
     return 0.0f; \
 }
@@ -102,75 +102,70 @@ DECLARE_ZONEMAXPOWER_PROTECTION_DELEGATE(eHitTypeExplosion);
 
 #undef DECLARE_ZONEMAXPOWER_PROTECTION_DELEGATE
 
-int GetActorPDAContactsName()
-{
-    return (int)g_actor->GetPDA()->ActiveContactsNum();
-}
+int GetActorPDAContactsName()	{return (int)g_actor->GetPDA()->ActiveContactsNum();	}
 
-LPCSTR GetPlayerName()
-{
-    return g_actor->Name();
-}
+LPCSTR GetPlayerName()			{ return g_actor->Name();								}
 
-float GetPlayerHealth()
-{
-    return g_actor->conditions().GetHealth();
-}
+float GetPlayerHealth()			{ return g_actor->conditions().GetHealth();				}
+float GetPlayerPower()			{ return g_actor->conditions().GetPower();				}
+float GetPlayerRestoreSpeed()	{ return g_actor->GetRestoreSpeed(ALife::ePowerRestoreSpeed) / g_actor->conditions().GetMaxPowerRestoreSpeed();;}
 
 void RegisterExpressionDelegates ()
 {
     //Actor outfit protections
-    g_uiExpressionMgr.RegisterVariable("fltActorOutfitBurnProtection",          GetOutfiteHitTypeBurnProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorOutfitShockProtection",         GetOutfiteHitTypeShockProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorOutfitChemicalBurnProtection",  GetOutfiteHitTypeChemicalBurnProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorOutfitRadiationProtection",     GetOutfiteHitTypeRadiationProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorOutfitTelepaticProtection",     GetOutfiteHitTypeTelepaticProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorOutfitWoundProtection",         GetOutfiteHitTypeWoundProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorOutfitFireWoundProtection",     GetOutfiteHitTypeFireWoundProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorOutfitStrikeProtection",        GetOutfiteHitTypeStrikeProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorOutfitExplosionProtection",     GetOutfiteHitTypeExplosionProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorOutfitBurnProtection",				GetOutfiteHitTypeBurnProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorOutfitShockProtection",				GetOutfiteHitTypeShockProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorOutfitChemicalBurnProtection",		GetOutfiteHitTypeChemicalBurnProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorOutfitRadiationProtection",			GetOutfiteHitTypeRadiationProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorOutfitTelepaticProtection",			GetOutfiteHitTypeTelepaticProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorOutfitWoundProtection",				GetOutfiteHitTypeWoundProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorOutfitFireWoundProtection",			GetOutfiteHitTypeFireWoundProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorOutfitStrikeProtection",			GetOutfiteHitTypeStrikeProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorOutfitExplosionProtection",			GetOutfiteHitTypeExplosionProtection);
 
     //Helmet outfit protections
-    g_uiExpressionMgr.RegisterVariable("fltActorHelmetBurnProtection",          GetHelmeteHitTypeBurnProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorHelmetShockProtection",         GetHelmeteHitTypeShockProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorHelmetChemicalBurnProtection",  GetHelmeteHitTypeChemicalBurnProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorHelmetRadiationProtection",     GetHelmeteHitTypeRadiationProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorHelmetTelepaticProtection",     GetHelmeteHitTypeTelepaticProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorHelmetWoundProtection",         GetHelmeteHitTypeWoundProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorHelmetFireWoundProtection",     GetHelmeteHitTypeFireWoundProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorHelmetStrikeProtection",        GetHelmeteHitTypeStrikeProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorHelmetExplosionProtection",     GetHelmeteHitTypeExplosionProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorHelmetBurnProtection",				GetHelmeteHitTypeBurnProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorHelmetShockProtection",				GetHelmeteHitTypeShockProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorHelmetChemicalBurnProtection",		GetHelmeteHitTypeChemicalBurnProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorHelmetRadiationProtection",			GetHelmeteHitTypeRadiationProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorHelmetTelepaticProtection",			GetHelmeteHitTypeTelepaticProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorHelmetWoundProtection",				GetHelmeteHitTypeWoundProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorHelmetFireWoundProtection",			GetHelmeteHitTypeFireWoundProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorHelmetStrikeProtection",			GetHelmeteHitTypeStrikeProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorHelmetExplosionProtection",			GetHelmeteHitTypeExplosionProtection);
     
     //Booster protections
-    g_uiExpressionMgr.RegisterVariable("fltActorBoostRadiationProtection",     GetBoostereBoostRadiationProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorBoostTelepaticProtection",     GetBoostereBoostTelepaticProtection);
-    g_uiExpressionMgr.RegisterVariable("fltActorBoostChemicalBurnProtection",  GetBoostereBoostChemicalBurnProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorBoostRadiationProtection",			GetBoostereBoostRadiationProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorBoostTelepaticProtection",			GetBoostereBoostTelepaticProtection);
+    g_uiExpressionMgr.RegisterVariable("fltActorBoostChemicalBurnProtection",		GetBoostereBoostChemicalBurnProtection);
 
     //Artefacts on belt protection
-    g_uiExpressionMgr.RegisterVariable("fltArtefactsBurnProtection",          GetArtefactseHitTypeBurnProtection);
-    g_uiExpressionMgr.RegisterVariable("fltArtefactsShockProtection",         GetArtefactseHitTypeShockProtection);
-    g_uiExpressionMgr.RegisterVariable("fltArtefactsChemicalBurnProtection",  GetArtefactseHitTypeChemicalBurnProtection);
-    g_uiExpressionMgr.RegisterVariable("fltArtefactsRadiationProtection",     GetArtefactseHitTypeRadiationProtection);
-    g_uiExpressionMgr.RegisterVariable("fltArtefactsTelepaticProtection",     GetArtefactseHitTypeTelepaticProtection);
-    g_uiExpressionMgr.RegisterVariable("fltArtefactsWoundProtection",         GetArtefactseHitTypeWoundProtection);
-    g_uiExpressionMgr.RegisterVariable("fltArtefactsFireWoundProtection",     GetArtefactseHitTypeFireWoundProtection);
-    g_uiExpressionMgr.RegisterVariable("fltArtefactsStrikeProtection",        GetArtefactseHitTypeStrikeProtection);
-    g_uiExpressionMgr.RegisterVariable("fltArtefactsExplosionProtection",     GetArtefactseHitTypeExplosionProtection);
+    g_uiExpressionMgr.RegisterVariable("fltArtefactsBurnProtection",				GetArtefactseHitTypeBurnProtection);
+    g_uiExpressionMgr.RegisterVariable("fltArtefactsShockProtection",				GetArtefactseHitTypeShockProtection);
+    g_uiExpressionMgr.RegisterVariable("fltArtefactsChemicalBurnProtection",		GetArtefactseHitTypeChemicalBurnProtection);
+    g_uiExpressionMgr.RegisterVariable("fltArtefactsRadiationProtection",			GetArtefactseHitTypeRadiationProtection);
+    g_uiExpressionMgr.RegisterVariable("fltArtefactsTelepaticProtection",			GetArtefactseHitTypeTelepaticProtection);
+    g_uiExpressionMgr.RegisterVariable("fltArtefactsWoundProtection",				GetArtefactseHitTypeWoundProtection);
+    g_uiExpressionMgr.RegisterVariable("fltArtefactsFireWoundProtection",			GetArtefactseHitTypeFireWoundProtection);
+    g_uiExpressionMgr.RegisterVariable("fltArtefactsStrikeProtection",				GetArtefactseHitTypeStrikeProtection);
+    g_uiExpressionMgr.RegisterVariable("fltArtefactsExplosionProtection",			GetArtefactseHitTypeExplosionProtection);
 
     //Zone max power (maximum of protection value)
-    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerBurnProtection",          GetZoneMaxPowereHitTypeBurn);
-    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerShockProtection",         GetZoneMaxPowereHitTypeShock);
-    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerChemicalBurnProtection",  GetZoneMaxPowereHitTypeChemicalBurn);
-    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerRadiationProtection",     GetZoneMaxPowereHitTypeRadiation);
-    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerTelepaticProtection",     GetZoneMaxPowereHitTypeTelepatic);
-    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerWoundProtection",         GetZoneMaxPowereHitTypeWound);
-    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerFireWoundProtection",     GetZoneMaxPowereHitTypeFireWound);
-    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerStrikeProtection",        GetZoneMaxPowereHitTypeStrike);
-    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerExplosionProtection",     GetZoneMaxPowereHitTypeExplosion);
+    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerBurnProtection",				GetZoneMaxPowereHitTypeBurn);
+    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerShockProtection",			GetZoneMaxPowereHitTypeShock);
+    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerChemicalBurnProtection",		GetZoneMaxPowereHitTypeChemicalBurn);
+    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerRadiationProtection",		GetZoneMaxPowereHitTypeRadiation);
+    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerTelepaticProtection",		GetZoneMaxPowereHitTypeTelepatic);
+    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerWoundProtection",			GetZoneMaxPowereHitTypeWound);
+    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerFireWoundProtection",		GetZoneMaxPowereHitTypeFireWound);
+    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerStrikeProtection",			GetZoneMaxPowereHitTypeStrike);
+    g_uiExpressionMgr.RegisterVariable("fltZoneMaxPowerExplosionProtection",		GetZoneMaxPowereHitTypeExplosion);
 
     //Actor variables
-    g_uiExpressionMgr.RegisterVariable("intPDAActiveContacts",  GetActorPDAContactsName);
-    g_uiExpressionMgr.RegisterVariable("strPlayerName", GetPlayerName);
-    g_uiExpressionMgr.RegisterVariable("fltPlayerHealth", GetPlayerHealth);
+    g_uiExpressionMgr.RegisterVariable("intPDAActiveContacts",						GetActorPDAContactsName);
+    g_uiExpressionMgr.RegisterVariable("strPlayerName",								GetPlayerName);
+    g_uiExpressionMgr.RegisterVariable("fltPlayerHealth",							GetPlayerHealth);
+	g_uiExpressionMgr.RegisterVariable("fltPlayerPower",							GetPlayerPower);
+	g_uiExpressionMgr.RegisterVariable("fltPlayerRestoreSpeed",						GetPlayerRestoreSpeed);
 
 }

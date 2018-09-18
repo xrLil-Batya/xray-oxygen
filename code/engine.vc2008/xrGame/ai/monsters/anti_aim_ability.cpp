@@ -3,7 +3,6 @@
 #include "basemonster/base_monster.h"
 #include "../../Actor.h"
 #include "../../ActorEffector.h"
-#include "../../../xrCore/_vector3d_ext.h"
 #include "control_animation_base.h"
 #include "../../Inventory.h"
 #include "../../Weapon.h"
@@ -34,7 +33,7 @@ anti_aim_ability::~anti_aim_ability ()
 	do_deactivate						();
 }
 
-void   anti_aim_ability::load_from_ini (CInifile const* ini, pcstr const section)
+void   anti_aim_ability::load_from_ini (CInifile* ini, pcstr const section)
 {
 	using namespace						detail;
 

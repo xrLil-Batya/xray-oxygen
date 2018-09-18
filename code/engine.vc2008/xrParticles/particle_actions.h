@@ -35,8 +35,11 @@ namespace PAPI {
 		void clear()
 		{
 			R_ASSERT(!m_bLocked);
-			for (PAVecIt it = actions.begin(); it != actions.end(); it++)
-				xr_delete(*it);
+			for (PAPI::ParticleAction* pAction : actions)
+			{
+				xr_delete(pAction);
+			}
+
 			actions.clear();
 		}
 

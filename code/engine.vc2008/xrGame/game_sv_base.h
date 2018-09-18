@@ -1,7 +1,6 @@
 #pragma once
 
 #include "game_base.h"
-#include "alife_space.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrCore/client_id.h"
 #include "alife_simulator.h"
@@ -11,7 +10,7 @@ class xrServer;
 
 class	game_sv_GameState	: public game_GameState
 {
-	typedef game_GameState inherited;
+	using inherited = game_GameState;
 
 public:
 	BOOL							sv_force_sync;
@@ -49,15 +48,13 @@ public:
 	virtual		void				net_Export_Update		(NET_Packet& P, ClientID id_to, ClientID id);		// just incremental update for specific client
 	virtual		void				net_Export_GameTime		(NET_Packet& P);						// update GameTime only for remote clients
 
-	virtual		bool				change_level			(NET_Packet &net_packet, ClientID sender);
-	virtual		void				save_game				(NET_Packet &net_packet, ClientID sender);
-	virtual		bool				load_game				(NET_Packet &net_packet, ClientID sender);
-	virtual		void				switch_distance			(NET_Packet &net_packet);
+	virtual		bool				change_level			(NET_Packet &net_packet);
+	virtual		bool				load_game				(NET_Packet &net_packet);
 
 	virtual		void				teleport_object			(NET_Packet &packet, u16 id);
-	virtual		void				add_restriction			(NET_Packet &packet, u16 id);
-	virtual		void				remove_restriction		(NET_Packet &packet, u16 id);
-	virtual		void				remove_all_restrictions	(NET_Packet &packet, u16 id);
+	virtual		void				add_restriction			(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id);
+	virtual		void				remove_restriction		(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id);
+	virtual		void				remove_all_restrictions	(RestrictionSpace::ERestrictorTypes type, u16 id);
 
 	virtual		void				sls_default				();
 	virtual		shared_str			level_name				(const shared_str &server_options) const;

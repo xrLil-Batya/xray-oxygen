@@ -70,10 +70,10 @@ void weather::load			()
 	typedef CInifile::Root	sections_type;
 	sections_type&			sections = config->sections();
 	m_times.reserve			(sections.size());
-	sections_type::const_iterator	i = sections.begin();
-	sections_type::const_iterator	e = sections.end();
-	for ( ; i != e; ++i) {
-		time*				object = xr_new<time>(&m_manager, this, (*i)->Name);
+
+	for (auto it: sections)
+	{
+		time*				object = xr_new<time>(&m_manager, this, it.second->Name);
 		object->load		(*config);
 		object->fill		(m_collection);
 		m_times.push_back	(object);
@@ -277,14 +277,13 @@ shared_str weather::generate_unique_id	() const
 
 bool weather::save_time_frame			(shared_str const& frame_id, char* buffer, u32 const& buffer_size)
 {
-	container_type::iterator	i = m_times.begin();
-	container_type::iterator	e = m_times.end();
-	for ( ; i != e; ++i) {
-		if (frame_id._get() != (*i)->id()._get())
+	for (weathers::time* pTime: m_times) 
+	{
+		if (frame_id._get() != pTime->id()._get())
 			continue;
 
 		CInifile		temp(0, FALSE, FALSE, FALSE);
-		(*i)->save		(temp);
+		pTime->save		(temp);
 
 		CMemoryWriter	writer;
 		temp.save_as	(writer);
@@ -312,7 +311,7 @@ bool weather::paste_time_frame			(shared_str const& frame_id, char const* buffer
 		if (temp.sections().empty())
 			return		(false);
 
-		(*i)->load_from	((*temp.sections().begin())->Name, temp, shared_str((*i)->id()));
+		(*i)->load_from	((*temp.sections().begin()).second->Name, temp, shared_str((*i)->id()));
 		return			(true);
 	}
 
@@ -326,7 +325,7 @@ bool weather::add_time_frame			(char const* buffer, u32 const& buffer_size)
 	if (temp.sections().empty())
 		return			(false);
 
-	shared_str const&	section = (*temp.sections().begin())->Name;
+	shared_str const&	section = (*temp.sections().begin()).second->Name;
 	container_type::const_iterator	i = m_times.begin();
 	container_type::const_iterator	e = m_times.end();
 	for ( ; i != e; ++i)

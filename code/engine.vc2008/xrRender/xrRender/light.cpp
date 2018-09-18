@@ -13,7 +13,6 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	flags.bShadow	= false;
 	flags.bVolumetric = false;
 	flags.bHudMode	= false;
-	flags.bFlare = true;
 	position.set	(0,-1000,0);
 	direction.set	(0,-1,0);
 	right.set		(0,0,0);
@@ -26,7 +25,7 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	m_volumetric_distance	= 1;
 
 	frame_render	= 0;
-	virtual_size	= .1f;
+	virtual_size	= 0.1f;
 
     std::memset(omnipart,0,sizeof(omnipart));
 	s_spot			= NULL;
@@ -36,7 +35,6 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	vis.query_order	= 0;
 	vis.visible		= true;
 	vis.pending		= false;
-	fBlend          = 0;
 }
 
 light::~light()
@@ -292,7 +290,6 @@ void	light::export_		(light_Package& package)
 						L->set_cone			(PI_DIV_2);
 						L->set_range		(range);
 						L->set_color		(color);
-						L->set_flare        (flags.bFlare);
 						L->spatial.sector	= spatial.sector;	//. dangerous?
 						L->s_spot			= s_spot	;
 						L->s_point			= s_point	;

@@ -11,10 +11,12 @@ class CUIProgressBar: public CUIWindow
 protected:
 	enum EOrientMode
 	{
-		om_horz = 0,
-		om_vert = 1,
-		om_back = 2,
-		om_down = 3,
+		om_horz			= 0,
+		om_vert			= 1,
+		om_back			= 2,
+		om_down			= 3,
+		om_fromcenter	= 4,
+		om_vfromcenter	= 5,
 		om_count
 	}	m_orient_mode;
 
@@ -31,6 +33,7 @@ protected:
 	
 public:
 	bool				m_bUseColor;
+	bool				colorSmoothing;
 	Fcolor				m_minColor;
 	Fcolor				m_middleColor;
 	Fcolor				m_maxColor;

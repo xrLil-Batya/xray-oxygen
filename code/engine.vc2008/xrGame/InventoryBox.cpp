@@ -42,7 +42,7 @@ void CInventoryBox::OnEvent(NET_Packet& P, u16 type)
 			VERIFY					(pIItem);
 			if (GameUI())
 			{
-				if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodySearch)
+				if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodyOrContainerSearch)
 				{
 					if (this == GameUI()->ActorMenu().GetInvBox())
 						GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
@@ -63,7 +63,7 @@ void CInventoryBox::OnEvent(NET_Packet& P, u16 type)
 			bool just_before_destroy		= !P.r_eof() && P.r_u8();
 			bool dont_create_shell			= (type==GE_TRADE_SELL) || just_before_destroy;
 
-			itm->H_SetParent	(NULL, dont_create_shell);
+			itm->H_SetParent	(nullptr, dont_create_shell);
 
 			if( m_in_use )
 			{

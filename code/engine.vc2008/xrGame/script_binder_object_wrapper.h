@@ -10,6 +10,7 @@
 
 #include "script_binder_object.h"
 #include "script_game_object.h"
+#include <luabind/wrapper_base.hpp>
 
 class CScriptGameObject;
 

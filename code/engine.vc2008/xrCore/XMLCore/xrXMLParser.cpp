@@ -70,7 +70,7 @@ void CXml::Load(const char* path_alias, const char* path, const char* _xml_filen
 	return Load(path_alias, str);
 }
 
-//инициализация и загрузка XML файла
+//РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Рё Р·Р°РіСЂСѓР·РєР° XML С„Р°Р№Р»Р°
 void CXml::Load(const char* path, const char* xml_filename)
 {
 	xr_strcpy(m_xml_file_name, xml_filename);
@@ -88,8 +88,10 @@ void CXml::Load(const char* path, const char* xml_filename)
 
 	if (m_Doc.Error())
 	{
-		std::string Error = "XML file: " + std::string(m_xml_file_name) + "value: " + m_Doc.Value() + "errDescr " + m_Doc.ErrorName();
-		Debug.fatal(DEBUG_INFO, Error.c_str());
+        string4096 ErrorInfo = { 0 };
+        m_Doc.DumpError(ErrorInfo, xml_filename);
+
+        Debug.fatal(DEBUG_INFO, ErrorInfo);
 	}
 
 	m_root = m_Doc.FirstChildElement();
@@ -107,7 +109,7 @@ XML_NODE* CXml::NavigateToNode(XML_NODE* start_node, const char*  path, int node
 	char seps[] = ":";
 	char *token;
 
-	//разбить путь на отдельные подпути
+	//СЂР°Р·Р±РёС‚СЊ РїСѓС‚СЊ РЅР° РѕС‚РґРµР»СЊРЅС‹Рµ РїРѕРґРїСѓС‚Рё
 	token = strtok(buf_str, seps);
 
 	if (token)
@@ -247,12 +249,12 @@ const char* CXml::ReadAttrib(XML_NODE* node, const char* attrib, const char* def
 	if (node)
 	{
 		/*
-				//обязательно делаем ref_str, а то
-				//не сможем запомнить строку и return вернет левый указатель
+				//РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРµР»Р°РµРј ref_str, Р° С‚Рѕ
+				//РЅРµ СЃРјРѕР¶РµРј Р·Р°РїРѕРјРЅРёС‚СЊ СЃС‚СЂРѕРєСѓ Рё return РІРµСЂРЅРµС‚ Р»РµРІС‹Р№ СѓРєР°Р·Р°С‚РµР»СЊ
 				shared_str result_str;
 		*/
 		const char* result_str;
-		// Кастаем ниже по иерархии
+		// РљР°СЃС‚Р°РµРј РЅРёР¶Рµ РїРѕ РёРµСЂР°СЂС…РёРё
 
 		tinyxml2::XMLElement *el = node->ToElement();
 
@@ -343,7 +345,7 @@ int CXml::GetNodesNum(XML_NODE* node, const char*  tag_name)
 	return result;
 }
 
-//нахождение элемнета по его атрибуту
+//РЅР°С…РѕР¶РґРµРЅРёРµ СЌР»РµРјРЅРµС‚Р° РїРѕ РµРіРѕ Р°С‚СЂРёР±СѓС‚Сѓ
 XML_NODE* CXml::SearchForAttribute(const char* path, int index, const char* tag_name, const char* attrib, const char* attrib_value_pattern)
 {
 	XML_NODE* start_node = NavigateToNode(path, index);

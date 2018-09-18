@@ -24,7 +24,7 @@ void character_shell_control::Load(LPCSTR section)
 	skeleton_skin_ddelay = pSettings->r_float(section, "ph_skeleton_skin_ddelay");
 	skeleton_skin_remain_time = skeleton_skin_ddelay;
 
-	//gray_wolf>Читаем из ltx параметры для поддержки изменяющегося трения у персонажей во время смерти
+	//gray_wolf>Р§РёС‚Р°РµРј РёР· ltx РїР°СЂР°РјРµС‚СЂС‹ РґР»СЏ РїРѕРґРґРµСЂР¶РєРё РёР·РјРµРЅСЏСЋС‰РµРіРѕСЃСЏ С‚СЂРµРЅРёСЏ Сѓ РїРµСЂСЃРѕРЅР°Р¶РµР№ РІРѕ РІСЂРµРјСЏ СЃРјРµСЂС‚Рё
 	skeleton_skin_friction_start = pSettings->r_float(section, "ph_skeleton_skin_friction_start");
 	skeleton_skin_friction_end = pSettings->r_float(section, "ph_skeleton_skin_friction_end");
 	character_have_wounded_state = pSettings->r_bool(section, "ph_character_have_wounded_state");
@@ -56,7 +56,7 @@ void character_shell_control::set_fatal_impulse(SHit &H) const
 void  OnCharacterContactInDeath(bool& do_colide, bool bo1, dContact& c, SGameMtl * /*material_1*/, SGameMtl * /*material_2*/)
 {
 	dSurfaceParameters		&surface = c.surface;
-	character_shell_control* l_character_physic_support = 0;
+	character_shell_control* l_character_physic_support = nullptr;
 	if (bo1)
 	{
 		l_character_physic_support = (character_shell_control*)PHRetrieveGeomUserData(c.geom.g1)->callback_data;
@@ -125,7 +125,7 @@ void character_shell_control::CalculateTimeDelta()
 
 void character_shell_control::UpdateFrictionAndJointResistanse(IPhysicsShellEx	* sh)
 {
-	//Преобразование skel_ddelay из кадров в секунды и линейное нарастание сопротивления в джоинтах со временем от момента смерти
+	//РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ skel_ddelay РёР· РєР°РґСЂРѕРІ РІ СЃРµРєСѓРЅРґС‹ Рё Р»РёРЅРµР№РЅРѕРµ РЅР°СЂР°СЃС‚Р°РЅРёРµ СЃРѕРїСЂРѕС‚РёРІР»РµРЅРёСЏ РІ РґР¶РѕРёРЅС‚Р°С… СЃРѕ РІСЂРµРјРµРЅРµРј РѕС‚ РјРѕРјРµРЅС‚Р° СЃРјРµСЂС‚Рё
 	if (skel_remain_time != 0)
 	{
 		skel_remain_time -= m_time_delta;

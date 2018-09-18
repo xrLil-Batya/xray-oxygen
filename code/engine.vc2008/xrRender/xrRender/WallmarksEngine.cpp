@@ -10,8 +10,6 @@
 #include "../../xrEngine/GameFont.h"
 #include "SkeletonCustom.h"
 
-u32 g_r = 1;
-
 namespace WallmarksEngine {
 	struct wm_slot
 	{
@@ -401,26 +399,25 @@ void CWallmarksEngine::Render()
 			}
 #endif
 
-			float dst	= Device.vCameraPosition.distance_to_sqr(W->m_Bounds.P);
-			float ssa	= W->m_Bounds.R * W->m_Bounds.R / dst;
-			if (ssa>=ssaCLIP){
-				Device.Statistic->RenderDUMP_WMD_Count++;
-				u32 w_count		= u32(w_verts-w_start);
-				if ((w_count+W->VCount())>=(MAX_TRIS*3)){
-					FlushStream	(hGeom,slot->shader,w_offset,w_verts,w_start,TRUE);
-					BeginStream	(hGeom,w_offset,w_verts,w_start);
-				}
-
-				FVF::LIT	*w_save = w_verts;
-				try {
-					W->Parent()->RenderWallmark	(W,w_verts);
-				} catch (...)
-				{
-					Msg		("! Failed to render dynamic wallmark");
-					w_verts = w_save;
-				}
+			Device.Statistic->RenderDUMP_WMD_Count++;
+			u32 w_count = u32(w_verts - w_start);
+			if ((w_count + W->VCount()) >= (MAX_TRIS * 3))
+			{
+				FlushStream(hGeom, slot->shader, w_offset, w_verts, w_start, TRUE);
+				BeginStream(hGeom, w_offset, w_verts, w_start);
 			}
-			 W->used_in_render	= u32(-1);
+
+			FVF::LIT *w_save = w_verts;
+			try
+			{
+				W->Parent()->RenderWallmark(W, w_verts);
+			}
+			catch (...)
+			{
+				Msg("! Failed to render dynamic wallmark");
+				w_verts = w_save;
+			}
+			W->used_in_render = u32(-1);
 		}
 		slot->skeleton_items.clear();
 		// Flush stream

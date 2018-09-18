@@ -42,7 +42,7 @@ function l_special        (shader, t_base, t_second, t_detail)
 			:fog                (false)
 			:distort        (true)
 
-	shader: dx10color_write_enable( true, true, true, false)
+	shader: dx10color_write_enable( true, true, true, true)
 
 --  shader:sampler        ("s_base")       :texture  (tex_base)
 --  shader:sampler        ("s_distort")    :texture  (tex_dist)

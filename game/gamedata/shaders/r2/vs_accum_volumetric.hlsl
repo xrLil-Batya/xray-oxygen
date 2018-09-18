@@ -8,8 +8,8 @@ struct vf
 	float4 	hpos		: POSITION;
 	float3 	lightToPos	: TEXCOORD0;		// light center to plane vector
 	float3 	vPos		: TEXCOORD1;		// position in camera space
-	half 	fDensity	: TEXCOORD2;		// plane density alon Z axis
-//	half2	tNoise 		: TEXCOORD3;		// projective noise
+	float 	fDensity	: TEXCOORD2;		// plane density alon Z axis
+//	float2	tNoise 		: TEXCOORD3;		// projective noise
 };
 
 vf main (v_static v)
@@ -23,10 +23,10 @@ vf main (v_static v)
 	o.lightToPos = vPos.xyz - Ldynamic_pos.xyz;
 	o.vPos = vPos;
 
-//	o.fDensity = (vMaxBounds.z-vMinBounds.z)/2000.0h;
-//	o.fDensity = (vMaxBounds.z-vMinBounds.z)/2000.0h*2;
-	o.fDensity = 1.0h/40.0h;
-//	o.fDensity = 1.0h/20.0h;
+//	o.fDensity = (vMaxBounds.z-vMinBounds.z)/2000.0f;
+//	o.fDensity = (vMaxBounds.z-vMinBounds.z)/2000.0f*2;
+	o.fDensity = 1.0f/40.0f;
+//	o.fDensity = 1.0f/20.0f;
 
 	return o;
 }

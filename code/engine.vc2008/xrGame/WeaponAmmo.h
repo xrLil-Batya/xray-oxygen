@@ -27,7 +27,7 @@ class CCartridge
 public:
 	CCartridge();
 	void Load(LPCSTR section, u8 LocalAmmoType);
-	// Получить вес
+	// РџРѕР»СѓС‡РёС‚СЊ РІРµСЃ
 	float Weight() const; 
 	shared_str	m_ammoSect;
 	enum{

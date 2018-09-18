@@ -2,12 +2,14 @@
 #include "weaponvintorez.h"
 #include "WeaponMagazinedWGrenade.h"
 
-CWeaponVintorez::CWeaponVintorez(void) : CWeaponMagazined(SOUND_TYPE_WEAPON_SNIPERRIFLE)
+CWeaponVintorez::CWeaponVintorez() : CWeaponMagazined(SOUND_TYPE_WEAPON_SNIPERRIFLE)
 {}
 
-CWeaponVintorez::~CWeaponVintorez(void)
+CWeaponVintorez::~CWeaponVintorez()
 {}
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 #pragma optimize("s",on)
 void CWeaponVintorez::script_register	(lua_State *L)

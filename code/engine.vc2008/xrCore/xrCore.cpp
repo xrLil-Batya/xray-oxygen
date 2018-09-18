@@ -2,25 +2,25 @@
 //
 #include "stdafx.h"
 #pragma hdrstop
-
 #include <mmsystem.h>
 #include <objbase.h>
 #include "../FrayBuildConfig.hpp"
+#include "oxy_version.h"
 #pragma comment(lib,"winmm.lib")
 
 #ifdef DEBUG
 #	include	<malloc.h>
 #endif // DEBUG
 
-XRCORE_API		xrCore	Core;
-XRCORE_API		u32		build_id;
-XRCORE_API		const char*	build_date;
+XRCORE_API xrCore Core;
+XRCORE_API u32 build_id;
+XRCORE_API const char*	build_date;
 
 //indicate that we reach WinMain, and all static variables are initialized
-XRCORE_API		bool	gModulesLoaded = false;
+XRCORE_API bool	gModulesLoaded = false;
+XRCORE_API xr_vector<xr_token> vid_quality_token;
 
-
-static u32	init_counter	= 0;
+static u32	init_counter = 0;
 void compute_build_id();
 
 #include "DateTime.hpp"
@@ -39,7 +39,7 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 
 		// application path
 		GetModuleFileName(GetModuleHandle("xrCore"), fn, sizeof(fn));
-		_splitpath(fn, dr, di, 0, 0);
+		_splitpath(fn, dr, di, nullptr, nullptr);
 		strconcat(sizeof(ApplicationPath), ApplicationPath, dr, di);
 
 		GetCurrentDirectory(sizeof(WorkingPath), WorkingPath);
@@ -66,7 +66,7 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 
 		InitLog();
 		_initialize_cpu();
-		rtc_initialize();
+		XRay::Compress::RT::RtcInitialize();
 
 		xr_FS = new CLocatorAPI();
 		xr_EFS = new EFS_Utils();
@@ -74,8 +74,8 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 	if (init_fs)
 	{
 		u32 flags = 0;
-		if (0 != strstr(Params, "-build"))	 flags |= CLocatorAPI::flBuildCopy;
-		if (0 != strstr(Params, "-ebuild")) flags |= CLocatorAPI::flBuildCopy | CLocatorAPI::flEBuildCopy;
+		if (nullptr != strstr(Params, "-build"))	 flags |= CLocatorAPI::flBuildCopy;
+		if (nullptr != strstr(Params, "-ebuild")) flags |= CLocatorAPI::flBuildCopy | CLocatorAPI::flEBuildCopy;
 #ifdef DEBUG
 		if (strstr(Params, "-cache"))  flags |= CLocatorAPI::flCacheFiles;
 		else flags &= ~CLocatorAPI::flCacheFiles;
@@ -86,10 +86,14 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 		if (strstr(Params, "-file_activity"))
 			flags |= CLocatorAPI::flDumpFileActivity;
 #endif
-		FS._initialize(flags, 0, fs_fname);
+		FS._initialize(flags, nullptr, fs_fname);
+
+        // FS is valid at this point, signal to debug system
+        Debug._initializeAfterFS();
 
 		compute_build_id();
 		Msg("xrCore build %d, %s\n", build_id, build_date);
+		Msg("xrOxygen Version: branch[%s], commit[%s]", _BRANCH, _HASH); 
 
 		EFS._initialize();
 	}

@@ -14,6 +14,7 @@
 #include "smart_cover_object.h"
 #include "ai_monster_space.h"
 #include "smart_cover_transition.hpp"
+#include <luabind/luabind.hpp>
 
 using namespace MonsterSpace;
 using smart_cover::description;

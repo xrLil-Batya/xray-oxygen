@@ -33,8 +33,8 @@ static const float depth_resolve = 0.01f;
 imotion_position::imotion_position(): 
 interactive_motion(), 
 time_to_end(0.f), 
-saved_visual_callback( 0 ), 
-blend(0), 
+saved_visual_callback( nullptr ), 
+blend(nullptr), 
 shell_motion_has_history( false )
 {
 
@@ -66,7 +66,7 @@ void imotion_position::	interactive_motion_diagnostic( LPCSTR message )
 
 }
 #ifdef DEBUG
-CPhysicsShellHolder* collide_obj = 0;
+CPhysicsShellHolder* collide_obj = nullptr;
 #endif
 
 static float depth = 0;
@@ -76,7 +76,7 @@ static void  get_depth( bool& do_colide, bool bo1, dContact& c, SGameMtl * /*mat
 #ifdef DEBUG
 	if( depth != c.geom.depth )
 		return;
-	dxGeomUserData* ud = 0;
+	dxGeomUserData* ud = nullptr;
 	if( bo1 )
 		ud = PHRetrieveGeomUserData( c.geom.g2 );
 	else
@@ -84,7 +84,7 @@ static void  get_depth( bool& do_colide, bool bo1, dContact& c, SGameMtl * /*mat
 	if(ud)
 		collide_obj = static_cast<CPhysicsShellHolder*>(ud->ph_ref_object);
 	else
-		collide_obj = 0;
+		collide_obj = nullptr;
 #endif
 }
 static std::string collide_diag()
@@ -95,7 +95,7 @@ static std::string collide_diag()
 	else
 		return make_string("collide static");
 #else
-	return std::string("");
+	return std::string();
 #endif
 }
 
@@ -105,7 +105,7 @@ void disable_bone_calculation(IKinematics &K, bool v )
 	for(u16 i = 1; i< bn; ++i )//ommit real root
 	{
 		CBoneInstance &bi = K.LL_GetBoneInstance( i );
-		if( bi.callback_param()!=0 )
+		if( bi.callback_param()!=nullptr )
 			continue;
 #ifdef DEBUG
 		if( v && bi.callback_overwrite() == BOOL(v) )
@@ -121,7 +121,7 @@ void imotion_position::state_start( )
 	
 	IKinematics			*K	= shell->PKinematics();
 	saved_visual_callback = K->GetUpdateCallback();
-	K->SetUpdateCallback( 0 );
+	K->SetUpdateCallback( nullptr );
 	IKinematicsAnimated	*KA = smart_cast<IKinematicsAnimated*>( shell->PKinematics() );
 	VERIFY( KA );
 	KA->SetUpdateTracksCalback( &update_callback );
@@ -132,7 +132,7 @@ void imotion_position::state_start( )
 	{
 		CBlend					*blend;
 		const	PlayCallback	cb;
-		get_controled_blend(const	PlayCallback	_cb):blend( 0 ),cb(_cb){}
+		get_controled_blend(const	PlayCallback	_cb):blend( nullptr ),cb(_cb){}
 	    get_controled_blend(const get_controled_blend& other) = delete;
 	    get_controled_blend& operator=(const get_controled_blend& other) = delete;
 		virtual	void	operator () ( CBlend &B )
@@ -193,7 +193,7 @@ void imotion_position::state_start( )
 	{
 		interactive_motion_diagnostic("stoped immediately");
 		switch_to_free	( );
-		flags.set(fl_not_played,TRUE);
+		flags.set(fl_not_played,true);
 		return;
 	}
 	move( float( Device.dwTimeDelta )/1000, *KA );
@@ -287,8 +287,8 @@ void	imotion_position::state_end( )
 
 	IKinematicsAnimated	*KA = smart_cast<IKinematicsAnimated*>( shell->PKinematics() );
 	VERIFY( KA );
-	update_callback.motion = 0;
-	KA->SetUpdateTracksCalback( 0 );
+	update_callback.motion = nullptr;
+	KA->SetUpdateTracksCalback( nullptr );
 
 #if 0
 
@@ -452,7 +452,7 @@ class sblend_save
 	CBlend sv;
 	CBlend *b;
 public:
-	sblend_save(): b( 0 ){};
+	sblend_save(): b( nullptr ){};
 	void save( CBlend *B )
 	{
 		b = B;
@@ -462,7 +462,7 @@ public:
 	{
 		VERIFY( b );
 		*b = sv;
-		b = 0;
+		b = nullptr;
 	}
 };
 
@@ -566,7 +566,7 @@ float imotion_position::motion_collide( float dt, IKinematicsAnimated& KA )
 	if( time_to_end <  ( max_collide_timedelta + end_delta ) )
 	{
 		interactive_motion_diagnostic( make_string( "motion_collide 0: stoped: time out, time delta %f", dt ).c_str() );
-		flags.set( fl_switch_dm_toragdoll, TRUE );			
+		flags.set( fl_switch_dm_toragdoll, true );			
 		return advance_time;
 	}
 	if( depth > depth_resolve )
@@ -601,7 +601,7 @@ float imotion_position::motion_collide( float dt, IKinematicsAnimated& KA )
 		if( depth > depth0  )
 		{
 			interactive_motion_diagnostic( make_string( "motion_collide 1: stoped: colide: %s, depth %f", collide_diag().c_str(), depth ).c_str() );
-			flags.set( fl_switch_dm_toragdoll, TRUE );
+			flags.set( fl_switch_dm_toragdoll, true );
 		} 
 		else
 		{
@@ -620,7 +620,7 @@ float imotion_position::motion_collide( float dt, IKinematicsAnimated& KA )
 			if( depth > depth_resolve  )
 			{
 				interactive_motion_diagnostic( make_string( "motion_collide 2: stoped: colide: %s, depth %f", collide_diag().c_str(), depth ).c_str() );
-				flags.set( fl_switch_dm_toragdoll, TRUE );
+				flags.set( fl_switch_dm_toragdoll, true );
 			}
 		}
 		restore_blends( saved_blends );// rs1
@@ -724,7 +724,7 @@ void	imotion_position::rootbone_callback	( CBoneInstance *BI )
 	SKeyTable	keys;
 	KA->LL_BuldBoneMatrixDequatize( &K->LL_GetData( 0 ), u8(-1), keys );
 	
-	CKey *key = 0;
+	CKey *key = nullptr;
 	for( int i = 0; i < keys.chanel_blend_conts[0]; ++i )
 	{
 		if ( keys.blends[0][i] == im->blend)

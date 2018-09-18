@@ -3,6 +3,7 @@
 #include "script_game_object.h"
 #include "ai_monster_space.h"
 #include "AI/Monsters/monster_sound_defs.h"
+#include <luabind/luabind.hpp>
 
 using namespace luabind;
 

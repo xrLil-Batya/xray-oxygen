@@ -1,4 +1,4 @@
-// CUIEditBox.cpp: ввод строки с клавиатуры
+// CUIEditBox.cpp: РІРІРѕРґ СЃС‚СЂРѕРєРё СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
 // 
 //////////////////////////////////////////////////////////////////////
 
@@ -9,7 +9,7 @@
 
 
 CUIEditBox::CUIEditBox()
-:m_frameLine(NULL)
+:m_frameLine(nullptr)
 {
 }
 
@@ -69,7 +69,7 @@ bool CUIEditBox::IsChangedOptValue() const
 {
 	return 0 != xr_strcmp(m_opt_backup_value.c_str(), GetText());
 }
-
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

@@ -24,7 +24,8 @@
    <markus@oberhumer.com>
  */
 
-
+#pragma warning(push)
+#pragma warning(disable: 4244)
 #include "lzo1_d.ch"
 
 
@@ -451,4 +452,4 @@ lookbehind_overrun:
 /*
 vi:ts=4:et
 */
-
+#pragma warning(pop)

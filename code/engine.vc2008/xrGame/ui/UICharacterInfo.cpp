@@ -6,7 +6,7 @@
 #include "../actor.h"
 #include "../level.h"
 #include "../../xrServerEntities/character_info.h"
-#include "../string_table.h"
+#include "../../xrEngine/string_table.h"
 #include "../relation_registry.h"
 
 #include "xrUIXmlParser.h"
@@ -133,7 +133,6 @@ void CUICharacterInfo::InitCharacterInfo(CUIXml* xml_doc, LPCSTR node_str)
 	xml_doc->SetLocalRoot		(stored_root);
 }
 
-#ifdef MONSTER_INV
 void CUICharacterInfo::InitMonsterCharacter(shared_str monster_tex_name)
 {
 	if (m_icons[eIcon])
@@ -144,7 +143,6 @@ void CUICharacterInfo::InitMonsterCharacter(shared_str monster_tex_name)
 		m_icons[eIcon]->Show(true);
 	}
 }
-#endif
 
 void CUICharacterInfo::InitCharacter(u16 id)
 {
@@ -324,23 +322,23 @@ bool CUICharacterInfo::get_actor_community( shared_str* our, shared_str* enemy )
 	return true;
 }
 
-bool CUICharacterInfo::ignore_community( shared_str const& check_community )
+bool CUICharacterInfo::ignore_community(shared_str const& check_community)
 {
 	LPCSTR comm_section_str = "ignore_icons_communities";
-	VERIFY2( pSettings->section_exist( comm_section_str ), make_string( "Section [%s] does not exist !", comm_section_str ) );
+	VERIFY2(pSettings->section_exist(comm_section_str), make_string("Section [%s] does not exist !", comm_section_str));
 
-	CInifile::Sect&		faction_section = pSettings->r_section( comm_section_str );
-	CInifile::SectIt_	ib = faction_section.Data.begin();
-	CInifile::SectIt_	ie = faction_section.Data.end();
-	for ( ; ib != ie ; ++ib )
+	CInifile::Sect& faction_section = pSettings->r_section(comm_section_str);
+
+	for (CInifile::Item itm : faction_section.Data)
 	{
-		if ( check_community == (*ib).first )
+		if (check_community == itm.first)
 		{
 			return true;
 		}
 	}
 	return false;
 }
+#include <luabind/luabind.hpp>
 
 #include "ai_space.h"
 #include "script_engine.h"

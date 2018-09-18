@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
-// monster_community.h:	структура представления группировки для монстров
+// monster_community.h:	СЃС‚СЂСѓРєС‚СѓСЂР° РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РіСЂСѓРїРїРёСЂРѕРІРєРё РґР»СЏ РјРѕРЅСЃС‚СЂРѕРІ
 //							
 //////////////////////////////////////////////////////////////////////////
 
@@ -23,13 +23,11 @@ struct MONSTER_COMMUNITY_DATA
 };
 
 
-class MONSTER_COMMUNITY;
-
 class MONSTER_COMMUNITY: 
-	public CIni_IdToIndex<1, MONSTER_COMMUNITY_DATA, MONSTER_COMMUNITY_ID, MONSTER_COMMUNITY_INDEX, MONSTER_COMMUNITY>
+	public CIni_IdToIndex<true, MONSTER_COMMUNITY_DATA, MONSTER_COMMUNITY_ID, MONSTER_COMMUNITY_INDEX, MONSTER_COMMUNITY>
 {
 private:
-	typedef CIni_IdToIndex<1, MONSTER_COMMUNITY_DATA, MONSTER_COMMUNITY_ID, MONSTER_COMMUNITY_INDEX, MONSTER_COMMUNITY> inherited;
+	typedef CIni_IdToIndex<true, MONSTER_COMMUNITY_DATA, MONSTER_COMMUNITY_ID, MONSTER_COMMUNITY_INDEX, MONSTER_COMMUNITY> inherited;
 	friend inherited;
 
 public:
@@ -49,7 +47,7 @@ private:
 	static	void				InitIdToIndex	();
 
 public:
-	//отношение между группами монстров
+	//РѕС‚РЅРѕС€РµРЅРёРµ РјРµР¶РґСѓ РіСЂСѓРїРїР°РјРё РјРѕРЅСЃС‚СЂРѕРІ
 	static int					relation			(MONSTER_COMMUNITY_INDEX from, MONSTER_COMMUNITY_INDEX to);
 	int							relation			(MONSTER_COMMUNITY_INDEX to);
 

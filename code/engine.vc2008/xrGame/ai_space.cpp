@@ -20,8 +20,6 @@
 #include "alife_simulator.h"
 #include "moving_objects.h"
 #include "doors_manager.h"
-#include "../xrEngine/dedicated_server_only.h"
-#include "../xrEngine/no_single.h"
 #include "../FrayBuildConfig.hpp"
 
 CAI_Space *g_ai_space = 0;

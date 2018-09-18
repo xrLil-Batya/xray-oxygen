@@ -15,7 +15,7 @@
 #include "../Inventory.h"
 #include "../Inventory_item.h"
 #include "../InventoryBox.h"
-#include "../string_table.h"
+#include "../../xrEngine/string_table.h"
 #include "../ai/monsters/BaseMonster/base_monster.h"
 #include "../../FrayBuildConfig.hpp"
 #include "../xrEngine/xr_input.h"
@@ -27,7 +27,7 @@ void move_item_from_to (u16 from_id, u16 to_id, u16 what_id)
 	P.w_u16									(what_id);
 	CGameObject::u_EventSend				(P);
 
-	//äðóãîìó èíâåíòàðþ - âçÿòü âåùü 
+	//Ð´Ñ€ÑƒÐ³Ð¾Ð¼Ñƒ Ð¸Ð½Ð²ÐµÐ½Ñ‚Ð°Ñ€ÑŽ - Ð²Ð·ÑÑ‚ÑŒ Ð²ÐµÑ‰ÑŒ 
 	CGameObject::u_EventGen					(P, GE_TRADE_BUY, to_id);
 	P.w_u16									(what_id);
 	CGameObject::u_EventSend				(P);
@@ -179,9 +179,7 @@ bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
 	{
 		move_item_from_to(m_pActorInvOwner->object_id(), m_pInvBox->ID(), iitem->object_id());
 	}
-#ifdef MULTITRANSFER
 	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToDeadBodyBag(itm, b_use_cursor_pos);
-#endif
 	UpdateDeadBodyBag();
 	return true;
 }

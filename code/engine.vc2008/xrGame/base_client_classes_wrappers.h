@@ -20,6 +20,7 @@
 #include "ai_space.h"
 #include "script_engine.h"
 #include "xrServer_Object_Base.h"
+#include <luabind/wrapper_base.hpp>
 
 template <typename Base, typename... Ts>
 class DLL_PureWrapper : public Base, public Ts... 

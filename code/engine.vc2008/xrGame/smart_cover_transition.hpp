@@ -6,6 +6,11 @@
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+namespace luabind
+{
+	class object;
+}
+
 namespace MonsterSpace {
 	enum EBodyState;
 }; // namespace MonsterSpace

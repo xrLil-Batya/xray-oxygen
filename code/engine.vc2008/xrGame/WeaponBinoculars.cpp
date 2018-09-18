@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "WeaponBinoculars.h"
 
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 
 #include "level.h"
 #include "ui\UIFrameWindow.h"
@@ -11,7 +11,7 @@
 
 CWeaponBinoculars::CWeaponBinoculars()
 {
-	m_binoc_vision	= NULL;
+	m_binoc_vision	= nullptr;
 	m_bVision		= false;
 }
 
@@ -149,11 +149,12 @@ void CWeaponBinoculars::load(IReader &input_packet)
 	load_data		(m_fRTZoomFactor,input_packet);
 }
 
-bool CWeaponBinoculars::GetBriefInfo( II_BriefInfo& info )
+bool CWeaponBinoculars::GetBriefInfo(II_BriefInfo& info)
 {
 	info.clear();
-	info.name._set( m_nameShort );
-	info.icon._set( cNameSect() );
+	info.name._set(m_nameShort);
+	info.icon._set(cNameSect());
+
 	return true;
 }
 
@@ -170,6 +171,8 @@ bool CWeaponBinoculars::can_kill	() const
 	return			(false);
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 void CWeaponBinoculars::script_register(lua_State *L)
