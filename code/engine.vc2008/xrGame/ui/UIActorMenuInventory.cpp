@@ -832,6 +832,9 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 	CCustomOutfit* pOutfit	= smart_cast<CCustomOutfit*>( item );
 	CHelmet* pHelmet		= smart_cast<CHelmet*>		( item );
 	CInventory&  inv		= m_pActorInvOwner->inventory();
+	CUICellItem*	itm  = CurrentItem();
+	PIItem	iitem	= (PIItem)itm->m_pData;
+
 
 	// Флаг-признак для невлючения пункта контекстного меню: Dreess Outfit, если костюм уже надет
 	bool bAlreadyDressed	= false;
