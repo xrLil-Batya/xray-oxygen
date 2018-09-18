@@ -837,14 +837,38 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 	bool bAlreadyDressed	= false;
 	u16 cur_slot			= item->BaseSlot();
 
-	if (	!pOutfit && !pHelmet &&
-			cur_slot != NO_ACTIVE_SLOT &&
-			!inv.SlotIsPersistent(cur_slot) &&
-			inv.CanPutInSlot(item, cur_slot) )
+	if (!pOutfit && !pHelmet)
+		// Rietmon: A choice is made where to move the weapon
 	{
-		m_UIPropertiesBox->AddItem( "st_move_to_slot",  NULL, INVENTORY_TO_SLOT_ACTION );
-		b_show = true;
-	}
+		if (inv.CanPutInSlot(item, INV_SLOT_2) && iitem->BaseSlot()!=DETECTOR_SLOT)
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_2",  NULL, INVENTORY_TO_SLOT2_ACTION );
+			b_show = true;
+		}
+
+		if (inv.CanPutInSlot(item, INV_SLOT_3) && iitem->BaseSlot()!=DETECTOR_SLOT)
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_3",  NULL, INVENTORY_TO_SLOT3_ACTION );
+			b_show = true;
+		}
+
+		if  (iitem->BaseSlot()==KNIFE_SLOT && inv.CanPutInSlot(item, KNIFE_SLOT))
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_knife",  NULL, INVENTORY_TO_SLOT_ACTION );
+			b_show = true;
+		}
+
+		if (iitem->BaseSlot()==BINOCULAR_SLOT && inv.CanPutInSlot(item, BINOCULAR_SLOT))
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_binoc",  NULL, INVENTORY_TO_SLOT_ACTION );
+			b_show = true;
+		}
+
+		if (iitem->BaseSlot()==DETECTOR_SLOT && inv.CanPutInSlot(item, DETECTOR_SLOT))
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_detect",  NULL, INVENTORY_TO_SLOT_ACTION );
+			b_show = true;
+		}
 	if (	item->Belt() &&
 			inv.CanPutInBelt( item ) )
 	{
@@ -1081,6 +1105,10 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 
 	switch ( m_UIPropertiesBox->GetClickedItem()->GetTAG() )
 	{
+	// Rietmon: сделано, дабы создать выбор
+	case INVENTORY_TO_SLOT2_ACTION:	ToSlot(cell_item, true, INV_SLOT_2);		break;
+	case INVENTORY_TO_SLOT3_ACTION:	ToSlot(cell_item, true, INV_SLOT_3);		break;
+
 	case INVENTORY_TO_SLOT_ACTION:	ToSlot( cell_item, true, item->BaseSlot() );		break;
 	case INVENTORY_TO_BELT_ACTION:	ToBelt( cell_item, false );		break;
 	case INVENTORY_TO_BAG_ACTION:	ToBag ( cell_item, false );		break;
