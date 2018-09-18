@@ -24,9 +24,12 @@
 #include "../character_community.h"
 #include "../character_reputation.h"
 #include "../relation_registry.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 #include "UICharacterInfo.h"
 #include "ui_base.h"
+
+
+#include <luabind/luabind.hpp>
 
 #define  PDA_RANKING_XML		"pda_ranking.xml"
 
@@ -55,7 +58,8 @@ void CUIRankingWnd::Show( bool status )
 		m_actor_ch_info->InitCharacter( Actor()->object_id() );
 		
 		string64 buf;
-		xr_sprintf( buf, sizeof(buf), "%d %s", Actor()->get_money(), "RU" );
+		LPCSTR currency_str = CStringTable().translate("st_currency").c_str();
+		xr_sprintf( buf, sizeof(buf), "%d %s", Actor()->get_money(), currency_str );
 		m_money_value->SetText( buf );
 		m_money_value->AdjustWidthToText();
 		update_info();
@@ -157,8 +161,8 @@ void CUIRankingWnd::Init()
 	VERIFY2(pSettings->section_exist(section), make_string("Section [%s] does not exist!", section));
 
 	CInifile::Sect&	achievs_section = pSettings->r_section(section);
-	CInifile::SectIt_ ib			= achievs_section.Data.begin();
-	CInifile::SectIt_ ie			= achievs_section.Data.end();
+	auto ib			= achievs_section.Data.begin();
+	auto ie			= achievs_section.Data.end();
 	for(u8 i = 0; ib != ie ; ++ib, ++i)
 		add_achievement(xml, (*ib).first);
 
@@ -183,9 +187,9 @@ void CUIRankingWnd::add_achievement(CUIXml& xml, shared_str const& achiev_id)
 
 void CUIRankingWnd::update_info()
 {
-    auto b = m_achieves_vec.begin(), e = m_achieves_vec.end();
-	for(; b!=e; b++)
-		(*b)->Update();
+	for (CUIAchievements* pAchivment: m_achieves_vec)
+		pAchivment->Update();
+
 	get_statistic();
 	get_best_monster();
 	get_favorite_weapon();

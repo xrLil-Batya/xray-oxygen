@@ -76,7 +76,7 @@ void CStateBurerAttackGravi<Object>::critical_finalize()
 template <typename Object>
 bool CStateBurerAttackGravi<Object>::check_start_conditions()
 {
-	// îáðàáîòàòü îáúåêòû
+	// Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚Ð°Ñ‚ÑŒ Ð¾Ð±ÑŠÐµÐºÑ‚Ñ‹
 	if ( object->get_force_gravi_attack() ) return true;
 	float dist = object->Position().distance_to(object->EnemyMan.get_enemy()->Position());
 	if ( current_time() < m_next_gravi_allowed_tick ) return false;
@@ -109,7 +109,7 @@ void CStateBurerAttackGravi<Object>::ExecuteGraviStart()
 template <typename Object>
 void CStateBurerAttackGravi<Object>::ExecuteGraviContinue()
 {
-	// ïðîâåðèòü íà ãðàâè óäàð
+	// Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ Ð½Ð° Ð³Ñ€Ð°Ð²Ð¸ ÑƒÐ´Ð°Ñ€
 	float dist						=	object->Position().distance_to
 										(object->EnemyMan.get_enemy()->Position());
 

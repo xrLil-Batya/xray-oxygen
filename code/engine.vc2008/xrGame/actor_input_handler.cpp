@@ -5,7 +5,7 @@
 
 void CActorInputHandler::reinit()
 {
-	m_actor = 0;
+	m_actor = nullptr;
 }
 
 
@@ -32,8 +32,8 @@ void CActorInputHandler::release()
 {
 	VERIFY(m_actor);
 	
-	m_actor->set_input_external_handler(0);
-	m_actor = 0;
+	m_actor->set_input_external_handler(nullptr);
+	m_actor = nullptr;
 }
 
 

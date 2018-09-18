@@ -13,6 +13,7 @@
 #include "entity_alive.h"
 #include "danger_object.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 CScriptGameObject *not_yet_visible_object(const MemorySpace::CNotYetVisibleObject &object)
@@ -34,17 +35,17 @@ CScriptGameObject *get_memory_object(const MemorySpace::CMemoryObject<T> &memory
 CScriptGameObject *CDangerObject_object(const CDangerObject *self)
 {
 	VERIFY			(self);
-	return			(self->object() ? self->object()->lua_game_object() : 0);
+	return			(self->object() ? self->object()->lua_game_object() : nullptr);
 }
 
 CScriptGameObject *CDangerObject_dependent_object(const CDangerObject *self)
 {
 	VERIFY				(self);
 	if (!self->dependent_object())
-		return			(0);
+		return			(nullptr);
 
 	const CGameObject	*game_object = smart_cast<const CGameObject*>(self->dependent_object());
-	return				(game_object ? game_object->lua_game_object() : 0);
+	return				(game_object ? game_object->lua_game_object() : nullptr);
 }
 
 Fvector CDangerObject__position	(const CDangerObject *self)
@@ -52,6 +53,10 @@ Fvector CDangerObject__position	(const CDangerObject *self)
 	THROW				(self);
 	return				(self->position());
 }
+
+#include "../../SDK/include/luabind/detail/enum_maker.hpp"
+#include "../../SDK/include/luabind/operator.hpp"
+
 
 #pragma optimize("s",on)
 void CMemoryInfo::script_register(lua_State *L)
@@ -111,8 +116,8 @@ void CMemoryInfo::script_register(lua_State *L)
 			.def_readonly("amount",			&MemorySpace::CHitObject::m_amount),
 		
 		class_<MemorySpace::CVisibleObject,MemorySpace::CMemoryObject<CGameObject> >("visible_memory_object")
-//			.def("visible",					&MemorySpace_CVisibleObject_visible)
-			,
+//			.def("visible",					&MemorySpace::CVisibleObject::m_visible)
+		,
 
 		class_<MemorySpace::CMemoryInfo,MemorySpace::CVisibleObject>("memory_info")
 			.def_readonly("visual_info",	&MemorySpace::CMemoryInfo::m_visual_info)

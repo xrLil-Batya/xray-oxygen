@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "uiprogressbar.h"
 
-CUIProgressBar::CUIProgressBar(void)
+CUIProgressBar::CUIProgressBar()
 {
 	m_MinPos				= 1.0f;
 	m_MaxPos				= 1.0f+EPS;
@@ -20,7 +20,7 @@ CUIProgressBar::CUIProgressBar(void)
 	m_orient_mode			= om_horz;
 }
 
-CUIProgressBar::~CUIProgressBar(void)
+CUIProgressBar::~CUIProgressBar()
 {
 }
 
@@ -40,16 +40,22 @@ void CUIProgressBar::UpdateProgressBar()
 
 	float fCurrentLength = m_ProgressPos.x*progressbar_unit;
 
-	if ( m_orient_mode == om_horz || m_orient_mode == om_back )
+		switch (m_orient_mode)
 	{
-		m_CurrentLength = GetWidth()*fCurrentLength;
-	}
-	else if ( m_orient_mode == om_vert || m_orient_mode == om_down )
-	{
-		m_CurrentLength = GetHeight()*fCurrentLength;
-	}
-	else
-	{
+		case om_horz:
+		case om_back:
+		case om_fromcenter:
+			m_CurrentLength = GetWidth()*fCurrentLength;
+
+		break;
+
+		case om_vert:
+		case om_down:
+		case om_vfromcenter:
+			m_CurrentLength = GetHeight()*fCurrentLength;
+		break;
+
+		default:
 		m_CurrentLength = 0.0f;
 	}
 
@@ -58,6 +64,9 @@ void CUIProgressBar::UpdateProgressBar()
 		Fcolor curr;
 		curr.lerp							(m_minColor,m_middleColor,m_maxColor,fCurrentLength);
 		m_UIProgressItem.SetTextureColor	(curr.get());
+        // XXX: Implement color smoothing
+		if (colorSmoothing)
+		R_ASSERT2(false, "color smoothing is not implemented.");
 	}
 }
 
@@ -75,6 +84,14 @@ float _sign(const float& v)
 void CUIProgressBar::Update()
 {
 	inherited::Update();
+
+    if (m_expression.IsCompiled())
+    {
+        ExpressionVarVariadic Result = m_expression.ExecuteExpression();
+        m_ProgressPos.y = Result.Flt;
+        clamp(m_ProgressPos.y, m_MinPos, m_MaxPos);
+    }
+
 	if(!fsimilar(m_ProgressPos.x, m_ProgressPos.y))
 	{
 		if( fsimilar(m_MaxPos,m_MinPos) ) m_MaxPos	+= EPS;	//hack ^(
@@ -88,12 +105,6 @@ void CUIProgressBar::Update()
 		m_ProgressPos.x			+= _val;
 		UpdateProgressBar		();
 	}
-
-    if (m_expression.IsCompiled())
-    {
-        ExpressionVarVariadic Result = m_expression.ExecuteExpression();
-        SetProgressPos(Result.Flt);
-    }
 }
 
 void CUIProgressBar::Draw()
@@ -111,21 +122,14 @@ void CUIProgressBar::Draw()
 
 	switch ( m_orient_mode )
 	{
-	case om_horz:
-		progress_rect.set	( 0, 0, m_CurrentLength, GetHeight() );
-		break;
-	case om_vert:
-		progress_rect.set	( 0, GetHeight() - m_CurrentLength, GetWidth(), GetHeight() );
-		break;
-	case om_back:
-		progress_rect.set	( GetWidth() - m_CurrentLength * 1.01f, 0, GetWidth(), GetHeight() );
-	    break;
-	case om_down:
-		progress_rect.set	( 0, 0, GetWidth(), m_CurrentLength );
-	    break;
-	default:
-		NODEFAULT;
-		break;
+	case om_horz:progress_rect.set	( 0, 0,				m_CurrentLength, GetHeight() );							break;
+	case om_vert:progress_rect.set	( 0, GetHeight() -	m_CurrentLength, GetWidth(), GetHeight() );				break;
+	case om_back:progress_rect.set	( GetWidth() -		m_CurrentLength * 1.01f, 0, GetWidth(), GetHeight() );	break;
+	case om_down:progress_rect.set	( 0, 0, GetWidth(),	m_CurrentLength );										break;
+	case om_fromcenter:	{ const float center = GetWidth() / 2.f; progress_rect.set (center - m_CurrentLength, 0, center + m_CurrentLength, GetHeight());	break;}
+	case om_vfromcenter:{ const float center = GetHeight() / 2.f; progress_rect.set(0, center - m_CurrentLength, GetWidth(), center + m_CurrentLength);		break;}
+
+	default:NODEFAULT;																							break;
 	}
 
 	if(m_CurrentLength>0)
@@ -140,6 +144,7 @@ void CUIProgressBar::Draw()
 	m_last_render_frame	= Device.dwFrame;
 }
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

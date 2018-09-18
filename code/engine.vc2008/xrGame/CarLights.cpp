@@ -56,10 +56,17 @@ void SCarLight::ParseDefinitions(LPCSTR section)
 	glow_render->set_color	(clr);
 	glow_render->set_radius	(ini->r_float(section,"glow_radius"));
 
-	light_omni->set_range	(ini->r_float(section,"range_omni"));
-	Fcolor					clr_o;
-	clr_o.set					(ini->r_fcolor(section,"color_omnil"));
-	light_omni->set_color	(clr_o);
+    if (ini->line_exist(section, "range_omni"))
+    {
+	    light_omni->set_range	(ini->r_float(section,"range_omni"));
+    }
+
+    if (ini->line_exist(section, "color_omnil"))
+    {
+        Fcolor					clr_o;
+        clr_o.set(ini->r_fcolor(section, "color_omnil"));
+        light_omni->set_color(clr_o);
+    }
 	
 	bone_id	= pKinematics->LL_BoneID(ini->r_string(section,"bone"));
 	light_omni->set_active(false);

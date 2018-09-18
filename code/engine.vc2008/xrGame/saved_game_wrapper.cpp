@@ -76,10 +76,10 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 		return;
 	}
 
-	u32							source_count = stream->r_u32();
-	void						*source_data = xr_malloc(source_count);
-	rtc_decompress				(source_data,source_count,stream->pointer(),stream->length() - 3*sizeof(u32));
-	FS.r_close					(stream);
+	u32 source_count = stream->r_u32();
+	void *source_data = xr_malloc(source_count);
+	XRay::Compress::RT::RtcDecompress(source_data,source_count,stream->pointer(),stream->length() - 3 * sizeof(u32));
+	FS.r_close(stream);
 
 	IReader						reader(source_data,source_count);
 
@@ -168,6 +168,7 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 }
 
 #include "xr_time.h"
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 xrTime CSavedGameWrapper__game_time(const CSavedGameWrapper *self)

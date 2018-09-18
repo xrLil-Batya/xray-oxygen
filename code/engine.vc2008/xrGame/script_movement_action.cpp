@@ -14,6 +14,7 @@
 #include "ai_monster_space.h"
 #include "patrol_path_params.h"
 #include "patrol_path.h"
+#include <luabind/luabind.hpp>
 
 CScriptMovementAction::CScriptMovementAction		(MonsterSpace::EScriptMonsterMoveAction tAct, CPatrolPathParams *tPatrolPathParams, float dist_to_end, MonsterSpace::EScriptMonsterSpeedParam speed_param)
 {																																			

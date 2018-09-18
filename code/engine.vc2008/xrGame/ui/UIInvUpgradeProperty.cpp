@@ -147,47 +147,46 @@ UIInvUpgPropertiesWnd::~UIInvUpgPropertiesWnd()
 	delete_data( m_properties_ui );
 }
 
-void UIInvUpgPropertiesWnd::init_from_xml( LPCSTR xml_name )
+void UIInvUpgPropertiesWnd::init_from_xml(LPCSTR xml_name)
 {
 	CUIXml ui_xml;
-	ui_xml.Load( CONFIG_PATH, UI_PATH, xml_name );
-	
+	ui_xml.Load(CONFIG_PATH, UI_PATH, xml_name);
+
 	XML_NODE* stored_root = ui_xml.GetLocalRoot();
-	XML_NODE* node = ui_xml.NavigateToNode( "upgrade_info", 0 );
-	ui_xml.SetLocalRoot( node );
+	XML_NODE* node = ui_xml.NavigateToNode("upgrade_info", 0);
+	ui_xml.SetLocalRoot(node);
 
-	CUIXmlInit::InitWindow( ui_xml, "properties", 0, this );
+	CUIXmlInit::InitWindow(ui_xml, "properties", 0, this);
 
-	m_Upgr_line = xr_new<CUIStatic>();	 
+	m_Upgr_line = xr_new<CUIStatic>();
 	AttachChild(m_Upgr_line);
 	m_Upgr_line->SetAutoDelete(true);
 	CUIXmlInit::InitStatic(ui_xml, "properties:upgr_line", 0, m_Upgr_line);
 
 	LPCSTR properties_section = "upgrades_properties";
 
-	VERIFY2( pSettings->section_exist( properties_section ), make_string( "Section [%s] does not exist !", properties_section ) );
-	VERIFY2( pSettings->line_count( properties_section ),    make_string( "Section [%s] is empty !",       properties_section ) );
+	VERIFY2(pSettings->section_exist(properties_section), make_string("Section [%s] does not exist !", properties_section));
+	VERIFY2(pSettings->line_count(properties_section), make_string("Section [%s] is empty !", properties_section));
 	shared_str property_id;
 
-	CInifile::Sect&		inv_section = pSettings->r_section( properties_section );
-	CInifile::SectIt_	ib = inv_section.Data.begin();
-	CInifile::SectIt_	ie = inv_section.Data.end();
-	for ( ; ib != ie ; ++ib )
+	CInifile::Sect& inv_section = pSettings->r_section(properties_section);
+
+	for (CInifile::Item itm : inv_section.Data)
 	{
 		UIProperty* ui_property = xr_new<UIProperty>(); // load one time !!
-		ui_property->init_from_xml( ui_xml );
+		ui_property->init_from_xml(ui_xml);
 
-		property_id._set( (*ib).first );
-		if ( !ui_property->init_property( property_id ) )
+		property_id._set(itm.first);
+		if (!ui_property->init_property(property_id))
 		{
-			Msg( "! Invalid property <%s> in inventory upgrade manager!", property_id );
+			Msg("! Invalid property <%s> in inventory upgrade manager!", property_id);
 			continue;
 		}
 
-		m_properties_ui.push_back( ui_property );
-		AttachChild( ui_property );
-	} // for ib
-	ui_xml.SetLocalRoot( stored_root );
+		m_properties_ui.push_back(ui_property);
+		AttachChild(ui_property);
+	}
+	ui_xml.SetLocalRoot(stored_root);
 }
 
 void UIInvUpgPropertiesWnd::set_info( ItemUpgrades_type const& item_upgrades )

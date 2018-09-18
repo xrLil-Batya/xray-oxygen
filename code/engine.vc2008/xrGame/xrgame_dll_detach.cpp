@@ -2,7 +2,7 @@
 #include "ai_space.h"
 #include "object_factory.h"
 #include "ai/monsters/ai_monster_squad_manager.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 
 #include "entity_alive.h"
 #include "ui/UIInventoryUtilities.h"
@@ -25,7 +25,7 @@
 #include "sound_collection_storage.h"
 #include "relation_registry.h"
 
-typedef xr_vector<std::pair<shared_str,int> >	STORY_PAIRS;
+using STORY_PAIRS = xr_vector<std::pair<shared_str,int> >;
 extern STORY_PAIRS								story_ids;
 extern STORY_PAIRS								spawn_story_ids;
 
@@ -91,11 +91,11 @@ void clean_game_globals()
 	//static shader for blood
 	CEntityAlive::UnloadBloodyWallmarks				();
 	CEntityAlive::UnloadFireParticles				();
-	//очищение памяти таблицы строк
+	//РѕС‡РёС‰РµРЅРёРµ РїР°РјСЏС‚Рё С‚Р°Р±Р»РёС†С‹ СЃС‚СЂРѕРє
 	CStringTable::Destroy							();
-	// Очищение таблицы цветов
+	// РћС‡РёС‰РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ С†РІРµС‚РѕРІ
 	CUIXmlInit::DeleteColorDefs						();
-	// Очищение таблицы идентификаторов рангов и отношений сталкеров
+	// РћС‡РёС‰РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ СЂР°РЅРіРѕРІ Рё РѕС‚РЅРѕС€РµРЅРёР№ СЃС‚Р°Р»РєРµСЂРѕРІ
 	InventoryUtilities::ClearCharacterInfoStrings	();
 
 	xr_delete										(g_sound_collection_storage);

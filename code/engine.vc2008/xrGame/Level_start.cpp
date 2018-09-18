@@ -9,7 +9,7 @@
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrEngine/xr_ioconsole.h"
 #include "MainMenu.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "UIGame.h"
 #include "GamePersistent.h"
 
@@ -34,10 +34,10 @@ BOOL CLevel::net_Start(LPCSTR op_server, LPCSTR op_client)
 	GamePersistent().SetClientOption(tmp);
 	GamePersistent().SetServerOption(op_server);
 	//---------------------------------------------------------------------------
-	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start1));
-	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start2));
-	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start4));
-	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start6));
+	g_loading_events.emplace_back(this, &CLevel::net_start1);
+	g_loading_events.emplace_back(this, &CLevel::net_start2);
+	g_loading_events.emplace_back(this, &CLevel::net_start4);
+	g_loading_events.emplace_back(this, &CLevel::net_start6);
 
 	return net_start_result_total;
 }
@@ -99,12 +99,12 @@ bool CLevel::net_start4()
 	g_loading_events.pop_front();
 
     pApp->LoadBegin();
+	Server->createClient();
 
 	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client6));
 	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client5));
 	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client4));
 	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client3));
-	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client2));
 	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client1));
 
 	return false;
@@ -134,8 +134,8 @@ bool CLevel::net_start6				()
 		
 		if (!map_data.m_map_loaded && !map_data.m_name.size())
 		{
-			LPCSTR level_id_string = NULL;
-			LPCSTR dialog_string = NULL;
+			LPCSTR level_id_string = nullptr;
+			LPCSTR dialog_string = nullptr;
 			CStringTable	st;
 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
 			

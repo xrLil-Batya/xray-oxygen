@@ -13,5 +13,5 @@ ENGINE_API	void	split_time(u64 time, u32 &years, u32 &months, u32 &days, u32 &ho
 			u32		extra_day_count(u32 years);
 }
 
-// Мне лень везде писать название namespace в вызовах.
+// РњРЅРµ Р»РµРЅСЊ РІРµР·РґРµ РїРёСЃР°С‚СЊ РЅР°Р·РІР°РЅРёРµ namespace РІ РІС‹Р·РѕРІР°С….
 using namespace GameTime;

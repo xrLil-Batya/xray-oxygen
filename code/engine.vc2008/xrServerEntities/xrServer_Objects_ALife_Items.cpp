@@ -515,7 +515,7 @@ void CSE_ALifeItemWeapon::LoadAddons(LPCSTR scopes_list)
 				 {
 				string128 addon_section;
 				_GetItem(str, i, addon_section);
-				m_scopes.push_back(addon_section);
+				m_scopes.emplace_back(addon_section);
 				}
 			}
 		}
@@ -540,7 +540,7 @@ void CSE_ALifeItemWeapon::clone_addons(CSE_ALifeItemWeapon* parent)
 
 void CSE_ALifeItemWeapon::AddonsLoad()
 {
-	if (m_scope_name.size() != 0 && m_scopes.size() != 0)
+	if (m_scope_name.size() != 0 && !m_scopes.empty())
 	{
 		SCOPES_VECTOR::iterator it = m_scopes.begin();
 		for (; it != m_scopes.end(); it++)
@@ -565,7 +565,7 @@ u8 CSE_ALifeItemWeapon::GetScopeIdx(shared_str scope_name)
 	if(!pSettings->section_exist(scope_name))
 		return (u8)-1;
 
-	if (m_scopes.size() != 0)
+	if (!m_scopes.empty())
 	{
 		SCOPES_VECTOR::iterator it = m_scopes.begin();
 		for (; it != m_scopes.end(); it++)
@@ -590,7 +590,7 @@ void CSE_ALifeItemWeapon::AddonsUpdate()
 	else
 	{
 		m_scope_idx = u8(-1);
-		m_scope_name = NULL;
+		m_scope_name = nullptr;
 	}
 }
 
@@ -759,9 +759,9 @@ void CSE_ALifeItemWeaponShotGun::UPDATE_Write	(NET_Packet& P)
 	inherited::UPDATE_Write(P);
 
 	P.w_u8(u8(m_AmmoIDs.size()));
-	for (u32 i=0; i<m_AmmoIDs.size(); i++)
+	for (unsigned char AmmoID : m_AmmoIDs)
 	{
-		P.w_u8(u8(m_AmmoIDs[i]));
+		P.w_u8(u8(AmmoID));
 	}
 }
 void CSE_ALifeItemWeaponShotGun::STATE_Read		(NET_Packet& P, u16 size)
@@ -857,7 +857,7 @@ void CSE_ALifeItemWeaponMagazined::FillProps			(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeItemWeaponMagazinedWGL::CSE_ALifeItemWeaponMagazinedWGL	(LPCSTR caSection) : CSE_ALifeItemWeaponMagazined(caSection)
 {
-	m_bGrenadeMode = 0;
+	m_bGrenadeMode = false;
 }
 
 CSE_ALifeItemWeaponMagazinedWGL::~CSE_ALifeItemWeaponMagazinedWGL	()
@@ -1048,8 +1048,8 @@ BOOL CSE_ALifeItemArtefact::Net_Relevant	()
 CSE_ALifeItemPDA::CSE_ALifeItemPDA		(LPCSTR caSection) : CSE_ALifeItem(caSection)
 {
 	m_original_owner		= 0xffff;
-	m_specific_character	= NULL;
-	m_info_portion			= NULL;
+	m_specific_character	= nullptr;
+	m_info_portion			= nullptr;
 }
 
 
@@ -1069,8 +1069,8 @@ void CSE_ALifeItemPDA::STATE_Read		(NET_Packet	&tNetPacket, u16 size)
 		int tmp,tmp2;
 		tNetPacket.r			(&tmp,		sizeof(int));
 		tNetPacket.r			(&tmp2,		sizeof(int));
-		m_info_portion			= NULL;
-		m_specific_character	= NULL;
+		m_info_portion			= nullptr;
+		m_specific_character	= nullptr;
 	} else {
 		tNetPacket.r_stringZ	(m_specific_character);
 		tNetPacket.r_stringZ	(m_info_portion);
@@ -1117,7 +1117,7 @@ void CSE_ALifeItemPDA::FillProps		(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeItemDocument::CSE_ALifeItemDocument(LPCSTR caSection): CSE_ALifeItem(caSection)
 {
-	m_wDoc					= NULL;
+	m_wDoc					= nullptr;
 }
 
 CSE_ALifeItemDocument::~CSE_ALifeItemDocument()
@@ -1132,7 +1132,7 @@ void CSE_ALifeItemDocument::STATE_Read		(NET_Packet	&tNetPacket, u16 size)
 	{
 		u16 tmp;
 		tNetPacket.r_u16			(tmp);
-		m_wDoc = NULL;
+		m_wDoc = nullptr;
 	} else tNetPacket.r_stringZ		(m_wDoc);
 }
 
@@ -1248,8 +1248,8 @@ void CSE_ALifeItemExplosive::FillProps			(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeItemBolt::CSE_ALifeItemBolt		(LPCSTR caSection) : CSE_ALifeItem(caSection)
 {
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 	m_ef_weapon_type			= READ_IF_EXISTS(pSettings,r_u32,caSection,"ef_weapon_type",u32(-1));
 }
 

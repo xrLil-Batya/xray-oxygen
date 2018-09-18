@@ -164,8 +164,8 @@ void CALifeSpawnRegistry::save_updates		(IWriter &stream)
 	SPAWN_GRAPH::vertex_iterator			I = m_spawns.vertices().begin();
 	SPAWN_GRAPH::vertex_iterator			E = m_spawns.vertices().end();
 	for ( ; I != E; ++I) {
-		stream.open_chunk					((*I).second->vertex_id());
-		(*I).second->data()->save_update	(stream);
+        //just save level id, that's all
+		stream.open_chunk					((*I).second->vertex_id()); 
 		stream.close_chunk					();
 	}
 }
@@ -177,7 +177,6 @@ void CALifeSpawnRegistry::load_updates		(IReader &stream)
 		VERIFY						(u32(ALife::_SPAWN_ID(-1)) > vertex_id);
 		const SPAWN_GRAPH::CVertex	*vertex = m_spawns.vertex(ALife::_SPAWN_ID(vertex_id));
 		VERIFY						(vertex);
-		vertex->data()->load_update	(*chunk);
 	}
 }
 

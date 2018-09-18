@@ -14,17 +14,26 @@ XRCORE_API CRandom Random;
 
 typedef struct _PROCESSOR_POWER_INFORMATION
 {
-	ULONG Number;
-	ULONG MaxMhz;
-	ULONG CurrentMhz;
-	ULONG MhzLimit;
-	ULONG MaxIdleState;
-	ULONG CurrentIdleState;
+	DWORD Number;
+	DWORD MaxMhz;
+	DWORD CurrentMhz;
+	DWORD MhzLimit;
+	DWORD MaxIdleState;
+	DWORD CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+
+typedef struct SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION
+{
+	LARGE_INTEGER	IdleTime;
+	LARGE_INTEGER	KernelTime;
+	LARGE_INTEGER	UserTime;
+	LARGE_INTEGER	Reserved1[2];
+	ULONG			Reserved2;
+} SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION;
 
 namespace FPU
 {
-	// Когда-нибудь можно будет задавать точность для float в х64...
+	// РљРѕРіРґР°-РЅРёР±СѓРґСЊ РјРѕР¶РЅРѕ Р±СѓРґРµС‚ Р·Р°РґР°РІР°С‚СЊ С‚РѕС‡РЅРѕСЃС‚СЊ РґР»СЏ float РІ С…64...
 	XRCORE_API void m24(void)
 	{
 		_controlfp(_RC_CHOP, MCW_RC);
@@ -86,13 +95,14 @@ namespace CPU
 
 	typedef struct _PROCESSOR_POWER_INFORMATION
 	{
-		unsigned long Number;
-		unsigned long MaxMhz;
-		unsigned long CurrentMhz;
-		unsigned long MhzLimit;
-		unsigned long MaxIdleState;
-		unsigned long CurrentIdleState;
+		ULONG Number;
+		ULONG MaxMhz;
+		ULONG CurrentMhz;
+		ULONG MhzLimit;
+		ULONG MaxIdleState;
+		ULONG CurrentIdleState;
 	} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+
 	u64 getProcessorFrequency(u32 logicalProcessorCount)
 	{
 		PROCESSOR_POWER_INFORMATION* pInfo = reinterpret_cast<PROCESSOR_POWER_INFORMATION*> (alloca(sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount));
@@ -110,23 +120,22 @@ bool g_initialize_cpu_called = false;
 //------------------------------------------------------------------------------------
 void _initialize_cpu(void)
 {
-	////////////////////////////////////////////////
-	//#VERTVER: We're don't needy for vendor string:
-	//modelName has full name of your
-	////////////////////////////////////////////////
-	if (CPU::Info.hasFeature(CPUFeature::AMD))
-	{
-		Msg("* Vendor CPU: AMD");
-	}
+	const char* vendor;
+
+	if (CPU::Info.isAmd)
+		vendor = "AMD";
+	else if (CPU::Info.isIntel)
+		vendor = "Intel";
 	else
-	{
-		Msg("* Vendor CPU: Intel");
-	}
-	////////////////////////////////////////////////
+		vendor = "VIA";
+
+	Msg("* Vendor CPU: %s", vendor);
+
 	Msg("* Detected CPU: %s", CPU::Info.modelName);
 
 	string256	features;
 	xr_strcpy(features, sizeof(features), "RDTSC");
+	
 	if (CPU::Info.hasFeature(CPUFeature::MMX))
 		xr_strcat(features, ", MMX");
 
@@ -162,11 +171,10 @@ void _initialize_cpu(void)
 
 	if (CPU::Info.hasFeature(CPUFeature::AVX))
 		xr_strcat(features, ", AVX");
-
-	//#NOTE: Compiler doesn't use AVX now
 #ifdef __AVX__
-	else Debug.do_exit("X-Ray x64 using AVX anyway!");
+	else Debug.do_exit(NULL, "X-Ray x64 using AVX anyway!");
 #endif
+
 	if (CPU::Info.hasFeature(CPUFeature::AVX2))
 		xr_strcat(features, ", AVX2");
 
@@ -188,8 +196,8 @@ void _initialize_cpu(void)
 	if (CPU::Info.hasFeature(CPUFeature::EST))
 		xr_strcat(features, ", EST");
 
-	if (CPU::Info.hasFeature(CPUFeature::FXSR))
-		xr_strcat(features, ", FXSR");
+	if (CPU::Info.hasFeature(CPUFeature::XFSR))
+		xr_strcat(features, ", XFSR");
 
 	Msg("* CPU features: %s", features);
 	Msg("* CPU cores/threads: %d/%d \n", CPU::Info.n_cores, CPU::Info.n_threads);
@@ -228,86 +236,130 @@ void debug_on_thread_spawn();
 void _initialize_cpu_thread()
 {
 	debug_on_thread_spawn();
+
 	// fpu & sse
 	if (Core.PluginMode)
 		FPU::m64r();
 	else
 		FPU::m24r();
 
-	if (CPU::Info.hasFeature(CPUFeature::SSE))
+	_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
+	if (_denormals_are_zero_supported)
 	{
-		_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
-		if (_denormals_are_zero_supported)
+		__try
 		{
-			__try
-			{
-				_mm_set_denormals_zero_mode(_MM_DENORMALS_ZERO);
-			}
-			__except (EXCEPTION_EXECUTE_HANDLER)
-			{
-				_denormals_are_zero_supported = false;
-			}
+			_mm_set_denormals_zero_mode(_MM_DENORMALS_ZERO);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			_denormals_are_zero_supported = false;
 		}
 	}
 }
 
-// threading API
-#pragma pack(push,8)
-struct THREAD_NAME
-{
-	DWORD dwType;
-	const char* szName;
-	DWORD dwThreadID;
-	DWORD dwFlags;
-};
+unsigned long long SubtractTimes(const FILETIME one, const FILETIME two)
+{ 
+	LARGE_INTEGER a, b;
+	a.LowPart = one.dwLowDateTime;
+	a.HighPart = one.dwHighDateTime;
 
-void thread_name(const char* name)
-{
-	THREAD_NAME tn;
-	tn.dwType = 0x1000;
-	tn.szName = name;
-	tn.dwThreadID = DWORD(-1);
-	tn.dwFlags = 0;
-	__try
-	{
-		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(size_t), (size_t*)&tn);
-	}
-	__except (EXCEPTION_CONTINUE_EXECUTION)
-	{
-	}
-}
-#pragma pack(pop)
+	b.LowPart = two.dwLowDateTime;
+	b.HighPart = two.dwHighDateTime;
 
-struct	THREAD_STARTUP
-{
-	thread_t* entry;
-	char* name;
-	void* args;
-};
-
-void __cdecl thread_entry(void*	_params)
-{
-	// initialize
-	THREAD_STARTUP* startup = (THREAD_STARTUP*)_params;
-	thread_name(startup->name);
-	thread_t* entry = startup->entry;
-	void* arglist = startup->args;
-	xr_delete(startup);
-	_initialize_cpu_thread();
-
-	// call
-	entry(arglist);
+	return a.QuadPart - b.QuadPart;
 }
 
-void thread_spawn(thread_t*	entry, const char*	name, unsigned	stack, void* arglist)
+int processor_info::getCPULoad(double &val)
 {
-	Debug._initialize(false);
+	FILETIME sysIdle, sysKernel, sysUser;
+	// sysKernel include IdleTime
+	if (GetSystemTimes(&sysIdle, &sysKernel, &sysUser) == 0) // GetSystemTimes func FAILED return value is zero;
+		return 0;
 
-	auto* startup = new THREAD_STARTUP();
-	startup->entry = entry;
-	startup->name = (char*)name;
-	startup->args = arglist;
-	_beginthread(thread_entry, stack, startup);
+	if (prevSysIdle.dwLowDateTime != 0 && prevSysIdle.dwHighDateTime != 0)
+	{
+		DWORDLONG sysIdleDiff, sysKernelDiff, sysUserDiff;
+		sysIdleDiff = SubtractTimes(sysIdle, prevSysIdle);
+		sysKernelDiff = SubtractTimes(sysKernel, prevSysKernel);
+		sysUserDiff = SubtractTimes(sysUser, prevSysUser);
+
+		DWORDLONG sysTotal = sysKernelDiff + sysUserDiff;
+		DWORDLONG kernelTotal = sysKernelDiff - sysIdleDiff; // kernelTime - IdleTime = kernelTime, because sysKernel include IdleTime
+
+		if (sysTotal > 0) // sometimes kernelTime > idleTime
+			val = (double)(((kernelTotal + sysUserDiff) * 100.0) / sysTotal);
+	}
+
+	prevSysIdle = sysIdle;
+	prevSysKernel = sysKernel;
+	prevSysUser = sysUser;
+
+	return 1;
+}
+
+float processor_info::MTCPULoad()
+{
+	m_dwNumberOfProcessors = 0;
+	m_pNtQuerySystemInformation = NULL;
+
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+
+	m_dwNumberOfProcessors = info.dwNumberOfProcessors;
+
+	//#VERTVER: NtQuerySystemInformation now is depricated
+	m_pNtQuerySystemInformation = (NTQUERYSYSTEMINFORMATION)GetProcAddress(GetModuleHandle("NTDLL"), "NtQuerySystemInformation");
+
+	for (DWORD dwCpu = 0; dwCpu < MAX_CPU; dwCpu++)
+	{
+		m_idleTime[dwCpu].QuadPart = 0;
+		m_fltCpuUsage[dwCpu] = FLT_MAX;
+		m_dwTickCount[dwCpu] = 0;
+	}
+
+	return CalcMPCPULoad(1);
+}
+
+//#TODO: Return max value of float
+float processor_info::CalcMPCPULoad(DWORD dwCPU)
+{
+	if (!m_pNtQuerySystemInformation)
+		return FLT_MAX;
+
+	if (dwCPU >= m_dwNumberOfProcessors)
+		return FLT_MAX;
+
+
+	DWORD dwTickCount = GetTickCount();
+	//get standard timer tick count
+
+		SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION info[MAX_CPU];
+
+		if (SUCCEEDED(m_pNtQuerySystemInformation(SystemProcessorPerformanceInformation, &info, sizeof(info), NULL)))
+			//query CPU usage
+		{
+			if (m_idleTime[dwCPU].QuadPart)
+				//ensure that this function was already called at least once
+				//and we have the previous idle time value
+			{
+				m_fltCpuUsage[dwCPU] = 100.0f - 0.01f * (info[dwCPU].IdleTime.QuadPart - m_idleTime[dwCPU].QuadPart) / (dwTickCount - m_dwTickCount[dwCPU]);
+				//calculate new CPU usage value by estimating amount of time
+				//CPU was in idle during the last second
+
+				//clip calculated CPU usage to [0-100] range to filter calculation non-ideality
+
+				if (m_fltCpuUsage[dwCPU] < 0.0f)
+					m_fltCpuUsage[dwCPU] = 0.0f;
+
+				if (m_fltCpuUsage[dwCPU] > 100.0f)
+					m_fltCpuUsage[dwCPU] = 100.0f;
+			}
+
+			m_idleTime[dwCPU] = info[dwCPU].IdleTime;
+			//save new idle time for specified CPU
+		}
+
+	return m_fltCpuUsage[dwCPU];
 }
 
 void spline1(float t, Fvector *p, Fvector *ret)

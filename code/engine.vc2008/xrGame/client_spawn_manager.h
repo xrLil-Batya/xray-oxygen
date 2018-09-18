@@ -9,14 +9,17 @@
 #pragma once
 
 #include "alife_space.h"
-#include "../xrScripts/export/script_export_space.h"
 #include "script_callback_ex.h"
+#include "../xrScripts/export/script_export_space.h"
+
+template <typename _return_type>
+class CScriptCallbackEx;
 
 class CGameObject;
 
 class CClientSpawnManager {
 public:
-	typedef fastdelegate::FastDelegate1<CObject*>			CALLBACK_TYPE;
+	using CALLBACK_TYPE = fastdelegate::FastDelegate1<CObject*>;
 
 public:
 	struct CSpawnCallback {
@@ -25,8 +28,8 @@ public:
 	};
 
 public:
-	typedef xr_map<ALife::_OBJECT_ID,CSpawnCallback>		REQUESTED_REGISTRY;
-	typedef xr_map<ALife::_OBJECT_ID,REQUESTED_REGISTRY>	REQUEST_REGISTRY;
+	using REQUESTED_REGISTRY = xr_map<ALife::_OBJECT_ID,CSpawnCallback>;
+	using REQUEST_REGISTRY = xr_map<ALife::_OBJECT_ID,REQUESTED_REGISTRY>;
 
 private:
 	REQUEST_REGISTRY	m_registry;

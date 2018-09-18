@@ -1,7 +1,7 @@
 #pragma once
 ENGINE_API	extern bool			bDebug;
 
-#define _RELEASE(x)			{ if(x) { (x)->Release();       (x)=NULL; } }
+#define _RELEASE(x)			{ if(x) { (x)->Release(); (x)=NULL; } }
 #define _SHOW_REF(msg, x)   { if(x) { x->AddRef(); Log(msg,u32(x->Release()));}}
 
 // textures
@@ -14,7 +14,7 @@ enum: unsigned long
 	rsClearBB						= (1<<1),
 	rsVSync							= (1<<2),
 	rsWireframe						= (1<<3),
-	rsOcclusion						= (1<<4),
+	rsTripleBuffering				= (1<<4),
 	rsStatistic						= (1<<5),
 	rsDetails						= (1<<6),
 	rsRefresh60hz					= (1<<7),
@@ -26,23 +26,18 @@ enum: unsigned long
 	rsOcclusionDraw					= (1<<12),
 	rsOcclusionStats				= (1<<13),
 
-	mtSound							= (1<<14),
-	mtPhysics						= (1<<15),
-	mtNetwork						= (1<<16),
-	mtParticles						= (1<<17),
-
 	rsCameraPos						= (1<<18),
 	rsRefresh120hz					= (1<<19),
 	rsR2							= (1<<20),
 	rsR3							= (1<<21),
 	rsR4							= (1<<22), // was reserved to Editor
 	rsDrawFPS						= (1<<23), // was reserved to Editor
+	rsHWInfo						= (1<<24)
 	// 22-32 bit - reserved to Editor
 };
 
 ENGINE_API extern	u32			psCurrentVidMode[];
-ENGINE_API extern	u32			psCurrentBPP		;
-ENGINE_API extern	Flags32		psDeviceFlags		;
+ENGINE_API extern	Flags32		psDeviceFlags;
 
 // game path definition
 #define _game_data_				"$game_data$"

@@ -41,7 +41,7 @@ const char* _SetPos(const char* src, u32 pos, char separator)
 	const char*	res = src;
 	u32 p = 0;
 
-	while ((p < pos) && (0 != (res = strchr(res, separator))))
+	while ((p < pos) && (nullptr != (res = strchr(res, separator))))
 	{
 		res++;
 		p++;
@@ -69,7 +69,7 @@ int	_GetItemCount(const char* src, char separator)
 	{
 		const char*	res = src;
 		const char*	last_res = res;
-		while (0 != (res = strchr(res, separator)))
+		while (nullptr != (res = strchr(res, separator)))
 		{
 			res++;
 			last_res = res;
@@ -203,9 +203,9 @@ char* _ChangeSymbol(char* name, char src, char dest)
 
 xr_string& _ChangeSymbol(xr_string& name, char src, char dest)
 {
-	for (xr_string::iterator it = name.begin(); it != name.end(); it++)
-		if (*it == src)
-			*it = xr_string::value_type(dest);
+	for (char & it : name)
+		if (it == src)
+			it = xr_string::value_type(dest);
 
 	return  name;
 }
@@ -217,7 +217,7 @@ void _SequenceToList(LPSTRVec& lst, const char* in, char separator)
 
 	for (int i = 0; i < t_cnt; i++)
 	{
-		_GetItem(in, i, T, separator, 0);
+		_GetItem(in, i, T, separator, nullptr);
 		_Trim(T);
 		if (xr_strlen(T))
 			lst.push_back(xr_strdup(T));
@@ -231,10 +231,10 @@ void _SequenceToList(xr_vector<shared_str>& lst, const char* in, char separator)
 	xr_string	T;
 	for (int i = 0; i < t_cnt; i++)
 	{
-		_GetItem(in, i, T, separator, 0);
+		_GetItem(in, i, T, separator, nullptr);
 		_Trim(T);
-		if (T.size())
-			lst.push_back(T.c_str());
+		if (!T.empty())
+			lst.emplace_back(T.c_str());
 	}
 }
 
@@ -245,17 +245,17 @@ void _SequenceToList(SStringVec& lst, const char* in, char separator)
 	xr_string	T;
 	for (int i = 0; i < t_cnt; i++)
 	{
-		_GetItem(in, i, T, separator, 0);
+		_GetItem(in, i, T, separator, nullptr);
 		_Trim(T);
-		if (T.size())
-			lst.push_back(T.c_str());
+		if (!T.empty())
+			lst.emplace_back(T.c_str());
 	}
 }
 
 xr_string	_ListToSequence(const SStringVec& lst)
 {
 	static xr_string out = "";
-	if (lst.size())
+	if (!lst.empty())
 	{
 		out = lst.front();
 		for (auto s_it = lst.begin() + 1; s_it != lst.end(); s_it++)
@@ -267,7 +267,7 @@ xr_string	_ListToSequence(const SStringVec& lst)
 xr_string& _TrimLeft(xr_string& str)
 {
 	const char* b = str.c_str();
-	const char* p = str.c_str();
+	const char* p = b;
 
 	while (*p && (u8(*p) <= u8(' ')))
 		p++;
@@ -284,7 +284,7 @@ xr_string& _TrimRight(xr_string& str)
 	size_t l = str.length();
 	if (l)
 	{
-		const char* p = str.c_str() + l - 1;
+		const char* p = b + l - 1;
 
 		while ((p != b) && (u8(*p) <= u8(' ')))
 			p--;
@@ -330,7 +330,7 @@ const char* _GetItem(const char* src, int index, xr_string& dst, char separator,
 shared_str	_ListToSequence(const RStringVec& lst)
 {
 	xr_string		out;
-	if (lst.size())
+	if (!lst.empty())
 	{
 		out = *lst.front();
 		for (RStringVec::const_iterator s_it = lst.begin() + 1; s_it != lst.end(); ++s_it)

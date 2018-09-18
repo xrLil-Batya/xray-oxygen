@@ -57,9 +57,9 @@ XRCORE_API void dump_file_mappings	()
 //---------------------------------------------------
 void createPath(const std::string_view path)
 {
-	const auto lastSepPos = path.find_last_of('\\');
+	const size_t lastSepPos = path.find_last_of('\\');
     // TODO [imdex]: remove in 15.3
-    const auto foldersPath = (lastSepPos != std::string_view::npos) ? path.substr(0, lastSepPos) : path;
+    const std::string_view foldersPath = (lastSepPos != std::string_view::npos) ? path.substr(0, lastSepPos) : path;
     std::error_code e;
 	std::experimental::filesystem::create_directories(std::experimental::filesystem::path(foldersPath.begin(), foldersPath.end()), e);
     (void)e;
@@ -110,10 +110,10 @@ void FileCompress(const char* fn, const char* sign, void* data, const size_t siz
     MARK M;
     mk_mark(M, sign);
 
-    const auto H = _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
+    const int H = _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
     R_ASSERT2(H > 0, fn);
     _write(H, &M, 8);
-    _writeLZ(H, data, (u32)size);
+	XRay::Compress::LZ::WriteLZ(H, data, (u32)size);
     _close(H);
 }
 
@@ -121,7 +121,7 @@ void* FileDecompress(const char* fn, const char* sign, size_t* size) {
     MARK M, F;
     mk_mark(M, sign);
 
-    const auto H = _open(fn, O_BINARY | O_RDONLY);
+    const int H = _open(fn, O_BINARY | O_RDONLY);
     R_ASSERT2(H > 0, fn);
     _read(H, &F, 8);
     if (strncmp(M.data(), F.data(), 8) != 0) {
@@ -131,7 +131,7 @@ void* FileDecompress(const char* fn, const char* sign, size_t* size) {
     R_ASSERT(strncmp(M.data(), F.data(), 8) == 0);
 
     void* ptr = nullptr;
-    const size_t SZ = _readLZ(H, ptr, _filelength(H) - 8);
+    const size_t SZ = XRay::Compress::LZ::ReadLZ(H, ptr, _filelength(H) - 8);
     _close(H);
     if (size)
         *size = SZ;
@@ -183,7 +183,7 @@ void IWriter::open_chunk(const u32 type) {
 void IWriter::close_chunk() {
     VERIFY(!chunk_pos.empty());
 
-    const auto pos = tell();
+    const size_t pos = tell();
     seek(chunk_pos.top());
     w_u32(pos - chunk_pos.top() - 4);
     seek(pos);
@@ -200,7 +200,7 @@ size_t IWriter::chunk_size() {
 void IWriter::w_compressed(void* ptr, const size_t count) {
     u8* dest = nullptr;
     unsigned dest_sz = 0;
-    _compressLZ(&dest, &dest_sz, ptr, count);
+	XRay::Compress::LZ::CompressLZ(&dest, &dest_sz, ptr, count);
 
     if (dest && dest_sz)
         w(dest, dest_sz);
@@ -231,15 +231,16 @@ void IWriter::w_sdir(const Fvector& D) {
 
 //---------------------------------------------------
 // base stream
-IReader* IReader::open_chunk(const u32 ID) {
+IReader* IReader::open_chunk(const u32 ID) 
+{
     bool bCompressed;
 
-    const auto dwSize = find_chunk(ID, &bCompressed);
+    const size_t dwSize = find_chunk(ID, &bCompressed);
     if (dwSize != 0) {
         if (bCompressed) {
             u8* dest;
             unsigned dest_sz;
-            _decompressLZ(&dest, &dest_sz, pointer(), dwSize);
+			XRay::Compress::LZ::DecompressLZ(&dest, &dest_sz, pointer(), dwSize);
             return new CTempReader(dest, dest_sz, tell() + dwSize);
         } else {
             return new IReader(pointer(), dwSize, tell() + dwSize);
@@ -271,7 +272,7 @@ IReader* IReader::open_chunk_iterator(u32& ID, IReader* _prev) {
         // compressed
         u8* dest;
         unsigned dest_sz;
-        _decompressLZ(&dest, &dest_sz, pointer(), _size);
+		XRay::Compress::LZ::DecompressLZ(&dest, &dest_sz, pointer(), _size);
         return new CTempReader(dest, dest_sz, tell() + _size);
     } else {
         // normal

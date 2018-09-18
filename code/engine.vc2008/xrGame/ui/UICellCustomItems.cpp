@@ -41,13 +41,20 @@ CUIInventoryCellItem::CUIInventoryCellItem(CInventoryItem* itm)
 	inherited::SetStretchTexture					(true);
 }
 
+#include "eatable_item.h"
 bool CUIInventoryCellItem::EqualTo(CUICellItem* itm)
 {
 	CUIInventoryCellItem* ci = smart_cast<CUIInventoryCellItem*>( itm );
-	if (!itm ||
-		object()->object().cNameSect() != ci->object()->object().cNameSect() ||
+	if (!itm || object()->object().cNameSect() != ci->object()->object().cNameSect() ||
 		!fsimilar( object()->GetCondition(), ci->object()->GetCondition(), 0.01f) ||
-		!object()->equal_upgrades( ci->object()->upgardes())) return false;
+		!object()->equal_upgrades( ci->object()->upgardes())) 
+		return false;
+
+	CEatableItem* pEatable = smart_cast<CEatableItem*>(object());
+	if (pEatable && pEatable->PortionsNum() != smart_cast<CEatableItem*>(ci->object())->PortionsNum())
+	{
+		return false;
+	}
 
 	return true;
 }

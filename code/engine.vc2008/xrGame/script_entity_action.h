@@ -13,7 +13,7 @@
 #include "script_watch_action.h"
 #include "script_animation_action.h"
 #include "script_sound_action.h"
-#include "script_particle_action.h"
+#include "../xrParticles/script_particle_action.h"
 #include "script_object_action.h"
 #include "script_action_condition.h"
 #include "script_monster_action.h"

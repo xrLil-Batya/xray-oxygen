@@ -17,7 +17,6 @@ public:
 		u32			bShadow	:	1;
 		u32			bVolumetric:1;
 		u32			bHudMode:	1;
-		u32			bFlare  :   1;
 
 	}				flags;
 	Fvector			position	;
@@ -49,8 +48,6 @@ public:
 	ref_shader		s_spot;
 	ref_shader		s_point;
 	ref_shader		s_volumetric;
-
-	float			fBlend; // For flares
 
 #if (RENDER==R_R3) || (RENDER==R_R4)
 	ref_shader		s_spot_msaa[8];
@@ -99,17 +96,13 @@ public:
 	virtual void	set_type				(LT type)						{ flags.type = type;		}
 	virtual void	set_active				(bool b);
 	virtual bool	get_active				()								{ return flags.bActive;		}
-	virtual void set_shadow(bool b)						
+	virtual void	set_shadow				(bool b)						
 	{ 
-		flags.bShadow = b;			
+		flags.bShadow=b;			
 	}
-	virtual void set_volumetric(bool b)						
+	virtual void	set_volumetric			(bool b)						
 	{ 
-		flags.bVolumetric = b;			
-	}
-	virtual void set_flare(bool b)
-	{
-		flags.bFlare = b;
+		flags.bVolumetric=b;			
 	}
 
 	virtual void	set_volumetric_quality(float fValue) {m_volumetric_quality = fValue;}
@@ -120,7 +113,7 @@ public:
 	virtual void	set_rotation			(const Fvector& D, const Fvector& R);
 	virtual void	set_cone				(float angle);
 	virtual void	set_range				(float R);
-	virtual void	set_virtual_size		(float R)						{ virtual_size = R; };
+	virtual void	set_virtual_size		(float R)						{ virtual_size = R; }
 	virtual void	set_color				(const Fcolor& C)				{ color.set(C);				}
 	virtual void	set_color				(float r, float g, float b)		{ color.set(r,g,b,1);		}
 	virtual void	set_texture				(LPCSTR name);

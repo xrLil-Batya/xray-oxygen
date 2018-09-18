@@ -92,25 +92,31 @@ LPCSTR engine_impl::value				(shared_str const& value)
 	return			(value.c_str());
 }
 
-void engine_impl::weather				(LPCSTR value)
+void engine_impl::weather(LPCSTR value)
 {
 	if (!g_pGamePersistent)
 		return;
 
-	shared_str						new_weather_id = value;
-	CEnvironment&					environment = g_pGamePersistent->Environment();
+	shared_str new_weather_id = value;
+	CEnvironment& environment = g_pGamePersistent->Environment();
 	if (environment.CurrentWeatherName._get() == new_weather_id._get())
 		return;
 
 	typedef CEnvironment::EnvsMap	EnvsMap;
-	EnvsMap const&					weathers = environment.WeatherCycles;
-	EnvsMap::const_iterator			i = weathers.find(value);
+	EnvsMap const& weathers = environment.WeatherCycles;
+	EnvsMap::const_iterator i = weathers.find(value);
 	if (i == weathers.end())
 		return;
 
-	float const game_time						= g_pGamePersistent->Environment().GetGameTime();
-	environment.SetWeather						(value, true);
-	g_pGameLevel->SetEnvironmentGameTimeFactor	(iFloor(game_time), environment.fTimeFactor);
+	float const game_time = g_pGamePersistent->Environment().GetGameTime();
+	environment.SetWeather(value, true);
+
+	if (g_pGameLevel)
+	{
+		// FX: Позволим редактору погоды выставить редактируемую погоду, даже если он не на уровне
+		g_pGameLevel->SetEnvironmentGameTimeFactor(iFloor(game_time), environment.fTimeFactor);
+	}
+
 	g_pGamePersistent->Environment().SelectEnvs	(game_time);
 }
 
@@ -384,15 +390,17 @@ void engine_impl::weather_current_time			(char const* time)
 {
 	u32		hours, minutes, seconds;
 	sscanf_s(time, "%d:%d:%d", &hours, &minutes, &seconds);
-	bool	paused = g_pGamePersistent->Environment().m_paused;
 
-	g_pGamePersistent->Environment().m_paused = false;
-	g_pGamePersistent->Environment().SetGameTime(float(hours*60*60 + minutes*60 + seconds), g_pGamePersistent->Environment().fTimeFactor);
-	g_pGamePersistent->Environment().m_paused = paused;
+	CEnvironment& refEnvironment = g_pGamePersistent->Environment();
+	bool paused = refEnvironment.m_paused;
 
-	float										weight;
-	g_pGamePersistent->Environment().Invalidate	();
-	g_pGamePersistent->Environment().lerp		(weight);
+	refEnvironment.m_paused = false;
+	refEnvironment.SetGameTime(float(hours*60*60 + minutes*60 + seconds), refEnvironment.fTimeFactor);
+	refEnvironment.m_paused = paused;
+
+	float weight;
+	refEnvironment.Invalidate	();
+	refEnvironment.lerp		(weight);
 }
 
 void engine_impl::reload_current_time_frame		()
@@ -409,36 +417,39 @@ void engine_impl::reload_target_time_frame		()
 	manager.weathers().reload_target_time_frame();
 }
 
-void engine_impl::reload_current_weather		()
+void engine_impl::reload_current_weather()
 {
 	CEnvironment&					environment = g_pGamePersistent->Environment();
 	editor::environment::manager&	manager = dynamic_cast<editor::environment::manager&>(environment);
 
-	float const game_time						= g_pGamePersistent->Environment().GetGameTime();
-	manager.weathers().reload_current_weather	();
-	g_pGameLevel->SetEnvironmentGameTimeFactor	(iFloor(game_time), environment.fTimeFactor);
-	g_pGamePersistent->Environment().Current[0]	= 0;
-	g_pGamePersistent->Environment().Current[1]	= 0;
-	g_pGamePersistent->Environment().SelectEnvs	(game_time);
-	VERIFY										(g_pGamePersistent->Environment().Current[1]);
-	if (g_pGamePersistent->Environment().Current[1]->exec_time == game_time)
-		g_pGamePersistent->Environment().SelectEnvs	(game_time + .1f);
+	float const game_time = environment.GetGameTime();
+	manager.weathers().reload_current_weather();
+	g_pGameLevel->SetEnvironmentGameTimeFactor(iFloor(game_time), environment.fTimeFactor);
+	environment.Current[0] = 0;
+	environment.Current[1] = 0;
+	environment.SelectEnvs(game_time);
+
+	VERIFY(environment.Current[1]);
+	if (environment.Current[1]->exec_time == game_time)
+		environment.SelectEnvs(game_time + .1f);
 }
 
-void engine_impl::reload_weathers				()
+void engine_impl::reload_weathers()
 {
-	CEnvironment&					environment = g_pGamePersistent->Environment();
+	CEnvironment& environment = g_pGamePersistent->Environment();
 	editor::environment::manager&	manager = dynamic_cast<editor::environment::manager&>(environment);
 
-	float const game_time						= g_pGamePersistent->Environment().GetGameTime();
-	manager.weathers().reload					();
-	g_pGameLevel->SetEnvironmentGameTimeFactor	(iFloor(game_time), environment.fTimeFactor);
-	g_pGamePersistent->Environment().Current[0]	= 0;
-	g_pGamePersistent->Environment().Current[1]	= 0;
-	g_pGamePersistent->Environment().SelectEnvs	(game_time);
-	VERIFY										(g_pGamePersistent->Environment().Current[1]);
-	if (g_pGamePersistent->Environment().Current[1]->exec_time == game_time)
-		g_pGamePersistent->Environment().SelectEnvs	(game_time + .1f);
+	float const game_time = g_pGamePersistent->Environment().GetGameTime();
+	manager.weathers().reload();
+	g_pGameLevel->SetEnvironmentGameTimeFactor(iFloor(game_time), environment.fTimeFactor);
+
+	environment.Current[0] = 0;
+	environment.Current[1] = 0;
+	environment.SelectEnvs(game_time);
+
+	VERIFY(environment.Current[1]);
+	if (environment.Current[1]->exec_time == game_time)
+		environment.SelectEnvs(game_time + .1f);
 }
 
 #endif // #ifdef INGAME_EDITOR

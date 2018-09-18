@@ -32,13 +32,9 @@ using namespace StalkerDecisionSpace;
 // CStalkerActionReachEnemyLocation
 //////////////////////////////////////////////////////////////////////////
 
-CStalkerActionReachEnemyLocation::CStalkerActionReachEnemyLocation(
-		CAI_Stalker *object,
-		CPropertyStorage *combat_storage,
-		LPCSTR action_name
-	) :
-	inherited			(object,action_name),
-	m_combat_storage	(combat_storage)
+CStalkerActionReachEnemyLocation::CStalkerActionReachEnemyLocation(CAI_Stalker *pObject, CPropertyStorage *pStorage, LPCSTR ActionName) :
+	inherited(pObject, ActionName),
+	m_combat_storage(pStorage)
 {
 }
 
@@ -61,31 +57,23 @@ void CStalkerActionReachEnemyLocation::initialize		()
 		m_last_hit_time					= 0;
 	else
 		m_last_hit_time					= hit->m_level_time;
-
-//	object().sniper_update_rate			(true);
 }
 
-void CStalkerActionReachEnemyLocation::finalize		()
+void CStalkerActionReachEnemyLocation::finalize()
 {
 	inherited::finalize					();
-
-//	object().sniper_update_rate			(false);
 }
 
-void CStalkerActionReachEnemyLocation::execute			()
+void CStalkerActionReachEnemyLocation::execute()
 {
-#ifdef TEST_MENTAL_STATE
-	VERIFY								((start_level_time() == Device.dwTimeGlobal) || (object().movement().mental_state() == eMentalStateDanger));
-#endif // TEST_MENTAL_STATE
+	inherited::execute();
 
-	inherited::execute					();
-
-	MemorySpace::CMemoryInfo			mem_object = object().memory().memory(object().memory().enemy().selected());
+	MemorySpace::CMemoryInfo mem_object = object().memory().memory(object().memory().enemy().selected());
 
 	if (!mem_object.m_object)
 		return;
 
-	const MemorySpace::CHitObject		*hit = object().memory().hit().hit(object().memory().enemy().selected());
+	const MemorySpace::CHitObject *hit = object().memory().hit().hit(object().memory().enemy().selected());
 	if (hit && hit->m_level_time > m_last_hit_time) {
 		m_combat_storage->set_property	(eWorldPropertyLookedOut,		false);
 		m_combat_storage->set_property	(eWorldPropertyPositionHolded,	false);
@@ -93,60 +81,35 @@ void CStalkerActionReachEnemyLocation::execute			()
 		return;
 	}
 
-	if (object().movement().path_completed()) {
-#if 0
-		object().m_ce_ambush->setup		(mem_object.m_object_params.m_position,mem_object.m_self_params.m_position,10.f);
-		const CCoverPoint				*point = ai().cover_manager().best_cover(mem_object.m_object_params.m_position,10.f,*object().m_ce_ambush,CStalkerMovementRestrictor(m_object,true));
-		if (!point) {
-			object().m_ce_ambush->setup	(mem_object.m_object_params.m_position,mem_object.m_self_params.m_position,10.f);
-			point						= ai().cover_manager().best_cover(mem_object.m_object_params.m_position,30.f,*object().m_ce_ambush,CStalkerMovementRestrictor(m_object,true));
+	if (object().movement().path_completed()) 
+	{
+
+		if (object().movement().accessible(mem_object.m_object_params.m_level_vertex_id)) 
+		{
+			object().movement().set_level_dest_vertex(mem_object.m_object_params.m_level_vertex_id);
+		}
+		else 
+		{
+			object().movement().
+				set_nearest_accessible_position(mem_object.m_object_params.m_position, mem_object.m_object_params.m_level_vertex_id);
 		}
 
-		if (point) {
-			object().movement().set_level_dest_vertex	(point->level_vertex_id());
-			object().movement().set_desired_position	(&point->position());
-		}
-		else
-			object().movement().set_nearest_accessible_position	();
-#else
-		if (object().movement().accessible(mem_object.m_object_params.m_level_vertex_id)) {
-			object().movement().set_level_dest_vertex	(mem_object.m_object_params.m_level_vertex_id);
-//			object().movement().set_desired_position	(0);
-		}
-		else {
-			object().movement().set_nearest_accessible_position	(
-				mem_object.m_object_params.m_position,
-				mem_object.m_object_params.m_level_vertex_id
-			);
-		}
+		object().sight().setup(CSightAction(SightManager::eSightTypePosition,
+			Fvector(mem_object.m_object_params.m_position).add(Fvector().set(0.f, .5f, 0.f)),true));
 
-		object().sight().setup		(
-			CSightAction(
-				SightManager::eSightTypePosition,
-				Fvector(mem_object.m_object_params.m_position).add(Fvector().set(0.f, .5f, 0.f)),
-//				mem_object.m_object_params.m_position,
-				true
-			)
-		);
-#endif
-
-		if (object().movement().path_completed()) {
-			m_storage->set_property		(eWorldPropertyEnemyLocationReached, true);
+		if (object().movement().path_completed())
+		{
+			m_storage->set_property(eWorldPropertyEnemyLocationReached, true);
 
 #ifndef SILENT_COMBAT
-			play_start_search_sound		(0,0,10000,10000);
+			play_start_search_sound(0,0,10000,10000);
 #endif // SILENT_COMBAT
 		}
 	}
-	else {
-		object().sight().setup		(
-			CSightAction(
-				SightManager::eSightTypePosition,
-				Fvector(mem_object.m_object_params.m_position).add(Fvector().set(0.f, .5f, 0.f)),
-//				mem_object.m_object_params.m_position,
-				true
-			)
-		);
+	else 
+	{
+		object().sight().setup(CSightAction(SightManager::eSightTypePosition,
+			Fvector(mem_object.m_object_params.m_position).add(Fvector().set(0.f, .5f, 0.f)), true));
 	}
 }
 

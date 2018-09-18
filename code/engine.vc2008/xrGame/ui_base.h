@@ -18,8 +18,8 @@ struct CFontManager :public pureDeviceReset
 	CFontManager();
 	~CFontManager();
 
-	typedef xr_vector<CGameFont**> FONTS_VEC;
-	typedef FONTS_VEC::iterator FONTS_VEC_IT;
+	using FONTS_VEC = xr_vector<CGameFont**>;
+	using FONTS_VEC_IT = FONTS_VEC::iterator;
 	FONTS_VEC m_all_fonts;
 	void Render();
 
@@ -37,6 +37,7 @@ struct CFontManager :public pureDeviceReset
 	CGameFont* pFontGraffiti50Russian;
 	CGameFont* pFontLetterica25;
 	CGameFont* pFontElectron18;
+	CGameFont* pFontRoboto16;
 	CGameFont* pFontStat;
 
 	void InitializeFonts();

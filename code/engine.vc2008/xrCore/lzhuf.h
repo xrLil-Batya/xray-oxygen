@@ -1,10 +1,15 @@
-#ifndef _LZ_H_
-#define _LZ_H_
+#pragma once
+namespace XRay
+{
+	namespace Compress
+	{
+		namespace LZ
+		{
+			XRCORE_API unsigned	WriteLZ(int hf, void* d, unsigned size);
+			XRCORE_API unsigned	ReadLZ(int hf, void* &d, unsigned size);
+			XRCORE_API void		CompressLZ(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz);
+			XRCORE_API void		DecompressLZ(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz);
+		}
+	}
+}
 
-extern XRCORE_API unsigned	_writeLZ		(int hf, void* d, unsigned size);
-extern XRCORE_API unsigned	_readLZ			(int hf, void* &d, unsigned size);
-
-extern XRCORE_API void		_compressLZ		(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz);
-extern XRCORE_API void		_decompressLZ	(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz);
-
-#endif

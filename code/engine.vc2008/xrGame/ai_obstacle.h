@@ -5,34 +5,34 @@
 //	Author		: Dmitriy Iassenev
 //	Description : ai obstacle class inline functions
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef AI_OBSTACLE_H
-#define AI_OBSTACLE_H
-
+#pragma once
 #include "moving_objects.h"
-#include "magic_box3.h"
+#include "../../3rd-party/min_obb/magic_box3.h"
 
 class CGameObject;
 
-class ai_obstacle {
+class ai_obstacle 
+{
 public:
-	typedef moving_objects::AREA			AREA;
+	using AREA = moving_objects::AREA;
 
 private:
-	enum {
-		PLANE_COUNT			= 6,
+	enum: u32
+	{
+		PLANE_COUNT = 6,
 	};
 
 private:
-	typedef Fplane			CPlanesArray[PLANE_COUNT];
+	using CPlanesArray = Fplane[PLANE_COUNT];
 
 private:
-	struct CPlanes {
+	struct CPlanes 
+	{
 		CPlanesArray		m_planes;
 	};
 
 private:
-	CGameObject				*m_object;
+	CGameObject*			m_object;
 	bool					m_actual;
 	AREA					m_area;
 	AREA					m_danger_area;
@@ -45,21 +45,20 @@ private:
 	IC		bool			inside			(const Fvector &position, const float &radius, const float &increment, const u32 step_count) const;
 			void			prepare_inside	(Fvector &start, Fvector &dest);
 			void			correct_position(Fvector &position);
-			void			compute_impl	();
-			void			compute			();
+			void			compute_impl	() noexcept;
+			void			compute			() noexcept;
 			void			compute_matrix	(Fmatrix &result, const Fvector &additional);
 
 public:
 	IC						ai_obstacle		(CGameObject *object);
 	IC		const AREA		&area			();
-	IC		const AREA		&danger_area	();
 			void			on_move			();
 	IC		bool			inside			(const u32 &vertex_id) const;
-	IC		const u32		&crc			();
+	IC		const u32		&crc			() noexcept;
 			float			distance_to		(const Fvector &position) const;
-	IC		const MagicBox3	min_box			();
+
+	IC		const MagicBox3	min_box			() noexcept { return (m_min_box); }
+	IC		const AREA		&danger_area	() noexcept { return (m_danger_area); }
 };
 
 #include "ai_obstacle_inline.h"
-
-#endif // AI_OBSTACLE_H

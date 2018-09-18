@@ -44,17 +44,17 @@ IBlender* CResourceManager::_GetBlender		(LPCSTR Name)
 		return 0;
 	}
 #endif
-	if (I==m_blenders.end())	{ Debug.fatal(DEBUG_INFO,"Shader '%s' not found in library.",Name); return 0; }
+	if (I==m_blenders.end())	{ Debug.fatal(DEBUG_INFO,"Shader '%s' not found in library.",Name); return nullptr; }
 	else					return I->second;
 }
 
 IBlender* CResourceManager::_FindBlender		(LPCSTR Name)
 {
-	if (!(Name && Name[0])) return 0;
+	if (!(Name && Name[0])) return nullptr;
 
 	LPSTR N = LPSTR(Name);
 	map_Blender::iterator I = m_blenders.find	(N);
-	if (I==m_blenders.end())	return 0;
+	if (I==m_blenders.end())	return nullptr;
 	else						return I->second;
 }
 
@@ -91,31 +91,31 @@ void	CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 			strlwr		(N.begin());
 
 			fix_texture_name( N.begin() );
-			dest.push_back(N.begin());
+			dest.emplace_back(N.begin());
 			N.clear		();
 		} else {
 			N.push_back	(*P);
 		}
 		P++;
 	}
-	if (N.size())
+	if (!N.empty())
 	{
 		// flush
 		N.push_back	(0);
 		strlwr		(N.begin());
 
 		fix_texture_name( N.begin() );
-		dest.push_back(N.begin());
+		dest.emplace_back(N.begin());
 	}
 }
 
 ShaderElement* CResourceManager::_CreateElement			(ShaderElement& S)
 {
-	if (S.passes.empty())		return	0;
+	if (S.passes.empty())		return	nullptr;
 
 	// Search equal in shaders array
-	for (u32 it=0; it<v_elements.size(); it++)
-		if (S.equal(*(v_elements[it])))	return v_elements[it];
+	for (auto & v_element : v_elements)
+		if (S.equal(*v_element))	return v_element;
 
 	// Create _new_ entry
 	ShaderElement*	N		=	xr_new<ShaderElement>(S);
@@ -233,30 +233,32 @@ Shader*		CResourceManager::Create	(IBlender*	B,		LPCSTR s_shader,	LPCSTR s_textu
     return	_cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
 }
 
-Shader*		CResourceManager::Create	(LPCSTR s_shader,	LPCSTR s_textures,	LPCSTR s_constants,	LPCSTR s_matrices)
+Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 #if defined(USE_DX10) || defined(USE_DX11)
-	if	(_lua_HasShader(s_shader))		
-		return	_lua_Create	(s_shader,s_textures);
-	else								
+	if (_lua_HasShader(s_shader))
+		return _lua_Create(s_shader, s_textures);
+	else
 	{
-		Shader* pShader = _cpp_Create	(s_shader,s_textures,s_constants,s_matrices);
+		Shader* pShader = _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
 		if (pShader)
 			return pShader;
 		else
 		{
 			if (_lua_HasShader("stub_default"))
-				return	_lua_Create	("stub_default",s_textures);
+				return _lua_Create("stub_default", s_textures);
 			else
 			{
-				FATAL("Can't find stub_default.s");
-				return 0;
+				FATAL("Can't find stub_default.lua");
+				return nullptr;
 			}
 		}
 	}
 #else	//	USE_DX10
-	if(_lua_HasShader(s_shader)) return	_lua_Create(s_shader,s_textures);
-	else return	_cpp_Create(s_shader,s_textures,s_constants,s_matrices);
+	if (_lua_HasShader(s_shader))
+		return _lua_Create(s_shader, s_textures);
+
+	return _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
 #endif	//	USE_DX10
 }
 

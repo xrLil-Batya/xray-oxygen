@@ -65,20 +65,20 @@ void	CRenderTarget::phase_vol_accumulator()
 	{
 		m_bHasActiveVolumetric = true;
 		if( !RImplementation.o.dx10_msaa )
-			u_setrt								(rt_Generic_2,		NULL,NULL,HW.pBaseZB);
+			u_setrt								(rt_Volumetric,		NULL,NULL,HW.pBaseZB);
 		else
-			u_setrt								(rt_Generic_2,		NULL,NULL,RImplementation.Target->rt_MSAADepth->pZRT);
+			u_setrt								(rt_Volumetric,		NULL,NULL,RImplementation.Target->rt_MSAADepth->pZRT);
 		//u32		clr4clearVol				= color_rgba(0,0,0,0);	// 0x00
 		//CHK_DX	(HW.pDevice->Clear			( 0L, NULL, D3DCLEAR_TARGET, clr4clearVol, 1.0f, 0L));
 		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		HW.pContext->ClearRenderTargetView( rt_Generic_2->pRT, ColorRGBA);
+		HW.pContext->ClearRenderTargetView(rt_Volumetric->pRT, ColorRGBA);
 	}
 	else
 	{
 		if( !RImplementation.o.dx10_msaa )
-			u_setrt								(rt_Generic_2,		NULL,NULL,HW.pBaseZB);
+			u_setrt								(rt_Volumetric,		NULL,NULL,HW.pBaseZB);
 		else
-			u_setrt								(rt_Generic_2,		NULL,NULL,RImplementation.Target->rt_MSAADepth->pZRT);
+			u_setrt								(rt_Volumetric,		NULL,NULL,RImplementation.Target->rt_MSAADepth->pZRT);
 	}
 
 	RCache.set_Stencil							(FALSE);

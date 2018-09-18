@@ -88,7 +88,7 @@ xr_string CImageManager::UpdateFileName(xr_string& fn)
 }
 
 //------------------------------------------------------------------------------
-// создает тхм
+// СЃРѕР·РґР°РµС‚ С‚С…Рј
 //------------------------------------------------------------------------------
 void CImageManager::MakeThumbnailImage(ETextureThumbnail* THM, u32* data, u32 w, u32 h, u32 a)
 {
@@ -105,7 +105,7 @@ void CImageManager::MakeThumbnailImage(ETextureThumbnail* THM, u32* data, u32 w,
 }
 
 //------------------------------------------------------------------------------
-// создает тхм
+// СЃРѕР·РґР°РµС‚ С‚С…Рј
 //------------------------------------------------------------------------------
 void CImageManager::CreateTextureThumbnail(ETextureThumbnail* THM, const AnsiString& src_name, LPCSTR initial, bool bSetDefParam)
 {
@@ -129,7 +129,7 @@ void CImageManager::CreateTextureThumbnail(ETextureThumbnail* THM, const AnsiStr
 
 	MakeThumbnailImage(THM, data.data(), w, h, a);
 
-	// выставить начальные параметры
+	// РІС‹СЃС‚Р°РІРёС‚СЊ РЅР°С‡Р°Р»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹
 	if (bSetDefParam)
 	{
 		THM->m_Age = FS.get_file_age(fn.c_str());
@@ -143,7 +143,7 @@ void CImageManager::CreateTextureThumbnail(ETextureThumbnail* THM, const AnsiStr
 	THM->SetValid();
 }
 //------------------------------------------------------------------------------
-// создает новую текстуру
+// СЃРѕР·РґР°РµС‚ РЅРѕРІСѓСЋ С‚РµРєСЃС‚СѓСЂСѓ
 //------------------------------------------------------------------------------
 void CImageManager::CreateGameTexture(LPCSTR src_name, ETextureThumbnail* thumb)
 {
@@ -173,7 +173,7 @@ void CImageManager::CreateGameTexture(LPCSTR src_name, ETextureThumbnail* thumb)
 }
 
 //------------------------------------------------------------------------------
-// создает игровую текстуру
+// СЃРѕР·РґР°РµС‚ РёРіСЂРѕРІСѓСЋ С‚РµРєСЃС‚СѓСЂСѓ
 //------------------------------------------------------------------------------
 bool CImageManager::MakeGameTexture(LPCSTR game_name, u32* data, const STextureParams& tp)
 {
@@ -282,7 +282,7 @@ bool CImageManager::MakeGameTexture(ETextureThumbnail* THM, LPCSTR game_name, u3
 }
 
 //------------------------------------------------------------------------------
-// загружает 32-bit данные
+// Р·Р°РіСЂСѓР¶Р°РµС‚ 32-bit РґР°РЅРЅС‹Рµ
 //------------------------------------------------------------------------------
 bool CImageManager::LoadTextureData(LPCSTR src_name, U32Vec& data, u32& w, u32& h, int* age)
 {
@@ -301,8 +301,8 @@ bool CImageManager::LoadTextureData(LPCSTR src_name, U32Vec& data, u32& w, u32& 
 }
 
 //------------------------------------------------------------------------------
-// копирует обновленные текстуры с Import'a в Textures
-// files - список файлов для копирование
+// РєРѕРїРёСЂСѓРµС‚ РѕР±РЅРѕРІР»РµРЅРЅС‹Рµ С‚РµРєСЃС‚СѓСЂС‹ СЃ Import'a РІ Textures
+// files - СЃРїРёСЃРѕРє С„Р°Р№Р»РѕРІ РґР»СЏ РєРѕРїРёСЂРѕРІР°РЅРёРµ
 //------------------------------------------------------------------------------
 void CImageManager::SafeCopyLocalToServer(FS_FileSet& files)
 {
@@ -344,9 +344,9 @@ void CImageManager::SafeCopyLocalToServer(FS_FileSet& files)
 	}
 }
 //------------------------------------------------------------------------------
-// возвращает список не синхронизированных (модифицированных) текстур
-// source_list - содержит список текстур с расширениями
-// sync_list - реально сохраненные файлы (после использования освободить)
+// РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РЅРµ СЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°РЅРЅС‹С… (РјРѕРґРёС„РёС†РёСЂРѕРІР°РЅРЅС‹С…) С‚РµРєСЃС‚СѓСЂ
+// source_list - СЃРѕРґРµСЂР¶РёС‚ СЃРїРёСЃРѕРє С‚РµРєСЃС‚СѓСЂ СЃ СЂР°СЃС€РёСЂРµРЅРёСЏРјРё
+// sync_list - СЂРµР°Р»СЊРЅРѕ СЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ С„Р°Р№Р»С‹ (РїРѕСЃР»Рµ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РѕСЃРІРѕР±РѕРґРёС‚СЊ)
 //------------------------------------------------------------------------------
 void CImageManager::SynchronizeTextures(bool sync_thm, bool sync_game, bool bForceGame, FS_FileSet* source_list, AStringVec* sync_list, FS_FileSet* modif_map, bool bForceBaseAge)
 {
@@ -524,7 +524,7 @@ void CImageManager::SynchronizeTexture(LPCSTR tex_name, int age)
 	//RefreshTextures		(&modif);
 }
 //------------------------------------------------------------------------------
-// возвращает список всех текстур
+// РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РІСЃРµС… С‚РµРєСЃС‚СѓСЂ
 //------------------------------------------------------------------------------
 int CImageManager::GetTextures(FS_FileSet& files, BOOL bFolders)
 {
@@ -536,16 +536,16 @@ int CImageManager::GetTexturesRaw(FS_FileSet& files, BOOL bFolders)
 	return FS.file_list(files, _textures_, (bFolders ? FS_ListFolders : 0) | FS_ListFiles | FS_ClampExt, "*.tga");
 }
 //------------------------------------------------------------------------------
-// возвращает список текстур, которые нужно обновить
+// РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє С‚РµРєСЃС‚СѓСЂ, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ РѕР±РЅРѕРІРёС‚СЊ
 //------------------------------------------------------------------------------
 int CImageManager::GetLocalNewTextures(FS_FileSet& files)
 {
 	return FS.file_list(files, _import_, FS_ListFiles | FS_RootOnly, "*.tga,*.bmp");
 }
 //------------------------------------------------------------------------------
-// проверяет соответствие размера текстур
-// input: 	список файлов для тестирования
-// output: 	соответствие
+// РїСЂРѕРІРµСЂСЏРµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ СЂР°Р·РјРµСЂР° С‚РµРєСЃС‚СѓСЂ
+// input: 	СЃРїРёСЃРѕРє С„Р°Р№Р»РѕРІ РґР»СЏ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ
+// output: 	СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ
 //------------------------------------------------------------------------------
 #define SQR(a) ((a)*(a))
 BOOL CImageManager::CheckCompliance(LPCSTR fname, int& compl)
@@ -807,8 +807,8 @@ void CImageManager::RemoveTexture(LPCSTR fname, EItemType type, bool& res)
 }
 
 //------------------------------------------------------------------------------
-// если передан параметр modif - обновляем DX-Surface only и только из списка
-// иначе полная синхронизация
+// РµСЃР»Рё РїРµСЂРµРґР°РЅ РїР°СЂР°РјРµС‚СЂ modif - РѕР±РЅРѕРІР»СЏРµРј DX-Surface only Рё С‚РѕР»СЊРєРѕ РёР· СЃРїРёСЃРєР°
+// РёРЅР°С‡Рµ РїРѕР»РЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
 //------------------------------------------------------------------------------
 void CImageManager::RefreshTextures(AStringVec* modif)
 {

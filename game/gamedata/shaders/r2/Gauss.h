@@ -1,9 +1,9 @@
 #ifndef GAUSSBLUR_H_INCLUDED
 #define GAUSSBLUR_H_INCLUDED
 
-half4 Gauss(sampler2D inputSampler, float2 texCoord, int factor, bool optimize)
+float4 Gauss(sampler2D inputSampler, float2 texCoord, int factor, bool optimize)
 {
-	half4 outColor;
+	float4 outColor;
 	
 	if(!optimize)
 	{

@@ -14,29 +14,21 @@ dx103DFluidManager	FluidManager;
 
 namespace
 {
-
 	// For render call
-	//DrawTextureShaderVariable = pEffect->GetVariableByName( "textureNumber")->AsScalar();
 	shared_str	strDrawTexture("textureNumber");
 
 	// For project, advect
-	//ModulateShaderVariable = pEffect->GetVariableByName( "modulate")->AsScalar();
 	shared_str	strModulate("modulate");
 
 	// For confinement
-	//EpsilonShaderVariable = pEffect->GetVariableByName( "epsilon")->AsScalar();
 	shared_str	strEpsilon("epsilon");
 
 	// For confinement, advect
 	shared_str	strTimeStep("timestep");
 
 	// For advect BFECC
-	//ForwardShaderVariable = pEffect->GetVariableByName( "forward")->AsScalar();
 	shared_str	strForward("forward");
-
-	//HalfVolumeDimShaderVariable = pEffect->GetVariableByName( "halfVolumeDim")->AsVector();
 	shared_str	strHalfVolumeDim("halfVolumeDim");
-
 	shared_str	strGravityBuoyancy("GravityBuoyancy");
 }
 
@@ -268,13 +260,11 @@ void dx103DFluidManager::Update( dx103DFluidData &FluidData, float timestep )
 	rtViewport.TopLeftY = 0;
 	rtViewport.MinDepth = 0.0f;
 	rtViewport.MaxDepth = 1.0f;
-#ifdef USE_DX11
-	rtViewport.Width =  (float)m_iTextureWidth;
-	rtViewport.Height = (float)m_iTextureHeight;
-#else // #ifdef USE_DX11
-	rtViewport.Width =  m_iTextureWidth;
-	rtViewport.Height = m_iTextureHeight;
-#endif // #ifdef USE_DX11
+
+	// FX: Type DX10 != Type DX11. Hello, decltype!
+	rtViewport.Width =  (decltype(rtViewport.Width))m_iTextureWidth;
+	rtViewport.Height = (decltype(rtViewport.Width))m_iTextureHeight;
+
 	HW.pContext->RSSetViewports(1,&rtViewport);
 
 	RCache.set_ZB(0);

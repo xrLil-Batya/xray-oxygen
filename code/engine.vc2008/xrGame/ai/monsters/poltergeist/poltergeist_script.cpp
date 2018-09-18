@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "poltergeist.h"
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

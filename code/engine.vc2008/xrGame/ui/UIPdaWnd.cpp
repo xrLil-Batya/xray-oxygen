@@ -151,6 +151,7 @@ void CUIPdaWnd::Update()
 	Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(pUILogsWnd,&CUILogsWnd::PerformWork));
 }
 
+#include <luabind/luabind.hpp>
 void CUIPdaWnd::SetActiveSubdialog(const shared_str& section)
 {
 	if ( m_sActiveSection == section ) return;

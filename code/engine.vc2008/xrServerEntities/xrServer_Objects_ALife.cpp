@@ -9,7 +9,7 @@
 #include "stdafx.h"
 #include "xrServer_Objects_ALife.h"
 #include "xrServer_Objects_ALife_Monsters.h"
-#include "game_base_space.h"
+#include "../xrGame/game_base.h"
 #include "object_broker.h"
 #include "restriction_space.h"
 
@@ -375,7 +375,7 @@ CSE_ALifeObject::CSE_ALifeObject			(LPCSTR caSection) : CSE_Abstract(caSection)
 	m_story_id					= INVALID_STORY_ID;
 	m_spawn_story_id			= INVALID_SPAWN_STORY_ID;
 #ifdef XRGAME_EXPORTS
-	m_alife_simulator			= 0;
+	m_alife_simulator			= nullptr;
 #	ifdef LUACP_API
 		static bool _saved = false;
 		if (!_saved)
@@ -389,7 +389,7 @@ CSE_ALifeObject::CSE_ALifeObject			(LPCSTR caSection) : CSE_Abstract(caSection)
 #ifdef XRSE_FACTORY_EXPORTS
     fp_data.inc					();
 #endif // XRSE_FACTORY_EXPORTS
-	m_flags.set					(flOfflineNoMove,FALSE);
+	m_flags.set					(flOfflineNoMove,false);
 	seed						(u32(CPU::QPC() & 0xffffffff));
 }
 
@@ -420,7 +420,7 @@ bool CSE_ALifeObject::move_offline			() const
 
 void CSE_ALifeObject::move_offline			(bool value)
 {
-	m_flags.set					(flOfflineNoMove,!value ? TRUE : FALSE);
+	m_flags.set					(flOfflineNoMove,!value ? true : false);
 }
 
 bool CSE_ALifeObject::visible_for_map		() const
@@ -430,7 +430,7 @@ bool CSE_ALifeObject::visible_for_map		() const
 
 void CSE_ALifeObject::visible_for_map		(bool value)
 {
-	m_flags.set					(flVisibleForMap,value ? TRUE : FALSE);
+	m_flags.set					(flVisibleForMap,value ? true : false);
 }
 
 void CSE_ALifeObject::STATE_Write			(NET_Packet &tNetPacket)
@@ -763,8 +763,8 @@ void CSE_ALifeDynamicObjectVisual::FillProps	(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifePHSkeletonObject::CSE_ALifePHSkeletonObject(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection),CSE_PHSkeleton(caSection)
 {
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifePHSkeletonObject::~CSE_ALifePHSkeletonObject()
@@ -828,11 +828,11 @@ void CSE_ALifePHSkeletonObject::FillProps(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeSpaceRestrictor::CSE_ALifeSpaceRestrictor	(LPCSTR caSection) : CSE_ALifeDynamicObject(caSection)
 {
-	m_flags.set					(flUseSwitches,FALSE);
+	m_flags.set					(flUseSwitches,false);
 	m_space_restrictor_type		= RestrictionSpace::eDefaultRestrictorTypeNone;
-	m_flags.set					(flUsedAI_Locations,FALSE);
-	m_spawn_flags.set			(flSpawnDestroyOnSpawn,FALSE);
-	m_flags.set					(flCheckForSeparator,TRUE);
+	m_flags.set					(flUsedAI_Locations,false);
+	m_spawn_flags.set			(flSpawnDestroyOnSpawn,false);
+	m_flags.set					(flCheckForSeparator,true);
 }
 
 CSE_ALifeSpaceRestrictor::~CSE_ALifeSpaceRestrictor	()
@@ -884,7 +884,7 @@ xr_token defaul_retrictor_types[]={
 	{ "NONE default restrictor",	RestrictionSpace::eDefaultRestrictorTypeNone},
 	{ "OUT default restrictor",		RestrictionSpace::eDefaultRestrictorTypeOut	},
 	{ "IN default restrictor",		RestrictionSpace::eDefaultRestrictorTypeIn	},
-	{ 0,							0}
+	{ nullptr,							0}
 };
 
 #ifndef XRGAME_EXPORTS
@@ -1001,9 +1001,9 @@ CSE_ALifeObjectPhysic::CSE_ALifeObjectPhysic(LPCSTR caSection) : CSE_ALifeDynami
 	if(pSettings->line_exist(caSection,"fixed_bones"))
 		fixed_bones		= pSettings->r_string(caSection,"fixed_bones");
 
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
-	m_flags.set					(flUsedAI_Locations,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
+	m_flags.set					(flUsedAI_Locations,false);
 	
 #ifdef XRGAME_EXPORTS
 	m_freeze_time				= Device.dwTimeGlobal;
@@ -1279,7 +1279,7 @@ xr_token po_types[]={
 	{ "Fixed chain",	epotFixedChain	},
 	{ "Free chain",		epotFreeChain	},
 	{ "Skeleton",		epotSkeleton	},
-	{ 0,				0				}
+	{ nullptr,				0				}
 };
 
 #ifndef XRGAME_EXPORTS
@@ -1318,8 +1318,8 @@ CSE_ALifeObjectHangingLamp::CSE_ALifeObjectHangingLamp(LPCSTR caSection) : CSE_A
 	color						= 0xffffffff;
     brightness					= 1.f;
 	m_health					= 100.f;
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 
 	m_virtual_size				= 0.1f;
 	m_ambient_radius			= 10.f;
@@ -1583,8 +1583,8 @@ bool CSE_ALifeObjectHangingLamp::match_configuration() const
 
 CSE_ALifeObjectProjector::CSE_ALifeObjectProjector(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection)
 {
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifeObjectProjector::~CSE_ALifeObjectProjector()
@@ -1629,8 +1629,8 @@ bool CSE_ALifeObjectProjector::used_ai_locations() const
 
 CSE_ALifeSchedulable::CSE_ALifeSchedulable	(LPCSTR caSection)
 {
-	m_tpCurrentBestWeapon		= 0;
-	m_tpBestDetector			= 0;
+	m_tpCurrentBestWeapon		= nullptr;
+	m_tpBestDetector			= nullptr;
 	m_schedule_counter			= u64(-1);
 }
 
@@ -1682,9 +1682,9 @@ u32	 CSE_ALifeSchedulable::ef_detector_type	() const
 
 CSE_ALifeHelicopter::CSE_ALifeHelicopter	(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection), CSE_Motion(),CSE_PHSkeleton(caSection)
 {
-	m_flags.set					(flUseSwitches,		FALSE);
-	m_flags.set					(flSwitchOffline,	FALSE);
-	m_flags.set					(flInteractive,		FALSE);
+	m_flags.set					(flUseSwitches,		false);
+	m_flags.set					(flSwitchOffline,	false);
+	m_flags.set					(flInteractive,		false);
 }
 
 CSE_ALifeHelicopter::~CSE_ALifeHelicopter	()
@@ -1763,8 +1763,8 @@ CSE_ALifeCar::CSE_ALifeCar				(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(
 
 	if (pSettings->section_exist(caSection) && pSettings->line_exist(caSection,"visual"))
     	set_visual				(pSettings->r_string(caSection,"visual"));
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 	health						=1.0f;
 }
 
@@ -1905,8 +1905,8 @@ void CSE_ALifeCar::FillProps				(LPCSTR pref, PropItemVec& values)
 CSE_ALifeObjectBreakable::CSE_ALifeObjectBreakable	(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection)
 {
 	m_health					= 1.f;
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifeObjectBreakable::~CSE_ALifeObjectBreakable	()

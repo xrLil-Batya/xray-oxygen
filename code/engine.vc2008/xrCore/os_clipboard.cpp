@@ -11,7 +11,7 @@
 
 void os_clipboard::copy_to_clipboard(const char* buf)
 {
-	if (OpenClipboard(0))
+	if (OpenClipboard(nullptr))
 	{
 		const size_t handle_size = (xr_strlen(buf) + 1) * sizeof(char);
 		const HGLOBAL handle = GlobalAlloc(GHND, handle_size);
@@ -33,7 +33,7 @@ void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
 	VERIFY(buffer);
 	VERIFY(buffer_size > 0);
 
-	if (OpenClipboard(0))
+	if (OpenClipboard(nullptr))
 	{
 		const HGLOBAL hmem = GetClipboardData(CF_TEXT);
 		if (hmem)
@@ -45,7 +45,7 @@ void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
 			for (size_t i = 0; i < strlen(buffer); ++i)
 			{
 				char c = buffer[i];
-				if (((isprint(c) == 0) && (c != char(-1))) || c == '\t' || c == '\n')// "ÿ" = -1
+				if (((isprint(c) == 0) && (c != char(-1))) || c == '\t' || c == '\n')// "Ñ" = -1
 				{
 					buffer[i] = ' ';
 				}
@@ -58,7 +58,7 @@ void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
 
 void os_clipboard::update_clipboard(const char* string)
 {
-	if (OpenClipboard(0))
+	if (OpenClipboard(nullptr))
 	{
 		const HGLOBAL handle = GetClipboardData(CF_TEXT);
 		if (handle)

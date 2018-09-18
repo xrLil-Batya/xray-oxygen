@@ -3,7 +3,7 @@
 #include "UITextureMaster.h"
 #include "UIScrollBar.h"
 #include "UIListBoxItem.h"
-#include "../string_table.h"
+#include "../../xrEngine/string_table.h"
 
 #define CB_HEIGHT 20.0f
 
@@ -338,6 +338,7 @@ void CUIComboBox::ClearList()
 	m_disabled.clear();
 }
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

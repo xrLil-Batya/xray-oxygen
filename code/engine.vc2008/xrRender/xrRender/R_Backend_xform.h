@@ -4,9 +4,11 @@ class ECORE_API	R_xforms
 {
 public:
 	Fmatrix			m_w;		// Basic	- world
-	Fmatrix			m_invw;		// derived	- world2local, cached
+	Fmatrix			m_invw;		// Derived	- world2local, cached
 	Fmatrix			m_v;		// Basic	- view
+	Fmatrix			m_invv;		// Derived	- view2world
 	Fmatrix			m_p;		// Basic	- projection
+	Fmatrix			m_invp;		// Derived	- projection2view
 	Fmatrix			m_wv;		// Derived	- world2view
 	Fmatrix			m_vp;		// Derived	- view2projection
 	Fmatrix			m_wvp;		// Derived	- world2view2projection
@@ -14,12 +16,16 @@ public:
 	R_constant*		c_w;
 	R_constant*		c_invw;
 	R_constant*		c_v;
+	R_constant*		c_invv;
 	R_constant*		c_p;
+	R_constant*		c_invp;
 	R_constant*		c_wv;
 	R_constant*		c_vp;
 	R_constant*		c_wvp;
 private:
 	bool			m_bInvWValid;
+	bool			m_bInvVValid;
+	bool			m_bInvPValid;
 public:
 	R_xforms		();
 	void			unmap		();
@@ -32,10 +38,14 @@ public:
 	IC void			set_c_w		(R_constant* C);
 	IC void			set_c_invw	(R_constant* C);
 	IC void			set_c_v		(R_constant* C);
+	IC void			set_c_invv	(R_constant* C);
 	IC void			set_c_p		(R_constant* C);
+	IC void			set_c_invp	(R_constant* C);
 	IC void			set_c_wv	(R_constant* C);
 	IC void			set_c_vp	(R_constant* C);
 	IC void			set_c_wvp	(R_constant* C);
 private:
 	void			apply_invw	();
+	void			apply_invv	();
+	void			apply_invp	();
 };

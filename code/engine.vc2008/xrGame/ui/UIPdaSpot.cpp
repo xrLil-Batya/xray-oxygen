@@ -9,7 +9,7 @@
 #include "UIXmlInit.h"
 #include "UIHelper.h"
 #include "UI3tButton.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 
 CUIPdaSpot::CUIPdaSpot()
 {

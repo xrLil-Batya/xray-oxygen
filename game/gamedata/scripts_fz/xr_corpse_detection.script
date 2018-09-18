@@ -1,15 +1,15 @@
 --[[ ----------------------------------------------------------------------------------------------- 
  File       : xr_corpse_detection.script
- Description: Схема обыска трупов
- Copyright  : 2004 © GSC Game World
- Author     : Диденко Руслан (Stohe)
- Last edit  : 19.03.2012 (Viнt@rь)
+ Description: РЎС…РµРјР° РѕР±С‹СЃРєР° С‚СЂСѓРїРѕРІ
+ Copyright  : 2004 В© GSC Game World
+ Author     : Р”РёРґРµРЅРєРѕ Р СѓСЃР»Р°РЅ (Stohe)
+ Last edit  : 19.03.2012 (ViРЅt@rСЊ)
 --]] -----------------------------------------------------------------------------------------------
 --/										  Loot Table Items
 --]] -----------------------------------------------------------------------------------------------
 lootable_table = {}
 
---Патроны
+--РџР°С‚СЂРѕРЅС‹
 lootable_table["ammo_9x18_fmj"] = true
 lootable_table["ammo_9x18_pmm"] = true
 lootable_table["ammo_9x19_pbp"] = true
@@ -32,7 +32,7 @@ lootable_table["grenade_rgd5"] = true
 lootable_table["ammo_m209"] = true
 lootable_table["ammo_pkm_100"] = true
 
---Оружие
+--РћСЂСѓР¶РёРµ
 lootable_table["wpn_pm"] = true
 lootable_table["wpn_pb"] = true
 lootable_table["wpn_fort"] = true
@@ -65,7 +65,7 @@ lootable_table["wpn_g36"] = true
 lootable_table["wpn_fn2000"] = true
 lootable_table["wpn_pkm"] = true
 
--- Аддоны
+-- РђРґРґРѕРЅС‹
 lootable_table["wpn_addon_scope"] = true
 lootable_table["wpn_addon_scope_x2.7"] = true
 lootable_table["wpn_addon_scope_detector"] = true
@@ -79,7 +79,7 @@ lootable_table["wpn_addon_silencer"] = true
 lootable_table["wpn_addon_grenade_launcher"] = true
 lootable_table["wpn_addon_grenade_launcher_m203"] = true
 
--- Броники
+-- Р‘СЂРѕРЅРёРєРё
 lootable_table["novice_outfit"] = true
 lootable_table["specops_outfit"] = true
 lootable_table["military_outfit"] = true
@@ -92,21 +92,21 @@ lootable_table["svoboda_heavy_outfit"] = true
 lootable_table["dolg_outfit"] = true
 lootable_table["dolg_heavy_outfit"] = true
 
--- Шлемы
+-- РЁР»РµРјС‹
 lootable_table["helm_respirator"] = true
 lootable_table["helm_hardhat"] = true
 lootable_table["helm_protective"] = true
 lootable_table["helm_tactic"] = true
 lootable_table["helm_battle"] = true
 
---Медикаменты
+--РњРµРґРёРєР°РјРµРЅС‚С‹
 lootable_table["bandage"] = true
 lootable_table["medkit"] = true
 lootable_table["medkit_scientic"] = true
 lootable_table["medkit_army"] = true
 lootable_table["antirad"] = true
 
---Бустеры
+--Р‘СѓСЃС‚РµСЂС‹
 lootable_table["drug_booster"] = true
 lootable_table["drug_coagulant"] = true
 lootable_table["drug_psy_blockade"] = true
@@ -114,20 +114,20 @@ lootable_table["drug_antidot"] = true
 lootable_table["drug_radioprotector"] = true
 lootable_table["drug_anabiotic"] = true
 
---Еда
+--Р•РґР°
 lootable_table["bread"] = true
 lootable_table["kolbasa"] = true
 lootable_table["conserva"] = true
 lootable_table["vodka"] = true
 lootable_table["energy_drink"] = true
 
---Предметы
+--РџСЂРµРґРјРµС‚С‹
 lootable_table["detector_simple"] = true
 lootable_table["detector_advanced"] = true
 lootable_table["detector_elite"] = true
 lootable_table["detector_scientific"] = true
 
---Уникальные предметы
+--РЈРЅРёРєР°Р»СЊРЅС‹Рµ РїСЂРµРґРјРµС‚С‹
 lootable_table["wpn_pm_actor"] = true
 lootable_table["wpn_sig550_luckygun"] = true
 lootable_table["wpn_pkm_zulus"] = true
@@ -176,7 +176,7 @@ function evaluator_corpse:evaluate()
 		return false
 	end
 	local npc_id = npc:id()
-	if self.a.active and self.a.selected_corpse_id then -- проверка на возможность обыска
+	if self.a.active and self.a.selected_corpse_id then -- РїСЂРѕРІРµСЂРєР° РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РѕР±С‹СЃРєР°
 		local corpse = db.storage[self.a.selected_corpse_id] and db.storage[self.a.selected_corpse_id].object
 		if corpse and (db.storage[self.a.selected_corpse_id].corpse_already_selected == nil or db.storage[self.a.selected_corpse_id].corpse_already_selected == npc_id) then
 			if corpse:position():distance_to_sqr(self.a.vertex_position) > 15 then
@@ -198,21 +198,21 @@ function evaluator_corpse:evaluate()
 	self.a.dtimer = tg+math.random(2000, 4000)
 	
 	local corpses = release_body_manager.get_release_body_manager().release_objects_table
-	local nearest_corpse_dist = 700 -- Будет выбирать только трупы, ближе чем эта дистанция (проверяется по квадрату расстояния)
+	local nearest_corpse_dist = 700 -- Р‘СѓРґРµС‚ РІС‹Р±РёСЂР°С‚СЊ С‚РѕР»СЊРєРѕ С‚СЂСѓРїС‹, Р±Р»РёР¶Рµ С‡РµРј СЌС‚Р° РґРёСЃС‚Р°РЅС†РёСЏ (РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ РїРѕ РєРІР°РґСЂР°С‚Сѓ СЂР°СЃСЃС‚РѕСЏРЅРёСЏ)
 	local nearest_corpse_vertex = nil
 	local nearest_corpse_position = nil
 	local corpse_id	= nil
 	
-	for k,v in pairs(corpses) do -- обыск возможен
+	for k,v in pairs(corpses) do -- РѕР±С‹СЃРє РІРѕР·РјРѕР¶РµРЅ
 		local id = v.id
 		local corpse_npc = db.storage[id] and db.storage[id].object
-		if corpse_npc and IsStalker(corpse_npc) and db.storage[id].corpse_already_selected == nil then -- этот ли труп для обыска, стакер ли он, не был ли он уже очищен
+		if corpse_npc and IsStalker(corpse_npc) and db.storage[id].corpse_already_selected == nil then -- СЌС‚РѕС‚ Р»Рё С‚СЂСѓРї РґР»СЏ РѕР±С‹СЃРєР°, СЃС‚Р°РєРµСЂ Р»Рё РѕРЅ, РЅРµ Р±С‹Р» Р»Рё РѕРЅ СѓР¶Рµ РѕС‡РёС‰РµРЅ
 			local corpse_pos = corpse_npc:bone_position("bip01_spine")
 			local dist = npc:position():distance_to_sqr(corpse_pos)
-			if dist < nearest_corpse_dist or (npc:see(corpse_npc) and dist < nearest_corpse_dist*1.5) then -- заметили труп
+			if dist < nearest_corpse_dist or (npc:see(corpse_npc) and dist < nearest_corpse_dist*1.5) then -- Р·Р°РјРµС‚РёР»Рё С‚СЂСѓРї
 				corpse_contain_any_valuable = nil
 				corpse_npc:iterate_inventory(check_item,corpse_npc)
-				if corpse_contain_any_valuable then -- ведем сталкера к трупу
+				if corpse_contain_any_valuable then -- РІРµРґРµРј СЃС‚Р°Р»РєРµСЂР° Рє С‚СЂСѓРїСѓ
 					local corpse_vertex = level.vertex_id(corpse_pos)
 					if level.vertex_position(corpse_vertex):distance_to_sqr(corpse_pos) > 16 then
 						corpse_vertex = corpse_npc:level_vertex_id()

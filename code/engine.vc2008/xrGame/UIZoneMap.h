@@ -44,6 +44,7 @@ public:
 	void						SetupCurrentMap	();
 	void						OnSectorChanged	(int sector);
 	void						Counter_ResetClrAnimation();
+    CUIMiniMap*                 GetMinimap();
 
 private:
 	void						SetHeading		(float angle);

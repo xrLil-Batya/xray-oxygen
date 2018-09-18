@@ -44,7 +44,7 @@ public:
 	};
 	Flags8							flags;
 public:
-									CSE_Visual				(LPCSTR name=0);
+									CSE_Visual				(LPCSTR name=nullptr);
 	virtual							~CSE_Visual				();
 
 	void							visual_read				(NET_Packet& P, u16 version);
@@ -66,7 +66,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_Motion)
 public:
 	shared_str						motion_name;
 public:
-									CSE_Motion 				(LPCSTR name=0);
+									CSE_Motion 				(LPCSTR name=nullptr);
 	virtual							~CSE_Motion				();
 
 	void							motion_read				(NET_Packet& P);
@@ -106,7 +106,7 @@ public:
 		flVisualAnimationPauseChange= u32(1 << 4),
 	};
 	Flags32							m_editor_flags;
-	IC	void						set_editor_flag			(u32 mask)	{m_editor_flags.set	(mask,TRUE);}
+	IC	void						set_editor_flag			(u32 mask)	{m_editor_flags.set	(mask,true);}
 
 public:
 	virtual void		__stdcall	Spawn_Write				(NET_Packet &tNetPacket, BOOL bLocal) = 0;

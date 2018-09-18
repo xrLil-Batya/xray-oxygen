@@ -21,6 +21,7 @@ cost				= 1
 ; eatable item
 eat_health			= 0
 eat_satiety			= 0
+eat_thirst			= 0
 eat_power			= 0
 eat_max_power		= 0
 eat_radiation		= 0
@@ -186,10 +187,11 @@ boost_time				= 5.0
 boost_radiation_restore	= 0.005
 eat_alcohol				= 0.1
 eat_satiety				= -0.2
+eat_thirst				= -0.2
 
 use_sound			= interface\inv_vodka
 
-[vodka_script]:vodka ; не использовать
+[vodka_script]:vodka ; РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
 $spawn 				= "food and drugs\vodka_script"
 inv_weight			= 0
 
@@ -255,7 +257,7 @@ inv_grid_width      	= 2
 inv_grid_height     	= 1
 inv_grid_x        		= 16
 inv_grid_y        		= 12
-attach_angle_offset   	= -1.571,-1.308,-1.458    ;устанавливаетсљ в радианах Angle*PI/180
+attach_angle_offset   	= -1.571,-1.308,-1.458    ;СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃС™ РІ СЂР°РґРёР°РЅР°С… Angle*PI/180
 attach_position_offset  = 0.105, -0.004, 0.003
 attach_bone_name    	= bip01_l_hand
 auto_attach       		= false
@@ -288,6 +290,7 @@ boost_power_restore		= 0.005 ;0.001
 
 eat_alcohol				= 0.0
 eat_satiety 			= 0.0
+eat_thirst				= 0.5
 
 use_sound			= interface\inv_softdrink
 
@@ -561,7 +564,7 @@ inv_grid_height		= 1
 inv_grid_x			= 6
 inv_grid_y			= 13
 cost				= 20
-attach_angle_offset		= -1.303,0.107,-1.702   ;устанавливается в радианах Angle*PI/180
+attach_angle_offset		= -1.303,0.107,-1.702   ;СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РІ СЂР°РґРёР°РЅР°С… Angle*PI/180
 attach_position_offset	= 0.14,0.001,0.02
 attach_bone_name		= bip01_l_hand
 auto_attach			= false
@@ -634,7 +637,7 @@ inv_grid_height		= 1
 inv_grid_x			= 16
 inv_grid_y			= 12
 
-;вещью нельзя торговать
+;РІРµС‰СЊСЋ РЅРµР»СЊР·СЏ С‚РѕСЂРіРѕРІР°С‚СЊ
 can_trade			= true
 
 position			= 0.35,0.25,0.0
@@ -655,9 +658,9 @@ snd_night_vision_off		= weapons\nv_off
 snd_night_vision_idle		= weapons\nv_loop
 snd_night_vision_broken		= weapons\nv_off
 
-night_vision_recharge_time			= 6		;(c) время зарядки аккамулятора
-night_vision_recharge_time_min		= 2		;(c) мин. время зарядки аккамулятора, после которого уст-во уже может работать
-night_vision_discharge_time			= 20	;(c) время разрядки (работы) устройства после полной зарядки
+night_vision_recharge_time			= 6		;(c) РІСЂРµРјСЏ Р·Р°СЂСЏРґРєРё Р°РєРєР°РјСѓР»СЏС‚РѕСЂР°
+night_vision_recharge_time_min		= 2		;(c) РјРёРЅ. РІСЂРµРјСЏ Р·Р°СЂСЏРґРєРё Р°РєРєР°РјСѓР»СЏС‚РѕСЂР°, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ СѓСЃС‚-РІРѕ СѓР¶Рµ РјРѕР¶РµС‚ СЂР°Р±РѕС‚Р°С‚СЊ
+night_vision_discharge_time			= 20	;(c) РІСЂРµРјСЏ СЂР°Р·СЂСЏРґРєРё (СЂР°Р±РѕС‚С‹) СѓСЃС‚СЂРѕР№СЃС‚РІР° РїРѕСЃР»Рµ РїРѕР»РЅРѕР№ Р·Р°СЂСЏРґРєРё
 slot								= 9
 default_to_ruck						= false
 sprint_allowed						= true

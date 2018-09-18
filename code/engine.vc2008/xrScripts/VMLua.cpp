@@ -31,6 +31,22 @@ void setup_luabind_allocator()
     luabind::allocator_parameter = 0;
 }
 
+void CVMLua::luabind_onerror(lua_State* lua)
+{
+    if (lua_isstring(lua, -1))
+    {
+        const char* luaError = lua_tostring(lua, -1);
+        Msg("! LUA ERROR: %s", luaError);
+        lua_pop(lua, 1);
+    }
+
+    //#HACK: Invoke crash handler manually for now
+    if (crashhandler* CrashHanlderFunc = Debug.get_crashhandler())
+    {
+        CrashHanlderFunc();
+    }
+}
+
 bool CVMLua::CreateNamespaceTable(LPCSTR caNamespaceName)
 {
 	lua_pushstring(m_virtual_machine, "_G");
@@ -91,6 +107,9 @@ void CVMLua::OpenLib()
 	lopen::openlua(m_virtual_machine);
 	// FX to ALL: Add anothres namespace into this function
 	luabind::open(m_virtual_machine);
+#ifdef LUABIND_NO_EXCEPTIONS
+    luabind::set_error_callback(CVMLua::luabind_onerror);
+#endif
 }
 
 void CVMLua::Add(AddFun pFun)

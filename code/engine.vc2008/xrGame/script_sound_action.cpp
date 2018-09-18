@@ -32,6 +32,7 @@ void CScriptSoundAction::SetSound			(LPCSTR caSoundToPlay)
 	}
 }
 
+#include <luabind/luabind.hpp>
 
 using namespace luabind;
 

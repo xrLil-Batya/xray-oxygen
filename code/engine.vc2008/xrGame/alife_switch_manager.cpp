@@ -49,26 +49,25 @@ CALifeSwitchManager::~CALifeSwitchManager	()
 void CALifeSwitchManager::add_online(CSE_ALifeDynamicObject *object, bool update_registries)
 {
 	START_PROFILE("ALife/switch/add_online")
-	VERIFY							((ai().game_graph().vertex(object->m_tGraphID)->level_id() == graph().level().level_id()));
+	VERIFY((ai().game_graph().vertex(object->m_tGraphID)->level_id() == graph().level().level_id()));
 
-	object->m_bOnline				= true;
+	object->m_bOnline = true;
 
-	NET_Packet						tNetPacket;
-	CSE_Abstract					*l_tpAbstract = smart_cast<CSE_Abstract*>(object);
-	server().entity_Destroy			(l_tpAbstract);
-	object->s_flags.or				(M_SPAWN_UPDATE);
-	ClientID						clientID;
-	clientID.set					(server().GetServerClient() ? server().GetServerClient()->ID.value() : 0);
-	server().Process_spawn			(tNetPacket,clientID,FALSE,l_tpAbstract);
-	object->s_flags.and				(u16(-1) ^ M_SPAWN_UPDATE);
-	R_ASSERT3						(!object->used_ai_locations() || ai().level_graph().valid_vertex_id(object->m_tNodeID),"Invalid vertex for object ",object->name_replace());
+	NET_Packet tNetPacket;
+	CSE_Abstract *l_tpAbstract = smart_cast<CSE_Abstract*>(object);
+	server().entity_Destroy(l_tpAbstract);
+	object->s_flags.or(M_SPAWN_UPDATE);
+
+	server().Process_spawn(tNetPacket, FALSE, l_tpAbstract);
+	object->s_flags.and(u16(-1) ^ M_SPAWN_UPDATE);
+	R_ASSERT3(!object->used_ai_locations() || ai().level_graph().valid_vertex_id(object->m_tNodeID), "Invalid vertex for object ", object->name_replace());
 
 #ifdef DEBUG
 	if (psAI_Flags.test(aiALife))
-		Msg							("[LSS] Spawning object [%s][%s][%d]",object->name_replace(),*object->s_name,object->ID);
+		Msg("[LSS] Spawning object [%s][%s][%d]", object->name_replace(), *object->s_name, object->ID);
 #endif
 
-	object->add_online				(update_registries);
+	object->add_online(update_registries);
 	STOP_PROFILE
 }
 

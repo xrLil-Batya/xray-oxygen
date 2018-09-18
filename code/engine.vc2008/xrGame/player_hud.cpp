@@ -37,9 +37,9 @@ player_hud_motion* player_hud_motion_container::find_motion(const shared_str& na
 void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_str& sect)
 {
 	CInifile::Sect& _sect		= pSettings->r_section(sect);
-	CInifile::SectCIt _b		= _sect.Data.begin();
-	CInifile::SectCIt _e		= _sect.Data.end();
-	player_hud_motion* pm		= NULL;
+	auto _b		= _sect.Data.begin();
+	auto _e		= _sect.Data.end();
+	player_hud_motion* pm		= nullptr;
 	
 	string512					buff;
 	MotionID					motion_ID;
@@ -317,7 +317,7 @@ attachable_hud_item::~attachable_hud_item()
 {
 	IRenderVisual* v			= m_model->dcast_RenderVisual();
 	::Render->model_Delete		(v);
-	m_model						= NULL;
+	m_model						= nullptr;
 }
 
 void attachable_hud_item::load(const shared_str& sect_name)
@@ -341,8 +341,10 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 
 	player_hud_motion* anm	= m_hand_motions.find_motion(anim_name_r);
 	R_ASSERT2				(anm, make_string("model [%s] has no motion alias defined [%s]", m_sect_name.c_str(), anim_name_r).c_str());
+    if (anm == nullptr) return 0;
 	R_ASSERT2				(anm->m_animations.size(), make_string("model [%s] has no motion defined in motion_alias [%s]", pSettings->r_string(m_sect_name, "item_visual"), anim_name_r).c_str());
-	
+    if (anm->m_animations.empty()) return 0;
+
 	rnd_idx					= (u8)Random.randI((u32)anm->m_animations.size()) ;
 	const motion_descr& M	= anm->m_animations[ rnd_idx ];
 	float speed				= anm->m_anim_speed;
@@ -415,9 +417,9 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 
 player_hud::player_hud()
 {
-	m_model					= NULL;
-	m_attached_items[0]		= NULL;
-	m_attached_items[1]		= NULL;
+	m_model					= nullptr;
+	m_attached_items[0]		= nullptr;
+	m_attached_items[1]		= nullptr;
 	m_transform.identity	();
 }
 
@@ -426,7 +428,7 @@ player_hud::~player_hud()
 {
 	IRenderVisual* v			= m_model->dcast_RenderVisual();
 	::Render->model_Delete		(v);
-	m_model						= NULL;
+	m_model						= nullptr;
 
 	xr_vector<attachable_hud_item*>::iterator it	= m_pool.begin();
 	xr_vector<attachable_hud_item*>::iterator it_e	= m_pool.end();
@@ -441,7 +443,7 @@ player_hud::~player_hud()
 void player_hud::load(const shared_str& player_hud_sect)
 {
 	if(player_hud_sect ==m_sect_name)	return;
-	bool b_reload = (m_model!=NULL);
+	bool b_reload = (m_model!=nullptr);
 	if(m_model)
 	{
 		IRenderVisual* v			= m_model->dcast_RenderVisual();
@@ -454,11 +456,11 @@ void player_hud::load(const shared_str& player_hud_sect)
 
 	CInifile::Sect& _sect		= pSettings->r_section(player_hud_sect);
 	
-	for(auto it = _sect.Data.begin(); it != _sect.Data.end(); ++it)
+	for(auto & it : _sect.Data)
 	{
-		if(strstr(it->first.c_str(), "ancor_")==it->first.c_str())
+		if(strstr(it.first.c_str(), "ancor_")==it.first.c_str())
 		{
-			const shared_str& _bone	= it->second;
+			const shared_str& _bone	= it.second;
 			m_ancors.push_back		(m_model->dcast_PKinematics()->LL_BoneID(_bone));
 		}
 	}
@@ -638,7 +640,7 @@ void player_hud::update_inertion(Fmatrix& trans)
 		
         // load params
         hud_item_measures::inertion_params inertion_data;
-        if (pMainHud != NULL)
+        if (pMainHud != nullptr)
         { // Загружаем параметры инерции из основного худа
             inertion_data.m_pitch_offset_r = pMainHud->m_measures.m_inertion_params.m_pitch_offset_r;
             inertion_data.m_pitch_offset_n = pMainHud->m_measures.m_inertion_params.m_pitch_offset_n;
@@ -679,7 +681,7 @@ void player_hud::update_inertion(Fmatrix& trans)
 
         // tend to forward
         float _tendto_speed, _origin_offset;
-        if (pMainHud != NULL && pMainHud->m_parent_hud_item->GetCurrentHudOffsetIdx() > 0)
+        if (pMainHud != nullptr && pMainHud->m_parent_hud_item->GetCurrentHudOffsetIdx() > 0)
         { // Худ в режиме "Прицеливание"
             _tendto_speed = inertion_data.m_tendto_speed_aim - (inertion_data.m_tendto_speed_aim - inertion_data.m_tendto_speed) * 1;
             _origin_offset =
@@ -692,7 +694,7 @@ void player_hud::update_inertion(Fmatrix& trans)
         }
 
         // Фактор силы инерции
-        if (pMainHud != NULL)
+        if (pMainHud != nullptr)
         {
             _tendto_speed *= 1;
             _origin_offset *= 1;
@@ -704,7 +706,7 @@ void player_hud::update_inertion(Fmatrix& trans)
         // pitch compensation
         float pitch = angle_normalize_signed(xform.k.getP());
 
-        if (pMainHud != NULL)
+        if (pMainHud != nullptr)
             pitch *= 1;
 
         // Отдаление\приближение
@@ -769,12 +771,12 @@ void player_hud::attach_item(CHudItem* item)
 
 void player_hud::detach_item_idx(u16 idx)
 {
-	if( NULL==attached_item(idx) )					return;
+	if( nullptr==attached_item(idx) )					return;
 
 	m_attached_items[idx]->m_parent_hud_item->on_b_hud_detach();
 
-	m_attached_items[idx]->m_parent_hud_item		= NULL;
-	m_attached_items[idx]							= NULL;
+	m_attached_items[idx]->m_parent_hud_item		= nullptr;
+	m_attached_items[idx]							= nullptr;
 
 	if(idx==1 && attached_item(0))
 	{
@@ -812,7 +814,7 @@ void player_hud::detach_item_idx(u16 idx)
 
 void player_hud::detach_item(CHudItem* item)
 {
-	if( NULL==item->HudItemData() )		return;
+	if( nullptr==item->HudItemData() )		return;
 	u16 item_idx						= item->HudItemData()->m_attach_place_idx;
 
 	if( m_attached_items[item_idx]==item->HudItemData() )

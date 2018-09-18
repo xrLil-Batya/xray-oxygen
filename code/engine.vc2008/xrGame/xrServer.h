@@ -11,7 +11,7 @@ const u32 NET_Latency = 50;		// time in (ms)
 extern ClientID BroadcastCID;
 
 // t-defs
-typedef xr_hash_map<u16, CSE_Abstract*>	xrS_entities;
+using xrS_entities = xr_hash_map<u16, CSE_Abstract*>;
 
 class CClient
 {
@@ -41,7 +41,7 @@ private:
 	xr_vector<u16>				conn_spawned_ids;
 	
 private:
-	typedef 
+	using id_generator_type = 
 		CID_Generator<
 			u32,		// time identifier type
 			u8,			// compressed id type 
@@ -52,7 +52,7 @@ private:
 			u16(-2),	// max value
 			256,		// block size
 			u16(-1)		// invalid id
-		> id_generator_type;
+		>;
 
 protected:
     shared_str connect_options;
@@ -91,13 +91,13 @@ public:
 	void					Perform_reject			(CSE_Abstract* what, CSE_Abstract* from, int delta);
 	void					Perform_destroy			(CSE_Abstract* tpSE_Abstract);
 
-	CSE_Abstract*			Process_spawn			(NET_Packet& P, ClientID sender, BOOL bSpawnWithClientsMainEntityAsParent=FALSE, CSE_Abstract* tpExistedEntity=0);
+	CSE_Abstract*			Process_spawn			(NET_Packet& P, BOOL bSpawnWithClMainEntityAsParent=FALSE, CSE_Abstract* tpExistedEntity=nullptr);
 	void					Process_update			(NET_Packet& P);
 	void					Process_save			(NET_Packet& P);
 	void					Process_event			(NET_Packet& P);
 	void					Process_event_ownership	(NET_Packet& P, u16 ID);
-	bool					Process_event_reject	(NET_Packet& P, const ClientID sender, const u32 time, const u16 id_parent, const u16 id_entity, bool send_message = true);
-	void					Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack);
+	bool					Process_event_reject	(NET_Packet& P, const u32 &time, const u16 id_parent, const u16 id_entity, bool send_message = true);
+	void					Process_event_destroy	(NET_Packet& P, const u32 &time, u16 ID, NET_Packet* pEPack);
 	void					Process_event_activate	(NET_Packet& P, const u16 id_parent, const u16 id_entity);
 
 protected:
@@ -119,7 +119,6 @@ public:
 	void					entity_Destroy		(CSE_Abstract *&P);
 	CSE_Abstract*			GetEntity			(u32 Num);
 
-    CClient*			    ID_to_client(ClientID ID, bool ScanAll = false);
 	CSE_Abstract*			ID_to_entity		(u16 ID);
 
 	// main

@@ -17,7 +17,6 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserve
 		::Render					= &RImplementation;
 		::RenderFactory				= &RenderFactoryImpl;
 		::DU						= &DUImpl;
-		//::vid_mode_token			= inited by HW;
 		UIRender					= &UIRenderImpl;
 		DRender						= &DebugRenderImpl;
 		xrRender_initconsole		();

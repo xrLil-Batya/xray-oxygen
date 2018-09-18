@@ -136,26 +136,26 @@ void CWeaponBM16::PlayAnimIdle()
 		switch (m_magazine.size())
 		{
 		case 0:{
-			PlayHUDMotion("anm_idle_aim_0", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_idle_aim_0", TRUE, nullptr, GetState());
 		}break;
 		case 1:{
-			PlayHUDMotion("anm_idle_aim_1", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_idle_aim_1", TRUE, nullptr, GetState());
 		}break;
 		case 2:{
-			PlayHUDMotion("anm_idle_aim_2", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_idle_aim_2", TRUE, nullptr, GetState());
 		}break;
 		};
 	}else{
 		switch (m_magazine.size())
 		{
 		case 0:{
-			PlayHUDMotion("anm_idle_0", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_idle_0", TRUE, nullptr, GetState());
 		}break;
 		case 1:{
-			PlayHUDMotion("anm_idle_1", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_idle_1", TRUE, nullptr, GetState());
 		}break;
 		case 2:{
-			PlayHUDMotion("anm_idle_2", TRUE, NULL, GetState());
+			PlayHUDMotion("anm_idle_2", TRUE, nullptr, GetState());
 		}break;
 		};
 	}
@@ -164,6 +164,7 @@ void CWeaponBM16::PlayAnimIdle()
 #include "fooditem.h"
 #include "ExplosiveItem.h"
 #include "InventoryBox.h"
+#include <luabind/luabind.hpp>
 using namespace luabind;
 #pragma optimize("s",on)
 void CWeaponBM16::script_register(lua_State *L)

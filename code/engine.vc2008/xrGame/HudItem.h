@@ -52,23 +52,22 @@ protected:
 	virtual DLL_Pure*		_construct			();
 	
 	Flags16					m_huditem_flags;
-	enum{
+	enum
+	{
 		fl_pending			= (1<<0),
 		fl_renderhud		= (1<<1),
 		fl_inertion_enable	= (1<<2),
 		fl_inertion_allow	= (1<<3),
 	};
 
-	struct{
-		const CMotionDef*		m_current_motion_def;
-		shared_str				m_current_motion;
-		u32						m_dwMotionCurrTm;
-		u32						m_dwMotionStartTm;
-		u32						m_dwMotionEndTm;
-		u32						m_startedMotionState;
-		u8						m_started_rnd_anim_idx;
-		bool					m_bStopAtEndAnimIsRunning;
-	};
+	const CMotionDef*		m_current_motion_def;
+	shared_str				m_current_motion;
+	u32						m_dwMotionCurrTm;
+	u32						m_dwMotionStartTm;
+	u32						m_dwMotionEndTm;
+	u32						m_startedMotionState;
+	u8						m_started_rnd_anim_idx;
+	bool					m_bStopAtEndAnimIsRunning;
 public:
 	virtual void				Load				(LPCSTR section);
 	virtual	BOOL				net_Spawn			(CSE_Abstract* DC)				{return TRUE;};
@@ -87,8 +86,8 @@ public:
 	
 	virtual	u8					GetCurrentHudOffsetIdx ()							{return 0;}
 
-	BOOL						GetHUDmode			();
-	IC BOOL						IsPending			()		const					{ return !!m_huditem_flags.test(fl_pending);}
+	bool						GetHUDmode			();
+	IC bool						IsPending			()		const					{ return !!m_huditem_flags.test(fl_pending);}
 
 	virtual bool				ActivateItem		();
 	virtual void				DeactivateItem		();
@@ -147,7 +146,7 @@ protected:
 	IC		void				SetPending			(BOOL H)			{ m_huditem_flags.set(fl_pending, H);}
 	shared_str					hud_sect;
 
-	//êàäðû ìîìåíòà ïåðåñ÷åòà XFORM è FirePos
+	//ÐºÐ°Ð´Ñ€Ñ‹ Ð¼Ð¾Ð¼ÐµÐ½Ñ‚Ð° Ð¿ÐµÑ€ÐµÑÑ‡ÐµÑ‚Ð° XFORM Ð¸ FirePos
 	u32							dwFP_Frame;
 	u32							dwXF_Frame;
 

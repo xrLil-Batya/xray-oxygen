@@ -8,7 +8,7 @@
 #include "stdafx.h"
 #include "trade_parameters.h"
 
-CTradeParameters *CTradeParameters::m_instance = 0;
+CTradeParameters *CTradeParameters::m_instance = nullptr;
 
 void CTradeParameters::process	(action_show, CInifile &ini_file, const shared_str &section)
 {

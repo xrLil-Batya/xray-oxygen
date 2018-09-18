@@ -32,40 +32,41 @@ inline void CObjectList::o_crow		(CObject*	O)
 	O->dwFrame_AsCrow			= Device.dwFrame;
 }
 
-void CObject::MakeMeCrow			()
+void CObject::MakeMeCrow()
 {
-	if ( Props.crow )
+	if (Props.crow)
 		return;
 
-	if ( !processing_enabled() )
+	if (!processing_enabled())
 		return;
 
-	u32 const device_frame_id		= Device.dwFrame;
-	u32 const object_frame_id		= dwFrame_AsCrow;
+	u32 const device_frame_id = Device.dwFrame;
+	u32 const object_frame_id = dwFrame_AsCrow;
 	if (
-			(u32)_InterlockedCompareExchange(
-				(long*)&dwFrame_AsCrow,
-				device_frame_id,
-				object_frame_id
-			) == device_frame_id
+		(u32)_InterlockedCompareExchange(
+		(long*)&dwFrame_AsCrow,
+			device_frame_id,
+			object_frame_id
+		) == device_frame_id
 		)
 		return;
 
-	VERIFY							( dwFrame_AsCrow == device_frame_id );
+	VERIFY(dwFrame_AsCrow == device_frame_id);
 
-	Props.crow						= 1;
-	g_pGameLevel->Objects.o_crow	(this);
+	Props.crow = 1;
+	g_pGameLevel->Objects.o_crow(this);
 }
 
-void CObject::cName_set			(shared_str N)
-{ 
-	NameObject	=	N; 
+void CObject::cName_set(shared_str N)
+{
+	NameObject = std::move(N);
 }
-void CObject::cNameSect_set		(shared_str N)
-{ 
-	NameSection	=	N; 
+
+void CObject::cNameSect_set(shared_str N)
+{
+	NameSection = std::move(N);
 }
-//#include "SkeletonCustom.h"
+
 void CObject::cNameVisual_set	(shared_str N)
 { 
 	// check if equal
@@ -83,12 +84,6 @@ void CObject::cNameVisual_set	(shared_str N)
 		IKinematics* old_k	= old_v?old_v->dcast_PKinematics():NULL;
 		IKinematics* new_k	= renderable.visual->dcast_PKinematics();
 
-		/*
-		if(old_k && new_k){
-			new_k->Update_Callback			= old_k->Update_Callback;
-			new_k->Update_Callback_Param	= old_k->Update_Callback_Param;
-		}
-		*/
 		if(old_k && new_k)
 		{
 			new_k->SetUpdateCallback(old_k->GetUpdateCallback());

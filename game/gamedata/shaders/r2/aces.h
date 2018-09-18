@@ -1,4 +1,4 @@
-half4 ACESFilm(half4 x)
+float4 ACESFilm(float4 x)
 {
     float a = 2.51f;
     float b = 0.03f;

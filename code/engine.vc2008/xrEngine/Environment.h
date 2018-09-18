@@ -226,12 +226,14 @@ private:
 	void					SelectEnvs		(EnvVec* envs, CEnvDescriptor*& e0, CEnvDescriptor*& e1, float tm);
 	void					SelectEnv		(EnvVec* envs, CEnvDescriptor*& e, float tm);
 
-	void					calculate_dynamic_sun_dir();
 public:
 	static bool sort_env_pred	(const CEnvDescriptor* x, const CEnvDescriptor* y)
 	{	return x->exec_time < y->exec_time;	}
 	static bool sort_env_etl_pred	(const CEnvDescriptor* x, const CEnvDescriptor* y)
 	{	return x->exec_time_loaded < y->exec_time_loaded;	}
+
+    void					calculate_dynamic_sun_dir();
+
 protected:
 	CPerlinNoise1D*			PerlinNoise1D;
 

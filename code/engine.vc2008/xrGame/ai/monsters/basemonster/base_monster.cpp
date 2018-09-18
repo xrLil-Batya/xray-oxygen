@@ -75,7 +75,7 @@ CBaseMonster::CBaseMonster() :	m_psy_aura(this, "psy"),
 	EnemyMan.init_external			(this);
 	CorpseMan.init_external			(this);
 
-	// Инициализация параметров анимации	
+	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ Р°РЅРёРјР°С†РёРё	
 
 	StateMan						= 0;
 
@@ -444,7 +444,7 @@ void CBaseMonster::Hit(SHit* pHDS)
 	{
 		float &hit_power = pHDS->power;
 		float ap = pHDS->armor_piercing;
-		// пуля пробила шкуру
+		// РїСѓР»СЏ РїСЂРѕР±РёР»Р° С€РєСѓСЂСѓ
 		if(!fis_zero(m_fSkinArmor, EPS) && ap > m_fSkinArmor)
 		{
 			float d_hit_power = (ap - m_fSkinArmor) / ap;
@@ -454,11 +454,11 @@ void CBaseMonster::Hit(SHit* pHDS)
 			hit_power *= d_hit_power;
 			VERIFY(hit_power>=0.0f);
 		}
-		// пуля НЕ пробила шкуру
+		// РїСѓР»СЏ РќР• РїСЂРѕР±РёР»Р° С€РєСѓСЂСѓ
 		else
 		{
 			hit_power *= m_fHitFracMonster;
-			pHDS->add_wound = false; 	//раны нет
+			pHDS->add_wound = false; 	//СЂР°РЅС‹ РЅРµС‚
 		}
 	}
 	inherited::Hit(pHDS);
@@ -716,13 +716,13 @@ void CBaseMonster::on_kill_enemy(const CEntity *obj)
 {
 	const CEntityAlive *entity	= smart_cast<const CEntityAlive *>(obj);
 	
-	// добавить в список трупов	
+	// РґРѕР±Р°РІРёС‚СЊ РІ СЃРїРёСЃРѕРє С‚СЂСѓРїРѕРІ	
 	CorpseMemory.add_corpse		(entity);
 	
-	// удалить всю информацию о хитах
+	// СѓРґР°Р»РёС‚СЊ РІСЃСЋ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С…РёС‚Р°С…
 	HitMemory.remove_hit_info	(entity);
 
-	// удалить всю информацию о звуках
+	// СѓРґР°Р»РёС‚СЊ РІСЃСЋ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ Р·РІСѓРєР°С…
 	SoundMemory.clear			();
 }
 
@@ -752,9 +752,7 @@ DLL_Pure *CBaseMonster::_construct	()
 	
 	inherited::_construct		();
 	CStepManager::_construct	();
-#ifdef MONSTER_INV
 	CInventoryOwner::_construct();
-#endif
 	return						(this);
 }
 
@@ -800,7 +798,7 @@ CParticlesObject* CBaseMonster::PlayParticles(const shared_str& name, const Fvec
 {
 	CParticlesObject* ps = CParticlesObject::Create(name.c_str(),auto_remove);
 	
-	// вычислить позицию и направленность партикла
+	// РІС‹С‡РёСЃР»РёС‚СЊ РїРѕР·РёС†РёСЋ Рё РЅР°РїСЂР°РІР»РµРЅРЅРѕСЃС‚СЊ РїР°СЂС‚РёРєР»Р°
 	Fmatrix	matrix; 
 
 	matrix.identity			();
@@ -882,50 +880,56 @@ bool CBaseMonster::check_start_conditions(ControlCom::EControlType type)
 void CBaseMonster::OnEvent(NET_Packet& P, u16 type)
 {
 	inherited::OnEvent			(P,type);
-
-#ifdef MONSTER_INV
 	CInventoryOwner::OnEvent(P, type);
-#endif
 
 	u16 id;
+
+    // Monster inventory specific
+    if (g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY))
+    {
+        switch (type)
+        {
+        case GE_TRADE_BUY:
+        case GE_OWNERSHIP_TAKE:
+        {
+            P.r_u16(id);
+            CObject		*O = Level().Objects.net_Find(id);
+            VERIFY(O);
+
+            CGameObject			*GO = smart_cast<CGameObject*>(O);
+            CInventoryItem		*pIItem = smart_cast<CInventoryItem*>(GO);
+            VERIFY(inventory().CanTakeItem(pIItem));
+            pIItem->m_ItemCurrPlace.type = eItemPlaceRuck;
+
+            O->H_SetParent(this);
+            inventory().Take(GO, true, true);
+            break;
+        }
+        case GE_TRADE_SELL:
+        case GE_OWNERSHIP_REJECT:
+        {
+            P.r_u16(id);
+            CObject* O = Level().Objects.net_Find(id);
+            VERIFY(O);
+
+            bool just_before_destroy = !P.r_eof() && P.r_u8();
+            bool dont_create_shell = (type == GE_TRADE_SELL) || just_before_destroy;
+
+            O->SetTmpPreDestroy(just_before_destroy);
+            if (inventory().DropItem(smart_cast<CGameObject*>(O), dont_create_shell, dont_create_shell) && !O->getDestroy())
+            {
+                feel_touch_deny(O, 2000);
+            }
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+    // Other messages
 	switch (type)
 	{
-#ifdef MONSTER_INV
-	case GE_TRADE_BUY:
-	case GE_OWNERSHIP_TAKE:
-	{
-		P.r_u16(id);
-		CObject		*O = Level().Objects.net_Find(id);
-		VERIFY(O);
-
-		CGameObject			*GO = smart_cast<CGameObject*>(O);
-		CInventoryItem		*pIItem = smart_cast<CInventoryItem*>(GO);
-		VERIFY(inventory().CanTakeItem(pIItem));
-		pIItem->m_ItemCurrPlace.type = eItemPlaceRuck;
-
-		O->H_SetParent(this);
-		inventory().Take(GO, true, true);
-		break;
-	}
-	case GE_TRADE_SELL:
-	case GE_OWNERSHIP_REJECT:
-	{
-		P.r_u16(id);
-		CObject* O = Level().Objects.net_Find(id);
-		VERIFY(O);
-
-		bool just_before_destroy = !P.r_eof() && P.r_u8();
-		bool dont_create_shell = (type == GE_TRADE_SELL) || just_before_destroy;
-
-		O->SetTmpPreDestroy(just_before_destroy);
-		if (inventory().DropItem(smart_cast<CGameObject*>(O), dont_create_shell, dont_create_shell) && !O->getDestroy())
-		{
-			feel_touch_deny(O, 2000);
-		}
-		break;
-	}
-#endif
-
 	case GE_KILL_SOMEONE:
 		P.r_u16		(id);
 		CObject* O	= Level().Objects.net_Find	(id);

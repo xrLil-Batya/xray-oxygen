@@ -8,7 +8,7 @@
 
 #ifndef lua_h
 #define lua_h
-
+#include "../xrScripts.h"
 #include <stdarg.h>
 #include <stddef.h>
 

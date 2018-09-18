@@ -43,43 +43,27 @@ manager::~manager					()
 	::ide().destroy					(m_property_holder);
 }
 
-void manager::fill_levels			(CInifile& config, LPCSTR prefix, LPCSTR category)
+void manager::fill_levels(CInifile& config, LPCSTR prefix, LPCSTR category)
 {
-	string_path						section_id;
-	xr_strcpy						(section_id, "level_maps_");
-	xr_strcat						(section_id, prefix);
-	CInifile::Items const&			section = config.r_section(section_id).Data;
+	string_path section_id;
+	xr_strcpy(section_id, "level_maps_");
+	xr_strcat(section_id, prefix);
+	decltype(CInifile::Sect::Data) const& section = config.r_section(section_id).Data;
 
-	CInifile::Items::const_iterator	i = section.begin();
-	CInifile::Items::const_iterator	e = section.end();
-	for ( ; i != e; ++i) {
-		if (!(*i).first.size())
+	for (auto it: section)
+	{
+		if (!it.first.size())
 			continue;
 
-		VERIFY						(config.section_exist((*i).first));
-		if (!config.line_exist((*i).first, "weathers")) {
-			m_levels.insert			(
-				std::make_pair(
-					(*i).first.c_str(),
-					std::make_pair(
-						category,
-						s_default_weather_id
-					)
-				)
-			);
+		VERIFY(config.section_exist(it.first));
+		if (!config.line_exist(it.first, "weathers"))
+		{
+			m_levels.insert(std::make_pair(it.first.c_str(), std::make_pair(category, s_default_weather_id)));
 			continue;
 		}
 
-		LPCSTR						weather_id = config.r_string((*i).first, "weathers");
-		m_levels.insert				(
-			std::make_pair(
-				(*i).first.c_str(),
-				std::make_pair(
-					category,
-					weather_id
-				)
-			)
-		);
+		LPCSTR weather_id = config.r_string(it.first, "weathers");
+		m_levels.insert(std::make_pair(it.first.c_str(), std::make_pair(category, weather_id)));
 	}
 }
 

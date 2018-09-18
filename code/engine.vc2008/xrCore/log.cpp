@@ -10,13 +10,15 @@ static string_path			log_file_name;
 static bool 				no_log			= true;
 static std::recursive_mutex	logCS;
 
-bool __declspec(dllexport) force_flush_log = false;	// alpet: выставить в true если лог все-же записывается плохо при вылете. 
-//RvP													// Слишком частая запись лога вредит SSD и снижает производительность.
+bool __declspec(dllexport) force_flush_log = false;	// alpet: РІС‹СЃС‚Р°РІРёС‚СЊ РІ true РµСЃР»Рё Р»РѕРі РІСЃРµ-Р¶Рµ Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ РїР»РѕС…Рѕ РїСЂРё РІС‹Р»РµС‚Рµ. 
+//RvP													// РЎР»РёС€РєРѕРј С‡Р°СЃС‚Р°СЏ Р·Р°РїРёСЃСЊ Р»РѕРіР° РІСЂРµРґРёС‚ SSD Рё СЃРЅРёР¶Р°РµС‚ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ.
 IWriter *LogWriter;
 size_t cached_log = 0;
 
-xr_vector<shared_str>*		LogFile			= NULL;
-static LogCallback			LogCB			= 0;
+xr_vector<shared_str>*		LogFile			= nullptr;
+static LogCallback			LogCB			= nullptr;
+
+inline const size_t FlushTreshold = 32768;
 
 void FlushLog()
 {
@@ -28,9 +30,9 @@ void FlushLog()
 			IWriter *f = FS.w_open(log_file_name);
 			if (f)
 			{
-				for (u32 it = 0; it < LogFile->size(); it++) 
+				for (auto & it : *LogFile) 
 				{
-					const char* s = *((*LogFile)[it]);
+					const char* s = *it;
 					f->w_string(s ? s : "");
 				}
 				FS.w_close(f);
@@ -55,7 +57,6 @@ void AddOne(const char *split)
 
 	shared_str temp = shared_str(split);
 	LogFile->push_back(temp);
-#ifdef	LOG_TIME_PRECISE 
 	if (LogWriter)
 	{
 		switch (*split)
@@ -63,32 +64,25 @@ void AddOne(const char *split)
 		case 0x21:
 		case 0x23:
 		case 0x25:
-			split++; // пропустить первый символ, т.к. это вероятно цветовой тег
+			split++; // РїСЂРѕРїСѓСЃС‚РёС‚СЊ РїРµСЂРІС‹Р№ СЃРёРјРІРѕР», С‚.Рє. СЌС‚Рѕ РІРµСЂРѕСЏС‚РЅРѕ С†РІРµС‚РѕРІРѕР№ С‚РµРі
 			break;
 		}
 
-		char buf[64];
-		//SYSTEMTIME lt;
-		//GetLocalTime(&lt);
+        string256 buf;
+        SYSTEMTIME localTime;
+        GetLocalTime(&localTime);
+        int bufSize = xr_sprintf(buf, "[%hu.%hu.%hu %hu.%hu.%hu]", localTime.wDay, localTime.wMonth, localTime.wYear, localTime.wHour, localTime.wMinute, localTime.wSecond);
 
 		sprintf_s(buf, 64, "[%s %s] ", Core.UserDate, Core.UserTime);
 		LogWriter->w_printf("%s%s\r\n", buf, split);
-		cached_log += xr_strlen(buf);
+		cached_log += bufSize;
 		cached_log += xr_strlen(split) + 2;
-#else
-		time_t t = time(NULL);
-		tm* ti = localtime(&t);
-
-		strftime(buf, 64, "[%x %X]\t", ti);
-
-		LogWriter->wprintf("%s %s\r\n", buf, split);
-#endif
-		if (force_flush_log || cached_log >= 32768)
+        if (force_flush_log || cached_log >= FlushTreshold)
+        {
 			FlushLog();
+            cached_log = 0;
+        }
 
-		//-RvP
-
-		//exec CallBack
 		if (LogExecCB&&LogCB)LogCB(split);
 	}
 
@@ -124,7 +118,9 @@ void __cdecl Msg(const char *format, ...)
 	va_list		mark;
 	string2048	buf;
 	va_start	(mark, format );
-	int sz		= _vsnprintf(buf, sizeof(buf)-1, format, mark ); buf[sizeof(buf)-1]=0;
+	int sz		= _vsnprintf(buf, sizeof(buf)-1, format, mark ); 
+	ULONG		bufSize = sizeof(buf) - 1;
+	buf[bufSize]= 0;
     va_end		(mark);
 	if (sz)		Log(buf);
 }
@@ -220,7 +216,7 @@ const char* log_name			()
 
 void InitLog()
 {
-	R_ASSERT			(LogFile==NULL);
+	R_ASSERT			(LogFile==nullptr);
 	LogFile				= new xr_vector<shared_str>();
 	LogFile->reserve	(1000);
 }
@@ -249,13 +245,13 @@ void CreateLog(BOOL nl)
     }
 }
 
-void CloseLog(void)
+void CloseLog()
 {
 	FlushLog		();
  	LogFile->clear	();
 	xr_delete		(LogFile);
 }
-typedef void (WINAPI *OFFSET_UPDATER)(const char* key, u32 ofs);
+using OFFSET_UPDATER = void (WINAPI *)(const char* key, u32 ofs);
 //LuaICP_API only
 #pragma warning(disable: 4311 4302)
 void LogXrayOffset(const char* key, LPVOID base, LPVOID pval)

@@ -9,7 +9,7 @@
 #include "stdafx.h"
 #include "ai_space.h"
 #include "../xrServerEntities/script_engine.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 
 #include "inventory_upgrade.h"
 #include "inventory_upgrade_manager.h"
@@ -79,7 +79,6 @@ void Upgrade::construct( const shared_str& upgrade_id, Group& parental_group, Ma
 //	LPCSTR tooltip_functor_str	= pSettings->r_string( id(), "prereq_tooltip_functor" );
 	m_prerequisites.parameter	= pSettings->r_string( id(), "prereq_params" );//prerequisites_params
 	m_prerequisites.parameter2	= m_section.c_str();
-	//	m_tooltip.parameter			= pSettings->r_string( id(), "prereq_params" );
 	R_ASSERT2(
 		ai().script_engine().functor( prereq_functor_str, m_prerequisites.functr ),
 		make_string( "Failed to get prerequisites functor in section[%s], functor[%s]",
@@ -87,14 +86,6 @@ void Upgrade::construct( const shared_str& upgrade_id, Group& parental_group, Ma
 		)
 	);
 	m_prerequisites();
-
-	/*R_ASSERT2(
-		ai().script_engine().functor( tooltip_functor_str, m_tooltip.functr ),
-		make_string( "Failed to get tooltip functor in section[%s], functor[%s]",
-		id_str(), tooltip_functor_str
-		)
-	);
-	m_tooltip();*/
 
 	// effects = groups
 	LPCSTR groups_str = pSettings->r_string( id(), "effects" );
@@ -114,7 +105,7 @@ void Upgrade::construct( const shared_str& upgrade_id, Group& parental_group, Ma
 		shared_str prop	= _GetItem( properties.c_str(), i, buffer);
 		if(prop.size())
 		{
-			m_properties[i] = prop;
+			m_properties[i] = prop; //-V820
 			VERIFY2( manager_r.get_property( prop ),
 				make_string( "Upgrade <%s> : property [%s] is unknown (not found in upgrade manager) !", id_str(), prop.c_str() ) );
 		}

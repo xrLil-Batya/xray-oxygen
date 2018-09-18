@@ -154,18 +154,11 @@ void CParticlesObject::shedule_Update(u32 _dt)
 	u32 dt = Device.dwTimeGlobal - dwLastTime;
 	if (dt)
 	{
-		if (0)
-		{//.psDeviceFlags.test(mtParticles))	{    //. AlexMX comment this line// NO UNCOMMENT - DON'T WORK PROPERLY
-			mt_dt = dt;
-			fastdelegate::FastDelegate0<>		delegate(this, &CParticlesObject::PerformAllTheWork_mt);
-			Device.seqParallel.push_back(delegate);
-		}
-		else
-		{
-			mt_dt = 0;
-			IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-			V->OnFrame(dt);
-		}
+		
+		mt_dt = 0;
+		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+		V->OnFrame(dt);
+		
 
 		dwLastTime = Device.dwTimeGlobal;
 	}
@@ -252,8 +245,8 @@ void CParticlesObject::SetAutoRemove(bool auto_remove)
 	m_bAutoRemove = auto_remove;
 }
 
-//играются ли партиклы, отличается от PSI_Alive, тем что после
-//остановки Stop партиклы могут еще доигрывать анимацию IsPlaying = true
+//РёРіСЂР°СЋС‚СЃСЏ Р»Рё РїР°СЂС‚РёРєР»С‹, РѕС‚Р»РёС‡Р°РµС‚СЃСЏ РѕС‚ PSI_Alive, С‚РµРј С‡С‚Рѕ РїРѕСЃР»Рµ
+//РѕСЃС‚Р°РЅРѕРІРєРё Stop РїР°СЂС‚РёРєР»С‹ РјРѕРіСѓС‚ РµС‰Рµ РґРѕРёРіСЂС‹РІР°С‚СЊ Р°РЅРёРјР°С†РёСЋ IsPlaying = true
 bool CParticlesObject::IsPlaying()
 {
 	IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual);

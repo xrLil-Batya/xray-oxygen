@@ -21,18 +21,18 @@ namespace MemorySpace {
 }
 
 namespace GroupHierarchyHolder {
-	typedef xr_vector<MemorySpace::CVisibleObject>	VISIBLE_OBJECTS;
-	typedef xr_vector<MemorySpace::CSoundObject>	SOUND_OBJECTS;
-	typedef xr_vector<MemorySpace::CHitObject>		HIT_OBJECTS;
-	typedef xr_vector<CEntity*>						MEMBER_REGISTRY;
+	using VISIBLE_OBJECTS = xr_vector<MemorySpace::CVisibleObject>;
+	using SOUND_OBJECTS = xr_vector<MemorySpace::CSoundObject>;
+	using HIT_OBJECTS = xr_vector<MemorySpace::CHitObject>;
+	using MEMBER_REGISTRY = xr_vector<CEntity*>;
 }
 
 class CGroupHierarchyHolder {
 private:
-	typedef GroupHierarchyHolder::VISIBLE_OBJECTS	VISIBLE_OBJECTS;
-	typedef GroupHierarchyHolder::SOUND_OBJECTS		SOUND_OBJECTS;
-	typedef GroupHierarchyHolder::HIT_OBJECTS		HIT_OBJECTS;
-	typedef GroupHierarchyHolder::MEMBER_REGISTRY	MEMBER_REGISTRY;
+	using VISIBLE_OBJECTS = GroupHierarchyHolder::VISIBLE_OBJECTS;
+	using SOUND_OBJECTS = GroupHierarchyHolder::SOUND_OBJECTS;
+	using HIT_OBJECTS = GroupHierarchyHolder::HIT_OBJECTS;
+	using MEMBER_REGISTRY = GroupHierarchyHolder::MEMBER_REGISTRY;
 
 #ifdef SQUAD_HIERARCHY_HOLDER_USE_LEADER
 private:

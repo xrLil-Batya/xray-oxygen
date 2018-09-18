@@ -12,6 +12,7 @@
 #include "xrServer_script_macroses.h"
 #include "script_ini_file.h"
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 LPCSTR get_section_name(const CSE_Abstract *abstract)
@@ -31,7 +32,7 @@ CScriptIniFile *get_spawn_ini(CSE_Abstract *abstract)
 
 template <typename T>
 struct CWrapperBase : public T, public luabind::wrap_base {
-	typedef T inherited;
+	using inherited = T;
 	typedef CWrapperBase<T>	self_type;
 
 		IC			CWrapperBase(LPCSTR section) : T(section)
@@ -98,8 +99,8 @@ void CPureServerObject::script_register(lua_State *L)
 
 void CSE_Abstract::script_register(lua_State *L)
 {
-	typedef CWrapperBase<CSE_Abstract> WrapType;
-	typedef CSE_Abstract BaseType;
+	using WrapType = CWrapperBase<CSE_Abstract>;
+	using BaseType = CSE_Abstract;
 	module(L)[
 		class_<CSE_Abstract,WrapType,CPureServerObject>	("cse_abstract")
 			.def_readonly	("id",				&BaseType::ID)
@@ -115,16 +116,13 @@ void CSE_Abstract::script_register(lua_State *L)
 			.def			("STATE_Write",		&BaseType::STATE_Write, &WrapType::STATE_Write_static)
 			.def			("UPDATE_Read",		&BaseType::UPDATE_Read, &WrapType::UPDATE_Read_static)
 			.def			("UPDATE_Write",	&BaseType::UPDATE_Write, &WrapType::UPDATE_Write_static)
-//			.def(		constructor<LPCSTR>())
 	];
 }
 
 void CSE_Shape::script_register(lua_State *L)
 {
 	module(L)[
-		class_<CSE_Shape>
-			("cse_shape")
-//			.def(		constructor<>())
+		class_<CSE_Shape>("cse_shape")
 	];
 }
 
@@ -133,8 +131,6 @@ void CSE_Visual::script_register(lua_State *L)
 	module(L)[
 		class_<CSE_Visual>
 			("cse_visual")
-//			.def(		constructor<>())
-//			.def(		constructor<LPCSTR>())
 	];
 }
 
@@ -143,8 +139,6 @@ void CSE_Motion::script_register(lua_State *L)
 	module(L)[
 		class_<CSE_Motion>
 			("cse_motion")
-//			.def(		constructor<>())
-//			.def(		constructor<LPCSTR>())
 	];
 }
 
@@ -156,5 +150,27 @@ void CSE_Temporary::script_register(lua_State *L)
 			"cse_temporary",
 			CSE_Abstract
 		)
+	];
+}
+
+#pragma optimize("s",on)
+void CSE_PHSkeleton::script_register(lua_State *L)
+{
+	module(L)[
+		class_<CSE_PHSkeleton>
+			("cse_ph_skeleton")
+	];
+}
+
+void CSE_AbstractVisual::script_register(lua_State *L)
+{
+	module(L)[
+		luabind_class_abstract2(
+			CSE_AbstractVisual,
+			"CSE_AbstractVisual",
+			CSE_Visual,
+			CSE_Abstract
+		)
+			.def("getStartupAnimation", &CSE_AbstractVisual::getStartupAnimation)
 	];
 }

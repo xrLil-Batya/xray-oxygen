@@ -12,6 +12,7 @@ private:
 
 public:
 	void			_initialize			(const bool &dedicated);
+    void            _initializeAfterFS();
 	void			_destroy			();
 	
 public:
@@ -40,7 +41,8 @@ public:
 	void			error				(long  code, const char* e1, const char *file, int line, const char *function, bool &ignore_always);
 	void			error				(long  code, const char* e1, const char* e2, const char *file, int line, const char *function, bool &ignore_always);
 	void _cdecl		fatal				(const char *file, int line, const char *function, const char* F,...);
-	void			do_exit				(const std::string & message);
+	void			do_exit				(HWND hWnd, const std::string& message);
+    void do_exit2 (HWND hwnd, const std::string& message, bool& ignore_always);
 	void			do_exit				(const std::string & message, const std::string &message2);
 	void			backend				(const char* reason, const char* expression, const char *argument0, const char *argument1, const char* file, int line, const char *function, bool &ignore_always);
 };
@@ -60,5 +62,6 @@ std::string make_string(const char* format, const Args&... args)
 }
 
 extern XRCORE_API	xrDebug		Debug;
+extern XRCORE_API   HWND		gGameWindow;
 
 #include "xrDebug_macros.h"

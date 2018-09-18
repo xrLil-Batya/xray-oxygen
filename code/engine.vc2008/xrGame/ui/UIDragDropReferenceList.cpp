@@ -24,60 +24,38 @@ CUIDragDropReferenceList::~CUIDragDropReferenceList()
 
 void CUIDragDropReferenceList::Initialize()
 {
-#ifdef VERTICAL_BELT
-	Fvector2 pos;
-	Fvector2 size;
-	size.set(m_container->CellSize().x, m_container->CellSize().y);
+    Fvector2 pos;
+    Fvector2 size;
+    size.set(m_container->CellSize().x, m_container->CellSize().y);
 
-	//0
-	m_references.push_back(xr_new<CUIStatic>());
-	pos.set(0, 0);
-	m_references.back()->SetAutoDelete(true);
-	m_references.back()->SetWndPos(pos);
-	m_references.back()->SetWndSize(size);
-	AttachChild(m_references.back());
-	m_references.back()->SetWindowName("cell_item_reference");
-	Register(m_references.back());
-	//1
-	m_references.push_back(xr_new<CUIStatic>());
-	pos.set(m_container->CellSize().x + m_container->CellsSpacing().x, 0);
-	m_references.back()->SetAutoDelete(true);
-	m_references.back()->SetWndPos(pos);
-	m_references.back()->SetWndSize(size);
-	AttachChild(m_references.back());
-	m_references.back()->SetWindowName("cell_item_reference");
-	Register(m_references.back());
-	//2
-	m_references.push_back(xr_new<CUIStatic>());
-	pos.set(0, m_container->CellSize().y + m_container->CellsSpacing().y);
-	m_references.back()->SetAutoDelete(true);
-	m_references.back()->SetWndPos(pos);
-	m_references.back()->SetWndSize(size);
-	AttachChild(m_references.back());
-	m_references.back()->SetWindowName("cell_item_reference");
-	Register(m_references.back());
-	//3
-	m_references.push_back(xr_new<CUIStatic>());
-	pos.set(m_container->CellSize().x + m_container->CellsSpacing().x, m_container->CellSize().y + m_container->CellsSpacing().y);
-	m_references.back()->SetAutoDelete(true);
-	m_references.back()->SetWndPos(pos);
-	m_references.back()->SetWndSize(size);
-	AttachChild(m_references.back());
-	m_references.back()->SetWindowName("cell_item_reference");
-	Register(m_references.back());
-#else
-	for(int i=0; i<m_container->CellsCapacity().x; i++)
-	{
-		m_references.push_back(xr_new<CUIStatic>());
-		Fvector2 pos = Fvector2().set((m_container->CellSize().x+m_container->CellsSpacing().x)*i,0);
-		m_references.back()->SetAutoDelete(true);
-		m_references.back()->SetWndPos(pos);
-		m_references.back()->SetWndSize(Fvector2().set(m_container->CellSize().x, m_container->CellSize().y));
-		AttachChild(m_references.back());
-		m_references.back()->SetWindowName("cell_item_reference");
-		Register(m_references.back());
-	}
-#endif
+    // Positions for vertical belts, if it's enabled
+    const Fvector2 ElemPos[4] =
+    {
+        { 0.0f, 0.0f },
+        { (float)m_container->CellSize().x + m_container->CellsSpacing().x, 0.0f },
+        { 0.0f, (float)m_container->CellSize().y + m_container->CellsSpacing().y },
+        { (float)m_container->CellSize().x + m_container->CellsSpacing().x, (float)m_container->CellSize().y + m_container->CellsSpacing().y }
+    };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        m_references.push_back(xr_new<CUIStatic>());
+        CUIStatic* pCell = m_references.back();
+        if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+        {
+            pos.set(ElemPos[i]);
+        }
+        else
+        {
+            pos.set((m_container->CellSize().x + m_container->CellsSpacing().x)*i, 0);
+        }
+        pCell->SetAutoDelete(true);
+        pCell->SetWndPos(pos);
+        pCell->SetWndSize(size);
+        AttachChild(pCell);
+        pCell->SetWindowName("cell_item_reference");
+        Register(pCell);
+    }
 }
 
 void CUIDragDropReferenceList::SetItem(CUICellItem* itm)
@@ -102,11 +80,12 @@ void CUIDragDropReferenceList::SetItem(CUICellItem* itm, Fvector2 abs_pos)
 }
 void CUIDragDropReferenceList::SetItem(CUICellItem* itm, Ivector2 cell_pos)
 {
-#ifdef VERTICAL_BELT
-	CUIStatic* ref = m_references[cell_pos.x + 2 * cell_pos.y];
-#else
-	CUIStatic* ref = m_references[cell_pos.x];
-#endif
+    CUIStatic* ref = ref = m_references[cell_pos.x];
+    if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+    {
+        ref = m_references[cell_pos.x + 2 * cell_pos.y];
+    }
+
 	ref->SetShader(itm->GetShader());
 	ref->SetTextureRect(itm->GetTextureRect());
 	ref->TextureOn();
@@ -126,13 +105,13 @@ void CUIDragDropReferenceList::SetItem(CUICellItem* itm, Ivector2 cell_pos)
 CUICellItem* CUIDragDropReferenceList::RemoveItem(CUICellItem* itm, bool force_root)
 {
 	Ivector2 vec2 = m_container->GetItemPos(itm);
-	if(vec2.x!=-1&&vec2.y!=-1)
+	if(vec2.x != -1 && vec2.y != -1)
 	{
-#ifdef VERTICAL_BELT
-		u8 index = u8(vec2.x + 2 * vec2.y);
-#else
-		u8 index = u8(vec2.x);
-#endif
+        u8 index = u8(vec2.x);
+        if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+        {
+            index = u8(vec2.x + 2 * vec2.y);
+        }
 		xr_strcpy(ACTOR_DEFS::g_quick_use_slots[index], "");
 		m_references[index]->SetTextureColor(color_rgba(255,255,255,0));
 	}
@@ -142,11 +121,12 @@ CUICellItem* CUIDragDropReferenceList::RemoveItem(CUICellItem* itm, bool force_r
 
 void CUIDragDropReferenceList::LoadItemTexture(LPCSTR section, Ivector2 cell_pos)
 {
-#ifdef VERTICAL_BELT
-	CUIStatic* ref = m_references[cell_pos.x + 2 * cell_pos.y];
-#else
-	CUIStatic* ref = m_references[cell_pos.x];
-#endif
+    CUIStatic* ref = m_references[cell_pos.x];
+    if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+    {
+        ref = m_references[cell_pos.x + 2 * cell_pos.y];
+    }
+
 	ref->SetShader(InventoryUtilities::GetEquipmentIconsShader());
 	Frect texture_rect;
 	texture_rect.x1	= pSettings->r_float(section, "inv_grid_x")		*INV_GRID_WIDTH;
@@ -170,28 +150,29 @@ void CUIDragDropReferenceList::ReloadReferences(CInventoryOwner* pActor)
 
 	m_container->ClearAll(true);
 	m_selected_item	= nullptr;
-#ifdef VERTICAL_BELT
-	const u32 BeltCount = 4u;
-#else
-	const u32 BeltCount = m_container->CellsCapacity().x;
-#endif
+    u8 BeltCount = 4u;
+    //#REFACTOR: Vertical belts initial implementation was maded by Vasyan(c), so it's ugly and stupid
+    // It's use x as x,y
+    // Need remake that, once I (Giperion) got time
+    if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+    {
+        BeltCount = m_container->CellsCapacity().x;
+    }
 	for (u8 i = 0; i < BeltCount; i++)
 	{
 		CUIStatic* ref = m_references[i];
 		LPCSTR item_name = ACTOR_DEFS::g_quick_use_slots[i];
 		Ivector2 vec;
 
-#ifdef VERTICAL_BELT
-		switch (i)
-		{
-			case 0: vec.set(0, 0); break;
-			case 1: vec.set(1, 0); break;
-			case 2: vec.set(0, 1); break;
-			case 3: vec.set(1, 1); break;
-		}
-#else
-		vec.set(i, 0);
-#endif
+        vec.set(i, 0);
+
+        if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+        {
+            // Consider that BeltCount always aligned by 2
+            u8 BeltCountRows = sqrt<u8>(BeltCount);
+            vec.set(i / BeltCountRows, i % BeltCountRows);
+        }
+
 		if (item_name && xr_strlen(item_name))
 		{
 			PIItem itm = pActor->inventory().GetAny(item_name);
@@ -220,20 +201,20 @@ void CUIDragDropReferenceList::OnItemDBClick(CUIWindow* w, void* pData)
 	{
 		u8 index = u8(it-m_references.begin());
 		CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
+
 		if (actor && actor->inventory().GetAny(ACTOR_DEFS::g_quick_use_slots[index]))
 		{
-#ifdef VERTICAL_BELT
-			switch (index)
-			{
-				case 0: inherited::RemoveItem(GetCellAt(Ivector2().set(0, 0)).m_item, false); break;
-				case 1: inherited::RemoveItem(GetCellAt(Ivector2().set(1, 0)).m_item, false); break;
-				case 2: inherited::RemoveItem(GetCellAt(Ivector2().set(0, 1)).m_item, false); break;
-				case 3: inherited::RemoveItem(GetCellAt(Ivector2().set(1, 1)).m_item, false); break;
-			}
-#else
-			inherited::RemoveItem(GetCellAt(Ivector2().set(index, 0)).m_item, false);
-#endif
+            Ivector2 ElemIndex;
+
+            ElemIndex.set(index, 0);
+            if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+            {
+                u8 IndexRows = sqrt<u8>(index);
+                ElemIndex.set(index / IndexRows, index % IndexRows);
+            }
+            inherited::RemoveItem(GetCellAt(ElemIndex).m_item, false);
 		}
+
 		xr_strcpy(ACTOR_DEFS::g_quick_use_slots[index], "");
 		(*it)->SetTextureColor(color_rgba(255,255,255,0));
 	}
@@ -259,30 +240,5 @@ void CUIDragDropReferenceList::OnItemDrop(CUIWindow* w, void* pData)
 		return;
 	}
 
-	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
-	if(actor)
-	{
-		Ivector2 vec = PickCell(GetUICursor().GetCursorPosition());
-		if(vec.x!=-1&&vec.y!=-1)
-		{
-			Ivector2 vec2 = m_container->GetItemPos(itm);
-			if(vec2.x!=-1&&vec2.y!=-1)
-			{
-#ifdef VERTICAL_BELT
-				u8 index = u8(vec2.x + 2 * vec2.y);
-				shared_str tmp = ACTOR_DEFS::g_quick_use_slots[vec.x + 2 * vec.y];
-				xr_strcpy(ACTOR_DEFS::g_quick_use_slots[vec.x + 2 * vec.y], ACTOR_DEFS::g_quick_use_slots[index]);
-#else
-				u8 index = u8(vec2.x);
-				shared_str tmp = ACTOR_DEFS::g_quick_use_slots[vec.x];
-				xr_strcpy(ACTOR_DEFS::g_quick_use_slots[vec.x], ACTOR_DEFS::g_quick_use_slots[index]);
-#endif
-				xr_strcpy(ACTOR_DEFS::g_quick_use_slots[index], tmp.c_str());
-
-				ReloadReferences(actor);
-				return;
-			}
-		}
-	}
 	DestroyDragItem();
 }

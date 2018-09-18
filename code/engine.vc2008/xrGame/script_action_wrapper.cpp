@@ -11,6 +11,7 @@
 #include "script_game_object.h"
 #include "ai_space.h"
 #include "script_engine.h"
+#include <luabind/luabind.hpp>
 
 void CScriptActionWrapper::setup				(CScriptGameObject *object, CPropertyStorage *storage)
 {

@@ -1,7 +1,7 @@
  /*	
   *		CharStream.h - MAXScript
   *
-  *			Copyright © John Wainwright 1996
+  *			Copyright Â© John Wainwright 1996
   *
   */
  

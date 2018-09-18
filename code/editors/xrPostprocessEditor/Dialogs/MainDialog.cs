@@ -1,57 +1,72 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using XRay.ManagedApi.Core;
 
 namespace xrPostprocessEditor
 {
-    public partial class MainDialog : Form
+    public partial class MainDialog
     {
+        // XXX collectioner: Temporary mock, should be refactoring
+        private static readonly Dictionary<PostProcessParamType, List<PostProcessParamType>> TypesRelationships =
+            new Dictionary<PostProcessParamType, List<PostProcessParamType>>
+            {
+                {
+                    PostProcessParamType.DualityH, new List<PostProcessParamType>
+                    {
+                        PostProcessParamType.DualityH,
+                        PostProcessParamType.DualityV
+                    }
+                }
+            };
+
         private class ChannelDesc
         {
+            public int SelectedKey = DefaultUnselectedIndex;
             public delegate void UpdateHandler(int keyIndex);
-            public TabPage Page;
-            public KeyFrameBox List;
-            public PostProcessParamType Type;
-            public string Name;
-            public UpdateHandler Update;
+            public readonly TabPage Page;
+            public readonly KeyFrameBox List;
+            public readonly PostProcessParamType Type;
+            public readonly UpdateHandler Update;
 
-            public ChannelDesc(TabPage page, KeyFrameBox kfb, PostProcessParamType type, string name,
-                UpdateHandler updater)
+            public ChannelDesc(TabPage page, KeyFrameBox kfb, PostProcessParamType type, UpdateHandler updater)
             {
                 Page = page;
                 List = kfb;
                 Type = type;
-                Name = name;
                 Update = updater;
             }
         }
 
-        public static EditorEngine engine;
-        private readonly string defaultEffectName = "untitled";
-        private string effectName;
-        private ChannelDesc[] chInfo;
+        public static EditorEngine Engine;
+        private const int DefaultUnselectedIndex = -1;
+        private const string DefaultEffectName = "untitled";
+        private string _effectName;
+        private readonly ChannelDesc[] _chInfo;
 
         public MainDialog()
         {
             InitializeComponent();
-            chInfo = new ChannelDesc[]
+            _chInfo = new[]
             {
-                new ChannelDesc(tpAC, kfbAC, PostProcessParamType.AddColor, "Add color", UpdateAC),
-                new ChannelDesc(tpBC, kfbBC, PostProcessParamType.BaseColor, "Base color", UpdateBC),
-                new ChannelDesc(tpGC, kfbGC, PostProcessParamType.GrayColor, "Gray color", UpdateGC),
-                new ChannelDesc(tpDuality, kfbDuality, PostProcessParamType.DualityH, "Duality", UpdateDuality),
-                new ChannelDesc(tpNoise, kfbNoise, PostProcessParamType.NoiseIntensity, "Noise", UpdateNoise),
-                new ChannelDesc(tpBlur, kfbBlur, PostProcessParamType.Blur, "Blur", UpdateBlur),
+                new ChannelDesc(tpAC, kfbAC, PostProcessParamType.AddColor, UpdateAddColor),
+                new ChannelDesc(tpBC, kfbBC, PostProcessParamType.BaseColor, UpdateBaseColor),
+                new ChannelDesc(tpGC, kfbGC, PostProcessParamType.GrayColor, UpdateGrayColor),
+                new ChannelDesc(tpDuality, kfbDuality, PostProcessParamType.DualityH, UpdateDuality),
+                new ChannelDesc(tpNoise, kfbNoise, PostProcessParamType.NoiseIntensity, UpdateNoise),
+                new ChannelDesc(tpBlur, kfbBlur, PostProcessParamType.Blur, UpdateBlur),
                 new ChannelDesc(tpColorMapping, kfbColorMapping, PostProcessParamType.ColorMappingInfluence,
-                    "Color mapping", UpdateColorMapping)
+                    UpdateColorMapping)
             };
-            for (int kfbIndex = 0; kfbIndex < chInfo.Length; kfbIndex++)
+
+            for (int kfbIndex = 0; kfbIndex < _chInfo.Length; kfbIndex++)
             {
-                var dstChannel = chInfo[kfbIndex];
-                for (int tabIndex = 0; tabIndex < chInfo.Length; tabIndex++)
+                var dstChannel = _chInfo[kfbIndex];
+                for (int tabIndex = 0; tabIndex < _chInfo.Length; tabIndex++)
                 {
-                    var srcChannel = chInfo[tabIndex];
+                    var srcChannel = _chInfo[tabIndex];
                     var item = new MenuItem(srcChannel.Page.Text);
                     if (kfbIndex != tabIndex)
                         item.Click += (s, e) => CopyKeyFrames(dstChannel, srcChannel);
@@ -60,95 +75,102 @@ namespace xrPostprocessEditor
                     dstChannel.List.CopyMenu.MenuItems.Add(item);
                 }
             }
-            SetCurrentEffectName(defaultEffectName);
-            foreach (var ch in chInfo)
-            {
-                ch.List.SelectedIndexChanged += (s, e) => ch.Update((s as KeyFrameBox).SelectedIndex);
-            }
+
+            SetCurrentEffectName(DefaultEffectName);
+
+            SetUpHandlers();
         }
 
         Color ConvertColor(ColorF value)
         {
             Color result = Color.FromArgb(
-                (byte)(255*value.a),
-                (byte)(255*value.r),
-                (byte)(255*value.g),
-                (byte)(255*value.b));
+                Convert.ToByte(value.a),
+                Convert.ToByte(value.r),
+                Convert.ToByte(value.g),
+                Convert.ToByte(value.b));
+
             return result;
         }
 
-        private void UpdateAC(int keyIndex)
+        private void UpdateAddColor(int keyIndex)
         {
-            ColorF value = engine.GetAddColor(keyIndex);
+            ColorF value = Engine.GetAddColor(keyIndex);
             cpAC.Value = ConvertColor(value);
         }
 
-        private void UpdateBC(int keyIndex)
+        private void UpdateBaseColor(int keyIndex)
         {
-            ColorF value = engine.GetBaseColor(keyIndex);
+            ColorF value = Engine.GetBaseColor(keyIndex);
             cpBC.Value = ConvertColor(value);
         }
 
-        private void UpdateGC(int keyIndex)
+        private void UpdateGrayColor(int keyIndex)
         {
-            ColorF value = engine.GetGrayColor(keyIndex);
+            ColorF value = Engine.GetGrayColor(keyIndex);
             cpGC.Value = ConvertColor(value);
         }
 
         private void UpdateDuality(int keyIndex)
         {
-            Vector2F value = engine.GetDuality(keyIndex);
+            Vector2F value = Engine.GetDuality(keyIndex);
             nslDualityX.Value = (decimal)value.x;
             nslDualityY.Value = (decimal)value.y;
         }
 
         private void UpdateNoise(int keyIndex)
         {
-            NoiseParams value = engine.GetNoise(keyIndex);
-            nslNoiseIntensity.Value = (decimal)value.Intensity;
-            nslNoiseGrain.Value = (decimal)value.Grain;
-            nslNoiseFPS.Value = (decimal)value.FPS;
+            NoiseParams value = Engine.GetNoise(keyIndex);
+            //nslNoiseIntensity.Value = (decimal)value.Intensity;
+            //nslNoiseGrain.Value = (decimal)value.Grain;
+            //nslNoiseFPS.Value = (decimal)value.FPS;
         }
 
         private void UpdateBlur(int keyIndex)
         {
-            float value = engine.GetBlur(keyIndex);
-            nslBlur.Value = (decimal)value;
+            float value = Engine.GetBlur(keyIndex);
+            //nslBlur.Value = (decimal)value;
         }
 
         private void UpdateColorMapping(int keyIndex)
         {
-            ColorMappingParams value = engine.GetColorMapping(keyIndex);
-            nslColorMappingInfluence.Value = (decimal)value.Influence;
+            ColorMappingParams value = Engine.GetColorMapping(keyIndex);
+            //nslColorMappingInfluence.Value = (decimal)value.Influence;
             tbColorMappingTexture.Text = value.Texture;
         }
-        
-        public void Initialize(EditorEngine nEngine) { engine = nEngine; }
+
+        public void Initialize(EditorEngine nEngine)
+        {
+            Engine = nEngine;
+
+            Engine.ErrorOccuredEvent += Engine_ErrorOccuredEvent;
+        }
+
+        private void Engine_ErrorOccuredEvent(string message) => MessageBox.Show(message);
 
         private void CopyKeyFrames(ChannelDesc dst, ChannelDesc src)
         {
-            using (var dstParam = engine.GetParam(dst.Type))
-            using (var srcParam = engine.GetParam(src.Type))
+            using (var dstParam = Engine.GetParam(dst.Type))
+            using (var srcParam = Engine.GetParam(src.Type))
             {
                 // 1. engine: remove old keyframes
                 dst.List.Items.Clear();
                 dstParam.Reset();
                 // 2. engine: create new ones
                 for (int i = 0; i < srcParam.KeyCount; i++)
-                    engine.CreateKey(dst.Type, srcParam.GetKeyTime(i));
+                    Engine.CreateKey(dst.Type, srcParam.GetKeyTime(i));
             }
             LoadChannel(dst);
         }
 
         private void SetCurrentEffectName(string name)
         {
-            effectName = name;
-            Text = String.Format("{0} - {1}", effectName, Application.ProductName);
+            _effectName = name;
+            Text = $"{_effectName} - {Application.ProductName}";
         }
 
         private void LoadChannel(ChannelDesc ch)
         {
-            using (var param = engine.GetParam(ch.Type))
+            using (var param = Engine.GetParam(ch.Type))
             {
                 ch.List.Items.Clear();
                 for (int i = 0; i < param.KeyCount; i++)
@@ -158,16 +180,25 @@ namespace xrPostprocessEditor
         
         private void LoadAllChannels()
         {
-            foreach (var ch in chInfo)
+            foreach (var ch in _chInfo)
                 LoadChannel(ch);
+        }
+
+        private void ResetAllChannels()
+        {
+            foreach (var ch in _chInfo)
+            {
+                ch.List.Items.Clear();
+                ch.SelectedKey = DefaultUnselectedIndex;
+            }
         }
 
         private void CreateEffect(object sender, EventArgs e)
         {
             // XXX: show confirmation dialog if there are unsaved changes
-            engine.Reset();
-            SetCurrentEffectName(defaultEffectName);
-            LoadAllChannels();
+            Engine.Reset();
+            SetCurrentEffectName(DefaultEffectName);
+            ResetAllChannels();
         }
 
         private void LoadEffect(object sender, EventArgs e)
@@ -182,14 +213,14 @@ namespace xrPostprocessEditor
                     return;
                 fileName = dlg.FileName;
             }
-            engine.LoadEffect(fileName);
+            Engine.LoadEffect(fileName);
             SetCurrentEffectName(fileName);
             LoadAllChannels();
         }
 
         private void SaveEffect(object sender, EventArgs e)
         {
-            if (engine.EffectDuration == 0.0f)
+            if (Engine.EffectDuration == 0.0f)
             {
                 MessageBox.Show("Can't save zero length effect.", Application.ProductName);
                 return;
@@ -199,8 +230,56 @@ namespace xrPostprocessEditor
                 dlg.RestoreDirectory = true;
                 dlg.Filter = "Post-process effects (.ppe)|*.ppe|All Files (*.*)|*.*";
                 if (dlg.ShowDialog() == DialogResult.OK)
-                    engine.SaveEffect(dlg.FileName);
+                    Engine.SaveEffect(dlg.FileName);
             }
+        }
+
+        private void SetUpHandlers()
+        {
+            foreach (var ch in _chInfo)
+            {
+                ch.List.SelectedIndexChanged += (s, e) =>
+                {
+                    int keyIndex = ((ListBox) s).SelectedIndex;
+                    ch.SelectedKey = keyIndex;
+                    ch.Update(keyIndex);
+                };
+                ch.List.AddTimeKeyEvent += (sender, keyTime) => Engine.CreateKey(ch.Type, (float) keyTime);
+                ch.List.RemoveTimeKeyEvent += (sender, keyTime) => Engine.RemoveKey(ch.Type, (float) keyTime);
+                ch.List.ErrorOccuredEvent += message => MessageBox.Show(message);
+            }
+
+            cpAC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.AddColor, color);
+            cpBC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.BaseColor, color);
+            cpGC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.GrayColor, color);
+
+            nslDualityX.ValueChanged += (s, value) => UpdateEngineValue(PostProcessParamType.DualityH, value);
+            nslDualityY.ValueChanged += (s, value) => UpdateEngineValue(PostProcessParamType.DualityV, value);
+        }
+
+        private void UpdateEngineValue(PostProcessParamType paramType, Color color)
+        {
+            var channel = _chInfo.First(ch => ch.Type == paramType);
+            if (channel.SelectedKey == -1) return;
+
+            Engine.UpdateColorValue(channel.SelectedKey, paramType, color);
+        }
+
+        // XXX collectioner: Refactor this fucking shit!
+        private void UpdateEngineValue(PostProcessParamType paramType, decimal value)
+        {
+            KeyValuePair<PostProcessParamType, List<PostProcessParamType>> relationPair =
+                TypesRelationships.FirstOrDefault(item => item.Value.Contains(paramType));
+
+            PostProcessParamType searchedType =
+                relationPair.Equals(default(KeyValuePair<PostProcessParamType, List<PostProcessParamType>>))
+                    ? paramType
+                    : relationPair.Key;
+
+            ChannelDesc channel = _chInfo.FirstOrDefault(ch => ch.Type == searchedType);
+            if (channel == null || channel.SelectedKey == -1) return;
+
+            Engine.UpdateValue(channel.SelectedKey, paramType, value);
         }
     }
 }

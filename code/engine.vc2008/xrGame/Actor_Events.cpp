@@ -7,7 +7,7 @@
 #include "grenadelauncher.h"
 #include "inventory.h"
 #include "level.h"
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "FoodItem.h"
 #include "ActorCondition.h"
 #include "Grenade.h"
@@ -15,7 +15,7 @@
 #include "CameraLook.h"
 #include "CameraFirstEye.h"
 #include "holder_custom.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #ifdef DEBUG
 #include "PHDebug.h"
 #endif
@@ -69,12 +69,6 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 			Obj->SetTmpPreDestroy			(just_before_destroy);
 			
 			CGameObject * GO = smart_cast<CGameObject*>(Obj);
-			
-#ifdef MP_LOGGING
-			string64 act;
-			xr_strcpy( act, (type == GE_TRADE_SELL)? "sells" : "rejects" );
-			Msg("--- Actor [%d][%s]  %s  [%d][%s]", ID(), Name(), act, GO->ID(), GO->cNameSect().c_str());
-#endif // MP_LOGGING
 			
 			VERIFY( GO->H_Parent() );
 			if ( !GO->H_Parent() )
@@ -237,7 +231,7 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 				Msg("! Error: No object to attach holder [%d]", id);
 				break;
 			}
-			VERIFY(m_holder==NULL);
+			VERIFY(m_holder==nullptr);
 			CHolderCustom*	holder = smart_cast<CHolderCustom*>(O);
 			if(!holder->Engaged())	use_Holder		(holder);
 
@@ -248,7 +242,7 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 			u16 id			= P.r_u16();
 			CGameObject*	GO	= smart_cast<CGameObject*>(m_holder);
 			VERIFY			(id==GO->ID());
-			use_Holder		(NULL);
+			use_Holder		(nullptr);
 		}break;
 	}
 }
@@ -262,11 +256,9 @@ void CActor::MoveActor(Fvector NewPos, Fvector NewDir)
 	r_torso.pitch			= -NewDir.x;
 	unaffected_r_torso.yaw	= r_torso.yaw;
 	unaffected_r_torso.pitch= r_torso.pitch;
-	unaffected_r_torso.roll	= 0;//r_torso.roll;
+	unaffected_r_torso.roll	= 0;
 
 	r_torso_tgt_roll		= 0;
 	cam_Active()->Set		(-unaffected_r_torso.yaw,unaffected_r_torso.pitch,unaffected_r_torso.roll);
 	ForceTransform(M);
-
-	m_bInInterpolation = false;	
 }

@@ -2,6 +2,8 @@
 #include "pseudodog.h"
 #include "psy_dog.h"
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

@@ -6,6 +6,10 @@
 #include "IGame_Persistent.h"
 #include "render.h"
 #include "xr_object.h"
+#include "psapi.h"
+#include <Wbemidl.h>
+#include <comdef.h>
+#include <timeapi.h>
 
 #include "../Include/xrRender/DrawUtils.h"
 
@@ -301,7 +305,62 @@ void CStats::Show()
         pFont->Out(10, 10, FPSFormat, fLastDisplayedFPS);
         pFont->SetHeight(sz);
 		pFont->OnRender					();
-	};
+	}
+
+	if (psDeviceFlags.test(rsHWInfo))
+	{
+        if ((Core.dwFrame % 25) == 0)
+        {
+		    // init all variables
+		    MEMORYSTATUSEX mem;
+		    PROCESS_MEMORY_COUNTERS_EX pmc;
+		    SYSTEM_INFO sysInfo;
+		
+		    // Getting info about memory
+		    mem.dwLength = sizeof(MEMORYSTATUSEX);
+		    GlobalMemoryStatusEx((&mem));
+	
+		    AvailableMem = (float)mem.ullAvailPhys;	// how much phys mem available
+		    AvailableMem /= (1024 * 1024);	
+		    AvailablePageFileMem = (float)mem.ullAvailPageFile;	// how much pagefile mem available
+		    AvailablePageFileMem /= (1024 * 1024);
+
+		    // Getting info by request
+		    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(PROCESS_MEMORY_COUNTERS_EX));
+		    GetSystemInfo(&sysInfo);
+	
+			PhysMemoryUsedPercent = (float)mem.dwMemoryLoad;
+			PageFileMemUsedByApp = (float)pmc.PagefileUsage;
+		    PageFileMemUsedByApp /= (1024 * 1024);
+
+		    // Counting CPU load
+            CPU::Info.getCPULoad(cpuLoad);
+            cpuBefore = cpuLoad;
+        }
+
+        pFont->SetHeightI(0.018f);
+
+        if (AvailableMem < 512 || AvailablePageFileMem < 1596)
+            pFont->SetColor(DebugTextColor::DTC_RED);
+        else if (AvailableMem < 768 || AvailablePageFileMem < 2048)
+            pFont->SetColor(DebugTextColor::DTC_YELLOW);
+        else
+            pFont->SetColor(DebugTextColor::DTC_GREEN);
+
+        // Draw all your stuff
+        pFont->Out(10, 25, "MEM_AVAILABLE: %0.0fMB", AvailableMem);				// Physical memory available
+        pFont->Out(10, 40, "PAGE_AVAILABLE: %0.0fMB", AvailablePageFileMem);	// Pagefile memory available
+        pFont->Out(10, 55, "PAGE_APPUSED: %0.0fMB", PageFileMemUsedByApp);		// Physical memory used by app
+        if (cpuLoad > 80.0 || PhysMemoryUsedPercent > 80.0)
+            pFont->SetColor(DebugTextColor::DTC_RED);
+        else if (cpuLoad > 60.0 || PhysMemoryUsedPercent > 60.0)
+            pFont->SetColor(DebugTextColor::DTC_YELLOW);
+        else
+            pFont->SetColor(DebugTextColor::DTC_GREEN);
+		pFont->Out(10, 70, "CPU_LOAD: %0.0f", cpuLoad);							// CPU load
+		pFont->Out(10, 85, "MEM_USED: %0.0f", PhysMemoryUsedPercent);			// Total Phys. memory load (%)
+        pFont->OnRender();
+	}
 	
 	if( psDeviceFlags.test(rsCameraPos) ){
 		_draw_cam_pos					(pFont);
@@ -379,6 +438,8 @@ void CStats::Show()
 
 		g_SpatialSpacePhysic->stat_insert.FrameStart();
 		g_SpatialSpacePhysic->stat_remove.FrameStart();
+
+	
 	}
 	dwSND_Played = dwSND_Allocated = 0;
 	Particles_starting = Particles_active = Particles_destroy = 0;
@@ -396,9 +457,8 @@ void CStats::OnDeviceCreate			()
 {
 	g_bDisableRedText				= strstr(Core.Params,"-xclsx")?TRUE:FALSE;
 
-#ifndef DEDICATED_SERVER
 	pFont	= xr_new<CGameFont>		("stat_font", CGameFont::fsDeviceIndependent);
-#endif
+
 #ifdef DEBUG
 	if (!g_bDisableRedText)			SetLogCB	(_LogCallback);
 #endif

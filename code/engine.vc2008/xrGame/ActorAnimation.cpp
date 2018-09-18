@@ -244,7 +244,7 @@ void SActorVehicleAnims::Create(IKinematicsAnimated* V)
 
 SVehicleAnimCollection::SVehicleAnimCollection()
 {
-	for(u16 i=0;MAX_IDLES>i;++i) idles[i].invalidate();
+	for(MotionID & idle : idles) idle.invalidate();
 	idles_num = 0;
 	steer_left.invalidate();
 	steer_right.invalidate();
@@ -309,7 +309,7 @@ void CActor::g_SetSprintAnimation( u32 mstate_rl,MotionID &head,MotionID &torso,
 CMotion*        FindMotionKeys(MotionID motion_ID,IRenderVisual* V)
 {
 	IKinematicsAnimated* VA = smart_cast<IKinematicsAnimated*>(V);
-	return (VA && motion_ID.valid())?VA->LL_GetRootMotion(motion_ID):0;
+	return (VA && motion_ID.valid())?VA->LL_GetRootMotion(motion_ID):nullptr;
 }
 
 #ifdef DEBUG
@@ -327,7 +327,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 
 	if (!g_Alive()) {
 		if (m_current_legs||m_current_torso){
-			SActorState*				ST = 0;
+			SActorState*				ST = nullptr;
 			if (mstate_rl&mcCrouch)		ST = &m_anims->m_crouch;
 			else						ST = &m_anims->m_normal;
 			mstate_real					= 0;
@@ -340,8 +340,8 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		return;
 	}
 	STorsoWpn::eMovingState	moving_idx 		= STorsoWpn::eIdle;
-	SActorState*					ST 		= 0;
-	SAnimState*						AS 		= 0;
+	SActorState*					ST 		= nullptr;
+	SAnimState*						AS 		= nullptr;
 	
 	if		(mstate_rl&mcCrouch)	
 		ST 		= &m_anims->m_crouch;
@@ -364,12 +364,12 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		else
 			moving_idx				= STorsoWpn::eWalk;
 	}
-	// анимации
+	// Р°РЅРёРјР°С†РёРё
 	MotionID 						M_legs;
 	MotionID 						M_torso;
 	MotionID 						M_head;
 
-	//если мы просто стоим на месте
+	//РµСЃР»Рё РјС‹ РїСЂРѕСЃС‚Рѕ СЃС‚РѕРёРј РЅР° РјРµСЃС‚Рµ
 	bool is_standing = false;
 
 	// Legs
@@ -569,7 +569,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 			M_torso = ST->m_torso_idle;
 	}
 	
-	// есть анимация для всего - запустим / иначе запустим анимацию по частям
+	// РµСЃС‚СЊ Р°РЅРёРјР°С†РёСЏ РґР»СЏ РІСЃРµРіРѕ - Р·Р°РїСѓСЃС‚РёРј / РёРЅР°С‡Рµ Р·Р°РїСѓСЃС‚РёРј Р°РЅРёРјР°С†РёСЋ РїРѕ С‡Р°СЃС‚СЏРј
 	if (m_current_torso!=M_torso)
 	{
 		if (m_bAnimTorsoPlayed)		

@@ -55,8 +55,8 @@ protected:
 		void				CutFirstColoredTextEntry					(xr_string& entry, u32& color,xr_string& text)	const;
 	CUILine*				ParseTextToColoredLine						(const xr_string& str);
 
-	typedef xr_vector<CUILine>				LinesVector;
-	typedef LinesVector::iterator			LinesVector_it;
+	using LinesVector = xr_vector<CUILine>;
+	using LinesVector_it = LinesVector::iterator;
 	LinesVector				m_lines;	// parsed text
 
 	shared_str				m_text;

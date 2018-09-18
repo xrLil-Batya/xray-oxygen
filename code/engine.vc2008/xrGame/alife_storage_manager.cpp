@@ -19,7 +19,7 @@
 #include "level.h"
 #include "../xrEngine/x_ray.h"
 #include "saved_game_wrapper.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "../xrEngine/igame_persistent.h"
 #include "autosave_manager.h"
 
@@ -45,15 +45,15 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 
 	string_path					save;
 	xr_strcpy					(save,m_save_name);
-	if (save_name)
+
+	if (xr_strlen(save_name))
 	{
 		strconcat				(sizeof(m_save_name), m_save_name, save_name, SAVE_EXTENSION);
 	}
-	else {
-		if (!xr_strlen(m_save_name)) {
-			Log					("There is no file name specified!");
-			return;
-		}
+	else
+	{
+		Log("There is no file name specified!");
+		return;
 	}
 
 	u32							source_count;
@@ -69,9 +69,9 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 
 		source_count			= (u32)stream.tell();
 		void					*source_data = stream.pointer();
-		dest_count				= rtc_csize(source_count);
+		dest_count				= XRay::Compress::RT::RtcSize(source_count);
 		dest_data				= xr_malloc(dest_count);
-		dest_count				= (u32)rtc_compress(dest_data,dest_count,source_data,source_count);
+		dest_count				= (u32)XRay::Compress::RT::RtcCompress(dest_data,dest_count,source_data,source_count);
 	}
 
 	string_path					temp;
@@ -128,66 +128,62 @@ void CALifeStorageManager::load	(void *buffer, const u32 &buffer_size, LPCSTR fi
 	Level().autosave_manager().on_game_loaded	();
 }
 
-bool CALifeStorageManager::load	(LPCSTR save_name_no_check)
+bool CALifeStorageManager::load(LPCSTR save_name_no_check)
 {
-	LPCSTR game_saves_path		= FS.get_path("$game_saves$")->m_Path;
+	LPCSTR game_saves_path = FS.get_path("$game_saves$")->m_Path;
 
 	string_path					save_name;
-	strncpy_s					(save_name, sizeof(save_name), save_name_no_check, sizeof(save_name)-5-xr_strlen(SAVE_EXTENSION)-xr_strlen(game_saves_path));
+	strncpy_s(save_name, sizeof(save_name), save_name_no_check, sizeof(save_name) - 5 - xr_strlen(SAVE_EXTENSION) - xr_strlen(game_saves_path));
 
-	CTimer						timer;
-	timer.Start					();
+	string_path save;
+	xr_strcpy(save, m_save_name);
 
-	string_path					save;
-	xr_strcpy					(save,m_save_name);
-	if (!save_name) {
-		if (!xr_strlen(m_save_name))
-			R_ASSERT2			(false,"There is no file name specified!");
+	if (!xr_strlen(save_name))
+	{
+		Msg("There is no file name specified! %s", m_save_name);
+		return (false);
 	}
 	else
 	{
-		strconcat				(sizeof(m_save_name), m_save_name, save_name, SAVE_EXTENSION);
+		strconcat(sizeof(m_save_name), m_save_name, save_name, SAVE_EXTENSION);
 	}
 	string_path					file_name;
-	FS.update_path				(file_name,"$game_saves$",m_save_name);
+	FS.update_path(file_name, "$game_saves$", m_save_name);
 
-	xr_strcpy					(g_last_saved_game, save_name);
-	xr_strcpy					(g_bug_report_file, file_name);
+	xr_strcpy(g_last_saved_game, save_name);
+	xr_strcpy(g_bug_report_file, file_name);
 
 	IReader						*stream;
-	stream						= FS.r_open(file_name);
+	stream = FS.r_open(file_name);
 	if (!stream) {
-		Msg						("* Cannot find saved game %s",file_name);
-		xr_strcpy				(m_save_name,save);
+		Msg("* Cannot find saved game %s", file_name);
+		xr_strcpy(m_save_name, save);
 		return					(false);
 	}
 
-	CHECK_OR_EXIT				(CSavedGameWrapper::valid_saved_game(*stream),make_string("%s\nSaved game version mismatch or saved game is corrupted",file_name));
+	CHECK_OR_EXIT(CSavedGameWrapper::valid_saved_game(*stream), make_string("%s\nSaved game version mismatch or saved game is corrupted", file_name));
 
 	string512					temp;
-	strconcat					(sizeof(temp),temp,CStringTable().translate("st_loading_saved_game").c_str()," \"",save_name,SAVE_EXTENSION,"\"");
+	strconcat(sizeof(temp), temp, CStringTable().translate("st_loading_saved_game").c_str(), " \"", save_name, SAVE_EXTENSION, "\"");
 
 	pApp->SetLoadStageTitle(temp);
-	//pApp->LoadStage();
-    g_pGamePersistent->LoadTitle();
+	g_pGamePersistent->LoadTitle();
 
-	unload						();
-	reload						(m_section);
+	unload();
+	reload(m_section);
 
-	u32							source_count = stream->r_u32();
-	void						*source_data = xr_malloc(source_count);
-	rtc_decompress				(source_data,source_count,stream->pointer(),stream->length() - 3*sizeof(u32));
-	FS.r_close					(stream);
-	load						(source_data, source_count, file_name);
-	xr_free						(source_data);
+	u32 source_count = stream->r_u32();
+	void *source_data = xr_malloc(source_count);
+	XRay::Compress::RT::RtcDecompress(source_data, source_count, stream->pointer(), stream->length() - 3 * sizeof(u32));
+	FS.r_close(stream);
+	load(source_data, source_count, file_name);
+	xr_free(source_data);
 
-	groups().on_after_game_load	();
+	groups().on_after_game_load();
 
-	VERIFY						(graph().actor());
-	
-	Msg							("* Game %s is successfully loaded from file '%s' (%.3fs)",save_name, file_name,timer.GetElapsed_sec());
+	VERIFY(graph().actor());
 
-	return						(true);
+	return (true);
 }
 
 void CALifeStorageManager::save	(NET_Packet &net_packet)

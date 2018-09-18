@@ -12,12 +12,13 @@
 #include "ai_space.h"
 #include "../xrEngine/XR_IOConsole.h"
 #include "../xrEngine/xr_ioc_cmd.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "gamepersistent.h"
 #include "debug_renderer.h"
 #include "object_broker.h"
 #include "alife_simulator_base.h"
 #include "../xrEngine/x_ray.h"
+#include "ui/UILoadingScreen.h"
 
 //-----------------------------------------------------------------
 BOOL	net_sv_control_hit	= FALSE		;
@@ -125,7 +126,7 @@ game_sv_GameState::~game_sv_GameState()
 	delete_data(m_alife_simulator);
 }
 
-bool game_sv_GameState::change_level (NET_Packet &net_packet, ClientID sender)
+bool game_sv_GameState::change_level (NET_Packet &net_packet)
 {
 	if (ai().get_alife())
 		return (alife().change_level(net_packet));
@@ -133,13 +134,7 @@ bool game_sv_GameState::change_level (NET_Packet &net_packet, ClientID sender)
 		return (true);
 }
 
-void game_sv_GameState::save_game (NET_Packet &net_packet, ClientID sender)
-{
-	if (ai().get_alife())
-		alife().save(net_packet);
-}
-
-bool game_sv_GameState::load_game (NET_Packet &net_packet, ClientID sender)
+bool game_sv_GameState::load_game (NET_Packet &net_packet)
 {
 	if (!ai().get_alife())
 		return true;
@@ -147,12 +142,6 @@ bool game_sv_GameState::load_game (NET_Packet &net_packet, ClientID sender)
 	shared_str game_name;
 	net_packet.r_stringZ(game_name);
 	return (alife().load_game(*game_name, true));
-}
-
-void game_sv_GameState::switch_distance(NET_Packet &net_packet)
-{
-	if (ai().get_alife())
-		alife().set_switch_distance(net_packet.r_float());
 }
 
 void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
@@ -184,43 +173,28 @@ void game_sv_GameState::teleport_object	(NET_Packet &packet, u16 id)
 	alife().teleport_object(id, game_vertex_id, level_vertex_id, position);
 }
 
-void game_sv_GameState::add_restriction	(NET_Packet &packet, u16 id)
+void game_sv_GameState::add_restriction(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id)
 {
-	if (!ai().get_alife())
-		return;
-
-	ALife::_OBJECT_ID		restriction_id;
-	packet.r(&restriction_id, sizeof(restriction_id));
-
-	RestrictionSpace::ERestrictorTypes	restriction_type;
-	packet.r(&restriction_type, sizeof(restriction_type));
-
-	alife().add_restriction(id, restriction_id, restriction_type);
+	if (ai().get_alife())
+	{
+		alife().add_restriction(id, restriction_id, type);
+	}
 }
 
-void game_sv_GameState::remove_restriction(NET_Packet &packet, u16 id)
+void game_sv_GameState::remove_restriction(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id)
 {
-	if (!ai().get_alife())
-		return;
-
-	ALife::_OBJECT_ID		restriction_id;
-	packet.r(&restriction_id, sizeof(restriction_id));
-
-	RestrictionSpace::ERestrictorTypes	restriction_type;
-	packet.r(&restriction_type, sizeof(restriction_type));
-
-	alife().remove_restriction(id, restriction_id, restriction_type);
+	if (ai().get_alife())
+	{
+		alife().remove_restriction(id, restriction_id, type);
+	}
 }
 
-void game_sv_GameState::remove_all_restrictions	(NET_Packet &packet, u16 id)
+void game_sv_GameState::remove_all_restrictions(RestrictionSpace::ERestrictorTypes type, u16 id)
 {
-	if (!ai().get_alife())
-		return;
-
-	RestrictionSpace::ERestrictorTypes	restriction_type;
-	packet.r(&restriction_type, sizeof(restriction_type));
-
-	alife().remove_all_restrictions(id, restriction_type);
+	if (ai().get_alife())
+	{
+		alife().remove_all_restrictions(id, type);
+	}
 }
 
 shared_str game_sv_GameState::level_name(const shared_str &server_options) const
@@ -318,12 +292,11 @@ void game_sv_GameState::restart_simulator(LPCSTR saved_game_name)
 	xr_strcpy(g_pGamePersistent->m_game_params.m_game_or_spawn, saved_game_name);
 	xr_strcpy(g_pGamePersistent->m_game_params.m_new_or_load, "load");
 
-	pApp->ls_header[0] = '\0';
-	pApp->ls_tip_number[0] = '\0';
-	pApp->ls_tip[0] = '\0';
+	pApp->SetLoadingScreen(new UILoadingScreen());
 	pApp->LoadBegin();
 	m_alife_simulator = xr_new<CALifeSimulator>(&server(), &options);
 	g_pGamePersistent->SetLoadStageTitle("st_client_synchronising");
+	pApp->LoadForceFinish();
 	g_pGamePersistent->LoadTitle();
 	Device.PreCache(60, true, true);
 	pApp->LoadEnd();

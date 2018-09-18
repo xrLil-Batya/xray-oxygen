@@ -50,9 +50,9 @@ class engine_impl;
 class IRenderDevice
 {
 public:
-	virtual		CStatsPhysics*	_BCL		StatPhysics		()							= 0;								
-	virtual				void	_BCL		AddSeqFrame		( pureFrame* f, bool mt )	= 0;
-	virtual				void	_BCL		RemoveSeqFrame	( pureFrame* f )			= 0;
+	virtual		CStatsPhysics*	WINAPI		StatPhysics		()							= 0;								
+	virtual				void	WINAPI		AddSeqFrame		( pureFrame* f, bool mt )	= 0;
+	virtual				void	WINAPI		RemoveSeqFrame	( pureFrame* f )			= 0;
 };
 
 class ENGINE_API CRenderDeviceData
@@ -131,10 +131,10 @@ public:
 	class ENGINE_API CSecondVPParams //+SecondVP+
 	{
 	public:
-		bool m_bCamReady; // Флаг готовности камеры (FOV, позиция, и т.п) к рендеру второго вьюпорта
+		bool m_bCamReady; // Р¤Р»Р°Рі РіРѕС‚РѕРІРЅРѕСЃС‚Рё РєР°РјРµСЂС‹ (FOV, РїРѕР·РёС†РёСЏ, Рё С‚.Рї) Рє СЂРµРЅРґРµСЂСѓ РІС‚РѕСЂРѕРіРѕ РІСЊСЋРїРѕСЂС‚Р°
 	private:
-		bool m_bIsActive;  // Флаг активации рендера во второй вьюпорт
-		u8   m_FrameDelay; // На каком кадре с момента прошлого рендера во второй вьюпорт мы начнём новый (не может быть меньше 2 - каждый второй кадр, чем больше тем более низкий FPS во втором вьюпорте)
+		bool m_bIsActive;  // Р¤Р»Р°Рі Р°РєС‚РёРІР°С†РёРё СЂРµРЅРґРµСЂР° РІРѕ РІС‚РѕСЂРѕР№ РІСЊСЋРїРѕСЂС‚
+		u8   m_FrameDelay; // РќР° РєР°РєРѕРј РєР°РґСЂРµ СЃ РјРѕРјРµРЅС‚Р° РїСЂРѕС€Р»РѕРіРѕ СЂРµРЅРґРµСЂР° РІРѕ РІС‚РѕСЂРѕР№ РІСЊСЋРїРѕСЂС‚ РјС‹ РЅР°С‡РЅС‘Рј РЅРѕРІС‹Р№ (РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ 2 - РєР°Р¶РґС‹Р№ РІС‚РѕСЂРѕР№ РєР°РґСЂ, С‡РµРј Р±РѕР»СЊС€Рµ С‚РµРј Р±РѕР»РµРµ РЅРёР·РєРёР№ FPS РІРѕ РІС‚РѕСЂРѕРј РІСЊСЋРїРѕСЂС‚Рµ)
 	public:
 		IC bool IsSVPActive() { return m_bIsActive; }
 		void    SetSVPActive(bool bState);
@@ -150,9 +150,7 @@ public:
 
 private:
     // Main objects used for creating and rendering the 3D scene
-    u32										m_dwWindowStyle;
-    RECT									m_rcWindowBounds;
-    RECT									m_rcWindowClient;
+    u64										m_dwWindowStyle;
 
 	CTimer									TimerMM;
 
@@ -161,6 +159,9 @@ private:
 	void									_SetupStates();
 public:
 	LRESULT									MsgProc		(HWND,UINT,WPARAM,LPARAM);
+
+	// Get single WinAPI message and process it
+	void									ProcessSingleMessage();
 
 	u32										dwPrecacheTotal;
 
@@ -245,7 +246,7 @@ public:
 	void Initialize							(void);
 	void ShutDown							(void);
 
-    void UpdateWindowPropStyle              (WindowPropStyle PropStyle);
+    void UpdateWindowPropStyle              (WindowPropStyle PropStyle = (WindowPropStyle)ps_vid_windowtype);
 
 public:
 	void time_factor						(const float &time_factor)
@@ -324,7 +325,7 @@ extern		ENGINE_API		CRenderDevice		Device;
 
 extern		ENGINE_API		bool				g_bBenchmark;
 
-typedef fastdelegate::FastDelegate0<bool>		LOADING_EVENT;
+using LOADING_EVENT = fastdelegate::FastDelegate0<bool>;
 extern	ENGINE_API xr_list<LOADING_EVENT>		g_loading_events;
 
 class ENGINE_API CLoadScreenRenderer :public pureRender

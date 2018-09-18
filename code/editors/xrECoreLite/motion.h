@@ -43,7 +43,7 @@ struct st_BoneMotion
 
 	void        SetName(LPCSTR nm) { name = nm; }
 };
-// vector по костям
+// vector РїРѕ РєРѕСЃС‚СЏРј
 using BoneMotionVec = xr_vector<st_BoneMotion>;
 using BoneMotionIt = BoneVec::iterator;
 

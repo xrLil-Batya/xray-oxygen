@@ -1,9 +1,9 @@
 --[[ ------------------------------------------------------------------------------------------------
  File       : _s_storage.script
  Description: alternative storage
- Copyright  : 2012-2014 © FrostyTech
- Author     : Viнt@rь
- Last edit  : 14.06.2018 (Viнt@rь)
+ Copyright  : 2012-2014 В© FrostyTech
+ Author     : ViРЅt@rСЊ
+ Last edit  : 14.06.2018 (ViРЅt@rСЊ)
 --]] ------------------------------------------------------------------------------------------------
 --/											Variables
 --]] ------------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ function CreateStorageObject()
 	ReleaseStorageObject()
 	if not storage_object then
 		storage_object = alife():create("custom_storage", vector(), 0, 0)
-		-- никогда не выйдет в онлайн
+		-- РЅРёРєРѕРіРґР° РЅРµ РІС‹Р№РґРµС‚ РІ РѕРЅР»Р°Р№РЅ
     	storage_object:can_switch_online(false)
     	storage_object:can_switch_offline(true)
     end

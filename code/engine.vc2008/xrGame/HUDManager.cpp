@@ -10,14 +10,14 @@
 #include "Car.h"
 #include "UIGame.h"
 #include "UICursor.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "game_cl_base.h"
 
 #ifdef	DEBUG
 #include "phdebug.h"
 #endif
 
-extern CUIGame* GameUI() { return HUD().GetGameUI(); }
+extern CUIGame* GameUI() { return g_hud ? HUD().GetGameUI() : nullptr; }
 
 CFontManager::CFontManager()
 {
@@ -35,6 +35,7 @@ CFontManager::CFontManager()
 	m_all_fonts.push_back(&pFontGraffiti50Russian);
 	m_all_fonts.push_back(&pFontLetterica25);
 	m_all_fonts.push_back(&pFontElectron18);
+	m_all_fonts.push_back(&pFontRoboto16);
 	m_all_fonts.push_back(&pFontStat);
 
 	for (CGameFont** it : m_all_fonts)
@@ -57,6 +58,7 @@ void CFontManager::InitializeFonts()
 	InitializeFont(pFontGraffiti50Russian, "ui_font_graff_50");
 	InitializeFont(pFontLetterica25, "ui_font_letter_25");
 	InitializeFont(pFontElectron18, "ui_font_electron_18");
+	InitializeFont(pFontRoboto16, "ui_font_roboto_16");
 	InitializeFont(pFontStat, "stat_font", CGameFont::fsDeviceIndependent);
 	pFontStat->SetInterval(0.75f, 1.0f);
 }

@@ -19,7 +19,7 @@ class CUIDialogWnd;
 class CLevelChanger : public CGameObject, public Feel::Touch
 {
 private:
-	typedef	CGameObject	inherited;
+	using inherited =	CGameObject;
 
 	GameGraph::_GRAPH_ID	m_game_vertex_id;
 	u32						m_level_vertex_id;
@@ -57,7 +57,7 @@ public:
 class CChangeLevelWnd : public CUIDialogWnd
 {
 	CUIMessageBox* m_messageBox;
-	typedef CUIDialogWnd inherited;
+	using inherited = CUIDialogWnd;
 	void OnCancel();
 	void OnOk();
 

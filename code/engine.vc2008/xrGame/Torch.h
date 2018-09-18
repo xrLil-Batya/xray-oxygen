@@ -21,7 +21,10 @@ protected:
 	float			m_delta_h;
 	Fvector2		m_prev_hp;
 	bool			m_switched_on;
+
+    //#REFACTOR: Not used anymore, input was cutout long ago
 	int				torch_mode;
+
 	float           range;
 	float           range_o;
 	float           range_2;

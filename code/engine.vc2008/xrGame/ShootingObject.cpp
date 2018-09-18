@@ -15,7 +15,7 @@
 #include "level.h"
 #include "level_bullet_manager.h"
 
-CShootingObject::CShootingObject(void)
+CShootingObject::CShootingObject()
 {
 	fShotTimeCounter							= 0;
  	fOneShotTime						= 0;
@@ -39,18 +39,18 @@ CShootingObject::CShootingObject(void)
 	
 	bWorking						= false;
 
-	light_render					= 0;
+	light_render					= nullptr;
 
 	reinit();
 
 }
-CShootingObject::~CShootingObject(void)
+CShootingObject::~CShootingObject()
 {
 }
 
 void CShootingObject::reinit()
 {
-	m_pFlameParticles	= NULL;
+	m_pFlameParticles	= nullptr;
 }
 
 void CShootingObject::Load	(LPCSTR section)
@@ -79,7 +79,6 @@ void CShootingObject::Light_Create		()
 	//lights
 	light_render = ::Render->light_create();
 	light_render->set_shadow(true);
-	light_render->set_flare(false);
 }
 
 void CShootingObject::Light_Destroy		()
@@ -200,7 +199,7 @@ void CShootingObject::StartParticles (CParticlesObject*& pParticles, LPCSTR part
 {
 	if(!particles_name) return;
 
-	if(pParticles != NULL) 
+	if(pParticles != nullptr) 
 	{
 		UpdateParticles(pParticles, pos, vel);
 		return;
@@ -298,7 +297,7 @@ void CShootingObject::OnShellDrop	(const Fvector& play_pos,
 void CShootingObject::StartSmokeParticles	(const Fvector& play_pos,
 											const Fvector& parent_vel)
 {
-	CParticlesObject* pSmokeParticles = NULL;
+	CParticlesObject* pSmokeParticles = nullptr;
 	StartParticles(pSmokeParticles, *m_sSmokeParticlesCurrent, play_pos, parent_vel, true);
 }
 
@@ -424,7 +423,7 @@ void CShootingObject::FireEnd	()
 
 void CShootingObject::StartShotParticles	()
 {
-	CParticlesObject* pSmokeParticles = NULL;
+	CParticlesObject* pSmokeParticles = nullptr;
 	StartParticles(pSmokeParticles, *m_sShotParticles, 
 					m_vCurrentShootPos, m_vCurrentShootDir, true);
 }

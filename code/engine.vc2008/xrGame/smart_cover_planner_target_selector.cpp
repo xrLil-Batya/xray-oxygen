@@ -17,6 +17,7 @@
 #include "smart_cover_evaluators.h"
 #include "ai/stalker/ai_stalker.h"
 #include "smart_cover_default_behaviour_planner.hpp"
+#include "script_callback_ex.h"
 
 using namespace StalkerDecisionSpace;
 using smart_cover::target_selector;
@@ -24,11 +25,13 @@ using smart_cover::animation_planner;
 using smart_cover::target_provider;
 using smart_cover::default_behaviour_planner;
 
+target_selector::~target_selector()
+{
+}
+
 void target_selector::setup				(animation_planner *object, CPropertyStorage *storage)
 {
 	inherited::setup		(object, storage);
-//	inherited_planner::m_use_log = true;
-//	inherited_action::m_use_log = true;
 	CActionPlanner::m_storage.set_property(eWorldPropertyLookedOut, m_random.randF() <= .7f ? true : false);
 	CActionPlanner::m_storage.set_property(eWorldPropertyLoopholeTooMuchTimeFiring, false);
 	add_evaluators			();
@@ -39,9 +42,9 @@ void target_selector::setup				(animation_planner *object, CPropertyStorage *sto
 	set_target_state		(target);
 }
 
-void target_selector::callback			(callback_type const &callback)
+void target_selector::callback(callback_type const &callback)
 {
-	m_script_callback		= callback;
+	m_script_callback = callback;
 }
 
 void target_selector::update			()
@@ -51,7 +54,7 @@ void target_selector::update			()
 	//. when script callback is setup
 	inherited::update		();
 
-	m_script_callback		(object().object().lua_game_object());
+	m_script_callback(object().object().lua_game_object());
 }
 
 void target_selector::add_evaluators	()
@@ -59,7 +62,7 @@ void target_selector::add_evaluators	()
 	add_evaluator			(
 		eWorldPropertyLookedOut,
 		xr_new<CPropertyEvaluatorMember<animation_planner> >(
-			(CPropertyStorage*)0,
+			(CPropertyStorage*)nullptr,
 			eWorldPropertyLookedOut,
 			true,
 			true,
@@ -69,7 +72,7 @@ void target_selector::add_evaluators	()
 	add_evaluator			(
 		eWorldPropertyLoopholeTooMuchTimeFiring,
 		xr_new<CPropertyEvaluatorMember<animation_planner> >(
-			(CPropertyStorage*)0,
+			(CPropertyStorage*)nullptr,
 			eWorldPropertyLoopholeTooMuchTimeFiring,
 			true,
 			true,

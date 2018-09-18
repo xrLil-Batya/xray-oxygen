@@ -69,7 +69,7 @@ void CGameFont::Initialize(LPCSTR cShader, LPCSTR cTextureName)
 		xr_strcpy(cTexture, sizeof(cTexture), cTextureName);
 
 	uFlags &= ~fsValid;
-	vTS.set(1.f, 1.f); // обязательно !!!
+	vTS.set(1, 1); // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ !!!
 
 	eCurrentAlignment = alLeft;
 	vInterval.set(1.f, 1.f);
@@ -136,28 +136,29 @@ void CGameFont::Initialize(LPCSTR cShader, LPCSTR cTextureName)
 	else
 		if (ini->section_exist("symbol_coords"))
 		{
-			float d = 0.0f;
-			//.		if(ini->section_exist("width_correction"))
-			//.			d						= ini->r_float("width_correction", "value");
-
 			fHeight = ini->r_float("symbol_coords", "height");
-			for (u32 i = 0; i < nNumChars; i++) {
+			for (u32 i = 0; i < nNumChars; i++) 
+			{
 				xr_sprintf(buf, sizeof(buf), "%03d", i);
 				Fvector v = ini->r_fvector3("symbol_coords", buf);
-				TCMap[i].set(v.x, v.y, v[2] - v[0] + d);
+				TCMap[i].set(v.x, v.y, v[2] - v[0]);
 			}
 		}
-		else {
-			if (ini->section_exist("char widths")) {
+		else 
+		{
+			if (ini->section_exist("char widths")) 
+			{
 				fHeight = ini->r_float("char widths", "height");
 				int cpl = 16;
-				for (u32 i = 0; i < nNumChars; i++) {
+				for (u32 i = 0; i < nNumChars; i++) 
+				{
 					xr_sprintf(buf, sizeof(buf), "%d", i);
 					float w = ini->r_float("char widths", buf);
 					TCMap[i].set((i%cpl)*fHeight, (i / cpl)*fHeight, w);
 				}
 			}
-			else {
+			else 
+			{
 				R_ASSERT(ini->section_exist("font_size"));
 				fHeight = ini->r_float("font_size", "height");
 				float width = ini->r_float("font_size", "width");

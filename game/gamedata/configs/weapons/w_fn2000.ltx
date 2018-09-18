@@ -30,29 +30,29 @@ hit_power					= 0.32, 0.32, 0.32, 0.32
 hit_impulse					= 100
 hit_type						= fire_wound
 fire_distance           = 200
-bullet_speed         	= 550 ;начальная скорость пули
+bullet_speed         	= 550 ;РЅР°С‡Р°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РїСѓР»Рё
 rpm                     = 670
 rpm_empty_click         = 200
 
 grenade_vel 			= 32 ;76
 
-use_aim_bullet          = false                ;Поддерживается ли первая суппер пуля
+use_aim_bullet          = false                ;РџРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ Р»Рё РїРµСЂРІР°СЏ СЃСѓРїРїРµСЂ РїСѓР»СЏ
 time_to_aim             = 1.0
 
 hud                      = wpn_fn2000_hud
 
-misfire_probability        = 0.005 ;вероятность осечки при максимальном износе  !!!old - now not working
-;изношенность, при которой появляется шанс осечки
+misfire_probability        = 0.005 ;РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РѕСЃРµС‡РєРё РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РёР·РЅРѕСЃРµ  !!!old - now not working
+;РёР·РЅРѕС€РµРЅРЅРѕСЃС‚СЊ, РїСЂРё РєРѕС‚РѕСЂРѕР№ РїРѕСЏРІР»СЏРµС‚СЃСЏ С€Р°РЅСЃ РѕСЃРµС‡РєРё
 misfire_start_condition		= 0.6
-;изношеность при которой шанс осечки становится константным
+;РёР·РЅРѕС€РµРЅРѕСЃС‚СЊ РїСЂРё РєРѕС‚РѕСЂРѕР№ С€Р°РЅСЃ РѕСЃРµС‡РєРё СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РєРѕРЅСЃС‚Р°РЅС‚РЅС‹Рј
 misfire_end_condition		= 0.1
-;шанс осечки при изношености больше чем misfireStartCondition
+;С€Р°РЅСЃ РѕСЃРµС‡РєРё РїСЂРё РёР·РЅРѕС€РµРЅРѕСЃС‚Рё Р±РѕР»СЊС€Рµ С‡РµРј misfireStartCondition
 misfire_start_prob	     	= 0.005
-;шанс осечки при изношености больше чем misfireEndCondition
+;С€Р°РЅСЃ РѕСЃРµС‡РєРё РїСЂРё РёР·РЅРѕС€РµРЅРѕСЃС‚Рё Р±РѕР»СЊС€Рµ С‡РµРј misfireEndCondition
 misfire_end_prob	     	= 0.06
-;увеличение изношености при одиночном выстреле
+;СѓРІРµР»РёС‡РµРЅРёРµ РёР·РЅРѕС€РµРЅРѕСЃС‚Рё РїСЂРё РѕРґРёРЅРѕС‡РЅРѕРј РІС‹СЃС‚СЂРµР»Рµ
 condition_shot_dec      	= 0.001
-;увеличение изношености при выстреле очередью
+;СѓРІРµР»РёС‡РµРЅРёРµ РёР·РЅРѕС€РµРЅРѕСЃС‚Рё РїСЂРё РІС‹СЃС‚СЂРµР»Рµ РѕС‡РµСЂРµРґСЊСЋ
 condition_queue_shot_dec	= 0.001
 
 ammo_elapsed           	= 30
@@ -64,20 +64,20 @@ grenade_class			= ammo_m209
 fire_modes              = 1, 3, -1
 launch_speed         	= 32
 
-;-дисперсия-----------------------------------------------------------------------------
-;базовая дисперсия
-fire_dispersion_base       = 0.2    ;угол (в градусах) базовой дисперсии оружия (оружия зажатого в тисках)
+;-РґРёСЃРїРµСЂСЃРёСЏ-----------------------------------------------------------------------------
+;Р±Р°Р·РѕРІР°СЏ РґРёСЃРїРµСЂСЃРёСЏ
+fire_dispersion_base       = 0.2    ;СѓРіРѕР» (РІ РіСЂР°РґСѓСЃР°С…) Р±Р°Р·РѕРІРѕР№ РґРёСЃРїРµСЂСЃРёРё РѕСЂСѓР¶РёСЏ (РѕСЂСѓР¶РёСЏ Р·Р°Р¶Р°С‚РѕРіРѕ РІ С‚РёСЃРєР°С…)
 control_inertion_factor    = 1.2f
 crosshair_inertion			= 6.30
 
-;отдача
+;РѕС‚РґР°С‡Р°
 cam_return 				= 0
-cam_relax_speed         = 5    		;скорость возврата в исходное положение
+cam_relax_speed         = 5    		;СЃРєРѕСЂРѕСЃС‚СЊ РІРѕР·РІСЂР°С‚Р° РІ РёСЃС…РѕРґРЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ
 cam_relax_speed_ai     	= 120.75
-cam_dispersion          = 0.3 		;увеличения угла (в градусах) с каждым выстрелом
-cam_dispersion_inc      = 0.15 		;увеличениe cam_dispersion с каждым выстрелом
-cam_dispersion_frac     = 1.0 		;ствол будет подыматься на cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
-cam_max_angle           = 50.0		;максимальный угол отдачи
+cam_dispersion          = 0.3 		;СѓРІРµР»РёС‡РµРЅРёСЏ СѓРіР»Р° (РІ РіСЂР°РґСѓСЃР°С…) СЃ РєР°Р¶РґС‹Рј РІС‹СЃС‚СЂРµР»РѕРј
+cam_dispersion_inc      = 0.15 		;СѓРІРµР»РёС‡РµРЅРёe cam_dispersion СЃ РєР°Р¶РґС‹Рј РІС‹СЃС‚СЂРµР»РѕРј
+cam_dispersion_frac     = 1.0 		;СЃС‚РІРѕР» Р±СѓРґРµС‚ РїРѕРґС‹РјР°С‚СЊСЃСЏ РЅР° cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
+cam_max_angle           = 50.0		;РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СѓРіРѕР» РѕС‚РґР°С‡Рё
 cam_max_angle_horz      = 50.0      ;(degree) maximum shot horizontal degree
 cam_step_angle_horz     = 1.2 		;(degree) size of step camera moved in horizontal position while shooting
 
@@ -96,15 +96,15 @@ zoom_cam_max_angle           = 50.0
 zoom_cam_max_angle_horz      = 50.0
 zoom_cam_step_angle_horz     = 1.0
 
-fire_dispersion_condition_factor = 11        ;увеличение дисперсии в процентах при максимальном износе
+fire_dispersion_condition_factor = 11        ;СѓРІРµР»РёС‡РµРЅРёРµ РґРёСЃРїРµСЂСЃРёРё РІ РїСЂРѕС†РµРЅС‚Р°С… РїСЂРё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РёР·РЅРѕСЃРµ
 
 ;---DOF-------------------------------------------------------------------------
 ;zoom_dof					= 0.5, 1.0, 180
 reload_dof					= 0.0, 0.5, 5, 2
 ;-------------------------------------------------------------------------------
 
-holder_range_modifier   = 1.85            ; во сколько раз увеличивается eye_range
-holder_fov_modifier     = 1.0              ; во сколько раз увеличивается eye_fov
+holder_range_modifier   = 1.85            ; РІРѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ eye_range
+holder_fov_modifier     = 1.0              ; РІРѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ eye_fov
 
 min_radius              = 50
 max_radius              = 150
@@ -197,7 +197,7 @@ grenade_launcher_name   = wpn_addon_grenade_launcher
 grenade_launcher_x      = 95
 grenade_launcher_y      = 25
 
-;звуки
+;Р·РІСѓРєРё
 snd_draw                = weapons\generic_draw
 snd_holster             = weapons\generic_holster
 snd_shoot         		= weapons\n_fn2000_shot
@@ -297,7 +297,7 @@ gl_hud_offset_pos_16x9				= -0.124500,-0.084000,0.000000
 gl_hud_offset_rot_16x9				= -0.170000,0.030000,0.000000
 
 ;-----------------------------------------------------------------------------
-; Уникальнvе
+; РЈРЅРёРєР°Р»СЊРЅvРµ
 ;-----------------------------------------------------------------------------
 
 [wpn_fn2000_nimble]:wpn_fn2000

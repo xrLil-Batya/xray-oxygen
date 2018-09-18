@@ -13,6 +13,7 @@
 #include "level.h"
 #include "gameobject.h"
 #include "script_game_object.h"
+#include "script_callback_ex.h"
 
 CClientSpawnManager::~CClientSpawnManager	()
 {
@@ -115,7 +116,7 @@ void CClientSpawnManager::callback			(CSpawnCallback &spawn_callback, CObject *o
 		spawn_callback.m_object_callback	(object);
 
 	CGameObject						*game_object = smart_cast<CGameObject*>(object);
-	CScriptGameObject				*script_game_object = !game_object ? 0 : game_object->lua_game_object();
+	CScriptGameObject				*script_game_object = !game_object ? nullptr : game_object->lua_game_object();
 	(spawn_callback.m_callback)	(object->ID(),script_game_object);
 }
 
@@ -143,11 +144,11 @@ const CClientSpawnManager::CSpawnCallback *CClientSpawnManager::callback(ALife::
 {
 	REQUEST_REGISTRY::const_iterator	I = m_registry.find(requested_id);
 	if (I == m_registry.end())
-		return						(0);
+		return						(nullptr);
 
 	REQUESTED_REGISTRY::const_iterator	i = (*I).second.find(requesting_id);
 	if (i == (*I).second.end())
-		return						(0);
+		return						(nullptr);
 
 	return							(&(*i).second);
 }

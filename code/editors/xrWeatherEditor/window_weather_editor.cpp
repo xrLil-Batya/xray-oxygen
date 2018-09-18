@@ -362,35 +362,37 @@ Void window_weather_editor::CopyButton_Click						(Object^ sender, EventArgs^ e)
 	System::Windows::Forms::Clipboard::SetText(to_string(buffer));
 }
 
-Void window_weather_editor::PasteCurrentButton_Click				(Object^ sender, EventArgs^ e)
+Void window_weather_editor::PasteCurrentButton_Click(Object^ sender, EventArgs^ e)
 {
-	char*							buffer = to_string(Clipboard::GetText());
+	char*buffer = to_string(Clipboard::GetText());
 	if (buffer)
-		m_engine.paste_current_time_frame	(buffer, (strlen(buffer) + 1)*sizeof(char));
-	free							(buffer);
+		m_engine.paste_current_time_frame(buffer, u32((strlen(buffer) + 1) * sizeof(char)));
+	free(buffer);
 
-	fill_frames						(m_engine.weather());
-	current->Refresh				();
+	fill_frames(m_engine.weather());
+	current->Refresh();
 }
 
-Void window_weather_editor::PasteTargetButton_Click					(Object^ sender, EventArgs^ e)
+Void window_weather_editor::PasteTargetButton_Click(Object^ sender, EventArgs^ e)
 {
-	char*							buffer = to_string(Clipboard::GetText());
+	char* buffer = to_string(Clipboard::GetText());
 	if (buffer)
-		m_engine.paste_target_time_frame(buffer, (strlen(buffer) + 1)*sizeof(char));
-	free							(buffer);
+	{
+		m_engine.paste_target_time_frame(buffer, u32((strlen(buffer) + 1) * sizeof(char)));
+	}
+	free(buffer);
 
-	fill_frames						(m_engine.weather());
-	target->Refresh					();
+	fill_frames(m_engine.weather());
+	target->Refresh();
 }
 
-Void window_weather_editor::CreateFromButton_Click					(Object^ sender, EventArgs^ e)
+Void window_weather_editor::CreateFromButton_Click(Object^ sender, EventArgs^ e)
 {
 	char							buffer[4096];
 	if (!m_engine.save_time_frame(buffer, sizeof(buffer)))
 		return;
 
-	m_engine.add_time_frame			(buffer, (strlen(buffer) + 1)*sizeof(char));
+	m_engine.add_time_frame			(buffer, u32((strlen(buffer) + 1)*sizeof(char)));
 	
 	fill_frames						(m_engine.weather());
 	current->Refresh				();

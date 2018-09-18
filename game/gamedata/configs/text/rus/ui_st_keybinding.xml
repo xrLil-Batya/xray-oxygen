@@ -124,7 +124,7 @@
 		<text>Шаг вправо</text>
 	</string>
 	<string id="kb_scores">
-		<text>Очки</text>
+		<text>Текущее задание</text>
 	</string>
 	<string id="kb_screenshot">
 		<text>Скриншот</text>
@@ -204,4 +204,22 @@
 	<string id="kb_switch_horn">
 		<text>Гудок</text>
 	</string>	
+	<string id="kb_grp_developer">
+		<text>Разработчик</text>
+	</string>
+	<string id="kb_dev_noclip">
+		<text>Режим призрака</text>
+	</string>
+	<string id="kb_dev_action1">
+		<text>Действие разработчика 1</text>
+	</string>
+	<string id="kb_dev_action2">
+		<text>Действие разработчика 2</text>
+	</string>
+	<string id="kb_dev_action3">
+		<text>Действие разработчика 3</text>
+	</string>
+	<string id="kb_dev_action4">
+		<text>Действие разработчика 4</text>
+	</string>
 </string_table>

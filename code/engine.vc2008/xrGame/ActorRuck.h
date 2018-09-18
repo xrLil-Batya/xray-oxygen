@@ -4,7 +4,7 @@
 class CActorRuck : public CInventoryItemObject 
 {
 private:
-	typedef CInventoryItemObject inherited;
+	using inherited = CInventoryItemObject;
 	float m_additional_weight;
 
 public:

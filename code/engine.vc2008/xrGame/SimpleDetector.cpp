@@ -5,17 +5,17 @@
 #include "../xrEngine/LightAnimLibrary.h"
 #include "player_hud.h"
 
-CSimpleDetector::CSimpleDetector(void)
+CSimpleDetector::CSimpleDetector()
 {
 	m_artefacts.m_af_rank = 1;
 }
 
-CSimpleDetector::~CSimpleDetector(void)
+CSimpleDetector::~CSimpleDetector()
 {}
 
 void CSimpleDetector::CreateUI()
 {
-	R_ASSERT(NULL==m_ui);
+	R_ASSERT(nullptr==m_ui);
 	m_ui				= xr_new<CUIArtefactDetectorSimple>();
 	ui().construct		(this);
 }
@@ -27,7 +27,7 @@ CUIArtefactDetectorSimple&  CSimpleDetector::ui()
 
 void CSimpleDetector::UpdateAf()
 {
-	if(m_artefacts.m_ItemInfos.size()==0)	return;
+	if(m_artefacts.m_ItemInfos.empty())	return;
 
 	CAfList::ItemsMapIt it_b	= m_artefacts.m_ItemInfos.begin();
 	CAfList::ItemsMapIt it_e	= m_artefacts.m_ItemInfos.end();
@@ -64,7 +64,7 @@ void CSimpleDetector::UpdateAf()
 	float fRelPow			= (dist/m_fAfDetectRadius);
 	clamp					(fRelPow, 0.f, 1.f);
 
-	//îïðåäåëèòü òåêóùóþ ÷àñòîòó ñðàáàòûâàíèÿ ñèãíàëà
+	//Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»Ð¸Ñ‚ÑŒ Ñ‚ÐµÐºÑƒÑ‰ÑƒÑŽ Ñ‡Ð°ÑÑ‚Ð¾Ñ‚Ñƒ ÑÑ€Ð°Ð±Ð°Ñ‚Ñ‹Ð²Ð°Ð½Ð¸Ñ ÑÐ¸Ð³Ð½Ð°Ð»Ð°
 	af_info.cur_period = item_type->freq.x + 
 		(item_type->freq.y - item_type->freq.x) * (fRelPow*fRelPow);
 

@@ -34,9 +34,6 @@ namespace XRay.SdkControls
             e.Graphics.FillPolygon(brush, arrowPoints);
         }
 
-        public ContextMenu Menu
-        {
-            get { return menu; }
-        }
+        public ContextMenu Menu => menu;
     }
 }

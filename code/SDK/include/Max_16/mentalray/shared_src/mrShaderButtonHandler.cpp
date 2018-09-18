@@ -14,7 +14,7 @@
   modified:	
 
 
-© 2003 Autodesk
+Â© 2003 Autodesk
 ==============================================================================*/
 
 #include "mrShaderButtonHandler.h"

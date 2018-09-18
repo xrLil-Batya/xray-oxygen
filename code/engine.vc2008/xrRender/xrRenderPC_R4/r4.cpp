@@ -13,12 +13,13 @@
 
 #include "../xrRenderDX10/3DFluid/dx103DFluidManager.h"
 #include "../xrRender/ShaderResourceTraits.h"
+#include "../xrRender/dxGlowManager.h"
 
 #include "D3DX10Core.h"
 
 ENGINE_API BOOL isGraphicDebugging;
 
-CRender										RImplementation;
+CRender RImplementation;
 
 template<UINT TNameLength>
 IC void SetDebugObjectName(ID3D11DeviceChild* resource, const char(&name)[TNameLength])
@@ -27,22 +28,6 @@ IC void SetDebugObjectName(ID3D11DeviceChild* resource, const char(&name)[TNameL
 }
 
 //////////////////////////////////////////////////////////////////////////
-class CGlow				: public IRender_Glow
-{
-public:
-	bool				bActive;
-public:
-	CGlow() : bActive(false)								{ }
-	virtual void set_active		(bool b)					{ bActive = b; }
-	virtual bool get_active		()							{ return bActive; }
-	virtual void set_position	(const Fvector& P)			{ }
-	virtual void set_direction	(const Fvector& D)			{ }
-	virtual void set_radius		(float R)					{ }
-	virtual void set_texture	(LPCSTR name)				{ }
-	virtual void set_color		(const Fcolor& C)			{ }
-	virtual void set_color		(float r, float g, float b) { }
-};
-
 float		r_dtex_range		= 50.f;
 //////////////////////////////////////////////////////////////////////////
 ShaderElement* CRender::rimp_select_sh_dynamic	(dxRender_Visual *pVisual,
@@ -172,12 +157,7 @@ void					CRender::create()
 
 	VERIFY2(o.mrt && (HW.Caps.raster.dwInstructions >= 256), "Hardware doesn't meet minimum feature-level");
 	/////////////////////////////////////////////
-	if (o.mrtmixdepth)		
-		o.albedo_wo = FALSE;
-	else if (o.fp16_blend)	
-		o.albedo_wo = FALSE;
-	else					
-		o.albedo_wo = TRUE;
+	o.albedo_wo = FALSE;
 	/////////////////////////////////////////////
 	// gloss
 	char* g					= strstr(Core.Params, "-gloss ");
@@ -209,10 +189,10 @@ void					CRender::create()
 	o.disasm				= (strstr(Core.Params, "-disasm")) ? TRUE : FALSE;
 	o.forceskinw			= (strstr(Core.Params, "-skinw")) ? TRUE : FALSE;
 	/////////////////////////////////////////////
-	o.ssao_blur_on			= ps_r_ssao_flags.test(R_FLAG_SSAO_BLUR) && (ps_r_ssao != 0);
-	o.ssao_opt_data			= ps_r_ssao_flags.test(R_FLAG_SSAO_OPT_DATA) && (ps_r_ssao != 0);
-	o.ssao_half_data		= ps_r_ssao_flags.test(R_FLAG_SSAO_HALF_DATA) && o.ssao_opt_data && (ps_r_ssao != 0);
-	o.ssao_hbao				= ps_r_ssao_flags.test(R_FLAG_SSAO_HBAO) && (ps_r_ssao != 0);
+	o.ssao_blur_on			= ps_r_ssao_flags.test(R_FLAG_SSAO_BLUR);
+	o.ssao_opt_data			= ps_r_ssao_flags.test(R_FLAG_SSAO_OPT_DATA);
+	o.ssao_half_data		= ps_r_ssao_flags.test(R_FLAG_SSAO_HALF_DATA) && o.ssao_opt_data;
+	o.ssao_hbao				= ps_r_ssao_flags.test(R_FLAG_SSAO_HBAO);
 	/////////////////////////////////////////////
 	//	TODO: fix hbao shader to allow to perform per-subsample effect!
 	o.hbao_vectorized = false;
@@ -231,9 +211,8 @@ void					CRender::create()
 	o.dx10_msaa				= !!ps_r3_msaa;
 	o.dx10_msaa_samples		= (1 << ps_r3_msaa);
 	/////////////////////////////////////////////
-	//subshafts options
-	o.sunshaft_mrmnwar		= ps_r_sunshafts_mode == SS_MANOWAR_SS;
-	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
+	// sunshafts options
+//	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 	/////////////////////////////////////////////
 	o.dx10_msaa_opt			= ps_r3_flags.test(R3_FLAG_MSAA_OPT);
 	o.dx10_msaa_opt			= o.dx10_msaa_opt && o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1)
@@ -307,7 +286,6 @@ void					CRender::create()
 	/////////////////////////////////////////////
 	c_lmaterial			= "L_material";
 	c_sbase				= "s_base";
-	m_bMakeAsyncSS		= false;
 	/////////////////////////////////////////////
 	Target				= xr_new<CRenderTarget>();	// Main target
 	Models				= xr_new<CModelPool>();
@@ -332,7 +310,6 @@ void					CRender::create()
 
 void CRender::destroy()
 {
-	m_bMakeAsyncSS				= false;
 	FluidManager.Destroy		();
 	::PortalTraverser.destroy	();
 	/////////////////////////////////////////////
@@ -352,19 +329,18 @@ void CRender::reset_begin()
 	// Update incremental shadowmap-visibility solver
 	// BUG-ID: 10646
 	{
-		u32 it = 0;
 		/////////////////////////////////////////////
-		for (it=0; it<Lights_LastFrame.size(); it++)	
+		for (u32 i = 0; i<Lights_LastFrame.size(); i++)
 		{
-			if (!Lights_LastFrame[it])	
+			if (!Lights_LastFrame[i])	
 				continue;
 			try 
 			{
-				Lights_LastFrame[it]->svis.resetoccq ()	;
+				Lights_LastFrame[i]->svis.resetoccq ()	;
 			} 
 			catch (...)
 			{
-				Msg	("! Failed to flush-OCCq on light [%d] %X",it,*(u32*)(&Lights_LastFrame[it]));
+				Msg	("! Failed to flush-OCCq on light [%d] %X",i,*(u32*)(&Lights_LastFrame[i]));
 			}
 		}
 		/////////////////////////////////////////////
@@ -459,7 +435,7 @@ void CRender::model_Delete(IRenderVisual* &V, BOOL bDiscard)
 { 
 	dxRender_Visual* pVisual = (dxRender_Visual*)V;
 	Models->Delete(pVisual, bDiscard);
-	V = 0;
+	V = nullptr;
 }
 
 IRender_DetailModel* CRender::model_CreateDM(IReader*	F)
@@ -476,7 +452,7 @@ void CRender::model_Delete(IRender_DetailModel* & F)
 		CDetail*	D	= (CDetail*)F;
 		D->Unload		();
 		xr_delete		(D);
-		F				= NULL;
+		F				= nullptr;
 	}
 }
 IRenderVisual*			CRender::model_CreatePE			(LPCSTR name)	
@@ -596,7 +572,6 @@ void					CRender::rmNormal			()
 	D3D_VIEWPORT VP		= {0,0,(float)T->get_width(),(float)T->get_height(),0,1.f };
 
 	HW.pContext->RSSetViewports(1, &VP);
-	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 
 void					CRender::ResizeWindowProc(WORD h, WORD w)
@@ -608,14 +583,20 @@ void					CRender::ResizeWindowProc(WORD h, WORD w)
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CRender::CRender()
-:m_bFirstFrameAfterReset(false)
+CRender::CRender() :m_bFirstFrameAfterReset(false)
 {
 	init_cacades();
 }
 
 CRender::~CRender()
 {
+	for (FSlideWindowItem it : SWIs)
+	{
+		xr_free(it.sw);
+		it.sw = nullptr;
+		it.count = 0;
+	}
+	SWIs.clear();
 }
 
 #include "../../xrEngine/GameFont.h"
@@ -661,7 +642,7 @@ static HRESULT create_shader	(LPCSTR name,
 {
 	result->sh			= ShaderTypeTraits<T>::CreateHWShader(buffer, buffer_size);
 
-	ID3DShaderReflection *pReflection = 0;
+	ID3DShaderReflection *pReflection = nullptr;
 
 	HRESULT const _hr	= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
 	if (SUCCEEDED(_hr) && pReflection)
@@ -683,7 +664,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 	if (pTarget[0] == 'p') {
 		SPS* sps_result = (SPS*)result;
 #ifdef USE_DX11
-		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, 0, &sps_result->ps);
+		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, nullptr, &sps_result->ps);
 #else // #ifdef USE_DX11
 		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, &sps_result->ps);
 #endif // #ifdef USE_DX11
@@ -698,7 +679,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
         xr_sprintf(PsDebugName, "%s", name);
         SetDebugObjectName(sps_result->ps, PsDebugName);
 
-		ID3DShaderReflection *pReflection = 0;
+		ID3DShaderReflection *pReflection = nullptr;
 
 #ifdef USE_DX11
 		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
@@ -724,7 +705,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 	else if (pTarget[0] == 'v') {
 		SVS* svs_result = (SVS*)result;
 #ifdef USE_DX11
-		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, 0, &svs_result->vs);
+		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, nullptr, &svs_result->vs);
 #else // #ifdef USE_DX11
 		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, &svs_result->vs);
 #endif // #ifdef USE_DX11
@@ -739,7 +720,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
         xr_sprintf(VsDebugName, "%s", name);
         SetDebugObjectName(svs_result->vs, VsDebugName);
 
-		ID3DShaderReflection *pReflection = 0;
+		ID3DShaderReflection *pReflection = nullptr;
 #ifdef USE_DX11
 		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
 #else
@@ -775,7 +756,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 	else if (pTarget[0] == 'g') {
 		SGS* sgs_result = (SGS*)result;
 #ifdef USE_DX11
-		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, 0, &sgs_result->gs);
+		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, nullptr, &sgs_result->gs);
 #else // USE_DX10
 		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, &sgs_result->gs);
 #endif
@@ -791,7 +772,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
         xr_sprintf(GsDebugName, "%s", name);
         SetDebugObjectName(sgs_result->gs, GsDebugName);
 
-		ID3DShaderReflection *pReflection = 0;
+		ID3DShaderReflection *pReflection = nullptr;
 
 #ifdef USE_DX11
 		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
@@ -825,8 +806,8 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 
 	if ( disasm )
 	{
-		ID3DBlob*		disasm	= 0;
-		D3DDisassemble	(buffer, buffer_size, FALSE, 0, &disasm );
+		ID3DBlob*		disasm	= nullptr;
+		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &disasm );
 		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), FALSE, 0, &disasm );
 		string_path		dname;
 		strconcat		(sizeof(dname),dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
@@ -848,10 +829,10 @@ public:
 		string_path				pname;
 		strconcat				(sizeof(pname),pname,::Render->getShaderPath(),pFileName);
 		IReader*		R		= FS.r_open	("$game_shaders$",pname);
-		if (0==R)				{
+		if (nullptr==R)				{
 			// possibly in shared directory or somewhere else - open directly
 			R					= FS.r_open	("$game_shaders$",pFileName);
-			if (0==R)			return			E_FAIL;
+			if (nullptr==R)			return			E_FAIL;
 		}
 
 		// duplicate and zero-terminate
@@ -886,8 +867,8 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 
 	char	sh_name[MAX_PATH] = "";
 
-	for (u32 i = 0; i<m_ShaderOptions.size(); ++i)
-		defines[def_it++] = m_ShaderOptions[i];
+	for (auto ShaderOption : m_ShaderOptions)
+		defines[def_it++] = ShaderOption;
 
 	u32		len = xr_strlen(sh_name);
 	// options
@@ -1270,8 +1251,8 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
     sh_name[len] = 0;
 
 	// finish
-	defines[def_it].Name			=	0;
-	defines[def_it].Definition		=	0;
+	defines[def_it].Name			=	nullptr;
+	defines[def_it].Definition		=	nullptr;
 	def_it							++; 
 
 	// 
@@ -1342,8 +1323,8 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	if (FAILED(_result))
 	{
 		includer					Includer;
-		LPD3DBLOB					pShaderBuf	= NULL;
-		LPD3DBLOB					pErrorBuf	= NULL;
+		LPD3DBLOB					pShaderBuf	= nullptr;
+		LPD3DBLOB					pErrorBuf	= nullptr;
 		_result						= 
 			D3DCompile( 
 				pSrcData, 
@@ -1441,4 +1422,9 @@ static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const 
 
 	return						false;
 #endif // #ifdef DEBUG
+}
+
+void CRender::Screenshot(ScreenshotMode mode, LPCSTR name)
+{
+	ScreenshotManager.MakeScreenshot(mode, name);
 }

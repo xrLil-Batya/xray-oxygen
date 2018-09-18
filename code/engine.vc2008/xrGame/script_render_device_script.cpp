@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "script_render_device.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 bool is_device_paused(CRenderDevice* d)

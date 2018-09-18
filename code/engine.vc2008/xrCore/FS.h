@@ -268,7 +268,7 @@ public:
         if (m_last_pos != 0) {
             impl().seek(m_last_pos);
             dwType = r_u32();
-            dwSize = r_u32();
+            dwSize = r_u32(); //-V656
 
             if ((dwType & (~CFS_CompressMark)) == ID) {
                 success = true;
@@ -279,7 +279,7 @@ public:
             rewind();
             while (!eof()) {
                 dwType = r_u32();
-                dwSize = r_u32();
+                dwSize = r_u32(); //-V656
                 if ((dwType & (~CFS_CompressMark)) == ID) {
                     success = true;
                     break;

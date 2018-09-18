@@ -74,11 +74,9 @@ unsigned int query_processor_info(processor_info* pinfo)
 	*reinterpret_cast<int*>(pinfo->vendor + 4) = data[0][3];
 	*reinterpret_cast<int*>(pinfo->vendor + 8) = data[0][2];
 
-	/////////////////////////////////////////////////
-	//#TODO: Delete string of vendor
-	pinfo->isAmd = std::strncmp(pinfo->vendor, "AuthenticAMD", 12) == 0;
-	pinfo->isIntel = !pinfo->isAmd;
-	/////////////////////////////////////////////////
+	pinfo->isAmd = strncmp(pinfo->vendor, "AuthenticAMD", 12) == NULL;
+	pinfo->isIntel = strncmp(pinfo->vendor, "GenuineIntel", 12) == NULL;
+	pinfo->isVia = strncmp(pinfo->vendor, "CentaurHauls", 12) == NULL;		// It's really commons?
 
 	// load bitset with flags for function 0x00000001
 	if (nIds >= 1)
@@ -154,10 +152,8 @@ unsigned int query_processor_info(processor_info* pinfo)
 	if (f_1_ECX[5])
 		pinfo->features |= static_cast<unsigned>(CPUFeature::VMX);
 	if (f_1_EDX[24])
-		pinfo->features |= static_cast<unsigned>(CPUFeature::FXSR);
-
-	if (f_1_EDX[24])
 		pinfo->features |= static_cast<unsigned>(CPUFeature::XFSR);
+
 	// SSE
 	if (f_1_EDX[25])
 		pinfo->features |= static_cast<unsigned>(CPUFeature::SSE);

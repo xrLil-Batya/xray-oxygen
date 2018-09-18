@@ -27,7 +27,7 @@
 #	include "alife_simulator.h"
 #	include "alife_registry_container.h"
 #	include "ef_primary.h"
-#	include "string_table.h"
+#	include "..\xrEngine\string_table.h"
 #	include "alife_online_offline_group_brain.h"
 #	include "alife_simulator.h"
 #	include "alife_object_registry.h"
@@ -37,19 +37,19 @@
 #	include "location_manager.h"
 #endif
 
-void setup_location_types_section(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile const * ini, LPCSTR section)
+void setup_location_types_section(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile* ini, LPCSTR section)
 {
 	VERIFY3							(ini->section_exist(section),"cannot open section",section);
 	GameGraph::STerrainPlace		terrain_mask;
 	terrain_mask.tMask.resize		(GameGraph::LOCATION_TYPE_COUNT);
 
 	CInifile::Sect& sect			= ini->r_section(section);
-	CInifile::SectCIt				I = sect.Data.begin();
-	CInifile::SectCIt				E = sect.Data.end();
-	for ( ; I != E; ++I) {
-		LPCSTR						S = *(*I).first;
-		string16					I;
-		u32							N = _GetItemCount(S);
+
+	for (CInifile::Item Itm : sect.Data) 
+	{
+		LPCSTR S = Itm.first.c_str();
+		string16 I;
+		u32 N = _GetItemCount(S);
 		
 		if (N != GameGraph::LOCATION_TYPE_COUNT)
 			continue;
@@ -93,7 +93,7 @@ void setup_location_types_line(GameGraph::TERRAIN_VECTOR &m_vertex_types, LPCSTR
 	}
 }
 
-void setup_location_types(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile const * ini, LPCSTR string)
+void setup_location_types(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile * ini, LPCSTR string)
 {
 	m_vertex_types.clear			();
 	if (ini->section_exist(string) && ini->line_count(string))
@@ -103,31 +103,24 @@ void setup_location_types(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile co
 }
 
 //////////////////////////////////////////////////////////////////////////
-
-//âîçìîæíîå îòêëîíåíèå îò çíà÷åíèÿ ðåïóòàöèè
-//çàäàíîãî â ïðîôèëå è äëÿ êîíêðåòíîãî ïåðñîíàæà
+//Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾Ðµ Ð¾Ñ‚ÐºÐ»Ð¾Ð½ÐµÐ½Ð¸Ðµ Ð¾Ñ‚ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ Ñ€ÐµÐ¿ÑƒÑ‚Ð°Ñ†Ð¸Ð¸
+//Ð·Ð°Ð´Ð°Ð½Ð¾Ð³Ð¾ Ð² Ð¿Ñ€Ð¾Ñ„Ð¸Ð»Ðµ Ð¸ Ð´Ð»Ñ ÐºÐ¾Ð½ÐºÑ€ÐµÑ‚Ð½Ð¾Ð³Ð¾ Ð¿ÐµÑ€ÑÐ¾Ð½Ð°Ð¶Ð°
 #define REPUTATION_DELTA	10
 #define RANK_DELTA			10
 
-
-//////////////////////////////////////////////////////////////////////////
-
 using namespace ALife;
-
 ////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeTraderAbstract
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeTraderAbstract::CSE_ALifeTraderAbstract(LPCSTR caSection)
 {
-//	m_fCumulativeItemMass		= 0.f;
-//	m_iCumulativeItemVolume		= 0;
 	m_dwMoney					= 0;
 	if (pSettings->line_exist(caSection, "money"))
 		m_dwMoney 				= pSettings->r_u32(caSection, "money");
 	m_fMaxItemMass				= pSettings->r_float(caSection, "max_item_mass");
 
 	m_sCharacterProfile			= READ_IF_EXISTS(pSettings,r_string,caSection,"character_profile","default");
-	m_SpecificCharacter			= NULL;
+	m_SpecificCharacter			= nullptr;
 
 #ifdef XRGAME_EXPORTS
 	m_community_index			= NO_COMMUNITY_INDEX;
@@ -138,17 +131,16 @@ CSE_ALifeTraderAbstract::CSE_ALifeTraderAbstract(LPCSTR caSection)
 	m_deadbody_closed			= false;
 
 	m_trader_flags.zero			();
-	m_trader_flags.set			(eTraderFlagInfiniteAmmo,FALSE);
+	m_trader_flags.set			(eTraderFlagInfiniteAmmo,false);
 }
 
 CSE_Abstract *CSE_ALifeTraderAbstract::init	()
 {
-	string4096					S;
-	//xr_sprintf						(S,"%s\r\n[game_info]\r\nname_id = default\r\n",!*base()->m_ini_string ? "" : *base()->m_ini_string);
-	xr_sprintf						(S,"%s\r\n[game_info]\r\n",!*base()->m_ini_string ? "" : *base()->m_ini_string);
-	base()->m_ini_string		= S;
+	string4096 S;
+	xr_sprintf(S,"%s\r\n[game_info]\r\n",!*base()->m_ini_string ? "" : *base()->m_ini_string);
+	base()->m_ini_string = S;
 
-	return						(base());
+	return (base());
 }
 
 CSE_ALifeTraderAbstract::~CSE_ALifeTraderAbstract()
@@ -166,7 +158,6 @@ void CSE_ALifeTraderAbstract::STATE_Write	(NET_Packet &tNetPacket)
 	tNetPacket.w_stringZ		(s);
 #endif
 	tNetPacket.w_u32			(m_trader_flags.get());
-//	tNetPacket.w_s32			(m_iCharacterProfile);
 	tNetPacket.w_stringZ		(m_sCharacterProfile);
 
 #ifdef XRGAME_EXPORTS
@@ -207,7 +198,7 @@ void CSE_ALifeTraderAbstract::STATE_Read	(NET_Packet &tNetPacket, u16 size)
 			if(tmp!=-1)
 				m_SpecificCharacter = CSpecificCharacter::IndexToId(tmp);
 			else
-				m_SpecificCharacter = NULL;
+				m_SpecificCharacter = nullptr;
 
 #else
 			m_SpecificCharacter = NULL;
@@ -259,7 +250,7 @@ void CSE_ALifeTraderAbstract::STATE_Read	(NET_Packet &tNetPacket, u16 size)
 
 void CSE_ALifeTraderAbstract::OnChangeProfile(PropValue* sender)
 {
-	m_SpecificCharacter = NULL;
+	m_SpecificCharacter = nullptr;
 #ifndef AI_COMPILER
 	specific_character();
 #endif
@@ -270,8 +261,7 @@ void CSE_ALifeTraderAbstract::OnChangeProfile(PropValue* sender)
 
 
 #ifdef XRGAME_EXPORTS
-
-#include "game_base_space.h"
+#include "../xrGame/game_base.h"
 #include "Level.h"
 
 #endif
@@ -284,16 +274,16 @@ shared_str CSE_ALifeTraderAbstract::specific_character()
 	CCharacterInfo char_info;
 	char_info.Load(character_profile());
 
-	//ïðîôèëü çàäàí èíäåêñîì
+	//Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ Ð·Ð°Ð´Ð°Ð½ Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð¼
 	if(char_info.data()->m_CharacterId.size() )
 	{
 		set_specific_character(char_info.data()->m_CharacterId);
 		return m_SpecificCharacter;
 	}
-	//ïðîôèëü çàäàí øàáëîíîì
+	//Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ Ð·Ð°Ð´Ð°Ð½ ÑˆÐ°Ð±Ð»Ð¾Ð½Ð¾Ð¼
 	//
-	//ïðîâåðÿåì âñå èíôîðìàöèè î ïåðñîíàæå, çàïîìèíàåì ïîäõîäÿùèå,
-	//à ïîòîì äåëàåì ñëó÷àéíûé âûáîð
+	//Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÐ¼ Ð²ÑÐµ Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ð¸ Ð¾ Ð¿ÐµÑ€ÑÐ¾Ð½Ð°Ð¶Ðµ, Ð·Ð°Ð¿Ð¾Ð¼Ð¸Ð½Ð°ÐµÐ¼ Ð¿Ð¾Ð´Ñ…Ð¾Ð´ÑÑ‰Ð¸Ðµ,
+	//Ð° Ð¿Ð¾Ñ‚Ð¾Ð¼ Ð´ÐµÐ»Ð°ÐµÐ¼ ÑÐ»ÑƒÑ‡Ð°Ð¹Ð½Ñ‹Ð¹ Ð²Ñ‹Ð±Ð¾Ñ€
 	else
 	{	
 		m_CheckedCharacters.clear();
@@ -308,9 +298,9 @@ shared_str CSE_ALifeTraderAbstract::specific_character()
 			if(spec_char.data()->m_bNoRandom) continue;
 
 			bool class_found = false;
-			for(std::size_t j=0; j<spec_char.data()->m_Classes.size(); j++)
+			for(const auto & Classe : spec_char.data()->m_Classes)
 			{
-				if(char_info.data()->m_Class == spec_char.data()->m_Classes[j])
+				if(char_info.data()->m_Class == Classe)
 				{
 					class_found = true;
 					break;
@@ -318,7 +308,7 @@ shared_str CSE_ALifeTraderAbstract::specific_character()
 			}
 			if(!char_info.data()->m_Class.size() || class_found)
 			{
-				//çàïîìíèòü ïïîäõîäÿùèé ïåðñîíàæ ñ ôëàæêîì m_bDefaultForCommunity
+				//Ð·Ð°Ð¿Ð¾Ð¼Ð½Ð¸Ñ‚ÑŒ Ð¿Ð¿Ð¾Ð´Ñ…Ð¾Ð´ÑÑ‰Ð¸Ð¹ Ð¿ÐµÑ€ÑÐ¾Ð½Ð°Ð¶ Ñ Ñ„Ð»Ð°Ð¶ÐºÐ¾Ð¼ m_bDefaultForCommunity
 				if(spec_char.data()->m_bDefaultForCommunity)
 					m_DefaultCharacters.push_back(id);
 
@@ -327,11 +317,11 @@ shared_str CSE_ALifeTraderAbstract::specific_character()
 					if(char_info.data()->m_Reputation == NO_REPUTATION || _abs(spec_char.Reputation() - char_info.data()->m_Reputation)<REPUTATION_DELTA)
 					{
 #ifdef XRGAME_EXPORTS
-						int* count = NULL;
+						int* count = nullptr;
 						if(ai().get_alife())
 							count = ai().alife().registry(specific_characters).object(id, true);
-						//åñëè èíäåêñ åùå íå áûë èñïîëüçîâàí
-						if(NULL == count)
+						//ÐµÑÐ»Ð¸ Ð¸Ð½Ð´ÐµÐºÑ ÐµÑ‰Ðµ Ð½Ðµ Ð±Ñ‹Ð» Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½
+						if(nullptr == count)
 #endif
 							m_CheckedCharacters.push_back(id);
 					}
@@ -358,7 +348,7 @@ void CSE_ALifeTraderAbstract::set_specific_character	(shared_str new_spec_char)
 	R_ASSERT(new_spec_char.size());
 
 #ifdef XRGAME_EXPORTS
-	//óáðàòü ïðåäûäóùèé íîìåð èç ðååñòðà
+	//ÑƒÐ±Ñ€Ð°Ñ‚ÑŒ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰Ð¸Ð¹ Ð½Ð¾Ð¼ÐµÑ€ Ð¸Ð· Ñ€ÐµÐµÑÑ‚Ñ€Ð°
 	if (m_SpecificCharacter.size() && ai().get_alife())
 			ai().alife().registry(specific_characters).remove(m_SpecificCharacter, true);
 #endif
@@ -367,7 +357,7 @@ void CSE_ALifeTraderAbstract::set_specific_character	(shared_str new_spec_char)
 #ifdef XRGAME_EXPORTS
 	if(ai().get_alife())
 	{
-		//çàïîìíèòü, òî ÷òî ìû èñïîëüçîâàëè èíäåêñ
+		//Ð·Ð°Ð¿Ð¾Ð¼Ð½Ð¸Ñ‚ÑŒ, Ñ‚Ð¾ Ñ‡Ñ‚Ð¾ Ð¼Ñ‹ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð»Ð¸ Ð¸Ð½Ð´ÐµÐºÑ
 		int a = 1;
 		ai().alife().registry(specific_characters).add(m_SpecificCharacter, a, true);
 	}
@@ -442,7 +432,7 @@ void CSE_ALifeTraderAbstract::set_specific_character	(shared_str new_spec_char)
 		if(min_m!=max_m)	m_dwMoney += ::Random.randI(max_m-min_m);
 	}
 #else
-	//â ðåäàêòîðå ñïåöèôè÷åñêèé ïðîôèëü îñòàâëÿåì íå çàïîëíåíûì
+	//Ð² Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¾Ñ€Ðµ ÑÐ¿ÐµÑ†Ð¸Ñ„Ð¸Ñ‡ÐµÑÐºÐ¸Ð¹ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð½Ðµ Ð·Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ñ‹Ð¼
 	m_SpecificCharacter = NULL;
 #endif
 }
@@ -462,7 +452,7 @@ shared_str CSE_ALifeTraderAbstract::character_profile()
 
 #ifdef XRGAME_EXPORTS
 
-//äëÿ ðàáîòû ñ relation system
+//Ð´Ð»Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ñ relation system
 u16								CSE_ALifeTraderAbstract::object_id		() const
 {
 	return base()->ID;
@@ -615,7 +605,6 @@ void CSE_ALifeTrader::FillProps				(LPCSTR _pref, PropItemVec& items)
 CSE_ALifeCustomZone::CSE_ALifeCustomZone	(LPCSTR caSection) : CSE_ALifeSpaceRestrictor(caSection)
 {
 	m_owner_id					= u32(-1);
-//	m_maxPower					= pSettings->r_float(caSection,"min_start_power");
 	if (pSettings->line_exist(caSection,"hit_type"))
 		m_tHitType				= ALife::g_tfString2HitType(pSettings->r_string(caSection,"hit_type"));
 	else
@@ -696,7 +685,7 @@ CSE_ALifeAnomalousZone::CSE_ALifeAnomalousZone(LPCSTR caSection) : CSE_ALifeCust
 {
 	m_offline_interactive_radius	= 30.f;
 	m_artefact_spawn_count			= 32;
-	m_spawn_flags.set				(flSpawnDestroyOnSpawn,TRUE);
+	m_spawn_flags.set				(flSpawnDestroyOnSpawn,true);
 }
 
 CSE_Abstract *CSE_ALifeAnomalousZone::init			()
@@ -1155,7 +1144,7 @@ CSE_ALifeMonsterAbstract::CSE_ALifeMonsterAbstract(LPCSTR caSection)	: CSE_ALife
 
 	m_tpBestDetector			= this;
 
-	m_brain						= 0;
+	m_brain						= nullptr;
 	m_smart_terrain_id			= 0xffff;
 	m_task_reached				= false;
 
@@ -1509,8 +1498,8 @@ CSE_ALifeCreatureCrow::CSE_ALifeCreatureCrow(LPCSTR caSection) : CSE_ALifeCreatu
 {
 	if (pSettings->section_exist(caSection) && pSettings->line_exist(caSection,"visual"))
 		set_visual				(pSettings->r_string(caSection,"visual"));
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifeCreatureCrow::~CSE_ALifeCreatureCrow()
@@ -1561,8 +1550,8 @@ CSE_ALifeCreaturePhantom::CSE_ALifeCreaturePhantom(LPCSTR caSection) : CSE_ALife
 {
 	if (pSettings->section_exist(caSection) && pSettings->line_exist(caSection,"visual"))
 		set_visual				(pSettings->r_string(caSection,"visual"));
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifeCreaturePhantom::~CSE_ALifeCreaturePhantom()
@@ -2039,7 +2028,7 @@ void CSE_ALifeHumanAbstract::FillProps		(LPCSTR pref, PropItemVec& items)
 //////////////////////////////////////////////////////////////////////////
 CSE_ALifeHumanStalker::CSE_ALifeHumanStalker(LPCSTR caSection) : CSE_ALifeHumanAbstract(caSection),CSE_PHSkeleton(caSection)
 {
-	m_trader_flags.set			(eTraderFlagInfiniteAmmo,TRUE);
+	m_trader_flags.set			(eTraderFlagInfiniteAmmo,true);
 	m_start_dialog				= "";
 }
 
@@ -2120,7 +2109,7 @@ CSE_Abstract *CSE_ALifeOnlineOfflineGroup::init				()
 #endif
 
 	VERIFY						(m_members.empty());
-	m_flags.set					(flUsedAI_Locations,FALSE);
+	m_flags.set					(flUsedAI_Locations,false);
 
 	return						(this);
 }
@@ -2138,7 +2127,7 @@ CALifeSmartTerrainTask* CSE_ALifeOnlineOfflineGroup::get_current_task	()
 {
 	NODEFAULT;
 #ifdef DEBUG
-	return 0;
+	return nullptr;
 #endif // #ifdef DEBUG
 }
 #endif // #ifdef XRGAME_EXPORTS

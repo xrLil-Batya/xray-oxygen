@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "weaponsvd.h"
 
-CWeaponSVD::CWeaponSVD(void)
+CWeaponSVD::CWeaponSVD()
 {}
 
-CWeaponSVD::~CWeaponSVD(void)
+CWeaponSVD::~CWeaponSVD()
 {}
 
 void CWeaponSVD::switch2_Fire	()
@@ -28,6 +28,8 @@ void CWeaponSVD::OnAnimationEnd(u32 state)
 	inherited::OnAnimationEnd(state);
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

@@ -12,7 +12,7 @@
 #include "cameralook.h"
 #include "camerafirsteye.h"
 #include "script_entity_action.h"
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "level.h"
 #include "CarWeapon.h"
@@ -87,7 +87,7 @@ bool CCar::bfAssignObject(CScriptEntityAction *tpEntityAction)
 		}
 		return		(false);
 	}
-	SCarLight* light=NULL;
+	SCarLight* light=nullptr;
 	if (m_lights.findLight(l_sBoneID,light)) {
 		switch(l_tObjectAction.m_tGoalType) {
 			case MonsterSpace::eObjectActionActivate : {
@@ -240,33 +240,11 @@ void	CCar::OnKeyboardHold(int cmd)
 
 	switch(cmd)
 	{
-	case kCAM_ZOOM_IN: 
-	case kCAM_ZOOM_OUT: 
 	case kUP:
 	case kDOWN:
 	case kLEFT:
 	case kRIGHT:	active_camera->Move(cmd);	break;
-/*
-	case kFWD:		
-		if (ectFree==active_camera->tag)	active_camera->Move(kUP);
-		else								m_vCamDeltaHP.y += active_camera->rot_speed.y*Device.fTimeDelta;
-		break;
-	case kBACK:		
-		if (ectFree==active_camera->tag)	active_camera->Move(kDOWN);
-		else								m_vCamDeltaHP.y -= active_camera->rot_speed.y*Device.fTimeDelta;
-		break;
-	case kL_STRAFE: 
-		if (ectFree==active_camera->tag)	active_camera->Move(kLEFT);
-		else								m_vCamDeltaHP.x -= active_camera->rot_speed.x*Device.fTimeDelta;
-		break;
-	case kR_STRAFE: 
-		if (ectFree==active_camera->tag)	active_camera->Move(kRIGHT);
-		else								m_vCamDeltaHP.x += active_camera->rot_speed.x*Device.fTimeDelta;
-		break;
-*/
 	}
-//	clamp(m_vCamDeltaHP.x, -PI_DIV_2,	PI_DIV_2);
-//	clamp(m_vCamDeltaHP.y, active_camera->lim_pitch.x,	active_camera->lim_pitch.y);
 }
 void CCar::Action(u16 id, u32 flags)
 {
@@ -325,14 +303,14 @@ bool CCar::isObjectVisible			(CScriptGameObject* O_)
 		float ray_length = from_point.distance_to(to_point);
 
 
-		BOOL res = Level().ObjectSpace.RayTest(from_point, dir_to_object, ray_length, collide::rqtStatic, NULL, NULL);
+		BOOL res = Level().ObjectSpace.RayTest(from_point, dir_to_object, ray_length, collide::rqtStatic, nullptr, nullptr);
 		return (0==res);
 	}
 }
 
 bool CCar::HasWeapon()
 {
-	return (m_car_weapon != NULL);
+	return (m_car_weapon != nullptr);
 }
 
 Fvector CCar::CurrentVel()

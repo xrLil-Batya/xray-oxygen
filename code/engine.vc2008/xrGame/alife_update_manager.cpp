@@ -124,14 +124,14 @@ void CALifeUpdateManager::shedule_Update	(u32 dt)
 
 	if (!m_first_time) 
 	{
-		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CALifeUpdateManager::update));
+		Device.seqParallel.emplace_back(this, &CALifeUpdateManager::update);
 		return;
 	}
 
 	m_first_time					= false;
 
 	START_PROFILE("ALife/update")
-	update							();
+	Device.seqParallel.emplace_back(this, &CALifeUpdateManager::update);
 	STOP_PROFILE
 }
 
@@ -175,7 +175,7 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 	u32								holder_safe_level_vertex_id = u32(-1);
 	Fvector							holder_safe_position = Fvector().set(flt_max,flt_max,flt_max);
 	Fvector							holder_safe_angles = Fvector().set(flt_max,flt_max,flt_max);
-	CSE_ALifeObject					*holder = 0;
+	CSE_ALifeObject					*holder = nullptr;
 
 	net_packet.r					(&graph().actor()->m_tGraphID,sizeof(graph().actor()->m_tGraphID));
 	net_packet.r					(&graph().actor()->m_tNodeID,sizeof(graph().actor()->m_tNodeID));
@@ -270,13 +270,14 @@ void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_onl
 
 	xr_strcpy								(g_last_saved_game,game_name);
 
-	if (new_only || !CALifeStorageManager::load(game_name)) {
+	if (new_only || !CALifeStorageManager::load(game_name)) 
+	{
 		R_ASSERT3						(new_only || no_assert && xr_strlen(game_name),"Cannot find the specified saved game ",game_name);
 		new_game						(game_name);
 	}
 
 	if(g_pGameLevel)
-		Level().OnAlifeSimulatorLoaded();
+		Level().ResetLevel();
 
 #ifdef DEBUG
 	Msg									("* Loading alife simulator is successfully completed (%7.3f Mb)",float(Memory.mem_usage() - memory_usage)/1048576.0);
@@ -339,7 +340,7 @@ void CALifeUpdateManager::jump_to_level			(LPCSTR level_name) const
 	const CGameGraph::SLevel			&level = ai().game_graph().header().level(level_name);
 	GameGraph::_GRAPH_ID				dest = GameGraph::_GRAPH_ID(-1);
 	GraphEngineSpace::CGameLevelParams	evaluator(level.id());
-	bool								failed = !ai().graph_engine().search(ai().game_graph(),graph().actor()->m_tGraphID,GameGraph::_GRAPH_ID(-1),0,evaluator);
+	bool								failed = !ai().graph_engine().search(ai().game_graph(),graph().actor()->m_tGraphID,GameGraph::_GRAPH_ID(-1),nullptr,evaluator);
 	if (failed) {
 #ifndef MASTER_GOLD
 		Msg								("! Cannot build path via game graph from the current level to the level %s!",level_name);

@@ -56,7 +56,7 @@ CPHCommander::~CPHCommander()
 }
 void CPHCommander::clear	()
 {
-	while (m_calls.size())	{
+	while (!m_calls.empty())	{
 		remove_call(m_calls.end()-1);
 	}
 }

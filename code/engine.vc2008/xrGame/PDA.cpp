@@ -11,12 +11,13 @@
 #include "specific_character.h"
 #include "alife_registry_wrappers.h"
 #include "../xrServerEntities/script_engine.h"
+#include "ai/monsters/basemonster/base_monster.h"
 
 
-CPda::CPda(void)						
+CPda::CPda()						
 {										
 	m_idOriginalOwner		= u16(-1);
-	m_SpecificChracterOwner = NULL;
+	m_SpecificChracterOwner = nullptr;
 	TurnOff					();
 }
 
@@ -89,6 +90,9 @@ void CPda::feel_touch_new(CObject* O)
 {
 	if ( CInventoryOwner* pNewContactInvOwner = smart_cast<CInventoryOwner*>(O) )
 	{
+        // Don't display monsters as PDA contacts, they don't have PDA
+        if (smart_cast<CBaseMonster*>(O) != nullptr) return;
+
 		CInventoryOwner* pOwner	=	smart_cast<CInventoryOwner*>( H_Parent() );VERIFY(pOwner);
 		pOwner->NewPdaContact		(pNewContactInvOwner);
 	}
@@ -130,7 +134,7 @@ void CPda::OnH_A_Chield()
 {
 	VERIFY(IsOff());
 
-	//включить PDA только если оно находится у первого владельца
+	//РІРєР»СЋС‡РёС‚СЊ PDA С‚РѕР»СЊРєРѕ РµСЃР»Рё РѕРЅРѕ РЅР°С…РѕРґРёС‚СЃСЏ Сѓ РїРµСЂРІРѕРіРѕ РІР»Р°РґРµР»СЊС†Р°
 	if(H_Parent()->ID() == m_idOriginalOwner){
 		TurnOn					();
 		if(m_sFullName.empty()){
@@ -146,7 +150,7 @@ void CPda::OnH_B_Independent(bool just_before_destroy)
 {
 	inherited::OnH_B_Independent(just_before_destroy);
 	
-	//выключить
+	//РІС‹РєР»СЋС‡РёС‚СЊ
 	TurnOff();
 }
 

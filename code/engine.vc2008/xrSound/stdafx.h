@@ -33,6 +33,7 @@
 #define ENGINE_API
 
 #include "../xrcore/xr_resource.h"
+#include "XAudioCore.h"
 
 #ifdef _EDITOR    
 # 	include "ETools.h"
