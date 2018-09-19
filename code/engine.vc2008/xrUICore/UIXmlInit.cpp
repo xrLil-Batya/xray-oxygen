@@ -9,17 +9,20 @@
 #include "UIProgressBar.h"
 #include "UIProgressShape.h"
 #include "UITabControl.h"
+#include "UIXmlInit.h"
 #include "UIAnimatedStatic.h"
-#include "uixmlinit.h"
 #include "UIListBox.h"
 #include "UIComboBox.h"
 #include "UITrackBar.h"
 #include "UIHint.h"
+#include "UIScrollView.h"
+#include "UICustomEdit.h"
+#include "UIEditBox.h"
 //#include "game_base.h"
 
 #include "UITextureMaster.h"
-#include "UIDragDropListEx.h"
-#include "UIDragDropReferenceList.h"
+//#include "UIDragDropListEx.h"
+//#include "UIDragDropReferenceList.h"
 #include "UILines.h"
 
 #define DI_FONT_NAME			"di"
@@ -460,7 +463,7 @@ bool CUIXmlInit::InitSound(CXml& xml_doc, LPCSTR path, int index, CUI3tButton* p
 
 	return true;
 }
-
+#if 0
 bool CUIXmlInit::InitDragDropListEx(CXml& xml_doc, LPCSTR path, int index, CUIDragDropListEx* pWnd)
 {
 	R_ASSERT4(xml_doc.NavigateToNode(path, index), "XML node not found", path, xml_doc.m_xml_file_name);
@@ -520,9 +523,8 @@ bool CUIXmlInit::InitDragDropListEx(CXml& xml_doc, LPCSTR path, int index, CUIDr
 
 	return true;
 }
-
-bool CUIXmlInit::InitProgressBar(CXml& xml_doc, LPCSTR path,
-	int index, CUIProgressBar* pWnd)
+#endif
+bool CUIXmlInit::InitProgressBar(CXml& xml_doc, LPCSTR path, int index, CUIProgressBar* pWnd)
 {
 	R_ASSERT4(xml_doc.NavigateToNode(path, index), "XML node not found", path, xml_doc.m_xml_file_name);
 

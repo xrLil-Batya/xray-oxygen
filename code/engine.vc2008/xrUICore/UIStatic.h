@@ -7,9 +7,9 @@
 
 class CUIFrameWindow;
 class CLAItem;
-class CUIXml;
 
-struct lanim_cont{
+struct lanim_cont
+{
 	CLAItem*				m_lanim;
 	float					m_lanim_start_time;
 	float					m_lanim_delay_time;
@@ -17,7 +17,8 @@ struct lanim_cont{
 	void					set_defaults		();
 };
 
-struct lanim_cont_xf :public lanim_cont{
+struct lanim_cont_xf :public lanim_cont
+{
 	Fvector2				m_origSize;
 	void					set_defaults		();
 };

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "..\xrUICore\IGameUI.h"
 #include "../xrEngine/CustomHUD.h"
 #include "HitMarker.h"
 

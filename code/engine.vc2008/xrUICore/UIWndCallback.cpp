@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "UIWndCallback.h"
 #include "UIWindow.h"
-#include "../xrServerEntities/object_broker.h"
 #include "../xrGame/callback_info.h"
 
 bool event_comparer::operator ()(SCallbackInfo* i)
@@ -21,7 +20,7 @@ CUIWndCallback::~CUIWndCallback()
 	m_callbacks.clear();
 }
 
-void CUIWndCallback::Register			(CUIWindow* pChild)
+void CUIWndCallback::Register(CUIWindow* pChild)
 {
 	pChild->SetMessageTarget( dynamic_cast<CUIWindow*>(this) );
 }

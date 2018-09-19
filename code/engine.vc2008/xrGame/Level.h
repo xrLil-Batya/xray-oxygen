@@ -201,8 +201,8 @@ public:
 			shared_str			version					() const { return map_data.m_map_version; } //this method can be used ONLY from CCC_ChangeGameType
 	
 	//возвращает время в милисекундах относительно начала игры
-	ALife::_TIME_ID		GetStartGameTime		();
-	ALife::_TIME_ID		GetGameTime				();
+	virtual u64			GetStartGameTime		();
+	virtual u64			GetGameTime				();
 	//возвращает время для энвайронмента в милисекундах относительно начала игры
 	ALife::_TIME_ID		GetEnvironmentGameTime	();
 	//игровое время в отформатированном виде

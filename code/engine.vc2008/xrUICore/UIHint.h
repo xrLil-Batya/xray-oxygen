@@ -4,16 +4,13 @@
 //	Author		: Evgeniy Sokolov
 //	Description : UI Hint (for UIHintWindow) window class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef	UI_HINT_H_INCLUDED
-#define UI_HINT_H_INCLUDED
-
+#pragma once
 #include "UIWindow.h"
 
 class CUIStatic;
 class CUITextWnd;
 class CUIFrameWindow;
-class CUIXml;
+class CXml;
 
 class UIHint : public CUIWindow
 {
@@ -78,5 +75,3 @@ private:
 	shared_str		m_hint_text;
 	bool			m_enable;
 };// class UIHintWindow
-
-#endif // UI_HINT_H_INCLUDED

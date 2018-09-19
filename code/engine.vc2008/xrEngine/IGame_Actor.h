@@ -1,7 +1,7 @@
 #pragma once
 #include "xr_object.h"
 
-class CIActor
+class ENGINE_API CIActor
 {
 public:
 	virtual ~CIActor() = default;
@@ -13,6 +13,8 @@ public:
 	virtual void IR_OnKeyboardRelease(int dik) {}
 	virtual void IR_OnKeyboardHold(int dik) {}
 	virtual void IR_OnMouseWheel(int direction) {}
+
+	virtual BOOL g_Alive() { return false; }
 public:
 
 	//режим подбирания предметов
@@ -22,4 +24,6 @@ public:
 	u32	mstate_old;
 	u32	mstate_real;
 };
-extern CIActor* g_actor;
+
+extern ENGINE_API CIActor* g_actor;
+extern ENGINE_API int psActorSleepTime;

@@ -85,6 +85,7 @@ public:
 	virtual								~CActor				();
 
 	virtual BOOL						AlwaysTheCrow				()						{ return TRUE; }
+	virtual BOOL						g_Alive						()						{ return inherited::g_Alive(); }
 
 	virtual CAttachmentOwner*			cast_attachment_owner		()						{return this;}
 	virtual CInventoryOwner*			cast_inventory_owner		()						{return this;}

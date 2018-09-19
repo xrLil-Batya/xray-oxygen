@@ -50,7 +50,7 @@
 #include "Inventory.h"
 #include "GamePersistent.h"
 
-string_path		g_last_saved_game;
+ENGINE_API extern string_path g_last_saved_game;
 
 #ifdef DEBUG
 	extern float air_resistance_epsilon;

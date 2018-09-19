@@ -4,6 +4,7 @@
 #include "UI3tButton.h"
 #include "UIEditBox.h"
 #include "../xrEngine/string_table.h"
+#include "UIXmlInit.h"
 
 CUIMessageBox::CUIMessageBox()
 {
@@ -40,7 +41,7 @@ bool CUIMessageBox::OnMouseAction(float x, float y, EUIMessages mouse_action)
 void CUIMessageBox::InitMessageBox(LPCSTR box_template)
 {
 	Clear							();
-	CUIXml							uiXml;
+	CXml							uiXml;
 	uiXml.Load						(CONFIG_PATH, UI_PATH, "message_box.xml");
 	CUIXmlInit						xml_init;
 

@@ -15,7 +15,6 @@
 #include "UI3tButton.h"
 #include "UICheckButton.h"
 #include "UIHint.h"
-#include "UIDragDropReferenceList.h"
 #include "UIEditBox.h"
 
 CUIStatic* UIHelper::CreateStatic(CXml& xml, LPCSTR ui_path, CUIWindow* parent)
@@ -113,20 +112,18 @@ UIHint* UIHelper::CreateHint(CXml& xml, LPCSTR ui_path)
 	return ui;
 }
 
-CUIDragDropListEx* UIHelper::CreateDragDropListEx(CXml& xml, LPCSTR ui_path, CUIWindow* parent)
+CUIWindow* UIHelper::CreateDragDropListEx(CXml& xml, LPCSTR ui_path, CUIWindow* parent, CUIWindow* pDragDrop)
 {
-	CUIDragDropListEx* ui = xr_new<CUIDragDropListEx>();
-	parent->AttachChild(ui);
-	ui->SetAutoDelete(true);
-	CUIXmlInit::InitDragDropListEx(xml, ui_path, 0, ui);
-	return ui;
+	parent->AttachChild(pDragDrop);
+	pDragDrop->SetAutoDelete(true);
+//	CUIXmlInit::InitDragDropListEx(xml, ui_path, 0, pDragDrop);
+	return pDragDrop;
 }
 
-CUIDragDropReferenceList* UIHelper::CreateDragDropReferenceList(CXml& xml, LPCSTR ui_path, CUIWindow* parent)
+CUIWindow* UIHelper::CreateDragDropReferenceList(CXml& xml, LPCSTR ui_path, CUIWindow* parent, CUIWindow* pDragDrop)
 {
-	CUIDragDropReferenceList* ui = xr_new<CUIDragDropReferenceList>();
-	parent->AttachChild(ui);
-	ui->SetAutoDelete(true);
-	CUIXmlInit::InitDragDropListEx(xml, ui_path, 0, ui);
-	return ui;
+	parent->AttachChild(pDragDrop);
+	pDragDrop->SetAutoDelete(true);
+//	CUIXmlInit::InitDragDropListEx(xml, ui_path, 0, pDragDrop);
+	return pDragDrop;
 }

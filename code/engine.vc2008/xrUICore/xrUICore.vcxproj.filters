@@ -9,9 +9,50 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Файлы ресурсов">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Boxes">
+      <UniqueIdentifier>{fceb5d15-7dfc-4a77-abcd-e4c764ffe5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spin">
+      <UniqueIdentifier>{0b57412b-c657-4898-b87b-f8aa609f0f9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainMenu">
+      <UniqueIdentifier>{771bac8b-7650-4ffa-a04d-87b98a5b24fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scroll">
+      <UniqueIdentifier>{3ae3ce4c-60dd-487b-8fac-3965738b769e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buttons">
+      <UniqueIdentifier>{c1922175-82b8-4a3e-a39b-402a8985b454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buttons\Tab">
+      <UniqueIdentifier>{2f652ff6-12d7-42a3-9ac0-07517ed1a3ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buttons\Radio">
+      <UniqueIdentifier>{f6e1a489-2125-4326-9948-7441e9777f93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Boxes\List">
+      <UniqueIdentifier>{7618cec0-4861-4d28-96e6-0f89eda7c3b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Statics">
+      <UniqueIdentifier>{3a5c2a2b-4112-4a20-8390-c1040abb63eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Boxes\Edit">
+      <UniqueIdentifier>{d322e252-5813-463d-aa9d-8e4248fdc5ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Boxes\Messages">
+      <UniqueIdentifier>{25702855-a332-46e6-a3d6-edf2504c535d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Boxes\Combo">
+      <UniqueIdentifier>{f97047d3-8b8b-419b-9810-4982de471c07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Statics\IB">
+      <UniqueIdentifier>{984455c5-a539-4820-b302-9bfb5d17fa55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Statics\Classic">
+      <UniqueIdentifier>{e3c289aa-5bd9-425b-9580-dfbb44004918}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Statics\Animated">
+      <UniqueIdentifier>{f3c9bb51-3f24-45dc-a273-88ec77846033}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -19,9 +60,6 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="UICursor.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIStatic.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="UIXmlInit.cpp">
@@ -39,22 +77,13 @@
     <ClCompile Include="UITextureMaster.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="UIStaticItem.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="UILanimController.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="UIWindow.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="UIFrameWindow.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIBtnHint.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="UIDialogHolder.cpp">
@@ -66,20 +95,125 @@
     <ClCompile Include="UIWndCallback.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="UIMessageBox.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIMessageBoxEx.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UI3tButton.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="UIHint.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="UIHelper.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UIProgressBar.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFrameLineWnd.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOptionsItem.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UIButton.cpp">
+      <Filter>Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UICheckButton.cpp">
+      <Filter>Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UI3tButton.cpp">
+      <Filter>Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UIBtnHint.cpp">
+      <Filter>Buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOptionsManager.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOptionsManagerScript.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_arrow.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UITabButton.cpp">
+      <Filter>Buttons\Tab</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRadioButton.cpp">
+      <Filter>Buttons\Radio</Filter>
+    </ClCompile>
+    <ClCompile Include="UICustomSpin.cpp">
+      <Filter>Spin</Filter>
+    </ClCompile>
+    <ClCompile Include="UISpinNum.cpp">
+      <Filter>Spin</Filter>
+    </ClCompile>
+    <ClCompile Include="UISpinText.cpp">
+      <Filter>Spin</Filter>
+    </ClCompile>
+    <ClCompile Include="UITrackBar.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>MainMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="MMSound.cpp">
+      <Filter>MainMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMMShniaga.cpp">
+      <Filter>MainMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScrollView.cpp">
+      <Filter>Scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScrollBar.cpp">
+      <Filter>Scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFixedScrollBar.cpp">
+      <Filter>Scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScrollBox.cpp">
+      <Filter>Scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="UIProgressShape.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UITabControl.cpp">
+      <Filter>Buttons\Tab</Filter>
+    </ClCompile>
+    <ClCompile Include="UIListBoxItem.cpp">
+      <Filter>Boxes\List</Filter>
+    </ClCompile>
+    <ClCompile Include="UIListBoxItemMsgChain.cpp">
+      <Filter>Boxes\List</Filter>
+    </ClCompile>
+    <ClCompile Include="UIListBox.cpp">
+      <Filter>Boxes\List</Filter>
+    </ClCompile>
+    <ClCompile Include="UIEditBox.cpp">
+      <Filter>Boxes\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="UIEditBoxEx.cpp">
+      <Filter>Boxes\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMessageBox.cpp">
+      <Filter>Boxes\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMessageBoxEx.cpp">
+      <Filter>Boxes\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="UIComboBox.cpp">
+      <Filter>Boxes\Combo</Filter>
+    </ClCompile>
+    <ClCompile Include="UICustomEdit.cpp">
+      <Filter>Boxes\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_IB_Static.cpp">
+      <Filter>Statics\IB</Filter>
+    </ClCompile>
+    <ClCompile Include="UIStaticItem.cpp">
+      <Filter>Statics</Filter>
+    </ClCompile>
+    <ClCompile Include="UIStatic.cpp">
+      <Filter>Statics\Classic</Filter>
+    </ClCompile>
+    <ClCompile Include="UIAnimatedStatic.cpp">
+      <Filter>Statics\Animated</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,9 +227,6 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="UICursor.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIStatic.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="UIXmlInit.h">
@@ -119,22 +250,13 @@
     <ClInclude Include="UITextureMaster.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="UIStaticItem.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="UILanimController.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="UIWindow.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="UIFrameWindow.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIBtnHint.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="UIMessages.h">
@@ -152,12 +274,6 @@
     <ClInclude Include="UIWndCallback.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="UIMessageBox.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIMessageBoxEx.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="UI3tButton.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -166,6 +282,120 @@
     </ClInclude>
     <ClInclude Include="UIHelper.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UIProgressBar.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFrameLineWnd.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOptionsItem.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOptionsManager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOptionsManagerScript.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_arrow.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UIInteractiveBackground.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UITabButton.h">
+      <Filter>Buttons\Tab</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRadioButton.h">
+      <Filter>Buttons\Radio</Filter>
+    </ClInclude>
+    <ClInclude Include="UICustomSpin.h">
+      <Filter>Spin</Filter>
+    </ClInclude>
+    <ClInclude Include="UISpinNum.h">
+      <Filter>Spin</Filter>
+    </ClInclude>
+    <ClInclude Include="UISpinText.h">
+      <Filter>Spin</Filter>
+    </ClInclude>
+    <ClInclude Include="UITrackBar.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>MainMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="MMSound.h">
+      <Filter>MainMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMMShniaga.h">
+      <Filter>MainMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScrollView.h">
+      <Filter>Scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScrollBar.h">
+      <Filter>Scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFixedScrollBar.h">
+      <Filter>Scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScrollBox.h">
+      <Filter>Scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="UIProgressShape.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UITabControl.h">
+      <Filter>Buttons\Tab</Filter>
+    </ClInclude>
+    <ClInclude Include="UIListBox.h">
+      <Filter>Boxes\List</Filter>
+    </ClInclude>
+    <ClInclude Include="UIListBoxItem.h">
+      <Filter>Boxes\List</Filter>
+    </ClInclude>
+    <ClInclude Include="UIListBoxItemMsgChain.h">
+      <Filter>Boxes\List</Filter>
+    </ClInclude>
+    <ClInclude Include="UIButton.h">
+      <Filter>Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UIBtnHint.h">
+      <Filter>Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UICheckButton.h">
+      <Filter>Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="UIEditBox.h">
+      <Filter>Boxes\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="UIEditBoxEx.h">
+      <Filter>Boxes\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMessageBox.h">
+      <Filter>Boxes\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMessageBoxEx.h">
+      <Filter>Boxes\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComboBox.h">
+      <Filter>Boxes\Combo</Filter>
+    </ClInclude>
+    <ClInclude Include="UICustomEdit.h">
+      <Filter>Boxes\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_IB_Static.h">
+      <Filter>Statics\IB</Filter>
+    </ClInclude>
+    <ClInclude Include="UIStaticItem.h">
+      <Filter>Statics</Filter>
+    </ClInclude>
+    <ClInclude Include="UIStatic.h">
+      <Filter>Statics\Classic</Filter>
+    </ClInclude>
+    <ClInclude Include="UIAnimatedStatic.h">
+      <Filter>Statics\Animated</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

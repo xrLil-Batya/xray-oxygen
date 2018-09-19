@@ -54,17 +54,17 @@ void CUICursor::OnRender	()
 	g_statHint->OnRender();
 
 	if( !IsVisible() ) return;
-	if( psActorFlags.test(AF_SHOW_CURPOS))
-	{
-	CGameFont* F		= UI().Font().pFontDI;
-	F->SetAligment		(CGameFont::alCenter);
-	F->SetHeightI		(0.02f);
-	F->OutSetI			(0.f,-0.9f);
-	F->SetColor			(0xffffffff);
-	Fvector2			pt = GetCursorPosition();
-	F->OutNext			("%f-%f",pt.x, pt.y);
-	}
 
+	if (psActorFlags.test(AF_SHOW_CURPOS))
+	{
+		CGameFont* F = UI().Font().pFontDI;
+		F->SetAligment(CGameFont::alCenter);
+		F->SetHeightI(0.02f);
+		F->OutSetI(0.f, -0.9f);
+		F->SetColor(0xffffffff);
+		Fvector2			pt = GetCursorPosition();
+		F->OutNext("%f-%f", pt.x, pt.y);
+	}
 
 	m_static->SetWndPos	(vPos);
 	m_static->Update	();

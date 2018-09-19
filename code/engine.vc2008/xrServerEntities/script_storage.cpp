@@ -234,16 +234,10 @@ void CScriptStorage::ClearDumpedObjects()
 int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, ...)
 {
 	va_list marker;
-    string2048 buf;
+	string2048 buf;
 	va_start(marker, caFormat);
-    int sz = _vsnprintf(buf, sizeof(buf) - 1, caFormat, marker);
-    buf[sz] = '\0';
-    if (sz > 0)
-    {
-        Log(buf);
-    }
+	luaVM->ScriptLog(tLuaMessageType, caFormat, buf);
 	va_end(marker);
-
 	return 0;
 }
 
@@ -482,78 +476,15 @@ luabind::object CScriptStorage::name_space(const char* namespace_name)
 	}
 }
 
-struct raii_guard {
-	int m_error_code;
-	const char* const& m_error_description;
-	raii_guard(int error_code, const char* const& m_description) : m_error_code(error_code), m_error_description(m_description) {}
-	raii_guard(const raii_guard& other) = delete;
-	raii_guard& operator=(const raii_guard& other) = delete;
-	~raii_guard()
-	{
-		static bool const break_on_assert = true;
-		if (!m_error_code)
-			return;
-
-		if (break_on_assert)
-			R_ASSERT2(!m_error_code, m_error_description);
-		else
-			Msg("! SCRIPT ERROR: %s", m_error_description);
-	}
-}; // struct raii_guard
-
-   // FX: Added Error text to raii_guard
-bool CScriptStorage::print_output(lua_State *L, const char* caScriptFileName, int iErorCode, const char* caErrorText)
+// FX: Added Error text to raii_guard
+bool CScriptStorage::print_output(lua_State *L, const char* caScriptFileName, int iErrorCode, const char* caErrorText)
 {
-	if (iErorCode)
-		print_error(L, iErorCode);
-
-	raii_guard guard(iErorCode, caErrorText);
-
-	if (!lua_isstring(L, -1))
-		return				(false);
-
-	caErrorText = lua_tostring(L, -1);
-	if (!xr_strcmp(caErrorText, "cannot resume dead coroutine"))
-	{
-		VERIFY2("Please do not return any values from main!!!", caScriptFileName);
-	}
-	else {
-		if (!iErorCode)
-			script_log(ScriptStorage::eLuaMessageTypeInfo, "Output from %s", caScriptFileName);
-		script_log(iErorCode ? ScriptStorage::eLuaMessageTypeError : ScriptStorage::eLuaMessageTypeMessage, "%s", caErrorText);
-	}
-	return (true);
+	return CVMLua::PrintOut(L, caScriptFileName, iErrorCode, caErrorText);
 }
 
 void CScriptStorage::print_error(lua_State *L, int iErrorCode)
 {
-	switch (iErrorCode) {
-	case LUA_ERRRUN: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT RUNTIME ERROR");
-		break;
-	}
-	case LUA_ERRMEM: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT ERROR (memory allocation)");
-		break;
-	}
-	case LUA_ERRERR: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT ERROR (while running the error handler function)");
-		break;
-	}
-	case LUA_ERRFILE: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT ERROR (while running file)");
-		break;
-	}
-	case LUA_ERRSYNTAX: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT SYNTAX ERROR");
-		break;
-	}
-	case LUA_YIELD: {
-		script_log(ScriptStorage::eLuaMessageTypeInfo, "Thread is yielded");
-		break;
-	}
-	default: NODEFAULT;
-	}
+	CVMLua::PrintError(L, iErrorCode);
 }
 
 #ifdef DEBUG
