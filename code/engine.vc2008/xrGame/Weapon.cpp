@@ -799,7 +799,7 @@ void CWeapon::UpdateCL()
 		}
 	}
 
-	if (m_zoom_params.m_pNight_vision && !IsZoomed() && ZoomTexture() && !IsRotatingToZoom())
+	if (m_zoom_params.m_pNight_vision && IsZoomed() && ZoomTexture() && !IsRotatingToZoom())
 	{
 		if (!m_zoom_params.m_pNight_vision->IsActive())
 		{
@@ -855,6 +855,9 @@ void CWeapon::renderable_Render()
 	// нарисовать подсветку
 	RenderLight();
 
+	// если мы в режиме снайперки, то сам HUD рисовать не надо
+	RenderHud(!IsZoomed() && !ZoomTexture() && IsRotatingToZoom());
+	
 	inherited::renderable_Render();
 }
 
@@ -921,10 +924,13 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 			switch (flags)
 			{
 			case CMD_START:
-				if (!IsZoomed() && !IsPending())
+				if (!IsZoomed())
 				{
-					if (GetState() != eIdle)
-						SwitchState(eIdle);
+					if(!IsPending())
+					{
+						if (GetState() != eIdle)
+							SwitchState(eIdle);
+					}
 					OnZoomIn();
 				}
 				else if (!b_toggle_weapon_aim)
