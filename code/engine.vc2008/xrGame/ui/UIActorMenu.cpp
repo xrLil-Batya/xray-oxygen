@@ -253,6 +253,7 @@ EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 
     if (l == m_pInventoryKnifeList)         return iActorSlot;
     if (l == m_pInventoryBinocularList)     return iActorSlot;
+    if (l == m_pInventoryTorchList)         return iActorSlot;
 	
 	if (l == m_pTradeActorBagList)			return iActorBag;
 	if (l == m_pTradeActorList)			    return iActorTrade;
@@ -400,7 +401,7 @@ void CUIActorMenu::clear_highlight_lists()
 
     m_KnifeSlotHighlight->Show(false);
     m_BinocularSlotHighlight->Show(false);
-
+    m_TorchSlotHighlight->Show(false);
 	
 	for(u8 i=0; i<4; i++)
 		m_QuickSlotsHighlight[i]->Show(false);
@@ -450,6 +451,12 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
     if (item_slot == KNIFE_SLOT)
     {
         m_KnifeSlotHighlight->Show(true);
+        return;
+    }
+	
+	if (item_slot == TORCH_SLOT)
+    {
+        m_TorchSlotHighlight->Show(true);
         return;
     }
 	
@@ -778,6 +785,7 @@ void CUIActorMenu::ClearAllLists()
 
     m_pInventoryKnifeList->ClearAll             (true);
     m_pInventoryBinocularList->ClearAll         (true);
+    m_pInventoryTorchList->ClearAll             (true);
 	
 	m_pQuickSlot->ClearAll						(true);
 

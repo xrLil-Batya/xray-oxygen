@@ -103,6 +103,8 @@ void CUIActorMenu::Construct()
     m_KnifeSlotHighlight        ->Show(false);
     m_BinocularSlotHighlight    = UIHelper::CreateStatic(uiXml, "binocular_slot_highlight", this);
     m_BinocularSlotHighlight    ->Show(false);
+    m_TorchSlotHighlight        = UIHelper::CreateStatic(uiXml, "Torch_slot_highlight", this);
+    m_TorchSlotHighlight        ->Show(false);
 
     if (g_extraFeatures.is(GAME_EXTRA_RUCK))
     {
@@ -180,6 +182,7 @@ void CUIActorMenu::Construct()
 
     m_pInventoryKnifeList       = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_knife", this);
     m_pInventoryBinocularList   = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_binocular", this);
+    m_pInventoryTorchList       = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_Torch", this);
 
 	m_pTradeActorBagList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade_bag", this);
 	m_pTradeActorList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade", this);
@@ -286,6 +289,7 @@ void CUIActorMenu::Construct()
 	
     BindDragDropListEvents              (m_pInventoryKnifeList);
     BindDragDropListEvents              (m_pInventoryBinocularList);
+    BindDragDropListEvents              (m_pInventoryTorchList);
 
     if (g_extraFeatures.is(GAME_EXTRA_RUCK))
     {
