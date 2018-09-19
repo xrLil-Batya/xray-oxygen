@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<string_table>
+	<string id="ui_debug_options">
+		<text>Debug options</text>
+	</string>
+	<string id="ui_debug">
+		<text>Debug</text>
+	</string>
+	<string id="ui_debug_log_title">
+		<text>Log</text>
+	</string>
+	<string id="ui_debug_console">
+		<text>To the console</text>
+	</string>
+	<string id="ui_debug_news">
+		<text>In the news</text>
+	</string>
+	<string id="ui_debug_printf">
+		<text>printf</text>
+	</string>
+	<string id="ui_debug_abort">
+		<text>Crash games</text>
+	</string>
+	<string id="ui_debug_check_save_load">
+		<text>Check corr. save /load</text>
+	</string>
+	<string id="ui_debug_scripts_title">
+		<text>Scripts</text>
+	</string>
+	<string id="ui_debug_info">
+		<text>Debug info</text>
+	</string>
+	<string id="ui_debug_other">
+		<text>Other</text>
+	</string>
+	<string id="ui_debug_info_full">
+		<text>Full Debug info</text>
+	</string>
+	<string id="ui_debug_info_target">
+		<text>Targeting Info</text>
+	</string>
+	<string id="ui_debug_close">
+		<text>Close</text>
+	</string>
+</string_table>
