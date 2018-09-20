@@ -101,12 +101,14 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 		if (pActor != g_actor) return;
 
 		// if player flags changed
-		if (!lastActorFlagsState.equal(psActorFlags)) {
-
+		if (!lastActorFlagsState.equal(psActorFlags)) 
+		{
 			// Switch to third person view and vice versa
-			if (psActorFlags.test(AF_PSP)) {
+			if (psActorFlags.test(AF_PSP)) 
+			{
 				pActor->cam_Set(eacLookAt);
-			} else {
+			} else 
+			{
 				pActor->cam_Set(eacFirstEye);
 			}
 
@@ -137,8 +139,12 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 		HudUpdated = false;
 		if (Level().CurrentEntity() && pActor->ID() == Level().CurrentEntity()->ID())
 		{
+			// Overloaded on CActor::UpdateCL
 			psHUD_Flags.set(HUD_CROSSHAIR_RT2, true);
 			psHUD_Flags.set(HUD_DRAW_RT, true);
+
+			// Render HUD model everyone
+			psHUD_Flags.set(HUD_WEAPON_RT, true);
 		}
 		HudUpdated = true;
 
@@ -831,23 +837,15 @@ void CActor::UpdateCL()
 #ifdef DEBUG
 			HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
 #endif
-			BOOL B = !((mstate_real & mcLookout) && false);
-			if (!HudUpdated)
-			{
-				while (!HudUpdated)
-				{
-					_mm_pause();
-				}
-			}
-			psHUD_Flags.set(HUD_WEAPON_RT, B);
-			B = B && pWeapon->show_crosshair();
-			psHUD_Flags.set(HUD_CROSSHAIR_RT2, B);
+			// Waiting Second update thread
+			while (!HudUpdated)
+				_mm_pause();
 
+			psHUD_Flags.set(HUD_CROSSHAIR_RT2, pWeapon->show_crosshair());
 			psHUD_Flags.set(HUD_DRAW_RT, pWeapon->show_indicators());
-			HudUpdated = false;
+
 			pWeapon->UpdateSecondVP();
 		}
-
 	}
 	else if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
 	{
