@@ -100,6 +100,18 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 		if (pActor != g_actor) return;
 
+		HudUpdated = false;
+		if (Level().CurrentEntity() && pActor->ID() == Level().CurrentEntity()->ID())
+		{
+			// Overloaded on CActor::UpdateCL
+			psHUD_Flags.set(HUD_CROSSHAIR_RT2, true);
+			psHUD_Flags.set(HUD_DRAW_RT, true);
+
+			// Render HUD model everyone
+			psHUD_Flags.set(HUD_WEAPON_RT, true);
+		}
+		HudUpdated = true;
+
 		// if player flags changed
 		if (!lastActorFlagsState.equal(psActorFlags)) 
 		{
@@ -135,18 +147,6 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 		// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
 		pActor->PickupModeUpdate_COD(pActor->m_bPickupMode && g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP));
-
-		HudUpdated = false;
-		if (Level().CurrentEntity() && pActor->ID() == Level().CurrentEntity()->ID())
-		{
-			// Overloaded on CActor::UpdateCL
-			psHUD_Flags.set(HUD_CROSSHAIR_RT2, true);
-			psHUD_Flags.set(HUD_DRAW_RT, true);
-
-			// Render HUD model everyone
-			psHUD_Flags.set(HUD_WEAPON_RT, true);
-		}
-		HudUpdated = true;
 
 		SetEvent(pActor->MtSecondUpdaterEventEnd);
 	}
