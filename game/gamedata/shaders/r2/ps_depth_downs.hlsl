@@ -1,6 +1,5 @@
 #include "common.h"
 
-uniform half3x4                        m_v2w                ;
 uniform	float4		screen_res1;
 
 struct	_input

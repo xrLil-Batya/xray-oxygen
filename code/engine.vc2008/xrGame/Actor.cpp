@@ -48,7 +48,6 @@
 #include "CharacterPhysicsSupport.h"
 #include "material_manager.h"
 #include "../xrphysics/IColisiondamageInfo.h"
-#include "ui/UIMainIngameWnd.h"
 #include "map_manager.h"
 #include "GameTaskManager.h"
 #include "actor_memory.h"
@@ -86,12 +85,14 @@ static Fbox		bbStandBox;
 static Fbox		bbCrouchBox;
 static Fvector	vFootCenter;
 static Fvector	vFootExt;
-
 Flags32			psActorFlags={AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE|AF_GET_OBJECT_PARAMS|AF_SHOW_BOSS_HEALTH};
+static bool		HudUpdated;
 int				psActorSleepTime = 1;
 
 void CActor::MtSecondActorUpdate(void* pActorPointer)
 {
+	Flags32 lastActorFlagsState = psActorFlags;
+
 	CActor* pActor = reinterpret_cast<CActor*>(pActorPointer);
 	while (true)
 	{
@@ -99,9 +100,36 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 		if (pActor != g_actor) return;
 
-		// Update hardcode mode
-		if (psActorFlags.test(AF_HARDCORE))
-			pActor->cam_Set(eacFirstEye);
+		HudUpdated = false;
+		if (Level().CurrentEntity() && pActor->ID() == Level().CurrentEntity()->ID())
+		{
+			// Overloaded on CActor::UpdateCL
+			psHUD_Flags.set(HUD_CROSSHAIR_RT2, true);
+			psHUD_Flags.set(HUD_DRAW_RT, true);
+
+			// Render HUD model everyone
+			psHUD_Flags.set(HUD_WEAPON_RT, true);
+		}
+		HudUpdated = true;
+
+		// if player flags changed
+		if (!lastActorFlagsState.equal(psActorFlags)) 
+		{
+			// Switch to third person view and vice versa
+			if (psActorFlags.test(AF_PSP)) 
+			{
+				pActor->cam_Set(eacLookAt);
+			} else 
+			{
+				pActor->cam_Set(eacFirstEye);
+			}
+
+			// Update hardcode mode
+			if (psActorFlags.test(AF_HARDCORE))
+				pActor->cam_Set(eacFirstEye);
+
+			lastActorFlagsState.assign(psActorFlags);
+		}
 
 		// Update inventory
 		pActor->UpdateInventoryOwner(Device.dwTimeDelta);
@@ -119,12 +147,6 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 		// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
 		pActor->PickupModeUpdate_COD(pActor->m_bPickupMode && g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP));
-
-		if (Level().CurrentEntity() && pActor->ID() == Level().CurrentEntity()->ID())
-		{
-			psHUD_Flags.set(HUD_CROSSHAIR_RT2, true);
-			psHUD_Flags.set(HUD_DRAW_RT, true);
-		}
 
 		SetEvent(pActor->MtSecondUpdaterEventEnd);
 	}
@@ -662,11 +684,7 @@ void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 			SwitchOutBorder(new_border_state);
 		}
 
-		if (!psActorFlags.test(AF_NO_CLIP))
-			character_physics_support()->movement()->GetPosition(Position());
-		else
-			character_physics_support()->movement()->GetPosition(Position());
-
+		character_physics_support()->movement()->GetPosition(Position());
 		character_physics_support()->movement()->bSleep = false;
 	}
 
@@ -819,16 +837,15 @@ void CActor::UpdateCL()
 #ifdef DEBUG
 			HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
 #endif
-			BOOL B = !((mstate_real & mcLookout) && false);
+			// Waiting Second update thread
+			while (!HudUpdated)
+				_mm_pause();
 
-			psHUD_Flags.set(HUD_WEAPON_RT, B);
-			B = B && pWeapon->show_crosshair();
-			psHUD_Flags.set(HUD_CROSSHAIR_RT2, B);
-
+			psHUD_Flags.set(HUD_CROSSHAIR_RT2, pWeapon->show_crosshair());
 			psHUD_Flags.set(HUD_DRAW_RT, pWeapon->show_indicators());
+
 			pWeapon->UpdateSecondVP();
 		}
-
 	}
 	else if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
 	{

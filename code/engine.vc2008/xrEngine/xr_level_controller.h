@@ -96,7 +96,7 @@ ENGINE_API const char*	id_to_action_name		(EGameActions _id);
 ENGINE_API EGameActions	action_name_to_id		(LPCSTR _name);
 ENGINE_API _action*		action_name_to_ptr		(LPCSTR _name);
 
-extern _action		actions		[];
+extern ENGINE_API _action actions[];
 
 #define bindings_count kLASTACTION
 struct _binding

@@ -1738,15 +1738,6 @@
     <Filter Include="Core\Server\ServerEntities\objects_alife_smartcover">
       <UniqueIdentifier>{6ffdf47f-9322-4b83-9f2a-aedae1752a41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Server\ServerPerform">
-      <UniqueIdentifier>{0e623d75-44bf-46ca-8e29-411415c8f579}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Server\ServerProcess">
-      <UniqueIdentifier>{7ce64bec-06f0-40fb-9a14-95fa02f0c108}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Server\ServerConnect">
-      <UniqueIdentifier>{da77a547-a6e5-4fd7-8b22-22b7827af41f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Objects\actor\memory">
       <UniqueIdentifier>{6abdee0d-6c56-49e2-b5e8-a42c04c6ec7d}</UniqueIdentifier>
     </Filter>
@@ -1945,9 +1936,6 @@
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\TrackBar">
       <UniqueIdentifier>{c083d8e3-0a3c-490e-ba14-cc8e2889566e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Frames">
-      <UniqueIdentifier>{38640158-7ccd-4bc4-b64f-605485c22f99}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ScrollView">
       <UniqueIdentifier>{79993693-d0de-43ad-bd01-bfabbae4d7c0}</UniqueIdentifier>
     </Filter>
@@ -1974,15 +1962,6 @@
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\HUD">
       <UniqueIdentifier>{bc9409d4-eef7-4de5-b2bd-59afddd0622d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\GameTypes">
-      <UniqueIdentifier>{90bbd4a6-ba17-4626-b4cc-9180ef1696ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\GameTypes\GameCustom">
-      <UniqueIdentifier>{a5a78873-068b-48e8-aad6-5fe507880e23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\GameTypes\Single">
-      <UniqueIdentifier>{182d8983-2f82-4bca-8862-b745a3c3e06d}</UniqueIdentifier>
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\Cursor">
       <UniqueIdentifier>{b4ef4989-5d15-4d43-8fd2-8ac9bae443a6}</UniqueIdentifier>
@@ -7759,42 +7738,6 @@
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp">
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_perform_GameExport.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_perform_transfer.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_sls_clear.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event_activate.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event_destroy.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event_ownership.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event_reject.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_spawn.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_update.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_CL_connect.cpp">
-      <Filter>Core\Server\ServerConnect</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_Connect.cpp">
-      <Filter>Core\Server\ServerConnect</Filter>
     </ClCompile>
     <ClCompile Include="ui_base.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI</Filter>

@@ -25,7 +25,8 @@ IC	void CALifeScheduleRegistry::objects_per_update			(const u32 &objects_per_upd
 
 IC	void CALifeScheduleRegistry::update						()
 {
-	objects().empty() ? 0 : inherited::update(CUpdatePredicate(m_objects_per_update), false);
+	if(!objects().empty())
+		inherited::update(CUpdatePredicate(m_objects_per_update), false);
 }
 
 IC	CSE_ALifeSchedulable *CALifeScheduleRegistry::object	(const ALife::_OBJECT_ID &id, bool no_assert) const

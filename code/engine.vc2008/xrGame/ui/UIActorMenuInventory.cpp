@@ -54,6 +54,7 @@ void CUIActorMenu::InitInventoryMode()
 
     m_pInventoryKnifeList->Show         (true);
     m_pInventoryBinocularList->Show     (true);
+    m_pInventoryTorchList->Show         (true);
 	m_pQuickSlot->Show					(true);
 	m_pTrashList->Show					(true);
 	m_RightDelimiter->Show				(false);
@@ -241,6 +242,7 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 		m_pInventoryAutomaticList,
 		m_pInventoryKnifeList,
 		m_pInventoryBinocularList,
+		m_pInventoryTorchList,
 		m_pInventoryRuckList,
 		m_pInventoryOutfitList,
 		m_pInventoryHelmetList,
@@ -405,6 +407,7 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 
     InitCellForSlot             (KNIFE_SLOT);
     InitCellForSlot             (BINOCULAR_SLOT);
+    InitCellForSlot             (TORCH_SLOT);
 	InitCellForSlot				(OUTFIT_SLOT);
 	InitCellForSlot				(DETECTOR_SLOT);
 	InitCellForSlot				(GRENADE_SLOT);
@@ -677,6 +680,8 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 		    return m_pInventoryKnifeList;
 		case BINOCULAR_SLOT: 
 		    return m_pInventoryBinocularList; 
+		case TORCH_SLOT: 
+		    return m_pInventoryTorchList;
 		case OUTFIT_SLOT:
 			return m_pInventoryOutfitList;
 		case HELMET_SLOT:
@@ -826,18 +831,46 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 	CCustomOutfit* pOutfit	= smart_cast<CCustomOutfit*>( item );
 	CHelmet* pHelmet		= smart_cast<CHelmet*>		( item );
 	CInventory&  inv		= m_pActorInvOwner->inventory();
+	CUICellItem*	itm  = CurrentItem();
+	PIItem	iitem	= (PIItem)itm->m_pData;
+
 
 	// Флаг-признак для невлючения пункта контекстного меню: Dreess Outfit, если костюм уже надет
 	bool bAlreadyDressed	= false;
 	u16 cur_slot			= item->BaseSlot();
 
-	if (	!pOutfit && !pHelmet &&
-			cur_slot != NO_ACTIVE_SLOT &&
-			!inv.SlotIsPersistent(cur_slot) &&
-			inv.CanPutInSlot(item, cur_slot) )
+  // Rietmon: A choice is made where to move the weapon
+	if (!pOutfit && !pHelmet)
 	{
-		m_UIPropertiesBox->AddItem( "st_move_to_slot",  nullptr, INVENTORY_TO_SLOT_ACTION );
-		b_show = true;
+		if (inv.CanPutInSlot(item, INV_SLOT_2) && iitem->BaseSlot()!=DETECTOR_SLOT)
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_2",  NULL, INVENTORY_TO_SLOT2_ACTION );
+			b_show = true;
+		}
+
+		if (inv.CanPutInSlot(item, INV_SLOT_3) && iitem->BaseSlot()!=DETECTOR_SLOT)
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_3",  NULL, INVENTORY_TO_SLOT3_ACTION );
+			b_show = true;
+		}
+
+		if  (iitem->BaseSlot()==KNIFE_SLOT && inv.CanPutInSlot(item, KNIFE_SLOT))
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_knife",  NULL, INVENTORY_TO_SLOT_ACTION );
+			b_show = true;
+		}
+
+		if (iitem->BaseSlot()==BINOCULAR_SLOT && inv.CanPutInSlot(item, BINOCULAR_SLOT))
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_binoc",  NULL, INVENTORY_TO_SLOT_ACTION );
+			b_show = true;
+		}
+
+		if (iitem->BaseSlot()==DETECTOR_SLOT && inv.CanPutInSlot(item, DETECTOR_SLOT))
+		{
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_detect",  NULL, INVENTORY_TO_SLOT_ACTION );
+			b_show = true;
+		}
 	}
 	if (	item->Belt() &&
 			inv.CanPutInBelt( item ) )
@@ -1075,6 +1108,10 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 
 	switch ( m_UIPropertiesBox->GetClickedItem()->GetTAG() )
 	{
+	// Rietmon: �������, ���� ������� �����
+	case INVENTORY_TO_SLOT2_ACTION:	ToSlot(cell_item, true, INV_SLOT_2);		break;
+	case INVENTORY_TO_SLOT3_ACTION:	ToSlot(cell_item, true, INV_SLOT_3);		break;
+
 	case INVENTORY_TO_SLOT_ACTION:	ToSlot( cell_item, true, item->BaseSlot() );		break;
 	case INVENTORY_RELOAD_MAGAZINE: if (weapon) weapon->Action(kWPN_RELOAD, CMD_START); break;
 	case INVENTORY_TO_BELT_ACTION:	ToBelt( cell_item, false );		break;

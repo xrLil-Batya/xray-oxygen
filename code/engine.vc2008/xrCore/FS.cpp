@@ -110,7 +110,7 @@ void FileCompress(const char* fn, const char* sign, void* data, const size_t siz
     MARK M;
     mk_mark(M, sign);
 
-    const auto H = _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
+    const int H = _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
     R_ASSERT2(H > 0, fn);
     _write(H, &M, 8);
 	XRay::Compress::LZ::WriteLZ(H, data, (u32)size);
@@ -121,7 +121,7 @@ void* FileDecompress(const char* fn, const char* sign, size_t* size) {
     MARK M, F;
     mk_mark(M, sign);
 
-    const auto H = _open(fn, O_BINARY | O_RDONLY);
+    const int H = _open(fn, O_BINARY | O_RDONLY);
     R_ASSERT2(H > 0, fn);
     _read(H, &F, 8);
     if (strncmp(M.data(), F.data(), 8) != 0) {

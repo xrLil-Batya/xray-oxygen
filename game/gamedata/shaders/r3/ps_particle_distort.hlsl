@@ -20,7 +20,7 @@ Texture2D s_distort;
 float4 main ( v2p I ) : SV_Target
 {
 	float4	distort = s_distort.Sample(smp_linear, I.tc0);
-	float    factor = distort.a * dot(I.c.rgb,0.33h);
+	float    factor = distort.a * dot(I.c.rgb,0.333f);
 	float4	result = float4	(distort.rgb, factor);
 
 	result.a *= I.fog*I.fog; // ForserX: Port Skyloader fog fix

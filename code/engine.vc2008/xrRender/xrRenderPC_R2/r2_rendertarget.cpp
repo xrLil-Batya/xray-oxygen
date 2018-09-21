@@ -11,12 +11,8 @@
 #include "blender_bloom_build.h"
 #include "blender_luminance.h"
 #include "blender_ssao.h"
-#include "blender_rain_drops.h"
-#include "blender_fxaa.h"
-#include "blender_smaa.h"
 #include "blender_ssss_mrmnwar.h"
 #include "blender_ssss_ogse.h"
-#include "blender_gamma.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -59,7 +55,7 @@ void	CRenderTarget::u_stencil_optimize	(BOOL		common_stencil)
 	pv->set						(float(_w+eps),	eps,			eps,	1.f, C, 0, 0);	pv++;
 	RCache.Vertex.Unlock		(4,g_combine->vb_stride);
 	RCache.set_CullMode			(CULL_NONE	);
-	if (common_stencil)			RCache.set_Stencil	(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);	// keep/keep/keep
+	if (common_stencil)			RCache.set_Stencil	(TRUE, D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);	// keep/keep/keep
 	RCache.set_Element			(s_occq->E[1]	);
 	RCache.set_Geometry			(g_combine		);
 	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
@@ -214,12 +210,8 @@ CRenderTarget::CRenderTarget		()
 	b_ssao							= xr_new<CBlender_SSAO>					();
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
-	b_rain_drops                    = xr_new<CBlender_rain_drops>           ();
-	b_fxaa                          = xr_new<CBlender_FXAA>                 ();
-	b_smaa                          = xr_new<CBlender_SMAA>                 ();
 	b_ssss_mrmnwar					= xr_new<CBlender_ssss_mrmnwar>			();
 	b_ssss_ogse						= xr_new<CBlender_ssss_ogse>			();
-	b_gamma							= xr_new<CBlender_gamma>				();
 
 	//	NORMAL
 	{
@@ -268,17 +260,18 @@ CRenderTarget::CRenderTarget		()
         }
 
 		// generic(LDR) RTs
-		rt_Generic_0.create			(r2_RT_generic0,w,h,D3DFMT_A8R8G8B8		);
-		rt_Generic_1.create			(r2_RT_generic1,w,h,D3DFMT_A8R8G8B8		);
+		rt_Generic_0.create			(r2_RT_generic0, w, h, D3DFMT_A8R8G8B8);
+		rt_Generic_1.create			(r2_RT_generic1, w, h, D3DFMT_A8R8G8B8);
+		rt_Generic_2.create			(r2_RT_generic2, w, h, D3DFMT_A8R8G8B8);
+
+		// Second viewport
 		rt_secondVP.create          (r2_RT_secondVP, w, h, D3DFMT_A8R8G8B8);
 
-		//	temp: for higher quality blends
+		// For higher quality blends
 		if (RImplementation.o.advancedpp)
-			rt_Generic_2.create			(r2_RT_generic2,w,h,D3DFMT_A16B16G16R16F);
+			rt_Volumetric.create	(r2_RT_volumetric, w, h, D3DFMT_A16B16G16R16F);
 	}
 
-	// RAIN DROPS
-	s_rain_drops.create             (b_rain_drops,  "r2\\sgm_rain_drops");
 	// OCCLUSION
 	s_occq.create					(b_occq,		"r2\\occq");
 	s_water.create					("effects\\puddles", "water\\water_water");
@@ -363,25 +356,9 @@ CRenderTarget::CRenderTarget		()
 		s_bloom.create				(b_bloom,					"r2\\bloom");
 		f_bloom_factor				= 0.5f;
 	}
-
-	// Postrprocess anti-aliasing
 	{
-		u32	w = Device.dwWidth, h = Device.dwHeight;
 
-		// FXAA
-		s_fxaa.create(b_fxaa);
-
-		// SMAA
-		rt_prev_frame0.create		(r2_RT_prev_frame0,		w, h, D3DFMT_A8R8G8B8);
-		rt_smaa_edgetex.create		(r2_RT_smaa_edgetex,	w, h, D3DFMT_A8R8G8B8);
-		rt_smaa_blendtex.create		(r2_RT_smaa_blendtex,	w, h, D3DFMT_A8R8G8B8);
-
-		u32 fvf_smaa = D3DFVF_XYZRHW | D3DFVF_TEX5 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE4(1) | D3DFVF_TEXCOORDSIZE4(2) | D3DFVF_TEXCOORDSIZE4(3) | D3DFVF_TEXCOORDSIZE4(4);
-		g_smaa.create(fvf_smaa, RCache.Vertex.Buffer(), RCache.QuadIB);
-
-		s_smaa.create(b_smaa);
 	}
-	
 	// HBAO
 	if (RImplementation.o.ssao_opt_data)
 	{
@@ -427,7 +404,7 @@ CRenderTarget::CRenderTarget		()
 			xr_sprintf						(name,"%s_%d",	r2_RT_luminance_pool,it	);
 			rt_LUM_pool[it].create		(name,	1,	1,	D3DFMT_R32F				);
 			u_setrt						(rt_LUM_pool[it],	0,	0,	0			);
-			CHK_DX						(HW.pDevice->Clear( 0L, NULL, D3DCLEAR_TARGET,	0x7f7f7f7f,	1.0f, 0L));
+			RCache.Clear				(0L, nullptr, D3DCLEAR_TARGET, 0x7f7f7f7f, 1.0f, 0L);
 		}
 		u_setrt						( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
 	}
@@ -462,7 +439,28 @@ CRenderTarget::CRenderTarget		()
 	{
 		// RT, used as look up table
 		rt_GammaLUT.create			(r2_RT_gamma_lut, 256, 1, D3DFMT_A8R8G8B8);
-		s_gamma.create				(b_gamma);
+		s_gamma.create				("effects\\pp_gamma");
+	}
+
+	// Post combine_2 effects:
+	// - Antialiasing
+	// - Rain droplets
+	{
+		s_pp_antialiasing.create	("effects\\pp_antialiasing");
+		// Postrprocess anti-aliasing
+		{
+			u32	w = Device.dwWidth, h = Device.dwHeight;
+
+			// SMAA
+			rt_prev_frame0.create	(r2_RT_prev_frame0,		w, h, D3DFMT_A8R8G8B8);
+			rt_smaa_edgetex.create	(r2_RT_smaa_edgetex,	w, h, D3DFMT_A8R8G8B8);
+			rt_smaa_blendtex.create	(r2_RT_smaa_blendtex,	w, h, D3DFMT_A8R8G8B8);
+
+			u32 fvf_smaa = D3DFVF_XYZRHW | D3DFVF_TEX5 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE4(1) | D3DFVF_TEXCOORDSIZE4(2) | D3DFVF_TEXCOORDSIZE4(3) | D3DFVF_TEXCOORDSIZE4(4);
+			g_smaa.create(fvf_smaa, RCache.Vertex.Buffer(), RCache.QuadIB);
+		}
+
+		s_rain_drops.create			("effects\\screen_rain_droplets");
 	}
 
 	// Build textures
@@ -673,14 +671,10 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete					(b_accum_point			);
 	xr_delete					(b_accum_direct			);
 	xr_delete					(b_accum_direct_cascade	);
-	xr_delete                   (b_fxaa                 );
-	xr_delete                   (b_smaa                 );
 	xr_delete					(b_accum_mask			);
 	xr_delete					(b_occq					);
-	xr_delete                   (b_rain_drops           );
 	xr_delete					(b_ssss_mrmnwar			);
     xr_delete                   (b_ssss_ogse			);
-	xr_delete					(b_gamma				);
 }
 
 void CRenderTarget::reset_light_marker( bool bResetStencil)
@@ -702,7 +696,7 @@ void CRenderTarget::reset_light_marker( bool bResetStencil)
 		RCache.Vertex.Unlock		(4,g_combine->vb_stride);
 		RCache.set_CullMode			(CULL_NONE	);
 		//	Clear everything except last bit
-		RCache.set_Stencil	(TRUE,D3DCMP_ALWAYS,dwLightMarkerID,0x00,0xFE, D3DSTENCILOP_ZERO, D3DSTENCILOP_ZERO, D3DSTENCILOP_ZERO);
+		RCache.set_Stencil	(TRUE, D3DCMP_ALWAYS,dwLightMarkerID,0x00,0xFE, D3DSTENCILOP_ZERO, D3DSTENCILOP_ZERO, D3DSTENCILOP_ZERO);
 		RCache.set_Element			(s_occq->E[1]	);
 		RCache.set_Geometry			(g_combine		);
 		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
@@ -738,11 +732,15 @@ void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ID3DRenderTargetView* rt, ref
 	float d_Z	= EPS_S;
 	float d_W	= 1.0f;
 	u32	C		= color_rgba(0, 0, 0, 255);
+
+	// Half-pixel offset
 	Fvector2 p0, p1;
 	p0.set(0.5f/w, 0.5f/h);
 	p1.set((w+0.5f)/w, (h+0.5f)/h);
 
-    u_setrt				(w, h, rt, nullptr, nullptr, HW.pBaseZB);
+	if (rt)
+		u_setrt(w, h, rt, nullptr, nullptr, HW.pBaseZB);
+
 	RCache.set_CullMode	(CULL_NONE);
 	RCache.set_Stencil	(FALSE);
  
@@ -765,5 +763,5 @@ void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ID3DRenderTargetView* rt, ref
 
 void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ref_rt &rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts)
 {
-	RenderScreenQuad(w, h, rt->pRT, sh, consts);
+	RenderScreenQuad(w, h, rt ? rt->pRT : nullptr, sh, consts);
 }

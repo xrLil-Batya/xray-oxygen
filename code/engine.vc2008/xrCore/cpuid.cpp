@@ -208,4 +208,21 @@ unsigned int query_processor_info(processor_info* pinfo)
 processor_info::processor_info()
 {
 	features = query_processor_info(&*this);
+	GetSystemInfo(&sysInfo);
+	m_dwNumberOfProcessors = sysInfo.dwNumberOfProcessors;
+
+	fUsage = (PFLOAT)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(FLOAT) * m_dwNumberOfProcessors);
+
+	// get adress to our func to use
+	m_pNtQuerySystemInformation = (NTQUERYSYSTEMINFORMATION)GetProcAddress(
+		GetModuleHandleA("ntdll.dll"),
+		"NtQuerySystemInformation"
+	);
+
+	R_ASSERT(m_pNtQuerySystemInformation);
+	perfomanceInfo = (SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION*)HeapAlloc(
+		GetProcessHeap(),
+		HEAP_ZERO_MEMORY,
+		sizeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION) * m_dwNumberOfProcessors
+	);
 }

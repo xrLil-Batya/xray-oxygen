@@ -1,104 +1,88 @@
 #include "stdafx.h"
-
+#ifdef RAW_INPUT_USE
+#include "xr_input.h"
+#endif
+#ifdef XINPUT_USE
+#include <XInput.h>
+#pragma comment(lib, "xinput.lib")
+#endif
 extern ENGINE_API BOOL g_bRendering;
 static bool bResize = false;
 
 bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT &result)
 {
-	switch (uMsg) {
-		case WM_SYSKEYDOWN : {
-			return true;
-						   }
-		case WM_ACTIVATE : {
-#ifdef INGAME_EDITOR
-			if (editor()) {
-				Device.b_is_Active	= TRUE;
-				break;
-			}
-#endif // #ifdef INGAME_EDITOR
-			OnWM_Activate	(wParam, lParam);
-			return			(false);
-		}
-		case WM_SETCURSOR : {
-#ifdef INGAME_EDITOR
-			if (editor())
-				break;
-#endif // #ifdef INGAME_EDITOR
+#ifdef RAW_INPUT_USE
+	CInput::DataInput = lParam;
+#endif
+	switch (uMsg) 
+	{
+#ifdef XINPUT_USE
+	case WM_ACTIVATEAPP: XInputEnable((BOOL)wParam); break; // Controller Input Wrapper
+#endif
+	case WM_SYSKEYDOWN : return true;
+	case WM_ENTERSIZEMOVE: bResize = true; break;
+	case WM_TIMER: break;
+	case WM_SIZE: break;
+	case WM_CLOSE:  if (editor()) break; result = 0; return (true);
+	case WM_HOTKEY: break;// prevent 'ding' sounds caused by Alt+key combinations
+	case WM_SYSCHAR: result = 0; return true;
 
-			result			= 1;
-			return			(true);
-		}
-		case WM_ENTERSIZEMOVE:
+	case WM_ACTIVATE : 
+	{
+		if (editor())
 		{
-			//SetTimer(hWnd, TRUE, USER_TIMER_MINIMUM, NULL);
-			bResize = true;
+			Device.b_is_Active = TRUE;
 			break;
 		}
-		case WM_EXITSIZEMOVE:
-		{
-			//KillTimer(hWnd, TRUE);
-			bResize = false;
-			RECT ClientRect;
-
-			GetClientRect(hWnd, &ClientRect);
-			LONG width = ClientRect.right - ClientRect.left;
-			LONG height = ClientRect.bottom - ClientRect.top;
-
-			if (height >= NULL && width >= NULL)
-			{
-				Device.ResizeProc(height, width);
-			}
-
+		OnWM_Activate(wParam, lParam);
+		return (false);
+	}
+	case WM_SETCURSOR : 
+	{
+		if (editor())
 			break;
-		}
-		case WM_TIMER:
+
+		result			= 1;
+		return			(true);
+	}
+	case WM_EXITSIZEMOVE:
+	{
+		bResize = false;
+		RECT ClientRect;
+
+		GetClientRect(hWnd, &ClientRect);
+		LONG width = ClientRect.right - ClientRect.left;
+		LONG height = ClientRect.bottom - ClientRect.top;
+
+		if (height >= NULL && width >= NULL) { Device.ResizeProc(height, width); }
+
+		break;
+	}
+	case WM_SYSCOMMAND : 
+	{
+		if (editor())
+			break;
+
+		bool bRet = false;
+
+		// Prevent moving/sizing and power loss in fullscreen mode
+		switch (wParam)
 		{
-			//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_INTERNALPAINT);
-			//return 0;
+		case SC_MOVE:
+		case SC_SIZE:
+		case SC_MAXIMIZE:
+		case SC_MONITORPOWER:
+			result = 1;
+			bRet = true;
+			break;
+		default:
+			bRet = false;
 		}
-		case WM_SIZE:
-		{
-			WORD height = HIWORD(lParam);
-			WORD width = LOWORD(lParam);
-
-			/*if (height >= NULL && width >= NULL)
-			{
-				Device.ResizeProc(height, width);
-			}*/
-		}
-		case WM_SYSCOMMAND : {
-#ifdef INGAME_EDITOR
-			if (editor())
-				break;
-#endif // #ifdef INGAME_EDITOR
-
-			// Prevent moving/sizing and power loss in fullscreen mode
-			switch (wParam) {
-				case SC_MOVE:
-				case SC_SIZE:
-				case SC_MAXIMIZE:
-				case SC_MONITORPOWER:
-					result	= 1;
-					return	(true);
-			}
-			return			(false);
-		}
-		case WM_CLOSE : {
-#ifdef INGAME_EDITOR
-			if (editor())
-				break;
-#endif // #ifdef INGAME_EDITOR
-
-			result			= 0;
-			return			(true);
-		}
-		case WM_HOTKEY: // prevent 'ding' sounds caused by Alt+key combinations
-		case WM_SYSCHAR:
-			result = 0;
-			return true;
+		return bRet;
+	}
 	}
 
-	return					(false);
+	return (false);
 }
 //-----------------------------------------------------------------------------
 // Name: WndProc()
@@ -106,9 +90,8 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 //-----------------------------------------------------------------------------
 LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	LRESULT		result;
-	if (Device.on_message(hWnd, uMsg, wParam, lParam, result))
-		return	(result);
+	LRESULT	result = 0;
+	if (Device.on_message(hWnd, uMsg, wParam, lParam, result)) { return	(result); }
 
-	return		(DefWindowProc(hWnd, uMsg, wParam, lParam));
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

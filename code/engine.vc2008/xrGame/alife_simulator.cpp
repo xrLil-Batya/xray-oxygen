@@ -335,36 +335,33 @@ CSE_Abstract *CALifeSimulator__spawn_item2(CALifeSimulator *self, LPCSTR section
 	}
 
 	if (!object->m_bOnline)
-		return							(self->spawn_item(section, position, level_vertex_id, game_vertex_id, id_parent));
+		return (self->spawn_item(section, position, level_vertex_id, game_vertex_id, id_parent));
 
 	NET_Packet							packet;
 	packet.w_begin(M_SPAWN);
 	packet.w_stringZ(section);
 
-	CSE_Abstract						*item = self->spawn_item(section, position, level_vertex_id, game_vertex_id, id_parent, false);
+	CSE_Abstract *item = self->spawn_item(section, position, level_vertex_id, game_vertex_id, id_parent, false);
 	item->Spawn_Write(packet, FALSE);
 	self->server().FreeID(item->ID, 0);
 	F_entity_Destroy(item);
 
-	ClientID							clientID;
-	clientID.set(0xffff);
-
-	u16									dummy;
+	u16 dummy;
 	packet.r_begin(dummy);
 	VERIFY(dummy == M_SPAWN);
-	return								(self->server().Process_spawn(packet, clientID));
+	return (self->server().Process_spawn(packet));
 }
 
 CSE_Abstract *CALifeSimulator__spawn_ammo(CALifeSimulator *self, LPCSTR section, const Fvector &position, u32 level_vertex_id, GameGraph::_GRAPH_ID game_vertex_id, ALife::_OBJECT_ID id_parent, int ammo_to_spawn)
 {
-	//	if (id_parent == ALife::_OBJECT_ID(-1))
-	//		return							(self->spawn_item(section,position,level_vertex_id,game_vertex_id,id_parent));
-	CSE_ALifeDynamicObject				*object = nullptr;
-	if (id_parent != ALife::_OBJECT_ID(-1)) {
+	CSE_ALifeDynamicObject *object = nullptr;
+	if (id_parent != ALife::_OBJECT_ID(-1)) 
+	{
 		object = ai().alife().objects().object(id_parent, true);
-		if (!object) {
+		if (!object)
+		{
 			Msg("! invalid parent id [%d] specified", id_parent);
-			return						(nullptr);
+			return (nullptr);
 		}
 	}
 
@@ -397,21 +394,20 @@ CSE_Abstract *CALifeSimulator__spawn_ammo(CALifeSimulator *self, LPCSTR section,
 	ClientID							clientID;
 	clientID.set(0xffff);
 
-	u16									dummy;
+	u16 dummy;
 	packet.r_begin(dummy);
 	VERIFY(dummy == M_SPAWN);
-	return								(self->server().Process_spawn(packet, clientID));
+	return								(self->server().Process_spawn(packet));
 }
 
 ALife::_SPAWN_ID CALifeSimulator__spawn_id(CALifeSimulator *self, ALife::_SPAWN_STORY_ID spawn_story_id)
 {
-	return								(((const CALifeSimulator *)self)->spawns().spawn_id(spawn_story_id));
+	return ((const CALifeSimulator*)self)->spawns().spawn_id(spawn_story_id);
 }
 
 void CALifeSimulator__release(CALifeSimulator *self, CSE_Abstract *object, bool)
 {
 	VERIFY(self);
-	//	self->release						(object,true);
 
 	THROW(object);
 	CSE_ALifeObject						*alife_object = smart_cast<CSE_ALifeObject*>(object);

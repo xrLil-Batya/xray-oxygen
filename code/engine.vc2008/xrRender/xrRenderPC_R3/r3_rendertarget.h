@@ -48,11 +48,8 @@ public:
 	IBlender*					b_accum_reflected_msaa[8];
 	IBlender*					b_ssao;
 	IBlender*					b_ssao_msaa[8];
-	IBlender*					b_fxaa;
-	IBlender*					b_rain_drops;
 	IBlender*					b_ssss_mrmnwar;
 	IBlender*					b_ssss_ogse;
-	IBlender*					b_gamma;
 	
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -77,27 +74,27 @@ public:
 	ref_rt						rt_Accumulator_temp;// only for HW which doesn't feature fp16 blend
 	ref_rt						rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	ref_rt						rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
+	ref_rt						rt_Generic_2;		// 32bit		(r,g,b,a)				// post-process, intermediate results, etc.
+	ref_rt						rt_Volumetric;		// 64bit		(r,g,b,a)				// for volumetric lights
 
-	//  Second viewport
-    ref_rt                      rt_secondVP;        // 32bit		(r,g,b,a) +SecondVP+
-	//	Igor: for volumetric lights
-	ref_rt						rt_Generic_2;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	ref_rt						rt_Bloom_1;			// 32bit, dim/4	(r,g,b,?)
 	ref_rt						rt_Bloom_2;			// 32bit, dim/4	(r,g,b,?)
 	ref_rt						rt_LUM_64;			// 64bit, 64x64,	log-average in all components
 	ref_rt						rt_LUM_8;			// 64bit, 8x8,		log-average in all components
 
-	ref_rt						rt_LUM_pool[CHWCaps::MAX_GPUS*2]	;	// 1xfp32,1x1,		exp-result -> scaler
-	ref_texture				t_LUM_src		;	// source
-	ref_texture				t_LUM_dest		;	// destination & usage for current frame
+	ref_rt                      rt_secondVP;        // 32bit		(r,g,b,a) +SecondVP+
+
+	ref_rt						rt_LUM_pool[CHWCaps::MAX_GPUS*2];	// 1xfp32,1x1,		exp-result -> scaler
+	ref_texture					t_LUM_src;			// source
+	ref_texture					t_LUM_dest;			// destination & usage for current frame
 
 	// env
-	ref_texture				t_envmap_0		;	// env-0
-	ref_texture				t_envmap_1		;	// env-1
+	ref_texture					t_envmap_0;			// env-0
+	ref_texture					t_envmap_1;			// env-1
 
 	// smap
-	ref_rt						rt_smap_surf;	// 32bit,		color
-	ref_rt						rt_smap_depth;	// 24(32) bit,	depth 
+	ref_rt						rt_smap_surf;		// 32bit,		color
+	ref_rt						rt_smap_depth;		// 24(32) bit,	depth 
 	ref_rt						rt_smap_depth_minmax;	//	is used for min/max sm
 
 	ref_rt						rt_sunshafts_0;		// ss0
@@ -148,7 +145,7 @@ private:
 	ref_shader					s_accum_reflected;
 	ref_shader					s_accum_volume;
 
-    ref_shader					s_fxaa;
+    ref_shader					s_pp_antialiasing;
 	
 	//	generate min/max
 	ref_shader					s_create_minmax_sm;

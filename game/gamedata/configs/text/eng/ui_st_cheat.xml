@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<string_table>
+	<string id="ui_cheat_additional">
+		<text>Additional</text>
+	</string>
+	<string id="ui_cheat_weather">
+		<text>Weather</text>
+	</string>
+	<string id="ui_cheat_community">
+		<text>Groupings</text>
+	</string>
+	<string id="ui_cheat_infos">
+		<text>Info</text>
+	</string>
+	<string id="ui_cheat_surge">
+		<text>Emission</text>
+	</string>
+	<string id="ui_cheat_demo_record">
+		<text>Demo Record</text>
+	</string>
+	<string id="ui_cheat_god">
+		<text>God Mode</text>
+	</string>
+	<string id="ui_cheat_unlimited_ammo">
+		<text>Unlimited Ammo</text>
+	</string>
+	<string id="ui_cheat_no_clip">
+		<text>No clip</text>
+	</string>
+	<string id="ui_cheat_money">
+		<text>Money:</text>
+	</string>
+	<string id="ui_cheat_time">
+		<text>Time</text>
+	</string>
+	<string id="ui_cheat_apply">
+		<text>Apply</text>
+	</string>
+	<string id="ui_cheat_teleport">
+		<text>Teleportation</text>
+	</string>
+	<string id="ui_cheat_actor_position">
+		<text>Player position</text>
+	</string>
+	<string id="ui_cheat_save">
+		<text>Save</text>
+	</string>
+	<string id="ui_cheat_teleport_five">
+		<text>Move 5m. forward</text>
+	</string>
+	<string id="ui_cheat_jump">
+		<text>Go</text>
+	</string>
+	<string id="ui_cheat_spawner">
+		<text>Spawner</text>
+	</string>
+	<string id="ui_cheat_stalkers">
+		<text>NPCs</text>
+	</string>
+	<string id="ui_cheat_monsters">
+		<text>Mutants</text>
+	</string>
+	<string id="ui_cheat_weapons">
+		<text>Weapons</text>
+	</string>
+	<string id="ui_cheat_addons">
+		<text>Add-ons</text>
+	</string>
+	<string id="ui_cheat_ammo">
+		<text>Ammunition</text>
+	</string>
+	<string id="ui_cheat_artefacts">
+		<text>Artifacts</text>
+	</string>
+	<string id="ui_cheat_outfits">
+		<text>Armor</text>
+	</string>
+	<string id="ui_cheat_quest_items">
+		<text>Quest</text>
+	</string>
+	<string id="ui_cheat_other">
+		<text>Miscellaneous</text>
+	</string>
+	<string id="ui_cheat_vehicles">
+		<text>Transport</text>
+	</string>
+	<string id="ui_cheat_objects">
+		<text>Objects</text>
+	</string>
+	<string id="ui_cheat_squads">
+		<text>Squads</text>
+	</string>
+	<string id="ui_cheat_anomalies">
+		<text>Anomalies</text>
+	</string>
+	<string id="ui_cheat_distance">
+		<text>Distance</text>
+	</string>
+	<string id="ui_cheat_extends">
+		<text>Advanced</text>
+	</string>
+	<string id="ui_cheat_fov">
+		<text>Fov</text>
+	</string>
+	<string id="ui_cheat_hud_fov">
+		<text>Hud</text>
+	</string>
+</string_table>

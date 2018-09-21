@@ -91,9 +91,6 @@ void CLevel::mtLevelScriptUpdater(void* pCLevel)
 		// Disable objects
 		psDeviceFlags.set(rsDisableObjectsAsCrows, false);
 
-		// commit events from bullet manager from prev-frame
-		pLevel->BulletManager().CommitEvents();
-
 		Fvector temp_vector;
 		pLevel->m_feel_deny.feel_touch_update(temp_vector, 0.f);
 
@@ -416,6 +413,8 @@ void CLevel::OnFrame()
 	ResetEvent(m_mtScriptUpdaterEventEnd);
 	SetEvent(m_mtScriptUpdaterEventStart);
 
+	// commit events from bullet manager from prev-frame
+	BulletManager().CommitEvents();
 	ClientReceive();
 
 	// Update game events
@@ -424,7 +423,7 @@ void CLevel::OnFrame()
 	DBG_RenderUpdate();
 #endif // #ifdef DEBUG
 
-	Device.seqParallel.emplace_back(m_map_manager, &CMapManager::Update);
+	m_map_manager->Update();
 
 	if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
 		GameTaskManager().UpdateTasks();
@@ -453,6 +452,7 @@ void CLevel::OnFrame()
 	// deffer LUA-GC-STEP
 	Device.seqParallel.emplace_back(this, &CLevel::script_gc);
 	//-----------------------------------------------------
+#ifdef DEBUG
 	if (pStatGraphR)
 	{
 		static	float fRPC_Mult = 10.0f;
@@ -461,6 +461,7 @@ void CLevel::OnFrame()
 		pStatGraphR->AppendItem(float(m_dwRPC)*fRPC_Mult, 0xffff0000, 1);
 		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
 	}
+#endif
 
 	// Level Script Updater thread can issue a exception. But it require to process one message from HWND message queue, otherwise, Level script can't show error message
 	DWORD WaitResult = WAIT_TIMEOUT;

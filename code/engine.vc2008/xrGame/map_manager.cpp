@@ -251,19 +251,21 @@ void CMapManager::GetMapLocations(const shared_str& spot_type, u16 id, xr_vector
 
 void CMapManager::Update()
 {
-	delete_data(m_deffered_destroy_queue); //from prev frame
+	//from prev frame
+	if(!m_deffered_destroy_queue.empty())
+		delete_data(m_deffered_destroy_queue);
 
-    auto it			= Locations().begin();
-    auto it_e		= Locations().end();
-
-	for(u32 idx=0; it!=it_e;++it,++idx)
+	u32 idx = 0;
+	for (SLocationKey &refLockKey : Locations())
 	{
-		bool bForce		= Device.dwFrame%3 == idx%3;
-		(*it).actual	= (*it).location->Update();
+		bool bForce = Device.dwFrame % 3 == idx % 3;
+		refLockKey.actual = refLockKey.location->Update();
 
-		if((*it).actual && bForce)
-			(*it).location->CalcPosition();
+		if (refLockKey.actual && bForce)
+			refLockKey.location->CalcPosition();
+		idx++;
 	}
+
 	std::sort( Locations().begin(),Locations().end() );
 
 	while ((!Locations().empty()) && (!Locations().back().actual))

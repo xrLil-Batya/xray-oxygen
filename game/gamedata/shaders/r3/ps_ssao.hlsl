@@ -127,7 +127,7 @@ float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, uint iSample)
 	float num_dir	= 0.0h;
 
 	// jittering
-	float3 tc1	= mul( m_v2w, float4(P,1) );
+	float3 tc1	= mul(m_invV, float4(P,1));
 	tc1 *= ssao_noise_tile_factor;
 	tc1.xz += tc1.y;
 	float2	SmallTap = jitter0.Sample( smp_jitter, tc1.xz );

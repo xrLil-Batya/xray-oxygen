@@ -13,13 +13,7 @@ const int keyboard_device_key	= 2;
 const int all_device_key		= mouse_device_key | keyboard_device_key;
 const int default_key			= mouse_device_key | keyboard_device_key ;
 
-class ENGINE_API CInput
-#ifndef M_BORLAND
-	:
-	public pureFrame,
-	public pureAppActivate,
-	public pureAppDeactivate
-#endif
+class ENGINE_API CInput : public pureFrame, public pureAppActivate, public pureAppDeactivate
 {
 public:
 	enum {
@@ -40,11 +34,16 @@ public:
 		DIDEVICEINSTANCE			deviceInfo;
 		DIDEVICEOBJECTINSTANCE		objectInfo;
 	};
+#ifdef RAW_INPUT_USE
+	static HRAWINPUT	DataInput;
 private:
-	BENCH_SEC_SCRAMBLEMEMBER1
+	LPRAWINPUT			pDI;			// The Input object
+#else
+private:
 	LPDIRECTINPUT8				pDI;			// The DInput object
 	LPDIRECTINPUTDEVICE8		pMouse;			// The DIDevice7 interface
 	LPDIRECTINPUTDEVICE8		pKeyboard;		// The DIDevice7 interface
+#endif
 	//----------------------
 	u32							timeStamp	[COUNT_MOUSE_AXIS];
 	u32							timeSave	[COUNT_MOUSE_AXIS];
@@ -53,12 +52,14 @@ private:
 
 	//----------------------
 	BOOL						KBState		[COUNT_KB_BUTTONS];
+#ifdef RAW_INPUT_USE
+	HRESULT						CreateInputDevice(RAWINPUTDEVICE* pDev, GUID gDevice, const RID_DEVICE_INFO* pDataFormat, u32 dwFlags, u32 bSize);
 
-	HRESULT						CreateInputDevice(	LPDIRECTINPUTDEVICE8* device, GUID guidDevice,
-													const DIDATAFORMAT* pdidDataFormat, u32 dwFlags,
-													u32 buf_size );
+#else
+	HRESULT						CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice,
+													const DIDATAFORMAT* pdidDataFormat, u32 dwFlags, u32 buf_size );
+#endif
 
-//	xr_stack<IInputReceiver*>	cbStack;
 	xr_vector<IInputReceiver*>	cbStack;
 
 	void						MouseUpdate					( );

@@ -14,7 +14,6 @@ TextureCube		sky_s0;
 TextureCube		sky_s1;
 
 uniform float4	env_color;        // color.w  = lerp factor
-uniform float3x4	m_v2w;
 
 void hmodel
 (
@@ -23,7 +22,7 @@ void hmodel
 )
 {
         // hscale - something like diffuse reflection
-	float3	nw		= mul( m_v2w, normal );
+	float3	nw		= mul(m_invV, normal);
 	float	hscale	= h;	//. *        (.5h + .5h*nw.y);
 
 #ifdef         USE_GAMMA_22
@@ -32,7 +31,7 @@ void hmodel
 
 	// reflection vector
 	float3	v2PntL	= normalize( Pnt );
-	float3	v2Pnt	= mul( m_v2w, v2PntL );
+	float3	v2Pnt	= mul(m_invV, v2PntL);
 	float3	vreflect= reflect( v2Pnt, nw );
 	float	hspec	= .5h + .5h * dot( vreflect, v2Pnt );
 

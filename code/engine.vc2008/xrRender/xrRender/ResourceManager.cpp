@@ -233,30 +233,32 @@ Shader*		CResourceManager::Create	(IBlender*	B,		LPCSTR s_shader,	LPCSTR s_textu
     return	_cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
 }
 
-Shader*		CResourceManager::Create	(LPCSTR s_shader,	LPCSTR s_textures,	LPCSTR s_constants,	LPCSTR s_matrices)
+Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 #if defined(USE_DX10) || defined(USE_DX11)
-	if	(_lua_HasShader(s_shader))		
-		return	_lua_Create	(s_shader,s_textures);
-	else								
+	if (_lua_HasShader(s_shader))
+		return _lua_Create(s_shader, s_textures);
+	else
 	{
-		Shader* pShader = _cpp_Create	(s_shader,s_textures,s_constants,s_matrices);
+		Shader* pShader = _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
 		if (pShader)
 			return pShader;
 		else
 		{
 			if (_lua_HasShader("stub_default"))
-				return	_lua_Create	("stub_default",s_textures);
+				return _lua_Create("stub_default", s_textures);
 			else
 			{
-				FATAL("Can't find stub_default.s");
-				return 0;
+				FATAL("Can't find stub_default.lua");
+				return nullptr;
 			}
 		}
 	}
 #else	//	USE_DX10
-	if(_lua_HasShader(s_shader)) return	_lua_Create(s_shader,s_textures);
-	else return	_cpp_Create(s_shader,s_textures,s_constants,s_matrices);
+	if (_lua_HasShader(s_shader))
+		return _lua_Create(s_shader, s_textures);
+
+	return _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
 #endif	//	USE_DX10
 }
 

@@ -91,13 +91,13 @@ public:
 	void					Perform_reject			(CSE_Abstract* what, CSE_Abstract* from, int delta);
 	void					Perform_destroy			(CSE_Abstract* tpSE_Abstract);
 
-	CSE_Abstract*			Process_spawn			(NET_Packet& P, ClientID sender, BOOL bSpawnWithClientsMainEntityAsParent=FALSE, CSE_Abstract* tpExistedEntity=nullptr);
+	CSE_Abstract*			Process_spawn			(NET_Packet& P, BOOL bSpawnWithClMainEntityAsParent=FALSE, CSE_Abstract* tpExistedEntity=nullptr);
 	void					Process_update			(NET_Packet& P);
 	void					Process_save			(NET_Packet& P);
 	void					Process_event			(NET_Packet& P);
 	void					Process_event_ownership	(NET_Packet& P, u16 ID);
-	bool					Process_event_reject	(NET_Packet& P, const ClientID sender, const u32 time, const u16 id_parent, const u16 id_entity, bool send_message = true);
-	void					Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack);
+	bool					Process_event_reject	(NET_Packet& P, const u32 &time, const u16 id_parent, const u16 id_entity, bool send_message = true);
+	void					Process_event_destroy	(NET_Packet& P, const u32 &time, u16 ID, NET_Packet* pEPack);
 	void					Process_event_activate	(NET_Packet& P, const u16 id_parent, const u16 id_entity);
 
 protected:

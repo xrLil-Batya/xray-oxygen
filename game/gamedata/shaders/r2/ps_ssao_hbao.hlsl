@@ -3,7 +3,7 @@
 
 float4 calc_hbao(float z, float4 curN, float2 tc0)
 {
-	return 1.0h;
+	return 1.0f;
 }
 
 #else	//	SSAO_QUALITY
@@ -226,7 +226,7 @@ float4 calc_hbao(float z, float4 curN, float2 tc0)
 #ifndef HBAO_WORLD_JITTER
     float3 rand_Dir = tex2D(jitter4, tc0 * g_Resolution /64.0f).rgb;
 #else
-    float3 tc1	= mul( m_v2w, float4(P,1) );
+    float3 tc1	= mul(m_invV, float4(P, 1.0f));
     tc1 *= ssao_noise_tile_factor;
     tc1.xz += tc1.y; 
     float3 rand_Dir = tex2D(jitter4, tc1.xz).xyz; 

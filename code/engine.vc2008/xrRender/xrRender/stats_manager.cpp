@@ -11,7 +11,7 @@
 void stats_manager::increment_stats( u32 size, enum_stats_buffer_type type, _D3DPOOL location )
 {
 	R_ASSERT( type >= 0 && type < enum_stats_buffer_type_COUNT );
-	R_ASSERT( location >= 0 && location <= D3DPOOL_SCRATCH );
+	R_ASSERT( location >= D3DPOOL_DEFAULT && location <= D3DPOOL_SCRATCH );
 	memory_usage_summary [type][location]		+= size;
 }
  
@@ -19,7 +19,7 @@ void stats_manager::increment_stats( u32 size, enum_stats_buffer_type type, _D3D
 {
 	R_ASSERT( buff_ptr != NULL );
 	R_ASSERT( type >= 0 && type < enum_stats_buffer_type_COUNT );
-	R_ASSERT( location >= 0 && location <= D3DPOOL_SCRATCH );
+	R_ASSERT( location >= D3DPOOL_DEFAULT && location <= D3DPOOL_SCRATCH );
 	memory_usage_summary [type][location]		+= size;
 
 #ifdef DEBUG

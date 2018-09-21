@@ -24,10 +24,10 @@ struct REPUTATION_DATA
 class CHARACTER_REPUTATION;
 
 class CHARACTER_REPUTATION: 
-	public CIni_IdToIndex<1, REPUTATION_DATA, shared_str, int, CHARACTER_REPUTATION>
+	public CIni_IdToIndex<true, REPUTATION_DATA, shared_str, int, CHARACTER_REPUTATION>
 {
 private:
-	typedef CIni_IdToIndex<1, REPUTATION_DATA, shared_str, int, CHARACTER_REPUTATION> inherited;
+	typedef CIni_IdToIndex<true, REPUTATION_DATA, shared_str, int, CHARACTER_REPUTATION> inherited;
 	friend inherited;
 
 public:

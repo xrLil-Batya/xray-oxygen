@@ -131,7 +131,7 @@ void CALifeUpdateManager::shedule_Update	(u32 dt)
 	m_first_time					= false;
 
 	START_PROFILE("ALife/update")
-	update							();
+	Device.seqParallel.emplace_back(this, &CALifeUpdateManager::update);
 	STOP_PROFILE
 }
 

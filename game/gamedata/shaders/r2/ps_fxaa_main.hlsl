@@ -1,15 +1,9 @@
 #include "common.h"
 #include "fxaa.h"
 
-struct v2p 
+float4 main (p_screen I) : COLOR
 {
-	half4 	HPos : POSITION;
-	half2 	tc0	 : TEXCOORD0;
-};
-
-half4 main (v2p I) : COLOR
-{
-	half4 img = FxaaPixelShader(
+	float4 img = FxaaPixelShader(
 			I.tc0,									// FxaaFloat2 pos,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsolePosPos,
             s_image,								// FxaaTex tex,
@@ -27,7 +21,6 @@ half4 main (v2p I) : COLOR
             0.0f,									// FxaaFloat fxaaConsoleEdgeThresholdMin,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f)		// FxaaFloat4 fxaaConsole360ConstDir,
             );
-	
 	img.w = 1.0f;
 	
 	return saturate(img);

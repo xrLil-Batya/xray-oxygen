@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "CMagazine.h"
 
-
-CMagazine::CMagazine()
+CMagazine::CMagazine() : m_pCurrentAmmo(nullptr)
 {
 	m_iAmmoCurrentTotal = 0;
 
@@ -11,10 +10,9 @@ CMagazine::CMagazine()
 	m_ammoType = 0;
 }
 
-
 CMagazine::~CMagazine()
 {
-	xr_delete(m_pCurrentAmmo);
+//	xr_delete(m_pCurrentAmmo);
 }
 
 float CMagazine::GetMagazineWeight(const decltype(CMagazine::m_magazine)& mag) const

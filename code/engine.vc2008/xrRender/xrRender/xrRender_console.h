@@ -168,10 +168,10 @@ enum
 	R_FLAG_HOM_DEPTH_DRAW		= (1<<23),
 	R_FLAG_SUN_ZCULLING			= (1<<24),
 	R_FLAG_SUN_OLD				= (1<<25),
-	R_FLAG_GLOW_USE				= (1<<25),
+	R_FLAG_GLOW_USE				= (1<<26),
 
-	R_FLAG_RAIN_DROPS			= (1<<26),
-	R_FLAG_SS_GAMMA_CORRECTION	= (1<<27),
+	R_FLAG_RAIN_DROPS			= (1<<27),
+	R_FLAG_SS_GAMMA_CORRECTION	= (1<<28),
 };
 
 extern ECORE_API Flags32 ps_r_ssao_flags;

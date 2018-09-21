@@ -166,14 +166,14 @@ void CRender::render_menu	()
 
 	// Main Render
 	{
-		Target->u_setrt						(Target->rt_Generic_0,nullptr,nullptr,HW.pBaseZB);		// LDR RT
+		Target->u_setrt(Target->rt_Generic_0, nullptr, nullptr, HW.pBaseZB); // LDR RT
 		g_pGamePersistent->OnRenderPPUI_main()	;	// PP-UI
 	}
 	// Distort
 	{
-		Target->u_setrt						(Target->rt_Generic_1,nullptr,nullptr,HW.pBaseZB);		// Now RT is a distortion mask
-		CHK_DX(HW.pDevice->Clear			( 0L, nullptr, D3DCLEAR_TARGET, color_rgba(127,127,0,127), 1.0f, 0L));
-		g_pGamePersistent->OnRenderPPUI_PP	()	;	// PP-UI
+		Target->u_setrt(Target->rt_Generic_1, nullptr, nullptr, HW.pBaseZB); // Now RT is a distortion mask
+		RCache.Clear(0L, nullptr, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 127), 1.0f, 0L);
+		g_pGamePersistent->OnRenderPPUI_PP();	// PP-UI
 	}
 
 	// Actual Display

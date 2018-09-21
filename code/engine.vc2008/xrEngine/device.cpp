@@ -26,6 +26,7 @@
 /////////////////////////////////////
 #pragma comment(lib, "d3dx9.lib")
 /////////////////////////////////////
+extern bool bEngineloaded;
 ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
 /////////////////////////////////////
@@ -90,10 +91,6 @@ void CRenderDevice::Clear()
 	m_pRender->Clear();
 }
 
-
-extern void CheckPrivilegySlowdown();
-
-
 void CRenderDevice::End		()
 {
 #ifdef INGAME_EDITOR
@@ -119,11 +116,7 @@ void CRenderDevice::End		()
 
 			m_pRender->ResourcesDestroyNecessaryTextures();
 			Memory.mem_compact();
-			Msg("* MEMORY USAGE: %d MByte",Memory.mem_usage());
-			Msg("* End of synchronization A[%d] R[%d]",b_is_Active, b_is_Ready);
 
-			CheckPrivilegySlowdown();
-			
 			//#HACK:
 			if(g_pGamePersistent->GameType()==1)
 			{
@@ -165,8 +158,10 @@ void 			mt_Thread	(void *ptr)
 		// we has granted permission to execute
 		mt_Thread_marker			= Device.dwFrame;
  
-		for (auto & pit : Device.seqParallel)
+		for (fastdelegate::FastDelegate0<> & pit : Device.seqParallel)
+		{
 			pit();
+		}
 		Device.seqParallel.clear();
 		Device.seqFrameMT.Process(rp_Frame);
 
@@ -205,24 +200,20 @@ ENGINE_API xr_list<LOADING_EVENT>			g_loading_events;
 
 void CRenderDevice::on_idle		()
 {
-	if (!b_is_Ready) 
-	{
-		Sleep	(100);
-		return;
-	}
+	if (!b_is_Ready) { Sleep(100); return; }
 
-	if (psDeviceFlags.test(rsStatistic))	
-		g_bEnableStatGather	= TRUE;
-	else									
-		g_bEnableStatGather	= FALSE;
+	if (psDeviceFlags.test(rsStatistic))
+		g_bEnableStatGather = TRUE;
+	else
+		g_bEnableStatGather = FALSE;
 
 	if (!g_loading_events.empty())
 	{
-        if (LOADING_EVENT& loadEvent = g_loading_events.front())
-        {
-            loadEvent();
+		if (LOADING_EVENT& loadEvent = g_loading_events.front())
+		{
+			loadEvent();
 			g_loading_events.pop_front();
-        }
+		}
 		pApp->LoadDraw();
 		return;
 	}
@@ -234,55 +225,55 @@ void CRenderDevice::on_idle		()
 	// Precache
 	if (dwPrecacheFrame)
 	{
-		float factor					= float(dwPrecacheFrame)/float(dwPrecacheTotal);
-		float angle						= PI_MUL_2 * factor;
-		vCameraDirection.set			(_sin(angle),0,_cos(angle));	vCameraDirection.normalize	();
-		vCameraTop.set					(0,1,0);
-		vCameraRight.crossproduct		(vCameraTop,vCameraDirection);
+		float factor = float(dwPrecacheFrame) / float(dwPrecacheTotal);
+		float angle = PI_MUL_2 * factor;
+		vCameraDirection.set(_sin(angle), 0, _cos(angle));	vCameraDirection.normalize();
+		vCameraTop.set(0, 1, 0);
+		vCameraRight.crossproduct(vCameraTop, vCameraDirection);
 
-		mView.build_camera_dir			(vCameraPosition,vCameraDirection,vCameraTop);
+		mView.build_camera_dir(vCameraPosition, vCameraDirection, vCameraTop);
 	}
 
 	// Matrices
-	mFullTransform.mul			(mProject,mView);
+	mFullTransform.mul(mProject, mView);
 	m_pRender->SetCacheXform(mView, mProject);
-	D3DXMatrixInverse			((D3DXMATRIX*)&mInvFullTransform, nullptr, (D3DXMATRIX*)&mFullTransform);
+	D3DXMatrixInverse((D3DXMATRIX*)&mInvFullTransform, nullptr, (D3DXMATRIX*)&mFullTransform);
 
-	vCameraPosition_saved	= vCameraPosition;
-	mFullTransform_saved	= mFullTransform;
-	mView_saved				= mView;
-	mProject_saved			= mProject;
+	vCameraPosition_saved = vCameraPosition;
+	mFullTransform_saved = mFullTransform;
+	mView_saved = mView;
+	mProject_saved = mProject;
 
 	// *** Resume threads
 	// Capture end point - thread must run only ONE cycle
 	// Release start point - allow thread to run
 	mt_csLeave.lock();
 	mt_csEnter.unlock();
-    Sleep(0);
+	Sleep(0);
 
-	Statistic->RenderTOTAL_Real.FrameStart	();
-	Statistic->RenderTOTAL_Real.Begin		();
-	if (b_is_Active)							
+	Statistic->RenderTOTAL_Real.FrameStart();
+	Statistic->RenderTOTAL_Real.Begin();
+	if (b_is_Active)
 	{
-		if (Begin())				
+		if (Begin())
 		{
 			seqRender.Process(rp_Render);
-			if (psDeviceFlags.test(rsCameraPos) 
+			if (psDeviceFlags.test(rsCameraPos)
 				|| psDeviceFlags.test(rsStatistic)
 				|| psDeviceFlags.test(rsDrawFPS)
 				|| psDeviceFlags.test(rsHWInfo)
 				|| !Statistic->errors.empty())
 			{
-					Statistic->Show();
+				Statistic->Show();
 			}
 
 			//	Present goes here
-			End										();
+			End();
 		}
 	}
 	Statistic->RenderTOTAL_Real.End();
 	Statistic->RenderTOTAL_Real.FrameEnd();
-	Statistic->RenderTOTAL.accum			= Statistic->RenderTOTAL_Real.accum;
+	Statistic->RenderTOTAL.accum = Statistic->RenderTOTAL_Real.accum;
 
 	// *** Suspend threads
 	// Capture startup point
@@ -291,16 +282,15 @@ void CRenderDevice::on_idle		()
 	mt_csLeave.unlock();
 
 	// Ensure, that second thread gets chance to execute anyway
-	if (dwFrame!=mt_Thread_marker)			
+	if (dwFrame != mt_Thread_marker)
 	{
-		for (auto & pit : Device.seqParallel)
-			pit();
-		Device.seqParallel.clear	();
-		seqFrameMT.Process					(rp_Frame);
+		for (auto & pit : Device.seqParallel) { pit(); }
+		Device.seqParallel.clear();
+		seqFrameMT.Process(rp_Frame);
 	}
 
 	if (!b_is_Active)
-		Sleep		(1);
+		Sleep(1);
 }
 
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
@@ -403,6 +393,9 @@ void CRenderDevice::Run			()
 
 void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 {
+	// Don't drawing wnd when slash is active
+	if (!bEngineloaded) return;
+
     DWORD	dwWindowStyle		= 0;
     DWORD	dwWidthCurr				= psCurrentVidMode[0];
     DWORD	dwHeightCurr			= psCurrentVidMode[1];
@@ -466,14 +459,11 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     if (!bNewFullscreen)
     {
         AdjustWindowRect(&WindowBounds, dwWindowStyle, FALSE);
-
-        SetWindowPos	(m_hWnd,
-						HWND_NOTOPMOST,
-                        WindowBounds.left,
-                        WindowBounds.top,
-						(WindowBounds.right - WindowBounds.left),
-						(WindowBounds.bottom - WindowBounds.top),
-						SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
+		SetWindowPos(m_hWnd, HWND_NOTOPMOST,
+					 WindowBounds.left, WindowBounds.top,
+					 (WindowBounds.right - WindowBounds.left),
+					 (WindowBounds.bottom - WindowBounds.top),
+					 SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
     }
 
     if (Device.b_is_Ready && bFullscreen != bNewFullscreen)
@@ -483,7 +473,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     else
     {
         ShowCursor(FALSE);
-        SetForegroundWindow(m_hWnd);
+		SetForegroundWindow(m_hWnd);
     }
 }
 

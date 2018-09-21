@@ -1174,7 +1174,7 @@ void 	CIKLimb::BonesCallback0(CBoneInstance* B)
 #ifdef DEBUG
 	CIKLimb&	L = *D->m_limb;
 	if (ph_dbg_draw_mask1.test(phDbgDrawIKLimits))
-		DBG_DrawRotation3(Fmatrix().mul_43(*D->m_obj, start), x, L.m_limb.jt_limits, 0, 1, 2);
+		DBG_DrawRotation3(Fmatrix().mul_43(*D->m_obj, start), x, L.m_limb.get_jt_limits(), 0, 1, 2);
 	if (ph_dbg_draw_mask.test(phDbgDrawIKGoal))
 	{
 		DBG_DrawMatrix(Fmatrix().mul_43(*D->m_obj, start), 1.f);
@@ -1222,7 +1222,7 @@ void 	CIKLimb::BonesCallback2(CBoneInstance* B)
 	CIKLimb&		L = *D->m_limb;
 	if (ph_dbg_draw_mask1.test(phDbgDrawIKLimits))
 	{
-		DBG_DrawRotation3(Fmatrix().mul_43(*D->m_obj, start), x, L.m_limb.jt_limits, 4, 5, 6);
+		DBG_DrawRotation3(Fmatrix().mul_43(*D->m_obj, start), x, L.m_limb.get_jt_limits(), 4, 5, 6);
 	}
 	if (ph_dbg_draw_mask.test(phDbgDrawIKGoal))
 	{
