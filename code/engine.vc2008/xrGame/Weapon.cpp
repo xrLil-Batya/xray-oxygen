@@ -904,6 +904,7 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 			FireStart();
 		else
 			FireEnd();
+
 		return true;
 	}
 
@@ -912,7 +913,7 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 		CActor* pActor = smart_cast<CActor*>(H_Parent());
 		CCustomOutfit* pOutfit = pActor->GetOutfit();
 
-		return (!(pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint)))) ? SwitchAmmoType(flags) : false;
+		return !(pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint))) && SwitchAmmoType(flags);
 	}
 
 	case kWPN_ZOOM:

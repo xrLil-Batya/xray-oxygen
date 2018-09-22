@@ -14,11 +14,11 @@ CPuddles *Puddles;
 
 void CRender::level_Load(IReader* fs)
 {
-	R_ASSERT						(0!=g_pGameLevel);
-	R_ASSERT						(!b_loaded);
+	R_ASSERT(0!=g_pGameLevel);
+	R_ASSERT(!b_loaded);
 
 	// Begin
-	pApp->LoadBegin					();
+	pApp->LoadBegin();
 	dxRenderDeviceRender::Instance().Resources->DeferredLoad	(TRUE);
 	IReader*						chunk;
 

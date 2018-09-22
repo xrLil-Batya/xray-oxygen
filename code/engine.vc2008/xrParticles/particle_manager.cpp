@@ -166,10 +166,16 @@ void CParticleManager::Update(int effect_id, int alist_id, float dt)
 
 	// Step through all the actions in the action list.
 	float kill_old_time = 1.0f;
-	for (PAVecIt it = pa->begin(); it != pa->end(); ++it)
+	for (PAPI::ParticleAction* pAction : *pa)
 	{
-		VERIFY((*it));
-		(*it)->Execute(pe, dt, kill_old_time);
+		try
+		{
+			pAction->Execute(pe, dt, kill_old_time);
+		}
+		catch(...)
+		{
+			Log("[Warning] Current Particle action is invalid!");
+		}
 	}
 	pa->unlock();
 }
