@@ -194,7 +194,7 @@ bool CUIActorMenu::DropAllItemsFromRuck( bool quest_force )
 
 bool FindItemInList(CUIDragDropListEx* lst, PIItem pItem, CUICellItem*& ci_res)
 {
-	u32 count = lst->ItemsCount();
+	u32 count = lst ? lst->ItemsCount() : 0;
 	for (u32 i=0; i<count; ++i)
 	{
 		CUICellItem* pCellItm = lst->GetItemIdx(i);
@@ -270,31 +270,25 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 					pl.type		= eItemPlaceRuck;
 					pl.slot_id	= GRENADE_SLOT;
 				}
-#ifndef MASTER_GOLD
-				Msg("item place [%d]", pl);
-#endif // #ifndef MASTER_GOLD
 
-				if(pl.type==eItemPlaceSlot)
-					lst_to_add						= GetSlotList(pl.slot_id);
-				else if(pl.type==eItemPlaceBelt)
-					lst_to_add						= GetListByType(iActorBelt);
+				bool isDeadBodySearch = GetMenuMode() == mmDeadBodyOrContainerSearch;
+				if (!isDeadBodySearch && pl.type == eItemPlaceSlot)
+					lst_to_add = GetSlotList(pl.slot_id);
+				else if (!isDeadBodySearch && pl.type == eItemPlaceBelt)
+					lst_to_add = GetListByType(iActorBelt);
+				else if (pItem->parent_id() == m_pActorInvOwner->object_id())
+					lst_to_add = GetListByType(iActorBag);
 				else
-				{
-					if(pItem->parent_id()==m_pActorInvOwner->object_id())
-						lst_to_add						= GetListByType(iActorBag);
-					else
-						lst_to_add						= GetListByType(iDeadBodyBag);
-				}
+					lst_to_add = GetListByType(iDeadBodyBag);
 
-
-				while ( all_lists[i] )
+				while (all_lists[i])
 				{
 					CUIDragDropListEx*	curr = all_lists[i];
-					CUICellItem*		ci   = nullptr;
+					CUICellItem*		ci = nullptr;
 
-					if ( FindItemInList(curr, pItem, ci) )
+					if (FindItemInList(curr, pItem, ci))
 					{
-						if ( lst_to_add != curr )
+						if (lst_to_add != curr)
 						{
 							RemoveItemFromList(curr, pItem);
 						}
@@ -306,8 +300,9 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 					}
 					++i;
 				}
-				CUICellItem*		ci   = nullptr;
-				if(GetMenuMode()==mmDeadBodyOrContainerSearch && FindItemInList(lst_to_add, pItem, ci))
+
+				CUICellItem* ci = nullptr;
+				if(isDeadBodySearch && FindItemInList(lst_to_add, pItem, ci))
 					break;
 
 				if ( !b_already )
