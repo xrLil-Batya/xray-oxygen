@@ -204,7 +204,7 @@ CModelPool::~CModelPool()
 
 dxRender_Visual* CModelPool::Instance_Find(LPCSTR N)
 {
-	dxRender_Visual*				Model=0;
+	dxRender_Visual*				Model=nullptr;
 	xr_vector<ModelDef>::iterator	I;
 
 	for (I=Models.begin(); I!=Models.end(); I++)
@@ -457,7 +457,7 @@ void CModelPool::memory_stats		( u32& vb_mem_video, u32& vb_mem_system, u32& ib_
 		dxRender_Visual* ptr = it->model;
 		Fvisual* vis_ptr = dynamic_cast<Fvisual*> (ptr);
 
-		if( vis_ptr == NULL )
+		if( vis_ptr == nullptr)
 			continue;
 #if !defined(USE_DX10) && !defined(USE_DX11)
 		D3DINDEXBUFFER_DESC IB_desc;
@@ -465,23 +465,29 @@ void CModelPool::memory_stats		( u32& vb_mem_video, u32& vb_mem_system, u32& ib_
 
 		vis_ptr->m_fast->p_rm_Indices->GetDesc( &IB_desc );
 
-		if( IB_desc.Pool == D3DPOOL_DEFAULT ||
-			IB_desc.Pool == D3DPOOL_MANAGED )
-			ib_mem_video += IB_desc.Size;
+		D3DPOOL			IB_Pool = IB_desc.Pool;
+		unsigned int	IB_Size = IB_desc.Size;
 
-		if( IB_desc.Pool == D3DPOOL_MANAGED ||
-			IB_desc.Pool == D3DPOOL_SCRATCH )
-			ib_mem_system += IB_desc.Size;
+		if(	IB_Pool == D3DPOOL_DEFAULT ||
+			IB_Pool == D3DPOOL_MANAGED )
+			ib_mem_video += IB_Size;
+
+		if(IB_Pool == D3DPOOL_MANAGED ||
+			IB_Pool == D3DPOOL_SCRATCH )
+			ib_mem_system += IB_Size;
 
 		vis_ptr->m_fast->p_rm_Vertices->GetDesc( &VB_desc );
 
-		if( VB_desc.Pool == D3DPOOL_DEFAULT ||
-			VB_desc.Pool == D3DPOOL_MANAGED )
-			vb_mem_video += IB_desc.Size;
+		D3DPOOL			VB_Pool = VB_desc.Pool;
+		unsigned int	VB_Size = VB_desc.Size;
+
+		if (VB_Pool == D3DPOOL_DEFAULT ||
+			VB_Pool == D3DPOOL_MANAGED)
+			vb_mem_video += VB_Size;
 
 		if( VB_desc.Pool == D3DPOOL_MANAGED ||
 			VB_desc.Pool == D3DPOOL_SCRATCH )
-			vb_mem_system += IB_desc.Size;
+			vb_mem_system += VB_Size;
 
 #else
 		D3D_BUFFER_DESC IB_desc;
