@@ -337,7 +337,6 @@ void CStats::Show()
             CPU::Info.getCPULoad(cpuLoad);
             cpuBefore = cpuLoad;
 
-			//FLOAT* fCPUUsage = (FLOAT*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(FLOAT) * sys.
 			CPU::Info.MTCPULoad();
         }
 
@@ -380,7 +379,7 @@ void CStats::Show()
 #ifdef DEBUG
 	//////////////////////////////////////////////////////////////////////////
 	// Show errors
-	if (!g_bDisableRedText && errors.size())
+	if (!g_bDisableRedText && !errors.empty())
 	{
 		CGameFont&	F = *((CGameFont*)pFont);
 		F.SetColor	(color_rgba(255,16,16,191));

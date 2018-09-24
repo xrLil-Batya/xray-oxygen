@@ -360,9 +360,9 @@ IC void floating_point_handler(int signal)
 
 IC void illegal_instruction_handler(int signal)
 {
-	if (!CPU::Info.hasFeature(CPUFeature::SSE41))
+	if (!CPU::Info.hasFeature(CPUFeature::SSE42))
 	{
-		handler_base("SSE4.1 and AVX instructions isn't legal on your CPU");
+		handler_base("SSE4.2 and AVX instructions isn't legal on your CPU");
 	}
 	else if (!CPU::Info.hasFeature(CPUFeature::AVX)) 
 	{
