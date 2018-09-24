@@ -1,8 +1,7 @@
 #pragma once
-
 #include "UIWindow.h"
 
-class CUIFrameLineWnd: public CUIWindow
+class UI_API CUIFrameLineWnd: public CUIWindow
 {
 	typedef CUIWindow inherited;
 public:

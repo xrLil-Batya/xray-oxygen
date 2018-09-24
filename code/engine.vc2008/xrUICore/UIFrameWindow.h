@@ -1,8 +1,7 @@
 #pragma once
-#include "uiwindow.h"
+#include "UIWindow.h"
 
-
-class CUIFrameWindow: public CUIWindow, public ITextureOwner
+class UI_API CUIFrameWindow: public CUIWindow, public ITextureOwner
 {
 	using inherited = CUIWindow;
 public:

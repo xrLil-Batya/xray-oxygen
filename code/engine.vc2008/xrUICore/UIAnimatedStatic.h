@@ -1,7 +1,7 @@
 #pragma once
 #include "UIStatic.h"
 
-class CUIAnimatedStatic: public CUIStatic
+class UI_API CUIAnimatedStatic: public CUIStatic
 {
 	typedef CUIStatic inherited;
 	// Количекство кадров анимации

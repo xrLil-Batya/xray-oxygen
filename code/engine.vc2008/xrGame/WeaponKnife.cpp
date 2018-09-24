@@ -270,7 +270,7 @@ void CWeaponKnife::Fire2Start ()
 {
 	SwitchState(eFire2);
 	if (ParentIsActor())
-		g_actor->set_state_wishful(g_actor->get_state_wishful() & (~mcSprint));
+		Actor()->set_state_wishful(Actor()->get_state_wishful() & (~mcSprint));
 }
 
 

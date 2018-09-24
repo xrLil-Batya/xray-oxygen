@@ -1873,15 +1873,6 @@
     <Filter Include="ScriptEngine\ScriptClasses\UI\Common\MainIngame">
       <UniqueIdentifier>{d2493ff5-f2f9-46da-8808-1f6107794d1e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\OptionsItem">
-      <UniqueIdentifier>{f1c34a70-e43e-4966-b6d0-b964b7b45460}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\MainMenu">
-      <UniqueIdentifier>{5470b9a9-25f9-4ded-a58c-be802998b8aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding">
-      <UniqueIdentifier>{c3c69ef4-560a-4613-83f9-5a4eb67a4940}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities">
       <UniqueIdentifier>{c098af61-c1f4-44e1-9869-ba0afcc2ea57}</UniqueIdentifier>
     </Filter>
@@ -1914,9 +1905,6 @@
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Windows">
       <UniqueIdentifier>{41c50b76-b1de-43d1-9c16-414fc609b4e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar">
-      <UniqueIdentifier>{d0e93438-f8ff-4ed8-b43e-4f16a0febec9}</UniqueIdentifier>
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\TabControl">
       <UniqueIdentifier>{9af042b2-e133-45b4-887a-28e4890b2040}</UniqueIdentifier>
@@ -5412,41 +5400,11 @@
     <ClInclude Include="ui\UIMessagesWindow.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
-    <ClInclude Include="ui\UIMoneyIndicator.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClInclude>
     <ClInclude Include="ui\UIMotionIcon.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIPdaMsgListItem.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="UIZoneMap.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIOptionsItem.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIOptionsManager.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIOptionsManagerScript.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\MMSound.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIMMShniaga.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIEditKeyBind.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIKeyBinding.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIHelper.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
@@ -5507,15 +5465,6 @@
     </ClInclude>
     <ClInclude Include="ui\UIWindow.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIDoubleProgressBar.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIProgressBar.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIProgressShape.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITabButton.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
@@ -5629,9 +5578,6 @@
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="HUDTarget.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
-    </ClInclude>
-    <ClInclude Include="UICursor.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIGameTutorial.h">
@@ -5801,9 +5747,6 @@
     </ClInclude>
     <ClInclude Include="ActorRuck.h">
       <Filter>Core\Client\Objects\actor</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UILoadingScreen.h">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaSpot.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common</Filter>
@@ -7799,41 +7742,11 @@
     <ClCompile Include="ui\UIMessagesWindow.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIMoneyIndicator.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIMotionIcon.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIPdaMsgListItem.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="UIZoneMap.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIOptionsItem.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIOptionsManager.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIOptionsManagerScript.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\MMSound.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIMMShniaga.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIEditKeyBind.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIKeyBinding.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIHelper.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
@@ -7912,15 +7825,6 @@
     </ClCompile>
     <ClCompile Include="ui\UIWindow.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIDoubleProgressBar.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIProgressBar.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIProgressShape.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITabButton.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
@@ -8025,9 +7929,6 @@
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="HUDTarget.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
-    </ClCompile>
-    <ClCompile Include="UICursor.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorial.cpp">
@@ -8221,9 +8122,6 @@
     </ClCompile>
     <ClCompile Include="ActorRuck.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UILoadingScreen.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClCompile>
     <ClCompile Include="UIGame.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common</Filter>

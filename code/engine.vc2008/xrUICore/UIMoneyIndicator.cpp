@@ -2,15 +2,15 @@
 #include "UIMoneyIndicator.h"
 #include "xrUIXmlParser.h"
 #include "UIXmlInit.h"
-#include "UIGameLog.hpp"
 
-CUIMoneyIndicator::CUIMoneyIndicator(){
+CUIMoneyIndicator::CUIMoneyIndicator()
+{
 	AttachChild(&m_back);
 	AttachChild(&m_money_amount);
 	AttachChild(&m_money_change);
 }
 
-void CUIMoneyIndicator::InitFromXML(CUIXml& xml_doc)
+void CUIMoneyIndicator::InitFromXML(CXml& xml_doc)
 {
 	CUIXmlInit::InitWindow		(xml_doc, "money_wnd", 0,	this);
 	CUIXmlInit::InitStatic		(xml_doc, "money_wnd:money_indicator",0, &m_back);

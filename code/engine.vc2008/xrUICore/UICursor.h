@@ -1,10 +1,8 @@
 #pragma once
-
 #include "ui_base.h"
 class CUIStatic;
 
-class CUICursor:	public pureRender, 
-					public pureScreenResolutionChanged
+class UI_API CUICursor:	public pureRender, public pureScreenResolutionChanged
 {
 	bool			bVisible;
 	Fvector2		vPos;

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "uizonemap.h"
+#include "UIZoneMap.h"
 
 #include "InfoPortion.h"
 #include "Pda.h"
@@ -13,8 +13,8 @@
 #include "game_graph.h"
 
 #include "ui/UIMap.h"
-#include "ui/UIXmlInit.h"
-#include "ui/UIHelper.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIHelper.h"
 #include "ui/UIInventoryUtilities.h"
 //////////////////////////////////////////////////////////////////////////
 

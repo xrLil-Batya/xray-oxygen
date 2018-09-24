@@ -1,6 +1,5 @@
 #pragma once
 #include "UIWindow.h"
-//#include "UIListWnd.h"
 #include "UIFrameWindow.h"
 #include "UIFrameLineWnd.h"
 #include "UIEditBox.h"
@@ -8,7 +7,7 @@
 class CUIXml;
 class CUIScrollView;
 
-class CUIKeyBinding : public CUIWindow 
+class UI_API CUIKeyBinding : public CUIWindow 
 {
 public:
 					CUIKeyBinding			();

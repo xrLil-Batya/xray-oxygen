@@ -2,7 +2,7 @@
 #include "UIStatic.h"
 #include "../xrScripts/export/script_export_space.h"
 
-class CUIButton : public CUIStatic
+class UI_API CUIButton : public CUIStatic
 {
 private:
 	typedef			CUIStatic				inherited;

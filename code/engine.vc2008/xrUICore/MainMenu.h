@@ -4,13 +4,14 @@ class CUIDialogWnd;
 class CUICursor;
 class CUIMessageBoxEx;
 
+#include "ui_base.h"
 #include "../xrEngine/IInputReceiver.h"
 #include "../xrEngine/Render.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "UIDialogHolder.h"
 #include "UIWndCallback.h"
 
-class CMainMenu : public IMainMenu, public IInputReceiver, public pureRender, public CDialogHolder, public CUIWndCallback, public CDeviceResetNotifier
+class UI_API CMainMenu : public IMainMenu, public IInputReceiver, public pureRender, public CDialogHolder, public CUIWndCallback, public CDeviceResetNotifier
 {
 	CUIDialogWnd*		m_startDialog;
 	

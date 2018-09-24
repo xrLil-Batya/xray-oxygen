@@ -7,7 +7,7 @@ namespace text_editor
 	enum init_mode;
 };
 
-class CUICustomEdit : public CUIStatic
+class UI_API CUICustomEdit : public CUIStatic
 {
 private:
 	typedef			CUIStatic		inherited;

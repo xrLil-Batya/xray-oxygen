@@ -1,5 +1,5 @@
 #pragma once
-#include "uiwindow.h"
+#include "UIWindow.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "UIOptionsItem.h"
 
@@ -7,7 +7,7 @@ class CUITabButton;
 
 using TABS_VECTOR = xr_vector<CUITabButton*>;
 
-class CUITabControl: public CUIWindow , public CUIOptionsItem 
+class UI_API CUITabControl: public CUIWindow , public CUIOptionsItem 
 {
 	typedef				CUIWindow inherited;
 public:

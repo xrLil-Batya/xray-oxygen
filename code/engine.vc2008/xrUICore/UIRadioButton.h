@@ -1,7 +1,7 @@
 #pragma once
 #include "UITabButton.h"
 
-class CUIRadioButton : public CUITabButton
+class UI_API CUIRadioButton : public CUITabButton
 {
 	using inherited = CUITabButton;
 public:

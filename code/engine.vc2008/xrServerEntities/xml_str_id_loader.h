@@ -1,9 +1,7 @@
 #pragma once
+#	include "../xrUICore/xrUIXmlParser.h"
 
-#ifdef XRGAME_EXPORTS
-#	include "ui/xrUIXmlParser.h"
-#else // XRGAME_EXPORTS
-#	include "xrUIXmlParser.h"
+#ifndef XRGAME_EXPORTS
 #	include "object_broker.h"
 #endif // XRGAME_EXPORTS
 

@@ -3,7 +3,7 @@
 #include "UIButton.h"
 #include "../xrScripts/export/script_export_space.h"
 
-class CUIProgressBar: public CUIWindow
+class UI_API CUIProgressBar: public CUIWindow
 {
 	friend class CUIXmlInit;
 	using inherited = CUIWindow;

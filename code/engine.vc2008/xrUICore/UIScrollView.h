@@ -1,12 +1,11 @@
 #pragma once
 #include "UIScrollBar.h"
-#include "UIWindow.h"
 #include "UIWndCallback.h"
 
 class CUIScrollBar;
 class CUIFixedScrollBar;
 
-class CUIScrollView :public CUIWindow, public CUIWndCallback
+class UI_API CUIScrollView :public CUIWindow, public CUIWndCallback
 {
 typedef CUIWindow	inherited;
 friend class CUIXmlInit; //for init

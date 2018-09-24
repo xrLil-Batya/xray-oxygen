@@ -1,8 +1,9 @@
 #pragma once
+#include "linker.h"
 #include "ui_defs.h"
 
 
-class CUIStaticItem
+class UI_API CUIStaticItem
 {
 protected:
 public:

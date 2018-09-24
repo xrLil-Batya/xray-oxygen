@@ -1,9 +1,9 @@
 #pragma once
-
+#include "linker.h"
 struct SCallbackInfo;
 class CUIWindow;
 
-class CUIWndCallback
+class UI_API CUIWndCallback
 {
 public:
 	using void_function = fastdelegate::FastDelegate2<CUIWindow*,void*,void>;

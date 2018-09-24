@@ -5,6 +5,8 @@
 //	Description : UI Helper class
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "linker.h"
+
 class CXml;
 class CUIWindow;
 class CUIStatic;
@@ -19,7 +21,7 @@ class CUIDragDropListEx;
 class CUIDragDropReferenceList;
 class CUIEditBox;
 
-class UIHelper
+class UI_API UIHelper
 {
 public:
 	UIHelper		() = default;

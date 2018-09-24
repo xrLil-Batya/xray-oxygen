@@ -2,7 +2,7 @@
 #include "UIButton.h"
 #include "UI_IB_Static.h"
 
-class CUI3tButton : public CUIButton 
+class UI_API CUI3tButton : public CUIButton 
 {
 	typedef CUIButton	inherited;
 	friend class CUIXmlInit;

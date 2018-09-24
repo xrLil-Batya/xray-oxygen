@@ -4,7 +4,7 @@
 class CUITextWnd;
 class CUIStatic;
 
-class CUIListBoxItem : public CUIFrameLineWnd, public CUISelectable
+class UI_API CUIListBoxItem : public CUIFrameLineWnd, public CUISelectable
 {
 	using inherited = CUIFrameLineWnd; // C++11 style
 public:

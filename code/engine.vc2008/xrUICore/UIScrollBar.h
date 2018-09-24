@@ -5,7 +5,7 @@ class CUI3tButton;
 class CUIScrollBox;
 class CUIFrameLineWnd;
 
-class CUIScrollBar :public CUIWindow
+class UI_API CUIScrollBar :public CUIWindow
 {
 private:
 	typedef CUIWindow inherited;

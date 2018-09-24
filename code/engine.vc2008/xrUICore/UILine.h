@@ -32,7 +32,7 @@ IC	bool is_separated()	{ return (0 == word_2.pos)||(word_1.pos>=word_2.pos); }
 
 // Attention! Destructor is not virtual.
 // if you want to inherit this class then make _coresponding_ changes
-class CUILine 
+class UI_API CUILine 
 {
 	friend class CUILines;
 public:    

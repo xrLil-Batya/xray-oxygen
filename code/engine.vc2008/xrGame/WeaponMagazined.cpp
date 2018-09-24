@@ -15,8 +15,8 @@
 #include "UIGame.h"
 #include "object_broker.h"
 #include "..\xrEngine\string_table.h"
-#include "ui/UIXmlInit.h"
-#include "ui/UIStatic.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIStatic.h"
 #include "game_object_space.h"
 #include "script_callback_ex.h"
 #include "script_game_object.h"
@@ -26,8 +26,6 @@
 
 ENGINE_API extern float psHUD_FOV;
 ENGINE_API extern float psHUD_FOV_def;
-
-
 
 CUIXml* pWpnScopeXml = nullptr;
 

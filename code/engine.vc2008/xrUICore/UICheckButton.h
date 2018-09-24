@@ -1,10 +1,10 @@
 #pragma once
-#include "ui3tbutton.h"
+#include "UI3tButton.h"
 #include "UIOptionsItem.h"
 
 class UIHint;
 
-class CUICheckButton : public CUI3tButton, public CUIOptionsItem
+class UI_API CUICheckButton : public CUI3tButton, public CUIOptionsItem
 {
 	typedef CUI3tButton			inherited;
 

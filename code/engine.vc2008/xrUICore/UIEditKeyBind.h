@@ -1,5 +1,4 @@
 #pragma once
-
 #include "UIStatic.h"
 #include "UIOptionsItem.h"
 
@@ -7,7 +6,7 @@ struct _action;
 struct _keyboard;
 class CUIColorAnimatorWrapper;
 
-class CUIEditKeyBind : public CUIStatic, public CUIOptionsItem 
+class UI_API CUIEditKeyBind : public CUIStatic, public CUIOptionsItem 
 {
 	bool			m_bPrimary;
 	_action*		m_action;

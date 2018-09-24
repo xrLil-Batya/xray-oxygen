@@ -4,7 +4,7 @@
 
 class CUI3tButton;
 
-class CUITrackBar : public CUI_IB_FrameLineWnd, public CUIOptionsItem 
+class UI_API CUITrackBar : public CUI_IB_FrameLineWnd, public CUIOptionsItem 
 {
 public:
 					CUITrackBar				();

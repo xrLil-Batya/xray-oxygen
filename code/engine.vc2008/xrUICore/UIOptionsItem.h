@@ -1,7 +1,7 @@
 #pragma once
 #include "UIOptionsManager.h"
 
-class CUIOptionsItem
+class UI_API CUIOptionsItem
 {
 public:
 	enum ESystemDepends		{sdNothing, sdVidRestart, sdSndRestart, sdSystemRestart, sdApplyOnChange};
@@ -20,7 +20,7 @@ public:
 	virtual void			SaveBackUpOptValue	()			= 0 {};	// current->backup
 	virtual void			SaveOptValue		()			= 0;	// current->opt
 	virtual void			UndoOptValue		()			= 0;	// backup->current
-	virtual bool			IsChangedOptValue	() const 	= 0 {};	// backup!=current
+	virtual bool			IsChangedOptValue	() const 	{ return false; };	// backup!=current
 			void			OnChangedOptValue	();
 			
 protected:

@@ -1,7 +1,7 @@
 #pragma once
 #include "UIListBoxItem.h"
 
-class CUIListBoxItemMsgChain : public CUIListBoxItem
+class UI_API CUIListBoxItemMsgChain : public CUIListBoxItem
 {
 	using inherited = CUIListBoxItem;
 public:

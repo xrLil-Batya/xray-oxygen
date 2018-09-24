@@ -1,14 +1,13 @@
 #pragma once
-
 #include "UILanimController.h"
-#include "uistaticitem.h"
+#include "UIStaticItem.h"
 #include "../xrScripts/export/script_export_space.h"
-#include "uilines.h"
+#include "UILines.h"
 
 class CUIFrameWindow;
 class CLAItem;
 
-struct lanim_cont
+struct UI_API lanim_cont
 {
 	CLAItem*				m_lanim;
 	float					m_lanim_start_time;
@@ -17,13 +16,13 @@ struct lanim_cont
 	void					set_defaults		();
 };
 
-struct lanim_cont_xf :public lanim_cont
+struct UI_API lanim_cont_xf :public lanim_cont
 {
 	Fvector2				m_origSize;
 	void					set_defaults		();
 };
 
-class CUIStatic : public CUIWindow, public ITextureOwner, public CUILightAnimColorConrollerImpl
+class UI_API CUIStatic : public CUIWindow, public ITextureOwner, public CUILightAnimColorConrollerImpl
 {
 	friend class CUIXmlInit;
 private:
@@ -110,7 +109,7 @@ public:
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 
-class CUITextWnd :public CUIWindow, public CUILightAnimColorConrollerImpl
+class UI_API CUITextWnd :public CUIWindow, public CUILightAnimColorConrollerImpl
 {
 	typedef CUIWindow	inherited;
 	CUILines			m_lines;

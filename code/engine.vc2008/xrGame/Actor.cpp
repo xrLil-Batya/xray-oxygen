@@ -86,7 +86,6 @@ static Fbox		bbCrouchBox;
 static Fvector	vFootCenter;
 static Fvector	vFootExt;
 static bool		HudUpdated;
-psActorFlags = { AF_AUTOPICKUP | AF_RUN_BACKWARD | AF_IMPORTANT_SAVE | AF_SHOWDATE | AF_GET_OBJECT_PARAMS | AF_SHOW_BOSS_HEALTH };
 
 void CActor::MtSecondActorUpdate(void* pActorPointer)
 {

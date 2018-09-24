@@ -1,20 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////
 //  Created     : 19.06.2018
-//  Authors     : Xottab_DUTY (OpenXRay project)
+//  Authors     : Xottab_DUTY (OpenXRay Project)
 //                FozeSt
-//                Unfainthful
+//                Unfainthful (Oxygen Project)
 //
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
-
-#include "../../xrEngine/ILoadingScreen.h"
+#include "../xrEngine/ILoadingScreen.h"
 #include "UIStatic.h"
 #include "UIProgressBar.h"
 #include "UIWindow.h"
 
 class CApplication;
 
-class UILoadingScreen : public ILoadingScreen, public CUIWindow
+class UI_API UILoadingScreen : public ILoadingScreen, public CUIWindow
 {
 	CUIStatic* loadingProgressBackground;
 	CUIStatic* engineVersion;

@@ -3,7 +3,7 @@
 
 class CUIListBoxItem;
 
-class CUIListBox : 	public CUIScrollView
+class UI_API CUIListBox : public CUIScrollView
 {
 public:
 					CUIListBox						();

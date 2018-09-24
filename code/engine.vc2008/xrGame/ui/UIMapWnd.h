@@ -1,6 +1,6 @@
 #pragma once
-#include "UIWindow.h"
-#include "UIWndCallback.h"
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/UIWndCallback.h"
 class CUICustomMap;
 class CUIGlobalMap;
 class CUIFrameWindow;

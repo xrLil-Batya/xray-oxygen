@@ -1,8 +1,8 @@
 #pragma once
+#include "linker.h"
+#include "../xrCore/XMLCore/xrXMLParser.h"
 
-#include "../../xrCore/XMLCore/xrXMLParser.h"
-
-class CUIXml :public CXml
+class UI_API CUIXml :public CXml
 {
 	int						m_dbg_id;
 public:

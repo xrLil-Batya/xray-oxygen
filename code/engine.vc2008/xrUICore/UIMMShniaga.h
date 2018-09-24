@@ -1,13 +1,13 @@
 #pragma once
-
 #include "UIWindow.h"
+
 class CXml;
 class CUIStatic;
 class CUITextWnd;
 class CUIScrollView;
 class CMMSound;
 
-class CUIMMShniaga: public CUIWindow, public CDeviceResetNotifier
+class UI_API CUIMMShniaga: public CUIWindow, public CDeviceResetNotifier
 {
 public:
 						CUIMMShniaga			();

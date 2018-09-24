@@ -1,7 +1,8 @@
 #pragma once
+#include "linker.h"
 
 class CUIOptionsItem;
-class CUIOptionsManager
+class UI_API CUIOptionsManager
 {
 	using group_name = shared_str;
 	using items_list = xr_vector<CUIOptionsItem*>;

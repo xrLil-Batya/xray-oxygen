@@ -19,7 +19,7 @@
 #include "ai/monsters/basemonster/base_monster.h"
 #include "UIGame.h"
 #include "ui/UIMainIngameWnd.h"
-#include "ui/UIStatic.h"
+#include "../xrUICore/UIStatic.h"
 
 BOOL GodMode()	
 {  

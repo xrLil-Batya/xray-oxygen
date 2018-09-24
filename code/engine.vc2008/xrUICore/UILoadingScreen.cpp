@@ -2,24 +2,21 @@
 //  Created     : 19.06.2018
 //  Authors     : Xottab_DUTY (OpenXRay project)
 //                FozeSt
-//                Unfainthful
+//				  ForserX (Oxygen Project)
+//                Unfainthful (Oxygen Project)
 //
 ////////////////////////////////////////////////////////////////////////////
-
 #include "StdAfx.h"
 #include "UILoadingScreen.h"
-#include "../ui/UIXmlInit.h"
-#include "../../xrEngine/x_ray.h"
-#include "../../xrEngine/GameFont.h"
+#include "UIXmlInit.h"
+#include "../xrEngine/x_ray.h"
+#include "../xrEngine/GameFont.h"
 #include "UIHelper.h"
 #include "MainMenu.h"
-#include "Actor_Flags.h"
 
 extern ENGINE_API int ps_rs_loading_stages;
 
-UILoadingScreen::UILoadingScreen()
- :  loadingLogo(nullptr), loadingProgress(nullptr),
-    loadingStage(nullptr), loadingHeader(nullptr),
+UILoadingScreen::UILoadingScreen() : loadingLogo(nullptr), loadingProgress(nullptr), loadingStage(nullptr), loadingHeader(nullptr),
     loadingTipNumber(nullptr), loadingTip(nullptr)
  {
 	UILoadingScreen::Initialize();
@@ -27,7 +24,7 @@ UILoadingScreen::UILoadingScreen()
 
 void UILoadingScreen::Initialize()
  {
-	CUIXml uiXml;
+	CXml uiXml;
 	uiXml.Load(CONFIG_PATH, UI_PATH, "ui_mm_loading_screen.xml");
 	
 	loadingProgressBackground	= UIHelper::CreateStatic(uiXml, "loading_progress_background", this);

@@ -1,15 +1,14 @@
 #pragma once
 #include "UIStatic.h"
+class CXml;
 
-class CUIXml;
-
-class CUIMoneyIndicator: public CUIWindow 
+class UI_CORE CUIMoneyIndicator: public CUIWindow 
 {
 public:
 						CUIMoneyIndicator		();
 	virtual				~CUIMoneyIndicator		() = default;
 	virtual void 		Update					();
-			void 		InitFromXML				(CUIXml& xml_doc);
+			void 		InitFromXML				(CXml& xml_doc);
 			void 		SetMoneyAmount			(LPCSTR money);
 			void 		SetMoneyChange			(LPCSTR money);
 

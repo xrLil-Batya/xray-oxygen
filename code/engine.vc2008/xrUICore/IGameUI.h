@@ -2,7 +2,7 @@
 #include "UIDialogHolder.h"
 
 class game_cl_GameState;
-class IGameUI: public CDialogHolder
+class UI_API IGameUI: public CDialogHolder
 {
 	bool m_bShowGameIndicators;
 

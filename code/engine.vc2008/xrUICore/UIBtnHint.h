@@ -3,7 +3,7 @@
 
 class CUITextWnd;
 
-class CUIButtonHint :public CUIFrameWindow
+class UI_API CUIButtonHint :public CUIFrameWindow
 {
 	CUIWindow*			m_ownerWnd;
 

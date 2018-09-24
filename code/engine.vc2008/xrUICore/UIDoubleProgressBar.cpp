@@ -14,7 +14,7 @@ CUIDoubleProgressBar::~CUIDoubleProgressBar()
 {
 }
 
-void CUIDoubleProgressBar::InitFromXml( CUIXml& xml_doc, LPCSTR path )
+void CUIDoubleProgressBar::InitFromXml( CXml& xml_doc, LPCSTR path )
 {
 	CUIXmlInit::InitProgressBar( xml_doc, path, 0, &m_progress_one );
 	CUIXmlInit::InitProgressBar( xml_doc, path,	0, &m_progress_two );

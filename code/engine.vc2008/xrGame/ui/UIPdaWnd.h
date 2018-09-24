@@ -1,6 +1,6 @@
 #pragma once
 
-#include "UIDialogWnd.h"
+#include "../xrUICore/UIDialogWnd.h"
 
 class CUI3tButton;
 class CUITabControl;

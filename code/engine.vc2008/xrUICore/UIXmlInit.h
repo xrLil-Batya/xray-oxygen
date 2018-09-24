@@ -1,4 +1,5 @@
 #pragma once
+#include "linker.h"
 #include "../xrCore/XMLCore/xrXMLParser.h"
 
 class ITextureOwner;
@@ -29,7 +30,7 @@ class UIHintWindow;
 class CUILines;
 class CUITextWnd;
 
-class CUIXmlInit
+class UI_API CUIXmlInit
 {
 public:
 					CUIXmlInit				();

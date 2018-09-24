@@ -6,20 +6,22 @@
 // mail:		narrator@gsc-game.kiev.ua
 //
 // copyright 2005 GSC Game World
-
 #pragma once
-
-class CUIStaticItem;
+#include "linker.h"
 #include "ui_defs.h"
 
-struct TEX_INFO{
+class CUIStaticItem;
+
+struct UI_API TEX_INFO
+{
 	shared_str	file;
 	Frect		rect;
 	LPCSTR		get_file_name	()	{return *file;}
 	Frect		get_rect		()	{return rect;}
 };
 
-struct sh_pair{
+struct UI_API sh_pair
+{
 	shared_str	texture_name;
 	shared_str	shader_name;
 	bool operator < (const sh_pair& other) const
@@ -31,7 +33,8 @@ struct sh_pair{
 	}
 };
 
-class CUITextureMaster{
+class UI_API CUITextureMaster
+{
 public:
 
 	static void ParseShTexInfo			(LPCSTR xml_file);

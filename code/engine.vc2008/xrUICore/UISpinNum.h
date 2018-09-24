@@ -1,6 +1,6 @@
 #include "UICustomSpin.h"
 
-class CUISpinNum : public CUICustomSpin 
+class UI_API CUISpinNum : public CUICustomSpin 
 {
 public:
 					CUISpinNum			();

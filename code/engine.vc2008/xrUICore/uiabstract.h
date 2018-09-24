@@ -12,7 +12,7 @@ typedef enum {
 	valBotton
 } EVTextAlignment;
 
-class ITextureOwner
+class UI_API ITextureOwner
 {
 public:
 	virtual				~ITextureOwner			()												{}	
@@ -36,7 +36,7 @@ enum EWindowAlignment {
 	waCenter	=16
 };
 
-class CUISimpleWindow
+class UI_API CUISimpleWindow
 {
 public:
 							CUISimpleWindow		()											{m_alignment=waNone; m_wndPos.set(0,0); m_wndSize.set(0,0);} //-V730
@@ -87,7 +87,7 @@ protected:
 	EWindowAlignment		m_alignment;
 };
 
-class CUISelectable
+class UI_API CUISelectable
 {
 protected:
 	bool m_bSelected;

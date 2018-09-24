@@ -1,5 +1,4 @@
 #pragma once
-
 #include "UIEditBox.h"
 #include "UIListBox.h"
 #include "UIInteractiveBackground.h"
@@ -7,7 +6,7 @@
 
 class CUIListBoxItem;
 
-class CUIComboBox : public CUIWindow, public CUIOptionsItem, public pureRender
+class UI_API CUIComboBox : public CUIWindow, public CUIOptionsItem, public pureRender
 {
 	friend class CUIXmlInit;
 	typedef enum{

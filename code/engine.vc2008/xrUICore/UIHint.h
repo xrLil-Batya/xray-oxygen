@@ -12,7 +12,7 @@ class CUITextWnd;
 class CUIFrameWindow;
 class CXml;
 
-class UIHint : public CUIWindow
+class UI_API UIHint : public CUIWindow
 {
 private:
 	typedef CUIWindow	inherited;

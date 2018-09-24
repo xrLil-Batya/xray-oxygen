@@ -57,11 +57,13 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>UICORE_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>xrCore.lib;xrEngine.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -73,9 +75,11 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>UICORE_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrCore.lib;xrEngine.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -92,25 +96,32 @@
     <ClCompile Include="UICustomSpin.cpp" />
     <ClCompile Include="UIDialogHolder.cpp" />
     <ClCompile Include="UIDialogWnd.cpp" />
+    <ClCompile Include="UIDoubleProgressBar.cpp" />
     <ClCompile Include="UIEditBox.cpp" />
     <ClCompile Include="UIEditBoxEx.cpp" />
+    <ClCompile Include="UIEditKeyBind.cpp" />
     <ClCompile Include="UIFixedScrollBar.cpp" />
     <ClCompile Include="UIFrameLineWnd.cpp" />
     <ClCompile Include="UIFrameWindow.cpp" />
     <ClCompile Include="UIHelper.cpp" />
     <ClCompile Include="UIHint.cpp" />
+    <ClCompile Include="UIInteractiveBackground.cpp" />
+    <ClCompile Include="UIKeyBinding.cpp" />
     <ClCompile Include="UILanimController.cpp" />
     <ClCompile Include="UILine.cpp" />
     <ClCompile Include="UILines.cpp" />
     <ClCompile Include="UIListBox.cpp" />
     <ClCompile Include="UIListBoxItem.cpp" />
     <ClCompile Include="UIListBoxItemMsgChain.cpp" />
+    <ClCompile Include="UILoadingScreen.cpp" />
     <ClCompile Include="UIMessageBox.cpp" />
     <ClCompile Include="UIMessageBoxEx.cpp" />
     <ClCompile Include="UIMMShniaga.cpp" />
+    <ClCompile Include="UIMoneyIndicator.cpp" />
     <ClCompile Include="UIOptionsItem.cpp" />
     <ClCompile Include="UIOptionsManager.cpp" />
     <ClCompile Include="UIOptionsManagerScript.cpp" />
+    <ClCompile Include="UIPdaMsgListItem.cpp" />
     <ClCompile Include="UIProgressBar.cpp" />
     <ClCompile Include="UIProgressShape.cpp" />
     <ClCompile Include="UIRadioButton.cpp" />
@@ -132,6 +143,7 @@
     <ClCompile Include="ui_arrow.cpp" />
     <ClCompile Include="ui_base.cpp" />
     <ClCompile Include="UI_IB_Static.cpp" />
+    <ClCompile Include="xrUIXmlParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IGameUI.h" />
@@ -150,14 +162,17 @@
     <ClInclude Include="UICustomSpin.h" />
     <ClInclude Include="UIDialogHolder.h" />
     <ClInclude Include="UIDialogWnd.h" />
+    <ClInclude Include="UIDoubleProgressBar.h" />
     <ClInclude Include="UIEditBox.h" />
     <ClInclude Include="UIEditBoxEx.h" />
+    <ClInclude Include="UIEditKeyBind.h" />
     <ClInclude Include="UIFixedScrollBar.h" />
     <ClInclude Include="UIFrameLineWnd.h" />
     <ClInclude Include="UIFrameWindow.h" />
     <ClInclude Include="UIHelper.h" />
     <ClInclude Include="UIHint.h" />
     <ClInclude Include="UIInteractiveBackground.h" />
+    <ClInclude Include="UIKeyBinding.h" />
     <ClInclude Include="UILanimController.h" />
     <ClInclude Include="UILine.h" />
     <ClInclude Include="UILines.h" />
@@ -165,13 +180,16 @@
     <ClInclude Include="UIListBox.h" />
     <ClInclude Include="UIListBoxItem.h" />
     <ClInclude Include="UIListBoxItemMsgChain.h" />
+    <ClInclude Include="UILoadingScreen.h" />
     <ClInclude Include="UIMessageBox.h" />
     <ClInclude Include="UIMessageBoxEx.h" />
     <ClInclude Include="UIMessages.h" />
     <ClInclude Include="UIMMShniaga.h" />
+    <ClInclude Include="UIMoneyIndicator.h" />
     <ClInclude Include="UIOptionsItem.h" />
     <ClInclude Include="UIOptionsManager.h" />
     <ClInclude Include="UIOptionsManagerScript.h" />
+    <ClInclude Include="UIPdaMsgListItem.h" />
     <ClInclude Include="UIProgressBar.h" />
     <ClInclude Include="UIProgressShape.h" />
     <ClInclude Include="UIRadioButton.h" />
@@ -194,6 +212,7 @@
     <ClInclude Include="ui_base.h" />
     <ClInclude Include="ui_defs.h" />
     <ClInclude Include="UI_IB_Static.h" />
+    <ClInclude Include="xrUIXmlParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

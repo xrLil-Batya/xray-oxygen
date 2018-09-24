@@ -1,10 +1,9 @@
 #pragma once
-
-#include "uiwindow.h"
+#include "UIWindow.h"
 #include "UIDialogHolder.h"
 class CDialogHolder;
 
-class CUIDialogWnd : public CUIWindow  
+class UI_API CUIDialogWnd : public CUIWindow
 {
 private:
 	typedef CUIWindow inherited;

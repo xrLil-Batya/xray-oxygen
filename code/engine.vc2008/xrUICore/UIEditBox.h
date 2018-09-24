@@ -4,7 +4,7 @@
 #include "UICustomEdit.h"
 class CUIFrameLineWnd;
 
-class CUIEditBox : public CUIOptionsItem, public CUICustomEdit
+class UI_API CUIEditBox : public CUIOptionsItem, public CUICustomEdit
 {
 public:
 					CUIEditBox				();

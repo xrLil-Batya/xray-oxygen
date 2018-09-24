@@ -1,4 +1,5 @@
 #pragma once
+#include "linker.h"
 #include "../xrEngine/xr_level_controller.h"
 #include "UIMessages.h"
 #include "../xrScripts/export/script_export_space.h"
@@ -7,7 +8,7 @@
 
 template <typename T, typename allocator = xalloc<T>>
 using ui_list = xr_list<T, allocator>; // xr_vector<T, allocator>;
-class CUIWindow  : public CUISimpleWindow
+class UI_API CUIWindow  : public CUISimpleWindow
 {
 public:
 				CUIWindow						();

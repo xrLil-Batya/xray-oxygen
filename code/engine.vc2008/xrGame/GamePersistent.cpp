@@ -5,8 +5,8 @@
 #include "../xrEngine/gamemtllib.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "profiler.h"
-#include "MainMenu.h"
-#include "UICursor.h"
+#include "../xrUICore/MainMenu.h"
+#include "../xrUICore/UICursor.h"
 #include "game_base.h"
 #include "level.h"
 #include "../xrParticles/psystem.h"
@@ -18,7 +18,7 @@
 #include "ActorEffector.h"
 #include "actor.h"
 
-#include "UI/UItextureMaster.h"
+#include "../xrUICore/UItextureMaster.h"
 #include "ai_space.h"
 #include "../xrServerEntities/script_engine.h"
 
@@ -33,7 +33,7 @@
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIPdaWnd.h"
 #include "../xrEngine/x_ray.h"
-#include "ui/UILoadingScreen.h"
+#include "../xrUICore/UILoadingScreen.h"
 
 #ifndef MASTER_GOLD
 #	include "custommonster.h"

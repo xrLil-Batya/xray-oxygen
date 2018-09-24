@@ -5,8 +5,8 @@
 //	Description : UI Secondary Task Wnd class
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "UIWindow.h"
-#include "UIWndCallback.h"
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/UIWndCallback.h"
 
 #define PDA_TASK_XML	"pda_tasks.xml"
 

@@ -3,7 +3,7 @@
 
 class CUIFrameWindow;
 
-class CUIEditBoxEx : public CUICustomEdit 
+class UI_API CUIEditBoxEx : public CUICustomEdit 
 {
 public:
 					CUIEditBoxEx	();

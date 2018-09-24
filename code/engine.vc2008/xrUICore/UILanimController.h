@@ -1,6 +1,5 @@
 #pragma once
-
-#include "uiwindow.h"
+#include "UIWindow.h"
 #include "../xrEngine/LightAnimLibrary.h"
 
 class CLAItem;
@@ -10,7 +9,7 @@ class CLAItem;
 #define LA_TEXTCOLOR		(1<<2)
 #define LA_TEXTURECOLOR		(1<<3)
 
-struct color_animation
+struct UI_API color_animation
 {
 							color_animation		();
 	CLAItem*				m_lanim;
@@ -19,24 +18,24 @@ struct color_animation
 	Flags8					m_lanimFlags;
 };
 
-struct xform_animation :public color_animation
+struct UI_API xform_animation :public color_animation
 {
 							xform_animation		();
 	Fvector2				m_origSize;
 	void					set_defaults		();
 };
 
-class CUILightAnimColorConroller
+class UI_API CUILightAnimColorConroller
 {
 public:
 	virtual bool	IsColorAnimationPresent			()											= 0;
 	virtual void	ResetColorAnimation				()											= 0;
-	virtual void	SetColorAnimation				(LPCSTR lanim, u8 const& flags, float delay=0.0f)	= 0;
+	virtual void	SetColorAnimation				(LPCSTR lanm, u8 const& fl, float delay=0.f)= 0;
 	virtual void	ColorAnimationSetTextureColor	(u32 color, bool only_alpha)				{};
 	virtual void	ColorAnimationSetTextColor		(u32 color, bool only_alpha)				{};
 };
 
-class CUILightAnimColorConrollerImpl :public CUILightAnimColorConroller
+class UI_API CUILightAnimColorConrollerImpl :public CUILightAnimColorConroller
 {
 	color_animation			m_lanim_clr;
 public:
@@ -107,8 +106,7 @@ public:
 	}
 };
 
-class CUIColorAnimConrollerContainer :	public CUIWindow, 
-										public CUILightAnimColorConrollerImpl
+class UI_API CUIColorAnimConrollerContainer : public CUIWindow, public CUILightAnimColorConrollerImpl
 {
 	typedef CUIWindow		inherited;
 public:

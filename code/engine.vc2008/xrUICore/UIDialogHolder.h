@@ -1,9 +1,10 @@
 #pragma once
+#include "linker.h"
 
 class CUIDialogWnd;
 class CUIWindow;
 
-class dlgItem
+class UI_API dlgItem
 {
 public:
 	dlgItem(CUIWindow* pWnd);
@@ -12,10 +13,11 @@ public:
 	bool operator < (const dlgItem& itm) const;
 };
 
-class recvItem
+class UI_API recvItem
 {
 public:
-	enum {
+	enum 
+	{
 		eCrosshair = (1 << 0),
 		eIndicators = (1 << 1)
 	};
@@ -24,7 +26,7 @@ public:
 	Flags8 m_flags;
 };
 
-class CDialogHolder : public pureFrame
+class UI_API CDialogHolder : public pureFrame
 {
 	//dialogs
 	xr_vector<recvItem> m_input_receivers;

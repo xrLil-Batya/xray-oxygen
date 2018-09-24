@@ -1,11 +1,11 @@
 #pragma once
+#include "linker.h"
+#include "ui_defs.h"
 
 class CUICursor;
 class CUIGame;
 
-#include "ui_defs.h"
-
-class CDeviceResetNotifier :public pureDeviceReset
+class UI_API CDeviceResetNotifier :public pureDeviceReset
 {
 public:
 	CDeviceResetNotifier() { Device.seqDeviceReset.Add(this, REG_PRIORITY_NORMAL); };
@@ -13,7 +13,7 @@ public:
 	virtual void		OnDeviceReset() {};
 };
 
-struct CFontManager :public pureDeviceReset
+struct UI_API CFontManager :public pureDeviceReset
 {
 	CFontManager();
 	~CFontManager();
@@ -47,7 +47,7 @@ struct CFontManager :public pureDeviceReset
 	virtual void OnDeviceReset();
 };
 
-class ui_core : public CDeviceResetNotifier
+class UI_API ui_core : public CDeviceResetNotifier
 {
 	C2DFrustum m_2DFrustum;
 	C2DFrustum m_2DFrustumPP;

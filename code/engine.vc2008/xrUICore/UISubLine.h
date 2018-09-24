@@ -5,12 +5,13 @@
 // Mail:		narrator@gsc-game.kiev.ua
 //
 // Copyright 2005 GSC Game World
-
 #pragma once
+#include "linker.h"
 
 // Attention! Destructor is not virtual.
 // if you want to inherite this class then make _coresponding_ changes
-class CUISubLine{
+class UI_API CUISubLine
+{
 public:
 	CUISubLine();
 	CUISubLine(const CUISubLine& other);

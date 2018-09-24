@@ -22,8 +22,8 @@
 #include "debug_renderer.h"
 #include "clsid_game.h"
 #include "weaponBinocularsVision.h"
-#include "ui/UIWindow.h"
-#include "ui/UIXmlInit.h"
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "Torch.h"
 #include "cameralook.h"
 #include "CustomOutfit.h"
@@ -829,7 +829,7 @@ void CWeapon::UpdateCL()
 
 void CWeapon::EnableActorNVisnAfterZoom()
 {
-	CActor *pA = g_actor;
+	CActor *pA = Actor();
 
 	if (pA)
 	{

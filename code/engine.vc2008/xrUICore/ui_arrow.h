@@ -2,7 +2,7 @@
 #include "UIStatic.h"
 
 class CXml;
-class UI_Arrow: public CUIStatic
+class UI_API UI_Arrow: public CUIStatic
 {
 private:
 	typedef CUIStatic	inherited;
