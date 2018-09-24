@@ -127,7 +127,7 @@ void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
 
-	if (pa == NULL)
+	if (pa == nullptr)
 		return; // ERROR
 
 	pa->lock();
