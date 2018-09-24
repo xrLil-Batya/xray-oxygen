@@ -465,23 +465,23 @@ void CModelPool::memory_stats		( u32& vb_mem_video, u32& vb_mem_system, u32& ib_
 
 		vis_ptr->m_fast->p_rm_Indices->GetDesc( &IB_desc );
 
-		D3DPOOL			IB_Pool = IB_desc.Pool;
-		unsigned int	IB_Size = IB_desc.Size;
+		D3DPOOL         IB_Pool = IB_desc.Pool;
+		unsigned int    IB_Size = IB_desc.Size;
 
-		if(	IB_Pool == D3DPOOL_DEFAULT ||
+		if( IB_Pool == D3DPOOL_DEFAULT ||
 			IB_Pool == D3DPOOL_MANAGED )
 			ib_mem_video += IB_Size;
 
-		if(IB_Pool == D3DPOOL_MANAGED ||
+		if( IB_Pool == D3DPOOL_MANAGED ||
 			IB_Pool == D3DPOOL_SCRATCH )
 			ib_mem_system += IB_Size;
 
 		vis_ptr->m_fast->p_rm_Vertices->GetDesc( &VB_desc );
 
-		D3DPOOL			VB_Pool = VB_desc.Pool;
-		unsigned int	VB_Size = VB_desc.Size;
+		D3DPOOL         VB_Pool = VB_desc.Pool;
+		unsigned int    VB_Size = VB_desc.Size;
 
-		if (VB_Pool == D3DPOOL_DEFAULT ||
+		if( VB_Pool == D3DPOOL_DEFAULT ||
 			VB_Pool == D3DPOOL_MANAGED)
 			vb_mem_video += VB_Size;
 
