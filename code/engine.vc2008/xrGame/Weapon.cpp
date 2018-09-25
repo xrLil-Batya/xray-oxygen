@@ -789,7 +789,7 @@ void CWeapon::UpdateCL()
 		if (pActor && !pActor->AnyMove() && this == pActor->inventory().ActiveItem())
 		{
 			if (!hud_adj_mode && GetState() == eIdle && (Device.dwTimeGlobal - m_dw_curr_substate_time > iTimeForSwitchState) 
-				&& !IsZoomed() && g_player_hud->attached_item(1))
+				&& !IsZoomed() && !g_player_hud->attached_item(1))
 			{
 				if (AllowBore())
 					SwitchState(eBore);
@@ -799,7 +799,7 @@ void CWeapon::UpdateCL()
 		}
 	}
 
-	if (m_zoom_params.m_pNight_vision && !IsZoomed() && ZoomTexture() && !IsRotatingToZoom())
+	if (m_zoom_params.m_pNight_vision && IsZoomed() && ZoomTexture() && !IsRotatingToZoom())
 	{
 		if (!m_zoom_params.m_pNight_vision->IsActive())
 		{
@@ -844,7 +844,7 @@ void CWeapon::EnableActorNVisnAfterZoom()
 
 bool CWeapon::need_renderable()
 {
-	return true;
+	return !(IsZoomed() && ZoomTexture() && !IsRotatingToZoom());
 }
 
 void CWeapon::renderable_Render()
@@ -904,6 +904,7 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 			FireStart();
 		else
 			FireEnd();
+
 		return true;
 	}
 
@@ -912,7 +913,7 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 		CActor* pActor = smart_cast<CActor*>(H_Parent());
 		CCustomOutfit* pOutfit = pActor->GetOutfit();
 
-		return (!(pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint)))) ? SwitchAmmoType(flags) : false;
+		return !(pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint))) && SwitchAmmoType(flags);
 	}
 
 	case kWPN_ZOOM:
@@ -921,10 +922,13 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 			switch (flags)
 			{
 			case CMD_START:
-				if (!IsZoomed() && !IsPending())
+				if (!IsZoomed())
 				{
-					if (GetState() != eIdle)
-						SwitchState(eIdle);
+					if(!IsPending())
+					{
+						if (GetState() != eIdle)
+							SwitchState(eIdle);
+					}
 					OnZoomIn();
 				}
 				else if (!b_toggle_weapon_aim)

@@ -360,9 +360,9 @@ IC void floating_point_handler(int signal)
 
 IC void illegal_instruction_handler(int signal)
 {
-	if (!CPU::Info.hasFeature(CPUFeature::SSE41))
+	if (!CPU::Info.hasFeature(CPUFeature::SSE42))
 	{
-		handler_base("SSE4.1 and AVX instructions isn't legal on your CPU");
+		handler_base("SSE4.2 and AVX instructions isn't legal on your CPU");
 	}
 	else if (!CPU::Info.hasFeature(CPUFeature::AVX)) 
 	{
@@ -457,7 +457,7 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
         MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
         if (pDump)
         {
-			LPSTR ErrorString = nullptr;
+			string512 ErrorString = { NULL };
 			DWORD ErrorSysCode = NULL;
 			DWORD ErrorStringSize = NULL;
 
@@ -576,16 +576,7 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
                 else
                 {
 					ErrorSysCode = GetLastError();
-
-					ErrorStringSize = FormatMessageA(
-						FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-						NULL,
-						ErrorSysCode,
-						MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),	// default lang
-						ErrorString,
-						NULL,
-						NULL
-					);
+					ErrorStringSize = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, ErrorSysCode, 0, ErrorString, sizeof(ErrorString) - 1, nullptr);
 
 					if (!!ErrorString && ErrorSysCode && ErrorStringSize)
 					{
@@ -603,16 +594,7 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
             else
 			{
 				ErrorSysCode = GetLastError();
-
-				ErrorStringSize = FormatMessageA(
-					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-					NULL,
-					ErrorSysCode,
-					MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),	// default lang
-					ErrorString,
-					NULL,
-					NULL
-				);
+				ErrorStringSize = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, ErrorSysCode, 0, ErrorString, sizeof(ErrorString) - 1, nullptr);
 
 				if (!!ErrorString && ErrorSysCode && ErrorStringSize)
 				{

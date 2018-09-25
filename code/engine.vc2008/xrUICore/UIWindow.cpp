@@ -112,10 +112,18 @@ CUIWindow::~CUIWindow()
 
 void CUIWindow::Draw()
 {
-	for(WINDOW_LIST_it it = m_ChildWndList.begin(); m_ChildWndList.end() != it; ++it){
-		if(!(*it)->IsShown())		continue;
-		if((*it)->GetCustomDraw())	continue;
-		(*it)->Draw					();
+	for (CUIWindow* pWnd : m_ChildWndList)
+	{
+		if (!pWnd->IsShown())		continue;
+		if (pWnd->GetCustomDraw())	continue;
+		try
+		{
+			pWnd->Draw();
+		}
+		catch (...)
+		{
+			Msg("[Warning] %s wnd drawing error!", pWnd->m_windowName.c_str());
+		}
 	}
 #ifdef DEBUG
 	if(g_show_wnd_rect2){

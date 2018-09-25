@@ -94,14 +94,9 @@ void CLevel::mtLevelScriptUpdater(void* pCLevel)
 		Fvector temp_vector;
 		pLevel->m_feel_deny.feel_touch_update(temp_vector, 0.f);
 
-		// commit events from bullet manager from prev-frame
-		pLevel->BulletManager().CommitEvents();
-
 		// Call level script
 		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
 		if (levelScript) levelScript->update();
-
-		pLevel->BulletManager().CommitRenderSet();
 
 		SetEvent(pLevel->m_mtScriptUpdaterEventEnd);
 	}
@@ -418,6 +413,8 @@ void CLevel::OnFrame()
 	ResetEvent(m_mtScriptUpdaterEventEnd);
 	SetEvent(m_mtScriptUpdaterEventStart);
 
+	// commit events from bullet manager from prev-frame
+	BulletManager().CommitEvents();
 	ClientReceive();
 
 	// Update game events
@@ -448,6 +445,7 @@ void CLevel::OnFrame()
 
 	m_ph_commander->update();
 	m_ph_commander_scripts->update();
+	BulletManager().CommitRenderSet();
 
 	// update static sounds
 	Device.seqParallel.emplace_back(m_level_sound_manager, &CLevelSoundManager::Update);

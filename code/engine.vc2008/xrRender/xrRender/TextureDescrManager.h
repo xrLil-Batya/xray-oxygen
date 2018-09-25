@@ -21,6 +21,8 @@ class CTextureDescrMngr
 		bool				m_use_steep_parallax;
 	};
 public:
+	static std::vector<void*> hThreads;
+
 	struct texture_desc
 	{
 		texture_assoc*		m_assoc;
@@ -42,6 +44,8 @@ public:
 				~CTextureDescrMngr();
 	void		Load		();
 	void		UnLoad		();
+
+	static void WaitThreads ();
 public:
 	shared_str	GetBumpName		(const shared_str& tex_name) const;
 	float		GetMaterial		(const shared_str& tex_name) const;

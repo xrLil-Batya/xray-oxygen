@@ -141,16 +141,16 @@ void CTextureDescrMngr::LoadTHM(FS_FileSet& flist, LPCSTR initial, map_TD &s_tex
 	}
 }
 
+std::vector<void*> CTextureDescrMngr::hThreads;
 void CTextureDescrMngr::Load()
 {
 	TH_LoadTHM lvltex( "$level_textures$", m_texture_details, m_detail_scalers );
 	TH_LoadTHM gtex( "$game_textures$", m_texture_details, m_detail_scalers );
 	TH_LoadTHM lvl( "$level$", m_texture_details, m_detail_scalers );
 
-    std::vector<HANDLE> hThreads;
     hThreads.reserve(3);
 
-    auto StartLoadTHMThreadLambda = [&hThreads](TH_LoadTHM& ThmLoader, LPCSTR ThreadName)
+    auto StartLoadTHMThreadLambda = [](TH_LoadTHM& ThmLoader, LPCSTR ThreadName, std::vector<void*> &hThreads)
     {
         if (!ThmLoader.flist.empty())
         {
@@ -159,12 +159,17 @@ void CTextureDescrMngr::Load()
         }
     };
 
-    StartLoadTHMThreadLambda(lvltex, "X-Ray THM Loader 0");
-    StartLoadTHMThreadLambda(gtex, "X-Ray THM Loader 1");
-    StartLoadTHMThreadLambda(lvl, "X-Ray THM Loader 2");
+    StartLoadTHMThreadLambda(lvltex, "X-Ray THM Loader 0", hThreads);
+    StartLoadTHMThreadLambda(gtex, "X-Ray THM Loader 1", hThreads);
+    StartLoadTHMThreadLambda(lvl, "X-Ray THM Loader 2", hThreads);
 
-    DWORD dwWaitResult = WaitForMultipleObjects((DWORD)hThreads.size(), hThreads.data(), TRUE, INFINITE);
-    R_ASSERT(dwWaitResult != WAIT_FAILED);
+	WaitThreads();
+}
+
+void CTextureDescrMngr::WaitThreads()
+{
+	DWORD dwWaitResult = WaitForMultipleObjects((DWORD)hThreads.size(), hThreads.data(), TRUE, INFINITE);
+	R_ASSERT(dwWaitResult != WAIT_FAILED);
 }
 
 void CTextureDescrMngr::UnLoad()

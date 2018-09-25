@@ -152,7 +152,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 
 bool CUIActorMenu::OnItemStartDrag(CUICellItem* itm)
 {
-	InfoCurItem( NULL );
+	InfoCurItem(NULL);
 	return false; //default behaviour
 }
 
@@ -178,29 +178,27 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 			{
 				ToActorTrade( itm, false );
 				break;
-			}else
-				if ( m_currMenuMode == mmDeadBodyOrContainerSearch )
-				{
-					ToDeadBodyBag( itm, false );
-					break;
-				}
-				if(m_currMenuMode!=mmUpgrade && TryUseFoodItem( itm ))
-				{
-					break;
-				}
-				if ( TryActiveSlot( itm ) )
-				{
-					break;
-				}
-				PIItem iitem_to_place = (PIItem)itm->m_pData;
-				if ( !ToSlot( itm, false, iitem_to_place->BaseSlot() ) )
-				{
-					if ( !ToBelt( itm, false ) )
-					{
-						ToSlot( itm, true, iitem_to_place->BaseSlot() );
-					}
-				}
+			}
+			else if (m_currMenuMode == mmDeadBodyOrContainerSearch)
+			{
+				ToDeadBodyBag(itm, false);
 				break;
+			}
+
+			if(TryActiveSlot(itm) || m_currMenuMode!=mmUpgrade && TryUseFoodItem( itm ))
+			{
+				break;
+			}
+
+			PIItem iitem_to_place = (PIItem)itm->m_pData;
+			if (!ToSlot(itm, false, iitem_to_place->BaseSlot()))
+			{
+				if (!ToBelt(itm, false))
+				{
+					ToSlot(itm, true, iitem_to_place->BaseSlot());
+				}
+			}
+			break;
 		}
 	case iActorBelt:
 		{

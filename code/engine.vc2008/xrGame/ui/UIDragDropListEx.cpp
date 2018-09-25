@@ -440,7 +440,11 @@ void CUIDragDropListEx::SetItem(CUICellItem* itm, Fvector2 abs_pos) // start at 
 void CUIDragDropListEx::SetItem(CUICellItem* itm, Ivector2 cell_pos) // start at cell
 {
 	if(m_container->AddSimilar(itm))	return;
-	R_ASSERT						(m_container->IsRoomFree(cell_pos, itm->GetGridSize()));
+
+	if (!m_container->IsRoomFree(cell_pos, itm->GetGridSize()))
+	{
+		Msg("Invalid position on [%d, %d]", itm->GetWndPos().x, itm->GetWndPos().y);
+	}
 
 	m_container->PlaceItemAtPos	(itm, cell_pos);
 
@@ -448,7 +452,9 @@ void CUIDragDropListEx::SetItem(CUICellItem* itm, Ivector2 cell_pos) // start at
 	Register					(itm);
 	itm->SetOwnerList			(this);
 }
-bool CUIDragDropListEx::CanSetItem(CUICellItem* itm){
+
+bool CUIDragDropListEx::CanSetItem(CUICellItem* itm)
+{
 	if (m_container->HasFreeSpace(itm->GetGridSize()))
 		return true;
 	Compact();
@@ -644,33 +650,42 @@ CUICellItem* CUICellContainer::RemoveItem(CUICellItem* itm, bool force_root)
 	return					itm;
 }
 
-Ivector2 CUICellContainer::FindFreeCell	(const Ivector2& _size)
+Ivector2 CUICellContainer::FindFreeCell(const Ivector2& _size)
 {
 	Ivector2 tmp;
 	Ivector2 size = _size;
 
-	if(m_pParentDragDropList->GetVerticalPlacement())
+	if (m_pParentDragDropList->GetVerticalPlacement())
 		std::swap(size.x, size.y);
 
-	for(tmp.y=0; tmp.y<=m_cellsCapacity.y-size.y; ++tmp.y )
-		for(tmp.x=0; tmp.x<=m_cellsCapacity.x-size.x; ++tmp.x )
-			if(IsRoomFree(tmp,_size))
-				return  tmp;
-
-	if(m_pParentDragDropList->IsAutoGrow())
+	auto ReFindFreeRoom = [&tmp, &size, this](const Ivector2 &iSize)
 	{
-		Grow	();
-		return							FindFreeCell	(size);
-	}else{
-		m_pParentDragDropList->Compact		();
-		for(tmp.y=0; tmp.y<=m_cellsCapacity.y-size.y; ++tmp.y )
-			for(tmp.x=0; tmp.x<=m_cellsCapacity.x-size.x; ++tmp.x )
-				if(IsRoomFree(tmp,_size))
-					return  tmp;
+		for (tmp.y = 0; tmp.y <= m_cellsCapacity.y - size.y; ++tmp.y)
+		{
+			for (tmp.x = 0; tmp.x <= m_cellsCapacity.x - size.x; ++tmp.x)
+				if (IsRoomFree(tmp, iSize))
+					return  true;
+		}
+		return false;
+	};
+	
+	if (ReFindFreeRoom(_size))
+		return tmp;
 
-		R_ASSERT2		(0,"there are no free room to place item");
+	if (m_pParentDragDropList->IsAutoGrow())
+	{
+		Grow();
+		return FindFreeCell(size);
 	}
-	return			tmp;
+	else 
+	{
+		m_pParentDragDropList->Compact();
+		if (ReFindFreeRoom(_size))
+			return tmp;
+
+		Log("there are no free room to place item");
+	}
+	return tmp;
 }
 
 bool CUICellContainer::HasFreeSpace		(const Ivector2& _size)
@@ -748,23 +763,28 @@ Ivector2 CUICellContainer::TopVisibleCell()
 
 CUICell& CUICellContainer::GetCellAt(const Ivector2& pos)
 {
-	R_ASSERT			(ValidCell(pos));
-	CUICell&	c		= m_cells[m_cellsCapacity.x*pos.y+pos.x];
-	return				c;
+	if (!ValidCell(pos))
+	{
+		Log("[Error] Invalid position!");
+	}
+
+	CUICell& c = m_cells[m_cellsCapacity.x*pos.y+pos.x];
+	return c;
 }
 
 Ivector2 CUICellContainer::GetItemPos(CUICellItem* itm)
 {
-	for(int x=0; x<m_cellsCapacity.x ;++x)
-		for(int y=0; y<m_cellsCapacity.y ;++y){
+	for (int x = 0; x < m_cellsCapacity.x; ++x)
+		for (int y = 0; y < m_cellsCapacity.y; ++y) 
+		{
 			Ivector2 p;
-			p.set(x,y);
-		if(GetCellAt(p).m_item==itm)
-			return p;
+			p.set(x, y);
+			if (GetCellAt(p).m_item == itm)
+				return p;
 		}
 
-		R_ASSERT(0);
-		return Ivector2().set(-1,-1);
+	R_ASSERT(0);
+	return Ivector2().set(-1, -1);
 }
 
 u32 CUICellContainer::GetCellsInRange(const Irect& rect, UI_CELLS_VEC& res)

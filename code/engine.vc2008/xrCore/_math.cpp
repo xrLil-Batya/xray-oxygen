@@ -22,15 +22,6 @@ typedef struct _PROCESSOR_POWER_INFORMATION
 	DWORD CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
 
-typedef struct SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION
-{
-	LARGE_INTEGER	IdleTime;
-	LARGE_INTEGER	KernelTime;
-	LARGE_INTEGER	UserTime;
-	LARGE_INTEGER	Reserved1[2];
-	ULONG			Reserved2;
-} SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION;
-
 namespace FPU
 {
 	// Когда-нибудь можно будет задавать точность для float в х64...
@@ -297,27 +288,41 @@ int processor_info::getCPULoad(double &val)
 	return 1;
 }
 
-float processor_info::MTCPULoad()
+#define NT_SUCCESS(Status) (((LONG)(Status)) >= 0)
+
+float* processor_info::MTCPULoad()
 {
-	m_dwNumberOfProcessors = 0;
-	m_pNtQuerySystemInformation = NULL;
-
-	SYSTEM_INFO info;
-	GetSystemInfo(&info);
-
-	m_dwNumberOfProcessors = info.dwNumberOfProcessors;
-
-	//#VERTVER: NtQuerySystemInformation now is depricated
-	m_pNtQuerySystemInformation = (NTQUERYSYSTEMINFORMATION)GetProcAddress(GetModuleHandle("NTDLL"), "NtQuerySystemInformation");
-
-	for (DWORD dwCpu = 0; dwCpu < MAX_CPU; dwCpu++)
+	// get perfomance info by NtQuerySystemInformation()
+	if (!NT_SUCCESS(m_pNtQuerySystemInformation(
+		8,
+		perfomanceInfo,
+		sizeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION) * (ULONG)m_dwNumberOfProcessors,
+		NULL
+	)))
 	{
-		m_idleTime[dwCpu].QuadPart = 0;
-		m_fltCpuUsage[dwCpu] = FLT_MAX;
-		m_dwTickCount[dwCpu] = 0;
+		Msg("Can't get NtQuerySystemInformation");
 	}
 
-	return CalcMPCPULoad(1);
+	DWORD dwTickCount = GetTickCount();
+	if (!m_dwCount) m_dwCount = dwTickCount;
+
+	for (DWORD i = 0; i < m_dwNumberOfProcessors; i++)
+	{
+		SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION* cpuPerfInfo = &perfomanceInfo[i];
+		cpuPerfInfo->KernelTime.QuadPart -= cpuPerfInfo->IdleTime.QuadPart;
+
+		DWORD64 dwTotal = cpuPerfInfo->KernelTime.QuadPart + cpuPerfInfo->UserTime.QuadPart;
+		DWORD64 dwKernelTotal = cpuPerfInfo->KernelTime.QuadPart - cpuPerfInfo->IdleTime.QuadPart;
+
+		fUsage[i] = 100.0f - 0.01f * (cpuPerfInfo->IdleTime.QuadPart - m_idleTime[i].QuadPart) / ((dwTickCount - m_dwCount));
+		if (fUsage[i] < 0.0f) { fUsage[i] = 0.0f; }
+		if (fUsage[i] > 100.0f) { fUsage[i] = 100.0f; }
+
+		m_idleTime[i] = cpuPerfInfo->IdleTime;
+	}
+
+	m_dwCount = dwTickCount;
+	return fUsage;
 }
 
 //#TODO: Return max value of float
