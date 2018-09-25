@@ -5,11 +5,10 @@
 //	---------------------------------------------------------------------------
 //  TreeView Item class
 //=============================================================================
-
 #include "stdafx.h"
 #include "UITreeViewItem.h"
-#include "../string_table.h"
-
+#include "UIListBoxItem.h"
+#include "../xrEngine/string_table.h"
 
 #define UNREAD_COLOR	0xff00ff00
 #define READ_COLOR		0xffffffff
@@ -36,7 +35,6 @@ CUITreeViewItem::CUITreeViewItem()
 	UIBkg.InitTexture(treeItemBackgroundTexture);
 	UIBkg.TextureOff();
 	UIBkg.SetTextureOffset(-20, 0);
-	UIBkg.EnableTextHighlighting(false);
 
 	m_bManualSetColor = false;
 }
@@ -76,8 +74,7 @@ void CUITreeViewItem::OnRootChanged()
 			// Add plus sign
 			str.replace(pos, 1, "+");
 
-//		inherited::SetText(str.c_str());
-		GetSelectedItem()->m_text.SetText(str.c_str());
+		GetSelectedItem()->SetText(str.c_str());
 	}
 	else
 	{
@@ -93,7 +90,7 @@ void CUITreeViewItem::OnRootChanged()
 		else
 			str.replace(pos, 1, " ");
 
-		GetSelectedItem()->m_text.SetText(str.c_str());
+		GetSelectedItem()->SetText(str.c_str());
 	}
 }
 
@@ -119,7 +116,7 @@ void CUITreeViewItem::OnOpenClose()
 			str.replace(pos, 1, "+");
 	}
 
-	GetSelectedItem()->m_text.SetText(str.c_str());
+	GetSelectedItem()->SetText(str.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -134,7 +131,7 @@ void CUITreeViewItem::Open()
 	OnOpenClose();
 	
 	// Аттачим все подэлементы к родтельскому листбоксу
-	CUIListBox *pList = smart_cast<CUIListBox*>(GetParent());
+	CUIListBox *pList = dynamic_cast<CUIListBox*>(GetParent());
 	
 	R_ASSERT(pList);
 	if (!pList) return;
@@ -157,7 +154,7 @@ void CUITreeViewItem::Close()
 	OnOpenClose();
 
 	// Детачим все подэлементы
-	CUIListBox *pList = smart_cast<CUIListBox*>(GetParent());
+	CUIListBox *pList = dynamic_cast<CUIListBox*>(GetParent());
 
 	R_ASSERT(pList);
 	if (!pList) return;
@@ -237,7 +234,7 @@ void CUITreeViewItem::SetText(LPCSTR str)
 		s.erase(0, pos - iTextShift);
 	}
 
-	GetSelectedItem()->m_text.SetText(s.c_str());
+	GetSelectedItem()->SetText(s.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -257,7 +254,7 @@ void CUITreeViewItem::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 			MarkArticleAsRead(true);
 		}
 	}
-	else if (pWnd == this && STATIC_FOCUS_RECEIVED == msg)
+	else if (pWnd == this && WINDOW_FOCUS_RECEIVED == msg)
 	{
 		UIBkg.TextureOn();
 
@@ -267,7 +264,7 @@ void CUITreeViewItem::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 		}
 		pPrevFocusedItem = this;
 	}
-	else if (pWnd == this && STATIC_FOCUS_LOST == msg)
+	else if (pWnd == this && WINDOW_FOCUS_LOST == msg)
 	{
 		UIBkg.TextureOff();
 		pPrevFocusedItem = NULL;
@@ -446,17 +443,17 @@ void CreateTreeBranch(shared_str nesting, shared_str leafName, CUIListBox *pList
 				rootItemColor	(cl)
 		{}
 
-		CUITreeViewItem * operator () (GroupTree_it it, GroupTree &cont, CUITreeViewItem *pItemToIns)
+		CUITreeViewItem * operator () (GroupTree::iterator it, GroupTree &cont, CUITreeViewItem *pItemToIns)
 		{
 			// Вставляем иерархию разделов в энциклопедию
 			CUITreeViewItem *pNewItem = NULL;
 
-			for (GroupTree_it it2 = it; it2 != cont.end(); ++it2)
+			for (shared_str &refString : cont)
 			{
 				pNewItem = xr_new<CUITreeViewItem>();
 				pItemToIns->AddItem(pNewItem);
 				pNewItem->SetFont(pRootFnt);
-				pNewItem->SetText(*(*it2));
+				pNewItem->SetText(refString.c_str());
 				pNewItem->SetReadedColor(rootItemColor);
 				pNewItem->SetRoot(true);
 				pItemToIns = pNewItem;
@@ -507,7 +504,7 @@ void CreateTreeBranch(shared_str nesting, shared_str leafName, CUIListBox *pList
 	// Для всех рутовых элементов
 	for (u32 i = 0; i < pListToAdd->GetSize(); ++i)
 	{
-		pTVItem = smart_cast<CUITreeViewItem*>(pListToAdd->GetItem(i));
+		pTVItem = dynamic_cast<CUITreeViewItem*>(pListToAdd->GetItem(i));
 		R_ASSERT(pTVItem);
 
 		pTVItem->Close();
@@ -521,7 +518,7 @@ void CreateTreeBranch(shared_str nesting, shared_str leafName, CUIListBox *pList
 		{
 			// Уже содержит. Надо искать глубже
 			pTVItemChilds = pTVItem;
-			for (GroupTree_it it = groupTree.begin() + 1; it != groupTree.end(); ++it)
+			for (GroupTree::iterator it = groupTree.begin() + 1; it != groupTree.end(); ++it)
 			{
 				pTVItem = pTVItemChilds->Find(*(*it));
 				// Не нашли, надо вставлять хвост списка вложенности

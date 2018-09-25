@@ -5,17 +5,14 @@
 //	---------------------------------------------------------------------------
 //  TreeView Item class
 //=============================================================================
-
-#ifndef UI_TREE_VIEW_ITEM_H_
-#define UI_TREE_VIEW_ITEM_H_
-
 #pragma once
-
 #include "UIListBox.h"
 #include "UIListBoxItem.h"
 #include "UIStatic.h"
 
-class CUITreeViewItem: public CUIListBox
+class CGameFont;
+
+class UI_API CUITreeViewItem: public CUIListBox
 {
 	typedef CUIListBox inherited;
 	// Являемся ли мы началом подыерархии
@@ -117,12 +114,8 @@ private:
 //////////////////////////////////////////////////////////////////////////
 //  Function for automatic tree hierarchy creation
 //////////////////////////////////////////////////////////////////////////
-
-DEF_VECTOR(GroupTree, shared_str);
-
+using GroupTree = xr_vector<shared_str>;
 //////////////////////////////////////////////////////////////////////////
 
 void CreateTreeBranch(shared_str nestingTree, shared_str leafName, CUIListBox *pListToAdd, int leafProperty,
 					  CGameFont *pRootFont, u32 rootColor, CGameFont *pLeafFont, u32 leafColor, bool markRead);
-
-#endif	//UI_TREE_VIEW_ITEM_H_

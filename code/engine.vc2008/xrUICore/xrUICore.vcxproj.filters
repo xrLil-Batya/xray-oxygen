@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Файлы заголовков">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Kernel">
       <UniqueIdentifier>{f00eceaa-3141-4b40-8f9d-7b00bce06cb7}</UniqueIdentifier>
     </Filter>
@@ -96,65 +92,62 @@
     <Filter Include="Mature\CarPanel">
       <UniqueIdentifier>{f1de9adb-b03e-4d3f-988e-f1f9a6b8646f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{19084b00-2d8e-49a4-a689-558b430577b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows\Frame">
+      <UniqueIdentifier>{b08165a4-7582-4951-8b9f-414f44178776}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Hint">
+      <UniqueIdentifier>{0a4c946b-718d-4eea-bd02-19c692ade2bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mature\DialogHolder">
+      <UniqueIdentifier>{26816fc1-52e3-4b98-83f3-51a8d054f3f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mature\Options">
+      <UniqueIdentifier>{2b687230-a9e8-4780-84ca-4f87f1541bfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIHelpers">
+      <UniqueIdentifier>{a046bbbd-4910-40e0-82cb-28f373d80fca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIHelpers\Helper">
+      <UniqueIdentifier>{b63c9611-95a9-4869-8a04-45df322a4a0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIHelpers\XML">
+      <UniqueIdentifier>{6bb88fe8-9a69-4a32-ab6e-9548cd9aeb16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIHelpers\XML\Texture">
+      <UniqueIdentifier>{7ced8aad-6670-4593-9e8b-813667e82607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Lines">
+      <UniqueIdentifier>{0b528999-ccd1-48c7-ab92-c1351c939489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mature\PDA">
+      <UniqueIdentifier>{3856eea4-98b0-4d67-98e8-80adb5323003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\TrackBar">
+      <UniqueIdentifier>{affcb76c-1415-4286-bf80-df39e580d558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Cursor">
+      <UniqueIdentifier>{d6a0f7c9-20b5-4c95-bed2-946b59a3d692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Arrow">
+      <UniqueIdentifier>{9515a3a5-89a8-486c-a50f-b1b4cf9f76b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Indicators">
+      <UniqueIdentifier>{2843a3f9-dd11-422d-8df7-2936f23ef8ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Indicators\Money">
+      <UniqueIdentifier>{aa9b0f4c-e2dd-4c40-a170-f2c53dcf92ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIHelpers\LAnim">
+      <UniqueIdentifier>{440c08bc-4c69-4b84-b013-1182357dc595}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\TreeView">
+      <UniqueIdentifier>{e6e37a84-7670-4663-b015-5dfb0d9f3f37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UICursor.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIXmlInit.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UILines.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UILine.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UISubLine.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UITextureMaster.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UILanimController.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIWindow.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIFrameWindow.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIDialogHolder.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIDialogWnd.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIWndCallback.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIHint.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIHelper.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIFrameLineWnd.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOptionsItem.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOptionsManager.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOptionsManagerScript.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_arrow.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="UITabButton.cpp">
       <Filter>Elements\Buttons\Tab</Filter>
     </ClCompile>
@@ -169,9 +162,6 @@
     </ClCompile>
     <ClCompile Include="UISpinText.cpp">
       <Filter>Elements\Spin</Filter>
-    </ClCompile>
-    <ClCompile Include="UITrackBar.cpp">
-      <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
       <Filter>Mature\MainMenu</Filter>
@@ -263,9 +253,6 @@
     <ClCompile Include="UIProgressBar.cpp">
       <Filter>Elements\Progress\Bar</Filter>
     </ClCompile>
-    <ClCompile Include="xrUIXmlParser.cpp">
-      <Filter>Kernel</Filter>
-    </ClCompile>
     <ClCompile Include="UIEditKeyBind.cpp">
       <Filter>Mature\MainMenu\Keys</Filter>
     </ClCompile>
@@ -275,80 +262,86 @@
     <ClCompile Include="UIInteractiveBackground.cpp">
       <Filter>Elements\Background</Filter>
     </ClCompile>
-    <ClCompile Include="UIMoneyIndicator.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="UIPdaMsgListItem.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="UIPropertiesBox.cpp">
       <Filter>Elements\Boxes\Property</Filter>
     </ClCompile>
     <ClCompile Include="UICarPanel.cpp">
       <Filter>Mature\CarPanel</Filter>
     </ClCompile>
+    <ClCompile Include="UIFrameWindow.cpp">
+      <Filter>Windows\Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFrameLineWnd.cpp">
+      <Filter>Windows\Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="UIWindow.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="UIWndCallback.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="UIHint.cpp">
+      <Filter>Elements\Hint</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOptionsItem.cpp">
+      <Filter>Mature\Options</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOptionsManager.cpp">
+      <Filter>Mature\Options</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOptionsManagerScript.cpp">
+      <Filter>Mature\Options</Filter>
+    </ClCompile>
+    <ClCompile Include="UIDialogHolder.cpp">
+      <Filter>Mature\DialogHolder</Filter>
+    </ClCompile>
+    <ClCompile Include="UIDialogWnd.cpp">
+      <Filter>Mature\DialogHolder</Filter>
+    </ClCompile>
+    <ClCompile Include="UIHelper.cpp">
+      <Filter>UIHelpers\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="UIXmlInit.cpp">
+      <Filter>UIHelpers\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="xrUIXmlParser.cpp">
+      <Filter>UIHelpers\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="UITextureMaster.cpp">
+      <Filter>UIHelpers\XML\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="UILine.cpp">
+      <Filter>Elements\Lines</Filter>
+    </ClCompile>
+    <ClCompile Include="UILines.cpp">
+      <Filter>Elements\Lines</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPdaMsgListItem.cpp">
+      <Filter>Mature\PDA</Filter>
+    </ClCompile>
+    <ClCompile Include="UISubLine.cpp">
+      <Filter>Elements\Lines</Filter>
+    </ClCompile>
+    <ClCompile Include="UITrackBar.cpp">
+      <Filter>Elements\TrackBar</Filter>
+    </ClCompile>
+    <ClCompile Include="UICursor.cpp">
+      <Filter>Elements\Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_arrow.cpp">
+      <Filter>Elements\Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMoneyIndicator.cpp">
+      <Filter>Elements\Indicators\Money</Filter>
+    </ClCompile>
+    <ClCompile Include="UILanimController.cpp">
+      <Filter>UIHelpers\LAnim</Filter>
+    </ClCompile>
+    <ClCompile Include="UITreeViewItem.cpp">
+      <Filter>Elements\TreeView</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UICursor.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIXmlInit.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UILine.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UILines.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UISubLine.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UITextureMaster.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UILanimController.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIWindow.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIFrameWindow.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIMessages.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIDialogHolder.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIDialogWnd.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIWndCallback.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIHint.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIHelper.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIFrameLineWnd.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOptionsItem.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOptionsManager.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOptionsManagerScript.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_arrow.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="UITabButton.h">
       <Filter>Elements\Buttons\Tab</Filter>
     </ClInclude>
@@ -363,9 +356,6 @@
     </ClInclude>
     <ClInclude Include="UISpinText.h">
       <Filter>Elements\Spin</Filter>
-    </ClInclude>
-    <ClInclude Include="UITrackBar.h">
-      <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="MainMenu.h">
       <Filter>Mature\MainMenu</Filter>
@@ -472,9 +462,6 @@
     <ClInclude Include="UI3tButton.h">
       <Filter>Elements\Buttons\Classic</Filter>
     </ClInclude>
-    <ClInclude Include="xrUIXmlParser.h">
-      <Filter>Kernel</Filter>
-    </ClInclude>
     <ClInclude Include="UIEditKeyBind.h">
       <Filter>Mature\MainMenu\Keys</Filter>
     </ClInclude>
@@ -484,17 +471,86 @@
     <ClInclude Include="UIInteractiveBackground.h">
       <Filter>Elements\Background</Filter>
     </ClInclude>
-    <ClInclude Include="UIMoneyIndicator.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="UIPdaMsgListItem.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="UIPropertiesBox.h">
       <Filter>Elements\Boxes\Property</Filter>
     </ClInclude>
     <ClInclude Include="UICarPanel.h">
       <Filter>Mature\CarPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="UIWndCallback.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UIWindow.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFrameWindow.h">
+      <Filter>Windows\Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFrameLineWnd.h">
+      <Filter>Windows\Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="UIDialogWnd.h">
+      <Filter>Mature\DialogHolder</Filter>
+    </ClInclude>
+    <ClInclude Include="UIDialogHolder.h">
+      <Filter>Mature\DialogHolder</Filter>
+    </ClInclude>
+    <ClInclude Include="UIHint.h">
+      <Filter>Elements\Hint</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOptionsItem.h">
+      <Filter>Mature\Options</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOptionsManager.h">
+      <Filter>Mature\Options</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOptionsManagerScript.h">
+      <Filter>Mature\Options</Filter>
+    </ClInclude>
+    <ClInclude Include="UIHelper.h">
+      <Filter>UIHelpers\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="UIXmlInit.h">
+      <Filter>UIHelpers\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="xrUIXmlParser.h">
+      <Filter>UIHelpers\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="UITextureMaster.h">
+      <Filter>UIHelpers\XML\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="UILine.h">
+      <Filter>Elements\Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="UILines.h">
+      <Filter>Elements\Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMessages.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPdaMsgListItem.h">
+      <Filter>Mature\PDA</Filter>
+    </ClInclude>
+    <ClInclude Include="UISubLine.h">
+      <Filter>Elements\Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="UITrackBar.h">
+      <Filter>Elements\TrackBar</Filter>
+    </ClInclude>
+    <ClInclude Include="UICursor.h">
+      <Filter>Elements\Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_arrow.h">
+      <Filter>Elements\Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMoneyIndicator.h">
+      <Filter>Elements\Indicators\Money</Filter>
+    </ClInclude>
+    <ClInclude Include="UILanimController.h">
+      <Filter>UIHelpers\LAnim</Filter>
+    </ClInclude>
+    <ClInclude Include="UITreeViewItem.h">
+      <Filter>Elements\TreeView</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

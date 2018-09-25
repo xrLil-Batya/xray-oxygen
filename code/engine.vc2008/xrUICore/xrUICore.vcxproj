@@ -139,6 +139,7 @@
     <ClCompile Include="UITabControl.cpp" />
     <ClCompile Include="UITextureMaster.cpp" />
     <ClCompile Include="UITrackBar.cpp" />
+    <ClCompile Include="UITreeViewItem.cpp" />
     <ClCompile Include="UIWindow.cpp" />
     <ClCompile Include="UIWndCallback.cpp" />
     <ClCompile Include="UIXmlInit.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="UITabControl.h" />
     <ClInclude Include="UITextureMaster.h" />
     <ClInclude Include="UITrackBar.h" />
+    <ClInclude Include="UITreeViewItem.h" />
     <ClInclude Include="UIWindow.h" />
     <ClInclude Include="UIWndCallback.h" />
     <ClInclude Include="UIXmlInit.h" />
