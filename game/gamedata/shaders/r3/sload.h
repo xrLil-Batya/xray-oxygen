@@ -113,7 +113,7 @@ void UpdateTC( inout p_bumped I)
 								 I.M1.z, I.M2.z, I.M3.z), -I.position.xyz);
 								 
 	float	height	= s_bumpX.Sample( smp_base, I.tcdh).w;
-			height	= height*(parallax.x) - (parallax.x/2.0f);
+			height	= height*(parallax.x) + (parallax.y);
 	float2	new_tc  = I.tcdh + height * normalize(eye);	//
 
 	//	Output the result

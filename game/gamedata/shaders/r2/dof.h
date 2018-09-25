@@ -36,7 +36,7 @@ float DOFFactor( float depth)
 float3	dof(float2 center)
 {
 	// Scale tap offsets based on render target size
-	float 	depth		= 1.0f - tex2D(s_position,center).z;
+	float 	depth		= tex2D(s_position,center).z;
 	if (depth <= EPSDEPTH)	depth = dof_params.w;
 	float	blur 		= DOFFactor(depth);
 
