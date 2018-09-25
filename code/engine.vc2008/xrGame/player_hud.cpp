@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "player_hud.h"
 #include "HudItem.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 #include "physic_item.h"
 #include "actoreffector.h"
 #include "../xrEngine/IGame_Persistent.h"

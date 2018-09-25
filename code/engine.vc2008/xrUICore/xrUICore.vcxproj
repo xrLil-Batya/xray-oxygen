@@ -89,6 +89,7 @@
     <ClCompile Include="UIAnimatedStatic.cpp" />
     <ClCompile Include="UIBtnHint.cpp" />
     <ClCompile Include="UIButton.cpp" />
+    <ClCompile Include="UICarPanel.cpp" />
     <ClCompile Include="UICheckButton.cpp" />
     <ClCompile Include="UIComboBox.cpp" />
     <ClCompile Include="UICursor.cpp" />
@@ -124,6 +125,7 @@
     <ClCompile Include="UIPdaMsgListItem.cpp" />
     <ClCompile Include="UIProgressBar.cpp" />
     <ClCompile Include="UIProgressShape.cpp" />
+    <ClCompile Include="UIPropertiesBox.cpp" />
     <ClCompile Include="UIRadioButton.cpp" />
     <ClCompile Include="UIScrollBar.cpp" />
     <ClCompile Include="UIScrollBox.cpp" />
@@ -155,6 +157,7 @@
     <ClInclude Include="UIAnimatedStatic.h" />
     <ClInclude Include="UIBtnHint.h" />
     <ClInclude Include="UIButton.h" />
+    <ClInclude Include="UICarPanel.h" />
     <ClInclude Include="UICheckButton.h" />
     <ClInclude Include="UIComboBox.h" />
     <ClInclude Include="UICursor.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="UIPdaMsgListItem.h" />
     <ClInclude Include="UIProgressBar.h" />
     <ClInclude Include="UIProgressShape.h" />
+    <ClInclude Include="UIPropertiesBox.h" />
     <ClInclude Include="UIRadioButton.h" />
     <ClInclude Include="UIScrollBar.h" />
     <ClInclude Include="UIScrollBox.h" />

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "UIPropertiesBox.h"
-#include "../level.h"
 #include "UIListBoxItem.h"
 #include "UIXmlInit.h"
 
@@ -34,7 +33,7 @@ void CUIPropertiesBox::InitPropertiesBox(Fvector2 pos, Fvector2 size)
 
 	AttachChild				(&m_UIListWnd);
 
-	CUIXml					xml_doc;
+	CXml					xml_doc;
 	xml_doc.Load			(CONFIG_PATH, UI_PATH, "actor_menu.xml");
 
 	LPCSTR t = xml_doc.Read	("properties_box:texture", 0, "");
@@ -216,10 +215,12 @@ CUIListBoxItem* CUIPropertiesBox::GetClickedItem()
 {
 	return m_UIListWnd.GetSelectedItem();
 }
+
 void CUIPropertiesBox::Update()
 {
 	inherited::Update();
 }
+
 void CUIPropertiesBox::Draw()
 {
 	inherited::Draw();
@@ -238,13 +239,13 @@ void CUIPropertiesBox::script_register(lua_State *L)
 {
 	module(L)
 		[
-			class_<CUIPropertiesBox, CUIFrameWindow>("CUIPropertiesBox")
+		class_<CUIPropertiesBox, CUIFrameWindow>("CUIPropertiesBox")
 			.def(constructor<>())
-		.def("RemoveItem", &CUIPropertiesBox::RemoveItemByTAG)
-		.def("RemoveAll", &CUIPropertiesBox::RemoveAll)
-		.def("Show", (void(CUIPropertiesBox::*)(int, int))&CUIPropertiesBox::Show)
-		.def("Hide", &CUIPropertiesBox::Hide)
-		.def("AutoUpdateSize", &CUIPropertiesBox::AutoUpdateSize)
-		.def("AddItem", &CUIPropertiesBox::AddItem_script)
+			.def("RemoveItem",		&CUIPropertiesBox::RemoveItemByTAG)
+			.def("RemoveAll",		&CUIPropertiesBox::RemoveAll)
+			.def("Show",			(void(CUIPropertiesBox::*)(int, int))&CUIPropertiesBox::Show)
+			.def("Hide",			&CUIPropertiesBox::Hide)
+			.def("AutoUpdateSize",	&CUIPropertiesBox::AutoUpdateSize)
+			.def("AddItem",			&CUIPropertiesBox::AddItem_script)
 		];
 }

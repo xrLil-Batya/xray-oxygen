@@ -13,7 +13,7 @@
 #include "../Inventory.h"
 #include "../actor.h"
 #include "../UIGame.h"
-#include "UI3tButton.h"
+#include "../xrUICore/UI3tButton.h"
 
 #include "inventory_upgrade.h"
 #include "UITalkWnd.h"

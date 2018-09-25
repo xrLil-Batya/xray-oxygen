@@ -14,7 +14,7 @@ public:
 	virtual void IR_OnKeyboardHold(int dik) {}
 	virtual void IR_OnMouseWheel(int direction) {}
 
-	virtual BOOL g_Alive() { return false; }
+	virtual BOOL g_Alive() const { return false; }
 public:
 
 	//режим подбирания предметов

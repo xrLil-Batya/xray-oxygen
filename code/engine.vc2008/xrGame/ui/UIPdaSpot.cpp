@@ -4,11 +4,11 @@
 #include "Level.h"
 #include "map_manager.h"
 #include "map_location.h"
-#include "UIEditBox.h"
-#include "UIStatic.h"
-#include "UIXmlInit.h"
-#include "UIHelper.h"
-#include "UI3tButton.h"
+#include "../xrUICore/UIEditBox.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIHelper.h"
+#include "../xrUICore/UI3tButton.h"
 #include "..\xrEngine\string_table.h"
 
 CUIPdaSpot::CUIPdaSpot()
@@ -50,7 +50,7 @@ void CUIPdaSpot::InitControls()
 {
     this->SetWndRect(Frect().set(0.0f, 0.0f, 1024.f, 768.f));
 
-    CUIXml uiXml;
+    CXml uiXml;
     uiXml.Load(CONFIG_PATH, UI_PATH, "pda_spot.xml");
 
     m_background = UIHelper::CreateStatic(uiXml, "background", this);

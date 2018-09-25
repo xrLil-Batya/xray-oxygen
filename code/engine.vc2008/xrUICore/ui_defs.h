@@ -1,5 +1,5 @@
 #pragma once
-
+#include "linker.h"
 #include "../Include/xrRender/FactoryPtr.h"
 #include "../Include/xrRender/UIRender.h"
 #include "../Include/xrRender/UIShader.h"
@@ -22,10 +22,10 @@ struct S2DVert
 {
 	Fvector2 pt;
 	Fvector2 uv;
-	S2DVert() {}
-	S2DVert(float pX, float pY, float tU, float tV) { pt.set(pX, pY); uv.set(tU, tV); }
-	void set(float pt_x, float pt_y, float uv_x, float uv_y) { pt.set(pt_x, pt_y); uv.set(uv_x, uv_y); }
-	void set(const Fvector2& _pt, const Fvector2& _uv) { pt.set(_pt); uv.set(_uv); }
+	IC S2DVert() {}
+	IC S2DVert(float pX, float pY, float tU, float tV) { pt.set(pX, pY); uv.set(tU, tV); }
+	IC void set(float pt_x, float pt_y, float uv_x, float uv_y) { pt.set(pt_x, pt_y); uv.set(uv_x, uv_y); }
+	IC void set(const Fvector2& _pt, const Fvector2& _uv) { pt.set(_pt); uv.set(_uv); }
 	void rotate_pt(const Fvector2& pivot, const float cosA, const float sinA, const float kx);
 };
 
@@ -37,7 +37,7 @@ using sPoly2D = svector<S2DVert, UI_FRUSTUM_SAFE>;
 #define FRUSTUM_MAXPLANES 12
 #endif
 
-class C2DFrustum
+class UI_API C2DFrustum
 {
 	svector<Fplane2, FRUSTUM_MAXPLANES> planes;
 	Frect m_rect;

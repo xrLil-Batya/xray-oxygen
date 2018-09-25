@@ -81,8 +81,8 @@ public:
 	u32				GetEngineBuild();
 	const char*		GetEngineBuildDate();
 
-IC	const char*		GetGSVer() { return "1.7f"; };
+	const char*		GetGSVer();
 	virtual void	OnDeviceReset();
 };
 
-extern CMainMenu*	MainMenu();
+extern UI_API CMainMenu* MainMenu();

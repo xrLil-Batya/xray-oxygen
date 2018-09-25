@@ -19,5 +19,5 @@ public:
 	void			SetHintText		(CUIWindow* w, LPCSTR text);
 };
 
-extern CUIButtonHint* g_btnHint; 
-extern CUIButtonHint* g_statHint;
+extern UI_API CUIButtonHint* g_btnHint;
+extern UI_API CUIButtonHint* g_statHint;

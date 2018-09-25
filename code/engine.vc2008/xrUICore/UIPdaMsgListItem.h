@@ -2,7 +2,7 @@
 #include "UILanimController.h"
 #include "UIStatic.h"
 
-class UI_CORE CUIPdaMsgListItem : public CUIColorAnimConrollerContainer
+class UI_API CUIPdaMsgListItem : public CUIColorAnimConrollerContainer
 {
 	using inherited = CUIColorAnimConrollerContainer;
 public:

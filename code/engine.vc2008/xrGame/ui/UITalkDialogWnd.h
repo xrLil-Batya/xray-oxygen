@@ -1,16 +1,14 @@
 #pragma once
-
-
-#include "UIStatic.h"
-#include "UI3tButton.h"
-#include "UIFrameLineWnd.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UI3tButton.h"
+#include "../xrUICore/UIFrameLineWnd.h"
 
 #include "../InfoPortion.h"
 
 #include "UICharacterInfo.h"
 #include "UIItemInfo.h"
 
-#include "UIWndCallback.h"
+#include "../xrUICore/UIWndCallback.h"
 
 class CUIScrollView;
 class CUIXml;

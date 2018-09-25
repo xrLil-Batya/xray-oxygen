@@ -11,7 +11,7 @@
 #define DECLARE_OUTFIT_PROTECTION_DELEGATE(protectionType) \
 float GetOutfit##protectionType##Protection() \
 { \
-    if (CCustomOutfit* ActorOutfit = g_actor->GetOutfit()) \
+    if (CCustomOutfit* ActorOutfit = Actor()->GetOutfit()) \
     { \
         return ActorOutfit->GetDefHitTypeProtection(ALife::protectionType); \
     } \
@@ -33,7 +33,7 @@ DECLARE_OUTFIT_PROTECTION_DELEGATE(eHitTypeExplosion);
 #define DECLARE_HELMET_PROTECTION_DELEGATE(protectionType) \
 float GetHelmet##protectionType##Protection() \
 { \
-    PIItem itm = g_actor->inventory().ItemFromSlot(HELMET_SLOT); \
+    PIItem itm = Actor()->inventory().ItemFromSlot(HELMET_SLOT); \
     CHelmet* helmet = smart_cast<CHelmet*>(itm); \
     if (helmet != nullptr) \
     { \
@@ -57,7 +57,7 @@ DECLARE_HELMET_PROTECTION_DELEGATE(eHitTypeExplosion);
 #define DECLARE_BOOSTER_PROTECTION_DELEGATE(boosterType) \
 float GetBooster##boosterType() \
 { \
-    return g_actor->conditions().GetBoosterValueByType(boosterType); \
+    return Actor()->conditions().GetBoosterValueByType(boosterType); \
 }
 
 DECLARE_BOOSTER_PROTECTION_DELEGATE(eBoostRadiationProtection);
@@ -69,7 +69,7 @@ DECLARE_BOOSTER_PROTECTION_DELEGATE(eBoostTelepaticProtection);
 #define DECLARE_ARTEFACTS_ON_BELT_PROTECTION_DELEGATE(protectionType) \
 float GetArtefacts##protectionType##Protection() \
 { \
-    return g_actor->GetProtection_ArtefactsOnBelt(ALife::protectionType); \
+    return Actor()->GetProtection_ArtefactsOnBelt(ALife::protectionType); \
 }
 
 DECLARE_ARTEFACTS_ON_BELT_PROTECTION_DELEGATE(eHitTypeBurn);
@@ -87,7 +87,7 @@ DECLARE_ARTEFACTS_ON_BELT_PROTECTION_DELEGATE(eHitTypeExplosion);
 #define DECLARE_ZONEMAXPOWER_PROTECTION_DELEGATE(protectionType) \
 float GetZoneMaxPower##protectionType() \
 { \
-    return g_actor->conditions().GetZoneMaxPower(ALife::protectionType); \
+    return Actor()->conditions().GetZoneMaxPower(ALife::protectionType); \
 }
 
 DECLARE_ZONEMAXPOWER_PROTECTION_DELEGATE(eHitTypeBurn);
@@ -102,13 +102,13 @@ DECLARE_ZONEMAXPOWER_PROTECTION_DELEGATE(eHitTypeExplosion);
 
 #undef DECLARE_ZONEMAXPOWER_PROTECTION_DELEGATE
 
-int GetActorPDAContactsName()	{return (int)g_actor->GetPDA()->ActiveContactsNum();	}
+int GetActorPDAContactsName()	{return (int)Actor()->GetPDA()->ActiveContactsNum();	}
 
-LPCSTR GetPlayerName()			{ return g_actor->Name();								}
+LPCSTR GetPlayerName()			{ return Actor()->Name();								}
 
-float GetPlayerHealth()			{ return g_actor->conditions().GetHealth();				}
-float GetPlayerPower()			{ return g_actor->conditions().GetPower();				}
-float GetPlayerRestoreSpeed()	{ return g_actor->GetRestoreSpeed(ALife::ePowerRestoreSpeed) / g_actor->conditions().GetMaxPowerRestoreSpeed();;}
+float GetPlayerHealth()			{ return Actor()->conditions().GetHealth();				}
+float GetPlayerPower()			{ return Actor()->conditions().GetPower();				}
+float GetPlayerRestoreSpeed()	{ return Actor()->GetRestoreSpeed(ALife::ePowerRestoreSpeed) / Actor()->conditions().GetMaxPowerRestoreSpeed();;}
 
 void RegisterExpressionDelegates ()
 {

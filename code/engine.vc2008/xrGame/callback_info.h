@@ -20,5 +20,5 @@ struct event_comparer
 	s16					evt;
 
 	inline event_comparer(CUIWindow* w, s16 e):pWnd(w),evt(e){}
-	bool operator ()(SCallbackInfo* i);
+	UI_API bool operator()(SCallbackInfo* i);
 };

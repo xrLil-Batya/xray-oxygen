@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "stalker_movement_manager_smart_cover.h"
 #include "ai/stalker/ai_stalker.h"
+#include "ai_space.h"
 #include "memory_manager.h"
 #include "enemy_manager.h"
 #include "memory_space.h"
@@ -53,11 +54,8 @@ bool stalker_movement_manager_smart_cover::enemy_in_fov				() const
 	return				(true);
 }
 
-bool stalker_movement_manager_smart_cover::in_fov					(
-		shared_str const &cover_id,
-		shared_str const &loophole_id,
-		Fvector const &object_position
-	) const
+bool stalker_movement_manager_smart_cover::in_fov(shared_str const &cover_id,
+		shared_str const &loophole_id, Fvector const &object_position) const
 {
 	cover_type const&	cover = *(ai().cover_manager().smart_cover(cover_id));
 	loophole_type const&loophole = this->loophole(cover, loophole_id);

@@ -3,7 +3,7 @@
 #include "UIWindow.h"
 #include "../xrGame/callback_info.h"
 
-bool event_comparer::operator ()(SCallbackInfo* i)
+bool UI_API event_comparer::operator ()(SCallbackInfo* i)
 {
 	if (i->m_event == evt)
 	{

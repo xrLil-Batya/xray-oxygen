@@ -97,6 +97,6 @@ public:
 	IUIRender::ePointType m_currentPointType;
 };
 
-extern CUICursor& GetUICursor();
-extern ui_core &UI();
+extern UI_API CUICursor& GetUICursor();
+extern UI_API ui_core &UI();
 extern CUIGame* GameUI();

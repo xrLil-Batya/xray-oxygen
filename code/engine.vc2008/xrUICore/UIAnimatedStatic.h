@@ -48,7 +48,7 @@ public:
 	virtual void Update();
 };
 
-class CUISleepStatic: public CUIStatic
+class UI_API CUISleepStatic: public CUIStatic
 {
 private:
 	typedef			CUIStatic inherited;

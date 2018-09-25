@@ -48,6 +48,7 @@ const char*	file_header = 0;
 #	define NO_XRGAME_SCRIPT_ENGINE
 #endif
 
+CVMLua* CScriptStorage::luaVM = nullptr;
 void xrScriptCrashHandler()
 {
 	Msg("Trying dump lua state");

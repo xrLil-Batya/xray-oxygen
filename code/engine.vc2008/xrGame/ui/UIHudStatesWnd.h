@@ -1,6 +1,5 @@
 #pragma once
-
-#include "UIWindow.h"
+#include "..\..\xrUICore\UIWindow.h"
 #include "..\..\xrServerEntities\alife_space.h"
 #include "..\..\xrServerEntities\inventory_space.h"
 #include "..\actor_defs.h"
@@ -18,7 +17,7 @@ int const it_max = ALife::infl_max_count - 1;
 class CUIHudStatesWnd : public CUIWindow
 {
 private:
-	typedef CUIWindow						inherited;
+	typedef CUIWindow inherited;
 
 	CUIStatic*			m_back;
 

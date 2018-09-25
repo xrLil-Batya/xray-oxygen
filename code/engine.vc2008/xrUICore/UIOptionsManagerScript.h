@@ -1,7 +1,7 @@
 #pragma once
 #include "../xrScripts/export/script_export_space.h"
 
-class CUIOptionsManagerScript 
+class UI_API CUIOptionsManagerScript 
 {
 public:
 	void 		SaveBackupValues		(LPCSTR group);

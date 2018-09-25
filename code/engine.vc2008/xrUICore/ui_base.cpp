@@ -4,16 +4,22 @@
 #include "ui_base.h"
 #include "UICursor.h"
 
-ui_core GlobalUI;
+ui_core* GlobalUI = nullptr;
 
-CUICursor& GetUICursor() 
+UI_API CUICursor& GetUICursor()
 { 
 	return UI().GetUICursor(); 
 }
 
-ui_core &UI() 
+UI_API ui_core &UI()
 { 
-	return GlobalUI; 
+	VERIFY(GlobalUI);
+	return *GlobalUI; 
+}
+
+UI_API void initUICore()
+{
+	GlobalUI = new ui_core();
 }
 
 extern ENGINE_API Fvector2 g_current_font_scale;
@@ -410,62 +416,3 @@ void CFontManager::OnDeviceReset()
 {
 	InitializeFonts();
 }
-
-//#include "script_ui_registrator.h"
-//#include "MainMenu.h"
-//
-//#include "UIGame.h"
-//#include "UI/UIScriptWnd.h"
-//#include "UI/UIButton.h"
-//#include "UI/UIProgressBar.h"
-//#include "UI/UIEditBox.h"
-//#include "UI/UIMessageBox.h"
-//#include "UI/UIPropertiesBox.h"
-//#include "UI/UITabControl.h"
-//#include "UI/UIComboBox.h"
-//#include "ui/UIOptionsManagerScript.h"
-//#include "ScriptXmlInit.h"
-//#include <luabind/luabind.hpp>
-//using namespace luabind;
-//
-//CMainMenu* MainMenu();
-//
-//#pragma optimize("s",on)
-//void UIRegistrator::script_register(lua_State *L)
-//{
-//	CUIWindow::script_register(L);
-//	CUIStatic::script_register(L);
-//	CUIButton::script_register(L);
-//	CUIProgressBar::script_register(L);
-//	CUIComboBox::script_register(L);
-//	CUIEditBox::script_register(L);
-//	CUITabControl::script_register(L);
-//	CUIMessageBox::script_register(L);
-//	CUIListBox::script_register(L);
-//	CUIDialogWndEx::script_register(L);
-//	CUIPropertiesBox::script_register(L);
-//	CUIOptionsManagerScript::script_register(L);
-//	CScriptXmlInit::script_register(L);
-//	CUIGame::script_register(L);
-//
-//	module(L)
-//	[
-//		class_<CGameFont>("CGameFont")
-//		.enum_("EAligment")
-//		[
-//			value("alLeft",		u32(CGameFont::alLeft)),
-//			value("alRight",	u32(CGameFont::alRight)),
-//			value("alCenter",	u32(CGameFont::alCenter))
-//		],
-//
-//		class_<CMainMenu>("CMainMenu")
-//			.def("GetEngineBuild",		&CMainMenu::GetEngineBuild)
-//			.def("GetEngineBuildDate",	&CMainMenu::GetEngineBuildDate)
-//			.def("GetGSVer",			&CMainMenu::GetGSVer)
-//	];
-//
-//	module(L, "main_menu")
-//	[
-//		def("get_main_menu", &MainMenu)
-//	];
-//}

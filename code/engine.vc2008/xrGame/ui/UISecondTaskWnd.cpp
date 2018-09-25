@@ -28,6 +28,7 @@
 #include "UIInventoryUtilities.h"
 #include "../xrEngine/string_table.h"
 #include "../level.h"
+#include "../GametaskManager.h"
 
 UITaskListWnd::UITaskListWnd()
 {

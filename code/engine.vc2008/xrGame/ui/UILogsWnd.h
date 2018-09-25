@@ -4,16 +4,13 @@
 //	Author		: Evgeniy Sokolov
 //	Description : UI Logs (PDA) window class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef UI_PDA_LOGS_WND_H_INCLUDED
-#define UI_PDA_LOGS_WND_H_INCLUDED
-
-#include "UIWindow.h"
-#include "UIWndCallback.h"
+#pragma once
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/UIWndCallback.h"
 
 #include "../ai_space.h"
 #include "../../xrServerEntities/alife_space.h"
-#include "xrUIXmlParser.h"
+#include "../xrUICore/xrUIXmlParser.h"
 
 class CUITextWnd;
 class CUIFrameWindow;
@@ -83,5 +80,3 @@ protected:
 	
 			void 		on_scroll_keys		( int dik );
 }; // class CUILogsWnd
-
-#endif // UI_PDA_LOGS_WND_H_INCLUDED

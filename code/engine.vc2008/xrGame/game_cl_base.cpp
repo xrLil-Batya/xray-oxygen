@@ -8,7 +8,7 @@
 #include "ui/UIMainIngameWnd.h"
 #include "UI/UIGameTutorial.h"
 #include "UI/UIMessagesWindow.h"
-#include "UI/UIDialogWnd.h"
+#include "../xrUICore/UIDialogWnd.h"
 #include "..\xrEngine\string_table.h"
 #include <luabind/luabind.hpp>
 

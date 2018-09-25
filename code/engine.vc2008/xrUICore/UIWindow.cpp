@@ -6,12 +6,10 @@
 #include "../Include/xrRender/DebugRender.h"
 #include "../Include/xrRender/UIRender.h"
 
-void dump_list_wnd() {}
-
 xr_vector<Frect> g_wnds_rects;
 BOOL g_show_wnd_rect2 = FALSE;
 
-void clean_wnd_rects()
+void UI_API clean_wnd_rects()
 {
 #ifdef DEBUG
 	DRender->DestroyDebugShader(IDebugRender::dbgShaderWindow);
@@ -41,7 +39,8 @@ void draw_rect(Frect& r, u32 color)
 	
 #endif // DEBUG
 }
-void draw_wnds_rects()
+
+void UI_API draw_wnds_rects()
 {
 	if(0==g_wnds_rects.size())	return;
 
@@ -543,7 +542,7 @@ static bool is_in( Frect const& a, Frect const& b ) //b in a
 	return (a.x1 < b.x1) && (a.x2 > b.x2) && (a.y1 < b.y1) && (a.y2 > b.y2);
 }
 
-bool fit_in_rect(CUIWindow* w, Frect const& vis_rect, float border, float dx16pos ) //this = hint wnd
+UI_API bool fit_in_rect(CUIWindow* w, Frect const& vis_rect, float border, float dx16pos ) //this = hint wnd
 {
 	float const cursor_height	= 43.0f;
 	Fvector2 cursor_pos			= GetUICursor().GetCursorPosition();

@@ -1,10 +1,10 @@
 #pragma once
-#include "uiframewindow.h"
-#include "uilistbox.h"
+#include "UIFrameWindow.h"
+#include "UIListBox.h"
 
-#include "../../xrScripts/export/script_export_space.h"
+#include "../xrScripts/export/script_export_space.h"
 
-class CUIPropertiesBox: public CUIFrameWindow, public CUIWndCallback
+class UI_API CUIPropertiesBox: public CUIFrameWindow, public CUIWndCallback
 {
 private:
 	using inherited = CUIFrameWindow; 

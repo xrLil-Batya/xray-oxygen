@@ -22,4 +22,4 @@ public:
 	bool GameIndicatorsShown() { return m_bShowGameIndicators; };
 };
 
-extern IGameUI* pUIHud;
+extern UI_API IGameUI* pUIHud;

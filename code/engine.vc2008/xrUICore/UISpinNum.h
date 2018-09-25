@@ -36,7 +36,7 @@ protected:
 	int		m_opt_backup_value;
 };
 
-class CUISpinFlt : public CUICustomSpin 
+class UI_API CUISpinFlt : public CUICustomSpin 
 {
 public:
 	CUISpinFlt();

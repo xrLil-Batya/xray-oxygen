@@ -2,12 +2,12 @@
 #include "UIStaticItem.h"
 #include "ui_base.h"
 
-void CreateUIGeom()
+void UI_API CreateUIGeom()
 {
 	UIRender->CreateUIGeom();
 }
 
-void DestroyUIGeom()
+void UI_API DestroyUIGeom()
 {
 	UIRender->DestroyUIGeom();
 }

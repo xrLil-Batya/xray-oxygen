@@ -20,7 +20,7 @@
 #include "map_hint.h"
 #include "../xrUICore/UICursor.h"
 #include "../xrServerEntities/script_engine.h"
-#include "UIPropertiesBox.h"
+#include "../xrUICore/UIPropertiesBox.h"
 #include "../xrUICore/UIListBoxItem.h"
 #include "UIPdaSpot.h"
 

@@ -3,6 +3,7 @@
 #include "map_location.h"
 
 #include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "ui/UIMApWnd.h"
 #include "level.h"
 #include "ui/UIInventoryUtilities.h"

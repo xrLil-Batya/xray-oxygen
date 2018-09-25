@@ -1,6 +1,6 @@
 // sea 08.01.2008
-
 #include "StdAfx.h"
+#include "xrUIXmlParser.h"
 #include "UIDoubleProgressBar.h"
 #include "UIXmlInit.h"
 

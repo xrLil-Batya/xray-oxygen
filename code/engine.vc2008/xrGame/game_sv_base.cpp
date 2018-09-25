@@ -18,7 +18,7 @@
 #include "object_broker.h"
 #include "alife_simulator_base.h"
 #include "../xrEngine/x_ray.h"
-#include "ui/UILoadingScreen.h"
+#include "../xrUICore/UILoadingScreen.h"
 
 //-----------------------------------------------------------------
 BOOL	net_sv_control_hit	= FALSE		;

@@ -4,8 +4,8 @@
 #include "UIStatic.h"
 #include "UIXmlInit.h"
 
-CUIButtonHint* g_btnHint = nullptr; 
-CUIButtonHint* g_statHint = nullptr;
+UI_API CUIButtonHint* g_btnHint = nullptr;
+UI_API CUIButtonHint* g_statHint = nullptr;
 
 CUIButtonHint::CUIButtonHint() :m_ownerWnd(nullptr), m_enabledOnFrame(false)
 {

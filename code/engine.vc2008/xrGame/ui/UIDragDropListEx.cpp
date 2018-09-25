@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "UIDragDropListEx.h"
-#include "UIScrollBar.h"
+#include "../xrUICore/UIScrollBar.h"
 #include "object_broker.h"
 #include "UICellItem.h"
-#include "UICursor.h"
+#include "../xrUICore/UICursor.h"
 #include "../Level.h"
 #include "../Inventory.h"
 #include <dinput.h>

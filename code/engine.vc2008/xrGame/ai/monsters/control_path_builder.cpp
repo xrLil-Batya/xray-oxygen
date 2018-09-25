@@ -269,12 +269,10 @@ void CControlPathBuilder::make_inactual()
 	enable_movement(!enabled());
 }
 
-extern CActor*	g_actor;
-
 bool CControlPathBuilder::can_use_distributed_computations (u32 option) const
 {	
 	if (!g_actor)
-		return	true;
+		return true;
 
 	VERIFY(Actor());
 	VERIFY(inherited_com::m_object);
@@ -282,24 +280,16 @@ bool CControlPathBuilder::can_use_distributed_computations (u32 option) const
 	return inherited::can_use_distributed_computations(option);
 }
 
-u32	 CControlPathBuilder::find_nearest_vertex				(const u32 &level_vertex_id, const Fvector &target_position, const float &range)
+u32	 CControlPathBuilder::find_nearest_vertex(const u32 &level_vertex_id, const Fvector &target_position, const float &range)
 {
-	xr_vector<u32>	temp;
+	xr_vector<u32> temp;
 
-	ai().graph_engine().search	(
-		ai().level_graph(),
-		level_vertex_id,
-		level_vertex_id,
-		&temp,
-		GraphEngineSpace::CNearestVertexParameters(
-			target_position,
-			range
-		)
-	);
+	ai().graph_engine().search(ai().level_graph(), level_vertex_id, level_vertex_id,
+		&temp, GraphEngineSpace::CNearestVertexParameters(target_position, range));
 
-	VERIFY			(!temp.empty());
-	VERIFY			(temp.size() == 1);
-	return			(temp.front());
+	VERIFY(!temp.empty());
+	VERIFY(temp.size() == 1);
+	return (temp.front());
 }
 
 bool CControlPathBuilder::is_path_built()

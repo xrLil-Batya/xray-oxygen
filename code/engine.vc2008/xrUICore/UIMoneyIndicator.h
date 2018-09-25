@@ -2,7 +2,7 @@
 #include "UIStatic.h"
 class CXml;
 
-class UI_CORE CUIMoneyIndicator: public CUIWindow 
+class UI_API CUIMoneyIndicator: public CUIWindow 
 {
 public:
 						CUIMoneyIndicator		();

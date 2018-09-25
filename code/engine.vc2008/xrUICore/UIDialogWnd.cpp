@@ -3,7 +3,7 @@
 #include "IGameUI.h"
 #include "MainMenu.h"
 
-IGameUI* pUIHud = nullptr;
+UI_API IGameUI* pUIHud = nullptr;
 
 CUIDialogWnd:: CUIDialogWnd()
 {

@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
 #include "uiiteminfo.h"
-#include "uistatic.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/uistatic.h"
+#include "../xrUICore/UIXmlInit.h"
 
-#include "UIProgressBar.h"
-#include "UIScrollView.h"
-#include "UIFrameWindow.h"
+#include "../xrUICore/UIProgressBar.h"
+#include "../xrUICore/UIScrollView.h"
+#include "../xrUICore/UIFrameWindow.h"
 
 #include "ai_space.h"
 #include "alife_simulator.h"

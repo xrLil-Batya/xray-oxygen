@@ -2,7 +2,7 @@
 #include "controller.h"
 #include "controller_state_manager.h"
 #include "../controlled_entity.h"
-#include "../../../actor.h"
+#include "../../../Actor.h"
 #include "../../../ActorEffector.h"
 #include "../../../ActorCondition.h"
 #include "../ai_monster_effector.h"
@@ -11,7 +11,7 @@
 #include "../../../sound_player.h"
 #include "../../../ai_monster_space.h"
 #include "../../../UIGame.h"
-#include "../../../ui/UIStatic.h"
+#include "../../../../xrUICore/UIStatic.h"
 
 #include "../monster_velocity_space.h"
 #include "../../../level_debug.h"

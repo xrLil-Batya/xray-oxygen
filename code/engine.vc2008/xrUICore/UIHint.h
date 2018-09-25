@@ -45,7 +45,7 @@ protected:
 
 // =================================================================================================
 // UIHintWindow = Owner of UIHint
-class UIHintWindow : public CUIWindow
+class UI_API UIHintWindow : public CUIWindow
 {
 	typedef CUIWindow	inherited;
 

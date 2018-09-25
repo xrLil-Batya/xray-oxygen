@@ -90,6 +90,12 @@
     <Filter Include="Elements\Background">
       <UniqueIdentifier>{1176dec6-cf82-4700-8565-43aa1724138b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Elements\Boxes\Property">
+      <UniqueIdentifier>{a8f90e9e-34b2-43fd-8b7d-9471843baa15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mature\CarPanel">
+      <UniqueIdentifier>{f1de9adb-b03e-4d3f-988e-f1f9a6b8646f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UICursor.cpp">
@@ -274,6 +280,12 @@
     </ClCompile>
     <ClCompile Include="UIPdaMsgListItem.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPropertiesBox.cpp">
+      <Filter>Elements\Boxes\Property</Filter>
+    </ClCompile>
+    <ClCompile Include="UICarPanel.cpp">
+      <Filter>Mature\CarPanel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -477,6 +489,12 @@
     </ClInclude>
     <ClInclude Include="UIPdaMsgListItem.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPropertiesBox.h">
+      <Filter>Elements\Boxes\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="UICarPanel.h">
+      <Filter>Mature\CarPanel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

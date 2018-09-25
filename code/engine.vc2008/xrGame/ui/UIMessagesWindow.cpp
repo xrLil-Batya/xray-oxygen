@@ -12,7 +12,7 @@
 #include "../xrUICore/UIXmlInit.h"
 #include "UIInventoryUtilities.h"
 #include "../game_news.h"
-#include "UIPdaMsgListItem.h"
+#include "../xrUICore/UIPdaMsgListItem.h"
 #include "UIGameLog.hpp"
 
 CUIMessagesWindow::CUIMessagesWindow() :m_pGameLog(nullptr)

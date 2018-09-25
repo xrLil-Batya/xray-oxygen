@@ -151,8 +151,8 @@ void UIHintWindow::OnFocusLost()
 	disable_hint();
 }
 
-void UIHintWindow::Show( bool status )
+void UIHintWindow::Show(bool status)
 {
-	inherited::Show( status );
+	inherited::Show(status);
 	disable_hint();
 }

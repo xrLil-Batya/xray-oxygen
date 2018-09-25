@@ -26,7 +26,7 @@ static const char* month_id[12] =
 XRCORE_API u32 build_id;
 XRCORE_API const char* build_date;
 
-CMainMenu*	MainMenu() { return (CMainMenu*) g_pGamePersistent->m_pMainMenu; };
+UI_API CMainMenu* MainMenu() { return (CMainMenu*) g_pGamePersistent->m_pMainMenu; };
 //----------------------------------------------------------------------------------
 #define INIT_MSGBOX(_box, _template)	{ _box = xr_new<CUIMessageBoxEx>(); _box->InitMessageBox(_template);}
 //----------------------------------------------------------------------------------
@@ -64,6 +64,11 @@ CMainMenu::~CMainMenu()
 	for (CUIMessageBoxEx* pMsgBox : m_pMB_ErrDlgs)
 		xr_delete(pMsgBox);
 	m_pMB_ErrDlgs.clear();
+}
+
+const char* CMainMenu::GetGSVer()
+{
+	return "Oxygen 1.7f";
 }
 
 void CMainMenu::ReadTextureInfo()
