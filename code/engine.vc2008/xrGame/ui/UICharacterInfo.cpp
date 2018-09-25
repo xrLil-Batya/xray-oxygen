@@ -9,11 +9,11 @@
 #include "../../xrEngine/string_table.h"
 #include "../relation_registry.h"
 
-#include "xrUIXmlParser.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
 
-#include "uistatic.h"
-#include "UIScrollView.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIScrollView.h"
 
 #include "../alife_simulator.h"
 #include "../ai_space.h"

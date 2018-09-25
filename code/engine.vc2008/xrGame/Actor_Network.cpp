@@ -51,11 +51,10 @@
 
 int			g_dwInputUpdateDelta		= 20;
 BOOL		net_cl_inputguaranteed		= FALSE;
-CActor*		g_actor						= nullptr;
 
 CActor* Actor()	
 {
-	return (g_actor); 
+	return (CActor*)g_actor; 
 }
 //--------------------------------------------------------------------
 void	CActor::ConvState(u32 mstate_rl, string128 *buf)

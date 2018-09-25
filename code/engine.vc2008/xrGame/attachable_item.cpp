@@ -5,28 +5,29 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Attachable item
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "physicsshellholder.h"
 #include "attachable_item.h"
 #include "inventoryowner.h"
 #include "inventory.h"
+#include "../xrUICore/ui_base.h"
 #include "../xrEngine/xr_input.h"
-#include "ui_base.h"
 
-CAttachableItem*	CAttachableItem::m_dbgItem = nullptr;
+CAttachableItem* CAttachableItem::m_dbgItem = nullptr;
 
-CPhysicsShellHolder &CAttachableItem::object	() const
+CPhysicsShellHolder &CAttachableItem::object() const
 {
-	return				(item().object());
+	return (item().object());
 }
 
-DLL_Pure *CAttachableItem::_construct	()
+DLL_Pure *CAttachableItem::_construct()
 {
-	VERIFY				(!m_item);
-	m_item				= smart_cast<CInventoryItem*>(this);
-	VERIFY				(m_item);
-	return				(&item().object());
+	if (m_item) xr_delete(m_item);
+
+	m_item = smart_cast<CInventoryItem*>(this);
+	VERIFY(m_item);
+
+	return (&item().object());
 }
 
 CAttachableItem::~CAttachableItem		()

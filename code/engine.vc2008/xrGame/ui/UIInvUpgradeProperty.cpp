@@ -10,9 +10,9 @@
 #include "UIInvUpgradeProperty.h"
 #include "UIInvUpgradeInfo.h"
 
-#include "UIStatic.h"
-#include "xrUIXmlParser.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
 
 #include "ai_space.h"
 #include "alife_simulator.h"
@@ -32,7 +32,7 @@ UIProperty::~UIProperty()
 {
 }
 
-void UIProperty::init_from_xml( CUIXml& ui_xml )
+void UIProperty::init_from_xml( CXml& ui_xml )
 {
 	m_ui_icon = xr_new<CUIStatic>();	 
 	m_ui_text = xr_new<CUITextWnd>();

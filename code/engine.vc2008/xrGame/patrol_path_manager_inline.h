@@ -5,7 +5,6 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Patrol path manager inline functions
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
 
 IC	CPatrolPathManager::CPatrolPathManager(CRestrictedObject *object, CGameObject *game_object)

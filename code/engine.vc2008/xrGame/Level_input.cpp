@@ -17,7 +17,6 @@
 #include "actor.h"
 #include "huditem.h"
 #include "UIGame.h"
-#include "UI/UIDialogWnd.h"
 #include "../xrEngine/xr_input.h"
 #include "saved_game_wrapper.h"
 
@@ -25,7 +24,6 @@
 
 #ifdef DEBUG
 #	include "ai/monsters/BaseMonster/base_monster.h"
-
 // Lain: add
 #   include "level_debug.h"
 #endif

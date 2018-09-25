@@ -5,15 +5,14 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Patrol path manager
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "level.h"
 #include "script_engine.h"
 #include "patrol_path_storage.h"
 #include "patrol_path.h"
 #include "patrol_path_manager_space.h"
 #include "script_callback_ex.h"
+#include "ai_space.h"
 
 template <typename _return_type>
 class CScriptCallbackEx;
@@ -23,7 +22,8 @@ class CGameObject;
 
 using namespace PatrolPathManager;
 
-class CPatrolPathManager {
+class CPatrolPathManager 
+{
 private:
 	friend struct CAccessabilityEvaluator;
 

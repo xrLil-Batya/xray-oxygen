@@ -3,10 +3,10 @@
 #include "UIDragDropListEx.h"
 #include "UICharacterInfo.h"
 #include "UIInventoryUtilities.h"
-#include "UI3tButton.h"
+#include "../xrUICore/UI3tButton.h"
 #include "UICellItem.h"
 #include "UICellItemFactory.h"
-#include "UIFrameLineWnd.h"
+#include "../xrUICore/UIFrameLineWnd.h"
 
 #include "xrMessages.h"
 #include "../alife_registry_wrappers.h"

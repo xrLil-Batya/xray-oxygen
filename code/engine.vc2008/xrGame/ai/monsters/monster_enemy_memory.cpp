@@ -28,8 +28,6 @@ void CMonsterEnemyMemory::init_external(CBaseMonster *M, TTime mem_time)
 	time_memory = mem_time;
 }
 
-extern CActor*	g_actor;
-
 void CMonsterEnemyMemory::update() 
 {
 	VERIFY		(monster->g_Alive());
@@ -40,24 +38,22 @@ void CMonsterEnemyMemory::update()
 
 	objects_list const& objects	=	monster->memory().enemy().objects();
 
-	if ( monster_hit_memory.is_hit() && time() < monster_hit_memory.get_last_hit_time() + 1000 )
+	if (monster_hit_memory.is_hit() && time() < monster_hit_memory.get_last_hit_time() + 1000)
 	{
-		if ( CEntityAlive* enemy = smart_cast<CEntityAlive*>(monster->HitMemory.get_last_hit_object()) )
+		if (CEntityAlive* enemy = smart_cast<CEntityAlive*>(monster->HitMemory.get_last_hit_object()))
 		{
-			if ( monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) && 
-				 monster->Position().distance_to(enemy->Position()) 
-				                        < 
-				 monster->get_feel_enemy_who_just_hit_max_distance() )
+			if (monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) &&
+				monster->Position().distance_to(enemy->Position()) < monster->get_feel_enemy_who_just_hit_max_distance())
 			{
-				add_enemy					(enemy);
+				add_enemy(enemy);
 
-				bool const self_is_dog	=	!!smart_cast<const CAI_Dog*>(monster);
-				if ( self_is_dog )
+				bool const self_is_dog = !!smart_cast<const CAI_Dog*>(monster);
+				if (self_is_dog)
 				{
-					CMonsterSquad* const squad	=	monster_squad().get_squad(monster);
-					squad->set_home_in_danger	();
+					CMonsterSquad* const squad = monster_squad().get_squad(monster);
+					squad->set_home_in_danger();
 				}
-			}			
+			}
 		}
 	}
 
@@ -66,25 +62,24 @@ void CMonsterEnemyMemory::update()
 		SoundElem sound;
 		bool dangerous;
 		monster->SoundMemory.GetSound(sound, dangerous);
-		if (dangerous && Device.dwTimeGlobal < sound.time + 2000 && g_actor)
+		if (dangerous && Device.dwTimeGlobal < sound.time + 2000 && Actor())
 		{
 			if (CEntityAlive const* enemy = smart_cast<CEntityAlive const*>(sound.who))
 			{
-				float const xz_dist	= monster->Position().distance_to_xz(g_actor->Position());
-				float const y_dist = _abs(monster->Position().y - g_actor->Position().y);
+				float const xz_dist = monster->Position().distance_to_xz(Actor()->Position());
+				float const y_dist = _abs(monster->Position().y - Actor()->Position().y);
 
-				if (monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) && 
-					 y_dist < 10 &&
-					 xz_dist < monster->get_feel_enemy_who_made_sound_max_distance() &&
-					 g_actor->memory().visual().visible_now(monster))
+				if (monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) && y_dist < 10 &&
+					xz_dist < monster->get_feel_enemy_who_made_sound_max_distance() &&
+					Actor()->memory().visual().visible_now(monster))
 				{
-					add_enemy					(enemy);
+					add_enemy(enemy);
 
-					bool const self_is_dog	=	!!smart_cast<const CAI_Dog*>(monster);
-					if ( self_is_dog )
+					bool const self_is_dog = !!smart_cast<const CAI_Dog*>(monster);
+					if (self_is_dog)
 					{
-						CMonsterSquad* const squad	=	monster_squad().get_squad(monster);
-						squad->set_home_in_danger	();
+						CMonsterSquad* const squad = monster_squad().get_squad(monster);
+						squad->set_home_in_danger();
 					}
 				}
 			}
@@ -102,13 +97,13 @@ void CMonsterEnemyMemory::update()
 
 	float const feel_enemy_max_distance	= monster->get_feel_enemy_max_distance();
 
-	if (g_actor)
+	if (Actor())
 	{
-		float const xz_dist	= monster->Position().distance_to_xz(g_actor->Position());
-		float const y_dist = _abs(monster->Position().y - g_actor->Position().y);
+		float const xz_dist	= monster->Position().distance_to_xz(Actor()->Position());
+		float const y_dist = _abs(monster->Position().y - Actor()->Position().y);
 
-		if (xz_dist < feel_enemy_max_distance && y_dist < 10 && monster->memory().enemy().is_useful(g_actor) && g_actor->memory().visual().visible_now(monster))
-			add_enemy(g_actor);
+		if (xz_dist < feel_enemy_max_distance && y_dist < 10 && monster->memory().enemy().is_useful(Actor()) && Actor()->memory().visual().visible_now(monster))
+			add_enemy(Actor());
 	}
 	
 	// удалить устаревших врагов

@@ -1,13 +1,12 @@
 #pragma once
-
 #include "../xrScripts/export/script_export_space.h"
 #include "object_interfaces.h"
 #include "inventory_space.h"
 #include "gametype_chooser.h"
-#include "UIDialogHolder.h"
+#include "../xrUICore/UIDialogHolder.h"
+#include "../xrUICore/IGameUI.h"
 #include "../xrEngine/CustomHUD.h"
-#include "UIGame.h"
-#include "ui/UIDialogWnd.h"
+#include "../xrUICore/UIDialogWnd.h"
 #include "game_graph_space.h"
 
 // refs
@@ -73,7 +72,7 @@ typedef xr_vector<SGameWeathers> GAME_WEATHERS;
 typedef xr_vector<SGameWeathers>::iterator GAME_WEATHERS_IT;
 typedef xr_vector<SGameWeathers>::const_iterator GAME_WEATHERS_CIT;
 
-class CUIGame : public DLL_Pure, public CDialogHolder
+class CUIGame : public IGameUI, public DLL_Pure
 {
 private:
 	game_cl_GameState* m_game;
@@ -87,8 +86,6 @@ protected:
 
 	CUIActorMenu* m_ActorMenu;
 	CUIPdaWnd* m_PdaMenu;
-
-	bool m_bShowGameIndicators;
 
 public:
 	CUIMainIngameWnd* UIMainIngameWnd;
@@ -127,8 +124,6 @@ public:
 	void ShowMessagesWindow();
 	void HideMessagesWindow();
 
-	void ShowGameIndicators(bool b) { m_bShowGameIndicators = b; };
-	bool GameIndicatorsShown() { return m_bShowGameIndicators; };
 	void ShowCrosshair(bool b) { psHUD_Flags.set(HUD_CROSSHAIR_RT, b); }
 	bool CrosshairShown() { return !!psHUD_Flags.test(HUD_CROSSHAIR_RT); }
 

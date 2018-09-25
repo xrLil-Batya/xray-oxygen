@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GameTask.h"
-#include "ui/xrUIXmlParser.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "map_location.h"
 #include "map_spot.h"
 #include "map_manager.h"
@@ -16,7 +16,7 @@
 #include "alife_story_registry.h"
 #include "game_object_space.h"
 #include "object_broker.h"
-#include "ui/uitexturemaster.h"
+#include "../xrUICore/UITextureMaster.h"
 
 CGameTask::CGameTask()
 {

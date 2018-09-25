@@ -6,10 +6,12 @@
 #include "script_game_object.h"
 #include "infoportion.h"
 #include "inventoryowner.h"
-#include "ai_debug.h"
-#include "ui/xrUIXmlParser.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "actor.h"
 #include <luabind/luabind.hpp>
+#ifdef DEBUG
+#	include "ai_debug.h"
+#endif
 
 //загрузка из XML файла
 void CDialogScriptHelper::Load		(CUIXml* uiXml, XML_NODE* phrase_node)

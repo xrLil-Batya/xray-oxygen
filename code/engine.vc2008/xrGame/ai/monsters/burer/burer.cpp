@@ -497,21 +497,18 @@ void   CBurer::face_enemy ()
 	set_action							(ACT_STAND_IDLE);
 }
 
-extern CActor* g_actor;
-
-bool   actor_is_reloading_weapon ()
+bool actor_is_reloading_weapon()
 {
-	if ( !g_actor )
+	if (!g_actor)
 	{
-		return								false;
-	}
-	
-	CWeapon* const active_weapon	=	smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
-	if ( active_weapon && active_weapon->GetState() == CWeapon::eReload )
-	{
-		return							true;
+		return false;
 	}
 
-	return									false;
+	CWeapon* const active_weapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+	if (active_weapon && active_weapon->GetState() == CWeapon::eReload)
+	{
+		return true;
+	}
+
+	return false;
 }
-

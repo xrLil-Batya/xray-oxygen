@@ -19,7 +19,7 @@
 #include "map_manager.h"
 #include "level_sounds.h"
 #include "trade_parameters.h"
-#include "MainMenu.h"
+#include "../xrUICore/MainMenu.h"
 #include "player_hud.h"
 #include "UI/UIGameTutorial.h"
 #include "CustomDetector.h"

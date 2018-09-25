@@ -11,8 +11,8 @@
 #include "GameObject.h"
 #include "../xrEngine/feel_touch.h"
 #include "game_graph_space.h"
-#include "ui/UIDialogWnd.h"
-#include "ui/UIMessageBox.h"
+#include "../xrUICore/UIDialogWnd.h"
+#include "../xrUICore/UIMessageBox.h"
 
 class CUIDialogWnd;
 

@@ -8,7 +8,6 @@
 #include "../xrEngine/device.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrEngine/xr_ioconsole.h"
-#include "MainMenu.h"
 #include "..\xrEngine\string_table.h"
 #include "UIGame.h"
 #include "GamePersistent.h"

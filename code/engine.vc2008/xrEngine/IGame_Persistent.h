@@ -121,7 +121,7 @@ public:
 	virtual bool					CanBePaused			()		{ return true;}
 };
 
-class IMainMenu
+class ENGINE_API IMainMenu
 {
 public:
 	virtual			~IMainMenu						()													{};

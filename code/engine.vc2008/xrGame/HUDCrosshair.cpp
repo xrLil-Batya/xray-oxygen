@@ -1,12 +1,10 @@
 // HUDCrosshair.cpp:  крестик прицела, отображающий текущую дисперсию
 // 
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "actor.h"
 #include "HUDCrosshair.h"
-//.#include "UIStaticItem.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 
 CHUDCrosshair::CHUDCrosshair	()
 {

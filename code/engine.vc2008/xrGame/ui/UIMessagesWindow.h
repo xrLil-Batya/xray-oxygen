@@ -5,10 +5,8 @@
 // Mail:		narrator@gsc-game.kiev.ua
 //
 // Copyright 2005 GSC Game World
-
 #pragma once
-
-#include "UIWindow.h"
+#include "../xrUICore/UIWindow.h"
 
 struct GAME_NEWS_DATA;
 class  CUIGameLog;

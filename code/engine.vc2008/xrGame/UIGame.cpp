@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "UIGame.h"
 #include "level.h"
-#include "ui/UIXmlInit.h"
-#include "ui/UIStatic.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIStatic.h"
 #include "object_broker.h"
 #include "..\xrEngine\string_table.h"
 

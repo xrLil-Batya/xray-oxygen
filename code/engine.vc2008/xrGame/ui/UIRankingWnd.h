@@ -4,10 +4,9 @@
 //	Author		: Evgeniy Sokolov
 //	Description : UI Ranking window class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-#include "UIWindow.h"
-#include "UIWndCallback.h"
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/UIWndCallback.h"
 #include "UIAchievements.h"
 
 class CUIStatic;

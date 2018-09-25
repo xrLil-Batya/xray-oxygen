@@ -16,7 +16,7 @@
 #include "../xrEngine/igame_persistent.h"
 #include "game_cl_base.h"
 #include "UIGame.h"
-#include "UI/UIDialogWnd.h"
+#include "../xrUICore/UIDialogWnd.h"
 #include "../xrEngine/date_time.h"
 #include "ai_space.h"
 #include "level_graph.h"

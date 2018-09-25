@@ -149,7 +149,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>IKAN.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrUICore.lib;IKAN.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>
       </AdditionalOptions>
     </Link>
@@ -209,7 +209,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>IKAN.lib;min_obb.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrUICore.lib;IKAN.lib;min_obb.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions> /EDITANDCONTINUE /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -279,7 +279,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>IKAN.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrUICore.lib;IKAN.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -351,14 +351,13 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>IKAN.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrUICore.lib;IKAN.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CMagazine.h" />
-    <ClInclude Include="ui\UILoadingScreen.h" />
     <ClInclude Include="ui\UIPdaSpot.h" />
     <ClInclude Include="ActivatingCharCollisionDelay.h" />
     <ClInclude Include="ActorRuck.h" />
@@ -1533,9 +1532,6 @@
     <ClInclude Include="..\xrServerEntities\script_value_container.h" />
     <ClInclude Include="..\xrServerEntities\script_value_container_impl.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h" />
-    <ClInclude Include="ui_base.h" />
-    <ClInclude Include="ui_defs.h" />
-    <ClInclude Include="UIDialogHolder.h" />
     <ClInclude Include="ui\UIInventoryUpgradeWnd.h" />
     <ClInclude Include="ui\UIInvUpgrade.h" />
     <ClInclude Include="ui\UIInvUpgradeInfo.h" />
@@ -1565,92 +1561,29 @@
     <ClInclude Include="ui\UIHudStatesWnd.h" />
     <ClInclude Include="ui\UIMainIngameWnd.h" />
     <ClInclude Include="ui\UIMessagesWindow.h" />
-    <ClInclude Include="ui\UIMoneyIndicator.h" />
     <ClInclude Include="ui\UIMotionIcon.h" />
-    <ClInclude Include="ui\UIPdaMsgListItem.h" />
     <ClInclude Include="UIZoneMap.h" />
-    <ClInclude Include="ui\UIOptionsItem.h" />
-    <ClInclude Include="ui\UIOptionsManager.h" />
-    <ClInclude Include="ui\UIOptionsManagerScript.h" />
-    <ClInclude Include="MainMenu.h" />
-    <ClInclude Include="ui\MMSound.h" />
-    <ClInclude Include="ui\UIMMShniaga.h" />
-    <ClInclude Include="ui\UIEditKeyBind.h" />
-    <ClInclude Include="ui\UIKeyBinding.h" />
-    <ClInclude Include="ui\UIHelper.h" />
     <ClInclude Include="ui\UIInventoryUtilities.h" />
     <ClInclude Include="ui\UIActorMenu.h" />
     <ClInclude Include="ui\UIActorStateInfo.h" />
     <ClInclude Include="ui\UIDebugFonts.h" />
     <ClInclude Include="callback_info.h" />
-    <ClInclude Include="ui\uiabstract.h" />
-    <ClInclude Include="ui\UIMessages.h" />
-    <ClInclude Include="ui\UIWndCallback.h" />
-    <ClInclude Include="ui\UITextureMaster.h" />
-    <ClInclude Include="ui\UIXmlInit.h" />
-    <ClInclude Include="ui\xrUIXmlParser.h" />
-    <ClInclude Include="ui\UIMessageBox.h" />
-    <ClInclude Include="ui\UIMessageBoxEx.h" />
-    <ClInclude Include="ui\UIPropertiesBox.h" />
-    <ClInclude Include="ui\UIAnimatedStatic.h" />
-    <ClInclude Include="ui\UILanimController.h" />
-    <ClInclude Include="ui\UIStatic.h" />
-    <ClInclude Include="UIStaticItem.h" />
-    <ClInclude Include="ui\UIEditBox.h" />
-    <ClInclude Include="ui\UIEditBoxEx.h" />
-    <ClInclude Include="ui\UICustomEdit.h" />
-    <ClInclude Include="ui\UIDialogWnd.h" />
-    <ClInclude Include="ui\UIFrameLineWnd.h" />
-    <ClInclude Include="ui\UIFrameWindow.h" />
-    <ClInclude Include="ui\UIWindow.h" />
-    <ClInclude Include="ui\UIDoubleProgressBar.h" />
-    <ClInclude Include="ui\UIProgressBar.h" />
-    <ClInclude Include="ui\UIProgressShape.h" />
-    <ClInclude Include="ui\UITabButton.h" />
-    <ClInclude Include="ui\UITabControl.h" />
     <ClInclude Include="ui\UIScriptWnd.h" />
     <ClInclude Include="ui\uiscriptwnd_script.h" />
-    <ClInclude Include="ui\UI3tButton.h" />
-    <ClInclude Include="ui\UIBtnHint.h" />
-    <ClInclude Include="ui\UIButton.h" />
-    <ClInclude Include="ui\UICheckButton.h" />
-    <ClInclude Include="ui\UIRadioButton.h" />
-    <ClInclude Include="ui\UIComboBox.h" />
-    <ClInclude Include="ui\UI_IB_Static.h" />
-    <ClInclude Include="ui\UIInteractiveBackground.h" />
-    <ClInclude Include="ui\UITrackBar.h" />
-    <ClInclude Include="ui\UIScrollView.h" />
-    <ClInclude Include="ui\UILine.h" />
-    <ClInclude Include="ui\UILines.h" />
-    <ClInclude Include="ui\uilinestd.h" />
-    <ClInclude Include="ui\UISubLine.h" />
     <ClInclude Include="ui\UICellCustomItems.h" />
     <ClInclude Include="ui\UICellItem.h" />
     <ClInclude Include="ui\UICellItemFactory.h" />
     <ClInclude Include="ui\UIDragDropListEx.h" />
     <ClInclude Include="ui\UIDragDropReferenceList.h" />
-    <ClInclude Include="ui\UIFixedScrollBar.h" />
-    <ClInclude Include="ui\UIScrollBar.h" />
-    <ClInclude Include="ui\UIScrollBox.h" />
-    <ClInclude Include="ui\UICustomSpin.h" />
-    <ClInclude Include="ui\UISpinNum.h" />
-    <ClInclude Include="ui\UISpinText.h" />
-    <ClInclude Include="ui\ui_arrow.h" />
-    <ClInclude Include="ui\UIHint.h" />
-    <ClInclude Include="ui\UIListBox.h" />
-    <ClInclude Include="ui\UIListBoxItem.h" />
-    <ClInclude Include="ui\UIListBoxItemMsgChain.h" />
     <ClInclude Include="HitMarker.h" />
     <ClInclude Include="HUDManager.h" />
     <ClInclude Include="UIGame.h" />
     <ClInclude Include="HUDCrosshair.h" />
     <ClInclude Include="HUDTarget.h" />
-    <ClInclude Include="UICursor.h" />
     <ClInclude Include="ui\UIGameTutorial.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CMagazine.cpp" />
-    <ClCompile Include="ui\UILoadingScreen.cpp" />
     <ClCompile Include="ui\UIPdaSpot.cpp" />
     <ClCompile Include="ActivatingCharCollisionDelay.cpp" />
     <ClCompile Include="ActorRuck.cpp" />
@@ -2420,8 +2353,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script4.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp" />
-    <ClCompile Include="ui_base.cpp" />
-    <ClCompile Include="UIDialogHolder.cpp" />
     <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp" />
     <ClCompile Include="ui\UIInvUpgrade.cpp" />
     <ClCompile Include="ui\UIInvUpgradeInfo.cpp" />
@@ -2451,19 +2382,8 @@
     <ClCompile Include="ui\UIHudStatesWnd.cpp" />
     <ClCompile Include="ui\UIMainIngameWnd.cpp" />
     <ClCompile Include="ui\UIMessagesWindow.cpp" />
-    <ClCompile Include="ui\UIMoneyIndicator.cpp" />
     <ClCompile Include="ui\UIMotionIcon.cpp" />
-    <ClCompile Include="ui\UIPdaMsgListItem.cpp" />
     <ClCompile Include="UIZoneMap.cpp" />
-    <ClCompile Include="ui\UIOptionsItem.cpp" />
-    <ClCompile Include="ui\UIOptionsManager.cpp" />
-    <ClCompile Include="ui\UIOptionsManagerScript.cpp" />
-    <ClCompile Include="MainMenu.cpp" />
-    <ClCompile Include="ui\MMSound.cpp" />
-    <ClCompile Include="ui\UIMMShniaga.cpp" />
-    <ClCompile Include="ui\UIEditKeyBind.cpp" />
-    <ClCompile Include="ui\UIKeyBinding.cpp" />
-    <ClCompile Include="ui\UIHelper.cpp" />
     <ClCompile Include="ui\UIInventoryUtilities.cpp" />
     <ClCompile Include="ui\UIActorMenu.cpp" />
     <ClCompile Include="ui\UIActorMenu_action.cpp" />
@@ -2477,65 +2397,18 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="ui\UIWndCallback.cpp" />
-    <ClCompile Include="ui\UITextureMaster.cpp" />
-    <ClCompile Include="ui\UIXmlInit.cpp" />
-    <ClCompile Include="ui\xrUIXmlParser.cpp" />
-    <ClCompile Include="ui\UIMessageBox.cpp" />
-    <ClCompile Include="ui\UIMessageBoxEx.cpp" />
-    <ClCompile Include="ui\UIPropertiesBox.cpp" />
-    <ClCompile Include="ui\UIAnimatedStatic.cpp" />
-    <ClCompile Include="ui\UILanimController.cpp" />
-    <ClCompile Include="ui\UIStatic.cpp" />
     <ClCompile Include="ui\UIStatic_script.cpp" />
-    <ClCompile Include="UIStaticItem.cpp" />
-    <ClCompile Include="ui\UIEditBox.cpp" />
-    <ClCompile Include="ui\UIEditBoxEx.cpp" />
-    <ClCompile Include="ui\UICustomEdit.cpp" />
-    <ClCompile Include="ui\UIDialogWnd.cpp" />
-    <ClCompile Include="ui\UIFrameLineWnd.cpp" />
-    <ClCompile Include="ui\UIFrameWindow.cpp" />
-    <ClCompile Include="ui\UIWindow.cpp" />
-    <ClCompile Include="ui\UIDoubleProgressBar.cpp" />
-    <ClCompile Include="ui\UIProgressBar.cpp" />
-    <ClCompile Include="ui\UIProgressShape.cpp" />
-    <ClCompile Include="ui\UITabButton.cpp" />
-    <ClCompile Include="ui\UITabControl.cpp" />
     <ClCompile Include="ui\UIScriptWnd.cpp" />
-    <ClCompile Include="ui\UI3tButton.cpp" />
-    <ClCompile Include="ui\UIBtnHint.cpp" />
-    <ClCompile Include="ui\UIButton.cpp" />
-    <ClCompile Include="ui\UICheckButton.cpp" />
-    <ClCompile Include="ui\UIRadioButton.cpp" />
-    <ClCompile Include="ui\UIComboBox.cpp" />
-    <ClCompile Include="ui\UI_IB_Static.cpp" />
-    <ClCompile Include="ui\UITrackBar.cpp" />
-    <ClCompile Include="ui\UIScrollView.cpp" />
-    <ClCompile Include="ui\UILine.cpp" />
-    <ClCompile Include="ui\UILines.cpp" />
-    <ClCompile Include="ui\UISubLine.cpp" />
     <ClCompile Include="ui\UICellCustomItems.cpp" />
     <ClCompile Include="ui\UICellItem.cpp" />
     <ClCompile Include="ui\UICellItemFactory.cpp" />
     <ClCompile Include="ui\UIDragDropListEx.cpp" />
     <ClCompile Include="ui\UIDragDropReferenceList.cpp" />
-    <ClCompile Include="ui\UIFixedScrollBar.cpp" />
-    <ClCompile Include="ui\UIScrollBar.cpp" />
-    <ClCompile Include="ui\UIScrollBox.cpp" />
-    <ClCompile Include="ui\UICustomSpin.cpp" />
-    <ClCompile Include="ui\UISpinNum.cpp" />
-    <ClCompile Include="ui\UISpinText.cpp" />
-    <ClCompile Include="ui\ui_arrow.cpp" />
-    <ClCompile Include="ui\UIHint.cpp" />
-    <ClCompile Include="ui\UIListBox.cpp" />
-    <ClCompile Include="ui\UIListBoxItem.cpp" />
-    <ClCompile Include="ui\UIListBoxItemMsgChain.cpp" />
     <ClCompile Include="HitMarker.cpp" />
     <ClCompile Include="HUDManager.cpp" />
     <ClCompile Include="UIGame.cpp" />
     <ClCompile Include="HUDCrosshair.cpp" />
     <ClCompile Include="HUDTarget.cpp" />
-    <ClCompile Include="UICursor.cpp" />
     <ClCompile Include="ui\UIGameTutorial.cpp" />
     <ClCompile Include="ui\UIGameTutorialSimpleItem.cpp" />
     <ClCompile Include="ui\UIGameTutorialVideoItem.cpp" />

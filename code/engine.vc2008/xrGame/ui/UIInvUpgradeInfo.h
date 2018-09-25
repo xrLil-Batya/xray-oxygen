@@ -5,12 +5,9 @@
 //	Author		: Evgeniy Sokolov, Prishchepa Sergey
 //	Description : inventory upgrade UI info window class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef UI_INVENTORY_UPGRADE_INFO_H_INCLUDED
-#define UI_INVENTORY_UPGRADE_INFO_H_INCLUDED
-
-#include "UIWindow.h"
-#include "xrUIXmlParser.h"
+#pragma once
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/xrUIXmlParser.h"
 
 
 namespace inventory { namespace upgrade {
@@ -51,5 +48,3 @@ protected:
 	CUITextWnd*			m_prereq;
 	
 }; // class UIInvUpgradeInfo
-
-#endif // UI_INVENTORY_UPGRADE_INFO_H_INCLUDED

@@ -4,10 +4,8 @@
 //	---------------------------------------------------------------------------
 //  Multiplayer game log window
 //=============================================================================
-
 #pragma once
-
-#include "UIScrollView.h"
+#include "../xrUICore/UIScrollView.h"
 
 class CUIXml;
 class CUIPdaMsgListItem;

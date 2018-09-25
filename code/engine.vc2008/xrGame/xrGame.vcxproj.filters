@@ -1834,12 +1834,6 @@
     <Filter Include="ScriptEngine\ScriptClasses\UI\Common">
       <UniqueIdentifier>{0a88ac1d-653a-4ba9-b9f2-62f82c0e2824}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\InventoryWnd">
-      <UniqueIdentifier>{456452e9-9df5-4a13-b769-de8e45a032f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade">
-      <UniqueIdentifier>{c73571ac-db45-4d2a-8a24-788af39562c9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\Common\PDA">
       <UniqueIdentifier>{3e07a440-9156-422c-ac24-312ee00e148d}</UniqueIdentifier>
     </Filter>
@@ -1873,15 +1867,6 @@
     <Filter Include="ScriptEngine\ScriptClasses\UI\Common\MainIngame">
       <UniqueIdentifier>{d2493ff5-f2f9-46da-8808-1f6107794d1e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\OptionsItem">
-      <UniqueIdentifier>{f1c34a70-e43e-4966-b6d0-b964b7b45460}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\MainMenu">
-      <UniqueIdentifier>{5470b9a9-25f9-4ded-a58c-be802998b8aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding">
-      <UniqueIdentifier>{c3c69ef4-560a-4613-83f9-5a4eb67a4940}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities">
       <UniqueIdentifier>{c098af61-c1f4-44e1-9869-ba0afcc2ea57}</UniqueIdentifier>
     </Filter>
@@ -1894,71 +1879,14 @@
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows">
       <UniqueIdentifier>{0f9640ce-8748-4cd1-a8eb-05024c8592c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\XML">
-      <UniqueIdentifier>{cafd4b04-4aa9-494e-9810-ed600fb4b3da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox">
-      <UniqueIdentifier>{0cbc4948-ef06-46d1-b9cc-5113085b1596}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\PropertiesBox">
-      <UniqueIdentifier>{0b4c5e8b-bdd6-4280-8a91-7a8de56c656a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Static">
       <UniqueIdentifier>{b22c05df-6572-4506-87b9-8e0780cfc136}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\EditBox">
-      <UniqueIdentifier>{02c23e1a-309a-4e7c-9c12-2245e49e8d9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\EditBox\customEB">
-      <UniqueIdentifier>{c5a0e2ee-fa3a-4d30-ae3b-46b35de61fce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Windows">
-      <UniqueIdentifier>{41c50b76-b1de-43d1-9c16-414fc609b4e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar">
-      <UniqueIdentifier>{d0e93438-f8ff-4ed8-b43e-4f16a0febec9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\TabControl">
-      <UniqueIdentifier>{9af042b2-e133-45b4-887a-28e4890b2040}</UniqueIdentifier>
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd">
       <UniqueIdentifier>{43f7cc8e-8aab-473a-a752-11be673caa87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Buttons">
-      <UniqueIdentifier>{dc38828d-ab9e-46fc-b99c-2d63ee24dc9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ComboBox">
-      <UniqueIdentifier>{7f789a45-71a2-47d4-80b0-957c6eac5058}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\InteractiveBackground">
-      <UniqueIdentifier>{46371946-e69f-49b7-b15f-ae58db5fcf18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\TrackBar">
-      <UniqueIdentifier>{c083d8e3-0a3c-490e-ba14-cc8e2889566e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ScrollView">
-      <UniqueIdentifier>{79993693-d0de-43ad-bd01-bfabbae4d7c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Lines">
-      <UniqueIdentifier>{f0d26ef5-0f8e-4dbc-9550-3e680d8241a1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop">
       <UniqueIdentifier>{b8915ebe-4e94-44f2-9c8e-6c4396725e3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar">
-      <UniqueIdentifier>{3a8be6c3-fa40-4df6-a016-abcbd7c6385b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox">
-      <UniqueIdentifier>{ade0d7ce-ec6e-42af-a09e-2c4b39ef94d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\arrow">
-      <UniqueIdentifier>{4c5bc68e-0765-45e5-ade7-f64f3d54d6c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Hint">
-      <UniqueIdentifier>{73d91344-b947-4c04-b470-5bf431a841f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ListBox">
-      <UniqueIdentifier>{13c4e79b-a05b-44d7-a956-730d2b08f660}</UniqueIdentifier>
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\HUD">
       <UniqueIdentifier>{bc9409d4-eef7-4de5-b2bd-59afddd0622d}</UniqueIdentifier>
@@ -2007,6 +1935,9 @@
     </Filter>
     <Filter Include="GamePhysics\IK">
       <UniqueIdentifier>{39acfd1d-c932-4f71-83ff-de59da57c6a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\InventoryUpgrade">
+      <UniqueIdentifier>{c73571ac-db45-4d2a-8a24-788af39562c9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -5325,26 +5256,17 @@
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h">
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
     </ClInclude>
-    <ClInclude Include="ui_base.h">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_defs.h">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UIDialogHolder.h">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClInclude>
     <ClInclude Include="ui\UIInventoryUpgradeWnd.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUpgrade</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInvUpgrade.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUpgrade</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInvUpgradeInfo.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUpgrade</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInvUpgradeProperty.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUpgrade</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaWnd.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA</Filter>
@@ -5421,44 +5343,11 @@
     <ClInclude Include="ui\UIMessagesWindow.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
-    <ClInclude Include="ui\UIMoneyIndicator.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClInclude>
     <ClInclude Include="ui\UIMotionIcon.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIPdaMsgListItem.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="UIZoneMap.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIOptionsItem.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIOptionsManager.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIOptionsManagerScript.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\MMSound.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIMMShniaga.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIEditKeyBind.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIKeyBinding.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIHelper.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInventoryUtilities.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
@@ -5475,128 +5364,11 @@
     <ClInclude Include="callback_info.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
     </ClInclude>
-    <ClInclude Include="ui\uiabstract.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIMessages.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIWndCallback.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UITextureMaster.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIXmlInit.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\xrUIXmlParser.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIMessageBox.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIMessageBoxEx.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIPropertiesBox.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIAnimatedStatic.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UILanimController.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIStatic.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="UIStaticItem.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIEditBox.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIEditBoxEx.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UICustomEdit.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIDialogWnd.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIFrameLineWnd.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIFrameWindow.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIWindow.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIDoubleProgressBar.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIProgressBar.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIProgressShape.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UITabButton.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UITabControl.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
-    </ClInclude>
     <ClInclude Include="ui\UIScriptWnd.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\uiscriptwnd_script.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UI3tButton.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIBtnHint.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIButton.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UICheckButton.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIRadioButton.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIComboBox.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ComboBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UI_IB_Static.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIInteractiveBackground.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UITrackBar.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TrackBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIScrollView.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollView</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UILine.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UILines.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\uilinestd.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UISubLine.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICellCustomItems.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
@@ -5613,39 +5385,6 @@
     <ClInclude Include="ui\UIDragDropReferenceList.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClInclude>
-    <ClInclude Include="ui\UIFixedScrollBar.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIScrollBar.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIScrollBox.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UICustomSpin.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UISpinNum.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UISpinText.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\ui_arrow.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\arrow</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIHint.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Hint</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIListBox.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIListBoxItem.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIListBoxItemMsgChain.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
-    </ClInclude>
     <ClInclude Include="HitMarker.h">
       <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClInclude>
@@ -5656,9 +5395,6 @@
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="HUDTarget.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
-    </ClInclude>
-    <ClInclude Include="UICursor.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIGameTutorial.h">
@@ -5828,9 +5564,6 @@
     </ClInclude>
     <ClInclude Include="ActorRuck.h">
       <Filter>Core\Client\Objects\actor</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UILoadingScreen.h">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaSpot.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common</Filter>
@@ -7739,23 +7472,17 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp">
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
     </ClCompile>
-    <ClCompile Include="ui_base.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UIDialogHolder.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUpgrade</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInvUpgrade.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUpgrade</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInvUpgradeInfo.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUpgrade</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInvUpgradeProperty.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUpgrade</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaWnd.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA</Filter>
@@ -7832,44 +7559,11 @@
     <ClCompile Include="ui\UIMessagesWindow.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIMoneyIndicator.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIMotionIcon.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIPdaMsgListItem.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="UIZoneMap.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIOptionsItem.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIOptionsManager.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIOptionsManagerScript.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
-    </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\MMSound.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIMMShniaga.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIEditKeyBind.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIKeyBinding.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIHelper.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryUtilities.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
@@ -7901,116 +7595,11 @@
     <ClCompile Include="ui\UIDebugFonts.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\_Debug Fonts</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIWndCallback.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UITextureMaster.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIXmlInit.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\xrUIXmlParser.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIMessageBox.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIMessageBoxEx.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIPropertiesBox.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIAnimatedStatic.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UILanimController.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIStatic.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIStatic_script.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClCompile>
-    <ClCompile Include="UIStaticItem.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIEditBox.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIEditBoxEx.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UICustomEdit.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIDialogWnd.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIFrameLineWnd.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIFrameWindow.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIWindow.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIDoubleProgressBar.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIProgressBar.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIProgressShape.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UITabButton.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UITabControl.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIScriptWnd.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UI3tButton.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIBtnHint.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIButton.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UICheckButton.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIRadioButton.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIComboBox.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ComboBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UI_IB_Static.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UITrackBar.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TrackBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIScrollView.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollView</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UILine.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UILines.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UISubLine.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICellCustomItems.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
@@ -8027,39 +7616,6 @@
     <ClCompile Include="ui\UIDragDropReferenceList.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIFixedScrollBar.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIScrollBar.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIScrollBox.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UICustomSpin.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UISpinNum.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UISpinText.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\ui_arrow.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\arrow</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIHint.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Hint</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIListBox.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIListBoxItem.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIListBoxItemMsgChain.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
-    </ClCompile>
     <ClCompile Include="HitMarker.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClCompile>
@@ -8070,9 +7626,6 @@
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="HUDTarget.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
-    </ClCompile>
-    <ClCompile Include="UICursor.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorial.cpp">
@@ -8266,9 +7819,6 @@
     </ClCompile>
     <ClCompile Include="ActorRuck.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UILoadingScreen.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClCompile>
     <ClCompile Include="UIGame.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common</Filter>

@@ -20,7 +20,7 @@
 #include "../../../ai_monster_space.h"
 #include "../control_animation_base.h"
 #include "../../../UIGame.h"
-#include "../../../UI/UIStatic.h"
+#include "../../../../xrUICore/UIStatic.h"
 #include "../../../ai_object_location.h"
 #include "../../../profiler.h"
 #include "../../../ActorEffector.h"

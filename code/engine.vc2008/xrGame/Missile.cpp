@@ -18,26 +18,23 @@
 #ifdef DEBUG
 #	include "phdebug.h"
 #endif
-
-
 #define PLAYING_ANIM_TIME 10000
 
-#include "ui/UIProgressShape.h"
-#include "ui/UIXmlInit.h"
+#include "../xrUICore/UIProgressShape.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "physicsshellholder.h"
 
 CUIProgressShape* g_MissileForceShape = nullptr;
 
 void create_force_progress()
 {
-	VERIFY							(!g_MissileForceShape);
-	CUIXml uiXml;
-	uiXml.Load						(CONFIG_PATH, UI_PATH, "ui_HUD.xml");
+	VERIFY(!g_MissileForceShape);
+	CXml uiXml;
+	uiXml.Load(CONFIG_PATH, UI_PATH, "ui_HUD.xml");
 
-
-	CUIXmlInit						xml_init;
-	g_MissileForceShape				= xr_new<CUIProgressShape>();
-	xml_init.InitProgressShape		(uiXml, "progress", 0, g_MissileForceShape);
+	CUIXmlInit xml_init;
+	g_MissileForceShape = xr_new<CUIProgressShape>();
+	xml_init.InitProgressShape(uiXml, "progress", 0, g_MissileForceShape);
 }
 
 CMissile::CMissile() 

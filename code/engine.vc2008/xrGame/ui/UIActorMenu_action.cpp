@@ -17,16 +17,16 @@
 #include "UIInventoryUtilities.h"
 #include "game_cl_base.h"
 
-#include "UICursor.h"
+#include "../xrUICore/UICursor.h"
 #include "UICellItem.h"
 #include "UICharacterInfo.h"
 #include "UIItemInfo.h"
 #include "UIDragDropListEx.h"
 #include "UIInventoryUpgradeWnd.h"
-#include "UI3tButton.h"
-#include "UIBtnHint.h"
-#include "UIMessageBoxEx.h"
-#include "UIPropertiesBox.h"
+#include "../xrUICore/UI3tButton.h"
+#include "../xrUICore/UIBtnHint.h"
+#include "../xrUICore/UIMessageBoxEx.h"
+#include "../xrUICore/UIPropertiesBox.h"
 #include "UIMainIngameWnd.h"
 
 

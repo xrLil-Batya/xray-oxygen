@@ -1,24 +1,22 @@
 #include "stdafx.h"
 #include "ScriptXmlInit.h"
-#include "ui\UIXmlInit.h"
-#include "ui\UITextureMaster.h"
-#include "ui\UICheckButton.h"
-#include "ui\UISpinNum.h"
-#include "ui\UISpinText.h"
-#include "ui\UIComboBox.h"
-#include "ui\UITabControl.h"
-#include "ui\UIFrameWindow.h"
-#include "ui\UIKeyBinding.h"
-#include "ui\UIEditBox.h"
-#include "ui\UIAnimatedStatic.h"
-#include "ui\UITrackBar.h"
-#include "ui\UIMMShniaga.h"
-#include "ui\UIScrollView.h"
-#include "ui\UIProgressBar.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UITextureMaster.h"
+#include "../xrUICore/UICheckButton.h"
+#include "../xrUICore/UISpinNum.h"
+#include "../xrUICore/UISpinText.h"
+#include "../xrUICore/UIComboBox.h"
+#include "../xrUICore/UITabControl.h"
+#include "../xrUICore/UIFrameWindow.h"
+#include "../xrUICore/UIKeyBinding.h"
+#include "../xrUICore/UIEditBox.h"
+#include "../xrUICore/UIAnimatedStatic.h"
+#include "../xrUICore/UITrackBar.h"
+#include "../xrUICore/UIMMShniaga.h"
+#include "../xrUICore/UIScrollView.h"
+#include "../xrUICore/UIProgressBar.h"
 
-
-
-#include "luabind/luabind.hpp"
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 void _attach_child(CUIWindow* _child, CUIWindow* _parent)

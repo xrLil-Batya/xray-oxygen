@@ -29,10 +29,10 @@
 #include "../xrEngine/date_time.h"
 #include "UIGame.h"
 #include "ui/UIActorMenu.h"
-#include "ui/UIStatic.h"
+#include "../xrUICore/UIStatic.h"
 #include "zone_effector.h"
 #include "GameTask.h"
-#include "MainMenu.h"
+#include "../xrUICore/MainMenu.h"
 #include "saved_game_wrapper.h"
 #include "level_graph.h"
 #include "cameralook.h"
@@ -40,7 +40,7 @@
 #include "inventory_upgrade_manager.h"
 #include "../xrCore/FS.h"
 #include "../xrCore/LocatorAPI.h"
-#include "uizonemap.h"
+#include "UIZoneMap.h"
 #include "ai_debug_variables.h"
 #include "../xrphysics/console_vars.h"
 #include "HudItem.h"
@@ -50,7 +50,7 @@
 #include "Inventory.h"
 #include "GamePersistent.h"
 
-string_path		g_last_saved_game;
+ENGINE_API extern string_path g_last_saved_game;
 
 #ifdef DEBUG
 	extern float air_resistance_epsilon;

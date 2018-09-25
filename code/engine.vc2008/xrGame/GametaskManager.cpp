@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GameTaskManager.h"
 #include "alife_registry_wrappers.h"
-#include "ui/xrUIXmlParser.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "GameTask.h"
 #include "Level.h"
 #include "map_manager.h"
@@ -18,17 +18,18 @@
 
 shared_str	g_active_task_id;
 
-struct FindTaskByID{
+struct FindTaskByID
+{
 	shared_str	id;
 	bool		b_only_inprocess;
-	FindTaskByID(const shared_str& s, bool search_only_inprocess):id(s),b_only_inprocess(search_only_inprocess){}
+	FindTaskByID(const shared_str& s, bool search_only_inprocess) :id(s), b_only_inprocess(search_only_inprocess) {}
 	bool operator () (const SGameTaskKey& key)
-		{
-			if(b_only_inprocess)
-				return (id==key.task_id && key.game_task->GetTaskState()==eTaskStateInProgress);
-			else
-				return (id==key.task_id);
-		}
+	{
+		if (b_only_inprocess)
+			return (id == key.task_id && key.game_task->GetTaskState() == eTaskStateInProgress);
+		else
+			return (id == key.task_id);
+	}
 };
 
 bool task_prio_pred(const SGameTaskKey& k1, const SGameTaskKey& k2)

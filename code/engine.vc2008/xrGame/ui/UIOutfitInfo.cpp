@@ -1,8 +1,8 @@
 #include "StdAfx.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "UIOutfitInfo.h"
-#include "UIXmlInit.h"
-#include "UIStatic.h"
-#include "UIDoubleProgressBar.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIDoubleProgressBar.h"
 
 #include "..\CustomOutfit.h"
 #include "..\ActorHelmet.h"
