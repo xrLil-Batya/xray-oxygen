@@ -4,7 +4,7 @@
 #include "../xrEngine/igame_persistent.h"
 
 #include "ai_space.h"
-#include "game_cl_base.h"
+
 #include "NET_Queue.h"
 #include "hudmanager.h"
 
@@ -110,9 +110,6 @@ bool CLevel::net_start_client6()
     {
 		g_hud->Load();
 		g_hud->OnConnected();
-	
-		if (game)
-			game->OnConnected();
 	
 		g_pGamePersistent->SetLoadStageTitle("st_client_synchronising");
 		pApp->LoadForceFinish();

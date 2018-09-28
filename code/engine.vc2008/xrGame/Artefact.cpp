@@ -2,7 +2,6 @@
 #include "artefact.h"
 #include "../xrphysics/PhysicsShell.h"
 #include "PhysicsShellHolder.h"
-#include "game_cl_base.h"
 
 #include "../Include/xrRender/Kinematics.h"
 #include "../Include/xrRender/KinematicsAnimated.h"
@@ -24,7 +23,6 @@
 
 #include "inventoryOwner.h"
 #include "Entity_alive.h"
-
 
 #define	FASTMODE_DISTANCE (50.f)	//distance to camera from sphere, when zone switches to fast update sequence
 

@@ -4,7 +4,7 @@
 #include "Level.h"
 #include "hudmanager.h"
 #include "net_queue.h"
-#include "game_cl_base.h"
+
 #include "GameTaskManager.h"
 #include "Level_Bullet_Manager.h"
 #include "script_process.h"
@@ -28,6 +28,9 @@
 #include "debug_renderer.h"
 #include "physicobject.h"
 #include "..\xrEngine\string_table.h"
+#include "ai_space.h"
+#include "alife_simulator.h"
+#include "alife_time_manager.h"
 
 #ifdef DEBUG
 #	include "ai_debug.h"
@@ -102,26 +105,23 @@ void CLevel::mtLevelScriptUpdater(void* pCLevel)
 	}
 }
 
-CLevel::CLevel() :IPureClient(Device.GetTimerGlobal())
+CLevel::CLevel() :IPureClient(Device.GetTimerGlobal()), Server(nullptr)
 {
 	g_bDebugEvents = strstr(Core.Params, "-debug_ge") ? TRUE : FALSE;
 
-	Server = nullptr;
+	game			= new game_GameState();
+	game_events		= new NET_Queue_Event();
+	spawn_events	= new NET_Queue_Event();
 
-	game = nullptr;
-	game_events = xr_new<NET_Queue_Event>();
-
-	spawn_events = xr_new<NET_Queue_Event>();
 	game_configured = FALSE;
 	m_connect_server_err = xrServer::ErrNoError;
 
 	eEnvironment = Engine.Event.Handler_Attach("LEVEL:Environment", this);
 	eEntitySpawn = Engine.Event.Handler_Attach("LEVEL:spawn", this);
 
-	m_pBulletManager = xr_new<CBulletManager>();
-
-	m_map_manager = xr_new<CMapManager>();
-	m_game_task_manager = xr_new<CGameTaskManager>();
+	m_pBulletManager	= new CBulletManager();
+	m_map_manager		= new CMapManager();
+	m_game_task_manager = new CGameTaskManager();
 
 	//----------------------------------------------------
 	m_seniority_hierarchy_holder = xr_new<CSeniorityHierarchyHolder>();
@@ -205,9 +205,7 @@ CLevel::~CLevel()
 
 	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
-	xr_delete(game);
 	xr_delete(game_events);
-
 
 	//by Dandy
 	//destroy bullet manager
@@ -440,7 +438,7 @@ void CLevel::OnFrame()
 	}
 	g_pGamePersistent->Environment().m_paused = m_bEnvPaused;
 #endif
-	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
+	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), ai().alife().time_manager().time_factor());
 
 
 	m_ph_commander->update();
@@ -501,7 +499,6 @@ void CLevel::OnRender()
 		return;
 
 	HUD().RenderUI();
-	Game().OnRender();
 	BulletManager().Render();
 	::Render->AfterWorldRender();
 
@@ -618,17 +615,17 @@ void CLevel::OnEvent(EVENT E, u64 P1, u64 /**P2/**/)
 
 ALife::_TIME_ID CLevel::GetStartGameTime()
 {
-	return(game->GetStartGameTime());
+	return(ai().alife().time_manager().start_game_time());
 }
 
 ALife::_TIME_ID CLevel::GetGameTime()
 {
-	return(game->GetGameTime());
+	return(ai().alife().time_manager().game_time());
 }
 
 ALife::_TIME_ID CLevel::GetEnvironmentGameTime()
 {
-	return(game->GetEnvironmentGameTime());
+	return(ai().alife().time_manager().game_time());
 }
 
 u8 CLevel::GetDayTime()
@@ -660,15 +657,14 @@ void CLevel::GetGameDateTime(u32& year, u32& month, u32& day, u32& hours, u32& m
 	split_time(GetGameTime(), year, month, day, hours, mins, secs, milisecs);
 }
 
-
 float CLevel::GetGameTimeFactor()
 {
-	return			(game->GetGameTimeFactor());
+	return(ai().alife().time_manager().time_factor());
 }
 
 void CLevel::SetGameTimeFactor(const float fTimeFactor)
 {
-	game->SetGameTimeFactor(fTimeFactor);
+	Server->game->SetGameTimeFactor(fTimeFactor);
 }
 
 void CLevel::SetGameTimeFactor(ALife::_TIME_ID GameTime, const float fTimeFactor)
@@ -692,7 +688,7 @@ void CLevel::ResetLevel()
 
 u32	GameID()
 {
-	return Game().Type();
+	return EGameIDs::eGameIDSingle;
 }
 
 // -------------------------------------------------------------------------------------------------

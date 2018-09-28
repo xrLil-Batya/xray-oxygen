@@ -9,7 +9,6 @@
 #include "Actor_Flags.h"
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "firedeps.h"
-#include "game_cl_base.h"
 #include "first_bullet_controller.h"
 
 #include "CameraRecoil.h"

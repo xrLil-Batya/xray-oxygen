@@ -23,7 +23,6 @@
 #include "../xrServerEntities/script_engine.h"
 
 #include "holder_custom.h"
-#include "game_cl_base.h"
 #include "xrserver_objects_alife_monsters.h"
 #include "../xrServerEntities/xrServer_Object_Base.h"
 #include "UI/UIGameTutorial.h"

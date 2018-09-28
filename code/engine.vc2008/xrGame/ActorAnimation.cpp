@@ -15,7 +15,6 @@
 #include "Car.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
-#include "game_cl_base.h"
 #include "../xrEngine/motion.h"
 #include "artefact.h"
 #include "IKLimbsController.h"

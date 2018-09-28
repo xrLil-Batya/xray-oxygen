@@ -1532,7 +1532,6 @@ bool CActor::can_attach(const CInventoryItem *inventory_item) const
 	return true;
 }
 
-#include "game_cl_base.h"
 void CActor::OnDifficultyChanged	()
 {
 	// immunities

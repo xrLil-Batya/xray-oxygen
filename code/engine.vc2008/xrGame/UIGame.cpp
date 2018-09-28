@@ -16,7 +16,7 @@
 #include "actor.h"
 #include "actorcondition.h"
 #include "inventory.h"
-#include "game_cl_base.h"
+
 
 #include "GameTaskManager.h"
 #include "GameTask.h"
@@ -50,7 +50,6 @@ CUIGame::CUIGame() : m_msgs_xml(nullptr), m_ActorMenu(nullptr), m_PdaMenu(nullpt
 	ShowCrosshair(true);
 
 	TalkMenu = xr_new<CUITalkWnd>();
-	m_game = xr_new<game_cl_GameState>();
 	UIChangeLevelWnd = xr_new<CChangeLevelWnd>();
 }
 
@@ -267,13 +266,6 @@ void CUIGame::HidePdaMenu()
 {
 	if (m_PdaMenu->IsShown())
 		m_PdaMenu->HideDialog();
-}
-
-void CUIGame::SetClGame(game_cl_GameState* g)
-{
-	g->SetGameUI(this);
-	m_game = smart_cast<game_cl_GameState*>(g);
-	R_ASSERT(m_game);
 }
 
 void CUIGame::UnLoad()

@@ -21,7 +21,6 @@
 #include "../xrUICore/UILoadingScreen.h"
 
 //-----------------------------------------------------------------
-BOOL	net_sv_control_hit	= FALSE		;
 BOOL	g_bCollectStatisticData = TRUE;
 //-----------------------------------------------------------------
 
@@ -47,10 +46,8 @@ void game_sv_GameState::signal_Syncronize()
 void game_sv_GameState::net_Export_State(NET_Packet& P, ClientID to)
 {
 	// Generic
-	P.w_u32			(m_type);
 	P.w_u16			(m_phase);
 	P.w_u32			(m_start_time);
-	P.w_u8			(u8(net_sv_control_hit));
 
 	// Players
 	net_Export_GameTime(P);
@@ -72,7 +69,6 @@ void game_sv_GameState::net_Export_GameTime(NET_Packet& P)
 	P.w_float(GetEnvironmentGameTimeFactor());
 };
 
-
 void game_sv_GameState::OnPlayerConnect			(ClientID /**id_who/**/)
 {
 	signal_Syncronize	();
@@ -87,10 +83,10 @@ void game_sv_GameState::Create(shared_str &options)
     CInifile *l_tpIniFile = xr_new<CInifile>(S);
     R_ASSERT(l_tpIniFile);
 
-	if (l_tpIniFile->section_exist(type_name()))
+	if (l_tpIniFile->section_exist("single"))
 	{
-		if (l_tpIniFile->r_string(type_name(), "script"))
-			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorGame, xr_new<CScriptProcess>("game", l_tpIniFile->r_string(type_name(), "script")));
+		if (l_tpIniFile->r_string("single", "script"))
+			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorGame, xr_new<CScriptProcess>("game", l_tpIniFile->r_string("single", "script")));
 		else
 			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorGame, xr_new<CScriptProcess>("game", ""));
 	}
@@ -100,7 +96,6 @@ void game_sv_GameState::Create(shared_str &options)
 		m_alife_simulator = xr_new<CALifeSimulator>(&server(), &options);
 
 	switch_Phase(GAME_PHASE_INPROGRESS);
-
 }
 
 void game_sv_GameState::Update		()

@@ -11,7 +11,6 @@
 #include "UIGame.h"
 #include "../xrUICore/UICursor.h"
 #include "..\xrEngine\string_table.h"
-#include "game_cl_base.h"
 
 #ifdef	DEBUG
 #include "phdebug.h"
@@ -259,9 +258,13 @@ extern CUIXml* pWpnScopeXml;
 void CHUDManager::Load()
 {
 	if (!pUIHud)
-		pUIHud = Game().createGameUI();
-	else
-		GetGameUI()->SetClGame(&Game());
+	{
+		pUIHud = new CUIGame();
+		GetGameUI()->Load();
+		GetGameUI()->Init(0);
+		GetGameUI()->Init(1);
+		GetGameUI()->Init(2);
+	}
 }
 
 void CHUDManager::OnScreenResolutionChanged()

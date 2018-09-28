@@ -1708,9 +1708,6 @@
     <Filter Include="Core\Server\Games">
       <UniqueIdentifier>{b778b708-6d20-44cc-8b1d-75d1b19cfaeb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Server\Games\client">
-      <UniqueIdentifier>{5a7f36c3-d5fc-4a19-9244-e48263b88307}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Server\Games\server">
       <UniqueIdentifier>{f176e7fa-e215-4fd6-9a03-8a8f4ddea948}</UniqueIdentifier>
     </Filter>
@@ -5559,9 +5556,6 @@
     <ClInclude Include="game_sv_base.h">
       <Filter>Core\Server\Games\server</Filter>
     </ClInclude>
-    <ClInclude Include="game_cl_base.h">
-      <Filter>Core\Server\Games\client</Filter>
-    </ClInclude>
     <ClInclude Include="ActorRuck.h">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClInclude>
@@ -7810,9 +7804,6 @@
     </ClCompile>
     <ClCompile Include="game_sv_base.cpp">
       <Filter>Core\Server\Games\server</Filter>
-    </ClCompile>
-    <ClCompile Include="game_cl_base.cpp">
-      <Filter>Core\Server\Games\client</Filter>
     </ClCompile>
     <ClCompile Include="game_expression_delegates.cpp">
       <Filter>Core\Common\Expressions</Filter>

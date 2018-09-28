@@ -9,7 +9,7 @@
 #include "object_broker.h"
 #include "../ai/monsters/BaseMonster/base_monster.h"
 #include "UIInventoryUtilities.h"
-#include "game_cl_base.h"
+
 
 #include "../Weapon.h"
 #include "../WeaponMagazinedWGrenade.h"

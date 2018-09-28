@@ -12,27 +12,26 @@
 #include "UIGame.h"
 #include "Grenade.h"
 #include "WeaponRPG7.h"
-#include "ExplosiveRocket.h"
-#include "game_cl_base.h"
 #include "Level.h"
 #include "clsid_game.h"
 #include "hudmanager.h"
 #include "ZoneCampfire.h"
-#include "../FrayBuildConfig.hpp"
+#include "ExplosiveRocket.h"
 
 #define PICKUP_INFO_COLOR 0xFFFFA916
 
-void CActor::feel_touch_new				(CObject* O)
+void CActor::feel_touch_new(CObject* O)
 {
-	CPhysicsShellHolder* sh=smart_cast<CPhysicsShellHolder*>(O);
-	if(sh&&sh->character_physics_support()) m_feel_touch_characters++;
-
+	CPhysicsShellHolder* sh = smart_cast<CPhysicsShellHolder*>(O);
+	if (sh&&sh->character_physics_support()) 
+		m_feel_touch_characters++;
 }
 
 void CActor::feel_touch_delete	(CObject* O)
 {
 	CPhysicsShellHolder* sh=smart_cast<CPhysicsShellHolder*>(O);
-	if(sh&&sh->character_physics_support()) m_feel_touch_characters--;
+	if(sh&&sh->character_physics_support()) 
+		m_feel_touch_characters--;
 }
 
 BOOL CActor::feel_touch_contact		(CObject *O)
@@ -185,7 +184,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 	{
 		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject        ());
 
-		if (nullptr == pIItem)											continue;
+		if (nullptr == pIItem)										continue;
 		if (pIItem->object().H_Parent() != nullptr)					continue;
 		if (!pIItem->CanTake())										continue;
 		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )	continue;

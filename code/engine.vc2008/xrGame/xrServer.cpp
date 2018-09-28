@@ -5,7 +5,7 @@
 #include "xrMessages.h"
 #include "xrServer_Objects_ALife_All.h"
 #include "level.h"
-#include "game_cl_base.h"
+
 #include "ai_space.h"
 #include "alife_object_registry.h"
 #include "../xrEngine/IGame_Persistent.h"
@@ -957,10 +957,7 @@ void xrServer::OnCL_Connected()
 	SV_Client->net_Accepted = TRUE;
 
 	// Export Game Type
-	NET_Packet P;
-	P.w_begin(M_SV_CONFIG_NEW_CLIENT);
-	P.w_stringZ(game->type_name());
-	Level().OnMessage(P.B.data, (u32)P.B.count);
+	R_ASSERT(Level().Load_GameSpecific_After());
 	// end
 
 	Perform_game_export();

@@ -6,7 +6,7 @@
 #include "../xrEngine/CustomHUD.h"
 #include "Entity.h"
 #include "level.h"
-#include "game_cl_base.h"
+
 #include "../xrEngine/igame_persistent.h"
 
 #include "../xrUICore/ui_base.h"

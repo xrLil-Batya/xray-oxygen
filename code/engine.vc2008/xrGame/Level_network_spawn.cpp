@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "xrServer_Objects_ALife_All.h"
 #include "level.h"
-#include "game_cl_base.h"
+#include "GameObject.h"
 #include "net_queue.h"
 #include "ai_space.h"
 #include "game_level_cross_table.h"

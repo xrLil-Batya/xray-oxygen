@@ -14,7 +14,7 @@
 #include "xrServer.h"
 #include "client_spawn_manager.h"
 #include "../xrEngine/igame_persistent.h"
-#include "game_cl_base.h"
+
 #include "UIGame.h"
 #include "../xrUICore/UIDialogWnd.h"
 #include "../xrEngine/date_time.h"
@@ -186,8 +186,9 @@ float get_time_factor()
 void set_game_difficulty(ESingleGameDifficulty dif)
 {
 	g_SingleGameDifficulty = dif;
-	Level().game->OnDifficultyChanged();
+	Actor()->OnDifficultyChanged();
 }
+
 ESingleGameDifficulty get_game_difficulty()
 {
 	return g_SingleGameDifficulty;

@@ -1514,7 +1514,6 @@
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
     <ClInclude Include="game_base.h" />
-    <ClInclude Include="game_cl_base.h" />
     <ClInclude Include="game_sv_base.h" />
     <ClInclude Include="xr_time.h" />
     <ClInclude Include="id_generator.h" />
@@ -2331,7 +2330,6 @@
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp" />
     <ClCompile Include="game_base.cpp" />
-    <ClCompile Include="game_cl_base.cpp" />
     <ClCompile Include="game_sv_base.cpp" />
     <ClCompile Include="xr_time.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp" />

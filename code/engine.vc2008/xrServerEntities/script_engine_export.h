@@ -105,7 +105,6 @@
 #	include "car.h"
 #	include "script_lanim.h"
 #	include "artefact.h"
-#	include "game_cl_base.h"
 #	include "alife_human_brain.h"
 #	include "alife_monster_brain.h"
 #	include "alife_monster_movement_manager.h"

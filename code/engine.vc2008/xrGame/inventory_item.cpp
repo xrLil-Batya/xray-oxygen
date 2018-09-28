@@ -14,7 +14,7 @@
 #include "physicsshellholder.h"
 #include "entity_alive.h"
 #include "Level.h"
-#include "game_cl_base.h"
+
 #include "Actor.h"
 #include "..\xrEngine\string_table.h"
 #include "../Include/xrRender/Kinematics.h"

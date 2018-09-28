@@ -464,7 +464,7 @@ void CRender::render_forward				()
 	RImplementation.o.distortion				= FALSE;				// disable distorion
 }
 
-// Ïåðåä íà÷àëîì ðåíäåðà ìèðà +SecondVP+
+// Перед началом рендера мира +SecondVP+
 void CRender::BeforeWorldRender() {}
 
 // После рендера мира и пост-эффектов +SecondVP+

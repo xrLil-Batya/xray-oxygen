@@ -12,7 +12,7 @@
 #include "Level_network_map_sync.h"
 
 class	CParticlesObject;
-class	game_cl_GameState;
+class	game_GameState;
 class	NET_Queue_Event;
 class	CSE_Abstract;
 class	CSpaceRestrictionManager;
@@ -91,7 +91,7 @@ public:
 	using POVec = xr_vector<CParticlesObject*>;
 	POVec						m_StaticParticles;
 
-	game_cl_GameState			*game;
+	game_GameState*				game;
 	BOOL						game_configured;
 	NET_Queue_Event				*game_events;
 	xr_deque<CSE_Abstract*>		game_spawn_queue;
@@ -247,7 +247,7 @@ add_to_type_list(CLevel)
 #define script_type_list save_type_list(CLevel)
 
 IC CLevel&				Level()		{ return *((CLevel*) g_pGameLevel);			}
-IC game_cl_GameState&	Game()		{ return *Level().game;					}
+IC game_GameState&		Game()		{ return *Level().game;					}
 	u32					GameID();
 
 

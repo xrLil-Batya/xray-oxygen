@@ -7,7 +7,7 @@
 #include "script_engine.h"
 #include "script_engine_space.h"
 #include "level.h"
-#include "game_cl_base.h"
+
 #include "../xrEngine/x_ray.h"
 #include "../xrEngine/gamemtllib.h"
 #include "../xrphysics/PhysicsCommon.h"
@@ -147,7 +147,8 @@ BOOL CLevel::Load_GameSpecific_After()
 	else
 		ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel, xr_new<CScriptProcess>("level", ""));
 
-	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
+	if(game)
+		g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
 	return TRUE;
 }

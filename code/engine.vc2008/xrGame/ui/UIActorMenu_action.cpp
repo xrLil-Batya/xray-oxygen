@@ -15,7 +15,7 @@
 #include "../InventoryBox.h"
 #include "object_broker.h"
 #include "UIInventoryUtilities.h"
-#include "game_cl_base.h"
+
 
 #include "../xrUICore/UICursor.h"
 #include "UICellItem.h"

@@ -10,7 +10,7 @@
 
 #include "../xrphysics/PhysicsShell.h"
 #include "PhysicsShellHolder.h"
-#include "game_cl_base.h"
+
 
 #include "../Include/xrRender/Kinematics.h"
 #include "../Include/xrRender/KinematicsAnimated.h"

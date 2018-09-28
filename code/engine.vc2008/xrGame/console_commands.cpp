@@ -10,7 +10,7 @@
 #include "level.h"
 #include "ai_debug.h"
 #include "alife_simulator.h"
-#include "game_cl_base.h"
+
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "actor.h"
@@ -66,7 +66,6 @@ extern	int		psLUA_GCSTEP;
 
 extern	int		x_m_x;
 extern	int		x_m_z;
-extern	BOOL	net_sv_control_hit		;
 extern	int		g_dwInputUpdateDelta	;
 extern	ESingleGameDifficulty g_SingleGameDifficulty;
 extern	BOOL	g_show_wnd_rect2			;

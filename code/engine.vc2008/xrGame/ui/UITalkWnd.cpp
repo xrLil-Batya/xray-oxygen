@@ -13,7 +13,6 @@
 #include "../PhraseDialog.h"
 #include "../PhraseDialogManager.h"
 
-#include "../game_cl_base.h"
 #include "../xrEngine/string_table.h"
 #include "../xrEngine/xr_level_controller.h"
 #include "../../xrEngine/cameraBase.h"

@@ -11,7 +11,7 @@
 #include "alife_simulator.h"
 #include "alife_registry_container.h"
 #include "script_game_object.h"
-#include "game_cl_base.h"
+
 #include "xrServer.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "alife_registry_wrappers.h"

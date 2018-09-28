@@ -15,7 +15,6 @@
 #include "UIGame.h"
 #include "inventory.h"
 #include "level.h"
-#include "game_cl_base.h"
 #include "..\xrEngine\xr_level_controller.h"
 #include "UsableScriptObject.h"
 #include "actorcondition.h"

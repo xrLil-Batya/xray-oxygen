@@ -11,7 +11,6 @@
 
 // refs
 class CUI;
-class game_cl_GameState;
 class CUIDialogWnd;
 class CUICaption;
 class CUIStatic;
@@ -74,24 +73,21 @@ typedef xr_vector<SGameWeathers>::const_iterator GAME_WEATHERS_CIT;
 
 class CUIGame : public IGameUI, public DLL_Pure
 {
-private:
-	game_cl_GameState* m_game;
-
 protected:
-	CUIWindow* m_window;
-	CUIXml* m_msgs_xml;
 	typedef xr_vector<SDrawStaticStruct*> st_vec;
 	typedef st_vec::iterator st_vec_it;
-	st_vec m_custom_statics;
 
-	CUIActorMenu* m_ActorMenu;
-	CUIPdaWnd* m_PdaMenu;
+	CUIWindow*		m_window;
+	CUIXml*			m_msgs_xml;
+	st_vec			m_custom_statics;
+
+	CUIActorMenu*	m_ActorMenu;
+	CUIPdaWnd*		m_PdaMenu;
 
 public:
-	CUIMainIngameWnd* UIMainIngameWnd;
+	CUIMainIngameWnd*  UIMainIngameWnd;
 	CUIMessagesWindow* m_pMessagesWnd;
 
-	virtual void SetClGame(game_cl_GameState* g);
 	virtual bool IR_UIOnKeyboardPress(int dik);
 	virtual void OnInventoryAction(PIItem item, u16 action_type);
 
