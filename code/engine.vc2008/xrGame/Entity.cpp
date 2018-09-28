@@ -190,8 +190,6 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 	if (g_Alive()) 
 	{
 		m_registered_member = true;
-		Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).register_member(this);
-		++Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).m_dwAliveCount;
 
 		CSquadHierarchyHolder& squad = Level().seniority_holder().team(g_Team()).squad(g_Squad());
 		while (squad.group(g_Group()).members().size() == sizeof(squad_mask_type) * 4) 
