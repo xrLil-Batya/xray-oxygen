@@ -1,7 +1,5 @@
 // Entity.cpp: implementation of the CEntity class.
-
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "Entity.h"
 #include "actor.h"
@@ -17,8 +15,9 @@
 #include "ai_space.h"
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
+#include "memory_space.h"
 
-const u32 BODY_REMOVE_TIME = 600000;
+constexpr u32 BODY_REMOVE_TIME = 600000;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -189,9 +188,22 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 
 	if (g_Alive()) 
 	{
-		m_registered_member		= true;
+		m_registered_member = true;
 		Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).register_member(this);
 		++Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).m_dwAliveCount;
+
+		CSquadHierarchyHolder& squad = Level().seniority_holder().team(g_Team()).squad(g_Squad());
+		while (squad.group(g_Group()).members().size() == sizeof(squad_mask_type) * 4) 
+		{
+			Msg("* [%s]: [%s]: group [team:%u][squad:%u][group:%u] is full (%u), try next group %u", __FUNCTION__, 
+				(E && \E->name_replace()[0]) ? E->name_replace() : 
+				cName().c_str(), g_Team(), g_Squad(), g_Group(), squad.group(g_Group()).members().size(), g_Group() + 1);
+
+			++id_Group;
+		}
+
+		squad.group(g_Group()).register_member(this);
+		++squad.group(g_Group()).m_dwAliveCount;
 	}
 	else
 	{
@@ -202,18 +214,21 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 	if (!inherited::net_Spawn(DC))
 		return				(FALSE);
 
-//	SetfHealth			(E->fHealth);
 	IKinematics* pKinematics=smart_cast<IKinematics*>(Visual());
-	CInifile* ini = nullptr;
 
-	if(pKinematics) ini = pKinematics->LL_UserData();
-	if (ini) {
-		if (ini->section_exist("damage_section") && !use_simplified_visual())
-			CDamageManager::reload(pSettings->r_string("damage_section","damage"),ini);
+	if (pKinematics)
+	{
+		CInifile* ini = pKinematics->LL_UserData();
+		if (ini)
+		{
+			if (ini->section_exist("damage_section") && !use_simplified_visual())
+				CDamageManager::reload(pSettings->r_string("damage_section", "damage"), ini);
 
-		CParticlesPlayer::LoadParticles(pKinematics);
+			CParticlesPlayer::LoadParticles(pKinematics);
+		}
 	}
-	return					TRUE;
+
+	return TRUE;
 }
 
 void CEntity::net_Destroy	()
