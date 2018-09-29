@@ -631,13 +631,8 @@ void CUIXmlInit::InitAutoStaticGroup(CXml& xml_doc, LPCSTR path, int index, CUIW
 			++cnt_text;
 
 		//FX: tinyxml::IterateChildren code:
-		if (!node)
-			node = curr_root->FirstChildElement();
-		else
-		{
-			R_ASSERT(node->Parent() == curr_root);
-			node = node->NextSiblingElement();
-		}
+		R_ASSERT(node->Parent() == curr_root);
+		node = node->NextSiblingElement();
 		// end
 	}
 	xml_doc.SetLocalRoot(_stored_root);

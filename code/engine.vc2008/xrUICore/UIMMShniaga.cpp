@@ -371,19 +371,17 @@ float CUIMMShniaga::pos(float x1, float x2, u32 t)
 {
 	float x = 0;
 
-    if (t>=0 && t<=m_run_time)
-        x = log(1 + (t*10.0f)/m_run_time)/log(11.0f);
-	else if (t<=0)
-		x = 0;
-	else if (t>m_run_time)
+	if (t != u32(-1) && t <= m_run_time)
+		x = log(1 + (t*10.0f) / m_run_time) / log(11.0f);
+	else if (t > m_run_time)
 		x = 1;
 
-	x*=abs(x2 - x1);
+	x *= abs(x2 - x1);
 
 	if (x2 - x1 < 0)
 		return x1 - x;
 	else
-        return x1 + x;
+		return x1 + x;
 }
 
 bool b_shniaganeed_pp = true;

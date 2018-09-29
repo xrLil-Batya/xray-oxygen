@@ -568,7 +568,7 @@ void CUILines::CutFirstColoredTextEntry(xr_string& entry, u32& color, xr_string&
 		text.replace(0, begin, "");
 	}
 	// if we have two color entries. and first has 0 position
-	else if (0 == begin && xr_string::npos != begin2)
+	else if (xr_string::npos != begin2)
 	{
 		entry = text.substr(0, begin2);
 		color = GetColorFromText(entry);
