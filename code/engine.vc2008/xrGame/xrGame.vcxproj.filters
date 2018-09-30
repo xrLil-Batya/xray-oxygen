@@ -1870,9 +1870,6 @@
     <Filter Include="ScriptEngine\ScriptClasses\UI\Common\Inventory">
       <UniqueIdentifier>{82267d97-0fe9-46bd-bfee-3b3200b40571}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\_Debug Fonts">
-      <UniqueIdentifier>{b2f4a4d7-65da-42f2-b400-39b220c90088}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows">
       <UniqueIdentifier>{0f9640ce-8748-4cd1-a8eb-05024c8592c7}</UniqueIdentifier>
     </Filter>
@@ -5355,9 +5352,6 @@
     <ClInclude Include="ui\UIActorStateInfo.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="ui\UIDebugFonts.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\_Debug Fonts</Filter>
-    </ClInclude>
     <ClInclude Include="callback_info.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
     </ClInclude>
@@ -7585,9 +7579,6 @@
     </ClCompile>
     <ClCompile Include="ui\UIActorStateInfo.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIDebugFonts.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\_Debug Fonts</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatic_script.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>

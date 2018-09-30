@@ -8,7 +8,7 @@ static CXml* uiXml;
 
 void CUICarPanel::Init(float x, float y, float width, float height)
 {
-	uiXml = new CXml();
+	uiXml = xr_new<CXml>();
 	uiXml->Load(CONFIG_PATH, UI_PATH, CAR_PANEL_XML);
 
 	CUIXmlInit	xml_init;

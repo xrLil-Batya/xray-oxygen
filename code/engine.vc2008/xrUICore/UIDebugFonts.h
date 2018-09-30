@@ -11,14 +11,14 @@
 #include "UIStatic.h"
 #include "UIDialogWnd.h"
 
-class CUIDebugFonts : public CUIDialogWnd 
+class UI_API CUIDebugFonts : public CUIDialogWnd
 {
 public:
 				CUIDebugFonts		();
 	virtual		~CUIDebugFonts		();
 
 			void InitDebugFonts		(Frect r);
-	virtual bool OnKeyboardAction			(int dik, EUIMessages keyboard_action);
+	virtual bool OnKeyboardAction	(int dik, EUIMessages keyboard_action);
 			void FillUpList			();
 protected:
 	CUIStatic  m_background;

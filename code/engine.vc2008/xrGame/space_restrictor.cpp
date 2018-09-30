@@ -203,7 +203,7 @@ continue_loop:
 #ifdef DEBUG
 
 #include "customzone.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 
 extern	Flags32	dbg_net_Draw_Flags;
 

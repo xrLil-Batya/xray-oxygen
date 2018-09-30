@@ -10,6 +10,7 @@
 #include "game_object_space.h"
 #include "script_game_object.h"
 #include "../xrEngine/LightAnimLibrary.h"
+#include "../xrUICore/ui_base.h"
 
 //50fps fixed
 float STEP=0.02f;

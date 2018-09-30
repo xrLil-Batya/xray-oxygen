@@ -68,7 +68,7 @@ extern	int		x_m_x;
 extern	int		x_m_z;
 extern	int		g_dwInputUpdateDelta	;
 extern	ESingleGameDifficulty g_SingleGameDifficulty;
-extern	BOOL	g_show_wnd_rect2			;
+extern UI_API BOOL g_show_wnd_rect2;
 //-----------------------------------------------------------
 extern	float	g_fTimeFactor;
 extern	BOOL	b_toggle_weapon_aim;

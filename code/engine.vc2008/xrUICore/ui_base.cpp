@@ -19,7 +19,7 @@ UI_API ui_core &UI()
 
 UI_API void initUICore()
 {
-	GlobalUI = new ui_core();
+	GlobalUI = xr_new<ui_core>();
 }
 
 extern ENGINE_API Fvector2 g_current_font_scale;

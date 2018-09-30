@@ -1565,7 +1565,6 @@
     <ClInclude Include="ui\UIInventoryUtilities.h" />
     <ClInclude Include="ui\UIActorMenu.h" />
     <ClInclude Include="ui\UIActorStateInfo.h" />
-    <ClInclude Include="ui\UIDebugFonts.h" />
     <ClInclude Include="callback_info.h" />
     <ClInclude Include="ui\UIScriptWnd.h" />
     <ClInclude Include="ui\uiscriptwnd_script.h" />
@@ -2391,10 +2390,6 @@
     <ClCompile Include="ui\UIActorMenuTrade.cpp" />
     <ClCompile Include="ui\UIActorMenuUpgrade.cpp" />
     <ClCompile Include="ui\UIActorStateInfo.cpp" />
-    <ClCompile Include="ui\UIDebugFonts.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="ui\UIStatic_script.cpp" />
     <ClCompile Include="ui\UIScriptWnd.cpp" />
     <ClCompile Include="ui\UICellCustomItems.cpp" />

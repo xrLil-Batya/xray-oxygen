@@ -486,37 +486,34 @@ void CGamePersistent::OnFrame	()
 	if(!g_pGameLevel)			return;
 	if(!g_pGameLevel->bReady)	return;
 
-	if(Device.Paused())
+	if (Device.Paused())
 	{
 #ifndef MASTER_GOLD
-		if (Level().CurrentViewEntity()) {
-			if (!(!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID())))
+		if (Level().CurrentViewEntity())
+		{
+			if (Actor() && (Actor()->ID() == Level().CurrentViewEntity()->ID()))
 			{
 				CCameraBase* C = nullptr;
-				if (g_actor)
-				{
-					if(!Actor()->Holder())
-						C = Actor()->cam_Active();
-					else
-						C = Actor()->Holder()->Camera();
+				if (!Actor()->Holder())
+					C = Actor()->cam_Active();
+				else
+					C = Actor()->Holder()->Camera();
 
-					Actor()->Cameras().UpdateFromCamera		(C);
-					Actor()->Cameras().ApplyDevice			(VIEWPORT_NEAR);
-				}
+				Actor()->Cameras().UpdateFromCamera(C);
+				Actor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
 			}
 		}
 #else // MASTER_GOLD
 		if (g_actor)
 		{
 			CCameraBase* C = nullptr;
-			if(!Actor()->Holder())
+			if (!Actor()->Holder())
 				C = Actor()->cam_Active();
 			else
 				C = Actor()->Holder()->Camera();
 
-			Actor()->Cameras().UpdateFromCamera			(C);
-			Actor()->Cameras().ApplyDevice				(VIEWPORT_NEAR);
-
+			Actor()->Cameras().UpdateFromCamera(C);
+			Actor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
 		}
 #endif // MASTER_GOLD
 	}

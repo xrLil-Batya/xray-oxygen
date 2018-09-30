@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Исходные файлы">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Kernel">
       <UniqueIdentifier>{f00eceaa-3141-4b40-8f9d-7b00bce06cb7}</UniqueIdentifier>
     </Filter>
@@ -145,6 +141,9 @@
     </Filter>
     <Filter Include="Elements\TreeView">
       <UniqueIdentifier>{e6e37a84-7670-4663-b015-5dfb0d9f3f37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIHelpers\DebugFonts">
+      <UniqueIdentifier>{342ad255-166f-4e94-a5fa-1c27f3ae0ba0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -339,6 +338,9 @@
     </ClCompile>
     <ClCompile Include="UITreeViewItem.cpp">
       <Filter>Elements\TreeView</Filter>
+    </ClCompile>
+    <ClCompile Include="UIDebugFonts.cpp">
+      <Filter>UIHelpers\DebugFonts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -551,6 +553,9 @@
     </ClInclude>
     <ClInclude Include="UITreeViewItem.h">
       <Filter>Elements\TreeView</Filter>
+    </ClInclude>
+    <ClInclude Include="UIDebugFonts.h">
+      <Filter>UIHelpers\DebugFonts</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
