@@ -236,8 +236,11 @@ int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessag
 {
 	va_list marker;
 	string2048 buf;
+	ZeroMemory(&buf, sizeof(buf));
 	va_start(marker, caFormat);
-	luaVM->ScriptLog(tLuaMessageType, caFormat, buf);
+	int sz = vsnprintf(buf, sizeof(buf) - 1, caFormat, marker);
+	if (sz != -1)
+		luaVM->ScriptLog(tLuaMessageType, "%s", buf);
 	va_end(marker);
 	return 0;
 }

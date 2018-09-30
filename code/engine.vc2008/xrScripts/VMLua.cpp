@@ -141,14 +141,26 @@ bool CVMLua::IsObjectPresent(const char* identifier, int type)
 
 void CVMLua::ScriptLog(ELuaMessageType tLuaMessageType, const char* caFormat, ...)
 {
+	char c;
+
+	switch (tLuaMessageType)
+	{
+	case ELuaMessageType::eLuaMessageTypeError:		c = '!'; break;
+	case ELuaMessageType::eLuaMessageTypeMessage:	c = '~'; break;
+	default: c = '\0';
+	}
+
 	va_list marker;
 	string2048 buf;
+	ZeroMemory(&buf, sizeof(buf));
 	va_start(marker, caFormat);
-	int sz = _vsnprintf(buf, sizeof(buf) - 1, caFormat, marker);
-	buf[sz] = '\0';
-	if (sz > 0)
+	int sz = vsnprintf(buf, sizeof(buf) - 1, caFormat, marker);
+	if (sz != -1)
 	{
-		Log(buf);
+		if (c == '\0')
+			Log(buf);
+		else
+			Msg("%c %s", c, buf);
 	}
 	va_end(marker);
 }
