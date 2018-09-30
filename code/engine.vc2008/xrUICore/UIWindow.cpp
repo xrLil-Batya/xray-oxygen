@@ -7,7 +7,7 @@
 #include "../Include/xrRender/UIRender.h"
 
 xr_vector<Frect> g_wnds_rects;
-BOOL g_show_wnd_rect2 = FALSE;
+UI_API BOOL g_show_wnd_rect2 = FALSE;
 
 void UI_API clean_wnd_rects()
 {
