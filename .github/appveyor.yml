@@ -12,7 +12,7 @@ build:
   verbosity: quiet
 before_build:
 - cmd: >-
-    copy /Y code\engine.vc2008\xrCore\GitParset\hackappveyor code\engine.vc2008\xrCore\GitParset\hack.appveyor
+    copy /Y code\engine.vc2008\xrCore\GitParser\hackappveyor.inl code\engine.vc2008\xrCore\GitParser\hack.appveyor
 after_build:
 - cmd: >-
     copy code\SDK\binaries\x64\amd_ags_x64.dll game\bins\
