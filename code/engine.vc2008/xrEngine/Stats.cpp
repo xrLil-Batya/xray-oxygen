@@ -365,7 +365,7 @@ void CStats::Show()
 		// get MT Load
 		for (size_t i = 0; i < CPU::Info.m_dwNumberOfProcessors; i++)
 		{
-			DWORD dwScale = 100 + i * 15;
+			float dwScale = 100 + (float)i * 15;
 			pFont->Out(10, dwScale, "CPU%d: %0.0f", i, CPU::Info.fUsage[i]);
 		}
 

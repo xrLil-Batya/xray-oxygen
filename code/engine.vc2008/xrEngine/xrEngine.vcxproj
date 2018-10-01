@@ -539,6 +539,7 @@
   <ItemGroup>
     <None Include="Effects description.txt" />
     <None Include="features.txt" />
+    <None Include="OffSetOfWrapper.inl" />
     <None Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>

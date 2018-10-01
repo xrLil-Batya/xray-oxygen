@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #pragma hdrstop
-
 #include "xr_input.h"
 #include "IInputReceiver.h"
 #include "../include/editor/ide.hpp"
 #include "../FrayBuildConfig.hpp"
+#include "OffSetOfWrapper.inl"
 
 CInput *	pInput = NULL;
 IInputReceiver		dummyController;

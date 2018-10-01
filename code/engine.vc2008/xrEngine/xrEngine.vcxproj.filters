@@ -961,6 +961,9 @@
     <None Include="Effects description.txt">
       <Filter>Engine</Filter>
     </None>
+    <None Include="OffSetOfWrapper.inl">
+      <Filter>Interfaces\Input</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\xrCore.natvis">
