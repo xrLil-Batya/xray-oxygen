@@ -1,3 +1,6 @@
+# Kushified
+* This code-base will likely become vastly different from the main Xray-Oxygen repository. This is because I have ideas of my own for this engine and with to engage in them without any restrictions or obligations. That said, anyone can feel free to use any additions I make, provided the proper credit.
+
 # X-Ray Oxygen 1.7
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/024d7b2b5c6745eba5d00301bc250f2c)](https://app.codacy.com/app/sv3nk/xray-oxygen?utm_source=github.com&utm_medium=referral&utm_content=xrOxygen/xray-oxygen&utm_campaign=Badge_Grade_Settings) [![Build status](https://ci.appveyor.com/api/projects/status/dt2q9gjuxi2q9i6v/branch/master?svg=true)](https://ci.appveyor.com/project/xrOxygen/xray-oxygen/branch/master)
