@@ -7313,13 +7313,7 @@
     <ClCompile Include="Car.cpp">
       <Filter>Core\Client\Objects\vehicles\Car</Filter>
     </ClCompile>
-    <ClCompile Include="CarCameras.cpp">
-      <Filter>Core\Client\Objects\vehicles\Car</Filter>
-    </ClCompile>
     <ClCompile Include="CarDamageParticles.cpp">
-      <Filter>Core\Client\Objects\vehicles\Car</Filter>
-    </ClCompile>
-    <ClCompile Include="CarDoors.cpp">
       <Filter>Core\Client\Objects\vehicles\Car</Filter>
     </ClCompile>
     <ClCompile Include="CarInput.cpp">

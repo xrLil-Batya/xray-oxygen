@@ -795,22 +795,7 @@ void xrServer::Process_event(NET_Packet& P)
 		if (iitem)
 			iitem->add_upgrade(upgrade_id);
 	} break;
-	case GE_INV_BOX_STATUS:
-	{
-		u8 can_take, closed;
-		P.r_u8(can_take);
-		P.r_u8(closed);
-		shared_str tip_text;
-		P.r_stringZ(tip_text);
-
-		CSE_ALifeInventoryBox* box = smart_cast<CSE_ALifeInventoryBox*>(receiver);
-		if (box)
-		{
-			box->m_can_take = (can_take == 1);
-			box->m_closed = (closed == 1);
-			box->m_tip_text._set(tip_text);
-		}
-	}break;
+//	case GE_INV_BOX_STATUS:
 	case GE_INV_OWNER_STATUS:
 	{
 		u8 can_take, closed;

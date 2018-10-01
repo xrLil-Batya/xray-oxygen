@@ -9,6 +9,9 @@
 #include "ui/UIActorMenu.h"
 #include "UIGame.h"
 #include "inventory_item.h"
+#include "Level.h"
+#include "xrServer.h"
+#include "game_base.h"
 
 CInventoryBox::CInventoryBox()
 {
@@ -142,10 +145,14 @@ void CInventoryBox::set_closed( bool status, LPCSTR reason )
 
 void CInventoryBox::SE_update_status()
 {
-	NET_Packet P;
-	CGameObject::u_EventGen( P, GE_INV_BOX_STATUS, ID() );
-	P.w_u8( (m_can_take)? 1 : 0 );
-	P.w_u8( (m_closed)? 1 : 0 );
-	P.w_stringZ( tip_text() );
-	CGameObject::u_EventSend( P );
+	CSE_Abstract* receiver = Level().Server->game->get_entity_from_eid(ID());
+	{
+		CSE_ALifeInventoryBox* box = smart_cast<CSE_ALifeInventoryBox*>(receiver);
+		if (box)
+		{
+			box->m_can_take = m_can_take;
+			box->m_closed = m_closed;
+			box->m_tip_text._set(tip_text());
+		}
+	}
 }

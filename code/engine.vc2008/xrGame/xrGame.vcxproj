@@ -2293,9 +2293,7 @@
     <ClCompile Include="ZoneVisual.cpp" />
     <ClCompile Include="ZoneCampfire.cpp" />
     <ClCompile Include="Car.cpp" />
-    <ClCompile Include="CarCameras.cpp" />
     <ClCompile Include="CarDamageParticles.cpp" />
-    <ClCompile Include="CarDoors.cpp" />
     <ClCompile Include="CarInput.cpp" />
     <ClCompile Include="CarLights.cpp" />
     <ClCompile Include="CarScript.cpp" />
