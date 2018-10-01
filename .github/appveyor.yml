@@ -10,10 +10,12 @@ build:
   publish_wap: true
   parallel: true
   verbosity: quiet
+before_build:
+- cmd: >-
+    copy /Y code\engine.vc2008\xrCore\GitParset\hackappveyor code\engine.vc2008\xrCore\GitParset\hack.appveyor
 after_build:
 - cmd: >-
     copy code\SDK\binaries\x64\amd_ags_x64.dll game\bins\
-    copy /Y code\engine.vc2008\xrCore\GitParset\hackappveyor code\engine.vc2008\xrCore\GitParset\hack.appveyor
     
     cd binaries\x64\Release
     
