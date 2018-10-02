@@ -849,6 +849,9 @@ bool CWeapon::need_renderable()
 
 void CWeapon::renderable_Render()
 {
+	if (Device.m_SecondViewport.IsSVPFrame() && m_zoom_params.m_fZoomRotationFactor > 0.05f)
+		return;
+
 	// обновить xForm
 	UpdateXForm();
 

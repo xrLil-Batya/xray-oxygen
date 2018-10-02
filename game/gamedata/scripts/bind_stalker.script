@@ -66,9 +66,11 @@ function actor_binder:net_destroy()
 					xr_sound.stop_sounds_by_id(v.id)
 			end
 	end
-	if(actor_stats.remove_from_ranking~=nil)then
+	
+	if actor_stats and actor_stats.remove_from_ranking then
 		actor_stats.remove_from_ranking(self.object:id())
 	end
+	
 	level.show_weapon(true)
 	db.del_actor(self.object)
 
