@@ -1659,7 +1659,6 @@
     <ClCompile Include="UIDosimeter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="ui\UIGameLog.cpp" />
     <ClCompile Include="visual_memory_manager.cpp" />
     <ClCompile Include="visual_memory_params.cpp" />
     <ClCompile Include="vision_client.cpp" />
@@ -2388,7 +2387,6 @@
     <ClCompile Include="ui\UIActorMenuTrade.cpp" />
     <ClCompile Include="ui\UIActorMenuUpgrade.cpp" />
     <ClCompile Include="ui\UIActorStateInfo.cpp" />
-    <ClCompile Include="ui\UIStatic_script.cpp" />
     <ClCompile Include="ui\UIScriptWnd.cpp" />
     <ClCompile Include="ui\UICellCustomItems.cpp" />
     <ClCompile Include="ui\UICellItem.cpp" />

@@ -13,7 +13,7 @@
 #include "UIInventoryUtilities.h"
 #include "../game_news.h"
 #include "../xrUICore/UIPdaMsgListItem.h"
-#include "UIGameLog.hpp"
+#include "../xrUICore/UIGameLog.hpp"
 
 CUIMessagesWindow::CUIMessagesWindow() :m_pGameLog(nullptr)
 {

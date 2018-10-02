@@ -1,18 +1,11 @@
 #pragma once
-
 // Note:
 // ZNear - always 0.0f
 // ZFar  - always 1.0f
 
-//class	ENGINE_API	CResourceManager;
-//class	ENGINE_API	CGammaControl;
-
 #include "pure.h"
-//#include "hw.h"
 #include "../xrcore/ftimer.h"
 #include "stats.h"
-//#include "shader.h"
-//#include "R_Backend.h"
 
 #define VIEWPORT_NEAR  0.05f
 
@@ -46,6 +39,8 @@ enum WindowPropStyle
 class engine_impl;
 
 #pragma pack(push,4)
+#pragma warning(push)
+#pragma warning(disable: 4366)
 
 class IRenderDevice
 {
@@ -340,3 +335,4 @@ public:
 	bool			b_need_user_input;
 };
 extern ENGINE_API CLoadScreenRenderer load_screen_renderer;
+#pragma warning(pop)
