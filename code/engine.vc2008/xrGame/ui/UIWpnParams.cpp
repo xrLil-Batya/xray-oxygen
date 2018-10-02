@@ -1,6 +1,7 @@
 #include "stdafx.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "UIWpnParams.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "../level.h"
 #include "game_base.h"
 #include "../ai_space.h"

@@ -26,8 +26,5 @@ enum{
 		AF_FP2ZOOM_FORCED		=(1<<24),
 };
 
-extern Flags32	psActorFlags;
+extern ENGINE_API Flags32	psActorFlags;
 extern BOOL		GodMode	();	
-
-extern int		psActorSleepTime;
-

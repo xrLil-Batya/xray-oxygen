@@ -11,9 +11,9 @@ private:
     DWORD           m_mainThreadId = 0;
 
 public:
-	void			_initialize			(const bool &dedicated);
+	void			_initialize();
     void            _initializeAfterFS();
-	void			_destroy			();
+	void			_destroy();
 	
 public:
 	crashhandler*	get_crashhandler	()							{ return handler;	};

@@ -33,7 +33,10 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		{
 			Device.b_is_Active = TRUE;
 			break;
-		}
+		}	
+		
+		ShowCursor(wParam == WA_INACTIVE);
+		
 		OnWM_Activate(wParam, lParam);
 		return (false);
 	}

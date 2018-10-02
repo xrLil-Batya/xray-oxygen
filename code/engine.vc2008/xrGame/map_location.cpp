@@ -9,7 +9,7 @@
 #include "game_graph.h"
 #include "xrServer.h"
 #include "xrServer_Objects_ALife_Monsters.h"
-#include "ui/UIXmlInit.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "ui/UIMap.h"
 #include "alife_simulator.h"
 #include "graph_engine.h"
@@ -28,7 +28,6 @@
 #include "gametaskmanager.h"
 #include "ActorHelmet.h"
 #include "Inventory.h"
-//#include "CustomMonster.h"
 
 CMapLocation::CMapLocation(LPCSTR type, u16 object_id, bool is_user_loc)
 {

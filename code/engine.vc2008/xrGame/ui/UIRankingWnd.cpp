@@ -8,12 +8,12 @@
 #include "stdafx.h"
 #include "UIRankingWnd.h"
 
-#include "UIFixedScrollBar.h"
-#include "UIXmlInit.h"
-#include "UIProgressBar.h"
-#include "UIFrameLineWnd.h"
-#include "UIScrollView.h"
-#include "UIHelper.h"
+#include "../xrUICore/UIFixedScrollBar.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIProgressBar.h"
+#include "../xrUICore/UIFrameLineWnd.h"
+#include "../xrUICore/UIScrollView.h"
+#include "../xrUICore/UIHelper.h"
 #include "UIInventoryUtilities.h"
 
 #include "../actor.h"
@@ -26,8 +26,7 @@
 #include "../relation_registry.h"
 #include "../xrEngine/string_table.h"
 #include "UICharacterInfo.h"
-#include "ui_base.h"
-
+#include "../xrUICore/ui_base.h"
 
 #include <luabind/luabind.hpp>
 

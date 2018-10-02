@@ -1,16 +1,15 @@
 #include "stdafx.h"
-#include "grenade.h"
-#include "../xrphysics/PhysicsShell.h"
-#include "entity.h"
+#include "Grenade.h"
+#include "../xrPhysics/PhysicsShell.h"
+#include "Entity.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
-#include "actor.h"
+#include "Actor.h"
 #include "inventory.h"
-#include "level.h"
-#include "xrmessages.h"
+#include "Level.h"
+#include "xrMessages.h"
 #include "..\xrEngine\xr_level_controller.h"
-#include "game_cl_base.h"
-#include "xrserver_objects_alife.h"
+#include "xrServer_Objects_Alife.h"
 
 const float default_grenade_detonation_threshold_hit=100;
 CGrenade::CGrenade() 
@@ -311,7 +310,6 @@ bool CGrenade::Action(u16 cmd, u32 flags)
 	return false;
 }
 
-
 bool CGrenade::NeedToDestroyObject()	const
 {
 	return false;
@@ -325,10 +323,9 @@ ALife::_TIME_ID	 CGrenade::TimePassedAfterIndependant()	const
 		return 0;
 }
 
-BOOL CGrenade::UsedAI_Locations		()
+BOOL CGrenade::UsedAI_Locations()
 {
-#pragma todo("Dima to ForserX : It crashes, because on net_Spawn object doesn't use AI locations, but on net_Destroy it does use them")
-	return inherited::UsedAI_Locations( );//m_dwDestroyTime == 0xffffffff;
+	return inherited::UsedAI_Locations();
 }
 
 void CGrenade::net_Relcase(CObject* O )

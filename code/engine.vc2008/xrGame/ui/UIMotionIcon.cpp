@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "UIMainIngameWnd.h"
 #include "UIMotionIcon.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "../actor.h"
 const LPCSTR MOTION_ICON_XML = "ui_HUD.xml";
 

@@ -8,7 +8,7 @@
 #include "../xrEngine/fdemorecord.h"
 #include "level.h"
 #include "..\xrEngine\xr_level_controller.h"
-#include "game_cl_base.h"
+
 #include "stalker_movement_manager_smart_cover.h"
 #include "Inventory.h"
 #include "xrServer.h"
@@ -17,7 +17,6 @@
 #include "actor.h"
 #include "huditem.h"
 #include "UIGame.h"
-#include "UI/UIDialogWnd.h"
 #include "../xrEngine/xr_input.h"
 #include "saved_game_wrapper.h"
 
@@ -25,7 +24,6 @@
 
 #ifdef DEBUG
 #	include "ai/monsters/BaseMonster/base_monster.h"
-
 // Lain: add
 #   include "level_debug.h"
 #endif
@@ -38,7 +36,7 @@
 bool g_bDisableAllInput = false;
 extern	float	g_fTimeFactor;
 
-#define CURRENT_ENTITY()	(game ? CurrentEntity() : 0)
+#define CURRENT_ENTITY()	(CurrentEntity() ? CurrentEntity() : nullptr)
 
 void CLevel::IR_OnMouseWheel( int direction )
 {
@@ -151,9 +149,6 @@ void CLevel::IR_OnKeyboardPress(int key)
 		return;
 
 	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	
-		return;
-
-	if (game && game->OnKeyboardPress(key))	
 		return;
 
     // developer actions
@@ -337,9 +332,6 @@ void CLevel::IR_OnKeyboardRelease(int key)
 		return;
 
 	if (GameUI() && GameUI()->IR_UIOnKeyboardRelease(key)) 
-		return;
-
-	if (game && game->OnKeyboardRelease(get_binded_action(key)))		
 		return;
 
 	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))

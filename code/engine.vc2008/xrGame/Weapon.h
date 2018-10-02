@@ -9,7 +9,6 @@
 #include "Actor_Flags.h"
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "firedeps.h"
-#include "game_cl_base.h"
 #include "first_bullet_controller.h"
 
 #include "CameraRecoil.h"
@@ -71,7 +70,9 @@ public:
 
 	virtual	void			Hit					(SHit* pHDS);
 
-	void                   UpdateSecondVP       ();
+	void					UpdateSecondVP			();
+	float					GetZRotatingFactor		() const { return m_zoom_params.m_fZoomRotationFactor; } //--#SM+#--
+	float					GetSecondVP_FovFactor	() const { return m_zoom_params.m_fSecondVP_FovFactor; } //--#SM+#--
 
 	virtual void			reinit				();
 	virtual void			reload				(LPCSTR section);
@@ -258,7 +259,6 @@ public:
 	virtual	float			CurrentZoomFactor	();
 	//показывает, что оружие находится в соостоянии поворота для приближенного прицеливания
 	bool			IsRotatingToZoom	() const		{	return (m_zoom_params.m_fZoomRotationFactor<1.f);}
-	float           GetZRotatingFactor  () const        {   return m_zoom_params.m_fZoomRotationFactor; }
 
 	virtual	u8				GetCurrentHudOffsetIdx ();
 

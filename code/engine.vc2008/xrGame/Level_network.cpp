@@ -3,10 +3,9 @@
 #include "Level_Bullet_Manager.h"
 #include "xrserver.h"
 #include "xrmessages.h"
-#include "game_cl_base.h"
+
 #include "PHCommander.h"
 #include "net_queue.h"
-#include "MainMenu.h"
 #include "space_restriction_manager.h"
 #include "ai_space.h"
 #include "script_engine.h"

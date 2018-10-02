@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "WeaponBinocularsVision.h"
 #include "WeaponBinoculars.h"
-#include "ui\UIFrameWindow.h"
 #include "entity_alive.h"
 #include "visual_memory_manager.h"
 #include "actor.h"
@@ -11,7 +10,7 @@
 
 #include "game_base.h"
 #include "Level.h"
-#include "game_cl_base.h"
+
 #include "AI/Monsters/BaseMonster/base_monster.h"
 #include "../xrEngine/igame_persistent.h"
 

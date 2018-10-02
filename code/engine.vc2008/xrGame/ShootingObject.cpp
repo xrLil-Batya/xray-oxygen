@@ -11,7 +11,7 @@
 #include "WeaponAmmo.h"
 
 #include "actor.h"
-#include "game_cl_base.h"
+
 #include "level.h"
 #include "level_bullet_manager.h"
 

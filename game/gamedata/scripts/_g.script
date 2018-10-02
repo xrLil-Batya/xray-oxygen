@@ -459,9 +459,9 @@ function abort(fmt, ...)
 	end
 	
 	if ScriptDebug then
-	    to_log("!Call abort, reason: "..reason)
-	else
 	    error_log("!Call abort, reason: "..reason)
+	else
+	    to_log("!Call abort, reason: "..reason)
 	end
 end
 

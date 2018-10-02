@@ -12,11 +12,10 @@
 
 #include "ActorEffector.h"
 
-#include "../xrphysics/iPHWorld.h"
-#include "../xrphysics/actorcameracollision.h"
+#include "../xrPhysics/iPHWorld.h"
+#include "../xrPhysics/actorcameracollision.h"
 #include "level.h"
 #include "..\xrEngine\xr_level_controller.h"
-#include "game_cl_base.h"
 #include "infoportion.h"
 #include "alife_registry_wrappers.h"
 #include "../Include/xrRender/Kinematics.h"
@@ -51,11 +50,10 @@
 
 int			g_dwInputUpdateDelta		= 20;
 BOOL		net_cl_inputguaranteed		= FALSE;
-CActor*		g_actor						= nullptr;
 
 CActor* Actor()	
 {
-	return (g_actor); 
+	return (CActor*)g_actor; 
 }
 //--------------------------------------------------------------------
 void	CActor::ConvState(u32 mstate_rl, string128 *buf)

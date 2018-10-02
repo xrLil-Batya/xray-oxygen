@@ -33,9 +33,9 @@ void CIKLimbsController::Create(CGameObject* O)
 	for (u16 i = 0; sz > i; ++i)
 		LimbSetup();
 
+	bool already_has_callbacks = !O->visual_callbacks().empty();
 	O->add_visual_callback(IKVisualCallback);
-
-	if (!O->visual_callbacks().empty())
+	if (already_has_callbacks)
 		std::swap(*(O->visual_callbacks().begin()), *(O->visual_callbacks().end() - 1));
 
 	_pose_extrapolation.init(O->XFORM());
@@ -302,7 +302,7 @@ void	CIKLimbsController::Update()
 
 	_pose_extrapolation.update(m_object->XFORM());
 
-	for (auto it : _bone_chains)
+	for (CIKLimb &it : _bone_chains)
 		LimbUpdate(it);
 }
 

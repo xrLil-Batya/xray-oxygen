@@ -7,7 +7,7 @@
 uniform float3		direction;
 float4 	main		( float4 tc:TEXCOORD0 )	: COLOR
 {
-  float4 _P		= 1.0f - tex2Dproj 	(s_position, 	tc); 
+  float4 _P		= tex2Dproj 	(s_position, 	tc); 
   float4 _N		= tex2Dproj 	(s_normal,   	tc); 
 
   float3 	L2P 	= _P.xyz - Ldynamic_pos.xyz;                         		// light2point

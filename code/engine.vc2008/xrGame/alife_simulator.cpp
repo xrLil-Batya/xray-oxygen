@@ -12,7 +12,7 @@
 #include "ai_space.h"
 #include "GamePersistent.h"
 #include "script_engine.h"
-#include "mainmenu.h"
+#include "../xrUICore/MainMenu.h"
 #include "object_factory.h"
 #include "alife_object_registry.h"
 #include "../xrEngine/xr_ioconsole.h"

@@ -139,6 +139,93 @@ bool CVMLua::IsObjectPresent(const char* identifier, int type)
 	return	(false);
 }
 
+void CVMLua::ScriptLog(ELuaMessageType tLuaMessageType, const char* caFormat, ...)
+{
+	char c;
+
+	switch (tLuaMessageType)
+	{
+	case ELuaMessageType::eLuaMessageTypeError:		c = '!'; break;
+	case ELuaMessageType::eLuaMessageTypeMessage:	c = '~'; break;
+	default: c = '\0';
+	}
+
+	va_list marker;
+	string2048 buf;
+	ZeroMemory(&buf, sizeof(buf));
+	va_start(marker, caFormat);
+	int sz = vsnprintf(buf, sizeof(buf) - 1, caFormat, marker);
+	if (sz != -1)
+	{
+		if (c == '\0')
+			Log(buf);
+		else
+			Msg("%c %s", c, buf);
+	}
+	va_end(marker);
+}
+
+void CVMLua::PrintError(lua_State * L, int iErrorCode)
+{
+	switch (iErrorCode)
+	{
+	case LUA_ERRRUN:
+	{
+		ScriptLog(ScriptStorage::eLuaMessageTypeError, "SCRIPT RUNTIME ERROR");
+		break;
+	}
+	case LUA_ERRMEM:
+	{
+		ScriptLog(ScriptStorage::eLuaMessageTypeError, "SCRIPT ERROR (memory allocation)");
+		break;
+	}
+	case LUA_ERRERR: 
+	{
+		ScriptLog(ScriptStorage::eLuaMessageTypeError, "SCRIPT ERROR (while running the error handler function)");
+		break;
+	}
+	case LUA_ERRFILE: 
+	{
+		ScriptLog(ScriptStorage::eLuaMessageTypeError, "SCRIPT ERROR (while running file)");
+		break;
+	}
+	case LUA_ERRSYNTAX: 
+	{
+		ScriptLog(ScriptStorage::eLuaMessageTypeError, "SCRIPT SYNTAX ERROR");
+		break;
+	}
+	case LUA_YIELD:
+	{
+		ScriptLog(ScriptStorage::eLuaMessageTypeInfo, "Thread is yielded");
+		break;
+	}
+	default: NODEFAULT;
+	}
+}
+
+bool CVMLua::PrintOut(lua_State *L, const char* caScriptFileName, int iErrorCode, const char* caErrorText)
+{
+	if (iErrorCode)
+		PrintError(L, iErrorCode);
+
+	raii_guard guard(iErrorCode, caErrorText);
+
+	if (!lua_isstring(L, -1))
+		return				(false);
+
+	caErrorText = lua_tostring(L, -1);
+	if (!xr_strcmp(caErrorText, "cannot resume dead coroutine"))
+	{
+		VERIFY2("Please do not return any values from main!!!", caScriptFileName);
+	}
+	else {
+		if (!iErrorCode)
+			ScriptLog(ScriptStorage::eLuaMessageTypeInfo, "Output from %s", caScriptFileName);
+		ScriptLog(iErrorCode ? ScriptStorage::eLuaMessageTypeError : ScriptStorage::eLuaMessageTypeMessage, "%s", caErrorText);
+	}
+	return (true);
+}
+
 bool CVMLua::GetNamespaceTable(LPCSTR N)
 {
 	lua_pushstring(m_virtual_machine, "_G");

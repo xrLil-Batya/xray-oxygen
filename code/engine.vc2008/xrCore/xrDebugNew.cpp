@@ -360,9 +360,9 @@ IC void floating_point_handler(int signal)
 
 IC void illegal_instruction_handler(int signal)
 {
-	if (!CPU::Info.hasFeature(CPUFeature::SSE41))
+	if (!CPU::Info.hasFeature(CPUFeature::SSE42))
 	{
-		handler_base("SSE4.1 and AVX instructions isn't legal on your CPU");
+		handler_base("SSE4.2 and AVX instructions isn't legal on your CPU");
 	}
 	else if (!CPU::Info.hasFeature(CPUFeature::AVX)) 
 	{
@@ -393,9 +393,8 @@ void debug_on_thread_spawn()
 	_set_purecall_handler(&pure_call_handler);
 }
 
-void xrDebug::_initialize(const bool &dedicated)
+void xrDebug::_initialize()
 {
-	//static bool is_dedicated = dedicated;
 	*g_bug_report_file = 0;
 	debug_on_thread_spawn();
 	previous_filter = ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions

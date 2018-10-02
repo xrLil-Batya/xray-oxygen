@@ -2,14 +2,15 @@
 #include "map_spot.h"
 #include "map_location.h"
 
-#include "ui/UIXmlInit.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "ui/UIMApWnd.h"
 #include "level.h"
 #include "ui/UIInventoryUtilities.h"
 #include "../xrEngine/xr_object.h"
 #include "object_broker.h"
-#include "ui/UITextureMaster.h"
-#include "ui/UIHelper.h"
+#include "../xrUICore/UITextureMaster.h"
+#include "../xrUICore/UIHelper.h"
 
 #include "../Include/xrRender/UIShader.h"
 #include "gametaskmanager.h"

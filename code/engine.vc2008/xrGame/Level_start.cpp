@@ -2,13 +2,12 @@
 #include "level.h"
 #include "Level_Bullet_Manager.h"
 #include "xrserver.h"
-#include "game_cl_base.h"
+
 #include "xrmessages.h"
 #include "../xrEngine/x_ray.h"
 #include "../xrEngine/device.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrEngine/xr_ioconsole.h"
-#include "MainMenu.h"
 #include "..\xrEngine\string_table.h"
 #include "UIGame.h"
 #include "GamePersistent.h"
@@ -162,17 +161,7 @@ bool CLevel::net_start6				()
 	return true;
 }
 
-void CLevel::InitializeClientGame	(NET_Packet& P)
+void CLevel::InitializeClientGame(NET_Packet& P)
 {
-	string256 game_type_name;
-	P.r_stringZ(game_type_name);
-	if(game && !xr_strcmp(game_type_name, game->type_name()) )
-		return;
-	
-	xr_delete(game);
-	CLASS_ID clsid			= game_GameState::getCLASS_ID(game_type_name,false);
-	game					= smart_cast<game_cl_GameState*> ( NEW_INSTANCE ( clsid ) );
-	game->Init				();
-	
-	R_ASSERT				(Load_GameSpecific_After ());
+	R_ASSERT(Load_GameSpecific_After());
 }

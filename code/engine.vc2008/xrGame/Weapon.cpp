@@ -11,7 +11,7 @@
 #include "actoreffector.h"
 #include "level.h"
 #include "..\xrEngine\xr_level_controller.h"
-#include "game_cl_base.h"
+
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
 #include "../xrphysics/mathutils.h"
@@ -22,8 +22,8 @@
 #include "debug_renderer.h"
 #include "clsid_game.h"
 #include "weaponBinocularsVision.h"
-#include "ui/UIWindow.h"
-#include "ui/UIXmlInit.h"
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "Torch.h"
 #include "cameralook.h"
 #include "CustomOutfit.h"
@@ -829,7 +829,7 @@ void CWeapon::UpdateCL()
 
 void CWeapon::EnableActorNVisnAfterZoom()
 {
-	CActor *pA = g_actor;
+	CActor *pA = Actor();
 
 	if (pA)
 	{
@@ -849,6 +849,9 @@ bool CWeapon::need_renderable()
 
 void CWeapon::renderable_Render()
 {
+	if (Device.m_SecondViewport.IsSVPFrame() && m_zoom_params.m_fZoomRotationFactor > 0.05f)
+		return;
+
 	// обновить xForm
 	UpdateXForm();
 
@@ -904,6 +907,7 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 			FireStart();
 		else
 			FireEnd();
+
 		return true;
 	}
 
@@ -912,7 +916,7 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 		CActor* pActor = smart_cast<CActor*>(H_Parent());
 		CCustomOutfit* pOutfit = pActor->GetOutfit();
 
-		return (!(pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint)))) ? SwitchAmmoType(flags) : false;
+		return !(pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint))) && SwitchAmmoType(flags);
 	}
 
 	case kWPN_ZOOM:

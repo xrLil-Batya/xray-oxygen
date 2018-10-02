@@ -337,7 +337,6 @@ void CStats::Show()
             CPU::Info.getCPULoad(cpuLoad);
             cpuBefore = cpuLoad;
 
-			//FLOAT* fCPUUsage = (FLOAT*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(FLOAT) * sys.
 			CPU::Info.MTCPULoad();
         }
 
@@ -366,7 +365,7 @@ void CStats::Show()
 		// get MT Load
 		for (size_t i = 0; i < CPU::Info.m_dwNumberOfProcessors; i++)
 		{
-			DWORD dwScale = 100 + i * 15;
+			float dwScale = 100 + (float)i * 15;
 			pFont->Out(10, dwScale, "CPU%d: %0.0f", i, CPU::Info.fUsage[i]);
 		}
 
@@ -380,7 +379,7 @@ void CStats::Show()
 #ifdef DEBUG
 	//////////////////////////////////////////////////////////////////////////
 	// Show errors
-	if (!g_bDisableRedText && errors.size())
+	if (!g_bDisableRedText && !errors.empty())
 	{
 		CGameFont&	F = *((CGameFont*)pFont);
 		F.SetColor	(color_rgba(255,16,16,191));

@@ -1,9 +1,8 @@
 #pragma once
-
-#include "UIDialogWnd.h"
-#include "UIWndCallback.h"
+#include "../xrUICore/UIDialogWnd.h"
+#include "../xrUICore/UIWndCallback.h"
 #include "../../xrServerEntities/inventory_space.h"
-#include "UIHint.h"
+#include "../xrUICore/UIHint.h"
 
 #include "../../FrayBuildConfig.hpp"
 

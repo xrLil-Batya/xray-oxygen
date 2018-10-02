@@ -2,12 +2,10 @@
 #include "EliteDetector.h"
 #include "player_hud.h"
 #include "../Include/xrRender/UIRender.h"
-#include "ui/UIXmlInit.h"
-#include "ui/xrUIXmlParser.h"
-#include "ui/UIStatic.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIStatic.h"
 #include "ui/ArtefactDetectorUI.h"
-
-
 
 CEliteDetector::CEliteDetector()
 {
@@ -16,7 +14,6 @@ CEliteDetector::CEliteDetector()
 
 CEliteDetector::~CEliteDetector()
 {}
-
 
 void CEliteDetector::CreateUI()
 {

@@ -10,9 +10,9 @@
 #include "UIDragDropReferenceList.h"
 #include "UICellCustomItems.h"
 #include "UIItemInfo.h"
-#include "UIFrameLineWnd.h"
-#include "UIPropertiesBox.h"
-#include "UIListBoxItem.h"
+#include "../xrUICore/UIFrameLineWnd.h"
+#include "../xrUICore/UIPropertiesBox.h"
+#include "../xrUICore/UIListBoxItem.h"
 #include "UIMainIngameWnd.h"
 #include "UIGame.h"
 #include "eatable_item_object.h"
@@ -25,7 +25,7 @@
 #include "../WeaponMagazined.h"
 #include "../CustomOutfit.h"
 #include "../ActorHelmet.h"
-#include "../UICursor.h"
+#include "../../xrUICore/UICursor.h"
 #include "../player_hud.h"
 #include "../CustomDetector.h"
 #include "../PDA.h"
@@ -194,24 +194,26 @@ bool CUIActorMenu::DropAllItemsFromRuck( bool quest_force )
 
 bool FindItemInList(CUIDragDropListEx* lst, PIItem pItem, CUICellItem*& ci_res)
 {
-	u32 count = lst->ItemsCount();
+	u32 count = lst ? lst->ItemsCount() : 0;
 	for (u32 i=0; i<count; ++i)
 	{
-		CUICellItem* ci				= lst->GetItemIdx(i);
-		for(u32 j=0; j<ci->ChildsCount(); ++j)
+		CUICellItem* pCellItm = lst->GetItemIdx(i);
+		if (!pCellItm) continue;
+
+		for (u32 j = 0; j < pCellItm->ChildsCount(); ++j)
 		{
-			CUIInventoryCellItem* ici = smart_cast<CUIInventoryCellItem*>(ci->Child(j));
-			if(ici->object()==pItem)
+			CUIInventoryCellItem* ici = smart_cast<CUIInventoryCellItem*>(pCellItm->Child(j));
+			if (ici->object() == pItem)
 			{
 				ci_res = ici;
 				return true;
 			}
 		}
 
-		CUIInventoryCellItem* ici = smart_cast<CUIInventoryCellItem*>(ci);
-		if(ici->object()==pItem)
+		CUIInventoryCellItem* pInvCellItem = smart_cast<CUIInventoryCellItem*>(pCellItm);
+		if(pInvCellItem && pInvCellItem->object()==pItem)
 		{
-			ci_res = ci;
+			ci_res = pCellItm;
 			return true;
 		}
 	}
@@ -268,31 +270,25 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 					pl.type		= eItemPlaceRuck;
 					pl.slot_id	= GRENADE_SLOT;
 				}
-#ifndef MASTER_GOLD
-				Msg("item place [%d]", pl);
-#endif // #ifndef MASTER_GOLD
 
-				if(pl.type==eItemPlaceSlot)
-					lst_to_add						= GetSlotList(pl.slot_id);
-				else if(pl.type==eItemPlaceBelt)
-					lst_to_add						= GetListByType(iActorBelt);
+				bool isDeadBodySearch = GetMenuMode() == mmDeadBodyOrContainerSearch;
+				if (!isDeadBodySearch && pl.type == eItemPlaceSlot)
+					lst_to_add = GetSlotList(pl.slot_id);
+				else if (!isDeadBodySearch && pl.type == eItemPlaceBelt)
+					lst_to_add = GetListByType(iActorBelt);
+				else if (pItem->parent_id() == m_pActorInvOwner->object_id())
+					lst_to_add = GetListByType(iActorBag);
 				else
-				{
-					if(pItem->parent_id()==m_pActorInvOwner->object_id())
-						lst_to_add						= GetListByType(iActorBag);
-					else
-						lst_to_add						= GetListByType(iDeadBodyBag);
-				}
+					lst_to_add = GetListByType(iDeadBodyBag);
 
-
-				while ( all_lists[i] )
+				while (all_lists[i])
 				{
 					CUIDragDropListEx*	curr = all_lists[i];
-					CUICellItem*		ci   = nullptr;
+					CUICellItem*		ci = nullptr;
 
-					if ( FindItemInList(curr, pItem, ci) )
+					if (FindItemInList(curr, pItem, ci))
 					{
-						if ( lst_to_add != curr )
+						if (lst_to_add != curr)
 						{
 							RemoveItemFromList(curr, pItem);
 						}
@@ -304,8 +300,9 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 					}
 					++i;
 				}
-				CUICellItem*		ci   = nullptr;
-				if(GetMenuMode()==mmDeadBodyOrContainerSearch && FindItemInList(lst_to_add, pItem, ci))
+
+				CUICellItem* ci = nullptr;
+				if(isDeadBodySearch && FindItemInList(lst_to_add, pItem, ci))
 					break;
 
 				if ( !b_already )
@@ -1104,16 +1101,14 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 	{
 		return;
 	}
-	CWeapon* weapon = smart_cast<CWeapon*>( item );
+	CWeapon* pWeapon = smart_cast<CWeapon*>(item);
 
 	switch ( m_UIPropertiesBox->GetClickedItem()->GetTAG() )
 	{
-	// Rietmon: �������, ���� ������� �����
-	case INVENTORY_TO_SLOT2_ACTION:	ToSlot(cell_item, true, INV_SLOT_2);		break;
-	case INVENTORY_TO_SLOT3_ACTION:	ToSlot(cell_item, true, INV_SLOT_3);		break;
-
+	case INVENTORY_TO_SLOT2_ACTION:	if (pWeapon) ToSlot(cell_item, true, INV_SLOT_2);		break;
+	case INVENTORY_TO_SLOT3_ACTION:	if (pWeapon) ToSlot(cell_item, true, INV_SLOT_3);		break;
 	case INVENTORY_TO_SLOT_ACTION:	ToSlot( cell_item, true, item->BaseSlot() );		break;
-	case INVENTORY_RELOAD_MAGAZINE: if (weapon) weapon->Action(kWPN_RELOAD, CMD_START); break;
+	case INVENTORY_RELOAD_MAGAZINE: if (pWeapon) pWeapon->Action(kWPN_RELOAD, CMD_START); break;
 	case INVENTORY_TO_BELT_ACTION:	ToBelt( cell_item, false );		break;
 	case INVENTORY_TO_BAG_ACTION:	ToBag ( cell_item, false );		break;
 	case INVENTORY_EAT_ACTION:		TryUseFoodItem( cell_item ); 	break;
@@ -1151,9 +1146,9 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			break;
 		}
 	case INVENTORY_DETACH_SCOPE_ADDON:
-		if ( weapon )
+		if (pWeapon)
 		{
-			DetachAddon( weapon->GetScopeName().c_str() );
+			DetachAddon(pWeapon->GetScopeName().c_str() );
 			for ( u32 i = 0; i < cell_item->ChildsCount(); ++i )
 			{
 				CUICellItem*	child_itm	= cell_item->Child(i);
@@ -1167,9 +1162,9 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 		break;
 	case INVENTORY_DETACH_SILENCER_ADDON:
-		if ( weapon )
+		if (pWeapon)
 		{
-			DetachAddon( weapon->GetSilencerName().c_str() );
+			DetachAddon(pWeapon->GetSilencerName().c_str() );
 			for ( u32 i = 0; i < cell_item->ChildsCount(); ++i )
 			{
 				CUICellItem*	child_itm	= cell_item->Child(i);
@@ -1183,9 +1178,9 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 		break;
 	case INVENTORY_DETACH_GRENADE_LAUNCHER_ADDON:
-		if ( weapon )
+		if (pWeapon)
 		{
-			DetachAddon( weapon->GetGrenadeLauncherName().c_str() );
+			DetachAddon(pWeapon->GetGrenadeLauncherName().c_str() );
 			for ( u32 i = 0; i < cell_item->ChildsCount(); ++i )
 			{
 				CUICellItem*	child_itm	= cell_item->Child(i);

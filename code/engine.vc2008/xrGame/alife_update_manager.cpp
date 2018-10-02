@@ -30,7 +30,7 @@
 
 using namespace ALife;
 
-extern string_path g_last_saved_game;
+extern string_path ENGINE_API g_last_saved_game;
 
 class CSwitchPredicate {
 private:

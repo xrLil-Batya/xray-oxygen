@@ -35,7 +35,9 @@ static float g[B + B + 2][3];
 //--------------------------------------------------------------------
 void noise3Init()
 {
-	int	i, j, k;
+	uint_fast16_t i;
+	uint_fast8_t j;
+	int k;
 	float v[3], s;
 	int	rnd;
 
@@ -143,15 +145,15 @@ float fractalsum3(const Fvector& v, float freq, int octaves)
 	}
 	*/
 
-	int i;
-	float sum = 0.0;
+	
+	float sum = 0.0f;
 	Fvector	v_;
 	float boost = freq;
 	v_[0] = v[0] * freq;
 	v_[1] = v[1] * freq;
 	v_[2] = v[2] * freq;
 
-	for (i = 0; i < octaves; ++i)
+	for (int i = 0; i < octaves; ++i)
 	{
 		sum += noise3(v_) / freq;
 		freq *= 2.059f;
@@ -166,22 +168,14 @@ float fractalsum3(const Fvector& v, float freq, int octaves)
 //--------------------------------------------------------------------
 float turbulence3(const Fvector& v, float freq, int octaves)
 {
-	/* Not used now
-	if (start) {
-		start = 0;
-		noise3Init();
-	}
-	*/
-
-	int i;
-	float sum = 0.0;
+	float sum = 0.0f;
 	Fvector	v_;
 	float boost = freq;
 	v_[0] = v[0] * freq;
 	v_[1] = v[1] * freq;
 	v_[2] = v[2] * freq;
 
-	for (i = 0; i < octaves; ++i)
+	for (int i = 0; i < octaves; ++i)
 	{
 		sum += _abs(noise3(v_)) / freq;
 		freq *= 2.059f;

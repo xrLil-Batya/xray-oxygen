@@ -47,66 +47,67 @@ void CBaseMonster::GenerateNewOffsetFromLeader ()
 
 //////////////////////////////////////////////////////////////////////////
 
-bool CBaseMonster::AssignGamePathIfNeeded (Fvector const target_pos, u32 const level_vertex)
+bool CBaseMonster::AssignGamePathIfNeeded(Fvector const target_pos, u32 const level_vertex)
 {
-	GameGraph::_GRAPH_ID const self_game_vertex		=	ai_location().game_vertex_id();
-	
-	u32 target_level_vertex				=	0;
-	
-	if ( ai().level_graph().valid_vertex_id(level_vertex) )
+	GameGraph::_GRAPH_ID const self_game_vertex = ai_location().game_vertex_id();
+
+	u32 target_level_vertex = 0;
+
+	if (ai().level_graph().valid_vertex_id(level_vertex))
 	{
-		target_level_vertex				=	level_vertex;
+		target_level_vertex = level_vertex;
 	}
-	else if ( ai().level_graph().valid_vertex_position(target_pos) )
+	else if (ai().level_graph().valid_vertex_position(target_pos))
 	{
-		target_level_vertex				=	ai().level_graph().vertex_id(target_pos);
+		target_level_vertex = ai().level_graph().vertex_id(target_pos);
 	}
 	else
 	{
-		return								false;
+		return false;
 	}
 
-	bool level_vertex_is_valid			=	ai().level_graph().valid_vertex_id(target_level_vertex);
+	bool level_vertex_is_valid = ai().level_graph().valid_vertex_id(target_level_vertex);
 
-	if ( !level_vertex_is_valid )
+	if (!level_vertex_is_valid)
 	{
-		if ( m_action_target_pos == target_pos && m_action_target_node != u32(-1) )
+		if (m_action_target_pos == target_pos && m_action_target_node != u32(-1))
 		{
-			target_level_vertex			=	m_action_target_node;
-			level_vertex_is_valid		=	true;
+			target_level_vertex = m_action_target_node;
+			level_vertex_is_valid = true;
 		}
 		else
 		{
-			u32 const path_node			=	path().get_target_found_node();
-			if ( path().is_target_actual() && 
-				 path().get_target_set() == target_pos && 
-				 path_node != u32(-1) )
+			u32 const path_node = path().get_target_found_node();
+			if (path().is_target_actual() &&
+				path().get_target_set() == target_pos &&
+				path_node != u32(-1))
 			{
-				target_level_vertex		=	path_node;
-				level_vertex_is_valid	=	ai().level_graph().valid_vertex_id(target_level_vertex);
+				target_level_vertex = path_node;
+				level_vertex_is_valid = ai().level_graph().valid_vertex_id(target_level_vertex);
 			}
 		}
 	}
 
-	if ( level_vertex_is_valid )
+	if (level_vertex_is_valid)
 	{
-		m_action_target_pos				=	target_pos;
-		m_action_target_node			=	target_level_vertex;
+		m_action_target_pos = target_pos;
+		m_action_target_node = target_level_vertex;
 
-		GameGraph::_GRAPH_ID const target_game_vertex	=	ai().cross_table().vertex(target_level_vertex).game_vertex_id();
-		bool const game_vertex_is_valid	=	ai().game_graph().valid_vertex_id(target_game_vertex);
-		VERIFY								(game_vertex_is_valid);
-		if ( game_vertex_is_valid && self_game_vertex != target_game_vertex ) 
+		GameGraph::_GRAPH_ID const target_game_vertex = ai().cross_table().vertex(target_level_vertex).game_vertex_id();
+		bool const game_vertex_is_valid = ai().game_graph().valid_vertex_id(target_game_vertex);
+		VERIFY(game_vertex_is_valid);
+		if (game_vertex_is_valid && self_game_vertex != target_game_vertex)
 		{
-			path().detour_graph_points		(target_game_vertex);
-			control().path_builder().set_path_type	(MovementManager::ePathTypeGamePath);			
-			control().path_builder().set_game_dest_vertex	(target_game_vertex);
-			return							true;
+			path().detour_graph_points(target_game_vertex);
+			control().path_builder().set_path_type(MovementManager::ePathTypeGamePath);
+			control().path_builder().set_game_dest_vertex(target_game_vertex);
+			return true;
 		}
 	}
 
-	m_action_target_node				=	u32(-1);
-	return									false;
+	m_action_target_node = u32(-1); //-V519
+
+	return false;
 }
 
 bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)

@@ -258,7 +258,6 @@ float   anti_aim_ability::calculate_angle () const
 #include "../../level_debug.h"
 #include "../../debug_text_tree.h"
 #endif
-extern CActor* g_actor;
 
 bool   anti_aim_ability::check_update_condition () const
 {

@@ -1,6 +1,6 @@
 #pragma once
-#include "UIDialogWnd.h"
-#include "UIWndCallback.h"
+#include "../xrUICore/UIDialogWnd.h"
+#include "../xrUICore/UIWndCallback.h"
 
 class CUIXml;
 class CUI3tButton;

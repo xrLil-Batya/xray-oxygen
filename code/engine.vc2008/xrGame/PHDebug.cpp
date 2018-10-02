@@ -14,7 +14,7 @@
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "../xrEngine/bone.h"
 #include "../xrEngine/iphdebug.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 
 Flags32		ph_dbg_draw_mask;
 Flags32		ph_dbg_draw_mask1;

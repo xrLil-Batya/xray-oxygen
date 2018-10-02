@@ -132,7 +132,7 @@ VOID DSplashScreen::ShowSplash()
 	}
 	else
 	{
-		PostThreadMessageA(threadId, WM_ACTIVATE, WA_CLICKACTIVE, NULL);
+		PostThreadMessage(threadId, WM_ACTIVATE, WA_CLICKACTIVE, NULL);
 	}
 }
 
@@ -157,7 +157,7 @@ VOID DSplashScreen::SetProgressPosition(DWORD percent, xr_string messageString)
 	if (hThread)
 	{
 		xr_string* tempMsg = new xr_string(messageString);
-		PostThreadMessageA(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(tempMsg));
+		PostThreadMessage(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(tempMsg));
 	}
 }
 
@@ -167,12 +167,12 @@ VOID DSplashScreen::SetProgressPosition(DWORD percent, DWORD resourceId, HMODULE
 	int len = ::LoadStringA(hModule, resourceId, reinterpret_cast<LPSTR>(&lpMessage), NULL);
 
 	xr_string* tempMsg = new xr_string(lpMessage, len);
-	PostThreadMessageA(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(tempMsg));
+	PostThreadMessage(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(tempMsg));
 }
 
 VOID DSplashScreen::SetProgressColor(COLORREF refColor)
 {
-	PostThreadMessageA(threadId, PBM_SETBARCOLOR, NULL, refColor);
+	PostThreadMessage(threadId, PBM_SETBARCOLOR, NULL, refColor);
 }
 
 UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
@@ -194,7 +194,7 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 	windowsClass.lpszClassName = "OxySplashScreen";
 	windowsClass.hIcon = LoadIcon(windowsClass.hInstance, MAKEINTRESOURCEA(IDI_ICON1));
 
-	R_ASSERT(RegisterClassA(&windowsClass));
+	R_ASSERT(RegisterClass(&windowsClass));
 
 	// try to find monitor where mouse was last time
 	tagPOINT point = { NULL };
@@ -207,7 +207,7 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 	hMonitor = MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
 
 	// get window info to rect
-	if (GetMonitorInfoA(hMonitor, &monitorInfo))
+	if (GetMonitorInfo(hMonitor, &monitorInfo))
 	{
 		areaRect.left = (monitorInfo.rcMonitor.right + monitorInfo.rcMonitor.left - static_cast<LONG>(pSplashImage->GetWidth())) / 2;
 		areaRect.top = (monitorInfo.rcMonitor.top + monitorInfo.rcMonitor.bottom - static_cast<LONG>(pSplashImage->GetHeight())) / 2;
@@ -220,44 +220,38 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 	}
 
 	// create splash window
-	pSplash->hwndSplash = CreateWindowExA(
-		pSplash->splashWindowName.length() ? NULL : WS_EX_TOOLWINDOW,
-		"OxySplashScreen",
-		pSplash->splashWindowName.c_str(),
+	pSplash->hwndSplash = CreateWindowEx(pSplash->splashWindowName.length() ? NULL : WS_EX_TOOLWINDOW,
+		"OxySplashScreen", pSplash->splashWindowName.c_str(), 
 		WS_CLIPCHILDREN | WS_POPUP,
-		areaRect.left,
-		areaRect.top,
-		pSplashImage->GetWidth(),
-		pSplashImage->GetHeight(),
-		pSplash->hwndParent,
-		NULL,
-		windowsClass.hInstance,
-		NULL
+		areaRect.left, areaRect.top,
+		pSplashImage->GetWidth(), pSplashImage->GetHeight(),
+		pSplash->hwndParent, NULL, windowsClass.hInstance, NULL
 	);
 
 	R_ASSERT(pSplash->hwndSplash);
 
 	// set long pointer
-	SetWindowLongPtrA(pSplash->hwndSplash, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pSplash));
+	SetWindowLongPtr(pSplash->hwndSplash, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pSplash));
 	ShowWindow(pSplash->hwndSplash, SW_SHOWNOACTIVATE);
 
 	MSG msg = { NULL };
-	BOOL bRet = FALSE;
 	LONG timerCount = 0;
 
-	PeekMessageA(&msg, NULL, 0, 0, 0);
+	PeekMessage(&msg, NULL, 0, 0, 0);
 	SetEvent(pSplash->hEvent);
 
 	// while game isn't runned
-	while ((bRet = GetMessageA(&msg, NULL, 0, 0) != 0))
+	for(int bRet = GetMessage(&msg, NULL, 0, 0); bRet; bRet = GetMessage(&msg, NULL, 0, 0))
 	{
 		if (msg.message == WM_QUIT) break;
+
 		if (msg.message == PBM_SETPOS)
 		{
 			KillTimer(NULL, pSplash->timerID);
 			SendMessage(pSplash->hwndSplash, PBM_SETPOS, msg.wParam, msg.lParam);
 			continue;
 		}
+
 		if (msg.message == PBM_SETSTEP)
 		{
 			SendMessage(pSplash->hwndSplash, PBM_SETPOS, LOWORD(msg.wParam), 0); // initiate progress bar creation
@@ -266,6 +260,7 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 			pSplash->timerID = SetTimer(NULL, 0, 1000, NULL);
 			continue;
 		}
+
 		if (msg.message == WM_TIMER && msg.wParam == pSplash->timerID)
 		{
 			SendMessage(pSplash->hwndProgress, PBM_STEPIT, 0, 0);
@@ -278,6 +273,7 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 			}
 			continue;
 		}
+
 		if (msg.message == PBM_SETBARCOLOR)
 		{
 			if (!IsWindow(pSplash->hwndProgress)) 
@@ -339,18 +335,10 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 			RECT clientRect = { NULL };
 			GetClientRect(hwnd, &clientRect);
 
-			pInstance->hwndProgress = CreateWindowA(
-				PROGRESS_CLASS,
-				NULL,
+			pInstance->hwndProgress = CreateWindowA(PROGRESS_CLASS, NULL,
 				WS_CHILD | WS_VISIBLE | PBS_SMOOTH,
-				4,
-				clientRect.bottom - 20,
-				clientRect.right - 8,
-				16,
-				hwnd,
-				NULL,
-				GetModuleHandleA(NULL),
-				NULL
+				4, clientRect.bottom - 20, clientRect.right - 8, 16,
+				hwnd, NULL, GetModuleHandle(NULL), NULL
 			);
 
 			SendMessage(pInstance->hwndProgress, PBM_SETRANGE, 0, MAKELPARAM(0, 100));

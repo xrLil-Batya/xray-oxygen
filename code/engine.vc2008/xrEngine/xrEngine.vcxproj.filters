@@ -603,6 +603,9 @@
     <ClInclude Include="DynamicSplash.h">
       <Filter>Device\Stats</Filter>
     </ClInclude>
+    <ClInclude Include="IGame_Actor.h">
+      <Filter>Game API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -944,6 +947,9 @@
     <ClCompile Include="Stats.cpp">
       <Filter>Device\Stats</Filter>
     </ClCompile>
+    <ClCompile Include="IGame_Actor.cpp">
+      <Filter>Game API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="TODO.txt">
@@ -954,6 +960,9 @@
     </None>
     <None Include="Effects description.txt">
       <Filter>Engine</Filter>
+    </None>
+    <None Include="OffSetOfWrapper.inl">
+      <Filter>Interfaces\Input</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

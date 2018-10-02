@@ -1,7 +1,5 @@
 // Entity.cpp: implementation of the CEntity class.
-
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "Entity.h"
 #include "actor.h"
@@ -17,8 +15,9 @@
 #include "ai_space.h"
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
+#include "memory_space.h"
 
-const u32 BODY_REMOVE_TIME = 600000;
+constexpr u32 BODY_REMOVE_TIME = 600000;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -101,12 +100,13 @@ void CEntity::Hit(SHit* pHDS)
 	mInvXForm.invert		(XFORM());
 	mInvXForm.transform_dir	(vLocalDir,pHDS->dir);
 	vLocalDir.invert		();
-
-	// Hit impulse
+#pragma message("ForserX to RZ: Check it!")
+#if 0
 	//#TODO: Function commented. Check if it needs to be restored.
+	// Hit impulse
 	if (pHDS->impulse)
 		HitImpulse(pHDS->impulse, pHDS->dir, vLocalDir); // @@@: WT
-	
+#endif
 	// Calc amount (correct only on local player)
 	float lost_health = CalcCondition(pHDS->damage());
 
@@ -189,9 +189,20 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 
 	if (g_Alive()) 
 	{
-		m_registered_member		= true;
-		Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).register_member(this);
-		++Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).m_dwAliveCount;
+		m_registered_member = true;
+
+		CSquadHierarchyHolder& squad = Level().seniority_holder().team(g_Team()).squad(g_Squad());
+		while (squad.group(g_Group()).members().size() == sizeof(squad_mask_type) * 4) 
+		{
+			Msg("* [%s]: [%s]: group [team:%u][squad:%u][group:%u] is full (%u), try next group %u", __FUNCTION__, 
+				(E && E->name_replace()[0]) ? E->name_replace() : 
+				cName().c_str(), g_Team(), g_Squad(), g_Group(), squad.group(g_Group()).members().size(), g_Group() + 1);
+
+			++id_Group;
+		}
+
+		squad.group(g_Group()).register_member(this);
+		++squad.group(g_Group()).m_dwAliveCount;
 	}
 	else
 	{
@@ -202,18 +213,21 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 	if (!inherited::net_Spawn(DC))
 		return				(FALSE);
 
-//	SetfHealth			(E->fHealth);
 	IKinematics* pKinematics=smart_cast<IKinematics*>(Visual());
-	CInifile* ini = nullptr;
 
-	if(pKinematics) ini = pKinematics->LL_UserData();
-	if (ini) {
-		if (ini->section_exist("damage_section") && !use_simplified_visual())
-			CDamageManager::reload(pSettings->r_string("damage_section","damage"),ini);
+	if (pKinematics)
+	{
+		CInifile* ini = pKinematics->LL_UserData();
+		if (ini)
+		{
+			if (ini->section_exist("damage_section") && !use_simplified_visual())
+				CDamageManager::reload(pSettings->r_string("damage_section", "damage"), ini);
 
-		CParticlesPlayer::LoadParticles(pKinematics);
+			CParticlesPlayer::LoadParticles(pKinematics);
+		}
 	}
-	return					TRUE;
+
+	return TRUE;
 }
 
 void CEntity::net_Destroy	()
@@ -231,24 +245,24 @@ void CEntity::KillEntity(u16 whoID)
 	if (whoID == ID() && m_killer_id != ALife::_OBJECT_ID(-1))
 		return;
 
-	m_killer_id			= whoID;
+	m_killer_id = whoID;
 
-	set_death_time		();
+	set_death_time();
 
-	if (!getDestroy()){
+	if (!getDestroy())
+	{
 		NET_Packet		P;
-		u_EventGen		(P,GE_DIE,ID());
-		P.w_u16			(u16(whoID));
-		P.w_u32			(0);
-		u_EventSend	(P);
+		u_EventGen(P, GE_DIE, ID());
+		P.w_u16(u16(whoID));
+		P.w_u32(0);
+		u_EventSend(P);
 	}
-};
-
-void CEntity::reinit			()
-{
-	inherited::reinit			();
 }
 
+void CEntity::reinit()
+{
+	inherited::reinit();
+}
 
 void CEntity::reload			(LPCSTR section)
 {
@@ -263,15 +277,15 @@ void CEntity::set_death_time	()
 	m_game_death_time	= ai().get_alife() ? ai().alife().time_manager().game_time() : Level().GetGameTime();
 }
 
-bool CEntity::IsFocused			()const	{ return (smart_cast<const CEntity*>(g_pGameLevel->CurrentEntity())==this);		}
-bool CEntity::IsMyCamera		()const	{ return (smart_cast<const CEntity*>(g_pGameLevel->CurrentViewEntity())==this);	}
+bool CEntity::IsFocused	()const	{ return (smart_cast<const CEntity*>(g_pGameLevel->CurrentEntity())==this);		}
+bool CEntity::IsMyCamera()const	{ return (smart_cast<const CEntity*>(g_pGameLevel->CurrentViewEntity())==this);	}
 
-DLL_Pure *CEntity::_construct	()
+DLL_Pure *CEntity::_construct()
 {
-	inherited::_construct		();
-	CDamageManager::_construct	();
-	m_entity_condition			= create_entity_condition(nullptr);
-	return						(this);
+	inherited::_construct();
+	CDamageManager::_construct();
+	m_entity_condition = create_entity_condition(nullptr);
+	return (this);
 }
 
 const u32 FORGET_KILLER_TIME = 180000;
@@ -279,13 +293,15 @@ const u32 FORGET_KILLER_TIME = 180000;
 void CEntity::shedule_Update	(u32 dt)
 {
 	inherited::shedule_Update	(dt);
-	if (!getDestroy() && !g_Alive() && (m_killer_id != u16(-1))) {
-		if (Device.dwTimeGlobal > m_level_death_time + FORGET_KILLER_TIME) {
-			m_killer_id			= u16(-1);
-			NET_Packet			P;
-			u_EventGen			(P,GE_ASSIGN_KILLER,ID());
-			P.w_u16				(u16(-1));
-			u_EventSend			(P);
+	if (!getDestroy() && !g_Alive() && (m_killer_id != u16(-1)))
+	{
+		if (Device.dwTimeGlobal > m_level_death_time + FORGET_KILLER_TIME)
+		{
+			m_killer_id = u16(-1);
+			NET_Packet P;
+			u_EventGen(P, GE_ASSIGN_KILLER, ID());
+			P.w_u16(u16(-1));
+			u_EventSend(P);
 		}
 	}
 }
@@ -302,18 +318,19 @@ void CEntity::ChangeTeam(int team, int squad, int group)
 {
 	if ((team == g_Team()) && (squad == g_Squad()) && (group == g_Group())) return;
 
-	VERIFY2					(g_Alive(), "Try to change team of a dead object");
-	VERIFY					(m_registered_member);
-	
-	// remove from current team
-	on_before_change_team	();
-	Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).unregister_member	(this);
+	VERIFY2(g_Alive(), "Try to change team of a dead object");
+	VERIFY(m_registered_member);
 
-	id_Team					= team;
-	id_Squad				= squad;
-	id_Group				= group;
+	// remove from current team
+	on_before_change_team();
+	CSeniorityHierarchyHolder& refHierarchy = Level().seniority_holder();
+	refHierarchy.team(g_Team()).squad(g_Squad()).group(g_Group()).unregister_member(this);
+
+	id_Team = team;
+	id_Squad = squad;
+	id_Group = group;
 
 	// add to new team
-	Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).register_member		(this);
-	on_after_change_team	();
+	refHierarchy.team(g_Team()).squad(g_Squad()).group(g_Group()).register_member(this);
+	on_after_change_team();
 }

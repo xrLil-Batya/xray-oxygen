@@ -1,7 +1,6 @@
 #pragma once
-
-#include "UIStatic.h"
-#include "UIDialogWnd.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIDialogWnd.h"
 
 class CUIDragItem;
 class CUIDragDropListEx;

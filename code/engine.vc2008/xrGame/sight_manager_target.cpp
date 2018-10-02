@@ -5,7 +5,6 @@
 //	Author		: Dmitriy Iassenev
 //	Description : sight manager target functions
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "sight_manager.h"
 #include "ai/stalker/ai_stalker.h"
@@ -17,73 +16,61 @@
 
 void CSightManager::SetPointLookAngles(const Fvector &tPosition, float &yaw, float &pitch, Fvector const& look_position, const CGameObject *object)
 {
-	Fvector						my_position = look_position;
-	Fvector						target = tPosition;
-	if (!aim_target(my_position, target, object)) {
-		target					= tPosition;
-		my_position				= look_position;
+	Fvector my_position = look_position;
+	Fvector target = tPosition;
+
+	if (!aim_target(my_position, target, object))
+	{
+		target = tPosition;
+		my_position = look_position;
 	}
 
-	target.sub					(my_position);
-	target.getHP				(yaw,pitch);
+	target.sub(my_position);
+	target.getHP(yaw, pitch);
 
-	VERIFY						(_valid(yaw));
-	yaw							*= -1;
+	VERIFY(_valid(yaw));
+	yaw *= -1;
 
-	VERIFY						(_valid(pitch));
-	pitch						*= -1;
+	VERIFY(_valid(pitch));
+	pitch *= -1;
 }
 
 #include "actor.h"
 void aim_target	(shared_str const& aim_bone_id, Fvector &result, const CGameObject *object);
 
-bool CSightManager::aim_target	(Fvector &my_position, Fvector &aim_target, const CGameObject *object) const
+bool CSightManager::aim_target(Fvector &my_position, Fvector &aim_target, const CGameObject *object) const
 {
 	if (!object)
 		return					(false);
 
 	if (m_object->aim_bone_id().size()) {
-		m_object->aim_target	(aim_target, object);
+		m_object->aim_target(aim_target, object);
 		return					(true);
 	}
 
-	extern CActor*	g_actor;
-
-	if ( g_actor == object ) {
-		::aim_target			( "bip01_head", aim_target, object);
-		return					(true);
+	if (Actor() == object) 
+	{
+		::aim_target("bip01_head", aim_target, object);
+		return (true);
 	}
 
-	if ( CAI_Stalker const* stalker = smart_cast<CAI_Stalker const*>(object) ) {
-		if ( stalker->g_Alive() ) {
-			::aim_target		( "bip01_head", aim_target, object);
-			return				(true);
+	if (CAI_Stalker const* stalker = smart_cast<CAI_Stalker const*>(object)) 
+	{
+		if (stalker->g_Alive()) 
+		{
+			::aim_target("bip01_head", aim_target, object);
+			return (true);
 		}
 	}
 
 	if (!object->use_center_to_aim())
-		return					(false);
+		return (false);
 
-	m_object->Center			(my_position);
-#if 1
+	m_object->Center(my_position);
 	//. hack is here, just because our actor model is animated with 20cm shift
-	m_object->XFORM().transform_tiny	(
-		my_position,
-		Fvector().set(
-			.2f,
-			my_position.y - m_object->Position().y,
-			0.f
-		)
-	);
-#else
-	const CEntityAlive			*entity_alive = smart_cast<const CEntityAlive*>(object);
-	if (!entity_alive || entity_alive->g_Alive()) {
-		aim_target.x			= m_object->Position().x;
-		aim_target.z			= m_object->Position().z;
-	}
-#endif
+	m_object->XFORM().transform_tiny(my_position, Fvector().set(.2f, my_position.y - m_object->Position().y, 0.f));
 
-	return						(true);
+	return (true);
 }
 
 void CSightManager::SetFirePointLookAngles(const Fvector &tPosition, float &yaw, float &pitch, Fvector const& look_position, const CGameObject *object)

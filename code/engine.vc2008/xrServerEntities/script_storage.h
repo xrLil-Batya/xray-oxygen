@@ -27,8 +27,8 @@ using namespace ScriptStorage;
 class CScriptStorage
 {
 private:
-    CVMLua* luaVM;
-	CScriptThread				*m_current_thread	;
+    static CVMLua*				luaVM;
+	CScriptThread*				m_current_thread	;
 	BOOL						m_jit				;
     std::set<void*>             m_dumpedObjList     ;
 

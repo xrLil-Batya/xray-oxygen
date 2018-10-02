@@ -5,14 +5,10 @@
 //	Author		: Evgeniy Sokolov, Prishchepa Sergey
 //	Description : inventory upgrade UI class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef UI_INVENTORY_UPGRADE_H_INCLUDED
-#define UI_INVENTORY_UPGRADE_H_INCLUDED
-
-#include "UIStatic.h"
-
-#include "xrUIXmlParser.h"
-#include "UIXmlInit.h"
+#pragma once
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
 
 
 namespace inventory { namespace upgrade {
@@ -142,5 +138,3 @@ public:
 	virtual void		OnFocusReceive();
 	virtual void		OnFocusLost();
 };
-
-#endif // UI_INVENTORY_UPGRADE_H_INCLUDED

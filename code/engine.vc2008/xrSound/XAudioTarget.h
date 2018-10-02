@@ -33,14 +33,14 @@ public:
 	//void source_changed();
 
 	virtual bool _initialize();
-	//virtual void _destroy();
-	//virtual void _restart();
+	virtual void _destroy();
+	virtual void _restart();
 
-	//virtual void start(CSoundRender_Emitter* E);
-	//virtual void render();
-	//virtual void rewind();
-	//virtual void stop();
-	//virtual void update();
+	virtual void start(CSoundRender_Emitter* E);
+	virtual void render();
+	virtual void rewind();
+	virtual void stop();
+	virtual void update();
 	virtual void fill_parameters();
-	//virtual	void alAuxInit(ALuint slot);
+	virtual	void alAuxInit(u32 slot);
 };

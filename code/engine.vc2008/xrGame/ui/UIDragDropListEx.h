@@ -1,7 +1,6 @@
 #pragma once
-
-#include "UIWindow.h"
-#include "UIWndCallback.h"
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/UIWndCallback.h"
 
 class CUICellContainer;
 class CUIScrollBar;
@@ -9,8 +8,8 @@ class CUIStatic;
 class CUICellItem;
 class CUIDragItem;
 
-
-struct CUICell{
+struct CUICell
+{
 							CUICell					()						{m_item=NULL; Clear();}
 
 		CUICellItem*		m_item;

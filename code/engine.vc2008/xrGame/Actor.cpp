@@ -79,15 +79,11 @@ extern float cammera_into_collision_shift ;
 string32		ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
 //skeleton
 
-bool isCampFireAt;
-
 static Fbox		bbStandBox;
 static Fbox		bbCrouchBox;
 static Fvector	vFootCenter;
 static Fvector	vFootExt;
-Flags32			psActorFlags={AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE|AF_GET_OBJECT_PARAMS|AF_SHOW_BOSS_HEALTH};
 static bool		HudUpdated;
-int				psActorSleepTime = 1;
 
 void CActor::MtSecondActorUpdate(void* pActorPointer)
 {
@@ -154,6 +150,8 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 {
+	g_actor = this;
+
 	game_news_registry = xr_new< CGameNewsRegistryWrapper >();
 	// Cameras
 	cameras[eacFirstEye] = xr_new<CCameraFirstEye>(this, CCameraBase::flKeepPitch);
@@ -394,6 +392,12 @@ void CActor::Load	(LPCSTR section )
 		m_BloodSnd.create		(pSettings->r_string(section,"heavy_blood_snd"), st_Effect,SOUND_TYPE_MONSTER_INJURING);
 		m_DangerSnd.create		(pSettings->r_string(section,"heavy_danger_snd"), st_Effect,SOUND_TYPE_MONSTER_INJURING);
 	}
+
+	if (this == Level().CurrentEntity()) //--#SM+#--
+	{
+		GamePersistent().m_pGShaderConstants.m_blender_mode.set(0.f, 0.f, 0.f, 0.f);
+	}
+
 	if( psActorFlags.test(AF_PSP) )
 		cam_Set					(eacLookAt);
 	else
@@ -845,6 +849,9 @@ void CActor::UpdateCL()
 			psHUD_Flags.set(HUD_DRAW_RT, pWeapon->show_indicators());
 
 			pWeapon->UpdateSecondVP();
+
+			GamePersistent().m_pGShaderConstants.hud_params.x = pWeapon->GetZRotatingFactor(); //--#SM+#--
+			GamePersistent().m_pGShaderConstants.hud_params.y = pWeapon->GetSecondVP_FovFactor(); //--#SM+#-- 
 		}
 	}
 	else if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
@@ -859,6 +866,7 @@ void CActor::UpdateCL()
 			bLook_cam_fp_zoom = false;
 		}
 
+		GamePersistent().m_pGShaderConstants.hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
 		Device.m_SecondViewport.SetSVPActive(false);
 	}
 
@@ -1532,7 +1540,6 @@ bool CActor::can_attach(const CInventoryItem *inventory_item) const
 	return true;
 }
 
-#include "game_cl_base.h"
 void CActor::OnDifficultyChanged	()
 {
 	// immunities

@@ -16,11 +16,13 @@ bool CPHMovementControl:: ActivateBoxDynamic(DWORD id,int num_it/*=8*/,int num_s
 		if(Device.dwTimeGlobal-trying_times[id]<500&&dif.magnitude()<0.05f)
 																	return false;
 	}
-	if(!m_character||m_character->PhysicsRefObject()->ObjectPPhysicsShell())
+
+	if(!m_character|| m_character->PhysicsRefObject()->ObjectPPhysicsShell())
 		return false;
+
 	DWORD old_id=BoxID();
 
-	bool  character_disabled=character_exist && !m_character->IsEnabled();
+	bool character_disabled=character_exist && !m_character->IsEnabled();
 
 	if( character_exist && id==old_id )
 		return true;
@@ -39,17 +41,16 @@ bool CPHMovementControl:: ActivateBoxDynamic(DWORD id,int num_it/*=8*/,int num_s
 
 	bool ret =	::ActivateBoxDynamic( this, character_exist,id, num_it, num_steps, resolve_depth );
 
-
 	if(!ret)
 	{	
 		if(!character_exist)
 			DestroyCharacter();
 		else if(character_disabled)
 			m_character->Disable();
+
 		ActivateBox(old_id);
 		SetVelocity(vel);
-		if(m_character)
-			m_character->fix_body_rotation();
+		m_character->fix_body_rotation();
 		SetPosition(pos);
 	}
 	else
@@ -58,7 +59,6 @@ bool CPHMovementControl:: ActivateBoxDynamic(DWORD id,int num_it/*=8*/,int num_s
 	}
 
 	SetVelocity(vel);
-
 
 	if(!ret&&character_exist)
 	{

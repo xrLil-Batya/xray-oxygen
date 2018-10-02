@@ -1,24 +1,22 @@
 #include "stdafx.h"
 #include "ScriptXmlInit.h"
-#include "ui\UIXmlInit.h"
-#include "ui\UITextureMaster.h"
-#include "ui\UICheckButton.h"
-#include "ui\UISpinNum.h"
-#include "ui\UISpinText.h"
-#include "ui\UIComboBox.h"
-#include "ui\UITabControl.h"
-#include "ui\UIFrameWindow.h"
-#include "ui\UIKeyBinding.h"
-#include "ui\UIEditBox.h"
-#include "ui\UIAnimatedStatic.h"
-#include "ui\UITrackBar.h"
-#include "ui\UIMMShniaga.h"
-#include "ui\UIScrollView.h"
-#include "ui\UIProgressBar.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UITextureMaster.h"
+#include "../xrUICore/UICheckButton.h"
+#include "../xrUICore/UISpinNum.h"
+#include "../xrUICore/UISpinText.h"
+#include "../xrUICore/UIComboBox.h"
+#include "../xrUICore/UITabControl.h"
+#include "../xrUICore/UIFrameWindow.h"
+#include "../xrUICore/UIKeyBinding.h"
+#include "../xrUICore/UIEditBox.h"
+#include "../xrUICore/UIAnimatedStatic.h"
+#include "../xrUICore/UITrackBar.h"
+#include "../xrUICore/UIMMShniaga.h"
+#include "../xrUICore/UIScrollView.h"
+#include "../xrUICore/UIProgressBar.h"
 
-
-
-#include "luabind/luabind.hpp"
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 void _attach_child(CUIWindow* _child, CUIWindow* _parent)
@@ -231,7 +229,6 @@ bool CScriptXmlInit::NodeExists(LPCSTR path, int index)
 }
 
 
-
 #pragma optimize("s",on)
 void CScriptXmlInit::script_register(lua_State *L)
 {
@@ -262,5 +259,59 @@ void CScriptXmlInit::script_register(lua_State *L)
 				.def("InitListBox",		&CScriptXmlInit::InitListBox)
 				.def("InitProgressBar",	&CScriptXmlInit::InitProgressBar)
 				.def("NodeExists",		&CScriptXmlInit::NodeExists)
+		];
+}
+
+#include "script_ui_registrator.h"
+#include "../xrUICore/MainMenu.h"
+
+#include "UIGame.h"
+#include "UI/UIScriptWnd.h"
+#include "../xrUICore/UIButton.h"
+#include "../xrUICore/UIProgressBar.h"
+#include "../xrUICore/UIEditBox.h"
+#include "../xrUICore/UIMessageBox.h"
+#include "../xrUICore/UIPropertiesBox.h"
+#include "../xrUICore/UITabControl.h"
+#include "../xrUICore/UIComboBox.h"
+#include "../xrUICore/UIOptionsManagerScript.h"
+
+#pragma optimize("s",on)
+void UIRegistrator::script_register(lua_State *L)
+{
+	CUIWindow::script_register(L);
+	CUIStatic::script_register(L);
+	CUIButton::script_register(L);
+	CUIProgressBar::script_register(L);
+	CUIComboBox::script_register(L);
+	CUIEditBox::script_register(L);
+	CUITabControl::script_register(L);
+	CUIMessageBox::script_register(L);
+	CUIListBox::script_register(L);
+	CUIDialogWndEx::script_register(L);
+	CUIPropertiesBox::script_register(L);
+	CUIOptionsManagerScript::script_register(L);
+	CScriptXmlInit::script_register(L);
+	CUIGame::script_register(L);
+
+	module(L)
+		[
+			class_<CGameFont>("CGameFont")
+			.enum_("EAligment")
+		[
+			value("alLeft", u32(CGameFont::alLeft)),
+			value("alRight", u32(CGameFont::alRight)),
+			value("alCenter", u32(CGameFont::alCenter))
+		],
+
+		class_<CMainMenu>("CMainMenu")
+		.def("GetEngineBuild", &CMainMenu::GetEngineBuild)
+		.def("GetEngineBuildDate", &CMainMenu::GetEngineBuildDate)
+		.def("GetGSVer", &CMainMenu::GetGSVer)
+		];
+
+	module(L, "main_menu")
+		[
+			def("get_main_menu", &MainMenu)
 		];
 }

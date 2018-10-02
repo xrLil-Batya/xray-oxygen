@@ -105,7 +105,8 @@ void					CRender::create					()
 	D3DFORMAT	nullrt	= (D3DFORMAT)MAKEFOURCC('N','U','L','L');
 	o.nullrt			= HW.IsFormatSupported(nullrt, D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
 
-	if (o.nullrt)		{
+	if (o.nullrt)		
+	{
 		Msg				("* NULLRT supported and used");
 	};
 

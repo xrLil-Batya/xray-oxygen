@@ -18,25 +18,8 @@
 #include "object_broker.h"
 #include "alife_simulator_base.h"
 #include "../xrEngine/x_ray.h"
-#include "ui/UILoadingScreen.h"
-
+#include "../xrUICore/UILoadingScreen.h"
 //-----------------------------------------------------------------
-BOOL	net_sv_control_hit	= FALSE		;
-BOOL	g_bCollectStatisticData = TRUE;
-//-----------------------------------------------------------------
-
-void* game_sv_GameState::get_client (u16 id) //if exist
-{
-	CSE_Abstract* entity = get_entity_from_eid(id);
-	if (entity && entity->owner)
-		return entity->owner;
-	return nullptr;
-}
-
-CSE_Abstract*		game_sv_GameState::get_entity_from_eid		(u16 id)
-{
-	return				m_server->ID_to_entity(id);
-}
 
 void game_sv_GameState::signal_Syncronize()
 {
@@ -47,10 +30,8 @@ void game_sv_GameState::signal_Syncronize()
 void game_sv_GameState::net_Export_State(NET_Packet& P, ClientID to)
 {
 	// Generic
-	P.w_u32			(m_type);
 	P.w_u16			(m_phase);
 	P.w_u32			(m_start_time);
-	P.w_u8			(u8(net_sv_control_hit));
 
 	// Players
 	net_Export_GameTime(P);
@@ -72,7 +53,6 @@ void game_sv_GameState::net_Export_GameTime(NET_Packet& P)
 	P.w_float(GetEnvironmentGameTimeFactor());
 };
 
-
 void game_sv_GameState::OnPlayerConnect			(ClientID /**id_who/**/)
 {
 	signal_Syncronize	();
@@ -87,35 +67,34 @@ void game_sv_GameState::Create(shared_str &options)
     CInifile *l_tpIniFile = xr_new<CInifile>(S);
     R_ASSERT(l_tpIniFile);
 
-	if (l_tpIniFile->section_exist(type_name()))
+	if (l_tpIniFile->section_exist("single"))
 	{
-		if (l_tpIniFile->r_string(type_name(), "script"))
-			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorGame, xr_new<CScriptProcess>("game", l_tpIniFile->r_string(type_name(), "script")));
+		if (l_tpIniFile->r_string("single", "script"))
+			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorGame, xr_new<CScriptProcess>("game", l_tpIniFile->r_string("single", "script")));
 		else
 			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorGame, xr_new<CScriptProcess>("game", ""));
 	}
     xr_delete(l_tpIniFile);
 
 	if (strstr(*options, "/alife"))
-		m_alife_simulator = xr_new<CALifeSimulator>(&server(), &options);
+		m_alife_simulator = xr_new<CALifeSimulator>(Level().Server, &options);
 
 	switch_Phase(GAME_PHASE_INPROGRESS);
-
 }
 
-void game_sv_GameState::Update		()
+void game_sv_GameState::Update()
 {
-    if (Level().game) {
-        CScriptProcess				*script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
-        if (script_process)
-            script_process->update();
-    }
+	if (Level().game)
+	{
+		CScriptProcess *script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
+		if (script_process)
+			script_process->update();
+	}
 }
 
 game_sv_GameState::game_sv_GameState()
 {
 	VERIFY(g_pGameLevel);
-	m_server = Level().Server;
 	m_alife_simulator = nullptr;
 	m_type = eGameIDSingle;
 }
@@ -148,12 +127,12 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 {
 	if (type == GAME_EVENT_ON_HIT)
 	{
-		u16		id_dest = tNetPacket.r_u16();
-		u16     id_src = tNetPacket.r_u16();
-		CSE_Abstract*	e_src = get_entity_from_eid(id_src);
+		u16 id_dest = tNetPacket.r_u16();
+		u16 id_src = tNetPacket.r_u16();
+		CSE_Abstract* e_src = Level().Server->ID_to_entity(id_src);
 
 		if (e_src)
-			m_server->SendBroadcast(BroadcastCID, tNetPacket);
+			Level().Server->SendBroadcast(BroadcastCID, tNetPacket);
 	}
 }
 
@@ -250,36 +229,37 @@ void game_sv_GameState::OnCreate(u16 id_who)
 	if (!ai().get_alife())
 		return;
 
-	CSE_Abstract			*e_who = get_entity_from_eid(id_who);
+	CSE_Abstract* e_who = Level().Server->ID_to_entity(id_who);
 	VERIFY(e_who);
 	if (!e_who->m_bALifeControl)
 		return;
 
-	CSE_ALifeObject			*alife_object = smart_cast<CSE_ALifeObject*>(e_who);
+	CSE_ALifeObject *alife_object = smart_cast<CSE_ALifeObject*>(e_who);
 	if (!alife_object)
 		return;
 
 	alife_object->m_bOnline = true;
 
-	if (alife_object->ID_Parent != 0xffff) {
-		CSE_ALifeDynamicObject			*parent = ai().alife().objects().object(alife_object->ID_Parent, true);
-		if (parent) {
-			CSE_ALifeTraderAbstract		*trader = smart_cast<CSE_ALifeTraderAbstract*>(parent);
+	if (alife_object->ID_Parent != 0xffff)
+	{
+		CSE_ALifeDynamicObject *parent = ai().alife().objects().object(alife_object->ID_Parent, true);
+		if (parent) 
+		{
+			CSE_ALifeTraderAbstract *trader = smart_cast<CSE_ALifeTraderAbstract*>(parent);
 			if (trader)
 				alife().create(alife_object);
-			else {
-				CSE_ALifeInventoryBox* const	box = smart_cast<CSE_ALifeInventoryBox*>(parent);
+			else 
+			{
+				CSE_ALifeInventoryBox* const box = smart_cast<CSE_ALifeInventoryBox*>(parent);
 				if (box)
 					alife().create(alife_object);
 				else
 					alife_object->m_bALifeControl = false;
 			}
 		}
-		else
-			alife_object->m_bALifeControl = false;
+		else alife_object->m_bALifeControl = false;
 	}
-	else
-		alife().create(alife_object);
+	else alife().create(alife_object);
 }
 
 void game_sv_GameState::restart_simulator(LPCSTR saved_game_name)
@@ -287,14 +267,14 @@ void game_sv_GameState::restart_simulator(LPCSTR saved_game_name)
 	shared_str options = GamePersistent().GetServerOption();
 
 	delete_data(m_alife_simulator);
-	server().clear_ids();
+	Level().Server->clear_ids();
 
 	xr_strcpy(g_pGamePersistent->m_game_params.m_game_or_spawn, saved_game_name);
 	xr_strcpy(g_pGamePersistent->m_game_params.m_new_or_load, "load");
 
 	pApp->SetLoadingScreen(new UILoadingScreen());
 	pApp->LoadBegin();
-	m_alife_simulator = xr_new<CALifeSimulator>(&server(), &options);
+	m_alife_simulator = xr_new<CALifeSimulator>(Level().Server, &options);
 	g_pGamePersistent->SetLoadStageTitle("st_client_synchronising");
 	pApp->LoadForceFinish();
 	g_pGamePersistent->LoadTitle();
@@ -304,8 +284,8 @@ void game_sv_GameState::restart_simulator(LPCSTR saved_game_name)
 
 void game_sv_GameState::OnTouch(u16 eid_who, u16 eid_what)
 {
-	CSE_Abstract*		e_who = get_entity_from_eid(eid_who);		VERIFY(e_who);
-	CSE_Abstract*		e_what = get_entity_from_eid(eid_what);	VERIFY(e_what);
+	CSE_Abstract*		e_who = Level().Server->ID_to_entity(eid_who);		VERIFY(e_who);
+	CSE_Abstract*		e_what = Level().Server->ID_to_entity(eid_what);	VERIFY(e_what);
 
 	if (ai().get_alife())
 	{
@@ -324,8 +304,8 @@ void game_sv_GameState::OnDetach(u16 eid_who, u16 eid_what)
 {
 	if (ai().get_alife())
 	{
-		CSE_Abstract*		e_who = get_entity_from_eid(eid_who);		VERIFY(e_who);
-		CSE_Abstract*		e_what = get_entity_from_eid(eid_what);	VERIFY(e_what);
+		CSE_Abstract*		e_who = Level().Server->ID_to_entity(eid_who);		VERIFY(e_who);
+		CSE_Abstract*		e_what = Level().Server->ID_to_entity(eid_what);	VERIFY(e_what);
 
 		CSE_ALifeInventoryItem *l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(e_what);
 		if (!l_tpALifeInventoryItem)
@@ -335,26 +315,26 @@ void game_sv_GameState::OnDetach(u16 eid_who, u16 eid_what)
 		if (!l_tpDynamicObject)
 			return;
 
-		if (
-			ai().alife().objects().object(e_who->ID, true) &&
-			!ai().alife().graph().level().object(l_tpALifeInventoryItem->base()->ID, true) &&
-			ai().alife().objects().object(e_what->ID, true)
-			)
-			alife().graph().detach(*e_who, l_tpALifeInventoryItem, l_tpDynamicObject->m_tGraphID, false, false);
-		else {
-			if (!ai().alife().objects().object(e_what->ID, true)) {
-				u16				id = l_tpALifeInventoryItem->base()->ID_Parent;
-				l_tpALifeInventoryItem->base()->ID_Parent = 0xffff;
+		const CALifeObjectRegistry &refAlifeObj = ai().alife().objects();
 
-				CSE_ALifeDynamicObject *dynamic_object = smart_cast<CSE_ALifeDynamicObject*>(e_what);
-				VERIFY(dynamic_object);
-				dynamic_object->m_tNodeID = l_tpDynamicObject->m_tNodeID;
-				dynamic_object->m_tGraphID = l_tpDynamicObject->m_tGraphID;
-				dynamic_object->m_bALifeControl = true;
-				dynamic_object->m_bOnline = true;
-				alife().create(dynamic_object);
-				l_tpALifeInventoryItem->base()->ID_Parent = id;
-			}
+		if (refAlifeObj.object(e_who->ID, true) && refAlifeObj.object(e_what->ID, true) &&
+			!ai().alife().graph().level().object(l_tpALifeInventoryItem->base()->ID, true))
+		{
+			alife().graph().detach(*e_who, l_tpALifeInventoryItem, l_tpDynamicObject->m_tGraphID, false, false);
+		}
+		else if (!refAlifeObj.object(e_what->ID, true))
+		{
+			u16 id = l_tpALifeInventoryItem->base()->ID_Parent;
+			l_tpALifeInventoryItem->base()->ID_Parent = 0xffff;
+
+			CSE_ALifeDynamicObject *dynamic_object = smart_cast<CSE_ALifeDynamicObject*>(e_what);
+			VERIFY(dynamic_object);
+			dynamic_object->m_tNodeID = l_tpDynamicObject->m_tNodeID;
+			dynamic_object->m_tGraphID = l_tpDynamicObject->m_tGraphID;
+			dynamic_object->m_bALifeControl = true;
+			dynamic_object->m_bOnline = true;
+			alife().create(dynamic_object);
+			l_tpALifeInventoryItem->base()->ID_Parent = id;
 		}
 	}
 }
@@ -413,7 +393,6 @@ void game_sv_GameState::sls_default()
 {
 	alife().update_switch();
 }
-
 
 //  [7/5/2005]
 #ifdef DEBUG

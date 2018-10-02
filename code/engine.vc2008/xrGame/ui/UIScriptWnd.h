@@ -1,5 +1,5 @@
 #pragma once
-#include "UIDialogWnd.h"
+#include "../xrUICore/UIDialogWnd.h"
 #include "../../xrServerEntities/script_space_forward.h"
 #include "../../xrScripts/export/script_export_space.h"
 

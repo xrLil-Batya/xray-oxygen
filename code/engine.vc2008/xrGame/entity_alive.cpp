@@ -211,7 +211,7 @@ BOOL CEntityAlive::net_Spawn(CSE_Abstract* DC)
 	m_ParticleWounds.clear		();
 
 	// Add blood and fire particles if needed
-	for (const auto &pWound : conditions().wounds())
+	for (CWound* pWound : conditions().wounds())
 	{
 		StartFireParticles		(pWound);
 		StartBloodDrops			(pWound);
@@ -227,8 +227,10 @@ void CEntityAlive::net_Destroy()
 
 void CEntityAlive::HitImpulse(float amount, Fvector& vWorldDir, Fvector& vLocalDir)
 {
-//	float Q = 2*float(amount)/m_PhysicMovementControl->GetMass();
-//	m_PhysicMovementControl->vExternalImpulse.mad(vWorldDir,Q);
+#if 0
+	float Q = 2*float(amount)/ GetMass();
+	m_PhysicMovementControl->vExternalImpulse.mad(vWorldDir,Q);
+#endif
 }
 
 void CEntityAlive::Hit(SHit* pHDS)

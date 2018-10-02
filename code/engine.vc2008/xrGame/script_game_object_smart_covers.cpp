@@ -11,30 +11,33 @@
 #include "script_game_object.h"
 
 #include "ai/stalker/ai_stalker.h"
+#include "ai_space.h"
 #include "stalker_movement_manager_smart_cover.h"
 #include "script_callback_ex.h"
 #include "smart_cover.h"
 
-bool CScriptGameObject::use_smart_covers_only		() const
+bool CScriptGameObject::use_smart_covers_only() const
 {
-	CAI_Stalker							*stalker = smart_cast<CAI_Stalker*>(&object());
-	if (!stalker) {
-		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member use_smart_covers_only!");
-		return							(false);
+	CAI_Stalker *stalker = smart_cast<CAI_Stalker*>(&object());
+	if (!stalker) 
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member use_smart_covers_only!");
+		return (false);
 	}
 
-	return								(stalker->use_smart_covers_only());
+	return (stalker->use_smart_covers_only());
 }
 
-void CScriptGameObject::use_smart_covers_only		(bool value)
+void CScriptGameObject::use_smart_covers_only(bool value)
 {
-	CAI_Stalker							*stalker = smart_cast<CAI_Stalker*>(&object());
-	if (!stalker) {
-		ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeError,"CAI_Stalker : cannot access class member use_smart_covers_only!");
+	CAI_Stalker *stalker = smart_cast<CAI_Stalker*>(&object());
+	if (!stalker)
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CAI_Stalker : cannot access class member use_smart_covers_only!");
 		return;
 	}
 
-	stalker->use_smart_covers_only		(value);
+	stalker->use_smart_covers_only(value);
 }
 
 void CScriptGameObject::set_smart_cover_target_selector	()

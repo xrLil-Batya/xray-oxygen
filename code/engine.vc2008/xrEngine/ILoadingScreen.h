@@ -2,12 +2,13 @@
 //  Created     : 19.06.2018
 //  Authors     : Xottab_DUTY (OpenXRay project)
 //                FozeSt
-//                Unfainthful
+//                Unfainthful (Oxygen Project)
+//                ForserX (Oxygen Project)
 //
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-class ILoadingScreen
+class ENGINE_API ILoadingScreen
  {
 public:
 	virtual ~ILoadingScreen() = default;

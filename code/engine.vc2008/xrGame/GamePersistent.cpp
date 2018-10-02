@@ -5,8 +5,8 @@
 #include "../xrEngine/gamemtllib.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "profiler.h"
-#include "MainMenu.h"
-#include "UICursor.h"
+#include "../xrUICore/MainMenu.h"
+#include "../xrUICore/UICursor.h"
 #include "game_base.h"
 #include "level.h"
 #include "../xrParticles/psystem.h"
@@ -18,12 +18,11 @@
 #include "ActorEffector.h"
 #include "actor.h"
 
-#include "UI/UItextureMaster.h"
+#include "../xrUICore/UItextureMaster.h"
 #include "ai_space.h"
 #include "../xrServerEntities/script_engine.h"
 
 #include "holder_custom.h"
-#include "game_cl_base.h"
 #include "xrserver_objects_alife_monsters.h"
 #include "../xrServerEntities/xrServer_Object_Base.h"
 #include "UI/UIGameTutorial.h"
@@ -33,7 +32,7 @@
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIPdaWnd.h"
 #include "../xrEngine/x_ray.h"
-#include "ui/UILoadingScreen.h"
+#include "../xrUICore/UILoadingScreen.h"
 
 #ifndef MASTER_GOLD
 #	include "custommonster.h"
@@ -44,6 +43,7 @@
 #endif // _EDITOR
 
 using MySuper = IGame_Persistent;
+extern void UI_API initUICore();
 
 CGamePersistent::CGamePersistent()
 {
@@ -62,7 +62,8 @@ CGamePersistent::CGamePersistent()
 
     std::memset(ambient_sound_next_time, 0, sizeof(ambient_sound_next_time));
 	
-	m_pUI_core					= nullptr;
+	initUICore();
+	m_pUI_core					= &UI(); 
 	m_pMainMenu					= nullptr;
 	m_intro						= nullptr;
 	m_intro_event.bind			(this, &CGamePersistent::start_logo_intro);
@@ -485,69 +486,34 @@ void CGamePersistent::OnFrame	()
 	if(!g_pGameLevel)			return;
 	if(!g_pGameLevel->bReady)	return;
 
-	if(Device.Paused())
+	if (Device.Paused())
 	{
 #ifndef MASTER_GOLD
-		if (Level().CurrentViewEntity()) {
-			if (!(!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID())))
+		if (Level().CurrentViewEntity())
+		{
+			if (Actor() && (Actor()->ID() == Level().CurrentViewEntity()->ID()))
 			{
 				CCameraBase* C = nullptr;
-				if (g_actor)
-				{
-					if(!Actor()->Holder())
-						C = Actor()->cam_Active();
-					else
-						C = Actor()->Holder()->Camera();
+				if (!Actor()->Holder())
+					C = Actor()->cam_Active();
+				else
+					C = Actor()->Holder()->Camera();
 
-					Actor()->Cameras().UpdateFromCamera		(C);
-					Actor()->Cameras().ApplyDevice			(VIEWPORT_NEAR);
-// #ifdef DEBUG
-// 					if(psActorFlags.test(AF_NO_CLIP))
-// 					{
-// 						Actor()->dbg_update_cl			= 0;
-// 						Actor()->dbg_update_shedule		= 0;
-// 						Device.dwTimeDelta				= 0;
-// 						Device.fTimeDelta				= 0.01f;			
-// 						Actor()->UpdateCL				();
-// 						Actor()->shedule_Update			(0);
-// 						Actor()->dbg_update_cl			= 0;
-// 						Actor()->dbg_update_shedule		= 0;
-// 
-// 						CSE_Abstract* e					= Level().Server->ID_to_entity(Actor()->ID());
-// 						VERIFY							(e);
-// 						CSE_ALifeCreatureActor*	s_actor = smart_cast<CSE_ALifeCreatureActor*>(e);
-// 						VERIFY							(s_actor);
-// 						xr_vector<u16>::iterator it = s_actor->children.begin();
-// 						for(;it!=s_actor->children.end();it++)
-// 						{
-// 							CObject* obj = Level().Objects.net_Find(*it);
-// 							if(obj && Engine.Sheduler.Registered(obj))
-// 							{
-// 								obj->dbg_update_shedule = 0;
-// 								obj->dbg_update_cl = 0;
-// 								obj->shedule_Update	(0);
-// 								obj->UpdateCL();
-// 								obj->dbg_update_shedule = 0;
-// 								obj->dbg_update_cl = 0;
-// 							}
-// 						}
-// 					}
-// #endif // DEBUG
-				}
+				Actor()->Cameras().UpdateFromCamera(C);
+				Actor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
 			}
 		}
 #else // MASTER_GOLD
 		if (g_actor)
 		{
 			CCameraBase* C = nullptr;
-			if(!Actor()->Holder())
+			if (!Actor()->Holder())
 				C = Actor()->cam_Active();
 			else
 				C = Actor()->Holder()->Camera();
 
-			Actor()->Cameras().UpdateFromCamera			(C);
-			Actor()->Cameras().ApplyDevice				(VIEWPORT_NEAR);
-
+			Actor()->Cameras().UpdateFromCamera(C);
+			Actor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
 		}
 #endif // MASTER_GOLD
 	}
@@ -642,7 +608,7 @@ void CGamePersistent::OnAppDeactivate	()
 	bEntryFlag = FALSE;
 }
 
-extern void draw_wnds_rects();
+extern void UI_API draw_wnds_rects();
 void CGamePersistent::OnRenderPPUI_main()
 {
 	// always

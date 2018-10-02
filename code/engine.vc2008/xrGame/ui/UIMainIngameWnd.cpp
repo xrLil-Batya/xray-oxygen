@@ -20,7 +20,6 @@
 #include "../xrServerEntities/xrServer_objects_ALife.h"
 #include "../alife_simulator.h"
 #include "../alife_object_registry.h"
-#include "../game_cl_base.h"
 #include "../level.h"
 #include "../seniority_hierarchy_holder.h"
 
@@ -29,11 +28,11 @@
 #include "../../xrEngine/LightAnimLibrary.h"
 
 #include "UIInventoryUtilities.h"
-#include "UIHelper.h"
+#include "../xrUICore/UIHelper.h"
 #include "UIMotionIcon.h"
 
-#include "UIXmlInit.h"
-#include "UIPdaMsgListItem.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIPdaMsgListItem.h"
 #include "UIPdaWnd.h"
 #include "../alife_registry_wrappers.h"
 
@@ -44,7 +43,7 @@
 #	include "../../xrEngine/xr_input.h"
 #endif
 
-#include "UIScrollView.h"
+#include "../xrUICore/UIScrollView.h"
 #include "map_hint.h"
 #include "../game_news.h"
 
@@ -74,7 +73,7 @@ CUIMainIngameWnd::CUIMainIngameWnd() : m_pPickUpItem(nullptr), UIArtefactIcon(nu
 	UIZoneMap					= xr_new<CUIZoneMap>();
 }
 
-#include "UIProgressShape.h"
+#include "../xrUICore/UIProgressShape.h"
 extern CUIProgressShape* g_MissileForceShape;
 
 CUIMainIngameWnd::~CUIMainIngameWnd()

@@ -10,7 +10,7 @@
 #include "level.h"
 #include "ai_debug.h"
 #include "alife_simulator.h"
-#include "game_cl_base.h"
+
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "actor.h"
@@ -29,10 +29,10 @@
 #include "../xrEngine/date_time.h"
 #include "UIGame.h"
 #include "ui/UIActorMenu.h"
-#include "ui/UIStatic.h"
+#include "../xrUICore/UIStatic.h"
 #include "zone_effector.h"
 #include "GameTask.h"
-#include "MainMenu.h"
+#include "../xrUICore/MainMenu.h"
 #include "saved_game_wrapper.h"
 #include "level_graph.h"
 #include "cameralook.h"
@@ -40,7 +40,7 @@
 #include "inventory_upgrade_manager.h"
 #include "../xrCore/FS.h"
 #include "../xrCore/LocatorAPI.h"
-#include "uizonemap.h"
+#include "UIZoneMap.h"
 #include "ai_debug_variables.h"
 #include "../xrphysics/console_vars.h"
 #include "HudItem.h"
@@ -50,7 +50,7 @@
 #include "Inventory.h"
 #include "GamePersistent.h"
 
-string_path		g_last_saved_game;
+ENGINE_API extern string_path g_last_saved_game;
 
 #ifdef DEBUG
 	extern float air_resistance_epsilon;
@@ -66,10 +66,9 @@ extern	int		psLUA_GCSTEP;
 
 extern	int		x_m_x;
 extern	int		x_m_z;
-extern	BOOL	net_sv_control_hit		;
 extern	int		g_dwInputUpdateDelta	;
 extern	ESingleGameDifficulty g_SingleGameDifficulty;
-extern	BOOL	g_show_wnd_rect2			;
+extern UI_API BOOL g_show_wnd_rect2;
 //-----------------------------------------------------------
 extern	float	g_fTimeFactor;
 extern	BOOL	b_toggle_weapon_aim;

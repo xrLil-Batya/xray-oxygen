@@ -5,7 +5,7 @@
 #include "xrMessages.h"
 #include "xrServer_Objects_ALife_All.h"
 #include "level.h"
-#include "game_cl_base.h"
+
 #include "ai_space.h"
 #include "alife_object_registry.h"
 #include "../xrEngine/IGame_Persistent.h"
@@ -291,7 +291,7 @@ void xrServer::Process_update(NET_Packet& P)
 		u8 size = P.r_u8();
 
 		u32	_pos = P.r_tell();
-		CSE_Abstract *pSEAbstract = game->get_entity_from_eid(ID);
+		CSE_Abstract *pSEAbstract = ID_to_entity(ID);
 
 		if (pSEAbstract)
 		{
@@ -322,7 +322,7 @@ void xrServer::Process_save(NET_Packet& P)
 		u16 size = P.r_u16();
 
 		u32 _pos_start = P.r_tell();
-		CSE_Abstract *pSEAbstract = game->get_entity_from_eid(ID);
+		CSE_Abstract *pSEAbstract = ID_to_entity(ID);
 
 		if (pSEAbstract)
 		{
@@ -366,7 +366,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 	CSE_Abstract *e_parent = nullptr;
 	if (pAbstractE->ID_Parent != 0xffff)
 	{
-		e_parent = game->get_entity_from_eid(pAbstractE->ID_Parent);
+		e_parent = ID_to_entity(pAbstractE->ID_Parent);
 		if (!e_parent)
 		{
 			R_ASSERT2(!tpExistedEntity, "Entity don't init!");
@@ -475,8 +475,8 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 bool xrServer::Process_event_reject(NET_Packet& P, const u32 &time, const u16 id_parent, const u16 id_entity, bool send_message)
 {
 	// Parse message
-	CSE_Abstract*		e_parent = game->get_entity_from_eid(id_parent);
-	CSE_Abstract*		e_entity = game->get_entity_from_eid(id_entity);
+	CSE_Abstract*		e_parent = ID_to_entity(id_parent);
+	CSE_Abstract*		e_entity = ID_to_entity(id_entity);
 
 	VERIFY2(e_entity, make_string("entity not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame).c_str());
 	if (!e_entity) {
@@ -577,7 +577,7 @@ void xrServer::Perform_destroy(CSE_Abstract* object)
 
 	while (!object->children.empty())
 	{
-		CSE_Abstract *child = game->get_entity_from_eid(object->children.back());
+		CSE_Abstract *child = ID_to_entity(object->children.back());
 		R_ASSERT2(child, make_string("child registered but not found [%d] [%s]", object->children.back(), object->name()));
 
 		Perform_reject(child, object, 2 * NET_Latency);
@@ -643,7 +643,7 @@ void xrServer::Process_event(NET_Packet& P)
 	P.r_u16(type);
 	P.r_u16(destination);
 
-	CSE_Abstract* receiver = game->get_entity_from_eid(destination);
+	CSE_Abstract* receiver = ID_to_entity(destination);
 	if (receiver)
 	{
 		R_ASSERT(receiver->owner);
@@ -685,7 +685,7 @@ void xrServer::Process_event(NET_Packet& P)
 		// кто забирает (для своих нужд)
 		CSE_Abstract* e_parent = receiver;
 		// кто отдает
-		CSE_Abstract* e_entity = game->get_entity_from_eid(id_entity);
+		CSE_Abstract* e_entity = ID_to_entity(id_entity);
 		if (!e_entity) break;
 
 		// this item already taken
@@ -708,7 +708,7 @@ void xrServer::Process_event(NET_Packet& P)
 			P.w_u32(SV_Client->ID.value());
 		};
 		u16 id_src = P.r_u16();
-		CSE_Abstract* e_src = game->get_entity_from_eid(id_src);
+		CSE_Abstract* e_src = ID_to_entity(id_src);
 
 		if (e_src)
 			SendBroadcast(BroadcastCID, P);
@@ -745,12 +745,7 @@ void xrServer::Process_event(NET_Packet& P)
 		// this is possible when hit event is sent before destroy event
 		if (!e_dest) break;
 
-		CSE_Abstract* e_src = game->get_entity_from_eid(id_src);	// кто убил
-		if (!e_src)
-		{
-			CClient* C = (CClient*)game->get_client(id_src);
-			if (C) e_src = C->owner;
-		}
+		CSE_Abstract* e_src = ID_to_entity(id_src);	// кто убил
 
 		if (!e_src)
 		{
@@ -795,22 +790,7 @@ void xrServer::Process_event(NET_Packet& P)
 		if (iitem)
 			iitem->add_upgrade(upgrade_id);
 	} break;
-	case GE_INV_BOX_STATUS:
-	{
-		u8 can_take, closed;
-		P.r_u8(can_take);
-		P.r_u8(closed);
-		shared_str tip_text;
-		P.r_stringZ(tip_text);
-
-		CSE_ALifeInventoryBox* box = smart_cast<CSE_ALifeInventoryBox*>(receiver);
-		if (box)
-		{
-			box->m_can_take = (can_take == 1);
-			box->m_closed = (closed == 1);
-			box->m_tip_text._set(tip_text);
-		}
-	}break;
+//	case GE_INV_BOX_STATUS:
 	case GE_INV_OWNER_STATUS:
 	{
 		u8 can_take, closed;
@@ -855,8 +835,8 @@ void xrServer::Process_event(NET_Packet& P)
 void xrServer::Process_event_activate(NET_Packet& P, const u16 id_parent, const u16 id_entity)
 {
 	// Parse message
-	CSE_Abstract* e_parent = game->get_entity_from_eid(id_parent);
-	CSE_Abstract* e_entity = game->get_entity_from_eid(id_entity);
+	CSE_Abstract* e_parent = ID_to_entity(id_parent);
+	CSE_Abstract* e_entity = ID_to_entity(id_entity);
 
 	R_ASSERT2(e_parent, make_string("parent not found. id_parent=%d id_entity=%d frame=%d", id_parent, id_entity, Device.dwFrame).c_str());
 	R_ASSERT2(e_entity, make_string("entity not found. id_parent=%d id_entity=%d frame=%d", id_parent, id_entity, Device.dwFrame).c_str());
@@ -957,10 +937,7 @@ void xrServer::OnCL_Connected()
 	SV_Client->net_Accepted = TRUE;
 
 	// Export Game Type
-	NET_Packet P;
-	P.w_begin(M_SV_CONFIG_NEW_CLIENT);
-	P.w_stringZ(game->type_name());
-	Level().OnMessage(P.B.data, (u32)P.B.count);
+	R_ASSERT(Level().Load_GameSpecific_After());
 	// end
 
 	Perform_game_export();
@@ -1002,8 +979,8 @@ void xrServer::Process_event_ownership(NET_Packet& P, u16 ID)
 {
 	u16					id_parent = ID, id_entity;
 	P.r_u16(id_entity);
-	CSE_Abstract*		e_parent = game->get_entity_from_eid(id_parent);
-	CSE_Abstract*		e_entity = game->get_entity_from_eid(id_entity);
+	CSE_Abstract*		e_parent = ID_to_entity(id_parent);
+	CSE_Abstract*		e_entity = ID_to_entity(id_entity);
 
 	if (!e_parent || !is_object_valid_on_svclient(id_parent))
 	{
@@ -1036,7 +1013,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET
 	u16 id_dest = ID;
 
 	// кто должен быть уничтожен
-	CSE_Abstract* e_dest = game->get_entity_from_eid(id_dest);
+	CSE_Abstract* e_dest = ID_to_entity(id_dest);
 	if (!e_dest)
 	{
 		return;

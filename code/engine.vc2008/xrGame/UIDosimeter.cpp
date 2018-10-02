@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 #include "UIDosimeter.h"
 #include "HUDManager.h"
 #include "UIGame.h"
@@ -7,14 +7,14 @@
 #include "player_hud.h"
 #include "ui/UIHudStatesWnd.h"
 #include "ui/UIMainIngameWnd.h"
-#include "ui/UIXmlInit.h"
-#include "ui/UIStatic.h"
+#include "../xrUICore//UIXmlInit.h"
+#include "../xrUICore//UIStatic.h"
 #include "Dosimeter.h"
 
 void CUIDosimeter::construct(CDosimeter* p)
 {
     m_parent = p;
-    CUIXml uiXml;
+    CXml uiXml;
     uiXml.Load(CONFIG_PATH, UI_PATH, "ui_dosimeter.xml");
 
     CUIXmlInit xml_init;

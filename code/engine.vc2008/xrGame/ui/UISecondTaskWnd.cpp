@@ -8,18 +8,18 @@
 #include "stdafx.h"
 #include "UISecondTaskWnd.h"
 
-#include "xrUIXmlParser.h"
-#include "UIXmlInit.h"
-#include "UIHelper.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIHelper.h"
 
-#include "UIFrameWindow.h"
-#include "UIScrollView.h"
-#include "UIStatic.h"
-#include "UI3tButton.h"
-#include "UICheckButton.h"
-#include "UIFrameLineWnd.h"
-#include "UIFixedScrollBar.h"
-#include "UIHint.h"
+#include "../xrUICore/UIFrameWindow.h"
+#include "../xrUICore/UIScrollView.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UI3tButton.h"
+#include "../xrUICore/UICheckButton.h"
+#include "../xrUICore/UIFrameLineWnd.h"
+#include "../xrUICore/UIFixedScrollBar.h"
+#include "../xrUICore/UIHint.h"
 #include "UITaskWnd.h"
 
 #include "../GameTaskDefs.h"
@@ -28,9 +28,7 @@
 #include "UIInventoryUtilities.h"
 #include "../xrEngine/string_table.h"
 #include "../level.h"
-#include "../gametaskmanager.h"
-#include "../actor.h"
-
+#include "../GametaskManager.h"
 
 UITaskListWnd::UITaskListWnd()
 {

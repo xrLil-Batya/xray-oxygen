@@ -200,15 +200,17 @@ void	CBlender_Compile::r_Pass		(LPCSTR _vs, LPCSTR _gs, LPCSTR _ps, bool bFog, B
 #ifdef USE_DX11
 	dest.hs = DEV->_CreateHS("null");
 	dest.ds = DEV->_CreateDS("null");
+	dest.cs = DEV->_CreateCS("null");
 #endif
-	ctable.merge			(&ps->constants);
-	ctable.merge			(&vs->constants);
-	ctable.merge			(&gs->constants);
+	ctable.merge(&ps->constants);
+	ctable.merge(&vs->constants);
+	ctable.merge(&gs->constants);
 
 	// Last Stage - disable
-	if (0==stricmp(_ps,"null"))	{
-		RS.SetTSS				(0,D3DTSS_COLOROP,D3DTOP_DISABLE);
-		RS.SetTSS				(0,D3DTSS_ALPHAOP,D3DTOP_DISABLE);
+	if (0 == stricmp(_ps, "null"))
+	{
+		RS.SetTSS(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+		RS.SetTSS(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 	}
 }
 

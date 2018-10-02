@@ -6,8 +6,8 @@
 #include "level.h"
 #include "map_manager.h"
 #include "ActorEffector.h"
-#include "actor.h"
-#include "ui/UIWindow.h"
+#include "Actor.h"
+#include "../xrUICore/UIWindow.h"
 #include "player_hud.h"
 #include "weapon.h"
 

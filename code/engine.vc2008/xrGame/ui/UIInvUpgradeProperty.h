@@ -5,11 +5,9 @@
 //	Author		: Evgeniy Sokolov, Prishchepa Sergey
 //	Description : inventory upgrade property UIWindow class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef UI_INVENTORY_UPGRADE_PROPERTY_H_INCLUDED
-#define UI_INVENTORY_UPGRADE_PROPERTY_H_INCLUDED
-
-#include "UIStatic.h"
+#pragma once
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "inventory_item.h"
 #include "inventory_upgrade_property.h"
 
@@ -37,7 +35,7 @@ protected:
 public:
 					UIProperty();
 	virtual			~UIProperty();
-		void		init_from_xml( CUIXml& ui_xml );
+		void		init_from_xml( CXml& ui_xml );
 		bool		init_property( shared_str const& property_id );
 	Property_type*	get_property();
 
@@ -74,5 +72,3 @@ protected:
 		void		set_info( ItemUpgrades_type const& item_upgrades );
 
 }; // class UIInvUpgPropertiesWnd
-
-#endif // UI_INVENTORY_UPGRADE_PROPERTY_H_INCLUDED

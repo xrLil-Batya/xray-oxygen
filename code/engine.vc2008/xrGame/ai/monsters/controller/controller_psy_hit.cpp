@@ -164,27 +164,9 @@ bool check_actor_visibility (const Fvector trace_from,
 
 } // namespace detail
 
-extern CActor* g_actor;
-
 bool CControllerPsyHit::see_enemy ()
 {
 	return	m_object->EnemyMan.see_enemy_now(Actor());
-// 	using namespace detail;
-// 	Fvector const self_head = get_head_position(m_object);
-// 	Fvector actor_center;
-// 	Actor()->Center(actor_center);
-// 	Fvector self_center;
-// 	m_object->Center(self_center);
-// 
-// 	if ( check_actor_visibility(self_head, get_head_position(Actor()), m_object) &&
-// 		 check_actor_visibility(self_head, actor_center, m_object) &&
-// 		 check_actor_visibility(self_center, get_head_position(Actor()), m_object) &&
-// 		 check_actor_visibility(self_center, actor_center, m_object) )
-// 	{
-// 		return true;
-// 	}
-// 
-// 	return false;
 }
 
 bool CControllerPsyHit::check_conditions_final()
@@ -194,9 +176,6 @@ bool CControllerPsyHit::check_conditions_final()
 	
 	if (!g_actor)									
 		return false;
-	
-// 	if (m_object->EnemyMan.get_enemy() != Actor())	
-// 		return false;
 	
  	if (!m_object->EnemyMan.is_enemy(Actor()))
  		return false;
@@ -212,8 +191,9 @@ bool CControllerPsyHit::check_conditions_final()
 
 void CControllerPsyHit::death_glide_start()
 {
-	if (!check_conditions_final()) {
-		m_man->deactivate	(this);
+	if (!check_conditions_final()) 
+	{
+		m_man->deactivate(this);
 		return;
 	}
 	
@@ -309,23 +289,27 @@ void CControllerPsyHit::update_frame()
 void CControllerPsyHit::set_sound_state(ESoundState state)
 {
 	CController *monster = smart_cast<CController *>(m_object);
-	if (state == ePrepare) {
+	if (state == ePrepare)
+	{
 		monster->m_sound_tube_prepare.play_at_pos(Actor(), Fvector().set(0.f, 0.f, 0.f), sm_2D);
-	} else 
-	if (state == eStart) {
+	}
+	else if (state == eStart)
+	{
 		if (monster->m_sound_tube_prepare._feedback())	monster->m_sound_tube_prepare.stop();
 
 		monster->m_sound_tube_start.play_at_pos(Actor(), Fvector().set(0.f, 0.f, 0.f), sm_2D);
 		monster->m_sound_tube_pull.play_at_pos(Actor(), Fvector().set(0.f, 0.f, 0.f), sm_2D);
-	} else 
-	if (state == eHit) {
+	}
+	else if (state == eHit)
+	{
 		if (monster->m_sound_tube_start._feedback())	monster->m_sound_tube_start.stop();
 		if (monster->m_sound_tube_pull._feedback())		monster->m_sound_tube_pull.stop();
-		
+
 		//monster->m_sound_tube_hit_left.play_at_pos(Actor(), Fvector().set(-1.f, 0.f, 1.f), sm_2D);
 		//monster->m_sound_tube_hit_right.play_at_pos(Actor(), Fvector().set(1.f, 0.f, 1.f), sm_2D);
-	} else 
-	if (state == eNone) {
+	}
+	else if (state == eNone)
+	{
 		if (monster->m_sound_tube_start._feedback())	monster->m_sound_tube_start.stop();
 		if (monster->m_sound_tube_pull._feedback())		monster->m_sound_tube_pull.stop();
 		if (monster->m_sound_tube_prepare._feedback())	monster->m_sound_tube_prepare.stop();

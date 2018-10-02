@@ -1,11 +1,9 @@
-#ifndef __XR_HITMARKER_H__
-#define __XR_HITMARKER_H__
 #pragma once
 
 #include "../Include/xrRender/FactoryPtr.h"
 
 class IUIShader;
-#include "ui_defs.h"
+#include "../xrUICore/ui_defs.h"
 
 class CUIStaticItem;
 class CLAItem;
@@ -69,5 +67,3 @@ public:
 
 	void net_Relcase(CObject* obj);
 };
-
-#endif // __XR_HITMARKER_H__

@@ -517,10 +517,11 @@ void CControlAnimationBase::UpdateAnimCount()
 		}
 
 		if (count != 0) (*it)->count = count;
-		else {
+		else
+		{
 			xr_sprintf(s, "Error! No animation: %s for monster %s", *((*it)->target_name), *m_object->cName());
-			R_ASSERT2(count != 0, s);
-		} 
+			R_ASSERT2(false, s);
+		}
 	}
 }
 

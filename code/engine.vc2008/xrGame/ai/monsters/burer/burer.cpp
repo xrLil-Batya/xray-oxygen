@@ -63,11 +63,11 @@ void CBurer::reload(LPCSTR section)
 	// add specific sounds
 	sound().add				(pSettings->r_string(section,"sound_gravi_attack"),	DEFAULT_SAMPLE_COUNT,	
 							SOUND_TYPE_MONSTER_ATTACKING,	MonsterSound::eHighPriority + 2,	
-							u32(MonsterSound::eBaseChannel),	eMonsterSoundGraviAttack, "head");
+							u32(MonsterSound::eBaseChannel),	eMonsterSoundGraviAttack, get_head_bone_name());
 
 	sound().add				(pSettings->r_string(section,"sound_tele_attack"),	DEFAULT_SAMPLE_COUNT,	
 							SOUND_TYPE_MONSTER_ATTACKING,	MonsterSound::eHighPriority + 3,	
-							u32(MonsterSound::eBaseChannel),	eMonsterSoundTeleAttack, "head");
+							u32(MonsterSound::eBaseChannel),	eMonsterSoundTeleAttack, get_head_bone_name());
 }
 
 void CBurer::ActivateShield () 
@@ -497,21 +497,18 @@ void   CBurer::face_enemy ()
 	set_action							(ACT_STAND_IDLE);
 }
 
-extern CActor* g_actor;
-
-bool   actor_is_reloading_weapon ()
+bool actor_is_reloading_weapon()
 {
-	if ( !g_actor )
+	if (!g_actor)
 	{
-		return								false;
-	}
-	
-	CWeapon* const active_weapon	=	smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
-	if ( active_weapon && active_weapon->GetState() == CWeapon::eReload )
-	{
-		return							true;
+		return false;
 	}
 
-	return									false;
+	CWeapon* const active_weapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+	if (active_weapon && active_weapon->GetState() == CWeapon::eReload)
+	{
+		return true;
+	}
+
+	return false;
 }
-

@@ -130,10 +130,6 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	return TRUE;	
 }
 
-#ifndef _EDITOR
-#include "../xrCore/threadpool/ttapi.h"
-#endif
-
 void IGame_Level::OnRender()
 {
     Render->Calculate();

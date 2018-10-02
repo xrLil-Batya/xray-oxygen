@@ -67,6 +67,10 @@ public:
 	virtual void	_BCL		OnFrame					(void);
 	virtual void				OnRender				(void);
 
+	//возвращает время в милисекундах относительно начала игры
+	virtual u64					GetStartGameTime		() { return 0; }
+	virtual u64					GetGameTime				() { return 0; }
+
 	// Main interface
 	CObject*					CurrentEntity			(void) const							{ return pCurrentEntity;				}
 	CObject*					CurrentViewEntity		(void) const							{ return pCurrentViewEntity;			}

@@ -1,0 +1,13 @@
+game_types = {
+	-- s.t.a.l.k.e.r internal types
+	eGameIDNoGame			= 0,
+	eGameIDSingle			= 1,
+		
+	-- backward compatibility		
+	GAME_ANY 				= 0,
+	GAME_SINGLE 			= 1,
+		
+	-- script game types
+	GAME_DUMMY				= 255 -- max(unsigned8)
+}
+
