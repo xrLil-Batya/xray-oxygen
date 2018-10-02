@@ -393,9 +393,8 @@ void debug_on_thread_spawn()
 	_set_purecall_handler(&pure_call_handler);
 }
 
-void xrDebug::_initialize(const bool &dedicated)
+void xrDebug::_initialize()
 {
-	//static bool is_dedicated = dedicated;
 	*g_bug_report_file = 0;
 	debug_on_thread_spawn();
 	previous_filter = ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions

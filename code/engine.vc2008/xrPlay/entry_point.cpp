@@ -65,7 +65,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	try
 	{
 		// Init X-ray core
-		Debug._initialize(false);
+		Debug._initialize();
 		Core._initialize("X-Ray Oxygen", nullptr, TRUE, "fsgame.ltx");
 	}
 	catch (...)
