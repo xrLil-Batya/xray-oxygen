@@ -16,25 +16,15 @@
 #include "xrserver.h"
 #include "ai_space.h"
 #include "level_graph.h"
-
-#ifdef DEBUG
-#	include "level.h"
-#endif // DEBUG
+#include "level.h"
 
 using namespace ALife;
 
-struct remove_non_savable_predicate {
-	xrServer			*m_server;
-
-	IC		 remove_non_savable_predicate(xrServer *server)
-	{
-		VERIFY			(server);
-		m_server		= server;
-	}
-
+struct remove_non_savable_predicate 
+{
 	IC	bool operator()	(const ALife::_OBJECT_ID &id) const
 	{
-		CSE_Abstract	*object = m_server->game->get_entity_from_eid(id);
+		CSE_Abstract	*object = Level().Server->ID_to_entity(id);
 		VERIFY			(object);
 		CSE_ALifeObject	*alife_object = smart_cast<CSE_ALifeObject*>(object);
 		VERIFY			(alife_object);
@@ -78,15 +68,10 @@ void CALifeSwitchManager::remove_online(CSE_ALifeDynamicObject *object, bool upd
 	
 	m_saved_chidren				= object->children;
 	CSE_ALifeTraderAbstract		*inventory_owner = smart_cast<CSE_ALifeTraderAbstract*>(object);
-	if (inventory_owner) {
-		m_saved_chidren.erase	(
-			std::remove_if(
-				m_saved_chidren.begin(),
-				m_saved_chidren.end(),
-				remove_non_savable_predicate(&server())
-			),
-			m_saved_chidren.end()
-		);
+	if (inventory_owner) 
+	{
+		m_saved_chidren.erase(std::remove_if(m_saved_chidren.begin(), m_saved_chidren.end(), 
+			remove_non_savable_predicate()), m_saved_chidren.end());
 	}
 
 	server().Perform_destroy	(object);

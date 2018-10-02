@@ -14,8 +14,8 @@ class	game_sv_GameState	: public game_GameState
 
 public:
 	BOOL							sv_force_sync;
+
 protected:
-	xrServer*						m_server;
 	CALifeSimulator					*m_alife_simulator;
 
 	//Events
@@ -26,9 +26,6 @@ public:
 public:
 									game_sv_GameState		();
 	virtual							~game_sv_GameState		();
-	// Main accessors
-	virtual		void*				get_client				(u16 id);
-				CSE_Abstract*		get_entity_from_eid		(u16 id);
 	// Signals
 	virtual		void				signal_Syncronize		();
 
@@ -64,7 +61,6 @@ public:
 	virtual		void				on_death				(CSE_Abstract *e_dest, CSE_Abstract *e_src);
 	
 	// Single State
-	IC			xrServer			&server() const 		{ return (*m_server); }
 	IC			CALifeSimulator		&alife() const			{ return (*m_alife_simulator); }
 	void		restart_simulator							(LPCSTR saved_game_name);
 	
@@ -77,5 +73,4 @@ public:
 	virtual		ALife::_TIME_ID		GetEnvironmentGameTime();
 	virtual		float				GetEnvironmentGameTimeFactor();
 	virtual		void				SetEnvironmentGameTimeFactor(const float fTimeFactor);
-
 };

@@ -24,19 +24,19 @@
 
 using namespace InventoryUtilities;
 
-CSE_ALifeTraderAbstract* ch_info_get_from_id (u16 id)
+CSE_ALifeTraderAbstract* ch_info_get_from_id(u16 id)
 {
-	if( ai().get_alife() && ai().get_game_graph() )
+	if (ai().get_alife() && ai().get_game_graph())
 	{
 		return	smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(id));
-	}else{
-		return	smart_cast<CSE_ALifeTraderAbstract*>(Level().Server->game->get_entity_from_eid(id));
+	}
+	else 
+	{
+		return	smart_cast<CSE_ALifeTraderAbstract*>(Level().Server->ID_to_entity(id));
 	}
 }
 
-CUICharacterInfo::CUICharacterInfo()
-	: m_ownerID(u16(-1)),
-	pUIBio(NULL)
+CUICharacterInfo::CUICharacterInfo() : m_ownerID(u16(-1)), pUIBio(NULL)
 {
     std::memset(m_icons,0,sizeof(m_icons));
 	m_bForceUpdate		= false;

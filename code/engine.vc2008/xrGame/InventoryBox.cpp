@@ -109,6 +109,7 @@ void CInventoryBox::net_Relcase(CObject* O)
 {
 	inherited::net_Relcase(O);
 }
+
 #include "inventory_item.h"
 void CInventoryBox::AddAvailableItems(TIItemContainer& items_container) const
 {
@@ -128,24 +129,25 @@ void CInventoryBox::set_can_take( bool status )
 	SE_update_status();
 }
 
-void CInventoryBox::set_closed( bool status, LPCSTR reason )
+void CInventoryBox::set_closed(bool status, LPCSTR reason)
 {
 	m_closed = status;
 
-	if ( reason && xr_strlen( reason ) )
+	if (reason && xr_strlen(reason))
 	{
-		set_tip_text( reason );
+		set_tip_text(reason);
 	}
 	else
 	{
-		set_tip_text( "inventory_box_use" );
+		set_tip_text("inventory_box_use");
 	}
+
 	SE_update_status();
 }
 
 void CInventoryBox::SE_update_status()
 {
-	CSE_Abstract* receiver = Level().Server->game->get_entity_from_eid(ID());
+	CSE_Abstract* receiver = Level().Server->ID_to_entity(ID());
 	{
 		CSE_ALifeInventoryBox* box = smart_cast<CSE_ALifeInventoryBox*>(receiver);
 		if (box)
