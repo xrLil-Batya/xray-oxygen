@@ -99,7 +99,6 @@ void CCustomOutfit::Load(LPCSTR section)
 
 	m_BonesProtectionSect	= READ_IF_EXISTS(pSettings, r_string, section, "bones_koeff_protection",  "" );
 	bIsHelmetAvaliable		= !!READ_IF_EXISTS(pSettings, r_bool, section, "helmet_avaliable", true);
-	m_reload_on_sprint		= !!READ_IF_EXISTS(pSettings, r_bool, section, "reload_on_sprint", false);
 }
 
 void CCustomOutfit::ReloadBonesProtection()
@@ -316,21 +315,16 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 				CTorch* pTorch = smart_cast<CTorch*>(pActor->inventory().ItemFromSlot(TORCH_SLOT));
 				if (pTorch && pTorch->GetNightVisionStatus())
 					pTorch->SwitchNightVision(true, false);
+
 				PIItem pHelmet = pActor->inventory().ItemFromSlot(HELMET_SLOT);
 				if (pHelmet)
-					// Внимание! Корректно настроить алгоритм блокировки слота шлема не удалось;
-					// при блокировке слота шлем переносится в рюкзак, однако визуально это будет видно только после перезапуска инвентаря;
-					// принудительные апдейты и другие методы не помогли; явление, по сути, безобидное, но глаз режет;
-					// для избежания нежелательных косяков рекомендуется после установки данного типа апгрейдов закрывать инвентарь скриптом;
+				{
 					pActor->inventory().Ruck(pHelmet, false);
+				}
 			}
 		}
 	}
-	result |= result2;	
-	
-	result2 = process_if_exists_set( section, "reload_on_sprint", &CInifile::r_bool, value, test);
-	if (result2 && !test)
-		m_reload_on_sprint = value;
+	result |= result2;
 
 	result2 = process_if_exists_set( section, "bones_koeff_protection", &CInifile::r_string, str, test );
 	if ( result2 && !test )

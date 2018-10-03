@@ -176,8 +176,7 @@ void CWeaponMagazined::FireEnd()
 
     if (g_extraFeatures.is(GAME_EXTRA_WEAPON_AUTORELOAD))
     {
-        CActor *actor = smart_cast<CActor*>(H_Parent());
-		if (m_pInventory && !iAmmoElapsed && actor && GetState() != eReload)
+		if (m_pInventory && !iAmmoElapsed && smart_cast<CActor*>(H_Parent()) && GetState() != eReload)
 		{
 			Reload();
 		}
@@ -186,10 +185,8 @@ void CWeaponMagazined::FireEnd()
 
 void CWeaponMagazined::Reload() 
 {
-	
 	inherited::Reload();
 	TryReload();
-	
 }
 
 bool CWeaponMagazined::TryReload() 
@@ -684,13 +681,13 @@ void CWeaponMagazined::switch2_Empty()
 {
 	OnZoomOut();
 	
-	if (!TryReload() || g_extraFeatures.is(GAME_EXTRA_WEAPON_AUTORELOAD))
+	if (TryReload() && g_extraFeatures.is(GAME_EXTRA_WEAPON_AUTORELOAD))
 	{
-		OnEmptyClick();
+		inherited::FireEnd();
 	}
 	else
 	{
-		inherited::FireEnd();
+		OnEmptyClick();
 	}
 }
 
@@ -767,17 +764,10 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 	{
 	    case kWPN_RELOAD:
 	    {
-			if (CActor* pActor = smart_cast<CActor*>(H_Parent()))
-			{
-				CCustomOutfit* pOutfit = pActor->GetOutfit();
-
-				// Если у актора нет необходимой команды или ему запрещает костюм - не перезаряжаемся
-				if (pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint)))
-					break;
-			}
-
 			if (iAmmoElapsed < iMagazineSize || IsMisfire())
+			{
 				Reload();
+			}
 
 			return true;
 	    }

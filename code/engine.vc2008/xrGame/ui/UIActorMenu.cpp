@@ -819,13 +819,6 @@ void CUIActorMenu::ResetMode()
     GameUI()->UIMainIngameWnd->ShowZoneMap(true);
 }
 
-void CUIActorMenu::UpdateActorMP()
-{
-	m_ActorCharacterInfo->ClearInfo();
-	m_ActorMoney->SetText("");
-	return;
-}
-
 bool CUIActorMenu::CanSetItemToList(PIItem item, CUIDragDropListEx* l, u16& ret_slot)
 {
 	u16 item_slot = item->BaseSlot();
