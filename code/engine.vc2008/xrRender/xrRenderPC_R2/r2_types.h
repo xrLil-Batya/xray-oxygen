@@ -62,6 +62,7 @@
 
 #define		r2_RT_gamma_lut		"$user$gamma_lut"		
 
+#define		r2_jitter_hq		"$user$jitter_hq"
 #define		JITTER(a) r2_jitter #a
 
 const		float				SMAP_near_plane		= .1f	;

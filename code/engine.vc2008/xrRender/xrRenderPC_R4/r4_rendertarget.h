@@ -28,11 +28,7 @@ public:
 	IBlender*					b_accum_point;
 	IBlender*					b_accum_spot;
 	IBlender*					b_accum_reflected;
-	IBlender*					b_bloom;
-	IBlender*					b_luminance;
 	IBlender*					b_combine;
-	IBlender*					b_postprocess_msaa;
-	IBlender*					b_bloom_msaa;
 	IBlender*					b_combine_msaa[8];
 	IBlender*					b_accum_mask_msaa[8];
 	IBlender*					b_accum_spot_msaa[8];
@@ -44,8 +40,6 @@ public:
 	IBlender*					b_accum_reflected_msaa[8];
 	IBlender*					b_ssao;
 	IBlender*					b_ssao_msaa[8];
-	IBlender*					b_ssss_mrmnwar;
-    IBlender*					b_ssss_ogse;
 
 #ifdef DEBUG
 	struct		dbg_line_t		{
@@ -103,13 +97,18 @@ public:
 	ref_rt						rt_SunShaftsPass0;
 
 	// Textures
-	ID3DTexture3D*			t_material_surf;
+	ID3DTexture3D*				t_material_surf;
 	ref_texture					t_material;
 
-	ID3DTexture2D*			t_noise_surf	[TEX_jitter_count];
-	ref_texture					t_noise				[TEX_jitter_count];
-	ID3DTexture2D*			t_noise_surf_mipped;
+	// Noise (jitter)
+	ID3DTexture2D*				t_noise_surf[TEX_jitter_count];
+	ref_texture					t_noise		[TEX_jitter_count];
+	// Mipped noise
+	ID3DTexture2D*				t_noise_surf_mipped;
 	ref_texture					t_noise_mipped;
+	// HQ noise
+	ID3DTexture2D*				t_noise_hq_surf;
+	ref_texture					t_noise_hq;
 
 private:
 	// For gamma correction in windowed mode
@@ -183,7 +182,6 @@ private:
 	ref_shader				s_bloom_dbg_1;
 	ref_shader				s_bloom_dbg_2;
 	ref_shader				s_bloom;
-   ref_shader				s_bloom_msaa;
 	float					f_bloom_factor;
 
 	// Luminance

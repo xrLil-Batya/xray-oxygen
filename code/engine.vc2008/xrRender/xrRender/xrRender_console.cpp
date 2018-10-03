@@ -702,6 +702,7 @@ public:
 #endif	//	DEBUG
 #endif	//	(RENDER == R_R3) || (RENDER == R_R4)
 
+#ifdef DEBUG
 class CCC_SaveGammaLUT : public IConsole_Command
 {
 public:
@@ -711,6 +712,7 @@ public:
 		RImplementation.Target->SaveGammaLUT();
 	}
 };
+#endif
 
 //-----------------------------------------------------------------------
 void xrRender_initconsole()
@@ -720,9 +722,8 @@ void xrRender_initconsole()
 	CMD4(CCC_Integer,	"rs_skeleton_update",	&ps_r_SkeletonUpdate,		2,		128		);
 #ifdef DEBUG
 	CMD1(CCC_DumpResources,	"dump_resources");
-#endif
-
 	CMD1(CCC_SaveGammaLUT, "r_dbg_save_gamma_lut");
+#endif
 
 	// Common
 	CMD1(CCC_Screenshot,"screenshot"			);

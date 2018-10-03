@@ -28,12 +28,12 @@ _out main( _input I )
 	float4	color;
 
 #ifndef USE_MSAA
-	color = s_vollight.Load(int3(I.tc0.xy*pos_decompression_params2.xy, 0));
+	color = s_vollight.Load(int3(I.tc0.xy*screen_res.xy, 0));
 #else // USE_MSAA
-	color = s_vollight.Load(int3(I.tc0.xy*pos_decompression_params2.xy, 0), 0);
+	color = s_vollight.Load(int3(I.tc0.xy*screen_res.xy, 0), 0);
 	[unroll] for(int iSample = 1; iSample < MSAA_SAMPLES; ++iSample)
 	{
-		color	+= s_vollight.Load(int3(I.tc0*pos_decompression_params2.xy, 0), iSample);
+		color	+= s_vollight.Load(int3(I.tc0*screen_res.xy, 0), iSample);
 	}
 	color /= MSAA_SAMPLES;
 #endif // USE_MSAA

@@ -5,15 +5,9 @@
 float4 main(p_screen I) : SV_Target
 {
 	float4 depth;
-#ifndef USE_MSAA	
-	depth.x = s_position.Sample(smp_nofilter, I.tc0.xy + float2(0, 1.0f) * screen_res.zw).z;
-	depth.y = s_position.Sample(smp_nofilter, I.tc0.xy + float2(1, 0.65f) * screen_res.zw).z;
-	depth.z = s_position.Sample(smp_nofilter, I.tc0.xy + float2(-1, 0.65f) * screen_res.zw).z;
-#else
 	depth.x = s_position.Load(int3((I.tc0.xy + float2(0, 1.0f) * screen_res.zw) * screen_res.xy, 0), 0).z;
 	depth.y = s_position.Load(int3((I.tc0.xy + float2(1, 0.65f) * screen_res.zw) * screen_res.xy, 0), 0).z;
 	depth.z = s_position.Load(int3((I.tc0.xy + float2(-1, 0.65f) * screen_res.zw) * screen_res.xy, 0), 0).z;
-#endif
 
 	float4 sceneDepth;
 	sceneDepth.x = normalize_depth(depth.x)*is_not_sky(depth.x);

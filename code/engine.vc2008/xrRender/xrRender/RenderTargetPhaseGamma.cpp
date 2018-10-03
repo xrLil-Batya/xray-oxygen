@@ -82,6 +82,7 @@ void CRenderTarget::PhaseGammaApply()
 	RenderScreenQuad(_w, _h, HW.pBaseRT, s_gamma->E[1]);
 }
 
+#ifdef DEBUG
 void CRenderTarget::SaveGammaLUT()
 {
 	ID3DBlob* saved = nullptr;
@@ -132,3 +133,4 @@ void CRenderTarget::SaveGammaLUT()
 	FS.w_close(fs);
 	_RELEASE(saved);
 }
+#endif

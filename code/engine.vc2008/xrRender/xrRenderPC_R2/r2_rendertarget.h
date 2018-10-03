@@ -23,12 +23,8 @@ public:
 	IBlender*					b_accum_point;
 	IBlender*					b_accum_spot;
 	IBlender*					b_accum_reflected;
-	IBlender*					b_bloom;
 	IBlender*					b_ssao;
-	IBlender*					b_luminance;
 	IBlender*					b_combine;
-	IBlender*					b_ssss_mrmnwar;
-    IBlender*					b_ssss_ogse;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -86,8 +82,13 @@ public:
 	IDirect3DVolumeTexture9*	t_material_surf;
 	ref_texture					t_material;
 
+	// Noise (jitter)
 	IDirect3DTexture9*			t_noise_surf	[TEX_jitter_count];
 	ref_texture					t_noise			[TEX_jitter_count];
+
+	// HQ noise
+	IDirect3DTexture9*			t_noise_hq_surf;
+	ref_texture					t_noise_hq;
 
 private:
 	// For gamma correction in windowed mode
@@ -242,8 +243,8 @@ public:
 	void						phase_smap_spot_tsh		(light* L);
 	void						phase_accumulator		();
 	void						phase_vol_accumulator	();
-	void						PhaseRainDrops			();
 	void						phase_puddles			();
+	void						PhaseRainDrops			();
 	void						PhaseAA					();
 	void						ProcessFXAA				();
 	void						ProcessSMAA				();

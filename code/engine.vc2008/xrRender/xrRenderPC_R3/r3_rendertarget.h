@@ -32,11 +32,7 @@ public:
 	IBlender*					b_accum_point;
 	IBlender*					b_accum_spot;
 	IBlender*					b_accum_reflected;
-	IBlender*					b_bloom;
-	IBlender*					b_luminance;
 	IBlender*					b_combine;
-	IBlender*					b_postprocess_msaa;
-	IBlender*					b_bloom_msaa;
 	IBlender*					b_combine_msaa[8];
 	IBlender*					b_accum_mask_msaa[8];
 	IBlender*					b_accum_spot_msaa[8];
@@ -48,8 +44,6 @@ public:
 	IBlender*					b_accum_reflected_msaa[8];
 	IBlender*					b_ssao;
 	IBlender*					b_ssao_msaa[8];
-	IBlender*					b_ssss_mrmnwar;
-	IBlender*					b_ssss_ogse;
 	
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -104,13 +98,18 @@ public:
 	ref_rt						rt_SunShaftsPass0;
 
 	// Textures
-	ID3DTexture3D*			t_material_surf;
+	ID3DTexture3D*				t_material_surf;
 	ref_texture					t_material;
 
-	ID3DTexture2D*			t_noise_surf	[TEX_jitter_count];
-	ref_texture					t_noise				[TEX_jitter_count];
-	ID3DTexture2D*			t_noise_surf_mipped;
+	// Noise (jitter)
+	ID3DTexture2D*				t_noise_surf[TEX_jitter_count];
+	ref_texture					t_noise		[TEX_jitter_count];
+	// Mipped noise
+	ID3DTexture2D*				t_noise_surf_mipped;
 	ref_texture					t_noise_mipped;
+	// HQ noise
+	ID3DTexture2D*				t_noise_hq_surf;
+	ref_texture					t_noise_hq;
 
 private:
 	// For gamma correction in windowed mode
@@ -181,17 +180,16 @@ private:
 	ID3DIndexBuffer*		g_accum_volumetric_ib;
 
 	// Bloom
-	ref_geom					g_bloom_build;
-	ref_geom					g_bloom_filter;
+	ref_geom				g_bloom_build;
+	ref_geom				g_bloom_filter;
 	ref_shader				s_bloom_dbg_1;
 	ref_shader				s_bloom_dbg_2;
 	ref_shader				s_bloom;
-   ref_shader				s_bloom_msaa;
-	float							f_bloom_factor;
+	float					f_bloom_factor;
 
 	// Luminance
-	ref_shader			s_luminance;
-	float						f_luminance_adapt;
+	ref_shader				s_luminance;
+	float					f_luminance_adapt;
 
 	// Combine
 	ref_geom				g_combine;
@@ -258,8 +256,6 @@ public:
 	BOOL						u_need_PP				();
 	bool						u_need_CM				();
 	
-	void						PhaseSSSS				();
-	void						PhaseRainDrops			();
 	void						phase_scene_prepare		();
 	void						phase_scene_begin		();
 	void						phase_scene_end			();
@@ -274,6 +270,8 @@ public:
 	void						phase_smap_spot_tsh		(light* L);
 	void						phase_accumulator		();
 	void						phase_vol_accumulator	();
+	void						PhaseSSSS				();
+	void						PhaseRainDrops			();
 	void						PhaseAA					();
 	void						ProcessFXAA				();
 	void						ProcessSMAA				();

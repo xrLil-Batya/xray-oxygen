@@ -229,8 +229,6 @@
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h" />
     <ClInclude Include="..\xrRender\dxGlowManager.h" />
     <ClInclude Include="..\xrRender\ScreenshotManager.h" />
-    <ClInclude Include="blender_ssss_mrmnwar.h" />
-    <ClInclude Include="blender_ssss_ogse.h" />
     <ClInclude Include="cl_intersect.h" />
     <ClInclude Include="r2_puddles.h" />
     <ClInclude Include="stdafx.h" />
@@ -260,7 +258,6 @@
     <ClInclude Include="..\xrRender\LightTrack.h" />
     <ClInclude Include="SMAP_Allocator.h" />
     <ClInclude Include="..\xrRender\WallmarksEngine.h" />
-    <ClInclude Include="blender_bloom_build.h" />
     <ClInclude Include="..\xrRender\Blender_BmmD.h" />
     <ClInclude Include="blender_combine.h" />
     <ClInclude Include="blender_deffer_aref.h" />
@@ -275,7 +272,6 @@
     <ClInclude Include="blender_light_point.h" />
     <ClInclude Include="blender_light_reflected.h" />
     <ClInclude Include="blender_light_spot.h" />
-    <ClInclude Include="blender_luminance.h" />
     <ClInclude Include="..\xrRender\Blender_Particle.h" />
     <ClInclude Include="blender_ssao.h" />
     <ClInclude Include="..\xrRender\uber_deffer.h" />
@@ -396,8 +392,6 @@
     <ClCompile Include="..\xrRender\RenderTargetPhaseRainDrops.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseSSSS.cpp" />
     <ClCompile Include="..\xrRender\ScreenshotManager.cpp" />
-    <ClCompile Include="blender_ssss_mrmnwar.cpp" />
-    <ClCompile Include="blender_ssss_ogse.cpp" />
     <ClCompile Include="r2_puddles.cpp" />
     <ClCompile Include="r2_rendertarget_phase_puddles.cpp" />
     <ClCompile Include="ScreenshotManagerDX9.cpp" />
@@ -443,7 +437,6 @@
     <ClCompile Include="light_vis.cpp" />
     <ClCompile Include="..\xrRender\LightTrack.cpp" />
     <ClCompile Include="..\xrRender\WallmarksEngine.cpp" />
-    <ClCompile Include="blender_bloom_build.cpp" />
     <ClCompile Include="..\xrRender\Blender_BmmD.cpp" />
     <ClCompile Include="blender_combine.cpp" />
     <ClCompile Include="blender_deffer_aref.cpp" />
@@ -458,7 +451,6 @@
     <ClCompile Include="blender_light_point.cpp" />
     <ClCompile Include="blender_light_reflected.cpp" />
     <ClCompile Include="blender_light_spot.cpp" />
-    <ClCompile Include="blender_luminance.cpp" />
     <ClCompile Include="..\xrRender\Blender_Particle.cpp" />
     <ClCompile Include="blender_ssao.cpp" />
     <ClCompile Include="..\xrRender\uber_deffer.cpp" />

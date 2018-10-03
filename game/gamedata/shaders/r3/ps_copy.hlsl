@@ -18,9 +18,9 @@ float4 main( float2 tc : TEXCOORD0, uint iSample : SV_SAMPLEINDEX ) : SV_Target
 	return		s_generic.Sample( smp_nofilter, tc );
 #else
 #ifndef MSAA_OPTIMIZATION
-	return		s_generic.Load( int3( tc * pos_decompression_params2.xy, 0 ), ISAMPLE );
+	return		s_generic.Load( int3( tc * screen_res.xy, 0 ), ISAMPLE );
 #else
-	return		s_generic.Load( int3( tc * pos_decompression_params2.xy, 0 ), iSample );
+	return		s_generic.Load( int3( tc * screen_res.xy, 0 ), iSample );
 #endif
 #endif
 }
