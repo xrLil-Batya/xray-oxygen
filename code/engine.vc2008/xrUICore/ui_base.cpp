@@ -362,6 +362,12 @@ void CFontManager::InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 	else
 		F->Initialize(sh_name, font_tex_name);
 
+	if (pSettings->section_exist("interval"))
+	{
+		F->SetInterval(pSettings->r_fvector2(section, "interval"));
+	}
+	else F->SetInterval(1.f, 1.f);
+
 #ifdef DEBUG
 	F->m_font_name = section;
 #endif

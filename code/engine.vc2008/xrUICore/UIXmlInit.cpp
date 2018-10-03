@@ -683,11 +683,11 @@ bool CUIXmlInit::InitFont(CXml &xml_doc, LPCSTR path, int index, u32 &color, CGa
 		}
 		else if (!xr_strcmp(font_name, GRAFFITI32_FONT_NAME))
 		{
-			pFnt = UI().Font().GetFont("ui_font_graffiti32_russian");
+			pFnt = UI().Font().GetFont("ui_font_graff_32");
 		}
 		else if (!xr_strcmp(font_name, GRAFFITI50_FONT_NAME))
 		{
-			pFnt = UI().Font().GetFont("ui_font_graffiti50_russian");
+			pFnt = UI().Font().GetFont("ui_font_graff_50");
 		}
 		else if (!xr_strcmp(font_name, ARIAL14_FONT_NAME))
 		{
@@ -715,7 +715,7 @@ bool CUIXmlInit::InitFont(CXml &xml_doc, LPCSTR path, int index, u32 &color, CGa
 		}
 		else if (!xr_strcmp(font_name, LETTERICA25_FONT_NAME))
 		{
-			pFnt = UI().Font().GetFont("ui_font_letterica25_russian");
+			pFnt = UI().Font().GetFont("ui_font_letter_25");
 		}
 		else if (!xr_strcmp(font_name, DI_FONT_NAME))
 		{

@@ -625,7 +625,7 @@ GenFontFuncToLua(ui_font_graffiti32_russian	)
 GenFontFuncToLua(ui_font_graffiti50_russian	)
 GenFontFuncToLua(ui_font_letterica16_russian)
 GenFontFuncToLua(ui_font_letterica18_russian)
-GenFontFuncToLua(ui_font_letterica25_russian)
+GenFontFuncToLua(ui_font_letter_25)
 
 #include "UIFrameWindow.h"
 #include "UIFrameLineWnd.h"
@@ -651,7 +651,7 @@ void CUIWindow::script_register(lua_State *L)
 			def("GetFontGraffiti50Russian",		&ui_font_graffiti50_russian	),
 			def("GetFontLetterica16Russian",	&ui_font_letterica16_russian),
 			def("GetFontLetterica18Russian",	&ui_font_letterica18_russian),
-			def("GetFontLetterica25",			&ui_font_letterica25_russian),
+			def("GetFontLetterica25",			&ui_font_letter_25),
 
 			class_<CUIWindow>("CUIWindow")
 				.def(constructor<>())
