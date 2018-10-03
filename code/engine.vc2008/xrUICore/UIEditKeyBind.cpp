@@ -62,7 +62,7 @@ void CUIEditKeyBind::InitKeyBind(Fvector2 pos, Fvector2 size)
 	CUIStatic::SetWndPos(pos);
 	CUIStatic::SetWndSize(size);
 	InitTexture("ui_listline2");
-	TextItemControl()->SetFont(UI().Font().pFontLetterica16Russian);
+	TextItemControl()->SetFont(UI().Font().GetFont("ui_font_letterica16_russian"));
 	SetStretchTexture(true);
 	SetEditMode(false);
 }

@@ -42,17 +42,17 @@ void CUIDebugFonts::FillUpList()
 	pos.set(0.0f, 0.0f);
 	sz.set(UI_BASE_WIDTH, UI_BASE_HEIGHT);
 	string256 str;
-	for (CGameFont** ppFont : UI().Font().m_all_fonts)
+	for (auto ppFont : UI().Font().FontVect)
 	{
-		if (!ppFont || !*ppFont)
+		if (!ppFont.first)
 			continue;
 
-		xr_sprintf(str, "%s:%s", (*ppFont)->m_font_name.c_str(), CStringTable().translate("Test_Font_String").c_str());
+		xr_sprintf(str, "%s:%s", (ppFont.first)->m_font_name.c_str(), CStringTable().translate("Test_Font_String").c_str());
 
 		CUITextWnd* pItem = xr_new<CUITextWnd>();
 		pItem->SetWndPos			(pos);
 		pItem->SetWndSize			(sz);
-		pItem->SetFont				(*ppFont);
+		pItem->SetFont				(ppFont.first);
 		pItem->SetText				(str);
 		pItem->SetTextComplexMode	(false);
 		pItem->SetVTextAlignment	(valCenter);

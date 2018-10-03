@@ -1238,7 +1238,7 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	CBoneInstance& BI = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(u16(m_head));
 	Fmatrix M;
 	smart_cast<IKinematics*>(Visual())->CalculateBones	();
-	M.mul						(XFORM(),BI.mTransform);
+	M.mul(XFORM(),BI.mTransform);
 	//------------------------------------------------
 	Fvector v0, v1;
 	v0.set(M.c); v1.set(M.c);
@@ -1250,7 +1250,7 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	Device.mFullTransform.transform(v1r,v1);
 	float size = v1r.distance_to(v0r);
 
-	CGameFont* pFont = UI().Font().pFontArial14;
+	CGameFont* pFont = UI().Font().GetFont("ui_font_arial_14");
 	if (!pFont) return;
 
 	float delta_up = 0.0f;

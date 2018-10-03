@@ -42,9 +42,6 @@
 #define LETTERICA18_FONT_NAME	"letterica18"
 #define LETTERICA25_FONT_NAME	"letterica25"
 
-#define ELECTRON18_FONT_NAME	"electron18"
-#define ROBOTO16_FONT_NAME		"roboto16"
-
 //////////////////////////////////////////////////////////////////////////
 
 const char * const		COLOR_DEFINITIONS = "color_defs.xml";
@@ -678,27 +675,27 @@ bool CUIXmlInit::InitFont(CXml &xml_doc, LPCSTR path, int index, u32 &color, CGa
 	{
 		if (!xr_strcmp(font_name, GRAFFITI19_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontGraffiti19Russian;
+			pFnt = UI().Font().GetFont("ui_font_graffiti19_russian");
 		}
 		else if (!xr_strcmp(font_name, GRAFFITI22_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontGraffiti22Russian;
+			pFnt = UI().Font().GetFont("ui_font_graffiti22_russian");
 		}
 		else if (!xr_strcmp(font_name, GRAFFITI32_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontGraffiti32Russian;
+			pFnt = UI().Font().GetFont("ui_font_graffiti32_russian");
 		}
 		else if (!xr_strcmp(font_name, GRAFFITI50_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontGraffiti50Russian;
+			pFnt = UI().Font().GetFont("ui_font_graffiti50_russian");
 		}
 		else if (!xr_strcmp(font_name, ARIAL14_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontArial14;
+			pFnt = UI().Font().GetFont("ui_font_arial_14");
 		}
 		else if (!xr_strcmp(font_name, ARIAL21_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontArial21;
+			pFnt = UI().Font().GetFont("ui_font_arial_21");
 		}
 		else if (!xr_strcmp(font_name, MEDIUM_FONT_NAME))
 		{
@@ -706,27 +703,19 @@ bool CUIXmlInit::InitFont(CXml &xml_doc, LPCSTR path, int index, u32 &color, CGa
 		}
 		else if (!xr_strcmp(font_name, SMALL_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontStat;
+			pFnt = UI().Font().GetFont("stat_font");
 		}
 		else if (!xr_strcmp(font_name, LETTERICA16_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontLetterica16Russian;
+			pFnt = UI().Font().GetFont("ui_font_letterica16_russian");
 		}
 		else if (!xr_strcmp(font_name, LETTERICA18_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontLetterica18Russian;
+			pFnt = UI().Font().GetFont("ui_font_letterica18_russian");
 		}
 		else if (!xr_strcmp(font_name, LETTERICA25_FONT_NAME))
 		{
-			pFnt = UI().Font().pFontLetterica25;
-		}
-		else if (!xr_strcmp(font_name, ELECTRON18_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontElectron18;
-		}
-		else if (!xr_strcmp(font_name, ROBOTO16_FONT_NAME))
-		{
-			pFnt = UI().Font().pFontRoboto16;
+			pFnt = UI().Font().GetFont("ui_font_letterica25_russian");
 		}
 		else if (!xr_strcmp(font_name, DI_FONT_NAME))
 		{
@@ -734,8 +723,7 @@ bool CUIXmlInit::InitFont(CXml &xml_doc, LPCSTR path, int index, u32 &color, CGa
 		}
 		else
 		{
-			R_ASSERT3(0, "unknown font", font_name);
-			pFnt = NULL;
+			pFnt = UI().Font().GetFont(font_name);
 		}
 	}
 	return true;

@@ -315,24 +315,8 @@ shared_str	ui_core::get_xml_name(LPCSTR fn)
 CFontManager::CFontManager()
 {
 	Device.seqDeviceReset.Add(this, REG_PRIORITY_HIGH);
-
-	m_all_fonts.push_back(&pFontMedium);// used cpp
-	m_all_fonts.push_back(&pFontDI);// used cpp
-	m_all_fonts.push_back(&pFontArial14);// used xml
-	m_all_fonts.push_back(&pFontArial21);
-	m_all_fonts.push_back(&pFontGraffiti19Russian);
-	m_all_fonts.push_back(&pFontGraffiti22Russian);
-	m_all_fonts.push_back(&pFontLetterica16Russian);
-	m_all_fonts.push_back(&pFontLetterica18Russian);
-	m_all_fonts.push_back(&pFontGraffiti32Russian);
-	m_all_fonts.push_back(&pFontGraffiti50Russian);
-	m_all_fonts.push_back(&pFontLetterica25);
-	m_all_fonts.push_back(&pFontElectron18);
-	m_all_fonts.push_back(&pFontRoboto16);
-	m_all_fonts.push_back(&pFontStat);
-
-	for (CGameFont** it : m_all_fonts)
-		*it = 0;
+	pFontMedium = nullptr;
+	pFontDI = nullptr;
 
 	InitializeFonts();
 }
@@ -341,19 +325,6 @@ void CFontManager::InitializeFonts()
 {
 	InitializeFont(pFontMedium, "hud_font_medium");
 	InitializeFont(pFontDI, "hud_font_di", CGameFont::fsGradient | CGameFont::fsDeviceIndependent);
-	InitializeFont(pFontArial14, "ui_font_arial_14");
-	InitializeFont(pFontArial21, "ui_font_arial_21");
-	InitializeFont(pFontGraffiti19Russian, "ui_font_graffiti19_russian");
-	InitializeFont(pFontGraffiti22Russian, "ui_font_graffiti22_russian");
-	InitializeFont(pFontLetterica16Russian, "ui_font_letterica16_russian");
-	InitializeFont(pFontLetterica18Russian, "ui_font_letterica18_russian");
-	InitializeFont(pFontGraffiti32Russian, "ui_font_graff_32");
-	InitializeFont(pFontGraffiti50Russian, "ui_font_graff_50");
-	InitializeFont(pFontLetterica25, "ui_font_letter_25");
-	InitializeFont(pFontElectron18, "ui_font_electron_18");
-	InitializeFont(pFontRoboto16, "ui_font_roboto_16");
-	InitializeFont(pFontStat, "stat_font", CGameFont::fsDeviceIndependent);
-	pFontStat->SetInterval(0.75f, 1.0f);
 }
 
 LPCSTR CFontManager::GetFontTexName(LPCSTR section)
@@ -399,19 +370,36 @@ void CFontManager::InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 CFontManager::~CFontManager()
 {
 	Device.seqDeviceReset.Remove(this);
-	FONTS_VEC_IT it = m_all_fonts.begin();
-	FONTS_VEC_IT it_e = m_all_fonts.end();
-	for (; it != it_e; ++it)
-		xr_delete(**it);
+
+	for (auto FontPair : FontVect)
+		xr_delete(FontPair.first);
+	FontVect.clear();
 }
 
 void CFontManager::Render()
 {
-	FONTS_VEC_IT it = m_all_fonts.begin();
-	FONTS_VEC_IT it_e = m_all_fonts.end();
-	for (; it != it_e; ++it)
-		(**it)->OnRender();
+	for (auto FontPair: FontVect)
+		FontPair.first->OnRender();
 }
+
+CGameFont* CFontManager::GetFont(const char* name)
+{
+	for (auto FontPair : FontVect)
+	{
+		shared_str SharedFont = std::move(FontPair.second);
+		if (SharedFont.equal(name))
+		{
+			return FontPair.first;
+		}
+	}
+
+	CGameFont* NewFont = nullptr;
+	InitializeFont(NewFont, name);
+	FontVect.emplace(NewFont, name);
+
+	return NewFont;
+}
+
 void CFontManager::OnDeviceReset()
 {
 	InitializeFonts();
