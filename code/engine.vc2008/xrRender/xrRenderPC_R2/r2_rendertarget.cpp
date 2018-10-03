@@ -475,6 +475,7 @@ CRenderTarget::CRenderTarget()
 		}
 
 		s_rain_drops.create			("effects\\screen_rain_droplets");
+		s_vignette.create			("effects\\vignette");
 	}
 
 	// Build textures

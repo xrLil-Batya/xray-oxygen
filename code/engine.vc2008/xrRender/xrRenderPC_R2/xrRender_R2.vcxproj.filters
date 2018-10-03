@@ -1141,6 +1141,9 @@
     <ClCompile Include="ScreenshotManagerDX9.cpp">
       <Filter>Core\ScreenshotManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\xrRender\RenderTargetPhaseVignette.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />

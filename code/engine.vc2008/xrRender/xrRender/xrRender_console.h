@@ -172,6 +172,7 @@ enum
 
 	R_FLAG_RAIN_DROPS			= (1<<27),
 	R_FLAG_SS_GAMMA_CORRECTION	= (1<<28),
+	R_FLAG_VIGNETTE				= (1<<31),
 };
 
 extern ECORE_API Flags32 ps_r_ssao_flags;

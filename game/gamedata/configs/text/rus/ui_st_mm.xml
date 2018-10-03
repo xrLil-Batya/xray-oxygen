@@ -391,7 +391,10 @@
 		<text>SMAA</text>
 	</string>
 	<string id="ui_mm_rain_drops">
-		<text>Капли дождя на линзе</text>
+		<text>Капли дождя на экране</text>
+	</string>
+	<string id="ui_mm_vignette">
+		<text>Виньетка</text>
 	</string>
 	<string id="ui_mm_texture_quality">
 		<text>Качество текстур</text>

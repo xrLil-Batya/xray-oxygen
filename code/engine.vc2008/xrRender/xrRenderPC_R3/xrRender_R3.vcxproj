@@ -402,6 +402,7 @@
     <ClCompile Include="..\xrRender\RenderTargetPhaseGamma.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseSSSS.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseRainDrops.cpp" />
+    <ClCompile Include="..\xrRender\RenderTargetPhaseVignette.cpp" />
     <ClCompile Include="..\xrRender\ScreenshotManager.cpp" />
     <ClCompile Include="r3_rendertarget_phase_puddles.cpp" />
     <ClCompile Include="r3_puddles.cpp" />

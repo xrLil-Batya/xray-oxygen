@@ -125,6 +125,9 @@ private:
 	// RAIN DROPS
 	ref_shader					s_rain_drops;
 
+	// Vignette
+	ref_shader					s_vignette;
+
 	// SSAO
 	ref_rt						rt_ssao_temp;
 	ref_rt						rt_half_depth;
@@ -273,6 +276,7 @@ public:
 	void						phase_vol_accumulator	();
 	void						phase_puddles			();
 	void						PhaseAA					();
+	void						PhaseVignette			();
 	void						ProcessFXAA				();
 	void						ProcessSMAA				();
 	void						PhaseGammaGenerateLUT	();

@@ -769,6 +769,9 @@ void xrRender_initconsole()
 	// Rain droplets on visor
 	CMD3(CCC_Mask,		"r_rain_droplets",		&ps_r_flags,				R_FLAG_RAIN_DROPS);
 
+	// Vignette
+	CMD3(CCC_Mask,		"r_vignette",			&ps_r_flags,				R_FLAG_VIGNETTE);
+
 	// Shadows
 	CMD3(CCC_Token,		"r_shadow_map_size",	&ps_r_smapsize,				q_smapsize_token);
 	CMD3(CCC_Mask,      "r_actor_shadow",		&ps_r_flags,				R_FLAG_ACTOR_SHADOW);

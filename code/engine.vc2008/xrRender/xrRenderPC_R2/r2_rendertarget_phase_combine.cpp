@@ -196,7 +196,7 @@ void CRenderTarget::phase_combine()
 	
 	// PP enabled ?
 	// Render to RT texture to be able to copy RT even in windowed mode.
-	bool bComplexPP = u_need_PP() || (ps_r_pp_aa_mode > 0) || ps_r_flags.test(R_FLAG_RAIN_DROPS);
+	bool bComplexPP = u_need_PP() || (ps_r_pp_aa_mode > 0) || ps_r_flags.test(R_FLAG_RAIN_DROPS) || ps_r_flags.test(R_FLAG_VIGNETTE);
 	if (bMenuPP)
 		bComplexPP = false;
 	else
@@ -226,6 +226,7 @@ void CRenderTarget::phase_combine()
 	// - PPE
 	// - Anti-aliasing (FXAA, SMAA)
 	// - On-screen rain drops
+	// - Vignette effect
 	if (bComplexPP)
 		u_setrt(rt_Color, nullptr, nullptr, HW.pBaseZB); // LDR RT
 	else
@@ -288,6 +289,13 @@ void CRenderTarget::phase_combine()
 		{
 			PIX_EVENT(phase_rain_droplets);
 			PhaseRainDrops();
+		}
+
+		// Vignette effect
+		if (ps_r_flags.test(R_FLAG_VIGNETTE))
+		{
+			PIX_EVENT(phase_vignette);
+			PhaseVignette();
 		}
 
 		PIX_EVENT(phase_pp);

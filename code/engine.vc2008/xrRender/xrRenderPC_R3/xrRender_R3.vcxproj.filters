@@ -1303,6 +1303,9 @@
     <ClCompile Include="ScreenshotManagerDX10.cpp">
       <Filter>Core\ScreenshotManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\xrRender\RenderTargetPhaseVignette.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\..\xrCore.natvis" />

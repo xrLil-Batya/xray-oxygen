@@ -632,15 +632,18 @@ CRenderTarget::CRenderTarget()
 	// Post combine_2 effects:
 	// - Antialiasing
 	// - Rain droplets
+	// - Vignette
 	if (RImplementation.o.dx10_msaa)
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing_msaa");
 		s_rain_drops.create		("effects\\screen_rain_droplets_msaa");
+		s_vignette.create		("effects\\vignette_msaa");
 	}
 	else
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing");
 		s_rain_drops.create		("effects\\screen_rain_droplets");
+		s_vignette.create		("effects\\vignette");
 	}
 
 	// Build textures

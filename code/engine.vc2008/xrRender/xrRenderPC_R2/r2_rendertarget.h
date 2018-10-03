@@ -112,6 +112,9 @@ private:
 	ref_rt						rt_prev_frame0;
 	ref_geom					g_smaa;
 
+	// Vignette
+	ref_shader					s_vignette;
+
 
 	// Water
 	ref_shader					s_water;
@@ -245,6 +248,7 @@ public:
 	void						phase_vol_accumulator	();
 	void						phase_puddles			();
 	void						PhaseRainDrops			();
+	void						PhaseVignette			();
 	void						PhaseAA					();
 	void						ProcessFXAA				();
 	void						ProcessSMAA				();

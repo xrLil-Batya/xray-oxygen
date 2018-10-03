@@ -273,7 +273,7 @@ void CRenderTarget::phase_combine()
 	// - PPE
 	// - Anti-aliasing (FXAA, SMAA)
 	// - On-screen rain drops
-
+	// - Vignette effect
 	if (bComplexPP)
 	{
 		if (RImplementation.o.dx10_msaa)
@@ -342,6 +342,13 @@ void CRenderTarget::phase_combine()
 		{
 			PIX_EVENT(phase_rain_droplets);
 			PhaseRainDrops();
+		}
+
+		// Vignette effect
+		if (ps_r_flags.test(R_FLAG_VIGNETTE))
+		{
+			PIX_EVENT(phase_vignette);
+			PhaseVignette();
 		}
 
 		PIX_EVENT(phase_pp);
