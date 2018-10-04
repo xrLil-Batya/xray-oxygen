@@ -794,6 +794,14 @@ u32 get_vertex_count(CLevelGraph *graph)
 	return graph->header().vertex_count(); 
 }
 
+void patrol_path_add(LPCSTR patrol_path, CPatrolPath* path) {
+	ai().patrol_paths_raw().add_path(shared_str(patrol_path), path);
+}
+
+void patrol_path_remove(LPCSTR patrol_path) {
+	ai().patrol_paths_raw().remove_path(shared_str(patrol_path));
+}
+
 #include "../../SDK/include/luabind/operator.hpp"
 #include "../../SDK/include/luabind/out_value_policy.hpp"
 
@@ -814,6 +822,8 @@ void CLevel::script_register(lua_State *L)
 			.property("level_id", &get_level_id)
 			.property("vertices_count", &get_vertex_count),
 
+		def("patrol_path_add", &patrol_path_add),
+		def("patrol_path_remove", &patrol_path_remove),
 		def("u_event_gen", &u_event_gen), //Send events via packet
 		def("u_event_send", &u_event_send),
 	    def("send", &g_send),
