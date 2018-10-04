@@ -13,7 +13,6 @@ UI_API CUICursor& GetUICursor()
 
 UI_API ui_core &UI()
 { 
-	VERIFY(GlobalUI);
 	return *GlobalUI; 
 }
 

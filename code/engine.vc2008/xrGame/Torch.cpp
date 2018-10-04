@@ -365,7 +365,12 @@ void CTorch::UpdateCL()
 			light_omni->set_position(offset);
 
 			if (actor->cam_FirstEye())
+			{
 				light_omni->set_shadow(false);
+
+				// Not remove! Please!
+				light_render->set_volumetric(false);
+			}
 
 			glow_render->set_position(M.c);
 
