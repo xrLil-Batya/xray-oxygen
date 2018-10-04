@@ -58,7 +58,7 @@ namespace detail
 				UI().Font().GetFont("stat_font")->SetColor(s_params.color2);
 			}
 			
-			UI().Font().pFontStat->OutNext(s);
+			UI().Font().GetFont("stat_font")->OutNext(s);
 			s_params.cur_row++;
 		}
 	};

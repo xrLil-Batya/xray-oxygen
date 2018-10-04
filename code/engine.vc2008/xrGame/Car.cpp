@@ -487,10 +487,10 @@ void CCar::OnHUDDraw(CCustomHUD* /**hud*/)
 #ifdef DEBUG
 	Fvector velocity;
 	m_pPhysicsShell->get_LinearVel(velocity);
-	UI().Font().pFontStat->SetColor(0xffffffff);
-	UI().Font().pFontStat->OutSet(120, 530);
-	UI().Font().pFontStat->OutNext("Position:      [%3.2f, %3.2f, %3.2f]", VPUSH(Position()));
-	UI().Font().pFontStat->OutNext("Velocity:      [%3.2f]", velocity.magnitude());
+	UI().Font().GetFont("stat_font")->SetColor(0xffffffff);
+	UI().Font().GetFont("stat_font")->OutSet(120, 530);
+	UI().Font().GetFont("stat_font")->OutNext("Position:      [%3.2f, %3.2f, %3.2f]", VPUSH(Position()));
+	UI().Font().GetFont("stat_font")->OutNext("Velocity:      [%3.2f]", velocity.magnitude());
 #endif
 }
 

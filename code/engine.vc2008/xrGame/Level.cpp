@@ -560,13 +560,13 @@ void CLevel::OnRender()
 		ObjectSpace.dbgRender();
 
 		//---------------------------------------------------------------------
-		UI().Font().pFontStat->OutSet(170, 630);
-		UI().Font().pFontStat->SetHeight(16.0f);
-		UI().Font().pFontStat->SetColor(0xffff0000);
+		UI().Font().GetFont("stat_font")->OutSet(170, 630);
+		UI().Font().GetFont("stat_font")->SetHeight(16.0f);
+		UI().Font().GetFont("stat_font")->SetColor(0xffff0000);
 
-		UI().Font().pFontStat->OutNext("Server Objects:      [%d]", Objects.o_count());
+		UI().Font().GetFont("stat_font")->OutNext("Server Objects:      [%d]", Objects.o_count());
 
-		UI().Font().pFontStat->SetHeight(8.0f);
+		UI().Font().GetFont("stat_font")->SetHeight(8.0f);
 
 		//---------------------------------------------------------------------
 		DBG().draw_object_info();
