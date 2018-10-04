@@ -14,7 +14,6 @@
 #include "xrServer.h"
 #include "client_spawn_manager.h"
 #include "../xrEngine/igame_persistent.h"
-
 #include "UIGame.h"
 #include "../xrUICore/UIDialogWnd.h"
 #include "../xrEngine/date_time.h"
@@ -41,7 +40,7 @@
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIMap.h"
 #include "ui/UIMotionIcon.h"
-
+#include "patrol_path.h"
 
 using namespace luabind;
  bool single_game()

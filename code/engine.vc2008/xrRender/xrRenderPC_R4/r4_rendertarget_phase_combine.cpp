@@ -64,8 +64,6 @@ void	CRenderTarget::phase_combine	()
 	g_pGamePersistent->Environment().RenderClouds();
 	// Enable Z (moved to shader)
 
-	
-
 	RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00);	// stencil should be >= 1
 
 	// calc m-blur matrices
