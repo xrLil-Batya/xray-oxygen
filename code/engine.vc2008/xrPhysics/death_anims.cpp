@@ -205,7 +205,7 @@ class	type_motion0 : public type_motion
 	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle)	const override
 	{
 		m = MotionID();
-		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
+		if (H.initiator() != g_pGameLevel->CurrentEntity())
 			return false;
 
 		VERIFY(pEntity.Visual());
@@ -261,7 +261,7 @@ class	type_motion2 : public type_motion
 	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
 		m = MotionID();
-		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
+		if (H.initiator() != g_pGameLevel->CurrentEntity())
 			return false;
 
 		CObject* O = g_pGameLevel->Objects.net_Find(H.weaponID);
@@ -287,7 +287,7 @@ class	type_motion3 : public type_motion
 	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
 		m = MotionID();
-		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
+		if (H.initiator() != g_pGameLevel->CurrentEntity())
 			return false;
 		VERIFY(pEntity.Visual());
 		IKinematics *K = pEntity.Visual()->dcast_PKinematics();
@@ -320,7 +320,7 @@ class	type_motion4 : public type_motion
 {
 	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
-		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
+		if (H.initiator() != g_pGameLevel->CurrentEntity())
 			return false;
 		m = MotionID();
 		VERIFY(pEntity.Visual());
@@ -344,7 +344,7 @@ class	type_motion5 : public type_motion
 {
 	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
-		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
+		if (H.initiator() != g_pGameLevel->CurrentEntity())
 			return false;
 
 		m = MotionID();
@@ -368,7 +368,7 @@ class	type_motion6 : public type_motion
 	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
 
-		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
+		if (H.initiator() != g_pGameLevel->CurrentEntity())
 			return false;
 
 		if (H.type() == 8) // HACK

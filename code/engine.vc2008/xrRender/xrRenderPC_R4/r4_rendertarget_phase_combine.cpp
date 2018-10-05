@@ -59,10 +59,8 @@ void	CRenderTarget::phase_combine	()
 
 	// Draw skybox & clouds without Z-test to avoid silhouettes.
 	// However, it's a bit slower process.
-	// Disable Z (moved to shader)
 	g_pGamePersistent->Environment().RenderSky();
 	g_pGamePersistent->Environment().RenderClouds();
-	// Enable Z (moved to shader)
 
 	RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00);	// stencil should be >= 1
 
