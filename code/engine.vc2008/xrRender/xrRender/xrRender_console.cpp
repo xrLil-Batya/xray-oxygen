@@ -105,6 +105,7 @@ xr_token qpp_aa_mode_token[] =
 {
 	{ "st_opt_off",		0		},
 	{ "st_opt_fxaa",	FXAA	},
+	{ "st_opt_dlaa",	DLAA	},
 #if 0
 	{ "st_opt_smaa",	SMAA	},
 #endif

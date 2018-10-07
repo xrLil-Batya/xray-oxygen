@@ -382,10 +382,13 @@
 		<text>Сглаживание</text>
 	</string>
 	<string id="ui_mm_aa_mode">
-		<text>Сглаживание</text>
+		<text>Доп.Сглаживание</text>
 	</string>
 	<string id="st_opt_fxaa">
 		<text>FXAA</text>
+	</string>
+	<string id="st_opt_dlaa">
+		<text>DLAA</text>
 	</string>
 	<string id="st_opt_smaa">
 		<text>SMAA</text>

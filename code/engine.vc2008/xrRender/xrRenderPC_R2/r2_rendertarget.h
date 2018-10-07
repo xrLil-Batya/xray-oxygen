@@ -252,6 +252,7 @@ public:
 	void						PhaseAA					();
 	void						ProcessFXAA				();
 	void						ProcessSMAA				();
+	void						ProcessDLAA				();
 	void						PhaseGammaGenerateLUT	();
 	void						PhaseGammaApply			();
 	void						SaveGammaLUT			();

@@ -384,6 +384,9 @@
 	<string id="ui_mm_aa_mode">
 		<text>Antialiasing</text>
 	</string>
+	<string id="st_opt_dlaa">
+		<text>DLAA</text>
+	</string>
 	<string id="st_opt_fxaa">
 		<text>FXAA</text>
 	</string>
