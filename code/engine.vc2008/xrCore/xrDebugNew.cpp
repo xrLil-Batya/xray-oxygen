@@ -18,6 +18,22 @@
 #include "cpuid.h"
 #include <DbgHelp.h>
 
+/////////////////////////////////////
+XRCORE_API DWORD gMainThreadId = 0xFFFFFFFF;
+XRCORE_API DWORD gSecondaryThreadId = 0xFFFFFFFF;
+/////////////////////////////////////
+
+
+XRCORE_API bool IsMainThread()
+{
+	return GetCurrentThreadId() == gMainThreadId;
+}
+
+XRCORE_API bool IsSecondaryThread()
+{
+	return GetCurrentThreadId() == gSecondaryThreadId;
+}
+
 #define DEBUG_INVOKE	__debugbreak()
 
 XRCORE_API	xrDebug		Debug;
@@ -131,9 +147,7 @@ void xrDebug::do_exit(const std::string &message, const std::string &message2)
 
 void xrDebug::backend(const char* expression, const char* description, const char* argument0, const char* argument1, const char* file, int line, const char* function, bool &ignore_always)
 {
-	static std::recursive_mutex CS;
-	std::lock_guard<decltype(CS)> lock(CS);
-
+	xrCriticalSectionGuard guard(Lock);
 	error_after_dialog = true;
 
 	string4096 assertion_info;
@@ -395,6 +409,11 @@ void debug_on_thread_spawn()
 
 void xrDebug::_initialize()
 {
+	if (gMainThreadId == 0xFFFFFFFF)
+	{
+		gMainThreadId = GetCurrentThreadId();
+		m_mainThreadId = gMainThreadId;
+	}
 	*g_bug_report_file = 0;
 	debug_on_thread_spawn();
 	previous_filter = ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions

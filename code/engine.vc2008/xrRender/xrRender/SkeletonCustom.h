@@ -9,7 +9,7 @@
 #include		"fhierrarhyvisual.h"
 #include		"../../Include/xrRender/Kinematics.h"
 
-extern	std::recursive_mutex	UCalc_Mutex;
+extern	xrCriticalSection	UCalc_Mutex;
 
 // refs
 class	 CKinematics;

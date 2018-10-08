@@ -61,7 +61,7 @@ void dxRainRender::Copy(IRainRender &_in)
 #include "../../xrEngine/iGame_persistent.h"
 void dxRainRender::Render(CEffect_Rain &owner)
 {
-	float	factor				= g_pGamePersistent->Environment().CurrentEnv->rain_density;
+	float	factor				= Environment().CurrentEnv->rain_density;
 #ifndef _EDITOR
     rain_timers->Update(true, false);
     //rain params update
@@ -81,7 +81,7 @@ void dxRainRender::Render(CEffect_Rain &owner)
   	u32 desired_items			= iFloor	(0.5f*(1.f+factor)*float(max_desired_items));
 	// visual
 	float		factor_visual	= factor/2.f+.5f;
-	Fvector3	f_rain_color	= g_pGamePersistent->Environment().CurrentEnv->rain_color;
+	Fvector3	f_rain_color	= Environment().CurrentEnv->rain_color;
 	u32			u_rain_color	= color_rgba_f(f_rain_color.x,f_rain_color.y,f_rain_color.z,factor_visual);
 
 	// born _new_ if needed

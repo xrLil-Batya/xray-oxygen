@@ -250,7 +250,7 @@ void			ISpatial_DB::_insert	(ISpatial_NODE* N, Fvector& n_C, float n_R)
 
 void ISpatial_DB::insert(ISpatial* S)
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 #ifdef DEBUG
 	stat_insert.Begin	();
 #endif
@@ -298,7 +298,7 @@ void ISpatial_DB::_remove(ISpatial_NODE* N, ISpatial_NODE* N_sub)
 
 void ISpatial_DB::remove(ISpatial* S)
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 #ifdef DEBUG
 	stat_remove.Begin	();
 #endif
@@ -317,7 +317,7 @@ void ISpatial_DB::update(u32 nodes/* =8 */)
 {
 #ifdef DEBUG
 	if (!m_root)	return;
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 	VERIFY			(verify());
 #endif
 }

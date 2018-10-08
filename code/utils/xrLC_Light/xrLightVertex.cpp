@@ -10,7 +10,7 @@
 typedef	xr_multimap<float,vecVertex>	mapVert;
 typedef	mapVert::iterator				mapVertIt;
 mapVert*								g_trans;
-std::recursive_mutex						g_trans_CS;
+xrCriticalSection						g_trans_CS;
 extern XRLC_LIGHT_API void		LightPoint		(CDB::COLLIDER* DB, CDB::MODEL* MDL, base_color_c &C, Fvector &P, Fvector &N, base_lighting& lights, u32 flags, Face* skip);
 
 void	g_trans_register_internal		(Vertex* V)
@@ -50,7 +50,7 @@ void	g_trans_register_internal		(Vertex* V)
 }
 void	g_trans_register	(Vertex* V)
 {
-    std::lock_guard<decltype(g_trans_CS)> lock(g_trans_CS);
+	xrCriticalSectionGuard guard(g_trans_CS);
 	g_trans_register_internal	(V);
 }
 
@@ -58,7 +58,7 @@ void	g_trans_register	(Vertex* V)
 const u32				VLT_END		= u32(-1);
 class CVertexLightTasker
 {
-	std::recursive_mutex	cs;
+	xrCriticalSection	cs;
 	volatile u32		index;	
 public:
 	CVertexLightTasker	() : index(0)
@@ -71,7 +71,7 @@ public:
 
 	u32		get			()
 	{
-        std::lock_guard<decltype(cs)> lock(cs);
+		xrCriticalSectionGuard guard(cs);
 		u32 _res		=	index;
 		if (_res>=lc_global_data()->g_vertices().size())	_res	=	VLT_END;
 		else							index	+=	1;

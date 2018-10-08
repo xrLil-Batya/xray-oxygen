@@ -35,7 +35,7 @@ namespace lc_net
 	{	
 		 u32 state = u32(-1);
 		 inStream->Read(&state, sizeof(id_state) );
-         std::lock_guard<decltype(lock)> locker(lock);
+		 xrCriticalSectionGuard guard(lock);
 		 if( state == id_state )
 			 return;
 

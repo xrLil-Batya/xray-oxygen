@@ -1,7 +1,7 @@
 #pragma once
 
 class ENGINE_API	CEvent;
-typedef CEvent*		EVENT;
+using EVENT = CEvent*;
 
 //---------------------------------------------------------------------
 class ENGINE_API	IEventReceiver
@@ -21,7 +21,7 @@ class ENGINE_API	CEventAPI
 private:
 	xr_vector<EVENT>		Events;
 	xr_vector<Deferred>		Events_Deferred;
-	std::recursive_mutex	CS;
+	xrCriticalSection		CS;
 public:
 	EVENT	Create			(const char* N);
 	void	Destroy			(EVENT& E);

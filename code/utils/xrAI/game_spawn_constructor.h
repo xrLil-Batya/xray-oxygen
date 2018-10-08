@@ -41,7 +41,7 @@ public:
 	};
 
 private:
-	std::recursive_mutex				m_critical_section;
+	xrCriticalSection				m_critical_section;
 	ALife::_SPAWN_ID				m_spawn_id;
 	CThreadManager					m_thread_manager;
 	CSpawnHeader					m_spawn_header;

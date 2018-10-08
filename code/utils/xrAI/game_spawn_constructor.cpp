@@ -232,7 +232,7 @@ void CGameSpawnConstructor::add_story_object(ALife::_STORY_ID id, CSE_ALifeDynam
 
 void CGameSpawnConstructor::add_object(CSE_Abstract *object)
 {
-	std::lock_guard<decltype(m_critical_section)> lock(m_critical_section);
+	xrCriticalSectionGuard guard(m_critical_section);
 	object->m_tSpawnID = spawn_id();
 	spawn_graph().add_vertex(xr_new<CServerEntityWrapper>(object), object->m_tSpawnID);
 }

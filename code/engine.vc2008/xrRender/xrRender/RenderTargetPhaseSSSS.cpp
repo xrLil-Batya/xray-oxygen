@@ -7,7 +7,7 @@ void CRenderTarget::PhaseSSSS()
 	float _h = float(Device.dwHeight);
 
 	// Constants
-	float intensity = g_pGamePersistent->Environment().CurrentEnv->m_fSunShaftsIntensity;
+	float intensity = Environment().CurrentEnv->m_fSunShaftsIntensity;
 
 	Fvector4 params = { 0.0f, 0.0f, 0.0f, 0.0f };
 	xr_unordered_map<LPCSTR, Fvector4*> consts;

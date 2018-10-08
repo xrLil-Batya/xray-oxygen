@@ -27,7 +27,7 @@ enum OxygenExtraFeatures : size_t
 };
 extern Flags32 g_extraFeatures;
 
-class CGamePersistent: public IGame_Persistent, public IEventReceiver
+class GAME_API CGamePersistent: public IGame_Persistent, public IEventReceiver
 {
 	// ambient particles
 	CParticlesObject*	ambient_particles; 

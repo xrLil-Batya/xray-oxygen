@@ -34,9 +34,9 @@ struct TH_LoadTHM
 
 	LPCSTR initial;
 	map_TD &s_texture_details;
-    static std::mutex s_texture_details_protector;
+    static xrCriticalSection s_texture_details_protector;
 	map_CS &s_detail_scalers;
-    static std::mutex s_detail_scalers_protector;
+    static xrCriticalSection s_detail_scalers_protector;
 
     FS_FileSet flist;
 
@@ -47,8 +47,8 @@ struct TH_LoadTHM
     }
 };
 
-std::mutex TH_LoadTHM::s_texture_details_protector;
-std::mutex TH_LoadTHM::s_detail_scalers_protector;
+xrCriticalSection TH_LoadTHM::s_texture_details_protector;
+xrCriticalSection TH_LoadTHM::s_detail_scalers_protector;
 
 void CTextureDescrMngr::LoadTHMThread(void* args)
 {
@@ -81,7 +81,7 @@ void CTextureDescrMngr::LoadTHM(FS_FileSet& flist, LPCSTR initial, map_TD &s_tex
                 texture_desc.m_assoc = xr_new<texture_assoc>();
                 texture_desc.m_assoc->detail_name = tp.detail_name;
 
-                TH_LoadTHM::s_detail_scalers_protector.lock();
+                TH_LoadTHM::s_detail_scalers_protector.Enter();
                 auto detailScalerIter = s_detail_scalers.find(fn);
                 if (detailScalerIter != s_detail_scalers.end())
                 {
@@ -99,7 +99,7 @@ void CTextureDescrMngr::LoadTHM(FS_FileSet& flist, LPCSTR initial, map_TD &s_tex
                     cl_dt_scaler* scaler = xr_new<cl_dt_scaler>(tp.detail_scale);
                     s_detail_scalers.insert(std::make_pair(fn, scaler));
                 }
-                TH_LoadTHM::s_detail_scalers_protector.unlock();
+                TH_LoadTHM::s_detail_scalers_protector.Leave();
 
                 texture_desc.m_assoc->usage = 0;
 				
@@ -127,7 +127,7 @@ void CTextureDescrMngr::LoadTHM(FS_FileSet& flist, LPCSTR initial, map_TD &s_tex
                 texture_desc.m_spec->m_use_steep_parallax = true;
 			}
 
-            TH_LoadTHM::s_texture_details_protector.lock();
+            TH_LoadTHM::s_texture_details_protector.Enter();
             auto textureDescIter = s_texture_details.find(fn);
             if (textureDescIter != s_texture_details.end())
             {
@@ -136,7 +136,7 @@ void CTextureDescrMngr::LoadTHM(FS_FileSet& flist, LPCSTR initial, map_TD &s_tex
                 s_texture_details.erase(textureDescIter);
             }
             s_texture_details.insert(std::make_pair(fn, texture_desc));
-            TH_LoadTHM::s_texture_details_protector.unlock();
+            TH_LoadTHM::s_texture_details_protector.Leave();
 		}
 	}
 }

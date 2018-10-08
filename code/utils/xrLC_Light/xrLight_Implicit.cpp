@@ -145,11 +145,11 @@ void ImplicitExecute::Execute(net_task_callback *net_callback)
 	}
 }
 
-std::recursive_mutex implicit_net_lock;
+xrCriticalSection implicit_net_lock;
 void XRLC_LIGHT_API ImplicitNetWait()
 {
-	implicit_net_lock.lock();
-	implicit_net_lock.unlock();
+	implicit_net_lock.Enter();
+	implicit_net_lock.Leave();
 }
 
 static xr_vector<u32> not_clear;
@@ -294,7 +294,8 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
 
 void ImplicitLightingTreadNetExec(void *p)
 {
-	std::lock_guard<std::recursive_mutex> lock(implicit_net_lock);
+	xrCriticalSectionGuard guard(implicit_net_lock);
+
 	ImplicitLightingExec(TRUE, 2);
 }
 

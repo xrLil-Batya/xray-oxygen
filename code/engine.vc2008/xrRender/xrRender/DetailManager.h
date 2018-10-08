@@ -186,7 +186,7 @@ public:
 	void							Render			();
 
 	/// MT stuff
-	std::recursive_mutex				MT;
+	xrCriticalSection				MTLock;
 	volatile u32					m_frame_calc;
 	volatile u32					m_frame_rendered;
 

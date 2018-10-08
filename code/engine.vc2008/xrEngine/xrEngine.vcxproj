@@ -293,6 +293,8 @@
     <ClInclude Include="DynamicSplash.h" />
     <ClInclude Include="IGame_Actor.h" />
     <ClInclude Include="ILoadingScreen.h" />
+    <ClInclude Include="spectre\ExternalCallbackTypes.h" />
+    <ClInclude Include="spectre\Spectre.h" />
     <ClInclude Include="string_table.h" />
     <ClInclude Include="xr_ioc_cmd_ex.h" />
     <ClInclude Include="xr_level_controller.h" />
@@ -419,6 +421,8 @@
     <ClCompile Include="CPU\xrSkin2W_thread.cpp" />
     <ClCompile Include="date_time.cpp" />
     <ClCompile Include="defines.cpp" />
+    <ClCompile Include="spectre\ExternalCallbackTypes.cpp" />
+    <ClCompile Include="spectre\Spectre.cpp" />
     <ClCompile Include="DynamicSplash.cpp" />
     <ClCompile Include="IGame_Actor.cpp" />
     <ClCompile Include="stdafx.cpp">

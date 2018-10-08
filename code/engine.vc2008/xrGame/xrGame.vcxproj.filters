@@ -4356,9 +4356,6 @@
     <ClInclude Include="..\xrServerEntities\script_export_macroses.h">
       <Filter>ScriptEngine</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_export_space.h">
-      <Filter>ScriptEngine</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_space_forward.h">
       <Filter>ScriptEngine</Filter>
     </ClInclude>
@@ -5560,6 +5557,9 @@
       <Filter>ScriptEngine\ScriptClasses\ScriptSound</Filter>
     </ClInclude>
     <ClInclude Include="CMagazine.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="xrGame.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

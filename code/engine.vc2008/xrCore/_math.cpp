@@ -260,12 +260,12 @@ unsigned long long SubtractTimes(const FILETIME one, const FILETIME two)
 	return a.QuadPart - b.QuadPart;
 }
 
-int processor_info::getCPULoad(double &val)
+bool processor_info::getCPULoad(double &val)
 {
 	FILETIME sysIdle, sysKernel, sysUser;
 	// sysKernel include IdleTime
 	if (GetSystemTimes(&sysIdle, &sysKernel, &sysUser) == 0) // GetSystemTimes func FAILED return value is zero;
-		return 0;
+		return false;
 
 	if (prevSysIdle.dwLowDateTime != 0 && prevSysIdle.dwHighDateTime != 0)
 	{
@@ -285,7 +285,7 @@ int processor_info::getCPULoad(double &val)
 	prevSysKernel = sysKernel;
 	prevSysUser = sysUser;
 
-	return 1;
+	return true;
 }
 
 #define NT_SUCCESS(Status) (((LONG)(Status)) >= 0)

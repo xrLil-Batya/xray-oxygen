@@ -48,7 +48,7 @@ void CPda::Load(LPCSTR section)
 {
 	inherited::Load(section);
 
-	m_fRadius = pSettings->r_float(section,"radius");
+	SetRadius(pSettings->r_float(section,"radius"));
 	m_functor_str = READ_IF_EXISTS(pSettings,r_string,section,"play_function",""); 
 }
 
@@ -68,7 +68,7 @@ void CPda::shedule_Update(u32 dt)
 			return;
 		}
 
-		feel_touch_update(Position(),m_fRadius);
+		feel_touch_update(Position(),GetRadius());
 		UpdateActiveContacts	();
 	}
 }

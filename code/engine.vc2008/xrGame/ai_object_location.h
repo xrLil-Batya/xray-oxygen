@@ -17,7 +17,7 @@ namespace LevelGraph {
 	class CVertex;
 };
 
-class CAI_ObjectLocation {
+class GAME_API CAI_ObjectLocation {
 public:
 	typedef GameGraph::_GRAPH_ID				_GRAPH_ID;
 	typedef GameGraph::CVertex					CVertex;

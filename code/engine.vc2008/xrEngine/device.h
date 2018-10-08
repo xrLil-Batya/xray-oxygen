@@ -18,15 +18,8 @@
 #	include "../Include/editor/interfaces.hpp"
 #endif // #ifdef INGAME_EDITOR
 
-//Thread Id's
-extern DWORD gMainThreadId;
-extern DWORD gSecondaryThreadId;
-
-ENGINE_API bool IsMainThread();
-ENGINE_API bool IsSecondaryThread();
-
 //for window prop control
-extern u32 ps_vid_windowtype;
+ENGINE_API extern u32 ps_vid_windowtype;
 
 enum WindowPropStyle
 {
@@ -153,8 +146,6 @@ private:
 	void									_Destroy	(BOOL	bKeepTextures);
 	void									_SetupStates();
 public:
-	LRESULT									MsgProc		(HWND,UINT,WPARAM,LPARAM);
-
 	// Get single WinAPI message and process it
 	void									ProcessSingleMessage();
 
@@ -233,12 +224,16 @@ public:
 
 	// Creation & Destroying
 	void ConnectToRender();
-	void Create								(void);
+	void Create								(bool bIsEditor);
 	void Run								(void);
-	void Destroy							(void);
+
+	void BeginToWork();
+
+	void Destroy(void);
 	void Reset								(bool precache = true);
 
 	void Initialize							(void);
+	HWND CreateXRayWindow (HWND parent = NULL, int Width = 0, int Height = 0);
 	void ShutDown							(void);
 
     void UpdateWindowPropStyle              (WindowPropStyle PropStyle = (WindowPropStyle)ps_vid_windowtype);
@@ -259,8 +254,8 @@ public:
     WindowPropStyle GetCurrentWindowPropStyle() const { return (WindowPropStyle)ps_vid_windowtype; };
 
 	// Multi-threading
-	std::recursive_mutex	mt_csEnter;
-	std::recursive_mutex	mt_csLeave;
+	xrCriticalSection	mt_csEnter;
+	xrCriticalSection	mt_csLeave;
 	volatile BOOL		mt_bMustExit;
 
 	ICF		void			remove_from_seq_parallel	(const fastdelegate::FastDelegate0<> &delegate)

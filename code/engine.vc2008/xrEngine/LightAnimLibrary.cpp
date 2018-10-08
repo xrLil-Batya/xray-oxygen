@@ -13,7 +13,7 @@
 #define CHUNK_ITEM_KEYS		0x0002
 //---------------------------------------------------------------------------
 
-ELightAnimLibrary LALib;
+ENGINE_API ELightAnimLibrary LALib;
 
 CLAItem::CLAItem()
 {
@@ -197,7 +197,7 @@ void ELightAnimLibrary::Unload()
     Items.clear();
 }
 
-__declspec(dllexport) void ELightAnimLibrary::Load()
+void ELightAnimLibrary::Load()
 {
 	string_path fn;
     FS.update_path(fn,_game_data_,"lanims.xr");

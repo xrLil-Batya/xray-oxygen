@@ -322,6 +322,7 @@ start GitParser\GitParser.exe</Command>
     </ClCompile>
     <ClCompile Include="ThreadManager.cpp" />
     <ClCompile Include="threadpool\ttapi_oxygen.cpp" />
+    <ClCompile Include="thread_utils.cpp" />
     <ClCompile Include="XMLCore\Expression.cpp" />
     <ClCompile Include="xrAPI.cpp" />
     <ClCompile Include="XMLCore\tinyxml.cpp" />

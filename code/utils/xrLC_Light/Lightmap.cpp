@@ -31,7 +31,7 @@ void CLightmap::Capture(CDeflector *D, int b_u, int b_v, int s_u, int s_v, BOOL 
 	D->RemapUV(tris, b_u + BORDER, b_v + BORDER, s_u - 2 * BORDER, s_v - 2 * BORDER, c_LMAP_size, c_LMAP_size, bRotated);
 
 	// Capture faces and setup their coords
-	for (auto &tris_iter: tris)
+	for (UVtri& tris_iter: tris)
 	{
 		Face *F = tris_iter.owner;
 		F->lmap_layer = this;

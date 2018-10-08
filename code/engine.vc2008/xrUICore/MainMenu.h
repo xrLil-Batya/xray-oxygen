@@ -81,7 +81,7 @@ public:
 	u32				GetEngineBuild();
 	const char*		GetEngineBuildDate();
 
-	const char*		GetGSVer();
+IC	const char*		GetGSVer() { return ENGINE_VERSION; };
 	virtual void	OnDeviceReset();
 };
 

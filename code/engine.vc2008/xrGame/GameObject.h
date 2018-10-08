@@ -46,7 +46,7 @@ class IKinematics;
 template <typename _return_type>
 class CScriptCallbackEx;
 
-class CGameObject : 
+class GAME_API CGameObject : 
 	public CObject, 
 	public CUsableScriptObject,
 	public CScriptBinder

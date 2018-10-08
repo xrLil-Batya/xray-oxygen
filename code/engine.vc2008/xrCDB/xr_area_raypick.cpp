@@ -21,7 +21,7 @@ using namespace	collide;
 //--------------------------------------------------------------------------------
 bool CObjectSpace::RayTest(const Fvector &start, const Fvector &dir, float range, collide::rq_target tgt, collide::ray_cache* cache, CObject* ignore_object)
 {
-	std::lock_guard<decltype(Lock)> lock(Lock);
+	xrCriticalSectionGuard guard(Lock);
 	bool	_ret = _RayTest(start, dir, range, tgt, cache, ignore_object);
 	r_spatial.clear();
 	return			_ret;
@@ -97,7 +97,7 @@ bool CObjectSpace::_RayTest(const Fvector &start, const Fvector &dir, float rang
 //--------------------------------------------------------------------------------
 bool CObjectSpace::RayPick(const Fvector &start, const Fvector &dir, float range, rq_target tgt, rq_result& R, CObject* ignore_object)
 {
-	std::lock_guard<decltype(Lock)> lock(Lock);
+	xrCriticalSectionGuard guard(Lock);
 	bool	_res = _RayPick(start, dir, range, tgt, R, ignore_object);
 	r_spatial.clear();
 	return	_res;
@@ -150,7 +150,7 @@ bool CObjectSpace::_RayPick(const Fvector &start, const Fvector &dir, float rang
 //--------------------------------------------------------------------------------
 bool CObjectSpace::RayQuery(collide::rq_results& dest, const collide::ray_defs& R, collide::rq_callback* CB, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object)
 {
-	std::lock_guard<decltype(Lock)> lock(Lock);
+	xrCriticalSectionGuard guard(Lock);
 	bool						_res = _RayQuery2(dest, R, CB, user_data, tb, ignore_object);
 	r_spatial.clear();
 	return						(_res);

@@ -2,7 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 #pragma once
-#include <filesystem>
 #include <array>
 #include <string_view>
 #pragma warning(push)

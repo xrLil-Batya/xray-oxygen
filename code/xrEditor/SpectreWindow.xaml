@@ -1,0 +1,50 @@
+﻿<Window x:Class="xrEditor.SpectreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:xrEditor"
+        mc:Ignorable="d"
+        Title="XRay Spectre Window" Height="500" Width="1000" Style="{DynamicResource WindowDarkTheme}">
+    <Window.Resources>
+        <BitmapImage x:Key="WelcomeImg" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="H:\STALKER_SRC\code\xrEditor\WelcomeScreenBackground_3.png"/>
+    </Window.Resources>
+    <Border BorderBrush="Black" BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftPanel" MinWidth="200" MaxWidth="200"/>
+                <ColumnDefinition x:Name="RightPart"/>
+            </Grid.ColumnDefinitions>
+            <Border HorizontalAlignment="Left" Width="200" Background="#FF1D1D1D">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" >
+                        <Label x:Name="txtNewProj" Content="New Project" Style="{DynamicResource LabelDarkTheme}" FontSize="24" Margin="10,0,0,0" FontWeight="Bold"/>
+                        <Button x:Name="btnCreateDefaultTemplate" Content="Create default template" Style="{DynamicResource ButtonLinkTheme}" HorizontalAlignment="Left" Margin="20,-5,0,0"/>
+                        <Button x:Name="btnCreateActorTemplate" Content="Create template with actor" Style="{DynamicResource ButtonLinkTheme}" HorizontalAlignment="Left" Margin="20,0,0,0"/>
+                        <Rectangle x:Name="Line" Fill="#FF5299FA" Height="1" Margin="0,15,0,0"/>
+                        <Label x:Name="txtLatestProj" Content="Latest Projects" Style="{DynamicResource LabelDarkTheme}" FontSize="24" Margin="10,0,0,0" FontWeight="Bold"/>
+                    </StackPanel>
+                    <Button x:Name="btnMenuSettings" Content="Menu Settings" Style="{DynamicResource ButtonLinkTheme}" HorizontalAlignment="Left" Margin="10,0,0,15" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Foreground="#FF60738E" FontWeight="Bold"/>
+                </DockPanel>
+            </Border>
+            <Canvas Grid.Column="1" x:Name="MainCanvas">
+                <Rectangle Width="790" Height="467">
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="{DynamicResource WelcomeImg}"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <StackPanel Height="80" DockPanel.Dock="Top" VerticalAlignment="Top" >
+                    <Label x:Name="txtWelcome" Content="Welcome to Spectrum Editor" Style="{DynamicResource LabelDarkTheme}" FontWeight="Bold" FontSize="32" Margin="0"/>
+                    <StackPanel x:Name="VersionGroup" Orientation="Horizontal" Margin="0,-15,0,0">
+                        <Label x:Name="txtVersion" Content="Version" Style="{DynamicResource LabelDarkTheme}" FontSize="16" Margin="10,0,0,0" Foreground="#FF3C74C0" FontWeight="Bold"/>
+                        <Label x:Name="txtVersionNum" Content="0.3f" Style="{DynamicResource LabelDarkTheme}" FontSize="16" Foreground="#FF3C74C0" FontWeight="Bold"/>
+                    </StackPanel>
+                </StackPanel>
+                <TextBlock x:Name="txtAdv" Canvas.Left="10" TextWrapping="Wrap" Text="Daily advice: " Canvas.Top="295.832" Foreground="#FF2978E6" FontFamily="{DynamicResource IstokWeb}" FontSize="16"/>
+                <TextBlock x:Name="txtAdvice" Canvas.Left="10" TextWrapping="Wrap" Text="                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent imperdiet vulputate quam eu imperdiet. Proin id metus nec orci lobortis pulvinar quis viverra felis. Duis id tristique orci, eu aliquet neque. Aliquam erat volutpat. Mauris accumsan erat eu leo tristique laoreet. Nullam maximus lorem eget diam pretium, et vulputate ante sodales. Sed commodo, velit eget ornare luctus, eros sapien molestie elit, vel tincidunt nulla lacus in urna. Duis non luctus est. Mauris pellentesque arcu non ipsum tempor facilisis. Ut ultrices ex at vestibulum semper. " Canvas.Top="295.832" Foreground="#FFA2A2A2" FontFamily="{DynamicResource IstokWeb}" FontSize="16" Height="161.168" Width="565.68"/>
+            </Canvas>
+            <Label x:Name="txtCopyright" Content="Oxygen Team © 2018" Grid.Column="1" FontSize="21.333" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="#FFA0A0A0" Margin="0,0,10,10" FontFamily="Calibri"/>
+        </Grid>
+    </Border>
+
+</Window>

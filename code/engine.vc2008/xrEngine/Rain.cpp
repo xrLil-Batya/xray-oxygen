@@ -43,7 +43,14 @@ CEffect_Rain::CEffect_Rain()
 {
 	state							= stIdle;
 	
-	snd_Ambient.create				("ambient\\rain",st_Effect,sg_Undefined);
+	if (::Sound != nullptr)
+	{
+		snd_Ambient.create				("ambient\\rain",st_Effect,sg_Undefined);
+	}
+	else
+	{
+		Msg("! Rain sound ambient not created - sound engine is null");
+	}
 
 	//	Moced to p_Render constructor
 	p_create						();
@@ -58,7 +65,8 @@ CEffect_Rain::CEffect_Rain()
 
 CEffect_Rain::~CEffect_Rain()
 {
-	snd_Ambient.destroy				();
+	if (::Sound != nullptr)
+		snd_Ambient.destroy				();
 
 	// Cleanup
 	p_destroy						();
@@ -76,11 +84,11 @@ void	CEffect_Rain::Born		(Item& dest, float radius)
 {
 	Fvector		axis;	
     axis.set			(0,-1,0);
-	float gust			= g_pGamePersistent->Environment().wind_strength_factor;
-	float k				= g_pGamePersistent->Environment().CurrentEnv->wind_velocity*gust/drop_max_wind_vel;
+	float gust			= Environment().wind_strength_factor;
+	float k				= Environment().CurrentEnv->wind_velocity*gust/drop_max_wind_vel;
 	clamp				(k,0.f,1.f);
 	float	pitch		= drop_max_angle*k-PI_DIV_2;
-    axis.setHP			(g_pGamePersistent->Environment().CurrentEnv->wind_direction,pitch);
+    axis.setHP			(Environment().CurrentEnv->wind_direction,pitch);
     
 	Fvector&	view	= Device.vCameraPosition;
 	float		angle	= ::Random.randF	(0,PI_MUL_2);
@@ -124,7 +132,7 @@ void	CEffect_Rain::OnFrame	()
 	if (!g_pGameLevel)			return;
 
 	// Parse states
-	float	factor				= g_pGamePersistent->Environment().CurrentEnv->rain_density;
+	float	factor				= Environment().CurrentEnv->rain_density;
 	static float hemi_factor	= 0.f;
 	CObject* E 					= g_pGameLevel->CurrentViewEntity();
 	if (E&&E->renderable_ROS())
@@ -141,27 +149,30 @@ void	CEffect_Rain::OnFrame	()
 		hemi_factor				= hemi_factor*(1.0f-t) + f*t;
 	}
 
-	switch (state)
+	if (::Sound != nullptr)
 	{
-	case stIdle:		
-		if (factor<EPS_L)		return;
-		state					= stWorking;
-		snd_Ambient.play		(0,sm_Looped);
-		snd_Ambient.set_position(Fvector().set(0,0,0));
-		snd_Ambient.set_range	(source_offset,source_offset*2.f);
-	break;
-	case stWorking:
-		if (factor<EPS_L){
-			state				= stIdle;
-			snd_Ambient.stop	();
-			return;
+		switch (state)
+		{
+		case stIdle:
+			if (factor < EPS_L)		return;
+			state = stWorking;
+			snd_Ambient.play(0, sm_Looped);
+			snd_Ambient.set_position(Fvector().set(0, 0, 0));
+			snd_Ambient.set_range(source_offset, source_offset*2.f);
+			break;
+		case stWorking:
+			if (factor < EPS_L) {
+				state = stIdle;
+				snd_Ambient.stop();
+				return;
+			}
+			break;
 		}
-		break;
-	}
 
-	// ambient sound
-	if (snd_Ambient._feedback())
-		snd_Ambient.set_volume	(std::max(0.1f,factor) * hemi_factor );
+		// ambient sound
+		if (snd_Ambient._feedback())
+			snd_Ambient.set_volume(std::max(0.1f, factor) * hemi_factor);
+	}
 }
 
 #ifndef _EDITOR
@@ -176,8 +187,8 @@ BOOL rain_timer_params::RayPick(const Fvector& s, const Fvector& d, float& range
 }
 int rain_timer_params::Update(BOOL state, bool need_raypick)
 {
-    float	factor = g_pGamePersistent->Environment().CurrentEnv->rain_density;
-    if (factor>EPS_L)
+    float factor = Environment().CurrentEnv->rain_density;
+    if (factor > EPS_L)
     {
         // is raining	
         if (state)

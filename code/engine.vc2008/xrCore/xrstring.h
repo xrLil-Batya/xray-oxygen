@@ -31,9 +31,7 @@ class IWriter;
 class XRCORE_API str_container
 {
 private:
-#ifndef _CLR_MANAGER
-    std::recursive_mutex				cs;
-#endif
+    xrCriticalSection					cs;
 	str_container_impl*                 impl;
 public:
 						str_container	();

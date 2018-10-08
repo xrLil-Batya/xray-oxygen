@@ -15,7 +15,6 @@
 #include "stream_reader.h"
 #include "file_stream_reader.h"
 
-#include <filesystem>
 
 const u32 BIG_FILE_READER_WINDOW_SIZE	= 1024*1024;
 

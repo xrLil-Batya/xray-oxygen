@@ -15,7 +15,7 @@ class CIKLimbsController;
 
 
 
-class CPhysicsShellHolder:  public CGameObject,
+class GAME_API CPhysicsShellHolder:  public CGameObject,
 							public CParticlesPlayer,
 							public IObjectPhysicsCollision,
 							public IPhysicsShellHolder
@@ -36,6 +36,7 @@ public:
 
 			CPhysicsShellHolder							();
 	virtual	~CPhysicsShellHolder						();
+	CPhysicsShellHolder& operator = (const CPhysicsShellHolder& other) = delete;
 
 	virtual bool		ActivationSpeedOverriden (Fvector& dest, bool clear_override) { return false; }
 

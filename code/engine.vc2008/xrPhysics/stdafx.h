@@ -14,6 +14,7 @@
 #endif
 #include "xrPhysics.h"
 #include "../xrCore/xrapi.h"
+#include "../xrGame/xrGame.h"
 
 #include "d3d9types.h"
 

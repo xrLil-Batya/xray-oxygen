@@ -1,6 +1,3 @@
-#ifndef _CLSID_H
-#define _CLSID_H
-
 #pragma once
 
 //***** CLASS ID type
@@ -12,5 +9,3 @@ typedef u64		CLASS_ID;
 
 extern XRCORE_API void		__stdcall CLSID2TEXT(CLASS_ID id, char* text);
 extern XRCORE_API CLASS_ID	__stdcall TEXT2CLSID(const char* text);
-
-#endif

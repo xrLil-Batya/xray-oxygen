@@ -19,7 +19,7 @@ class	XRCDB_API						CObjectSpace
 {
 private:
 	// Debug
-    std::recursive_mutex					Lock;
+    xrCriticalSection					Lock;
 	CDB::MODEL							Static;
 	Fbox								m_BoundingVolume;
 	xrXRC								xrc;				// MT: dangerous

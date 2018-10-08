@@ -22,23 +22,23 @@ CThreadManager			mu_secondary;
 #define		MU_THREADS	4
 // mu-light
 bool mu_models_local_calc_lightening = false;
-std::recursive_mutex		mu_models_local_calc_lightening_wait_lock;
+xrCriticalSection		mu_models_local_calc_lightening_wait_lock;
 void WaitMuModelsLocalCalcLightening()
 {
 	for(;;)
 	{
 		bool complited = false;
 		Sleep(1000);
-		mu_models_local_calc_lightening_wait_lock.lock();
+		mu_models_local_calc_lightening_wait_lock.Enter();
 		complited = mu_models_local_calc_lightening;
-		mu_models_local_calc_lightening_wait_lock.unlock();
+		mu_models_local_calc_lightening_wait_lock.Leave();
 		if(complited)
 			break;
 	}
 }
 void SetMuModelsLocalCalcLighteningCompleted()
 {
-    std::lock_guard<std::recursive_mutex> lock(mu_models_local_calc_lightening_wait_lock);
+	xrCriticalSectionGuard guard(mu_models_local_calc_lightening_wait_lock);
 	mu_models_local_calc_lightening = true;
 }
 class CMULight	: public CThread

@@ -59,7 +59,7 @@ class CActorMemory;
 
 class CLocationManager;
 
-class CActor: 
+class GAME_API CActor: 
 	public CIActor,
 	public CEntityAlive, 
 	public IInputReceiver,
@@ -79,7 +79,7 @@ private:
 public:
 	HANDLE								MtSecondUpdaterEventStart;
 	HANDLE								MtSecondUpdaterEventEnd;
-	std::recursive_mutex				MtFeelTochMutex;
+	xrCriticalSection					MtFeelTochMutex;
 public:
 										CActor				();
 	virtual								~CActor				();
