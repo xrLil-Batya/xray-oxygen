@@ -110,7 +110,7 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 	os_clipboard::copy_to_clipboard(assertion_info);
 }
 
-void xrDebug::do_exit(HWND hWnd, const std::string &message)
+void xrDebug::do_exit(HWND hWnd, const xr_string &message)
 {
 	FlushLog();
 
@@ -125,11 +125,11 @@ void xrDebug::do_exit(HWND hWnd, const std::string &message)
 #endif
 }
 
-void xrDebug::do_exit(const std::string &message, const std::string &message2)
+void xrDebug::do_exit(const xr_string &message, const xr_string &message2)
 {
 	FlushLog();
 
-	std::string szMsg = "Expression: "	+
+	xr_string szMsg = "Expression: "	+
 						message			+ 
 						"\n"			+
 						"Description: "	+
@@ -186,7 +186,7 @@ const char* xrDebug::error2string(long code)
 }
 
 
-void xrDebug::do_exit2(HWND hwnd, const std::string& message, bool& ignore_always)
+void xrDebug::do_exit2(HWND hwnd, const xr_string& message, bool& ignore_always)
 {
     int MsgRet = MessageBox(hwnd, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
 
@@ -221,7 +221,7 @@ void xrDebug::fail(const char *e1, const char *file, int line, const char *funct
 	backend("assertion failed", e1, nullptr, nullptr, file, line, function, ignore_always);
 }
 
-void xrDebug::fail(const char *e1, const std::string &e2, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::fail(const char *e1, const xr_string &e2, const char *file, int line, const char *function, bool &ignore_always)
 {
 	backend(e1, e2.c_str(), nullptr, nullptr, file, line, function, ignore_always);
 }

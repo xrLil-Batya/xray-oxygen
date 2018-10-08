@@ -280,7 +280,7 @@ void CRenderDevice::on_idle		()
 
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
-	std::string buf = "vid_mode " + std::to_string(width) + "x" + std::to_string(height);
+	xr_string buf = "vid_mode " + std::to_string(width) + "x" + std::to_string(height);
 	Console->Execute(buf.c_str());
 
 	m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);

@@ -69,7 +69,7 @@ xr_string	EFS_Utils::ChangeFileExt(const xr_string& src, const char* ext)
 //----------------------------------------------------
 void MakeFilter(string1024& dest, const char* info, const char* ext)
 {
-    std::string res;
+    xr_string res;
 
     if (ext)
     {

@@ -119,7 +119,7 @@ namespace std
   {
     std::size_t operator() ( const shared_str &s ) const 
 	{
-      return std::hash<std::string>{}( s.c_str() );
+      return std::hash<xr_string>{}( s.c_str() );
     }
   };
 }

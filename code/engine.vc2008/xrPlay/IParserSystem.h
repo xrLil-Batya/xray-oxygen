@@ -12,15 +12,15 @@
 
 class config
 {
-	using string = std::string;
+	using string = xr_string;
 	using string_view = std::string_view;
 public:
 	struct section
 	{
 		bool isParent;
-		std::string name;
-		std::string parent;
-		std::unordered_map<std::string, std::string> keyvalues;
+		xr_string name;
+		xr_string parent;
+		std::unordered_map<xr_string, xr_string> keyvalues;
 	};
 
 public:
@@ -39,9 +39,9 @@ public:
 	float	get_float (const string& sectionname, const string& keyname);
 
 private:
-	void parse(const std::string& filename, bool create);
+	void parse(const xr_string& filename, bool create);
 private:
 	std::list<section> sections;
 	section currentsection;
-	std::string path;
+	xr_string path;
 };

@@ -38,16 +38,16 @@ public:
 	}
 
 	void			fail				(const char *e1, const char *file, int line, const char *function, bool &ignore_always);
-	void			fail				(const char *e1, const std::string &e2, const char *file, int line, const char *function, bool &ignore_always);
+	void			fail				(const char *e1, const xr_string &e2, const char *file, int line, const char *function, bool &ignore_always);
 	void			fail				(const char *e1, const char *e2, const char *file, int line, const char *function, bool &ignore_always);
 	void			fail				(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function, bool &ignore_always);
 	void			fail				(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function, bool &ignore_always);
 	void			error				(long  code, const char* e1, const char *file, int line, const char *function, bool &ignore_always);
 	void			error				(long  code, const char* e1, const char* e2, const char *file, int line, const char *function, bool &ignore_always);
 	void _cdecl		fatal				(const char *file, int line, const char *function, const char* F,...);
-	void			do_exit				(HWND hWnd, const std::string& message);
-    void do_exit2 (HWND hwnd, const std::string& message, bool& ignore_always);
-	void			do_exit				(const std::string & message, const std::string &message2);
+	void			do_exit				(HWND hWnd, const xr_string& message);
+    void do_exit2 (HWND hwnd, const xr_string& message, bool& ignore_always);
+	void			do_exit				(const xr_string & message, const xr_string &message2);
 	void			backend				(const char* reason, const char* expression, const char *argument0, const char *argument1, const char* file, int line, const char *function, bool &ignore_always);
 };
 
@@ -57,12 +57,12 @@ LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo);
 // warning
 // this function can be used for debug purposes only
 template <typename... Args>
-std::string make_string(const char* format, const Args&... args)
+xr_string make_string(const char* format, const Args&... args)
 {
 	static constexpr size_t bufferSize = 4096;
 	char temp[bufferSize];
 	snprintf(temp, bufferSize, format, args...);
-	return std::string(temp);
+	return xr_string(temp);
 }
 
 extern XRCORE_API	xrDebug		Debug;

@@ -237,7 +237,7 @@ bool CCC_LoadCFG_custom::allow(LPCSTR cmd)
 class CCC_Start : public IConsole_Command
 {
 protected:
-	std::string parse(const std::string &str)
+	xr_string parse(const xr_string &str)
 	{
 		std::regex Reg("\\(([^)]+)\\)");
 		std::smatch results;
@@ -248,7 +248,7 @@ public:
 	CCC_Start(const char* N) : IConsole_Command(N) {};
 	void Execute(const char* args) override 
 	{
-		std::string str = this->parse(args);
+		xr_string str = this->parse(args);
 		Engine.Event.Defer("KERNEL:start", u64(xr_strdup(str.c_str())), u64(xr_strdup("localhost")));
 	}
 };

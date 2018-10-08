@@ -459,7 +459,7 @@ void CWeapon::Load(LPCSTR section)
 	}
 	else if (m_eScopeStatus == ALife::eAddonPermanent)
 	{
-		std::string scope_tex_name = pSettings->r_string(cNameSect(), "scope_texture");
+		xr_string scope_tex_name = pSettings->r_string(cNameSect(), "scope_texture");
 		m_zoom_params.m_fScopeZoomFactor = pSettings->r_float( cNameSect(), "scope_zoom_factor");
         m_UIScope = xr_new<CUIWindow>();
 
@@ -1209,9 +1209,9 @@ bool CWeapon::SilencerAttachable()
 	return (ALife::eAddonAttachable == m_eSilencerStatus);
 }
 
-std::string wpn_scope = "wpn_scope";
-std::string wpn_silencer = "wpn_silencer";
-std::string wpn_grenade_launcher = "wpn_launcher";
+xr_string wpn_scope = "wpn_scope";
+xr_string wpn_silencer = "wpn_silencer";
+xr_string wpn_grenade_launcher = "wpn_launcher";
 
 // Только для актора
 void CWeapon::UpdateHUDAddonsVisibility()

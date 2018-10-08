@@ -133,5 +133,5 @@ private://IPhysicsShellHolder
 	virtual CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer					()  					{return ph_sound_player();}
 	virtual	ICollisionDamageReceiver* _BCL				ObjectPhCollisionDamageReceiver		()						;
 	virtual	void					_BCL					BonceDamagerCallback				(float &damage_factor)	;
-	virtual	std::string				_BCL					dump								(EDumpType type) const  ;
+	virtual	xr_string				_BCL					dump								(EDumpType type) const  ;
 };

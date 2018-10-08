@@ -62,7 +62,7 @@ VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
 	//#VERTVER: PLS REWORK IT
 	//////////////////////////////////////
 	FS_Path* filePath = FS.get_path("$textures$");
-	std::string szPath = std::string(filePath->m_Path);
+	xr_string szPath = xr_string(filePath->m_Path);
 	std::wstring szWPath = std::wstring(szPath.begin(), szPath.end());
 	szWPath += L"ui\\Splash.bmp";
 	//////////////////////////////////////
@@ -310,7 +310,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 
 				//#VERTVER: PLS REWORK IT
 				//////////////////////////////////////
-				std::string prgress = pInstance->progressMsg.c_str();
+				xr_string prgress = pInstance->progressMsg.c_str();
 				std::wstring progressName(prgress.begin(), prgress.end());
 				//////////////////////////////////////
 

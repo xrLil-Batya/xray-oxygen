@@ -149,7 +149,7 @@ bool CWeapon::install_upgrade_hit( LPCSTR section, bool test )
 	}
 	result |= result2;
 
-	std::string	s_sHitPowerCritical;
+	xr_string	s_sHitPowerCritical;
 	result2 = process_if_exists_set( section, "hit_power_critical", &CInifile::r_string_wb, s_sHitPower, test );
 	if ( result2 && !test )
 	{

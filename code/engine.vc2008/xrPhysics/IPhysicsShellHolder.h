@@ -59,5 +59,5 @@ public:
 	virtual CPHSoundPlayer*				__stdcall	ObjectPhSoundPlayer() = 0;
 	virtual	ICollisionDamageReceiver*	__stdcall	ObjectPhCollisionDamageReceiver() = 0;
 	virtual	void						__stdcall BonceDamagerCallback(float &damage_factor) = 0;
-	virtual	std::string					__stdcall	dump(EDumpType type) const = 0;
+	virtual	xr_string					__stdcall	dump(EDumpType type) const = 0;
 };
