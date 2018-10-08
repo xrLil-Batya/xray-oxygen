@@ -37,7 +37,6 @@
 #define NOHELP
 #define NOPROFILER
 #define NOMCX
-//#define NOMINMAX
 #define DOSWIN32
 #define _WIN32_DCOM
 

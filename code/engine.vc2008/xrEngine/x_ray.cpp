@@ -191,7 +191,7 @@ void Startup()
 	bEngineloaded = true;
 	Device.UpdateWindowPropStyle();
 	splashScreen.HideSplash();
-	Device.Create();
+	Device.Create(false);
 
 	pApp = xr_new<CApplication>();
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);

@@ -9,7 +9,6 @@
 * Methods for dynamic splash implementation
 *********************************************************/
 #include "stdafx.h"
-#pragma hdrstop
 
 #include "DynamicSplash.h"
 #include <process.h>
@@ -18,13 +17,6 @@
 #include "../xrPlay/resource.h"
 #include "../xrCore/LocatorAPI.h"
 
-#ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
-#endif
-
-#ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
 
 #pragma warning(push)
 #pragma warning(disable: 4458)

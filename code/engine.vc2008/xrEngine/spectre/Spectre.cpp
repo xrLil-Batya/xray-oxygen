@@ -72,4 +72,6 @@ SpectreCallback::IClientCallbackDeclaration* SpectreEngineClient::GetCallbackDec
 		}
 		pClientFuncNode = pClientFuncNode->pNextNode;
 	} while (pClientFuncNode != nullptr);
+
+	return nullptr;
 }
