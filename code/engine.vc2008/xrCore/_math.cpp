@@ -311,9 +311,6 @@ float* processor_info::MTCPULoad()
 		SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION* cpuPerfInfo = &perfomanceInfo[i];
 		cpuPerfInfo->KernelTime.QuadPart -= cpuPerfInfo->IdleTime.QuadPart;
 
-		DWORD64 dwTotal = cpuPerfInfo->KernelTime.QuadPart + cpuPerfInfo->UserTime.QuadPart;
-		DWORD64 dwKernelTotal = cpuPerfInfo->KernelTime.QuadPart - cpuPerfInfo->IdleTime.QuadPart;
-
 		fUsage[i] = 100.0f - 0.01f * (cpuPerfInfo->IdleTime.QuadPart - m_idleTime[i].QuadPart) / ((dwTickCount - m_dwCount));
 		if (fUsage[i] < 0.0f) { fUsage[i] = 0.0f; }
 		if (fUsage[i] > 100.0f) { fUsage[i] = 100.0f; }
