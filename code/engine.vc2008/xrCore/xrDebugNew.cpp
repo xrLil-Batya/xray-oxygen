@@ -221,11 +221,6 @@ void xrDebug::fail(const char *e1, const char *file, int line, const char *funct
 	backend("assertion failed", e1, nullptr, nullptr, file, line, function, ignore_always);
 }
 
-void xrDebug::fail(const char *e1, const xr_string &e2, const char *file, int line, const char *function, bool &ignore_always)
-{
-	backend(e1, e2.c_str(), nullptr, nullptr, file, line, function, ignore_always);
-}
-
 void xrDebug::fail(const char *e1, const char *e2, const char *file, int line, const char *function, bool &ignore_always)
 {
 	backend(e1, e2, nullptr, nullptr, file, line, function, ignore_always);

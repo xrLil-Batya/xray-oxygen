@@ -491,6 +491,8 @@ using Dvector3 = _vector3<double>;
 using Ivector = _vector3<s32>;
 using Ivector3 = _vector3<s32>;
 
+using FvectorVec = xr_vector<Fvector>;
+
 template <class T>
 BOOL	_valid			(const _vector3<T>& v)	{ return _valid((T)v.x) && _valid((T)v.y) && _valid((T)v.z);	}
 

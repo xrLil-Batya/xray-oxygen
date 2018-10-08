@@ -703,7 +703,7 @@ xr_string CInifile::get_as_string()
 		}
 	}
 
-	return str.str();
+	return xr_string(str.str().c_str());
 }
 
 // Uniqle COP

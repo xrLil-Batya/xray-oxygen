@@ -1114,9 +1114,8 @@ void CLocatorAPI::file_from_archive	(IReader *&R, const char* fname, const file 
 void CLocatorAPI::file_from_archive	(CStreamReader *&R, const char* fname, const file &desc)
 {
 	archive	&A = m_archives[desc.vfs];
-	R_ASSERT2(desc.size_compressed == desc.size_real,
-		make_string("cannot use stream reading for compressed data %s, do not compress data to be streamed",
-		fname));
+	R_ASSERT3(desc.size_compressed == desc.size_real,
+		"cannot use stream reading for compressed data, do not compress data to be streamed", fname);
 
 	R = new CStreamReader();
 	R->construct(A.hSrcMap, desc.ptr, desc.size_compressed, A.size, BIG_FILE_READER_WINDOW_SIZE);
@@ -1580,7 +1579,7 @@ bool CLocatorAPI::getFileName(LPCSTR path, string512& outFilename)
     if (stdPath.has_filename())
     {
         std::experimental::filesystem::path fileNamePath = stdPath.filename();
-        xr_string fileNameStr = fileNamePath.u8string();
+        std::string fileNameStr = fileNamePath.u8string();
         R_ASSERT2(fileNameStr.size() < sizeof(string512), fileNameStr.c_str());
 
         xr_strcpy(outFilename, fileNameStr.c_str());

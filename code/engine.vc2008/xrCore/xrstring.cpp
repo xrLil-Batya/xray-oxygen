@@ -391,3 +391,12 @@ bool xr_string::StartWith(LPCSTR Str, size_t Size) const
 
     return true;
 }
+
+
+xr_string xr_string::ToString(int Value)
+{
+	string64 buf = {0};
+	itoa(Value, &buf[0], 10);
+
+	return xr_string(buf);
+}

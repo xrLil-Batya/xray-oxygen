@@ -155,14 +155,15 @@
 #	define XRCORE_API __declspec(dllimport)
 #endif
 
+#include "_types.h"
+#include "xrMemory.h"
+#include "_stl_extensions.h"
 #include "thread_utils.h"
 #include "xrDebug.h"
 #include "vector.h"
 #include "clsid.h"
-#include "xrMemory.h"
 #include "xrDebug.h"
 
-#include "_stl_extensions.h"
 #include "xrsharedmem.h"
 #include "xrstring.h"
 #include "xr_resource.h"

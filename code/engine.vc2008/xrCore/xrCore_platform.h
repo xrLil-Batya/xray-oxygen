@@ -39,6 +39,7 @@
 #define NOMCX
 #define DOSWIN32
 #define _WIN32_DCOM
+#define NOMINMAX
 
 #pragma warning(push)
 #pragma warning(disable:4005)

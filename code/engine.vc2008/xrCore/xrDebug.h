@@ -38,7 +38,6 @@ public:
 	}
 
 	void			fail				(const char *e1, const char *file, int line, const char *function, bool &ignore_always);
-	void			fail				(const char *e1, const xr_string &e2, const char *file, int line, const char *function, bool &ignore_always);
 	void			fail				(const char *e1, const char *e2, const char *file, int line, const char *function, bool &ignore_always);
 	void			fail				(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function, bool &ignore_always);
 	void			fail				(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function, bool &ignore_always);
