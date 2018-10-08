@@ -1,6 +1,5 @@
-#ifndef FixedVectorH
-#define FixedVectorH
 #pragma once
+#include "xrDebug_macros.h"
 
 template <class T, std::size_t dim>
 class svector 
@@ -35,8 +34,8 @@ public:
 	IC void		push_back(value_type e)		{ VERIFY(count<dim); array[count++]=e;	}
 	IC void		pop_back()					{ VERIFY(count); count--;				}
 
-	IC reference		operator[] (u32 id)			{ VERIFY2(id<count, make_string("id=[%d] count=[%d]", id, count)); return array[id];	}
-	IC const_reference	operator[] (u32 id)	const	{ VERIFY2(id<count, make_string("id=[%d] count=[%d]", id, count)); return array[id];	}
+	IC reference		operator[] (u32 id)			{ VERIFY2(id < count, "trying reference fixed vector out of range"); return array[id]; }
+	IC const_reference	operator[] (u32 id)	const	{ VERIFY2(id < count, "trying reference fixed vector out of range"); return array[id]; }
 
 	IC reference		front()				{ return array[0];						}
 	IC reference		back()				{ return array[count-1];				}
@@ -70,5 +69,3 @@ public:
 		return TRUE;
 	}
 };
-
-#endif
