@@ -9,17 +9,22 @@
 * Methods for dynamic splash implementation
 *********************************************************/
 #include "stdafx.h"
-
 #include "DynamicSplash.h"
+
 #include <process.h>
 #include <CommCtrl.h>
 #include <WinUser.h>
 #include "../xrPlay/resource.h"
-#include "../xrCore/LocatorAPI.h"
-
 
 #pragma warning(push)
 #pragma warning(disable: 4458)
+#ifndef max
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#endif
 #include <gdiplus.h>
 #include <gdiplusinit.h>
 #pragma warning(pop)

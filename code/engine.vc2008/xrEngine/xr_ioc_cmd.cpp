@@ -242,7 +242,7 @@ protected:
 		std::regex Reg("\\(([^)]+)\\)");
 		std::smatch results;
 		R_ASSERT3(std::regex_search(str, results, Reg), "Failed parsing string: [%s]", str.c_str());
-		return results[1].str();
+		return results[1].str().c_str();
 	}
 public:
 	CCC_Start(const char* N) : IConsole_Command(N) {};
@@ -252,7 +252,6 @@ public:
 		Engine.Event.Defer("KERNEL:start", u64(xr_strdup(str.c_str())), u64(xr_strdup("localhost")));
 	}
 };
-
 
 class CCC_Disconnect : public IConsole_Command
 {

@@ -86,7 +86,7 @@ HWND CRenderDevice::CreateXRayWindow(HWND parent /*= NULL*/, int Width /*= 0*/, 
 		// Set the window's initial width
 		RECT rc;
 		SetRect(&rc, 0, 0, 640, 480);
-		AdjustWindowRect(&rc, m_dwWindowStyle, FALSE);
+		AdjustWindowRect(&rc, (DWORD)m_dwWindowStyle, FALSE);
 		FinalWidth = (rc.right - rc.left);
 		FinalHeight = (rc.bottom - rc.top);
 	}
@@ -96,7 +96,7 @@ HWND CRenderDevice::CreateXRayWindow(HWND parent /*= NULL*/, int Width /*= 0*/, 
 	}
 
 	// Create the render window
-	m_hWnd = CreateWindowExA(wndStyle,
+	m_hWnd = CreateWindowEx(wndStyle,
 		wndclass, "X-Ray Oxygen", m_dwWindowStyle,
 		/*rc.left, rc.top, */CW_USEDEFAULT, CW_USEDEFAULT,
 		FinalWidth, FinalHeight, parent,
