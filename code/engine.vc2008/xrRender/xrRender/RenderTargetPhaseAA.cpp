@@ -116,7 +116,7 @@ void CRenderTarget::ProcessDLAA()
 	float _h = float(Device.dwHeight);
 
 	// Pass 0
-#if 0 //defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX10) || defined(USE_DX11)
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
 	RenderScreenQuad(_w, _h, rt_Generic_2, s_pp_antialiasing->E[3]);
