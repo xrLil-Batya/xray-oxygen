@@ -1,5 +1,5 @@
 #pragma once
-
+#include "r2_types.h"
 #include "../xrRender/ColorMapManager.h"
 
 class light;
@@ -14,29 +14,52 @@ private:
 	u32							dwHeight;
 	u32							dwAccumulatorClearMark;
 public:
+	enum	eStencilOptimizeMode
+	{
+		SO_Light = 0,	//	Default
+		SO_Combine,		//	Default
+	};
+
 	u32							dwLightMarkerID;
 	// 
 	IBlender*					b_occq;
 	IBlender*					b_accum_mask;
 	IBlender*					b_accum_direct;
-	IBlender*					b_accum_direct_cascade;
 	IBlender*					b_accum_point;
 	IBlender*					b_accum_spot;
 	IBlender*					b_accum_reflected;
 	IBlender*					b_ssao;
 	IBlender*					b_combine;
+#if defined(USE_DX11) || defined(USE_DX10)
+	IBlender*					b_ssao_msaa[8];
+	IBlender*					b_combine_msaa[8];
+	IBlender*					b_accum_mask_msaa[8];
+	IBlender*					b_accum_spot_msaa[8];
+	IBlender*					b_accum_direct_msaa[8];
+	IBlender*					b_accum_direct_volumetric_msaa[8];
+	IBlender*					b_accum_direct_volumetric_sun_msaa[8];
+	IBlender*					b_accum_volumetric_msaa[8];
+	IBlender*					b_accum_point_msaa[8];
+	IBlender*					b_accum_reflected_msaa[8];
+#else
+	IBlender*					b_accum_direct_cascade;
+#endif
 #ifdef DEBUG
-	struct		dbg_line_t		{
-		Fvector	P0,P1;
+	struct		dbg_line_t 
+	{
+		Fvector	P0, P1;
 		u32		color;
 	};
-	xr_vector<std::pair<Fsphere,Fcolor> >		dbg_spheres;
+	xr_vector<std::pair<Fsphere, Fcolor> >		dbg_spheres;
 	xr_vector<dbg_line_t>						dbg_lines;
 	xr_vector<Fplane>							dbg_planes;
 #endif
-
 	// MRT-path
 	ref_rt						rt_Depth;			// Z-buffer like - initial depth
+	ref_rt						rt_MSAADepth;     // z-buffer for MSAA deferred shading
+	ref_rt						rt_Generic_0_r;   // MRT generic 0
+	ref_rt						rt_Generic_1_r;   // MRT generic 1
+	ref_rt						rt_Generic;
 	ref_rt						rt_Position;		// 64bit,	fat	(x,y,z,?)				(eye-space)
 	ref_rt						rt_Normal;			// 64bit,	fat	(x,y,z,hemi)			(eye-space)
 	ref_rt						rt_Color;			// 64/32bit,fat	(r,g,b,specular-gloss)	(or decompressed MET-8-8-8-8)
@@ -44,18 +67,9 @@ public:
 	// 
 	ref_rt						rt_Accumulator;		// 64bit		(r,g,b,specular)
 	ref_rt						rt_Accumulator_temp;// only for HW which doesn't feature fp16 blend
-    ref_rt						rt_sunshafts_0;		// ss0
-    ref_rt						rt_sunshafts_1;		// ss1
-	ref_rt						rt_SunShaftsMask;
-	ref_rt						rt_SunShaftsMaskSmoothed;
-	ref_rt						rt_SunShaftsPass0;
-	//ref_rt						rt_SunShaftsPass2;
-	//ref_rt						rt_SunShaftsPass1;
-	
-	ref_rt						rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermediate results, etc.
-	ref_rt						rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermediate results, etc.
+	ref_rt						rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
+	ref_rt						rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	ref_rt						rt_Generic_2;		// 32bit		(r,g,b,a)				// post-process, intermediate results, etc.
-
 	ref_rt						rt_Volumetric;		// 64bit		(r,g,b,a)				// for volumetric lights
 
 	ref_rt						rt_Bloom_1;			// 32bit, dim/4	(r,g,b,?)
@@ -63,31 +77,39 @@ public:
 	ref_rt						rt_LUM_64;			// 64bit, 64x64,	log-average in all components
 	ref_rt						rt_LUM_8;			// 64bit, 8x8,		log-average in all components
 
-	ref_rt                      rt_secondVP;        // 32bit (r,g,b,a) +SecondVP+
+	ref_rt                      rt_secondVP;        // 32bit		(r,g,b,a) +SecondVP+
 
-	ref_rt						rt_LUM_pool	[CHWCaps::MAX_GPUS*2]	;	// 1xfp32,1x1,		exp-result -> scaler
-	ref_texture					t_LUM_src		;	// source
-	ref_texture					t_LUM_dest		;	// destination & usage for current frame
+	ref_rt						rt_LUM_pool[CHWCaps::MAX_GPUS*2];	// 1xfp32,1x1,		exp-result -> scaler
+	ref_texture					t_LUM_src;			// source
+	ref_texture					t_LUM_dest;			// destination & usage for current frame
 
 	// env
-	ref_texture					t_envmap_0		;	// env-0
-	ref_texture					t_envmap_1		;	// env-1
+	ref_texture					t_envmap_0;			// env-0
+	ref_texture					t_envmap_1;			// env-1
 
 	// smap
-	ref_rt						rt_smap_surf;	// 32bit,		color
-	ref_rt						rt_smap_depth;	// 24(32) bit,	depth 
-	IDirect3DSurface9*			rt_smap_ZB;		//
+	ref_rt						rt_smap_surf;		// 32bit,		color
+	ref_rt						rt_smap_depth;		// 24(32) bit,	depth 
+	ref_rt						rt_smap_depth_minmax;	//	is used for min/max sm
+
+	ref_rt						rt_sunshafts_0;		// ss0
+	ref_rt						rt_sunshafts_1;		// ss1
+	ref_rt						rt_SunShaftsMask;
+	ref_rt						rt_SunShaftsMaskSmoothed;
+	ref_rt						rt_SunShaftsPass0;
 
 	// Textures
-	IDirect3DVolumeTexture9*	t_material_surf;
+	ID3DTexture3D*				t_material_surf;
 	ref_texture					t_material;
 
 	// Noise (jitter)
-	IDirect3DTexture9*			t_noise_surf	[TEX_jitter_count];
-	ref_texture					t_noise			[TEX_jitter_count];
-
+	ID3DTexture2D*				t_noise_surf[TEX_jitter_count];
+	ref_texture					t_noise		[TEX_jitter_count];
+	// Mipped noise
+	ID3DTexture2D*				t_noise_surf_mipped;
+	ref_texture					t_noise_mipped;
 	// HQ noise
-	IDirect3DTexture9*			t_noise_hq_surf;
+	ID3DTexture2D*				t_noise_hq_surf;
 	ref_texture					t_noise_hq;
 
 private:
@@ -105,80 +127,98 @@ private:
 	// RAIN DROPS
 	ref_shader					s_rain_drops;
 
-	// Postrprocess anti-aliasing
-    ref_shader                  s_pp_antialiasing;
-	ref_rt						rt_smaa_edgetex;
-	ref_rt						rt_smaa_blendtex;
-	ref_rt						rt_prev_frame0;
-	ref_geom					g_smaa;
-
 	// Vignette
 	ref_shader					s_vignette;
 
+	// SSAO
+	ref_rt						rt_ssao_temp;
+	ref_rt						rt_half_depth;
+	ref_shader					s_ssao;
+	ref_shader					s_ssao_msaa[8];
 
-	// Water
+	// Puddles
 	ref_shader					s_water;
-	
 	// Accum
 	ref_shader					s_accum_mask	;
 	ref_shader					s_accum_direct	;
 	ref_shader					s_accum_direct_cascade;
 	ref_shader					s_accum_direct_volumetric;
+	ref_shader					s_accum_direct_volumetric_minmax;
 	ref_shader					s_accum_direct_volumetric_cascade;
 	ref_shader					s_accum_point	;
 	ref_shader					s_accum_spot	;
 	ref_shader					s_accum_reflected;
 	ref_shader					s_accum_volume;
 
-	ref_geom					g_accum_point	;
-	ref_geom					g_accum_spot	;
-	ref_geom					g_accum_omnipart;
-	ref_geom					g_accum_volumetric;
+	// Anti Aliasing
+    ref_shader					s_pp_antialiasing;
+	ref_rt						rt_smaa_edgetex;
+	ref_rt						rt_smaa_blendtex;
+	ref_rt						rt_prev_frame0;
+	ref_geom					g_smaa;
+	
+	//	generate min/max
+	ref_shader					s_create_minmax_sm;
 
-	IDirect3DVertexBuffer9*		g_accum_point_vb;
-	IDirect3DIndexBuffer9*		g_accum_point_ib;
+	//	DX10 Rain
+	ref_shader					s_rain;
+	
+	ref_shader					s_rain_msaa[8]	; // up to 8 shaders for DX10.0 support
+	ref_shader              s_accum_direct_volumetric_msaa[8];
+	ref_shader					s_accum_mask_msaa[8];
+	ref_shader					s_accum_direct_msaa[8];
+   ref_shader					s_mark_msaa_edges;
+	ref_shader					s_accum_point_msaa[8]	;
+	ref_shader					s_accum_spot_msaa[8]	;
+	ref_shader					s_accum_reflected_msaa[8];
+	ref_shader					s_accum_volume_msaa[8];
 
-	IDirect3DVertexBuffer9*		g_accum_omnip_vb;
-	IDirect3DIndexBuffer9*		g_accum_omnip_ib;
+	ref_geom						g_accum_point	;
+	ref_geom						g_accum_spot	;
+	ref_geom						g_accum_omnipart;
+	ref_geom						g_accum_volumetric;
 
-	IDirect3DVertexBuffer9*		g_accum_spot_vb	;
-	IDirect3DIndexBuffer9*		g_accum_spot_ib	;
+	ID3DVertexBuffer*		g_accum_point_vb;
+	ID3DIndexBuffer*		g_accum_point_ib;
 
-	IDirect3DVertexBuffer9*		g_accum_volumetric_vb;
-	IDirect3DIndexBuffer9*		g_accum_volumetric_ib;
+	ID3DVertexBuffer*		g_accum_omnip_vb;
+	ID3DIndexBuffer*		g_accum_omnip_ib;
 
-	//SSAO
-	ref_shader					s_ssao;
-	ref_rt						rt_ssao_temp;
-	ref_rt						rt_half_depth;
+	ID3DVertexBuffer*		g_accum_spot_vb	;
+	ID3DIndexBuffer*		g_accum_spot_ib	;
+
+	ID3DVertexBuffer*		g_accum_volumetric_vb;
+	ID3DIndexBuffer*		g_accum_volumetric_ib;
 
 	// Bloom
-	ref_geom					g_bloom_build;
-	ref_geom					g_bloom_filter;
-	ref_shader					s_bloom_dbg_1;
-	ref_shader					s_bloom_dbg_2;
-	ref_shader					s_bloom;
-	float						f_bloom_factor;
+	ref_geom				g_bloom_build;
+	ref_geom				g_bloom_filter;
+	ref_shader				s_bloom_dbg_1;
+	ref_shader				s_bloom_dbg_2;
+	ref_shader				s_bloom;
+	float					f_bloom_factor;
 
 	// Luminance
-	ref_shader					s_luminance;
-	float						f_luminance_adapt;
+	ref_shader				s_luminance;
+	float					f_luminance_adapt;
 
 	// Combine
-	ref_geom					g_combine;
-	ref_geom					g_combine_VP;		// xy=p,zw=tc
-	ref_geom					g_combine_2UV;
-	ref_geom					g_combine_cuboid;
-	ref_geom					g_aa_AA;
-	ref_shader					s_combine_dbg_0;
-	ref_shader					s_combine_dbg_1;
-	ref_shader					s_combine_dbg_Accumulator;
-	ref_shader					s_combine;
-	ref_shader					s_combine_volumetric;
+	ref_geom				g_combine;
+	ref_geom				g_combine_VP;		// xy=p,zw=tc
+	ref_geom				g_combine_2UV;
+	ref_geom				g_combine_cuboid;
+	ref_geom				g_aa_AA;
+	ref_shader				s_combine_dbg_0;
+	ref_shader				s_combine_dbg_1;
+	ref_shader				s_combine_dbg_Accumulator;
+	ref_shader				s_combine;
+   ref_shader				s_combine_msaa[8];
+	ref_shader				s_combine_volumetric;
 public:
-	ref_shader					s_postprocess;
+	ref_shader				s_postprocess;
+   ref_shader           s_postprocess_msaa;
 	ref_geom					g_postprocess;
-	ref_shader					s_menu;
+	ref_shader				s_menu;
 	ref_geom					g_menu;
 private:
 	float						im_noise_time;
@@ -203,7 +243,6 @@ private:
 
 	//	Igor: used for volumetric lights
 	bool						m_bHasActiveVolumetric;
-
 public:
 								CRenderTarget			();
 								~CRenderTarget			();
@@ -213,31 +252,36 @@ public:
 	void						accum_omnip_geom_destroy();
 	void						accum_spot_geom_create	();
 	void						accum_spot_geom_destroy	();
+
 	//	Igor: used for volumetric lights
 	void						accum_volumetric_geom_create();
 	void						accum_volumetric_geom_destroy();
 
-	void						u_stencil_optimize		(BOOL		common_stencil=TRUE);
-	void						u_compute_texgen_screen		(Fmatrix&	dest);
-	void						u_compute_texgen_screen_asd	(Fmatrix&	dest);
+	void						u_compute_texgen_screen	(Fmatrix&	dest);
 	void						u_compute_texgen_jitter	(Fmatrix&	dest);
-	void						u_setrt					(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, IDirect3DSurface9* zb);
-	void						u_setrt					(u32 W, u32 H, IDirect3DSurface9* _1, IDirect3DSurface9* _2, IDirect3DSurface9* _3, IDirect3DSurface9* zb);
+	void						u_setrt					(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, ID3DDepthStencilView* zb);
+	void						u_setrt					(const ref_rt& _1, const ref_rt& _2, ID3DDepthStencilView* zb);
+	void						u_setrt					(u32 W, u32 H, ID3DRenderTargetView* _1, ID3DRenderTargetView* _2, ID3DRenderTargetView* _3, ID3DDepthStencilView* zb);
 	void						u_calc_tc_noise			(Fvector2& p0, Fvector2& p1);
 	void						u_calc_tc_duality_ss	(Fvector2& r0, Fvector2& r1, Fvector2& l0, Fvector2& l1);
 	BOOL						u_need_PP				();
 	bool						u_need_CM				();
+
+#if !defined(USE_DX10) && !defined(USE_DX11)
+	void						enable_dbt_bounds		(light* L);
+	void						u_stencil_optimize		(BOOL common_stencil = TRUE);
 	BOOL						u_DBT_enable			(float zMin, float zMax);
 	void						u_DBT_disable			();
 
-	void						phase_clear_position	();
-	void						PhaseSSSS				();
-	void						phase_ssao				();
-	void						phase_downsamp			();
+	IDirect3DSurface9*			rt_smap_ZB;		//
+#endif
+
 	void						phase_scene_prepare		();
 	void						phase_scene_begin		();
 	void						phase_scene_end			();
 	void						phase_occq				();
+	void						phase_ssao				();
+	void						phase_downsamp			();
 	void						phase_wallmarks			();
 	void						phase_smap_direct		(light* L,	u32 sub_phase);
 	void						phase_smap_direct_tsh	(light* L,	u32 sub_phase);
@@ -246,7 +290,7 @@ public:
 	void						phase_smap_spot_tsh		(light* L);
 	void						phase_accumulator		();
 	void						phase_vol_accumulator	();
-	void						phase_puddles			();
+	void						PhaseSSSS				();
 	void						PhaseRainDrops			();
 	void						PhaseVignette			();
 	void						PhaseAA					();
@@ -257,18 +301,28 @@ public:
 	void						PhaseGammaApply			();
 	void						SaveGammaLUT			();
 
+	void						phase_puddles			();
+
 	void						shadow_direct			(light* L, u32 dls_phase);
 
+	//	Generates min/max sm
+	void						create_minmax_SM();
+
+	void						phase_rain				();
+	void						draw_rain				(light &RainSetup);
+	
+	void						mark_msaa_edges();
+
 	bool						need_to_render_sunshafts();
+	bool						use_minmax_sm_this_frame();
 
 	BOOL						enable_scissor			(light* L);		// true if intersects near plane
-	void						enable_dbt_bounds		(light* L);
 
 	void						disable_aniso			();
 
 	void						draw_volume				(light* L);
 	void						accum_direct			(u32	sub_phase);
-	void						accum_direct_cascade	(u32 sub_phase, Fmatrix& xform, Fmatrix& xform_prev, float fBias); 
+	void						accum_direct_cascade	(u32	sub_phase, Fmatrix& xform, Fmatrix& xform_prev, float fBias );
 	void						accum_direct_f			(u32	sub_phase);
 	void						accum_direct_lum		();
 	void						accum_direct_blend		();
@@ -313,42 +367,6 @@ public:
 		dbg_lines.back().P0		= P0;
 		dbg_lines.back().P1		= P1;
 		dbg_lines.back().color	= c;
-	}
-	IC void						dbg_addbox(const Fbox &box, const u32 &color)
-	{
-		Fvector c, r;
-		box.getcenter(c);
-		box.getradius(r);
-		dbg_addbox(c, r.x, r.y, r.z, color);
-	}
-	IC void						dbg_addbox(const Fvector &c, float rx, float ry, float rz, u32 color)
-	{
-		Fvector p1, p2, p3, p4, p5, p6, p7, p8;
-		
-		p1.set(c.x+rx, c.y+ry, c.z+rz);
-		p2.set(c.x+rx, c.y-ry, c.z+rz);
-		p3.set(c.x-rx, c.y-ry, c.z+rz);
-		p4.set(c.x-rx, c.y+ry, c.z+rz);
-		
-		p5.set(c.x+rx, c.y+ry, c.z-rz);
-		p6.set(c.x+rx, c.y-ry, c.z-rz);
-		p7.set(c.x-rx, c.y-ry, c.z-rz);
-		p8.set(c.x-rx, c.y+ry, c.z-rz);
-
-		dbg_addline(p1, p2, color);
-		dbg_addline(p2, p3, color);
-		dbg_addline(p3, p4, color);
-		dbg_addline(p4, p1, color);
-
-		dbg_addline(p5, p6, color);
-		dbg_addline(p6, p7, color);
-		dbg_addline(p7, p8, color);
-		dbg_addline(p8, p5, color);
-
-		dbg_addline(p1, p5, color);
-		dbg_addline(p2, p6, color);
-		dbg_addline(p3, p7, color);
-		dbg_addline(p4, p8, color);
 	}
 	IC void						dbg_addplane			(Fplane& P0,  u32 c)								{
 		dbg_planes.push_back(P0);
