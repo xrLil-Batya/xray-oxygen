@@ -111,13 +111,9 @@ void CRestrictedObject::net_Destroy			()
 u32	CRestrictedObject::accessible_nearest	(const Fvector &position, Fvector &result) const
 {
 	START_PROFILE("Restricted Object/Accessible Nearest");
-	VERIFY2						(
-		!accessible(position),
-		make_string(
+	VERIFY_FORMAT(!accessible(position),
 			"[%s] [%f][%f][%f]",
-			object().cName().c_str(),
-			VPUSH(position)
-		)
+			object().cName().c_str(), VPUSH(position)
 	);
 
 	return						(Level().space_restriction_manager().accessible_nearest(object().ID(),position,result));

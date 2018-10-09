@@ -1164,15 +1164,15 @@ void CInventory::BlockSlot(u16 slot_id)
 	
 	++m_blocked_slots[slot_id];
 	
-	VERIFY2(m_blocked_slots[slot_id] < 5,
-		make_string("blocked slot [%d] overflow").c_str());	
+	VERIFY_FORMAT(m_blocked_slots[slot_id] < 5,
+		"blocked slot [%d] overflow", slot_id);
 }
 
 void CInventory::UnblockSlot(u16 slot_id)
 {
 	VERIFY(slot_id <= LAST_SLOT);
-	VERIFY2(m_blocked_slots[slot_id] > 0,
-		make_string("blocked slot [%d] underflow").c_str());	
+	VERIFY_FORMAT(m_blocked_slots[slot_id] > 0,
+		"blocked slot [%d] underflow", slot_id);	
 	
 	--m_blocked_slots[slot_id];	
 }

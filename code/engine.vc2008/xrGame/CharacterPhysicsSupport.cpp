@@ -461,8 +461,8 @@ void CCharacterPhysicsSupport::in_Hit(SHit &H, bool is_killing)
 		return;
 	if (m_flags.test(fl_block_hit))
 	{
-		VERIFY2(!m_EntityAlife.g_Alive(),
-			make_string("entity [%s][%d] is dead", m_EntityAlife.Name(), m_EntityAlife.ID()).c_str());
+		VERIFY_FORMAT(!m_EntityAlife.g_Alive(),
+			"entity [%s][%d] is dead", m_EntityAlife.Name(), m_EntityAlife.ID());
 		if (Device.dwTimeGlobal - m_EntityAlife.GetLevelDeathTime() >= 2000)
 			m_flags.set(fl_block_hit, false);
 		else return;

@@ -66,10 +66,9 @@ IC	const DetailPathManager::STravelPathPoint &CDetailPathManager::curr_travel_po
 
 IC	u32	 CDetailPathManager::curr_travel_point_index() const
 {
-	VERIFY2					(
-		!m_path.empty() && (m_current_travel_point < m_path.size()),
-		make_string("path[%d], current[%d]",m_path.size(),m_current_travel_point)
-	);
+	VERIFY_FORMAT(!m_path.empty() && (m_current_travel_point < m_path.size()),
+		"path[%d], current[%d]", m_path.size(),m_current_travel_point);
+
 	return					(m_current_travel_point);
 }
 

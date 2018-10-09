@@ -907,17 +907,13 @@ void CUIActorMenu::TryRepairItem(CUIWindow* w, void* d)
 	LPCSTR partner = m_pPartnerInvOwner->CharacterInfo().Profile().c_str();
 
 	luabind::functor<bool> funct;
-	R_ASSERT2(
-		ai().script_engine().functor("inventory_upgrades.can_repair_item", funct),
-		make_string("Failed to get functor <inventory_upgrades.can_repair_item>, item = %s", item_name).c_str()
-	);
+	R_ASSERT_FORMAT(ai().script_engine().functor("inventory_upgrades.can_repair_item", funct),
+		"Failed to get functor <inventory_upgrades.can_repair_item>, item = %s", item_name);
 	bool can_repair = funct(item_name, item->GetCondition(), partner);
 
 	luabind::functor<LPCSTR> funct2;
-	R_ASSERT2(
-		ai().script_engine().functor("inventory_upgrades.question_repair_item", funct2),
-		make_string("Failed to get functor <inventory_upgrades.question_repair_item>, item = %s", item_name).c_str()
-	);
+	R_ASSERT_FORMAT(ai().script_engine().functor("inventory_upgrades.question_repair_item", funct2),
+		"Failed to get functor <inventory_upgrades.question_repair_item>, item = %s", item_name);
 	LPCSTR question = funct2(item_name, item->GetCondition(), can_repair, partner);
 
 	if (can_repair)
@@ -958,10 +954,8 @@ bool CUIActorMenu::CanUpgradeItem(PIItem item)
 	LPCSTR partner = m_pPartnerInvOwner->CharacterInfo().Profile().c_str();
 
 	luabind::functor<bool> funct;
-	R_ASSERT2(
-		ai().script_engine().functor("inventory_upgrades.can_upgrade_item", funct),
-		make_string("Failed to get functor <inventory_upgrades.can_upgrade_item>, item = %s, mechanic = %s", item_name, partner).c_str()
-	);
+	R_ASSERT_FORMAT(ai().script_engine().functor("inventory_upgrades.can_upgrade_item", funct),
+		"Failed to get functor <inventory_upgrades.can_upgrade_item>, item = %s, mechanic = %s", item_name, partner);
 
 	return funct(item_name, partner);
 }

@@ -342,7 +342,7 @@ void GetActionAllBinding(LPCSTR _action, char* dst_buff, int dst_buff_sz)
 		}
 		catch (...)
 		{
-			Debug.fatal(DEBUG_INFO, make_string("can't action id: %d", action_id).c_str());
+			R_ASSERT_FORMAT(false, "can't action id: %d", action_id);
 		}
 	}
 

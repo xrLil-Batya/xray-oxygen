@@ -747,10 +747,10 @@ void CAI_Stalker::update_range_fov		(float &new_range, float &new_fov, float sta
 	if (zoom_state())
 		inventory().ActiveItem()->modify_holder_params(range,fov);
 
-	VERIFY2					( start_fov < 180.f, make_string("[%s] %f", cName().c_str(), start_fov) );
-	VERIFY2					( fov < 180.f, make_string("fix addon multiplier for weapon or scope %s (fov=%f)", inventory().ActiveItem()->object().cName().c_str(), fov) );
+	VERIFY_FORMAT ( start_fov < 180.f, "[%s] %f", cName().c_str(), start_fov );
+	VERIFY_FORMAT ( fov < 180.f, "fix addon multiplier for weapon or scope %s (fov=%f)", inventory().ActiveItem()->object().cName().c_str(), fov );
 
-	return					(inherited::update_range_fov(new_range,new_fov,range,fov));
+	return		  ( inherited::update_range_fov(new_range,new_fov,range,fov));
 }
 
 bool CAI_Stalker::fire_make_sense		()

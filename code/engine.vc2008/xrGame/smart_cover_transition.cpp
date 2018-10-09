@@ -42,10 +42,8 @@ bool action::applicable			() const
 {
 	luabind::functor<bool>		functor;
 
-	R_ASSERT2					(
-		ai().script_engine().functor(m_precondition_functor.c_str(),functor), 
-		make_string("failed to get [%s]", m_precondition_functor.c_str()).c_str()
-	);
+	R_ASSERT_FORMAT(ai().script_engine().functor(m_precondition_functor.c_str(),functor), 
+		"failed to get [%s]", m_precondition_functor.c_str());
 
 	return						(functor(m_precondition_params.c_str()));
 }
