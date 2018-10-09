@@ -87,7 +87,7 @@ R_occlusion::occq_result R_occlusion::occq_get		(u32&	ID		)
 	CTimer	T;
 	T.Start	();
 	Device.Statistic->RenderDUMP_Wait.Begin	();
-	VERIFY2( ID<used.size(),make_string("_Pos = %d, size() = %d ", ID, used.size()));
+	VERIFY_FORMAT( ID<used.size(), "_Pos = %d, size() = %d ", ID, used.size());
 	while	((hr=GetData(used[ID].Q, &fragments,sizeof(fragments)))==S_FALSE) 
 	{
 		if (!SwitchToThread())			
