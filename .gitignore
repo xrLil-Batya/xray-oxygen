@@ -45,7 +45,7 @@ librariesx64/
 /code/xrQt/xrDevLaunch/release/
 code/engine.vc2008/xrCore/GitParser/GitParser.exe
 code/engine.vc2008/xrCore/oxy_version.h
-code/xrEditor/obj
+code/editors/xrEditor/obj
 
 game/gamedata_/
 game/gamedata/configs/coordinates.ltx

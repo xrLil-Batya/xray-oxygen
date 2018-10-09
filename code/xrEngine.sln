@@ -97,8 +97,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Spectre", "Spectre", "{2813
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Editors (will be moved later)", "Editors (will be moved later)", "{83B9D87D-2161-422D-AE5D-81B98EFC0776}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xrEditor", "xrEditor\xrEditor.csproj", "{A7773ECE-2F73-42A7-8783-4F79F97BD4AB}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedRenderLib", "engine.vc2008\xrManagedRenderLib\xrManagedRenderLib.vcxproj", "{42986579-D91D-4523-AE54-0BFFEB0748C2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CCCA7859-EB86-493E-9B53-C4235F45B3C5} = {CCCA7859-EB86-493E-9B53-C4235F45B3C5}
