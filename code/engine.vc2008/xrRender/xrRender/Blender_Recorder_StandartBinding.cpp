@@ -426,6 +426,7 @@ static class cl_LOD : public R_constant_setup
 
 
 // Standart constant-binding
+//MatthewKush to all: make sure byte alignment is correct. Same with structs.
 void CBlender_Compile::SetMapping()
 {
     r_Constant("ogse_c_screen", &binder_screen_params);

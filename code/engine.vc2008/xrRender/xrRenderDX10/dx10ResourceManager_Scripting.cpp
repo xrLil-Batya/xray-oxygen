@@ -88,6 +88,8 @@ void LuaLog(LPCSTR caMessage)
 
 // export
 #include "../../xrScripts/VMLua.h"
+//MatthewKush to all: I can do EVERYTHING from LUA from now on if you add the following options:
+//alpha-blending, _passCS, ability to create my own sampler's and sampler states
 void	CResourceManager::LS_Load()
 {
     luaVM = xr_new<CVMLua>();

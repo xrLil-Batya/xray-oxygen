@@ -111,7 +111,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	Caps.id_vendor = Desc.VendorId;
 	Caps.id_device = Desc.DeviceId;
 
-	// Set up the presentation parameters
+	// MatthewKush to all: Please change to DXGI_SWAP_CHAIN_DESC1 (for lots of reasons)
 	DXGI_SWAP_CHAIN_DESC &sd = m_ChainDesc;
 	memset(&sd, 0, sizeof(sd));
 
@@ -186,9 +186,15 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	D3D11_FEATURE_DATA_THREADING threadingFeature;
 	R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_THREADING, &threadingFeature, sizeof(threadingFeature)));
+        //MatthewKush to all: If we keep data threading, make use of async resources. Otherwise we
+        //should make it a single-threaded device.
 
 	if (IsWindows10OrGreater())
 	{
+	        D3D11_FEATURE_DATA ARCHITECTURE arch;
+	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE, &arch, sizeof(arch)));
+                arch.TileBasedDeferredRenderer == TRUE;
+
 		IDXGIDevice3 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
 
@@ -199,6 +205,10 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	}
 	else if (IsWindows8OrGreater())
 	{
+	        D3D11_FEATURE_DATA ARCHITECTURE arch;
+	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE, &arch, sizeof(arch)));
+                arch.TileBasedDeferredRenderer == TRUE;
+
 		IDXGIDevice2 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&pDXGIDevice));
 
