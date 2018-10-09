@@ -257,7 +257,7 @@ void OGF::Optimize	()
 
 
 // Make Progressive
-std::recursive_mutex			progressive_cs;
+xrCriticalSection			progressive_cs;
 void OGF::MakeProgressive	(float metric_limit)
 {
 	// test
@@ -269,7 +269,7 @@ void OGF::MakeProgressive	(float metric_limit)
 //. AlexMX added for draft build mode
 	if (g_params().m_quality==ebqDraft)		return		;
 
-    std::lock_guard<decltype(progressive_cs)> lock(progressive_cs);
+	xrCriticalSectionGuard guard(progressive_cs);
 
 	//////////////////////////////////////////////////////////////////////////
 	// NORMAL

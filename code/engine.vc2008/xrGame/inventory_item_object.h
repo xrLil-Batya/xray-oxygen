@@ -11,7 +11,7 @@
 #include "physic_item.h"
 #include "inventory_item.h"
 
-class CInventoryItemObject : 
+class GAME_API CInventoryItemObject : 
 			public CInventoryItem, 
 			public CPhysicItem
 {

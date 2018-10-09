@@ -13,7 +13,7 @@
 inline std::string_view ltrim(std::string_view s)
 {
 	const size_t startpos = s.find_first_not_of(" \t\r\n\v\f");
-	if (std::string::npos != startpos)
+	if (xr_string::npos != startpos)
 		s = s.substr(startpos);
 	return s;
 }
@@ -22,13 +22,13 @@ inline std::string_view ltrim(std::string_view s)
 inline std::string_view rtrim(std::string_view s)
 {
 	const size_t endpos = s.find_last_not_of(" \t\r\n\v\f");
-	if (std::string::npos != endpos)
+	if (xr_string::npos != endpos)
 		s = s.substr(0, endpos + 1);
 	return s;
 }
 
 // Getting and founding sects
-inline std::list<config::section>::iterator get_found(const std::string& sectname, std::list<config::section>& sects)
+inline std::list<config::section>::iterator get_found(const xr_string& sectname, std::list<config::section>& sects)
 {
 	return std::find_if(sects.begin(), sects.end(), [sectname](const config::section& sect) { return sect.name.compare(sectname) == 0; });
 }
@@ -70,7 +70,7 @@ void config::WriteSect(const std::string_view filename, const std::string_view s
 		inp.open(filename.data());
 		if (!inp)
 		{
-			throw std::invalid_argument(std::string(filename) + " could not be opened");
+			throw std::invalid_argument(xr_string(filename) + " could not be opened");
 		}
 	}
 	inp << "[" << sectionname << "]";
@@ -94,13 +94,13 @@ config::section* config::get_section(const string& sectionname)
 }
 
 // Get value of sector
-std::string config::get_value(const string& sectionname, const string& keyname)
+xr_string config::get_value(const string& sectionname, const string& keyname)
 {
 	const section* sect = get_section(sectionname);
 	if (sect)
 	{
 		auto it = sect->keyvalues.find(keyname);
-		auto newsect = [] (std::string sect) {if (sect[0] == ' ') sect = sect.erase(0, 1); return sect; };
+		auto newsect = [] (xr_string sect) {if (sect[0] == ' ') sect = sect.erase(0, 1); return sect; };
 		if (it != sect->keyvalues.end())
 		{
 			return newsect(it->second);
@@ -206,7 +206,7 @@ void config::parse(const string& filename, bool create)
 // Getting the string
 bool config::get_logic(const string& sectionname, const string& keyname)
 {
-	std::string &val = this->get_value(sectionname, keyname);
+	xr_string &val = this->get_value(sectionname, keyname);
 	std::transform(val.begin(), val.end(), val.begin(), ::tolower);
 	return val == "true";
 }
@@ -215,7 +215,7 @@ bool config::get_logic(const string& sectionname, const string& keyname)
 // Getting the int
 int config::get_number(const string& sectionname, const string& keyname)
 {
-	const std::string &val = this->get_value(sectionname, keyname);
+	const xr_string &val = this->get_value(sectionname, keyname);
 	return std::stoi(val);
 }
 
@@ -223,7 +223,7 @@ int config::get_number(const string& sectionname, const string& keyname)
 // Getting the float
 float config::get_float(const string& sectionname, const string& keyname)
 {
-	const std::string &val = this->get_value(sectionname, keyname);
+	const xr_string &val = this->get_value(sectionname, keyname);
 	return std::stof(val);
 }
 

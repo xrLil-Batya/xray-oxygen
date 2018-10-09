@@ -4,7 +4,7 @@
 class CEntityAlive;
 class CBlend;
 struct SGameMtlPair;
-class CStepManager {
+class GAME_API CStepManager {
 	u8					m_legs_count;
 
 	STEPS_MAP			m_steps_map;

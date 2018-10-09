@@ -3,7 +3,7 @@
 //==============================================================================
 class ENGINE_API INetQueue
 {
-	std::recursive_mutex cs;
+	xrCriticalSection cs;
 	xr_deque<NET_Packet*>	ready;
 	xr_vector<NET_Packet*>	unused;
 public:
@@ -14,8 +14,8 @@ public:
 	NET_Packet*			Create	(const NET_Packet& _other);
 	NET_Packet*			Retreive();
 	void				Release	();
-	inline void			Lock	() { cs.lock(); };
-	inline void			Unlock	() { cs.unlock(); };
+	inline void			Lock	() { cs.Enter(); };
+	inline void			Unlock	() { cs.Leave(); };
 };
 //==============================================================================
 class ENGINE_API IPureClient

@@ -22,32 +22,32 @@ int Time::GetHour()
 	return aTm->tm_hour < 10;
 }
 
-std::string Time::GetSeconds()
+xr_string Time::GetSeconds()
 {
-	return (aTm->tm_sec < 10) ? "0" + std::to_string(aTm->tm_sec) : std::to_string(aTm->tm_sec);
+	return (aTm->tm_sec < 10) ? "0" + xr_string::ToString(aTm->tm_sec) : xr_string::ToString(aTm->tm_sec);
 }
 
-std::string Time::GetMinutes()
+xr_string Time::GetMinutes()
 {
-	return (aTm->tm_min < 10) ? "0" + std::to_string(aTm->tm_min) : std::to_string(aTm->tm_min);
+	return (aTm->tm_min < 10) ? "0" + xr_string::ToString(aTm->tm_min) : xr_string::ToString(aTm->tm_min);
 }
 
-std::string Time::GetHours()
+xr_string Time::GetHours()
 {
-	return (aTm->tm_hour < 10) ? "0" + std::to_string(aTm->tm_hour) : std::to_string(aTm->tm_hour);
+	return (aTm->tm_hour < 10) ? "0" + xr_string::ToString(aTm->tm_hour) : xr_string::ToString(aTm->tm_hour);
 }
 
-std::string Time::GetDay()
+xr_string Time::GetDay()
 {
-	return (aTm->tm_mday < 10) ? "0" + std::to_string(aTm->tm_mday) : std::to_string(aTm->tm_mday);
+	return (aTm->tm_mday < 10) ? "0" + xr_string::ToString(aTm->tm_mday) : xr_string::ToString(aTm->tm_mday);
 }
 
-std::string Time::GetMonth()
+xr_string Time::GetMonth()
 {
-	return (aTm->tm_mon + 1 < 10) ? "0" + std::to_string(aTm->tm_mon + 1) : std::to_string(aTm->tm_mon + 1);
+	return (aTm->tm_mon + 1 < 10) ? "0" + xr_string::ToString(aTm->tm_mon + 1) : xr_string::ToString(aTm->tm_mon + 1);
 }
 
-std::string Time::GetYear()
+xr_string Time::GetYear()
 {
-	return std::to_string(aTm->tm_year + 1900);
+	return xr_string::ToString(aTm->tm_year + 1900);
 }

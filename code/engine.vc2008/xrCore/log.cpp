@@ -8,7 +8,8 @@
 extern BOOL					LogExecCB		= TRUE;
 static string_path			log_file_name;
 static bool 				no_log			= true;
-static std::recursive_mutex	logCS;
+
+xrCriticalSection Lock;
 
 bool __declspec(dllexport) force_flush_log = false;	// alpet: выставить в true если лог все-же записывается плохо при вылете. 
 //RvP													// Слишком частая запись лога вредит SSD и снижает производительность.
@@ -26,7 +27,7 @@ void FlushLog()
 	{
 		if (!no_log) 
 		{
-			std::lock_guard<decltype(logCS)> lock(logCS);
+			xrCriticalSectionGuard guard(Lock);
 			IWriter *f = FS.w_open(log_file_name);
 			if (f)
 			{
@@ -50,7 +51,7 @@ void AddOne(const char *split)
 	if (!LogFile)
 		return;
 
-	std::lock_guard<decltype(logCS)> lock(logCS);
+	xrCriticalSectionGuard guard(Lock);
 
 	OutputDebugString(split);
 	OutputDebugString("\n");

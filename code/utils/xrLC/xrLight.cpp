@@ -10,7 +10,7 @@
 //#include "../xrLC_Light/net_task_manager.h"
 #include "../xrLC_Light/lcnet_task_manager.h"
 #include "../xrLC_Light/mu_model_light.h"
-std::recursive_mutex	task_CS;
+xrCriticalSection	task_CS;
 
 xr_vector<int>		task_pool;
 
@@ -35,7 +35,7 @@ public:
 		{
 			// Get task
             {
-                std::lock_guard<decltype(task_CS)> lock(task_CS);
+				xrCriticalSectionGuard guard(task_CS);
                 thProgress = 1.f - float(task_pool.size()) / float(lc_global_data()->g_deflectors().size());
                 if (task_pool.empty()) return;
 

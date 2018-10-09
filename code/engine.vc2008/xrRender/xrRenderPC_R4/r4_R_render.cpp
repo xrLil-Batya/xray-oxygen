@@ -456,7 +456,7 @@ void CRender::render_forward				()
 		if (Glows && ps_r_flags.is(R_FLAG_GLOW_USE))
 			Glows->Render();											// glows render
 
-		g_pGamePersistent->Environment().RenderLast();					// rain/thunder-bolts
+		Environment().RenderLast();					// rain/thunder-bolts
 	}
 
 	RImplementation.o.distortion				= FALSE;				// disable distorion

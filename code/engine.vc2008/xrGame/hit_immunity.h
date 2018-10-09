@@ -9,7 +9,7 @@ namespace HitImmunity
 	using HitTypeSVec = svector<float, ALife::eHitTypeMax>;
 };
 
-class CHitImmunity
+class GAME_API CHitImmunity
 {
 	//коэффициенты на которые домножается хит
 	//при соответствующем типе воздействия

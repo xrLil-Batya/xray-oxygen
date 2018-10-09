@@ -15,7 +15,7 @@ class CIKLimbsController;
 
 
 
-class CPhysicsShellHolder:  public CGameObject,
+class GAME_API CPhysicsShellHolder:  public CGameObject,
 							public CParticlesPlayer,
 							public IObjectPhysicsCollision,
 							public IPhysicsShellHolder
@@ -36,6 +36,7 @@ public:
 
 			CPhysicsShellHolder							();
 	virtual	~CPhysicsShellHolder						();
+	CPhysicsShellHolder& operator = (const CPhysicsShellHolder& other) = delete;
 
 	virtual bool		ActivationSpeedOverriden (Fvector& dest, bool clear_override) { return false; }
 
@@ -132,5 +133,5 @@ private://IPhysicsShellHolder
 	virtual CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer					()  					{return ph_sound_player();}
 	virtual	ICollisionDamageReceiver* _BCL				ObjectPhCollisionDamageReceiver		()						;
 	virtual	void					_BCL					BonceDamagerCallback				(float &damage_factor)	;
-	virtual	std::string				_BCL					dump								(EDumpType type) const  ;
+	virtual	xr_string				_BCL					dump								(EDumpType type) const  ;
 };

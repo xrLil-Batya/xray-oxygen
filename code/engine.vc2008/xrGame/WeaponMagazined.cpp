@@ -810,7 +810,7 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 			return true;
 	// Подствольный гранатомет
 	else if (pGrenadeLauncher && m_eGrenadeLauncherStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) == 0 &&
-		(m_sGrenadeLauncherName == std::string(pIItem->object().cNameSect().c_str())))
+		(m_sGrenadeLauncherName == xr_string(pIItem->object().cNameSect().c_str())))
 			return true;
 	else
 		return inherited::CanAttach(pIItem);

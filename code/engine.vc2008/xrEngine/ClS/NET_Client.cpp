@@ -20,7 +20,7 @@ INetQueue::INetQueue()
 
 INetQueue::~INetQueue()
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 	u32				it;
 	for				(it=0; it<unused.size(); it++)	xr_delete(unused[it]);
 	for				(it=0; it<ready.size(); it++)	xr_delete(ready[it]);
@@ -45,10 +45,11 @@ NET_Packet*		INetQueue::Create	()
 	//cs.Leave		();
 	return	P;
 }
+
 NET_Packet*		INetQueue::Create	(const NET_Packet& _other)
 {
-	NET_Packet*	P			= 0;
-    std::lock_guard<decltype(cs)> lock(cs);
+	NET_Packet*	P			= nullptr;
+	xrCriticalSectionGuard guard(cs);
 	if (unused.empty())	
 	{
 		ready.push_back		(xr_new<NET_Packet> ());
@@ -64,9 +65,10 @@ NET_Packet*		INetQueue::Create	(const NET_Packet& _other)
     std::memcpy(P,&_other,sizeof(NET_Packet));
 	return			P;
 }
+
 NET_Packet*		INetQueue::Retreive	()
 {
-	NET_Packet*	P			= 0;
+	NET_Packet*	P			= nullptr;
 	if (!ready.empty())		P = ready.front();
 	//---------------------------------------------	
 	else

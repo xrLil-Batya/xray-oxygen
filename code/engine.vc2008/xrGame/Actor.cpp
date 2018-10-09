@@ -751,7 +751,7 @@ void CActor::UpdateCL()
 	SetEvent(MtSecondUpdaterEventStart);
 
 	// Update Collision
-	MtFeelTochMutex.lock();
+	MtFeelTochMutex.Enter();
 	if (IsFeelTouchCharacters())
 	{
 		for (CObject* pObject : feel_touch)
@@ -763,7 +763,7 @@ void CActor::UpdateCL()
 			}
 		}
 	}
-	MtFeelTochMutex.unlock();
+	MtFeelTochMutex.Leave();
 
 	m_pPhysics_support->in_UpdateCL();
 

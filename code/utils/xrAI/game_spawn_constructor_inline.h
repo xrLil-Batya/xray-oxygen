@@ -42,13 +42,13 @@ IC	void CGameSpawnConstructor::add_level_points		(const LEVEL_POINT_STORAGE &lev
 
 IC	void CGameSpawnConstructor::add_level_changer		(CSE_ALifeLevelChanger *level_changer)
 {
-    std::lock_guard<decltype(m_critical_section)> lock(m_critical_section);
+	xrCriticalSectionGuard guard(m_critical_section);
 	m_level_changers.push_back	(level_changer);
 }
 
 IC	void CGameSpawnConstructor::add_edge				(ALife::_SPAWN_ID id0, ALife::_SPAWN_ID id1, float weight)
 {
-    std::lock_guard<decltype(m_critical_section)> lock(m_critical_section);
+	xrCriticalSectionGuard guard(m_critical_section);
 	spawn_graph().add_edge		(id0,id1,weight);
 }
 

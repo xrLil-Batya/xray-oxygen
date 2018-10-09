@@ -3,7 +3,7 @@
 #pragma once
 
 #define VC_EXTRALEAN				// Exclude rarely-used stuff from Windows headers
-#define WIN32_LEAN_AND_MEAN			// Exclude rarely-used stuff from Windows headers
+//#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #ifndef STRICT
 #	define STRICT					// Enable strict syntax
 #endif // STRICT
@@ -37,9 +37,9 @@
 #define NOHELP
 #define NOPROFILER
 #define NOMCX
-//#define NOMINMAX
 #define DOSWIN32
 #define _WIN32_DCOM
+#define NOMINMAX
 
 #pragma warning(push)
 #pragma warning(disable:4005)

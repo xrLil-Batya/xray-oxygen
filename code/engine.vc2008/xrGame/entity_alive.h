@@ -11,7 +11,7 @@ class CCharacterPhysicsSupport;
 class CMaterialManager;
 class CVisualMemoryManager;
 class CBlend;
-class CEntityAlive : public CEntity {
+class GAME_API CEntityAlive : public CEntity {
 protected:
 	using inherited =	CEntity;	
 private:

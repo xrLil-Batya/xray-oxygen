@@ -221,6 +221,13 @@ public:
 	inline BOOL IsDynamic() { return m_objectFlags.is(eoDynamic); }
 	inline BOOL IsStatic() { return !m_objectFlags.is(eoSoundOccluder) && !m_objectFlags.is(eoDynamic) && !m_objectFlags.is(eoHOM) && !m_objectFlags.is(eoMultipleUsage); }
 	inline BOOL IsMUStatic() { return !m_objectFlags.is(eoSoundOccluder) && !m_objectFlags.is(eoDynamic) && !m_objectFlags.is(eoHOM) && m_objectFlags.is(eoMultipleUsage); }
+
+	shared_str GetCreatorName()			const { return m_CreateName;  }
+	shared_str GetModificatorName()		const { return m_ModifName;   }
+
+	__time32_t GetCreationTime()		const { return m_CreateTime; }
+	__time32_t GetModificationTime()	const { return m_ModifTime; }
+
 private:
 	// bounding volume
 	Fbox m_Box;

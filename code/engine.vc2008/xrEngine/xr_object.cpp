@@ -15,6 +15,7 @@
 
 #include "mp_logging.h"
 #include "xr_collide_form.h"
+#include "spectre/Spectre.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -335,7 +336,10 @@ void CObject::shedule_Update	( u32 T )
 
 	// Always make me crow on shedule-update 
 	// Makes sure that update-cl called at least with freq of shedule-update
-	MakeMeCrow					();	
+	MakeMeCrow					();
+
+	//Call indexed spectre method
+	SpectreCallback::shedule_update->Invoke(DLL_Pure::SpectreObjectId, T);
 }
 
 void	CObject::spatial_register	()

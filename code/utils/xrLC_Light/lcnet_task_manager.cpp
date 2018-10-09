@@ -39,7 +39,7 @@ namespace	lc_net{
 
 	bool	task_manager::initialize_session( DWORD _session_id )
 	{
-        std::lock_guard<decltype(init_lock)> lock(init_lock);
+		xrCriticalSectionGuard guard(init_lock);
 		bool ret = false;
 		if( session_id == DWORD(-1) )
 		{
@@ -78,10 +78,10 @@ namespace	lc_net{
 		R_ASSERT(pool_id >= 0 );
 		R_ASSERT(pool_id < num_pools );
 
-		pool_lock.lock( );
+		pool_lock.Enter( );
 		if( pools[pool_id] == 0 )
 			pools[pool_id] = xr_new<exec_pool>( this );
-		pool_lock.unlock( );
+		pool_lock.Leave( );
 		return pools[pool_id]->receive_task( agent, sessionId, inStream );
 
 	}
@@ -98,9 +98,9 @@ namespace	lc_net{
 		{
 			Sleep(1);
 			bool user_inited = false;
-			init_lock.lock();
+			init_lock.Enter();
 			user_inited = !!_user;
-			init_lock.unlock();
+			init_lock.Leave();
 			if( user_inited )
 				break;
 		}
@@ -111,7 +111,8 @@ namespace	lc_net{
 	}
 	void	task_manager::create_user( )
 	{
-        std::lock_guard<decltype(init_lock)> lock(init_lock);
+		xrCriticalSectionGuard guard(init_lock);
+
 		R_ASSERT( !_user );
 		R_ASSERT( !_release );
 		_user = CreateGridUserObject(IGridUser::VERSION);
@@ -125,9 +126,9 @@ namespace	lc_net{
 		{
 			bool release = false;
 			Sleep( 1000 );
-			init_lock.lock();
+			init_lock.Enter();
 			release = _release;
-			init_lock.unlock();
+			init_lock.Leave();
 			if( release )
 				break;
 		}
@@ -152,11 +153,11 @@ namespace	lc_net{
 	}
 	exec_pool	*task_manager::run( LPCSTR name_pool )
 	{
-		pool_lock.lock();
+		pool_lock.Enter();
 
 		if( !pools[current_pool] )
 		{
-			pool_lock.unlock();
+			pool_lock.Leave();
 			return nullptr;
 		}
 		pools[current_pool]->set_name( name_pool );
@@ -165,7 +166,7 @@ namespace	lc_net{
 		++current_pool;
 		R_ASSERT( current_pool < num_pools );
 
-		pool_lock.unlock();
+		pool_lock.Leave();
 
 		R_ASSERT( _user );
 		pools[lrun]->run(  *_user,  lrun );
@@ -175,10 +176,10 @@ namespace	lc_net{
 	void task_manager::progress( u32 task )
 	{
 		u32 l_completed = 0;
-		log_lock.lock();
+		log_lock.Enter();
 		++tasks_completed;
 		l_completed = tasks_completed;
-		log_lock.unlock();
+		log_lock.Leave();
 		Progress(float(l_completed)/float(start));
 	}
 
@@ -193,7 +194,8 @@ namespace	lc_net{
 
 	void task_manager::release_user( )
 	{
-        std::lock_guard<decltype(init_lock)> lock(init_lock);
+		xrCriticalSectionGuard guard(init_lock);
+
 		if(!_user)
 			return;
 
@@ -209,7 +211,7 @@ namespace	lc_net{
 	{
 		for(u8 i = 0; i < num_pools; ++i )
 				R_ASSERT( !(pools[i]) || !(pools[i]->is_running()) );
-        std::lock_guard<decltype(init_lock)> lock(init_lock);
+		xrCriticalSectionGuard guard(init_lock);
 		_release = true;
 	//	thread_spawn	(task_manager::release_user_thread_proc,"release-user",1024*1024,this);
 
@@ -218,7 +220,7 @@ namespace	lc_net{
 
 	void	task_manager::add_task( net_execution* task )
 	{
-        std::lock_guard<decltype(pool_lock)> lock(pool_lock);
+		xrCriticalSectionGuard guard(pool_lock);
 
 		if( !pools[current_pool] )
 			pools[current_pool] = xr_new<exec_pool>( start, this );

@@ -13,7 +13,7 @@ void CRenderTarget::PhaseRainDrops()
 	float _h = float(Device.dwHeight);
 
 	// Consts
-	CEnvDescriptorMixer& envdesc = *g_pGamePersistent->Environment().CurrentEnv;
+	CEnvDescriptorMixer& envdesc = *Environment().CurrentEnv;
 	Fvector4 params = { envdesc.rain_density, droplets_power_debug, 0, 0 };
 	xr_unordered_map<LPCSTR, Fvector4*> consts;
 	consts.insert(std::make_pair("rain_drops_params0", &params));

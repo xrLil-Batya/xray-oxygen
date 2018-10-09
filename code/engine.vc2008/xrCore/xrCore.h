@@ -1,15 +1,8 @@
-/*
-	* Authors:
-	* Date of creation:
-	* Description:
-	* Copyright:
-*/
 #pragma once
 #pragma warning (disable : 4530 )		// C++ vector(985)
-#ifndef _CLR_MANAGER
-#	include <thread>
-#	include <mutex>
-#endif
+
+#define ENGINE_VERSION "1.7f"
+
 #ifndef DEBUG
 #	define MASTER_GOLD
 #endif // DEBUG
@@ -162,14 +155,15 @@
 #	define XRCORE_API __declspec(dllimport)
 #endif
 
+#include "_types.h"
+#include "xrMemory.h"
+#include "_stl_extensions.h"
+#include "thread_utils.h"
 #include "xrDebug.h"
 #include "vector.h"
-
 #include "clsid.h"
-#include "xrMemory.h"
 #include "xrDebug.h"
 
-#include "_stl_extensions.h"
 #include "xrsharedmem.h"
 #include "xrstring.h"
 #include "xr_resource.h"
@@ -229,6 +223,16 @@ using RTokenVec = xr_vector<xr_rtoken>;
 #ifndef XRCORE_STATIC
 #include "net_utils.h"
 #endif
+
+// Check if user included some files, that a prohibited
+#ifdef _MUTEX_
+#error <mutex> file is prohibited, please use xrCriticalSection and xrCriticalSectionGuard instead
+#endif
+// Ban std::thread also
+#ifdef _THREAD_
+#error <thread> is prohibited, please use ttapi, or _beginthreadex
+#endif
+
 // destructor
 template <class T>
 class destructor

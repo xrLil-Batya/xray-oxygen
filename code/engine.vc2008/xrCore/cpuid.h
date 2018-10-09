@@ -96,7 +96,7 @@ struct XRCORE_API processor_info
 		return (features & static_cast<unsigned>(feature));
 	}
 
-	int getCPULoad(double &val);
+	bool getCPULoad(double &val);
 	float* MTCPULoad();
 	float CalcMPCPULoad(DWORD dwCPU);
 

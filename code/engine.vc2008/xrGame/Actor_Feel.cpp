@@ -124,7 +124,7 @@ void CActor::PickupModeUpdate()
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
-	MtFeelTochMutex.lock(); // Syns MtActorUpdate and UpdateCL
+	xrCriticalSectionGuard guard(MtFeelTochMutex);
     for (CObject* obj : feel_touch)
     {
         Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
@@ -150,12 +150,10 @@ void CActor::PickupModeUpdate()
 				m_CapmfireWeLookingAt = camp;
 				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
 
-				MtFeelTochMutex.unlock();
 				return;
 			}
 		}
 	}
-	MtFeelTochMutex.unlock();
 }
 
 #include "../xrEngine/CameraBase.h"

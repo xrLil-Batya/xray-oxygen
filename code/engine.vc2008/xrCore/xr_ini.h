@@ -46,7 +46,7 @@ public:
 
 	bool save_as(const char* = 0);
 	void save_as(IWriter& writer, bool bcheck = false) const;
-	std::string get_as_string();
+	xr_string get_as_string();
 
 	const char* fname() { return fName; };
 

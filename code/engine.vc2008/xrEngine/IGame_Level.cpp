@@ -115,7 +115,7 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	Render->level_Load			(LL_Stream);
 
 	// Objects
-	g_pGamePersistent->Environment().mods_load	();
+	Environment().mods_load	();
 	R_ASSERT					(Load_GameSpecific_Before());
 	Objects.Load				();
 

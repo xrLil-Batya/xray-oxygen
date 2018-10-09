@@ -3,7 +3,7 @@
 #pragma hdrstop
 #include "GameMtlLib.h"
 
-CEGameMtlLibrary GEMLib;
+ECORE_API CEGameMtlLibrary GEMLib;
 
 void SEGameMtl::Load(IReader& fs)
 {
