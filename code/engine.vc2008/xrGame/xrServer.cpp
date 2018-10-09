@@ -578,7 +578,7 @@ void xrServer::Perform_destroy(CSE_Abstract* object)
 	while (!object->children.empty())
 	{
 		CSE_Abstract *child = ID_to_entity(object->children.back());
-		R_ASSERT2(child, make_string("child registered but not found [%d] [%s]", object->children.back(), object->name()));
+		R_ASSERT2(child, make_string("child registered but not found [%d] [%s]", object->children.back(), object->name()).c_str());
 
 		Perform_reject(child, object, 2 * NET_Latency);
 		Perform_destroy(child);
@@ -682,9 +682,9 @@ void xrServer::Process_event(NET_Packet& P)
 		u16 id_entity;
 		P.r_u16(id_entity);
 
-		// кто забирает (для своих нужд)
+		// РєС‚Рѕ Р·Р°Р±РёСЂР°РµС‚ (РґР»СЏ СЃРІРѕРёС… РЅСѓР¶Рґ)
 		CSE_Abstract* e_parent = receiver;
-		// кто отдает
+		// РєС‚Рѕ РѕС‚РґР°РµС‚
 		CSE_Abstract* e_entity = ID_to_entity(id_entity);
 		if (!e_entity) break;
 
@@ -718,7 +718,7 @@ void xrServer::Process_event(NET_Packet& P)
 		u16 id_src;
 		P.r_u16(id_src);
 
-		// кто умер
+		// РєС‚Рѕ СѓРјРµСЂ
 		CSE_Abstract *e_dest = receiver;
 		// this is possible when hit event is sent before destroy event
 		if (!e_dest) break;
@@ -740,12 +740,12 @@ void xrServer::Process_event(NET_Packet& P)
 		u16 id_dest = destination, id_src;
 		P.r_u16(id_src);
 
-		// кто умер
+		// РєС‚Рѕ СѓРјРµСЂ
 		CSE_Abstract* e_dest = receiver;
 		// this is possible when hit event is sent before destroy event
 		if (!e_dest) break;
 
-		CSE_Abstract* e_src = ID_to_entity(id_src);	// кто убил
+		CSE_Abstract* e_src = ID_to_entity(id_src);	// РєС‚Рѕ СѓР±РёР»
 
 		if (!e_src)
 		{
@@ -755,7 +755,7 @@ void xrServer::Process_event(NET_Packet& P)
 
 		game->on_death(e_dest, e_src);
 
-		// клиент, чей юнит убил
+		// РєР»РёРµРЅС‚, С‡РµР№ СЋРЅРёС‚ СѓР±РёР»
 		CClient* c_src = e_src->owner;
 
 		if (c_src->owner->ID == id_src)
@@ -1012,7 +1012,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET
 	// Parse message
 	u16 id_dest = ID;
 
-	// кто должен быть уничтожен
+	// РєС‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРЅРёС‡С‚РѕР¶РµРЅ
 	CSE_Abstract* e_dest = ID_to_entity(id_dest);
 	if (!e_dest)
 	{

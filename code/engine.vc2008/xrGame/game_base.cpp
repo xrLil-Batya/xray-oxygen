@@ -57,7 +57,7 @@ void game_GameState::net_import_GameTime(NET_Packet & P)
 	Level().SetEnvironmentGameTimeFactor(GameEnvironmentTime, EnvironmentTimeFactor);
 
 	if (OldTime > GameEnvironmentTime)
-		GamePersistent().Environment().Invalidate();
+		Environment().Invalidate();
 }
 
 CLASS_ID game_GameState::getCLASS_ID(LPCSTR game_type_name, bool isServer)
@@ -177,6 +177,6 @@ EGameLanguage g_Language = EGameLanguage::eglRussian;
 
 xr_token language_type_token[] =
 {
-	{ "Русский", 0 },
+	{ "Р СѓСЃСЃРєРёР№", 0 },
 { "English", 1 }
 };

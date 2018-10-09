@@ -436,7 +436,7 @@ void CLevel::OnFrame()
 	}
 	Environment().m_paused = m_bEnvPaused;
 #endif
-	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
+	Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
 
 	m_ph_commander->update();

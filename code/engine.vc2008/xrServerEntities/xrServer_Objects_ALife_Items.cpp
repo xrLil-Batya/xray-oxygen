@@ -147,10 +147,7 @@ void CSE_ALifeInventoryItem::UPDATE_Write	(NET_Packet &tNetPacket)
 	num_items.mask					= 0;
 	num_items.num_items				= m_u8NumItems;
 
-	R_ASSERT2						(
-		num_items.num_items < (u8(1) << 5),
-		make_string("%d",num_items.num_items)
-		);
+	R_ASSERT2(num_items.num_items < (u8(1) << 5), make_string("%d", num_items.num_items).c_str());
 
 	if (State.enabled)									num_items.mask |= inventory_item_state_enabled;
 	if (fis_zero(State.angular_vel.square_magnitude()))	num_items.mask |= inventory_item_angular_null;
@@ -203,10 +200,7 @@ void CSE_ALifeInventoryItem::UPDATE_Read	(NET_Packet &tNetPacket)
 	num_items.common				= m_u8NumItems;
 	m_u8NumItems					= num_items.num_items;
 
-	R_ASSERT2						(
-		m_u8NumItems < (u8(1) << 5),
-		make_string("%d",m_u8NumItems)
-		);
+	R_ASSERT2(m_u8NumItems < (u8(1) << 5), make_string("%d", m_u8NumItems).c_str());
 	
 	/*if (check(num_items.mask,animated))
 	{
@@ -307,7 +301,7 @@ void CSE_ALifeInventoryItem::add_upgrade( const shared_str& upgrade_id )
 		m_upgrades.push_back( upgrade_id );
 		return;
 	}
-	FATAL(make_string("Can`t add existent upgrade (%s)!", upgrade_id.c_str()));
+	FATAL(make_string("Can`t add existent upgrade (%s)!", upgrade_id.c_str()).c_str());
 }
 
 

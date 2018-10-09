@@ -30,7 +30,7 @@ BOOL CVisualZone::	net_Spawn						(CSE_Abstract* DC)
 			cName().c_str(),
 			Z->attack_animation.c_str(),
 			cNameVisual().c_str()
-		)
+		).c_str()
 	) ;
 
 	m_idle_animation			= SA->ID_Cycle_Safe(Z->startup_animation);
@@ -41,7 +41,7 @@ BOOL CVisualZone::	net_Spawn						(CSE_Abstract* DC)
 			cName().c_str(),
 			Z->startup_animation.c_str(),
 			cNameVisual().c_str()
-		)
+		).c_str()
 	) ;
 
 	SA->PlayCycle				(m_idle_animation);

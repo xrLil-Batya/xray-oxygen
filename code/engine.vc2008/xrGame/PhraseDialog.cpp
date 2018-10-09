@@ -134,7 +134,7 @@ bool CPhraseDialog::SayPhrase(DIALOG_SHARED_PTR& phrase_dialog, const shared_str
 			}
 
 		}
-		R_ASSERT2(!phrase_dialog->m_PhraseVector.empty(), make_string("No available phrase to say, dialog[%s]", *phrase_dialog->m_DialogId));
+		R_ASSERT2(!phrase_dialog->m_PhraseVector.empty(), make_string("No available phrase to say, dialog[%s]", *phrase_dialog->m_DialogId).c_str());
 
 		//упорядочить списко по убыванию благосклонности
 		std::sort(phrase_dialog->m_PhraseVector.begin(), phrase_dialog->m_PhraseVector.end(), PhraseGoodwillPred);
