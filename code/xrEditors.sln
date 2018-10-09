@@ -70,6 +70,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedRenderLib", "engin
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedSoundLib", "engine.vc2008\xrManagedSoundLib\xrManagedSoundLib.vcxproj", "{FE528A91-73A9-46C2-B98C-661B5C7D647A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrLayoutEditor", "editors\xrLayoutEditor\xrLayoutEditor.vcxproj", "{3D821E98-6D10-4963-A179-1C0621C609DB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33} = {65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -479,6 +484,20 @@ Global
 		{FE528A91-73A9-46C2-B98C-661B5C7D647A}.Release|x64.ActiveCfg = Release|x64
 		{FE528A91-73A9-46C2-B98C-661B5C7D647A}.Release|x64.Build.0 = Release|x64
 		{FE528A91-73A9-46C2-B98C-661B5C7D647A}.Release|x86.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Debug|x64.ActiveCfg = Debug|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Debug|x64.Build.0 = Debug|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Debug|x86.ActiveCfg = Debug|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Mixed|x64.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Mixed|x64.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Mixed|x86.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Mixed|x86.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release_IA32|x64.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release_IA32|x64.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release_IA32|x86.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release_IA32|x86.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release|x64.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release|x64.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

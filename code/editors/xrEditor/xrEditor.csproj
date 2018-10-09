@@ -98,7 +98,6 @@
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Resource Include="Fonts\IstokWeb-Bold.ttf" />
     <Resource Include="Fonts\IstokWeb-BoldItalic.ttf" />
@@ -107,7 +106,6 @@
     <Fakes Include="Fakes\xrManagedCoreLib.fakes" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
