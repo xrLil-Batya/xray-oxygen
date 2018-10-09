@@ -384,9 +384,6 @@
     <ClInclude Include="..\xrRender\occRasterizer.h">
       <Filter>Visibility\HOM Occlusion</Filter>
     </ClInclude>
-    <ClInclude Include="r4_rendertarget.h">
-      <Filter>Core_Target</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\ColorMapManager.h">
       <Filter>Core_Target\ColorMap</Filter>
     </ClInclude>
@@ -735,6 +732,9 @@
     <ClInclude Include="..\xrRender\dxGlowManager.h" />
     <ClInclude Include="..\xrRender\ScreenshotManager.h">
       <Filter>Core\ScreenshotManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrRender\xrRenderTarget.h">
+      <Filter>Core_Target</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

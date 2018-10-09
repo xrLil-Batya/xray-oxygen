@@ -59,8 +59,8 @@ void	CRenderTarget::phase_combine	()
 
 	// Draw skybox & clouds without Z-test to avoid silhouettes.
 	// However, it's a bit slower process.
-	g_pGamePersistent->Environment().RenderSky();
-	g_pGamePersistent->Environment().RenderClouds();
+	Environment().RenderSky();
+	Environment().RenderClouds();
 
 	RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00);	// stencil should be >= 1
 
@@ -83,7 +83,7 @@ void	CRenderTarget::phase_combine	()
 	{
 		PIX_EVENT(combine_1);
 		// Compute params
-		CEnvDescriptorMixer& envdesc= *g_pGamePersistent->Environment().CurrentEnv		;
+		CEnvDescriptorMixer& envdesc= *Environment().CurrentEnv;
 		const float minamb			= 0.001f;
 		Fvector4	ambclr			= { std::max(envdesc.ambient.x*2,minamb),	std::max(envdesc.ambient.y*2,minamb),			std::max(envdesc.ambient.z*2,minamb),	0	};
 					ambclr.mul		(ps_r_sun_lumscale_amb);
@@ -328,7 +328,7 @@ void	CRenderTarget::phase_combine	()
 	RCache.set_Stencil(FALSE);
 
 	// if FP16-BLEND !not! supported - draw flares here, otherwise they are already in the bloom target
-	g_pGamePersistent->Environment().RenderFlares(); // lens-flares
+	Environment().RenderFlares(); // lens-flares
 
 	// PP-if required
 	if (bComplexPP)
