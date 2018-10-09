@@ -1,28 +1,11 @@
-#include	"stdafx.h"
-#include	"ETools.h"
-#include	"xrXRC.h"
+#include "stdafx.h"
+		 
+#include "ETools.h"
+#include "xrXRC.h"
 
 #pragma warning(disable:4267)
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-					  DWORD  fdwReason, 
-					  LPVOID lpReserved
-					  )
-{ 
-	switch(fdwReason) {
-		case DLL_PROCESS_ATTACH:
-			Debug._initialize	();
-			Core._initialize	("XRayEditorTools",0,FALSE);
-			//FPU::m64r	();
-			break;
-		case DLL_THREAD_ATTACH:
-			break;
-		case DLL_THREAD_DETACH:
-			break;
-		case DLL_PROCESS_DETACH:
-			Core._destroy();
-			break;
-BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason,	LPVOID lpReserved)
+BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved)
 {
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
@@ -41,7 +24,8 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason,	LPVOID lpReserved)
 	return TRUE;
 }
 
-namespace ETOOLS {
+namespace ETOOLS 
+{
 	ETOOLS_API bool  __stdcall TestRayTriA(const Fvector& C, const Fvector& D, Fvector** p, float& u, float& v, float& range, bool bCull)
 	{
 		Fvector edge1, edge2, tvec, pvec, qvec;
@@ -224,4 +208,3 @@ namespace ETOOLS {
 		XRC.box_query(inv_parent, m_def, src);
 	}
 }
-

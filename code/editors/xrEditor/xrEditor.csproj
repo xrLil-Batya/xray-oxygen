@@ -112,25 +112,25 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\engine.vc2008\xrManagedECoreLib\xrManagedECoreLib.vcxproj">
+    <ProjectReference Include="..\..\engine.vc2008\xrManagedECoreLib\xrManagedECoreLib.vcxproj">
       <Project>{ace4da6a-fd27-4006-94ba-e0132a51930e}</Project>
       <Name>xrManagedECoreLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\engine.vc2008\xrManagedEngineLib\xrManagedEngineLib.vcxproj">
+    <ProjectReference Include="..\..\engine.vc2008\xrManagedEngineLib\xrManagedEngineLib.vcxproj">
       <Project>{09dc3343-46ca-4d55-bfe3-317c0ff02e52}</Project>
       <Name>xrManagedEngineLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\engine.vc2008\xrManagedLib\xrManagedLib.vcxproj">
+    <ProjectReference Include="..\..\engine.vc2008\xrManagedLib\xrManagedLib.vcxproj">
       <Project>{c4defc31-a910-4339-99b3-6c410dc19ad0}</Project>
       <Name>xrManagedCoreLib</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\engine.vc2008\xrManagedRenderLib\xrManagedRenderLib.vcxproj">
+    <ProjectReference Include="..\..\engine.vc2008\xrManagedRenderLib\xrManagedRenderLib.vcxproj">
       <Project>{42986579-d91d-4523-ae54-0bffeb0748c2}</Project>
       <Name>xrManagedRenderLib</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\engine.vc2008\xrManagedSoundLib\xrManagedSoundLib.vcxproj">
+    <ProjectReference Include="..\..\engine.vc2008\xrManagedSoundLib\xrManagedSoundLib.vcxproj">
       <Project>{fe528a91-73a9-46c2-b98c-661b5c7d647a}</Project>
       <Name>xrManagedSoundLib</Name>
     </ProjectReference>
