@@ -162,9 +162,6 @@
     <ProjectReference Include="..\xrParticles\xrParticles.vcxproj">
       <Project>{94a1c366-3d19-48e6-8170-4adc2e70df97}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\xrRender\xrRenderPC_R4\xrRender_R4.vcxproj">
-      <Project>{ac9b12ed-a2d7-4337-a981-5bd8430e96d8}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
