@@ -103,7 +103,7 @@ void xrLauncherWnd::Init()
 		radioButton2->Checked = true;
 
 	// Command line init
-	const xr_string cmd = launch->get_value("global", "cmdline");
+	const std::string cmd = launch->get_value("global", "cmdline");
 	if (cmd != "Error reading! Section: global Key: cmdline")
 		textBox1->Text = gcnew System::String(cmd.c_str());
 	this->CPUTest();
