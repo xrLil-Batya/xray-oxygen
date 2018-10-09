@@ -191,8 +191,8 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	if (IsWindows10OrGreater())
 	{
-	        D3D11_FEATURE_DATA ARCHITECTURE arch;
-	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE, &arch, sizeof(arch)));
+	        D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
+	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
                 arch.TileBasedDeferredRenderer == TRUE;
 
 		IDXGIDevice3 * pDXGIDevice;
@@ -205,8 +205,8 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	}
 	else if (IsWindows8OrGreater())
 	{
-	        D3D11_FEATURE_DATA ARCHITECTURE arch;
-	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE, &arch, sizeof(arch)));
+	        D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
+	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
                 arch.TileBasedDeferredRenderer == TRUE;
 
 		IDXGIDevice2 * pDXGIDevice;
