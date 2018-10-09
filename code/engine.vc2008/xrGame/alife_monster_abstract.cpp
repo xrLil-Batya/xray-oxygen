@@ -243,15 +243,10 @@ bool CSE_ALifeMonsterAbstract::redundant				() const
 		return					(false);
 
 	ALife::_TIME_ID				current_time = alife().time_manager().game_time();
-	VERIFY2						(
-		m_game_death_time <= current_time,
-		make_string(
+	VERIFY_FORMAT (m_game_death_time <= current_time,
 			"incorrect death time for monster %s[death time = %I64d][current time = %I64d]",
-			name_replace(),
-			m_game_death_time,
-			current_time
-		)
-	);
+			name_replace(), m_game_death_time, current_time);
+
 	if ((m_game_death_time + m_stay_after_death_time_interval) > current_time)
 		return					(false);
 

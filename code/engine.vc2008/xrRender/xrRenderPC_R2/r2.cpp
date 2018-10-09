@@ -947,15 +947,9 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 static inline bool match_shader		( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, LPCSTR const mask, size_t const mask_length )
 {
 	u32 const full_shader_id_length	= xr_strlen( full_shader_id );
-	R_ASSERT2				(
-		full_shader_id_length == mask_length,
-		make_string(
-			"bad cache for shader %s, [%s], [%s]",
-			debug_shader_id,
-			mask,
-			full_shader_id
-		).c_str()
-	);
+	R_ASSERT_FORMAT( full_shader_id_length == mask_length, "bad cache for shader %s, [%s], [%s]",
+			debug_shader_id, mask,full_shader_id);
+
 	char const* i			= full_shader_id;
 	char const* const e		= full_shader_id + full_shader_id_length;
 	char const* j			= mask;

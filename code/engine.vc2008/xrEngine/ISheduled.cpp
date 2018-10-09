@@ -16,10 +16,7 @@ ISheduled::ISheduled	()
 extern		BOOL		g_bSheduleInProgress;
 ISheduled::~ISheduled	()
 {
-	VERIFY2				(
-		!Engine.Sheduler.Registered(this),
-		make_string("0x%08x : %s",this,*shedule_Name())
-	);
+	VERIFY_FORMAT(!Engine.Sheduler.Registered(this),"0x%08x : %s", this, *shedule_Name());
 
 	// sad, but true
 	// we need this to become MASTER_GOLD

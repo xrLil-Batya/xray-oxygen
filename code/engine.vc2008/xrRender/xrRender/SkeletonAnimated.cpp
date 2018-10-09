@@ -860,7 +860,7 @@ void	CKinematicsAnimated::LL_BoneMatrixBuild	( CBoneInstance &bi, const Fmatrix 
 		float box_size = 100000.f;
 		dbg_box.set( -box_size, -box_size, -box_size, box_size, box_size, box_size );
 		//VERIFY(dbg_box.contains(bi.mTransform.c));
-		VERIFY2( dbg_box.contains(bi.mTransform.c), ( make_string( "model: %s has strange bone position, matrix : ", getDebugName().c_str() ) + get_string( bi.mTransform ) ).c_str() );
+		VERIFY_FORMAT( dbg_box.contains(bi.mTransform.c), "model: %s has strange bone position, matrix : %s", getDebugName().c_str(), get_string(bi.mTransform).c_str());
 
 		//if(!is_similar(PrevTransform,RES,0.3f))
 		//{

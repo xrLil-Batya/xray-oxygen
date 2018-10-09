@@ -35,14 +35,11 @@ IC	const xr_vector<u32> &CSpaceRestrictionAbstract::accessible_neighbour_border(
 	if (!m_accessible_neighbour_border_actual)
 		prepare_accessible_neighbour_border			(restriction,out_restriction);
 
-	VERIFY2											(
-		!m_accessible_neighbour_border.empty(),
-		make_string(
+	VERIFY_FORMAT(!m_accessible_neighbour_border.empty(),
 			"space restrictor %s has no accessible neighbours (border size[%d])",
 			*name(),
-			border().size()
-		)
-	);
+			border().size());
+
 	return											(m_accessible_neighbour_border);
 }
 

@@ -44,15 +44,11 @@ void CAgentMemberManager::add					(CEntity *member)
 	if (!stalker || !stalker->g_Alive())
 		return;
 
-	VERIFY2						(
-		sizeof(squad_mask_type)*8 > members().size(),
-		make_string(
+	VERIFY_FORMAT (sizeof(squad_mask_type)*8 > members().size(),
 			"too many stalkers in group ([team:%d][squad:%d][group:%d]!",
 			m_members.front()->object().g_Team(),
 			m_members.front()->object().g_Squad(),
-			m_members.front()->object().g_Group()
-		)
-	);
+			m_members.front()->object().g_Group());
 
 	iterator					I = std::find_if(m_members.begin(),m_members.end(), CMemberPredicate(stalker));
 	VERIFY						(I == m_members.end());

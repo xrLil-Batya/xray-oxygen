@@ -104,7 +104,7 @@ IC	xr_string __cdecl	make_xrstr (u32   d) { return make_xrstr("%u", d); }
 IC	xr_string __cdecl	make_xrstr (u64   d) { return make_xrstr("%lu", d); }
 IC	xr_string __cdecl	make_xrstr (Fvector3 v) { return make_xrstr("[%f][%f][%f]", v.x, v.y, v.z); }
 IC	xr_string __cdecl	make_xrstr (const xr_string& s) { return s; }
-IC	xr_string __cdecl	make_xrstr (const xr_string& s) { return xr_string(s.data(), s.size()); }
+IC	xr_string __cdecl	make_xrstr (const std::string& s) { return xr_string(s.data(), s.size()); }
 IC	xr_string __cdecl	make_xrstr (const std::basic_string<char, std::char_traits<char>, xalloc<char>>& s) { return xr_string(s.data(), s.size()); }
 
 

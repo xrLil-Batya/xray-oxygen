@@ -4,16 +4,26 @@
 ISpectreCoreServer* SpectreEngineClient::CoreAPI;
 ISpectreEngineLib* SpectreEngineClient::EngineLibAPI;
 
-
 void SpectreEngineClient::Initialize()
 {
 	// Get interface ptr from xrManagedLib
- 	HMODULE hManagedLib = LoadLibrary("xrManagedCoreLib.dll");
- 	FARPROC pGetInterface = GetProcAddress(hManagedLib, "GetCoreInterface");
+	HMODULE hManagedLib = NULL;
+	HMODULE hGameManagedLib = NULL;
+	FARPROC pGetInterface = nullptr;
+	INT_PTR pAPI = NULL;
+	FuncNode* pServerNode = nullptr;
 
+	// Get main manage core interface
+	if (!(hManagedLib = GetModuleHandleA("xrManagedCoreLib.dll")))
+	{
+		// If managed library module is not exist - load it from bit path
+		hManagedLib = LoadLibraryA("xrManagedCoreLib.dll");
+		R_ASSERT2(hManagedLib, "No 'xrManagedCoreLib.dll' library at bit path.");
+	}
+
+ 	pGetInterface = GetProcAddress(hManagedLib, "GetCoreInterface");
 	R_ASSERT2(pGetInterface, "Can't get 'GetCoreInterface' function from xrManagedLib.dll. DLL corrupted?");
-
-	INT_PTR pAPI = pGetInterface();
+	pAPI = pGetInterface();
 	CoreAPI = reinterpret_cast<ISpectreCoreServer*>(pAPI);
 
 	// Initialize Game lib and xrScripts
@@ -21,16 +31,19 @@ void SpectreEngineClient::Initialize()
 	CoreAPI->CompileScripts();
 
 	// Get interface ptr from game lib
-	HMODULE hGameManagedLib = GetModuleHandle("xrManagedEngineLib.dll");
+	if (!(hGameManagedLib = GetModuleHandleA("xrManagedEngineLib.dll")))
+	{
+		hGameManagedLib = LoadLibraryA("xrManagedEngineLib.dll");
+		R_ASSERT(hGameManagedLib);
+	}
+
 	pGetInterface = GetProcAddress(hGameManagedLib, "GetEngineInterface");
-
 	R_ASSERT2(pGetInterface, "Can't get 'GetGameInterface' function from xrManagedLib.dll. DLL corrupted?");
-
 	pAPI = pGetInterface();
 	EngineLibAPI = reinterpret_cast<ISpectreEngineLib*>(pAPI);
 
 	// Get all callbacks prototype, and hook up all our interface prototypes
-	FuncNode* pServerNode = EngineLibAPI->GetFunctionLinkedListStart();
+	pServerNode = EngineLibAPI->GetFunctionLinkedListStart();
 	R_ASSERT2(pServerNode, "No Spectre callbacks in xrManaged libs");
 
 	do

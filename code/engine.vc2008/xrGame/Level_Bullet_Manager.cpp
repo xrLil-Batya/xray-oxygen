@@ -362,7 +362,9 @@ static float trajectory_select_pick_gravity(
 	VERIFY			(high >= start_low);
 	float result	= start_low + time;
 	clamp			(result, start_low, high);
-	VERIFY2			(result <= high, make_string("result[%f], high[%f], start_low[%f], air_resistance[%f]", result, high, start_low, air_resistance));
+	VERIFY_FORMAT (result <= high, 
+		"result[%f], high[%f], start_low[%f], air_resistance[%f]", 
+		result, high, start_low, air_resistance);
 	return result;
 }
 
@@ -439,7 +441,9 @@ static float trajectory_select_pick_time(
 		float const air_resistance
 )
 {
-	VERIFY2(start_low < high, make_string("start_low[%f] high[%f]", start_low, high));
+	VERIFY_FORMAT(start_low < high, 
+		"start_low[%f] high[%f]", 
+		start_low, high);
 	float const start_high = high;
 	if (trajectory_select_pick_ranges(high, bullet, start_low, high, gravity, air_resistance))
 	{
@@ -464,7 +468,9 @@ static float trajectory_select_pick_time(
 		check_time = (low + high)*0.5f;
 	}
 	
-	VERIFY2 (low <= start_high, make_string("low[%f], high[%f]", low, start_high));
+	VERIFY_FORMAT (low <= start_high, 
+		"low[%f], high[%f]",
+		low, start_high);
 	return low;
 }
 
@@ -739,13 +745,13 @@ bool CBulletManager::process_bullet(collide::rq_results & storage, SBullet& bull
 				return false;
 
 			float safe_time = time;
-			VERIFY2(safe_time <= high, make_string("safe_time[%f], high[%f]", safe_time, high));
+			VERIFY_FORMAT(safe_time <= high, "safe_time[%f], high[%f]", safe_time, high);
 			if (!trajectory_check_error(previous_position, storage, bullet, low, time, gravity, air_resistance))
 			{
-				VERIFY2(safe_time >= time, make_string("safe_time[%f], time[%f]", safe_time, time));
-				VERIFY2(safe_time <= high, make_string("safe_time[%f], high[%f]", safe_time, high));
+				VERIFY_FORMAT(safe_time >= time, "safe_time[%f], time[%f]", safe_time, time);
+				VERIFY_FORMAT(safe_time <= high, "safe_time[%f], high[%f]", safe_time, high);
 				high = high - safe_time + time;
-				VERIFY2(low <= high, make_string("start_low[%f] high[%f]", low, high));
+				VERIFY_FORMAT(low <= high, "start_low[%f] high[%f]", low, high);
 				if (fsimilar(low, high))
 					return !fis_zero(bullet.speed);
 
@@ -758,9 +764,9 @@ bool CBulletManager::process_bullet(collide::rq_results & storage, SBullet& bull
 			if (fsimilar(time, high))
 				return true;
 
-			VERIFY2(low < high, make_string("start_low[%f] high[%f]", low, high));
+			VERIFY_FORMAT(low < high, "start_low[%f] high[%f]", low, high);
 			low = time;
-			VERIFY2(low < high, make_string("start_low[%f] high[%f]", low, high));
+			VERIFY_FORMAT(low < high, "start_low[%f] high[%f]", low, high);
 		}
 
 		if (fis_zero(bullet.speed))
@@ -1117,7 +1123,7 @@ void CBulletManager::FireShotmark(SBullet* bullet, const Fvector& vDir, const Fv
 	// Particles
 	if (bDrawHitParticles || bDrawExplodeParticles)
 	{
-		VERIFY2(particle_dir.square_magnitude() > flt_zero, make_string("[%f][%f][%f]", VPUSH(particle_dir)));
+		VERIFY_FORMAT(particle_dir.square_magnitude() > flt_zero, "[%f][%f][%f]", VPUSH(particle_dir));
 		Fmatrix pos;
 		pos.k.normalize(particle_dir);
 		Fvector::generate_orthonormal_basis(pos.k, pos.j, pos.i);

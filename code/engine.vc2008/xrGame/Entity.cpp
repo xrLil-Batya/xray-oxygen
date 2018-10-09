@@ -152,8 +152,9 @@ BOOL CEntity::net_Spawn		(CSE_Abstract* DC)
 	if (E) {
 		SetfHealth			(E->get_health());
 
-		R_ASSERT2(!((E->get_killer_id() != ALife::_OBJECT_ID(-1)) && g_Alive()), make_string("server entity [%s][%d] has an killer [%d] and not dead",
-			E->name_replace(), E->ID, E->get_killer_id()).c_str());
+		R_ASSERT_FORMAT(!((E->get_killer_id() != ALife::_OBJECT_ID(-1)) && g_Alive()), 
+			"server entity [%s][%d] has an killer [%d] and not dead",
+			E->name_replace(), E->ID, E->get_killer_id());
 
 		m_killer_id			= E->get_killer_id();
 		if (m_killer_id == ID())

@@ -211,7 +211,7 @@ void CUIInventoryUpgradeWnd::SetCurScheme( const shared_str& id )
 			return;
 		}
 	}
-	VERIFY2( 0, make_string( "Scheme <%s> does not loaded !", id.c_str() ) );
+	VERIFY_FORMAT(0, "Scheme <%s> does not loaded !", id.c_str());
 }
 
 bool CUIInventoryUpgradeWnd::install_item( CInventoryItem& inv_item, bool can_upgrade )
@@ -436,7 +436,7 @@ UIUpgrade::ViewState CUIInventoryUpgradeWnd::SelectCellState(LPCSTR state_str)
 
 	if (!xr_strcmp(state_str, "disabled_highlight")) { return UIUpgrade::STATE_DISABLED_FOCUSED; }
 
-	VERIFY2(0, make_string("Such UI upgrade state (%s) does not exist !", state_str));
+	VERIFY_FORMAT(0, "Such UI upgrade state (%s) does not exist !", state_str);
 	return UIUpgrade::STATE_UNKNOWN;
 }
 

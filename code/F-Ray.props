@@ -22,6 +22,7 @@
       <DisableSpecificWarnings>4996;4577;4315</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>$(xrIncl);</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
