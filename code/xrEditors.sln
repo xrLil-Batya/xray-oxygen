@@ -68,6 +68,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pre-build tools", "pre-buil
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GitParser", "engine.vc2008\xrCore\GitParser\GitParser.vcxproj", "{76485157-3A23-47E9-8A5E-5B190F91511C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrLayoutEditor", "editors\xrLayoutEditor\xrLayoutEditor.vcxproj", "{3D821E98-6D10-4963-A179-1C0621C609DB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33} = {65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -304,6 +309,20 @@ Global
 		{76485157-3A23-47E9-8A5E-5B190F91511C}.Release|x64.ActiveCfg = Release|x64
 		{76485157-3A23-47E9-8A5E-5B190F91511C}.Release|x64.Build.0 = Release|x64
 		{76485157-3A23-47E9-8A5E-5B190F91511C}.Release|x86.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Debug|x64.ActiveCfg = Debug|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Debug|x64.Build.0 = Debug|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Debug|x86.ActiveCfg = Debug|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Mixed|x64.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Mixed|x64.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Mixed|x86.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Mixed|x86.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release_IA32|x64.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release_IA32|x64.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release_IA32|x86.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release_IA32|x86.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release|x64.ActiveCfg = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release|x64.Build.0 = Release|x64
+		{3D821E98-6D10-4963-A179-1C0621C609DB}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
