@@ -1,8 +1,0 @@
-H:\STALKER_SRC\code\xrEditor\bin\Debug\xrEditor.exe.config
-H:\STALKER_SRC\code\xrEditor\bin\Debug\xrEditor.exe
-H:\STALKER_SRC\code\xrEditor\bin\Debug\xrEditor.pdb
-H:\STALKER_SRC\code\xrEditor\bin\Debug\xrManagedCoreLib.dll
-H:\STALKER_SRC\code\xrEditor\bin\Debug\xrManagedRenderLib.dll
-H:\STALKER_SRC\code\xrEditor\bin\Debug\xrManagedCoreLib.pdb
-H:\STALKER_SRC\code\xrEditor\bin\Debug\xrManagedCoreLib.xml
-H:\STALKER_SRC\code\xrEditor\bin\Debug\xrManagedRenderLib.pdb
