@@ -138,7 +138,7 @@ namespace luabind {
 	class object;
 } // namespace luabind
 
-class CScriptGameObject {
+class GAME_API CScriptGameObject {
 	mutable CGameObject		*m_game_object;
 							CScriptGameObject		(CScriptGameObject const& game_object);
 

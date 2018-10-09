@@ -587,7 +587,7 @@ public:
             return;
 
         if (!Device.editor())
-            g_pGamePersistent->Environment().SetWeather(args, true);
+            Environment().SetWeather(args, true);
     }
 
 	virtual void fill_tips(vecTips& tips, u32 mode)

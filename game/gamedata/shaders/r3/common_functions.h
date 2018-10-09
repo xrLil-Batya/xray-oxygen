@@ -259,14 +259,14 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d )
 
 gbuffer_data gbuffer_load_data_offset( float2 tc : TEXCOORD, float2 OffsetTC : TEXCOORD, float2 pos2d )
 {
-	float2  delta	  = ( ( OffsetTC - tc ) * pos_decompression_params2.xy );
+	float2  delta	  = ( ( OffsetTC - tc ) * screen_res.xy );
 
 	return gbuffer_load_data( OffsetTC, pos2d + delta, 0 );
 }
 
 gbuffer_data gbuffer_load_data_offset( float2 tc : TEXCOORD, float2 OffsetTC : TEXCOORD, float2 pos2d, uint iSample )
 {
-   float2  delta	  = ( ( OffsetTC - tc ) * pos_decompression_params2.xy );
+   float2  delta	  = ( ( OffsetTC - tc ) * screen_res.xy );
 
    return gbuffer_load_data( OffsetTC, pos2d + delta, iSample );
 }
@@ -277,27 +277,27 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, uint iSample )
 	gbuffer_data gbd;
 
 #ifndef USE_MSAA
-	float4 P	= s_position.Load( int3( tc * pos_decompression_params2.xy, 0 ) );
+	float4 P	= s_position.Load( int3( tc * screen_res.xy, 0 ) );
 #else
-   float4 P	= s_position.Load( int3( tc * pos_decompression_params2.xy, 0 ), iSample );
+   float4 P	= s_position.Load( int3( tc * screen_res.xy, 0 ), iSample );
 #endif
 
 	gbd.P		= P.xyz;
 	gbd.mtl		= P.w;
 
 #ifndef USE_MSAA
-	float4 N	= s_normal.Load( int3( tc * pos_decompression_params2.xy, 0 ) );
+	float4 N	= s_normal.Load( int3( tc * screen_res.xy, 0 ) );
 #else
-	float4 N	= s_normal.Load( int3( tc * pos_decompression_params2.xy, 0 ), iSample );
+	float4 N	= s_normal.Load( int3( tc * screen_res.xy, 0 ), iSample );
 #endif
 
 	gbd.N		= N.xyz;
 	gbd.hemi	= N.w;
 
 #ifndef USE_MSAA
-	float4	C	= s_diffuse.Load( int3( tc * pos_decompression_params2.xy, 0 ) );
+	float4	C	= s_diffuse.Load( int3( tc * screen_res.xy, 0 ) );
 #else
-	float4	C	= s_diffuse.Load( int3( tc * pos_decompression_params2.xy, 0 ), iSample );
+	float4	C	= s_diffuse.Load( int3( tc * screen_res.xy, 0 ), iSample );
 #endif
 
 

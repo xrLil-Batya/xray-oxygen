@@ -7,14 +7,10 @@
 #include "blender_light_spot.h"
 #include "blender_light_reflected.h"
 #include "blender_combine.h"
-#include "blender_bloom_build.h"
-#include "blender_luminance.h"
 #include "blender_ssao.h"
 #include "dx10MinMaxSMBlender.h"
 #include "../xrRenderDX10/msaa/dx10MSAABlender.h"
 #include "../xrRenderDX10/DX10 Rain/dx10RainBlender.h"
-#include "blender_ssss_mrmnwar.h"
-#include "blender_ssss_ogse.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -257,17 +253,8 @@ CRenderTarget::CRenderTarget		()
 	b_accum_point					= xr_new<CBlender_accum_point>			();
 	b_accum_spot					= xr_new<CBlender_accum_spot>			();
 	b_accum_reflected				= xr_new<CBlender_accum_reflected>		();
-	b_bloom							= xr_new<CBlender_bloom_build>			();
-	if( RImplementation.o.dx10_msaa )
-	{
-		b_bloom_msaa		= xr_new<CBlender_bloom_build_msaa>();
-		b_postprocess_msaa	= xr_new<CBlender_postprocess_msaa>();
-	}
-	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
 	b_ssao							= xr_new<CBlender_SSAO_noMSAA>			();
-	b_ssss_mrmnwar					= xr_new<CBlender_ssss_mrmnwar>			();
-	b_ssss_ogse						= xr_new<CBlender_ssss_ogse>			();
 
 	if( RImplementation.o.dx10_msaa )
 	{
@@ -347,7 +334,7 @@ CRenderTarget::CRenderTarget		()
             rt_SunShaftsMask.create			(r2_RT_SunShaftsMask,			w, h, D3DFMT_A8R8G8B8);
             rt_SunShaftsMaskSmoothed.create	(r2_RT_SunShaftsMaskSmoothed,	w, h, D3DFMT_A8R8G8B8);
             rt_SunShaftsPass0.create		(r2_RT_SunShaftsPass0,			w, h, D3DFMT_A8R8G8B8);
-            s_ssss_mrmnwar.create			(b_ssss_mrmnwar);
+            s_ssss_mrmnwar.create			("effects\\ss_sunshafts_mrmnwar");
         }
 
         // RT - KD Screen space sunshafts
@@ -355,7 +342,7 @@ CRenderTarget::CRenderTarget		()
         {
             rt_sunshafts_0.create			(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
             rt_sunshafts_1.create			(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
-            s_ssss_ogse.create				(b_ssss_ogse);
+            s_ssss_ogse.create				("effects\\ss_sunshafts_ogse");
         }
 
 		// generic(LDR) RTs
@@ -521,44 +508,40 @@ CRenderTarget::CRenderTarget		()
 
 	// BLOOM
 	{
-		D3DFORMAT	fmt				= D3DFMT_A8R8G8B8;			//;		// D3DFMT_X8R8G8B8
-		u32	w=BLOOM_size_X, h=BLOOM_size_Y;
+		D3DFORMAT fmt = D3DFMT_A8R8G8B8;
+		u32	w = BLOOM_size_X, h = BLOOM_size_Y;
 		u32 fvf_build				= D3DFVF_XYZRHW|D3DFVF_TEX4|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3);
 		u32 fvf_filter				= (u32)D3DFVF_XYZRHW|D3DFVF_TEX8|D3DFVF_TEXCOORDSIZE4(0)|D3DFVF_TEXCOORDSIZE4(1)|D3DFVF_TEXCOORDSIZE4(2)|D3DFVF_TEXCOORDSIZE4(3)|D3DFVF_TEXCOORDSIZE4(4)|D3DFVF_TEXCOORDSIZE4(5)|D3DFVF_TEXCOORDSIZE4(6)|D3DFVF_TEXCOORDSIZE4(7);
-		rt_Bloom_1.create			(r2_RT_bloom1,	w,h,		fmt);
-		rt_Bloom_2.create			(r2_RT_bloom2,	w,h,		fmt);
+		rt_Bloom_1.create			(r2_RT_bloom1,	w, h, fmt);
+		rt_Bloom_2.create			(r2_RT_bloom2,	w, h, fmt);
 		g_bloom_build.create		(fvf_build,		RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_bloom_filter.create		(fvf_filter,	RCache.Vertex.Buffer(), RCache.QuadIB);
-		s_bloom_dbg_1.create		("effects\\screen_set",		r2_RT_bloom1);
-		s_bloom_dbg_2.create		("effects\\screen_set",		r2_RT_bloom2);
-		s_bloom.create				(b_bloom,					"r2\\bloom");
-      if( RImplementation.o.dx10_msaa )
-      {
-         s_bloom_msaa.create		 (b_bloom_msaa,					"r2\\bloom");
-         s_postprocess_msaa.create(b_postprocess_msaa,			"r2\\post");
-      }
+		s_bloom_dbg_1.create		("effects\\screen_set", r2_RT_bloom1);
+		s_bloom_dbg_2.create		("effects\\screen_set", r2_RT_bloom2);
+		s_bloom.create				("effects\\bloom_build");
 		f_bloom_factor				= 0.5f;
 	}
 	
 	// TONEMAP
 	{
-		rt_LUM_64.create			(r2_RT_luminance_t64,	64, 64,	D3DFMT_A16B16G16R16F	);
-		rt_LUM_8.create				(r2_RT_luminance_t8,	8,	8,	D3DFMT_A16B16G16R16F	);
-		s_luminance.create			(b_luminance,				"r2\\luminance");
+		rt_LUM_64.create			(r2_RT_luminance_t64,	64, 64,	D3DFMT_A16B16G16R16F);
+		rt_LUM_8.create				(r2_RT_luminance_t8,	8,	8,	D3DFMT_A16B16G16R16F);
+		s_luminance.create			("effects\\bloom_luminance");
 		f_luminance_adapt			= 0.5f;
 
 		t_LUM_src.create			(r2_RT_luminance_src);
 		t_LUM_dest.create			(r2_RT_luminance_cur);
 
 		// create pool
-		for (u32 it=0; it<HW.Caps.iGPUNum*2; it++)	{
-			string256					name;
-			xr_sprintf						(name,"%s_%d",	r2_RT_luminance_pool,it	);
-			rt_LUM_pool[it].create		(name,	1,	1,	D3DFMT_R32F				);
-			FLOAT ColorRGBA[4] = { 127.0f/255.0f, 127.0f/255.0f, 127.0f/255.0f, 127.0f/255.0f};
+		for (u32 it = 0; it < HW.Caps.iGPUNum * 2; it++)
+		{
+			string256 name;
+			xr_sprintf(name, "%s_%d", r2_RT_luminance_pool, it);
+			rt_LUM_pool[it].create(name, 1, 1, D3DFMT_R32F);
+			FLOAT ColorRGBA[4] = { 127.0f / 255.0f, 127.0f / 255.0f, 127.0f / 255.0f, 127.0f / 255.0f };
 			HW.pDevice->ClearRenderTargetView(rt_LUM_pool[it]->pRT, ColorRGBA);
 		}
-		u_setrt						( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
+		u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, NULL, NULL, HW.pBaseZB);
 	}
 
 	// HBAO
@@ -635,233 +618,290 @@ CRenderTarget::CRenderTarget		()
 	// Post combine_2 effects:
 	// - Antialiasing
 	// - Rain droplets
+	// - Vignette
 	if (RImplementation.o.dx10_msaa)
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing_msaa");
 		s_rain_drops.create		("effects\\screen_rain_droplets_msaa");
+		s_vignette.create		("effects\\vignette_msaa");
 	}
 	else
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing");
 		s_rain_drops.create		("effects\\screen_rain_droplets");
+		s_vignette.create		("effects\\vignette");
 	}
 
 	// Build textures
 	{
 		// Build material(s)
 		{
-			//	Create immutable texture. 
-			//	So we need to init data _before_ the creation.
-			// Surface
-			//R_CHK						(D3DXCreateVolumeTexture(HW.pDevice,TEX_material_LdotN,TEX_material_LdotH,4,1,0,D3DFMT_A8L8,D3DPOOL_MANAGED,&t_material_surf));
-			//t_material					= dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_material);
-			//t_material->surface_set		(t_material_surf);
-			//	Use DXGI_FORMAT_R8G8_UNORM
-
+			// Create immutable texture. 
+			// So we need to init data _before_ the creation.
 			u16	tempData[TEX_material_LdotN*TEX_material_LdotH*TEX_material_Count];
 
-			D3D10_TEXTURE3D_DESC	desc;
-			desc.Width = TEX_material_LdotN;
-			desc.Height = TEX_material_LdotH;
-			desc.Depth	= TEX_material_Count;
-			desc.MipLevels = 1;
-			desc.Format = DXGI_FORMAT_R8G8_UNORM;
-			desc.Usage = D3D10_USAGE_IMMUTABLE;
-			desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
+			D3D_TEXTURE3D_DESC desc;
+			std::memset(&desc, 0, sizeof(D3D_TEXTURE3D_DESC));
+			desc.Width			= TEX_material_LdotN;
+			desc.Height			= TEX_material_LdotH;
+			desc.Depth			= TEX_material_Count;
+			desc.MipLevels		= 1;
+			desc.Format			= DXGI_FORMAT_R8G8_UNORM;
+			desc.Usage			= D3D_USAGE_IMMUTABLE;
+			desc.BindFlags		= D3D_BIND_SHADER_RESOURCE;
 			desc.CPUAccessFlags = 0;
-			desc.MiscFlags = 0;
+			desc.MiscFlags		= 0;
 
-			D3D10_SUBRESOURCE_DATA	subData;
-
-			subData.pSysMem = tempData;
-			subData.SysMemPitch = desc.Width*2;
-			subData.SysMemSlicePitch = desc.Height*subData.SysMemPitch;
+			D3D_SUBRESOURCE_DATA subData;
+			subData.pSysMem				= tempData;
+			subData.SysMemPitch			= desc.Width*2;
+			subData.SysMemSlicePitch	= desc.Height*subData.SysMemPitch;
 
 			// Fill it (addr: x=dot(L,N),y=dot(L,H))
-			for (u32 slice=0; slice<TEX_material_Count; slice++)
+			for (u32 slice = 0; slice < TEX_material_Count; ++slice)
 			{
-				for (u32 y=0; y<TEX_material_LdotH; y++)
+				for (u32 y = 0; y < TEX_material_LdotH; ++y)
 				{
-					for (u32 x=0; x<TEX_material_LdotN; x++)
+					for (u32 x = 0; x < TEX_material_LdotN; ++x)
 					{
-						u16*	p	=	(u16*)		
-							(LPBYTE (subData.pSysMem) 
-							+ slice*subData.SysMemSlicePitch 
-							+ y*subData.SysMemPitch + x*2);
-						float	ld	=	float(x)	/ float	(TEX_material_LdotN-1);
-						float	ls	=	float(y)	/ float	(TEX_material_LdotH-1) + EPS_S;
-						ls			*=	powf(ld,1/32.f);
-						float	fd,fs = 1.f; // (ls * 1.01f)^0
+						u16* p = (u16*)(LPBYTE(subData.pSysMem) + slice * subData.SysMemSlicePitch + y * subData.SysMemPitch + x * 2);
+						float ld = float(x) / float(TEX_material_LdotN - 1);
+						float ls = float(y) / float(TEX_material_LdotH - 1) + EPS_S;
+						ls *= powf(ld, 1.0f / 32.0f);
+						float fd, fs = 1.0f; // (ls * 1.01f)^0
 
-						switch	(slice)
+						switch (slice)
 						{
-						case 0:	{ // looks like OrenNayar
-							fd	= powf(ld,0.75f);		// 0.75
-							fs	= powf(ls,16.f)*.5f;
-								}	break;
-						case 1:	{// looks like Blinn
-							fd	= powf(ld,0.90f);		// 0.90
-							fs	= powf(ls,24.f);
-								}	break;
-						case 2: 
-						{	// looks like Phong
-							fd = ld;					// 1.0
-							fs = powf(ls*1.01f, 128.f);
+						case 0: // Looks like OrenNayar
+						{
+							fd = powf(ld, 0.75f);		// 0.75
+							fs = powf(ls, 16.0f)*0.5f;
 						}	break;
-						case 3:	{ // looks like Metal
-							float	s0	=	_abs	(1-_abs	(0.05f*_sin(33.f*ld)+ld-ls));
-							float	s1	=	_abs	(1-_abs	(0.05f*_cos(33.f*ld*ls)+ld-ls));
-							float	s2	=	_abs	(1-_abs	(ld-ls));
-							fd		=	ld;				// 1.0
-							fs		=	powf	(std::max(std::max(s0,s1),s2), 24.f);
-							fs		*=	powf	(ld,1/7.f);
-								}	break;
+						case 1: // Looks like Blinn
+						{
+							fd = powf(ld, 0.90f);		// 0.90
+							fs = powf(ls, 24.0f);
+						}	break;
+						case 2: // Looks like Phong
+						{
+							fd = ld;					// 1.0
+							fs = powf(ls*1.01f, 128.0f);
+						}	break;
+						case 3: // Looks like Metal
+						{
+							float s0 = _abs(1.0f - _abs(0.05f*_sin(33.0f*ld) + ld - ls));
+							float s1 = _abs(1.0f - _abs(0.05f*_cos(33.0f*ld*ls) + ld - ls));
+							float s2 = _abs(1.0f - _abs(ld - ls));
+							fd = ld;					// 1.0
+							fs = powf(std::max(std::max(s0, s1), s2), 24.0f);
+							fs *= powf(ld, 1.0f / 7.0f);
+						}	break;
 						default:
-							fd	= fs = 0;
+							fd = fs = 0;
 						}
-						s32		_d	=	clampr	(iFloor	(fd*255.5f),	0,255);
-						s32		_s	=	clampr	(iFloor	(fs*255.5f),	0,255);
-						if ((y==(TEX_material_LdotH-1)) && (x==(TEX_material_LdotN-1)))	{ _d = 255; _s=255;	}
-						*p			=	u16		(_s*256 + _d);
+						s32 _d = clampr(iFloor(fd*255.5f), 0, 255);
+						s32 _s = clampr(iFloor(fs*255.5f), 0, 255);
+						if ((y == (TEX_material_LdotH - 1)) && (x == (TEX_material_LdotN - 1)))
+						{
+							_d = 255;
+							_s = 255;
+						}
+						*p = u16(_s * 256 + _d);
 					}
 				}
 			}
 
 			R_CHK(HW.pDevice->CreateTexture3D(&desc, &subData, &t_material_surf));
-			t_material					= dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_material);
-			t_material->surface_set		(t_material_surf);
+			t_material = dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_material);
+			t_material->surface_set(t_material_surf);
 		}
 
-		// Build noise table		
-		static const int sampleSize = 4;
-		u32	tempData[TEX_jitter_count][TEX_jitter*TEX_jitter];
-
-		D3D10_TEXTURE2D_DESC	desc;
-		desc.Width = TEX_jitter;
-		desc.Height = TEX_jitter;
-		desc.MipLevels = 1;
-		desc.ArraySize = 1;
-		desc.SampleDesc.Count = 1;
-		desc.SampleDesc.Quality = 0;
-		desc.Format = DXGI_FORMAT_R8G8B8A8_SNORM;
-		desc.Usage = D3D10_USAGE_DEFAULT;
-		desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
-		desc.CPUAccessFlags = 0;
-		desc.MiscFlags = 0;
-
-		D3D10_SUBRESOURCE_DATA	subData[TEX_jitter_count];
-		
-		for (int it=0; it<TEX_jitter_count-1; it++)
+		// Build noise table
 		{
-			subData[it].pSysMem = tempData[it];
-			subData[it].SysMemPitch = desc.Width*sampleSize;
-		}
+			static const int sampleSize = 4;
+			D3D_SUBRESOURCE_DATA subData[TEX_jitter_count];
 
-		// Fill it,
-		for (u32 y=0; y<TEX_jitter; y++)
-		{
-			for (u32 x=0; x<TEX_jitter; x++)
+			// Generic jitter textures
 			{
-				DWORD	data	[TEX_jitter_count-1];
-				generate_jitter	(data,TEX_jitter_count-1);
-				for (u32 it=0; it<TEX_jitter_count-1; it++)
-				{
-					u32*	p	=	(u32*)	
-						(LPBYTE (subData[it].pSysMem) 
-						+ y*subData[it].SysMemPitch 
-						+ x*4);
+				u32	tempData[TEX_jitter_count][TEX_jitter*TEX_jitter];
 
-					*p	=	data	[it];
+				D3D_TEXTURE2D_DESC desc;
+				std::memset(&desc, 0, sizeof(D3D_TEXTURE2D_DESC));
+				desc.Width				= TEX_jitter;
+				desc.Height				= TEX_jitter;
+				desc.MipLevels			= 1;
+				desc.ArraySize			= 1;
+				desc.SampleDesc.Count	= 1;
+				desc.SampleDesc.Quality = 0;
+				desc.Format				= DXGI_FORMAT_R8G8B8A8_SNORM;
+				desc.Usage				= D3D_USAGE_DEFAULT;
+				desc.BindFlags			= D3D_BIND_SHADER_RESOURCE;
+				desc.CPUAccessFlags		= 0;
+				desc.MiscFlags			= 0;
+		
+				for (int it = 0; it < TEX_jitter_count - 1; ++it)
+				{
+					subData[it].pSysMem = tempData[it];
+					subData[it].SysMemPitch = desc.Width * sampleSize;
+				}
+
+				// Fill it,
+				for (u32 y = 0; y < TEX_jitter; ++y)
+				{
+					for (u32 x = 0; x < TEX_jitter; ++x)
+					{
+						DWORD	data[TEX_jitter_count - 1];
+						generate_jitter(data, TEX_jitter_count - 1);
+						for (u32 it = 0; it < TEX_jitter_count - 1; ++it)
+						{
+							u32* p = (u32*)(LPBYTE(subData[it].pSysMem) + y * subData[it].SysMemPitch + x * 4);
+							*p = data[it];
+						}
+					}
+				}
+
+				for (int it = 0; it < TEX_jitter_count - 1; ++it)
+				{
+					string_path name;
+					xr_sprintf(name, "%s%d", r2_jitter, it);
+					R_CHK(HW.pDevice->CreateTexture2D(&desc, &subData[it], &t_noise_surf[it]));
+					t_noise[it] = dxRenderDeviceRender::Instance().Resources->_CreateTexture(name);
+					t_noise[it]->surface_set(t_noise_surf[it]);
 				}
 			}
-		}
 
-		for (int it=0; it<TEX_jitter_count-1; it++)
-		{
-			string_path					name;
-			xr_sprintf						(name,"%s%d",r2_jitter,it);
-			R_CHK( HW.pDevice->CreateTexture2D(&desc, &subData[it], &t_noise_surf[it]) );
-			t_noise[it]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
-			t_noise[it]->surface_set	(t_noise_surf[it]);
-		}
-
-		float tempDataHBAO[TEX_jitter*TEX_jitter*4];
-
-		// generate HBAO jitter texture (last)
-		D3D10_TEXTURE2D_DESC	descHBAO;
-		descHBAO.Width = TEX_jitter;
-		descHBAO.Height = TEX_jitter;
-		descHBAO.MipLevels = 1;
-		descHBAO.ArraySize = 1;
-		descHBAO.SampleDesc.Count = 1;
-		descHBAO.SampleDesc.Quality = 0;
-		descHBAO.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		descHBAO.Usage = D3D10_USAGE_DEFAULT;
-		descHBAO.BindFlags = D3D10_BIND_SHADER_RESOURCE;
-		descHBAO.CPUAccessFlags = 0;
-		descHBAO.MiscFlags = 0;
-		
-		const auto it = TEX_jitter_count-1;
-		subData[it].pSysMem = tempDataHBAO;
-		subData[it].SysMemPitch = descHBAO.Width*sampleSize * sizeof(float);
-		
-		// Fill it,
-		for (u32 y=0; y<TEX_jitter; y++)
-		{
-			for (u32 x=0; x<TEX_jitter; x++)
+			// HBAO jitter texture
 			{
-				float numDir = 1.0f;
-				switch (ps_r_ssao)
+				float tempDataHBAO[TEX_jitter*TEX_jitter * 4];
+				D3D_TEXTURE2D_DESC descHBAO;
+				std::memset(&descHBAO, 0, sizeof(D3D_TEXTURE2D_DESC));
+				descHBAO.Width				= TEX_jitter;
+				descHBAO.Height				= TEX_jitter;
+				descHBAO.MipLevels			= 1;
+				descHBAO.ArraySize			= 1;
+				descHBAO.SampleDesc.Count	= 1;
+				descHBAO.SampleDesc.Quality = 0;
+				descHBAO.Format				= DXGI_FORMAT_R32G32B32A32_FLOAT;
+				descHBAO.Usage				= D3D_USAGE_DEFAULT;
+				descHBAO.BindFlags			= D3D_BIND_SHADER_RESOURCE;
+				descHBAO.CPUAccessFlags		= 0;
+				descHBAO.MiscFlags			= 0;
+
+				const auto it = TEX_jitter_count - 1;
+				subData[it].pSysMem = tempDataHBAO;
+				subData[it].SysMemPitch = descHBAO.Width * sampleSize * sizeof(float);
+
+				// Fill it
+				for (u32 y = 0; y < TEX_jitter; ++y)
 				{
-				case 1: numDir = 4.0f; break;
-				case 2: numDir = 6.0f; break;
-				case 3: numDir = 8.0f; break;
-				case 4: numDir = 8.0f; break;
+					for (u32 x = 0; x < TEX_jitter; ++x)
+					{
+						float numDir = 1.0f;
+						switch (ps_r_ssao)
+						{
+						case 1: numDir = 4.0f; break;
+						case 2: numDir = 6.0f; break;
+						case 3: numDir = 8.0f; break;
+						case 4: numDir = 8.0f; break;
+						}
+						float angle = 2 * PI * ::Random.randF(0.0f, 1.0f) / numDir;
+						float dist = ::Random.randF(0.0f, 1.0f);
+
+						float *p = (float*)(LPBYTE(subData[it].pSysMem) + y * subData[it].SysMemPitch + x * 4 * sizeof(float));
+
+						*p = (float)(_cos(angle));
+						*(p + 1) = (float)(_sin(angle));
+						*(p + 2) = (float)(dist);
+						*(p + 3) = 0;
+					}
 				}
-				float angle = 2 * PI * ::Random.randF(0.0f, 1.0f) / numDir;
-				float dist = ::Random.randF(0.0f, 1.0f);
 
-				float *p	=	(float*)	
-					(LPBYTE (subData[it].pSysMem) 
-					+ y*subData[it].SysMemPitch 
-					+ x*4*sizeof(float));
-				*p = (float)(_cos(angle));
-				*(p+1) = (float)(_sin(angle));
-				*(p+2) = (float)(dist);
-				*(p+3) = 0;
+				string_path name;
+				xr_sprintf(name, "%s%d", r2_jitter, it);
+				R_CHK(HW.pDevice->CreateTexture2D(&descHBAO, &subData[it], &t_noise_surf[it]));
+				t_noise[it] = dxRenderDeviceRender::Instance().Resources->_CreateTexture(name);
+				t_noise[it]->surface_set(t_noise_surf[it]);
 			}
-		}			
+
+			// Mipped jitter
+			{
+				D3D_TEXTURE2D_DESC desc;
+				std::memset(&desc, 0, sizeof(D3D_TEXTURE2D_DESC));
+				desc.Width				= TEX_jitter;
+				desc.Height				= TEX_jitter;
+				desc.MipLevels			= 0; // Autogen mipmaps
+				desc.ArraySize			= 1;
+				desc.SampleDesc.Count	= 1;
+				desc.SampleDesc.Quality = 0;
+				desc.Format				= DXGI_FORMAT_R8G8B8A8_SNORM;
+				desc.Usage				= D3D_USAGE_DEFAULT;
+				desc.BindFlags			= D3D_BIND_SHADER_RESOURCE;
+				desc.CPUAccessFlags		= 0;
+				desc.MiscFlags			= 0;
+
+				R_CHK(HW.pDevice->CreateTexture2D(&desc, 0, &t_noise_surf_mipped));
+				t_noise_mipped = dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_jitter_mipped);
+				t_noise_mipped->surface_set(t_noise_surf_mipped);
+
+				// Update texture. Generate mips.
+				HW.pDevice->CopySubresourceRegion(t_noise_surf_mipped, 0, 0, 0, 0, t_noise_surf[0], 0, 0);
+
+				D3DX10FilterTexture(t_noise_surf_mipped, 0, D3DX10_FILTER_POINT);
+			}
 		
-		string_path					name;
-		xr_sprintf						(name,"%s%d",r2_jitter,it);
-		R_CHK( HW.pDevice->CreateTexture2D(&descHBAO, &subData[it], &t_noise_surf[it]) );
-		t_noise[it]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
-		t_noise[it]->surface_set	(t_noise_surf[it]);
+			// HQ noise
+			{
+				u32 w = Device.dwWidth, h = Device.dwHeight;
 
+				D3D_TEXTURE2D_DESC desc;
+				std::memset(&desc, 0, sizeof(D3D_TEXTURE2D_DESC));
+				desc.Width				= w;
+				desc.Height				= h;
+				desc.MipLevels			= 1;
+				desc.ArraySize			= 1;
+				desc.SampleDesc.Count	= 1;
+				desc.SampleDesc.Quality = 0;
+				desc.Format				= DXGI_FORMAT_R8G8B8A8_SNORM;
+				desc.Usage				= D3D_USAGE_DEFAULT;
+				desc.BindFlags			= D3D_BIND_SHADER_RESOURCE;
+				desc.CPUAccessFlags		= 0;
+				desc.MiscFlags			= 0;
 
-		//	Create noise mipped
-		{
-			//	Autogen mipmaps
-			desc.MipLevels = 0;
-			R_CHK( HW.pDevice->CreateTexture2D(&desc, 0, &t_noise_surf_mipped) );
-			t_noise_mipped = dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_jitter_mipped);
-			t_noise_mipped->surface_set(t_noise_surf_mipped);
+				u32* tempData = (u32*)malloc(w * h * sizeof(u32));
+				D3D_SUBRESOURCE_DATA subData;
+				std::memset(&subData, 0, sizeof(D3D_SUBRESOURCE_DATA));
+				subData.pSysMem = tempData;
+				subData.SysMemPitch = desc.Width * sampleSize;
 
-			//	Update texture. Generate mips.
+				// Fill it
+				for (u32 y = 0; y < h; ++y)
+				{
+					for (u32 x = 0; x < w; ++x)
+					{
+						DWORD data;
+						generate_jitter(&data, 1);
+						u32* p = (u32*)(LPBYTE(subData.pSysMem) + y * subData.SysMemPitch + x * 4);
+						*p = data;
+					}
+				}
 
-			HW.pDevice->CopySubresourceRegion( t_noise_surf_mipped, 0, 0, 0, 0, t_noise_surf[0], 0, 0 );
-	
-			D3DX10FilterTexture(t_noise_surf_mipped, 0, D3DX10_FILTER_POINT);
+				R_CHK(HW.pDevice->CreateTexture2D(&desc, &subData, &t_noise_hq_surf));
+				t_noise_hq = dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_jitter_hq);
+				t_noise_hq->surface_set(t_noise_hq_surf);
+
+				free(tempData);
+			}
 		}
-		
 	}
 
 	// PP
-	s_postprocess.create				("postprocess");
+	s_postprocess.create				("effects\\postprocess");
 	g_postprocess.create				(D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_SPECULAR|D3DFVF_TEX3,RCache.Vertex.Buffer(),RCache.QuadIB);
+	if (RImplementation.o.dx10_msaa)
+		s_postprocess_msaa.create		("effects\\postprocess_msaa");
 
 	// Menu
-	s_menu.create						("distort");
+	s_menu.create						("effects\\ui_distort");
 	g_menu.create						(FVF::F_TL,RCache.Vertex.Buffer(),RCache.QuadIB);
 
 	// 
@@ -869,51 +909,58 @@ CRenderTarget::CRenderTarget		()
 	dwHeight	= Device.dwHeight;
 }
 
-CRenderTarget::~CRenderTarget	()
+CRenderTarget::~CRenderTarget()
 {
 	// Textures
-	t_material->surface_set		(NULL);
+	t_material->surface_set		(nullptr);
 
 #ifdef DEBUG
 	_SHOW_REF					("t_material_surf",t_material_surf);
-#endif // DEBUG
+#endif
 	_RELEASE					(t_material_surf);
 
-	t_LUM_src->surface_set		(NULL);
-	t_LUM_dest->surface_set		(NULL);
+	t_LUM_src->surface_set		(nullptr);
+	t_LUM_dest->surface_set		(nullptr);
 
 #ifdef DEBUG
-	ID3DBaseTexture*	pSurf = 0;
+	ID3DBaseTexture* pSurf = nullptr;
 
 	pSurf = t_envmap_0->surface_get();
-	if (pSurf) pSurf->Release();
+	if (pSurf)
+		pSurf->Release();
 	_SHOW_REF("t_envmap_0 - #small",pSurf);
 
 	pSurf = t_envmap_1->surface_get();
-	if (pSurf) pSurf->Release();
+	if (pSurf)
+		pSurf->Release();
 	_SHOW_REF("t_envmap_1 - #small",pSurf);
 #endif // DEBUG
-	t_envmap_0->surface_set		(NULL);
-	t_envmap_1->surface_set		(NULL);
+	t_envmap_0->surface_set		(nullptr);
+	t_envmap_1->surface_set		(nullptr);
 	t_envmap_0.destroy			();
 	t_envmap_1.destroy			();
 
 	// Jitter
-	for (int it=0; it<TEX_jitter_count; it++)	{
-		t_noise	[it]->surface_set	(NULL);
+	for (int it = 0; it < TEX_jitter_count; it++)
+	{
+		t_noise[it]->surface_set(nullptr);
 #ifdef DEBUG
-		_SHOW_REF("t_noise_surf[it]",t_noise_surf[it]);
-#endif // DEBUG
-		_RELEASE					(t_noise_surf[it]);
+		_SHOW_REF("t_noise_surf[it]", t_noise_surf[it]);
+#endif
+		_RELEASE(t_noise_surf[it]);
 	}
 
-	t_noise_mipped->surface_set	(NULL);
+	t_noise_mipped->surface_set(nullptr);
 #ifdef DEBUG
 	_SHOW_REF("t_noise_surf_mipped",t_noise_surf_mipped);
-#endif // DEBUG
-	_RELEASE					(t_noise_surf_mipped);
+#endif
+	_RELEASE(t_noise_surf_mipped);
 
-	// 
+	// Destroy HQ noise texture
+	t_noise_hq->surface_set(nullptr);
+	_RELEASE(t_noise_hq_surf);
+
+	// Light geoms
 	accum_spot_geom_destroy		();
 	accum_omnip_geom_destroy	();
 	accum_point_geom_destroy	();
@@ -921,38 +968,33 @@ CRenderTarget::~CRenderTarget	()
 
 	// Blenders
 	xr_delete(b_combine);
-	xr_delete(b_luminance);
-	xr_delete(b_bloom);
 	xr_delete(b_accum_reflected);
 	xr_delete(b_accum_spot);
 	xr_delete(b_accum_point);
 	xr_delete(b_accum_direct);
 	xr_delete(b_ssao);
-	xr_delete(b_ssss_mrmnwar);
-	xr_delete(b_ssss_ogse);
 
-   if( RImplementation.o.dx10_msaa )
-   {
-      int bound = RImplementation.o.dx10_msaa_samples;
+	if (RImplementation.o.dx10_msaa)
+	{
+		int bound = RImplementation.o.dx10_msaa_samples;
+		if (RImplementation.o.dx10_msaa_opt)
+			bound = 1;
 
-      if( RImplementation.o.dx10_msaa_opt )
-         bound = 1;
-
-	  for( int i = 0; i < bound; ++i )
-	  {
-		  xr_delete					(b_combine_msaa[i]);
-		  xr_delete					(b_accum_direct_msaa[i]);
-		  xr_delete					(b_accum_mask_msaa[i]);
-		  xr_delete					(b_accum_direct_volumetric_msaa[i]);
-		  xr_delete					(b_accum_spot_msaa[i]);
-		  xr_delete					(b_accum_volumetric_msaa[i]);
-		  xr_delete					(b_accum_point_msaa[i]);
-		  xr_delete					(b_accum_reflected_msaa[i]);
-		  xr_delete					(b_ssao_msaa[i]);
-	  }
-   }
-	xr_delete					(b_accum_mask			);
-	xr_delete					(b_occq					);
+		for (int i = 0; i < bound; ++i)
+		{
+			xr_delete(b_combine_msaa[i]);
+			xr_delete(b_accum_direct_msaa[i]);
+			xr_delete(b_accum_mask_msaa[i]);
+			xr_delete(b_accum_direct_volumetric_msaa[i]);
+			xr_delete(b_accum_spot_msaa[i]);
+			xr_delete(b_accum_volumetric_msaa[i]);
+			xr_delete(b_accum_point_msaa[i]);
+			xr_delete(b_accum_reflected_msaa[i]);
+			xr_delete(b_ssao_msaa[i]);
+		}
+	}
+	xr_delete(b_accum_mask);
+	xr_delete(b_occq);
 }
 
 void CRenderTarget::reset_light_marker( bool bResetStencil)
@@ -995,7 +1037,7 @@ bool CRenderTarget::need_to_render_sunshafts()
 		return false;
 
 	light* sun = (light*)RImplementation.Lights.sun._get();
-	CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
+	CEnvDescriptor&	E = *Environment().CurrentEnv;
 	Fcolor sun_color = sun->color;
 	float fValue = E.m_fSunShaftsIntensity * u_diffuse2s(sun_color.r, sun_color.g, sun_color.b);
 	if (fValue < EPS)

@@ -46,7 +46,7 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 			bool bSilencer = false;
 			bool bLauncher = false;
 			bool alt_scope = false;
-			std::string st;
+			xr_string st;
 			
 			j = 1;
 			p = 1.f;

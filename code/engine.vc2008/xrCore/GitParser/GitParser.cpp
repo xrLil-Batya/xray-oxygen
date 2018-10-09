@@ -10,6 +10,12 @@
 #include <istream>
 #include <sstream>
 
+#if __has_include("hack.appveyor")
+#define ITS_CI_BUILD
+#define NewStr(str) #str
+#define xstr(ToStr) NewStr(ToStr)
+#endif 
+
 std::vector<std::string> Split(std::string Str, size_t StrSize, char splitCh) noexcept
 {
 	std::vector<std::string> Result;
@@ -38,7 +44,7 @@ std::vector<std::string> Split(std::string Str, size_t StrSize, char splitCh) no
 
 int main()
 {
-#ifndef APPVEYOR
+#ifndef ITS_CI_BUILD
 	std::ifstream *Reader = nullptr;
 	std::string PathFile = "../../../.git/";
 
@@ -65,9 +71,9 @@ int main()
 	std::stringstream HeaderString;
 	HeaderString << "#pragma once" << std::endl;
 	
-#ifdef APPVEYOR
-	HeaderString << "#define _BRANCH " << "\"" << #APPVEYOR_REPO_BRANCH << "\"" << std::endl;
-	HeaderString << "#define _HASH " << "\"" << #APPVEYOR_REPO_COMMIT << "\"" << std::endl;
+#ifdef ITS_CI_BUILD
+	HeaderString << "#define _BRANCH " << "\"" << xstr(APPVEYOR_REPO_BRANCH) << "\"" << std::endl;
+	HeaderString << "#define _HASH " << "\"" << xstr(APPVEYOR_REPO_COMMIT) << "\"" << std::endl;
 #else
 	HeaderString << "#define _BRANCH " << "\"" << BranchName << "\"" << std::endl;
 	HeaderString << "#define _HASH " << "\"" << hash << "\"" << std::endl;

@@ -58,7 +58,7 @@ protected:
 	PORTIONS			m_portions;
 	TIMERS				m_timers;
 	bool				m_actual;
-	std::recursive_mutex	m_section;
+	xrCriticalSection	m_section;
 	u32					m_call_count;
 
 protected:

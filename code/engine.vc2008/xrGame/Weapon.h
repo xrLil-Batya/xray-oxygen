@@ -70,7 +70,9 @@ public:
 
 	virtual	void			Hit					(SHit* pHDS);
 
-	void                   UpdateSecondVP       ();
+	void					UpdateSecondVP			();
+	float					GetZRotatingFactor		() const { return m_zoom_params.m_fZoomRotationFactor; } //--#SM+#--
+	float					GetSecondVP_FovFactor	() const { return m_zoom_params.m_fSecondVP_FovFactor; } //--#SM+#--
 
 	virtual void			reinit				();
 	virtual void			reload				(LPCSTR section);
@@ -174,9 +176,9 @@ public:
 	int	GetGrenadeLauncherX() {return m_iGrenadeLauncherX;}
 	int	GetGrenadeLauncherY() {return m_iGrenadeLauncherY;}
 
-	const std::string& GetGrenadeLauncherName	() const{return m_sGrenadeLauncherName;}
-	const std::string GetScopeName				() const{return pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");}
-	const std::string& GetSilencerName			() const{return m_sSilencerName;}
+	const xr_string& GetGrenadeLauncherName	() const{return m_sGrenadeLauncherName;}
+	const xr_string GetScopeName				() const{return pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");}
+	const xr_string& GetSilencerName			() const{return m_sSilencerName;}
 
 	IC void	ForceUpdateAmmo						()		{ m_BriefInfo_CalcFrame = 0; }
 
@@ -192,9 +194,9 @@ protected:
 	ALife::EWeaponAddonStatus	m_eGrenadeLauncherStatus;
 
 	//названия секций подключаемых аддонов
-	std::string		m_sScopeName;
-	std::string		m_sSilencerName;
-	std::string		m_sGrenadeLauncherName;
+	xr_string		m_sScopeName;
+	xr_string		m_sSilencerName;
+	xr_string		m_sGrenadeLauncherName;
 
 	//смещение иконов апгрейдов в инвентаре
 	int	m_iScopeX, m_iScopeY;
@@ -257,7 +259,6 @@ public:
 	virtual	float			CurrentZoomFactor	();
 	//показывает, что оружие находится в соостоянии поворота для приближенного прицеливания
 	bool			IsRotatingToZoom	() const		{	return (m_zoom_params.m_fZoomRotationFactor<1.f);}
-	float           GetZRotatingFactor  () const        {   return m_zoom_params.m_fZoomRotationFactor; }
 
 	virtual	u8				GetCurrentHudOffsetIdx ();
 
@@ -401,7 +402,7 @@ protected:
 			void			StopFlameParticles2	();
 			void			UpdateFlameParticles2();
 protected:
-	std::string				m_sFlameParticles2;
+	xr_string				m_sFlameParticles2;
 	//объект партиклов для стрельбы из 2-го ствола
 	CParticlesObject*		m_pFlameParticles2;
 

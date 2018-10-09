@@ -57,7 +57,6 @@ struct str_container_impl
                     xr_free(value);
                 }
                 else current = &value->next;
-#pragma todo("ForserX to Giperion: Результат применения унарного оператора '&' может быть невыровненным")
             }
         }
     }
@@ -131,7 +130,7 @@ str_value*	str_container::dock(str_c value)
 {
     if (!value) return nullptr;
 
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 
     str_value*	result = nullptr;
 
@@ -185,19 +184,19 @@ str_value*	str_container::dock(str_c value)
 
 void		str_container::clean()
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     impl->clean();
 }
 
 void		str_container::verify()
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     impl->verify();
 }
 
 void		str_container::dump()
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     FILE* F = fopen("d:\\$str_dump$.txt", "w");
     impl->dump(F);
     fclose(F);
@@ -205,13 +204,13 @@ void		str_container::dump()
 
 void		str_container::dump(IWriter* W)
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     impl->dump(W);
 }
 
 u32			str_container::stat_economy()
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     int				counter = 0;
     counter -= sizeof(*this);
     counter += impl->stat_economy();
@@ -391,4 +390,13 @@ bool xr_string::StartWith(LPCSTR Str, size_t Size) const
     }
 
     return true;
+}
+
+
+xr_string xr_string::ToString(int Value)
+{
+	string64 buf = {0};
+	itoa(Value, &buf[0], 10);
+
+	return xr_string(buf);
 }

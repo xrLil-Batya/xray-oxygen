@@ -38,7 +38,7 @@ void CheckOpenAL(const char* params)
 	DWORD dwOpenALInstalled = GetFileAttributes("C:\\Windows\\System32\\OpenAL32.dll");
 	if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
 	{
-		std::string StrCmd = "/select, " + std::string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
+		xr_string StrCmd = "/select, " + xr_string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
 		StrCmd[11] = '\\';
 		//WinExec(StrCmd.c_str(), 1);
 		ShellExecute(NULL, NULL, "explorer.exe", StrCmd.c_str(), NULL, SW_SHOWNORMAL);
@@ -65,7 +65,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	try
 	{
 		// Init X-ray core
-		Debug._initialize(false);
+		Debug._initialize();
 		Core._initialize("X-Ray Oxygen", nullptr, TRUE, "fsgame.ltx");
 	}
 	catch (...)

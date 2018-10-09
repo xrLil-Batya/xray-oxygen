@@ -676,7 +676,7 @@ void CInifile::remove_line(const char* S, const char* L)
 }
 
 #include <sstream>
-std::string CInifile::get_as_string() 
+xr_string CInifile::get_as_string() 
 {
 	std::stringstream str;
 
@@ -703,7 +703,7 @@ std::string CInifile::get_as_string()
 		}
 	}
 
-	return str.str();
+	return xr_string(str.str().c_str());
 }
 
 // Uniqle COP

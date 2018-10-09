@@ -42,8 +42,8 @@ bool	global_data_file_path(LPCSTR name, IAgent* agent, DWORD sessionId, string_p
 		//net_global_data_impl<gl_type>	impl;
 		
 
-		std::recursive_mutex	create_data_lock;
-		std::recursive_mutex	ref_lock;
+		xrCriticalSection	create_data_lock;
+		xrCriticalSection	ref_lock;
 		u32					_id;
 		u32					_use_count;
 		bool				_clear;
@@ -55,26 +55,26 @@ bool	global_data_file_path(LPCSTR name, IAgent* agent, DWORD sessionId, string_p
 		void clear( )
 		{
 			VERIFY( _id!=0 );
-			ref_lock.lock( );
-			create_data_lock.lock();
+			ref_lock.Enter( );
+			create_data_lock.Enter();
 			if( _use_count > 0 )
 					_clear = true;
 			else
 				destroy_data( );
-			create_data_lock.unlock();
-			ref_lock.unlock( );
+			create_data_lock.Leave();
+			ref_lock.Leave( );
 		}
 		IC u32 id()	{ return _id ;}
 	private:
 		virtual	void	add_ref				()	
 		{
-			ref_lock.lock();
+			ref_lock.Enter();
 			++_use_count;
-			ref_lock.unlock();
+			ref_lock.Leave();
 		}
 		virtual	void	free_ref			()	
 		{
-			ref_lock.lock();
+			ref_lock.Enter();
 			R_ASSERT( _use_count>0 );
 			--_use_count;
 			if( _clear )
@@ -82,7 +82,7 @@ bool	global_data_file_path(LPCSTR name, IAgent* agent, DWORD sessionId, string_p
 				destroy_data( );
 				_clear = false;
 			}
-			ref_lock.unlock();
+			ref_lock.Leave();
 		}
 		virtual	void	on_task_send		(IGenericStream* outStream ) const
 		{
@@ -103,22 +103,22 @@ bool	global_data_file_path(LPCSTR name, IAgent* agent, DWORD sessionId, string_p
 			for(u32 i = 0; i< size; ++i )
 				globals().get(v[i]).on_task_receive(agent,sessionId,inStream);
 			//
-			create_data_lock.lock();
+			create_data_lock.Enter();
 			u32 i;
 			inStream->Read( &i, sizeof(i) );
 			R_ASSERT( i>0 );
 			if( i == _id )
 			{
-				create_data_lock.unlock();
+				create_data_lock.Leave();
 				return true;
 			}
 			if( _id == 0 )
 			{
 				bool ret = create_data( i, agent, sessionId );
-				create_data_lock.unlock();
+				create_data_lock.Leave();
 				return ret;
 			}
-			create_data_lock.unlock();
+			create_data_lock.Leave();
 			return false;
 		}
 
@@ -169,16 +169,16 @@ bool	global_data_file_path(LPCSTR name, IAgent* agent, DWORD sessionId, string_p
 		virtual	void	data_init()
 		{
 			data_cleanup( );
-			create_data_lock.lock();
+			create_data_lock.Enter();
 			impl::data_init();
 			++_id;
 			create_data_file();
-			create_data_lock.unlock();
+			create_data_lock.Leave();
 		}
 
 		virtual	void	data_cleanup()
 		{
-			create_data_lock.lock();
+			create_data_lock.Enter();
 			
 			if( _id > 0 )
 			{
@@ -186,7 +186,7 @@ bool	global_data_file_path(LPCSTR name, IAgent* agent, DWORD sessionId, string_p
 				impl::data_cleanup	( );
 				lc_net::cleanup().set_cleanup<gl_type>	( _id );
 			}
-			create_data_lock.unlock();
+			create_data_lock.Leave();
 		}
 
 	};

@@ -392,6 +392,12 @@ void CActor::Load	(LPCSTR section )
 		m_BloodSnd.create		(pSettings->r_string(section,"heavy_blood_snd"), st_Effect,SOUND_TYPE_MONSTER_INJURING);
 		m_DangerSnd.create		(pSettings->r_string(section,"heavy_danger_snd"), st_Effect,SOUND_TYPE_MONSTER_INJURING);
 	}
+
+	if (this == Level().CurrentEntity()) //--#SM+#--
+	{
+		GamePersistent().m_pGShaderConstants.m_blender_mode.set(0.f, 0.f, 0.f, 0.f);
+	}
+
 	if( psActorFlags.test(AF_PSP) )
 		cam_Set					(eacLookAt);
 	else
@@ -745,7 +751,7 @@ void CActor::UpdateCL()
 	SetEvent(MtSecondUpdaterEventStart);
 
 	// Update Collision
-	MtFeelTochMutex.lock();
+	MtFeelTochMutex.Enter();
 	if (IsFeelTouchCharacters())
 	{
 		for (CObject* pObject : feel_touch)
@@ -757,7 +763,7 @@ void CActor::UpdateCL()
 			}
 		}
 	}
-	MtFeelTochMutex.unlock();
+	MtFeelTochMutex.Leave();
 
 	m_pPhysics_support->in_UpdateCL();
 
@@ -843,6 +849,9 @@ void CActor::UpdateCL()
 			psHUD_Flags.set(HUD_DRAW_RT, pWeapon->show_indicators());
 
 			pWeapon->UpdateSecondVP();
+
+			GamePersistent().m_pGShaderConstants.hud_params.x = pWeapon->GetZRotatingFactor(); //--#SM+#--
+			GamePersistent().m_pGShaderConstants.hud_params.y = pWeapon->GetSecondVP_FovFactor(); //--#SM+#-- 
 		}
 	}
 	else if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
@@ -857,6 +866,7 @@ void CActor::UpdateCL()
 			bLook_cam_fp_zoom = false;
 		}
 
+		GamePersistent().m_pGShaderConstants.hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
 		Device.m_SecondViewport.SetSVPActive(false);
 	}
 
@@ -1228,7 +1238,7 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	CBoneInstance& BI = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(u16(m_head));
 	Fmatrix M;
 	smart_cast<IKinematics*>(Visual())->CalculateBones	();
-	M.mul						(XFORM(),BI.mTransform);
+	M.mul(XFORM(),BI.mTransform);
 	//------------------------------------------------
 	Fvector v0, v1;
 	v0.set(M.c); v1.set(M.c);
@@ -1240,7 +1250,7 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	Device.mFullTransform.transform(v1r,v1);
 	float size = v1r.distance_to(v0r);
 
-	CGameFont* pFont = UI().Font().pFontArial14;
+	CGameFont* pFont = UI().Font().GetFont("ui_font_arial_14");
 	if (!pFont) return;
 
 	float delta_up = 0.0f;

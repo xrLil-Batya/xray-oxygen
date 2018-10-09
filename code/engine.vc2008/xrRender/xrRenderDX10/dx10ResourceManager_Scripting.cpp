@@ -328,10 +328,10 @@ Shader*	CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Search equal in shaders array
-	for (const auto &shader : v_shaders)
+	for (Shader* pShader : v_shaders)
 	{
-		if (S.equal(shader))
-			return shader;
+		if (S.equal(pShader))
+			return pShader;
 	}
 
 	// Create _new_ entry

@@ -91,6 +91,7 @@ bool CVMLua::CreateNamespaceTable(LPCSTR caNamespaceName)
 
 CVMLua::CVMLua()
 {
+	setup_luabind_allocator();
 	m_virtual_machine = luaL_newstate();
 	R_ASSERT2(m_virtual_machine, "Cannot initialize script virtual machine!");
 

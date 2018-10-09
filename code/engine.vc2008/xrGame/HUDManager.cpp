@@ -170,32 +170,34 @@ void  CHUDManager::RenderUI()
 	UI().RenderFont();
 	m_pHUDTarget->Render();
 
-	if (Device.Paused() && bShowPauseString) {
-		CGameFont* pFont = UI().Font().pFontGraffiti50Russian;
+	if (Device.Paused() && bShowPauseString)
+	{
+		CGameFont* pFont = UI().Font().GetFont("ui_font_graff_50");
 		pFont->SetColor(0x80FF0000);
 		LPCSTR _str = CStringTable().translate("st_game_paused").c_str();
 
-		Fvector2			_pos;
+		Fvector2 _pos;
 		_pos.set(UI_BASE_WIDTH / 2.0f, UI_BASE_HEIGHT / 2.0f);
 		UI().ClientToScreenScaled(_pos);
 		pFont->SetAligment(CGameFont::alCenter);
 		pFont->Out(_pos.x, _pos.y, _str);
 		pFont->OnRender();
 	}
-	if(psActorFlags.test(AF_WORKINPROGRESS))
+
+	if (psActorFlags.test(AF_WORKINPROGRESS))
 	{
-		CGameFont* pFont = UI().Font().pFontGraffiti19Russian;
+		CGameFont* pFont = UI().Font().GetFont("ui_font_graffiti19_russian");
 		pFont->SetColor(D3DCOLOR_XRGB(216, 216, 216));
 		LPCSTR _str = CStringTable().translate("Work In Progress").c_str();
 
 		Fvector2			_pos;
-		_pos.set(20,650);
+		_pos.set(20, 650);
 		UI().ClientToScreenScaled(_pos);
 		pFont->SetAligment(CGameFont::alLeft);
 		pFont->Out(_pos.x, _pos.y, _str);
 		pFont->OnRender();
 	}
-	}
+}
 
 void CHUDManager::OnEvent(EVENT E, u64 P1, u64 P2)
 {

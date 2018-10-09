@@ -231,9 +231,9 @@ dxRender_Visual* CModelPool::Create(const char* name, IReader* data)
 		dxRender_Visual* Model = it->second;
 		Model->Spawn();
 
-		mtPeref.lock();
+		mtPeref.Enter();
 		Pool.erase(it);
-		mtPeref.unlock();
+		mtPeref.Leave();
 
 		return Model;
 	}
@@ -242,7 +242,7 @@ dxRender_Visual* CModelPool::Create(const char* name, IReader* data)
 		// 1. Search for already loaded model (reference, base model)
 		dxRender_Visual* Base = Instance_Find(low_name);
 
-		mtPeref.lock();
+		mtPeref.Enter();
 		if (!Base) 
 		{
 			// 2. If not found
@@ -255,7 +255,7 @@ dxRender_Visual* CModelPool::Create(const char* name, IReader* data)
 		dxRender_Visual* Model = Instance_Duplicate(Base);
 
 		Registry.insert(std::make_pair(Model, low_name));
-		mtPeref.unlock();
+		mtPeref.Leave();
 
 		return Model;
 	}

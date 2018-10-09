@@ -330,10 +330,10 @@ struct SPHDBGOutText : public SPHDBGDrawAbsract
 		//if(rendered) return;
 		if (!fsimilar(dbg_text_current_height_scale, dbg_text_height_scale))
 		{
-			UI().Font().pFontStat->SetHeight(UI().Font().pFontStat->GetHeight() * dbg_text_height_scale / dbg_text_current_height_scale);
+			UI().Font().GetFont("stat_font")->SetHeight(UI().Font().GetFont("stat_font")->GetHeight() * dbg_text_height_scale / dbg_text_current_height_scale);
 			dbg_text_current_height_scale = dbg_text_height_scale;
 		}
-		UI().Font().pFontStat->OutNext("%s", s);
+		UI().Font().GetFont("stat_font")->OutNext("%s", s);
 		rendered = true;
 	}
 };
@@ -357,7 +357,7 @@ struct SPHDBGTextSetColor : public SPHDBGDrawAbsract
 	}
 	virtual void render()
 	{
-		UI().Font().pFontStat->SetColor(color);
+		UI().Font().GetFont("stat_font")->SetColor(color);
 	}
 };
 
@@ -376,7 +376,7 @@ struct SPHDBGTextOutSet : public SPHDBGDrawAbsract
 	}
 	virtual void render()
 	{
-		UI().Font().pFontStat->OutSet(x, y);
+		UI().Font().GetFont("stat_font")->OutSet(x, y);
 	}
 };
 
@@ -524,7 +524,7 @@ void PH_DBG_Render()
 	if (ph_dbg_draw_mask.test(phDbgDrawZDisable))
 		DRender->ZEnable(false);
 	//CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE,0));
-	UI().Font().pFontStat->OutSet(550, 250);
+	UI().Font().GetFont("stat_font")->OutSet(550, 250);
 	DBG_PHAbstructRender();
 
 	if (ph_dbg_draw_mask.test(phDbgDrawZDisable))

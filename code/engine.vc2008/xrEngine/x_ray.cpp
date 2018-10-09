@@ -40,7 +40,10 @@ struct _SoundProcessor : public pureFrame
 	virtual void _BCL OnFrame()
 	{
 		Device.Statistic->Sound.Begin();
-		::Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+		if (::Sound != nullptr)
+		{
+			::Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+		}
 		Device.Statistic->Sound.End();
 	}
 }	SoundProcessor;
@@ -99,6 +102,11 @@ ENGINE_API void InitInput()
 	BOOL bCaptureInput = !strstr(Core.Params, "-i");
 
 	pInput = xr_new<CInput>(bCaptureInput);
+}
+
+ENGINE_API void InitInput(bool bExclusiveMode)
+{
+	pInput = xr_new<CInput>(bExclusiveMode);
 }
 
 void destroyInput()
@@ -183,7 +191,7 @@ void Startup()
 	bEngineloaded = true;
 	Device.UpdateWindowPropStyle();
 	splashScreen.HideSplash();
-	Device.Create();
+	Device.Create(false);
 
 	pApp = xr_new<CApplication>();
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);
@@ -339,7 +347,7 @@ extern "C"
 void ENGINE_API RunApplication(LPCSTR commandLine)
 {
 	gMainThreadId = GetCurrentThreadId();
-	Debug.set_mainThreadId(gMainThreadId);
+//	Debug.set_mainThreadId(gMainThreadId);
 
 	// Title window
 	HWND logoInsertPos = HWND_TOPMOST;

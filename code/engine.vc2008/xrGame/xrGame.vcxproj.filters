@@ -1873,9 +1873,6 @@
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows">
       <UniqueIdentifier>{0f9640ce-8748-4cd1-a8eb-05024c8592c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Static">
-      <UniqueIdentifier>{b22c05df-6572-4506-87b9-8e0780cfc136}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd">
       <UniqueIdentifier>{43f7cc8e-8aab-473a-a752-11be673caa87}</UniqueIdentifier>
     </Filter>
@@ -4359,9 +4356,6 @@
     <ClInclude Include="..\xrServerEntities\script_export_macroses.h">
       <Filter>ScriptEngine</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_export_space.h">
-      <Filter>ScriptEngine</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_space_forward.h">
       <Filter>ScriptEngine</Filter>
     </ClInclude>
@@ -5563,6 +5557,9 @@
       <Filter>ScriptEngine\ScriptClasses\ScriptSound</Filter>
     </ClInclude>
     <ClInclude Include="CMagazine.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="xrGame.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -7313,13 +7310,7 @@
     <ClCompile Include="Car.cpp">
       <Filter>Core\Client\Objects\vehicles\Car</Filter>
     </ClCompile>
-    <ClCompile Include="CarCameras.cpp">
-      <Filter>Core\Client\Objects\vehicles\Car</Filter>
-    </ClCompile>
     <ClCompile Include="CarDamageParticles.cpp">
-      <Filter>Core\Client\Objects\vehicles\Car</Filter>
-    </ClCompile>
-    <ClCompile Include="CarDoors.cpp">
       <Filter>Core\Client\Objects\vehicles\Car</Filter>
     </ClCompile>
     <ClCompile Include="CarInput.cpp">
@@ -7580,9 +7571,6 @@
     <ClCompile Include="ui\UIActorStateInfo.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIStatic_script.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIScriptWnd.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
     </ClCompile>
@@ -7621,9 +7609,6 @@
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorialVideoItem.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIGameLog.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="Actor.cpp">
       <Filter>Core\Client\Objects\actor</Filter>

@@ -459,7 +459,7 @@ void CWeapon::Load(LPCSTR section)
 	}
 	else if (m_eScopeStatus == ALife::eAddonPermanent)
 	{
-		std::string scope_tex_name = pSettings->r_string(cNameSect(), "scope_texture");
+		xr_string scope_tex_name = pSettings->r_string(cNameSect(), "scope_texture");
 		m_zoom_params.m_fScopeZoomFactor = pSettings->r_float( cNameSect(), "scope_zoom_factor");
         m_UIScope = xr_new<CUIWindow>();
 
@@ -849,6 +849,9 @@ bool CWeapon::need_renderable()
 
 void CWeapon::renderable_Render()
 {
+	if (Device.m_SecondViewport.IsSVPFrame() && m_zoom_params.m_fZoomRotationFactor > 0.05f)
+		return;
+
 	// обновить xForm
 	UpdateXForm();
 
@@ -894,72 +897,86 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 
 	switch (cmd)
 	{
-	case kWPN_FIRE:
-	{
-		//если оружие чем-то занято, то ничего не делать
-		if (IsPending())
-			return false;
-
-		if (flags&CMD_START)
-			FireStart();
-		else
-			FireEnd();
-
-		return true;
-	}
-
-	case kWPN_NEXT:
-	{
-		CActor* pActor = smart_cast<CActor*>(H_Parent());
-		CCustomOutfit* pOutfit = pActor->GetOutfit();
-
-		return !(pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint))) && SwitchAmmoType(flags);
-	}
-
-	case kWPN_ZOOM:
-		if (IsZoomEnabled())
+		case kWPN_FIRE:
 		{
-			switch (flags)
-			{
-			case CMD_START:
-				if (!IsZoomed())
-				{
-					if(!IsPending())
-					{
-						if (GetState() != eIdle)
-							SwitchState(eIdle);
-					}
-					OnZoomIn();
-				}
-				else if (!b_toggle_weapon_aim)
-				{
-					OnZoomOut();
-				}
-				break;
-			case CMD_IN:
-				if (!IsZoomEnabled() || !IsZoomed())
-				{
-					return false;
-				}
+			//если оружие чем-то занято, то ничего не делать
+			if (IsPending())
+				return false;
 
-				ZoomInc();
-				break;
-			case CMD_OUT:
-				if (!IsZoomEnabled() || !IsZoomed())
-				{
-					return false;
-				}
+			if (flags & CMD_START)
+				FireStart();
+			else
+				FireEnd();
 
-				ZoomDec();
-				break;
-			default:
-				if (!b_toggle_weapon_aim && IsZoomed())
-				{
-					OnZoomOut();
-				}
-				break;
-			}
 			return true;
+		}
+
+		case kWPN_NEXT:
+		{
+			return SwitchAmmoType(flags);
+		}
+
+		case kWPN_ZOOM:
+		{
+			if (IsZoomEnabled())
+			{
+				switch (flags)
+				{
+					case CMD_START:
+					{
+						if (!IsZoomed())
+						{
+							if (!IsPending())
+							{
+								if (GetState() != eIdle)
+								{
+									SwitchState(eIdle);
+								}
+
+								OnZoomIn();
+							}
+						}
+						else if (!b_toggle_weapon_aim)
+						{
+							OnZoomOut();
+						}
+
+						break;
+					}
+
+					case CMD_IN:
+					{
+						if (!IsZoomEnabled() || !IsZoomed())
+						{
+							return false;
+						}
+
+						ZoomInc();
+						break;
+					}
+
+					case CMD_OUT:
+					{
+						if (!IsZoomEnabled() || !IsZoomed())
+						{
+							return false;
+						}
+
+						ZoomDec();
+						break;
+					}
+
+					default:
+					{
+						if (!b_toggle_weapon_aim && IsZoomed())
+						{
+							OnZoomOut();
+						}
+						break;
+					}
+				}
+				return true;
+			}
 		}
 	}
 	return false;
@@ -1192,9 +1209,9 @@ bool CWeapon::SilencerAttachable()
 	return (ALife::eAddonAttachable == m_eSilencerStatus);
 }
 
-std::string wpn_scope = "wpn_scope";
-std::string wpn_silencer = "wpn_silencer";
-std::string wpn_grenade_launcher = "wpn_launcher";
+xr_string wpn_scope = "wpn_scope";
+xr_string wpn_silencer = "wpn_silencer";
+xr_string wpn_grenade_launcher = "wpn_launcher";
 
 // Только для актора
 void CWeapon::UpdateHUDAddonsVisibility()

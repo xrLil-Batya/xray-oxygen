@@ -229,7 +229,6 @@ bool CScriptXmlInit::NodeExists(LPCSTR path, int index)
 }
 
 
-
 #pragma optimize("s",on)
 void CScriptXmlInit::script_register(lua_State *L)
 {
@@ -260,5 +259,59 @@ void CScriptXmlInit::script_register(lua_State *L)
 				.def("InitListBox",		&CScriptXmlInit::InitListBox)
 				.def("InitProgressBar",	&CScriptXmlInit::InitProgressBar)
 				.def("NodeExists",		&CScriptXmlInit::NodeExists)
+		];
+}
+
+#include "script_ui_registrator.h"
+#include "../xrUICore/MainMenu.h"
+
+#include "UIGame.h"
+#include "UI/UIScriptWnd.h"
+#include "../xrUICore/UIButton.h"
+#include "../xrUICore/UIProgressBar.h"
+#include "../xrUICore/UIEditBox.h"
+#include "../xrUICore/UIMessageBox.h"
+#include "../xrUICore/UIPropertiesBox.h"
+#include "../xrUICore/UITabControl.h"
+#include "../xrUICore/UIComboBox.h"
+#include "../xrUICore/UIOptionsManagerScript.h"
+
+#pragma optimize("s",on)
+void UIRegistrator::script_register(lua_State *L)
+{
+	CUIWindow::script_register(L);
+	CUIStatic::script_register(L);
+	CUIButton::script_register(L);
+	CUIProgressBar::script_register(L);
+	CUIComboBox::script_register(L);
+	CUIEditBox::script_register(L);
+	CUITabControl::script_register(L);
+	CUIMessageBox::script_register(L);
+	CUIListBox::script_register(L);
+	CUIDialogWndEx::script_register(L);
+	CUIPropertiesBox::script_register(L);
+	CUIOptionsManagerScript::script_register(L);
+	CScriptXmlInit::script_register(L);
+	CUIGame::script_register(L);
+
+	module(L)
+		[
+			class_<CGameFont>("CGameFont")
+			.enum_("EAligment")
+		[
+			value("alLeft", u32(CGameFont::alLeft)),
+			value("alRight", u32(CGameFont::alRight)),
+			value("alCenter", u32(CGameFont::alCenter))
+		],
+
+		class_<CMainMenu>("CMainMenu")
+		.def("GetEngineBuild", &CMainMenu::GetEngineBuild)
+		.def("GetEngineBuildDate", &CMainMenu::GetEngineBuildDate)
+		.def("GetGSVer", &CMainMenu::GetGSVer)
+		];
+
+	module(L, "main_menu")
+		[
+			def("get_main_menu", &MainMenu)
 		];
 }

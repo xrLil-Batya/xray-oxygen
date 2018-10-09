@@ -90,7 +90,7 @@ void SThunderboltCollection::load				(CInifile* pIni, CInifile* thunderbolts, LP
 	for (int tb_idx=0; tb_idx<tb_count; tb_idx++){
 		LPCSTR		N, V;
 		if (pIni->r_line(sect,tb_idx,&N,&V))
-			palette.push_back	(g_pGamePersistent->Environment().thunderbolt_description(*thunderbolts, N));
+			palette.push_back	(Environment().thunderbolt_description(*thunderbolts, N));
 	}
 }
 SThunderboltCollection::~SThunderboltCollection	()
@@ -149,7 +149,7 @@ BOOL CEffect_Thunderbolt::RayPick(const Fvector& s, const Fvector& d, float& dis
 #endif
     return bRes;
 }
-#define FAR_DIST g_pGamePersistent->Environment().CurrentEnv->far_plane
+#define FAR_DIST Environment().CurrentEnv->far_plane
 
 void CEffect_Thunderbolt::Bolt(shared_str id, float period, float lt)
 {
@@ -158,12 +158,12 @@ void CEffect_Thunderbolt::Bolt(shared_str id, float period, float lt)
 	life_time	            = lt+Random.randF(-lt*0.5f,lt*0.5f);
     current_time            = 0.f;
 
-    current		            = g_pGamePersistent->Environment().thunderbolt_collection(collection, id)->GetRandomDesc(); VERIFY(current);
+    current		            = Environment().thunderbolt_collection(collection, id)->GetRandomDesc(); VERIFY(current);
 
     Fmatrix XF,S;
     Fvector pos,dev;
     float sun_h, sun_p; 
-	CEnvironment&			environment = g_pGamePersistent->Environment();
+	CEnvironment&			environment = Environment();
     environment.CurrentEnv->sun_dir.getHP			(sun_h,sun_p);
     float alt	            = environment.p_var_alt;//Random.randF(environment.p_var_alt.x,environment.p_var_alt.y);
     float lng	            = Random.randF(sun_h-environment.p_var_long+PI,sun_h+environment.p_var_long+PI); 
@@ -227,7 +227,7 @@ void CEffect_Thunderbolt::OnFrame(shared_str id, float period, float duration)
 		lightning_phase = 1.5f*(current_time / life_time);
 		clamp(lightning_phase, 0.f, 1.f);
 
-		CEnvironment&	environment = g_pGamePersistent->Environment();
+		CEnvironment&	environment = Environment();
 
 		Fvector&		sky_color = environment.CurrentEnv->sky_color;
 		sky_color.mad(fClr, environment.p_sky_color);
@@ -239,8 +239,8 @@ void CEffect_Thunderbolt::OnFrame(shared_str id, float period, float duration)
 		environment.CurrentEnv->fog_color.mad(fClr, environment.p_fog_color);
 
 		R_ASSERT(_valid(current_direction));
-		g_pGamePersistent->Environment().CurrentEnv->sun_dir = current_direction;
-		VERIFY2(g_pGamePersistent->Environment().CurrentEnv->sun_dir.y < 0, "Invalid sun direction settings while CEffect_Thunderbolt");
+		Environment().CurrentEnv->sun_dir = current_direction;
+		VERIFY2(Environment().CurrentEnv->sun_dir.y < 0, "Invalid sun direction settings while CEffect_Thunderbolt");
 	}
 }
 

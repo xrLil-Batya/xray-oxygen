@@ -24,7 +24,7 @@ float4 main(p_screen I) : SV_Target
 	[unroll]
 	for (int i = 0; i < NUM_SAMPLES; ++i)
 	{
-		float4 depth = s_mask_blur.Sample(smp_rtlinear, (I.tc0.xy + sunDir.xy * i));
+		float4 depth = s_mask_blur.Load(int3((I.tc0.xy + sunDir.xy * i) * screen_res.xy, 0), 0);
 		accum += depth*(1 - i/NUM_SAMPLES);
 	}
 	accum /= NUM_SAMPLES;

@@ -40,7 +40,7 @@ float3	dof(float2 center)
 #ifndef USE_MSAA
    float 	depth		= s_position.Sample( smp_nofilter, center).z;
 #else
-   float 	depth		= s_position.Load( int3( center * pos_decompression_params2.xy ,0),0 ).z;
+   float 	depth		= s_position.Load( int3( center * screen_res.xy ,0),0 ).z;
 #endif
 	if (depth <= EPSDEPTH)	depth = dof_params.w;
 	float	blur 		= DOFFactor(depth);

@@ -819,13 +819,6 @@ void CUIActorMenu::ResetMode()
     GameUI()->UIMainIngameWnd->ShowZoneMap(true);
 }
 
-void CUIActorMenu::UpdateActorMP()
-{
-	m_ActorCharacterInfo->ClearInfo();
-	m_ActorMoney->SetText("");
-	return;
-}
-
 bool CUIActorMenu::CanSetItemToList(PIItem item, CUIDragDropListEx* l, u16& ret_slot)
 {
 	u16 item_slot = item->BaseSlot();
@@ -916,14 +909,14 @@ void CUIActorMenu::TryRepairItem(CUIWindow* w, void* d)
 	luabind::functor<bool> funct;
 	R_ASSERT2(
 		ai().script_engine().functor("inventory_upgrades.can_repair_item", funct),
-		make_string("Failed to get functor <inventory_upgrades.can_repair_item>, item = %s", item_name)
+		make_string("Failed to get functor <inventory_upgrades.can_repair_item>, item = %s", item_name).c_str()
 	);
 	bool can_repair = funct(item_name, item->GetCondition(), partner);
 
 	luabind::functor<LPCSTR> funct2;
 	R_ASSERT2(
 		ai().script_engine().functor("inventory_upgrades.question_repair_item", funct2),
-		make_string("Failed to get functor <inventory_upgrades.question_repair_item>, item = %s", item_name)
+		make_string("Failed to get functor <inventory_upgrades.question_repair_item>, item = %s", item_name).c_str()
 	);
 	LPCSTR question = funct2(item_name, item->GetCondition(), can_repair, partner);
 
@@ -967,7 +960,7 @@ bool CUIActorMenu::CanUpgradeItem(PIItem item)
 	luabind::functor<bool> funct;
 	R_ASSERT2(
 		ai().script_engine().functor("inventory_upgrades.can_upgrade_item", funct),
-		make_string("Failed to get functor <inventory_upgrades.can_upgrade_item>, item = %s, mechanic = %s", item_name, partner)
+		make_string("Failed to get functor <inventory_upgrades.can_upgrade_item>, item = %s, mechanic = %s", item_name, partner).c_str()
 	);
 
 	return funct(item_name, partner);

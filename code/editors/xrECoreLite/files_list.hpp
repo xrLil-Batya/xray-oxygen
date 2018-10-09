@@ -1,7 +1,9 @@
 #pragma once
 #include <xrCore/xrCore.h>
 
-#define ECORE_API __declspec(dllexport)
+#ifndef ECORE_API
+	#define ECORE_API __declspec(dllexport)
+#endif
 #define ENGINE_API __declspec(dllimport)
 // Flexible vertex format bits
 //

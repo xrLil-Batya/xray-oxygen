@@ -3,9 +3,13 @@
 
 XRCORE_API void __stdcall CLSID2TEXT(CLASS_ID id, char* text)
 {
+	CLASS_ID copy_id = id;
 	text[8] = 0;
 	for (int i = 7; i >= 0; i--)
-		text[i] = char(id & 0xff); id >>= 8;
+	{
+		text[i] = char(copy_id & 0xff);
+		copy_id = copy_id >> 8;
+	}
 }
 
 XRCORE_API CLASS_ID __stdcall TEXT2CLSID(const char* text)

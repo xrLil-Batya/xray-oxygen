@@ -105,6 +105,7 @@ xr_token qpp_aa_mode_token[] =
 {
 	{ "st_opt_off",		0		},
 	{ "st_opt_fxaa",	FXAA	},
+	{ "st_opt_dlaa",	DLAA	},
 #if 0
 	{ "st_opt_smaa",	SMAA	},
 #endif
@@ -702,6 +703,7 @@ public:
 #endif	//	DEBUG
 #endif	//	(RENDER == R_R3) || (RENDER == R_R4)
 
+#ifdef DEBUG
 class CCC_SaveGammaLUT : public IConsole_Command
 {
 public:
@@ -711,6 +713,7 @@ public:
 		RImplementation.Target->SaveGammaLUT();
 	}
 };
+#endif
 
 //-----------------------------------------------------------------------
 void xrRender_initconsole()
@@ -720,9 +723,8 @@ void xrRender_initconsole()
 	CMD4(CCC_Integer,	"rs_skeleton_update",	&ps_r_SkeletonUpdate,		2,		128		);
 #ifdef DEBUG
 	CMD1(CCC_DumpResources,	"dump_resources");
-#endif
-
 	CMD1(CCC_SaveGammaLUT, "r_dbg_save_gamma_lut");
+#endif
 
 	// Common
 	CMD1(CCC_Screenshot,"screenshot"			);
@@ -767,6 +769,9 @@ void xrRender_initconsole()
 
 	// Rain droplets on visor
 	CMD3(CCC_Mask,		"r_rain_droplets",		&ps_r_flags,				R_FLAG_RAIN_DROPS);
+
+	// Vignette
+	CMD3(CCC_Mask,		"r_vignette",			&ps_r_flags,				R_FLAG_VIGNETTE);
 
 	// Shadows
 	CMD3(CCC_Token,		"r_shadow_map_size",	&ps_r_smapsize,				q_smapsize_token);

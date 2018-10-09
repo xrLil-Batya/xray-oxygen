@@ -54,8 +54,8 @@ void CRenderTarget::phase_combine()
 	RCache.set_ColorWriteEnable();
 //	RCache.set_Z(FALSE);
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
-	g_pGamePersistent->Environment().RenderSky();
-	g_pGamePersistent->Environment().RenderClouds();
+	Environment().RenderSky();
+	Environment().RenderClouds();
 //	RCache.set_Z(TRUE);
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
 	
@@ -84,7 +84,7 @@ void CRenderTarget::phase_combine()
 	if (!bMenuPP)
 	{
 		// Compute params
-		CEnvDescriptorMixer& envdesc = *g_pGamePersistent->Environment().CurrentEnv;
+		CEnvDescriptorMixer& envdesc = *Environment().CurrentEnv;
 		const float minamb = 0.001f;
 		Fvector4 ambclr = { std::max(envdesc.ambient.x * 2,minamb),	std::max(envdesc.ambient.y * 2,minamb), std::max(envdesc.ambient.z * 2,minamb),	0.0f };
 		ambclr.mul(ps_r_sun_lumscale_amb);
@@ -196,7 +196,7 @@ void CRenderTarget::phase_combine()
 	
 	// PP enabled ?
 	// Render to RT texture to be able to copy RT even in windowed mode.
-	bool bComplexPP = u_need_PP() || (ps_r_pp_aa_mode > 0) || ps_r_flags.test(R_FLAG_RAIN_DROPS);
+	bool bComplexPP = u_need_PP() || (ps_r_pp_aa_mode > 0) || ps_r_flags.test(R_FLAG_RAIN_DROPS) || ps_r_flags.test(R_FLAG_VIGNETTE);
 	if (bMenuPP)
 		bComplexPP = false;
 	else
@@ -226,6 +226,7 @@ void CRenderTarget::phase_combine()
 	// - PPE
 	// - Anti-aliasing (FXAA, SMAA)
 	// - On-screen rain drops
+	// - Vignette effect
 	if (bComplexPP)
 		u_setrt(rt_Color, nullptr, nullptr, HW.pBaseZB); // LDR RT
 	else
@@ -271,7 +272,7 @@ void CRenderTarget::phase_combine()
 	RCache.set_Stencil	(FALSE);
 
 	// if FP16-BLEND !not! supported - draw flares here, overwise they are already in the bloom target
-	g_pGamePersistent->Environment().RenderFlares();	// lens-flares
+	Environment().RenderFlares();	// lens-flares
 
 	// PP-if required
 	if (bComplexPP)
@@ -288,6 +289,13 @@ void CRenderTarget::phase_combine()
 		{
 			PIX_EVENT(phase_rain_droplets);
 			PhaseRainDrops();
+		}
+
+		// Vignette effect
+		if (ps_r_flags.test(R_FLAG_VIGNETTE))
+		{
+			PIX_EVENT(phase_vignette);
+			PhaseVignette();
 		}
 
 		PIX_EVENT(phase_pp);
@@ -377,7 +385,7 @@ void CRenderTarget::phase_combine_volumetric()
 	RCache.set_ColorWriteEnable(D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
 	{
 		// Compute params
-		CEnvDescriptorMixer& envdesc= *g_pGamePersistent->Environment().CurrentEnv;
+		CEnvDescriptorMixer& envdesc= *Environment().CurrentEnv;
 		const float minamb = 0.001f;
 		Fvector4 ambclr = { std::max(envdesc.ambient.x * 2,minamb), std::max(envdesc.ambient.y * 2,minamb), std::max(envdesc.ambient.z * 2,minamb),	0.0f };
 		ambclr.mul(ps_r_sun_lumscale_amb);

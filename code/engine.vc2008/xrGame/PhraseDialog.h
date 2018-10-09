@@ -37,7 +37,7 @@ using PHRASE_VECTOR = xr_vector<CPhrase*>;
 class CPhraseDialog;
 class CPhraseDialogManager;
 
-class CPhraseDialog	:
+class GAME_API CPhraseDialog	:
 	public CSharedClass<SPhraseDialogData, shared_str, false>,
 	public CXML_IdToIndex<CPhraseDialog>,
 	public intrusive_base

@@ -384,6 +384,9 @@
 	<string id="ui_mm_aa_mode">
 		<text>Antialiasing</text>
 	</string>
+	<string id="st_opt_dlaa">
+		<text>DLAA</text>
+	</string>
 	<string id="st_opt_fxaa">
 		<text>FXAA</text>
 	</string>
@@ -391,7 +394,10 @@
 		<text>SMAA</text>
 	</string>
 	<string id="ui_mm_rain_drops">
-		<text>Rain drops on lens</text>
+		<text>Rain drops on screen</text>
+	</string>
+	<string id="ui_mm_vignette">
+		<text>Vignette</text>
 	</string>
 	<string id="ui_mm_texture_quality">
 		<text>Texture detail</text>

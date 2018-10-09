@@ -256,7 +256,7 @@ void CRender::Render		()
 		m_project.build_projection	(
 			deg2rad(Device.fFOV), 
 			Device.fASPECT, VIEWPORT_NEAR, 
-			z_distance * g_pGamePersistent->Environment().CurrentEnv->far_plane);
+			z_distance * Environment().CurrentEnv->far_plane);
 		m_zfill.mul	(m_project,Device.mView);
 		r_pmask										(true,false);	// enable priority "0"
 		set_Recorder								(nullptr)		;
@@ -515,7 +515,7 @@ void CRender::render_forward				()
 		if (Glows && ps_r_flags.is(R_FLAG_GLOW_USE)) 
 			Glows->Render();											// glows render
 
-		g_pGamePersistent->Environment().RenderLast();					// rain/thunder-bolts
+		Environment().RenderLast();					// rain/thunder-bolts
 	}
 
 	RImplementation.o.distortion				= FALSE;				// disable distorion

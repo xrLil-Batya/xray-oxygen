@@ -20,7 +20,7 @@ private:
 	typedef CWeapon inherited;
 protected:
 	//звук текущего выстрела
-	std::string		m_sSndShotCurrent;
+	xr_string		m_sSndShotCurrent;
 
 	bool bBulletInBarrel;
 

@@ -31,9 +31,7 @@ class IWriter;
 class XRCORE_API str_container
 {
 private:
-#ifndef _CLR_MANAGER
-    std::recursive_mutex				cs;
-#endif
+    xrCriticalSection					cs;
 	str_container_impl*                 impl;
 public:
 						str_container	();
@@ -121,7 +119,7 @@ namespace std
   {
     std::size_t operator() ( const shared_str &s ) const 
 	{
-      return std::hash<std::string>{}( s.c_str() );
+      return std::hash<xr_string>{}( s.c_str() );
     }
   };
 }

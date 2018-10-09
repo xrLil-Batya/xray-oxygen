@@ -124,7 +124,7 @@ void CActor::PickupModeUpdate()
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
-	MtFeelTochMutex.lock(); // Syns MtActorUpdate and UpdateCL
+	xrCriticalSectionGuard guard(MtFeelTochMutex);
     for (CObject* obj : feel_touch)
     {
         Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
@@ -150,12 +150,10 @@ void CActor::PickupModeUpdate()
 				m_CapmfireWeLookingAt = camp;
 				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
 
-				MtFeelTochMutex.unlock();
 				return;
 			}
 		}
 	}
-	MtFeelTochMutex.unlock();
 }
 
 #include "../xrEngine/CameraBase.h"
@@ -268,7 +266,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 void CActor::PickupInfoDraw(CObject* object)
 {
 	LPCSTR draw_str = nullptr;
-	
+
 	CArtefact* artefact = smart_cast<CArtefact*>(object);
 	CEatableItem* boost = smart_cast<CEatableItem*>(object);
 	CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(object);
@@ -284,59 +282,59 @@ void CActor::PickupInfoDraw(CObject* object)
 	CCustomOutfit* outf = smart_cast<CCustomOutfit*>(object);
 	CHelmet* helm = smart_cast<CHelmet*>(object);
 	CPda* doc = smart_cast<CPda*>(object);
-	if(!item)		return;
+	if (!item)		return;
 
 	Fmatrix			res;
-	res.mul			(Device.mFullTransform,object->XFORM());
+	res.mul(Device.mFullTransform, object->XFORM());
 	Fvector4		v_res;
 	Fvector			shift;
 
 	draw_str = item->NameItem();
-	shift.set(0,0,0);
+	shift.set(0, 0, 0);
 
-	res.transform(v_res,shift);
+	res.transform(v_res, shift);
 
 	if (v_res.z < 0 || v_res.w < 0)	return;
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f) return;
 
-	float x = (1.f + v_res.x)/2.f * (Device.dwWidth);
-	float y = (1.f - v_res.y)/2.f * (Device.dwHeight);
+	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
 
-	UI().Font().pFontLetterica16Russian->SetAligment	(CGameFont::alCenter);
+	UI().Font().GetFont("ui_font_letterica16_russian")->SetAligment(CGameFont::alCenter);
 	if (!psActorFlags.test(AF_COLORED_FEEL))
-	UI().Font().pFontLetterica16Russian->SetColor		(PICKUP_INFO_COLOR);
+		UI().Font().GetFont("ui_font_letterica16_russian")->SetColor(PICKUP_INFO_COLOR);
 	else
 	{
-	if(doc)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFD7A096);
-	if(ammo)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFFA121);
-	if(weapon)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF6B42);
-	if(boost)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF8330);
-	if(artefact)
-	UI().Font().pFontLetterica16Russian->SetColor		(0xFF736FD5);
-	if(edetect)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEBDD0B);
-	if(adetect)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEBFFA1);
-	if(sdetect)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEBFFC8);
-	if(grenade)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF6432);
-	if(grenadela)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEB6E0A);		
-	if(scope && !grenadela)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEB8C0A);
-	if(sil && !scope && !grenadela)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEB8C64);
-	if(outf)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF6464);
-	if(helm && !outf)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF9178);
+		if (doc)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFD7A096);
+		if (ammo)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFFA121);
+		if (weapon)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF6B42);
+		if (boost)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF8330);
+		if (artefact)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFF736FD5);
+		if (edetect)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEBDD0B);
+		if (adetect)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEBFFA1);
+		if (sdetect)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEBFFC8);
+		if (grenade)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF6432);
+		if (grenadela)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEB6E0A);
+		if (scope && !grenadela)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEB8C0A);
+		if (sil && !scope && !grenadela)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEB8C64);
+		if (outf)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF6464);
+		if (helm && !outf)
+			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF9178);
 	}
-	UI().Font().pFontLetterica18Russian->Out			(x,y,draw_str);
+	UI().Font().GetFont("ui_font_letterica18_russian")->Out(x, y, draw_str);
 }
 
 void CActor::feel_sound_new(CObject* who, int type, CSound_UserDataPtr user_data, const Fvector& Position, float power)

@@ -22,6 +22,29 @@
 #include "../Include/xrRender/RainRender.h"
 #include "../Include/xrRender/ThunderboltRender.h"
 
+#ifdef INGAME_EDITOR
+#	include "editor_environment_manager.hpp"
+#endif // INGAME_EDITOR
+
+CEnvironment* pEnvironment = nullptr;
+
+ENGINE_API CEnvironment& Environment()
+{
+	if (pEnvironment == nullptr)
+	{
+		if (RDEVICE.editor())
+		{
+			pEnvironment = xr_new<editor::environment::manager>();
+		}
+		else
+		{
+			pEnvironment = xr_new<CEnvironment>();
+		}
+	}
+
+	return *pEnvironment;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -435,15 +458,6 @@ void CEnvironment::SelectEnvs(float gt)
 #endif
 		}
     }
-}
-
-int get_ref_count(IUnknown* ii)
-{
-	if(ii){
-		ii->AddRef();
-		return ii->Release();
-	}else
-	return 0;
 }
 
 void CEnvironment::lerp		(float& current_weight)

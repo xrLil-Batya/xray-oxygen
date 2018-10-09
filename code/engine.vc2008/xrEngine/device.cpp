@@ -29,21 +29,6 @@
 extern bool bEngineloaded;
 ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
-/////////////////////////////////////
-DWORD gMainThreadId = 0xFFFFFFFF;
-DWORD gSecondaryThreadId = 0xFFFFFFFF;
-/////////////////////////////////////
-
-
-ENGINE_API bool IsMainThread()
-{
-    return GetCurrentThreadId() == gMainThreadId;
-}
-
-ENGINE_API bool IsSecondaryThread()
-{
-    return GetCurrentThreadId() == gSecondaryThreadId;
-}
 
 
 /////////////////////////////////////
@@ -148,11 +133,11 @@ void 			mt_Thread	(void *ptr)
 	while (true) 
 	{
 		// waiting for Device permission to execute
-		Device.mt_csEnter.lock	();
+		Device.mt_csEnter.Enter	();
 
 		if (Device.mt_bMustExit) {
 			Device.mt_bMustExit = FALSE;				// Important!!!
-			Device.mt_csEnter.unlock();					// Important!!!
+			Device.mt_csEnter.Leave();					// Important!!!
 			return;
 		}
 		// we has granted permission to execute
@@ -166,11 +151,11 @@ void 			mt_Thread	(void *ptr)
 		Device.seqFrameMT.Process(rp_Frame);
 
 		// now we give control to device - signals that we are ended our work
-		Device.mt_csEnter.unlock();
+		Device.mt_csEnter.Leave();
 		// waits for device signal to continue - to start again
-		Device.mt_csLeave.lock();
+		Device.mt_csLeave.Enter();
 		// returns sync signal to device
-		Device.mt_csLeave.unlock();
+		Device.mt_csLeave.Leave();
 	}
 }
 
@@ -247,9 +232,9 @@ void CRenderDevice::on_idle		()
 	// *** Resume threads
 	// Capture end point - thread must run only ONE cycle
 	// Release start point - allow thread to run
-	mt_csLeave.lock();
-	mt_csEnter.unlock();
-	Sleep(0);
+	mt_csLeave.Enter();
+	mt_csEnter.Leave();
+    Sleep(0);
 
 	Statistic->RenderTOTAL_Real.FrameStart();
 	Statistic->RenderTOTAL_Real.Begin();
@@ -278,8 +263,8 @@ void CRenderDevice::on_idle		()
 	// *** Suspend threads
 	// Capture startup point
 	// Release end point - allow thread to wait for startup point
-	mt_csEnter.lock();
-	mt_csLeave.unlock();
+	mt_csEnter.Enter();
+	mt_csLeave.Leave();
 
 	// Ensure, that second thread gets chance to execute anyway
 	if (dwFrame != mt_Thread_marker)
@@ -352,43 +337,48 @@ int GetNumOfDisplays()
 
 void CRenderDevice::Run			()
 {
-	g_bLoaded				= FALSE;
-	Log						("Starting engine...");
-
-	Msg						("Value of system displays: %d.", GetNumOfDisplays());
-
-	thread_name				("X-RAY Primary thread");
-
-	// Startup timers and calculate timer delta
-	dwTimeGlobal				= 0;
-	Timer_MM_Delta				= 0;
-	{
-		u32 time_mm = timeGetTime	();
-		// wait for next tick
-		while (timeGetTime()==time_mm);	 //-V529
-
-		u32 time_system = timeGetTime	();
-		u32 time_local  = TimerAsync	();
-		Timer_MM_Delta  = time_system-time_local;
-	}
-
-	// Start all threads
-	mt_csEnter.lock				();
-	mt_bMustExit				= FALSE;
-	thread_spawn				(mt_Thread, "X-RAY Secondary thread", 0, nullptr);
-
-	// Message cycle
-	seqAppStart.Process			(rp_AppStart);
-	m_pRender->ClearTarget		();
+	BeginToWork();
 	message_loop				();
 
 	seqAppEnd.Process		(rp_AppEnd);
 
 	// Stop Balance-Thread
 	mt_bMustExit			= TRUE;
-	mt_csEnter.unlock		();
+	mt_csEnter.Leave();
 	while (mt_bMustExit)	
 		Sleep(0);
+}
+
+void CRenderDevice::BeginToWork()
+{
+	g_bLoaded = FALSE;
+	Log("Starting engine...");
+
+	Msg("Value of system displays: %d.", GetNumOfDisplays());
+
+	thread_name("X-RAY Primary thread");
+
+	// Startup timers and calculate timer delta
+	dwTimeGlobal = 0;
+	Timer_MM_Delta = 0;
+	{
+		u32 time_mm = timeGetTime();
+		// wait for next tick
+		while (timeGetTime() == time_mm);	 //-V529
+
+		u32 time_system = timeGetTime();
+		u32 time_local = TimerAsync();
+		Timer_MM_Delta = time_system - time_local;
+	}
+
+	// Start all threads
+	mt_csEnter.Enter();
+	mt_bMustExit = FALSE;
+	thread_spawn(mt_Thread, "X-RAY Secondary thread", 0, nullptr);
+
+	// Message cycle
+	seqAppStart.Process(rp_AppStart);
+	m_pRender->ClearTarget();
 }
 
 void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)

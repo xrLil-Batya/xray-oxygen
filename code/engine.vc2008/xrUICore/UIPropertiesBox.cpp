@@ -9,7 +9,7 @@
 
 CUIPropertiesBox::CUIPropertiesBox(CUIPropertiesBox* sub_property_box)
 {
-	m_UIListWnd.SetFont					(UI().Font().pFontArial14);
+	m_UIListWnd.SetFont					(UI().Font().GetFont("ui_font_arial_14"));
 	m_UIListWnd.SetImmediateSelection	(true);
 	
 	m_sub_property_box			= sub_property_box;

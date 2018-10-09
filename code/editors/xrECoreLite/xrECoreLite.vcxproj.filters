@@ -75,14 +75,14 @@
     <ClCompile Include="VertCache.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="ogf_desc.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="FBasicVisual.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorLevel.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="FBasicVisual.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorLevel.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

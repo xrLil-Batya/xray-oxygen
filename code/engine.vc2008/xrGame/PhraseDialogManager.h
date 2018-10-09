@@ -2,7 +2,7 @@
 
 #include "PhraseDialogDefs.h"
 
-class CPhraseDialogManager
+class GAME_API CPhraseDialogManager
 {
 public:
 									CPhraseDialogManager			(void);

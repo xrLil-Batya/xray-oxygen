@@ -21,9 +21,9 @@ float4 main ( float4 tc : TEXCOORD0 ) : SV_Target
 	return		s_generic.Sample( smp_nofilter, tc );
 #else
 #ifdef MSAA_OPTIMIZATION
-	return		s_generic.Load( int3( tc * pos_decompression_params2.xy, 0 ), iSample );
+	return		s_generic.Load( int3( tc * screen_res.xy, 0 ), iSample );
 #else
-	return		s_generic.Load( int3( tc * pos_decompression_params2.xy, 0 ), ISAMPLE );
+	return		s_generic.Load( int3( tc * screen_res.xy, 0 ), ISAMPLE );
 #endif
 #endif
 }

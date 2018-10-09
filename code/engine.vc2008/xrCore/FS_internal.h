@@ -6,6 +6,11 @@
 #include <sys\stat.h>
 #include <share.h>
 
+#ifndef SPECTRE
+#include <filesystem>
+#endif
+
+
 void* FileDownload(const char* fn, size_t* pdwSize = nullptr);
 void FileCompress(const char* fn, const char* sign, void* data, const size_t size);
 void* FileDecompress(const char* fn, const char* sign, size_t* size = nullptr);

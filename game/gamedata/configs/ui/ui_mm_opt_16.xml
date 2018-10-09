@@ -360,6 +360,14 @@
 			<options_item entry="r_rain_droplets" group="mm_opt_video_adv"/>
 		</check_rain_drops>
 		
+		<cap_vignette x="16" y="3" width="108" height="24">
+			<text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_vignette</text>
+		</cap_vignette>
+		<check_vignette x="133" y="0" width="35" stretch="1" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<options_item entry="r_vignette" group="mm_opt_video_adv"/>
+		</check_vignette>
+
 		<cap_aa_mode x="16" y="3" width="108" height="24">
 			<text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_aa_mode</text>
 		</cap_aa_mode>

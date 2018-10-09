@@ -108,12 +108,9 @@ BOOL CLevel::Load_GameSpecific_After()
 		Sounds_Random_Enabled = FALSE;
 	}
 
-	if (g_pGamePersistent->pEnvironment)
+	if (CEffect_Rain* rain = Environment().eff_Rain)
 	{
-		if (CEffect_Rain* rain = g_pGamePersistent->pEnvironment->eff_Rain)
-		{
-			rain->InvalidateState();
-		}
+		rain->InvalidateState();
 	}
 
 	if (FS.exist(fn_game, "$level$", "level.fog_vol"))
@@ -147,8 +144,8 @@ BOOL CLevel::Load_GameSpecific_After()
 	else
 		ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel, xr_new<CScriptProcess>("level", ""));
 
-	if(game)
-		g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
+	if (game)
+		Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
 	return TRUE;
 }

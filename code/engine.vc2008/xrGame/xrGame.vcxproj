@@ -105,7 +105,7 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;LUABIND_NO_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;LUABIND_NO_EXCEPTIONS;GAME_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -167,7 +167,7 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;DEBUG;MIXED;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DEBUG;MIXED;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;GAME_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -229,7 +229,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;LUABIND_NO_EXCEPTIONS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;LUABIND_NO_EXCEPTIONS;_SECURE_SCL=0;GAME_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -253,7 +253,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4237;4275;4717;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/bigobj</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -300,7 +300,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;_SECURE_SCL=0;GAME_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -1218,7 +1218,6 @@
     <ClInclude Include="patrol_point.h" />
     <ClInclude Include="patrol_point_inline.h" />
     <ClInclude Include="..\xrServerEntities\script_export_macroses.h" />
-    <ClInclude Include="..\xrServerEntities\script_export_space.h" />
     <ClInclude Include="..\xrServerEntities\script_space_forward.h" />
     <ClInclude Include="script_bind_macroses.h" />
     <ClInclude Include="script_movement_action.h" />
@@ -1293,6 +1292,7 @@
     <ClInclude Include="pp_effector_custom.h" />
     <ClInclude Include="pp_effector_distance.h" />
     <ClInclude Include="PostprocessAnimator.h" />
+    <ClInclude Include="xrGame.h" />
     <ClInclude Include="zone_effector.h" />
     <ClInclude Include="EffectorShot.h" />
     <ClInclude Include="EffectorZoomInertion.h" />
@@ -1659,7 +1659,6 @@
     <ClCompile Include="UIDosimeter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="ui\UIGameLog.cpp" />
     <ClCompile Include="visual_memory_manager.cpp" />
     <ClCompile Include="visual_memory_params.cpp" />
     <ClCompile Include="vision_client.cpp" />
@@ -2293,9 +2292,7 @@
     <ClCompile Include="ZoneVisual.cpp" />
     <ClCompile Include="ZoneCampfire.cpp" />
     <ClCompile Include="Car.cpp" />
-    <ClCompile Include="CarCameras.cpp" />
     <ClCompile Include="CarDamageParticles.cpp" />
-    <ClCompile Include="CarDoors.cpp" />
     <ClCompile Include="CarInput.cpp" />
     <ClCompile Include="CarLights.cpp" />
     <ClCompile Include="CarScript.cpp" />
@@ -2390,7 +2387,6 @@
     <ClCompile Include="ui\UIActorMenuTrade.cpp" />
     <ClCompile Include="ui\UIActorMenuUpgrade.cpp" />
     <ClCompile Include="ui\UIActorStateInfo.cpp" />
-    <ClCompile Include="ui\UIStatic_script.cpp" />
     <ClCompile Include="ui\UIScriptWnd.cpp" />
     <ClCompile Include="ui\UICellCustomItems.cpp" />
     <ClCompile Include="ui\UICellItem.cpp" />

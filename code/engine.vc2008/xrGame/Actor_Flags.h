@@ -1,6 +1,6 @@
 #pragma once
 
-enum{
+enum {
 		AF_GODMODE				=(1<<0),
 		AF_NO_CLIP				=(1<<1),
 		AF_UNLIMITEDAMMO		=(1<<3),
@@ -10,7 +10,7 @@ enum{
 		AF_DYNAMIC_MUSIC		=(1<<7),
 		AF_IMPORTANT_SAVE		=(1<<9),
 		AF_CROUCH_TOGGLE		=(1<<10),
-		AF_RELOADONSPRINT		=(1<<11),
+		//AF_RELOADONSPRINT		=(1<<11),
 		AF_CUR_INS_CROS			=(1<<12),
 		AF_COLORED_FEEL			=(1<<13),
 		AF_SHOW_CURPOS			=(1<<14),

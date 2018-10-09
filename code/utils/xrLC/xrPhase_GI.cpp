@@ -17,7 +17,7 @@ const	float			gi_clip				= 0.05f;
 const	u32				gi_maxlevel			= 4;
 //////////////////////////////////////////////////////////////////////////
 static xr_vector<R_Light>*		task;
-std::recursive_mutex 		task_cs;
+xrCriticalSection 		task_cs;
 static u32						task_it;
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ public:
             R_Light				src, dst;
 
             {
-                std::lock_guard<decltype(task_cs)> lock(task_cs);
+				xrCriticalSectionGuard guard(task_cs);
                 if (task_it >= task->size()) {
                     return;
                 } else {
@@ -175,7 +175,7 @@ public:
 				if (dst.energy > gi_clip/4)	
 				{
 					//clMsg	("dst_ER[%f/%f]", dst.energy, dst.range);
-                    std::lock_guard<decltype(task_cs)> lock(task_cs);
+					xrCriticalSectionGuard guard(task_cs);
 					task->push_back		(dst);
 				}
 			}

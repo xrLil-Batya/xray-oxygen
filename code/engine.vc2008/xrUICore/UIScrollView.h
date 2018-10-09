@@ -76,7 +76,7 @@ IC			bool	NeedShowScrollBar	();		// no comment
 };
 
 #define ADD_TEXT_TO_VIEW3(txt,st,view)		st = xr_new<CUITextWnd>();						\
-											st->SetFont(UI().Font().pFontLetterica16Russian); \
+											st->SetFont(UI().Font().GetFont("ui_font_letterica16_russian")); \
 											st->SetText(txt);								\
 											st->SetTextComplexMode(true);					\
 											st->SetWidth(view->GetDesiredChildWidth());		\

@@ -355,7 +355,7 @@ void CDetailManager::Render	()
 	RDEVICE.Statistic->RenderDUMP_DT_Render.Begin	();
 
 #ifndef _EDITOR
-	float factor			= g_pGamePersistent->Environment().wind_strength_factor;
+	float factor			= Environment().wind_strength_factor;
 #else
 	float factor			= 0.3f;
 #endif
@@ -378,7 +378,7 @@ void __stdcall	CDetailManager::MT_CALC		()
 	if (!psDeviceFlags.is(rsDetails))	return;
 #endif    
 
-    std::lock_guard<decltype(MT)> lock(MT);
+	xrCriticalSectionGuard guard(MTLock);
 	if (m_frame_calc!=RDEVICE.dwFrame)	
 		if ((m_frame_rendered+1)==RDEVICE.dwFrame) //already rendered
 		{

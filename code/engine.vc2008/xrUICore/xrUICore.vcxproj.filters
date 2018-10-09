@@ -145,6 +145,9 @@
     <Filter Include="UIHelpers\DebugFonts">
       <UniqueIdentifier>{342ad255-166f-4e94-a5fa-1c27f3ae0ba0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mature\GameLog">
+      <UniqueIdentifier>{d89080bd-3508-4b30-bed4-a06b01e9177a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UITabButton.cpp">
@@ -341,6 +344,15 @@
     </ClCompile>
     <ClCompile Include="UIDebugFonts.cpp">
       <Filter>UIHelpers\DebugFonts</Filter>
+    </ClCompile>
+    <ClCompile Include="UIGameLog.cpp">
+      <Filter>Mature\GameLog</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="UIStatic_script.cpp">
+      <Filter>Elements\Statics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -556,6 +568,9 @@
     </ClInclude>
     <ClInclude Include="UIDebugFonts.h">
       <Filter>UIHelpers\DebugFonts</Filter>
+    </ClInclude>
+    <ClInclude Include="UIGameLog.hpp">
+      <Filter>Mature\GameLog</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

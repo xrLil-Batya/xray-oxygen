@@ -15,7 +15,7 @@ void	CRenderTarget::phase_smap_direct		(light* L, u32 sub_phase)
 		D3D_VIEWPORT VP					=	{L->X.D.minX,L->X.D.minY,
 			(L->X.D.maxX - L->X.D.minX) , 
 			(L->X.D.maxY - L->X.D.minY) , 
-			0,1 };
+			0 ,1u };
 		//CHK_DX								(HW.pDevice->SetViewport(&VP));
 		HW.pDevice->RSSetViewports(1, &VP);
 	}

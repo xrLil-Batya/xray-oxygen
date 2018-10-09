@@ -360,7 +360,7 @@ void stalker_movement_manager_smart_cover::loophole_path					(smart_cover::cover
 			source_raw.c_str(),
 			target_raw.c_str(),
 			cover.description()->table_id().c_str()
-		)
+		).c_str()
 	);
 }
 

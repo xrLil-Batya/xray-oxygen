@@ -4,7 +4,7 @@
 
 class CGameObject;
 
-class CUsableScriptObject
+class GAME_API CUsableScriptObject
 {
 public:
 							CUsableScriptObject		();

@@ -14,7 +14,7 @@ void CKinematics::CalculateBones			(BOOL bForceExact)
 	// check if the info is still relevant
 	// skip all the computations - assume nothing changes in a small period of time :)
 	if		(RDEVICE.dwTimeGlobal == UCalc_Time)										return;	// early out for "fast" update
-    std::lock_guard<decltype(UCalc_Mutex)> lock(UCalc_Mutex);
+	xrCriticalSectionGuard guard(UCalc_Mutex);
 	OnCalculateBones		();
 	if		(!bForceExact && (RDEVICE.dwTimeGlobal < (UCalc_Time + UCalc_Interval)))	return;	// early out for "slow" update
 	if		(Update_Visibility)									Visibility_Update	();

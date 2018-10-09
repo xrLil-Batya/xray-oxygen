@@ -108,6 +108,7 @@ private:
 	// preload sounds registry
     using SoundRegistryMap = xr_map<shared_str, ref_sound>;
 	SoundRegistryMap			sound_registry;
+	xrCriticalSection EventProcesserLock;
 
 public:
 	void						PrefetchSound (LPCSTR name);

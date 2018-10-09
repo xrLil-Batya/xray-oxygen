@@ -102,10 +102,26 @@ void CRenderTarget::ProcessSMAA()
 
 void CRenderTarget::PhaseAA()
 {
-	if (ps_r_pp_aa_mode == FXAA)
-		ProcessFXAA();
-	else if (ps_r_pp_aa_mode == SMAA)
+	switch (ps_r_pp_aa_mode)
 	{
-		ProcessSMAA();
+	case FXAA: ProcessFXAA(); break;
+	case SMAA: ProcessSMAA(); break;
+	case DLAA: ProcessDLAA(); break;
 	}
+}
+
+void CRenderTarget::ProcessDLAA()
+{
+	float _w = float(Device.dwWidth);
+	float _h = float(Device.dwHeight);
+
+	// Pass 0
+#if defined(USE_DX10) || defined(USE_DX11)
+	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
+
+	RenderScreenQuad(_w, _h, rt_Generic_2, s_pp_antialiasing->E[3]);
+	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
+#else
+	RenderScreenQuad(_w, _h, rt_Color, s_pp_antialiasing->E[3]);
+#endif
 }

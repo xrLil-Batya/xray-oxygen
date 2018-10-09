@@ -135,7 +135,7 @@ ICF bool						_empty			()
 class XRCDB_API	ISpatial_DB
 {
 private:
-	std::recursive_mutex				cs;
+	xrCriticalSection				cs;
 
 	poolSS< ISpatial_NODE, 128 >	allocator;
 

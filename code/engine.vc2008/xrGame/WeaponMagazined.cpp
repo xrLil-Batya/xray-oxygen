@@ -176,18 +176,17 @@ void CWeaponMagazined::FireEnd()
 
     if (g_extraFeatures.is(GAME_EXTRA_WEAPON_AUTORELOAD))
     {
-        CActor *actor = smart_cast<CActor*>(H_Parent());
-        if (m_pInventory && !iAmmoElapsed && actor && GetState() != eReload)
-            Reload();
+		if (m_pInventory && !iAmmoElapsed && smart_cast<CActor*>(H_Parent()) && GetState() != eReload)
+		{
+			Reload();
+		}
     }
 }
 
 void CWeaponMagazined::Reload() 
 {
-	
 	inherited::Reload();
 	TryReload();
-	
 }
 
 bool CWeaponMagazined::TryReload() 
@@ -682,10 +681,14 @@ void CWeaponMagazined::switch2_Empty()
 {
 	OnZoomOut();
 	
-	if (!TryReload())
-		OnEmptyClick();
-	else
+	if (TryReload() && g_extraFeatures.is(GAME_EXTRA_WEAPON_AUTORELOAD))
+	{
 		inherited::FireEnd();
+	}
+	else
+	{
+		OnEmptyClick();
+	}
 }
 
 void CWeaponMagazined::PlayReloadSound()
@@ -761,17 +764,10 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 	{
 	    case kWPN_RELOAD:
 	    {
-			if (CActor* pActor = smart_cast<CActor*>(H_Parent()))
-			{
-				CCustomOutfit* pOutfit = pActor->GetOutfit();
-
-				// Если у актора нет необходимой команды или ему запрещает костюм - не перезаряжаемся
-				if (pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint)))
-					break;
-			}
-
 			if (iAmmoElapsed < iMagazineSize || IsMisfire())
+			{
 				Reload();
+			}
 
 			return true;
 	    }
@@ -814,7 +810,7 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 			return true;
 	// Подствольный гранатомет
 	else if (pGrenadeLauncher && m_eGrenadeLauncherStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) == 0 &&
-		(m_sGrenadeLauncherName == std::string(pIItem->object().cNameSect().c_str())))
+		(m_sGrenadeLauncherName == xr_string(pIItem->object().cNameSect().c_str())))
 			return true;
 	else
 		return inherited::CanAttach(pIItem);

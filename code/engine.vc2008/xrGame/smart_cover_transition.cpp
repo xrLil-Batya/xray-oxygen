@@ -44,7 +44,7 @@ bool action::applicable			() const
 
 	R_ASSERT2					(
 		ai().script_engine().functor(m_precondition_functor.c_str(),functor), 
-		make_string("failed to get [%s]", m_precondition_functor.c_str())
+		make_string("failed to get [%s]", m_precondition_functor.c_str()).c_str()
 	);
 
 	return						(functor(m_precondition_params.c_str()));

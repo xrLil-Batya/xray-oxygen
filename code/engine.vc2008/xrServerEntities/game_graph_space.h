@@ -25,7 +25,7 @@ namespace GameGraph {
 #ifdef AI_COMPILER
 	struct
 #else
-	class
+	class GAME_API
 #endif
 		SLevel {
 		shared_str				m_name;
@@ -72,7 +72,7 @@ namespace GameGraph {
 #ifdef AI_COMPILER
 	struct
 #else
-	class
+	class GAME_API
 #endif
 		CEdge {
 		_GRAPH_ID					m_vertex_id;
@@ -85,7 +85,7 @@ namespace GameGraph {
 #ifdef AI_COMPILER
 	struct
 #else
-	class
+	class GAME_API
 #endif
 		CVertex {
 		Fvector						tLocalPoint;
@@ -113,7 +113,7 @@ namespace GameGraph {
 #ifdef AI_COMPILER
 	struct
 #else
-	class
+	class GAME_API
 #endif
 		CHeader {
 		u8							m_version;
@@ -143,7 +143,7 @@ namespace GameGraph {
 #ifdef AI_COMPILER
 	struct
 #else
-	class
+	class GAME_API
 #endif
 		CLevelPoint  {
 		Fvector		tPoint;

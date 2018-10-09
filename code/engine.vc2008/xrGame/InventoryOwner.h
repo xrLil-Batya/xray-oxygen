@@ -28,7 +28,7 @@ class CPurchaseList;
 class CWeapon;
 class CCustomOutfit;
 
-class CInventoryOwner : public CAttachmentOwner {							
+class GAME_API CInventoryOwner : public CAttachmentOwner {							
 public:
 					CInventoryOwner				();
 	virtual			~CInventoryOwner			();

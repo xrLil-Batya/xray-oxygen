@@ -6,7 +6,7 @@ class CInventoryItem;
 class CHudItem;
 class CInventoryOwner;
 
-class CInventorySlot
+class GAME_API CInventorySlot
 {									
 public:
 							CInventorySlot		();
@@ -33,7 +33,7 @@ private:
 typedef xr_vector<CInventorySlot> TISlotArr;
 
 
-class CInventory
+class GAME_API CInventory
 {				
 public:
 							CInventory			();

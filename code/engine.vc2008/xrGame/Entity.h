@@ -14,7 +14,7 @@ class	CWeaponList;
 class   CPHMovementControl;
 class	CHudItem;
 
-class CEntity : 
+class GAME_API CEntity : 
 		public CPhysicsShellHolder,
 		public CDamageManager
 {

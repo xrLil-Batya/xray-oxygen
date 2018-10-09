@@ -13,8 +13,8 @@ float4 blendSoftLight(float4 a, float4 b)
 
 float4 main(p_screen I) : SV_Target
 {
-	float4 	cScreen 	= s_image.Sample(smp_rtlinear, I.tc0.xy);
-	float4 	cSunShafts 	= s_sunshafts.Sample(smp_rtlinear, I.tc0.xy);
+	float4 	cScreen 	= s_image.Load(int3(I.tc0.xy * screen_res.xy, 0), 0);
+	float4 	cSunShafts 	= s_sunshafts.Load(int3(I.tc0.xy * screen_res.xy, 0), 0);
 	
 	float 	fShaftsMask = saturate(1.00001f - cSunShafts.w) * ssss_params.y * 2;
 	

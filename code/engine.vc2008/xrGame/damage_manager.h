@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-class CDamageManager 
+class GAME_API CDamageManager 
 {
 protected:
 	float				m_default_hit_factor;

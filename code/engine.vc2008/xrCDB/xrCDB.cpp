@@ -46,7 +46,7 @@ MODEL::~MODEL()
 
 struct	BTHREAD_params
 {
-	MODEL*			M;
+	MODEL*			Model;
 	Fvector*		V;
 	int				Vcnt;
 	TRI*			T;
@@ -62,10 +62,16 @@ void MODEL::build_thread(void *params)
 {
 	_initialize_cpu_thread();
 	FPU::m64r();
-	BTHREAD_params	P = *((BTHREAD_params*)params);
-	std::lock_guard<std::recursive_mutex> lock(P.M->cs);
-	P.M->build_internal(P.V, P.Vcnt, P.T, P.Tcnt, P.pCache, P.isCacheReader, P.BC, P.BCP, P.rebuildTrisRequired);
-	P.M->status = S_READY;
+	BTHREAD_params	BuildParams = *((BTHREAD_params*)params);
+	xrCriticalSectionGuard guard(BuildParams.Model->lock);
+	BuildParams.Model->build_internal(
+		BuildParams.V, BuildParams.Vcnt, 
+		BuildParams.T, BuildParams.Tcnt, 
+		BuildParams.pCache, BuildParams.isCacheReader, 
+		BuildParams.BC, BuildParams.BCP, 
+		BuildParams.rebuildTrisRequired);
+
+	BuildParams.Model->status = S_READY;
 }
 
 void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isCacheReader, build_callback* bc, void* bcp, bool rebuildTrisRequired)
