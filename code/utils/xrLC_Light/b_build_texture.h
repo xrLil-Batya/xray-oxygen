@@ -22,7 +22,7 @@ struct  b_BuildTexture : public b_texture
 			}
 		}
 	}
-	void		read	(INetReader	&r );
+	void		read	(IReader	&r );
 	void		write	(IWriter	&w )const;
 
 };

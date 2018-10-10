@@ -4,7 +4,7 @@
 #include "xrface.h"
 #include "xrlc_globaldata.h"
 
-void ImplicitCalcGlobs::read(INetReader	&r)
+void ImplicitCalcGlobs::read(IReader	&r)
 {
 	R_ASSERT(read_faces);
 	NetClear();

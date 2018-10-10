@@ -265,12 +265,6 @@
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_thread.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_thread_inline.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_stack_tracker.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_callStack.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_debugger.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_debugger_messages.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_debugger_threads.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_lua_helper.h" />
-    <ClInclude Include="script_debugger_utils.h" />
     <ClInclude Include="script_file.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\alife_space.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\game_graph_space.h" />
@@ -332,11 +326,6 @@
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_process.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_thread.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_stack_tracker.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_callStack.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_debugger.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_debugger_threads.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_lua_helper.cpp" />
-    <ClCompile Include="script_debugger_utils.cpp" />
     <ClCompile Include="script_file.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_space.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_human_brain.cpp" />

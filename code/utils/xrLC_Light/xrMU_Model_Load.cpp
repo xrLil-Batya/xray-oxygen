@@ -31,9 +31,9 @@ void xrMU_Model::Load	( IReader& F, u32 version )
 	F.r	(&*sm_groups.begin(),(u32)sm_groups.size()*sizeof(u32));
 
 	// CONVERT and OPTIMIZE
-	for (u32 v_it=0; v_it<b_vertices.size(); v_it++)
+	for (Fvector& b_vertice : b_vertices)
 	{
-		create_vertex	(b_vertices[v_it]);
+		create_vertex	(b_vertice);
 	}
 	for (u32 f_it=0; f_it<b_faces.size(); f_it++)
 	{
@@ -50,7 +50,7 @@ void xrMU_Model::Load	( IReader& F, u32 version )
 	}
 */
 	// 
-	clMsg	("* Loading model: '%s' - v(%d/%d), f(%d/%d)",*m_name,m_vertices.size(),b_vertices.size(),m_faces.size(),b_faces.size());
+	Logger.clMsg	("* Loading model: '%s' - v(%d/%d), f(%d/%d)",*m_name,m_vertices.size(),b_vertices.size(),m_faces.size(),b_faces.size());
 }
 
 _face* xrMU_Model::create_face(_vertex* v0, _vertex* v1, _vertex* v2, b_face& B)
@@ -93,9 +93,9 @@ _vertex* xrMU_Model::create_vertex(Fvector& P)
 _vertex* xrMU_Model::load_create_vertex(Fvector& P)
 {
 	// find similar
-	for (u32 it=0; it<m_vertices.size(); it++)
+	for (_vertex* vertice : m_vertices)
 	{
-		if (m_vertices[it]->P.similar(P,.001f))	return m_vertices[it];
+		if (vertice->P.similar(P,.001f))	return vertice;
 	}
 	// create new
 	return				create_vertex(P);

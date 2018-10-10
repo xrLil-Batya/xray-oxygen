@@ -18,7 +18,7 @@ void clear( b_BuildTexture &texture )
 	xr_free(texture.pSurface);
 }
 
-void	b_BuildTexture::	read	(INetReader	&r )
+void	b_BuildTexture::	read	(IReader	&r )
 {
 	::read( r, *this );
 	THM.read( r );

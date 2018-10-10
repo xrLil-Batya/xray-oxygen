@@ -44,12 +44,12 @@ void _face::Failure		()
 		//Fvector2	tc	[3];
 		//Fvector		N;
 		//u32			sm_group;
-void	_face::read_vertices		( INetReader	&r )
+void	_face::read_vertices		( IReader	&r )
 {}
 void	_face::write_vertices		( IWriter	&w )const
 {}
 
-void _face::read( INetReader &r )
+void _face::read( IReader &r )
 {
 	base_Face::read( r );
 	r.r_fvector2( tc[0] );
@@ -74,7 +74,7 @@ void _face::write( IWriter &w ) const
 
 
 
-void _vertex::read( INetReader &r )
+void _vertex::read( IReader &r )
 {
 	base_Vertex::read( r );
 }
@@ -87,7 +87,7 @@ void _vertex::write( IWriter &w ) const
 
 
 //////////////////////////////////////////////////////////////
-void	_vertex::isolate_pool_clear_read		( INetReader	&r )
+void	_vertex::isolate_pool_clear_read		( IReader	&r )
 {
 	R_ASSERT(false);
 }
@@ -96,7 +96,7 @@ void	_vertex::isolate_pool_clear_write	( IWriter	&w )const
 	R_ASSERT(false);
 }
 ///////////////////////////////////////////////////////////////
-void	_vertex::read_adjacents		( INetReader	&r )
+void	_vertex::read_adjacents		( IReader	&r )
 {
 }
 void	_vertex::write_adjacents	( IWriter	&w )const

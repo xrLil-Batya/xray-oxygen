@@ -21,7 +21,7 @@ void write(IWriter	&w, const b_texture &b)
 		w.w( b.pSurface, size );
 	}
 }
-void read(INetReader &r, b_texture &b)
+void read(IReader &r, b_texture &b)
 {
 	r.r_string( b.name, sizeof(b.name) );
 	b.dwWidth = r.r_u32(  );

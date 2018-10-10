@@ -26,7 +26,7 @@ IC	ImplicitDeflector	&DATA()
 		R_ASSERT( defl );
 		return *defl;
 	}
-	void	read				( INetReader	&r );
+	void	read				( IReader	&r );
 	void	write				( IWriter	&w ) const ;
 	void	Allocate			( );
 	void	Deallocate			( );

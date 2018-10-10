@@ -95,7 +95,7 @@ void recalculation::close()
 	xr_delete(dtFS);
 }
 
-void recalculation::read(INetReader &r)
+void recalculation::read(IReader &r)
 {
 	R_ASSERT(!slots_flags);
 	R_ASSERT(dtH.version() != u32(-1));

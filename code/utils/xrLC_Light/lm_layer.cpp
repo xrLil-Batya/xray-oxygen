@@ -48,7 +48,7 @@ void lm_layer::Pixel(u32 ID, u8& r, u8& g, u8& b, u8& s, u8& h)
 	h = u8_clr(c.hemi);
 }
 
-void lm_layer::read(INetReader	&r)
+void lm_layer::read(IReader	&r)
 {
 	width = r.r_u32();
 	height = r.r_u32();

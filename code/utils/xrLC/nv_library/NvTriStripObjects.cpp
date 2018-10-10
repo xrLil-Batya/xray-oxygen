@@ -1233,7 +1233,7 @@ void NvStripifier::FindAllStrips(NvStripInfoVec &allStrips,
 		loopCtr++;
 		
 		//
-		// PHASE 1: Set up numSamples * numEdges experiments
+		// Logger.Phase 1: Set up numSamples * numEdges experiments
 		//
 		xr_vector<NvStripInfoVec>	experiments;
 		experiments.resize			(numSamples * 6);
@@ -1294,7 +1294,7 @@ void NvStripifier::FindAllStrips(NvStripInfoVec &allStrips,
 		}
 		
 		//
-		// PHASE 2: Iterate through that we setup in the last phase
+		// Logger.Phase 2: Iterate through that we setup in the last Logger.Phase
 		// and really build each of the strips and strips that follow to see how
 		// far we get
 		//
@@ -1323,7 +1323,7 @@ void NvStripifier::FindAllStrips(NvStripInfoVec &allStrips,
 		}
 		
 		//
-		// Phase 3: Find the experiment that has the most promise
+		// Logger.Phase 3: Find the experiment that has the most promise
 		//
 		int bestIndex = 0;
 		float bestValue = 0;
@@ -1343,7 +1343,7 @@ void NvStripifier::FindAllStrips(NvStripInfoVec &allStrips,
 		}
 		
 		//
-		// Phase 4: commit the best experiment of the bunch
+		// Logger.Phase 4: commit the best experiment of the bunch
 		//
 		CommitStrips(allStrips, experiments[bestIndex]);
 		

@@ -116,7 +116,7 @@ struct OGF : public OGF_Base
 	vec_XV				x_vertices	;
 	vecOGF_F			x_faces		;
 
-	// Progressive
+	// Logger.Progressive
 	FSlideWindowItem	m_SWI		;		// The records of the collapses.
 	FSlideWindowItem	x_SWI		;		// The records of the collapses / fast-path
 */
@@ -179,8 +179,8 @@ struct OGF : public OGF_Base
 	void				Stripify			();
 	void				DumpFaces			();
 
-	BOOL				progressive_test	()	{ return data.m_SWI.count;	}
-	void				progressive_clear	()	{ 
+	BOOL				Progressive_test	()	{ return data.m_SWI.count;	}
+	void				Progressive_clear	()	{ 
 		data.m_SWI.count		= 0;
 		xr_free			(data.m_SWI.sw);
 	}
@@ -188,12 +188,8 @@ struct OGF : public OGF_Base
 	virtual void		PreSave			(u32 tree_id);
 	virtual void		Save			(IWriter &fs);
 
-//	void				Save_Cached		(IWriter &fs, ogf_header& H, BOOL bColors);
-
 	void				Save_Normal_PM	(IWriter &fs, ogf_header& H, BOOL bColors);
 	void				Load_Normal_PM	(IReader &fs, ogf_header& H, BOOL bColors);
-
-//	void				Save_Progressive(IWriter &fs, ogf_header& H, BOOL bColors);
 
 	virtual void		GetGeometry		(xr_vector<Fvector> &R)
 	{
@@ -280,6 +276,6 @@ struct	OGF_LOD		: public OGF_Node
 	virtual void		Save		(IWriter &fs);
 };
 
-void set_status(char* N, int id, int f, int v);
+void set_Status(char* N, int id, int f, int v);
 
 extern OGF_Base*				g_TREE_ROOT		;

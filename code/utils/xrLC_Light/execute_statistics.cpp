@@ -11,7 +11,7 @@
 LPCSTR make_time	( string64 &buf, float fsec );
 #ifdef	COLLECT_EXECUTION_STATS
 
-void	execute_time_statistics::read				( INetReader	&r )
+void	execute_time_statistics::read				( IReader	&r )
 {
 	r_pod(r,*this);
 }
@@ -25,7 +25,7 @@ void	execute_time_statistics::log					()const
 	Msg( "calc time: %s ", make_time( buf, m_time ) );
 }
 
-void	execute_statistics::read				( INetReader	&r )
+void	execute_statistics::read				( IReader	&r )
 {
 	r_pod( r, dir ); 
 	time_stats.read( r );

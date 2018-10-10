@@ -4,12 +4,6 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{53249e6c-9376-4ce4-bdba-9cd066d91c47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\Res">
-      <UniqueIdentifier>{b0e27ec3-5695-4208-ab22-ffbf9c54cb59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Kernel\Log">
-      <UniqueIdentifier>{0d817a32-5ee7-4b22-93e2-7d8a142fe129}</UniqueIdentifier>
-    </Filter>
     <Filter Include="CDB">
       <UniqueIdentifier>{14116abd-cbb0-446e-990b-3aa28f3ca223}</UniqueIdentifier>
     </Filter>
@@ -37,6 +31,9 @@
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\net">
       <UniqueIdentifier>{6cbd5326-f9f2-467f-bfc4-95c7dfe9e93e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PLY_exporter">
+      <UniqueIdentifier>{455aa784-a57a-42e5-813f-fa8eb00e145b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -44,12 +41,6 @@
     </ClInclude>
     <ClInclude Include="StdAfx.h">
       <Filter>Kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Kernel\Res</Filter>
-    </ClInclude>
-    <ClInclude Include="cl_log.h">
-      <Filter>Kernel\Log</Filter>
     </ClInclude>
     <ClInclude Include="cl_intersect.h">
       <Filter>CDB</Filter>
@@ -129,9 +120,6 @@
     <ClInclude Include="vbm.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal</Filter>
     </ClInclude>
-    <ClInclude Include="net.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\net</Filter>
-    </ClInclude>
     <ClInclude Include="xrGameMaterials.h" />
     <ClInclude Include="..\common\NvMender2003\remove_isolated_verts.h">
       <Filter>External\NV_Mender2003</Filter>
@@ -145,6 +133,9 @@
     <ClInclude Include="..\common\NvMender2003\NVMeshMender.h">
       <Filter>External\NV_Mender2003</Filter>
     </ClInclude>
+    <ClInclude Include="PLY_Exporter.h">
+      <Filter>PLY_exporter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -152,9 +143,6 @@
     </ClCompile>
     <ClCompile Include="xrLC.cpp">
       <Filter>Kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="cl_log.cpp">
-      <Filter>Kernel\Log</Filter>
     </ClCompile>
     <ClCompile Include="NV_Library\NvTriStrip.cpp">
       <Filter>External\NV_Strips</Filter>
@@ -261,23 +249,15 @@
     <ClCompile Include="xrMU_Model_export_OGF.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClCompile>
-    <ClCompile Include="net.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\net</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\engine.vc2008\xrEngine\xrLoadSurface.cpp" />
-    <ClCompile Include="..\..\SDK\include\hxgrid\Interface\hxGridInterface.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\net</Filter>
-    </ClCompile>
     <ClCompile Include="..\common\NvMender2003\NVMeshMender4.cpp">
       <Filter>External\NV_Mender2003</Filter>
     </ClCompile>
     <ClCompile Include="xrT_Junction.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resource.rc">
-      <Filter>Kernel\Res</Filter>
-    </ResourceCompile>
+    <ClCompile Include="PLY_Exporter.cpp">
+      <Filter>PLY_exporter</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
