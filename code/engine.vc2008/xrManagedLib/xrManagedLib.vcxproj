@@ -131,6 +131,7 @@
     <ClInclude Include="API\System.h" />
     <ClInclude Include="API\Utils.h" />
     <ClInclude Include="HelperFuncs.h" />
+    <ClInclude Include="INIParser.h" />
     <ClInclude Include="ISpectreEngine.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScriptCompiler.h" />
@@ -146,6 +147,7 @@
     <ClCompile Include="API\Utils.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="HelperFuncs.cpp" />
+    <ClCompile Include="ParsingMyIniPlease.cpp" />
     <ClCompile Include="ScriptCompiler.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
