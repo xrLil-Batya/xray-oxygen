@@ -202,10 +202,10 @@ void Startup()
 	Device.Run();
 	
 	// Destroy APP
-	xr_delete(g_SpatialSpacePhysic);
-	xr_delete(g_SpatialSpace);
-	DEL_INSTANCE(g_pGamePersistent);
-	xr_delete(pApp);
+	xr_delete(g_SpatialSpacePhysic); g_SpatialSpacePhysic = nullptr;
+	xr_delete(g_SpatialSpace);		 g_SpatialSpace = nullptr;
+	DEL_INSTANCE(g_pGamePersistent); g_pGamePersistent = nullptr;
+	xr_delete(pApp); pApp = nullptr;
 	Engine.Event.Dump();
 
 	// Destroying

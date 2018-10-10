@@ -80,7 +80,7 @@ void	ISpatial::spatial_register	()
 
 void	ISpatial::spatial_unregister()
 {
-	if (spatial.node_ptr)
+	if (g_SpatialSpace && spatial.node_ptr)
 	{
 		// remove
 		spatial.space->remove	(this);
