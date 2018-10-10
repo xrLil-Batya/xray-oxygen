@@ -159,7 +159,7 @@ namespace XRay
 			}
 		}
 
-		virtual void shedule_update(Int32 deltaTime);
+		virtual void shedule_update(UInt32 deltaTime);
 
 	protected:
 

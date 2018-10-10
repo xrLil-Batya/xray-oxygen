@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Object.h"
 
-void XRay::Object::shedule_update(Int32 deltaTime)
+void XRay::Object::shedule_update(UInt32 deltaTime)
 {
 
 }
