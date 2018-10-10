@@ -82,6 +82,7 @@ CGamePersistent::CGamePersistent()
 
 CGamePersistent::~CGamePersistent()
 {	
+	SpectreEngineClient::Shutdown();
 	Device.seqFrame.Remove		(this);
 	Engine.Event.Handler_Detach	(eQuickLoad,this);
 }

@@ -20,6 +20,7 @@ xr_pure_interface MANAGED_ENGINE_API ISpectreEngineLib
 {
 	virtual DWORD CreateProxyObject(DLL_Pure* pObject) = 0;
 	virtual void DestroyProxyObject(DLL_Pure* pObject) = 0;
+	virtual void OnShutdown() = 0;
 	virtual FuncNode* GetFunctionLinkedListStart() = 0;
 };
 

@@ -7,6 +7,7 @@ class ENGINE_API SpectreEngineClient
 {
 public:
 	static void Initialize();
+	static void Shutdown();
 	static DWORD CreateProxyObject(DLL_Pure* pObject);
 	static void DestroyProxyObject(DLL_Pure* pObject);
 

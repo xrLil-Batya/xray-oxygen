@@ -63,6 +63,21 @@ void XRay::ObjectPool::DestroyObject(IntPtr pDllPure)
 }
 
 
+void XRay::ObjectPool::DestroyAllObjects()
+{
+	array<UInt32>^ AllObjectHandles = gcnew array<UInt32>(IndexRegistry->Count);
+	IndexRegistry->Keys->CopyTo(AllObjectHandles, 0);
+
+	for each (UInt32 ObjHandle in AllObjectHandles)
+	{
+		NativeObject^ Obj = GetObjectByHandle(ObjHandle);
+		if (Obj != nullptr)
+		{
+			DestroyObject(Obj->GetNativeObject());
+		}
+	}
+}
+
 XRay::NativeObject^ XRay::ObjectPool::GetObjectByHandle(UInt32 Handle)
 {
 	XRay::NativeObject^ NatObject = nullptr;

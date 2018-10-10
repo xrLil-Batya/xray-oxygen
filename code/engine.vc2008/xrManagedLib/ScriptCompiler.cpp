@@ -33,7 +33,7 @@ bool xrScriptCompiler::CompileScripts()
 	if (ScriptFiles.empty() && ShaderScriptFiles.empty())
 	{
 		Log("CSharp compiler: nothing compile, skip");
-		return true;
+		return false;
 	}
 
 	for (const FS_File& file : ShaderScriptFiles)
@@ -80,7 +80,7 @@ bool xrScriptCompiler::CompileScripts()
 		}
 		String^ ErrLog = sb->ToString();
 		XRay::Log::Error(ErrLog);
-		return nullptr;
+		return false;
 	}
 
 	//check for warnings
@@ -111,30 +111,30 @@ bool xrScriptCompiler::CompileScripts()
 	{
 		Log("! CSharp compile can't load compiled file. Can't write to disk (Not enough space?)");
 		XRay::Log::Error(fileNotFound->FusionLog);
-		return nullptr;
+		return false;
 	}
 	catch (FileLoadException^ FileLoadExp)
 	{
 		Log("! CSharp compile can't load compiled file. Incorrect file format");
 		XRay::Log::Error(FileLoadExp->FusionLog);
-		return nullptr;
+		return false;
 	}
 	catch (ArgumentNullException^)
 	{
 		Log("! CSharp compile can't compile source code");
-		return nullptr;
+		return false;
 	}
 	catch (BadImageFormatException^ invalidImageExp)
 	{
 		Log("! CSharp compile can't load compiled file. Incorrect file format");
 		XRay::Log::Error(invalidImageExp->FusionLog);
-		return nullptr;
+		return false;
 	}
 
 	if (ScriptModule == nullptr)
 	{
 		Log("! CSharp compile can't compile source code");
-		return nullptr;
+		return false;
 	}
 
 	scriptAssembly = ScriptModule;

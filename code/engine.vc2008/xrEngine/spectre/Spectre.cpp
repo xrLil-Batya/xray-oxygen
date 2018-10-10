@@ -14,7 +14,7 @@ void SpectreEngineClient::Initialize()
 	FuncNode* pServerNode = nullptr;
 
 	// Get main manage core interface
-	if (!(hManagedLib = GetModuleHandleA("xrManagedCoreLib.dll")))
+	if ((hManagedLib = GetModuleHandleA("xrManagedCoreLib.dll")) == NULL)
 	{
 		// If managed library module is not exist - load it from bit path
 		hManagedLib = LoadLibraryA("xrManagedCoreLib.dll");
@@ -31,7 +31,7 @@ void SpectreEngineClient::Initialize()
 	CoreAPI->CompileScripts();
 
 	// Get interface ptr from game lib
-	if (!(hGameManagedLib = GetModuleHandleA("xrManagedEngineLib.dll")))
+	if ((hGameManagedLib = GetModuleHandleA("xrManagedEngineLib.dll")) == NULL)
 	{
 		hGameManagedLib = LoadLibraryA("xrManagedEngineLib.dll");
 		R_ASSERT(hGameManagedLib);
@@ -60,6 +60,11 @@ void SpectreEngineClient::Initialize()
 
 		pServerNode = pServerNode->NextNode;
 	} while (pServerNode != nullptr);
+}
+
+void SpectreEngineClient::Shutdown()
+{
+	EngineLibAPI->OnShutdown();
 }
 
 DWORD SpectreEngineClient::CreateProxyObject(DLL_Pure* pObject)

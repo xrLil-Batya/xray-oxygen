@@ -14,6 +14,7 @@ namespace XRay
 
 		static UInt32 CreateObject(IntPtr pDllPure);
 		static void DestroyObject(IntPtr pDllPure);
+		static void DestroyAllObjects();
 
 		static Dictionary < IntPtr, List<XRay::NativeObject^>^ >^ GlobalRegistry;
 

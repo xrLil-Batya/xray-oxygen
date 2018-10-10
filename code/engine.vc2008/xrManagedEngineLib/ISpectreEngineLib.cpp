@@ -40,6 +40,10 @@ struct SpectreEngineLib : public ISpectreEngineLib
 		return pRootNode;
 	}
 
+	virtual void OnShutdown() override
+	{
+		XRay::ObjectPool::DestroyAllObjects();
+	}
 };
 
 SpectreEngineLib EngineLib;

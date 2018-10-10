@@ -14,7 +14,7 @@ public:
 	DLL_Pure(void *params)	{CLS_ID=0; };
 	DLL_Pure()				{CLS_ID=0; };
 	virtual	DLL_Pure*		_construct		()	{ return this; 	}
-	virtual ~DLL_Pure()		{};
+	virtual ~DLL_Pure();
 };
 
 // Class creation/destroying interface
