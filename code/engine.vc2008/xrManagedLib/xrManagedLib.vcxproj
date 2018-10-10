@@ -126,12 +126,13 @@
     <ClInclude Include="API\ClassRegistrator.h" />
     <ClInclude Include="API\Defines.h" />
     <ClInclude Include="API\Filesystem.h" />
+    <ClInclude Include="API\Ini.h" />
+    <ClInclude Include="API\INIParser.h" />
     <ClInclude Include="API\Log.h" />
     <ClInclude Include="API\ModInstance.h" />
     <ClInclude Include="API\System.h" />
     <ClInclude Include="API\Utils.h" />
     <ClInclude Include="HelperFuncs.h" />
-    <ClInclude Include="INIParser.h" />
     <ClInclude Include="ISpectreEngine.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScriptCompiler.h" />
@@ -141,13 +142,14 @@
   <ItemGroup>
     <ClCompile Include="API\ClassRegistrator.cpp" />
     <ClCompile Include="API\Filesystem.cpp" />
+    <ClCompile Include="API\Ini.cpp" />
     <ClCompile Include="API\Log.cpp" />
     <ClCompile Include="API\ModInstance.cpp" />
+    <ClCompile Include="API\ParsingMyIniPlease.cpp" />
     <ClCompile Include="API\System.cpp" />
     <ClCompile Include="API\Utils.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="HelperFuncs.cpp" />
-    <ClCompile Include="ParsingMyIniPlease.cpp" />
     <ClCompile Include="ScriptCompiler.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

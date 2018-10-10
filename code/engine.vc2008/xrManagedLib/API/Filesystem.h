@@ -10,7 +10,7 @@ namespace XRay
 	public:
 		virtual int Read(array<unsigned char>^ buffer, int offset, int count) override;
 		virtual void Write(array<unsigned char>^ buffer, int offset, int count) override;
-		
+
 		virtual property bool CanRead
 		{
 			bool get() override
@@ -72,7 +72,7 @@ namespace XRay
 				{
 					pReader->seek(value);
 				}
-				
+
 				// Code for written for future cases
 				if (pWritter != nullptr)
 				{
@@ -101,7 +101,6 @@ namespace XRay
 		IReader* pReader = nullptr;
 		IWriter* pWritter = nullptr;
 	};
-
 
 
 	public ref class Filesystem abstract sealed
