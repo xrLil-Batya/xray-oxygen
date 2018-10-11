@@ -310,9 +310,10 @@ CRenderTarget::CRenderTarget()
 	//	NORMAL
 	{
 		u32		w = Device.dwWidth, h = Device.dwHeight;
+                //MatthewKush: to hell with s_position. We should use rt_Depth and re-create the 3 dimensions
 		rt_Position.create					(r2_RT_P, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 
-        rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //needed for depth prepass
+        rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //not needed for depth prepass..
 
 		if (RImplementation.o.dx10_msaa)
 			rt_MSAADepth.create				(r2_RT_MSAAdepth, w, h, D3DFMT_D24S8, SampleCount);
@@ -636,12 +637,14 @@ CRenderTarget::CRenderTarget()
 	if (RImplementation.o.dx10_msaa)
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing_msaa");
+		s_pp_taa.create("effects\\taa_msaa");
 		s_rain_drops.create		("effects\\screen_rain_droplets_msaa");
 		s_vignette.create		("effects\\vignette_msaa");
 	}
 	else
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing");
+		s_pp_taa.create("effects\\taa");
 		s_rain_drops.create		("effects\\screen_rain_droplets");
 		s_vignette.create		("effects\\vignette");
 	}

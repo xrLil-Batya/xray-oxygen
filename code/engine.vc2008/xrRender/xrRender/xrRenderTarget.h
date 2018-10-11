@@ -156,7 +156,9 @@ private:
 	ref_rt						rt_smaa_blendtex;
 	ref_rt						rt_prev_frame0;
 	ref_geom					g_smaa;
-	
+//#ifdef USE_DX11 - Do I need this?
+    ref_shader					s_pp_taa;
+//#endif	
 	//	generate min/max
 	ref_shader					s_create_minmax_sm;
 

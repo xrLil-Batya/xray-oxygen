@@ -6,7 +6,7 @@
 ```lua
 xrOxygen is an project that uses experimental C++ features, has no special restrictions on changing the engine and tries to bring something new to the usual modding.
 ```
-* [Stable branch](https://github.com/xrOxygen/xray-oxygen/tree/master) | [Dev branch](https://github.com/xrOxygen/xray-oxygen/tree/ox_dev) | [PhysX branch](https://github.com/xrOxygen/xray-oxygen/tree/PhysX)
+* [Stable branch](https://github.com/xrOxygen/xray-oxygen/tree/master) | [Dev branch](https://github.com/xrOxygen/xray-oxygen/tree/ox_dev) | [RenderThread](https://github.com/xrOxygen/xray-oxygen/tree/RThread)
 
 ## Purposes
 
