@@ -8,3 +8,8 @@ XRay::Actor::Actor(IntPtr InNativeObject)
 
 	inventory = (Inventory^)Inventory::Create(InNativeObject, Inventory::typeid);
 }
+
+XRay::Actor::Actor() : Actor(XRay::ClassRegistrator::GetFactoryTarget())
+{
+
+}

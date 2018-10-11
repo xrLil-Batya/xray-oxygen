@@ -2,6 +2,8 @@
 #include "NativeObject.h"
 #include "ObjectPool.h"
 
+#include "ClassRegistrator.h"
+
 using namespace System::Reflection;
 
 XRay::NativeObject^ XRay::NativeObject::Create(IntPtr InNativeObject, Type^ InTargetType)
@@ -25,10 +27,12 @@ XRay::NativeObject^ XRay::NativeObject::Create(IntPtr InNativeObject, Type^ InTa
  	if (ExistedObject != nullptr) return ExistedObject;
  
  	// Object not picked, create a new one
+	XRay::ClassRegistrator::SetFactoryTarget(InNativeObject);
 	array<::System::Object^>^ activationArgs = gcnew array<::System::Object ^>(1);
 	activationArgs[0] = InNativeObject;
 	NativeObject^ ProxyObject = (NativeObject^)::System::Activator::CreateInstance(InTargetType, activationArgs, nullptr);
  	Objects->Add(ProxyObject);
+	XRay::ClassRegistrator::ResetFactoryTarget();
  
  	return ProxyObject;
 }

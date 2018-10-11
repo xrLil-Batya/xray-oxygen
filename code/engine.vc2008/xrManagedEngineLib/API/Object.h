@@ -162,7 +162,7 @@ namespace XRay
 		virtual void shedule_update(UInt32 deltaTime);
 
 	protected:
-
+		Object();
 		Object(IntPtr InNativeObject);
 
 	private:

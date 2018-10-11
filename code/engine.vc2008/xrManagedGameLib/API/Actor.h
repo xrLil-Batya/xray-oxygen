@@ -12,7 +12,7 @@ namespace XRay
 	public ref class Actor : public EntityAlive
 	{
 	public:
-
+		Actor();
 		Actor(IntPtr InNativeObject);
 
 		Inventory^ inventory;
