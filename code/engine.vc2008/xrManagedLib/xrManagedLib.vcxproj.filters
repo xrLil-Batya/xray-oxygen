@@ -60,9 +60,6 @@
     <ClInclude Include="API\ClassRegistrator.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\INIParser.h">
-      <Filter>Header Files\API</Filter>
-    </ClInclude>
     <ClInclude Include="API\Ini.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
@@ -102,9 +99,6 @@
       <Filter>Source Files\API</Filter>
     </ClCompile>
     <ClCompile Include="API\Ini.cpp">
-      <Filter>Source Files\API</Filter>
-    </ClCompile>
-    <ClCompile Include="API\ParsingMyIniPlease.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>

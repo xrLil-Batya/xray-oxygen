@@ -5,6 +5,7 @@ using namespace System;
 
 namespace XRay
 {
+	/// <summary> X-Ray CInifile wrapper </summary>
 	public ref class Ini sealed
 	{
 		msclr::interop::marshal_context Marshal;
@@ -12,8 +13,8 @@ namespace XRay
 		/// <summary> Returns file name </summary>
 		property String^ FileName
 		{
-			String^ get() 
-			{ 
+			String^ get()
+			{
 				return gcnew System::String(pIni->fname());
 			}
 		};
@@ -59,6 +60,9 @@ namespace XRay
 
 		/// <summary> Returns float value </summary>
 		float r_float(String^ section, String^ line);
+
+		/// <summary> Returns color value </summary>
+		u32 r_color(String^ section, String^ line);
 
 		/// <summary> Returns string value </summary>
 		String^ r_string(String^ section, String^ line);

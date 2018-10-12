@@ -86,6 +86,11 @@ float Ini::r_float(String^ section, String^ line)
 	return pIni->r_float(Marshal.marshal_as<const char*>(section), Marshal.marshal_as<const char*>(line));
 }
 
+u32 Ini::r_color(String^ section, String^ line)
+{
+	return pIni->r_color(Marshal.marshal_as<const char*>(section), Marshal.marshal_as<const char*>(line));
+}
+
 String^ Ini::r_string(String^ section, String^ line)
 {
 	return gcnew String(pIni->r_string(Marshal.marshal_as<const char*>(section), Marshal.marshal_as<const char*>(line)));
