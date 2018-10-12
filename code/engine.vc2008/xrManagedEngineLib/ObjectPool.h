@@ -10,6 +10,7 @@ namespace XRay
 	{
 	public:
 
+		delegate XRay::NativeObject^ ScriptedObjectActivator();
 		delegate XRay::NativeObject^ ObjectActivator(IntPtr InNativeObject);
 
 		static UInt32 CreateObject(IntPtr pDllPure);
@@ -24,9 +25,9 @@ namespace XRay
 
 		static void ConditionalInitialize();
 
-		static ObjectActivator^ CreateFastObjectActivator(Type^ ClassType);
+		static System::Object^ CreateFastObjectActivator(Type^ ClassType);
 
-		static Dictionary < Type^, ObjectActivator^ >^ ConstructorCache;
+		static Dictionary < Type^, System::Object^ >^ ConstructorCache;
 		static Dictionary < UInt32, XRay::NativeObject^>^ IndexRegistry;
 		static UInt32 IndexCounter;
 	};

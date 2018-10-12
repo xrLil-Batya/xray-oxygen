@@ -21,7 +21,7 @@ UInt32 XRay::ObjectPool::CreateObject(IntPtr pDllPure)
 	}
 
 	// Get compiled lambda activator for that type
-	ObjectActivator^ Activator = nullptr;
+	System::Object^ Activator = nullptr;
 	if (!ConstructorCache->TryGetValue(ClassType, Activator))
 	{
 		Activator = CreateFastObjectActivator(ClassType);
@@ -38,7 +38,14 @@ UInt32 XRay::ObjectPool::CreateObject(IntPtr pDllPure)
 	}
 
 	// Call activator to create a newer object
-	XRay::NativeObject^ CreatedObject = Activator(BoxedPtr);
+	XRay::NativeObject^ CreatedObject = nullptr;
+	ObjectActivator^ NativeActivator = dynamic_cast<ObjectActivator^>(Activator);
+	ScriptedObjectActivator^ ScriptActivator = dynamic_cast<ScriptedObjectActivator^>(Activator);
+
+	XRay::ClassRegistrator::SetFactoryTarget(BoxedPtr);
+	CreatedObject = ScriptActivator == nullptr ? NativeActivator(BoxedPtr) : ScriptActivator();
+	XRay::ClassRegistrator::ResetFactoryTarget();
+
 	ObjectList->Add(CreatedObject);
 
 	IndexRegistry->Add(++IndexCounter, CreatedObject);
@@ -90,22 +97,45 @@ void XRay::ObjectPool::ConditionalInitialize()
 	if (GlobalRegistry == nullptr)
 	{
 		GlobalRegistry = gcnew Dictionary<IntPtr, List<XRay::NativeObject ^> ^>();
-		ConstructorCache = gcnew Dictionary < Type^, ObjectActivator^ >();
+		ConstructorCache = gcnew Dictionary < Type^, System::Object^ >();
 		IndexRegistry = gcnew Dictionary<UInt32, XRay::NativeObject ^>();
 		IndexCounter = 0;
 	}
 }
 
-XRay::ObjectPool::ObjectActivator^ XRay::ObjectPool::CreateFastObjectActivator(Type^ ClassType)
+System::Object^ XRay::ObjectPool::CreateFastObjectActivator(Type^ ClassType)
 {
-	array<Type^>^ constructorsParams = gcnew array<Type ^>(1);
-	constructorsParams[0] = IntPtr::typeid;
+	LambdaExpression^ lambda = nullptr;
+	System::Object^ returnValue = nullptr;
 
-	ConstructorInfo^ NativeConstructor = ClassType->GetConstructor(BindingFlags::Public | BindingFlags::NonPublic | BindingFlags::Instance, nullptr, constructorsParams, nullptr);
-	ParameterExpression^ InNativeObjectParam = Expression::Parameter(IntPtr::typeid);
+	array<Type^>^ noConstructorsParams = gcnew array<Type ^>(0);
+	ConstructorInfo^ NativeConstructor = ClassType->GetConstructor(BindingFlags::Public | BindingFlags::NonPublic | BindingFlags::Instance, nullptr, noConstructorsParams, nullptr);
+	
+	if (NativeConstructor == nullptr) 
+	{
+		array<Type^>^ constructorsParams = gcnew array<Type ^>(1);
+		constructorsParams[0] = IntPtr::typeid;
 
-	NewExpression^ ConstructorExpression = Expression::New(NativeConstructor, InNativeObjectParam);
-	LambdaExpression^ lambda = Expression::Lambda(ObjectActivator::typeid, ConstructorExpression, InNativeObjectParam);
+		NativeConstructor = ClassType->GetConstructor(BindingFlags::Public | BindingFlags::NonPublic | BindingFlags::Instance, nullptr, constructorsParams, nullptr);
 
-	return (ObjectActivator^)lambda->Compile();
+		if (NativeConstructor == nullptr)
+		{
+			throw gcnew Exception("There's no constructor for "+ClassType->ToString());
+			return nullptr;
+		}
+
+		ParameterExpression^ InNativeObjectParam = Expression::Parameter(IntPtr::typeid);
+		NewExpression^ ConstructorExpression = Expression::New(NativeConstructor, InNativeObjectParam);
+		
+		lambda = Expression::Lambda(ObjectActivator::typeid, ConstructorExpression, InNativeObjectParam);
+		returnValue = (ObjectActivator^)lambda->Compile();
+	}
+	else
+	{
+		NewExpression^ ConstructorExpression = Expression::New(NativeConstructor);
+		lambda = Expression::Lambda(ScriptedObjectActivator::typeid, ConstructorExpression);
+		returnValue = (ScriptedObjectActivator^)lambda->Compile();
+	}
+
+	return returnValue;
 }
