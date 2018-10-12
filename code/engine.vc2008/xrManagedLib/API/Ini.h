@@ -8,9 +8,6 @@ namespace XRay
 	public ref class Ini sealed
 	{
 		msclr::interop::marshal_context Marshal;
-	private:
-		CInifile* pIni;
-
 	public:
 		/// <summary> Returns file name </summary>
 		property String^ FileName
@@ -20,6 +17,9 @@ namespace XRay
 				return gcnew System::String(pIni->fname());
 			}
 		};
+
+	private:
+		CInifile* pIni;
 
 	public:
 		Ini(String^ fileName);

@@ -18,7 +18,7 @@ Ini::Ini(String^ fileName, bool readOnly, bool load) : Ini(fileName, readOnly, l
 
 Ini::Ini(String^ fileName, bool readOnly, bool load, bool saveAtEnd)
 {
-	pIni = new CInifile(Marshal.marshal_as<const char*>(fileName), readOnly, load, saveAtEnd);
+	pIni = new CInifile(Marshal.marshal_as<const char*>(Filesystem::GetPathToResource(CONFIG, fileName)), readOnly, load, saveAtEnd);
 }
 
 Ini::~Ini()
@@ -83,7 +83,7 @@ s32 Ini::r_s32(String^ section, String^ line)
 
 float Ini::r_float(String^ section, String^ line)
 {
-	return pIni->r_float(Marshal.marshal_as<const char*>(section), Marshal.marshal_as<const char*>(line));;
+	return pIni->r_float(Marshal.marshal_as<const char*>(section), Marshal.marshal_as<const char*>(line));
 }
 
 String^ Ini::r_string(String^ section, String^ line)
