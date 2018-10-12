@@ -547,8 +547,10 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 				Console->Execute("main_menu on");
 			}
 		}
-		R_ASSERT			(0!=g_pGamePersistent);
-		g_pGamePersistent->Disconnect();
+
+		// Special for new editor
+		if(g_pGamePersistent)
+			g_pGamePersistent->Disconnect();
 	}
 	else if (E == eConsole)
 	{

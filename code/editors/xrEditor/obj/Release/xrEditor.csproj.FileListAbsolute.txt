@@ -1,6 +1,0 @@
-F:\X-Ray\xray-oxygen\code\editors\xrEditor\obj\Release\xrEditor.csprojAssemblyReference.cache
-F:\X-Ray\xray-oxygen\code\editors\xrEditor\obj\Release\SpectreWindow.g.cs
-F:\X-Ray\xray-oxygen\code\editors\xrEditor\obj\Release\App.g.cs
-F:\X-Ray\xray-oxygen\code\editors\xrEditor\obj\Release\xrEditor_MarkupCompile.cache
-F:\X-Ray\xray-oxygen\code\editors\xrEditor\obj\Release\xrEditor_MarkupCompile.lref
-F:\X-Ray\xray-oxygen\code\editors\xrEditor\obj\Release\xrEditor.csprojFakesResolveAssemblyReference.cache
