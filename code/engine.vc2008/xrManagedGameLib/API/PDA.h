@@ -57,7 +57,7 @@ namespace XRay
 			{
 				PDA_LIST NativePdaList;
 				pNativeObject->ActivePDAContacts(NativePdaList);
-				array<PDA^>^ Result = gcnew array<PDA ^>(NativePdaList.size());
+				array<PDA^>^ Result = gcnew array<PDA ^>((u32)NativePdaList.size());
 
 				for (int i = 0; i < NativePdaList.size(); ++i)
 				{

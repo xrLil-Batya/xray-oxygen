@@ -82,6 +82,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -99,6 +100,7 @@
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ExceptionHandling>false</ExceptionHandling>
+      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -116,6 +118,7 @@
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ExceptionHandling>false</ExceptionHandling>
+      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>

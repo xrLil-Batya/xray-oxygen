@@ -13,9 +13,9 @@ namespace XRay
 			array<LevelInfo>^ get()
 			{
 				size_t NumLevels = pApp->Levels.size();
-				array<LevelInfo>^ Result = gcnew array<LevelInfo>(NumLevels);
+				array<LevelInfo>^ Result = gcnew array<LevelInfo>((u32)NumLevels);
 
-				for (size_t i = 0; i < NumLevels; ++i)
+				for (u32 i = 0; i < NumLevels; ++i)
 				{
 					Result[i] = GetLevelInfoFromSource(pApp->Levels[i]);
 				}

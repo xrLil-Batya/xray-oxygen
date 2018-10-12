@@ -80,6 +80,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalIncludeDirectories>./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrEngine.lib;xrCDB.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -96,6 +97,7 @@
       <AdditionalIncludeDirectories>./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ExceptionHandling>false</ExceptionHandling>
+      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrEngine.lib;xrCDB.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -112,6 +114,7 @@
       <AdditionalIncludeDirectories>./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ExceptionHandling>false</ExceptionHandling>
+      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrEngine.lib;xrCDB.lib;%(AdditionalDependencies)</AdditionalDependencies>

@@ -80,6 +80,7 @@
       <AdditionalIncludeDirectories>./;../;../xrGame/;../xrServerEntities;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrGame.lib;xrEngine.lib</AdditionalDependencies>
@@ -95,6 +96,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ExceptionHandling>false</ExceptionHandling>
+      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrGame.lib;xrEngine.lib</AdditionalDependencies>
@@ -110,6 +112,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ExceptionHandling>false</ExceptionHandling>
+      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrGame.lib;xrEngine.lib</AdditionalDependencies>
