@@ -48,15 +48,15 @@ File^ File::OpenRead(String^ filename)
 	string1024 FileNameBuff;
 	Filesystem::ValidateStringAndGetAsciiCopy(filename, FileNameBuff);
 
-	File^ NewFile = gcnew XRay::File();
+	File^ file = gcnew File();
 	IReader* pFile = FS.r_open(FileNameBuff);
 	if (pFile == nullptr)
 	{
 		return nullptr;
 	}
-	NewFile->pReader = pFile;
+	file->pReader = pFile;
 
-	return NewFile;
+	return file;
 }
 
 File^ File::OpenWrite(String^ filename)
@@ -64,14 +64,14 @@ File^ File::OpenWrite(String^ filename)
 	string1024 FileNameBuff;
 	Filesystem::ValidateStringAndGetAsciiCopy(filename, FileNameBuff);
 
-	File^ NewFile = gcnew XRay::File();
+	File^ file = gcnew File();
 	IWriter* pFile = FS.w_open(FileNameBuff);
 	if (pFile == nullptr)
 	{
 		return nullptr;
 	}
-	NewFile->pWritter = pFile;
-	return NewFile;
+	file->pWritter = pFile;
+	return file;
 }
 
 
@@ -141,10 +141,10 @@ File^ File::OpenExternalRead(String^ filename)
 	string1024 FilenameBuff;
 	Filesystem::ValidateStringAndGetAsciiCopy(filename, FilenameBuff);
 
-	File^ outFile = gcnew File();
-	outFile->pReader = xr_new<CFileReader>(FilenameBuff);
+	File^ file = gcnew File();
+	file->pReader = xr_new<CFileReader>(FilenameBuff);
 
-	return outFile;
+	return file;
 }
 
 IntPtr XRay::File::GetUnderlyingReader()

@@ -28,8 +28,8 @@ namespace XRay
 		/// XRay.Log.Info($"SomeVariable is {SomeVariable}");
 		/// </code>
 		/// </example>
-		/// <param name="Message">A message that will be printed</param>
-		static void Info(String^ Message);
+		/// <param name="message">A message that will be printed</param>
+		static void Info(String^ message);
 
 		/// <summary>
 		/// Log message into in-game console, file and debugger (if presented)
@@ -42,8 +42,8 @@ namespace XRay
 		/// XRay.Log.Warning($"SomeVariable is {SomeVariable}");
 		/// </code>
 		/// </example>
-		/// <param name="Message">A message that will be printed</param>
-		static void Warning(String^ Message);
+		/// <param name="message">A message that will be printed</param>
+		static void Warning(String^ message);
 
 		/// <summary>
 		/// Log message into in-game console, file and debugger (if presented).
@@ -56,7 +56,7 @@ namespace XRay
 		/// XRay.Log.Error($"SomeVariable is {SomeVariable}");
 		/// </code>
 		/// </example>
-		/// <param name="Message">A message that will be printed</param>
-		static void Error(String^ Message);
+		/// <param name="message">A message that will be printed</param>
+		static void Error(String^ message);
 	};
 }

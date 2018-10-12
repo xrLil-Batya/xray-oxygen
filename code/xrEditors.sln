@@ -70,6 +70,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedSoundLib", "engine
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deprecated", "Deprecated", "{896A2103-A208-42CB-A7EB-51312DFB67F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xrLayoutEditor", "editors\xrLayoutEditor\xrLayoutEditor.csproj", "{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C4DEFC31-A910-4339-99B3-6C410DC19AD0} = {C4DEFC31-A910-4339-99B3-6C410DC19AD0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -459,6 +464,30 @@ Global
 		{FE528A91-73A9-46C2-B98C-661B5C7D647A}.Release|x64.ActiveCfg = Release|x64
 		{FE528A91-73A9-46C2-B98C-661B5C7D647A}.Release|x64.Build.0 = Release|x64
 		{FE528A91-73A9-46C2-B98C-661B5C7D647A}.Release|x86.ActiveCfg = Release|x64
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Debug|x64.Build.0 = Debug|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Debug|x86.Build.0 = Debug|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Mixed|Any CPU.ActiveCfg = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Mixed|Any CPU.Build.0 = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Mixed|x64.ActiveCfg = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Mixed|x64.Build.0 = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Mixed|x86.ActiveCfg = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Mixed|x86.Build.0 = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release_IA32|Any CPU.ActiveCfg = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release_IA32|Any CPU.Build.0 = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release_IA32|x64.ActiveCfg = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release_IA32|x64.Build.0 = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release_IA32|x86.ActiveCfg = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release_IA32|x86.Build.0 = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release|x64.ActiveCfg = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release|x64.Build.0 = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release|x86.ActiveCfg = Release|Any CPU
+		{BF5CB1A3-BDC5-4777-9705-DCAD0360AB58}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
