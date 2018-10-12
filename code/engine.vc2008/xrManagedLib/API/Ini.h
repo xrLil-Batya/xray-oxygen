@@ -5,7 +5,7 @@ using namespace System;
 
 namespace XRay
 {
-	public ref class Ini abstract sealed
+	public ref class Ini sealed
 	{
 		msclr::interop::marshal_context Marshal;
 	public:
