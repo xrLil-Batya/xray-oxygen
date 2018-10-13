@@ -6,11 +6,16 @@
         xmlns:c="clr-namespace:XRay;assembly=xrManagedRenderLib"
         xmlns:local="clr-namespace:xrEditor"
         mc:Ignorable="d"
-        Title="XRay Oxygen Editor" Height="1080" Width="1920">
+        Title="XRay Oxygen Editor" Height="720" Width="1320">
     <StackPanel>
-        <Label Content="Engine Viewport" FontSize="24" FontWeight="Bold"/>
-        <c:XRayRenderHost x:Name="AWDA" Width="1900" Height="932" Margin="0,10,0,0" />
-        <Button Content="Test Action" HorizontalAlignment="Left" Margin="20,20,0,0" Click="Button_Click"/>
+        <DockPanel Height="42">
+            <Label Content="Engine Viewport" FontSize="24" FontWeight="Bold" Width="1220"/>
+            <CheckBox x:Name="EngineMode" Content="Engine mode" Height="42" VerticalAlignment="Top" Width="100" IsChecked="True"
+                      Checked="checkBox_Checked" 
+                      Unchecked="checkBox_Unchecked"/>
+        </DockPanel>
+        <c:XRayRenderHost x:Name="AWDA" Width="1300" Height="620" Margin="0,1,0,0" />
+        <Button Content="Test Action" HorizontalAlignment="Left" Margin="20,5,0,0" Click="Button_Click"/>
     </StackPanel>
 
 </Window>
