@@ -81,16 +81,21 @@ namespace xrPostprocessEditor
             SetUpHandlers();
         }
 
-        Color ConvertColor(ColorF value)
-        {
-            Color result = Color.FromArgb(
-                Convert.ToByte(value.a),
-                Convert.ToByte(value.r),
-                Convert.ToByte(value.g),
-                Convert.ToByte(value.b));
+		Color ConvertColor(ColorF value)
+		{
+			int NewA = (value.a < 0) ? 0 : Convert.ToInt32(value.a);
+			int NewR = (value.r < 0) ? 0 : Convert.ToInt32(value.r);
+			int NewG = (value.g < 0) ? 0 : Convert.ToInt32(value.g);
+			int NewB = (value.b < 0) ? 0 : Convert.ToInt32(value.b);
 
-            return result;
-        }
+			if(value.a != 1 && value.a > 0) NewA = (int)(value.a *256);
+			if(value.r != 1 && value.r > 0) NewR = (int)(value.r *256);
+			if(value.g != 1 && value.g > 0) NewG = (int)(value.g *256);
+			if(value.b != 1 && value.b > 0) NewB = (int)(value.b *256);
+
+			Color result = Color.FromArgb(NewA, NewR, NewB, NewG);
+			return result;
+		}
 
         private void UpdateAddColor(int keyIndex)
         {
@@ -128,7 +133,7 @@ namespace xrPostprocessEditor
         private void UpdateBlur(int keyIndex)
         {
             float value = Engine.GetBlur(keyIndex);
-            //nslBlur.Value = (decimal)value;
+            nslBlur.Value = (decimal)value;
         }
 
         private void UpdateColorMapping(int keyIndex)
@@ -230,7 +235,9 @@ namespace xrPostprocessEditor
                 dlg.RestoreDirectory = true;
                 dlg.Filter = "Post-process effects (.ppe)|*.ppe|All Files (*.*)|*.*";
                 if (dlg.ShowDialog() == DialogResult.OK)
-                    Engine.SaveEffect(dlg.FileName);
+				{
+					Engine.SaveEffect(dlg.FileName);
+				}
             }
         }
 

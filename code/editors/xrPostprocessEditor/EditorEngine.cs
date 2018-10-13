@@ -129,8 +129,8 @@ namespace xrPostprocessEditor
             {
                 float time = param.GetKeyTime(keyIndex);
 
-                param.UpdateValue(time, (float) value, DefaultValueIdx);
-            }
+				param.UpdateValue(time, (float)value, DefaultValueIdx);
+			}
         }
 
         public ColorF GetAddColor(int keyIndex)
