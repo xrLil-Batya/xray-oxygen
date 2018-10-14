@@ -47,7 +47,7 @@ void PostProcessParam::DeleteValue(float time) { impl->delete_value(time); }
 
 void PostProcessParam::UpdateValue(float time, float value, int index)
 {
-	impl->update_value(time, value / 256, index);
+	impl->update_value(time, value / 255, index);
 }
 
 void XRay::ManagedApi::Core::PostProcessParam::GetValue(float time, [Out] float % value, int index)
@@ -154,7 +154,7 @@ void PostProcessParamProxy::AddValue(float time, float value, int index) { impl-
 void PostProcessParamProxy::DeleteValue(float time) { impl->delete_value(time); }
 void PostProcessParamProxy::UpdateValue(float time, float value, int index) 
 {
-	impl->update_value(time, value / 256, index);
+	impl->update_value(time, value / 255, index);
 }
 void XRay::ManagedApi::Core::PostProcessParamProxy::GetValue(float time, [Out] float % value, int index)
 {
