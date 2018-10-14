@@ -634,17 +634,28 @@ CRenderTarget::CRenderTarget()
 	// - Antialiasing
 	// - Rain droplets
 	// - Vignette
+
+	// SMAA RTs
+	{
+		u32	w = Device.dwWidth;
+		u32 h = Device.dwHeight;
+
+//		rt_prev_frame0.create	(r2_RT_prev_frame0,		w, h, D3DFMT_A8R8G8B8);
+		rt_smaa_edgetex.create	(r2_RT_smaa_edgetex,	w, h, D3DFMT_A8R8G8B8);
+		rt_smaa_blendtex.create	(r2_RT_smaa_blendtex,	w, h, D3DFMT_A8R8G8B8);
+	}
+
 	if (RImplementation.o.dx10_msaa)
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing_msaa");
-		s_pp_taa.create("effects\\taa_msaa");
+		s_pp_taa.create			("effects\\taa_msaa");
 		s_rain_drops.create		("effects\\screen_rain_droplets_msaa");
 		s_vignette.create		("effects\\vignette_msaa");
 	}
 	else
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing");
-		s_pp_taa.create("effects\\taa");
+		s_pp_taa.create			("effects\\taa");
 		s_rain_drops.create		("effects\\screen_rain_droplets");
 		s_vignette.create		("effects\\vignette");
 	}

@@ -29,10 +29,13 @@ public:
 	adopt_sampler&			_clamp			()						{ if (C) C->i_Address	(stage,D3DTADDRESS_CLAMP);									return *this;	}
 	adopt_sampler&			_wrap			()						{ if (C) C->i_Address	(stage,D3DTADDRESS_WRAP);									return *this;	}
 	adopt_sampler&			_mirror			()						{ if (C) C->i_Address	(stage,D3DTADDRESS_MIRROR);									return *this;	}
+	adopt_sampler&			_f_gaussian		()						{ if (C) C->i_Filter	(stage,D3DTEXF_GAUSSIANQUAD,  D3DTEXF_LINEAR,  D3DTEXF_GAUSSIANQUAD);	return *this;	}
+	adopt_sampler&			_f_pyramidal	()						{ if (C) C->i_Filter	(stage,D3DTEXF_PYRAMIDALQUAD, D3DTEXF_LINEAR, D3DTEXF_PYRAMIDALQUAD);	return *this;	}
 	adopt_sampler&			_f_anisotropic	()						{ if (C) C->i_Filter	(stage,D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,D3DTEXF_ANISOTROPIC);	return *this;	}
 	adopt_sampler&			_f_trilinear	()						{ if (C) C->i_Filter	(stage,D3DTEXF_LINEAR,D3DTEXF_LINEAR,D3DTEXF_LINEAR);		return *this;	}
 	adopt_sampler&			_f_bilinear		()						{ if (C) C->i_Filter	(stage,D3DTEXF_LINEAR,D3DTEXF_POINT, D3DTEXF_LINEAR);		return *this;	}
 	adopt_sampler&			_f_linear		()						{ if (C) C->i_Filter	(stage,D3DTEXF_LINEAR,D3DTEXF_NONE,  D3DTEXF_LINEAR);		return *this;	}
+	adopt_sampler&			_f_point		()						{ if (C) C->i_Filter	(stage,D3DTEXF_POINT, D3DTEXF_POINT,  D3DTEXF_POINT);		return *this;	}
 	adopt_sampler&			_f_none			()						{ if (C) C->i_Filter	(stage,D3DTEXF_POINT, D3DTEXF_NONE,  D3DTEXF_POINT);		return *this;	}
 	adopt_sampler&			_fmin_none		()						{ if (C) C->i_Filter_Min(stage,D3DTEXF_NONE);										return *this;	}
 	adopt_sampler&			_fmin_point		()						{ if (C) C->i_Filter_Min(stage,D3DTEXF_POINT);										return *this;	}
@@ -44,8 +47,6 @@ public:
 	adopt_sampler&			_fmag_none		()						{ if (C) C->i_Filter_Mag(stage,D3DTEXF_NONE);										return *this;	}
 	adopt_sampler&			_fmag_point		()						{ if (C) C->i_Filter_Mag(stage,D3DTEXF_POINT);										return *this;	}
 	adopt_sampler&			_fmag_linear	()						{ if (C) C->i_Filter_Mag(stage,D3DTEXF_LINEAR);										return *this;	}
-	adopt_sampler&			_f_gaussian		()						{ if (C) C->i_Filter	(stage,D3DTEXF_GAUSSIANQUAD,  D3DTEXF_LINEAR,  D3DTEXF_GAUSSIANQUAD);	return *this;	}
-	adopt_sampler&			_f_pyramidal	()						{ if (C) C->i_Filter	(stage,D3DTEXF_PYRAMIDALQUAD, D3DTEXF_LINEAR, D3DTEXF_PYRAMIDALQUAD);	return *this;	}
 };																																							
 																																							
 // wrapper																																					
@@ -101,10 +102,13 @@ void CResourceManager::LS_Load()
 			.def("clamp",						&adopt_sampler::_clamp			,return_reference_to<1>())
 			.def("wrap",						&adopt_sampler::_wrap			,return_reference_to<1>())
 			.def("mirror",						&adopt_sampler::_mirror			,return_reference_to<1>())
+			.def("f_gaussian",					&adopt_sampler::_f_gaussian		,return_reference_to<1>())
+			.def("f_pyramidal",					&adopt_sampler::_f_pyramidal	,return_reference_to<1>())
 			.def("f_anisotropic",				&adopt_sampler::_f_anisotropic	,return_reference_to<1>())
 			.def("f_trilinear",					&adopt_sampler::_f_trilinear	,return_reference_to<1>())
 			.def("f_bilinear",					&adopt_sampler::_f_bilinear		,return_reference_to<1>())
 			.def("f_linear",					&adopt_sampler::_f_linear		,return_reference_to<1>())
+			.def("f_point",						&adopt_sampler::_f_point		,return_reference_to<1>())
 			.def("f_none",						&adopt_sampler::_f_none			,return_reference_to<1>())
 			.def("fmin_none",					&adopt_sampler::_fmin_none		,return_reference_to<1>())
 			.def("fmin_point",					&adopt_sampler::_fmin_point		,return_reference_to<1>())
@@ -115,8 +119,6 @@ void CResourceManager::LS_Load()
 			.def("fmip_linear",					&adopt_sampler::_fmip_linear	,return_reference_to<1>())
 			.def("fmag_none",					&adopt_sampler::_fmag_none		,return_reference_to<1>())
 			.def("fmag_point",					&adopt_sampler::_fmag_point		,return_reference_to<1>())
-			.def("f_gaussian",					&adopt_sampler::_f_gaussian		,return_reference_to<1>())
-			.def("f_pyramidal",					&adopt_sampler::_f_pyramidal	,return_reference_to<1>())
 			.def("fmag_linear",					&adopt_sampler::_fmag_linear	,return_reference_to<1>()),
 
 		class_<adopt_compiler>("_compiler")

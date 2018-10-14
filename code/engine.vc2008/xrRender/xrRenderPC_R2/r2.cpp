@@ -554,6 +554,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	char c_ssao[32];
 	char c_sun_quality[32];
     char c_bokeh_quality[32];
+	char c_pp_aa_quality[32];
 
 	char sh_name[MAX_PATH] = "";
 	u32 len	= 0;
@@ -828,6 +829,16 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		else
 			sh_name[len] = '0'; ++len;
 
+		if (ps_r_pp_aa_quality > 0)
+		{
+			xr_sprintf(c_pp_aa_quality, "%d", ps_r_pp_aa_quality);
+			defines[def_it].Name = "PP_AA_QUALITY";
+			defines[def_it].Definition = c_pp_aa_quality;
+			def_it++;
+			sh_name[len] = '0' + char(ps_r_pp_aa_quality); ++len;
+		}
+		else
+			sh_name[len] = '0'; ++len;
 	}
 
 	// Puddles

@@ -466,12 +466,9 @@ CRenderTarget::CRenderTarget()
 			u32 h = Device.dwHeight;
 
 			// SMAA
-			rt_prev_frame0.create	(r2_RT_prev_frame0,		w, h, D3DFMT_A8R8G8B8);
+//			rt_prev_frame0.create	(r2_RT_prev_frame0,		w, h, D3DFMT_A8R8G8B8);
 			rt_smaa_edgetex.create	(r2_RT_smaa_edgetex,	w, h, D3DFMT_A8R8G8B8);
 			rt_smaa_blendtex.create	(r2_RT_smaa_blendtex,	w, h, D3DFMT_A8R8G8B8);
-
-			u32 fvf_smaa = D3DFVF_XYZRHW | D3DFVF_TEX5 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE4(1) | D3DFVF_TEXCOORDSIZE4(2) | D3DFVF_TEXCOORDSIZE4(3) | D3DFVF_TEXCOORDSIZE4(4);
-			g_smaa.create(fvf_smaa, RCache.Vertex.Buffer(), RCache.QuadIB);
 		}
 
 		s_rain_drops.create			("effects\\screen_rain_droplets");
@@ -791,10 +788,10 @@ void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ID3DRenderTargetView* rt, ref
 	p1.set((w+0.5f)/w, (h+0.5f)/h);
 
 	if (rt)
-		u_setrt(w, h, rt, nullptr, nullptr, HW.pBaseZB);
+		u_setrt(w, h, rt, nullptr, nullptr, nullptr);
 
-	RCache.set_CullMode	(CULL_NONE);
 	RCache.set_Stencil	(FALSE);
+	RCache.set_CullMode	(CULL_NONE);
  
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
 	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;

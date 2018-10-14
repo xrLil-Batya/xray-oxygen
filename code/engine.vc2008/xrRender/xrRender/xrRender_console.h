@@ -24,8 +24,12 @@ extern ECORE_API u32			ps_r_bokeh_quality;
 extern ECORE_API xr_token		qbokeh_quality_token[];
 
 extern ECORE_API u32			ps_r_pp_aa_mode;
-extern ECORE_API xr_token		qpp_aa_mode_token[];
+extern ECORE_API xr_token		pp_aa_mode_token[];
 
+extern ECORE_API u32			ps_r_pp_aa_quality;
+extern ECORE_API xr_token		pp_aa_quality_token[];
+
+extern ECORE_API int			ps_r_pp_aa_use_taa;
 extern ECORE_API int			ps_r_Supersample;
 extern ECORE_API int			ps_r_LightSleepFrames;
 extern ECORE_API int			ps_r_SkeletonUpdate;

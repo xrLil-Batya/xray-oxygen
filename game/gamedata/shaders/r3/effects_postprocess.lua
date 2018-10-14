@@ -1,5 +1,5 @@
 function element_0(shader, t_base, t_second, t_detail)		--[0]
-	shader:begin("stub_notransform_postpr","postprocess")
+	shader:begin("stub_notransform_postpr", "postprocess")
 		:fog			(false)
 		:zb 			(false, false)
 	shader:dx10texture	("s_base0", "$user$albedo")
@@ -11,7 +11,7 @@ function element_0(shader, t_base, t_second, t_detail)		--[0]
 end
 
 function element_1(shader, t_base, t_second, t_detail)		--[1] use color map
-	shader:begin("stub_notransform_postpr","postprocess_CM")
+	shader:begin("stub_notransform_postpr", "postprocess_CM")
 		:fog			(false)
 		:zb 			(false, false)
 	shader:dx10texture	("s_base0", "$user$albedo")
