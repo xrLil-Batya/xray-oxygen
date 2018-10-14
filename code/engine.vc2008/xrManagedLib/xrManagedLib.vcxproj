@@ -132,6 +132,7 @@
     <ClInclude Include="API\Ini.h" />
     <ClInclude Include="API\Log.h" />
     <ClInclude Include="API\ModInstance.h" />
+    <ClInclude Include="API\PostProcessAnimator.h" />
     <ClInclude Include="API\System.h" />
     <ClInclude Include="API\Utils.h" />
     <ClInclude Include="HelperFuncs.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="API\Ini.cpp" />
     <ClCompile Include="API\Log.cpp" />
     <ClCompile Include="API\ModInstance.cpp" />
+    <ClCompile Include="API\PostProcessAnimator.cpp" />
     <ClCompile Include="API\System.cpp" />
     <ClCompile Include="API\Utils.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
