@@ -99,12 +99,12 @@ struct TL_2c3uv		{
 void CRenderTarget::phase_pp		()
 {
 	// combination/postprocess
-	u_setrt				( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
+	u_setrt(rt_Color, nullptr, nullptr, nullptr);
 
 	//	Element 0 for for normal post-process
-	//	Element 4 for color map post-process
+	//	Element 1 for color map post-process
 	bool	bCMap = u_need_CM();
-	RCache.set_Element	(s_postprocess->E[bCMap ? 4 : 0]);
+	RCache.set_Element	(s_postprocess->E[bCMap ? 1 : 0]);
 
 	int		gblend		= clampr		(iFloor((1-param_gray)*255.f),0,255);
 	int		nblend		= clampr		(iFloor((1-param_noise)*255.f),0,255);

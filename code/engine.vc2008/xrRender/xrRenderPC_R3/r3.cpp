@@ -709,11 +709,12 @@ HRESULT	CRender::shader_compile			(
 	D3D_SHADER_MACRO defines[128];
 	int def_it = 0;
 	char c_smapsize		[32];
-	char c_gloss			[32];
+	char c_gloss		[32];
 	char c_sun_shafts	[32];
 	char c_ssao			[32];
 	char c_sun_quality	[32];
     char c_bokeh_quality[32];
+	char c_pp_aa_quality[32];
 
 	char	sh_name[MAX_PATH] = "";
 	u32 len = 0;
@@ -1110,6 +1111,17 @@ HRESULT	CRender::shader_compile			(
     {
         sh_name[len] = '0'; ++len;
     }
+
+	if (ps_r_pp_aa_quality > 0)
+	{
+		xr_sprintf(c_pp_aa_quality, "%d", ps_r_pp_aa_quality);
+		defines[def_it].Name = "PP_AA_QUALITY";
+		defines[def_it].Definition = c_pp_aa_quality;
+		def_it++;
+		sh_name[len] = '0' + char(ps_r_pp_aa_quality); ++len;
+	}
+	else
+		sh_name[len] = '0'; ++len;
 
 	// finish
 	defines[def_it].Name			=	nullptr;

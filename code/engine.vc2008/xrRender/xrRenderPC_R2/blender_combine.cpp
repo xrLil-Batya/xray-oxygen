@@ -48,5 +48,10 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
 		C.r_End				();
 		break;
+	case 3: // copy rt_Color to back buffer
+		C.r_Pass			("null", "copy", FALSE, FALSE, FALSE);
+		C.r_Sampler_rtf		("s_base",			r2_RT_albedo);
+		C.r_End				();
+		break;
 	}
 }

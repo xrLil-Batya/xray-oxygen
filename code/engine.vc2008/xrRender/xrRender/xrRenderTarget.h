@@ -1,6 +1,6 @@
 #pragma once
-#include "r2_types.h"
-#include "../xrRender/ColorMapManager.h"
+#include "r_types.h"
+#include "ColorMapManager.h"
 
 class light;
 
@@ -154,11 +154,9 @@ private:
     ref_shader					s_pp_antialiasing;
 	ref_rt						rt_smaa_edgetex;
 	ref_rt						rt_smaa_blendtex;
-	ref_rt						rt_prev_frame0;
-	ref_geom					g_smaa;
-//#ifdef USE_DX11 - Do I need this?
     ref_shader					s_pp_taa;
-//#endif	
+//	ref_rt						rt_prev_frame0;
+	
 	//	generate min/max
 	ref_shader					s_create_minmax_sm;
 
@@ -299,6 +297,7 @@ public:
 	void						ProcessFXAA				();
 	void						ProcessSMAA				();
 	void						ProcessDLAA				();
+	void						ProcessTAA				();
 	void						PhaseGammaGenerateLUT	();
 	void						PhaseGammaApply			();
 	void						SaveGammaLUT			();

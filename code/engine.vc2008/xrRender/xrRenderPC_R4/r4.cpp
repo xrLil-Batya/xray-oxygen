@@ -770,13 +770,14 @@ static inline bool match_shader_id		( LPCSTR const debug_shader_id, LPCSTR const
 
 HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 SrcDataLen, const char* pFunctionName, const char* pTarget, DWORD Flags, void*& result)
 {
-	D3D_SHADER_MACRO				defines			[128];
-	int								def_it			= 0;
-	char							c_smapsize		[32];
-	char							c_sun_shafts	[32];
-	char							c_ssao			[32];
-	char							c_sun_quality	[32];
+	D3D_SHADER_MACRO defines[128];
+	int def_it = 0;
+	char c_smapsize		[32];
+	char c_sun_shafts	[32];
+	char c_ssao			[32];
+	char c_sun_quality	[32];
     char c_bokeh_quality[32];
+	char c_pp_aa_quality[32];
 
 	char	sh_name[MAX_PATH] = "";
 
@@ -1160,6 +1161,17 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
     {
         sh_name[len] = '0'; ++len;
     }
+
+	if (ps_r_pp_aa_quality > 0)
+	{
+		xr_sprintf(c_pp_aa_quality, "%d", ps_r_pp_aa_quality);
+		defines[def_it].Name = "PP_AA_QUALITY";
+		defines[def_it].Definition = c_pp_aa_quality;
+		def_it++;
+		sh_name[len] = '0' + char(ps_r_pp_aa_quality); ++len;
+	}
+	else
+		sh_name[len] = '0'; ++len;
 
     sh_name[len] = 0;
 

@@ -180,9 +180,6 @@
     <ClInclude Include="r2.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="r2_types.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\r__dsgraph_structure.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -640,6 +637,9 @@
     <ClInclude Include="..\xrRender\xrRenderTarget.h">
       <Filter>Core_Target</Filter>
     </ClInclude>
+    <ClInclude Include="..\xrRender\r_types.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -900,9 +900,6 @@
     <ClCompile Include="r2_rendertarget_phase_bloom.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_combine.cpp">
-      <Filter>Core_Target</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_luminance.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
@@ -1142,6 +1139,9 @@
       <Filter>Core\ScreenshotManager</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\RenderTargetPhaseVignette.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\RenderTargetPhaseCombine.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
   </ItemGroup>

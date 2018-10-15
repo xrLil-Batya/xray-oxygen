@@ -50,7 +50,7 @@
  *
  * The shader has three passes, chained together as follows:
  *
- *                           |input|------------------Â·
+ *                           |input|------------------·
  *                              v                     |
  *                    [ SMAA*EdgeDetection ]          |
  *                              v                     |
@@ -60,7 +60,7 @@
  *                              v                     |
  *                          |blendTex|                |
  *                              v                     |
- *                [ SMAANeighborhoodBlending ] <------Â·
+ *                [ SMAANeighborhoodBlending ] <------·
  *                              v
  *                           |output|
  *
@@ -599,14 +599,15 @@ SamplerState PointSampler { Filter = MIN_MAG_MIP_POINT; AddressU = Clamp; Addres
 float3 SMAAGatherNeighbours(float2 texcoord,
                             float4 offset[3],
                             SMAATexture2D(tex)) {
-    #ifdef SMAAGather
-    return SMAAGather(tex, texcoord + SMAA_RT_METRICS.xy * float2(-0.5, -0.5)).grb;
-    #else
-    float P = SMAASamplePoint(tex, texcoord).r;
-    float Pleft = SMAASamplePoint(tex, offset[0].xy).r;
-    float Ptop  = SMAASamplePoint(tex, offset[0].zw).r;
+	// RainbowZerg: SMAAGather is not supported now, need depth to be stored as x-component
+//    #ifdef SMAAGather
+//    return SMAAGather(tex, texcoord + SMAA_RT_METRICS.xy * float2(-0.5, -0.5)).grb;
+//    #else
+    float P = SMAASamplePoint(tex, texcoord).z;			// RainbowZerg: changed here .r to .z 'cause in X-Ray depth stored as z-component of s_position
+    float Pleft = SMAASamplePoint(tex, offset[0].xy).z;	// RainbowZerg: changed here .r to .z 'cause in X-Ray depth stored as z-component of s_position
+    float Ptop  = SMAASamplePoint(tex, offset[0].zw).z;	// RainbowZerg: changed here .r to .z 'cause in X-Ray depth stored as z-component of s_position
     return float3(P, Pleft, Ptop);
-    #endif
+//    #endif
 }
 
 /**

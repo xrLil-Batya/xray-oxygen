@@ -27,10 +27,8 @@
 #define		r2_RT_generic1_r	"$user$generic1_r"
 #define		r2_RT_generic2		"$user$generic2"
 #define		r2_RT_generic		"$user$generic"
-#define		r2_RT_volumetric	"$user$volumetric"		// --- for volumetric lights
 
-#define		r2_RT_bloom1		"$user$bloom1"			// ---
-#define		r2_RT_bloom2		"$user$bloom2"			// ---
+#define		r2_RT_volumetric	"$user$volumetric"		// --- for volumetric lights
 
 #define		r2_RT_sunshafts0	"$user$sun_shafts0"		// first rt
 #define		r2_RT_sunshafts1	"$user$sun_shafts1"		// second rt
@@ -38,6 +36,9 @@
 #define		r2_RT_SunShaftsMask				"$user$SunShaftsMask"
 #define		r2_RT_SunShaftsMaskSmoothed		"$user$SunShaftsMaskSmoothed"
 #define		r2_RT_SunShaftsPass0			"$user$SunShaftsPass0"
+
+#define		r2_RT_bloom1		"$user$bloom1"			// ---
+#define		r2_RT_bloom2		"$user$bloom2"			// ---
 
 #define		r2_RT_luminance_t64	"$user$lum_t64"			// --- temp
 #define		r2_RT_luminance_t8	"$user$lum_t8"			// --- temp
@@ -56,7 +57,12 @@
 #define		r2_jitter			"$user$jitter_"			// --- dither
 #define		r2_jitter_mipped	"$user$jitter_mipped"			// --- dither
 #define		r2_sunmask			"shaders\\sunmask"
-#define     r2_RT_secondVP      "$user$viewport2"
+
+// SMAA
+#define		r2_RT_smaa_edgetex	"$user$smaa_edgetex"
+#define		r2_RT_smaa_blendtex	"$user$smaa_blendtex"
+
+#define     r2_RT_secondVP      "$user$viewport2" // +SecondVP+ Хранит картинку со второго вьюпорта
 
 #define		r2_RT_gamma_lut		"$user$gamma_lut"	
 
