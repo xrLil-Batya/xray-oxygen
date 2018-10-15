@@ -91,6 +91,7 @@ Texture2D	jitter0;
 sampler		smp_jitter;
 Texture2D	jitterMipped;
 
+float4 ssao_params;
 
 float3 uv_to_eye(float2 uv, float eye_z)
 {
