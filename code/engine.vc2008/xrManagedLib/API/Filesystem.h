@@ -81,14 +81,28 @@ namespace XRay
 			}
 		}
 
+		property IntPtr NativeReader
+		{
+			IntPtr get()
+			{
+				return (IntPtr)pReader;
+			}
+		}
+
+		property IntPtr NativeWritter
+		{
+			IntPtr get()
+			{
+				return (IntPtr)pWritter;
+			}
+		}
+
 		virtual ~File();
 
 		virtual void Flush() override;
 		virtual void SetLength(Int64 value) override;
 
 		virtual Int64 Seek(Int64 offset, System::IO::SeekOrigin origin) override;
-
-		IntPtr GetUnderlyingReader();
 
 		static File^ OpenRead(String^ filename);
 		static File^ OpenWrite(String^ filename);

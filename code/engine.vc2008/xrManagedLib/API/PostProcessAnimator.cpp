@@ -1,13 +1,16 @@
 #include "stdafx.h"
-#include "PostprocessAnimator.h"
-#include <msclr/marshal.h>
+#include "Filesystem.h"
+#include "PostProcessAnimator.h"
 
-using namespace XRay;
+#pragma warning(push)
+#pragma warning(disable : 4995) // ignore deprecation warnings
+#include <msclr/marshal.h>
+#pragma warning(pop)
 
 using msclr::interop::marshal_context;
 
+using namespace XRay;
 
-//PostProcessParam
 PostProcessParamBase::PostProcessParamBase(::CPostProcessParam* impl)
 {
 	this->impl = impl;
@@ -32,16 +35,15 @@ void PostProcessParam::Update(float dt)
 	impl->update(dt);
 }
 
-void PostProcessParam::Load(IReader* reader)
+void PostProcessParam::Load(File ^ reader)
 {
-	//::IReader& readerImpl = *reader->impl;
-	//impl->load(readerImpl);
+	::IReader& readerImpl = *(IReader*)reader->NativeReader.ToPointer();
+	impl->load(readerImpl);
 }
-
-void PostProcessParam::Save(IWriter* writer)
+void PostProcessParam::Save(File ^ writer)
 {
-	//::IWriter& writerImpl = *writer->impl;
-	//impl->save(writerImpl);
+	::IWriter& writerImpl = *(IWriter*)writer->NativeWritter.ToPointer();
+	impl->save(writerImpl);
 }
 
 float PostProcessParam::Length::get()
@@ -84,33 +86,6 @@ float PostProcessParam::GetKeyTime(int index)
 void PostProcessParam::Reset()
 {
 	impl->clear_all_keys();
-}
-// end PostProcessParam
-
-// PostProcessInfo
-PostProcessInfo::PostProcessInfo(::SPPInfo* impl)
-{
-	this->impl = impl;
-}
-
-PostProcessInfo::PostProcessInfo(::SPPInfo* impl, bool dontDestroy) : PostProcessInfo(impl)
-{
-	this->dontDestroy = dontDestroy;
-}
-
-PostProcessInfo::~PostProcessInfo()
-{
-	if (!dontDestroy)
-	{
-		auto p = impl;
-		xr_delete(p);
-	}
-	impl = nullptr;
-}
-
-PostProcessParamProxy::PostProcessParamProxy(::CPostProcessParam* impl) : PostProcessParamBase(impl)
-{
-	dontDestroy = true;
 }
 
 float PostProcessInfo::Blur::get()
@@ -163,95 +138,78 @@ void PostProcessInfo::AddColor::set(PostProcessInfo::Color value)
 	impl->color_add = reinterpret_cast<::SPPInfo::SColor&>(value);
 }
 
-float PostProcessInfo::ColorMappingInfluence::get()
-{
-	return impl->cm_influence;
-}
-
-void PostProcessInfo::ColorMappingInfluence::set(float value)
-{
-	impl->cm_influence = value;
-}
-
-float PostProcessInfo::ColorMappingInterpolate::get()
-{
-	return impl->cm_interpolate;
-}
-
-void PostProcessInfo::ColorMappingInterpolate::set(float value)
-{
-	impl->cm_interpolate = value;
-}
-
-String^ PostProcessInfo::ColorMappingGradient1::get()
-{
-	return gcnew String(impl->cm_tex1.c_str());
-}
-
-void PostProcessInfo::ColorMappingGradient1::set(String^ value)
+float PostProcessInfo::ColorMappingInfluence::get() { return impl->cm_influence; }
+void PostProcessInfo::ColorMappingInfluence::set(float value) { impl->cm_influence = value; }
+float PostProcessInfo::ColorMappingInterpolate::get() { return impl->cm_interpolate; }
+void PostProcessInfo::ColorMappingInterpolate::set(float value) { impl->cm_interpolate = value; }
+String ^ PostProcessInfo::ColorMappingGradient1::get() { return gcnew String(impl->cm_tex1.c_str()); }
+void PostProcessInfo::ColorMappingGradient1::set(String ^ value)
 {
 	marshal_context context;
 	auto tmpStr = context.marshal_as<const char*>(value);
 	impl->cm_tex1 = tmpStr;
 }
-
-String^ PostProcessInfo::ColorMappingGradient2::get()
-{
-	return gcnew String(impl->cm_tex2.c_str());
-}
-
-void PostProcessInfo::ColorMappingGradient2::set(String^ value)
+String ^ PostProcessInfo::ColorMappingGradient2::get() { return gcnew String(impl->cm_tex2.c_str()); }
+void PostProcessInfo::ColorMappingGradient2::set(String ^ value)
 {
 	marshal_context context;
 	auto tmpStr = context.marshal_as<const char*>(value);
 	impl->cm_tex2 = tmpStr;
 }
-
-PostProcessInfo% PostProcessInfo::Add(const PostProcessInfo% ppi)
+PostProcessInfo::PostProcessInfo(::SPPInfo* impl) { this->impl = impl; }
+PostProcessInfo::PostProcessInfo(::SPPInfo* impl, bool dontDestroy) : PostProcessInfo(impl)
+{
+	this->dontDestroy = dontDestroy;
+}
+PostProcessInfo::~PostProcessInfo()
+{
+	if (!dontDestroy)
+	{
+		auto p = impl;
+		xr_delete(p);
+	}
+	impl = nullptr;
+}
+PostProcessInfo % PostProcessInfo::Add(const PostProcessInfo % ppi)
 {
 	impl->add(*ppi.impl);
 	return *this;
 }
-
-PostProcessInfo% PostProcessInfo::Substract(const PostProcessInfo% ppi)
+PostProcessInfo % PostProcessInfo::Substract(const PostProcessInfo % ppi)
 {
 	impl->sub(*ppi.impl);
 	return *this;
 }
-
-void PostProcessInfo::Normalize()
-{
-	impl->normalize();
-}
-
-PostProcessInfo% PostProcessInfo::Interpolate(const PostProcessInfo% def, const PostProcessInfo% to, float factor)
+void PostProcessInfo::Normalize() { impl->normalize(); }
+PostProcessInfo % PostProcessInfo::Interpolate(const PostProcessInfo % def, const PostProcessInfo % to, float factor)
 {
 	impl->lerp(*def.impl, *to.impl, factor);
 	return *this;
 }
-
-void PostProcessInfo::Validate(String^ str)
+void PostProcessInfo::Validate(String ^ str)
 {
 	marshal_context context;
 	auto tmpStr = context.marshal_as<const char*>(str);
 	impl->validate(tmpStr);
 }
-// end PostProcessInfo
 
-// PostProcessParamProxy
+PostProcessParamProxy::PostProcessParamProxy(::CPostProcessParam* impl) : PostProcessParamBase(impl)
+{
+	dontDestroy = true;
+}
 void PostProcessParamProxy::Update(float dt)
 {
 	impl->update(dt);
 }
 
-void PostProcessParamProxy::Load(IReader* reader)
+void PostProcessParamProxy::Load(File^ reader)
 {
-	//impl->load(*reader->impl);
+	impl->load(*(IReader*)reader->NativeReader.ToPointer());
 }
 
-void PostProcessParamProxy::Save(IWriter* writer)
+void PostProcessParamProxy::Save(File^ writer)
 {
-	//impl->save(*writer->impl);
+	impl->save(*(IWriter*)writer->NativeWritter.ToPointer());
 }
 
 float PostProcessParamProxy::Length::get()
@@ -295,101 +253,90 @@ void PostProcessParamProxy::Reset()
 {
 	impl->clear_all_keys();
 }
-// end PostParamProxy
 
-// PostProcessAnimator
-BasicPostProcessAnimator::BasicPostProcessAnimator() : impl(new ::BasicPostProcessAnimator())
+XRay::BasicPostProcessAnimator::BasicPostProcessAnimator() : impl(new ::BasicPostProcessAnimator())
 {
 }
 
-BasicPostProcessAnimator::BasicPostProcessAnimator(int id, bool cyclic) : impl(new ::BasicPostProcessAnimator(id, cyclic))
+XRay::BasicPostProcessAnimator::BasicPostProcessAnimator(int id, bool cyclic)
+	: impl(new ::BasicPostProcessAnimator(id, cyclic))
 {
 }
 
-BasicPostProcessAnimator::~BasicPostProcessAnimator()
+XRay::BasicPostProcessAnimator::~BasicPostProcessAnimator()
 {
-	//auto p = impl;
-	//xr_delete(p);
+	auto p = impl;
+	xr_delete(p);
 	impl = nullptr;
 }
-
-void BasicPostProcessAnimator::Clear()
+void XRay::BasicPostProcessAnimator::Clear()
 {
-	//impl->Clear();
+	impl->Clear();
 }
 
-void BasicPostProcessAnimator::Load(String^ name, bool internalFs)
+void XRay::BasicPostProcessAnimator::Load(String ^ name, bool internalFs)
 {
 	marshal_context context;
-	// 	std::string new_name = "";
-	// 	char slash_name = '\\';
 	const char* tmpName = context.marshal_as<const char*>(name);
-	// 	for (size_t it = 0; it < strlen(tmpName); it++)
-	// 	{
-	// 		new_name += tmpName[it];
-	// 		if (tmpName[it] == slash_name)
-	// 			new_name += slash_name;
-	// 	}
 
-	//impl->Load(tmpName, internalFs);
+	impl->Load(tmpName, internalFs);
 }
 
-String^ BasicPostProcessAnimator::Name::get()
+String ^ XRay::BasicPostProcessAnimator::Name::get()
 {
-	return gcnew String(""/*impl->Name()*/);
+	return gcnew String(impl->Name());
 }
 
-void BasicPostProcessAnimator::Stop(float speed)
+void XRay::BasicPostProcessAnimator::Stop(float speed)
 {
-	//impl->Stop(speed);
+	impl->Stop(speed);
 }
-
-void BasicPostProcessAnimator::SetDesiredFactor(float f, float sp)
+void XRay::BasicPostProcessAnimator::SetDesiredFactor(float f, float sp)
 {
-	//impl->SetDesiredFactor(f, sp);
+	impl->SetDesiredFactor(f, sp);
 }
 
-void BasicPostProcessAnimator::SetCurrentFactor(float f)
+void XRay::BasicPostProcessAnimator::SetCurrentFactor(float f)
 {
 	impl->SetCurrentFactor(f);
 }
 
-void BasicPostProcessAnimator::SetCyclic(bool b)
+void XRay::BasicPostProcessAnimator::SetCyclic(bool b)
 {
 	impl->SetCyclic(b);
 }
 
-float BasicPostProcessAnimator::Length::get()
+float XRay::BasicPostProcessAnimator::Length::get()
 {
 	return impl->GetLength();
 }
 
-PostProcessInfo^ BasicPostProcessAnimator::PPInfo::get()
+PostProcessInfo ^ XRay::BasicPostProcessAnimator::PPInfo::get()
 {
 	return gcnew PostProcessInfo(&impl->PPinfo(), true);
 }
 
-bool BasicPostProcessAnimator::Process(float dt, PostProcessInfo ^ PPInfo)
+bool XRay::BasicPostProcessAnimator::Process(float dt, PostProcessInfo ^ PPInfo)
 {
 	return !!impl->Process(dt, *PPInfo->impl);
 }
 
-void BasicPostProcessAnimator::Create()
+void XRay::BasicPostProcessAnimator::Create()
 {
 	impl->Create();
 }
 
-PostProcessParamBase^ BasicPostProcessAnimator::GetParam(PostProcessParamType param)
+PostProcessParamBase ^ XRay::BasicPostProcessAnimator::GetParam(PostProcessParamType param)
 {
-	return gcnew PostProcessParamProxy(impl->GetParam((pp_params)param));
+	return gcnew PostProcessParamProxy(impl->GetParam((_pp_params)param));
 }
 
-void BasicPostProcessAnimator::ResetParam(PostProcessParamType param)
+void XRay::BasicPostProcessAnimator::ResetParam(PostProcessParamType param)
 {
-	impl->ResetParam((pp_params)param);
+	impl->ResetParam((_pp_params)param);
 }
 
-void BasicPostProcessAnimator::Save(String ^ name)
+void XRay::BasicPostProcessAnimator::Save(String ^ name)
 {
 	marshal_context context;
 	auto tmpName = context.marshal_as<const char*>(name);

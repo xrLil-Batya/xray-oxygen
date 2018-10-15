@@ -147,11 +147,6 @@ File^ File::OpenExternalRead(String^ filename)
 	return file;
 }
 
-IntPtr XRay::File::GetUnderlyingReader()
-{
-	return IntPtr(pReader);
-}
-
 File^ XRay::File::OpenExternalWrite(String^ filename)
 {
 	throw gcnew System::NotImplementedException(gcnew String("OpenExternalWrite in XRay::File is not implemented"));

@@ -14,6 +14,9 @@ namespace XRay
 	public ref class System abstract sealed
 	{
 	public:
+		/// <summary>Init xrCore object</summary>
+		static void Initialize(String^ appName);
+
 		/// <summary>
 		/// Major version of Engine and Game Module
 		/// </summary>

@@ -1,12 +1,30 @@
-#include "../xrCore/PostprocessAnimator.h"
-#pragma once
-
-using namespace System;
-using namespace System::Numerics;
-using namespace System::Runtime::InteropServices;
+#include "../../../engine.vc2008/xrCore/xrCore.h"
+#include "../../../engine.vc2008/xrCore/PostprocessAnimator.h"
+#include "Types.hpp"
 
 namespace XRay
 {
+	using namespace System::Runtime::InteropServices;
+
+	using pp_params = enum
+	{
+		pp_unknown = -1,
+		pp_base_color = 0,
+		pp_add_color = 1,
+		pp_gray_color = 2,
+		pp_gray_value = 3,
+		pp_blur = 4,
+		pp_dual_h = 5,
+		pp_dual_v = 6,
+		pp_noise_i = 7,
+		pp_noise_g = 8,
+		pp_noise_f = 9,
+		pp_cm_influence = 10,
+		pp_last = 11,
+		pp_force_dword = 0x7fffffff
+	};
+
+	// pp_params
 	public enum class PostProcessParamType : int
 	{
 		Unknown = pp_params::pp_unknown,
@@ -25,36 +43,6 @@ namespace XRay
 		ForceDword = pp_params::pp_force_dword,
 	};
 
-	public ref class PostProcessParam abstract
-	{
-	protected:
-		CPostProcessParam* pPostProcessParam;
-
-		//PostProcessParam(CPostProcessParam* pPostProcessParam);
-
-	public:
-		virtual ~PostProcessParam();
-
-		virtual void Update(float) = 0;
-		//virtual void Load(IReader* pReader) = 0;
-		//virtual void Save(IWriter* pWriter) = 0;
-	};
-
-	public ref class PostProcessValue : public PostProcessParam
-	{
-	protected:
-		CPostProcessValue* pPostProcessValue;
-
-		//PostProcessValue(CPostProcessValue* pPostProcessValue);
-
-	public:
-	};
-
-	public ref class PostProcessColor : public PostProcessParam
-	{
-
-	};
-
 	// CPostProcessParam
 	public ref class PostProcessParamBase abstract
 	{
@@ -67,9 +55,9 @@ namespace XRay
 		// update
 		virtual void Update(float dt) = 0;
 		// load(IReader)
-		virtual void Load(IReader* reader) = 0;
+		virtual void Load(File^ reader) = 0;
 		// save(IWriter)
-		virtual void Save(IWriter* writer) = 0;
+		virtual void Save(File ^ writer) = 0;
 		// get_length
 		virtual property float Length { float get() = 0; }
 		// get_keys_count
@@ -97,9 +85,9 @@ namespace XRay
 		// update
 		virtual void Update(float dt) override;
 		// load(IReader)
-		virtual void Load(IReader* reader) override;
+		virtual void Load(File ^ reader) override;
 		// save(IWriter)
-		virtual void Save(IWriter* writer) override;
+		virtual void Save(File ^ writer) override;
 		// get_length
 		virtual property float Length { float get() override; }
 		// get_keys_count
@@ -125,7 +113,7 @@ namespace XRay
 		[StructLayout(LayoutKind::Explicit, Size = sizeof(Fvector3))] value struct Color
 		{
 		private:
-			[FieldOffset(0)] Vector3 vec;
+			[FieldOffset(0)] Vector3F vec;
 
 		public:
 			[FieldOffset(0)] float r;
@@ -140,7 +128,7 @@ namespace XRay
 				int _b = clampr(iFloor(b * 255.0f + 0.5f), 0, 255);
 				return color_rgba(_r, _g, _b, 0);
 			}
-			operator const Vector3 % () { return vec; }
+			operator const Vector3F % () { return vec; }
 			Color % operator+=(const Color % ppi)
 			{
 				r += ppi.r;
@@ -269,8 +257,8 @@ namespace XRay
 	public:
 		PostProcessParamProxy(::CPostProcessParam* impl);
 		virtual void Update(float dt) override;
-		virtual void Load(IReader* reader) override;
-		virtual void Save(IWriter* writer) override;
+		virtual void Load(File ^ reader) override;
+		virtual void Save(File ^ writer) override;
 		virtual property float Length { float get() override; }
 		virtual property int KeyCount { int get() override; }
 		virtual void AddValue(float time, float value, int index) override;
@@ -297,18 +285,22 @@ namespace XRay
 		void SetDesiredFactor(float f, float sp);
 		void SetCurrentFactor(float f);
 		void SetCyclic(bool b);
+
 		// GetLength
-		property float Length { float get(); }
+		property float Length 
+		{ 
+			float get(); 
+		}
+
 		// PPinfo
-		property PostProcessInfo^ PPInfo { PostProcessInfo^ get(); }
-
-		virtual bool Process(float dt, PostProcessInfo^ PPInfo);
-
+		property PostProcessInfo ^ PPInfo 
+		{ 
+			PostProcessInfo ^ get(); 
+		} 
+		virtual bool Process(float dt, PostProcessInfo ^ PPInfo);
 		void Create();
-
-		PostProcessParamBase^ GetParam(PostProcessParamType param);
-
+		PostProcessParamBase ^ GetParam(PostProcessParamType param);
 		void ResetParam(PostProcessParamType param);
-		void Save(String^ name);
+		void Save(String ^ name);
 	};
 }
