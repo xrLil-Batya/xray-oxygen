@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "../Include/xrRender/DrawUtils.h"
 #include "render.h"

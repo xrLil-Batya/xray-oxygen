@@ -1,4 +1,4 @@
-#ifndef EnvironmentH
+﻿#ifndef EnvironmentH
 #define EnvironmentH
 
 // refs

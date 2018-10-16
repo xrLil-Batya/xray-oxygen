@@ -1,4 +1,4 @@
-#ifndef xrPROPERTIES_H
+﻿#ifndef xrPROPERTIES_H
 #define xrPROPERTIES_H
 
 #pragma once

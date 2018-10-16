@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "igame_level.h"
 #include "igame_persistent.h"
 
@@ -105,7 +105,7 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	// Render-level Load
 	try
 	{
-		// Ïîïðîáóåì âûãðóçèòü ñòàðûå äàííûå, åñëè ïîëó÷èòñÿ. 
+		// ÐŸÐ¾Ð¿Ñ€Ð¾Ð±ÑƒÐµÐ¼ Ð²Ñ‹Ð³Ñ€ÑƒÐ·Ð¸Ñ‚ÑŒ ÑÑ‚Ð°Ñ€Ñ‹Ðµ Ð´Ð°Ð½Ð½Ñ‹Ðµ, ÐµÑÐ»Ð¸ Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑÑ. 
 		Render->level_Unload();
 	}
 	catch (...) 

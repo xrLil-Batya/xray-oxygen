@@ -1,4 +1,4 @@
-// WaveForm.h - Header for Waveform Utility
+﻿// WaveForm.h - Header for Waveform Utility
 #pragma once
 #pragma pack(push,4)
 struct WaveForm

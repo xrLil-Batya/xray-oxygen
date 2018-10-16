@@ -34,13 +34,13 @@ void	CRender::render_lights(light_Package& LP)
 		xr_vector<light*>&		source = LP.v_shadowed;
 		xr_vector<light*>		refactored;
 		refactored.reserve(source.size());
-		u32 total = source.size();
+		size_t total = source.size();
 
 		for (u16 smap_ID = 0; refactored.size() != total; smap_ID++)
 		{
 			LP_smap_pool.initialize(RImplementation.o.smapsize);
 			std::sort(source.begin(), source.end(), pred_area);
-			for (u32 test = 0; test<source.size(); test++)
+			for (size_t test = 0; test<source.size(); test++)
 			{
 				light*	L = source[test];
 				SMAP_Rect	R;
@@ -133,22 +133,22 @@ void	CRender::render_lights(light_Package& LP)
 
 		//		if (has_point_unshadowed)	-> 	accum point unshadowed
 		if (!LP.v_point.empty()) {
-			light*	L = LP.v_point.back();		LP.v_point.pop_back();
-			L->vis_update();
-			if (L->vis.visible) {
-				Target->accum_point(L);
-				render_indirect(L);
+			light*	pointLight = LP.v_point.back();		LP.v_point.pop_back();
+			pointLight->vis_update();
+			if (pointLight->vis.visible) {
+				Target->accum_point(pointLight);
+				render_indirect(pointLight);
 			}
 		}
 
 		//		if (has_spot_unshadowed)	-> 	accum spot unshadowed
 		if (!LP.v_spot.empty()) {
-			light*	L = LP.v_spot.back();		LP.v_spot.pop_back();
-			L->vis_update();
-			if (L->vis.visible) {
-				LR.compute_xf_spot(L);
-				Target->accum_spot(L);
-				render_indirect(L);
+			light*	spotLight = LP.v_spot.back();		LP.v_spot.pop_back();
+			spotLight->vis_update();
+			if (spotLight->vis.visible) {
+				LR.compute_xf_spot(spotLight);
+				Target->accum_spot(spotLight);
+				render_indirect(spotLight);
 			}
 		}
 

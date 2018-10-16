@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ISheduled.h"
 
 class ENGINE_API CSheduler

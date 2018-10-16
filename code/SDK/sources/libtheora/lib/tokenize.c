@@ -1329,7 +1329,7 @@ void oc_enc_tokenize_finish(oc_enc_ctx *_enc){
     int       new_eb;
     int       zzj;
     int       plj;
-    ptrdiff_t ti=ti;
+    ptrdiff_t ti=0;
     int       run_count;
     /*Make sure this coefficient has tokens at all.*/
     if(_enc->ndct_tokens[pli][zzi]<=0)continue;

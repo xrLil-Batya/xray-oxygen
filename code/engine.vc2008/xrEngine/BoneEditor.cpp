@@ -1,4 +1,4 @@
-/// ExportOGF for X-Ray Engine
+﻿/// ExportOGF for X-Ray Engine
 /// v1.1
 
 #include "stdafx.h"

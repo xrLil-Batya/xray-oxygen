@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 // Modifer: sv3nk
 #ifndef INGAME_EDITOR
 #	define	INGAME_EDITOR

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "EngineAPI.h"
 #include "../xrcdb/xrXRC.h"
 #include "XR_IOConsole.h"

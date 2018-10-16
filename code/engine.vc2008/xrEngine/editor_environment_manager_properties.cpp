@@ -1,4 +1,4 @@
-
+﻿
 struct test_property {
 	int	m_property;
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "../xrPlay/resource.h"
 
 #ifdef INGAME_EDITOR
@@ -97,7 +97,7 @@ HWND CRenderDevice::CreateXRayWindow(HWND parent /*= NULL*/, int Width /*= 0*/, 
 
 	// Create the render window
 	m_hWnd = CreateWindowEx(wndStyle,
-		wndclass, "X-Ray Oxygen", m_dwWindowStyle,
+		wndclass, "X-Ray Oxygen", (DWORD)m_dwWindowStyle,
 		/*rc.left, rc.top, */CW_USEDEFAULT, CW_USEDEFAULT,
 		FinalWidth, FinalHeight, parent,
 		0, hInstance, 0L);

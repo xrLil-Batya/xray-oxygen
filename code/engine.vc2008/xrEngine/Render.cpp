@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "render.h"
 
 IRender_interface::~IRender_interface(){};

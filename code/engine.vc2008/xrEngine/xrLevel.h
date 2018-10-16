@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 struct xrGUID {
 	u64	g[2];

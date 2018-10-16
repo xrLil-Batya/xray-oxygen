@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef DEBUG
 	#define MP_LOGGING

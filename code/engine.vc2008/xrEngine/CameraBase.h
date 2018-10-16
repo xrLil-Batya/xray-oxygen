@@ -1,4 +1,4 @@
-// CameraBase.h: interface for the CCameraBase class.
+﻿// CameraBase.h: interface for the CCameraBase class.
 //////////////////////////////////////////////////////////////////////
 #pragma once
 

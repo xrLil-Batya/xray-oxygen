@@ -1,4 +1,4 @@
-#ifndef pure_relcaseH
+﻿#ifndef pure_relcaseH
 #define pure_relcaseH
 
 class ENGINE_API pure_relcase{

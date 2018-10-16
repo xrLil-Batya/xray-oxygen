@@ -1,4 +1,4 @@
-//////////////////////////////////////////
+п»ї//////////////////////////////////////////
 // OXYGEN TEAM, 2018 (C)
 // ForserX, Vertver
 //////////////////////////////////////////
@@ -201,7 +201,7 @@ unsigned int query_processor_info(processor_info* pinfo)
 	pinfo->n_threads = sysInfo.dwNumberOfProcessors;
 	pinfo->affinity_mask = unsigned(pa_mask_save);
     //threads
-    //так, лучше не надо здесь cpuid, давайте стандартный WinAPI
+    //С‚Р°Рє, Р»СѓС‡С€Рµ РЅРµ РЅР°РґРѕ Р·РґРµСЃСЊ cpuid, РґР°РІР°Р№С‚Рµ СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ WinAPI
     bool allocatedBuffer = false;
     SYSTEM_LOGICAL_PROCESSOR_INFORMATION SLPI;
     SYSTEM_LOGICAL_PROCESSOR_INFORMATION* ptr = &SLPI;
@@ -213,7 +213,6 @@ unsigned int query_processor_info(processor_info* pinfo)
         DWORD errCode = GetLastError();
         if (errCode == ERROR_INSUFFICIENT_BUFFER)
         {
-            int num = addr / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
             ptr = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION*)new BYTE[addr];
             allocatedBuffer = true;
             result = GetLogicalProcessorInformation(ptr, &addr);

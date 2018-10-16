@@ -1,4 +1,4 @@
-// EffectorPP.cpp: implementation of the CEffectorFall class.
+﻿// EffectorPP.cpp: implementation of the CEffectorFall class.
 //
 //////////////////////////////////////////////////////////////////////
 

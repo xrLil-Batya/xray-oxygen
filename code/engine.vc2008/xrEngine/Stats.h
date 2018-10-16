@@ -1,4 +1,4 @@
-// Stats.h: interface for the CStats class.
+﻿// Stats.h: interface for the CStats class.
 //
 //////////////////////////////////////////////////////////////////////
 #pragma once

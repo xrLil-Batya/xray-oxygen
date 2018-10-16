@@ -3,7 +3,7 @@
 #include "StateManager/dx10StateManager.h"
 #include "StateManager/dx10ShaderResourceStateCache.h"
 
-IC void CBackend::set_xform( u32 ID, const Fmatrix& M )
+IC void CBackend::set_xform( u32 ID, const Fmatrix& Matrix )
 {
 	stat.xforms			++;
 }
@@ -278,9 +278,9 @@ ICF void CBackend::Clear(u32 Count, const D3DRECT* pRects, u32 Flags, u32 Color,
 		// Clear all RTs
 		for (u32 i = 0; i < 3; ++i)
 		{
-			ID3DRenderTargetView* pRT = RCache.get_RT(i);
-			if (pRT)
-				HW.pContext->ClearRenderTargetView(pRT, clearColor);
+			ID3DRenderTargetView* pRenderTarget = RCache.get_RT(i);
+			if (pRenderTarget)
+				HW.pContext->ClearRenderTargetView(pRenderTarget, clearColor);
 		}
 	}
 
@@ -292,10 +292,10 @@ ICF void CBackend::Clear(u32 Count, const D3DRECT* pRects, u32 Flags, u32 Color,
 		HW.pContext->ClearDepthStencilView(RCache.get_ZB(), dsFlags, Z, (u8)Stencil);
 }
 
-IC void CBackend::Render(D3DPRIMITIVETYPE T, u32 baseV, u32 startV, u32 countV, u32 startI, u32 PC)
+IC void CBackend::Render(D3DPRIMITIVETYPE PrimitiveType, u32 baseV, u32 startV, u32 countV, u32 startI, u32 PC)
 {
-	D3D_PRIMITIVE_TOPOLOGY Topology = TranslateTopology(T);
-	u32	iIndexCount = GetIndexCount(T, PC);
+	D3D_PRIMITIVE_TOPOLOGY Topology = TranslateTopology(PrimitiveType);
+	u32	iIndexCount = GetIndexCount(PrimitiveType, PC);
 
 	//!!! HACK !!!
 #ifdef USE_DX11
@@ -323,14 +323,14 @@ IC void CBackend::Render(D3DPRIMITIVETYPE T, u32 baseV, u32 startV, u32 countV, 
 	PGO					(Msg("PGO:DIP:%dv/%df",countV,PC));
 }
 
-IC void CBackend::Render(D3DPRIMITIVETYPE T, u32 startV, u32 PC)
+IC void CBackend::Render(D3DPRIMITIVETYPE PrimitiveType, u32 startV, u32 PC)
 {
 	//	TODO: DX10: Remove triangle fan usage from the engine
-	if (T == D3DPT_TRIANGLEFAN)
+	if (PrimitiveType == D3DPT_TRIANGLEFAN)
 		return;
 
-	D3D_PRIMITIVE_TOPOLOGY Topology = TranslateTopology(T);
-	u32	iVertexCount = GetIndexCount(T, PC);
+	D3D_PRIMITIVE_TOPOLOGY Topology = TranslateTopology(PrimitiveType);
+	u32	iVertexCount = GetIndexCount(PrimitiveType, PC);
 
 	stat.calls++;
 	stat.verts += 3*PC;
@@ -416,7 +416,7 @@ IC void CBackend::ApplyVertexLayout()
 
 		CHK_DX(HW.pDevice->CreateInputLayout(
 			&decl->dx10_dcl_code[0],
-			decl->dx10_dcl_code.size()-1,
+			(UINT)decl->dx10_dcl_code.size()-1,
 			m_pInputSignature->GetBufferPointer(),
 			m_pInputSignature->GetBufferSize(),
 			&pLayout
@@ -466,11 +466,11 @@ IC bool CBackend::CBuffersNeedUpdate( ref_cbuffer buf1[MaxCBuffers], ref_cbuffer
 	return bRes;
 }
 
-IC void CBackend::set_Constants			(R_constant_table* C)
+IC void CBackend::set_Constants			(R_constant_table* pConstantTable)
 {
 	// caching
-	if (ctable==C)	return;
-	ctable			= C;
+	if (ctable==pConstantTable)	return;
+	ctable			= pConstantTable;
 	xforms.unmap	();
 	hemi.unmap		();
 	tree.unmap		();
@@ -478,7 +478,7 @@ IC void CBackend::set_Constants			(R_constant_table* C)
 	LOD.unmap		();
 #endif
 	StateManager.UnmapConstants();
-	if (0==C)		return;
+	if (pConstantTable == nullptr)		return;
 
 	PGO				(Msg("PGO:c-table"));
 
@@ -516,8 +516,8 @@ IC void CBackend::set_Constants			(R_constant_table* C)
 			m_aComputeConstants[i] = 0;
 #endif
 		}
-		R_constant_table::cb_table::iterator	it	= C->m_CBTable.begin();
-		R_constant_table::cb_table::iterator	end	= C->m_CBTable.end	();
+		R_constant_table::cb_table::iterator	it	= pConstantTable->m_CBTable.begin();
+		R_constant_table::cb_table::iterator	end	= pConstantTable->m_CBTable.end	();
 		for (; it!=end; ++it)
 		{
 			u32				uiBufferIndex = it->first; 
@@ -654,8 +654,8 @@ IC void CBackend::set_Constants			(R_constant_table* C)
 	}
 
 	// process constant-loaders
-	R_constant_table::c_table::iterator	it	= C->table.begin();
-	R_constant_table::c_table::iterator	end	= C->table.end	();
+	R_constant_table::c_table::iterator	it	= pConstantTable->table.begin();
+	R_constant_table::c_table::iterator	end	= pConstantTable->table.end	();
 	for (; it!=end; it++)	
 	{
 		R_constant* Cs = &**it;
@@ -676,10 +676,10 @@ ICF void CBackend::ApplyRTandZB()
 
 IC	void CBackend::get_ConstantDirect(shared_str& n, u32 DataSize, void** pVData, void** pGData, void** pPData)
 {
-	ref_constant C = get_c(n);
+	ref_constant pConstantRef = get_c(n);
 
-	if (C)
-		constants.access_direct(&*C, DataSize, pVData, pGData, pPData);
+	if (pConstantRef)
+		constants.access_direct(&*pConstantRef, DataSize, pVData, pGData, pPData);
 	else
 	{
 		if (pVData)	*pVData = 0;

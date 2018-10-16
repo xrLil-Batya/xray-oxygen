@@ -1,4 +1,4 @@
-// CDemoPlay.cpp: implementation of the CDemoPlay class.
+﻿// CDemoPlay.cpp: implementation of the CDemoPlay class.
 //
 //////////////////////////////////////////////////////////////////////
 

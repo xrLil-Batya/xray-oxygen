@@ -1,4 +1,4 @@
-////////////////////////////////////////
+п»ї////////////////////////////////////////
 // OXYGEN TEAM, 2018 (C) * X-RAY OXYGEN	
 // entry_point.cpp - entry point of xrPlay
 // Edited: 13 May, 2018						
@@ -44,7 +44,7 @@ void CheckOpenAL(const char* params)
 		ShellExecute(NULL, NULL, "explorer.exe", StrCmd.c_str(), NULL, SW_SHOWNORMAL);
 		system(StrCmd.c_str());
 		MessageBox(0, "ENG: Click just after installing OpenAL. \n"
-					  "RUS: Нажмите после установки OpenAL.", "OpenAL Not Found!", MB_OK);
+					  "RUS: РќР°Р¶РјРёС‚Рµ РїРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё OpenAL.", "OpenAL Not Found!", MB_OK);
 	}
 }
 

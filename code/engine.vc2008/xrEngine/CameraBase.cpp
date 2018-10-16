@@ -1,4 +1,4 @@
-// CameraBase.cpp: implementation of the CCameraBase class.
+﻿// CameraBase.cpp: implementation of the CCameraBase class.
 //
 //////////////////////////////////////////////////////////////////////
 

@@ -1,4 +1,4 @@
-#ifndef skeleton_motion_defs_inluded
+﻿#ifndef skeleton_motion_defs_inluded
 #define skeleton_motion_defs_inluded
 #pragma once
 

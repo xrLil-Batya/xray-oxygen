@@ -1,4 +1,4 @@
-/*/////////////////////////////////
+﻿/*/////////////////////////////////
 // Desc: Async Sheduler Manager	 //
 // Author: DjYar				 //
 // Modifer: ForserX				 //
@@ -256,8 +256,6 @@ void CSheduler::ProcessStep()
 
 	while (!Items.empty() && Top().dwTimeForExecute < dwTime)
 	{
-		u32		delta_ms = dwTime - Top().dwTimeForExecute;
-
 		// Update
 		Item	T = Top();
 		u32		Elapsed = dwTime - T.dwTimeOfLastExecute;

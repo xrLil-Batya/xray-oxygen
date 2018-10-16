@@ -2,50 +2,41 @@
 
 void CRenderTarget::ProcessFXAA()
 {
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
-
 	// Luminance pass
-	RenderScreenQuad(_w, _h, rt_Generic_0, s_pp_antialiasing->E[0]);
+	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_0, s_pp_antialiasing->E[0]);
 
 	// Main pass
 #if defined(USE_DX10) || defined(USE_DX11)
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
-	RenderScreenQuad(_w, _h, rt_Generic_2, s_pp_antialiasing->E[1]);
+	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_pp_antialiasing->E[1]);
 	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 #else
-	RenderScreenQuad(_w, _h, rt_Color, s_pp_antialiasing->E[1]);
+	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Color, s_pp_antialiasing->E[1]);
 #endif
 }
 
 void CRenderTarget::ProcessTAA()
 {
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
-
-	// Temporal AA passing
 #if defined(USE_DX10) || defined(USE_DX11)
+	// Temporal AA passing
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
-	RenderScreenQuad(_w, _h, rt_Generic_2, s_pp_taa->E[0]);
+	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_pp_taa->E[0]);
 	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 #endif
 }
 
 void CRenderTarget::ProcessDLAA()
 {
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
-
 	// Pass 0
 #if defined(USE_DX10) || defined(USE_DX11)
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
-	RenderScreenQuad(_w, _h, rt_Generic_2, s_pp_antialiasing->E[5]);
+	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_pp_antialiasing->E[5]);
 	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 #else
-	RenderScreenQuad(_w, _h, rt_Color, s_pp_antialiasing->E[5]);
+	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Color, s_pp_antialiasing->E[5]);
 #endif
 }
 

@@ -1,4 +1,4 @@
-// CameraManager.cpp: implementation of the CCameraManager class.
+﻿// CameraManager.cpp: implementation of the CCameraManager class.
 //
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"

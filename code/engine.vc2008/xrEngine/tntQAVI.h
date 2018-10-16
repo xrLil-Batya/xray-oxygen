@@ -1,4 +1,4 @@
-// tntQAVI.h - хедер для декодера AVI
+﻿// tntQAVI.h - хедер для декодера AVI
 // Oles (C), 2002-2007
 #pragma once
 #include <math.h>
@@ -43,8 +43,8 @@ protected:
 	BITMAPINFOHEADER	m_biOutFormat;
 	BITMAPINFOHEADER	m_biInFormat;
 
-	float				m_fRate;		// стандартнаЯ скорость, fps
-	float				m_fCurrentRate;	// текущаЯ скорость, fps
+	float				m_fRate;		// СЃС‚Р°РЅРґР°СЂС‚РЅР°РЇ СЃРєРѕСЂРѕСЃС‚СЊ, fps
+	float				m_fCurrentRate;	// С‚РµРєСѓС‰Р°РЇ СЃРєРѕСЂРѕСЃС‚СЊ, fps
 
 	DWORD				m_dwFrameTotal;
 	DWORD				m_dwFrameCurrent;

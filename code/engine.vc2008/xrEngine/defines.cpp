@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 ENGINE_API bool bDebug	= FALSE;
 

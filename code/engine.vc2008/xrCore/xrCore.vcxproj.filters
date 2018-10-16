@@ -455,9 +455,6 @@
     <ClInclude Include="xrMemoryDebug.h">
       <Filter>Memory manager</Filter>
     </ClInclude>
-    <ClInclude Include="thread_utils.h">
-      <Filter>OS</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCore.rc">

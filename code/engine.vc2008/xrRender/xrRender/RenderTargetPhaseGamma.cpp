@@ -76,10 +76,8 @@ void CRenderTarget::PhaseGammaApply()
 	//CHK_DX(HW.pDevice->GetRenderTargetData(HW.pBaseRT, rt_Generic_0->pRT));
 #endif
 
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
 	RCache.set_Z(FALSE);
-	RenderScreenQuad(_w, _h, HW.pBaseRT, s_gamma->E[1]);
+	RenderScreenQuad(Device.dwWidth, Device.dwHeight, HW.pBaseRT, s_gamma->E[1]);
 }
 
 #ifdef DEBUG

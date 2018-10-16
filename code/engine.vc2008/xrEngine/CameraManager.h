@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CameraDefs.h"
 #include "../xrCore/SPPInfo.h"
 using EffectorCamVec = xr_list<CEffectorCam*>;

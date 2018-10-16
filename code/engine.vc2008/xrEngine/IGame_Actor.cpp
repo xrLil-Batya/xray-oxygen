@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "IGame_Actor.h"
 #include "../xrGame/Actor_Flags.h"
 

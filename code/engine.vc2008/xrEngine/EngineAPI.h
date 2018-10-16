@@ -1,4 +1,4 @@
-// EngineAPI.h: interface for the CEngineAPI class.
+﻿// EngineAPI.h: interface for the CEngineAPI class.
 //
 //****************************************************************************
 // Support for extension DLLs

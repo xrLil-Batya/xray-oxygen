@@ -336,10 +336,10 @@ void CRenderTarget::phase_combine()
 
 		// Fill VB
 		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
-		pv->set(EPS,    _h+EPS, EPS, 1.0f, 0.0f, p0.x, p1.y); pv++;
-		pv->set(EPS,    EPS,    EPS, 1.0f, 0.0f, p0.x, p0.y); pv++;
-		pv->set(_w+EPS, _h+EPS, EPS, 1.0f, 0.0f, p1.x, p1.y); pv++;
-		pv->set(_w+EPS, EPS,    EPS, 1.0f, 0.0f, p1.x, p0.y); pv++;
+		pv->set(EPS,    _h+EPS, EPS, 1.0f, 0, p0.x, p1.y); pv++;
+		pv->set(EPS,    EPS,    EPS, 1.0f, 0, p0.x, p0.y); pv++;
+		pv->set(_w+EPS, _h+EPS, EPS, 1.0f, 0, p1.x, p1.y); pv++;
+		pv->set(_w+EPS, EPS,    EPS, 1.0f, 0, p1.x, p0.y); pv++;
 		RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 		// Set up variables

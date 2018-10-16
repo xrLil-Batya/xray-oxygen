@@ -1,4 +1,4 @@
-/*********************************************************
+﻿/*********************************************************
 * Copyright (C) X-Ray Oxygen, 2018. All rights reserved.
 * X-Ray Oxygen - open-source X-Ray fork
 * Apache License
@@ -78,8 +78,6 @@ VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
 	splashScreen.SetBackgroundImage(pImage);
 	splashScreen.SetSplashWindowName("Oxy splash");
 	delete pImage;
-
-	COLORREF clrRef = 0;
 
 	splashScreen.ShowSplash();
 	splashScreen.SetProgressPosition(0, "Engine entry-point");

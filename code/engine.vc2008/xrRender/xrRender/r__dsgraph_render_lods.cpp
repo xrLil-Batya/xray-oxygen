@@ -38,7 +38,7 @@ void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 		const size_t iBatchSize = std::min(lstLODs.size() - i, uiImpostersFit);
 		int cur_count = 0;
 		u32 vOffset;
-		FLOD::_hw* V = (FLOD::_hw*)RCache.Vertex.Lock(iBatchSize*uiVertexPerImposter, firstV->geom->vb_stride, vOffset);
+		FLOD::_hw* V = (FLOD::_hw*)RCache.Vertex.Lock(u32(iBatchSize) * uiVertexPerImposter, firstV->geom->vb_stride, vOffset);
 
 		for (size_t j = 0; j < iBatchSize; ++j, ++i)
 		{
@@ -103,7 +103,7 @@ void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 			}
 		}
 		lstLODgroups.push_back(cur_count);
-		RCache.Vertex.Unlock(iBatchSize*uiVertexPerImposter, firstV->geom->vb_stride);
+		RCache.Vertex.Unlock(u32(iBatchSize) * uiVertexPerImposter, firstV->geom->vb_stride);
 
 		// *** Render
 		RCache.set_xform_world(Fidentity);

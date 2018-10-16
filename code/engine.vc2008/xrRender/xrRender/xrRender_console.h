@@ -137,7 +137,7 @@ extern ECORE_API float			ps_r_prop_ss_blend;
 extern ECORE_API float	        droplets_power_debug;
 
 extern ECORE_API Flags32 ps_r_flags;
-enum
+enum RenderFlags : u32
 {
 	R_FLAG_SUN					= (1<<0),
 	R_FLAG_SUN_FOCUS			= (1<<1),
@@ -176,7 +176,7 @@ enum
 
 	R_FLAG_RAIN_DROPS			= (1<<27),
 	R_FLAG_SS_GAMMA_CORRECTION	= (1<<28),
-	R_FLAG_VIGNETTE				= (1<<31),
+	R_FLAG_VIGNETTE				= (1<<29),
 };
 
 extern ECORE_API Flags32 ps_r_ssao_flags;

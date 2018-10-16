@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 // Note:
 // ZNear - always 0.0f
 // ZFar  - always 1.0f

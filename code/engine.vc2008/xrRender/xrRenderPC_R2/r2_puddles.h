@@ -17,7 +17,7 @@ class CPuddles
 {
 public:
 	SPuddle		points[MAX_PUDDLES];
-	u32			size;
+	size_t		size;
 	bool		m_bLoaded;
 	IRender_Mesh *mesh;
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "xr_object.h"
 #include "ObjectDump.h"
 #include "../xrCore/dump_string.h"

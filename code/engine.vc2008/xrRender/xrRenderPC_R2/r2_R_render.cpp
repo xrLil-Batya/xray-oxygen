@@ -265,8 +265,8 @@ void CRender::Render		()
 
 	CTimer	T;							T.Start();
 	BOOL	result = FALSE;
-	HRESULT	hr = S_FALSE;
-	while ((hr = q_sync_point[q_sync_count]->GetData(&result, sizeof(result), D3DGETDATA_FLUSH)) == S_FALSE) {
+	HRESULT	hResult = S_FALSE;
+	while ((hResult = q_sync_point[q_sync_count]->GetData(&result, sizeof(result), D3DGETDATA_FLUSH)) == S_FALSE) {
 		if (!SwitchToThread())			Sleep(ps_r_wait_sleep);
 		if (T.GetElapsed_ms() > 500) {
 			result = FALSE;
@@ -320,8 +320,8 @@ void CRender::Render		()
 		light_Package&	LP	= Lights.package;
 
 		// stats
-		stats.l_shadowed	= LP.v_shadowed.size();
-		stats.l_unshadowed	= LP.v_point.size() + LP.v_spot.size();
+		stats.l_shadowed	= (u32)LP.v_shadowed.size();
+		stats.l_unshadowed	= (u32)(LP.v_point.size() + LP.v_spot.size());
 		stats.l_total		= stats.l_shadowed + stats.l_unshadowed;
 
 		// perform tests

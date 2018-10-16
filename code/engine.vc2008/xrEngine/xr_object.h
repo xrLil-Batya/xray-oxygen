@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "../xrCDB/ispatial.h"
 #include "isheduled.h"
 #include "irenderable.h"

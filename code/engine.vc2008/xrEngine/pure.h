@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // messages
 #define REG_PRIORITY_LOW		0x11111111ul
