@@ -458,9 +458,15 @@ void CRenderTarget::phase_combine()
 	else
 		dbg_lines		= saved_dbg_lines;
 
+#if defined(USE_DX10) || defined(USE_DX11)
+	StateManager.SetDepthEnable(TRUE);
+	StateManager.SetDepthFunc(D3DCMP_LESSEQUAL);
+	StateManager.Apply();
+#else
 	HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	RCache.set_ZFunc(D3DCMP_LESSEQUAL);
 	HW.pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+#endif
 	for (u32 it=0; it<dbg_lines.size(); it++)
 	{
 		RCache.dbg_DrawLINE		(Fidentity,dbg_lines[it].P0,dbg_lines[it].P1,dbg_lines[it].color);
