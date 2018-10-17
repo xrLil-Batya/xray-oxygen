@@ -189,12 +189,12 @@ namespace xrPostprocessEditor
             using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.DualityH))
             {
                 time = param.GetKeyTime(keyIndex);
-                SafetyGetValue(param, time, ref result.x, 0);
+                SafetyGetValue(param, time, ref result.x, keyIndex);
             }
 
             using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.DualityV))
             {
-                SafetyGetValue(param, time, ref result.y, 0);
+                SafetyGetValue(param, time, ref result.y, keyIndex);
             }
 
             return result;
