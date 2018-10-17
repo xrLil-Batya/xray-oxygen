@@ -5,10 +5,11 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Numerics;
 using XRay;
 
 namespace xrLayoutEditor
-{
+{ 
     /// <summary>
     /// Логика взаимодействия для App.xaml
     /// </summary>
@@ -16,8 +17,9 @@ namespace xrLayoutEditor
     {
         protected override void OnStartup(System.Windows.StartupEventArgs e)
         {
-            SpectreEngine.xrCoreInit();
             base.OnStartup(e);
+
+            SpectreEngine.xrCoreInit("Layout Editor");
         }
     }
 }

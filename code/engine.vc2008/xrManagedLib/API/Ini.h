@@ -2,13 +2,14 @@
 #include "Filesystem.h"
 #include <msclr\marshal.h>
 using namespace System;
+using namespace System::Numerics;
 
 namespace XRay
 {
 	/// <summary> X-Ray CInifile wrapper </summary>
 	public ref class Ini sealed
 	{
-		msclr::interop::marshal_context Marshal;
+		msclr::interop::marshal_context marshal;
 	public:
 		/// <summary> Returns file name </summary>
 		property String^ FileName
@@ -63,6 +64,15 @@ namespace XRay
 
 		/// <summary> Returns color value </summary>
 		u32 r_color(String^ section, String^ line);
+
+		/// <summary> Returns Vector2 value </summary>
+		Vector2^ r_vector2(String^ section, String^ line);
+
+		/// <summary> Returns Vector3 value </summary>
+		Vector3^ r_vector3(String^ section, String^ line);
+
+		/// <summary> Returns Vector4 value </summary>
+		Vector4^ r_vector4(String^ section, String^ line);
 
 		/// <summary> Returns string value </summary>
 		String^ r_string(String^ section, String^ line);

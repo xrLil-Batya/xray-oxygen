@@ -35,12 +35,12 @@ void PostProcessParam::Update(float dt)
 	impl->update(dt);
 }
 
-void PostProcessParam::Load(File ^ reader)
+void PostProcessParam::Load(File^ reader)
 {
 	::IReader& readerImpl = *(IReader*)reader->NativeReader.ToPointer();
 	impl->load(readerImpl);
 }
-void PostProcessParam::Save(File ^ writer)
+void PostProcessParam::Save(File^ writer)
 {
 	::IWriter& writerImpl = *(IWriter*)writer->NativeWritter.ToPointer();
 	impl->save(writerImpl);

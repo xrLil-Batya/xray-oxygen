@@ -10,7 +10,8 @@ namespace xrPostprocessEditor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            XRay.System.Initialize("xrPostrprocessEditor");
+
+            SpectreEngine.xrCoreInit("Post Process Editor");
             using (var engine = new EditorEngine())
             {
                 var mainDialog = new MainDialog();
