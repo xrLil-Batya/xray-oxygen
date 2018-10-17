@@ -114,12 +114,12 @@ IPureClient::~IPureClient()
 
 void IPureClient::Disconnect()
 {
-}
+
 
 void IPureClient::OnMessage(void* data, u32 size)
 {
 	// One of the messages - decompress it
-	net_Queue.Lock();
+	
 	NET_Packet* P = net_Queue.Create();
 
 	P->set( data, size );	
@@ -127,5 +127,5 @@ void IPureClient::OnMessage(void* data, u32 size)
 
 	u16			m_type;
 	P->r_begin	(m_type);
-	net_Queue.Unlock();
+	
 }
