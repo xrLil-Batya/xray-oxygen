@@ -1702,9 +1702,6 @@
     <Filter Include="Core\Server">
       <UniqueIdentifier>{04771e36-10bf-4a5f-b065-10acc52e71ee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Server\Editor">
-      <UniqueIdentifier>{deb13e69-8cc0-4746-bb14-dccdac8960ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Server\Games">
       <UniqueIdentifier>{b778b708-6d20-44cc-8b1d-75d1b19cfaeb}</UniqueIdentifier>
     </Filter>
@@ -6861,9 +6858,6 @@
       <Filter>Core\Client\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="ActorEffector.cpp">
-      <Filter>Core\Client\Effectors\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="ActorEffector_script.cpp">
       <Filter>Core\Client\Effectors\Actor</Filter>
     </ClCompile>
     <ClCompile Include="EffectorBobbing.cpp">
