@@ -100,6 +100,10 @@
       <Project>{c4defc31-a910-4339-99b3-6c410dc19ad0}</Project>
       <Name>xrManagedCoreLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\engine.vc2008\xrManagedUILib\xrManagedUILib\xrManagedUILib.vcxproj">
+      <Project>{d5ab4347-a96f-478d-9b44-9e3cbbdfcbdb}</Project>
+      <Name>xrManagedUILib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
