@@ -2111,7 +2111,6 @@
     <ClCompile Include="CameraFirstEye.cpp" />
     <ClCompile Include="cameralook.cpp" />
     <ClCompile Include="ActorEffector.cpp" />
-    <ClCompile Include="ActorEffector_script.cpp" />
     <ClCompile Include="EffectorBobbing.cpp" />
     <ClCompile Include="EffectorFall.cpp" />
     <ClCompile Include="ai\Monsters\ai_monster_effector.cpp">

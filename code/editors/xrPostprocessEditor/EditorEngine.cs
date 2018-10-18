@@ -110,16 +110,16 @@ namespace xrPostprocessEditor
             {
                 time = param.GetKeyTime(keyIndex);
 
-                param.UpdateValue(time, color.R, 0);
-                param.UpdateValue(time, color.G, 1);
-                param.UpdateValue(time, color.B, 2);
+                param.UpdateValue(time, ((float)color.R) / 255, 0);
+                param.UpdateValue(time, ((float)color.G) / 255, 1);
+                param.UpdateValue(time, ((float)color.B) / 255, 2);
             }
 
             if (type != PostProcessParamType.GrayColor) return;
 
             using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.GrayValue))
             {
-                param.UpdateValue(time, color.A, 0);
+                param.UpdateValue(time, color.A / 255, 0);
             }
         }
 
@@ -189,12 +189,12 @@ namespace xrPostprocessEditor
             using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.DualityH))
             {
                 time = param.GetKeyTime(keyIndex);
-                SafetyGetValue(param, time, ref result.x, 0);
+                SafetyGetValue(param, time, ref result.x, keyIndex);
             }
 
             using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.DualityV))
             {
-                SafetyGetValue(param, time, ref result.y, 0);
+                SafetyGetValue(param, time, ref result.y, keyIndex);
             }
 
             return result;
