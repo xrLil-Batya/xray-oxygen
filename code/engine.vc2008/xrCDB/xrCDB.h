@@ -120,7 +120,7 @@ namespace CDB
 	private:
 		mutable xrCriticalSection lock;
 		CDB_Model*				tree;
-		u32						status;		// 0=ready, 1=init, 2=building
+		volatile u32						status;		// 0=ready, 1=init, 2=building
 
 		// tris
 		TRI*					tris;
