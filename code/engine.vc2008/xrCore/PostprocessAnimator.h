@@ -104,7 +104,7 @@ public:
     virtual void    get_value                       (float time, float &value, int index = 0);
     virtual float   get_key_time                    (size_t index)
                     {
-						return (index < get_keys_count()) && m_Red.keys.size() ? m_Red.keys[index]->time : 0;
+						return (index < get_keys_count()) ? m_Red.keys[index]->time : 0;
                     }
     virtual void   clear_all_keys                  ();
 };
