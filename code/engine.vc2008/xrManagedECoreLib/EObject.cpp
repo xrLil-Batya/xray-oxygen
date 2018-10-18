@@ -5,12 +5,13 @@ using namespace System;
 
 XRay::Editor::EObject^ XRay::Editor::EObject::CreateEObject(XRay::File^ file)
 {
-	IntPtr pReader = file->GetUnderlyingReader();
-	IReader* pRealReader = (IReader*)pReader.ToPointer();
+	IReader* pReader = (IReader*)file->NativeReader.ToPointer();
 
-	IReader* OBJ = pRealReader->open_chunk(EOBJ_CHUNK_OBJECT_BODY);
-	if (OBJ == nullptr)
+	IReader* OBJ = pReader->open_chunk(EOBJ_CHUNK_OBJECT_BODY);
+	if (!OBJ)
+	{
 		return nullptr;
+	}
 
 	CEditableObject* EdObject = new CEditableObject("AWDA");
 	if (!EdObject->Load(*OBJ))
