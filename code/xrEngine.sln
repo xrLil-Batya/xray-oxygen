@@ -125,7 +125,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{FB33
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrShaders", "xrShaders\xrShaders.vcxproj", "{58818F0E-2DA2-48E4-9BB8-4D7629426F25}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedUILib", "engine.vc2008\xrManagedUILib\xrManagedUILib\xrManagedUILib.vcxproj", "{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedUILib", "engine.vc2008\xrManagedUILib\xrManagedUILib.vcxproj", "{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
