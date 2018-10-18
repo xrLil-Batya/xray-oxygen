@@ -234,7 +234,7 @@ public:
 		if (d>range)							return;
 		
 		// test items
-		for (auto _it = N->items.begin(); _it != N->items.end(); _it++)
+		for (auto _it = N->items.begin(); _it != N->items.end(); ++_it)
 		{
 			ISpatial*		S = *_it;
 			if (mask != (S->spatial.type&mask))	continue;
