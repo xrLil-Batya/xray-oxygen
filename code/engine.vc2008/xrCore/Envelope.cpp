@@ -258,7 +258,7 @@ void CEnvelope::LoadA(IReader& F)
 		}
 		// behavior <pre> <post>
 		F.r_string(buf, sizeof(buf));
-		R_ASSERT(sscanf(buf, "Behaviors %d %d", behavior[0], behavior[1]) == 2);
+		R_ASSERT(sscanf(buf, "Behaviors %d %d", &behavior[0], &behavior[1]) == 2);
 	}
 }
 
