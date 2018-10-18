@@ -389,47 +389,80 @@ void CWeaponMagazined::ReloadMagazine()
 	}
 }
 
-void CWeaponMagazined::OnStateSwitch(u32 S)
+void CWeaponMagazined::OnStateSwitch(u32 S, u32 oldState)
 {
-	u32 old_state = GetState();
-	inherited::OnStateSwitch(S);
+	inherited::OnStateSwitch(S, oldState);
 	CInventoryOwner* owner = smart_cast<CInventoryOwner*>(this->H_Parent());
 
 	switch (S)
 	{
 		case eIdle:
+		{
 			switch2_Idle();
 			break;
+		}
+
 		case eFire:
+		{
 			switch2_Fire();
 			break;
+		}
+
 		case eMisfire:
+		{
 			if (smart_cast<CActor*>(this->H_Parent()) && (Level().CurrentViewEntity() == H_Parent()))
+			{
 				GameUI()->AddCustomStatic("gun_jammed", true);
+			}
 			break;
+		}
+
 		case eMagEmpty:
+		{
 			switch2_Empty();
 			break;
+		}
+
 		case eReload:
+		{
 			if (owner)
+			{
 				m_sounds_enabled = owner->CanPlayShHdRldSounds();
+			}
+
 			switch2_Reload();
 			break;
+		}
+
 		case eShowing:
+		{
 			if (owner)
+			{
 				m_sounds_enabled = owner->CanPlayShHdRldSounds();
+			}
 			switch2_Showing();
 			break;
-		case eHiding: // [fixed] quick changing of target slot restarts animation of hiding
-			if (owner)
-				m_sounds_enabled = owner->CanPlayShHdRldSounds();
+		}
 
-			if (old_state != eHiding)
+		case eHiding: // [fixed] quick changing of target slot restarts animation of hiding
+		{
+			if (owner)
+			{
+				m_sounds_enabled = owner->CanPlayShHdRldSounds();
+			}
+
+			if (oldState != eHiding)
+			{
 				switch2_Hiding();
+			}
 			break;
+		}
+
 		case eHidden:
+		{
 			switch2_Hidden();
 			break;
+		}
 	}
 }
 

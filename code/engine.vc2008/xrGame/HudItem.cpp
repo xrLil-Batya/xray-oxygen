@@ -99,11 +99,11 @@ void CHudItem::OnEvent(NET_Packet& P, u16 type)
 {
 	if (type == GE_WPN_STATE_CHANGE)
 	{
-		OnStateSwitch(P.r_u8());
+		OnStateSwitch(P.r_u8(), GetState());
 	}
 }
 
-void CHudItem::OnStateSwitch(u32 uState)
+void CHudItem::OnStateSwitch(u32 uState, u32 oldState)
 {
 	SetState(uState);
 

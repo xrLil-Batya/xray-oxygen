@@ -37,7 +37,7 @@ public:
 	
 	virtual bool			Action								(u16 cmd, u32 flags);
 	virtual bool			Useful								() const;
-	virtual void			State								(u32 state);
+	virtual void			State								(u32 state, u32 oldState);
 
 	virtual void			OnH_B_Chield						()				{inherited::OnH_B_Chield();}
 

@@ -69,47 +69,62 @@ void CWeaponKnife::Load	(LPCSTR section)
 	
 }
 
-void CWeaponKnife::OnStateSwitch	(u32 S)
+void CWeaponKnife::OnStateSwitch(u32 S, u32 oldState)
 {
-	u32 old_state = GetState();
-	inherited::OnStateSwitch(S);
+	inherited::OnStateSwitch(S, oldState);
+
 	switch (S)
 	{
-	case eIdle:
-		switch2_Idle	();
-		break;
-	case eShowing:
-		switch2_Showing	();
-		break;
-	case eHiding:
-		switch2_Hiding	();
-		break;
-	case eHidden:
-	// [fixed] quick changing of target slot restarts animation of hiding
-			if (old_state != eHiding)
-				switch2_Hidden	();
-		break;
-	case eFire:
+		case eIdle:
+		{
+			switch2_Idle();
+			break;
+		}
+
+		case eShowing:
+		{
+			switch2_Showing();
+			break;
+		}
+
+		case eHiding:
+		{
+			if (oldState != eHiding)
+			{
+				switch2_Hiding();
+			}
+			break;
+		}
+
+		case eHidden:
+		{
+			switch2_Hidden();
+			break;
+		}
+
+		case eFire:
 		{
 			//-------------------------------------------
-			m_eHitType		= m_eHitType_1;
-			fCurrentHit		= (ParentIsActor()) ? fvHitPower_1[g_SingleGameDifficulty] : fvHitPower_1[egdMaster];
-			fHitImpulse_cur	= fHitImpulse_1;
+			m_eHitType = m_eHitType_1;
+			fCurrentHit = (ParentIsActor()) ? fvHitPower_1[g_SingleGameDifficulty] : fvHitPower_1[egdMaster];
+			fHitImpulse_cur = fHitImpulse_1;
 			//-------------------------------------------
-			switch2_Attacking	(S);
-		}break;
-	case eFire2:
+			switch2_Attacking(S);
+			break;
+		}
+
+		case eFire2:
 		{
 			//-------------------------------------------
-			m_eHitType		= m_eHitType_2;
-			fCurrentHit		= (ParentIsActor()) ? fvHitPower_2[g_SingleGameDifficulty] : fvHitPower_2[egdMaster];
-			fHitImpulse_cur	= fHitImpulse_2;
+			m_eHitType = m_eHitType_2;
+			fCurrentHit = (ParentIsActor()) ? fvHitPower_2[g_SingleGameDifficulty] : fvHitPower_2[egdMaster];
+			fHitImpulse_cur = fHitImpulse_2;
 			//-------------------------------------------
-			switch2_Attacking	(S);
-		}break;
+			switch2_Attacking(S);
+			break;
+		}
 	}
 }
-
 
 void CWeaponKnife::KnifeStrike(const Fvector& pos, const Fvector& dir)
 {

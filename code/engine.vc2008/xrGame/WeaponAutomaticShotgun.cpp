@@ -92,35 +92,49 @@ void CWeaponAutomaticShotgun::TriStateReload()
 	SwitchState			(eReload);
 }
 
-void CWeaponAutomaticShotgun::OnStateSwitch	(u32 S)
+void CWeaponAutomaticShotgun::OnStateSwitch(u32 S, u32 oldState)
 {
-	if(!m_bTriStateReload || S != eReload){
-		inherited::OnStateSwitch(S);
+	if (!m_bTriStateReload || S != eReload)
+	{
+		inherited::OnStateSwitch(S, oldState);
 		return;
 	}
 
-	CWeapon::OnStateSwitch(S);
+	CWeapon::OnStateSwitch(S, oldState);
 
-	if( m_magazine.size() == (u32)iMagazineSize || !HaveCartridgeInInventory(1) ){
-			switch2_EndReload		();
-			m_sub_state = eSubstateReloadEnd;
-			return;
-	};
+	if (m_magazine.size() == (u32)iMagazineSize || !HaveCartridgeInInventory(1))
+	{
+		switch2_EndReload();
+		m_sub_state = eSubstateReloadEnd;
+		return;
+	}
 
 	switch (m_sub_state)
 	{
-	case eSubstateReloadBegin:
-		if( HaveCartridgeInInventory(1) )
-			switch2_StartReload	();
-		break;
-	case eSubstateReloadInProcess:
-			if( HaveCartridgeInInventory(1) )
-				switch2_AddCartgidge	();
-		break;
-	case eSubstateReloadEnd:
-			switch2_EndReload		();
-		break;
-	};
+		case eSubstateReloadBegin:
+		{
+			if (HaveCartridgeInInventory(1))
+			{
+				switch2_StartReload();
+			}
+			break;
+		}
+
+		case eSubstateReloadInProcess:
+		{
+			if (HaveCartridgeInInventory(1))
+			{
+				switch2_AddCartgidge();
+			}
+			break;
+		}
+
+		case eSubstateReloadEnd:
+		{
+			switch2_EndReload();
+			break;
+		}
+	}
 }
 
 void CWeaponAutomaticShotgun::switch2_StartReload()

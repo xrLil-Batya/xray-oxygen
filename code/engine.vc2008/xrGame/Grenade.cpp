@@ -91,37 +91,43 @@ void CGrenade::OnH_A_Chield()
 	inherited::OnH_A_Chield				();
 }
 
-void CGrenade::State(u32 state) 
+void CGrenade::State(u32 state, u32 oldState)
 {
 	switch (state)
 	{
-	case eThrowStart:
+		case eThrowStart:
 		{
-			Fvector						C;
-			Center						(C);
-			PlaySound					("sndCheckout", C);
-		}break;
-	case eThrowEnd:
+			Fvector C;
+			Center(C);
+			PlaySound("sndCheckout", C);
+			break;
+		}
+
+		case eThrowEnd:
 		{
-			if(m_thrown)
+			if (m_thrown)
 			{
 				if (m_pPhysicsShell)
+				{
 					m_pPhysicsShell->Deactivate();
-				xr_delete	( m_pPhysicsShell );
-				m_dwDestroyTime			= 0xffffffff;
-				PutNextToSlot			();
+				}
+
+				xr_delete(m_pPhysicsShell);
+				m_dwDestroyTime = 0xffffffff;
+				PutNextToSlot();
 				if (Local())
 				{
 #ifndef MASTER_GOLD
-					Msg( "Destroying local grenade[%d][%d]", ID(), Device.dwFrame );
-#endif // #ifndef MASTER_GOLD
+					Msg("Destroying local grenade[%d][%d]", ID(), Device.dwFrame);
+#endif
 					DestroyObject();
 				}
-				
-			};
-		}break;
-	};
-	inherited::State( state );
+			}
+			break;
+		}
+	}
+
+	inherited::State(state, oldState);
 }
 
 bool CGrenade::DropGrenade()
@@ -141,8 +147,12 @@ bool CGrenade::DropGrenade()
 
 void CGrenade::DiscardState()
 {
-	if(GetState()==eReady || GetState()==eThrow)
-		OnStateSwitch(eIdle);
+	u32 state = GetState();
+
+	if (GetState() == eReady || GetState() == eThrow)
+	{
+		OnStateSwitch(eIdle, state);
+	}
 }
 
 void CGrenade::SendHiddenItem						()

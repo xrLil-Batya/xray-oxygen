@@ -662,7 +662,7 @@ void CWeapon::OnEvent(NET_Packet& P, u16 type)
 			u8 NextAmmo = P.r_u8();
 
 			m_set_next_ammoType_on_reload = (NextAmmo == undefined_ammo_type) ? undefined_ammo_type : NextAmmo;
-			OnStateSwitch(state);
+			OnStateSwitch(state, GetState());
 		} break;
 
 		default:
@@ -844,7 +844,7 @@ void CWeapon::EnableActorNVisnAfterZoom()
 
 bool CWeapon::need_renderable()
 {
-	return !(IsZoomed() && ZoomTexture() && !IsRotatingToZoom());
+	return !Device.m_SecondViewport.IsSVPFrame() && !(IsZoomed() && ZoomTexture() && !IsRotatingToZoom());
 }
 
 void CWeapon::renderable_Render()
@@ -1339,7 +1339,10 @@ void CWeapon::OnZoomIn()
 
 		SetZoomFactor(m_fRTZoomFactor);
 	}
-	else m_zoom_params.m_fCurrentZoomFactor = CurrentZoomFactor();	
+	else
+	{
+		m_zoom_params.m_fCurrentZoomFactor = CurrentZoomFactor();
+	}
 
 	if (m_zoom_params.m_bZoomDofEnabled && !IsScopeAttached())
 		GamePersistent().SetEffectorDOF(m_zoom_params.m_ZoomDof);
@@ -1356,7 +1359,7 @@ void CWeapon::OnZoomIn()
 		CActor *pA = smart_cast<CActor *>(H_Parent());
         if (pA && nullptr == m_zoom_params.m_pNight_vision)
             m_zoom_params.m_pNight_vision = xr_new<CNightVisionEffector>(m_zoom_params.m_sUseZoomPostprocess.c_str());
-    }	
+    }
 }
 
 void CWeapon::OnZoomOut()
@@ -1589,39 +1592,41 @@ bool CWeapon::ready_to_kill() const
 
 void CWeapon::UpdateHudAdditonal(Fmatrix& trans)
 {
-	CActor* pActor	= smart_cast<CActor*>(H_Parent());
+	CActor* pActor = smart_cast<CActor*>(H_Parent());
 
-	if (!pActor)		
+	if (!pActor)
 		return;
 
-
-	if ((IsZoomed() && m_zoom_params.m_fZoomRotationFactor<=1.f) || (!IsZoomed() && m_zoom_params.m_fZoomRotationFactor>0.f))
+	if ((IsZoomed() && m_zoom_params.m_fZoomRotationFactor <= 1.f) || (!IsZoomed() && m_zoom_params.m_fZoomRotationFactor > 0.f))
 	{
+		attachable_hud_item* hi = HudItemData();
+		R_ASSERT(hi);
+
 		u8 idx = GetCurrentHudOffsetIdx();
 
-		attachable_hud_item*		hi = HudItemData();
-		R_ASSERT					(hi);
-		Fvector						curr_offs, curr_rot;
-		curr_offs					= hi->m_measures.m_hands_offset[0][idx];//pos,aim
-		curr_rot					= hi->m_measures.m_hands_offset[1][idx];//rot,aim
-		curr_offs.mul				(m_zoom_params.m_fZoomRotationFactor);
-		curr_rot.mul				(m_zoom_params.m_fZoomRotationFactor);
+		Fvector curr_offs, curr_rot;
 
-		Fmatrix						hud_rotation;
-		hud_rotation.identity		();
-		hud_rotation.rotateX		(curr_rot.x);
+		curr_offs = hi->m_measures.m_hands_offset[0][idx]; //pos, aim
+		curr_rot = hi->m_measures.m_hands_offset[1][idx]; //rot, aim
 
-		Fmatrix						hud_rotation_y;
-		hud_rotation_y.identity		();
-		hud_rotation_y.rotateY		(curr_rot.y);
-		hud_rotation.mulA_43		(hud_rotation_y);
+		curr_offs.mul(m_zoom_params.m_fZoomRotationFactor);
+		curr_rot.mul(m_zoom_params.m_fZoomRotationFactor);
 
-		hud_rotation_y.identity		();
-		hud_rotation_y.rotateZ		(curr_rot.z);
-		hud_rotation.mulA_43		(hud_rotation_y);
+		Fmatrix	hud_rotation;
+		hud_rotation.identity();
+		hud_rotation.rotateX(curr_rot.x);
 
-		hud_rotation.translate_over	(curr_offs);
-		trans.mulB_43				(hud_rotation);
+		Fmatrix	hud_rotation_y;
+		hud_rotation_y.identity();
+		hud_rotation_y.rotateY(curr_rot.y);
+		hud_rotation.mulA_43(hud_rotation_y);
+
+		hud_rotation_y.identity();
+		hud_rotation_y.rotateZ(curr_rot.z);
+		hud_rotation.mulA_43(hud_rotation_y);
+
+		hud_rotation.translate_over(curr_offs);
+		trans.mulB_43(hud_rotation);
 
 		if (pActor->IsZoomAimingMode())
 			m_zoom_params.m_fZoomRotationFactor += Device.fTimeDelta / m_zoom_params.m_fZoomRotateTime;
@@ -1726,11 +1731,16 @@ float CWeapon::Weight() const
 	return res;
 }
 
+// Требуется-ли отрисовывать перекрестие
 bool CWeapon::show_crosshair()
 {
+	if (hud_adj_mode)
+		return true;
+
 	return !IsPending() && (!IsZoomed() || !ZoomHideCrosshair());
 }
 
+// Требуется-ли отображать интерфейс игрока
 bool CWeapon::show_indicators()
 {
 	return !(IsZoomed() && ZoomTexture());
@@ -1784,9 +1794,9 @@ const float &CWeapon::hit_probability() const
 	return (m_hit_probability[g_SingleGameDifficulty]);
 }
 
-void CWeapon::OnStateSwitch	(u32 S)
+void CWeapon::OnStateSwitch(u32 S, u32 oldState)
 {
-	inherited::OnStateSwitch(S);
+	inherited::OnStateSwitch(S, oldState);
 	m_BriefInfo_CalcFrame = 0;
 
 	if (GetState() == eReload)
