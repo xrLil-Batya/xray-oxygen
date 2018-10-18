@@ -78,12 +78,12 @@ UInt16 Ini::ReadUShort(String^ section, String^ line)
 
 Int32 Ini::ReadInt(String^ section, String^ line)
 {
-	return pIni->r_u32(marshal.marshal_as<const char*>(section), marshal.marshal_as<const char*>(line));
+	return pIni->r_s32(marshal.marshal_as<const char*>(section), marshal.marshal_as<const char*>(line));
 }
 
 UInt32 Ini::ReadUInt(String^ section, String^ line)
 {
-	return pIni->r_s32(marshal.marshal_as<const char*>(section), marshal.marshal_as<const char*>(line));
+	return pIni->r_u32(marshal.marshal_as<const char*>(section), marshal.marshal_as<const char*>(line));
 }
 
 UInt64 Ini::ReadULong(String^ section, String^ line)
