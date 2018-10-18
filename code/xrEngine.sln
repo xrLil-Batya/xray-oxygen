@@ -125,6 +125,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{FB33
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrShaders", "xrShaders\xrShaders.vcxproj", "{58818F0E-2DA2-48E4-9BB8-4D7629426F25}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedUILib", "engine.vc2008\xrManagedUILib\xrManagedUILib\xrManagedUILib.vcxproj", "{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -354,6 +356,14 @@ Global
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25}.Mixed|x64.ActiveCfg = Release|x64
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25}.Release_IA32|x64.ActiveCfg = Release|x64
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25}.Release|x64.ActiveCfg = Release|x64
+		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Debug|x64.ActiveCfg = Debug|x64
+		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Debug|x64.Build.0 = Debug|x64
+		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Mixed|x64.ActiveCfg = Release|x64
+		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Mixed|x64.Build.0 = Release|x64
+		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Release_IA32|x64.ActiveCfg = Release|x64
+		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Release_IA32|x64.Build.0 = Release|x64
+		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Release|x64.ActiveCfg = Release|x64
+		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -378,6 +388,7 @@ Global
 		{DECF49BA-E334-47D5-8C0C-D6C3DC67A759} = {2813539F-84F6-44F9-844E-557158626F35}
 		{FB339160-99FE-47BD-B161-B3EB1C4C5974} = {7A76B1EB-9731-4FA0-8B13-5B5046FF7FC6}
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25} = {FB339160-99FE-47BD-B161-B3EB1C4C5974}
+		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB} = {2813539F-84F6-44F9-844E-557158626F35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC8D3737-61A4-4A70-AE4C-C66D5F07767A}
