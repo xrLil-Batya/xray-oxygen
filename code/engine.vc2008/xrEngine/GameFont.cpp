@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #pragma hdrstop
 
 #include "GameFont.h"
@@ -89,7 +89,8 @@ void CGameFont::Initialize(LPCSTR cShader, LPCSTR cTextureName)
 	nNumChars = 0x100;
 	TCMap = (Fvector*)xr_realloc((void*)TCMap, nNumChars * sizeof(Fvector));
 
-	if (ini->section_exist("mb_symbol_coords")) {
+	if (ini->section_exist("mb_symbol_coords")) 
+	{
 		nNumChars = 0x10000;
 		TCMap = (Fvector*)xr_realloc((void*)TCMap, nNumChars * sizeof(Fvector));
 		uFlags |= fsMultibyte;

@@ -1,4 +1,4 @@
-#ifndef _D3D_EXT_internal
+﻿#ifndef _D3D_EXT_internal
 #define _D3D_EXT_internal
 
 #ifndef NO_XR_LIGHT

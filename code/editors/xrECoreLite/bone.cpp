@@ -221,7 +221,7 @@ bool CBone::ExportOGF(IWriter& F)
 	// check valid
 
 	if (shape.Valid())
-		MessageBox(0, "! Bone '%s' has invalid shape.", std::string("Invalid Shape!" + std::string(*Name())).c_str(), 0);
+		MessageBox(0, "! Bone '%s' has invalid shape.", xr_string("Invalid Shape!" + xr_string(*Name())).c_str(), 0);
 	else
 	{
 		const SEGameMtl* M = GEMLib.GetMaterial(game_mtl.c_str());

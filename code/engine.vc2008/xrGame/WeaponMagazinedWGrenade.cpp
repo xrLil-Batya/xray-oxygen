@@ -100,7 +100,7 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 
 		if(b_if_grenade_mode || b_if_simple_mode) 
 		{
-			std::string fake_grenade_name = pSettings->r_string(pM->back().m_ammoSect.c_str(), "fake_grenade_name");
+			xr_string fake_grenade_name = pSettings->r_string(pM->back().m_ammoSect.c_str(), "fake_grenade_name");
 			
 			CRocketLauncher::SpawnRocket(fake_grenade_name.c_str(), this);
 		}

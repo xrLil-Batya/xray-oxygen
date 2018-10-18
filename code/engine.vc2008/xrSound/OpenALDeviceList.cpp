@@ -60,7 +60,9 @@ void ALDeviceList::Enumerate()
 	// -- empty all the lists and reserve space for 10 devices
 	m_devices.clear();
 
-	CoUninitialize();
+// 	if (!strstr(Core.Params, "-editor"))
+// 		CoUninitialize();
+
 	// grab function pointers for 1.0-API functions, and if successful proceed to enumerate all devices
 	if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT"))
 	{
@@ -138,8 +140,8 @@ void ALDeviceList::Enumerate()
 	{
 		GetDeviceVersion(j, &majorVersion, &minorVersion);
 	}
-	if (!strstr(Core.Params, "-editor"))
-		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+// 	if (!strstr(Core.Params, "-editor"))
+// 		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 }
 
 const char* ALDeviceList::GetDeviceName(u32 index)

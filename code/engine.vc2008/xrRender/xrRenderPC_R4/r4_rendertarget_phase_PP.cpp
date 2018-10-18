@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "r4_rendertarget.h"
 
 void	CRenderTarget::u_calc_tc_noise		(Fvector2& p0, Fvector2& p1)
 {
@@ -100,17 +99,18 @@ struct TL_2c3uv		{
 void CRenderTarget::phase_pp		()
 {
 	// combination/postprocess
-	u_setrt				( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
+	u_setrt(rt_Generic_2, nullptr, nullptr, nullptr);
+
 	//	Element 0 for for normal post-process
-	//	Element 4 for color map post-process
+	//	Element 1 for color map post-process
 	bool	bCMap = u_need_CM();
 	if( !RImplementation.o.dx10_msaa )
 	{
-		RCache.set_Element	(s_postprocess->E[bCMap ? 4 : 0]);
+		RCache.set_Element	(s_postprocess->E[bCMap ? 1 : 0]);
 	}
 	else
 	{
-		RCache.set_Element	(s_postprocess_msaa->E[bCMap ? 4 : 0]);
+		RCache.set_Element	(s_postprocess_msaa->E[bCMap ? 1 : 0]);
 	}
 
 	int		gblend		= clampr		(iFloor((1-param_gray)*255.f),0,255);
@@ -144,4 +144,9 @@ void CRenderTarget::phase_pp		()
 	RCache.set_c		(s_colormap, param_color_map_influence,param_color_map_interpolate,0,0);
 	RCache.set_Geometry	(g_postprocess);
 	RCache.Render		(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
+
+	// D3D10/D3D11 can't use the same RT both as input and output
+	// so we need to render in one and then copy in another...
+	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
+	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 }

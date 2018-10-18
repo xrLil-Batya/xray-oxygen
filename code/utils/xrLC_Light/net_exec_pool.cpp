@@ -73,19 +73,19 @@ namespace lc_net
 		R_ASSERT(pos >= 0);
 		R_ASSERT(pos < size);
 
-		send_receive_lock.lock();
+		send_receive_lock.Enter();
 
 		net_execution *e = pool[pos];
 		R_ASSERT(e->type() == type);
 		if (e == 0)
 		{
-			send_receive_lock.unlock();
+			send_receive_lock.Leave();
 			return;
 		}
 		pool[pos] = 0;
 		++tasks_completed;
 		u32 l_completed = tasks_completed;
-		send_receive_lock.unlock();
+		send_receive_lock.Leave();
 		e->receive_result(inStream);
 		//xr_delete( e );
 		execution_factory.destroy(e);
@@ -113,7 +113,7 @@ namespace lc_net
 //		if( l_completed == size )
 //		{
 			execution_factory.free_pool(type);
-			std::lock_guard<decltype(run_lock)> lock(run_lock);
+			xrCriticalSectionGuard guard(run_lock);
 			_running = false;
 		}
 	}
@@ -129,7 +129,7 @@ namespace lc_net
 	bool	exec_pool::is_running()
 	{
 		bool running = true;
-		std::lock_guard<decltype(run_lock)> lock(run_lock);
+		xrCriticalSectionGuard guard(run_lock);
 		running = _running;
 		return running;
 	}
@@ -147,7 +147,7 @@ namespace lc_net
 		return *this;
 	}
 	void __cdecl Finalize(IGenericStream* outStream);
-	std::recursive_mutex run_task_lock;
+	xrCriticalSection run_task_lock;
 	void	exec_pool::send_task(IGridUser& user, IGenericStream* Stream, u8 pool_id, u32 id)
 	{
 
@@ -176,7 +176,7 @@ namespace lc_net
 		string_path data;
 		string_path files;
 		strconcat(sizeof(data), data, e->data_files(files), "");
-		std::lock_guard<decltype(run_task_lock)> lock(run_task_lock);
+		xrCriticalSectionGuard guard(run_task_lock);
 		bool ok = false;
 		run_task:;
 		if (ok)
@@ -203,7 +203,7 @@ namespace lc_net
 		read_task_caption( inStream, id, type );
 
 
-		send_receive_lock.lock();
+		send_receive_lock.Enter();
 		
 		for (size_t i = 0; i < pool.size(); i++)
 		{
@@ -211,14 +211,14 @@ namespace lc_net
 			R_ASSERT(it);
 			if (it->id() == id)
 			{
-				send_receive_lock.unlock();
+				send_receive_lock.Leave();
 				return nullptr;
 			}
 		}
 		
 		net_execution* e = execution_factory.create( type, id );
 		pool.push_back( e );
-		send_receive_lock.unlock();
+		send_receive_lock.Leave();
 
 		e->receive_task( agent, sessionId, inStream );
 
@@ -235,14 +235,14 @@ namespace lc_net
 
 	void	exec_pool::remove_task( net_execution *e )
 	{
-		send_receive_lock.lock();
+		send_receive_lock.Enter();
 		xr_vector<net_execution*>::iterator i = std::find( pool.begin(), pool.end(), e );
 		R_ASSERT( i != pool.end() );
 		net_execution *pe = *i;
 		R_ASSERT( pe == e );
 		R_ASSERT( pe->id() == e->id() );
 		pool.erase( i );
-		send_receive_lock.unlock();
+		send_receive_lock.Leave();
 		xr_delete( e );
 	}
 

@@ -20,7 +20,7 @@ public:
 		bool isParent;
 		std::string name;
 		std::string parent;
-		std::unordered_map<std::string, std::string> keyvalues;
+		std::unordered_map< std::string, std::string> keyvalues;
 	};
 
 public:
@@ -39,7 +39,7 @@ public:
 	float	get_float (const string& sectionname, const string& keyname);
 
 private:
-	void parse(const std::string& filename, bool create);
+	void parse(const  std::string& filename, bool create);
 private:
 	std::list<section> sections;
 	section currentsection;

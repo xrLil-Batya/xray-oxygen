@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "../Include/xrRender/DrawUtils.h"
 #include "render.h"
@@ -72,7 +72,7 @@ void CRenderDevice::ConnectToRender()
 	if (!m_pRender) { m_pRender = RenderFactory->CreateRenderDeviceRender(); }
 }
 
-void CRenderDevice::Create()
+void CRenderDevice::Create(bool bIsEditor)
 {
 	if (b_is_Ready) { return; }		// prevent double call
 	Statistic = xr_new<CStats>();
@@ -98,17 +98,13 @@ void CRenderDevice::Create()
 
 	m_pRender->Create(
 		m_hWnd,
-		dwWidth,
-		dwHeight,
-		fWidth_2,
-		fHeight_2,
-#ifdef INGAME_EDITOR
-		editor() ? false :
-#endif // #ifdef INGAME_EDITOR
-		true
+		dwWidth, dwHeight,
+		fWidth_2, fHeight_2,
+		!bIsEditor
 	);
 
-    UpdateWindowPropStyle(GetCurrentWindowPropStyle());
+	if (!bIsEditor)
+		UpdateWindowPropStyle(GetCurrentWindowPropStyle());
 
 	string_path			fname; 
 	FS.update_path		(fname,"$game_data$","shaders.xr");

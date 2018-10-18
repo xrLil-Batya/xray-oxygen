@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "../xrcdb/ispatial.h"
 #include "irenderable.h"
 

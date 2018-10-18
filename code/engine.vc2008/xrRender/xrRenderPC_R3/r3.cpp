@@ -47,67 +47,6 @@ ShaderElement*			CRender::rimp_select_sh_static	(dxRender_Visual	*pVisual, float
 	}
 	return pVisual->shader->E[id]._get();
 }
-static class cl_parallax		: public R_constant_setup
-{
-	virtual void setup	(R_constant* C)
-	{
-		float h			=	ps_r_df_parallax_h;
-		RCache.set_c	(C,h,-h/2.f,1.f/r_dtex_range,1.f/r_dtex_range);
-	}
-}	binder_parallax;
-
-static class cl_tree_amplitude_intensity : public R_constant_setup
-{
- 	virtual void setup(R_constant* C)
- 	{
- 		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
- 		float fValue = E.m_fTreeAmplitudeIntensity;
- 		RCache.set_c(C, fValue, fValue, fValue, 0);
- 	}
-} binder_tree_amplitude_intensity;
-
-static class cl_pos_decompress_params		: public R_constant_setup		{	virtual void setup	(R_constant* C)
-{
-	float VertTan =  -1.0f * tanf( deg2rad(Device.fFOV/2.0f ) );
-	float HorzTan =  - VertTan / Device.fASPECT;
-
-	RCache.set_c	( C, HorzTan, VertTan, ( 2.0f * HorzTan )/(float)Device.dwWidth, ( 2.0f * VertTan ) /(float)Device.dwHeight );
-
-}}	binder_pos_decompress_params;
-
-static class cl_pos_decompress_params2		: public R_constant_setup		{	virtual void setup	(R_constant* C)
-{
-	RCache.set_c	(C,(float)Device.dwWidth, (float)Device.dwHeight, 1.0f/(float)Device.dwWidth, 1.0f/(float)Device.dwHeight );
-
-}}	binder_pos_decompress_params2;
-
-static class cl_water_intensity : public R_constant_setup		
-{	
-	virtual void setup	(R_constant* C)
-	{
-		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E.m_fWaterIntensity;
-		RCache.set_c	(C, fValue, fValue, fValue, 0);
-	}
-}	binder_water_intensity;
-
-static class cl_sun_shafts_intensity : public R_constant_setup		
-{	
-	virtual void setup	(R_constant* C)
-	{
-		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E.m_fSunShaftsIntensity;
-		RCache.set_c	(C, fValue, fValue, fValue, 0);
-	}
-}	binder_sun_shafts_intensity;
-
-static class cl_alpha_ref	: public R_constant_setup 
-{	
-	virtual void setup (R_constant* C) 
-	{ 
-		StateManager.BindAlphaRef(C);
-	}
-} binder_alpha_ref;
 
 extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;	//	advanced post process and effects
@@ -151,7 +90,6 @@ void					CRender::create					()
 	}
 
 	// options
-	o.bug				= (strstr(Core.Params,"-bug"))?			TRUE	:FALSE	;
 	o.sunfilter			= (strstr(Core.Params,"-sunfilter"))?	TRUE	:FALSE	;
 	//.	o.sunstatic			= (strstr(Core.Params,"-sunstatic"))?	TRUE	:FALSE	;
 	o.sunstatic			= r2_sun_static;
@@ -227,44 +165,36 @@ void					CRender::create					()
 	o.dx10_gbuffer_opt	= ps_r3_flags.test(R3_FLAG_GBUFFER_OPT);
 
 	o.dx10_minmax_sm = ps_r3_minmax_sm;
-	o.dx10_minmax_sm_screenarea_threshold = 1600*1200;
+	o.dx10_minmax_sm_screenarea_threshold = 1600 * 1200;
 
-	if (o.dx10_minmax_sm==MMSM_AUTODETECT)
+	if (o.dx10_minmax_sm == MMSM_AUTODETECT)
 	{
 		o.dx10_minmax_sm = MMSM_OFF;
 
-		//	AMD device
-		if (HW.Caps.id_vendor==0x1002)
+		// AMD device
+		if (HW.Caps.id_vendor == 0x1002)
 		{
-			if (ps_r_sun_quality>=3)
-				o.dx10_minmax_sm=MMSM_AUTO;
-			else if (ps_r_sun_shafts>=2)
+			if (ps_r_sun_quality >= 3)
+				o.dx10_minmax_sm = MMSM_AUTO;
+			else if (ps_r_sun_shafts >= 2)
 			{
-				o.dx10_minmax_sm=MMSM_AUTODETECT;
-				//	Check resolution in runtime in use_minmax_sm_this_frame
-				o.dx10_minmax_sm_screenarea_threshold = 1600*1200;
+				o.dx10_minmax_sm = MMSM_AUTODETECT;
+				// Check resolution in runtime in use_minmax_sm_this_frame
+				o.dx10_minmax_sm_screenarea_threshold = 1600 * 1200;
 			}
 		}
 
-		//	NVidia boards
-		if (HW.Caps.id_vendor==0x10DE)
+		// NVidia boards
+		if (HW.Caps.id_vendor == 0x10DE)
 		{
-			if ((ps_r_sun_shafts>=2))
+			if ((ps_r_sun_shafts >= 2))
 			{
-				o.dx10_minmax_sm=MMSM_AUTODETECT;
-				//	Check resolution in runtime in use_minmax_sm_this_frame
-				o.dx10_minmax_sm_screenarea_threshold = 1280*1024;
+				o.dx10_minmax_sm = MMSM_AUTODETECT;
+				// Check resolution in runtime in use_minmax_sm_this_frame
+				o.dx10_minmax_sm_screenarea_threshold = 1280 * 1024;
 			}
 		}
 	}
-
-	// constants
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("parallax", &binder_parallax);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("water_intensity", &binder_water_intensity);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("sun_shafts_intensity", &binder_sun_shafts_intensity);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("m_AlphaRef", &binder_alpha_ref);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("pos_decompression_params", &binder_pos_decompress_params);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("pos_decompression_params2", &binder_pos_decompress_params2);
 
 	c_lmaterial					= "L_material";
 	c_sbase						= "s_base";
@@ -779,11 +709,12 @@ HRESULT	CRender::shader_compile			(
 	D3D_SHADER_MACRO defines[128];
 	int def_it = 0;
 	char c_smapsize		[32];
-	char c_gloss			[32];
+	char c_gloss		[32];
 	char c_sun_shafts	[32];
 	char c_ssao			[32];
 	char c_sun_quality	[32];
     char c_bokeh_quality[32];
+	char c_pp_aa_quality[32];
 
 	char	sh_name[MAX_PATH] = "";
 	u32 len = 0;
@@ -1181,6 +1112,17 @@ HRESULT	CRender::shader_compile			(
         sh_name[len] = '0'; ++len;
     }
 
+	if (ps_r_pp_aa_quality > 0)
+	{
+		xr_sprintf(c_pp_aa_quality, "%d", ps_r_pp_aa_quality);
+		defines[def_it].Name = "PP_AA_QUALITY";
+		defines[def_it].Definition = c_pp_aa_quality;
+		def_it++;
+		sh_name[len] = '0' + char(ps_r_pp_aa_quality); ++len;
+	}
+	else
+		sh_name[len] = '0'; ++len;
+
 	// finish
 	defines[def_it].Name			=	nullptr;
 	defines[def_it].Definition		=	nullptr;
@@ -1317,15 +1259,9 @@ HRESULT	CRender::shader_compile			(
 static inline bool match_shader		( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, LPCSTR const mask, size_t const mask_length )
 {
 	u32 const full_shader_id_length	= xr_strlen( full_shader_id );
-	R_ASSERT2				(
-		full_shader_id_length == mask_length,
-		make_string(
-			"bad cache for shader %s, [%s], [%s]",
-			debug_shader_id,
-			mask,
-			full_shader_id
-		)
-	);
+	R_ASSERT_FORMAT(full_shader_id_length == mask_length, "bad cache for shader %s, [%s], [%s]",
+			debug_shader_id, mask, full_shader_id);
+
 	char const* i			= full_shader_id;
 	char const* const e		= full_shader_id + full_shader_id_length;
 	char const* j			= mask;

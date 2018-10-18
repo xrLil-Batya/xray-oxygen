@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: editor_environment_thunderbolts_manager.cpp
 //	Created 	: 04.01.2008
 //  Modified 	: 04.01.2008
@@ -216,7 +216,7 @@ void manager::save					()
 			TRUE
 		);
 
-	CEnvironment&					environment = g_pGamePersistent->Environment();
+	CEnvironment& environment = Environment();
 	
 	config->w_float					("environment","altitude",			rad2deg(environment.p_var_alt)	);
 	config->w_float					("environment","delta_longitude",	rad2deg(environment.p_var_long)	);

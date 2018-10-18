@@ -44,28 +44,21 @@ namespace detail
 				return;
 			}
 
-			// dont use multicolumns
-// 			if ( s_params.cur_row && s_params.cur_row + 1 > s_params.max_rows )
-// 			{
-// 				s_params.cur_row = 0;
-// 				s_params.ori_x  += s_params.column_size;
-// 			}
-
 			if ( !s_params.cur_row )
 			{
-				UI().Font().pFontStat->OutSet((float)s_params.ori_x, (float)s_params.ori_y);
+				UI().Font().GetFont("stat_font")->OutSet((float)s_params.ori_x, (float)s_params.ori_y);
 			}			
 
 			if ( s_params.cur_row % 2 )
 			{
-				UI().Font().pFontStat->SetColor(s_params.color1);
+				UI().Font().GetFont("stat_font")->SetColor(s_params.color1);
 			}
 			else
 			{
-				UI().Font().pFontStat->SetColor(s_params.color2);
+				UI().Font().GetFont("stat_font")->SetColor(s_params.color2);
 			}
 			
-			UI().Font().pFontStat->OutNext(s);
+			UI().Font().GetFont("stat_font")->OutNext(s);
 			s_params.cur_row++;
 		}
 	};

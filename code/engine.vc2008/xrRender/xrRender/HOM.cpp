@@ -13,8 +13,8 @@ float	psOSSR		= .001f;
 
 void __stdcall	CHOM::MT_RENDER()
 {
-    std::lock_guard<decltype(MT)> lock(MT);
-	bool b_main_menu_is_active = (g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive() );
+	xrCriticalSectionGuard guard(MTLock);
+	bool b_main_menu_is_active = (g_pGamePersistent != nullptr && g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive() );
 	if (MT_frame_rendered!=Device.dwFrame && !b_main_menu_is_active)
 	{
 		CFrustum					ViewBase;

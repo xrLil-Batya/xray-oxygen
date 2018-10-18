@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GameFont.h"
 #pragma hdrstop
 
@@ -381,7 +381,6 @@ void CStats::Show()
 	// Show errors
 	if (!g_bDisableRedText && !errors.empty())
 	{
-		CGameFont&	F = *((CGameFont*)pFont);
 		F.SetColor	(color_rgba(255,16,16,191));
 		F.OutSet	(200,0);
 		F.SetHeightI	(f_base_size);

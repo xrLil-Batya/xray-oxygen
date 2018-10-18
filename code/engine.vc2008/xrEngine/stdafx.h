@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 // Modifer: sv3nk
 #ifndef INGAME_EDITOR
 #	define	INGAME_EDITOR
@@ -10,14 +10,6 @@
 
 #include "../xrCore/xrCore.h"
 #include "../xrCore/xrAPI.h"
-
-#ifdef _DEBUG
-#	define D3D_DEBUG_INFO
-#endif
-#pragma warning(push)
-#pragma warning(disable:4995)
-#include <d3d9.h>
-#pragma warning(pop)
 
 // you must define ENGINE_BUILD then building the engine itself
 // and not define it if you are about to build DLL
@@ -35,7 +27,10 @@
 	#define DLL_API
 #endif // NO_ENGINE_API
 
-#define ECORE_API
+// This stdafx is included inside xrECore
+#ifndef ECORE_API
+	#define ECORE_API
+#endif
 
 // Our headers
 #include "engine.h"
@@ -64,7 +59,5 @@ extern ENGINE_API CInifile *pGameIni;
 #endif
 #pragma comment( lib, "sound_static.lib")
  
-#define LUABIND_DONT_COPY_STRINGS
-
 #define READ_IF_EXISTS(ltx,method,section,name,default_value)\
 	(((ltx)->line_exist(section, name)) ? ((ltx)->method(section, name)) : (default_value))

@@ -226,18 +226,15 @@ stalker_movement_manager_smart_cover::transition_action const &stalker_movement_
 		
 	}
 
-	VERIFY2					(
-		result,
-		make_string(
+	VERIFY_FORMAT(result,
 			"cover[%s][%s], loophole[%s -> %s], body_state[%s] [%f][%f][%f]",
 			cover.id().c_str(),
 			cover.description()->table_id().c_str(),
 			loophole_id0.c_str(),
 			loophole_id1.c_str(),
 			!target_body_state ? "" : (*target_body_state == eBodyStateStand ? "stand" : (*target_body_state == eBodyStateCrouch ? "crouch" : "invalid!")),
-			VPUSH(position)
-		)
-	);
+			VPUSH(position));
+
 	return					(*result);
 }
 
@@ -503,17 +500,13 @@ loophole const &stalker_movement_manager_smart_cover::nearest_enterable_loophole
 
 shared_str const &stalker_movement_manager_smart_cover::next_loophole_id			()
 {
-	VERIFY2					(
-		m_current.cover(),
-		make_string(
+	VERIFY_FORMAT(m_current.cover(),
 			"[%s][%s] -> [%s][%s], [%d]",
 			m_current.cover() ? m_current.cover()->id().c_str() : "<world>",
 			m_current.cover() ? m_current.cover_loophole()->id().c_str() : "<no loophole>",
 			m_target.cover() ? m_target.cover()->id().c_str() : "<world>",
 			m_target.cover() ? m_target.cover_loophole()->id().c_str() : "<no loophole>",
-			m_path.size()
-		)
-	);
+			m_path.size());
 
 	try_actualize_path		();
 	
@@ -668,14 +661,11 @@ loophole const &stalker_movement_manager_smart_cover::loophole		(smart_cover::co
 			loophole_id_predicate(loophole_id)
 		);
 
-	VERIFY2					(
-		i != loopholes.end(),
-		make_string			(
+	VERIFY_FORMAT(i != loopholes.end(),
 			"loophole [%s] not present in smart_cover [%s]",
 			loophole_id.c_str(),
-			cover.id().c_str()
-		)
-	);
+			cover.id().c_str());
+
 	return					(**i);
 }
 

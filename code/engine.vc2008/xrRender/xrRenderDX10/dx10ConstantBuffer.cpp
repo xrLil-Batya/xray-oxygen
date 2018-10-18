@@ -83,7 +83,7 @@ void dx10ConstantBuffer::Flush()
 {
 	if (m_bChanged)
 	{
-		void	*pData;
+		void	*pData = nullptr;
 #ifdef USE_DX11
 		D3D11_MAPPED_SUBRESOURCE	pSubRes;
 		CHK_DX(HW.pContext->Map(m_pBuffer, 0, D3D_MAP_WRITE_DISCARD, 0, &pSubRes));

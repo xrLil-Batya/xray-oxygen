@@ -1,9 +1,9 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "xr_object.h"
 #include "ObjectDump.h"
 #include "../xrCore/dump_string.h"
 
-ENGINE_API std::string dbg_object_base_dump_string( const CObject *obj )
+ENGINE_API xr_string dbg_object_base_dump_string( const CObject *obj )
 {
 	if( !obj )
 		return make_string("object: NULL ptr");
@@ -13,13 +13,13 @@ ENGINE_API std::string dbg_object_base_dump_string( const CObject *obj )
 						 obj->Visual() ? obj->cNameVisual().c_str() : "none" );
 }
 
-ENGINE_API std::string dbg_object_poses_dump_string( const CObject *obj )
+ENGINE_API xr_string dbg_object_poses_dump_string( const CObject *obj )
 {
 	if(!obj)
-		return std::string();
+		return xr_string();
 	
 	u32 ps_size = obj->ps_Size();
-	std::string buf("");
+	xr_string buf("");
 	for (u32 i = 0; i < ps_size; ++i )
 	{
 		const CObject::SavedPosition &svp = obj->ps_Element( i );
@@ -29,10 +29,10 @@ ENGINE_API std::string dbg_object_poses_dump_string( const CObject *obj )
 	return make_string( "\n XFORM: %s \n position stack : %s \n,  ", get_string(obj->XFORM()).c_str(), buf.c_str() );
 }
 
-ENGINE_API std::string dbg_object_visual_geom_dump_string( const CObject *obj )
+ENGINE_API xr_string dbg_object_visual_geom_dump_string( const CObject *obj )
 {
 	if( !obj || !obj->Visual() )
-			return std::string();
+			return xr_string();
 	const Fbox &box = obj->BoundingBox();
 	Fvector c;obj->Center( c );
 
@@ -40,10 +40,10 @@ ENGINE_API std::string dbg_object_visual_geom_dump_string( const CObject *obj )
 		get_string(box).c_str(), get_string( c ).c_str(), obj->Radius() );
 }
 
-ENGINE_API std::string dbg_object_props_dump_string( const CObject *obj )
+ENGINE_API xr_string dbg_object_props_dump_string( const CObject *obj )
 {
 	if( !obj )
-		return  std::string();
+		return  xr_string();
 
 	CObject::ObjectProperties props;
 	obj->DBGGetProps( props );
@@ -58,7 +58,7 @@ ENGINE_API std::string dbg_object_props_dump_string( const CObject *obj )
 		obj->dbg_update_cl, obj->dwFrame_UpdateCL, obj->dwFrame_AsCrow, Device.dwFrame, Device.dwTimeGlobal );
 }
 
-ENGINE_API std::string dbg_object_full_dump_string( const CObject *obj )
+ENGINE_API xr_string dbg_object_full_dump_string( const CObject *obj )
 {
 	return	dbg_object_base_dump_string( obj ) + 
 			dbg_object_props_dump_string( obj )+
@@ -66,8 +66,8 @@ ENGINE_API std::string dbg_object_full_dump_string( const CObject *obj )
 			dbg_object_visual_geom_dump_string( obj );
 			 
 }
-ENGINE_API std::string dbg_object_full_capped_dump_string( const CObject *obj )
+ENGINE_API xr_string dbg_object_full_capped_dump_string( const CObject *obj )
 {
-	return	std::string("\n object dump: \n" ) +
+	return	xr_string("\n object dump: \n" ) +
 			dbg_object_full_dump_string( obj );
 }

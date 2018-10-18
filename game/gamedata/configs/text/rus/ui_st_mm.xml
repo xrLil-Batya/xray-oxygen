@@ -379,19 +379,31 @@
 		<text>Солнечные лучи</text>
 	</string>
 	<string id="ui_mm_supersample">
-		<text>Сглаживание</text>
+		<text>SSAA</text>
+	</string>
+	<string id="ui_mm_msaa">
+		<text>MSAA</text>
 	</string>
 	<string id="ui_mm_aa_mode">
 		<text>Сглаживание</text>
 	</string>
+	<string id="ui_mm_aa_quality">
+		<text>Качество сглаживания</text>
+	</string>
 	<string id="st_opt_fxaa">
 		<text>FXAA</text>
+	</string>
+	<string id="st_opt_dlaa">
+		<text>DLAA</text>
 	</string>
 	<string id="st_opt_smaa">
 		<text>SMAA</text>
 	</string>
 	<string id="ui_mm_rain_drops">
-		<text>Капли дождя на линзе</text>
+		<text>Капли дождя на экране</text>
+	</string>
+	<string id="ui_mm_vignette">
+		<text>Виньетка</text>
 	</string>
 	<string id="ui_mm_texture_quality">
 		<text>Качество текстур</text>

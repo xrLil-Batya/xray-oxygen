@@ -62,7 +62,7 @@ public:
     virtual void    delete_value                    (float time);
     virtual void    update_value                    (float time, float value, int index = 0);
     virtual void    get_value                       (float time, float &valueb, int index = 0);
-    virtual float   get_key_time                    (size_t index)  {VERIFY (index < get_keys_count ()); return m_Value.keys[index]->time;}
+    virtual float   get_key_time                    (size_t index)  { return m_Value.keys.size() < index ? m_Value.keys[index]->time : 0.f;}
     virtual void   clear_all_keys                  ();
 
 };
@@ -104,8 +104,7 @@ public:
     virtual void    get_value                       (float time, float &value, int index = 0);
     virtual float   get_key_time                    (size_t index)
                     {
-                    VERIFY (index < get_keys_count ());
-                    return m_Red.keys.size() ? m_Red.keys[index]->time : 0;
+						return (index < get_keys_count()) && m_Red.keys.size() ? m_Red.keys[index]->time : 0;
                     }
     virtual void   clear_all_keys                  ();
 };

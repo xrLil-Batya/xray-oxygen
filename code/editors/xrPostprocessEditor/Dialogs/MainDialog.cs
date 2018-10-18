@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using XRay.ManagedApi.Core;
+using XRay;
 
 namespace xrPostprocessEditor
 {
@@ -60,8 +60,8 @@ namespace xrPostprocessEditor
                 new ChannelDesc(tpColorMapping, kfbColorMapping, PostProcessParamType.ColorMappingInfluence,
                     UpdateColorMapping)
             };
-
-            for (int kfbIndex = 0; kfbIndex < _chInfo.Length; kfbIndex++)
+			
+			for (int kfbIndex = 0; kfbIndex < _chInfo.Length; kfbIndex++)
             {
                 var dstChannel = _chInfo[kfbIndex];
                 for (int tabIndex = 0; tabIndex < _chInfo.Length; tabIndex++)
@@ -76,38 +76,72 @@ namespace xrPostprocessEditor
                 }
             }
 
-            SetCurrentEffectName(DefaultEffectName);
+			cpBC.isAReversed.Visible = false;
+			cpBC.isRReversed.Location = new Point(cpBC.isRReversed.Location.X - 15, cpBC.isRReversed.Location.Y);
+			cpBC.isGReversed.Location = new Point(cpBC.isGReversed.Location.X - 15, cpBC.isGReversed.Location.Y);
+			cpBC.isBReversed.Location = new Point(cpBC.isBReversed.Location.X - 15, cpBC.isBReversed.Location.Y);
+
+			cpAC.isAReversed.Visible = false;
+			cpAC.isRReversed.Location = new Point(cpAC.isRReversed.Location.X - 15, cpAC.isRReversed.Location.Y);
+			cpAC.isGReversed.Location = new Point(cpAC.isGReversed.Location.X - 15, cpAC.isGReversed.Location.Y);
+			cpAC.isBReversed.Location = new Point(cpAC.isBReversed.Location.X - 15, cpAC.isBReversed.Location.Y);
+			
+			nslNoiseGrain.Value = 1;
+			nslNoiseFPS.Value = 1;
+
+			SetCurrentEffectName(DefaultEffectName);
 
             SetUpHandlers();
         }
 
-        Color ConvertColor(ColorF value)
-        {
-            Color result = Color.FromArgb(
-                Convert.ToByte(value.a),
-                Convert.ToByte(value.r),
-                Convert.ToByte(value.g),
-                Convert.ToByte(value.b));
+		Color ConvertColor(ColorF value, ref XRay.SdkControls.ColorPicker Picer)
+		{
+			int NewA = (int)(value.a * 255);
+			int NewR = (int)(value.r * 255);
+			int NewG = (int)(value.g * 255);
+			int NewB = (int)(value.b * 255);
 
-            return result;
-        }
+			if (value.a < 0)
+			{
+				NewA += 255;
+				Picer.isAReversed.Checked = true;
+			}
+			if (value.r < 0)
+			{
+				NewR += 255;
+				Picer.isRReversed.Checked = true;
+			}
+			if (value.g < 0)
+			{
+				NewG += 255;
+				Picer.isGReversed.Checked = true;
+			}
+			if (value.b < 0)
+			{
+				NewB += 255;
+				Picer.isBReversed.Checked = true;
+			}
+
+			Color result = Color.FromArgb(NewA, NewR, NewB, NewG);
+			return result;
+		}
 
         private void UpdateAddColor(int keyIndex)
         {
             ColorF value = Engine.GetAddColor(keyIndex);
-            cpAC.Value = ConvertColor(value);
+            cpAC.Value = ConvertColor(value, ref cpAC);
         }
 
         private void UpdateBaseColor(int keyIndex)
         {
             ColorF value = Engine.GetBaseColor(keyIndex);
-            cpBC.Value = ConvertColor(value);
+            cpBC.Value = ConvertColor(value, ref cpBC);
         }
 
         private void UpdateGrayColor(int keyIndex)
         {
             ColorF value = Engine.GetGrayColor(keyIndex);
-            cpGC.Value = ConvertColor(value);
+            cpGC.Value = ConvertColor(value, ref cpGC);
         }
 
         private void UpdateDuality(int keyIndex)
@@ -120,15 +154,31 @@ namespace xrPostprocessEditor
         private void UpdateNoise(int keyIndex)
         {
             NoiseParams value = Engine.GetNoise(keyIndex);
-            //nslNoiseIntensity.Value = (decimal)value.Intensity;
-            //nslNoiseGrain.Value = (decimal)value.Grain;
-            //nslNoiseFPS.Value = (decimal)value.FPS;
+			try
+			{
+				nslNoiseIntensity.Value = (decimal)Convert.ToInt32(value.Intensity.ToString().Split('.', ',')[1]);
+			}
+			catch
+			{
+				nslNoiseIntensity.Value = 0;
+			}
+
+			try
+			{
+				nslNoiseGrain.Value = (decimal)Convert.ToInt32(value.Grain.ToString().Split('.', ',')[1]);
+			}
+			catch
+			{
+				nslNoiseGrain.Value = 0;
+			}
+
+			nslNoiseFPS.Value = (decimal)value.FPS;
         }
 
         private void UpdateBlur(int keyIndex)
         {
             float value = Engine.GetBlur(keyIndex);
-            //nslBlur.Value = (decimal)value;
+            nslBlur.Value = (decimal)value;
         }
 
         private void UpdateColorMapping(int keyIndex)
@@ -230,7 +280,9 @@ namespace xrPostprocessEditor
                 dlg.RestoreDirectory = true;
                 dlg.Filter = "Post-process effects (.ppe)|*.ppe|All Files (*.*)|*.*";
                 if (dlg.ShowDialog() == DialogResult.OK)
-                    Engine.SaveEffect(dlg.FileName);
+				{
+					Engine.SaveEffect(dlg.FileName);
+				}
             }
         }
 
@@ -255,7 +307,10 @@ namespace xrPostprocessEditor
 
             nslDualityX.ValueChanged += (s, value) => UpdateEngineValue(PostProcessParamType.DualityH, value);
             nslDualityY.ValueChanged += (s, value) => UpdateEngineValue(PostProcessParamType.DualityV, value);
-        }
+
+			nslNoiseIntensity.ValueChanged += (s, nlsVal) => UpdateEngineValue(PostProcessParamType.NoiseIntensity, nlsVal);
+
+		}
 
         private void UpdateEngineValue(PostProcessParamType paramType, Color color)
         {

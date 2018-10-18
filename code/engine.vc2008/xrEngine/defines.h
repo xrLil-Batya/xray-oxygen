@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 ENGINE_API	extern bool			bDebug;
 
 #define _RELEASE(x)			{ if(x) { (x)->Release(); (x)=NULL; } }

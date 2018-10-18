@@ -33,6 +33,7 @@
 #include "ui/UIPdaWnd.h"
 #include "../xrEngine/x_ray.h"
 #include "../xrUICore/UILoadingScreen.h"
+#include "../xrEngine/spectre/Spectre.h"
 
 #ifndef MASTER_GOLD
 #	include "custommonster.h"
@@ -75,10 +76,13 @@ CGamePersistent::CGamePersistent()
 	eQuickLoad				= Engine.Event.Handler_Attach("Game:QuickLoad",this);
 	Fvector3* DofValue		= Console->GetFVectorPtr("r_dof");
 	SetBaseDof				(*DofValue);
+
+	SpectreEngineClient::Initialize();
 }
 
 CGamePersistent::~CGamePersistent()
 {	
+	SpectreEngineClient::Shutdown();
 	Device.seqFrame.Remove		(this);
 	Engine.Event.Handler_Detach	(eQuickLoad,this);
 }

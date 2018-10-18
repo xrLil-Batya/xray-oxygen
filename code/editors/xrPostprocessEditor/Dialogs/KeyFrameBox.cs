@@ -88,7 +88,7 @@ namespace xrPostprocessEditor
         {
             var items = lbKeyFrames.Items.Cast<string>();
 
-            return items.Contains(newKeyTime.ToString(CultureInfo.InvariantCulture));
+			return false; //items.Contains(Convert.ToString(newKeyTime));
         }
     }
 }

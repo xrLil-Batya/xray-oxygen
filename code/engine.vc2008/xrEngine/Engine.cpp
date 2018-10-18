@@ -1,4 +1,4 @@
-// Engine.cpp: implementation of the CEngine class.
+﻿// Engine.cpp: implementation of the CEngine class.
 //
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"

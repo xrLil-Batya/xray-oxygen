@@ -1,4 +1,4 @@
-#ifndef	__IPHYSICS_GEOMETRY_H__
+﻿#ifndef	__IPHYSICS_GEOMETRY_H__
 #define	__IPHYSICS_GEOMETRY_H__
 
 class	IPhysicsGeometry

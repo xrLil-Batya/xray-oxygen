@@ -276,8 +276,6 @@ void dxEnvironmentRender::RenderSky(CEnvironment &env)
 	// The state may be not set by RCache if the state is changed using API SetRenderState() function before 
 	// and the RCache flag will remain unchanged to it's old value. 
 	// 
-
-	RCache.set_Z(FALSE);
 	RCache.set_Z(TRUE);
  	env.eff_LensFlare->Render(TRUE, FALSE, FALSE);
 	RCache.set_Z(FALSE);

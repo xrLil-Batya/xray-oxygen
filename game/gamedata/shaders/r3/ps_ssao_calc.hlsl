@@ -4,7 +4,8 @@
 #define ISAMPLE 0
 #endif
 
-uniform	Texture2D	s_half_depth;
+uniform float4 ssao_params;
+uniform	Texture2D s_half_depth;
 
 #include "ps_ssao.hlsl"
 #ifdef	USE_HBAO
@@ -24,10 +25,10 @@ float4 main ( _input I
 #endif	//	MSAA_OPTIMIZATION	
 ) : SV_Target0
 {
-	gbuffer_data gbd0 = gbuffer_load_data( GLD_P(I.tc0.xy + 0.5f * pos_decompression_params2.zw, I.pos2d * 2, ISAMPLE) );
-	gbuffer_data gbd1 = gbuffer_load_data( GLD_P(I.tc0.xy - 0.5f * pos_decompression_params2.zw, I.pos2d * 2, ISAMPLE) );
-	gbuffer_data gbd2 = gbuffer_load_data( GLD_P(I.tc0.xy + 0.5f * float2(+pos_decompression_params2.z, -pos_decompression_params2.w), I.pos2d * 2, ISAMPLE) );
-	gbuffer_data gbd3 = gbuffer_load_data( GLD_P(I.tc0.xy + 0.5f * float2(-pos_decompression_params2.z, +pos_decompression_params2.w), I.pos2d * 2, ISAMPLE) );
+	gbuffer_data gbd0 = gbuffer_load_data( GLD_P(I.tc0.xy + 0.5f * screen_res.zw, I.pos2d * 2, ISAMPLE) );
+	gbuffer_data gbd1 = gbuffer_load_data( GLD_P(I.tc0.xy - 0.5f * screen_res.zw, I.pos2d * 2, ISAMPLE) );
+	gbuffer_data gbd2 = gbuffer_load_data( GLD_P(I.tc0.xy + 0.5f * float2(+screen_res.z, -screen_res.w), I.pos2d * 2, ISAMPLE) );
+	gbuffer_data gbd3 = gbuffer_load_data( GLD_P(I.tc0.xy + 0.5f * float2(-screen_res.z, +screen_res.w), I.pos2d * 2, ISAMPLE) );
 
 	//float3 avgN = (gbd0.N +  gbd1.N +  gbd2.N + gbd3.N) * 0.25f;
 	

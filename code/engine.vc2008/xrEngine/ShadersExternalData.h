@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 // Хранилище внешних шейдерных параметров, которые читаются в Blender_Recorder_StandartBinding.cpp
 class	ShadersExternalData	//--#SM+#--
 {

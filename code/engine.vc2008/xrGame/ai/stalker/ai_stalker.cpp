@@ -1022,7 +1022,7 @@ void aim_target(shared_str const& aim_bone_id, Fvector &result, const CGameObjec
 	VERIFY(kinematics);
 
 	u16 bone_id = kinematics->LL_BoneID(aim_bone_id);
-	VERIFY2(bone_id != BI_NONE, make_string("Cannot find bone %s", bone_id));
+	VERIFY_FORMAT(bone_id != BI_NONE, "Cannot find bone %hu", bone_id);
 
 	Fmatrix const &bone_matrix = kinematics->LL_GetTransform(bone_id);
 	Fmatrix final;

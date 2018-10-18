@@ -21,7 +21,8 @@ extern LPCSTR generate_temp_file_name			(LPCSTR header0, LPCSTR header1, string_
 
 #define NO_MULTITHREADING
 
-CGameSpawnConstructor::CGameSpawnConstructor	(LPCSTR name, LPCSTR output, LPCSTR start, bool no_separator_check)
+CGameSpawnConstructor::CGameSpawnConstructor	(LPCSTR name, LPCSTR output, LPCSTR start, bool no_separator_check):
+	m_thread_manager(ProxyStatus, ProxyProgress)
 {
 	load_spawns						(name,no_separator_check);
 	process_spawns					();
@@ -232,7 +233,7 @@ void CGameSpawnConstructor::add_story_object(ALife::_STORY_ID id, CSE_ALifeDynam
 
 void CGameSpawnConstructor::add_object(CSE_Abstract *object)
 {
-	std::lock_guard<decltype(m_critical_section)> lock(m_critical_section);
+	xrCriticalSectionGuard guard(m_critical_section);
 	object->m_tSpawnID = spawn_id();
 	spawn_graph().add_vertex(xr_new<CServerEntityWrapper>(object), object->m_tSpawnID);
 }

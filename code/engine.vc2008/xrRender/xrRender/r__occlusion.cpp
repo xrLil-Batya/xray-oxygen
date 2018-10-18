@@ -57,7 +57,7 @@ u32		R_occlusion::occq_begin		(u32&	ID		)
 		VERIFY				( pool.size() );
 		used[ID]			= pool.back	();
 	} else {
-		ID					= used.size	();
+		ID					= (u32)used.size	();
 		VERIFY				( pool.size() );
 		used.push_back		(pool.back());
 	}
@@ -87,7 +87,7 @@ R_occlusion::occq_result R_occlusion::occq_get		(u32&	ID		)
 	CTimer	T;
 	T.Start	();
 	Device.Statistic->RenderDUMP_Wait.Begin	();
-	VERIFY2( ID<used.size(),make_string("_Pos = %d, size() = %d ", ID, used.size()));
+	VERIFY_FORMAT( ID<used.size(), "_Pos = %d, size() = %d ", ID, used.size());
 	while	((hr=GetData(used[ID].Q, &fragments,sizeof(fragments)))==S_FALSE) 
 	{
 		if (!SwitchToThread())			

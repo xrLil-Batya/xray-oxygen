@@ -213,6 +213,9 @@
     <ClCompile Include="ThreadManager.cpp">
       <Filter>OS</Filter>
     </ClCompile>
+    <ClCompile Include="thread_utils.cpp">
+      <Filter>OS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">

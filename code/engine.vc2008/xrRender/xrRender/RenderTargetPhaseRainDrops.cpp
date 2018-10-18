@@ -9,11 +9,8 @@ void CRenderTarget::PhaseRainDrops()
 	// 2. Use wet/dry timers for proper effect accumulation.
 	// 3. Add layered distortion effect to simulate water flowing, streaks, etc.
 
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
-
 	// Consts
-	CEnvDescriptorMixer& envdesc = *g_pGamePersistent->Environment().CurrentEnv;
+	CEnvDescriptorMixer& envdesc = *Environment().CurrentEnv;
 	Fvector4 params = { envdesc.rain_density, droplets_power_debug, 0, 0 };
 	xr_unordered_map<LPCSTR, Fvector4*> consts;
 	consts.insert(std::make_pair("rain_drops_params0", &params));
@@ -22,9 +19,9 @@ void CRenderTarget::PhaseRainDrops()
 #if defined(USE_DX10) || defined(USE_DX11)
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
-	RenderScreenQuad(_w, _h, rt_Generic_2, s_rain_drops->E[0], &consts);
+	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_rain_drops->E[0], &consts);
 	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 #else
-	RenderScreenQuad(_w, _h, rt_Color, s_rain_drops->E[0], &consts);
+	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Color, s_rain_drops->E[0], &consts);
 #endif
 }

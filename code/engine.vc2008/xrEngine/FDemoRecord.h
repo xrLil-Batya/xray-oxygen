@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "iinputreceiver.h"
 #include "effector.h"

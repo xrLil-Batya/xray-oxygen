@@ -54,7 +54,7 @@ struct net_updateInvData
 };
 
 
-class CInventoryItem : 
+class GAME_API CInventoryItem : 
 	public CAttachableItem,
 	public CHitImmunity
 #ifdef DEBUG

@@ -246,19 +246,24 @@
 			<options_item entry="r_tf_aniso" group="mm_opt_video_adv"/>
 		</track_aniso>
 
-		<cap_ssample x="16" y="3" width="108" height="24">
+		<!-- SUPERSAMPLING IS NOT AVAILABLE NOW AND NEVER WAS ON R2+. MAYBE LATER. -->
+<!-- 	<cap_ssample x="16" y="3" width="108" height="24">
 			<text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_supersample</text>
 		</cap_ssample>
 		<track_ssample x="144" y="6" width="188" height="16" step="1" is_integer="1">
 			<options_item entry="r_supersample" group="mm_opt_video_adv" depend="vid"/>
-		</track_ssample>
-		<combo_ssample x="144" y="0" width="188" height="20" list_length="4" always_show_scroll="0">
+		</track_ssample> -->
+		
+		<cap_msaa x="16" y="3" width="108" height="24">
+            <text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_msaa</text>
+        </cap_msaa>
+		<combo_msaa x="144" y="0" width="188" height="20" list_length="4" always_show_scroll="0">
 			<options_item entry="r3_msaa" group="mm_opt_video_adv" depend="vid"/>
 			<list_font color="yellow" font="letterica16"/>
 			<text_color>
 				<e color="yellow"/>
 			</text_color>
-		</combo_ssample>
+		</combo_msaa>
 
 		<cap_r_sun x="16" y="3" width="108" height="24">
 			<text r="255" g="220" b="0" font="letterica16" align="r" vert_align="c">ui_mm_r_sun</text>
@@ -360,6 +365,14 @@
 			<options_item entry="r_rain_droplets" group="mm_opt_video_adv"/>
 		</check_rain_drops>
 		
+		<cap_vignette x="16" y="3" width="108" height="24">
+			<text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_vignette</text>
+		</cap_vignette>
+		<check_vignette x="133" y="0" width="35" stretch="1" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<options_item entry="r_vignette" group="mm_opt_video_adv"/>
+		</check_vignette>
+
 		<cap_aa_mode x="16" y="3" width="108" height="24">
 			<text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_aa_mode</text>
 		</cap_aa_mode>
@@ -370,6 +383,17 @@
 				<e r="34" g="179" b="34"/>
 			</text_color>
 		</combo_aa_mode>
+		
+		<cap_aa_quality x="16" y="3" width="108" height="24">
+            <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_aa_quality</text>
+        </cap_aa_quality>
+        <combo_aa_quality x="144" y="0" width="188" height="20" list_length="5" always_show_scroll="0">
+            <options_item entry="r_aa_quality" group="mm_opt_video" depend="vid"/>
+            <list_font r="34" g="179" b="34" font="letterica16"/>
+            <text_color>
+	            <e r="34" g="179" b="34"/>
+            </text_color>
+        </combo_aa_quality>
 		
 		<cap_vsync x="16" y="3" width="108" height="24">
 			<text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_vsync</text>

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // refs
 class ENGINE_API				CObject;

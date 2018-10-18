@@ -126,14 +126,11 @@ extern xr_vector<b_rc_face>			g_rc_faces		;
 
 // phases
 void	xrLoad			(LPCSTR name, bool draft_mode);
-//void	xrBuildNodes	();
 void	xrSmoothNodes	();
-void	xrLight			();
 void	xrCover			(bool pure_covers);
 void	xrMerge			();
 void	xrConvertAndLink();
 void	xrDisplay		();
-//void	xrPalettizeCovers();
 void	xrSaveNodes		(LPCSTR name, LPCSTR out_name);
 
 // constants

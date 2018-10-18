@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 typedef unsigned char  tv_uchar, * lp_tv_uchar ;
 typedef signed char   tv_schar, * lp_tv_schar ;

@@ -102,7 +102,7 @@ void	export_geometry		( xrMU_Model &	mu_model )
 		g_IB.Register	(LPWORD(&*it->ogf->data.faces.begin()),LPWORD(&*it->ogf->data.faces.end()),&it->ib_id,&it->ib_start);
 
 		// SW
-		if (it->ogf->progressive_test())
+		if (it->ogf->Progressive_test())
 			g_SWI.Register	(&it->sw_id,&it->ogf->data.m_SWI);
 	}
 }

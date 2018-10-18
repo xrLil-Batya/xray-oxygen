@@ -7,7 +7,7 @@ class XRCORE_API Time
 private:
 	time_t t;
 	tm* aTm;
-	using string = std::string;
+	using string = xr_string;
 
 public:
 	Time();

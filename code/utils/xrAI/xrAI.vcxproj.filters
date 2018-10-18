@@ -17,9 +17,6 @@
       <UniqueIdentifier>{52a43e8d-1b28-42ed-a312-13841e363de6}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
-    <Filter Include="Compiler\Kernel\Log">
-      <UniqueIdentifier>{10aef637-f580-4032-9fb9-34d7069b3e5d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Compiler\Kernel\Generic">
       <UniqueIdentifier>{40197598-ec0d-4b05-88c3-4cd2fb61da9a}</UniqueIdentifier>
     </Filter>
@@ -244,9 +241,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="_buildnodes_view.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
     <ClCompile Include="compiler.cpp">
       <Filter>Compiler</Filter>
     </ClCompile>
@@ -260,9 +254,6 @@
       <Filter>Compiler</Filter>
     </ClCompile>
     <ClCompile Include="compiler_light.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
-    <ClCompile Include="compiler_link.cpp">
       <Filter>Compiler</Filter>
     </ClCompile>
     <ClCompile Include="compiler_load.cpp">
@@ -285,12 +276,6 @@
     </ClCompile>
     <ClCompile Include="xrAI.cpp">
       <Filter>Compiler\Kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="xrThread.cpp">
-      <Filter>Compiler\Kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="cl_log.cpp">
-      <Filter>Compiler\Kernel\Log</Filter>
     </ClCompile>
     <ClCompile Include="cl_collector.cpp">
       <Filter>Compiler\Kernel\Generic\CDB</Filter>
@@ -432,14 +417,8 @@
     <ClInclude Include="xrShaderTypes.h">
       <Filter>Compiler\Kernel</Filter>
     </ClInclude>
-    <ClInclude Include="xrThread.h">
-      <Filter>Compiler\Kernel</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Compiler\Kernel\Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cl_log.h">
-      <Filter>Compiler\Kernel\Log</Filter>
     </ClInclude>
     <ClInclude Include="_d3d_extensions.h">
       <Filter>Compiler\Kernel\Generic</Filter>

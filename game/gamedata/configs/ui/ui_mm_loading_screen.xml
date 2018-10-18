@@ -8,7 +8,7 @@
 	</background>
 
 	<engine_version x="610" y="120">
-		<text color="gray" font="electron18"/>
+		<text color="gray" font="ui_font_electron_18"/>
 	</engine_version>
 	
 	<loading_logo x="0" y="173" width="1024" height="399"/>							<!-- Картинка загружаемого уровня-->
@@ -27,7 +27,7 @@
 	</loading_progress>
 
 	<loading_progress_percent  x="500" y="574">										<!-- Проценты загрузки числами-->
-		<text color="gray" font="electron18"/>
+		<text color="gray" font="ui_font_electron_18"/>
 	</loading_progress_percent>
 
 	<loading_stage x="260" y="530" width="506" height="20">							<!-- Стадия загрузки текстом-->

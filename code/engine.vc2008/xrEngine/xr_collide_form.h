@@ -1,4 +1,4 @@
-#ifndef __XR_COLLIDE_FORM_H__
+﻿#ifndef __XR_COLLIDE_FORM_H__
 #define __XR_COLLIDE_FORM_H__
 
 #include "../xrcdb/xr_collide_defs.h"

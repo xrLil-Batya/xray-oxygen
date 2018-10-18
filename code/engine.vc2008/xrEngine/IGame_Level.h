@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include "iinputreceiver.h"
 #include "xr_object_list.h"
@@ -67,7 +67,7 @@ public:
 	virtual void	_BCL		OnFrame					(void);
 	virtual void				OnRender				(void);
 
-	//возвращает время в милисекундах относительно начала игры
+	//РІРѕР·РІСЂР°С‰Р°РµС‚ РІСЂРµРјСЏ РІ РјРёР»РёСЃРµРєСѓРЅРґР°С… РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РЅР°С‡Р°Р»Р° РёРіСЂС‹
 	virtual u64					GetStartGameTime		() { return 0; }
 	virtual u64					GetGameTime				() { return 0; }
 

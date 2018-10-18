@@ -241,7 +241,7 @@ void CRender::Render		()
 		m_project.build_projection	(
 			deg2rad(Device.fFOV), 
 			Device.fASPECT, VIEWPORT_NEAR, 
-			z_distance * g_pGamePersistent->Environment().CurrentEnv->far_plane);
+			z_distance * Environment().CurrentEnv->far_plane);
 		m_zfill.mul	(m_project,Device.mView);
 		r_pmask										(true,false);	// enable priority "0"
 		set_Recorder								(nullptr)		;
@@ -265,8 +265,8 @@ void CRender::Render		()
 
 	CTimer	T;							T.Start();
 	BOOL	result = FALSE;
-	HRESULT	hr = S_FALSE;
-	while ((hr = q_sync_point[q_sync_count]->GetData(&result, sizeof(result), D3DGETDATA_FLUSH)) == S_FALSE) {
+	HRESULT	hResult = S_FALSE;
+	while ((hResult = q_sync_point[q_sync_count]->GetData(&result, sizeof(result), D3DGETDATA_FLUSH)) == S_FALSE) {
 		if (!SwitchToThread())			Sleep(ps_r_wait_sleep);
 		if (T.GetElapsed_ms() > 500) {
 			result = FALSE;
@@ -320,8 +320,8 @@ void CRender::Render		()
 		light_Package&	LP	= Lights.package;
 
 		// stats
-		stats.l_shadowed	= LP.v_shadowed.size();
-		stats.l_unshadowed	= LP.v_point.size() + LP.v_spot.size();
+		stats.l_shadowed	= (u32)LP.v_shadowed.size();
+		stats.l_unshadowed	= (u32)(LP.v_point.size() + LP.v_spot.size());
 		stats.l_total		= stats.l_shadowed + stats.l_unshadowed;
 
 		// perform tests
@@ -458,7 +458,7 @@ void CRender::render_forward				()
 		if (Glows && ps_r_flags.is(R_FLAG_GLOW_USE))
 			Glows->Render();											// glows render
 
-		g_pGamePersistent->Environment().RenderLast();					// rain/thunder-bolts
+		Environment().RenderLast();					// rain/thunder-bolts
 	}
 
 	RImplementation.o.distortion				= FALSE;				// disable distorion

@@ -1,4 +1,4 @@
-#ifndef _RENDER_H_
+﻿#ifndef _RENDER_H_
 #define _RENDER_H_
 
 #include "../xrCDB/frustum.h"
@@ -257,6 +257,12 @@ public:
 	virtual void					rmNormal				()											= 0;
 	virtual u32						memory_usage			()											= 0;
 	virtual u32                     active_phase            ()                                          = 0;
+
+	// Editor specific
+	//virtual void					StaticInit() = 0;
+	//virtual void					StaticDestroy() = 0;
+	//virtual u32						ShaderLoad(LPCSTR ShaderName, LPCSTR ShaderTextureList, LPCSTR ShaderConstantList, LPCSTR ShaderMatrixList) = 0;
+	//virtual IRenderVisual*			LoadVisualFromData(void* pVertexData, u32 VertexCount, void* pIndiciesData, u32 IndiciesCount) = 0;
 
 	// Constructor/destructor
 	virtual ~IRender_interface();

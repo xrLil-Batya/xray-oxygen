@@ -13,7 +13,7 @@
 //==============================================================================
 
 
-static std::recursive_mutex	block;
+static xrCriticalSection	block;
 LPCSTR dataDesc  = "global_data";
 
 xr_vector<u32>	net_pool;

@@ -86,13 +86,12 @@ static const float angles[5] =
 	6.2832f
 };
 #endif
-float ssao_noise_tile_factor;
-float ssao_kernel_size;
 
 Texture2D	jitter0;
 sampler		smp_jitter;
 Texture2D	jitterMipped;
 
+float4 ssao_params;
 
 float3 uv_to_eye(float2 uv, float eye_z)
 {
@@ -118,6 +117,9 @@ float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, uint iSample)
 #	endif
 #endif
 {
+	const float ssao_noise_tile_factor = ssao_params.x;
+	const float ssao_kernel_size = ssao_params.y;
+
 	float point_depth = P.z;
 	if (point_depth<0.01) point_depth = 100000.0h;	//	filter for the sky
 	float2 scale = float2(.5f / 1024.h, .5f / 768.h)*ssao_kernel_size/max(point_depth,1.3);

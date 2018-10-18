@@ -1,4 +1,4 @@
-#ifndef xr_efflensflareH
+﻿#ifndef xr_efflensflareH
 #define xr_efflensflareH
 
 #include "../xrcdb/xr_collide_defs.h"

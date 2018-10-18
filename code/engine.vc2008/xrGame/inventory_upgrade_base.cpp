@@ -33,7 +33,7 @@ void UpgradeBase::construct( const shared_str& upgrade_id, Manager& manager_r )
 	m_id._set( upgrade_id );
 	m_known = false;
 	
-	VERIFY2( pSettings->section_exist( m_id ), make_string( "Section of upgrade [%s] not exist!", m_id.c_str() ) );
+	VERIFY_FORMAT( pSettings->section_exist( m_id ), "Section of upgrade [%s] not exist!", m_id.c_str());
 }
 
 void UpgradeBase::add_dependent_groups( LPCSTR groups_str, Manager& manager_r )
@@ -94,7 +94,6 @@ bool UpgradeBase::contain_upgrade( const shared_str& upgrade_id )
 
 void UpgradeBase::fill_root_container( Root* root )
 {
-//!=R_ASSERT2( 0, make_string( "! Can`t fill <%s> in <UpgradeBase::fill_root_container> for root = %s", id_str(), root->id_str() ) );
 	Groups_type::iterator ib = m_depended_groups.begin();
 	Groups_type::iterator ie = m_depended_groups.end();
 	for ( ; ib != ie ; ++ib )
@@ -120,10 +119,6 @@ UpgradeStateResult UpgradeBase::can_install( CInventoryItem& item, bool loading 
 		{
 			Msg( "- Upgrade <%s> (id = %d) is installed already.", id_str(), item.object_id() );
 		}
-		/*if ( loading )
-		{
-			FATAL( make_string( "Loading item: Upgrade <%s> (id = %d) is installed already.", id_str(), item.object_id() ).c_str() );
-		}*/
 		return result_e_installed; // true
 	}
 	return result_ok;

@@ -145,7 +145,7 @@ inline errno_t xr_strcat		( char* destination, size_t const buffer_size, const c
 {
 	return						strcat_s( destination, buffer_size, source );
 }
-#ifndef __CLR_VER 
+
 inline int xr_sprintf	( char* destination, size_t const buffer_size, const char* format_string, ... )
 {
 	va_list args;
@@ -159,7 +159,7 @@ inline int xr_sprintf	( char (&destination)[count], const char* format_string, .
 	va_start					( args, format_string);
 	return						vsprintf_s( destination, count, format_string, args );
 }
-#endif
+
 #else // #ifndef MASTER_GOLD
 
 inline errno_t xr_strcpy	( char* destination, size_t const destination_size, const char* source )

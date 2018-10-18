@@ -84,10 +84,10 @@ public:
 		xr_vector<xrMU_Model*>		&mu_models		()		{	return _mu_models; }
 		xr_vector<xrMU_Reference*>	&mu_refs		()		{	return _mu_refs; }
 
-		void						read_mu_models			( INetReader &r );
+		void						read_mu_models			( IReader &r );
 		void						write_mu_models			( IWriter	&w ) const ;
 
-		void						read_mu_model_refs		( INetReader &r );
+		void						read_mu_model_refs		( IReader &r );
 		void						write_mu_model_refs		( IWriter	&w ) const ;
 		void						close_models_read		();
 		void						close_models_write		()const ;
@@ -112,34 +112,31 @@ public:
 
 		void						gl_mesh_clear			();
 public:
-		void						read_base				( INetReader &r );
+		void						read_base				( IReader &r );
 		void						write_base				( IWriter	&w ) const ;
-		void						read					( INetReader &r );
+		void						read					( IReader &r );
 		void						write					( IWriter	&w ) const ;
-		void						read_vertices			( INetReader	&r );
+		void						read_vertices			( IReader	&r );
 		void						write_vertices			( IWriter	&w )const;
-		void						read_lm_data			( INetReader	&r );
+		void						read_lm_data			( IReader	&r );
 		void						write_lm_data			( IWriter	&w )const;
 
-		void						read_modes_color		( INetReader	&r );
+		void						read_modes_color		( IReader	&r );
 		void						write_modes_color		( IWriter	&w )const;
 
-		void						read					( INetReader &r, base_Face* &f);
+		void						read					( IReader &r, base_Face* &f);
 		void						write					( IWriter &r, const base_Face *f ) const ;
 		void						clear					();
 		void						clear_mesh				();
 		void						clear_mu_models			();	
 		void						mu_models_calc_materials();
-private:
-
-
 };													
 
 extern "C" XRLC_LIGHT_API xrLC_GlobalData*	lc_global_data();
 extern "C" XRLC_LIGHT_API void				create_global_data();
 extern "C" XRLC_LIGHT_API void				destroy_global_data();
 extern "C" XRLC_LIGHT_API u32				InvalideFaces();
-		   XRLC_LIGHT_API void				ImplicitLighting(BOOL net, u32 thCount);
+		   XRLC_LIGHT_API void				ImplicitLighting(u32 thCount);
 
 extern xrLC_GlobalData* data;
 IC xrLC_GlobalData* inlc_global_data() { return data; }

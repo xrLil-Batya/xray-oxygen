@@ -87,7 +87,7 @@ static void  get_depth( bool& do_colide, bool bo1, dContact& c, SGameMtl * /*mat
 		collide_obj = nullptr;
 #endif
 }
-static std::string collide_diag()
+static xr_string collide_diag()
 {
 #ifdef	DEBUG
 	if( collide_obj )
@@ -95,7 +95,7 @@ static std::string collide_diag()
 	else
 		return make_string("collide static");
 #else
-	return std::string();
+	return xr_string();
 #endif
 }
 
@@ -156,10 +156,9 @@ void imotion_position::state_start( )
 
 	blend = get_blend.blend;
 
-	VERIFY2( B.stop_at_end, 
-		make_string( "can not use cyclic anim in death animth motion: %s", 
-		KA->LL_MotionDefName_dbg( B.motionID ).first ) 
-	);
+	VERIFY_FORMAT( B.stop_at_end, 
+		"can not use cyclic anim in death animth motion: %s", 
+		KA->LL_MotionDefName_dbg( B.motionID ).first);
 	time_to_end = B.timeTotal - (SAMPLE_SPF+EPS) - B.timeCurrent;
 	time_to_end/=B.speed;
 	shell->add_ObjectContactCallback( get_depth );

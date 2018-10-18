@@ -1,4 +1,4 @@
-#ifndef vis_commonH
+﻿#ifndef vis_commonH
 #define vis_commonH
 #pragma once
 

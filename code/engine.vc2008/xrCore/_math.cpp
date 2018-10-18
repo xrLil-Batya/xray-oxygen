@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#pragma hdrstop
 #pragma warning(disable: 4005)
 
 #include <process.h>
@@ -260,12 +259,12 @@ unsigned long long SubtractTimes(const FILETIME one, const FILETIME two)
 	return a.QuadPart - b.QuadPart;
 }
 
-int processor_info::getCPULoad(double &val)
+bool processor_info::getCPULoad(double &val)
 {
 	FILETIME sysIdle, sysKernel, sysUser;
 	// sysKernel include IdleTime
 	if (GetSystemTimes(&sysIdle, &sysKernel, &sysUser) == 0) // GetSystemTimes func FAILED return value is zero;
-		return 0;
+		return false;
 
 	if (prevSysIdle.dwLowDateTime != 0 && prevSysIdle.dwHighDateTime != 0)
 	{
@@ -285,7 +284,7 @@ int processor_info::getCPULoad(double &val)
 	prevSysKernel = sysKernel;
 	prevSysUser = sysUser;
 
-	return 1;
+	return true;
 }
 
 #define NT_SUCCESS(Status) (((LONG)(Status)) >= 0)
@@ -310,9 +309,6 @@ float* processor_info::MTCPULoad()
 	{
 		SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION* cpuPerfInfo = &perfomanceInfo[i];
 		cpuPerfInfo->KernelTime.QuadPart -= cpuPerfInfo->IdleTime.QuadPart;
-
-		DWORD64 dwTotal = cpuPerfInfo->KernelTime.QuadPart + cpuPerfInfo->UserTime.QuadPart;
-		DWORD64 dwKernelTotal = cpuPerfInfo->KernelTime.QuadPart - cpuPerfInfo->IdleTime.QuadPart;
 
 		fUsage[i] = 100.0f - 0.01f * (cpuPerfInfo->IdleTime.QuadPart - m_idleTime[i].QuadPart) / ((dwTickCount - m_dwCount));
 		if (fUsage[i] < 0.0f) { fUsage[i] = 0.0f; }

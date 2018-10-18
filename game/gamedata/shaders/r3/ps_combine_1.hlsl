@@ -47,13 +47,13 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 	float4	L		= s_accumulator[int2(I.pos2d.xy)];	// diffuse.specular
 	// MatthewKush to all: If non-MSAA, this is better (but only if the sampler uses is smp_nofilter)
 #	else
-	float4	L		= s_accumulator.Load(int3(I.tc0 * pos_decompression_params2.xy, 0));
+	float4	L		= s_accumulator.Load(int3(I.tc0 * screen_res.xy, 0));
 #	endif
 #else
 #	ifdef GBUFFER_OPTIMIZATION
 	float4	L		= s_accumulator.Load(int3(I.pos2d.xy, 0), ISAMPLE);	// diffuse.specular
 #	else
-	float4	L		= s_accumulator.Load(int3(I.tc0 * pos_decompression_params2.xy, 0), ISAMPLE);
+	float4	L		= s_accumulator.Load(int3(I.tc0 * screen_res.xy, 0), ISAMPLE);
 #	endif
 #endif
 
@@ -86,7 +86,7 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 #	ifdef GBUFFER_OPTIMIZATION
 	int2	texCoord = I.pos2d;
 #	else
-	int2	texCoord = int2(I.tc0 * pos_decompression_params2.xy);
+	int2	texCoord = int2(I.tc0 * screen_res.xy);
 #	endif
 #endif
 	

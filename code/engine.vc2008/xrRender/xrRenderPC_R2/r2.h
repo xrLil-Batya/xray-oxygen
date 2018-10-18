@@ -2,11 +2,8 @@
 
 #include "../xrRender/r__dsgraph_structure.h"
 #include "../xrRender/r__occlusion.h"
-
 #include "../xrRender/PSLibrary.h"
-
-#include "r2_types.h"
-#include "r2_rendertarget.h"
+#include "../xrRender/xrRenderTarget.h"
 
 #include "../xrRender/hom.h"
 #include "../xrRender/detailmanager.h"
@@ -38,8 +35,6 @@ public:
 
 public:
 	struct		_options	{
-		u32		bug					: 1;
-		
 		u32		ssao_blur_on		: 1;
 		u32		ssao_opt_data		: 1;
 		u32		ssao_half_data		: 1;

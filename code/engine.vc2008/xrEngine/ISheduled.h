@@ -1,4 +1,4 @@
-class	ENGINE_API	ISheduled
+﻿class	ENGINE_API	ISheduled
 #pragma once
 {
 public:

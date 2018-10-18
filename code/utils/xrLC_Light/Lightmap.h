@@ -20,7 +20,7 @@ public:
 public:
 	CLightmap					() = default;
 	~CLightmap					() = default;
-	void	read				( INetReader	&r );
+	void	read				( IReader	&r );
 	void	write				( IWriter	&w )const;
 	void	Capture				( CDeflector *D, int b_u, int b_v, int s_u, int s_v, BOOL bRotate );
 	void	Save				( LPCSTR path );

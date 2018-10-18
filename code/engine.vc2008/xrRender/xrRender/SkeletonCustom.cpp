@@ -17,7 +17,7 @@
 
 #include "../../xrCDB/cl_intersect.h"
 
-std::recursive_mutex	UCalc_Mutex;
+xrCriticalSection	UCalc_Mutex;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

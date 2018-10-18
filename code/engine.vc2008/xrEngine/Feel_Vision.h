@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../xrcdb/xr_collide_defs.h"
 #include "render.h"

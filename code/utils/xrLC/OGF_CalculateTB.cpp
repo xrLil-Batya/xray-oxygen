@@ -12,10 +12,9 @@ void OGF::CalculateTB()
 {
 	remove_isolated_verts(data.vertices, data.faces);
 	// ************************************* Declare inputs
-	Status("Declarator...");
+	Logger.Status("Declarator...");
 	u32 v_count_reserve = iFloor(float(data.vertices.size())*1.33f);
-	u32 i_count_reserve = 3 * data.faces.size();
-
+	size_t i_count_reserve = 3 * data.faces.size();
 
 	mender_mapping_out_to_in_vert.clear();
 
@@ -27,12 +26,12 @@ void OGF::CalculateTB()
 	mender_in_out_indices.clear();
 	fill_mender_input(data.vertices, data.faces, mender_in_out_verts, mender_in_out_indices);
 
-	u32			v_was = data.vertices.size();
-	u32			v_become = mender_in_out_verts.size();
-	clMsg("duplication: was[%d] / become[%d] - %2.1f%%", v_was, v_become, 100.f*float(v_become - v_was) / float(v_was));
+	u32			v_was = (u32)data.vertices.size();
+	u32			v_become = (u32)mender_in_out_verts.size();
+	Logger.clMsg("duplication: was[%d] / become[%d] - %2.1f%%", v_was, v_become, 100.f*float(v_become - v_was) / float(v_was));
 
 	// ************************************* Perform mungle
-	Status("Calculating basis...");
+	Logger.Status("Calculating basis...");
 
 	MeshMender	mender;
 	if (!mender.Mend(

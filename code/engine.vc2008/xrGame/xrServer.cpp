@@ -215,9 +215,9 @@ void xrServer::verify_entity				(const CSE_Abstract *entity) const
 	VERIFY(entity->m_wVersion!=0);
 	if (entity->ID_Parent != 0xffff) {
 		xrS_entities::const_iterator	J = entities.find(entity->ID_Parent);
-		VERIFY2							(J != entities.end(),
-			make_string("SERVER : Cannot find parent in the map [%s][%s]",entity->name_replace(),
-			entity->name()).c_str());
+		VERIFY_FORMAT (J != entities.end(),
+			"SERVER : Cannot find parent in the map [%s][%s]",entity->name_replace(),
+			entity->name());
 		VERIFY3							((*J).second,"SERVER : Null entity object in the map",entity->name_replace());
 		VERIFY3							((*J).first == (*J).second->ID,"SERVER : ID mismatch - map key doesn't correspond to the real entity ID",(*J).second->name_replace());
 		VERIFY3							(std::find((*J).second->children.begin(),(*J).second->children.end(),entity->ID) != (*J).second->children.end(),"SERVER : Parent/Children relationship mismatch - Object has parent, but corresponding parent doesn't have children",(*J).second->name_replace());
@@ -478,13 +478,13 @@ bool xrServer::Process_event_reject(NET_Packet& P, const u32 &time, const u16 id
 	CSE_Abstract*		e_parent = ID_to_entity(id_parent);
 	CSE_Abstract*		e_entity = ID_to_entity(id_entity);
 
-	VERIFY2(e_entity, make_string("entity not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame).c_str());
+	VERIFY_FORMAT(e_entity, "entity not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame);
 	if (!e_entity) {
 		Msg("! ERROR on rejecting: entity not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
 		return false;
 	}
 
-	VERIFY2(e_parent, make_string("parent not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame).c_str());
+	VERIFY_FORMAT(e_parent, "parent not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame);
 	if (!e_parent) {
 		Msg("! ERROR on rejecting: parent not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
 		return false;
@@ -578,7 +578,7 @@ void xrServer::Perform_destroy(CSE_Abstract* object)
 	while (!object->children.empty())
 	{
 		CSE_Abstract *child = ID_to_entity(object->children.back());
-		R_ASSERT2(child, make_string("child registered but not found [%d] [%s]", object->children.back(), object->name()));
+		R_ASSERT_FORMAT(child, "child registered but not found [%d] [%s]", object->children.back(), object->name());
 
 		Perform_reject(child, object, 2 * NET_Latency);
 		Perform_destroy(child);
@@ -682,9 +682,9 @@ void xrServer::Process_event(NET_Packet& P)
 		u16 id_entity;
 		P.r_u16(id_entity);
 
-		// кто забирает (для своих нужд)
+		// РєС‚Рѕ Р·Р°Р±РёСЂР°РµС‚ (РґР»СЏ СЃРІРѕРёС… РЅСѓР¶Рґ)
 		CSE_Abstract* e_parent = receiver;
-		// кто отдает
+		// РєС‚Рѕ РѕС‚РґР°РµС‚
 		CSE_Abstract* e_entity = ID_to_entity(id_entity);
 		if (!e_entity) break;
 
@@ -718,7 +718,7 @@ void xrServer::Process_event(NET_Packet& P)
 		u16 id_src;
 		P.r_u16(id_src);
 
-		// кто умер
+		// РєС‚Рѕ СѓРјРµСЂ
 		CSE_Abstract *e_dest = receiver;
 		// this is possible when hit event is sent before destroy event
 		if (!e_dest) break;
@@ -740,12 +740,12 @@ void xrServer::Process_event(NET_Packet& P)
 		u16 id_dest = destination, id_src;
 		P.r_u16(id_src);
 
-		// кто умер
+		// РєС‚Рѕ СѓРјРµСЂ
 		CSE_Abstract* e_dest = receiver;
 		// this is possible when hit event is sent before destroy event
 		if (!e_dest) break;
 
-		CSE_Abstract* e_src = ID_to_entity(id_src);	// кто убил
+		CSE_Abstract* e_src = ID_to_entity(id_src);	// РєС‚Рѕ СѓР±РёР»
 
 		if (!e_src)
 		{
@@ -755,7 +755,7 @@ void xrServer::Process_event(NET_Packet& P)
 
 		game->on_death(e_dest, e_src);
 
-		// клиент, чей юнит убил
+		// РєР»РёРµРЅС‚, С‡РµР№ СЋРЅРёС‚ СѓР±РёР»
 		CClient* c_src = e_src->owner;
 
 		if (c_src->owner->ID == id_src)
@@ -838,8 +838,8 @@ void xrServer::Process_event_activate(NET_Packet& P, const u16 id_parent, const 
 	CSE_Abstract* e_parent = ID_to_entity(id_parent);
 	CSE_Abstract* e_entity = ID_to_entity(id_entity);
 
-	R_ASSERT2(e_parent, make_string("parent not found. id_parent=%d id_entity=%d frame=%d", id_parent, id_entity, Device.dwFrame).c_str());
-	R_ASSERT2(e_entity, make_string("entity not found. id_parent=%d id_entity=%d frame=%d", id_parent, id_entity, Device.dwFrame).c_str());
+	R_ASSERT_FORMAT(e_parent, "parent not found. id_parent=%d id_entity=%d frame=%d", id_parent, id_entity, Device.dwFrame);
+	R_ASSERT_FORMAT(e_entity, "entity not found. id_parent=%d id_entity=%d frame=%d", id_parent, id_entity, Device.dwFrame);
 
 	xr_delete(e_parent);
 
@@ -1012,7 +1012,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET
 	// Parse message
 	u16 id_dest = ID;
 
-	// кто должен быть уничтожен
+	// РєС‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРЅРёС‡С‚РѕР¶РµРЅ
 	CSE_Abstract* e_dest = ID_to_entity(id_dest);
 	if (!e_dest)
 	{

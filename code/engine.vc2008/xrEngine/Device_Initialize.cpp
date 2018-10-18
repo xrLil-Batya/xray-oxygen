@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "../xrPlay/resource.h"
 
 #ifdef INGAME_EDITOR
@@ -46,44 +46,65 @@ void CRenderDevice::Initialize			()
 	// Unless a substitute hWnd has been specified, create a window to render into
     if( m_hWnd == NULL)
     {
-		const char*	wndclass ="_XRAY_1.7";
-
-        // Register the windows class
-		HINSTANCE hInstance = (HINSTANCE)GetModuleHandle(0);
-        WNDCLASS wndClass = { 0, WndProc, 0, 0, hInstance,
-                              LoadIcon( hInstance, MAKEINTRESOURCE(IDI_ICON1) ),
-                              LoadCursor( NULL, IDC_ARROW ),
-                              (HBRUSH)GetStockObject(BLACK_BRUSH),
-                              NULL, wndclass };
-        RegisterClass( &wndClass );
-
-        // Set the window's initial style
-        m_dwWindowStyle = WS_BORDER | WS_DLGFRAME;
-
-        // Set the window's initial width
-        RECT rc;
-        SetRect			( &rc, 0, 0, 640, 480 );
-        AdjustWindowRect( &rc, (DWORD)m_dwWindowStyle, FALSE );
-
-        DWORD wndStyle = WS_EX_TOPMOST;
-
-        if (IsDebuggerPresent())
-        {
-            wndStyle = 0;
-        }
-
-        // Create the render window
-		m_hWnd = CreateWindowEx(wndStyle,
-								wndclass, "X-Ray Oxygen", (DWORD)m_dwWindowStyle,
-                               /*rc.left, rc.top, */CW_USEDEFAULT, CW_USEDEFAULT,
-                               (rc.right-rc.left), (rc.bottom-rc.top), 0L,
-                               0, hInstance, 0L );
-
-		// Let the debugger know about game window
-		gGameWindow = m_hWnd;
+		CreateXRayWindow();
     }
 
     // Save window properties
     m_dwWindowStyle = GetWindowLongPtr( m_hWnd, GWL_STYLE );
+}
+
+HWND CRenderDevice::CreateXRayWindow(HWND parent /*= NULL*/, int Width /*= 0*/, int Height /*= 0*/)
+{
+	LPCSTR wndclass = "_XRAY_1.7";
+
+	int FinalWidth = Width;
+	int FinalHeight = Height;
+
+	// Register the windows class
+	HINSTANCE hInstance = (HINSTANCE)GetModuleHandle(0);
+	UINT ClassStyle = 0;
+	WNDCLASS wndClass = { ClassStyle,
+						  WndProc, 0, 0, hInstance,
+						  LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1)),
+						  LoadCursor(NULL, IDC_ARROW),
+						  (HBRUSH)GetStockObject(BLACK_BRUSH),
+						  NULL, wndclass };
+	RegisterClass(&wndClass);
+
+	DWORD wndStyle = WS_EX_TOPMOST;
+
+	if (IsDebuggerPresent() || parent != NULL)
+	{
+		wndStyle = 0;
+	}
+
+	if (parent == NULL)
+	{
+		// Set the window's initial style
+		m_dwWindowStyle = WS_BORDER | WS_DLGFRAME;
+
+		// Set the window's initial width
+		RECT rc;
+		SetRect(&rc, 0, 0, 640, 480);
+		AdjustWindowRect(&rc, (DWORD)m_dwWindowStyle, FALSE);
+		FinalWidth = (rc.right - rc.left);
+		FinalHeight = (rc.bottom - rc.top);
+	}
+	else
+	{
+		m_dwWindowStyle |= WS_CHILD;
+	}
+
+	// Create the render window
+	m_hWnd = CreateWindowEx(wndStyle,
+		wndclass, "X-Ray Oxygen", (DWORD)m_dwWindowStyle,
+		/*rc.left, rc.top, */CW_USEDEFAULT, CW_USEDEFAULT,
+		FinalWidth, FinalHeight, parent,
+		0, hInstance, 0L);
+
+	// Let the debugger know about game window
+	gGameWindow = m_hWnd;
+
+	return m_hWnd;
 }
 

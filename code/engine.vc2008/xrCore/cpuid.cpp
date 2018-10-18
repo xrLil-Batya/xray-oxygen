@@ -1,4 +1,4 @@
-//////////////////////////////////////////
+﻿//////////////////////////////////////////
 // OXYGEN TEAM, 2018 (C)
 // ForserX, Vertver
 //////////////////////////////////////////
@@ -200,7 +200,53 @@ unsigned int query_processor_info(processor_info* pinfo)
 	// All logical processors
 	pinfo->n_threads = sysInfo.dwNumberOfProcessors;
 	pinfo->affinity_mask = unsigned(pa_mask_save);
-	pinfo->n_cores = (pinfo->hasFeature(CPUFeature::HT)) ? (pinfo->n_threads / 2) : (pinfo->n_threads);
+    //threads
+    //так, лучше не надо здесь cpuid, давайте стандартный WinAPI
+    bool allocatedBuffer = false;
+    SYSTEM_LOGICAL_PROCESSOR_INFORMATION SLPI;
+    SYSTEM_LOGICAL_PROCESSOR_INFORMATION* ptr = &SLPI;
+    DWORD addr = sizeof(SLPI);
+    DWORD sizeofStruct = sizeof(SLPI);
+    BOOL result = GetLogicalProcessorInformation(&SLPI, &addr);
+    if (!result)
+    {
+        DWORD errCode = GetLastError();
+        if (errCode == ERROR_INSUFFICIENT_BUFFER)
+        {
+            ptr = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION*)new BYTE[addr];
+            allocatedBuffer = true;
+            result = GetLogicalProcessorInformation(ptr, &addr);
+        }
+    }
+
+
+    DWORD byteOffset = 0;
+    DWORD processorCoreCount = 0;
+    DWORD processorPackageCount = 0;
+
+    INT64 origPtr = (INT64)ptr;
+    while (byteOffset + sizeofStruct <= addr)
+    {
+        switch (ptr->Relationship)
+        {
+        case RelationProcessorCore:
+            processorCoreCount++;
+
+            break;
+        case RelationProcessorPackage:
+            // Logical processors share a physical package.
+            processorPackageCount++;
+            break;
+
+        default:
+            break;
+        }
+        byteOffset += sizeofStruct;
+        ptr++;
+    }
+    ptr = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION*)origPtr;
+    if (allocatedBuffer) delete[] ptr;
+    pinfo->n_cores = processorCoreCount;
 
 	return pinfo->features;
 }

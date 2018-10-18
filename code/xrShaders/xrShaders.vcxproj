@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{58818F0E-2DA2-48E4-9BB8-4D7629426F25}</ProjectGuid>
+    <RootNamespace>xrShaders</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\..\game\gamedata\shaders\r2\accum_volumetric.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\accum_volumetric_sun.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\accum_volumetric_sun_cascade.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\c.cmd" />
+    <None Include="..\..\game\gamedata\shaders\r2\clouds.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\combine_volumetric.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\details_lod.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_bloom_build.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_bloom_luminance.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_lightplanes.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_postprocess.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_pp_antialiasing.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_pp_gamma.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_puddles.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_screen_rain_droplets.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_ss_sunshafts_mrmnwar.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_ss_sunshafts_ogse.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_sun.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_ui_distort.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_vignette.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_wallmarkblend.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_wallmarkmult.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_wallmarkset.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_water.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_waterryaska.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\effects_waterstuden.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\hud_crosshair.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\hud_font.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\hud_font2.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\hud_movie.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\hud_p3d.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_lightplanes.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_metallreflect.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_pautina.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_selflight.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_selflightl.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_selflight_det.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xanomaly.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xdistort.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xdistortcolor.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xdistortcolorl.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xdistortcolorlinv.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xdistortinv.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xglass.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xglass2.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xlens.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xmonolith.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\models_xwindows.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\p.bat" />
+    <None Include="..\..\game\gamedata\shaders\r2\p1.bat" />
+    <None Include="..\..\game\gamedata\shaders\r2\p3.bat" />
+    <None Include="..\..\game\gamedata\shaders\r2\particles_xadd.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\particles_xdistort.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\portal.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\selflight.lua" />
+    <None Include="..\..\game\gamedata\shaders\r2\t.bat" />
+    <None Include="..\..\game\gamedata\shaders\r2\v.bat" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_nomsaa.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_minmax.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_msaa0.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_msaa1.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_msaa2.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_msaa3.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_msaa4.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_msaa5.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_msaa6.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_msaa7.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_nomsaa.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\accum_volumetric_sun_nomsaa_minmax.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\clouds.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\combine_volumetric.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\details_lod.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_bloom_build.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_bloom_luminance.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_bullet_tracer.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_flare.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_lightning.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_lightplanes.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_postprocess.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_postprocess_msaa.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_pp_antialiasing.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_pp_antialiasing_msaa.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_pp_gamma.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_rain.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_screen_rain_droplets.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_screen_rain_droplets_msaa.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_ss_sunshafts_mrmnwar.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_ss_sunshafts_ogse.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_sun.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_taa.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_taa_msaa.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_ui_distort.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_vignette.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_vignette_msaa.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_wallmark.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_wallmark.s" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_wallmarkblend.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_wallmarkmult.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_wallmarkset.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_water.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_waterryaska.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\effects_waterstuden.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\fluid3d_stub.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\friendly_indicator.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\hud_crosshair.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\hud_font.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\hud_font2.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\hud_movie.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\hud_p3d.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_lightplanes.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_pautina.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_selflight.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_selflightl.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_selflight_det.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_xanomaly.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_xdistort.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_xdistortcolor.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_xdistortcolorl.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_xdistortcolorlinv.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_xdistortinv.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_xmonolith.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\models_xwindows.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\particles_xadd.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\particles_xdistort.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\portal.lua" />
+    <None Include="..\..\game\gamedata\shaders\r3\selflight.lua" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\aces.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\blur_bokeh.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\common.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\common_defines.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\common_functions.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\common_iostructs.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\common_samplers.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\configurator_defines.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\dlaa.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\dof.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\fencode.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\fxaa.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\Gauss.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\hmodel.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\hmodel_f.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\lmodel.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\mblur.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\ogse_config.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\ogse_functions.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\ogse_gbuffer.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\shadow.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\shared\cloudconfig.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\shared\common.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\shared\waterconfig.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\shared\watermove.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\shared\wmark.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\skin.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\sload.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r2\smaa.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\blur_bokeh.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\common.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\common_cbuffers.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\common_defines.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\common_functions.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\common_iostructs.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\common_policies.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\common_samplers.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\configurator_defines.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\dlaa.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\dof.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\dx11\tess.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\fluid_common.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\fluid_common_render.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\fluid_common_tricubic.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\fxaa.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\Gauss.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\hmodel.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\lmodel.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\mblur.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\ogse_config.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\ogse_functions.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\ogse_gbuffer.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\shadow.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\skin.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\sload.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\r3\smaa.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\shared\cloudconfig.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\shared\common.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\shared\waterconfig.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\shared\watermove.h" />
+    <ClInclude Include="..\..\game\gamedata\shaders\shared\wmark.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_base.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_emissive.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_emissivel.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_indirect.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_omni_normal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_omni_transluent.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_omni_unshadowed.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_spot_fullsize.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_spot_normal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_spot_unshadowed.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_cascade.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_cascade_far.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_far.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_mask.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_near.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_near_new.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_near_old.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_near_save.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_near_var1.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_near_var2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_sun_test.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_volumetric.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_volumetric_sun.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_accum_volumetric_sun_cascade.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_avg4.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_base_lplanes.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_bloom_build.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_bloom_filter.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_bloom_filter_f.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_bloom_luminance_1.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_bloom_luminance_2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_bloom_luminance_3.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_clouds.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_combine_1.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_combine_2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_combine_2_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_combine_volumetric.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_copy.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_copy_p.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_aref_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_aref_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_lmh_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_base_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_impl_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_impl_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_impl_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_impl_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_impl_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_impl_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_deffer_particle.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_depth.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_depth_downs.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_distort.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_dlaa_main.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_dumb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_effects_glow_p.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_font2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_fxaa_luma.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_fxaa_main.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_gamma_apply.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_gamma_gen_lut.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_hud3d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_hud_font.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_lmape.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_lod.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_model_def_lq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_model_env_lq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_model_scope_lense.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_particle.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_particle2t.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_particle_alphaonly.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_particle_distort.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_particle_s-aadd.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_particle_s-add.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_particle_s-blend.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_particle_s-mul.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_portal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_postprocess.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_postprocess_cm.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_rain_drops.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_shadow_direct_base.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_shadow_direct_base_aref.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_simple.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_simple_color.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_sky2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_smaa_bweight_calc.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_smaa_edge_detect.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_smaa_neighbour_blend.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssao.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssao_blur.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssao_calc.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssao_hbao.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssss_mrmnwar_display.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssss_mrmnwar_generation.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssss_mrmnwar_mask.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssss_mrmnwar_mask_blur.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssss_ogse_blur.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssss_ogse_final.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_ssss_ogse_mask.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_stub_default.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_vert.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_vignette.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_water.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_waterd.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_waterd_soft.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_water_puddles.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_water_soft.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\ps_yuv2rgb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_accum_mask.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_accum_volume.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_accum_volumetric.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_base_lplanes.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_clouds.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_combine_1.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_lmh_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_lmh_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_lmh_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_lmh_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_lmh_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_base_lmh_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_detail_s_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_detail_w_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_impl_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_model_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_model_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_model_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_model_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_model_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_model_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_particle.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_s_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_s_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_s_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_s_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_s_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_deffer_tree_s_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_dumb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_editor.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_effects_glow_p.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_effects_lensflare.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_effects_sun.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_hud3d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_lmape.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_lod.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_lod_.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_model_def_lplanes.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_model_def_lq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_model_distort.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_model_distort2t.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_model_distort4ghost.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_model_distort4glass.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_model_distort_inv.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_model_env_lq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_particle-clip.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_particle.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_portal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_rain_drops.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_shadow_direct_base.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_shadow_direct_base_aref.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_shadow_direct_model.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_shadow_direct_model_aref.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_shadow_direct_tree.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_shadow_direct_tree_s.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_simple.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_simple_color.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_sky2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_stub_notransform_2uv.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_vert.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_water.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_waterd.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_waterd_soft.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_water_puddles.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_water_soft.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r2\vs_wmark.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\dx11\ds_tess.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\dx11\ds_tess_shadow.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\dx11\hs_tess.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\gs_fluid_array.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\gs_fluid_array_dyn_oobb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\gs_fluid_array_oobb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\gs_test.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_base.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_emissive.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_emissivel.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_indirect.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_indirect_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_indirect_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_omni_normal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_omni_normal_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_omni_normal_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_omni_transluent.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_omni_transluent_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_omni_transluent_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_omni_unshadowed.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_omni_unshadowed_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_omni_unshadowed_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_spot_fullsize.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_spot_fullsize_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_spot_fullsize_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_spot_normal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_spot_normal_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_spot_normal_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_spot_unshadowed.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_spot_unshadowed_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_spot_unshadowed_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_far.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_far_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_far_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_mask.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_mask_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_mask_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_near.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_near_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_near_msaa_minmax.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_near_msaa_nominmax.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_near_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_near_nomsaa_minmax.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_near_nomsaa_nominmax.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_near_old.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_sun_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_minmax.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_msaa0.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_msaa1.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_msaa2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_msaa3.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_msaa4.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_msaa5.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_msaa6.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_msaa7.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_accum_volumetric_sun_normal .hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_base_lplanes.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_bloom_build.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_bloom_filter.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_bloom_filter_f.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_bloom_luminance_1.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_bloom_luminance_2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_bloom_luminance_3.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_clouds.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_combine_1.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_combine_1_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_combine_1_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_combine_2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_combine_2_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_combine_volumetric.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_copy.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_copy_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_copy_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_copy_p.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_copy_p_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_copy_p_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_create_minmax_sm.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_aref_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_aref_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_atoc_lmh_aref_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_aref_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_bump_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_lmh_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_steep-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_steep_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_base_steep_db-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_impl_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_impl_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_deffer_particle.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_depth_downs.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_distort.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_dlaa_main.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_dumb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_advect.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_advect_bfecc.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_advect_bfecc_temp.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_advect_temp.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_advect_vel.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_advect_vel_g.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_confinement.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_divergence.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_draw_texture.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_edge_detect.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_gaussian.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_jacobi.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_obststaticbox.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_obst_dynamic_oobb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_obst_static_oobb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_project.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_raycastcopy_quad.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_raycastcopy_quad_fire.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_raycast_quad.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_raycast_quad_fire.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_raydatacopy_quad.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_raydata_back.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_raydata_front.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fluid_vorticity.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_font2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fxaa_luma.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_fxaa_main.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_gamma_apply.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_gamma_gen_lut.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_gather.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_hud3d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_hud_font.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_lmape.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_lod.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_mark_msaa_edges.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_model_def_lq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_model_env_lq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_model_scope_lense.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_particle.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_particle_alphaonly.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_particle_distort.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_particle_distort_hard.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_particle_hard.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_particle_s-aadd.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_particle_s-add.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_particle_s-blend.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_portal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_postprocess.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_postprocess_cm.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_apply_gloss.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_apply_gloss_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_apply_gloss_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_apply_normal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_apply_normal_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_apply_normal_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_drops.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_layer.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_patch_normal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_patch_normal_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_patch_normal_new.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_rain_patch_normal_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_shadow_direct_base.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_shadow_direct_base_aref.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_simple.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_simple_color.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_sky2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_smaa_bweight_calc.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_smaa_edge_detect.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_smaa_neighbour_blend.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssao.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssao_blur.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssao_calc.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssao_calc_msaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssao_calc_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssao_hbao.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssss_mrmnwar_display.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssss_mrmnwar_generation.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssss_mrmnwar_mask.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssss_mrmnwar_mask_blur.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssss_ogse_blur.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssss_ogse_final.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_ssss_ogse_mask.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_stub_default.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_stub_default_ma.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_taa_main.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_vert.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_vignette.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_water.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_waterd.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_waterd_soft.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_water_soft.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\ps_yuv2rgb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_accum_mask.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_accum_sun.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_accum_volume.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_accum_volumetric.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_accum_volumetric_nomsaa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_base_lplanes.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_clouds.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_combine_1.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_lmh_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_lmh_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_lmh_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_lmh_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_lmh_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_base_lmh_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_detail_s_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_detail_w_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_impl_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_model_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_model_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_model_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_model_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_model_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_model_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_particle.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_s_bump-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_s_bump.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_s_bump_d-hq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_s_bump_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_s_flat.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_deffer_tree_s_flat_d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_dumb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_editor.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_effects_sun.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_effects_wallmark.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_fluid_edge_detect.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_fluid_grid.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_fluid_grid_dyn_oobb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_fluid_grid_oobb.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_fluid_raycast_quad.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_fluid_raydata_back.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_fluid_raydata_front.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_hud3d.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_hud_crosshair.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_lmape.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_lod.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_model_def_lplanes.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_model_def_lq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_model_distort.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_model_distort4ghost.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_model_distort4glass.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_model_distort_inv.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_model_env_lq.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_particle-clip.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_particle.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_portal.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_shadow_direct_base.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_shadow_direct_base_aref.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_shadow_direct_model.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_shadow_direct_model_aref.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_shadow_direct_tree.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_shadow_direct_tree_aref.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_shadow_direct_tree_s.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_shadow_direct_tree_s_aref.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_sky2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_default.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform_2uv.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform_aa_aa.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform_build.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform_filter.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform_postpr.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform_t.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform_t_m2.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform_t_m4.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_notransform_t_ma.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_stub_screen_space.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_vert.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_water.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_waterd.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_waterd_soft.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_water_soft.hlsl" />
+    <FxCompile Include="..\..\game\gamedata\shaders\r3\vs_wmark.hlsl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -12,7 +12,7 @@ class CSE_Abstract;
 class CScriptBinderObject;
 class NET_Packet;
 
-class CScriptBinder {
+class GAME_API CScriptBinder {
 protected:
 	CScriptBinderObject			*m_object;
 

@@ -1,4 +1,4 @@
-/*********************************************************
+﻿/*********************************************************
 * Copyright (C) X-Ray Oxygen, 2018. All rights reserved.
 * X-Ray Oxygen - open-source X-Ray fork
 * Apache License
@@ -9,25 +9,22 @@
 * Methods for dynamic splash implementation
 *********************************************************/
 #include "stdafx.h"
-#pragma hdrstop
-
 #include "DynamicSplash.h"
+
 #include <process.h>
 #include <CommCtrl.h>
 #include <WinUser.h>
 #include "../xrPlay/resource.h"
-#include "../xrCore/LocatorAPI.h"
-
-#ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
-#endif
-
-#ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
 
 #pragma warning(push)
 #pragma warning(disable: 4458)
+#ifndef max
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#endif
 #include <gdiplus.h>
 #include <gdiplusinit.h>
 #pragma warning(pop)
@@ -70,7 +67,7 @@ VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
 	//#VERTVER: PLS REWORK IT
 	//////////////////////////////////////
 	FS_Path* filePath = FS.get_path("$textures$");
-	std::string szPath = std::string(filePath->m_Path);
+	xr_string szPath = xr_string(filePath->m_Path);
 	std::wstring szWPath = std::wstring(szPath.begin(), szPath.end());
 	szWPath += L"ui\\Splash.bmp";
 	//////////////////////////////////////
@@ -81,8 +78,6 @@ VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
 	splashScreen.SetBackgroundImage(pImage);
 	splashScreen.SetSplashWindowName("Oxy splash");
 	delete pImage;
-
-	COLORREF clrRef = 0;
 
 	splashScreen.ShowSplash();
 	splashScreen.SetProgressPosition(0, "Engine entry-point");
@@ -318,7 +313,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 
 				//#VERTVER: PLS REWORK IT
 				//////////////////////////////////////
-				std::string prgress = pInstance->progressMsg.c_str();
+				xr_string prgress = pInstance->progressMsg.c_str();
 				std::wstring progressName(prgress.begin(), prgress.end());
 				//////////////////////////////////////
 

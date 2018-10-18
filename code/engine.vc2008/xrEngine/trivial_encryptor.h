@@ -1,4 +1,4 @@
-#ifndef TRIVIAL_ENCRYPTOR_H
+﻿#ifndef TRIVIAL_ENCRYPTOR_H
 #define TRIVIAL_ENCRYPTOR_H
 
 // before including this file

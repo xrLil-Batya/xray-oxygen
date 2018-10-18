@@ -6,9 +6,8 @@
 #include "../../xrEngine/XR_IOConsole.h"
 #include "../../xrEngine/xr_ioc_cmd.h"
 #include "../../xrEngine/xr_ioc_cmd_ex.h"
-// Common
-BOOL SkyGodEdition = false;
 
+// Common
 u32	ps_r_smapsize = 2048;
 xr_token q_smapsize_token[] =
 {
@@ -101,19 +100,31 @@ xr_token qbokeh_quality_token[] =
 };
 
 u32 ps_r_pp_aa_mode = 0;
-xr_token qpp_aa_mode_token[] =
+xr_token pp_aa_mode_token[] =
 {
-	{ "st_opt_off",		0		},
 	{ "st_opt_fxaa",	FXAA	},
-#if 0
+	{ "st_opt_dlaa",	DLAA	},
 	{ "st_opt_smaa",	SMAA	},
-#endif
 	{ 0,				0		},
 };
+
+u32 ps_r_pp_aa_quality = 0;
+xr_token pp_aa_quality_token[] =
+{
+	{ "st_opt_off",		0	},
+    { "st_opt_low",		1	},
+    { "st_opt_medium",	2	},
+    { "st_opt_high",	3	},
+    { "st_opt_ultra",	4	},
+    { 0,				0	}
+};
+
+BOOL SkyGodEdition						= false;
 
 int			ps_rs_loading_stages		= 0;
 float		droplets_power_debug		= 0.f;
 
+int			ps_r_pp_aa_use_taa			= 0;
 int			ps_r_Supersample			= 1;
 int			ps_r_LightSleepFrames		= 10;
 int			ps_r_SkeletonUpdate			= 32;
@@ -702,6 +713,7 @@ public:
 #endif	//	DEBUG
 #endif	//	(RENDER == R_R3) || (RENDER == R_R4)
 
+#ifdef DEBUG
 class CCC_SaveGammaLUT : public IConsole_Command
 {
 public:
@@ -711,6 +723,7 @@ public:
 		RImplementation.Target->SaveGammaLUT();
 	}
 };
+#endif
 
 //-----------------------------------------------------------------------
 void xrRender_initconsole()
@@ -720,9 +733,8 @@ void xrRender_initconsole()
 	CMD4(CCC_Integer,	"rs_skeleton_update",	&ps_r_SkeletonUpdate,		2,		128		);
 #ifdef DEBUG
 	CMD1(CCC_DumpResources,	"dump_resources");
+	CMD1(CCC_SaveGammaLUT,	"r_dbg_save_gamma_lut");
 #endif
-
-	CMD1(CCC_SaveGammaLUT, "r_dbg_save_gamma_lut");
 
 	// Common
 	CMD1(CCC_Screenshot,"screenshot"			);
@@ -763,10 +775,15 @@ void xrRender_initconsole()
 
 	// Anti-aliasing
 	CMD4(CCC_Integer,	"r_supersample",		&ps_r_Supersample,			1,		8		); // doesn't work
-	CMD3(CCC_Token,		"r_aa_mode",			&ps_r_pp_aa_mode,			qpp_aa_mode_token);
+	CMD3(CCC_Token,		"r_aa_mode",			&ps_r_pp_aa_mode,			pp_aa_mode_token);
+	CMD3(CCC_Token,		"r_aa_quality",			&ps_r_pp_aa_quality,		pp_aa_quality_token);
+	CMD4(CCC_Integer,	"r_aa_taa",				&ps_r_pp_aa_use_taa,		0,		1);
 
 	// Rain droplets on visor
 	CMD3(CCC_Mask,		"r_rain_droplets",		&ps_r_flags,				R_FLAG_RAIN_DROPS);
+
+	// Vignette
+	CMD3(CCC_Mask,		"r_vignette",			&ps_r_flags,				R_FLAG_VIGNETTE);
 
 	// Shadows
 	CMD3(CCC_Token,		"r_shadow_map_size",	&ps_r_smapsize,				q_smapsize_token);

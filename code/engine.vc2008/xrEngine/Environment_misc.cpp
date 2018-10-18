@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #pragma hdrstop
 
 #include "Environment.h"
@@ -108,7 +108,14 @@ void CEnvAmbient::SSndChannel::load(CInifile& config, LPCSTR sect)
 	for (u32 k=0; k<cnt; ++k)
 	{
 		_GetItem			(snds,k,tmp);
-		m_sounds[k].create	(tmp,st_Effect,sg_SourceType);
+		if (::Sound != nullptr)
+		{
+			m_sounds[k].create	(tmp,st_Effect,sg_SourceType);
+		}
+		else
+		{
+			Msg("! Sound \"%s\" not created - sound engine is disabled", sect);
+		}
 	}
 }
 
@@ -334,8 +341,6 @@ void CEnvDescriptorMixer::clear	()
 {
 	m_pDescriptorMixer->Clear();
 }
-
-int get_ref_count(IUnknown* ii);
 
 void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescriptor& B, float f, CEnvModifier& Mdf, float modifier_power)
 {
@@ -634,14 +639,18 @@ void CEnvironment::load_weather_effects	()
 	FS.file_list_close				(pfile_list);
 
 	// sorting weather envs
-	for (auto it: WeatherFXs){
-		R_ASSERT3	(it.second.size() > 1,"Environment in weather must >=2", it.first.c_str());
-		std::sort	(it.second.begin(), it.second.end(), sort_env_etl_pred);
+	for (auto WeatherFX: WeatherFXs)
+	{
+		R_ASSERT3	(WeatherFX.second.size() > 1,"Environment in weather must >=2", WeatherFX.first.c_str());
+		std::sort	(WeatherFX.second.begin(), WeatherFX.second.end(), sort_env_etl_pred);
 	}
 }
 
 void CEnvironment::load		()
 {
+	// prevent double loading
+	if (++LoadCounter != 1) return;
+
 	if (!CurrentEnv)
 		create_mixer		();
 
@@ -656,36 +665,43 @@ void CEnvironment::load		()
 
 void CEnvironment::unload	()
 {
-	// clear weathers
-	auto _I		= WeatherCycles.begin();
-	auto _E		= WeatherCycles.end();
-	for (; _I!=_E; _I++){
-		for (auto it=_I->second.begin(); it!=_I->second.end(); it++)
-			xr_delete	(*it);
-	}
+	if (--LoadCounter > 0) return;
 
+	// clear weather cycles
+	for (auto& WeatherCycle : WeatherCycles)
+	{
+		for (CEnvDescriptor* pEnvDesc : WeatherCycle.second)
+		{
+			xr_delete(pEnvDesc);
+		}
+	}
 	WeatherCycles.clear		();
+
 	// clear weather effect
-	_I		= WeatherFXs.begin();
-	_E		= WeatherFXs.end();
-	for (; _I!=_E; _I++){
-		for (auto it=_I->second.begin(); it!=_I->second.end(); it++)
-			xr_delete	(*it);
+	for (auto& WeatherFX : WeatherFXs)
+	{
+		for (CEnvDescriptor* pEnvDesc : WeatherFX.second)
+		{
+			xr_delete(pEnvDesc);
+		}
 	}
 	WeatherFXs.clear		();
+
 	// clear ambient
-	for (auto it=Ambients.begin(); it!=Ambients.end(); it++)
-		xr_delete		(*it);
+	for (CEnvAmbient* Ambient : Ambients)
+	{
+		xr_delete		(Ambient);
+	}
 	Ambients.clear		();
+
 	// misc
 	xr_delete			(eff_Rain);
 	xr_delete			(eff_LensFlare);
 	xr_delete			(eff_Thunderbolt);
-	CurrentWeather		= 0;
-	CurrentWeatherName	= 0;
+	CurrentWeather		= nullptr;
+	CurrentWeatherName	= nullptr;
 	CurrentEnv->clear	();
 	Invalidate			();
 
 	m_pRender->OnUnload	();
-//	tonemap				= 0;
 }

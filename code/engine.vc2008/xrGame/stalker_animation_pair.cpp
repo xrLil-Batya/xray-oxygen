@@ -195,13 +195,10 @@ std::pair<LPCSTR,LPCSTR> *CStalkerAnimationPair::blend_id	(IKinematicsAnimated *
 	const u32	part_blend	=part_blends_num - 2;
 	CBlend		*b			=skeleton_animated->LL_PartBlend( bone_part_id,  part_blend );
 #if 0
-	VERIFY2					(
+	VERIFY_FORMAT (
 		b->motionID != animation(),
-		make_string(
 			"animation is blending with itself (%s)",
-			skeleton_animated->LL_MotionDefName_dbg(animation()).first
-		)
-	);
+			skeleton_animated->LL_MotionDefName_dbg(animation()).first);
 #endif
 	result					= skeleton_animated->LL_MotionDefName_dbg(b->motionID);
 	return					(&result);

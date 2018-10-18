@@ -10,7 +10,7 @@ void	CRenderTarget::phase_smap_spot		(light* L)
 	// Targets + viewport
 	u_setrt	(rt_smap_surf, NULL, NULL, rt_smap_depth->pZRT);
 
-	D3D_VIEWPORT VP	= {L->X.S.posX, L->X.S.posY, L->X.S.size, L->X.S.size, 0, 1};
+	D3D_VIEWPORT VP	= {L->X.S.posX, L->X.S.posY, L->X.S.size, L->X.S.size, 0, 1u};
 	HW.pDevice->RSSetViewports(1, &VP);
 
 	// Misc		- draw only front-faces //back-faces

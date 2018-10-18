@@ -1,8 +1,9 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "EngineAPI.h"
 #include "../xrcdb/xrXRC.h"
 #include "XR_IOConsole.h"
 #include "xr_ioc_cmd.h"
+#include "spectre/Spectre.h"
 
 extern XRCORE_API xr_vector<xr_token> vid_quality_token;
 
@@ -153,4 +154,9 @@ void CEngineAPI::Destroy	(void)
 	pDestroy				= 0;
 	Engine.Event._destroy	();
 	XRC.r_clear_compact		();
+}
+
+DLL_Pure::~DLL_Pure()
+{
+	SpectreEngineClient::DestroyProxyObject(this);
 }

@@ -1,9 +1,9 @@
-#define LOCAL_EPSILON 0.000001f
+﻿#define LOCAL_EPSILON 0.000001f
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Computes a ray-triangle intersection test.
- *	Original code from Tomas M�ller's "Fast Minimum Storage Ray-Triangle Intersection".
+ *	Original code from Tomas Mцller's "Fast Minimum Storage Ray-Triangle Intersection".
  *	It's been optimized a bit with integer code, and modified to return a non-intersection if distance from
  *	ray origin to triangle is negative.
  *

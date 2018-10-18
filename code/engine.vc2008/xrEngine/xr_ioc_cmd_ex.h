@@ -1,4 +1,4 @@
-class ENGINE_API CCC_U32 : public IConsole_Command
+﻿class ENGINE_API CCC_U32 : public IConsole_Command
 {
 protected:
 	unsigned*	value;

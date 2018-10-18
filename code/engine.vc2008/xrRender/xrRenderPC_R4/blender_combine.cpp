@@ -62,6 +62,11 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_dx10Sampler		("smp_rtlinear");
 		C.r_End				();
 		break;
+	case 3: // copy rt_Color to back buffer
+		C.r_Pass			("stub_screen_space", "copy_nomsaa", FALSE, FALSE, FALSE);
+		C.r_dx10Texture		("s_generic",		r2_RT_albedo);
+		C.r_End				();
+		break;
 	}
 }
 
@@ -127,6 +132,11 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
 
 		C.r_dx10Sampler		("smp_nofilter");
 		C.r_dx10Sampler		("smp_rtlinear");
+		C.r_End				();
+		break;
+	case 3: // copy rt_Color to back buffer
+		C.r_Pass			("stub_screen_space", "copy_msaa", FALSE, FALSE, FALSE);
+		C.r_dx10Texture		("s_generic",		r2_RT_generic);
 		C.r_End				();
 		break;
    }

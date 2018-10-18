@@ -32,12 +32,12 @@ namespace XRay.SdkControls
                 nslBlue.Value = value.B;
 
                 // XXX collectioner: dirty hardcode. Should be changed
-                pbColor.ColorSample =
-                    Color.FromArgb(
-                        alphaValue,
-                        value.R,
-                        value.G,
-                        value.B);
+                pbColor.ColorSample = Color.FromArgb(alphaValue, value.R, value.G, value.B);
+
+				isAReversed.Visible = true;
+				isRReversed.Visible = true;
+				isGReversed.Visible = true;
+				isBReversed.Visible = true;
             }
         }
 

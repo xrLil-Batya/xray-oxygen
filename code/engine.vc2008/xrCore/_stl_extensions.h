@@ -160,12 +160,16 @@ public:
 
     xr_vector<xr_string> Split(char splitCh);
     xr_vector<xr_string> Split(u32 NumberOfSplits, ...);
-
+	
     bool StartWith(const xr_string& Other) const;
     bool StartWith(LPCSTR Str) const;
     bool StartWith(LPCSTR Str, size_t Size) const;
     xr_string RemoveWhitespaces() const;
+
+	static xr_string ToString(int Value);
 };
+
+
 
 namespace std {
     template<>
@@ -190,7 +194,6 @@ struct pred_stri {
 #include "buffer_vector.h"
 
 // auxilary definition
-using FvectorVec = xr_vector<Fvector>;
 using LPSTRVec = xr_vector<LPSTR>;
 using SStringVec = xr_vector<xr_string>;
 using U8Vec = xr_vector<u8>;
@@ -199,7 +202,6 @@ using U32Vec = xr_vector<u32>;
 using FloatVec = xr_vector<float>;
 using IntVec = xr_vector<int>;
 using boolVec = xr_vector<bool>;
-using Fvector2Vec = xr_vector<Fvector2>;
 
 template <typename K, class V, class Hasher = std::hash<K>, class Traits = std::equal_to<K>,
     typename allocator = xalloc<std::pair<const K, V>>>

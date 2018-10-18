@@ -62,7 +62,7 @@ void CSector::BuildHierrarhy	()
 
 	for (; SizeLimit<=delimiter; SizeLimit*=2)
 	{
-		int iSize = g_tree.size();
+		int iSize = (int)g_tree.size();
 
 		for (int I=0; I<iSize; I++)
 		{
@@ -124,7 +124,7 @@ void CSector::BuildHierrarhy	()
 		}
 	}
 	if (0==TreeRoot) {
-		clMsg("Can't build hierrarhy for sector #%d",SelfID);
+		Logger.clMsg("Can't build hierrarhy for sector #%d",SelfID);
 	}
 }
 

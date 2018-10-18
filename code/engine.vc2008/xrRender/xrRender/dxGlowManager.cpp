@@ -12,7 +12,7 @@
 
 #define FADE_SCALE_UP		4096.f
 #define FADE_SCALE_DOWN		4096.f
-#define MAX_GlowsDist1		float(g_pGamePersistent->Environment().CurrentEnv->far_plane)
+#define MAX_GlowsDist1		float(Environment().CurrentEnv->far_plane)
 #define MAX_GlowsDist2		float(MAX_GlowsDist1*MAX_GlowsDist1)
 
 
@@ -216,7 +216,7 @@ void CGlowManager::render_sw		()
 
 	// 1. Test some number of glows
 	Fvector start	= Device.vCameraPosition;
-	for (int i=0; i<ps_GlowsPerFrame; i++,dwTestID++)
+	for (u32 i=0; i<ps_GlowsPerFrame; i++,dwTestID++)
 	{
 		u32	ID		= dwTestID%Selected.size();
 		CGlow&	G	= *( (CGlow*)Selected[ID]._get() );
@@ -242,7 +242,7 @@ void CGlowManager::render_hw		()
 	SelectedToTest_0.clear();
 
 	// 1. Sort into two parts - 1(selected-to-test)[to-test], 2(selected)[just-draw]
-	for (int i=0; (i<ps_GlowsPerFrame) && !Selected.empty(); i++,dwTestID++)
+	for (u32 i=0; (i<ps_GlowsPerFrame) && !Selected.empty(); i++,dwTestID++)
 	{
 		u32	ID		= dwTestID%Selected.size();
 		SelectedToTest_0.push_back	(Selected[ID]);

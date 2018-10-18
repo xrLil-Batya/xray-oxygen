@@ -26,7 +26,7 @@
     shared_str			bump_name;
     shared_str			ext_normal_map_name;
 */
-void STextureParams::read( INetReader	&r )
+void STextureParams::read( IReader	&r )
 {
 	r_pod( r, fmt );
 	r_pod( r, flags );

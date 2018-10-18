@@ -1,4 +1,4 @@
-/*********************************************************
+﻿/*********************************************************
 * Copyright (C) X-Ray Oxygen, 2018. All rights reserved.
 * X-Ray Oxygen - open-source X-Ray fork
 * Apache License

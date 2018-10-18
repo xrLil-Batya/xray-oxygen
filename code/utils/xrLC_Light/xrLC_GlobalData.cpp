@@ -64,18 +64,18 @@ void	xrLC_GlobalData	::destroy_rcmodel	()
 }
 void xrLC_GlobalData::clear_build_textures_surface()
 {
-	clLog( "mem usage before clear build textures surface: %u", Memory.mem_usage() );
+	Logger.clLog( "mem usage before clear build textures surface: %u", Memory.mem_usage() );
 	//xr_vector<b_BuildTexture>		_textures;
 	xr_vector<b_BuildTexture>::iterator i = textures().begin();
 	xr_vector<b_BuildTexture>::const_iterator e = textures().end();
 	for(;i!=e;++i)
 		::clear((*i));
 	Memory.mem_compact();
-	clLog( "mem usage after clear build textures surface: %u", Memory.mem_usage() );
+	Logger.clLog( "mem usage after clear build textures surface: %u", Memory.mem_usage() );
 }
 void xrLC_GlobalData::clear_build_textures_surface( const xr_vector<u32> &exept )
 {
-	clLog( "mem usage before clear build textures surface: %u", Memory.mem_usage() );
+	Logger.clLog( "mem usage before clear build textures surface: %u", Memory.mem_usage() );
 	xr_vector<b_BuildTexture>::iterator i = textures().begin();
 	xr_vector<b_BuildTexture>::const_iterator e = textures().end();
 	xr_vector<b_BuildTexture>::const_iterator b = textures().begin();
@@ -86,7 +86,7 @@ void xrLC_GlobalData::clear_build_textures_surface( const xr_vector<u32> &exept 
 			::clear((*i));
 	}
 	Memory.mem_compact();
-	clLog( "mem usage after clear build textures surface: %u", Memory.mem_usage() );
+	Logger.clLog( "mem usage after clear build textures surface: %u", Memory.mem_usage() );
 }
 
 void	xrLC_GlobalData	::create_rcmodel	(CDB::CollectorPacked& CL)
@@ -125,14 +125,14 @@ void write( IWriter	&w, const CDB::TRI &tri, const xrLC_GlobalData  &lc_global_d
 	lc_global_data.write( w, F );
 }
 
-void read( INetReader	&r, CDB::TRI &tri )
+void read( IReader	&r, CDB::TRI &tri )
 {
 	tri.verts[ 0 ]  = r.r_u32( );
 	tri.verts[ 1 ]  = r.r_u32( );
 	tri.verts[ 2 ]  = r.r_u32( );
 }
 
-void read( INetReader	&r, CDB::TRI &tri, xrLC_GlobalData  &lc_global_data  )
+void read( IReader	&r, CDB::TRI &tri, xrLC_GlobalData  &lc_global_data  )
 {
 	::read( r, tri );
 	VERIFY( &lc_global_data );
@@ -144,7 +144,7 @@ void read( INetReader	&r, CDB::TRI &tri, xrLC_GlobalData  &lc_global_data  )
 static xr_vector<Fvector> verts;
 static xr_vector<CDB::TRI> tris;
 
-void read( INetReader	&r, CDB::MODEL* &m, xrLC_GlobalData  &lc_global_data )
+void read( IReader	&r, CDB::MODEL* &m, xrLC_GlobalData  &lc_global_data )
 {
 	
 	verts.clear();
@@ -163,7 +163,7 @@ void read( INetReader	&r, CDB::MODEL* &m, xrLC_GlobalData  &lc_global_data )
 	tris.clear();
 }
 
-void read(INetReader	&r, CDB::MODEL &m)
+void read(IReader	&r, CDB::MODEL &m)
 {
 	verts.clear();
 	tris.clear();
@@ -203,7 +203,7 @@ void write( IWriter	&w, const  CDB::MODEL &m, const  xrLC_GlobalData  &lc_global
 //	w.w( m.get_tris(), m.get_tris_count() * sizeof(CDB::TRI) );
 }
 
-void			xrLC_GlobalData	::read_base		( INetReader &r )
+void			xrLC_GlobalData	::read_base		( IReader &r )
 {
 	_b_nosun = !!r.r_u8();
 	_b_slmap = !!r.r_u8();
@@ -248,7 +248,7 @@ void			xrLC_GlobalData	::write_base		( IWriter	&w ) const
 }
 
 
-void xrLC_GlobalData::read(INetReader	&r)
+void xrLC_GlobalData::read(IReader	&r)
 {
 	read_faces->read(r);
 	::read(r, _cl_globs._RCAST_Model, *this);
@@ -273,7 +273,7 @@ void xrLC_GlobalData::mu_models_calc_materials()
 
 }
 
-void	xrLC_GlobalData::read_lm_data	( INetReader	&r )
+void	xrLC_GlobalData::read_lm_data	( IReader	&r )
 {
 	read_vertices( r );
 	read_deflectors = xr_new< tread_deflectors	>( &_g_deflectors );
@@ -294,7 +294,7 @@ void		xrLC_GlobalData	::				write_lm_data	( IWriter	&w )const
 	xr_delete( write_deflectors );
 }
 
-void	xrLC_GlobalData	::	read_vertices	( INetReader	&r )
+void	xrLC_GlobalData	::	read_vertices	( IReader	&r )
 {
 		//not used for light//
 	::read_vertices = xr_new< tread_vertices	>( &_g_vertices );
@@ -313,7 +313,7 @@ void	xrLC_GlobalData	::	write_vertices	( IWriter	&w )const
 		(*i)->write_vertices( w );
 	
 }
-void	xrLC_GlobalData	::						read_mu_models			( INetReader &r )
+void	xrLC_GlobalData	::						read_mu_models			( IReader &r )
 {
 	
 	read_models =  xr_new< tread_models	>( &_mu_models );
@@ -329,7 +329,7 @@ void	xrLC_GlobalData	::						write_mu_models			( IWriter	&w ) const
 
 }
 
-void			xrLC_GlobalData	::				read_modes_color( INetReader	&r )
+void			xrLC_GlobalData	::				read_modes_color( IReader	&r )
 {
 	xr_vector<xrMU_Model*>::iterator i = _mu_models.begin(), e = _mu_models.end();
 	for(;e!=i;++i)
@@ -343,7 +343,7 @@ void			xrLC_GlobalData	::				write_modes_color( IWriter	&w )const
 		(*i)->write_color( w );
 }
 
-void	xrLC_GlobalData	::						read_mu_model_refs			( INetReader &r )
+void	xrLC_GlobalData	::						read_mu_model_refs			( IReader &r )
 {
 	read_mu_refs	=  xr_new< tread_mu_refs	>( &_mu_refs );
 	read_models		=  xr_new< tread_models	>( &_mu_models );
@@ -426,7 +426,7 @@ enum serialize_mesh_item_type
 	smit_null  = u8(-1)
 };
 
-void xrLC_GlobalData::read( INetReader &r, base_Face* &f )
+void xrLC_GlobalData::read( IReader &r, base_Face* &f )
 {
 	VERIFY(!f);
 	u8 type  = r.r_u8( );
@@ -517,12 +517,12 @@ void mu_mesh_clear();
 void	xrLC_GlobalData::clear_mu_models	()
 {	
 
-		clLog( "mem usage before mu_clear %d", Memory.mem_usage() );
+		Logger.clLog( "mem usage before mu_clear %d", Memory.mem_usage() );
 		vec_clear(_mu_models);// not clear ogf
 		vec_clear(_mu_refs);
 		mu_mesh_clear();
 		Memory.mem_compact();
-		clLog( "mem usage after mu_clear: %d", Memory.mem_usage() );
+		Logger.clLog( "mem usage after mu_clear: %d", Memory.mem_usage() );
 
 }
 void		xrLC_GlobalData::				clear			()

@@ -419,7 +419,7 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 
 	// The near and far planes are used to unproject the scene's z-buffer values
 	RCache.set_c(strZNear, VIEWPORT_NEAR);
-	RCache.set_c(strZFar, g_pGamePersistent->Environment().CurrentEnv->far_plane);
+	RCache.set_c(strZFar, Environment().CurrentEnv->far_plane);
 
 	D3DXMATRIX gridWorld;
 	gridWorld = *(D3DXMATRIX*)&transform;
@@ -622,10 +622,10 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 
 	const dx103DFluidData::Settings &VolumeSettings = FluidData.GetSettings();
 
-	Fvector4 hemi_color = g_pGamePersistent->Environment().CurrentEnv->hemi_color;
+	Fvector4 hemi_color = Environment().CurrentEnv->hemi_color;
 	hemi_color.mul(VolumeSettings.m_fHemi);
 	LightData.m_vLightIntencity.set(hemi_color.x, hemi_color.y, hemi_color.z);
-	LightData.m_vLightIntencity.add(g_pGamePersistent->Environment().CurrentEnv->ambient);
+	LightData.m_vLightIntencity.add(Environment().CurrentEnv->ambient);
 
 	const Fmatrix &Transform = FluidData.GetTransform();
 
@@ -649,9 +649,9 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 		size
 		);
 
-	u32 iNumRenderables = m_lstRenderables.size();
+	size_t iNumRenderables = m_lstRenderables.size();
 	// Determine visibility for dynamic part of scene
-	for (u32 i=0; i<iNumRenderables; ++i)
+	for (size_t i=0; i<iNumRenderables; ++i)
 	{
 		ISpatial*	spatial		= m_lstRenderables[i];
 

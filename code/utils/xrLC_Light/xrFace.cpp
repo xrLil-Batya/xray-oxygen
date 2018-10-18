@@ -29,7 +29,7 @@ void			base_Face::CacheOpacity	()
 	if ( !flags.bOpaque && !(T.THM.HasSurface()) )	//(0==T.pSurface)//	pSurface was possible deleted
 	{
 		flags.bOpaque	= true;
-		clMsg			("Strange face detected... Has alpha without texture...");
+		Logger.clMsg			("Strange face detected... Has alpha without texture...");
 	}
 }
 static bool do_not_add_to_vector_in_global_data = false;
@@ -106,7 +106,7 @@ Tvertex<DataVertex>::~Tvertex()
 			
 			//inlc_global_data()->g_vertices().erase(F);
 		}
-		else clMsg("* ERROR: Unregistered VERTEX destroyed");
+		else Logger.clMsg("* ERROR: Unregistered VERTEX destroyed");
 	}
 }
 
@@ -135,7 +135,7 @@ template<>
 Tface<DataVertex>::Tface()
 {
 	
-	pDeflector				= 0;
+	pDeflector				= nullptr;
 	flags.bSplitted			= false;
 	VERIFY( inlc_global_data() );
 	if( !do_not_add_to_vector_in_global_data )
@@ -144,7 +144,7 @@ Tface<DataVertex>::Tface()
 		inlc_global_data()->g_faces().push_back		(this);
 	}
 	sm_group				= u32(-1);
-	lmap_layer				= NULL;
+	lmap_layer				= nullptr;
 }
 
 template<>
@@ -160,13 +160,13 @@ Tface<DataVertex>::~Tface()
 			faces.pop_back();
 			//faces.erase(F);
 		}
-		else clMsg("* ERROR: Unregistered FACE destroyed");
+		else Logger.clMsg("* ERROR: Unregistered FACE destroyed");
 	}
 	// Remove 'this' from adjacency info in vertices
-	for (int i=0; i<3; ++i)
-		v[i]->prep_remove(this);
+	for (Face::type_vertex* i : v)
+		i->prep_remove(this);
 
-	lmap_layer				= NULL;
+	lmap_layer				= nullptr;
 }
 
 //#define VPUSH(a) ((a).x), ((a).y), ((a).z)
@@ -176,13 +176,13 @@ void Face::	Failure		()
 {
 	dwInvalidFaces			++;
 
-	clMsg		("* ERROR: Invalid face. (A=%f,e0=%f,e1=%f,e2=%f)",
+	Logger.clMsg		("* ERROR: Invalid face. (A=%f,e0=%f,e1=%f,e2=%f)",
 		CalcArea(),
 		v[0]->P.distance_to(v[1]->P),
 		v[0]->P.distance_to(v[2]->P),
 		v[1]->P.distance_to(v[2]->P)
 		);
-	clMsg		("*        v0[%f,%f,%f], v1[%f,%f,%f], v2[%f,%f,%f]",
+	Logger.clMsg		("*        v0[%f,%f,%f], v1[%f,%f,%f], v2[%f,%f,%f]",
 		VPUSH(v[0]->P),
 		VPUSH(v[1]->P),
 		VPUSH(v[2]->P)
@@ -250,7 +250,7 @@ void	DataFace::AddChannel	(Fvector2 &p1, Fvector2 &p2, Fvector2 &p3)
 
 BOOL	DataFace::hasImplicitLighting()
 {
-	if (0==this)								return FALSE;
+	if (nullptr==this)								return FALSE;
 	if (!Shader().flags.bRendering)				return FALSE;
 	VERIFY( inlc_global_data() );
 	b_material& M		= inlc_global_data()->materials()		[dwMaterial];
@@ -336,13 +336,13 @@ aa2_largest:	// aa2 is largest
 */
 
 
-void	DataFace::	read	(INetReader	&r )
+void	DataFace::	read	(IReader	&r )
 {
 	base_Face::read( r );	
 
 	r.r_fvector3( N );			
-	r_vector ( r, tc ) ;			
-	pDeflector =0 ;
+	r_vector ( r, tc );			
+	pDeflector = nullptr;
 	VERIFY( read_lightmaps );
 	read_lightmaps->read( r, lmap_layer );
 	sm_group = r.r_u32();
@@ -357,7 +357,7 @@ void	DataFace::	write	(IWriter	&w )const
 	write_lightmaps->write( w, lmap_layer );
 	w.w_u32( sm_group );
 }
-void	DataVertex::	read	(INetReader	&r )
+void	DataVertex::	read	(IReader	&r )
 {
 	base_Vertex::read( r );
 
@@ -367,7 +367,7 @@ void	DataVertex::	write	(IWriter	&w )const
 	base_Vertex::write( w );
 }
 
-void Face::	read_vertices		( INetReader	&r )
+void Face::	read_vertices		( IReader	&r )
 {
 	VERIFY( ::read_vertices );
 	::read_vertices->read( r, v[0] );
@@ -382,7 +382,7 @@ void Face::write_vertices		( IWriter	&w )const
 	::write_vertices->write( w, v[2] );
 }
 
-void	Face::	read	( INetReader	&r )
+void	Face::	read	( IReader	&r )
 {
 	DataFace::read( r );
 	
@@ -404,7 +404,7 @@ void	Face::	write	( IWriter	&w )const
 
 
 
-void	Vertex::read		( INetReader	&r )
+void	Vertex::read		( IReader	&r )
 {
 	//	v_faces							m_adjacents; !
 	DataVertex::read( r );
@@ -416,19 +416,18 @@ void	Vertex::write		( IWriter	&w )const
 }
 
 //////////////////////////////////////////////////////////////
-void	Vertex::isolate_pool_clear_read		( INetReader	&r )
+void	Vertex::isolate_pool_clear_read		( IReader	&r )
 {
 	DataVertex::read( r );
 	r_pod_vector( r, m_adjacents );
-	for(u32 i= 0; i< m_adjacents.size();++i )
+	for(Face* adjacent : m_adjacents)
 	{
-		Face &f = *m_adjacents[i];
 		int v_i = -1;
 		r_pod( r, v_i );
 		R_ASSERT( v_i>=0 );
 		R_ASSERT( v_i<3 );
-		R_ASSERT( f.vertex( v_i ) == 0 );
-		f.raw_set_vertex( v_i, this );
+		R_ASSERT(adjacent->vertex( v_i ) == nullptr );
+		adjacent->raw_set_vertex( v_i, this );
 	}
 }
 void	Vertex::isolate_pool_clear_write	( IWriter	&w )const
@@ -442,11 +441,11 @@ void	Vertex::isolate_pool_clear_write	( IWriter	&w )const
 		R_ASSERT( v_i>=0 );
 		R_ASSERT( v_i<3 );
 		w_pod( w, v_i );
-		f.raw_set_vertex( v_i, 0 );
+		f.raw_set_vertex( v_i, nullptr);
 	}
 }
 
-void	Vertex::read_adjacents		( INetReader	&r )
+void	Vertex::read_adjacents		( IReader	&r )
 {
 	//VERIFY()
 }

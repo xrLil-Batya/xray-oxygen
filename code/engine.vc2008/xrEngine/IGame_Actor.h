@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include "xr_object.h"
 
 class ENGINE_API CIActor
@@ -17,7 +17,7 @@ public:
 	virtual BOOL g_Alive() const { return false; }
 public:
 
-	//режим подбирания предметов
+	//СЂРµР¶РёРј РїРѕРґР±РёСЂР°РЅРёСЏ РїСЂРµРґРјРµС‚РѕРІ
 	bool m_bPickupMode;
 
 	u32	mstate_wishful;

@@ -1,4 +1,4 @@
-////////////////////////////////////////
+п»ї////////////////////////////////////////
 // OXYGEN TEAM, 2018 (C) * X-RAY OXYGEN	
 // entry_point.cpp - entry point of xrPlay
 // Edited: 13 May, 2018						
@@ -38,20 +38,13 @@ void CheckOpenAL(const char* params)
 	DWORD dwOpenALInstalled = GetFileAttributes("C:\\Windows\\System32\\OpenAL32.dll");
 	if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
 	{
-		std::string StrCmd = "/select, " + std::string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
+		xr_string StrCmd = "/select, " + xr_string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
 		StrCmd[11] = '\\';
 		//WinExec(StrCmd.c_str(), 1);
 		ShellExecute(NULL, NULL, "explorer.exe", StrCmd.c_str(), NULL, SW_SHOWNORMAL);
 		system(StrCmd.c_str());
 		MessageBox(0, "ENG: Click just after installing OpenAL. \n"
-					  "RUS: Нажмите после установки OpenAL.", "OpenAL Not Found!", MB_OK);
-	}
-
-	HMODULE hLib = LoadLibrary("xrEngine.dll");
-	IsRunFunc RunFunc = (IsRunFunc)GetProcAddress(hLib, "RunApplication");
-	if (RunFunc)
-	{
-		RunFunc(params);
+					  "RUS: РќР°Р¶РјРёС‚Рµ РїРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё OpenAL.", "OpenAL Not Found!", MB_OK);
 	}
 }
 
@@ -139,6 +132,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CreateRendererList();
 	CheckOpenAL(params);
 
+	HMODULE hLib = LoadLibrary("xrEngine.dll");
+	if (hLib == NULL)
+	{
+		MessageBoxA(NULL, "Can't load xrEngine.dll!", "Init error", MB_OK | MB_ICONERROR);
+		return 1;
+	}
+
+	IsRunFunc RunFunc = (IsRunFunc)GetProcAddress(hLib, "RunApplication");
+	if (RunFunc)
+	{
+		RunFunc(params);
+	}
+	else
+	{
+		MessageBoxA(NULL, "xrEngine module doesn't seems to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
+		return 1;
+	}
 #ifdef NO_MULTI_INSTANCES		
 	// Delete application presence mutex
 	CloseHandle(hCheckPresenceMutex);

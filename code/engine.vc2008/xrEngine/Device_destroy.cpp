@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "../Include/xrRender/DrawUtils.h"
 #include "render.h"
@@ -66,7 +66,7 @@ void CRenderDevice::Reset(bool precache)
 
 	if (g_pGamePersistent)
 	{
-		g_pGamePersistent->Environment().bNeed_re_create_env = TRUE;
+		Environment().bNeed_re_create_env = TRUE;
 	}
 
 	_SetupStates();

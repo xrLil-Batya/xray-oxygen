@@ -180,9 +180,6 @@
     <ClInclude Include="r2.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="r2_types.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\r__dsgraph_structure.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -246,9 +243,6 @@
     <ClInclude Include="..\xrRender\WallmarksEngine.h">
       <Filter>Wallmarks</Filter>
     </ClInclude>
-    <ClInclude Include="blender_bloom_build.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\Blender_BmmD.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
@@ -289,9 +283,6 @@
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="blender_light_spot.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
-    <ClInclude Include="blender_luminance.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\Blender_Particle.h">
@@ -353,9 +344,6 @@
     </ClInclude>
     <ClInclude Include="..\xrRender\occRasterizer.h">
       <Filter>Visibility\HOM Occlusion</Filter>
-    </ClInclude>
-    <ClInclude Include="r2_rendertarget.h">
-      <Filter>Core_Target</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\ColorMapManager.h">
       <Filter>Core_Target\ColorMap</Filter>
@@ -639,18 +627,18 @@
     <ClInclude Include="r2_puddles.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="blender_ssss_ogse.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
-    <ClInclude Include="blender_ssss_mrmnwar.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h">
       <Filter>Interfase implementations\Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\dxGlowManager.h" />
     <ClInclude Include="..\xrRender\ScreenshotManager.h">
       <Filter>Core\ScreenshotManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrRender\xrRenderTarget.h">
+      <Filter>Core_Target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrRender\r_types.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -768,9 +756,6 @@
     <ClCompile Include="..\xrRender\WallmarksEngine.cpp">
       <Filter>Wallmarks</Filter>
     </ClCompile>
-    <ClCompile Include="blender_bloom_build.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\Blender_BmmD.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
@@ -811,9 +796,6 @@
       <Filter>Shading templates</Filter>
     </ClCompile>
     <ClCompile Include="blender_light_spot.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_luminance.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\Blender_Particle.cpp">
@@ -916,9 +898,6 @@
       <Filter>Core_Target</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_bloom.cpp">
-      <Filter>Core_Target</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_combine.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_luminance.cpp">
@@ -1140,12 +1119,6 @@
     <ClCompile Include="..\xrRender\RenderTargetPhaseSSSS.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
-    <ClCompile Include="blender_ssss_ogse.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_ssss_mrmnwar.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\RenderTargetPhaseAA.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
@@ -1164,6 +1137,12 @@
     </ClCompile>
     <ClCompile Include="ScreenshotManagerDX9.cpp">
       <Filter>Core\ScreenshotManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\RenderTargetPhaseVignette.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\RenderTargetPhaseCombine.cpp">
+      <Filter>Core_Target</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -318,8 +318,9 @@ SAAParam &CControlAnimationBase::AA_GetParams(LPCSTR anim_name)
 	// искать текущую анимацию в AA_VECTOR
 	MotionID motion = smart_cast<IKinematicsAnimated*>(m_object->Visual())->LL_MotionID(anim_name);
 
-	for (auto it = m_attack_anims.begin(); it != m_attack_anims.end(); it++) {
-		if (it->motion == motion) return (*it);
+	for (SAAParam& attack_anim : m_attack_anims) 
+	{
+		if (attack_anim.motion == motion) return attack_anim;
 	}
 	
 	VERIFY3(FALSE, "Error! No animation in AA_VECTOR! Animation = ", anim_name);
@@ -329,8 +330,9 @@ SAAParam &CControlAnimationBase::AA_GetParams(LPCSTR anim_name)
 SAAParam &CControlAnimationBase::AA_GetParams(MotionID motion, float time_perc)
 {
 	// искать текущую анимацию в AA_VECTOR
-	for (auto it = m_attack_anims.begin(); it != m_attack_anims.end(); it++) {
-		if ((it->motion == motion) && (it->time == time_perc)) return (*it);
+	for (SAAParam& attack_anim : m_attack_anims)
+	{
+		if ((attack_anim.motion == motion) && (attack_anim.time == time_perc)) return attack_anim;
 	}
 
 	VERIFY2(FALSE, "Error! No animation in AA_VECTOR! Animation = [UNKNOWN]");
@@ -341,7 +343,7 @@ EPState	CControlAnimationBase::GetState (EMotionAnim a)
 {
 	// найти анимацию 
 	SAnimItem *item_it = m_anim_storage[a];
-	VERIFY2(item_it, make_string("animation not found in m_anim_storage!"));
+	VERIFY2(item_it, "animation not found in m_anim_storage!");
 
 	return item_it->pos_state;
 }
@@ -384,7 +386,7 @@ float CControlAnimationBase::GetAnimSpeed(EMotionAnim anim)
 bool CControlAnimationBase::IsTurningCurAnim()
 {
 	SAnimItem *item_it = m_anim_storage[cur_anim_info().get_motion()];
-	VERIFY2(item_it, make_string("animation not found in m_anim_storage!"));;
+	VERIFY2(item_it, "animation not found in m_anim_storage!");
 
 	if (!fis_zero(item_it->velocity.velocity.angular_real)) return true;
 	return false;
@@ -393,7 +395,7 @@ bool CControlAnimationBase::IsTurningCurAnim()
 bool CControlAnimationBase::IsStandCurAnim()
 {
 	SAnimItem *item_it = m_anim_storage[cur_anim_info().get_motion()];
-	VERIFY2(item_it, make_string("animation not found in m_anim_storage!"));;
+	VERIFY2(item_it, "animation not found in m_anim_storage!");
 
 	if (fis_zero(item_it->velocity.velocity.linear)) return true;
 	return false;
@@ -447,7 +449,7 @@ EAction CControlAnimationBase::GetActionFromPath()
 LPCSTR CControlAnimationBase::GetAnimationName(EMotionAnim anim)
 {
 	SAnimItem *item_it = m_anim_storage[anim];
-	VERIFY2(item_it, make_string("animation not found in m_anim_storage!"));;
+	VERIFY2(item_it, "animation not found in m_anim_storage!");
 
 	return *item_it->target_name;
 }

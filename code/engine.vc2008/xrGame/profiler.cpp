@@ -104,14 +104,14 @@ void CProfiler::setup_timer			(LPCSTR timer_id, const u64 &timer_time, const u32
 	(*i).second.m_update_time	= Device.dwTimeGlobal;
 }
 
-void CProfiler::clear				()
+void CProfiler::clear ()
 {
-	m_section.lock				();
-	m_portions.clear			();
-	m_timers.clear				();
-	m_section.unlock				();
+	m_section.Enter();
+	m_portions.clear ();
+	m_timers.clear ();
+	m_section.Leave();
 
-	m_call_count				= 0;
+	m_call_count = 0;
 }
 
 void CProfiler::show_stats			(CGameFont *game_font, bool show)
@@ -123,7 +123,7 @@ void CProfiler::show_stats			(CGameFont *game_font, bool show)
 
 	++m_call_count;
 
-	m_section.lock				();
+	m_section.Enter();
 
 	if (!m_portions.empty()) {
 		std::sort				(m_portions.begin(),m_portions.end(),CProfilePortionPredicate());
@@ -147,7 +147,7 @@ void CProfiler::show_stats			(CGameFont *game_font, bool show)
 
 		m_portions.clear		();
 
-		m_section.unlock			();
+		m_section.Leave();
 
 		if (!m_actual) {
 			u32					max_string_size = 0;
@@ -164,7 +164,7 @@ void CProfiler::show_stats			(CGameFont *game_font, bool show)
 		}
 	}
 	else
-		m_section.unlock			();
+		m_section.Leave();
 
 	TIMERS::iterator			I = m_timers.begin();
 	TIMERS::iterator			E = m_timers.end();
@@ -199,6 +199,6 @@ void CProfiler::show_stats			(CGameFont *game_font, bool show)
 
 void CProfiler::add_profile_portion	(const CProfileResultPortion &profile_portion)
 {
-    std::lock_guard<decltype(m_section)> locker(m_section);
+	xrCriticalSectionGuard guard(m_section);
 	m_portions.push_back		(profile_portion);
 }

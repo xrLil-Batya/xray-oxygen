@@ -66,11 +66,6 @@ CMainMenu::~CMainMenu()
 	m_pMB_ErrDlgs.clear();
 }
 
-const char* CMainMenu::GetGSVer()
-{
-	return "Oxygen 1.7f";
-}
-
 void CMainMenu::ReadTextureInfo()
 {
 	FS_FileSet fset;

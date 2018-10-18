@@ -157,7 +157,7 @@ void CUIRankingWnd::Init()
 	m_achievements->SetWindowName("achievements_list");
 
 	LPCSTR section = "achievements";
-	VERIFY2(pSettings->section_exist(section), make_string("Section [%s] does not exist!", section));
+	VERIFY_FORMAT(pSettings->section_exist(section), "Section [%s] does not exist!", section);
 
 	CInifile::Sect&	achievs_section = pSettings->r_section(section);
 	auto ib			= achievs_section.Data.begin();
@@ -171,7 +171,7 @@ void CUIRankingWnd::Init()
 void CUIRankingWnd::add_achievement(CUIXml& xml, shared_str const& achiev_id)
 {
 	CUIAchievements* achievement = xr_new<CUIAchievements>(m_achievements);
-	VERIFY2(pSettings->section_exist(achiev_id), make_string("Section [%s] does not exist!", achiev_id));
+	VERIFY_FORMAT(pSettings->section_exist(achiev_id), "Section [%s] does not exist!", achiev_id);
 	achievement->init_from_xml(xml);
 
 	achievement->SetName(pSettings->r_string(achiev_id, "name"));

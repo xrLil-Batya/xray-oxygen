@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "../../xrEngine/igame_persistent.h"
 #include "../xrRender/FBasicVisual.h"
 #include "../../xrEngine/customhud.h"
@@ -12,10 +12,9 @@ IC	bool	pred_sp_sort	(ISpatial*	_1, ISpatial* _2)
 	float	d2		= _2->spatial.sphere.P.distance_to_sqr	(Device.vCameraPosition);
 	return	d1<d2	;
 }
-//Swartz27 to all: Switched from Deffered Lighting
-//to deffered shading for two reasons:
-//1) It's faster (proof is in the pudding)
-//2) It makes PBR easier to add
+//MatthewKush to all: I was completely wrong before
+//I shouldn't smoke so much cheeba
+//Current goal: deffered lighting > deffered shading > forward+ shading
 void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 {
 	PIX_EVENT(render_main);
@@ -246,7 +245,7 @@ void CRender::Render		()
 	View										= nullptr;
 
 	Target->phase_scene_prepare					();
-    RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //depth prepass
+    //RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //NOT EVEN a depth prepass :P
 	//*******
 	// Sync point
 	Device.Statistic->RenderDUMP_Wait_S.Begin	();
@@ -456,7 +455,7 @@ void CRender::render_forward				()
 		if (Glows && ps_r_flags.is(R_FLAG_GLOW_USE))
 			Glows->Render();											// glows render
 
-		g_pGamePersistent->Environment().RenderLast();					// rain/thunder-bolts
+		Environment().RenderLast();					// rain/thunder-bolts
 	}
 
 	RImplementation.o.distortion				= FALSE;				// disable distorion

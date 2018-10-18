@@ -18,7 +18,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}</ProjectGuid>
     <RootNamespace>xrECoreLite</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -81,7 +81,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrCore.lib;xrEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
@@ -102,29 +102,31 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrCore.lib;xrEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>./;..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_SECURE_SCL=0;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrCore.lib;xrEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
     <ClCompile Include="bone.cpp" />
+    <ClCompile Include="EditorLevel.cpp" />
     <ClCompile Include="FBasicVisual.cpp" />
     <ClCompile Include="Ogf.cpp" />
     <ClCompile Include="OgfV4.cpp" />
@@ -145,7 +147,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="motion.cpp" />
-    <ClCompile Include="ogf_desc.cpp" />
     <ClCompile Include="Omf.cpp" />
     <ClCompile Include="RAPIDMinBox.cpp" />
     <ClCompile Include="VertCache.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="ArbitraryList.h" />
     <ClInclude Include="bone.h" />
+    <ClInclude Include="EditorLevel.h" />
     <ClInclude Include="FBasicVisual.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Ogf.h" />

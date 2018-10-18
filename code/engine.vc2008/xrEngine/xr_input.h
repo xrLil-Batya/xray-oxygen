@@ -1,4 +1,4 @@
-#ifndef __XR_INPUT__
+﻿#ifndef __XR_INPUT__
 #define __XR_INPUT__
 
 #define DIRECTINPUT_VERSION 0x0800

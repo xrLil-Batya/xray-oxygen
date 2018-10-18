@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "MbHelpers.h"
 
@@ -31,7 +31,7 @@ unsigned short int mbhMulti2WideDumb
 		return 0;
 
 	if ( WideStr || WidePos )
-		VERIFY2( ( ( WideStrSize > 0 ) && ( WideStrSize < 0xFFFF ) ) , make_string( "'WideStrSize'=%hu" , WideStrSize ) );
+		VERIFY_FORMAT( ( ( WideStrSize > 0 ) && ( WideStrSize < 0xFFFF ) ), "'WideStrSize'=%hu", WideStrSize );
 
 	while ( ( b1	= MultiStr[ spos++ ] ) != 0x00 ) {
 
@@ -43,7 +43,7 @@ unsigned short int mbhMulti2WideDumb
 		wc = b1;
 
 		if ( WideStr ) {
-			VERIFY2( ( dpos < WideStrSize ) , make_string( "S1: '%s',%hu<%hu" , MultiStr , dpos , WideStrSize ) );
+			VERIFY_FORMAT( ( dpos < WideStrSize ), "S1: '%s',%hu<%hu" , MultiStr , dpos , WideStrSize);
 			WideStr[ dpos ] = wc;
 		}
 	}
@@ -52,7 +52,7 @@ unsigned short int mbhMulti2WideDumb
 		WidePos[ dpos ] = spos;
 
 	if ( WideStr ) {
-		VERIFY2( ( dpos < WideStrSize ) , make_string( "S2: '%s',%hu<%hu" , MultiStr , dpos , WideStrSize ) );
+		VERIFY_FORMAT( ( dpos < WideStrSize ), "S2: '%s',%hu<%hu" , MultiStr , dpos , WideStrSize);
 		WideStr[ dpos + 1 ] = 0x0000;
 	}
 
@@ -78,7 +78,7 @@ ENGINE_API unsigned short int mbhMulti2Wide
 		return 0;
 
 	if ( WideStr || WidePos )
-		VERIFY2( ( ( WideStrSize > 0 ) && ( WideStrSize < 0xFFFF ) ) , make_string( "'WideStrSize'=%hu" , WideStrSize ) );
+		VERIFY_FORMAT( ( ( WideStrSize > 0 ) && ( WideStrSize < 0xFFFF ) ), "'WideStrSize'=%hu" , WideStrSize );
 
 	while ( ( b1 = MultiStr[ spos ] ) != 0x00 ) {
 
@@ -96,8 +96,7 @@ ENGINE_API unsigned short int mbhMulti2Wide
 				if ( ! ( b2 && ( ( b2 & BITS2_MASK ) == BITS2_EXP ) ) )
 					return mbhMulti2WideDumb( WideStr , WidePos , WideStrSize , MultiStr );
 			#else // MB_DUMB_CONVERSION
-				VERIFY2( ( b2 && ( ( b2 & BITS2_MASK ) == BITS2_EXP ) ) , 
-					make_string( "B2: '%s',@%hu,[%hc][%hc]" , MultiStr , spos , b1 , b2 ) );
+				VERIFY_FORMAT( ( b2 && ( ( b2 & BITS2_MASK ) == BITS2_EXP ) ), "B2: '%s',@%hu,[%hc][%hc]" , MultiStr , spos , b1 , b2 );
 			#endif // MB_DUMB_CONVERSION
 			wc = ( ( b1 & ~ BITS3_MASK ) << 6 ) | ( b2 & ~ BITS2_MASK );
 		} else
@@ -107,30 +106,28 @@ ENGINE_API unsigned short int mbhMulti2Wide
 				if ( ! ( b2 && ( ( b2 & BITS2_MASK ) == BITS2_EXP ) ) )
 					return mbhMulti2WideDumb( WideStr , WidePos , WideStrSize , MultiStr );
 			#else // MB_DUMB_CONVERSION
-				VERIFY2( ( b2 && ( ( b2 & BITS2_MASK ) == BITS2_EXP ) ) ,
-					make_string( "B31: '%s',@%hu,[%hc][%hc]" , MultiStr , spos , b1 , b2 ) );
+				VERIFY_FORMAT( ( b2 && ( ( b2 & BITS2_MASK ) == BITS2_EXP ) ), "B31: '%s',@%hu,[%hc][%hc]", MultiStr , spos , b1 , b2);
 			#endif // MB_DUMB_CONVERSION
 			b3 = MultiStr[ spos++ ];
 			#ifdef MB_DUMB_CONVERSION
 				if ( ! ( b3 && ( ( b3 & BITS2_MASK ) == BITS2_EXP ) ) ) 
 					return mbhMulti2WideDumb( WideStr , WidePos , WideStrSize , MultiStr );
 			#else // MB_DUMB_CONVERSION
-				VERIFY2( ( b3 && ( ( b3 & BITS2_MASK ) == BITS2_EXP ) ) ,
-					make_string( "B32: '%s',@%hu,[%hc][%hc][%hc]" , MultiStr , spos , b1 , b2 , b3 ) );
+				VERIFY_FORMAT( ( b3 && ( ( b3 & BITS2_MASK ) == BITS2_EXP ) ), "B32: '%s',@%hu,[%hc][%hc][%hc]", MultiStr, spos , b1 , b2 , b3);
 			#endif // MB_DUMB_CONVERSION
 			wc = ( ( b1 & ~ BITS4_MASK ) << 12 ) | ( ( b2 & ~ BITS2_MASK ) << 6 ) | ( b3 & ~ BITS2_MASK );
 		} else {
 			#ifdef MB_DUMB_CONVERSION
 				return mbhMulti2WideDumb( WideStr , WidePos , WideStrSize , MultiStr );
 			#else // MB_DUMB_CONVERSION
-				VERIFY2( 0 , make_string( "B1: '%s',@%hu,[%hc]" , MultiStr , spos , b1 ) );
+				VERIFY_FORMAT( 0, "B1: '%s',@%hu,[%hc]", MultiStr, spos, b1);
 			#endif // MB_DUMB_CONVERSION
 		}
 
 		dpos++;
 
 		if ( WideStr ) {
-			VERIFY2( ( dpos < WideStrSize ) , make_string( "S1: '%s',%hu<%hu" , MultiStr , dpos , WideStrSize ) );
+			VERIFY_FORMAT( ( dpos < WideStrSize ) ,  "S1: '%s',%hu<%hu" , MultiStr , dpos , WideStrSize);
 			WideStr[ dpos ] = wc;
 		}
 	}
@@ -139,7 +136,7 @@ ENGINE_API unsigned short int mbhMulti2Wide
 		WidePos[ dpos ] = spos;
 
 	if ( WideStr ) {
-		VERIFY2( ( dpos < WideStrSize ) , make_string( "S2: '%s',%hu<%hu" , MultiStr , dpos , WideStrSize ) );
+		VERIFY_FORMAT( ( dpos < WideStrSize ) ,"S2: '%s',%hu<%hu" , MultiStr , dpos , WideStrSize);
 		WideStr[ dpos + 1 ] = 0x0000;
 	}
 

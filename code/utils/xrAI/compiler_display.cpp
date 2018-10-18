@@ -4,8 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "resource.h"
 
-extern HWND logWindow;
-
 int	dimX,dimZ;
 struct	Texel {
 	vertex*	N;
@@ -277,9 +275,10 @@ static INT_PTR CALLBACK disp_proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 	return TRUE;
 }
 
-void xrDisplay		()
+void xrDisplay()
 {
 	InternalRender	();
+	HWND logWindow = Logger.GetWindow();
 	DialogBox		(HINSTANCE(GetModuleHandle(0)),MAKEINTRESOURCE(IDD_NVIEW),logWindow,disp_proc);
 	xr_free			(texels);
 }

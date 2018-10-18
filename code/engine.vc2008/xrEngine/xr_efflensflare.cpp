@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #pragma hdrstop
 
 #include "xr_efflensflare.h"
@@ -18,7 +18,7 @@
 	#include "CameraManager.h"
 #endif
 
-#define FAR_DIST g_pGamePersistent->Environment().CurrentEnv->far_plane
+#define FAR_DIST Environment().CurrentEnv->far_plane
 
 // Globals ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -246,16 +246,16 @@ void CLensFlare::OnFrame(shared_str id)
 #endif
 	dwFrame			= Device.dwFrame;
 
-	R_ASSERT		( _valid(g_pGamePersistent->Environment().CurrentEnv->sun_dir) );
-	vSunDir.mul		(g_pGamePersistent->Environment().CurrentEnv->sun_dir,-1);
+	R_ASSERT		( _valid(Environment().CurrentEnv->sun_dir) );
+	vSunDir.mul		(Environment().CurrentEnv->sun_dir,-1);
 	R_ASSERT		( _valid(vSunDir) );
 
 	// color
-    float tf		= g_pGamePersistent->Environment().fTimeFactor;
-    Fvector& c		= g_pGamePersistent->Environment().CurrentEnv->sun_color;
+    float tf		= Environment().fTimeFactor;
+    Fvector& c		= Environment().CurrentEnv->sun_color;
 	LightColor.set	(c.x,c.y,c.z,1.f); 
 
-	CLensFlareDescriptor* desc = id.size() ? g_pGamePersistent->Environment().add_flare(m_Palette, id) : 0;
+	CLensFlareDescriptor* desc = id.size() ? Environment().add_flare(m_Palette, id) : 0;
 
 //	LFState			previous_state = m_State;
     switch(m_State){

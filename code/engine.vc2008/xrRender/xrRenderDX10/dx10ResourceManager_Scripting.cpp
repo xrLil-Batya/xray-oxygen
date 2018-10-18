@@ -88,6 +88,8 @@ void LuaLog(LPCSTR caMessage)
 
 // export
 #include "../../xrScripts/VMLua.h"
+//MatthewKush to all: I can do EVERYTHING from LUA from now on if you add the following options:
+//alpha-blending, _passCS, ability to create my own sampler's and sampler states
 void	CResourceManager::LS_Load()
 {
     luaVM = xr_new<CVMLua>();
@@ -328,10 +330,10 @@ Shader*	CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Search equal in shaders array
-	for (const auto &shader : v_shaders)
+	for (Shader* pShader : v_shaders)
 	{
-		if (S.equal(shader))
-			return shader;
+		if (S.equal(pShader))
+			return pShader;
 	}
 
 	// Create _new_ entry

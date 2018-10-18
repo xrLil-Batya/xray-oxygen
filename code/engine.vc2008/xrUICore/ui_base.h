@@ -15,26 +15,11 @@ public:
 
 struct UI_API CFontManager :public pureDeviceReset
 {
-	using FONTS_VEC = xr_vector<CGameFont**>;
-	using FONTS_VEC_IT = FONTS_VEC::iterator;
-	FONTS_VEC m_all_fonts;
-
 	// Hud font
 	CGameFont* pFontMedium;
 	CGameFont* pFontDI;
 
-	CGameFont* pFontArial14;
-	CGameFont* pFontArial21;
-	CGameFont* pFontGraffiti19Russian;
-	CGameFont* pFontGraffiti22Russian;
-	CGameFont* pFontLetterica16Russian;
-	CGameFont* pFontLetterica18Russian;
-	CGameFont* pFontGraffiti32Russian;
-	CGameFont* pFontGraffiti50Russian;
-	CGameFont* pFontLetterica25;
-	CGameFont* pFontElectron18;
-	CGameFont* pFontRoboto16;
-	CGameFont* pFontStat;
+	xr_map<CGameFont*, const char*> FontVect;
 
 					CFontManager		();
 					~CFontManager		();
@@ -45,6 +30,8 @@ struct UI_API CFontManager :public pureDeviceReset
 
 			void	Render				();
 	virtual void	OnDeviceReset		();
+public:
+	CGameFont*		GetFont				(const char* name);
 };
 
 class UI_API ui_core : public CDeviceResetNotifier

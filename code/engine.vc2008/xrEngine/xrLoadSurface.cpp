@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #pragma hdrstop
 
 #include <freeimage/freeimage.h>
@@ -8,8 +8,8 @@ struct SExts{
     void format_register(LPCSTR ext)
     {
     	if (ext&&ext[0]){
-			for (u32 i=0; i<exts.size(); i++)
-    			if (0==stricmp(exts[i],ext)) return;
+			for (LPSTR i : exts)
+    			if (0==stricmp(i,ext)) return;
     		exts.push_back(xr_strdup(ext));
         }
     }
@@ -17,8 +17,8 @@ struct SExts{
     LPSTR operator [](int k){return exts[k];}
 	~SExts()
     {
-		for (u32 i=0; i<exts.size(); i++)
-    		xr_free(exts[i]);
+		for (LPSTR ext : exts)
+    		xr_free(ext);
         exts.clear();
     }
 };
@@ -90,14 +90,14 @@ FIBITMAP*	Surface_Load(char* full_name)
 	// load
 	FREE_IMAGE_FORMAT	fif		= FreeImage_GetFIFFromFilename(full_name);
 	FIBITMAP*			map		= FreeImage_Load(fif,full_name);
-	if (0==map)			return NULL;
+	if (nullptr==map)			return nullptr;
 
 	// check if already 32bpp
 	if (32==FreeImage_GetBPP(map))	return map;
 
 	// convert
 	FIBITMAP*			map32	= FreeImage_ConvertTo32Bits(map);
-	if (0==map32)		map32	= map;
+	if (nullptr==map32)		map32	= map;
 	else				FreeImage_Unload(map);
 
  	return				map32;
@@ -109,7 +109,7 @@ u32*	Surface_Load(char* name, u32& w, u32& h)
 
 	// detect format
 	string_path		full;
-	if (!Surface_Detect(full,name)) return NULL;
+	if (!Surface_Detect(full,name)) return nullptr;
 
 	FIBITMAP* map32		= Surface_Load(full);
 

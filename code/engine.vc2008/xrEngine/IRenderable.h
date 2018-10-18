@@ -1,4 +1,4 @@
-#ifndef IRENDERABLE_H_INCLUDED
+﻿#ifndef IRENDERABLE_H_INCLUDED
 #define IRENDERABLE_H_INCLUDED
 
 #include "render.h"

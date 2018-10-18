@@ -232,6 +232,9 @@
     <Filter Include="Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton">
       <UniqueIdentifier>{51dac9fb-ca56-44cc-b86b-4bcbe28922da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Spectre">
+      <UniqueIdentifier>{814d34e1-3873-4ffd-a040-ed3993c26022}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game API\Level">
       <UniqueIdentifier>{f95a2f74-5e20-47a4-9614-4353cd722baf}</UniqueIdentifier>
     </Filter>
@@ -606,6 +609,12 @@
     <ClInclude Include="IGame_Actor.h">
       <Filter>Game API</Filter>
     </ClInclude>
+    <ClInclude Include="spectre\Spectre.h">
+      <Filter>Spectre</Filter>
+    </ClInclude>
+    <ClInclude Include="spectre\ExternalCallbackTypes.h">
+      <Filter>Spectre</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -949,6 +958,12 @@
     </ClCompile>
     <ClCompile Include="IGame_Actor.cpp">
       <Filter>Game API</Filter>
+    </ClCompile>
+    <ClCompile Include="spectre\Spectre.cpp">
+      <Filter>Spectre</Filter>
+    </ClCompile>
+    <ClCompile Include="spectre\ExternalCallbackTypes.cpp">
+      <Filter>Spectre</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -308,12 +308,10 @@ void CLevel::cl_Process_Event(u16 dest, u16 type, NET_Packet& P)
 	}
 };
 
-static std::recursive_mutex MutexGameEventsLock;
-
 void CLevel::ProcessGameEvents()
 {
 	// Threadsafe for ProcessGameEvents
-	std::lock_guard<std::recursive_mutex> guard(MutexGameEventsLock);
+	xrCriticalSectionGuard EventProcessGuard(EventProcesserLock);
 
 	// Game events
 	NET_Packet			P;
@@ -436,9 +434,9 @@ void CLevel::OnFrame()
 		if (pStatGraphR)
 			xr_delete(pStatGraphR);
 	}
-	g_pGamePersistent->Environment().m_paused = m_bEnvPaused;
+	Environment().m_paused = m_bEnvPaused;
 #endif
-	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), ai().alife().time_manager().time_factor());
+	Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
 
 	m_ph_commander->update();
@@ -560,13 +558,13 @@ void CLevel::OnRender()
 		ObjectSpace.dbgRender();
 
 		//---------------------------------------------------------------------
-		UI().Font().pFontStat->OutSet(170, 630);
-		UI().Font().pFontStat->SetHeight(16.0f);
-		UI().Font().pFontStat->SetColor(0xffff0000);
+		UI().Font().GetFont("stat_font")->OutSet(170, 630);
+		UI().Font().GetFont("stat_font")->SetHeight(16.0f);
+		UI().Font().GetFont("stat_font")->SetColor(0xffff0000);
 
-		UI().Font().pFontStat->OutNext("Server Objects:      [%d]", Objects.o_count());
+		UI().Font().GetFont("stat_font")->OutNext("Server Objects:      [%d]", Objects.o_count());
 
-		UI().Font().pFontStat->SetHeight(8.0f);
+		UI().Font().GetFont("stat_font")->SetHeight(8.0f);
 
 		//---------------------------------------------------------------------
 		DBG().draw_object_info();

@@ -244,13 +244,9 @@ CCoverManager::Cover *CCoverManager::smart_cover			(shared_str const &cover_id) 
 										id_predicate_less()
 	);
 
-	VERIFY2					(
-		((found != m_smart_covers.end()) && ((*found)->id()._get() == cover_id._get())),
-		make_string			(
+	VERIFY_FORMAT (((found != m_smart_covers.end()) && ((*found)->id()._get() == cover_id._get())),
 			"smart_cover [%s] not found",
-			cover_id.c_str()
-		)
-	);
+			cover_id.c_str());
 
 	return					(*found);
 }

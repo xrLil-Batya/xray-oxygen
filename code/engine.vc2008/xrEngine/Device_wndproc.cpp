@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #ifdef RAW_INPUT_USE
 #include "xr_input.h"
 #endif

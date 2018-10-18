@@ -33,7 +33,7 @@ IC	u32	CSpaceRestrictionBridge::accessible_nearest	(T const& restriction, const 
 
 	for (u32 it: hack_ref->accessible_neighbour_border(hack_ref, out_restriction)) 
 	{
-		VERIFY2(ai().level_graph().valid_vertex_id(it), make_string("%d", it));
+		VERIFY_FORMAT(ai().level_graph().valid_vertex_id(it), "%d", it);
 		float distance_sqr = ai().level_graph().vertex_position(it).distance_to_sqr(position);
 
 		if (distance_sqr < min_dist_sqr) 
@@ -42,8 +42,9 @@ IC	u32	CSpaceRestrictionBridge::accessible_nearest	(T const& restriction, const 
 			selected				= it;
 		}
 	}
-	VERIFY2(ai().level_graph().valid_vertex_id(selected),
-		make_string( "vertex_id[%d], object[%s], position[%f][%f][%f]", selected, name().c_str(), VPUSH(position)));
+	VERIFY_FORMAT(ai().level_graph().valid_vertex_id(selected),
+		 "vertex_id[%d], object[%s], position[%f][%f][%f]", 
+		selected, name().c_str(), VPUSH(position));
 
 	{
 		min_dist_sqr = flt_max;

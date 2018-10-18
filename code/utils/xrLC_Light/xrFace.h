@@ -32,7 +32,7 @@ public:
 
 	IC	BOOL	 similar			( Tvertex<DataVertex> &V, float eps );
 
-virtual	void		read	(INetReader	&r );
+virtual	void		read	(IReader	&r );
 virtual	void		write	(IWriter	&w )const;
 
 	DataVertex				(){};
@@ -62,7 +62,7 @@ public:
 	void		AddChannel			( Fvector2 &p1, Fvector2 &p2, Fvector2 &p3 ); 
 	BOOL		hasImplicitLighting	();
 
-	virtual	void		read	(INetReader	&r );
+	virtual	void		read	(IReader	&r );
 	virtual	void		write	(IWriter	&w )const;
 
 	DataFace(){};
