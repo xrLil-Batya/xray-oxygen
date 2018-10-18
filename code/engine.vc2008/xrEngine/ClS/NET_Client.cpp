@@ -112,9 +112,7 @@ IPureClient::~IPureClient()
 {
 }
 
-void IPureClient::Disconnect()
-{
-
+void IPureClient::Disconnect() {}
 
 void IPureClient::OnMessage(void* data, u32 size)
 {
