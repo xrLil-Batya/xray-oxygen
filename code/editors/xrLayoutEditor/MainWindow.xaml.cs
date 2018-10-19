@@ -23,6 +23,7 @@ namespace xrLayoutEditor
         public MainWindow()
         {
             InitializeComponent();
+			XRay.xrManagedUILib.UIXMLParser UIParser = new XRay.xrManagedUILib.UIXMLParser();
         }
     }
 }
