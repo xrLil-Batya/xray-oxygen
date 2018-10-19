@@ -50,7 +50,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 		{
 		case DLL_PROCESS_ATTACH:
 			{
-				Debug._initialize	(false);
+				Debug._initialize	();
 				bool init_log	=  (0 != xr_strcmp( Core.ApplicationName, "XRayEditorTools" ));
 				Core._initialize	("xrLC_Light",0, TRUE, "fsgame.ltx");
 				if( init_log )

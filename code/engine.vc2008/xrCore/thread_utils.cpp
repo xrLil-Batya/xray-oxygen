@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "thread_utils.h"
 
-xrCriticalSection::xrCriticalSection()
+xrCriticalSection::xrCriticalSection() : isLocked(false)
 {
 	InitializeCriticalSectionAndSpinCount(&Section, 250);
 }
@@ -13,12 +13,19 @@ xrCriticalSection::~xrCriticalSection()
 
 void xrCriticalSection::Enter()
 {
+	isLocked = true;
 	EnterCriticalSection(&Section);
 }
 
 void xrCriticalSection::Leave()
 {
+	isLocked = false;
 	LeaveCriticalSection(&Section);
+}
+
+bool xrCriticalSection::TryLock()
+{
+	return isLocked;
 }
 
 xrCriticalSectionGuard::xrCriticalSectionGuard(xrCriticalSection& InSection)

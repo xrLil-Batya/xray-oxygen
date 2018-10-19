@@ -95,7 +95,7 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 
 		SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);
 		// transfer data
-		while (!csLog.try_lock())
+		while (!csLog.TryLock())
 		{
 			ProcessMessages();
 			Sleep(1);
@@ -108,13 +108,13 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 		char tbuf[256];
 
 		{
-			std::lock_guard<decltype(csLog)> lock(csLog);
+			xrCriticalSectionGuard LogGuard(csLog);
 			if (LogSize != LogFile->size())
 			{
 				bWasChanges = TRUE;
-				for (; LogSize < LogFile->size(); LogSize++)
+				for (shared_str &LogFileStr: *LogFile)
 				{
-					const char* S = *(*LogFile)[LogSize];
+					const char* S = LogFileStr.c_str();
 					if (!S)
 						S = "";
 					SendMessage(hwLog, LB_ADDSTRING, 0, (LPARAM)S);
@@ -159,10 +159,10 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 			UpdateWindow(logWindow);
 			bWasChanges = FALSE;
 		}
-		csLog.unlock();
+		csLog.Leave();
 		ProcessMessages();
-		if (close)
-			break;
+
+		if (close) break;
 		Sleep(200);
 	}
 	// Cleanup
@@ -191,11 +191,11 @@ void LevelCompilerLoggerWindow::clMsgV(const char* format, va_list args)
 {
 	char buf[1024];
 	vsprintf(buf, format, args);
-	csLog.lock();
+
+	xrCriticalSectionGuard LogGuard(csLog);
 	string1024 msg;
 	strconcat(sizeof(msg), msg, "    |    | ", buf);
 	Log(msg);
-	csLog.unlock();
 }
 
 void LevelCompilerLoggerWindow::clLog(const char* format, ...)
@@ -204,9 +204,9 @@ void LevelCompilerLoggerWindow::clLog(const char* format, ...)
 	char buf[1024];
 	va_start(args, format);
 	vsprintf(buf, format, args);
-	csLog.lock();
+
+	xrCriticalSectionGuard LogGuard(csLog);
 	Log(buf);
-	csLog.unlock();
 }
 
 void LevelCompilerLoggerWindow::Status(const char* format, ...)
@@ -221,11 +221,11 @@ void LevelCompilerLoggerWindow::StatusV(const char* format, va_list args)
 {
 	char buf[1024];
 	vsprintf(buf, format, args);
-	csLog.lock();
+
+	xrCriticalSectionGuard LogGuard(csLog);
 	xr_strcpy(status, buf);
 	bStatusChange = true;
 	Msg("    | %s", buf);
-	csLog.unlock();
 }
 
 void LevelCompilerLoggerWindow::Progress(float progress) { this->progress = progress; }
@@ -233,7 +233,7 @@ void LevelCompilerLoggerWindow::Phase(const char* phaseName)
 {
 	while (!(hwPhaseTime && hwStage))
 		Sleep(1);
-	csLog.lock();
+	csLog.Enter();
 	// Replace phase name with TIME:Name
 	char tbuf[512];
 	bPhaseChange = TRUE;
@@ -251,7 +251,7 @@ void LevelCompilerLoggerWindow::Phase(const char* phaseName)
 	progress = 0;
 	// Release focus
 	Msg("\n* New phase started: %s", phaseName);
-	csLog.unlock();
+	csLog.Unlock();
 }
 
 void LevelCompilerLoggerWindow::Success(const char* msg)

@@ -14,7 +14,7 @@ private:
 	HWND hwTime = 0;
 	HWND hwPText = 0;
 	HWND hwPhaseTime = 0;
-	std::recursive_mutex csLog;
+	xrCriticalSection csLog;
 	volatile bool close = false;
 	char name[256];
 	char status[1024];
