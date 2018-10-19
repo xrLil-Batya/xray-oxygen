@@ -17,7 +17,7 @@ public:
 
 private:
 	CRITICAL_SECTION Section;
-	bool isLocked;
+	volatile bool isLocked;
 };
 
 
