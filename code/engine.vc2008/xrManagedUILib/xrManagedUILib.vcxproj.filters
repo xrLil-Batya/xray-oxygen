@@ -26,9 +26,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Headers Files</Filter>
     </ClInclude>
-    <ClInclude Include="ISpectreUILib.h">
-      <Filter>Headers Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xrManagedUILib.cpp">
@@ -38,9 +35,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ISpectreUILib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
