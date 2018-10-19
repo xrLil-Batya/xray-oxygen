@@ -293,7 +293,16 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	{
 	case kUP:
 	case kDOWN: 
-		cam_Active()->Move( (cmd==kUP) ? kDOWN : kUP, 0, LookFactor);									break;
+		cam_Active()->Move( (cmd==kUP) ? kDOWN : kUP, 0, LookFactor);									
+		break;
+
+	case kCAM_ZOOM_IN:
+	case kCAM_ZOOM_OUT:
+	{
+		cam_Active()->Move(cmd);
+		break;
+	}
+
 	case kLEFT:
 	case kRIGHT:
 		if (eacFreeLook!=cam_active) cam_Active()->Move(cmd, 0, LookFactor);	break;
