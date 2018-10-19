@@ -190,12 +190,12 @@ protected:
 	virtual void	RemoveZoomInertionEffector();
 
 
-	virtual void	FireBullet			(const Fvector& pos, 
+	virtual void	FireBullet			(const Fvector& pos,
         								 const Fvector& dir, 
 										 float fire_disp,
 										 const CCartridge& cartridge,
 										 u16 parent_id,
 										 u16 weapon_id,
-										 bool send_hit);
+										 bool send_hit = true);
 
 };

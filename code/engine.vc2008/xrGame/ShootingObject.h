@@ -39,9 +39,8 @@ protected:
 // Fire Params
 //////////////////////////////////////////////////////////////////////////
 protected:
-	virtual void			LoadFireParams		(LPCSTR section); 		//сила выстрела
-	virtual bool			SendHitAllowed		(CObject* pUser);
-	virtual void			FireBullet			(const Fvector& pos, const Fvector& dir, float fire_disp, const CCartridge& cartridge, u16 parent_id, u16 weapon_id, bool send_hit);
+	virtual void			LoadFireParams		(LPCSTR section); 		//сила выстрелаs
+	virtual void			FireBullet			(const Fvector& pos, const Fvector& dir, float fire_disp, const CCartridge& cartridge, u16 parent_id, u16 weapon_id, bool send_hit = true);
 	void					SetBulletSpeed(float new_speed) {m_fStartBulletSpeed = new_speed;}
 	float					GetBulletSpeed()				{return m_fStartBulletSpeed;}
 

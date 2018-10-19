@@ -376,11 +376,6 @@ void CShootingObject::RenderLight()
 	}
 }
 
-bool CShootingObject::SendHitAllowed(CObject* pUser)
-{
-	return true;
-}
-
 extern void random_dir(Fvector& tgt_dir, const Fvector& src_dir, float dispersion);
 
 void CShootingObject::FireBullet(const Fvector& pos, const Fvector& shot_dir, float fire_disp, const CCartridge& cartridge, u16 parent_id, u16 weapon_id, bool send_hit)
@@ -392,17 +387,21 @@ void CShootingObject::FireBullet(const Fvector& pos, const Fvector& shot_dir, fl
 	m_vCurrentShootPos = pos;
 	m_iCurrentParentID = parent_id;
 	
-	bool aim_bullet;
+	bool aim_bullet = false;
 	if (m_bUseAimBullet)
 	{
 		if (ParentMayHaveAimBullet())
 		{
-			if (m_fPredBulletTime == 0.0) aim_bullet=true;
-			else aim_bullet = ((Device.fTimeGlobal-m_fPredBulletTime)>=m_fTimeToAim) ? true : false;
+			if (m_fPredBulletTime == 0.0)
+			{
+				aim_bullet = true;
+			}
+			else
+			{
+				aim_bullet = ((Device.fTimeGlobal - m_fPredBulletTime) >= m_fTimeToAim) ? true : false;
+			}
 		}
-		else aim_bullet=false;
 	}
-	else aim_bullet = false;
 	
 	m_fPredBulletTime = Device.fTimeGlobal;
 

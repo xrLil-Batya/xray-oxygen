@@ -16,57 +16,57 @@
 
 #ifdef DEBUG
 #	include "debug_renderer.h"
-	extern BOOL g_bDrawBulletHit;
-#endif //#ifdef DEBUG
+
+extern BOOL g_bDrawBulletHit;
+#endif
 
 CWeaponKnife::CWeaponKnife()
 {
-	SetState				( eHidden );
-	SetNextState			( eHidden );
-	knife_material_idx		= (u16)-1;
-	fHitImpulse_cur			= 0.0f;
+	SetState(eHidden);
+	SetNextState(eHidden);
+	knife_material_idx = (u16)-1;
+	fHitImpulse_cur = 0.0f;
 
-	m_Hit1Distance			= 1.f;
-	m_Hit2Distance			= 1.f;
+	m_Hit1Distance = 1.f;
+	m_Hit2Distance = 1.f;
 
-	m_Hit1SplashRadius		= 1.0f;
-	m_Hit2SplashRadius		= 1.0f;
+	m_Hit1SplashRadius = 1.0f;
+	m_Hit2SplashRadius = 1.0f;
 
-	m_Hit1SpashDir.set	(0.f,0.f,1.f);
-	m_Hit2SpashDir.set	(0.f,0.f,1.f);
+	m_Hit1SpashDir.set(0.f, 0.f, 1.f);
+	m_Hit2SpashDir.set(0.f, 0.f, 1.f);
 }
 
-CWeaponKnife::~CWeaponKnife()
-{
-}
+CWeaponKnife::~CWeaponKnife() {}
 
-void CWeaponKnife::Load	(LPCSTR section)
+void CWeaponKnife::Load(LPCSTR section)
 {
 	// verify class
-	inherited::Load		(section);
+	inherited::Load(section);
 
-	fWallmarkSize = pSettings->r_float(section,"wm_size");
-	m_sounds.LoadSound(section,"snd_shoot"		, "sndShot"		, false, SOUND_TYPE_WEAPON_SHOOTING		);
-	
-	m_Hit1SpashDir		=	pSettings->r_fvector3(section, "splash1_direction");
-	m_Hit2SpashDir		=	pSettings->r_fvector3(section, "splash2_direction");
+	fWallmarkSize = pSettings->r_float(section, "wm_size");
+	m_sounds.LoadSound(section, "snd_shoot", "sndShot", false, SOUND_TYPE_WEAPON_SHOOTING);
 
-	m_Hit1Distance		=	pSettings->r_float(section, "spash1_dist");
-	m_Hit2Distance		=	pSettings->r_float(section, "spash2_dist");
+	m_Hit1SpashDir = pSettings->r_fvector3(section, "splash1_direction");
+	m_Hit2SpashDir = pSettings->r_fvector3(section, "splash2_direction");
 
-	m_Hit1SplashRadius	=	pSettings->r_float(section, "spash1_radius");
-	m_Hit2SplashRadius	=	pSettings->r_float(section, "spash2_radius");
+	m_Hit1Distance = pSettings->r_float(section, "spash1_dist");
+	m_Hit2Distance = pSettings->r_float(section, "spash2_dist");
 
-	m_Splash1HitsCount			=	pSettings->r_u32(section, "splash1_hits_count");
-	m_Splash1PerVictimsHCount	=	pSettings->r_u32(section, "splash1_pervictim_hcount");
-	m_Splash2HitsCount			=	pSettings->r_u32(section, "splash2_hits_count");
+	m_Hit1SplashRadius = pSettings->r_float(section, "spash1_radius");
+	m_Hit2SplashRadius = pSettings->r_float(section, "spash2_radius");
+
+	m_Splash1HitsCount = pSettings->r_u32(section, "splash1_hits_count");
+	m_Splash1PerVictimsHCount = pSettings->r_u32(section, "splash1_pervictim_hcount");
+	m_Splash2HitsCount = pSettings->r_u32(section, "splash2_hits_count");
+
 #ifdef DEBUG
 	m_dbg_data.m_pick_vectors.reserve(std::max(m_Splash1HitsCount, m_Splash2HitsCount));
 #endif
-	m_NextHitDivideFactor	=	pSettings->r_float(section, "splash_hit_divide_factor");
 
-	knife_material_idx =  GMLib.GetMaterialIdx(READ_IF_EXISTS(pSettings,r_string,section,"material","objects\\knife"));
-	
+	m_NextHitDivideFactor = pSettings->r_float(section, "splash_hit_divide_factor");
+
+	knife_material_idx = GMLib.GetMaterialIdx(READ_IF_EXISTS(pSettings, r_string, section, "material", "objects\\knife"));
 }
 
 void CWeaponKnife::OnStateSwitch(u32 S, u32 oldState)
@@ -104,22 +104,18 @@ void CWeaponKnife::OnStateSwitch(u32 S, u32 oldState)
 
 		case eFire:
 		{
-			//-------------------------------------------
 			m_eHitType = m_eHitType_1;
-			fCurrentHit = (ParentIsActor()) ? fvHitPower_1[g_SingleGameDifficulty] : fvHitPower_1[egdMaster];
+			fCurrentHit = fvHitPower_1[ParentIsActor() ? g_SingleGameDifficulty : egdMaster];
 			fHitImpulse_cur = fHitImpulse_1;
-			//-------------------------------------------
 			switch2_Attacking(S);
 			break;
 		}
 
 		case eFire2:
 		{
-			//-------------------------------------------
 			m_eHitType = m_eHitType_2;
-			fCurrentHit = (ParentIsActor()) ? fvHitPower_2[g_SingleGameDifficulty] : fvHitPower_2[egdMaster];
+			fCurrentHit = fvHitPower_2[ParentIsActor() ? g_SingleGameDifficulty : egdMaster];
 			fHitImpulse_cur = fHitImpulse_2;
-			//-------------------------------------------
 			switch2_Attacking(S);
 			break;
 		}
@@ -136,8 +132,7 @@ void CWeaponKnife::KnifeStrike(const Fvector& pos, const Fvector& dir)
 		return;
 	}
 	
-	
-	shot_targets_t	dest_hits(_alloca(sizeof(Fvector)*m_hits_count), m_hits_count);
+	shot_targets_t dest_hits(_alloca(sizeof(Fvector)*m_hits_count), m_hits_count);
 	
 	if (SelectHitsToShot(dest_hits, pos))
 	{
@@ -163,57 +158,63 @@ void CWeaponKnife::KnifeStrike(const Fvector& pos, const Fvector& dir)
 
 void CWeaponKnife::MakeShot(Fvector const & pos, Fvector const & dir, float const k_hit)
 {
-	CCartridge				cartridge; 
-	cartridge.param_s.buckShot		= 1;				
+	CCartridge cartridge;
+	cartridge.param_s.buckShot		= 1;
 	cartridge.param_s.impair		= 1.0f;
 	cartridge.param_s.kDisp			= 1.0f;
 	cartridge.param_s.kHit			= k_hit;
 	cartridge.param_s.kImpulse		= 1.0f;
 	cartridge.param_s.kAP			= EPS_L;
-	cartridge.m_flags.set			(CCartridge::cfTracer, false);
-	cartridge.m_flags.set			(CCartridge::cfRicochet, false);
-	cartridge.param_s.fWallmarkSize	= fWallmarkSize;
+	cartridge.m_flags.set(CCartridge::cfTracer, false);
+	cartridge.m_flags.set(CCartridge::cfRicochet, false);
+	cartridge.param_s.fWallmarkSize = fWallmarkSize;
 	cartridge.bullet_material_idx	= knife_material_idx;
 
-	while(m_magazine.size() < 2)	m_magazine.push_back(cartridge);
-	iAmmoElapsed					= (u32)m_magazine.size();
-	bool SendHit					= SendHitAllowed(H_Parent());
+	while (m_magazine.size() < 2)
+	{
+		m_magazine.push_back(cartridge);
+	}
 
-	PlaySound						("sndShot",pos);
+	iAmmoElapsed = (u32)m_magazine.size();
 
-	Level().BulletManager().AddBullet(pos, dir, m_fStartBulletSpeed, fCurrentHit, fHitImpulse_cur, 
-					H_Parent()->ID(), ID(), m_eHitType, fireDistance, cartridge, 1.f, SendHit);
+	PlaySound("sndShot", pos);
+	
+	Level().BulletManager().AddBullet(pos, dir, m_fStartBulletSpeed, fCurrentHit, fHitImpulse_cur,
+		H_Parent()->ID(), ID(), m_eHitType, fireDistance, cartridge, 1.f);
 }
 
 void CWeaponKnife::OnMotionMark(u32 state, const motion_marks& M)
 {
 	inherited::OnMotionMark(state, M);
+
 	if (state == eFire)
 	{
-		m_hit_dist	=	m_Hit1Distance;
-		m_splash_dir	=	m_Hit1SpashDir;
-		m_splash_radius	=	m_Hit1SplashRadius;
-		m_hits_count	=	m_Splash1HitsCount;
+		m_hit_dist = m_Hit1Distance;
+		m_splash_dir = m_Hit1SpashDir;
+		m_splash_radius = m_Hit1SplashRadius;
+		m_hits_count = m_Splash1HitsCount;
 		m_perv_hits_count = m_Splash1PerVictimsHCount;
-	} else if (state == eFire2)
+	}
+	else if (state == eFire2)
 	{
-		m_hit_dist	=	m_Hit2Distance;
-		m_splash_dir	=	m_Hit2SpashDir;
-		m_splash_radius	=	m_Hit2SplashRadius;
-		m_hits_count	=	m_Splash2HitsCount;
+		m_hit_dist = m_Hit2Distance;
+		m_splash_dir = m_Hit2SpashDir;
+		m_splash_radius = m_Hit2SplashRadius;
+		m_hits_count = m_Splash2HitsCount;
 		m_perv_hits_count = 0;
-	} 
-	else return;
+	}
+	else
+		return;
 
-	Fvector	p1, d; 
-	p1.set			(get_LastFP()); 
-	d.set			(get_LastFD());
-	fireDistance	= m_hit_dist + m_splash_radius;
+	Fvector	p1, d;
+	p1.set(get_LastFP());
+	d.set(get_LastFD());
+	fireDistance = m_hit_dist + m_splash_radius;
 
-	if(H_Parent())
+	if (H_Parent())
 	{
-		smart_cast<CEntity*>(H_Parent())->g_fireParams(this, p1,d);
-		KnifeStrike(p1,d);
+		smart_cast<CEntity*>(H_Parent())->g_fireParams(this, p1, d);
+		KnifeStrike(p1, d);
 	}
 }
 
@@ -221,82 +222,104 @@ void CWeaponKnife::OnAnimationEnd(u32 state)
 {
 	switch (state)
 	{
-	case eHiding:	SwitchState(eHidden);	break;
-	
-	case eFire: 
-	case eFire2: 	SwitchState(eIdle);		break;
+		case eHiding:
+		{
+			SwitchState(eHidden);
+			break;
+		}
 
-	case eShowing:
-	case eIdle:		SwitchState(eIdle);		break;	
+		case eFire:
+		case eFire2:
+		{
+			SwitchState(eIdle);
+			break;
+		}
 
-	default:		inherited::OnAnimationEnd(state);
+		case eShowing:
+		case eIdle:
+		{
+			SwitchState(eIdle);
+			break;
+		}
+
+		default:
+		{
+			inherited::OnAnimationEnd(state);
+		}
 	}
 }
 
-void CWeaponKnife::state_Attacking	(float)
+void CWeaponKnife::switch2_Attacking(u32 state)
 {
+	if (IsPending())	
+		return;
+
+	if (state == eFire)
+	{
+		PlayHUDMotion("anm_attack", FALSE, this, state);
+	}
+	else
+	{
+		PlayHUDMotion("anm_attack2", FALSE, this, state);
+	}
+
+	SetPending(TRUE);
 }
 
-void CWeaponKnife::switch2_Attacking	(u32 state)
+void CWeaponKnife::switch2_Idle()
 {
-	if(IsPending())	return;
+	VERIFY(GetState() == eIdle);
 
-	if(state==eFire) 	PlayHUDMotion("anm_attack",	FALSE, this, state);
-	else  			PlayHUDMotion("anm_attack2",	FALSE, this, state);
-
-	SetPending			(TRUE);
+	PlayAnimIdle();
+	SetPending(FALSE);
 }
 
-void CWeaponKnife::switch2_Idle	()
+void CWeaponKnife::switch2_Hiding()
 {
-	VERIFY(GetState()==eIdle);
-
-	PlayAnimIdle		();
-	SetPending			(FALSE);
-}
-
-void CWeaponKnife::switch2_Hiding	()
-{
-	FireEnd					();
+	FireEnd();
 	VERIFY(GetState() == eHiding);
 	PlayHUDMotion("anm_hide", TRUE, this, GetState());
 }
 
 void CWeaponKnife::switch2_Hidden()
 {
-	signal_HideComplete		();
-	SetPending				(FALSE);
+	signal_HideComplete();
+	SetPending(FALSE);
 }
 
-void CWeaponKnife::switch2_Showing	()
+void CWeaponKnife::switch2_Showing()
 {
-	VERIFY(GetState()==eShowing);
+	VERIFY(GetState() == eShowing);
 	PlayHUDMotion("anm_show", FALSE, this, GetState());
 }
 
-
 void CWeaponKnife::FireStart()
-{	
+{
 	inherited::FireStart();
 	SwitchState(eFire);
 }
 
-void CWeaponKnife::Fire2Start () 
+void CWeaponKnife::Fire2Start()
 {
 	SwitchState(eFire2);
+
 	if (ParentIsActor())
+	{
 		Actor()->set_state_wishful(Actor()->get_state_wishful() & (~mcSprint));
+	}
 }
 
-
-bool CWeaponKnife::Action(u16 cmd, u32 flags) 
+bool CWeaponKnife::Action(u16 cmd, u32 flags)
 {
-	if(inherited::Action(cmd, flags)) return true;
-	
-	if(cmd == kWPN_ZOOM) 
+	if (inherited::Action(cmd, flags)) 
+		return true;
+
+	if (cmd == kWPN_ZOOM)
 	{
-		if(flags & CMD_START) 
+		if (flags & CMD_START)
+		{
 			Fire2Start();
+		}
 		return true;
 	}
 	return false;
@@ -306,61 +329,65 @@ void CWeaponKnife::LoadFireParams(LPCSTR section)
 {
 	inherited::LoadFireParams(section);
 
-	string32			buffer;
-	shared_str			s_sHitPower_2;
-	shared_str			s_sHitPowerCritical_2;
+	string32 buffer;
+	shared_str s_sHitPower_2;
+	shared_str s_sHitPowerCritical_2;
 
-	fvHitPower_1		= fvHitPower;
-	fvHitPowerCritical_1= fvHitPowerCritical;
-	fHitImpulse_1		= fHitImpulse;
-	m_eHitType_1		= ALife::g_tfString2HitType(pSettings->r_string(section, "hit_type"));
+	fvHitPower_1 = fvHitPower;
+	fvHitPowerCritical_1 = fvHitPowerCritical;
+	fHitImpulse_1 = fHitImpulse;
+	m_eHitType_1 = ALife::g_tfString2HitType(pSettings->r_string(section, "hit_type"));
 
-	s_sHitPower_2			= pSettings->r_string_wb	(section, "hit_power_2" );
-	s_sHitPowerCritical_2	= pSettings->r_string_wb	(section, "hit_power_critical_2" );
-	
-	fvHitPower_2[egdMaster]			= (float)atof(_GetItem(*s_sHitPower_2,0,buffer));
-	fvHitPowerCritical_2[egdMaster]	= (float)atof(_GetItem(*s_sHitPowerCritical_2,0,buffer));
+	s_sHitPower_2 = pSettings->r_string_wb(section, "hit_power_2");
+	s_sHitPowerCritical_2 = pSettings->r_string_wb(section, "hit_power_critical_2");
+
+	fvHitPower_2[egdMaster] = (float)atof(_GetItem(*s_sHitPower_2, 0, buffer));
+	fvHitPowerCritical_2[egdMaster] = (float)atof(_GetItem(*s_sHitPowerCritical_2, 0, buffer));
 
 	fvHitPower_2[egdNovice] = fvHitPower_2[egdStalker] = fvHitPower_2[egdVeteran] = fvHitPower_2[egdMaster];
 	fvHitPowerCritical_2[egdNovice] = fvHitPowerCritical_2[egdStalker] = fvHitPowerCritical_2[egdVeteran] = fvHitPowerCritical_2[egdMaster];
 
-	int num_game_diff_param=_GetItemCount(*s_sHitPower_2);
-	if (num_game_diff_param>1)
+	int num_game_diff_param = _GetItemCount(*s_sHitPower_2);
+	if (num_game_diff_param > 1)
 	{
-		fvHitPower_2[egdVeteran] = (float)atof(_GetItem(*s_sHitPower_2,1,buffer));
-	}
-	if (num_game_diff_param>2)
-	{
-		fvHitPower_2[egdStalker] = (float)atof(_GetItem(*s_sHitPower_2,2,buffer));
-	}
-	if (num_game_diff_param>3)
-	{
-		fvHitPower_2[egdNovice]  = (float)atof(_GetItem(*s_sHitPower_2,3,buffer));
+		fvHitPower_2[egdVeteran] = (float)atof(_GetItem(*s_sHitPower_2, 1, buffer));
 	}
 
-	num_game_diff_param=_GetItemCount(*s_sHitPowerCritical_2);
-	if (num_game_diff_param>1)
+	if (num_game_diff_param > 2)
 	{
-		fvHitPowerCritical_2[egdVeteran] = (float)atof(_GetItem(*s_sHitPowerCritical_2,1,buffer));
-	}
-	if (num_game_diff_param>2)
-	{
-		fvHitPowerCritical_2[egdStalker] = (float)atof(_GetItem(*s_sHitPowerCritical_2,2,buffer));
-	}
-	if (num_game_diff_param>3)
-	{
-		fvHitPowerCritical_2[egdNovice]  = (float)atof(_GetItem(*s_sHitPowerCritical_2,3,buffer));
+		fvHitPower_2[egdStalker] = (float)atof(_GetItem(*s_sHitPower_2, 2, buffer));
 	}
 
-	fHitImpulse_2		= pSettings->r_float	(section, "hit_impulse_2" );
-	m_eHitType_2		= ALife::g_tfString2HitType(pSettings->r_string(section, "hit_type_2"));
+	if (num_game_diff_param > 3)
+	{
+		fvHitPower_2[egdNovice] = (float)atof(_GetItem(*s_sHitPower_2, 3, buffer));
+	}
+
+	num_game_diff_param = _GetItemCount(*s_sHitPowerCritical_2);
+	if (num_game_diff_param > 1)
+	{
+		fvHitPowerCritical_2[egdVeteran] = (float)atof(_GetItem(*s_sHitPowerCritical_2, 1, buffer));
+	}
+
+	if (num_game_diff_param > 2)
+	{
+		fvHitPowerCritical_2[egdStalker] = (float)atof(_GetItem(*s_sHitPowerCritical_2, 2, buffer));
+	}
+
+	if (num_game_diff_param > 3)
+	{
+		fvHitPowerCritical_2[egdNovice] = (float)atof(_GetItem(*s_sHitPowerCritical_2, 3, buffer));
+	}
+
+	fHitImpulse_2 = pSettings->r_float(section, "hit_impulse_2");
+	m_eHitType_2 = ALife::g_tfString2HitType(pSettings->r_string(section, "hit_type_2"));
 }
 
-bool CWeaponKnife::GetBriefInfo( II_BriefInfo& info )
+bool CWeaponKnife::GetBriefInfo(II_BriefInfo& info)
 {
 	info.clear();
-	info.name._set( m_nameShort );
-	info.icon._set( cNameSect() );
+	info.name._set(m_nameShort);
+	info.icon._set(cNameSect());
 	return true;
 }
 
@@ -402,57 +429,53 @@ static bool intersect(Fsphere const& bone, Fsphere const& query)
 	return bone.P.distance_to_sqr(query.P) < _sqr(bone.R + query.R);
 }
 
-static bool intersect (Fobb bone, Fsphere const& query)
+static bool intersect(Fobb bone, Fsphere const& query)
 {
 	Fmatrix	transform;
-	bone.m_halfsize.add	(Fvector().set( query.R, query.R, query.R));
-	bone.xform_full		(transform);
-	transform.invert	();
+	bone.m_halfsize.add(Fvector().set(query.R, query.R, query.R));
+	bone.xform_full(transform);
+	transform.invert();
 
 	Fvector new_position;
 	transform.transform_tiny(new_position, query.P);
 	// 1 >= xyz >= -1 
-	return (new_position.x >= -1.f) && (new_position.y >= -1.f) && (new_position.z >= -1.f) && (new_position.x <=  1.f) && (new_position.y <=  1.f) && (new_position.z <=  1.f);
+	return (new_position.x >= -1.f) && (new_position.y >= -1.f) && (new_position.z >= -1.f) && (new_position.x <= 1.f) && (new_position.y <= 1.f) && (new_position.z <= 1.f);
 }
 
-static bool intersect	( Fcylinder const& bone, Fsphere const& query )
+static bool intersect(Fcylinder const& bone, Fsphere const& query)
 {
-	Fvector const bone2query	= Fvector().sub( query.P, bone.m_center );
-	float const axe_projection	= bone2query.dotproduct(bone.m_direction);
-	float const half_height		= bone.m_height/2.f;
-	if ( _abs(axe_projection) > half_height + query.R )
+	Fvector const bone2query = Fvector().sub(query.P, bone.m_center);
+	float const axe_projection = bone2query.dotproduct(bone.m_direction);
+	float const half_height = bone.m_height / 2.f;
+	if (_abs(axe_projection) > half_height + query.R)
 		return false;
 
 	VERIFY(bone2query.square_magnitude() >= _sqr(axe_projection));
-	float const axe_projection2_sqr	= bone2query.square_magnitude() - _sqr(axe_projection);
-	if ( axe_projection2_sqr > _sqr(bone.m_radius + query.R) )
+	float const axe_projection2_sqr = bone2query.square_magnitude() - _sqr(axe_projection);
+	if (axe_projection2_sqr > _sqr(bone.m_radius + query.R))
 		return false;
 
 	if (_abs(axe_projection) <= half_height || axe_projection2_sqr <= _sqr(bone.m_radius))
 		return true;
-	
-	Fvector const center_direction		= Fvector(bone.m_direction).mul( axe_projection >= 0.f ? 1.f : -1.f);
-	Fvector const circle_center		= Fvector(bone.m_center).mad( center_direction, half_height );
-	Fvector const circle2sphere		= Fvector().sub( query.P, circle_center );
-	float const distance2plane		= circle2sphere.dotproduct( center_direction );
+
+	Fvector const center_direction = Fvector(bone.m_direction).mul(axe_projection >= 0.f ? 1.f : -1.f);
+	Fvector const circle_center = Fvector(bone.m_center).mad(center_direction, half_height);
+	Fvector const circle2sphere = Fvector().sub(query.P, circle_center);
+	float const distance2plane = circle2sphere.dotproduct(center_direction);
 	VERIFY(distance2plane > 0.f);
 	VERIFY(_sqr(query.R) >= _sqr(distance2plane));
-	float const circle_radius		= _sqrt( _sqr(query.R) - _sqr(distance2plane) );
-	Fvector const sphere_circle_center	= Fvector(query.P).mad(center_direction,-distance2plane);
-	float const distance2center_sqr		= circle_center.distance_to_sqr(sphere_circle_center);
-	return distance2center_sqr <= _sqr( bone.m_radius + circle_radius );
+	float const circle_radius = _sqrt(_sqr(query.R) - _sqr(distance2plane));
+	Fvector const sphere_circle_center = Fvector(query.P).mad(center_direction, -distance2plane);
+	float const distance2center_sqr = circle_center.distance_to_sqr(sphere_circle_center);
+	return distance2center_sqr <= _sqr(bone.m_radius + circle_radius);
 }
-
-void CWeaponKnife::GetVictimPos(CEntityAlive* victim, Fvector & pos_dest)
-{
-}
-
 
 u32 CWeaponKnife::get_entity_bones_count(CEntityAlive const * entity)
 {
 	if (!entity)
 		return 0;
-	IKinematics*	tmp_kinem	= smart_cast<IKinematics*>(entity->Visual());
+
+	IKinematics* tmp_kinem = smart_cast<IKinematics*>(entity->Visual());
 	if (!tmp_kinem)
 		return 0;
 
@@ -461,7 +484,7 @@ u32 CWeaponKnife::get_entity_bones_count(CEntityAlive const * entity)
 		return 0;
 
 	return (u32)tmp_accel->size();
-};
+}
 
 void CWeaponKnife::fill_shapes_list(CEntityAlive const * entity, Fvector const & camera_endpos, victims_shapes_list_t & dest_shapes)
 {
@@ -469,7 +492,7 @@ void CWeaponKnife::fill_shapes_list(CEntityAlive const * entity, Fvector const &
 	if (!entity)
 		return;
 
-	CCF_Skeleton*	tmp_skeleton = smart_cast<CCF_Skeleton*>(entity->CFORM());
+	CCF_Skeleton* tmp_skeleton = smart_cast<CCF_Skeleton*>(entity->CFORM());
 	if (!tmp_skeleton)
 		return;
 
@@ -482,17 +505,17 @@ void CWeaponKnife::fill_shapes_list(CEntityAlive const * entity, Fvector const &
 	CCF_Skeleton::ElementVec const & elems_vec = tmp_skeleton->_GetElements();
 	for (const auto & i : elems_vec)
 	{
-		Fvector		tmp_pos;
+		Fvector	tmp_pos;
 		i.center(tmp_pos);
 		tmp_pos.mul(basis_vector);
-		//float basis_proj = tmp_pos.dotproduct(basis_vector);
+
 		float bone_dist = tmp_pos.distance_to_sqr(camendpos2);
 		if (bone_dist < max_dist)
 		{
-			victim_bone_data	tmp_bone_data;
-			tmp_bone_data.m_bone_element	= &i;
-			tmp_bone_data.m_victim_id		= entity->ID();
-			tmp_bone_data.m_shots_count		= 0;
+			victim_bone_data tmp_bone_data;
+			tmp_bone_data.m_bone_element = &i;
+			tmp_bone_data.m_victim_id = entity->ID();
+			tmp_bone_data.m_shots_count = 0;
 			dest_shapes.push_back(std::make_pair(tmp_bone_data, bone_dist));
 		}
 	}
@@ -501,6 +524,7 @@ void CWeaponKnife::fill_shapes_list(CEntityAlive const * entity, Fvector const &
 void CWeaponKnife::fill_shots_list(victims_shapes_list_t & victims_shapres, Fsphere const & query, shot_targets_t & dest_shots)
 {
 	m_victims_hits_count.clear();
+
 	for (auto & victims_shapre : victims_shapres)
 	{
 		if (dest_shots.capacity() <= dest_shots.size())
@@ -508,15 +532,17 @@ void CWeaponKnife::fill_shots_list(victims_shapes_list_t & victims_shapres, Fsph
 
 		bool intersect_res = false;
 		Fvector target_pos;
+
 #ifdef DEBUG
 		m_dbg_data.m_target_boxes.clear();
 #endif
+
 		victim_bone_data & curr_bone = victims_shapre.first;
 		switch (curr_bone.m_bone_element->type)
 		{
-		case SBoneShape::stBox:
+			case SBoneShape::stBox:
 			{
-				Fobb	tmp_obb;
+				Fobb tmp_obb;
 				Fmatrix tmp_xform;
 				if (!tmp_xform.invert_b(curr_bone.m_bone_element->b_IM))
 				{
@@ -530,32 +556,38 @@ void CWeaponKnife::fill_shots_list(victims_shapes_list_t & victims_shapres, Fsph
 #endif
 				intersect_res = intersect(tmp_obb, query);
 				break;
-			};
-		case SBoneShape::stSphere:
+			}
+
+			case SBoneShape::stSphere:
 			{
 				intersect_res = intersect(curr_bone.m_bone_element->s_sphere, query);
 				break;
-			}break;
-		case SBoneShape::stCylinder:
+			}
+
+			case SBoneShape::stCylinder:
 			{
 				intersect_res = intersect(curr_bone.m_bone_element->c_cylinder, query);
 				break;
-			}break;
-		};//switch (tmp_bone_data.shape.type)*/
+			}
+		}
+
 		if (intersect_res)
 		{
-			victims_hits_count_t::iterator tmp_vhits_iter = m_victims_hits_count.find(
-				curr_bone.m_victim_id);
+			victims_hits_count_t::iterator tmp_vhits_iter = m_victims_hits_count.find(curr_bone.m_victim_id);
+
 			if (m_perv_hits_count && (tmp_vhits_iter == m_victims_hits_count.end()))
 			{
 				m_victims_hits_count.insert(std::make_pair(curr_bone.m_victim_id, u16(1)));
-			} else if (m_perv_hits_count && (tmp_vhits_iter->second < m_perv_hits_count))
+			}
+			else if (m_perv_hits_count && (tmp_vhits_iter->second < m_perv_hits_count))
 			{
 				++tmp_vhits_iter->second;
-			} else if (m_perv_hits_count)
+			}
+			else if (m_perv_hits_count)
 			{
 				continue;
 			}
+
 			curr_bone.m_bone_element->center(target_pos);
 			dest_shots.push_back(target_pos);
 		}
@@ -570,9 +602,11 @@ void CWeaponKnife::create_victims_list(spartial_base_t spartial_result, victims_
 		VERIFY(tmp_obj);
 		if (!tmp_obj)
 			continue;
-		CEntityAlive*	tmp_entity = smart_cast<CEntityAlive*>(tmp_obj);
+
+		CEntityAlive* tmp_entity = smart_cast<CEntityAlive*>(tmp_obj);
 		if (!tmp_entity)
 			continue;
+
 		VERIFY(victims_dest.capacity() > victims_dest.size());
 		victims_dest.push_back(tmp_entity);
 	}
@@ -584,7 +618,8 @@ void CWeaponKnife::make_hit_sort_vectors(Fvector & basis_hit_specific, float & m
 	{
 		basis_hit_specific.set(0.f, 1.f, 0.f);
 		max_dist = 0.2;
-	} else // if (m_eHitType == m_eHitType_2)
+	}
+	else
 	{
 		basis_hit_specific.set(1.f, 0.f, 0.f);
 		max_dist = 0.1;
@@ -689,12 +724,15 @@ bool CWeaponKnife::RayQueryCallback(collide::rq_result& result, LPVOID this_ptr)
 
 CObject* CWeaponKnife::TryPick(Fvector const & start_pos, Fvector const & dir, float const dist)
 {
-	collide::ray_defs		tmp_rdefs(start_pos, dir, dist, CDB::OPT_FULL_TEST, collide::rqtObject);
+	collide::ray_defs tmp_rdefs(start_pos, dir, dist, CDB::OPT_FULL_TEST, collide::rqtObject);
 	m_ray_query_results.r_clear();
-	m_last_picked_obj	= nullptr;
+
+	m_last_picked_obj = nullptr;
 	VERIFY(H_Parent());
-	m_except_id			= H_Parent()->ID();
+
+	m_except_id = H_Parent()->ID();
 	Level().ObjectSpace.RayQuery(m_ray_query_results, tmp_rdefs, &CWeaponKnife::RayQueryCallback, static_cast<LPVOID>(this), nullptr, nullptr);
+
 	return m_last_picked_obj;
 }
 
@@ -718,26 +756,26 @@ CWeaponKnife::victim_filter::victim_filter(victim_filter const & copy) :
 bool CWeaponKnife::victim_filter::operator()(spartial_base_t::value_type const & left) const
 {
 	CObject* const tmp_obj = left->dcast_CObject();
-	VERIFY			(tmp_obj);
+	VERIFY(tmp_obj);
 	if (!tmp_obj)
 		return true;
 
 	if (tmp_obj->ID() == m_except_id)
 		return true;
-	
-	CEntityAlive*	const tmp_actor = smart_cast<CEntityAlive*>(tmp_obj);
+
+	CEntityAlive* const tmp_actor = smart_cast<CEntityAlive*>(tmp_obj);
 	if (!tmp_actor)
 		return true;
 
-	Fvector			obj_pos;
+	Fvector	obj_pos;
 	tmp_actor->Center(obj_pos);
-	
-	Fvector	tmp_dir			= Fvector(obj_pos).sub(m_start_pos);
-	float const tmp_dist	= tmp_dir.magnitude();
-	
-	if ( tmp_dist > m_query_distance )
+
+	Fvector	tmp_dir = Fvector(obj_pos).sub(m_start_pos);
+	float const tmp_dist = tmp_dir.magnitude();
+
+	if (tmp_dist > m_query_distance)
 		return true;
-	
+
 	return false;
 }
 
@@ -755,35 +793,34 @@ CWeaponKnife::best_victim_selector::best_victim_selector(best_victim_selector co
 void CWeaponKnife::best_victim_selector::operator()(spartial_base_t::value_type const & left)
 {
 	CObject* const tmp_obj = left->dcast_CObject();
-	VERIFY			(tmp_obj);
+	VERIFY(tmp_obj);
 	if (!tmp_obj)
 		return;
 
 	if (tmp_obj->ID() == m_except_id)
 		return;
-	
-	CEntityAlive*	const tmp_actor = smart_cast<CEntityAlive*>(tmp_obj);
+
+	CEntityAlive* const tmp_actor = smart_cast<CEntityAlive*>(tmp_obj);
 	if (!tmp_actor)
 		return;
 
-	Fvector			obj_pos;
+	Fvector	obj_pos;
 	tmp_actor->Center(obj_pos);
 
-	Fvector	tmp_dir			= Fvector(obj_pos).sub(m_start_pos);
-	float const tmp_dist	= tmp_dir.magnitude();
-	tmp_dir.normalize		( );
+	Fvector	tmp_dir = Fvector(obj_pos).sub(m_start_pos);
+	float const tmp_dist = tmp_dir.magnitude();
+	tmp_dir.normalize();
 
-	if ( tmp_dist > m_query_distance )
+	if (tmp_dist > m_query_distance)
 		return;
-	
+
 	if (!m_dest_result || (m_min_dist > tmp_dist))
 	{
-		m_dest_result		=	left;
-		m_min_dist		=	tmp_dist;
+		m_dest_result = left;
+		m_min_dist = tmp_dist;
 		return;
 	}
 }
-
 
 #include "luabind/luabind.hpp"
 using namespace luabind;
