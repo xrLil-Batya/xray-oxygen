@@ -15,12 +15,12 @@ namespace XRay
 		{
 			String^ get()
 			{
-				return gcnew System::String(pIni->fname());
+				return gcnew System::String(pNativeObject->fname());
 			}
 		};
 
 	private:
-		CInifile* pIni;
+		CInifile* pNativeObject;
 
 	public:
 		Ini(String^ fileName);
