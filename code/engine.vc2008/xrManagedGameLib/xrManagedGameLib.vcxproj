@@ -129,7 +129,6 @@
     <ClInclude Include="API\Inventory.h" />
     <ClInclude Include="API\PDA.h" />
     <ClInclude Include="API\PhysicalGameObject.h" />
-    <ClInclude Include="CallbackIndexes.h" />
     <ClInclude Include="GameClassRegistrator.h" />
     <ClInclude Include="ISpectreGameLib.h" />
     <ClInclude Include="Resource.h" />

@@ -1,14 +1,5 @@
 #pragma once
 
-
-// char* ConvertWidecharToAscii(const wchar_t* pData, unsigned int size);
-// void ConvertWidecharToAscii(const wchar_t* pData, unsigned int size, string1024& OutStr);
-// void ConvertWidecharToAscii(const wchar_t* pData, unsigned int size, string512& OutStr);
-// void ConvertWidecharToAscii(const wchar_t* pData, unsigned int size, string256& OutStr);
-// 
-// template <int Size>
-// void ConvertWidecharToAscii(const wchar_t* pData, unsigned int size, char(&OutStr)[Size]);
-
 template <int Size>
 void ConvertWidecharToAscii(const wchar_t* pData, unsigned int size, char(&OutStr)[Size])
 {

@@ -128,10 +128,6 @@
       <Name>xrManagedRenderLib</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\engine.vc2008\xrManagedSoundLib\xrManagedSoundLib.vcxproj">
-      <Project>{fe528a91-73a9-46c2-b98c-661b5c7d647a}</Project>
-      <Name>xrManagedSoundLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="WelcomeScreenBackground_3.png" />

@@ -48,9 +48,6 @@
     <ClInclude Include="ISpectreGameLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CallbackIndexes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="API\Entity.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
