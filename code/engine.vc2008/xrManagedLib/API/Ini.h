@@ -9,7 +9,6 @@ namespace XRay
 	/// <summary> X-Ray CInifile wrapper </summary>
 	public ref class Ini sealed
 	{
-		msclr::interop::marshal_context marshal;
 	public:
 		/// <summary> Returns file name </summary>
 		property String^ FileName
