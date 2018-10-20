@@ -38,6 +38,7 @@ void xrDiscordPresense::SetStatus(StatusId status)
 		if (pApp->Level_Current < pApp->Levels.size())
 		{
 			CApplication::sLevelInfo& LevelInfo = pApp->Levels[pApp->Level_Current];
+			if (LevelInfo.name == nullptr) return;
 			if (xr_strcmp(LevelInfo.name, "zaton") == 0)
 			{
 				realStatus = StatusId::Zaton;
