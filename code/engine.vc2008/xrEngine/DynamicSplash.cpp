@@ -317,7 +317,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 				std::wstring progressName(prgress.begin(), prgress.end());
 				//////////////////////////////////////
 
-				gdip.DrawString(progressName.c_str(), -1, &msgFont, Gdiplus::PointF(2.0f, pSplashImage->GetHeight() - 43.0f), &msgBrush);
+				gdip.DrawString(progressName.c_str(), -1, &msgFont, Gdiplus::PointF(22.0f, pSplashImage->GetHeight() - 183.0f), &msgBrush);
 			}
 			ValidateRect(hwnd, NULL);
 			return 0;
