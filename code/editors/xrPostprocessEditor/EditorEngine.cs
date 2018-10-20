@@ -119,7 +119,7 @@ namespace xrPostprocessEditor
 
             using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.GrayValue))
             {
-                param.UpdateValue(time, color.A / 255, 0);
+                param.UpdateValue(time, ((float)color.A) / 255, 0);
             }
         }
 
