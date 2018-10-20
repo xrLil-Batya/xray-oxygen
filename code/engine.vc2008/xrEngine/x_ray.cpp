@@ -364,7 +364,6 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 
 	splashScreen.SetProgressPosition(15, "Init settings");
 	InitSettings();
-	
 
 	if (strstr(Core.Params, "-renderdebug"))
 	{
