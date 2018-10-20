@@ -21,6 +21,7 @@
 #include <process.h>
 #include <locale.h>
 #include "DynamicSplash.h"
+#include "DiscordRichPresense.h"
 
 
 #include "../FrayBuildConfig.hpp"
@@ -197,11 +198,13 @@ void Startup()
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);
 	g_SpatialSpace = xr_new<ISpatial_DB>();
 	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
+	g_discord.Initialize();
 
 	Memory.mem_usage();
 	Device.Run();
 	
 	// Destroy APP
+	g_discord.Shutdown();
 	xr_delete(g_SpatialSpacePhysic); g_SpatialSpacePhysic = nullptr;
 	xr_delete(g_SpatialSpace);		 g_SpatialSpace = nullptr;
 	DEL_INSTANCE(g_pGamePersistent); g_pGamePersistent = nullptr;
@@ -738,7 +741,7 @@ void CApplication::Level_Set(u32 L)
 
 	if (path[0] && loadingScreen)
 		loadingScreen->SetLevelLogo(path);
-
+	g_discord.SetStatus(xrDiscordPresense::StatusId::In_Game);
 }
 
 int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
@@ -770,6 +773,10 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 	{
 		if (0==stricmp(buffer,Levels[I].folder))	
 		{
+			if (Levels[I].name == nullptr)
+			{
+				Levels[I].name = strdup(name);
+			}
 			result = int(I);	
 			break;
 		}

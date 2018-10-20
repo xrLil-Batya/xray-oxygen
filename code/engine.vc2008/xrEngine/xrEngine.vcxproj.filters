@@ -241,6 +241,9 @@
     <Filter Include="Device\Stats">
       <UniqueIdentifier>{2c2e368f-497f-4dce-a130-d87a6e85b061}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interfaces\Discord">
+      <UniqueIdentifier>{f1004f51-b80f-4c12-a930-80f1ea7e1f0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -615,6 +618,9 @@
     <ClInclude Include="spectre\ExternalCallbackTypes.h">
       <Filter>Spectre</Filter>
     </ClInclude>
+    <ClInclude Include="DiscordRichPresense.h">
+      <Filter>Interfaces\Discord</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -964,6 +970,9 @@
     </ClCompile>
     <ClCompile Include="spectre\ExternalCallbackTypes.cpp">
       <Filter>Spectre</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscordRichPresense.cpp">
+      <Filter>Interfaces\Discord</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

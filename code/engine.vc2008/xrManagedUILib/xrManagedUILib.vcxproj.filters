@@ -26,6 +26,9 @@
     <ClInclude Include="Resource.h">
       <Filter>Headers Files</Filter>
     </ClInclude>
+    <ClInclude Include="API\Window.h">
+      <Filter>Headers Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xrManagedUILib.cpp">
@@ -36,6 +39,9 @@
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="API\Window.cpp">
+      <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
