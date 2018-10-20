@@ -19,6 +19,7 @@ void xrDiscordPresense::Shutdown()
 {
 	if (bInitialize)
 	{
+		Discord_ClearPresence();
 		Discord_Shutdown();
 		bInitialize = false;
 	}
