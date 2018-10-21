@@ -317,7 +317,6 @@ start GitParser\GitParser.exe</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ThreadManager.cpp" />
     <ClCompile Include="threadpool\ttapi_oxygen.cpp" />
     <ClCompile Include="thread_utils.cpp" />
     <ClCompile Include="XMLCore\Expression.cpp" />
@@ -372,6 +371,7 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="DateTime.hpp" />
     <ClInclude Include="envelope.h" />
     <ClInclude Include="FTimer.h" />
+    <ClInclude Include="StringsUtils.h" />
     <ClInclude Include="XMLCore\Expression.h" />
     <ClInclude Include="xrMemoryDebug.h" />
     <ClInclude Include="xrMemory_C.h" />

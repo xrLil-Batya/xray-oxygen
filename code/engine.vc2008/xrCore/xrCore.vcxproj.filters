@@ -210,9 +210,6 @@
     <ClCompile Include="xrMemoryDebug.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadManager.cpp">
-      <Filter>OS</Filter>
-    </ClCompile>
     <ClCompile Include="thread_utils.cpp">
       <Filter>OS</Filter>
     </ClCompile>
@@ -454,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="xrMemoryDebug.h">
       <Filter>Memory manager</Filter>
+    </ClInclude>
+    <ClInclude Include="StringsUtils.h">
+      <Filter>Kernel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
