@@ -219,7 +219,7 @@ float PostProcessParamProxy::Length::get()
 
 int PostProcessParamProxy::KeyCount::get()
 {
-	return impl->get_keys_count();
+	return (int)impl->get_keys_count();
 }
 
 void PostProcessParamProxy::AddValue(float time, float value, int index)

@@ -63,6 +63,9 @@
     <ClInclude Include="GameClassRegistrator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="API\Level.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -106,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="GameClassRegistrator.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="API\Level.cpp">
+      <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

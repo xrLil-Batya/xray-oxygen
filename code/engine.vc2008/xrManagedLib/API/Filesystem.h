@@ -70,13 +70,13 @@ namespace XRay
 			{
 				if (pReader != nullptr)
 				{
-					pReader->seek(value);
+					pReader->seek((Int32)value);
 				}
 
 				// Code for written for future cases
 				if (pWritter != nullptr)
 				{
-					pWritter->seek(value);
+					pWritter->seek((Int32)value);
 				}
 			}
 		}
