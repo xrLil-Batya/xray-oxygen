@@ -2,6 +2,14 @@
 #include "xrUIXmlParser.h"
 #include "ui_base.h"
 
+CUIXml::CUIXml()
+{
+}
+
+CUIXml::~CUIXml()
+{
+}
+
 shared_str CUIXml::correct_file_name(LPCSTR path, LPCSTR fn)
 {
 	if (!xr_strcmp(path, UI_PATH) || !xr_strcmp(path, "UI"))
@@ -11,12 +19,6 @@ shared_str CUIXml::correct_file_name(LPCSTR path, LPCSTR fn)
 	else return fn;
 }
 
-void dump_list_xmls(){}
-
-CUIXml::CUIXml()
-{
-}
-
-CUIXml::~CUIXml()
+void dump_list_xmls()
 {
 }
