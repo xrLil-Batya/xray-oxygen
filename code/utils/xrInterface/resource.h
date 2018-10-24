@@ -21,6 +21,7 @@
 #define IDC_PHASE_TIME                  1014
 #define IDC_PROGRESS1                   1015
 #define IDC_CHECK2                      1017
+#define IDC_STATIC                      -1
 
 // Next default values for new objects
 // 

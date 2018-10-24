@@ -44,7 +44,7 @@ int APIENTRY DllMain (HANDLE module_handle, DWORD call_reason, LPVOID reserved)
 	switch (call_reason) {
 		case DLL_PROCESS_ATTACH: 
 		{
-			Debug._initialize			(false);
+			Debug._initialize			();
  			Core._initialize			("xrSE_Factory", 0, TRUE,"fsfactory.ltx");
 			string_path					SYSTEM_LTX;
 			FS.update_path				(SYSTEM_LTX,"$game_config$","system.ltx");

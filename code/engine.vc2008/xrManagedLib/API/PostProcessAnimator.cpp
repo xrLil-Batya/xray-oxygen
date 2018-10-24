@@ -145,16 +145,16 @@ void PostProcessInfo::ColorMappingInterpolate::set(float value) { impl->cm_inter
 String ^ PostProcessInfo::ColorMappingGradient1::get() { return gcnew String(impl->cm_tex1.c_str()); }
 void PostProcessInfo::ColorMappingGradient1::set(String ^ value)
 {
-	marshal_context context;
-	auto tmpStr = context.marshal_as<const char*>(value);
-	impl->cm_tex1 = tmpStr;
+	string512 TempString;
+	ConvertDotNetStringToAscii(value, TempString);
+	impl->cm_tex1 = TempString;
 }
 String ^ PostProcessInfo::ColorMappingGradient2::get() { return gcnew String(impl->cm_tex2.c_str()); }
 void PostProcessInfo::ColorMappingGradient2::set(String ^ value)
 {
-	marshal_context context;
-	auto tmpStr = context.marshal_as<const char*>(value);
-	impl->cm_tex2 = tmpStr;
+	string512 TempString;
+	ConvertDotNetStringToAscii(value, TempString);
+	impl->cm_tex2 = TempString;
 }
 PostProcessInfo::PostProcessInfo(::SPPInfo* impl) { this->impl = impl; }
 PostProcessInfo::PostProcessInfo(::SPPInfo* impl, bool dontDestroy) : PostProcessInfo(impl)
@@ -188,9 +188,9 @@ PostProcessInfo % PostProcessInfo::Interpolate(const PostProcessInfo % def, cons
 }
 void PostProcessInfo::Validate(String ^ str)
 {
-	marshal_context context;
-	auto tmpStr = context.marshal_as<const char*>(str);
-	impl->validate(tmpStr);
+	string512 TempString;
+	ConvertDotNetStringToAscii(str, TempString);
+	impl->validate(TempString);
 }
 
 PostProcessParamProxy::PostProcessParamProxy(::CPostProcessParam* impl) : PostProcessParamBase(impl)
@@ -219,7 +219,7 @@ float PostProcessParamProxy::Length::get()
 
 int PostProcessParamProxy::KeyCount::get()
 {
-	return impl->get_keys_count();
+	return (int)impl->get_keys_count();
 }
 
 void PostProcessParamProxy::AddValue(float time, float value, int index)
@@ -276,10 +276,10 @@ void XRay::BasicPostProcessAnimator::Clear()
 
 void XRay::BasicPostProcessAnimator::Load(String ^ name, bool internalFs)
 {
-	marshal_context context;
-	const char* tmpName = context.marshal_as<const char*>(name);
+	string512 TempString;
+	ConvertDotNetStringToAscii(name, TempString);
 
-	impl->Load(tmpName, internalFs);
+	impl->Load(TempString, internalFs);
 }
 
 String ^ XRay::BasicPostProcessAnimator::Name::get()
@@ -338,7 +338,7 @@ void XRay::BasicPostProcessAnimator::ResetParam(PostProcessParamType param)
 
 void XRay::BasicPostProcessAnimator::Save(String ^ name)
 {
-	marshal_context context;
-	auto tmpName = context.marshal_as<const char*>(name);
-	impl->Save(tmpName);
+	string512 TempString;
+	ConvertDotNetStringToAscii(name, TempString);
+	impl->Save(TempString);
 }

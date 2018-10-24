@@ -90,13 +90,13 @@ System::Int64 File::Seek(Int64 offset, System::IO::SeekOrigin origin)
 		switch (origin)
 		{
 		case System::IO::SeekOrigin::Begin:
-			pReader->seek(offset);
+			pReader->seek((Int32)offset);
 			break;
 		case System::IO::SeekOrigin::Current:
-			pReader->advance(offset);
+			pReader->advance((Int32)offset);
 			break;
 		case System::IO::SeekOrigin::End:
-			pReader->seek(pReader->length() - offset);
+			pReader->seek(pReader->length() - (Int32)offset);
 			break;
 		default:
 			break;

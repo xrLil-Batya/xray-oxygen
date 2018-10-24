@@ -108,9 +108,6 @@
     <ClInclude Include="xrSE_Factory_import_export.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="defines.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="ai_space.h">
       <Filter>Common\ASpace</Filter>
     </ClInclude>
@@ -489,9 +486,6 @@
       <Filter>ServerStuff\ServerFactory</Filter>
     </ClCompile>
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp">
-      <Filter>ServerStuff\ServerFactory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp">
       <Filter>ServerStuff\ServerFactory</Filter>
     </ClCompile>
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp">

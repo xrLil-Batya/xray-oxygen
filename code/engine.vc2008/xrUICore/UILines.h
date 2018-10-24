@@ -3,6 +3,8 @@
 #include "UILine.h"
 #include "uiabstract.h"
 
+using ETextAlignment = CGameFont::EAligment;
+
 class UI_API CUILines : public CDeviceResetNotifier 
 {
 	 friend class CUICustomEdit;

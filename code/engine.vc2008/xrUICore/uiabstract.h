@@ -4,8 +4,6 @@
 
 #include "ui_base.h"
 
-using ETextAlignment = CGameFont::EAligment;
-
 typedef enum {
 	valTop = 0,
 	valCenter,

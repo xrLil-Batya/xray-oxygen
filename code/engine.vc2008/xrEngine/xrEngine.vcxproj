@@ -122,7 +122,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Gdiplus.lib;Psapi.lib;sound_static.lib;vfw32.lib;soft_oal.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Gdiplus.lib;Psapi.lib;sound_static.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -187,7 +187,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Gdiplus.lib;sound_static.lib;vfw32.lib;soft_oal.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Gdiplus.lib;Psapi.lib;sound_static.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -256,7 +256,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Gdiplus.lib;Psapi.lib;sound_static.lib;vfw32.lib;soft_oal.lib;Kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Gdiplus.lib;Psapi.lib;sound_static.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -290,6 +290,7 @@
     <ClInclude Include="DynamicSplash.h" />
     <ClInclude Include="IGame_Actor.h" />
     <ClInclude Include="ILoadingScreen.h" />
+    <ClInclude Include="DiscordRichPresense.h" />
     <ClInclude Include="spectre\ExternalCallbackTypes.h" />
     <ClInclude Include="spectre\Spectre.h" />
     <ClInclude Include="string_table.h" />
@@ -418,6 +419,7 @@
     <ClCompile Include="CPU\xrSkin2W_thread.cpp" />
     <ClCompile Include="date_time.cpp" />
     <ClCompile Include="defines.cpp" />
+    <ClCompile Include="DiscordRichPresense.cpp" />
     <ClCompile Include="spectre\ExternalCallbackTypes.cpp" />
     <ClCompile Include="spectre\Spectre.cpp" />
     <ClCompile Include="DynamicSplash.cpp" />

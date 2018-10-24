@@ -59,6 +59,7 @@ System::Void xrLauncherWnd::button1_Click(System::Object^  sender, System::Event
 	if (radioButton5->Checked) rendered = "-r4";
 
 	// Saving launch data to launc.ltx
+	// Вот для историй можете оставить тут использование marshal_as, но убереги вас Темный Сталкер вызывать эту гадость в модулях Spectre!
 	const char* render	= marsh.marshal_as<const char*>(rendered);
 	const char* cmdline = marsh.marshal_as<const char*>(textBox1->Text);
 

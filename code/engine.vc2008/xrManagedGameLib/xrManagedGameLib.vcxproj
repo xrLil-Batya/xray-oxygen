@@ -127,9 +127,9 @@
     <ClInclude Include="API\GameObject.h" />
     <ClInclude Include="API\GameVertex.h" />
     <ClInclude Include="API\Inventory.h" />
+    <ClInclude Include="API\Level.h" />
     <ClInclude Include="API\PDA.h" />
     <ClInclude Include="API\PhysicalGameObject.h" />
-    <ClInclude Include="CallbackIndexes.h" />
     <ClInclude Include="GameClassRegistrator.h" />
     <ClInclude Include="ISpectreGameLib.h" />
     <ClInclude Include="Resource.h" />
@@ -144,6 +144,7 @@
     <ClCompile Include="API\GameObject.cpp" />
     <ClCompile Include="API\GameVertex.cpp" />
     <ClCompile Include="API\Inventory.cpp" />
+    <ClCompile Include="API\Level.cpp" />
     <ClCompile Include="API\PDA.cpp" />
     <ClCompile Include="API\PhysicalGameObject.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />

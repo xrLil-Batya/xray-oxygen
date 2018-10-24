@@ -85,12 +85,10 @@ void CWeapon::FireTrace		(const Fvector& P, const Fvector& D)
 		}
 	}
 	
-
-	bool SendHit = SendHitAllowed(H_Parent());
 	//выстерлить пулю (с учетом возможной стрельбы дробью)
 	for(int i = 0; i < l_cartridge.param_s.buckShot; ++i) 
 	{
-		FireBullet(P, D, fire_disp, l_cartridge, H_Parent()->ID(), ID(), SendHit);
+		FireBullet(P, D, fire_disp, l_cartridge, H_Parent()->ID(), ID());
 	}
 
 	StartShotParticles		();

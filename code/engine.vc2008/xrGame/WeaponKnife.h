@@ -4,9 +4,9 @@
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrEngine/xr_collide_form.h"
 
-class CWeaponKnife: public CWeapon {
-private:
-	typedef CWeapon inherited;
+class CWeaponKnife: public CWeapon 
+{
+	using inherited = CWeapon;
 
 protected:
 
@@ -18,9 +18,7 @@ protected:
 
 	virtual void		OnAnimationEnd				(u32 state);
 	virtual void		OnMotionMark				(u32 state, const motion_marks&);
-	virtual void		OnStateSwitch				(u32 S);
-
-	void				state_Attacking				(float dt);
+	virtual void		OnStateSwitch				(u32 S, u32 oldState);
 
 	virtual void		KnifeStrike					(const Fvector& pos, const Fvector& dir);
 
@@ -107,7 +105,6 @@ private:
 
 
 	void			MakeShot				(Fvector const & pos, Fvector const & dir, float const k_hit = 1.0f);
-	void			GetVictimPos			(CEntityAlive* victim, Fvector & pos_dest);
 	u32				SelectHitsToShot		(shot_targets_t & dst_dirs, Fvector const & f_pos);
 	bool			SelectBestHitVictim		(Fvector const & f_pos, Fmatrix & parent_xform_dest, Fvector & fendpos_dest, Fsphere & query_sphere);
 	CObject*		TryPick					(Fvector const & start_pos, Fvector const & dir, float const dist);
@@ -124,7 +121,7 @@ private:
 		CCF_Skeleton::SElement const *	m_bone_element;
 		u16								m_victim_id;
 		u16								m_shots_count;
-	};//struct	victim_bone_data
+	};
 	typedef associative_vector<u16, u16>						victims_hits_count_t;
 	typedef buffer_vector<std::pair<victim_bone_data, float> >	victims_shapes_list_t;
 

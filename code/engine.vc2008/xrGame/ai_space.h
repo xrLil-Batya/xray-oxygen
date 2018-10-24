@@ -23,7 +23,7 @@ namespace doors {
 	class manager;
 } // namespace doors
 
-class CAI_Space {
+class GAME_API CAI_Space {
 private:
 	friend class CALifeSimulator;
 	friend class CALifeGraphRegistry;
@@ -79,6 +79,6 @@ public:
 
 IC	CAI_Space	&ai	();
 
-extern CAI_Space *g_ai_space;
+extern GAME_API CAI_Space *g_ai_space;
 
 #include "ai_space_inline.h"

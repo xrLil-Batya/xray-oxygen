@@ -14,6 +14,7 @@
 #include "..\xrEngine\string_table.h"
 #include "../xrCore/os_clipboard.h"
 #include <shellapi.h>
+#include "../xrEngine/DiscordRichPresense.h"
 #pragma comment(lib, "shell32.lib")
 
 extern bool b_shniaganeed_pp;
@@ -64,6 +65,8 @@ CMainMenu::~CMainMenu()
 	for (CUIMessageBoxEx* pMsgBox : m_pMB_ErrDlgs)
 		xr_delete(pMsgBox);
 	m_pMB_ErrDlgs.clear();
+
+	g_discord.SetStatus(xrDiscordPresense::StatusId::In_Game);
 }
 
 void CMainMenu::ReadTextureInfo()
@@ -120,6 +123,11 @@ void CMainMenu::Activate(bool bActivate)
 			CCameraManager::ResetPP();
 		};
 		Device.seqRender.Add(this, 4); // 1-console 2-cursor 3-tutorial
+
+		if (g_pGameLevel == nullptr)
+		{
+			g_discord.SetStatus(xrDiscordPresense::StatusId::Menu);
+		}
 	}
 	else {
 		m_deactivated_frame = Device.dwFrame;
@@ -164,6 +172,7 @@ void CMainMenu::Activate(bool bActivate)
 			m_Flags.set(flNeedVidRestart, FALSE);
 			Console->Execute("vid_restart");
 		}
+		//g_discord.SetStatus(xrDiscordPresense::StatusId::In_Game);
 	}
 }
 

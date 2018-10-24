@@ -48,9 +48,6 @@
     <ClInclude Include="ISpectreGameLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CallbackIndexes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="API\Entity.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
@@ -65,6 +62,9 @@
     </ClInclude>
     <ClInclude Include="GameClassRegistrator.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="API\Level.h">
+      <Filter>Header Files\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="GameClassRegistrator.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="API\Level.cpp">
+      <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

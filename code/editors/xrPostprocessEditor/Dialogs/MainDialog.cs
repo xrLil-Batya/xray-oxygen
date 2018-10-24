@@ -96,31 +96,34 @@ namespace xrPostprocessEditor
 
 		Color ConvertColor(ColorF value, ref XRay.SdkControls.ColorPicker Picer)
 		{
-			int NewA = (int)(value.a * 255);
-			int NewR = (int)(value.r * 255);
-			int NewG = (int)(value.g * 255);
-			int NewB = (int)(value.b * 255);
+			int NewA = (int)(value.a * 127.5);
+			int NewR = (int)(value.r * 127.5);
+			int NewG = (int)(value.g * 127.5);
+			int NewB = (int)(value.b * 127.5);
 
 			if (value.a < 0)
 			{
-				NewA += 255;
 				Picer.isAReversed.Checked = true;
 			}
+			NewA += 127;
+
 			if (value.r < 0)
 			{
-				NewR += 255;
 				Picer.isRReversed.Checked = true;
 			}
+			NewR += 127;
+
 			if (value.g < 0)
 			{
-				NewG += 255;
 				Picer.isGReversed.Checked = true;
 			}
+			NewG += 127;
+
 			if (value.b < 0)
 			{
-				NewB += 255;
 				Picer.isBReversed.Checked = true;
 			}
+			NewB += 127;
 
 			Color result = Color.FromArgb(NewA, NewR, NewB, NewG);
 			return result;
@@ -154,24 +157,9 @@ namespace xrPostprocessEditor
         private void UpdateNoise(int keyIndex)
         {
             NoiseParams value = Engine.GetNoise(keyIndex);
-			try
-			{
-				nslNoiseIntensity.Value = (decimal)Convert.ToInt32(value.Intensity.ToString().Split('.', ',')[1]);
-			}
-			catch
-			{
-				nslNoiseIntensity.Value = 0;
-			}
 
-			try
-			{
-				nslNoiseGrain.Value = (decimal)Convert.ToInt32(value.Grain.ToString().Split('.', ',')[1]);
-			}
-			catch
-			{
-				nslNoiseGrain.Value = 0;
-			}
-
+			nslNoiseIntensity.Value = (decimal)(value.Intensity * 255);
+			nslNoiseGrain.Value = (decimal)(value.Grain * 255);
 			nslNoiseFPS.Value = (decimal)value.FPS;
         }
 
@@ -184,7 +172,7 @@ namespace xrPostprocessEditor
         private void UpdateColorMapping(int keyIndex)
         {
             ColorMappingParams value = Engine.GetColorMapping(keyIndex);
-            //nslColorMappingInfluence.Value = (decimal)value.Influence;
+            nslColorMappingInfluence.Value = (decimal)value.Influence;
             tbColorMappingTexture.Text = value.Texture;
         }
 
@@ -309,7 +297,8 @@ namespace xrPostprocessEditor
             nslDualityY.ValueChanged += (s, value) => UpdateEngineValue(PostProcessParamType.DualityV, value);
 
 			nslNoiseIntensity.ValueChanged += (s, nlsVal) => UpdateEngineValue(PostProcessParamType.NoiseIntensity, nlsVal);
-
+			nslNoiseFPS.ValueChanged += (s, nlsVal) => UpdateEngineValue(PostProcessParamType.NoiseFps, nlsVal);
+			nslNoiseGrain.ValueChanged += (s, nlsVal) => UpdateEngineValue(PostProcessParamType.NoiseGrain, nlsVal);
 		}
 
         private void UpdateEngineValue(PostProcessParamType paramType, Color color)

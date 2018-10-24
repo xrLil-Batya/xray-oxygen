@@ -10,9 +10,14 @@ public:
 	void Enter();
 	void Leave();
 
-private:
+	inline void Lock()		{ this->Enter(); }
+	inline void Unlock()	{ this->Leave(); }
 
+	bool TryLock();
+
+private:
 	CRITICAL_SECTION Section;
+	volatile bool isLocked;
 };
 
 

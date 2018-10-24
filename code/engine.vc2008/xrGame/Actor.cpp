@@ -83,7 +83,6 @@ static Fbox		bbStandBox;
 static Fbox		bbCrouchBox;
 static Fvector	vFootCenter;
 static Fvector	vFootExt;
-static bool		HudUpdated;
 
 void CActor::MtSecondActorUpdate(void* pActorPointer)
 {
@@ -95,18 +94,6 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 		WaitForSingleObject(pActor->MtSecondUpdaterEventStart, INFINITE);
 
 		if (pActor != g_actor) return;
-
-		HudUpdated = false;
-		if (Level().CurrentEntity() && pActor->ID() == Level().CurrentEntity()->ID())
-		{
-			// Overloaded on CActor::UpdateCL
-			psHUD_Flags.set(HUD_CROSSHAIR_RT2, true);
-			psHUD_Flags.set(HUD_DRAW_RT, true);
-
-			// Render HUD model everyone
-			psHUD_Flags.set(HUD_WEAPON_RT, true);
-		}
-		HudUpdated = true;
 
 		// if player flags changed
 		if (!lastActorFlagsState.equal(psActorFlags)) 
@@ -841,9 +828,6 @@ void CActor::UpdateCL()
 #ifdef DEBUG
 			HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
 #endif
-			// Waiting Second update thread
-			while (!HudUpdated)
-				_mm_pause();
 
 			psHUD_Flags.set(HUD_CROSSHAIR_RT2, pWeapon->show_crosshair());
 			psHUD_Flags.set(HUD_DRAW_RT, pWeapon->show_indicators());
@@ -854,20 +838,23 @@ void CActor::UpdateCL()
 			GamePersistent().m_pGShaderConstants.hud_params.y = pWeapon->GetSecondVP_FovFactor(); //--#SM+#-- 
 		}
 	}
-	else if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
+	else
 	{
-		HUD().SetCrosshairDisp(0.f);
-		HUD().ShowCrosshair(false);
-
-		//Alun: Switch back to third-person if was forced
-		if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+		if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
 		{
-			cam_Set(eacLookAt);
-			bLook_cam_fp_zoom = false;
-		}
+			HUD().SetCrosshairDisp(0.f);
+			HUD().ShowCrosshair(false);
 
-		GamePersistent().m_pGShaderConstants.hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
-		Device.m_SecondViewport.SetSVPActive(false);
+			//Alun: Switch back to third-person if was forced
+			if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+			{
+				cam_Set(eacLookAt);
+				bLook_cam_fp_zoom = false;
+			}
+
+			GamePersistent().m_pGShaderConstants.hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
+			Device.m_SecondViewport.SetSVPActive(false);
+		}
 	}
 
 	DWORD WaitResult = WAIT_TIMEOUT;

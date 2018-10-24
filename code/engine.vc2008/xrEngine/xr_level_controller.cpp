@@ -29,6 +29,8 @@ _action  actions[] = {
 	{ "cam_1",				kCAM_1				},
 	{ "cam_2",				kCAM_2				},
 	{ "cam_3",				kCAM_3				},
+	{ "cam_zoom_in",		kCAM_ZOOM_IN		},
+	{ "cam_zoom_out",		kCAM_ZOOM_OUT		},
 
 	{ "torch",				kTORCH				},
 	{ "night_vision",		kNIGHT_VISION		},

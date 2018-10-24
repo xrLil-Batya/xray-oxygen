@@ -22,7 +22,6 @@ LPCSTR GAME_CONFIG = "game.ltx";
 
 #if !defined(XRGAME_EXPORTS) && !defined(AI_COMPILER)
 #	include "bone.h"
-#	include "defines.h"
 	LPCSTR GAME_CONFIG = "game.ltx";
 #else // XRGAME_EXPORTS
 #	include "../xrEngine/bone.h"

@@ -214,7 +214,6 @@
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="xrSE_Factory_import_export.h" />
-    <ClInclude Include="defines.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\restriction_space.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\ai_sounds.h" />
     <ClInclude Include="ai_space.h" />
@@ -347,7 +346,6 @@
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters_script.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters_script2.cpp" />

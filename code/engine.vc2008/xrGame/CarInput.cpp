@@ -234,18 +234,26 @@ void	CCar::OnKeyboardRelease(int cmd)
 	};
 }
 
-void	CCar::OnKeyboardHold(int cmd)
+void CCar::OnKeyboardHold(int cmd)
 {
-	if (Remote())								return;
+	if (Remote())
+		return;
 
-	switch(cmd)
+	switch (cmd)
 	{
-	case kUP:
-	case kDOWN:
-	case kLEFT:
-	case kRIGHT:	active_camera->Move(cmd);	break;
+		case kCAM_ZOOM_IN:
+		case kCAM_ZOOM_OUT:
+		case kUP:
+		case kDOWN:
+		case kLEFT:
+		case kRIGHT:
+		{
+			active_camera->Move(cmd);
+			break;
+		}
 	}
 }
+
 void CCar::Action(u16 id, u32 flags)
 {
 	if(m_car_weapon)m_car_weapon->Action(id,flags);
