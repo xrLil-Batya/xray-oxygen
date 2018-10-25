@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "../../xrEngine/IGame_Persistent.h"
 #include "../../xrEngine/Environment.h"
+#include "../../xrEngine/DirectXMathExternal.h"
+
 #include "r2_puddles.h"
 #include "../xrRender/dxEnvironmentRender.h"
 #include "../xrRender/dxRenderDeviceRender.h"
@@ -87,8 +89,8 @@ void CRenderTarget::phase_combine()
 		
 		// (new-camera) -> (world) -> (old_viewproj)
 		m_previous.mul		(m_saved_viewproj, RCache.xforms.m_invv);
-		m_current.set		(Device.mProject);
-		m_saved_viewproj.set(Device.mFullTransform);
+		m_current.set		(CastToGSCMatrix(Device.mProject));
+		m_saved_viewproj.set(CastToGSCMatrix(Device.mFullTransform));
 		float scale			= ps_r_mblur / 2.0f;
 		m_blur_scale.set	(scale, -scale).div(12.0f);
 	}
@@ -130,7 +132,7 @@ void CRenderTarget::phase_combine()
 			Fvector L_dir, L_clr;
 			L_clr.set(pSun->color.r, pSun->color.g, pSun->color.b);
 			float L_spec = u_diffuse2s(L_clr);
-			Device.mView.transform_dir(L_dir, pSun->direction);
+			CastToGSCMatrix(Device.mView).transform_dir(L_dir, pSun->direction);
 			L_dir.normalize();
 
 			sunclr.set(L_clr.x, L_clr.y, L_clr.z, L_spec);

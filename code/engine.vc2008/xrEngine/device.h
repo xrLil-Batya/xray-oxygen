@@ -2,10 +2,11 @@
 // Note:
 // ZNear - always 0.0f
 // ZFar  - always 1.0f
-
+#include <DirectXMath.h>
 #include "pure.h"
 #include "../xrcore/ftimer.h"
 #include "stats.h"
+#include "DirectXMathExternal.h"
 
 #define VIEWPORT_NEAR  0.05f
 
@@ -69,16 +70,16 @@ public:
 	Fvector									vCameraTop;
 	Fvector									vCameraRight;
 
-	Fmatrix									mView;
-	Fmatrix									mProject;
-	Fmatrix									mFullTransform;
+	DirectX::XMMATRIX						mView;
+	DirectX::XMMATRIX						mProject;
+	DirectX::XMMATRIX						mFullTransform;
 
 	// Copies of corresponding members. Used for synchronization.
 	Fvector									vCameraPosition_saved;
 
-	Fmatrix									mView_saved;
-	Fmatrix									mProject_saved;
-	Fmatrix									mFullTransform_saved;
+	DirectX::XMMATRIX						mView_saved;
+	DirectX::XMMATRIX						mProject_saved;
+	DirectX::XMMATRIX						mFullTransform_saved;
 
 	float									fFOV;
 	float									fASPECT;
@@ -157,16 +158,19 @@ public:
 	IRenderDeviceRender						*m_pRender;
 
 	BOOL									m_bNearer;
-	void									SetNearer	(BOOL enabled)
+	void									SetNearer(BOOL enabled)
 	{
-		if (enabled&&!m_bNearer){
-			m_bNearer						= TRUE;
-			mProject._43					-= EPS_L;
-		}else if (!enabled&&m_bNearer){
-			m_bNearer						= FALSE;
-			mProject._43					+= EPS_L;
+		if (enabled && !m_bNearer)
+		{
+			m_bNearer = TRUE;
+			mProject -= DirectX::XMMATRIX(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, EPS_L);
 		}
-		m_pRender->SetCacheXform(mView, mProject);
+		else if (!enabled && m_bNearer)
+		{
+			m_bNearer = FALSE;
+			mProject += DirectX::XMMATRIX(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, EPS_L);
+		}
+		m_pRender->SetCacheXform(CastToGSCMatrix(mView), CastToGSCMatrix(mProject));
 	}
 public:
 	// Registrators

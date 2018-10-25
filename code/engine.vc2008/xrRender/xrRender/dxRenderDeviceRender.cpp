@@ -402,7 +402,7 @@ void dxRenderDeviceRender::ClearTarget()
 #endif	//	USE_DX10
 }
 
-void dxRenderDeviceRender::SetCacheXform(Fmatrix &mView, Fmatrix &mProject)
+void dxRenderDeviceRender::SetCacheXform(const Fmatrix &mView, const Fmatrix &mProject)
 {
 	RCache.set_xform_view(mView);
 	RCache.set_xform_project(mProject);

@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "../xrCDB/frustum.h"
 #include "xr_input.h"
+#include "DirectXMathExternal.h"
 /////////////////////////////////////
 #define MMNOSOUND
 #define MMNOMIDI
@@ -29,8 +30,6 @@
 extern bool bEngineloaded;
 ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
-
-
 /////////////////////////////////////
 ENGINE_API BOOL g_bRendering = FALSE; 
 /////////////////////////////////////
@@ -38,7 +37,6 @@ BOOL		g_bLoaded		= FALSE;
 bool		g_bL			= false;
 ref_light	precache_light	= nullptr;
 /////////////////////////////////////
-
 
 BOOL CRenderDevice::Begin	()
 {
@@ -215,14 +213,13 @@ void CRenderDevice::on_idle		()
 		vCameraDirection.set(_sin(angle), 0, _cos(angle));	vCameraDirection.normalize();
 		vCameraTop.set(0, 1, 0);
 		vCameraRight.crossproduct(vCameraTop, vCameraDirection);
-
-		mView.build_camera_dir(vCameraPosition, vCameraDirection, vCameraTop);
+		BuildCamDir(vCameraPosition, vCameraDirection, vCameraTop, mView);
 	}
 
 	// Matrices
-	mFullTransform.mul(mProject, mView);
-	m_pRender->SetCacheXform(mView, mProject);
-	D3DXMatrixInverse((D3DXMATRIX*)&mInvFullTransform, nullptr, (D3DXMATRIX*)&mFullTransform);
+	mFullTransform = DirectX::XMMatrixMultiply(mView, mProject);
+	m_pRender->SetCacheXform(CastToGSCMatrix(mView), CastToGSCMatrix(mProject));
+	mInvFullTransform = CastToGSCMatrix(DirectX::XMMatrixInverse(0, mFullTransform));
 
 	vCameraPosition_saved = vCameraPosition;
 	mFullTransform_saved = mFullTransform;
@@ -243,11 +240,8 @@ void CRenderDevice::on_idle		()
 		if (Begin())
 		{
 			seqRender.Process(rp_Render);
-			if (psDeviceFlags.test(rsCameraPos)
-				|| psDeviceFlags.test(rsStatistic)
-				|| psDeviceFlags.test(rsDrawFPS)
-				|| psDeviceFlags.test(rsHWInfo)
-				|| !Statistic->errors.empty())
+			if (psDeviceFlags.test(rsCameraPos) || psDeviceFlags.test(rsStatistic)
+			   || psDeviceFlags.test(rsDrawFPS) || psDeviceFlags.test(rsHWInfo) || !Statistic->errors.empty())
 			{
 				Statistic->Show();
 			}

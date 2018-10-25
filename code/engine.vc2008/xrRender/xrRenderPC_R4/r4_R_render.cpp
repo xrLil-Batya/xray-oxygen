@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "../../xrEngine/igame_persistent.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 #include "../xrRender/FBasicVisual.h"
 #include "../../xrEngine/customhud.h"
 #include "../../xrEngine/xr_object.h"
@@ -241,7 +242,7 @@ void CRender::Render		()
 	if (o.sunstatic)		bSUN				= FALSE;
 
 	// HOM
-	ViewBase.CreateFromMatrix					(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+	ViewBase.CreateFromMatrix					(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View										= nullptr;
 
 	Target->phase_scene_prepare					();
@@ -273,7 +274,7 @@ void CRender::Render		()
 	if (bSUN)									set_Recorder	(&main_coarse_structure);
 	else										set_Recorder	(nullptr);
 	phase										= PHASE_NORMAL;
-	render_main									(Device.mFullTransform,true);
+	render_main									(CastToGSCMatrix(Device.mFullTransform),true);
 	set_Recorder								(nullptr);
 	r_pmask										(true,false);	// disable priority "1"
 	Device.Statistic->RenderCALC.End			();
@@ -404,8 +405,8 @@ void CRender::Render		()
 		Target->phase_accumulator			();
 
 		// Render emissive geometry, stencil - write 0x0 at pixel pos
-		RCache.set_xform_project			(Device.mProject); 
-		RCache.set_xform_view				(Device.mView);
+		RCache.set_xform_project			(CastToGSCMatrix(Device.mProject)); 
+		RCache.set_xform_view				(CastToGSCMatrix(Device.mView));
 
 		// Stencil - write 0x1 at pixel pos - 
       if( !RImplementation.o.dx10_msaa )
@@ -444,7 +445,7 @@ void CRender::render_forward				()
 		// level
 		r_pmask									(false,true);			// enable priority "1"
 		phase									= PHASE_NORMAL;
-		render_main								(Device.mFullTransform,false);//
+		render_main								(CastToGSCMatrix(Device.mFullTransform),false);//
 
 		//	Igor: we don't want to render old lods on next frame.
 		mapLOD.clear							();

@@ -726,13 +726,12 @@ void CRender::render_sun				()
 	D3DXMATRIX		m_LightViewProj		;
 
 	// calculate view-frustum bounds in world space
-	Fmatrix	ex_project, ex_full, ex_full_inverse;
+	DirectX::XMMATRIX	ex_project, ex_full, ex_full_inverse;
 	{
 		float _far_	= min(ps_r_sun_far, Environment().CurrentEnv->far_plane);
-		//ex_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,ps_r_sun_near,_far_);
-		ex_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR,_far_);
-		ex_full.mul					(ex_project,Device.mView);
-		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);
+		BuildProj(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR,_far_, ex_project);
+		ex_full = DirectX::XMMatrixMultiply(ex_project,Device.mView);
+		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -745,7 +744,7 @@ void CRender::render_sun				()
 	{
 		FPU::m64r					();
 		// Lets begin from base frustum
-		Fmatrix		fullxform_inv	= ex_full_inverse;
+		Fmatrix		fullxform_inv	= CastToGSCMatrix(ex_full_inverse);
 		DumbConvexVolume<false>		hull;
 		{
 			hull.points.reserve		(8);
@@ -1054,7 +1053,7 @@ void CRender::render_sun				()
 		// create clipper
 		DumbClipper	view_clipper;
 		Fmatrix&	xform		= *((Fmatrix*)&m_LightViewProj);
-		view_clipper.frustum.CreateFromMatrix(ex_full,FRUSTUM_P_ALL);
+		view_clipper.frustum.CreateFromMatrix(CastToGSCMatrix(ex_full),FRUSTUM_P_ALL);
 		for		(int p=0; p<view_clipper.frustum.p_count; p++)
 		{
 			Fplane&		P	= view_clipper.frustum.planes	[p];
@@ -1083,7 +1082,7 @@ void CRender::render_sun				()
 		{
 			x_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,ps_r_sun_near,ps_r_sun_near+tweak_guaranteed_range);
 			x_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR,ps_r_sun_near+tweak_guaranteed_range);
-			x_full.mul					(x_project,Device.mView);
+			x_full.mul					(x_project, CastToGSCMatrix(Device.mView));
 			D3DXMatrixInverse			((D3DXMATRIX*)&x_full_inverse,0,(D3DXMATRIX*)&x_full);
 		}
 		for		(int e=0; e<8; e++)
@@ -1156,8 +1155,8 @@ void CRender::render_sun				()
 
 	// Restore XForms
 	RCache.set_xform_world		(Fidentity			);
-	RCache.set_xform_view		(Device.mView		);
-	RCache.set_xform_project	(Device.mProject	);
+	RCache.set_xform_view		(CastToGSCMatrix(Device.mView		));
+	RCache.set_xform_project	(CastToGSCMatrix(Device.mProject	));
 }
 
 void CRender::render_sun_near	()
@@ -1166,11 +1165,12 @@ void CRender::render_sun_near	()
 	D3DXMATRIX		m_LightViewProj		;
 
 	// calculate view-frustum bounds in world space
-	Fmatrix	ex_project, ex_full, ex_full_inverse;
+
+	DirectX::XMMATRIX	ex_project, ex_full, ex_full_inverse;
 	{
-		ex_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR,ps_r_sun_near); 
-		ex_full.mul					(ex_project,Device.mView);
-		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);
+		BuildProj(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR, ps_r_sun_near, ex_project);
+		ex_full = DirectX::XMMatrixMultiply(ex_project, Device.mView);
+		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -1183,7 +1183,7 @@ void CRender::render_sun_near	()
 	{
 		FPU::m64r					();
 		// Lets begin from base frustum
-		Fmatrix		fullxform_inv	= ex_full_inverse;
+		Fmatrix		fullxform_inv	= CastToGSCMatrix(ex_full_inverse);
 #ifdef	_DEBUG
 		typedef		DumbConvexVolume<true>	t_volume;
 #else
@@ -1345,8 +1345,8 @@ void CRender::render_sun_near	()
 
 	// Restore XForms
 	RCache.set_xform_world		(Fidentity			);
-	RCache.set_xform_view		(Device.mView		);
-	RCache.set_xform_project	(Device.mProject	);
+	RCache.set_xform_view		(CastToGSCMatrix(Device.mView		));
+	RCache.set_xform_project	(CastToGSCMatrix(Device.mProject	));
 }
 
 void CRender::render_sun_filtered	()
@@ -1393,11 +1393,11 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 	light*			fuckingsun			= (light*)Lights.sun._get()	;
 
 	// calculate view-frustum bounds in world space
-	Fmatrix	ex_project, ex_full, ex_full_inverse;
+	DirectX::XMMATRIX ex_project, ex_full, ex_full_inverse;
 	{
 		ex_project = Device.mProject;
-		ex_full.mul					(ex_project,Device.mView);
-		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);
+		ex_full = DirectX::XMMatrixMultiply(ex_project, Device.mView);
+		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -1410,7 +1410,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 	{
 		FPU::m64r					();
 		// Lets begin from base frustum
-		Fmatrix		fullxform_inv	= ex_full_inverse;
+		Fmatrix		fullxform_inv	= CastToGSCMatrix(ex_full_inverse);
 #ifdef	_DEBUG
 		typedef		DumbConvexVolume<true>	t_volume;
 #else
@@ -1638,7 +1638,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 
 	// End SMAP-render
 	{
-		r_pmask									(true,false);
+		r_pmask (true,false);
 	}
 
 	// Accumulate
@@ -1646,15 +1646,14 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 
 	if( cascade_ind == 0 )
 		Target->accum_direct_cascade		(SE_SUN_NEAR, m_sun_cascades[cascade_ind].xform, m_sun_cascades[cascade_ind].xform, m_sun_cascades[cascade_ind].bias );
+	else if (cascade_ind < m_sun_cascades.size()-1)
+		Target->accum_direct_cascade		(SE_SUN_MIDDLE, m_sun_cascades[cascade_ind].xform, m_sun_cascades[cascade_ind-1].xform, m_sun_cascades[cascade_ind].bias);
 	else
-		if( cascade_ind < m_sun_cascades.size()-1 )
-			Target->accum_direct_cascade		(SE_SUN_MIDDLE, m_sun_cascades[cascade_ind].xform, m_sun_cascades[cascade_ind-1].xform, m_sun_cascades[cascade_ind].bias);
-		else
-			Target->accum_direct_cascade		(SE_SUN_FAR, m_sun_cascades[cascade_ind].xform, m_sun_cascades[cascade_ind-1].xform, m_sun_cascades[cascade_ind].bias);
+		Target->accum_direct_cascade		(SE_SUN_FAR, m_sun_cascades[cascade_ind].xform, m_sun_cascades[cascade_ind-1].xform, m_sun_cascades[cascade_ind].bias);
 
 
 	// Restore XForms
 	RCache.set_xform_world		(Fidentity			);
-	RCache.set_xform_view		(Device.mView		);
-	RCache.set_xform_project	(Device.mProject	);
+	RCache.set_xform_view		(CastToGSCMatrix(Device.mView		));
+	RCache.set_xform_project	(CastToGSCMatrix(Device.mProject	));
 }

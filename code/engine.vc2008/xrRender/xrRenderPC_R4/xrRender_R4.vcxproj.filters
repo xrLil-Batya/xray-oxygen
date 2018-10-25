@@ -1330,6 +1330,7 @@
     <ClCompile Include="..\xrRender\RenderTargetPhaseCombine.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
+    <ClCompile Include="AnselWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\..\xrCore.natvis" />

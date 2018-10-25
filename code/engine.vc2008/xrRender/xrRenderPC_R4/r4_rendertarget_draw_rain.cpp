@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 
 void CRenderTarget::draw_rain( light &RainSetup )
 {
@@ -14,17 +15,19 @@ void CRenderTarget::draw_rain( light &RainSetup )
 	p1.set						((_w+.5f)/_w, (_h+.5f)/_h );
 	float	d_Z	= EPS_S, d_W = 1.f;
 
+	Fmatrix GSCDevView = CastToGSCMatrix(Device.mView);
+
 	// Common constants (light-related)
 	Fvector		L_dir;
-	Device.mView.transform_dir	(L_dir,RainSetup.direction);
+	GSCDevView.transform_dir	(L_dir,RainSetup.direction);
 	L_dir.normalize				();
 
 	Fvector		W_dirX;
-	Device.mView.transform_dir	(W_dirX,Fvector().set(1.0f, 0.0f, 0.0f));
+	GSCDevView.transform_dir	(W_dirX,Fvector().set(1.0f, 0.0f, 0.0f));
 	W_dirX.normalize				();
 
 	Fvector		W_dirZ;
-	Device.mView.transform_dir	(W_dirZ,Fvector().set(0.0f, 0.0f, 1.0f));
+	GSCDevView.transform_dir	(W_dirZ,Fvector().set(0.0f, 0.0f, 1.0f));
 	W_dirZ.normalize				();
 
 	// Perform masking (only once - on the first/near phase)
@@ -44,14 +47,13 @@ void CRenderTarget::draw_rain( light &RainSetup )
 	// recalculate d_Z, to perform depth-clipping
 	const float fRainFar = ps_r3_dyn_wet_surf_far;
 
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,fRainFar);
-	Device.mFullTransform.transform(center_pt)	;
-	d_Z							= center_pt.z	;
+	Fvector	center_pt;
+	center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,fRainFar);
+	CastToGSCMatrix(Device.mFullTransform).transform(center_pt)	;
+	d_Z = center_pt.z	;
 
 	// Perform lighting
 	{
-
-
 		// texture adjustment matrix
 		float			fRange				=  1;
 		float			fBias				= -0.0001;
@@ -61,6 +63,7 @@ void CRenderTarget::draw_rain( light &RainSetup )
 		float			view_dimY			= float(RainSetup.X.D.maxX-RainSetup.X.D.minX)/smapsize;
 		float			view_sx				= float(RainSetup.X.D.minX)/smapsize;
 		float			view_sy				= float(RainSetup.X.D.minY)/smapsize;
+
 		Fmatrix			m_TexelAdjust		= 
 		{
 			view_dimX/2.f,							0.0f,									0.0f,		0.0f,
@@ -71,7 +74,7 @@ void CRenderTarget::draw_rain( light &RainSetup )
 
 		// compute xforms
 		FPU::m64r			();
-		Fmatrix				xf_invview;		xf_invview.invert	(Device.mView)	;
+		Fmatrix				xf_invview;		xf_invview.invert	(CastToGSCMatrix(Device.mView))	;
 
 		// shadow xform
 		Fmatrix				m_shadow;

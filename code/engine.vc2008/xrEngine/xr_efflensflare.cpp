@@ -8,6 +8,7 @@
 #include "../Include/xrRender/Kinematics.h"
 #include "../xrCDB/cl_intersect.h"
 #include "../xrServerEntities/object_broker.h"
+#include "DirectXMathExternal.h"
 
 #ifdef _EDITOR
     #include "ui_toolscustom.h"
@@ -403,7 +404,8 @@ void CLensFlare::OnFrame(shared_str id)
 	if (m_Current->m_Flags.is(CLensFlareDescriptor::flGradient))
     {
 		Fvector				scr_pos;
-		Device.mFullTransform.transform	( scr_pos, vecLight );
+		TransformVectorsByMatrix(Device.mFullTransform, scr_pos, vecLight);
+
 		float kx = 1, ky = 1;
 		float sun_blend		= 0.5f;
 		float sun_max		= 2.5f;

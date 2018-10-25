@@ -27,6 +27,7 @@ static int			facetable[6][4]		= {
 };
 
 //////////////////////////////////////////////////////////////////////////
+#include "../../xrEngine/DirectXMathExternal.h"
 void CRender::render_rain()
 {
 	//return;
@@ -49,13 +50,13 @@ void CRender::render_rain()
 	float	fBoundingSphereRadius = 0;
 
 	// calculate view-frustum bounds in world space
-	Fmatrix	ex_project, ex_full, ex_full_inverse;
+	DirectX::XMMATRIX ex_project, ex_full, ex_full_inverse;
 	{
 		//	
 		const float fRainFar = ps_r3_dyn_wet_surf_far;
-		ex_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR, fRainFar); 
-		ex_full.mul					(ex_project,Device.mView);
-		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);
+		BuildProj(deg2rad(Device.fFOV),Device.fASPECT,VIEWPORT_NEAR, fRainFar, ex_project);
+		ex_full = DirectX::XMMatrixMultiply(Device.mView, ex_project);
+		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
 
 		//	Calculate view frustum were we can see dynamic rain radius
 		{
@@ -81,7 +82,7 @@ void CRender::render_rain()
 	{
 		FPU::m64r					();
 		// Lets begin from base frustum
-		Fmatrix		fullxform_inv	= ex_full_inverse;
+		Fmatrix		fullxform_inv	= CastToGSCMatrix(ex_full_inverse);
 #ifdef	_DEBUG
 		typedef		DumbConvexVolume<true>	t_volume;
 #else
@@ -174,30 +175,37 @@ void CRender::render_rain()
 		// build viewport xform
 		float	view_dim			= float(limit);
 		float	fTexelOffs			= (.5f / RImplementation.o.smapsize);
-		Fmatrix	m_viewport			= {
+
+		const DirectX::XMMATRIX mViewPort
+		(
 			view_dim/2.f,	0.0f,				0.0f,		0.0f,
 			0.0f,			-view_dim/2.f,		0.0f,		0.0f,
 			0.0f,			0.0f,				1.0f,		0.0f,
 			view_dim/2.f+fTexelOffs,	view_dim/2.f+fTexelOffs,		0.0f,		1.0f
-		};
-		Fmatrix				m_viewport_inv;
-		D3DXMatrixInverse	((D3DXMATRIX*)&m_viewport_inv,0,(D3DXMATRIX*)&m_viewport);
+		);
+
+		Fmatrix mViewPortInverse = CastToGSCMatrix(DirectX::XMMatrixInverse(0, mViewPort));
 
 		// snap view-position to pixel
 		//	snap zero point to pixel
-		Fvector cam_proj	= wform		(cull_xform,Fvector().set(0,0,0)	);
-		Fvector	cam_pixel	= wform		(m_viewport,cam_proj				);
+		Fvector cam_proj	= wform		(cull_xform,Fvector().set(0,0,0));
+		Fvector	cam_pixel	= wform		(CastToGSCMatrix(mViewPort),cam_proj);
 		cam_pixel.x			= floorf	(cam_pixel.x);
 		cam_pixel.y			= floorf	(cam_pixel.y);
-		Fvector cam_snapped	= wform		(m_viewport_inv,cam_pixel);
-		Fvector diff;		diff.sub	(cam_snapped,cam_proj				);
-		Fmatrix adjust;		adjust.translate(diff);
-		cull_xform.mulA_44	(adjust);
+		Fvector cam_snapped	= wform		(mViewPortInverse,cam_pixel);
 
-		RainLight.X.D.minX			= 0;
-		RainLight.X.D.maxX			= limit;
-		RainLight.X.D.minY			= 0;
-		RainLight.X.D.maxY			= limit;
+		Fvector diff;		
+		diff.sub(cam_snapped,cam_proj);
+
+		Fmatrix adjust;		
+		adjust.translate(diff);
+
+		cull_xform.mulA_44(adjust);
+
+		RainLight.X.D.minX = 0;
+		RainLight.X.D.maxX = limit;
+		RainLight.X.D.minY = 0;
+		RainLight.X.D.maxY = limit;
 
 		// full-xform
 		FPU::m24r			();
@@ -239,8 +247,8 @@ void CRender::render_rain()
 
 	// Restore XForms
 	RCache.set_xform_world		(Fidentity			);
-	RCache.set_xform_view		(Device.mView		);
-	RCache.set_xform_project	(Device.mProject	);
+	RCache.set_xform_view		(CastToGSCMatrix(Device.mView		));
+	RCache.set_xform_project	(CastToGSCMatrix(Device.mProject	));
 
 	// Accumulate
 	Target->phase_rain	();

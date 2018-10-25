@@ -350,7 +350,6 @@ extern "C"
 void ENGINE_API RunApplication(LPCSTR commandLine)
 {
 	gMainThreadId = GetCurrentThreadId();
-//	Debug.set_mainThreadId(gMainThreadId);
 
 	// Title window
 	HWND logoInsertPos = HWND_TOPMOST;

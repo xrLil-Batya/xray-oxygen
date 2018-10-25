@@ -3,6 +3,7 @@
 #include "ParticleEffect.h"
 #include <xmmintrin.h>
 #include "../../xrCore/threadpool/ttapi.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 
 using namespace PAPI;
 using namespace PS;
@@ -551,22 +552,18 @@ void CParticleEffect::Render(float )
 			RCache.Vertex.Unlock(dwCount,geom->vb_stride);
 			if (dwCount)    
 			{
-#ifndef _EDITOR
-				Fmatrix Pold						= Device.mProject;
-				Fmatrix FTold						= Device.mFullTransform;
+				DirectX::XMMATRIX Pold	= Device.mProject;
+				DirectX::XMMATRIX FTold	= Device.mFullTransform;
 				if(GetHudMode())
 				{
-					RDEVICE.mProject.build_projection(	deg2rad(psHUD_FOV*Device.fFOV), 
-														Device.fASPECT, 
-														VIEWPORT_NEAR, 
-														Environment().CurrentEnv->far_plane);
+					BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane, RDEVICE.mProject);
 
-					Device.mFullTransform.mul	(Device.mProject, Device.mView);
-					RCache.set_xform_project	(Device.mProject);
+
+					Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mView, Device.mProject);
+					RCache.set_xform_project	(CastToGSCMatrix(Device.mProject));
 					RImplementation.rmNear		();
-					ApplyTexgen(Device.mFullTransform);
+					ApplyTexgen(CastToGSCMatrix(Device.mFullTransform));
 				}
-#endif
 
 				RCache.set_xform_world	(Fidentity);
 				RCache.set_Geometry		(geom);
@@ -580,8 +577,8 @@ void CParticleEffect::Render(float )
 					RImplementation.rmNormal	();
 					Device.mProject				= Pold;
 					Device.mFullTransform		= FTold;
-					RCache.set_xform_project	(Device.mProject);
-					ApplyTexgen(Device.mFullTransform);
+					RCache.set_xform_project	(CastToGSCMatrix(Device.mProject));
+					ApplyTexgen(CastToGSCMatrix(Device.mFullTransform));
 				}
 #endif
 			}

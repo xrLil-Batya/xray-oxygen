@@ -10,12 +10,10 @@ void CRenderDevice::_Destroy	(BOOL bKeepTextures)
 	DU->OnDeviceDestroy();
 
 	// before destroy
-	b_is_Ready					= FALSE;
-	Statistic->OnDeviceDestroy	();
-	::Render->destroy			();
+	b_is_Ready = FALSE;
+	Statistic->OnDeviceDestroy();
+	::Render->destroy();
 	m_pRender->OnDeviceDestroy(bKeepTextures);
-	//Resources->OnDeviceDestroy	(bKeepTextures);
-	//RCache.OnDeviceDestroy		();
 
 	Memory.mem_compact			();
 }
@@ -32,9 +30,6 @@ void CRenderDevice::Destroy	(void) {
 
 	// real destroy
 	m_pRender->DestroyHW();
-
-	//xr_delete					(Resources);
-	//HW.DestroyDevice			();
 
 	seqRender.R.clear			();
 	seqAppActivate.R.clear		();

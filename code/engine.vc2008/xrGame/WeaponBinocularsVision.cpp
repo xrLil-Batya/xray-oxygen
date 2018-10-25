@@ -77,7 +77,7 @@ void SBinocVisibleObj::Update()
 		Fbox		b = m_object->Visual()->getVisData().box;
 
 		Fmatrix				xform;
-		xform.mul(Device.mFullTransform, m_object->XFORM());
+		xform.mul(CastToGSCMatrix(Device.mFullTransform), m_object->XFORM());
 		Fvector2	mn = { flt_max,flt_max }, mx = { flt_min,flt_min };
 
 		for (u32 k = 0; k < 8; ++k) {
