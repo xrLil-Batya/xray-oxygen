@@ -1,5 +1,29 @@
 #pragma once
 
+/***************************************************************************
+ *   Copyright (C) 2018 - ForserX & Oxydev
+ *
+ *   Permission is hereby granted, free of charge, to any person obtaining
+ *   a copy of this software and associated documentation files (the
+ *   "Software"), to deal in the Software without restriction, including
+ *   without limitation the rights to use, copy, modify, merge, publish,
+ *   distribute, sublicense, and/or sell copies of the Software, and to
+ *   permit persons to whom the Software is furnished to do so, subject to
+ *   the following conditions:
+ *
+ *   The above copyright notice and this permission notice shall be
+ *   included in all copies or substantial portions of the Software.
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ *   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *   IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ *   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ *   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ *   OTHER DEALINGS IN THE SOFTWARE.
+ ***************************************************************************/
+
+/// <summary>Generate new cam direction </summary>
 inline void BuildCamDir(const Fvector &vFrom, const Fvector &vView, const Fvector &vWorldUp, DirectX::XMMATRIX &Matrics)
 {
 	// Get the dot product, and calculate the projection of the z basis
@@ -23,7 +47,7 @@ inline void BuildCamDir(const Fvector &vFrom, const Fvector &vView, const Fvecto
 		-vFrom.dotproduct(vRight), -vFrom.dotproduct(vUp), -vFrom.dotproduct(vView), 1.f);
 }
 
-// half_fov-angle-tangent
+/// <summary>Half fov <-> angle <-> tangent</summary>
 inline void build_projection_HAT(float HAT, float fAspect, float fNearPlane, float fFarPlane, DirectX::XMMATRIX &Matrics)
 {
 	float cot = 1.f / HAT;
@@ -38,11 +62,13 @@ inline void build_projection_HAT(float HAT, float fAspect, float fNearPlane, flo
 		0, 0, -Q * fNearPlane, 0);
 }
 
+/// <summary>Generate new a Matrix Projection</summary>
 inline void BuildProj(float fFOV, float fAspect, float fNearPlane, float fFarPlane, DirectX::XMMATRIX &Matrics)
 {
 	return build_projection_HAT(tanf(fFOV / 2.f), fAspect, fNearPlane, fFarPlane, Matrics);
 }
 
+/// <summary>Generate new ortho projection to matrix </summary>
 inline void BuildProjOrtho(float w, float h, float zn, float zf, DirectX::XMMATRIX &Matrics)
 {
 	Matrics = DirectX::XMMATRIX(
@@ -52,6 +78,7 @@ inline void BuildProjOrtho(float w, float h, float zn, float zf, DirectX::XMMATR
 		0, 0, zn / (zn - zf), 1.f);
 }
 
+/// <summary>Convert DirectX::XMMATRIX to Fmatrix</summary>
 inline Fmatrix CastToGSCMatrix(const DirectX::XMMATRIX &m)
 {
 	return
@@ -63,6 +90,7 @@ inline Fmatrix CastToGSCMatrix(const DirectX::XMMATRIX &m)
 	};
 }
 
+/// <summary>Call Fbox::xform for DirectX::XMMATRIX</summary>
 inline void BuildXForm(Fbox &B, DirectX::XMMATRIX &m)
 {
 	Fmatrix GSCMatrix = CastToGSCMatrix(m);
@@ -70,6 +98,7 @@ inline void BuildXForm(Fbox &B, DirectX::XMMATRIX &m)
 	B.xform(GSCMatrix);
 }
 
+/// <summary>GSC Transform func for DirectX::XMMATRIX</summary>
 inline void TransformVectorsByMatrix(const DirectX::XMMATRIX &m, Fvector &dest, const Fvector &v)
 {
 	float iw = 1.f / (v.x*m.r[0].m128_f32[3] + v.y*m.r[1].m128_f32[3] + v.z*m.r[2].m128_f32[3] + m.r[3].m128_f32[3]);
