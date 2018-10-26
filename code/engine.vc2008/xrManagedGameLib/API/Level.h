@@ -42,5 +42,10 @@ namespace XRay
 		Level();
 		Level(IntPtr InNativeObject);
 
+		/// <summary>Returns level name from a text files</summary>
+		property ::System::String^ LevelName
+		{
+			::System::String^ get();
+		}
 	};
 }
