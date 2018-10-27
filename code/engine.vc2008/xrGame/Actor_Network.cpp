@@ -8,7 +8,6 @@
 #include "../xrEngine/CustomHUD.h"
 #include "../xrEngine/x_ray.h"
 #include "CameraLook.h"
-#include "CameraFirstEye.h"
 
 #include "ActorEffector.h"
 

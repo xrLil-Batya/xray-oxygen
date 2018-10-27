@@ -4539,9 +4539,6 @@
     <ClInclude Include="ai_space_inline.h">
       <Filter>AI\ASpace</Filter>
     </ClInclude>
-    <ClInclude Include="CameraFirstEye.h">
-      <Filter>Core\Client\Cameras</Filter>
-    </ClInclude>
     <ClInclude Include="cameralook.h">
       <Filter>Core\Client\Cameras</Filter>
     </ClInclude>
@@ -6850,9 +6847,6 @@
     </ClCompile>
     <ClCompile Include="ai_space.cpp">
       <Filter>AI\ASpace</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraFirstEye.cpp">
-      <Filter>Core\Client\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="cameralook.cpp">
       <Filter>Core\Client\Cameras</Filter>

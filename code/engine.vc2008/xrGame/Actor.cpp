@@ -11,7 +11,7 @@
 #include "CarWeapon.h"
 #include "xrserver_objects_alife_monsters.h"
 #include "CameraLook.h"
-#include "CameraFirstEye.h"
+#include "../xrEngine/CameraFirstEye.h"
 #include "effectorfall.h"
 #include "EffectorBobbing.h"
 #include "ActorEffector.h"

@@ -1279,7 +1279,6 @@
     <ClInclude Include="ai_space.h" />
     <ClInclude Include="ai_space_inline.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="CameraFirstEye.h" />
     <ClInclude Include="cameralook.h" />
     <ClInclude Include="ActorEffector.h" />
     <ClInclude Include="CameraEffector.h" />
@@ -2108,7 +2107,6 @@
     </ClCompile>
     <ClCompile Include="ai_sounds.cpp" />
     <ClCompile Include="ai_space.cpp" />
-    <ClCompile Include="CameraFirstEye.cpp" />
     <ClCompile Include="cameralook.cpp" />
     <ClCompile Include="ActorEffector.cpp" />
     <ClCompile Include="EffectorBobbing.cpp" />

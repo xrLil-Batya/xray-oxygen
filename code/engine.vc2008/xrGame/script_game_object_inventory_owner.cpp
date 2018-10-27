@@ -35,7 +35,7 @@
 #include "agent_manager.h"
 #include "agent_member_manager.h"
 #include "stalker_animation_manager.h"
-#include "CameraFirstEye.h"
+#include "../xrEngine/CameraFirstEye.h"
 #include "stalker_movement_manager_smart_cover.h"
 #include "script_callback_ex.h"
 #include "memory_manager.h"

@@ -1,35 +1,35 @@
 #include "stdafx.h"
 #pragma hdrstop
 #ifdef DEBUG
-
 #include "PHDebug.h"
 #endif
 #include "alife_space.h"
-#include "hit.h"
-#include "phdestroyable.h"
-#include "car.h"
-#include "actor.h"
-#include "cameralook.h"
-#include "camerafirsteye.h"
+#include "Hit.h"
+#include "PHDestroyable.h"
+#include "Car.h"
+#include "Actor.h"
 #include "script_entity_action.h"
-#include "..\xrEngine\xr_level_controller.h"
+#include "../xrEngine/xr_level_controller.h"
+#include "../xrEngine/CameraBase.h"
 #include "../Include/xrRender/Kinematics.h"
-#include "level.h"
+#include "Level.h"
 #include "CarWeapon.h"
 #include "script_game_object.h"
 
-
-void	CCar::OnMouseMove(int dx, int dy)
+void CCar::OnMouseMove(int dx, int dy)
 {
-	if (Remote())					return;
+	if (Remote()) return;
 
 	CCameraBase* C	= active_camera;
 	float scale		= (C->f_fov/g_fov)*psMouseSens * psMouseSensScale/50.f;
-	if (dx){
+
+	if (dx)
+	{
 		float d		= float(dx)*scale;
 		C->Move		((d<0)?kLEFT:kRIGHT, _abs(d));
 	}
-	if (dy){
+	if (dy)
+	{
 		float d		= ((psMouseInvert.test(1))?-1:1)*float(dy)*scale*3.f/4.f;
 		C->Move		((d>0)?kUP:kDOWN, _abs(d));
 	}

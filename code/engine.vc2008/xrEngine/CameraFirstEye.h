@@ -1,9 +1,7 @@
-#ifndef __CAMERA_FE_H__
-#define __CAMERA_FE_H__
+#pragma once
+#include "CameraBase.h"
 
-#include "../xrEngine/CameraBase.h"
-
-class CCameraFirstEye : public CCameraBase
+class ENGINE_API CCameraFirstEye : public CCameraBase
 {
 	using inherited = CCameraBase;
 	Fvector			lookat_point;
@@ -23,5 +21,3 @@ public:
 	virtual float	GetWorldPitch	( )	{ return pitch; };
 			void	LookAtPoint		(Fvector p){lookat_point=p;lookat_active=true;}
 };
-
-#endif // __CAMERALOOK_H__

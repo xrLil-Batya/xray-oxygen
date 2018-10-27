@@ -2,8 +2,8 @@
 #pragma hdrstop
 
 #include "CameraFirstEye.h"
-#include "..\xrEngine\xr_level_controller.h"
-#include "../xrEngine/xr_object.h"
+#include "xr_level_controller.h"
+#include "xr_object.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
