@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "inventory.h"
 #include "actor.h"
-#include "CustomOutfit.h"
+#include "items/CustomOutfit.h"
 #include "trade.h"
-#include "weaponmagazined.h"
+#include "items/WeaponMagazined.h"
 
 #include "ui/UIInventoryUtilities.h"
 #include "ui/UIActorMenu.h"
@@ -791,7 +791,7 @@ u32 CInventory::dwfGetSameItemCount(LPCSTR caSection, bool SearchAll)
 	return		(l_dwCount);
 }
 
-#include "Grenade.h"
+#include "items/Grenade.h"
 u32 CInventory::dwfGetGrenadeCount(LPCSTR caSection, bool SearchAll)
 {
 	u32 l_dwCount = 0;

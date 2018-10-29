@@ -30,12 +30,12 @@
 #include "inventory.h"
 #include "infoportion.h"
 #include "AI/Monsters/BaseMonster/base_monster.h"
-#include "weaponmagazined.h"
+#include "items/WeaponMagazined.h"
 #include "ai/stalker/ai_stalker.h"
 #include "agent_manager.h"
 #include "agent_member_manager.h"
 #include "stalker_animation_manager.h"
-#include "CameraFirstEye.h"
+#include "../xrEngine/CameraFirstEye.h"
 #include "stalker_movement_manager_smart_cover.h"
 #include "script_callback_ex.h"
 #include "memory_manager.h"
@@ -46,7 +46,7 @@
 #include "customdetector.h"
 #include "doors_manager.h"
 #include "doors_door.h"
-#include "Torch.h"
+#include "items/Torch.h"
 #include "physicobject.h"
 
 bool CScriptGameObject::GiveInfoPortion(LPCSTR info_id)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "shootingobject.h"
-#include "weaponammo.h"
+#include "items/weaponammo.h"
 #include "rocketlauncher.h"
 #include "entity.h"
 #include "phskeleton.h"

@@ -24,8 +24,8 @@
 #include "trade_parameters.h"
 #include "purchase_list.h"
 #include "alife_object_registry.h"
-#include "CustomOutfit.h"
-#include "Bolt.h"
+#include "items/CustomOutfit.h"
+#include "items/Bolt.h"
 #include "../FrayBuildConfig.hpp"
 
 CInventoryOwner::CInventoryOwner			()

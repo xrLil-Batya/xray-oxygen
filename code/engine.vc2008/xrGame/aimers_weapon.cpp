@@ -12,7 +12,7 @@
 #include "../xrPhysics/animation_movement_controller.h"
 #include "game_object_space.h"
 #include "gameobject.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 
 using aimers::weapon;
 

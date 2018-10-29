@@ -6,7 +6,7 @@
 #include "../xrEngine/xr_input.h"
 #include "GamePersistent.h"
 #include "../xrUICore/MainMenu.h"
-#include "grenade.h"
+#include "items/Grenade.h"
 #include "Car.h"
 #include "UIGame.h"
 #include "../xrUICore/UICursor.h"

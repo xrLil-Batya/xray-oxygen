@@ -1072,7 +1072,7 @@ float CBaseMonster::get_screen_space_coverage_diagonal()
 	Fbox		b		= Visual()->getVisData().box;
 
 	Fmatrix				xform;
-	xform.mul			(Device.mFullTransform,XFORM());
+	xform.mul			(CastToGSCMatrix(Device.mFullTransform),XFORM());
 	Fvector2	mn		={flt_max,flt_max},mx={flt_min,flt_min};
 
 	for (u32 k=0; k<8; ++k)

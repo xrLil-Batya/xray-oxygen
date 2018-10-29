@@ -8,7 +8,6 @@
 #endif // DEBUG
 #include "PHDestroyable.h"
 #include "cameralook.h"
-#include "camerafirsteye.h"
 #include "Actor.h"
 #include "ActorEffector.h"
 #include "math.h"
@@ -20,7 +19,8 @@
 #include "ui/UIMainIngameWnd.h"
 #include "CarWeapon.h"
 #include "game_object_space.h"
-#include "../xrEngine/gamemtllib.h"
+#include "../xrEngine/GameMtlLib.h"
+#include "../xrEngine/CameraFirstEye.h"
 #include "CharacterPhysicsSupport.h"
 #include "car_memory.h"
 #include "../xrphysics/IPHWorld.h"

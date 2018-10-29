@@ -285,6 +285,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\FrayBuildConfig.hpp" />
+    <ClInclude Include="CameraFirstEye.h" />
     <ClInclude Include="ClS\NET_Client.h" />
     <ClInclude Include="date_time.h" />
     <ClInclude Include="DynamicSplash.h" />
@@ -412,6 +413,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoneEditor.cpp" />
+    <ClCompile Include="CameraFirstEye.cpp" />
     <ClCompile Include="ClS\NET_Client.cpp" />
     <ClCompile Include="CPU\PLC.cpp" />
     <ClCompile Include="CPU\xrCPU_Pipe.cpp" />

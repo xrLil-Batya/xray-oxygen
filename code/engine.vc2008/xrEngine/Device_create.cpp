@@ -43,9 +43,10 @@ void	SetupGPU(IRenderDeviceRender *pRender)
 void CRenderDevice::_SetupStates	()
 {
 	// General Render States
-	mView.identity			();
-	mProject.identity		();
-	mFullTransform.identity	();
+	mView = DirectX::XMMatrixIdentity();
+	mProject = DirectX::XMMatrixIdentity();
+	mFullTransform = DirectX::XMMatrixIdentity();
+
 	vCameraPosition.set		(0,0,0);
 	vCameraDirection.set	(0,0,1);
 	vCameraTop.set			(0,1,0);

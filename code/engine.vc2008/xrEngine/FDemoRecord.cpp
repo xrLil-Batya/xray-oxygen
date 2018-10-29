@@ -10,6 +10,7 @@
 #include "render.h"
 #include "CustomHUD.h"
 #include "CameraManager.h"
+#include "DirectXMathExternal.h"
 
 extern BOOL g_bDisableRedText;
 static Flags32 s_hud_flag = {0};
@@ -34,12 +35,12 @@ void setup_lm_screenshot_matrices()
 	Device.vCameraDirection.set(0.f, -1.f, 0.f);
 	Device.vCameraTop.set(0.f, 0.f, 1.f);
 	Device.vCameraRight.set(1.f, 0.f, 0.f);
-	Device.mView.build_camera_dir(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+	BuildCamDir(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop, Device.mView);
 
-	bb.xform(Device.mView);
+	BuildXForm(bb, Device.mView);
 
 	// build project matrix
-	Device.mProject.build_projection_ortho(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.min.z, bb.max.z);
+	BuildProjOrtho(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.min.z, bb.max.z, Device.mProject);
 }
 
 Fbox get_level_screenshot_bound()
@@ -73,10 +74,11 @@ CDemoRecord::CDemoRecord(const char *name, float life_time) : CEffectorCam(cefDe
 	{
 		g_position.set_position = false;
 		IR_Capture();	// capture input
-		m_Camera.invert(Device.mView);
+
+		m_Camera = DirectX::XMMatrixInverse(Device.mView.r, Device.mView);
 
 		// parse yaw
-		Fvector& dir = m_Camera.k;
+		Fvector dir = { m_Camera.r[2].m128_f32[0], m_Camera.r[2].m128_f32[1], m_Camera.r[2].m128_f32[2] };
 		Fvector DYaw;	
 		DYaw.set(dir.x, 0.f, dir.z); DYaw.normalize_safe();
 
@@ -90,7 +92,7 @@ CDemoRecord::CDemoRecord(const char *name, float life_time) : CEffectorCam(cefDe
 		m_HPB.y = asinf(dir.y);
 		m_HPB.z = 0;
 
-		m_Position.set(m_Camera.c);
+		m_Position.set({ m_Camera.r[3].m128_f32[0], m_Camera.r[3].m128_f32[1], m_Camera.r[3].m128_f32[2] });
 
 		m_vVelocity.set(0, 0, 0);
 		m_vAngularVelocity.set(0, 0, 0);
@@ -278,8 +280,8 @@ void CDemoRecord::MakeCubeMapFace(Fvector &D, Fvector &N)
 
 		case 6:
 			Render->Screenshot(IRender_interface::SM_FOR_CUBEMAP, itoa(m_Stage, buf, 10));
-			N.set(m_Camera.j);
-			D.set(m_Camera.k);
+			N.set({ m_Camera.r[1].m128_f32[0], m_Camera.r[1].m128_f32[1], m_Camera.r[1].m128_f32[2] });
+			D.set({ m_Camera.r[2].m128_f32[0], m_Camera.r[2].m128_f32[1], m_Camera.r[2].m128_f32[2] });
 			psHUD_Flags.assign(s_hud_flag);
 			m_bMakeCubeMap = false;
 			break;
@@ -300,9 +302,9 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		MakeScreenshotFace();
 
 		// update camera
-		info.n.set(m_Camera.j);
-		info.d.set(m_Camera.k);
-		info.p.set(m_Camera.c);
+		info.n.set({ m_Camera.r[1].m128_f32[0], m_Camera.r[1].m128_f32[1], m_Camera.r[1].m128_f32[2] });
+		info.d.set({ m_Camera.r[2].m128_f32[0], m_Camera.r[2].m128_f32[1], m_Camera.r[2].m128_f32[2] });
+		info.p.set({ m_Camera.r[3].m128_f32[0], m_Camera.r[3].m128_f32[1], m_Camera.r[3].m128_f32[3] });
 	}
 	else if (m_bMakeLevelMap)
 	{
@@ -312,7 +314,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 	else if (m_bMakeCubeMap)
 	{
 		MakeCubeMapFace(info.d, info.n);
-		info.p.set(m_Camera.c);
+		info.p.set({ m_Camera.r[3].m128_f32[0], m_Camera.r[3].m128_f32[1], m_Camera.r[3].m128_f32[3] });
 		info.fAspect = 1.f;
 	}
 	else
@@ -352,18 +354,16 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 			speed = m_fSpeed0;
 			ang_speed = m_fAngSpeed0;
 		}
-		else
-			if (IR_GetKeyState(DIK_LALT))
-			{
-				speed = m_fSpeed2;
-				ang_speed = m_fAngSpeed2;
-			}
-			else
-				if (IR_GetKeyState(DIK_LCONTROL))
-				{
-					speed = m_fSpeed3;
-					ang_speed = m_fAngSpeed3;
-				}
+		else if (IR_GetKeyState(DIK_LALT))
+		{
+			speed = m_fSpeed2;
+			ang_speed = m_fAngSpeed2;
+		} 
+		else if (IR_GetKeyState(DIK_LCONTROL))
+		{
+			speed = m_fSpeed3;
+			ang_speed = m_fAngSpeed3;
+		}
 
 		m_vT.mul(m_vVelocity, Device.fTimeDelta * speed);
 		m_vR.mul(m_vAngularVelocity, Device.fTimeDelta * ang_speed);
@@ -383,28 +383,28 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		// move
 		Fvector vmove;
 
-		vmove.set(m_Camera.k);
+		vmove.set({ m_Camera.r[2].m128_f32[0], m_Camera.r[2].m128_f32[1], m_Camera.r[2].m128_f32[2] });
 		vmove.normalize_safe();
 		vmove.mul(m_vT.z);
 		m_Position.add(vmove);
 
-		vmove.set(m_Camera.i);
+		vmove.set({ m_Camera.r[0].m128_f32[0], m_Camera.r[0].m128_f32[1], m_Camera.r[0].m128_f32[2] });
 		vmove.normalize_safe();
 		vmove.mul(m_vT.x);
 		m_Position.add(vmove);
 
-		vmove.set(m_Camera.j);
+		vmove.set({ m_Camera.r[1].m128_f32[0], m_Camera.r[1].m128_f32[1], m_Camera.r[1].m128_f32[2] });
 		vmove.normalize_safe();
 		vmove.mul(m_vT.y);
 		m_Position.add(vmove);
 
-		m_Camera.setHPB(m_HPB.x, m_HPB.y, m_HPB.z);
-		m_Camera.translate_over(m_Position);
+		//m_Camera.setHPB(m_HPB.x, m_HPB.y, m_HPB.z);
+		//m_Camera.translate_over(m_Position);
 
 		// update camera
-		info.n.set(m_Camera.j);
-		info.d.set(m_Camera.k);
-		info.p.set(m_Camera.c);
+		info.n.set({ m_Camera.r[1].m128_f32[0], m_Camera.r[1].m128_f32[1], m_Camera.r[1].m128_f32[2] });
+		info.d.set({ m_Camera.r[2].m128_f32[0], m_Camera.r[2].m128_f32[1], m_Camera.r[2].m128_f32[2] });
+		info.p.set({ m_Camera.r[3].m128_f32[0], m_Camera.r[3].m128_f32[1], m_Camera.r[3].m128_f32[2] });
 
 		fLifeTime -= Device.fTimeDelta;
 
@@ -575,9 +575,10 @@ void CDemoRecord::IR_OnMouseHold(int btn)
 
 void CDemoRecord::RecordKey()
 {
-	Fmatrix	g_matView;
-	g_matView.invert(m_Camera);
-	file->w(&g_matView, sizeof(Fmatrix));
+	DirectX::XMMATRIX g_matView;
+	g_matView = DirectX::XMMatrixInverse(m_Camera.r, m_Camera);
+
+	file->w(&g_matView, sizeof(DirectX::XMMATRIX));
 	iCount++;
 }
 

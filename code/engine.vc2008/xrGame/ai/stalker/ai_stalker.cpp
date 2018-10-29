@@ -8,7 +8,7 @@
 #include "stdafx.h"
 #include "ai_stalker.h"
 #include "../ai_monsters_misc.h"
-#include "../../weapon.h"
+#include "../../items/weapon.h"
 #include "../../hit.h"
 #include "../../phdestroyable.h"
 #include "../../CharacterPhysicsSupport.h"
@@ -16,7 +16,7 @@
 #include "../../game_level_cross_table.h"
 #include "../../game_graph.h"
 #include "../../inventory.h"
-#include "../../artefact.h"
+#include "../../items/artefact.h"
 #include "../../phmovementcontrol.h"
 #include "../../../xrServerEntities/xrserver_objects_alife_monsters.h"
 #include "../../cover_evaluators.h"
@@ -740,7 +740,7 @@ void CAI_Stalker::UpdateCL()
 		}
 
 		Exec_Look(client_update_fdelta());
-		CStepManager::update(false);
+		CStepManager::update();
 
 		if (weapon_shot_effector().IsActive())
 			weapon_shot_effector().Update();

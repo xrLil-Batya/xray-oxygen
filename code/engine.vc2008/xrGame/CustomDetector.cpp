@@ -9,7 +9,7 @@
 #include "Actor.h"
 #include "../xrUICore/UIWindow.h"
 #include "player_hud.h"
-#include "weapon.h"
+#include "items/weapon.h"
 
 ITEM_INFO::ITEM_INFO()
 {

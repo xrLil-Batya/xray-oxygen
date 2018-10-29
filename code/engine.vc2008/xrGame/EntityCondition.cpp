@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "entitycondition.h"
 #include "inventoryowner.h"
-#include "CustomOutfit.h"
+#include "items/CustomOutfit.h"
+#include "items/Helmet.h"
 #include "inventory.h"
 #include "wound.h"
 #include "Level.h"
@@ -9,7 +10,6 @@
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "object_broker.h"
-#include "ActorHelmet.h"
 
 #define MAX_HEALTH 1.0f
 #define MIN_HEALTH -0.01f

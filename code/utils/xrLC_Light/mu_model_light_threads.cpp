@@ -11,12 +11,8 @@ CThreadManager mu_secondary(ProxyStatus, ProxyProgress);
 #define		MU_THREADS	4
 // mu-light
 bool mu_models_local_calc_lightening = false;
-<<<<<<< HEAD
-xrCriticalSection		mu_models_local_calc_lightening_wait_lock;
-=======
-std::recursive_mutex mu_models_local_calc_lightening_wait_lock;
 
->>>>>>> origin/xrLC_Redux
+xrCriticalSection		mu_models_local_calc_lightening_wait_lock;
 void WaitMuModelsLocalCalcLightening()
 {
 	while(true)
@@ -25,24 +21,16 @@ void WaitMuModelsLocalCalcLightening()
 		Sleep(1000);
 		mu_models_local_calc_lightening_wait_lock.Enter();
 		complited = mu_models_local_calc_lightening;
-<<<<<<< HEAD
+
 		mu_models_local_calc_lightening_wait_lock.Leave();
 		if(complited)
-=======
-		mu_models_local_calc_lightening_wait_lock.unlock();
-		if (complited)
->>>>>>> origin/xrLC_Redux
 			break;
 	}
 }
 
 void SetMuModelsLocalCalcLighteningCompleted()
 {
-<<<<<<< HEAD
 	xrCriticalSectionGuard guard(mu_models_local_calc_lightening_wait_lock);
-=======
-	std::lock_guard<std::recursive_mutex> lock(mu_models_local_calc_lightening_wait_lock);
->>>>>>> origin/xrLC_Redux
 	mu_models_local_calc_lightening = true;
 }
 

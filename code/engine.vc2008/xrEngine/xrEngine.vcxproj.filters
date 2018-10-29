@@ -621,6 +621,9 @@
     <ClInclude Include="DiscordRichPresense.h">
       <Filter>Interfaces\Discord</Filter>
     </ClInclude>
+    <ClInclude Include="CameraFirstEye.h">
+      <Filter>Game API\Cameras</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -973,6 +976,9 @@
     </ClCompile>
     <ClCompile Include="DiscordRichPresense.cpp">
       <Filter>Interfaces\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraFirstEye.cpp">
+      <Filter>Game API\Cameras</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

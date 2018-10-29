@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 
 //////////////////////////////////////////////////////////////////////////
 // tables to calculate view-frustum bounds in world space
@@ -59,7 +60,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 	L_spec						= u_diffuse2s	(L_clr);
-	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
+	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
 	// Perform masking (only once - on the first/near phase)
@@ -121,7 +122,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 
 	// recalculate d_Z, to perform depth-clipping
 	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
-	Device.mFullTransform.transform(center_pt)	;
+	CastToGSCMatrix(Device.mFullTransform).transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
 	PIX_EVENT(Perform_lighting);
@@ -146,7 +147,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 
 		// compute xforms
 		FPU::m64r			();
-		Fmatrix				xf_invview;		xf_invview.invert	(Device.mView)	;
+		Fmatrix				xf_invview;		xf_invview.invert	(CastToGSCMatrix(Device.mView))	;
 
 		// shadow xform
 		Fmatrix				m_shadow;
@@ -218,10 +219,10 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 			zMin = ps_r_sun_near;
 			zMax = ps_r_sun_far;
 		}
-		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	Device.mFullTransform.transform	(center_pt);
+		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	CastToGSCMatrix(Device.mFullTransform).transform	(center_pt);
 		zMin = center_pt.z	;
 
-		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMax);	Device.mFullTransform.transform	(center_pt);
+		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMax);	CastToGSCMatrix(Device.mFullTransform).transform	(center_pt);
 		zMax = center_pt.z	;
 
 		// setup stencil
@@ -298,7 +299,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 	L_spec						= u_diffuse2s	(L_clr);
-	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
+	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
 	// Perform masking (only once - on the first/near phase)
@@ -360,7 +361,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 	// recalculate d_Z, to perform depth-clipping
 	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
-	Device.mFullTransform.transform(center_pt)	;
+	CastToGSCMatrix(Device.mFullTransform).transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
 	PIX_EVENT(Perform_lighting);
@@ -374,7 +375,6 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
 
 		//	TODO: DX10: Remove this when fix inverse culling for far region
-//		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r_sun_depth_near_bias):ps_r_sun_depth_far_bias;
 		Fmatrix			m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
@@ -385,7 +385,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 		// compute xforms
 		FPU::m64r			();
-		Fmatrix				xf_invview;		xf_invview.invert	(Device.mView)	;
+		Fmatrix				xf_invview;		xf_invview.invert	(CastToGSCMatrix(Device.mView));
 
 		// shadow xform
 		Fmatrix				m_shadow;
@@ -426,8 +426,8 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		Fmatrix			m_Texgen;
 		m_Texgen.identity();
  		RCache.xforms.set_W( m_Texgen );
- 		RCache.xforms.set_V( Device.mView );
- 		RCache.xforms.set_P( Device.mProject );
+ 		RCache.xforms.set_V( CastToGSCMatrix(Device.mView ));
+ 		RCache.xforms.set_P( CastToGSCMatrix(Device.mProject ));
  		u_compute_texgen_screen	( m_Texgen );
 
 
@@ -501,10 +501,10 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			zMin = ps_r_sun_near;
 			zMax = ps_r_sun_far;
 		}
-		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	Device.mFullTransform.transform	(center_pt);
+		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	CastToGSCMatrix(Device.mFullTransform).transform	(center_pt);
 		zMin = center_pt.z	;
 
-		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMax);	Device.mFullTransform.transform	(center_pt);
+		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMax);	CastToGSCMatrix(Device.mFullTransform).transform	(center_pt);
 		zMax = center_pt.z	;
 
 		// Enable Z function only for near and middle cascades, the far one is restricted by only stencil.
@@ -689,7 +689,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 	L_spec						= u_diffuse2s	(L_clr);
-	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
+	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
 	// Perform masking (only once - on the first/near phase)
@@ -753,7 +753,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 
 	// recalculate d_Z, to perform depth-clipping
 	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
-	Device.mFullTransform.transform(center_pt)	;
+	CastToGSCMatrix(Device.mFullTransform).transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
 	// Perform lighting
@@ -782,7 +782,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 		Fmatrix				m_shadow;
 		{
 			FPU::m64r		();
-			Fmatrix			xf_invview;		xf_invview.invert	(Device.mView)	;
+			Fmatrix			xf_invview;		xf_invview.invert	(CastToGSCMatrix(Device.mView))	;
 			Fmatrix			xf_project;		xf_project.mul		(m_TexelAdjust,fuckingsun->X.D.combine);
 			m_shadow.mul	(xf_project,	xf_invview);
 
@@ -879,12 +879,12 @@ void CRenderTarget::accum_direct_lum	()
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 	L_spec						= u_diffuse2s	(L_clr);
-	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
+	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
 	// recalculate d_Z, to perform depth-clipping
 	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
-	Device.mFullTransform.transform(center_pt)	;
+	CastToGSCMatrix(Device.mFullTransform).transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
 
@@ -1031,8 +1031,8 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 		Fmatrix			m_Texgen;
 		m_Texgen.identity();
  		RCache.xforms.set_W( m_Texgen );
- 		RCache.xforms.set_V( Device.mView );
- 		RCache.xforms.set_P( Device.mProject );
+ 		RCache.xforms.set_V( CastToGSCMatrix(Device.mView ));
+ 		RCache.xforms.set_P( CastToGSCMatrix(Device.mProject ));
  		u_compute_texgen_screen	( m_Texgen );
 
 		RCache.set_c				("m_texgen",			m_Texgen);
@@ -1054,11 +1054,11 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 
 		Fvector	center_pt;
 		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	
-		Device.mFullTransform.transform(center_pt);
+		CastToGSCMatrix(Device.mFullTransform).transform(center_pt);
 		zMin = center_pt.z	;
 
 		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMax);	
-		Device.mFullTransform.transform	(center_pt);
+		CastToGSCMatrix(Device.mFullTransform).transform	(center_pt);
 		zMax = center_pt.z	;
 
 

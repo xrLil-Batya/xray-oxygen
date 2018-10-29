@@ -29,7 +29,7 @@ public:
         for (;;)
         {
             // Get task
-            task_CS.lock();
+            task_CS.Enter();
             thProgress = 1.f - float(task_pool.size()) / float(lc_global_data()->g_deflectors().size());
             if (task_pool.empty())
             {
@@ -44,7 +44,7 @@ public:
             int DeflectorID = task_pool.back();
             D = lc_global_data()->g_deflectors()[DeflectorID];
             task_pool.pop_back();
-            task_CS.unlock();
+            task_CS.Leave();
 
             // Perform operation
             try {

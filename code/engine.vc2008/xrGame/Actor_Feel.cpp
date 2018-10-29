@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "actor.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "mercuryball.h"
 #include "inventory.h"
 #include "character_info.h"
@@ -10,8 +10,8 @@
 #include "../xrEngine/gamemtllib.h"
 #include "ui/UIMainIngameWnd.h"
 #include "UIGame.h"
-#include "Grenade.h"
-#include "WeaponRPG7.h"
+#include "items/Grenade.h"
+#include "items/WeaponRPG7.h"
 #include "Level.h"
 #include "clsid_game.h"
 #include "hudmanager.h"
@@ -122,7 +122,7 @@ void CActor::PickupModeUpdate()
 {
 	feel_touch_update	(Position(), m_fPickupInfoRadius);
 	CFrustum frustum;
-	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
 	xrCriticalSectionGuard guard(MtFeelTochMutex);
     for (CObject* obj : feel_touch)
@@ -169,7 +169,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 	}
 	
 	CFrustum						frustum;
-	frustum.CreateFromMatrix		(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix		(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
 	ISpatialResult.clear	();
 	g_SpatialSpace->q_frustum		(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
@@ -214,7 +214,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
         if (CGameObject* pNearestGameObject = InPickableItem->cast_game_object())
         {
             CFrustum					frustum;
-            frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
+            frustum.CreateFromMatrix(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
             if (!CanPickItem(frustum, act_and_cam_pos, &InPickableItem->object()))
             {
                 return nullptr;
@@ -253,14 +253,14 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 };
 
 #include "eatable_item.h"
-#include "EliteDetector.h"
-#include "AdvancedDetector.h"
-#include "SimpleDetector.h"
-#include "grenadelauncher.h"
-#include "Scope.h"
-#include "Silencer.h"
-#include "CustomOutfit.h"
-#include "ActorHelmet.h"
+#include "items/EliteDetector.h"
+#include "items/AdvancedDetector.h"
+#include "items/SimpleDetector.h"
+#include "items/GrenadeLauncher.h"
+#include "items/Scope.h"
+#include "items/Silencer.h"
+#include "items/CustomOutfit.h"
+#include "items/Helmet.h"
 #include "pda.h"
 
 void CActor::PickupInfoDraw(CObject* object)
@@ -285,7 +285,7 @@ void CActor::PickupInfoDraw(CObject* object)
 	if (!item)		return;
 
 	Fmatrix			res;
-	res.mul(Device.mFullTransform, object->XFORM());
+	res.mul(CastToGSCMatrix(Device.mFullTransform), object->XFORM());
 	Fvector4		v_res;
 	Fvector			shift;
 

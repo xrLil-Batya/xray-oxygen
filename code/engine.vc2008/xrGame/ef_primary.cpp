@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "entity_alive.h"
 #include "inventoryowner.h"
 #include "alife_simulator.h"

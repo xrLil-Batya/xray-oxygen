@@ -73,48 +73,46 @@ void CAttachableItem::OnH_A_Independent	()
 	enable							(false);
 }
 
-void CAttachableItem::enable			(bool value)
+void CAttachableItem::enable(bool value)
 {
-	if (!object().H_Parent()) 
-	{
-		m_enabled			= value;
-		return;
-	}
+	CGameObject* pGameObject = smart_cast<CGameObject*>(object().H_Parent());
+	CAttachmentOwner *pOwner = smart_cast<CAttachmentOwner*>(pGameObject);
 
-	if (value && !enabled() && object().H_Parent()) {
-		CGameObject			*game_object = smart_cast<CGameObject*>(object().H_Parent());
-		CAttachmentOwner	*owner = smart_cast<CAttachmentOwner*>(game_object);
-		if (owner) {
-			m_enabled			= value;
-			owner->attach		(&item());
-			object().setVisible	(true);
+	if (pGameObject && pOwner)
+	{
+		if (value && !enabled())
+		{
+			m_enabled = value;
+			pOwner->attach(&item());
+			object().setVisible(true);
+		}
+		else if (!value && enabled())
+		{
+			m_enabled = value;
+			pOwner->detach(&item());
+			object().setVisible(false);
 		}
 	}
-	
-	if (!value && enabled() && object().H_Parent()) {
-		CGameObject			*game_object = smart_cast<CGameObject*>(object().H_Parent());
-		CAttachmentOwner	*owner = smart_cast<CAttachmentOwner*>(game_object);
-		if (owner) {
-			m_enabled			= value;
-			owner->detach		(&item());
-			object().setVisible	(false);
-		}
+	else if(!pGameObject)
+	{
+		m_enabled = value;
 	}
 }
 
-bool  CAttachableItem::can_be_attached	() const
+bool  CAttachableItem::can_be_attached() const
 {
 	if (!item().m_pInventory)
-		return				(false);
+		return (false);
 
 	if (!item().m_pInventory->IsBeltUseful())
-		return				(true);
+		return (true);
 
 	if (item().m_ItemCurrPlace.type != eItemPlaceBelt)
-		return				(false);
-	 
-	return					(true);
+		return (false);
+
+	return     (true);
 }
+
 void CAttachableItem::afterAttach		()
 {
 	VERIFY							(m_valid);

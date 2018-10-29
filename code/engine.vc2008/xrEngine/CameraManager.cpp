@@ -15,6 +15,7 @@
 #include "gamefont.h"
 #include "render.h"
 #include "x_ray.h"
+#include "DirectXMathExternal.h"
 
 float psCamInert = 0.f;
 float psCamSlideInert = 0.0f;
@@ -296,7 +297,7 @@ extern float view_port_near_koef;
 void CCameraManager::ApplyDevice(float _viewport_near)
 {
     // Device params
-    Device.mView.build_camera_dir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
+	BuildCamDir(m_cam_info.p, m_cam_info.d, m_cam_info.n, Device.mView);
 
     Device.vCameraPosition.set(m_cam_info.p);
     Device.vCameraDirection.set(m_cam_info.d);
@@ -321,7 +322,7 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 	{
 		Device.m_SecondViewport.m_bCamReady = false;
 	}
-	Device.mProject.build_projection(deg2rad(Device.fFOV), m_cam_info.fAspect, _viewport_near * view_port_near_koef, m_cam_info.fFar);
+	BuildProj(deg2rad(Device.fFOV), m_cam_info.fAspect, _viewport_near * view_port_near_koef, m_cam_info.fFar, Device.mProject);
 
     if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu->IsActive())
         ResetPP();
@@ -370,16 +371,5 @@ void CCameraManager::ResetPP()
 
 void CCameraManager::Dump()
 {
-    Fmatrix mInvCamera;
-    Fvector _R, _U, _T, _P;
-
-    mInvCamera.invert(Device.mView);
-    _R.set(mInvCamera._11, mInvCamera._12, mInvCamera._13);
-    _U.set(mInvCamera._21, mInvCamera._22, mInvCamera._23);
-    _T.set(mInvCamera._31, mInvCamera._32, mInvCamera._33);
-    _P.set(mInvCamera._41, mInvCamera._42, mInvCamera._43);
-    Log("CCameraManager::Dump::vPosition  = ", _P);
-    Log("CCameraManager::Dump::vDirection = ", _T);
-    Log("CCameraManager::Dump::vNormal    = ", _U);
-    Log("CCameraManager::Dump::vRight     = ", _R);
+	// Retard
 }

@@ -20,7 +20,7 @@
 #include "../../../Inventory.h"
 #include "../../../ActorCondition.h"
 #include "../../../../xrEngine/xr_level_controller.h"
-#include "../../../weapon.h"
+#include "../../../items/weapon.h"
 
 #include "../control_direction_base.h"
 

@@ -11,15 +11,15 @@
 #include "UIInventoryUtilities.h"
 
 
-#include "../Weapon.h"
-#include "../WeaponMagazinedWGrenade.h"
-#include "../WeaponAmmo.h"
-#include "../Silencer.h"
-#include "../Scope.h"
-#include "../GrenadeLauncher.h"
+#include "../items/Weapon.h"
+#include "../items/WeaponMagazinedWGrenade.h"
+#include "../items/WeaponAmmo.h"
+#include "../items/Silencer.h"
+#include "../items/Scope.h"
+#include "../items/GrenadeLauncher.h"
 #include "../trade_parameters.h"
-#include "../ActorHelmet.h"
-#include "../CustomOutfit.h"
+#include "../items/Helmet.h"
+#include "../items/CustomOutfit.h"
 #include "../CustomDetector.h"
 #include "../eatable_item.h"
 
@@ -521,7 +521,7 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 	}
 }
 
-#include "../WeaponKnife.h"
+#include "../items/WeaponKnife.h"
 void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
 	PIItem item = (PIItem)cell_item->m_pData;

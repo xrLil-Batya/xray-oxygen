@@ -7,7 +7,7 @@
 #include "net_queue.h"
 #include "xrServer.h"
 #include "Actor.h"
-#include "Artefact.h"
+#include "items/Artefact.h"
 #include "ai_space.h"
 #include "saved_game_wrapper.h"
 #include "level_graph.h"

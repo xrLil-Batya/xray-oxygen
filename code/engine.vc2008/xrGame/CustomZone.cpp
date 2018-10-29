@@ -11,7 +11,7 @@
 #include "level.h"
 #include "../xrEngine/igame_persistent.h"
 #include "../xrengine/xr_collide_form.h"
-#include "artefact.h"
+#include "items/Artefact.h"
 #include "ai_object_location.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "zone_effector.h"
@@ -766,7 +766,7 @@ void CCustomZone::PlayHitParticles(CGameObject* pObject)
 		}
 	}
 }
-#include "bolt.h"
+#include "items/bolt.h"
 void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 {
 	m_entrance_sound.play_at_pos		(nullptr, pObject->Position());

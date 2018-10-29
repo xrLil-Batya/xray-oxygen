@@ -2,7 +2,7 @@
 #include "Actor.h"
 #include "ActorAnimation.h"
 #include "actor_anim_defs.h"
-#include "weapon.h"
+#include "items/weapon.h"
 #include "inventory.h"
 #include "missile.h"
 #include "level.h"
@@ -16,10 +16,10 @@
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
 #include "../xrEngine/motion.h"
-#include "artefact.h"
+#include "items/artefact.h"
 #include "IKLimbsController.h"
 #include "player_hud.h"
-#include "WeaponKnife.h"
+#include "items/WeaponKnife.h"
 
 static const float y_spin0_factor		= 0.0f;
 static const float y_spin1_factor		= 0.4f;

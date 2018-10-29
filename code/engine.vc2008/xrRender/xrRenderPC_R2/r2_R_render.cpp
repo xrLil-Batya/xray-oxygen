@@ -230,7 +230,7 @@ void CRender::Render		()
 	if (o.sunstatic)		bSUN				= FALSE;
 
 	// HOM
-	ViewBase.CreateFromMatrix					(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+	ViewBase.CreateFromMatrix					(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View										= nullptr;
 
 	//******* Z-prefill calc - DEFERRER RENDERER
@@ -242,7 +242,7 @@ void CRender::Render		()
 			deg2rad(Device.fFOV), 
 			Device.fASPECT, VIEWPORT_NEAR, 
 			z_distance * Environment().CurrentEnv->far_plane);
-		m_zfill.mul	(m_project,Device.mView);
+		m_zfill.mul	(m_project, CastToGSCMatrix(Device.mView));
 		r_pmask										(true,false);	// enable priority "0"
 		set_Recorder								(nullptr)		;
 		phase										= PHASE_SMAP;
@@ -285,7 +285,7 @@ void CRender::Render		()
 	if (bSUN)									set_Recorder	(&main_coarse_structure);
 	else										set_Recorder	(nullptr);
 	phase										= PHASE_NORMAL;
-	render_main									(Device.mFullTransform,true);
+	render_main									(CastToGSCMatrix(Device.mFullTransform), true);
 	set_Recorder								(nullptr);
 	r_pmask										(true,false);	// disable priority "1"
 	Device.Statistic->RenderCALC.End			();
@@ -410,8 +410,8 @@ void CRender::Render		()
 	{
 		Target->phase_accumulator					();
 		// Render emissive geometry, stencil - write 0x0 at pixel pos
-		RCache.set_xform_project					(Device.mProject); 
-		RCache.set_xform_view						(Device.mView);
+		RCache.set_xform_project					(CastToGSCMatrix(Device.mProject)); 
+		RCache.set_xform_view						(CastToGSCMatrix(Device.mView));
 		// Stencil - write 0x1 at pixel pos - 
 		RCache.set_Stencil							( TRUE,D3DCMP_ALWAYS,0x01,0xff,0xff,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
 		RCache.set_CullMode							(CULL_CCW);
@@ -448,7 +448,7 @@ void CRender::render_forward				()
 		// level
 		r_pmask									(false,true);			// enable priority "1"
 		phase									= PHASE_NORMAL;
-		render_main								(Device.mFullTransform,false);//
+		render_main								(CastToGSCMatrix(Device.mFullTransform), false);//
 		//	Igor: we don't want to render old lods on next frame.
 		mapLOD.clear							();
 		r_dsgraph_render_graph					(1)	;					// normal level, secondary priority

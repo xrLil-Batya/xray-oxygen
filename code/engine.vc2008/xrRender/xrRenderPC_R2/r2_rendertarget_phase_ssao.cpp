@@ -32,7 +32,7 @@ void CRenderTarget::phase_ssao	()
 	RCache.set_Stencil(FALSE);//TODO - disable later
 
 	{
-		Fmatrix	m_v2w;				m_v2w.invert(Device.mView);
+		Fmatrix	m_v2w;				m_v2w.invert(CastToGSCMatrix(Device.mView));
 		// Fill VB
 		float	_w					= float(Device.dwWidth);
 		float	_h					= float(Device.dwHeight);
@@ -90,7 +90,7 @@ void CRenderTarget::phase_downsamp	()
 	RCache.set_Stencil(FALSE);//TODO - disable later
 
 	{
-		Fmatrix	m_v2w;				m_v2w.invert(Device.mView);
+		Fmatrix	m_v2w;				m_v2w.invert(CastToGSCMatrix(Device.mView));
 		// Fill VB
 		float	_w					= float(Device.dwWidth) * 0.5f;
 		float	_h					= float(Device.dwHeight) * 0.5f;

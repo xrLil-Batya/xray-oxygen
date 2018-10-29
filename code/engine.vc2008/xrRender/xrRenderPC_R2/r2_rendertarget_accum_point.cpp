@@ -8,22 +8,18 @@ void CRenderTarget::accum_point		(light* L)
 	ref_shader		shader			= L->s_point;
 	if (!shader)	shader			= s_accum_point;
 
-
-	Fmatrix Pold=Fidentity;
-	Fmatrix FTold=Fidentity;
+	DirectX::XMMATRIX Pold=  *(DirectX::XMMATRIX*)&Fidentity;
+	DirectX::XMMATRIX FTold= *(DirectX::XMMATRIX*)&Fidentity;
 
 	if (L->flags.bHudMode)
 	{
 		extern ENGINE_API float		psHUD_FOV;
 		Pold				= Device.mProject;
 		FTold				= Device.mFullTransform;
-		Device.mProject.build_projection(
-			deg2rad(psHUD_FOV*Device.fFOV /* *Device.fASPECT*/ ), 
-			Device.fASPECT, VIEWPORT_NEAR, 
-			Environment().CurrentEnv->far_plane);
+		BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane, Device.mProject);
 
-		Device.mFullTransform.mul	(Device.mProject, Device.mView);
-		RCache.set_xform_project	(Device.mProject);
+		Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mProject, Device.mView);
+		RCache.set_xform_project	(CastToGSCMatrix(Device.mProject));
 		RImplementation.rmNear		();
 	}
 
@@ -33,13 +29,13 @@ void CRenderTarget::accum_point		(light* L)
 	float		L_R					= L->range*0.95f;
 	Fvector		L_clr;				L_clr.set		(L->color.r,L->color.g,L->color.b);
 	L_spec							= u_diffuse2s	(L_clr);
-	Device.mView.transform_tiny		(L_pos,L->position);
+	CastToGSCMatrix(Device.mView).transform_tiny		(L_pos,L->position);
 
 	// Xforms
 	L->xform_calc					();
 	RCache.set_xform_world			(L->m_xform);
-	RCache.set_xform_view			(Device.mView);
-	RCache.set_xform_project		(Device.mProject);
+	RCache.set_xform_view			(CastToGSCMatrix(Device.mView));
+	RCache.set_xform_project		(CastToGSCMatrix(Device.mProject));
 	enable_scissor					(L);
 	enable_dbt_bounds				(L);
 
@@ -132,6 +128,6 @@ void CRenderTarget::accum_point		(light* L)
 		// Restore projection
 		Device.mProject				= Pold;
 		Device.mFullTransform		= FTold;
-		RCache.set_xform_project	(Device.mProject);
+		RCache.set_xform_project	(CastToGSCMatrix(Device.mProject));
 	}
 }

@@ -14,7 +14,7 @@
 #include "aimers_weapon.h"
 #include "aimers_bone.h"
 #include "stalker_animation_manager.h"
-#include "weapon.h"
+#include "items/weapon.h"
 
 using MonsterSpace::SBoneRotation;
 
@@ -157,22 +157,17 @@ void CSightManager::Exec_Look		(float time_delta)
 	STOP_PROFILE
 }
 
-void CSightManager::setup			(const CSightAction &sight_action)
+void CSightManager::setup(const CSightAction &sight_action)
 {
-	if (m_actions.size() > 1)
-		clear			();
-
 	if (!m_actions.empty() && (*(*m_actions.begin()).second == sight_action))
 		return;
 
-	clear				();
-	add_action			(0,xr_new<CSightControlAction>(1.f,u32(-1),sight_action));
+	clear();
+	add_action(0, xr_new<CSightControlAction>(1.f, u32(-1), sight_action));
 }
 
-void CSightManager::update			()
+void CSightManager::update()
 {
-	START_PROFILE("Sight Manager")
-
 	if (!enabled())
 		return; 
 
@@ -183,13 +178,13 @@ void CSightManager::update			()
 		return;
 	}
 
-	if (!m_turning_in_place) {
+	if (!m_turning_in_place)
+	{
 		if (angle_difference(object().movement().m_body.current.yaw,object().movement().m_head.current.yaw) > (left_angle(-object().movement().m_head.current.yaw,-object().movement().m_body.current.yaw) ? m_max_left_angle : m_max_right_angle)) {
 			m_turning_in_place	= true;
 			object().movement().m_body.target.yaw	= object().movement().m_head.current.yaw;
 		}
-		else
-			object().movement().m_body.target.yaw	= object().movement().m_body.current.yaw;
+		else object().movement().m_body.target.yaw	= object().movement().m_body.current.yaw;
 
 		inherited::update();
 		return;
@@ -198,14 +193,13 @@ void CSightManager::update			()
 	if (angle_difference(object().movement().m_body.current.yaw,object().movement().m_head.target.yaw) > EPS_L) {
 		object().movement().m_body.target.yaw	= object().movement().m_head.target.yaw;
 	}
-	else {
+	else 
+	{
 		m_turning_in_place	= false;
 		object().movement().m_body.target.yaw	= object().movement().m_body.current.yaw;
 	}
 
 	inherited::update();
-
-	STOP_PROFILE
 }
 
 void CSightManager::remove_links					(CObject *object)

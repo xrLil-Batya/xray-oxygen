@@ -19,12 +19,12 @@
 #include "UIInvUpgradeProperty.h"
 #include "UIOutfitInfo.h"
 #include "UIBoosterInfo.h"
-#include "../Weapon.h"
-#include "../CustomOutfit.h"
-#include "../ActorHelmet.h"
+#include "../items/Weapon.h"
+#include "../items/CustomOutfit.h"
+#include "../items/Helmet.h"
 #include "../eatable_item.h"
 #include "UICellItem.h"
-#include "../WeaponKnife.h"
+#include "../items/WeaponKnife.h"
 
 extern const LPCSTR g_inventory_upgrade_xml;
 

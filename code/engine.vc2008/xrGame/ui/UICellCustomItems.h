@@ -1,6 +1,6 @@
 #pragma once
 #include "UICellItem.h"
-#include "../Weapon.h"
+#include "../items/Weapon.h"
 
 
 class CUIInventoryCellItem :public CUICellItem

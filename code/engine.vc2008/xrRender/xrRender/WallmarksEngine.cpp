@@ -322,20 +322,21 @@ ICF void FlushStream(ref_geom hGeom, ref_shader shader, u32& w_offset, FVF::LIT*
 		Device.Statistic->RenderDUMP_WMT_Count += w_count/3;
 	}
 }
-
+#include "../../xrEngine/DirectXMathExternal.h"
 void CWallmarksEngine::Render()
 {
 	// Projection and xform
-	float	_43					= Device.mProject._43;
-	Device.mProject._43			-= ps_r_WallmarkSHIFT; 
-	RCache.set_xform_world		(Fidentity);
-	RCache.set_xform_project	(Device.mProject);
+	Fmatrix WallmarksProject = CastToGSCMatrix(Device.mProject);
 
-	Fmatrix	mSavedView			= Device.mView;
+	WallmarksProject._43			-= ps_r_WallmarkSHIFT;
+	RCache.set_xform_world		(Fidentity);
+	RCache.set_xform_project	(CastToGSCMatrix(Device.mProject));
+
+	DirectX::XMMATRIX mSavedView = Device.mView;
 	Fvector	mViewPos			;
 			mViewPos.mad		(Device.vCameraPosition, Device.vCameraDirection,ps_r_WallmarkSHIFT_V);
-	Device.mView.build_camera_dir	(mViewPos,Device.vCameraDirection,Device.vCameraTop);
-	RCache.set_xform_view		(Device.mView);
+	BuildCamDir(mViewPos,Device.vCameraDirection,Device.vCameraTop, Device.mView);
+	RCache.set_xform_view		(CastToGSCMatrix(Device.mView));
 
 	Device.Statistic->RenderDUMP_WM.Begin	();
 	Device.Statistic->RenderDUMP_WMS_Count	= 0;
@@ -430,7 +431,6 @@ void CWallmarksEngine::Render()
 
 	// Projection
 	Device.mView				= mSavedView;
-	Device.mProject._43			= _43;
-	RCache.set_xform_view		(Device.mView);
-	RCache.set_xform_project	(Device.mProject);
+	RCache.set_xform_view		(CastToGSCMatrix(Device.mView));
+	RCache.set_xform_project	(CastToGSCMatrix(Device.mProject));
 }

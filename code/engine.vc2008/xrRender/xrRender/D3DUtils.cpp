@@ -4,6 +4,7 @@
 #pragma hdrstop
 
 #include "../../xrEngine/gamefont.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 #include "d3dutils.h"
 #include "du_box.h"
 #include "du_sphere.h"
@@ -551,11 +552,14 @@ void CDrawUtilities::dbgDrawPlacement(const Fvector& p, int sz, u32 clr, LPCSTR 
 {
 	VERIFY( Device.b_is_Ready );
     Fvector c;
-	float w	= p.x*Device.mFullTransform._14 + p.y*Device.mFullTransform._24 + p.z*Device.mFullTransform._34 + Device.mFullTransform._44;
+	Fmatrix &mFullTransform = CastToGSCMatrix(Device.mFullTransform);
+
+	float w	= p.x* mFullTransform._14 + p.y* mFullTransform._24 + p.z* mFullTransform._34 + mFullTransform._44;
     if (w<0) return; // culling
 
 	float s = (float)sz;
-	Device.mFullTransform.transform(c,p);
+	mFullTransform.transform(c,p);
+
 	c.x = (float)iFloor(_x2real(c.x)); c.y = (float)iFloor(_y2real(-c.y));
 
 	_VertexStream*	Stream	= &RCache.Vertex;
@@ -995,9 +999,11 @@ void CDrawUtilities::DrawAxis(const Fmatrix& T)
     // transform to screen
     float dx=-float(Device.dwWidth)/2.2f;
     float dy=float(Device.dwHeight)/2.25f;
+	Fmatrix &mFullTransform = CastToGSCMatrix(Device.mFullTransform);
 
-    for (int i=0; i<6; i++,pv++){
-	    pv->color = c[i]; pv->transform(p[i],Device.mFullTransform);
+    for (int i=0; i<6; i++,pv++)
+	{
+	    pv->color = c[i]; pv->transform(p[i], mFullTransform);
 	    pv->p.set((float)iFloor(_x2real(pv->p.x)+dx),(float)iFloor(_y2real(pv->p.y)+dy),0,1);
         p[i].set(pv->p.x,pv->p.y,0);
     }
@@ -1023,15 +1029,18 @@ void CDrawUtilities::DrawObjectAxis(const Fmatrix& T, float sz, BOOL sel)
 {
 	VERIFY( Device.b_is_Ready );
 	_VertexStream*	Stream	= &RCache.Vertex;
+	Fmatrix &mFullTransform = CastToGSCMatrix(Device.mFullTransform);
+
     Fvector c,r,n,d;
-	float w	= T.c.x*Device.mFullTransform._14 + T.c.y*Device.mFullTransform._24 + T.c.z*Device.mFullTransform._34 + Device.mFullTransform._44;
+	float w	= T.c.x* mFullTransform._14 + T.c.y* mFullTransform._24 + T.c.z* mFullTransform._34 +  mFullTransform._44;
     if (w<0) return; // culling
 
 	float s = w*sz;
-								Device.mFullTransform.transform(c,T.c);
-    r.mul(T.i,s); r.add(T.c); 	Device.mFullTransform.transform(r);
-    n.mul(T.j,s); n.add(T.c); 	Device.mFullTransform.transform(n);
-    d.mul(T.k,s); d.add(T.c); 	Device.mFullTransform.transform(d);
+
+								mFullTransform.transform(c,T.c);
+    r.mul(T.i,s); r.add(T.c); 	mFullTransform.transform(r);
+    n.mul(T.j,s); n.add(T.c); 	mFullTransform.transform(n);
+    d.mul(T.k,s); d.add(T.c); 	mFullTransform.transform(d);
 	c.x = (float)iFloor(_x2real(c.x)); c.y = (float)iFloor(_y2real(-c.y));
     r.x = (float)iFloor(_x2real(r.x)); r.y = (float)iFloor(_y2real(-r.y));
     n.x = (float)iFloor(_x2real(n.x)); n.y = (float)iFloor(_y2real(-n.y));
@@ -1179,9 +1188,12 @@ void CDrawUtilities::OnRender()
 void CDrawUtilities::OutText(const Fvector& pos, LPCSTR text, u32 color, u32 shadow_color)
 {
 	Fvector p;
-	float w	= pos.x*Device.mFullTransform._14 + pos.y*Device.mFullTransform._24 + pos.z*Device.mFullTransform._34 + Device.mFullTransform._44;
-	if (w>=0){
-		Device.mFullTransform.transform(p,pos);
+	Fmatrix &mFullTransform = CastToGSCMatrix(Device.mFullTransform);
+
+	float w	= pos.x* mFullTransform._14 + pos.y* mFullTransform._24 + pos.z* mFullTransform._34 +  mFullTransform._44;
+	if (w>=0)
+	{
+		mFullTransform.transform(p,pos);
 		p.x = (float)iFloor(_x2real(p.x)); p.y = (float)iFloor(_y2real(-p.y));
 
 		m_Font->SetColor(shadow_color);

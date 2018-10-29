@@ -13,7 +13,7 @@
 #include "../xrEngine/motion.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "script_entity_action.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
 #include "script_game_object.h"

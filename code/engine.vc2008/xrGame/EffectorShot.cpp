@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "EffectorShot.h"
-#include "Weapon.h"
+#include "items/Weapon.h"
 
 //-----------------------------------------------------------------------------
 // Weapon shot effector

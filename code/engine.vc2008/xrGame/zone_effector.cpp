@@ -6,7 +6,7 @@
 #include "actor.h"
 #include "actoreffector.h"
 #include "postprocessanimator.h"
-#include "CustomOutfit.h"
+#include "items/CustomOutfit.h"
 
 CZoneEffector::CZoneEffector()
 {
