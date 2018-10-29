@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "../../xrEngine/stdafx.h"
 #include "xrServer_Objects.h"
 #include "../xrGame/game_base.h"
 
