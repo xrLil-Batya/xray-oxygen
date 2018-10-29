@@ -4,7 +4,7 @@
 #include "InfoPortion.h"
 #include "Pda.h"
 
-#include "Grenade.h"
+#include "items/Grenade.h"
 #include "level.h"
 
 

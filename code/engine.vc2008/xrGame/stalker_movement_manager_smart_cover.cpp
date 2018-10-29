@@ -24,7 +24,7 @@
 #include "smart_cover_transition_animation.hpp"
 #include "CharacterPhysicsSupport.h"
 #include "inventory.h"
-#include "weapon.h"
+#include "items/weapon.h"
 
 namespace smart_cover {
 	shared_str	transform_vertex(shared_str const &vertex_id, bool const &in);

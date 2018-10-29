@@ -13,8 +13,8 @@
 #include "stalker_movement_manager_smart_cover.h"
 #include "stalker_animation_data.h"
 
-#include "weapon.h"
-#include "missile.h"
+#include "items/Weapon.h"
+#include "Missile.h"
 #include "inventory.h"
 #include "stalker_animation_manager_impl.h"
 

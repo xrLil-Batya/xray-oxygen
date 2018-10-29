@@ -6,7 +6,7 @@
 
 #include "CameraEffector.h"
 #include "../xrEngine/cameramanager.h"
-#include "WeaponMagazined.h"
+#include "items/WeaponMagazined.h"
 
 class CEffectorZoomInertion : public CEffectorCam
 {

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "UIInventoryUtilities.h"
-#include "../WeaponAmmo.h"
+#include "../items/WeaponAmmo.h"
 #include "../../xrUICore/UIStaticItem.h"
 #include "../xrUICore/UIStatic.h"
 #include "../eatable_item.h"

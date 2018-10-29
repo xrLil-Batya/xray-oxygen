@@ -5,7 +5,7 @@
 #include "../../ActorEffector.h"
 #include "control_animation_base.h"
 #include "../../Inventory.h"
-#include "../../Weapon.h"
+#include "../../items/Weapon.h"
 
 namespace detail
 {

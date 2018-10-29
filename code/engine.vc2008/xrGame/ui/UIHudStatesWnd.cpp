@@ -4,8 +4,8 @@
 #include "../Actor.h"
 #include "../ActorCondition.h"
 #include "../EntityCondition.h"
-#include "../CustomOutfit.h"
-#include "../ActorHelmet.h"
+#include "../items/CustomOutfit.h"
+#include "../items/Helmet.h"
 #include "../inventory.h"
 #include "../RadioactiveZone.h"
 
@@ -19,7 +19,7 @@
 #include "CustomDetector.h"
 #include "../ai/monsters/basemonster/base_monster.h"
 #include "../PDA.h"
-#include "WeaponMagazinedWGrenade.h"
+#include "items/WeaponMagazinedWGrenade.h"
 
 CUIHudStatesWnd::CUIHudStatesWnd() : m_b_force_update(true), m_timer_1sec(0), m_last_health(0.0f), m_radia_self(0.0f), m_radia_hit(0.0f)
 {

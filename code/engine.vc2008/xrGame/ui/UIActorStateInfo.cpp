@@ -28,10 +28,10 @@
 #include "../Actor.h"
 #include "../ActorCondition.h"
 #include "../EntityCondition.h"
-#include "../CustomOutfit.h"
-#include "../ActorHelmet.h"
+#include "../items/CustomOutfit.h"
+#include "../items/Helmet.h"
 #include "../Inventory.h"
-#include "../Artefact.h"
+#include "../items/Artefact.h"
 #include "../../xrEngine/string_table.h"
 ui_actor_state_wnd::ui_actor_state_wnd()
 {

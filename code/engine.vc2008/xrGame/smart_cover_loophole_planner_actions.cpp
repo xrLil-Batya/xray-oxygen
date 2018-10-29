@@ -31,7 +31,7 @@
 #include "stalker_animation_manager.h"
 #include "stalker_animation_data.h"
 #include "inventory_item.h"
-#include "Weapon.h"
+#include "items/Weapon.h"
 #include "../xrphysics/animation_movement_controller.h"
 #include "visual_memory_manager.h"
 

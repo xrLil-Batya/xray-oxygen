@@ -33,7 +33,7 @@
 #include "car.h"
 #include "ZoneCampfire.h"
 #include "physicobject.h"
-#include "artefact.h"
+#include "items/Artefact.h"
 #pragma warning(pop)
 
 #include "../../SDK/include/luabind/iterator_policy.hpp"

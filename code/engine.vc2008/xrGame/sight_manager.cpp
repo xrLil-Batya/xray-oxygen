@@ -14,7 +14,7 @@
 #include "aimers_weapon.h"
 #include "aimers_bone.h"
 #include "stalker_animation_manager.h"
-#include "weapon.h"
+#include "items/weapon.h"
 
 using MonsterSpace::SBoneRotation;
 

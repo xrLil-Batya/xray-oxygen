@@ -9,12 +9,10 @@
 #include "PHCommander.h"
 #include "PHScriptCall.h"
 #include "CustomRocket.h"
-#include "Grenade.h"
+#include "items/Grenade.h"
 
-//#include "phactivationshape.h"
 #include "../xrphysics/iphworld.h"
 #include "../xrphysics/iActivationShape.h"
-//#include "../xrphysics/phvalide.h"
 #include "characterphysicssupport.h"
 #include "phmovementcontrol.h"
 #include "../xrphysics/physics_shell_animated.h"

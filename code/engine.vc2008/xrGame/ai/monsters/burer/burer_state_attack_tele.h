@@ -1,10 +1,10 @@
 #pragma once
 #include "../state.h"
-#include "../../../grenade.h"
-
+#include "../../../items/Grenade.h"
 
 template<typename Object>
-class CStateBurerAttackTele : public CState<Object> {
+class CStateBurerAttackTele : public CState<Object> 
+{
 	typedef CState<Object> inherited;	
 
 	xr_vector<CPhysicsShellHolder *>	tele_objects;

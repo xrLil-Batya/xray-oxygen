@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "inventory.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "actor.h"
 #include "../xrCore/xr_ini.h"
 

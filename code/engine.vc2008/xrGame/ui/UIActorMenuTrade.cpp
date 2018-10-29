@@ -14,7 +14,7 @@
 #include "../Trade.h"
 #include "../Entity.h"
 #include "../Actor.h"
-#include "../Weapon.h"
+#include "../items/Weapon.h"
 #include "../trade_parameters.h"
 #include "../inventory_item_object.h"
 #include "../../xrEngine/string_table.h"

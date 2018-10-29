@@ -8,7 +8,7 @@
 #include "PHDestroyable.h"
 #include "Car.h"
 
-#include "Weapon.h"
+#include "items/Weapon.h"
 #include "Inventory.h"
 
 #include "SleepEffector.h"
@@ -145,41 +145,11 @@ IC bool test_point( const Fvector	&pt, const Fmatrix33& mat, const Fvector& ext,
 	fmat.j.set( mat.j );
 	fmat.k.set( mat.k );
 	fmat.c.set( pt );
-	//IPhysicsShellHolder * ve = smart_cast<IPhysicsShellHolder*> ( Level().CurrentEntity() ) ;
+
 	VERIFY( actor );
 	return test_camera_box( ext, fmat, actor );
 }
 
-#ifdef	DEBUG
-template<typename T>
-void	dbg_draw_viewport( const T &cam_info, float _viewport_near )
-{
-	
-	VERIFY( _viewport_near > 0.f );
-	const Fvector near_plane_center = Fvector().mad( cam_info.Position(), cam_info.Direction(), _viewport_near );
-	float h_w, h_h;
-	viewport_size ( _viewport_near, cam_info, h_w, h_h );
-	const Fvector right	= Fvector().mul( cam_info.Right(), h_w );
-	const Fvector up	= Fvector().mul( cam_info.Up(), h_h );
-
-	
-	const Fvector	top_left = Fvector().sub( near_plane_center,  right ).add( up );
-	const Fvector	top_right = Fvector().add( near_plane_center,  right ).add( up );
-	const Fvector	bottom_left = Fvector().sub( near_plane_center,  right ).sub( up );
-	const Fvector	bottom_right = Fvector().add( near_plane_center,  right ).sub( up );
-	
-	DBG_DrawLine( cam_info.Position(), top_left, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( cam_info.Position(), top_right, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( cam_info.Position(), bottom_left, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( cam_info.Position(), bottom_right, D3DCOLOR_XRGB(255, 0, 0 ) );
-
-	DBG_DrawLine( top_right, top_left, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( bottom_right, top_right, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( top_left, bottom_left, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( bottom_left, bottom_right, D3DCOLOR_XRGB(255, 0, 0 ) );
-
-}
-#endif
 IC void get_box_mat( Fmatrix33	&mat, float alpha, const SRotation	&r_torso  )
 {
 	float dZ			= ((PI_DIV_2-((PI+alpha)/2)));
@@ -368,14 +338,6 @@ void CActor::cam_Update(float dt, float fFOV)
 
 	fCurAVelocity			= vPrevCamDir.sub(cameras[eacFirstEye]->vDirection).magnitude()/Device.fTimeDelta;
 	vPrevCamDir				= cameras[eacFirstEye]->vDirection;
-
-#ifdef DEBUG
-	if( dbg_draw_camera_collision )
-	{
-		dbg_draw_viewport( *cameras[eacFirstEye], _viewport_near );
-		dbg_draw_viewport( Cameras(), _viewport_near );
-	}
-#endif
 
 	if (Level().CurrentEntity() == this)
 	{

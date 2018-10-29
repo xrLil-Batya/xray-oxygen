@@ -31,10 +31,10 @@
 #include "../xrUICore/UI3tButton.h"
 #include "../xrUICore/UIHelper.h"
 #include "../../xrUICore/ui_defs.h"
-#include "../Weapon.h"
-#include "../WeaponRPG7.h"
-#include "../CustomOutfit.h"
-#include "../ActorHelmet.h"
+#include "../items/Weapon.h"
+#include "../items/WeaponRPG7.h"
+#include "../items/CustomOutfit.h"
+#include "../items/Helmet.h"
 
 // -----
 const char* const g_inventory_upgrade_xml = "inventory_upgrade.xml";
