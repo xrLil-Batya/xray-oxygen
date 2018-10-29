@@ -4,6 +4,7 @@
 #include "../xrEngine/igame_persistent.h"
 
 #include "ai_space.h"
+#include "script_engine.h"
 
 #include "NET_Queue.h"
 #include "hudmanager.h"
@@ -21,6 +22,8 @@ extern	pureFrame* g_pNetProcessor;
 bool CLevel::net_start_client1()
 {
 	pApp->LoadBegin();
+	//ai().script_engine().init();
+
 	// name_of_server
 	string64 name_of_server = "";
 	shared_str clientOption = GamePersistent().GetClientOption();

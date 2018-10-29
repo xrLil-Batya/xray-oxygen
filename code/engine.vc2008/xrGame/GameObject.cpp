@@ -573,7 +573,7 @@ void CGameObject::u_EventSend(NET_Packet& P)
 	Level().Send(P);
 }
 
-#include "bolt.h"
+#include "items/bolt.h"
 void CGameObject::OnH_B_Chield()
 {
 	inherited::OnH_B_Chield();

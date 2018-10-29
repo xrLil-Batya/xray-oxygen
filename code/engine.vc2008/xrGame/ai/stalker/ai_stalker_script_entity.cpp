@@ -10,10 +10,10 @@
 #include "ai_stalker.h"
 #include "../../stalker_animation_manager.h"
 #include "../../script_entity_action.h"
-#include "../../torch.h"
+#include "../../items/torch.h"
 #include "../../inventory.h"
-#include "../../weapon.h"
-#include "../../weaponmagazined.h"
+#include "../../items/weapon.h"
+#include "../../items/weaponmagazined.h"
 #include "../../../Include/xrRender/Kinematics.h"
 #include "../../../xrServerEntities/script_engine.h"
 #include "../../sight_manager.h"
@@ -31,11 +31,6 @@ u32 CAI_Stalker::GetWeaponAmmo() const
 		return		(0);
 	return			(GetCurrentWeapon()->GetSuitableAmmoTotal(true));	
 }
-
-//CInventoryItem *CAI_Stalker::GetCurrentEquipment() const
-//{
-//    return inventory().ItemFromSlot(OUTFIT_SLOT);
-//}
 
 CInventoryItem *CAI_Stalker::GetMedikit() const
 {

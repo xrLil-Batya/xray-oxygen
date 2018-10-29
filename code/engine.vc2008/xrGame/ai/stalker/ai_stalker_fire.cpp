@@ -34,7 +34,7 @@
 #include "../../object_handler_planner.h"
 #include "../../object_handler_space.h"
 #include "../../visual_memory_manager.h"
-#include "../../weapon.h"
+#include "../../items/weapon.h"
 #include "ai_stalker_space.h"
 #include "../../effectorshot.h"
 #include "../../BoneProtections.h"
