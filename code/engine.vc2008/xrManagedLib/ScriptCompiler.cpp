@@ -59,6 +59,7 @@ bool xrScriptCompiler::CompileScripts()
 	parameters->ReferencedAssemblies->Add(GetPathToThisAssembly());
 	parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
 	parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
+	parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedUILib.dll"));
 	parameters->GenerateInMemory = false;
 	parameters->GenerateExecutable = false;
 	///#TODO: Generate release version without debug info

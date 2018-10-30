@@ -18,7 +18,6 @@ namespace XRay
 		Inventory^ inventory;
 
 	private:
-
 		CActor* pNativeObject;
 	};
 }

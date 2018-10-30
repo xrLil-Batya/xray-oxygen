@@ -66,6 +66,9 @@
     <ClInclude Include="IFunctionInvoker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GamePersistence.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xrManagedEngineLib.cpp">
@@ -103,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="CallbackTypes.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePersistence.cpp">
+      <Filter>Header Files\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
