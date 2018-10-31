@@ -3,7 +3,7 @@
 #include "common.h"
 
 #define PIXEL_SIZE screen_res.zw
-#include "dlaa.h"
+#include "../toolbox/dlaa.h"
 
 float4 main(p_screen I) : SV_Target
 {
