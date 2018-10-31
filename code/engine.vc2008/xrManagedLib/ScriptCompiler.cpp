@@ -5,12 +5,14 @@
 using namespace System::Reflection;
 using namespace System::IO;
 using namespace System::CodeDom::Compiler;
-using namespace Microsoft::CSharp;
+using namespace Microsoft;
 
 xrScriptCompiler::xrScriptCompiler()
 {
 	PrivateInfo = new xrScriptCompiler_Private();
-	SourceCodes = gcnew List<String ^>();
+	CSSourceCodes = gcnew List<String ^>();
+	VBSourceCodes = gcnew List<String ^>();
+	Parameters = gcnew CompilerParameters();
 }
 
 xrScriptCompiler::~xrScriptCompiler()
@@ -18,56 +20,75 @@ xrScriptCompiler::~xrScriptCompiler()
 	delete PrivateInfo;
 }
 
-bool xrScriptCompiler::CompileScripts()
+CompilerResults^ xrScriptCompiler::FindCSScripts()
 {
 	string_path ScriptFolder;
-	string_path ShaderFolder;
 	FS.update_path(ScriptFolder, "$game_scripts$", "");
-	FS.update_path(ShaderFolder, "$game_shaders$", "");
 
-	FS_FileSet ScriptFiles;
-	FS_FileSet ShaderScriptFiles;
-	FS.file_list(ScriptFiles, ScriptFolder, FS_ListFiles, "*.cs");
-	//FS.file_list(ShaderScriptFiles, ShaderFolder, FS_ListFiles, "*.cs");
+	FS_FileSet CSScriptFiles;
+	FS.file_list(CSScriptFiles, ScriptFolder, FS_ListFiles, "*.cs");
 
-	if (ScriptFiles.empty() && ShaderScriptFiles.empty())
+	if (CSScriptFiles.empty())
 	{
-		Log("CSharp compiler: nothing compile, skip");
-		return false;
+		Log("Spectre compiler: nothing compile, skip");
+		return nullptr;
 	}
 
-	for (const FS_File& file : ShaderScriptFiles)
-	{
-		string_path scriptPath;
-		FS.update_path(scriptPath, "$game_shaders$", file.name.c_str());
-
-		String^ sourceFile = gcnew String(scriptPath);
-		SourceCodes->Add(sourceFile);
-	}
-
-	for (const FS_File& file : ScriptFiles)
+	for (const FS_File& file : CSScriptFiles)
 	{
 		string_path scriptPath;
 		FS.update_path(scriptPath, "$game_scripts$", file.name.c_str());
 
-		String^ sourceFile = gcnew String(scriptPath);
-		SourceCodes->Add(sourceFile);
+		CSSourceCodes->Add(gcnew String(scriptPath));
 	}
 
-	CSharpCodeProvider^ provider = gcnew CSharpCodeProvider();
-	CompilerParameters^ parameters = gcnew CompilerParameters();
-	parameters->ReferencedAssemblies->Add(GetPathToThisAssembly());
-	parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
-	parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
-	parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedUILib.dll"));
-	parameters->GenerateInMemory = false;
-	parameters->GenerateExecutable = false;
+	CSharp::CSharpCodeProvider^ provider = gcnew CSharp::CSharpCodeProvider();
+	return provider->CompileAssemblyFromFile(Parameters, CSSourceCodes->ToArray());
+}
+
+CompilerResults^ xrScriptCompiler::FindVBScripts()
+{
+	string_path ScriptFolder;
+	FS.update_path(ScriptFolder, "$game_scripts$", "");
+
+	FS_FileSet VBScriptFiles;
+	FS.file_list(VBScriptFiles, ScriptFolder, FS_ListFiles, "*.vb");
+
+	for (const FS_File& file : VBScriptFiles)
+	{
+		string_path scriptPath;
+		FS.update_path(scriptPath, "$game_scripts$", file.name.c_str());
+
+		VBSourceCodes->Add(gcnew String(scriptPath));
+	}
+
+	VisualBasic::VBCodeProvider^ provider = gcnew VisualBasic::VBCodeProvider();
+	return provider->CompileAssemblyFromFile(Parameters, VBSourceCodes->ToArray());
+}
+
+bool xrScriptCompiler::CompileScripts()
+{
+	Parameters->ReferencedAssemblies->Add(GetPathToThisAssembly());
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedUILib.dll"));
+	Parameters->GenerateInMemory = false;
+	Parameters->GenerateExecutable = false;
+
 	///#TODO: Generate release version without debug info
-	parameters->IncludeDebugInformation = true;
-	parameters->OutputAssembly = "xrDotScripts.dll";
+	Parameters->IncludeDebugInformation = true;
+	Parameters->OutputAssembly = "xrDotScripts.dll";
 	//list all files in directory
-	parameters->CompilerOptions = "-platform:x64";
-	CompilerResults^ result = provider->CompileAssemblyFromFile(parameters, SourceCodes->ToArray());
+	Parameters->CompilerOptions = "-platform:x64";
+
+	CompilerResults^ result = FindCSScripts();
+	if (!result)
+	{
+		result = FindVBScripts();
+		if (!result)
+			return false;
+	}
+
 	if (result->Errors->HasErrors)
 	{
 		//print errors
@@ -100,10 +121,9 @@ bool xrScriptCompiler::CompileScripts()
 		XRay::Log::Error(ErrLog);
 	}
 
-
 	//load assembly
 	Assembly^ ScriptModule = nullptr;
-	String^ ModuleAddress = System::IO::Directory::GetCurrentDirectory() + "\\" + parameters->OutputAssembly;
+	String^ ModuleAddress = System::IO::Directory::GetCurrentDirectory() + "\\" + Parameters->OutputAssembly;
 	try
 	{
 		ScriptModule = Assembly::LoadFile(ModuleAddress);

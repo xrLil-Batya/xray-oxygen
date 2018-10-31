@@ -23,13 +23,14 @@ ref class xrScriptCompiler
 {
 public:
 	xrScriptCompiler();
-
 	~xrScriptCompiler();
+
+	CodeDom::Compiler::CompilerResults^ FindCSScripts();
+	CodeDom::Compiler::CompilerResults^ FindVBScripts();
 
 	bool CompileScripts();
 
 	Assembly^ GetAssembly();
-private:
 
 private:
 
@@ -37,7 +38,9 @@ private:
 	String^ GetPathToBuildAssembly(String^ assemblyName);
 
 	Assembly^ scriptAssembly;
-	List <String^>^ SourceCodes;
+	List <String^>^ CSSourceCodes;
+	List <String^>^ VBSourceCodes;
 
 	xrScriptCompiler_Private* PrivateInfo;
+	CodeDom::Compiler::CompilerParameters^ Parameters;
 };
