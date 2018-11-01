@@ -19,6 +19,17 @@
 
 static const bool bPreserveHf = 0;
 
+// sRGB primaries and D65 white point
+inline float Luminance(float3 rgb)
+{
+#ifdef HDR 
+	float3 CurrentDot = float3(0.2627, 0.6780, 0.0593);
+#else // HD
+	float3 CurrentDot = float3(0.2126, 0.7152, 0.0722);
+#endif
+    return dot(rgb, CurrentDot);
+}
+
 float4 PreProcessPS(float2 tc)
 {
     float4 center, left, right, top, bottom;
@@ -153,4 +164,5 @@ float4 DLAAPixelShader(float2 tc)
 	}
 	return clr;
 }
+
 #endif

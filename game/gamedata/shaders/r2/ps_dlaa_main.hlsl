@@ -4,7 +4,7 @@
 
 #define DX9Ver
 #define PIXEL_SIZE screen_res.zw
-#include "../toolbox/dlaa.h"
+#include "toolbox\dlaa.h"
 
 float4 main(p_screen I) : COLOR
 {
