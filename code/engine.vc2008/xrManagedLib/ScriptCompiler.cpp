@@ -18,6 +18,9 @@ xrScriptCompiler::xrScriptCompiler()
 xrScriptCompiler::~xrScriptCompiler()
 {
 	delete PrivateInfo;
+	delete CSSourceCodes;
+	delete VBSourceCodes;
+	delete Parameters;
 }
 
 CompilerResults^ xrScriptCompiler::FindCSScripts()
@@ -54,6 +57,9 @@ CompilerResults^ xrScriptCompiler::FindVBScripts()
 	FS_FileSet VBScriptFiles;
 	FS.file_list(VBScriptFiles, ScriptFolder, FS_ListFiles, "*.vb");
 
+	if (VBScriptFiles.empty())
+		return nullptr;
+
 	for (const FS_File& file : VBScriptFiles)
 	{
 		string_path scriptPath;
@@ -62,32 +68,19 @@ CompilerResults^ xrScriptCompiler::FindVBScripts()
 		VBSourceCodes->Add(gcnew String(scriptPath));
 	}
 
+	// Add C# scripts module
+	Parameters->OutputAssembly = GetPathToBuildAssembly("xrExternalDotScripts.dll");
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrDotScripts.dll"));
+
+	// Build VB.NET scripts
 	VisualBasic::VBCodeProvider^ provider = gcnew VisualBasic::VBCodeProvider();
 	return provider->CompileAssemblyFromFile(Parameters, VBSourceCodes->ToArray());
 }
 
-bool xrScriptCompiler::CompileScripts()
+bool xrScriptCompiler::ErrorHadler(CompilerResults^ result)
 {
-	Parameters->ReferencedAssemblies->Add(GetPathToThisAssembly());
-	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
-	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
-	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedUILib.dll"));
-	Parameters->GenerateInMemory = false;
-	Parameters->GenerateExecutable = false;
-
-	///#TODO: Generate release version without debug info
-	Parameters->IncludeDebugInformation = true;
-	Parameters->OutputAssembly = "xrDotScripts.dll";
-	//list all files in directory
-	Parameters->CompilerOptions = "-platform:x64";
-
-	CompilerResults^ result = FindCSScripts();
 	if (!result)
-	{
-		result = FindVBScripts();
-		if (!result)
-			return false;
-	}
+		return false;
 
 	if (result->Errors->HasErrors)
 	{
@@ -97,6 +90,11 @@ bool xrScriptCompiler::CompileScripts()
 		for (int errInd = 0; errInd < result->Errors->Count; errInd++)
 		{
 			CompilerError^ error = result->Errors[errInd];
+
+			string1024 PathToResource;
+			ConvertDotNetStringToAscii(error->ToString(), PathToResource);
+			MessageBox(0, PathToResource, "Error", 0);
+
 			sb->Append(error->ToString());
 			sb->Append(L" \n");
 		}
@@ -121,12 +119,10 @@ bool xrScriptCompiler::CompileScripts()
 		XRay::Log::Error(ErrLog);
 	}
 
-	//load assembly
 	Assembly^ ScriptModule = nullptr;
-	String^ ModuleAddress = System::IO::Directory::GetCurrentDirectory() + "\\" + Parameters->OutputAssembly;
 	try
 	{
-		ScriptModule = Assembly::LoadFile(ModuleAddress);
+		ScriptModule = Assembly::LoadFile(Parameters->OutputAssembly);
 	}
 	catch (FileNotFoundException^ fileNotFound)
 	{
@@ -159,10 +155,32 @@ bool xrScriptCompiler::CompileScripts()
 	}
 
 	scriptAssembly = ScriptModule;
-	if (scriptAssembly == nullptr) return false;
-	//invoke in all classes 'OnLoad'
 
-	return true;
+	return scriptAssembly != nullptr;
+}
+
+bool xrScriptCompiler::CompileScripts()
+{
+	Parameters->ReferencedAssemblies->Add(GetPathToThisAssembly());
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedUILib.dll"));
+	Parameters->GenerateInMemory = false;
+	Parameters->GenerateExecutable = false;
+
+	///#TODO: Generate release version without debug info
+	Parameters->IncludeDebugInformation = true;
+	Parameters->OutputAssembly = GetPathToBuildAssembly("xrDotScripts.dll");
+	//list all files in directory
+	Parameters->CompilerOptions = "-platform:x64";
+
+	if (ErrorHadler(FindCSScripts()))
+	{
+		ErrorHadler(FindVBScripts());
+		return true;
+	}
+	
+	return false;
 }
 
 System::Reflection::Assembly^ xrScriptCompiler::GetAssembly()

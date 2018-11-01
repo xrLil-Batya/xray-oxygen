@@ -25,14 +25,15 @@ public:
 	xrScriptCompiler();
 	~xrScriptCompiler();
 
-	CodeDom::Compiler::CompilerResults^ FindCSScripts();
-	CodeDom::Compiler::CompilerResults^ FindVBScripts();
-
 	bool CompileScripts();
 
 	Assembly^ GetAssembly();
 
 private:
+	CodeDom::Compiler::CompilerResults^ FindCSScripts();
+	CodeDom::Compiler::CompilerResults^ FindVBScripts();
+
+	bool ErrorHadler(CodeDom::Compiler::CompilerResults^ result);
 
 	String^ GetPathToThisAssembly();
 	String^ GetPathToBuildAssembly(String^ assemblyName);
