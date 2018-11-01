@@ -154,8 +154,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 		SPass &pass = *sh->passes[iPass];
 		auto &map = mapMatrixPasses[sh->flags.iPriority / 2][iPass];
 
-
-#if defined(USE_DX10) || defined(USE_DX11)
+#if defined(USE_DX11)
 		auto &Nvs = map[&*pass.vs];
 		auto &Ngs = Nvs[pass.gs->gs];
 		auto &Nps = Ngs[pass.ps->ps];
@@ -195,7 +194,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 					{
 						Nps.ssa = SSA;
 #endif
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 						if (SSA > Ngs.ssa)
 						{
 							Ngs.ssa = SSA;
@@ -204,7 +203,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 							{
 								Nvs.ssa = SSA;
 							}
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 						}
 #endif
 					}
@@ -302,7 +301,7 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 		SPass& pass	= *sh->passes[iPass];
 		mapNormal_T& map = mapNormalPasses[sh->flags.iPriority/2][iPass];
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		auto &Nvs = map[&*pass.vs];
 		auto &Ngs = Nvs[pass.gs->gs];
 		auto &Nps = Ngs[pass.ps->ps];
@@ -342,7 +341,7 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 					{
 						Nps.ssa = SSA;
 #endif
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 						if (SSA > Ngs.ssa)
 						{
 							Ngs.ssa = SSA;
@@ -351,7 +350,7 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 							{
 								Nvs.ssa = SSA;
 							}
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 						}
 #endif
 					}

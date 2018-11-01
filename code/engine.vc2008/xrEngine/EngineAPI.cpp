@@ -8,7 +8,6 @@
 extern XRCORE_API xr_vector<xr_token> vid_quality_token;
 
 constexpr const char* r2_name = "xrRender_R2";
-constexpr const char* r3_name = "xrRender_R3";
 constexpr const char* r4_name = "xrRender_R4";
 
 //////////////////////////////////////////////////////////////////////
@@ -29,7 +28,6 @@ CEngineAPI::~CEngineAPI()
 }
 
 extern u32 renderer_value; // con cmd
-ENGINE_API int g_current_renderer = 0;
 bool g_bRendererForced;
 
 ENGINE_API bool is_enough_address_space_available	()
@@ -48,8 +46,6 @@ void CEngineAPI::InitializeRenderer()
 	/// FX to Xottab-DUTU: Не трогай!
 	if (strstr(Core.Params, "-r4"))
 		Console->Execute("renderer renderer_r4");
-	else if (strstr(Core.Params, "-r3"))
-		Console->Execute("renderer renderer_r3");
 	else if (strstr(Core.Params, "-r2.5"))
 		Console->Execute("renderer renderer_r2.5");
 	else if (strstr(Core.Params, "-r2a"))
@@ -66,40 +62,22 @@ void CEngineAPI::InitializeRenderer()
 	if (psDeviceFlags.test(rsR4))
 	{
 		// try to initialize R4
-		Log				("Loading DLL:",	r4_name);
-		hRender			= LoadLibrary		(r4_name);
-		if (!hRender)	
+		Log("Loading DLL:", r4_name);
+		hRender = LoadLibrary(r4_name);
+		if (!hRender)
 		{
 			// try to load R4
-			Msg			("! ...Failed - incompatible hardware/pre-Vista OS.");
-			psDeviceFlags.set	(rsR3, true);
+			Msg("! ...Failed - incompatible hardware/pre-Vista OS.");
+			psDeviceFlags.set(rsR2, true);
 		}
-		else
-			g_current_renderer = 4;
-	}
-
-	if (psDeviceFlags.test(rsR3))
-	{
-		// try to initialize R3
-		Log				("Loading DLL:",	r3_name);
-		hRender			= LoadLibrary		(r3_name);
-		if (!hRender)	
-		{
-			// try to load R3
-			Msg			("! ...Failed - incompatible hardware/pre-Vista OS.");
-			psDeviceFlags.set	(rsR2, true);
-		}
-		else
-			g_current_renderer	= 3;
 	}
 
 	if (psDeviceFlags.test(rsR2))
 	{
 		// try to initialize R2
-		Log("Loading DLL:",	r2_name);
+		Log("Loading DLL:", r2_name);
 		hRender = LoadLibrary(r2_name);
 		R_ASSERT2(hRender, "! ...Failed - incompatible hardware.");
-		g_current_renderer	= 2;
 	}
 }
 

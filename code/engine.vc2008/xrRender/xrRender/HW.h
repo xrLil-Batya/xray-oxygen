@@ -11,10 +11,10 @@
 #endif
 
 class  CHW
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	:	public pureAppActivate, 
 		public pureAppDeactivate
-#endif	//	USE_DX10
+#endif
 {
 //	Functions section
 public:
@@ -42,18 +42,18 @@ public:
 	void					FreeVidModeList			();
 
 #ifdef DEBUG
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	void	Validate(void)	{};
-#else	//	USE_DX10
+#else
 	void	Validate(void)	{	VERIFY(pDevice); VERIFY(pD3D); };
-#endif	//	USE_DX10
+#endif
 #else
 	void	Validate(void)	{};
 #endif
 
 //	Variables section
 public:
-#if defined(USE_DX11)	//	USE_DX10
+#ifdef USE_DX11
 	IDXGIAdapter1*			m_pAdapter;	//	pD3D equivalent
 	ID3D11Device*			pDevice;	//	combine with DX9 pDevice via typedef
 	ID3D11DeviceContext*    pContext;	//	combine with DX9 pDevice via typedef
@@ -64,22 +64,6 @@ public:
 	CHWCaps					Caps;
 
 	D3D_DRIVER_TYPE			m_DriverType;	//	DevT equivalent
-	DXGI_SWAP_CHAIN_DESC	m_ChainDesc;	//	DevPP equivalent
-	bool					m_bUsePerfhud;
-	D3D_FEATURE_LEVEL		FeatureLevel;
-#elif defined(USE_DX10)
-	IDXGIAdapter1*			m_pAdapter;	//	pD3D equivalent
-	ID3D10Device1*       	pDevice1;	//	combine with DX9 pDevice via typedef
-	ID3D10Device*        	pDevice;	//	combine with DX9 pDevice via typedef
-	ID3D10Device1*       	pContext1;	//	combine with DX9 pDevice via typedef
-	ID3D10Device*        	pContext;	//	combine with DX9 pDevice via typedef
-	IDXGISwapChain*         m_pSwapChain;
-	ID3D10RenderTargetView*	pBaseRT;	//	combine with DX9 pBaseRT via typedef
-	ID3D10DepthStencilView*	pBaseZB;
-
-	CHWCaps					Caps;
-
-	D3D10_DRIVER_TYPE		m_DriverType;	//	DevT equivalent
 	DXGI_SWAP_CHAIN_DESC	m_ChainDesc;	//	DevPP equivalent
 	bool					m_bUsePerfhud;
 	D3D_FEATURE_LEVEL		FeatureLevel;
@@ -95,18 +79,18 @@ public:
 	UINT					DevAdapter;
 	D3DDEVTYPE				DevT;
 	D3DPRESENT_PARAMETERS	DevPP;
-#endif	//	USE_DX10
+#endif
 
 #ifndef _MAYA_EXPORT
 	stats_manager			stats_manager;
 #endif
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	void			UpdateViews();
 	DXGI_RATIONAL	SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
 
 	virtual	void	OnAppActivate();
 	virtual void	OnAppDeactivate();
-#endif	//	USE_DX10
+#endif
 
 private:
 	bool					m_move_window;

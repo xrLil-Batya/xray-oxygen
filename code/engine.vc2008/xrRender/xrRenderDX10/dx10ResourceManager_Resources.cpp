@@ -53,7 +53,7 @@ ENGINE_API BOOL isGraphicDebugging;
 	{
 		DestroyShader(CS);
 	}
-#endif	//	USE_DX10
+#endif
 
 void fix_texture_name(LPSTR fn);
 
@@ -81,11 +81,11 @@ SState*		CResourceManager::_CreateState		(SimulatorStates& state_code)
 	// Create New
 	v_states.push_back				(xr_new<SState>());
 	v_states.back()->dwFlags		|= xr_resource_flagged::RF_REGISTERED;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	v_states.back()->state			= ID3DState::Create(state_code);
-#else	//	USE_DX10
+#else
 	v_states.back()->state			= state_code.record();
-#endif	//	USE_DX10
+#endif
 	v_states.back()->state_code		= state_code;
 	return v_states.back();
 }

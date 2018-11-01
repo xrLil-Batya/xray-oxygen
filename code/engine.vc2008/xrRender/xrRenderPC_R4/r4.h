@@ -80,7 +80,6 @@ public:
 		u32		distortion_enabled	: 1;
 
 		u32		sunfilter			: 1;
-		u32		sunstatic			: 1;
 		u32		sjitter				: 1;
 		u32		noshadows			: 1;
 		u32		Tshadows			: 1;						// transluent shadows
@@ -246,13 +245,12 @@ public:
 
 	inline bool is_sun()
 	{
-		if (o.sunstatic) return false;
 		Fcolor sun_color = ((light*)Lights.sun._get())->color;
 		return (ps_r_flags.test(R_FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b)>EPS));
 	}
+
 public:
 	// feature level
-	virtual bool					is_sun_static			()	{ return o.sunstatic;}
 	virtual DWORD					get_dx_level			()	{ return HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1?0x000A0001:0x000A0000; }
 
 	// Loading / Unloading

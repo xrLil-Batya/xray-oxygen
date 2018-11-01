@@ -177,10 +177,10 @@ IC	bool	cmp_ps_mat			(mapMatrixPS::value_type& N1, mapMatrixPS::value_type& N2)
 #endif
 }
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 IC	bool	cmp_gs_nrm			(mapNormalGS::value_type& N1, mapNormalGS::value_type& N2)			{	return (N1.second.ssa > N2.second.ssa);		}
 IC	bool	cmp_gs_mat			(mapMatrixGS::value_type& N1, mapMatrixGS::value_type& N2)			{	return (N1.second.ssa > N2.second.ssa);		}
-#endif	//	USE_DX10
+#endif
 
 IC	bool	cmp_cs_nrm			(mapNormalCS::value_type& N1, mapNormalCS::value_type& N2)			{	return (N1.second.ssa > N2.second.ssa);		}
 IC	bool	cmp_cs_mat			(mapMatrixCS::value_type& N1, mapMatrixCS::value_type& N2)			{	return (N1.second.ssa > N2.second.ssa);		}
@@ -264,7 +264,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool)
 			{
 				RCache.set_VS(vs_it->first);
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#ifdef USE_DX11
 				//	GS setup
 				mapNormalGS& gs = vs_it->second;
 				gs.ssa = 0;
@@ -350,7 +350,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool)
 				}
 				nrmPS.clear();
 				ps.clear();
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#ifdef USE_DX11
 				}
 			nrmGS.clear();
 			gs.clear();
@@ -376,7 +376,7 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 	{
 		RCache.set_VS(vs_id->first);
 
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#ifdef USE_DX11
 		mapMatrixGS& gs = vs_id->second;
 		gs.ssa = 0;
 
@@ -465,7 +465,7 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 		}
 		matPS.clear();
 		ps.clear();
-#if defined(USE_DX10) || defined(USE_DX11) || defined(USE_OGL)
+#ifdef USE_DX11
 		}
 	matGS.clear();
 	gs.clear();

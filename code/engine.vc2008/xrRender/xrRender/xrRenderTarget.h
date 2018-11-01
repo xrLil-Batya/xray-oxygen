@@ -30,7 +30,8 @@ public:
 	IBlender*					b_accum_reflected;
 	IBlender*					b_ssao;
 	IBlender*					b_combine;
-#if defined(USE_DX11) || defined(USE_DX10)
+
+#ifdef USE_DX11
 	IBlender*					b_ssao_msaa[8];
 	IBlender*					b_combine_msaa[8];
 	IBlender*					b_accum_mask_msaa[8];
@@ -44,6 +45,7 @@ public:
 #else
 	IBlender*					b_accum_direct_cascade;
 #endif
+
 #ifdef DEBUG
 	struct		dbg_line_t 
 	{
@@ -155,7 +157,6 @@ private:
 	ref_rt						rt_smaa_edgetex;
 	ref_rt						rt_smaa_blendtex;
     ref_shader					s_pp_taa;
-//	ref_rt						rt_prev_frame0;
 	
 	//	generate min/max
 	ref_shader					s_create_minmax_sm;
@@ -267,7 +268,7 @@ public:
 	BOOL						u_need_PP				();
 	bool						u_need_CM				();
 
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#ifndef USE_DX11
 	void						enable_dbt_bounds		(light* L);
 	void						u_stencil_optimize		(BOOL common_stencil = TRUE);
 	BOOL						u_DBT_enable			(float zMin, float zMax);

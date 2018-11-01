@@ -67,9 +67,9 @@ void dxDebugRender::add_lines		(Fvector const *vertices, u32 const &vertex_count
 
 void dxDebugRender::NextSceneMode()
 {
-//	This mode is not supported in DX10 and DX11
-#if !defined(USE_DX10) && !defined(USE_DX11)
-	HW.Caps.SceneMode = (HW.Caps.SceneMode+1)%3;
+	// This mode is not supported in DX11
+#ifndef USE_DX11
+	HW.Caps.SceneMode = (HW.Caps.SceneMode + 1) % 3;
 #endif
 }
 
@@ -100,12 +100,12 @@ void dxDebugRender::CacheSetCullMode(CullMode m)
 
 void dxDebugRender::SetAmbient(u32 colour)
 {
-#if defined(USE_DX10) || defined(USE_DX11)
-	//	TODO: DX10: Check if need this for DX10
-	VERIFY(!"Not implemented for DX10");
-#else	//	USE_DX10
+#ifdef USE_DX11
+	//	TODO: DX11: Check if need this for DX11
+	VERIFY(!"Not implemented for DX11");
+#else
 	CHK_DX(HW.pDevice->SetRenderState (D3DRS_AMBIENT, colour));
-#endif	//	USE_DX10
+#endif
 }
 
 void dxDebugRender::SetDebugShader(dbgShaderHandle shdHandle)
