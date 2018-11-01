@@ -1,10 +1,10 @@
 //Shader Toolbox Version 0.1b
 //Xray-Oxygen 1.7
-//Author: MatthewKush
+//Authors: MatthewKush, Xray Oxygen team
 //Credits: GodComplex, WickedEngine, MaxestFramework, Nvidia, AMD, Intel, MJP, and many others
 //TODO: Organize this properly.
 
-#define half float
+//#define half float
 #define vec float
 #define vec2 float2
 #define vec3 float3
@@ -14,10 +14,7 @@
 #define mat4 float4x4 
 #define fract frac
 
-#define TEXTURE_SAMPLING
-
-
-#ifdef 0
+//#define TEXTURE_SAMPLING
 
 #define PI_SHORT 3.14159265359
 #define PI_LONG 3.1415926535897932384626433832795
@@ -35,19 +32,9 @@
 #define HALF_MAX 65504.0
 #define UINT_MAX 0xFFFFFFFFu
 
-#endif
-
 
 #ifdef TEXTURE_SAMPLING
-
-#ifdef SM_4_0 | SM_4_1 | SM_5_0
-
-float2 2DTextureSample(Texture2D myTex, Sampler smp_example, float2 uv)
-{
-    return myTex.Sample(smp_example, uv);
-}
-
-float4 getTexel(float2 uv, float2 myTexResolution)
+float4 getTexel(float2 uv, float2 myTexResolution) //todo: fix this so it can be used
 {
     p = p*myTexResolution + 0.5;
 
@@ -57,24 +44,29 @@ float4 getTexel(float2 uv, float2 myTexResolution)
     p = i + f;
 
     p = (p - 0.5)/myTexResolution;
-    return texture2D( myTex, p );
-}
-#endif //SM_4_0 | SM_4_1 | SM_5_0
-
+#ifdef SM_4_0 | SM_4_1 | SM_5_0  
+    return myTex.Sample(smp_rtlinear, p); //smp_rtlinear as this is already filtering it better than Aniso.
+#else
+    return tex2D( myTex, p );
 #endif
+}
+
+#endif //TEXTURE_SAMPLING
 
 
 #ifdef FILTERING
 //Box filtered checkerboard
-float checkers( in vec2 p, in vec2 dpdx, in vec2 dpdy )
+//Checkboard filtering is a new technique that works well. We can use this creatively.
+float checkers( in float2 p, in float2 dpdx, in float2 dpdy )
 {
-    vec2 w = max(abs(dpdx), abs(dpdy));
-    vec2 i = 2.0*(abs(fract((p-0.5*w)*0.5)-0.5)-
-                  abs(fract((p+0.5*w)*0.5)-0.5))/w;
+    float2 w = max(abs(dpdx), abs(dpdy));
+    float2 i = 2.0*(abs(frac((p-0.5*w)*0.5)-0.5)-
+                  abs(frac((p+0.5*w)*0.5)-0.5))/w;
     return 0.5 - 0.5*i.x*i.y;                  
 }
 
 //Box filtered grid
+//Todo: possibly remove, can't think of any uses for this
 float grid( in vec2 p, in vec2 dpdx, in vec2 dpdy )
 {
     const float N = 10.0; // grid ratio
@@ -86,43 +78,26 @@ float grid( in vec2 p, in vec2 dpdx, in vec2 dpdy )
     return (1.0-i.x)*(1.0-i.y);
 }
 
-// improved bilinear interpolated texture fetch
-vec4 textureGood( sampler2D sam, vec2 uv )
-{
-    vec2 res = textureSize( sam );
-
-    vec2 st = uv*res - 0.5;
-
-    vec2 iuv = floor( st );
-    vec2 fuv = fract( st );
-
-    vec4 a = texture( sam, (iuv+vec2(0.5,0.5))/res );
-    vec4 b = texture( sam, (iuv+vec2(1.5,0.5))/res );
-    vec4 c = texture( sam, (iuv+vec2(0.5,1.5))/res );
-    vec4 d = texture( sam, (iuv+vec2(1.5,1.5))/res );
-
-    return mix( mix( a, b, fuv.x),
-                mix( c, d, fuv.x), fuv.y );
-}
 #endif
 
 #ifdef REMAPPING
 /*******************************************************************
     Spherical map sampling
 *******************************************************************/
+//I was thinking of changing the skybox to a skysphere, hence this function
 float2 dirToSphericalCrd(float3 direction)
 {
     float3 p = normalize(direction);
     float2 uv;
-    uv.x = (1 + atan2(-p.z, p.x) / M_PI) * 0.5;
-    uv.y = 1 - (-acos(p.y) / M_PI);
+    uv.x = (1 + atan2(-p.z, p.x) / PI_SHORT) * 0.5;
+    uv.y = 1 - (-acos(p.y) / PI_SHORT);
     return uv;
 }
 
 float3 sphericalCrdToDir(float2 uv)
 {
-    float phi = M_PI * uv.y;
-    float theta = M_PI2 * uv.x - (M_PI / 2.0f);
+    float phi = PI_SHORT * uv.y;
+    float theta = TWO_PI_SHORT * uv.x - (PI_SHORT / 2.0f);
 
     float3 dir;
     dir.x = sin(phi) * sin(theta);
@@ -130,11 +105,6 @@ float3 sphericalCrdToDir(float2 uv)
     dir.z = sin(phi) * cos(theta);
 
     return normalize(dir);
-}
-
-mat2 scale(vec2 _scale){
-    return mat2(_scale.x,0.0,
-                0.0,_scale.y);
 }
 
 #endif
@@ -265,14 +235,9 @@ float box(in vec2 _st, in vec2 _size){
     return uv.x*uv.y;
 }
 
-float cross(in vec2 _st, float _size){
-    return  box(_st, vec2(_size,_size/4.)) +
-            box(_st, vec2(_size/4.,_size));
-}
-
 #endif
 
-#ifdef THE_MATRIX
+#ifdef MATRIX_FUNCTIONS
 
 mat2 rotate2d(float _angle){
     return mat2(cos(_angle),-sin(_angle),
@@ -320,6 +285,13 @@ void ConvertRoughnessToAnisotropy(float roughnessT, float roughnessB, out float 
     anisotropy = ((roughnessT - roughnessB) / max(roughnessT + roughnessB, 0.0001));
 }
 
+float ConvertGlossToRoughness(float gloss) //gloss = gbd.gloss, or if in sload.h S.gloss.
+{
+float Rough = 1.0 - gloss;
+float Roughness = Rough * Rough;
+return Roughness;
+}
+
 #endif
 
 #ifdef STEREO_PROJECTION
@@ -340,7 +312,7 @@ float4 stereo1(float4 v) { // stereographic projection inverse function: 3d spac
 #endif
 
 #ifdef TONEMAP_PASS
-
+//Note: Vanilla tonemapper is called "Reinhard with Maximum Luminance"
 float3 AcesToneMap(float3 color)
 {
     float A = 2.51f;
@@ -353,8 +325,20 @@ float3 AcesToneMap(float3 color)
     return color;
 }
 
+float3 FastToneMap( float3 hdr )
+{
+    return 1 - exp2(-hdr);
+}
+
+float3 FastInverseToneMap(float3 sdr)
+{
+    return -log2(max(1e-6, 1 - sdr));
+}
+
 #endif
 
+
+#ifdef 0 //giant mess, clean me.
 // Helper functions:
 float slopeFromT (float t, float A, float B, float C){
   float dtdx = 1.0/(3.0*A*t*t + 2.0*B*t + C); 
@@ -613,3 +597,4 @@ float cellular(vec2 p) {
     }
     return m_dist;
 }
+#endif

@@ -40,13 +40,11 @@ void CRenderTarget::phase_combine()
 		phase_ssao();
 
 	// low/hi RTs
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	if (!RImplementation.o.dx10_msaa)
 	{
 		u_setrt(rt_Generic_0, rt_Generic_1, nullptr, HW.pBaseZB);
-#ifdef USE_DX11
 		RCache.Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
-#endif
 	}
 	else
 	{
@@ -61,19 +59,19 @@ void CRenderTarget::phase_combine()
 	// Draw skybox & clouds without Z-test to avoid silhouettes.
 	// However, it's a bit slower process.
 	RCache.set_ColorWriteEnable();
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#ifndef USE_DX11
 	// RCache.set_Z(FALSE);
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
 #endif
 	Environment().RenderSky();
 	Environment().RenderClouds();
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#ifndef USE_DX11
 	// RCache.set_Z(TRUE);
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
 #endif
 	
 	RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00);	// stencil should be >= 1
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#ifndef USE_DX11
 	if (RImplementation.o.nvstencil)
 	{
 		u_stencil_optimize(FALSE);
@@ -148,7 +146,7 @@ void CRenderTarget::phase_combine()
 		t_envmap_1->surface_set(e1); _RELEASE(e1);
 
 		// Fill VB
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
 		pv->set(-1,  1,	0, 1, 0, 0,			scale_Y	); pv++;
 		pv->set(-1, -1,	0, 0, 0, 0,			0		); pv++;
@@ -182,7 +180,7 @@ void CRenderTarget::phase_combine()
 		RCache.set_c				("env_color",		envclr);
 		RCache.set_c				("ssao_params",		fSSAONoise, fSSAOKernelSize, 0.0f, 0.0f);
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		if (!RImplementation.o.dx10_msaa)
 			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 		else
@@ -217,7 +215,7 @@ void CRenderTarget::phase_combine()
 	{
 		PIX_EVENT(Forward_rendering);
 		// LDR RT
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		if (!RImplementation.o.dx10_msaa)
 			u_setrt(rt_Generic_0, nullptr, nullptr, HW.pBaseZB);
 		else
@@ -240,7 +238,7 @@ void CRenderTarget::phase_combine()
 		phase_combine_volumetric();
 	}
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	if (RImplementation.o.dx10_msaa)
 	{
 		// We need to resolve rt_Generic_1 into rt_Generic_1_r
@@ -262,7 +260,7 @@ void CRenderTarget::phase_combine()
 		RCache.set_ColorWriteEnable	();
 
 		// rt_Generic_1: xy - displacement, z - bloom factor, w - opacity
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		if (!RImplementation.o.dx10_msaa)
 			u_setrt(rt_Generic_1, nullptr, nullptr, HW.pBaseZB);
 		else
@@ -316,7 +314,7 @@ void CRenderTarget::phase_combine()
 
 		float _w = float(Device.dwWidth);
 		float _h = float(Device.dwHeight);
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		p0.set(0.0f, 0.0f);
 		p1.set(1.0f, 1.0f);
 
@@ -349,7 +347,7 @@ void CRenderTarget::phase_combine()
 		vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
 		vDofKernel.mul(ps_r_dof_kernel_size);
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		if (!RImplementation.o.dx10_msaa)
 			RCache.set_Element(s_combine->E[bDistort ? 2 : 1]);
 		else
@@ -405,7 +403,7 @@ void CRenderTarget::phase_combine()
 
 	// Final stage: copy rt_Color to back buffer. Let's do it with GPU.
 	{
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		if (RImplementation.o.dx10_msaa)
 			RenderScreenQuad(Device.dwWidth, Device.dwHeight, HW.pBaseRT, s_combine_msaa[0]->E[3]);
 		else
@@ -460,7 +458,7 @@ void CRenderTarget::phase_combine()
 	else
 		dbg_lines		= saved_dbg_lines;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	StateManager.SetDepthEnable(TRUE);
 	StateManager.SetDepthFunc(D3DCMP_LESSEQUAL);
 	StateManager.Apply();
@@ -485,7 +483,7 @@ void CRenderTarget::phase_wallmarks ()
 	// Targets
 	RCache.set_RT(nullptr, 2);
 	RCache.set_RT(nullptr, 1);
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	if (!RImplementation.o.dx10_msaa)
 		u_setrt(rt_Color, nullptr, nullptr, HW.pBaseZB);
 	else
@@ -509,7 +507,7 @@ void CRenderTarget::phase_combine_volumetric()
 	float scale_X	= float(Device.dwWidth) / float(TEX_jitter);
 	float scale_Y	= float(Device.dwHeight) / float(TEX_jitter);
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	if (!RImplementation.o.dx10_msaa)
 		u_setrt(rt_Generic_0, rt_Generic_1, nullptr, HW.pBaseZB);
 	else
@@ -522,7 +520,7 @@ void CRenderTarget::phase_combine_volumetric()
 	RCache.set_ColorWriteEnable(D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
 	{
 		// Fill VB
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
 		pv->set(-1,	 1,	0, 1, 0, 0,			scale_Y	); pv++;
 		pv->set(-1,	-1,	0, 0, 0, 0,			0		); pv++;

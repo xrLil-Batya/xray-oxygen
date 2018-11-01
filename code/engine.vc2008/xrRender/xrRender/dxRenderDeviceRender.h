@@ -23,7 +23,7 @@ public:
 	virtual void	Copy(IRenderDeviceRender &_in);
 
 	//	Gamma correction functions
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	virtual DXGI_GAMMA_CONTROL	GetGammaLUT() const;
 #else
 	virtual D3DGAMMARAMP		GetGammaLUT() const;

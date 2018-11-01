@@ -1,10 +1,10 @@
 #pragma once
 
-#if defined(USE_DX11) || defined(USE_DX10)
+#ifdef USE_DX11
 
 #	include "..\xrRenderDX10\DXCommonTypes.h"
 
-#else	//	USE_DX10
+#else
 
 typedef	IDirect3DVertexShader9	ID3DVertexShader;
 typedef	IDirect3DPixelShader9	ID3DPixelShader;
@@ -25,4 +25,4 @@ typedef	IDirect3DStateBlock9	ID3DState;
 
 #define DX10_ONLY(expr)			do {} while (0)
 
-#endif	//	USE_DX10
+#endif

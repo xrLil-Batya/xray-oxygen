@@ -165,10 +165,8 @@ public:
 	// data
 	CFrustum						ViewBase;
 	CFrustum*						View;
-public:
-	// feature level
-	virtual bool					is_sun_static			() =0;
 
+public:
 	// Loading / Unloading
 	virtual	void					create					()											= 0;
 	virtual	void					destroy					()											= 0;

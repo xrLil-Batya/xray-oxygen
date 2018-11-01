@@ -3,7 +3,7 @@
 void CRenderTarget::PhaseVignette()
 {
 	// Pass 0
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
 	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_vignette->E[0]);

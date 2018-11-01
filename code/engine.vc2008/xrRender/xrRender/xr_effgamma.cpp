@@ -14,7 +14,7 @@ void CGammaControl::GetIP(float& G, float &B, float& C, Fvector& Balance)
 	Balance.set(cBalance);
 }
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 void CGammaControl::Update() 
 {
 	if (HW.pDevice) 
@@ -62,7 +62,7 @@ void CGammaControl::GenLUT()
 	}
 }
 
-#else	//	USE_DX10
+#else
 
 IC u16 clr2gamma(float c)
 {
@@ -93,4 +93,4 @@ void CGammaControl::GenLUT()
 		G.blue[i] = clr2gamma(c*cBalance.z);
 	}
 }
-#endif	//	USE_DX10
+#endif
