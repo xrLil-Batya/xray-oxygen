@@ -8,6 +8,9 @@ namespace XRay
 {
 	public ref class Torch
 	{
+	internal:
+	CTorch* pNativeObject;
+	
 	public:
 		Torch(IntPtr InNativeObject);
 
@@ -23,10 +26,5 @@ namespace XRay
 				torch->Switch(value);
 			}
 		}
-
-	public:
-	
-	CTorch* pNativeObject;
-	
 	};
 }
