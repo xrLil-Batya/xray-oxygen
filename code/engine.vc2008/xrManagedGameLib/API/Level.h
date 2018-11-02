@@ -1,49 +1,31 @@
 #pragma once
-#include "../xrGame/Level.h"
-#include "../xrGame/level_graph.h"
+class CLevel;
+class CLevelGraph;
 
 using namespace System;
 
 namespace XRay
 {
-	ref class LevelGraph
+	ref class LevelGraph abstract
 	{
-	internal:
-		CLevelGraph *pNativeGraph;
-
 	public:
-		LevelGraph(IntPtr pNativeObj) : pNativeGraph((CLevelGraph*)pNativeObj.ToPointer()) {}
-		LevelGraph();
-
 		/// <summaru> Returns Level ID</summaru>
-		property u32 LevelID
+		static property u32 LevelID
 		{
-			u32 get()
-			{
-				return pNativeGraph->level_id();
-			}
+			u32 get();
 		}
 		/// <summaru> Returns Vertex count</summaru>
-		property u32 VertexCount
+		static property u32 VertexCount
 		{
-			u32 get()
-			{
-				return pNativeGraph->header().vertex_count();
-			}
+			u32 get();
 		}
 	};
 
-	public ref class Level
+	public ref class Level abstract
 	{
-	internal:
-		CLevel* pNativeObject;
-
 	public:
-		Level();
-		Level(IntPtr InNativeObject);
-
 		/// <summary>Returns level name from a text files</summary>
-		property ::System::String^ LevelName
+		static property ::System::String^ LevelName
 		{
 			::System::String^ get();
 		}

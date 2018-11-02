@@ -24,7 +24,7 @@
 #include "../../smart_cover_animation_planner.h"
 #include "../../script_game_object.h"
 #include "../../stalker_decision_space.h"
-#include "../../weapon.h"
+#include "../../items/weapon.h"
 
 extern const float MIN_SUITABLE_ENEMY_DISTANCE = 3.f;
 

@@ -5,12 +5,14 @@
 using namespace System::Reflection;
 using namespace System::IO;
 using namespace System::CodeDom::Compiler;
-using namespace Microsoft::CSharp;
+using namespace Microsoft;
 
 xrScriptCompiler::xrScriptCompiler()
 {
 	PrivateInfo = new xrScriptCompiler_Private();
-	SourceCodes = gcnew List<String ^>();
+	CSSourceCodes = gcnew List<String ^>();
+	VBSourceCodes = gcnew List<String ^>();
+	Parameters = gcnew CompilerParameters();
 }
 
 xrScriptCompiler::~xrScriptCompiler()
@@ -18,55 +20,65 @@ xrScriptCompiler::~xrScriptCompiler()
 	delete PrivateInfo;
 }
 
-bool xrScriptCompiler::CompileScripts()
+CompilerResults^ xrScriptCompiler::FindCSScripts()
 {
 	string_path ScriptFolder;
-	string_path ShaderFolder;
 	FS.update_path(ScriptFolder, "$game_scripts$", "");
-	FS.update_path(ShaderFolder, "$game_shaders$", "");
 
-	FS_FileSet ScriptFiles;
-	FS_FileSet ShaderScriptFiles;
-	FS.file_list(ScriptFiles, ScriptFolder, FS_ListFiles, "*.cs");
-	//FS.file_list(ShaderScriptFiles, ShaderFolder, FS_ListFiles, "*.cs");
+	FS_FileSet CSScriptFiles;
+	FS.file_list(CSScriptFiles, ScriptFolder, FS_ListFiles, "*.cs");
 
-	if (ScriptFiles.empty() && ShaderScriptFiles.empty())
+	if (CSScriptFiles.empty())
 	{
-		Log("CSharp compiler: nothing compile, skip");
-		return false;
+		Log("Spectre compiler: nothing compile, skip");
+		return nullptr;
 	}
 
-	for (const FS_File& file : ShaderScriptFiles)
-	{
-		string_path scriptPath;
-		FS.update_path(scriptPath, "$game_shaders$", file.name.c_str());
-
-		String^ sourceFile = gcnew String(scriptPath);
-		SourceCodes->Add(sourceFile);
-	}
-
-	for (const FS_File& file : ScriptFiles)
+	for (const FS_File& file : CSScriptFiles)
 	{
 		string_path scriptPath;
 		FS.update_path(scriptPath, "$game_scripts$", file.name.c_str());
 
-		String^ sourceFile = gcnew String(scriptPath);
-		SourceCodes->Add(sourceFile);
+		CSSourceCodes->Add(gcnew String(scriptPath));
 	}
 
-	CSharpCodeProvider^ provider = gcnew CSharpCodeProvider();
-	CompilerParameters^ parameters = gcnew CompilerParameters();
-	parameters->ReferencedAssemblies->Add(GetPathToThisAssembly());
-	parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
-	parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
-	parameters->GenerateInMemory = false;
-	parameters->GenerateExecutable = false;
-	///#TODO: Generate release version without debug info
-	parameters->IncludeDebugInformation = true;
-	parameters->OutputAssembly = "xrDotScripts.dll";
-	//list all files in directory
-	parameters->CompilerOptions = "-platform:x64";
-	CompilerResults^ result = provider->CompileAssemblyFromFile(parameters, SourceCodes->ToArray());
+	CSharp::CSharpCodeProvider^ provider = gcnew CSharp::CSharpCodeProvider();
+	return provider->CompileAssemblyFromFile(Parameters, CSSourceCodes->ToArray());
+}
+
+CompilerResults^ xrScriptCompiler::FindVBScripts()
+{
+	string_path ScriptFolder;
+	FS.update_path(ScriptFolder, "$game_scripts$", "");
+
+	FS_FileSet VBScriptFiles;
+	FS.file_list(VBScriptFiles, ScriptFolder, FS_ListFiles, "*.vb");
+
+	if (VBScriptFiles.empty())
+		return nullptr;
+
+	for (const FS_File& file : VBScriptFiles)
+	{
+		string_path scriptPath;
+		FS.update_path(scriptPath, "$game_scripts$", file.name.c_str());
+
+		VBSourceCodes->Add(gcnew String(scriptPath));
+	}
+
+	// Add C# scripts module
+	Parameters->OutputAssembly = GetPathToBuildAssembly("xrExternalDotScripts.dll");
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrDotScripts.dll"));
+
+	// Build VB.NET scripts
+	VisualBasic::VBCodeProvider^ provider = gcnew VisualBasic::VBCodeProvider();
+	return provider->CompileAssemblyFromFile(Parameters, VBSourceCodes->ToArray());
+}
+
+bool xrScriptCompiler::ErrorHadler(CompilerResults^ result)
+{
+	if (!result)
+		return false;
+
 	if (result->Errors->HasErrors)
 	{
 		//print errors
@@ -75,6 +87,11 @@ bool xrScriptCompiler::CompileScripts()
 		for (int errInd = 0; errInd < result->Errors->Count; errInd++)
 		{
 			CompilerError^ error = result->Errors[errInd];
+
+			string1024 PathToResource;
+			ConvertDotNetStringToAscii(error->ToString(), PathToResource);
+			MessageBox(0, PathToResource, "Error", 0);
+
 			sb->Append(error->ToString());
 			sb->Append(L" \n");
 		}
@@ -99,13 +116,10 @@ bool xrScriptCompiler::CompileScripts()
 		XRay::Log::Error(ErrLog);
 	}
 
-
-	//load assembly
 	Assembly^ ScriptModule = nullptr;
-	String^ ModuleAddress = System::IO::Directory::GetCurrentDirectory() + "\\" + parameters->OutputAssembly;
 	try
 	{
-		ScriptModule = Assembly::LoadFile(ModuleAddress);
+		ScriptModule = Assembly::LoadFile(Parameters->OutputAssembly);
 	}
 	catch (FileNotFoundException^ fileNotFound)
 	{
@@ -138,10 +152,32 @@ bool xrScriptCompiler::CompileScripts()
 	}
 
 	scriptAssembly = ScriptModule;
-	if (scriptAssembly == nullptr) return false;
-	//invoke in all classes 'OnLoad'
 
-	return true;
+	return scriptAssembly != nullptr;
+}
+
+bool xrScriptCompiler::CompileScripts()
+{
+	Parameters->ReferencedAssemblies->Add(GetPathToThisAssembly());
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedUILib.dll"));
+	Parameters->GenerateInMemory = false;
+	Parameters->GenerateExecutable = false;
+
+	///#TODO: Generate release version without debug info
+	Parameters->IncludeDebugInformation = true;
+	Parameters->OutputAssembly = GetPathToBuildAssembly("xrDotScripts.dll");
+	//list all files in directory
+	Parameters->CompilerOptions = "-platform:x64";
+
+	if (ErrorHadler(FindCSScripts()))
+	{
+		ErrorHadler(FindVBScripts());
+		return true;
+	}
+	
+	return false;
 }
 
 System::Reflection::Assembly^ xrScriptCompiler::GetAssembly()

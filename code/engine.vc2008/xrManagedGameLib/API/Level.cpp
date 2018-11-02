@@ -1,23 +1,20 @@
 ﻿#include "stdafx.h"
 #include "Level.h"
+#include "../xrGame/level_graph.h"
+#include "../xrGame/Level.h"
 #include "../xrGame/ai_space.h"
 
-XRay::Level::Level()
+u32 XRay::LevelGraph::LevelID::get()
 {
-	pNativeObject = (CLevel*)&::Level();
+	return ai().level_graph().level_id();
 }
 
-XRay::Level::Level(IntPtr InNativeObject)
+u32 XRay::LevelGraph::VertexCount::get()
 {
-	CAST_TO_NATIVE_OBJECT(CLevel, InNativeObject);
-}
-
-XRay::LevelGraph::LevelGraph()
-{
-	pNativeGraph = &ai().level_graph();
+	return  ai().level_graph().header().vertex_count();
 }
 
 System::String^ XRay::Level::LevelName::get()
 {
-	return gcnew ::System::String(pNativeObject->name_translated().c_str());
+	return gcnew ::System::String(::Level().name_translated().c_str());
 }

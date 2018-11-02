@@ -128,6 +128,7 @@
     <ClInclude Include="API\NativeObject.h" />
     <ClInclude Include="API\Object.h" />
     <ClInclude Include="ClassRegistrator.h" />
+    <ClInclude Include="GamePersistence.h" />
     <ClInclude Include="HelpfulMacro.h" />
     <ClInclude Include="FunctionInvoker.h" />
     <ClInclude Include="IFunctionInvoker.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="CallbackTypes.cpp" />
     <ClCompile Include="ClassRegistrator.cpp" />
+    <ClCompile Include="GamePersistence.cpp" />
     <ClCompile Include="ISpectreEngineLib.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -9,7 +9,7 @@ void CRenderTarget::PhaseGammaGenerateLUT()
 	float _h = float(Device.dwHeight);
 
 	Fvector2 p0, p1;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	p0.set(0.0f, 0.0f);
 	p1.set(1.0f, 1.0f);
 #else
@@ -65,7 +65,7 @@ void CRenderTarget::PhaseGammaGenerateLUT()
 void CRenderTarget::PhaseGammaApply()
 {
 	// Copy back buffer content to the rt_Generic_0
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	ID3DResource* pTmpTexture = rt_Generic_0->pTexture->surface_get();
 	HW.pBaseRT->GetResource(&pTmpTexture);
 	HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), pTmpTexture);
@@ -85,7 +85,7 @@ void CRenderTarget::SaveGammaLUT()
 {
 	ID3DBlob* saved = nullptr;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	ID3DResource* pSrcTexture;
 	rt_GammaLUT->pRT->GetResource(&pSrcTexture);
 	VERIFY(pSrcTexture);
