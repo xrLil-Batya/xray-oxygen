@@ -69,7 +69,7 @@ float shadow_sample = 0.0;
 }	
 return float(shadow_sample / 4.0);
 	
-#ifdef 0
+#if 0
     float	s0		= sample_hw_pcf( tc, float4( -1, -1, 0, 0) );
     float	s1		= sample_hw_pcf( tc, float4( +1, -1, 0, 0) );
     float	s2		= sample_hw_pcf( tc, float4( -1, +1, 0, 0) );
