@@ -18,9 +18,6 @@ xrScriptCompiler::xrScriptCompiler()
 xrScriptCompiler::~xrScriptCompiler()
 {
 	delete PrivateInfo;
-	delete CSSourceCodes;
-	delete VBSourceCodes;
-	delete Parameters;
 }
 
 CompilerResults^ xrScriptCompiler::FindCSScripts()
