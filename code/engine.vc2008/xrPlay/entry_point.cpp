@@ -95,6 +95,35 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 #endif
 
+	// Might be useful for shader developers. No need to clear shaders cache folder each time.
+	if (strstr(Core.Params, "-delete_shaderscache"))
+	{
+		xr_string ShadersCacheFolderPath;
+		ShadersCacheFolderPath = FS.get_path("$app_data_root$")->m_Path;
+		ShadersCacheFolderPath.append("shaders_cache\\*");
+
+		int len = strlen(ShadersCacheFolderPath.c_str()) + 2; // required to set 2 nulls at end of argument to SHFileOperation.
+		char* tempdir = (char*)malloc(len);
+		memset(tempdir, 0, len);
+		strcpy(tempdir, ShadersCacheFolderPath.c_str());
+
+		SHFILEOPSTRUCT file_op = {
+			NULL,
+			FO_DELETE,
+			tempdir,
+			"",
+			FOF_NOCONFIRMATION |
+			FOF_NOERRORUI |
+			FOF_SILENT,
+			false,
+			0,
+			""
+		};
+		SHFileOperation(&file_op);
+		free(tempdir); // Since we malloc-ed
+	}
+
+
 	// If we want to start launcher
 	if (strstr(lpCmdLine, "-launcher"))
 	{
