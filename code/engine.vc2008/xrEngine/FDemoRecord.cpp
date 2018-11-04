@@ -449,7 +449,7 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
 	{
 		if (g_pGameLevel->CurrentEntity())
 		{
-			g_pGameLevel->CurrentEntity()->ForceTransform(m_Camera);
+			g_pGameLevel->CurrentEntity()->ForceTransform(CastToGSCMatrix(m_Camera));
 			fLifeTime = -1;
 		}
 	}
