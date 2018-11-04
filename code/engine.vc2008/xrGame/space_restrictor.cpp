@@ -256,7 +256,7 @@ void CSpaceRestrictor::OnRender	()
 //DRAW name
 
 		Fmatrix		res;
-		res.mul		(Device.mFullTransform, XFORM());
+		res.mul		(CastToGSCMatrix(Device.mFullTransform), XFORM());
 
 		Fvector4	v_res;
 
