@@ -290,6 +290,7 @@
     <ClInclude Include="date_time.h" />
     <ClInclude Include="DynamicSplash.h" />
     <ClInclude Include="IGame_Actor.h" />
+    <ClInclude Include="IGame_AnselSDK.h" />
     <ClInclude Include="ILoadingScreen.h" />
     <ClInclude Include="DiscordRichPresense.h" />
     <ClInclude Include="spectre\ExternalCallbackTypes.h" />
@@ -422,6 +423,7 @@
     <ClCompile Include="date_time.cpp" />
     <ClCompile Include="defines.cpp" />
     <ClCompile Include="DiscordRichPresense.cpp" />
+    <ClCompile Include="IGame_AnselSDK.cpp" />
     <ClCompile Include="spectre\ExternalCallbackTypes.cpp" />
     <ClCompile Include="spectre\Spectre.cpp" />
     <ClCompile Include="DynamicSplash.cpp" />

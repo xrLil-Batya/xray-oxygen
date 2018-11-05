@@ -130,6 +130,7 @@
     <ClInclude Include="API\Level.h" />
     <ClInclude Include="API\PDA.h" />
     <ClInclude Include="API\PhysicalGameObject.h" />
+    <ClInclude Include="API\Torch.h" />
     <ClInclude Include="GameClassRegistrator.h" />
     <ClInclude Include="ISpectreGameLib.h" />
     <ClInclude Include="Resource.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="API\Level.cpp" />
     <ClCompile Include="API\PDA.cpp" />
     <ClCompile Include="API\PhysicalGameObject.cpp" />
+    <ClCompile Include="API\Torch.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="GameClassRegistrator.cpp" />
     <ClCompile Include="ISpectreGameLib.cpp" />

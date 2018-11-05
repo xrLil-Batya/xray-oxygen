@@ -301,10 +301,9 @@ public:
 	
 public:
 	CActorCameraManager&	Cameras				() 	{VERIFY(m_pActorEffector); return *m_pActorEffector;}
-	IC CCameraBase*			cam_Active			()	{return cameras[cam_active];}
-	IC CCameraBase*			cam_FirstEye		()	{return cameras[eacFirstEye];}
-    IC EActorCameras active_cam() {return cam_active;} //KD: need to know which cam active outside actor methods
-	virtual	void			cam_Set(EActorCameras style); //Alundaio: made public
+    IC EActorCameras		active_cam			() {return cam_active;} //KD: need to know which cam active outside actor methods
+	virtual	void			cam_Set				(EActorCameras style);  //Alundaio: made public
+
 protected:
 	void					cam_Update				(float dt, float fFOV);
 	void					cam_Lookout				( const Fmatrix &xform, float camera_height );
@@ -314,8 +313,6 @@ protected:
 	float					currentFOV				();
 
 	// Cameras
-	CCameraBase*			cameras[eacMaxCam];
-	EActorCameras			cam_active;
 	float					fPrevCamPos;
 	float					current_ik_cam_shift;
 	Fvector					vPrevCamDir;
