@@ -1,115 +1,174 @@
 #include "stdafx.h"
+#include "AnselWrapper.h"
+#include "../../xrEngine/IGame_Actor.h"
+#include "../../xrEngine/IGame_Persistent.h"
+#include "../../xrEngine/IGame_Level.h"
 
-#ifdef USE_ANSEL
 #include <AnselSDK/AnselSDK.h>
-#include <directxmath.h>
+#pragma comment(lib, "AnselSDK64.lib")
 
-struct ConstantBuffer
+AnselCamera::AnselCamera(CObject* p, u32 flags) : CCameraBase(p, flags) 
 {
-	DirectX::XMMATRIX mWorld;
-	DirectX::XMMATRIX mView;
-	DirectX::XMMATRIX mProjection;
-	DirectX::XMFLOAT4 vLightDir;
-	DirectX::XMFLOAT4 vLightColor;
-	DirectX::XMFLOAT4 vOutputColor;
-	float vTime;
-};
 
-ansel::Configuration config;
-bool g_AnselSessionIsActive = false;
-float g_LightIntensity = 0.666;
+}
 
-void InitAnsel()
+AnselCameraEffector::AnselCameraEffector() : CEffectorCam(cefAnsel, FLT_MAX) 
 {
-	if (!ansel::isAnselAvailable()) return;
 
-	// Configure the Ansel SDK
-	config.rotationalSpeedInDegreesPerSecond = 220.0f;
-	config.translationalSpeedInWorldUnitsPerSecond = 50.0f;
-	config.right = { 1.0f, 0.0f, 0.0f };
-	config.up = { 0.0f, 1.0f, 0.0f };
-	config.forward = { 0.0f, 0.0f, 1.0f };
-	config.captureLatency = 0;
-	config.captureSettleLatency = 0;
-	config.metersInWorldUnit = 2.0f;
-	config.fovType = ansel::kVerticalFov;
-	config.startSessionCallback = [](ansel::SessionConfiguration& conf, void* userPointer)
-	{
-		Device.Pause(true, 0, 0, "");
-		g_AnselSessionIsActive = true;
-		Device.mView_saved = Device.mView;
-		return ansel::kAllowed;
-	};
-	config.stopSessionCallback = [](void* userPointer)
-	{
-		Device.Pause(false, 0, 0, "");
-		g_AnselSessionIsActive = false;
-		Device.mView = Device.mView_saved;
-	};
-	config.startCaptureCallback = [](const ansel::CaptureConfiguration&, void*)
-	{
-		// turn non-uniform full screen effects like vignette off here
-	};
-	config.stopCaptureCallback = [](void*)
-	{
-		// turn disabled effects back on here
-	};
-	config.isCameraFovSupported = true;
-	config.isCameraOffcenteredProjectionSupported = true;
-	config.isCameraRotationSupported = true;
-	config.isCameraTranslationSupported = true;
-	config.userPointer = nullptr;
-	config.gameWindowHandle = Device.m_hWnd;
-	config.titleNameUtf8 = "AnselSDKIntegration";
-	ansel::setConfiguration(config);
+}
 
-	// Expose light intensity setting as user control in the Ansel UI
+BOOL AnselCameraEffector::ProcessCam(SCamEffectorInfo& info)
+{
+	info.dont_apply = false;
+
+	static ansel::Camera camera;
+	static nv::Vec3 right = { info.r.x, info.r.y, info.r.z };
+	static nv::Vec3 up = { info.n.x, info.n.y, info.n.z };
+	static nv::Vec3 forward = { info.d.x, info.d.y, info.d.z };
+
+	ansel::rotationMatrixVectorsToQuaternion(right, up, forward, camera.rotation);
+
+	camera.fov				 = info.fFov;
+	camera.aspectRatio		 = info.fAspect;
+	camera.farPlane			 = info.fFar;
+	camera.projectionOffsetX = pGameAnsel->offsetX;
+	camera.projectionOffsetY = pGameAnsel->offsetY;
+	camera.nearPlane		 = pGameAnsel->viewportNear;
+
+	ansel::updateCamera(camera);
+	ansel::quaternionToRotationMatrixVectors(camera.rotation, right, up, forward);
+
+	info.fFov					= camera.fov;
+	info.fAspect				= camera.aspectRatio;
+	info.fFar					= camera.farPlane;
+	pGameAnsel->offsetX			= camera.projectionOffsetX;
+	pGameAnsel->offsetY			= camera.projectionOffsetY;
+	pGameAnsel->viewportNear	= camera.nearPlane;
+
+	info.d.set(forward.x, forward.y, forward.z);
+	info.n.set(up.x, up.y, up.z);
+	info.r.set(right.x, right.y, right.z);
+	return TRUE;
+}
+
+AnselManager::AnselManager() : CGameAnsel(), pAnselModule(nullptr), Camera(this, 0), fTimeDelta(EPS_S)
+{
+	Timer.Start();
+}
+
+bool AnselManager::Load()
+{
+	Init();
+	pAnselModule = LoadLibrary("AnselSDK64.dll");
+	return pAnselModule;
+}
+
+void AnselManager::Unload()
+{
+	pAnselModule = nullptr;
+}
+
+bool AnselManager::Init() const
+{
+	if (pAnselModule && ansel::isAnselAvailable())
 	{
-		ansel::UserControlDesc ui_position_slider;
-		ui_position_slider.labelUtf8 = "Light intensity";
-		ui_position_slider.info.userControlId = 1;
-		ui_position_slider.info.userControlType = ansel::kUserControlSlider;
-		ui_position_slider.info.value = &g_LightIntensity;
-		ui_position_slider.callback = [](const ansel::UserControlInfo& info) {
-			g_LightIntensity = *reinterpret_cast<const float*>(info.value);
+		ansel::Configuration config;
+		config.titleNameUtf8 = u8"X-Ray Oxygen";
+		config.right = { 1, 0, 0 };
+		config.up = { 0, 1, 0 };
+		config.forward = { 0, 0, 1 };
+		config.fovType = ansel::kVerticalFov;
+		// XXX: Support camera move
+		config.isCameraTranslationSupported = false;
+		config.rotationalSpeedInDegreesPerSecond = 220.0f;
+		config.translationalSpeedInWorldUnitsPerSecond = 50.0f;
+		config.captureLatency = 0;
+		config.captureSettleLatency = 0;
+		config.gameWindowHandle = Device.m_hWnd;
+
+		static AnselManager* mutable_this = const_cast<AnselManager*>(this);
+		config.startSessionCallback = [](ansel::SessionConfiguration& conf, void* /*context*/)
+		{
+			if (!g_pGameLevel)
+				return ansel::kDisallowed;
+
+			pGameAnsel->isActive = true;
+
+			if (g_pGamePersistent->m_pMainMenu->IsActive())
+				g_pGamePersistent->m_pMainMenu->Activate(false);
+
+			conf.maximumFovInDegrees = 140;
+
+			Device.Pause(TRUE, TRUE, TRUE, "Nvidia Ansel");
+
+			g_pGameLevel->Cameras().AddCamEffector(new AnselCameraEffector());
+			Device.seqFrame.Add(mutable_this, REG_PRIORITY_CAPTURE);
+
+			CCameraBase* C = nullptr;
+
+			if (g_actor)
+			{
+				C = g_actor->cam_Active();
+			}
+			else
+			{
+				Log("! Failed to find camera for Ansel");
+				return ansel::kDisallowed;
+			}
+
+			mutable_this->Camera.Set(C->Position(), C->Direction(), C->vNormal);
+			mutable_this->Camera.f_fov = C->Fov();
+			mutable_this->Camera.f_aspect = C->Aspect();
+			return ansel::kAllowed;
 		};
-		ansel::addUserControl(ui_position_slider);
+
+		config.stopSessionCallback = [](void* /*context*/)
+		{
+			pGameAnsel->isActive = false;
+			Device.Pause(FALSE, FALSE, FALSE, "Nvidia Ansel");
+			g_pGameLevel->Cameras().RemoveCamEffector(cefAnsel);
+			Device.seqFrame.Remove(mutable_this);
+		};
+		config.startCaptureCallback = [](const ansel::CaptureConfiguration& /*conf*/, void* /*context*/)
+		{
+			// turn non-uniform full screen effects like vignette off here
+		};
+		config.stopCaptureCallback = [](void* /*context*/)
+		{
+			// turn disabled effects back on here
+		};
+		const auto status = ansel::setConfiguration(config);
+		switch (status)
+		{
+		case ansel::kSetConfigurationSuccess:
+			Log("Nvidia Ansel is supported and used");
+			return true;
+		case ansel::kSetConfigurationIncompatibleVersion:
+			Log("! Nvidia Ansel: incompatible version");
+			break;
+		case ansel::kSetConfigurationIncorrectConfiguration:
+			Log("! Nvidia Ansel: incorrect configuration");
+			break;
+
+		case ansel::kSetConfigurationSdkNotLoaded:
+			Log("! Nvidia Ansel: SDK wasn't loaded");
+			break;
+		}
 	}
+	else
+		Log("! Nvidia Ansel:: failed to load AnselSDKxx.dll");
+
+	return false;
 }
 
-void AnselRender()
+void AnselManager::OnFrame()
 {
-	// After Ansel SDK integration:
-	if (g_AnselSessionIsActive)
-	{
-		ansel::Camera cam;
-		// set up ansel::Camera object with the current camera parameters
-		cam.fov = (Device.fFOV/ DirectX::XM_PI) * 180.0f;
-		cam.projectionOffsetX = 0;
-		cam.projectionOffsetY = 0;
-
-		// convert view matrix (XMMATRIX) into a pair of a position and a quaternion
-		DirectX::XMMATRIX invView = XMMatrixInverse(nullptr, Device.mView);
-		const nv::Vec3 right = { invView.r[0].m128_f32[0], invView.r[0].m128_f32[1], invView.r[0].m128_f32[2] };
-		const nv::Vec3 up = { invView.r[1].m128_f32[0], invView.r[1].m128_f32[1], invView.r[1].m128_f32[2] };
-		const nv::Vec3 forward = { invView.r[2].m128_f32[0], invView.r[2].m128_f32[1], invView.r[2].m128_f32[2] };
-
-		ansel::rotationMatrixVectorsToQuaternion(right, up, forward, cam.rotation);
-		cam.position = { invView.r[3].m128_f32[0], invView.r[3].m128_f32[1], invView.r[3].m128_f32[2] };
-		ansel::updateCamera(cam);
-
-		// convert position and quaternion returned in ansel::updateCamera call and update camera parameters
-		invView = DirectX::XMMatrixAffineTransformation(DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f),
-			DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
-			DirectX::XMLoadFloat4(reinterpret_cast<const DirectX::XMFLOAT4*>(&cam.rotation)),
-			DirectX::XMLoadFloat3(reinterpret_cast<const DirectX::XMFLOAT3*>(&cam.position)));
-
-		Device.mView = XMMatrixInverse(nullptr, invView);
-		Device.fFOV = (cam.fov / 180.0f) * DirectX::XM_PI;
-		//g_ProjectionOffsetX = cam.projectionOffsetX;
-		//g_ProjectionOffsetY = cam.projectionOffsetY;
-		//updateProjectionMatrix();
-	}
+	const float previousFrameTime = Timer.GetElapsed_sec();
+	Timer.Start();
+	fTimeDelta = 0.3f * fTimeDelta + 0.7f * previousFrameTime;
+	clamp(fTimeDelta, EPS_S, 0.1f);
+	Device.fTimeDelta = fTimeDelta; // fake, to update cam (problem with fov)
+	g_pGameLevel->Cameras().UpdateFromCamera(&Camera);
+	Device.fTimeDelta = 0.0f; // fake, to update cam (problem with fov)
 }
 
-#endif

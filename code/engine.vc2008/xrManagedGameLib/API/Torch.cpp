@@ -1,8 +1,21 @@
-// Rietmon: Сделано на основе ПДА. В душе не ебу, че надо переписать под фонарик, так что исправляйте сами :)
 #include "stdafx.h"
-#include "API/Torch.h"
+#include "Torch.h"
+#include <items\Torch.h>
 
-XRay::Torch::Torch(IntPtr InNativeObject)
+using namespace System;
+using XRay::Torch;
+
+Torch::Torch(IntPtr InNativeObject)
 {
 	CAST_TO_NATIVE_OBJECT(CTorch, InNativeObject);
+}
+
+bool Torch::IsEnabled::get()
+{
+	return pNativeObject->torch_active();
+}
+
+void Torch::IsEnabled::set(bool value)
+{
+	pNativeObject->Switch(value);
 }

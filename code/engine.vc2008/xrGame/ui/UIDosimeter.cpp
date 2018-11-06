@@ -17,37 +17,35 @@ void CUIDosimeter::construct(CDosimeter* p)
     CXml uiXml;
     uiXml.Load(CONFIG_PATH, UI_PATH, "ui_dosimeter.xml");
 
-    CUIXmlInit xml_init;
-
-    xml_init.InitWindow(uiXml, "dosimeter", 0, this);
+    CUIXmlInit::InitWindow(uiXml, "dosimeter", 0, this);
 
     m_wrk_area = xr_new<CUIStatic>();
-    xml_init.InitStatic(uiXml, "dosimeter:wrk_area", 0, m_wrk_area);
+    CUIXmlInit::InitStatic(uiXml, "dosimeter:wrk_area", 0, m_wrk_area);
     m_wrk_area->SetAutoDelete(true);
     AttachChild(m_wrk_area);
 
     m_seg1 = xr_new<CUIStatic>();
-    xml_init.InitStatic(uiXml, "dosimeter:seg1", 0, m_seg1);
+    CUIXmlInit::InitStatic(uiXml, "dosimeter:seg1", 0, m_seg1);
     m_seg1->SetAutoDelete(true);
     AttachChild(m_seg1);
 
     m_seg2 = xr_new<CUIStatic>();
-    xml_init.InitStatic(uiXml, "dosimeter:seg2", 0, m_seg2);
+    CUIXmlInit::InitStatic(uiXml, "dosimeter:seg2", 0, m_seg2);
     m_seg2->SetAutoDelete(true);
     AttachChild(m_seg2);
 
     m_seg3 = xr_new<CUIStatic>();
-    xml_init.InitStatic(uiXml, "dosimeter:seg3", 0, m_seg3);
+    CUIXmlInit::InitStatic(uiXml, "dosimeter:seg3", 0, m_seg3);
     m_seg3->SetAutoDelete(true);
     AttachChild(m_seg3);
 
     m_seg4 = xr_new<CUIStatic>();
-    xml_init.InitStatic(uiXml, "dosimeter:seg4", 0, m_seg4);
+    CUIXmlInit::InitStatic(uiXml, "dosimeter:seg4", 0, m_seg4);
     m_seg4->SetAutoDelete(true);
     AttachChild(m_seg4);
 
     m_workIndicator = xr_new<CUIStatic>();
-    xml_init.InitStatic(uiXml, "dosimeter:work", 0, m_workIndicator);
+    CUIXmlInit::InitStatic(uiXml, "dosimeter:work", 0, m_workIndicator);
     m_workIndicator->SetAutoDelete(true);
     AttachChild(m_workIndicator);
 

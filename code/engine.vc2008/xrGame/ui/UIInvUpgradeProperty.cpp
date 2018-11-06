@@ -24,110 +24,109 @@
 UIProperty::UIProperty()
 {
 	m_text[0] = 0;
-	m_ui_icon = NULL;
-	m_ui_text = NULL;
+	m_ui_icon = nullptr;
+	m_ui_text = nullptr;
 }
 
 UIProperty::~UIProperty()
 {
 }
 
-void UIProperty::init_from_xml( CXml& ui_xml )
+void UIProperty::init_from_xml(CXml& ui_xml)
 {
-	m_ui_icon = xr_new<CUIStatic>();	 
+	m_ui_icon = xr_new<CUIStatic>();
 	m_ui_text = xr_new<CUITextWnd>();
-	AttachChild( m_ui_icon );
-	AttachChild( m_ui_text );
-	m_ui_icon->SetAutoDelete( true );
-	m_ui_text->SetAutoDelete( true );
+	AttachChild(m_ui_icon);
+	AttachChild(m_ui_text);
+	m_ui_icon->SetAutoDelete(true);
+	m_ui_text->SetAutoDelete(true);
 
-	CUIXmlInit::InitWindow( ui_xml, "properties", 0, this );
-	SetWndPos( Fvector2().set( 0, 0 ) );
-	CUIXmlInit::InitStatic( ui_xml, "properties:icon", 0, m_ui_icon );
-	CUIXmlInit::InitTextWnd( ui_xml, "properties:text", 0, m_ui_text );
+	CUIXmlInit::InitWindow(ui_xml, "properties", 0, this);
+	SetWndPos(Fvector2().set(0, 0));
+	CUIXmlInit::InitStatic(ui_xml, "properties:icon", 0, m_ui_icon);
+	CUIXmlInit::InitTextWnd(ui_xml, "properties:text", 0, m_ui_text);
 }
 
-bool UIProperty::init_property( shared_str const& property_id )
+bool UIProperty::init_property(const shared_str &property_id)
 {
 	m_property_id = property_id;
-	if ( !get_property() )
+
+	const bool HaveProperty = get_property();
+
+	if (HaveProperty)
 	{
-		return false;
+		m_ui_icon->InitTexture(get_property()->icon_name());
 	}
-	m_ui_icon->InitTexture( get_property()->icon_name() );
-	return true;
+
+	return HaveProperty;
 }
 
 UIProperty::Property_type* UIProperty::get_property()
 {
-	if ( !ai().get_alife() )
+	if (!ai().get_alife())
 	{
 		return NULL;
 	}
-	Property_type* proper = ai().alife().inventory_upgrade_manager().get_property( m_property_id );
-	VERIFY( proper );
+	Property_type* proper = ai().alife().inventory_upgrade_manager().get_property(m_property_id);
+	VERIFY(proper);
 	return proper;
 }
 
-bool UIProperty::read_value_from_section( LPCSTR section, LPCSTR param, float& result )
+bool UIProperty::read_value_from_section(LPCSTR section, LPCSTR param, float& result)
 {
 	result = 0.0f;
-	if ( !section || !pSettings->section_exist( section ) )
-	{
-		return false;
-	}
 
-	if ( pSettings->line_exist( section, param ) && *pSettings->r_string( section, param ) )
+	if (section && pSettings->section_exist(section) &&
+		pSettings->line_exist(section, param) && *pSettings->r_string(section, param))
 	{
-		result = pSettings->r_float( section, param );
+		result = pSettings->r_float(section, param);
 		return true;
 	}
+
 	return false;
 }
 
-bool UIProperty::compute_value( ItemUpgrades_type const& item_upgrades )
+bool UIProperty::compute_value(ItemUpgrades_type const& item_upgrades)
 {
-	if ( !get_property() )
+	if (!get_property())
 	{
 		return false;
 	}
 
-	int prop_count = 0;
-	string2048 buf; buf[0] = 0;
-	ItemUpgrades_type::const_iterator ib_upg = item_upgrades.begin();
-	ItemUpgrades_type::const_iterator ie_upg = item_upgrades.end();
-	for ( ; ib_upg != ie_upg; ++ib_upg )
+	u32 prop_count = 0;
+	string2048 buf = { 0 };
+
+	for (const shared_str &ItemUpgradeStr : item_upgrades)
 	{
-		Upgrade_type* upgr = ai().alife().inventory_upgrade_manager().get_upgrade( *ib_upg );
-		VERIFY( upgr );
-		for(u8 i = 0; i < inventory::upgrade::max_properties_count; i++)
+		Upgrade_type* pUpgradeType = ai().alife().inventory_upgrade_manager().get_upgrade(ItemUpgradeStr);
+		VERIFY(pUpgradeType);
+
+		for (u8 i = 0; i < inventory::upgrade::max_properties_count; i++)
 		{
-			if ( upgr->get_property_name(i)._get() == m_property_id._get() )
+			if (pUpgradeType->get_property_name(i)._get() == m_property_id._get())
 			{
-				LPCSTR upgr_section = upgr->section();
-				if ( prop_count > 0 )
+				LPCSTR upgr_section = pUpgradeType->section();
+				if (prop_count > 0)
 				{
-					xr_strcat( buf, sizeof(buf), ", " );
+					xr_strcat(buf, sizeof(buf), ", ");
 				}
-				xr_strcat( buf, sizeof(buf), upgr_section );
+				xr_strcat(buf, sizeof(buf), upgr_section);
 				++prop_count;
 			}
 		}
 	}
-	if ( prop_count > 0 )
-	{
-		return show_result( buf );
-	}
-	return false;
+
+	return !!prop_count ? show_result(buf) : false;
 }
 
-bool UIProperty::show_result( LPCSTR values )
+bool UIProperty::show_result(LPCSTR values)
 {
-	if ( get_property() && get_property()->run_functor( values, m_text ) )
+	if (get_property() && get_property()->run_functor(values, m_text))
 	{
-		m_ui_text->SetText( m_text );
+		m_ui_text->SetText(m_text);
 		return true;
-	}else
+	}
+	else
 	{
 		m_ui_text->SetText("");
 		return false;

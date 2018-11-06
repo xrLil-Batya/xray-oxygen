@@ -7,9 +7,9 @@
 class CLAItem;
 class CNightVisionEffector;
 
-class CTorch : public CInventoryItemObject {
-private:
-    typedef	CInventoryItemObject	inherited;
+class GAME_API CTorch : public CInventoryItemObject 
+{
+    using inherited = CInventoryItemObject;
 
 protected:
 	float			fBrightness;
