@@ -29,8 +29,12 @@ public:
 
 	virtual BOOL g_Alive() const { return false; }
 
-	IC CCameraBase*	cam_Active()   { return cameras[cam_active]; }
-	IC CCameraBase*	cam_FirstEye() { return cameras[eacFirstEye]; }
+	IC CCameraBase*		cam_Active()   { return cameras[cam_active]; }
+	IC CCameraBase*		cam_FirstEye() { return cameras[eacFirstEye]; }
+	// KD: need to know which cam active outside actor methods
+	IC EActorCameras	active_cam()   { return cam_active; }
+	// Alundaio: made public
+	virtual	void			cam_Set(EActorCameras style);  
 public:
 
 	//режим подбирания предметов

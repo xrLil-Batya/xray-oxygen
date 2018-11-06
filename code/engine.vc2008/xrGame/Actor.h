@@ -301,8 +301,6 @@ public:
 	
 public:
 	CActorCameraManager&	Cameras				() 	{VERIFY(m_pActorEffector); return *m_pActorEffector;}
-    IC EActorCameras		active_cam			() {return cam_active;} //KD: need to know which cam active outside actor methods
-	virtual	void			cam_Set				(EActorCameras style);  //Alundaio: made public
 
 protected:
 	void					cam_Update				(float dt, float fFOV);

@@ -29,13 +29,6 @@
 ENGINE_API extern float psHUD_FOV;
 ENGINE_API extern float psHUD_FOV_def;
 
-void CActor::cam_Set	(EActorCameras style)
-{
-	CCameraBase* old_cam = cam_Active();
-	cam_active = style;
-	old_cam->OnDeactivate();
-	cam_Active()->OnActivate(old_cam);
-}
 float CActor::f_Ladder_cam_limit=1.f;
 void CActor::cam_SetLadder()
 {
