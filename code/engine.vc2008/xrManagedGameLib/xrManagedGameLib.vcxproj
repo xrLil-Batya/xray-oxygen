@@ -171,6 +171,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\xrGame\xrGame.vcxproj">
+      <Project>{200652a6-043e-4634-8837-87983b3bd5e0}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\xrManagedEngineLib\xrManagedEngineLib.vcxproj">
       <Project>{09dc3343-46ca-4d55-bfe3-317c0ff02e52}</Project>
     </ProjectReference>
