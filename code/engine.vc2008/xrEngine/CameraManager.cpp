@@ -16,6 +16,7 @@
 #include "render.h"
 #include "x_ray.h"
 #include "DirectXMathExternal.h"
+#include "IGame_AnselSDK.h"
 
 float psCamInert = 0.f;
 float psCamSlideInert = 0.0f;
@@ -293,6 +294,7 @@ void CCameraManager::UpdatePPEffectors()
 
     pp_affected.validate("after applying pp");
 }
+
 extern float view_port_near_koef;
 void CCameraManager::ApplyDevice(float _viewport_near)
 {
@@ -310,7 +312,7 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 
 	//+SecondVP+
 	// Пересчитываем FOV для второго вьюпорта [Recalculate scene FOV for SecondVP frame]
-	if (Device.m_SecondViewport.IsSVPFrame())
+	if (Device.m_SecondViewport.IsSVPFrame() && !pGameAnsel->isActive)
 	{
 		// Для второго вьюпорта FOV выставляем здесь
 		Device.fFOV *= g_pGamePersistent->m_pGShaderConstants.hud_params.y;
@@ -326,7 +328,8 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 
     if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu->IsActive())
         ResetPP();
-    else {
+    else 
+	{
         pp_affected.validate("apply device");
         // postprocess
         IRender_Target* T = ::Render->getTarget();

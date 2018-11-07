@@ -66,6 +66,9 @@
     <ClInclude Include="API\Level.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="API\Torch.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -111,6 +114,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="API\Level.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\Torch.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "AnselWrapper.h"
 #include "r2_puddles.h"
 #include "r4.h"
 #include "../xrRender/ResourceManager.h"
@@ -49,9 +50,13 @@ void CRender::level_Load(IReader* fs)
 	}
 
 	// Components
-	Glows		= xr_new <CGlowManager>();
-	Wallmarks	= xr_new<CWallmarksEngine>();
-	Details		= xr_new<CDetailManager>();
+	Glows		= new CGlowManager();
+	Wallmarks	= new CWallmarksEngine();
+	Details		= new CDetailManager();
+	pGameAnsel  = new AnselManager();
+
+	// Init Ansel Wrapper
+	pGameAnsel->Load();
 
 	// VB,IB,SWI
 	g_pGamePersistent->SetLoadStageTitle("st_loading_geometry");

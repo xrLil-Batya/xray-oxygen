@@ -244,6 +244,9 @@
     <Filter Include="Interfaces\Discord">
       <UniqueIdentifier>{f1004f51-b80f-4c12-a930-80f1ea7e1f0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interfaces\Ansel SDK">
+      <UniqueIdentifier>{4748e55e-298c-4d97-a139-2ec3b9c51b87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -624,6 +627,9 @@
     <ClInclude Include="CameraFirstEye.h">
       <Filter>Game API\Cameras</Filter>
     </ClInclude>
+    <ClInclude Include="IGame_AnselSDK.h">
+      <Filter>Interfaces\Ansel SDK</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -979,6 +985,9 @@
     </ClCompile>
     <ClCompile Include="CameraFirstEye.cpp">
       <Filter>Game API\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="IGame_AnselSDK.cpp">
+      <Filter>Interfaces\Ansel SDK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

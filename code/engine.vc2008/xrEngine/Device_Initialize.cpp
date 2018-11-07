@@ -96,7 +96,7 @@ HWND CRenderDevice::CreateXRayWindow(HWND parent /*= NULL*/, int Width /*= 0*/, 
 	}
 
 	// Create the render window
-	m_hWnd = CreateWindowEx(wndStyle,
+	m_hWnd = CreateWindowExA(wndStyle,
 		wndclass, "X-Ray Oxygen", (DWORD)m_dwWindowStyle,
 		/*rc.left, rc.top, */CW_USEDEFAULT, CW_USEDEFAULT,
 		FinalWidth, FinalHeight, parent,

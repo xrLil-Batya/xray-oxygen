@@ -31,6 +31,7 @@
 #include "ai_space.h"
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
+#include "../xrEngine/IGame_AnselSDK.h"
 
 #ifdef DEBUG
 #	include "ai_debug.h"
@@ -417,10 +418,13 @@ void CLevel::OnFrame()
 	DBG_RenderUpdate();
 #endif // #ifdef DEBUG
 
-	m_map_manager->Update();
+	if (!pGameAnsel->isActive)
+	{
+		m_map_manager->Update();
 
-	if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
-		GameTaskManager().UpdateTasks();
+		if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
+			GameTaskManager().UpdateTasks();
+	}
 
 	// Inherited update
 	inherited::OnFrame();
@@ -493,8 +497,10 @@ void CLevel::OnRender()
 
 	if (!game)
 		return;
+	 
+	if(!pGameAnsel->isActive)
+		HUD().RenderUI();
 
-	HUD().RenderUI();
 	BulletManager().Render();
 	::Render->AfterWorldRender();
 

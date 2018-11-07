@@ -31,7 +31,7 @@ struct HS_CONSTANT_DATA_OUTPUT
 
 float triLOD;
 
-#ifdef 0 //untested and unfinished (adding so I don't forget)
+#if 0 //untested and unfinished (adding so I don't forget)
 //https://developer.nvidia.com/content/dynamic-hardware-tessellation-basics
 
 #define PIXELS_PER_EDGE 3 //should be changed IMO, too few. Has to match C++ though.

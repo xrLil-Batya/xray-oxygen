@@ -29,13 +29,6 @@
 ENGINE_API extern float psHUD_FOV;
 ENGINE_API extern float psHUD_FOV_def;
 
-void CActor::cam_Set	(EActorCameras style)
-{
-	CCameraBase* old_cam = cam_Active();
-	cam_active = style;
-	old_cam->OnDeactivate();
-	cam_Active()->OnActivate(old_cam);
-}
 float CActor::f_Ladder_cam_limit=1.f;
 void CActor::cam_SetLadder()
 {
@@ -273,10 +266,10 @@ void CActor::cam_Update(float dt, float fFOV)
 			psHUD_FOV = psHUD_FOV_def;
 	}
 
-	if( (mstate_real & mcClimb) && (cam_active!=eacFreeLook) )
+	if ((mstate_real & mcClimb) && (cam_active != eacFreeLook))
 		camUpdateLadder(dt);
 	on_weapon_shot_update();
-	float y_shift =0;
+	float y_shift = 0;
 	current_ik_cam_shift = 0;
 
 	// Alex ADD: smooth crouch fix
@@ -284,67 +277,69 @@ void CActor::cam_Update(float dt, float fFOV)
 
 	if (CurrentHeight != CameraHeight())
 	{
-		CurrentHeight = (CurrentHeight * (1.0f - HeightInterpolationSpeed*dt)) + (CameraHeight() * HeightInterpolationSpeed*dt);
+		CurrentHeight = (CurrentHeight * (1.0f - HeightInterpolationSpeed * dt)) + (CameraHeight() * HeightInterpolationSpeed*dt);
 	}
 
 	Fvector point = { 0, CurrentHeight + current_ik_cam_shift, 0 };
-	Fvector dangle		= {0,0,0};
+	Fvector dangle = { 0,0,0 };
 	Fmatrix				xform;
-	xform.setXYZ		(0,r_torso.yaw,0);
+	xform.setXYZ(0, r_torso.yaw, 0);
 	xform.translate_over(XFORM().c);
 
 	// lookout
 	if (this == Level().CurrentControlEntity())
-		cam_Lookout( xform, point.y  );
+		cam_Lookout(xform, point.y);
 
 
 	if (!fis_zero(r_torso.roll))
 	{
-		float radius		= point.y*0.5f;
-		float valid_angle	= r_torso.roll/2.f;
-		calc_point			(point,radius,0,valid_angle);
-		dangle.z			= (PI_DIV_2-((PI+valid_angle)/2));
+		float radius = point.y*0.5f;
+		float valid_angle = r_torso.roll / 2.f;
+		calc_point(point, radius, 0, valid_angle);
+		dangle.z = (PI_DIV_2 - ((PI + valid_angle) / 2));
 	}
 
-	float flCurrentPlayerY	= xform.c.y;
+	float flCurrentPlayerY = xform.c.y;
 
 	// Smooth out stair step ups
-	if ((character_physics_support()->movement()->Environment()==CPHMovementControl::peOnGround) && (flCurrentPlayerY-fPrevCamPos>0)){
-		fPrevCamPos			+= dt*1.5f;
+	if ((character_physics_support()->movement()->Environment() == CPHMovementControl::peOnGround) && (flCurrentPlayerY - fPrevCamPos > 0)) {
+		fPrevCamPos += dt * 1.5f;
 		if (fPrevCamPos > flCurrentPlayerY)
-			fPrevCamPos		= flCurrentPlayerY;
-		if (flCurrentPlayerY-fPrevCamPos>0.2f)
-			fPrevCamPos		= flCurrentPlayerY-0.2f;
-		point.y				+= fPrevCamPos-flCurrentPlayerY;
-	}else{
-		fPrevCamPos			= flCurrentPlayerY;
+			fPrevCamPos = flCurrentPlayerY;
+		if (flCurrentPlayerY - fPrevCamPos > 0.2f)
+			fPrevCamPos = flCurrentPlayerY - 0.2f;
+		point.y += fPrevCamPos - flCurrentPlayerY;
+	}
+	else {
+		fPrevCamPos = flCurrentPlayerY;
 	}
 
-	float _viewport_near			= VIEWPORT_NEAR;
+	float _viewport_near = VIEWPORT_NEAR;
 	// calc point
-	xform.transform_tiny			(point);
+	xform.transform_tiny(point);
 
-	CCameraBase* C					= cam_Active();
+	CCameraBase* C = cam_Active();
 
-	C->Update						(point,dangle);
-	C->f_fov						= fFOV;
+	C->Update(point, dangle);
+	C->f_fov = fFOV;
 
 	if (Level().CurrentEntity() == this)
 	{
-		collide_camera( *cameras[eacFirstEye], _viewport_near, this );
+		collide_camera(*cameras[eacFirstEye], _viewport_near, this);
 	}
 
-	Cameras().UpdateFromCamera			(C);	
+	Cameras().UpdateFromCamera(C);
 
-	fCurAVelocity			= vPrevCamDir.sub(cameras[eacFirstEye]->vDirection).magnitude()/Device.fTimeDelta;
-	vPrevCamDir				= cameras[eacFirstEye]->vDirection;
+	fCurAVelocity = vPrevCamDir.sub(cameras[eacFirstEye]->vDirection).magnitude() / Device.fTimeDelta;
+	vPrevCamDir = cameras[eacFirstEye]->vDirection;
 
 	if (Level().CurrentEntity() == this)
 	{
-		Level().Cameras().UpdateFromCamera	(C);
-		if(!Level().Cameras().GetCamEffector(cefDemo)){
-			Cameras().ApplyDevice	(_viewport_near);
-		}
+		Level().Cameras().UpdateFromCamera(C);
+
+		const bool allow = !Level().Cameras().GetCamEffector(cefDemo) && !Level().Cameras().GetCamEffector(cefAnsel);
+		if (eacFirstEye == cam_active && allow)
+			Cameras().ApplyDevice(_viewport_near);
 	}
 }
 
