@@ -60,10 +60,10 @@ private:
 			>									collection_type;
 
 private:
-	LPCSTR const* xr_stdcall weathers_getter	() const;
-	u32 xr_stdcall weathers_size_getter			() const;
-	LPCSTR const* xr_stdcall frames_getter		(LPCSTR weather_id) const;
-	u32 xr_stdcall frames_size_getter			(LPCSTR weather_id) const;
+	LPCSTR const*  weathers_getter	() const;
+	u32  weathers_size_getter			() const;
+	LPCSTR const*  frames_getter		(LPCSTR weather_id) const;
+	u32  frames_size_getter			(LPCSTR weather_id) const;
 
 private:
 	weather_container_type						m_weathers;

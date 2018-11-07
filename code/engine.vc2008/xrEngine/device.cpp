@@ -122,9 +122,9 @@ void CRenderDevice::End		()
 #	endif // #ifdef INGAME_EDITOR
 }
 
+volatile u32 mt_Thread_marker = 0x12345678;
 
-volatile u32	mt_Thread_marker		= 0x12345678;
-void 			mt_Thread	(void *ptr)	
+void mt_Thread(void *ptr)	
 {
     gSecondaryThreadId = GetCurrentThreadId();
 
@@ -133,18 +133,17 @@ void 			mt_Thread	(void *ptr)
 		// waiting for Device permission to execute
 		Device.mt_csEnter.Enter	();
 
-		if (Device.mt_bMustExit) {
-			Device.mt_bMustExit = FALSE;				// Important!!!
-			Device.mt_csEnter.Leave();					// Important!!!
+		if (Device.mt_bMustExit) 
+		{
+			Device.mt_bMustExit = FALSE; // Important!!!
+			Device.mt_csEnter.Leave();	 // Important!!!
 			return;
 		}
 		// we has granted permission to execute
-		mt_Thread_marker			= Device.dwFrame;
+		mt_Thread_marker = Device.dwFrame;
  
-		for (fastdelegate::FastDelegate0<> & pit : Device.seqParallel)
-		{
-			pit();
-		}
+		for (xrDelegate<void()> &refParallelDelegate : Device.seqParallel)
+			refParallelDelegate();
 
 		Device.seqParallel.clear();
 		Device.seqFrameMT.Process(rp_Frame);

@@ -581,14 +581,7 @@ void CAI_Stalker::net_Destroy()
 	CInventoryOwner::net_Destroy();
 	m_pPhysics_support->in_NetDestroy();
 
-	Device.remove_from_seq_parallel(fastdelegate::FastDelegate0<>(this, &CAI_Stalker::update_object_handler));
-
-#ifdef DEBUG
-	fastdelegate::FastDelegate0<>	f = fastdelegate::FastDelegate0<>(this, &CAI_Stalker::update_object_handler);
-	xr_vector<fastdelegate::FastDelegate0<> >::const_iterator	I;
-	I = std::find(Device.seqParallel.begin(), Device.seqParallel.end(), f);
-	VERIFY(I == Device.seqParallel.end());
-#endif // DEBUG
+	Device.remove_from_seq_parallel(xrDelegate<void()>(BindDelegate(this, &CAI_Stalker::update_object_handler)));
 
 	xr_delete(m_ce_close);
 	xr_delete(m_ce_far);

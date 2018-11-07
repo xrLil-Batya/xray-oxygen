@@ -651,8 +651,8 @@ void CCustomMonster::net_Destroy()
 	sound().unload				();
 	movement().net_Destroy		();
 	
-	Device.remove_from_seq_parallel	(fastdelegate::FastDelegate0<>(this, &CCustomMonster::update_sound_player));
-	Device.remove_from_seq_parallel	(fastdelegate::FastDelegate0<>(this, &CCustomMonster::Exec_Visibility));
+	Device.remove_from_seq_parallel	(xrDelegate<void()>(BindDelegate(this, &CCustomMonster::update_sound_player)));
+	Device.remove_from_seq_parallel	(xrDelegate<void()>(BindDelegate(this, &CCustomMonster::Exec_Visibility)));
 	
 #ifdef DEBUG
 	DBG().on_destroy_object(this);

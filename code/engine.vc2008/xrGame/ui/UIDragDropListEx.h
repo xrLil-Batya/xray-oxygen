@@ -64,8 +64,8 @@ public:
 	virtual					~CUIDragDropListEx	();
 				void		InitDragDropList		(Fvector2 pos, Fvector2 size);
 
-	typedef					fastdelegate::FastDelegate1<CUICellItem*, bool>			DRAG_CELL_EVENT;
-	typedef					fastdelegate::FastDelegate2<CUIDragItem*, bool, void>	DRAG_ITEM_EVENT;
+	typedef					xrDelegate<bool(CUICellItem*)>			DRAG_CELL_EVENT;
+	typedef					xrDelegate<void(CUIDragItem*, bool)>	DRAG_ITEM_EVENT;
 
 	DRAG_CELL_EVENT			m_f_item_drop;
 	DRAG_CELL_EVENT			m_f_item_start_drag;

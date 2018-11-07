@@ -41,8 +41,8 @@ public:
 	virtual	void			create_center_gradient	(CInifile& pIni, shared_str const& sect);
 
 private:
-			LPCSTR xr_stdcall id_getter	() const;
-			void   xr_stdcall id_setter	(LPCSTR value);
+			LPCSTR  id_getter	() const;
+			void    id_setter	(LPCSTR value);
 private:
 	typedef editor::property_holder		property_holder_type;
 

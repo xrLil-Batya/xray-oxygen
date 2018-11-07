@@ -112,7 +112,7 @@ void CStateBurerAttackTele<Object>::deactivate()
 			}
 			if ( CGrenade* grenade = smart_cast<CGrenade*>(cur_object) )
 			{
-				grenade->set_destroy_callback		(NULL);
+				grenade->DestroyCalbackClear();
 			}
 		}
 	}
@@ -449,7 +449,7 @@ void CStateBurerAttackTele<Object>::SelectObjects()
 }
 
 template <typename Object>
-void xr_stdcall CStateBurerAttackTele<Object>::OnGrenadeDestroyed (CGrenade* const grenade)
+void  CStateBurerAttackTele<Object>::OnGrenadeDestroyed (CGrenade* const grenade)
 {
 	object->CTelekinesis::remove_links	(grenade);
 }

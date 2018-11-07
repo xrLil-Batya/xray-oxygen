@@ -41,8 +41,8 @@ public:
 	virtual	sounds_type&	sounds		();
 
 private:
-			LPCSTR xr_stdcall id_getter	() const;
-			void   xr_stdcall id_setter	(LPCSTR value);
+			LPCSTR  id_getter	() const;
+			void    id_setter	(LPCSTR value);
 public:
 	typedef xr_vector<source*>			sound_container_type;
 

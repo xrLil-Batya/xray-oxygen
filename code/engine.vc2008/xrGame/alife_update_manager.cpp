@@ -74,15 +74,10 @@ CALifeUpdateManager::CALifeUpdateManager	(xrServer *server, LPCSTR section) :
 	m_first_time			= true;
 }
 
-CALifeUpdateManager::~CALifeUpdateManager	()
+CALifeUpdateManager::~CALifeUpdateManager()
 {
-	shedule_unregister		();
-	Device.remove_from_seq_parallel	(
-		fastdelegate::FastDelegate0<>(
-			this,
-			&CALifeUpdateManager::update
-		)
-	);
+	shedule_unregister();
+	Device.remove_from_seq_parallel(xrDelegate<void()>(BindDelegate(this, &CALifeUpdateManager::update)));
 }
 
 float CALifeUpdateManager::shedule_Scale	()

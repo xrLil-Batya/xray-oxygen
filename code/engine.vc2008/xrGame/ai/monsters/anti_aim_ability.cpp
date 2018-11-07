@@ -25,7 +25,7 @@ anti_aim_ability::anti_aim_ability (CBaseMonster* const object) : m_object(objec
 	m_last_activated_tick			=	0;
 	m_last_detection_tick			=	0;
 	m_last_angle					=	M_PI;
-	m_callback.clear					();
+	m_callback.reset					();
 }
 
 anti_aim_ability::~anti_aim_ability ()

@@ -226,7 +226,7 @@ void CBurer::CheckSpecParams(u32 spec_params)
 {
 }
 
-void xr_stdcall CBurer::StaminaHit ()
+void  CBurer::StaminaHit ()
 {
 	if ( GodMode() )
 	{

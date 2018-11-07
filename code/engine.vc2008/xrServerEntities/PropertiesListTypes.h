@@ -49,8 +49,8 @@ using PropItemVec = xr_vector<PropItem*>;
 //------------------------------------------------------------------------------
 #include "../xrcore/ChooseTypes.H"     
 //------------------------------------------------------------------------------
-using TOnDrawTextEvent = fastdelegate::FastDelegate2<PropValue*, xr_string&>; 
-using TOnClick = fastdelegate::FastDelegate1<PropItem*>;
+using TOnDrawTextEvent = xrDelegate<void(PropValue*, xr_string&)>;
+using TOnClick = xrDelegate<void(PropItem*)>;
 //------------------------------------------------------------------------------
 
 class PropValue
@@ -63,7 +63,7 @@ public:
 	u32					tag;
 public:
 	// base events
-	using TOnChange = fastdelegate::FastDelegate1<PropValue*>;
+	using TOnChange = xrDelegate<void(PropValue*)>;
     TOnChange			OnChangeEvent;
 public:
 						PropValue		():tag(0),m_Owner(nullptr),OnChangeEvent(nullptr){;}
@@ -90,8 +90,8 @@ public:
 	TYPE				init_value;            
 	TYPE*				value;
 public:
-	using TOnBeforeEditEvent = fastdelegate::FastDelegate2<PropValue*, T&>;
-	using TOnAfterEditEvent = fastdelegate::FastDelegate2<PropValue*, T&, bool>;
+	using TOnBeforeEditEvent = xrDelegate<void(PropValue*, T&)>;
+	using TOnAfterEditEvent =  xrDelegate<void(PropValue*, T&, bool)>;
     TOnBeforeEditEvent	OnBeforeEditEvent;
     TOnAfterEditEvent	OnAfterEditEvent;
 public:
@@ -134,7 +134,7 @@ private:
     TProperties* 		m_Owner;
 // events
 public:
-	using TOnPropItemFocused = fastdelegate::FastDelegate1<PropItem*>;
+	using TOnPropItemFocused = xrDelegate<void(PropItem*)>;
     TOnDrawTextEvent	OnDrawTextEvent;
     TOnPropItemFocused	OnItemFocused;
     TOnClick			OnClickEvent;
@@ -268,8 +268,8 @@ public:
 class CanvasValue: public PropValue{
 	shared_str			value;
 public:
-	using TOnTestEqual = fastdelegate::FastDelegate3<CanvasValue*,CanvasValue*,bool&>;
-	using TOnDrawCanvasEvent = fastdelegate::FastDelegate3<CanvasValue*,void* /* TCanvas* */, const Irect&>;
+	using TOnTestEqual =		xrDelegate<void(CanvasValue*, CanvasValue*,bool&)>;
+	using TOnDrawCanvasEvent =	xrDelegate<void(CanvasValue*,void*, const Irect&)>;
 public:
     int					height;
     TOnTestEqual		OnTestEqual;
@@ -289,7 +289,7 @@ class ButtonValue: public PropValue{
 public:
 	RStringVec			value;
     int					btn_num;
-	using TOnBtnClick = fastdelegate::FastDelegate3<ButtonValue*, bool&, bool&>;
+	using TOnBtnClick = xrDelegate<void(ButtonValue*, bool&, bool&)>;
     TOnBtnClick			OnBtnClickEvent;
     enum{
     	flFirstOnly		= (1<<0)
@@ -320,7 +320,7 @@ public:
 IC bool operator == (const xr_shortcut& A, const xr_shortcut& B){return !!A.similar(B);}
 class ShortcutValue: public CustomValue<xr_shortcut>{
 public:
-	using TOnValidateResult = fastdelegate::FastDelegate3<ShortcutValue*,const xr_shortcut&,bool&>;
+	using TOnValidateResult = xrDelegate<void(ShortcutValue*,const xr_shortcut&,bool&)>;
     TOnValidateResult	OnValidateResultEvent;
 public:
 						ShortcutValue	(TYPE* val):CustomValue<xr_shortcut>(val){}
@@ -365,8 +365,8 @@ class CTextValue: public PropValue{
 public:
 	LPSTR				value;
 public:
-	using TOnBeforeEditEvent = fastdelegate::FastDelegate2<PropValue*, xr_string&>;
-	using TOnAfterEditEvent = fastdelegate::FastDelegate2<PropValue*, xr_string&, bool>;
+	using TOnBeforeEditEvent = xrDelegate<void(PropValue*, xr_string&)>;
+	using TOnAfterEditEvent  = xrDelegate<bool(PropValue*, xr_string&)>;
     TOnBeforeEditEvent	OnBeforeEditEvent;
     TOnAfterEditEvent	OnAfterEditEvent;
 public:
@@ -407,7 +407,7 @@ public:
     u32 				m_ChooseFlags;
     shared_str	 		m_StartPath;
     ChooseItemVec*		m_Items;
-	using TOnChooseValueFill = fastdelegate::FastDelegate1<ChooseValue*>;
+	using TOnChooseValueFill = xrDelegate<void(ChooseValue*)>;
     TOnChooseValueFill	OnChooseFillEvent;
     TOnDrawThumbnail	OnDrawThumbnailEvent;
     void*				m_FillParam;

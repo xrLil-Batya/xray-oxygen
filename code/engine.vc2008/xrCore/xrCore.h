@@ -218,7 +218,6 @@ using RTokenVec = xr_vector<xr_rtoken>;
 #endif
 #include "FileSystem.h"
 #include "FTimer.h"
-#include "fastdelegate.h"
 #include "intrusive_ptr.h"
 #ifndef XRCORE_STATIC
 #include "net_utils.h"

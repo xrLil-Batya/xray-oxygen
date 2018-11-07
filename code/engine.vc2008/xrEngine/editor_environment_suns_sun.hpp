@@ -36,8 +36,8 @@ public:
 			void				fill		(editor::property_holder_collection* collection);
 
 private:
-			LPCSTR xr_stdcall	id_getter	() const;
-			void   xr_stdcall	id_setter	(LPCSTR value);
+			LPCSTR				id_getter	() const;
+			void				id_setter	(LPCSTR value);
 public:
 	inline	shared_str const&	id			() const { return m_id; }
 	virtual	property_holder*	object		();

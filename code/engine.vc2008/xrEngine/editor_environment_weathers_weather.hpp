@@ -56,8 +56,8 @@ private:
 			shared_str				generate_unique_id	(shared_str const& start) const;
 
 private:
-			LPCSTR	xr_stdcall		id_getter			() const;
-			void	xr_stdcall		id_setter			(LPCSTR value);
+			LPCSTR			id_getter			() const;
+			void			id_setter			(LPCSTR value);
 
 public:
 	typedef xr_vector<time*>		container_type;
