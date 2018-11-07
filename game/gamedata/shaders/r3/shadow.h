@@ -48,14 +48,35 @@ float sample_hw_pcf (float4 tc,float4 shift)
 
 #define GS2 3
 
+// -- 7x7 disc kernel
+static const float Disc_Kernel[7][7] =
+{
+    { 0.0,0.0,0.5,1.0,0.5,0.0,0.0 },
+    { 0.0,1.0,1.0,1.0,1.0,1.0,0.0 },
+    { 0.5,1.0,1.0,1.0,1.0,1.0,0.5 },
+    { 1.0,1.0,1.0,1.0,1.0,1.0,1.0 },
+    { 0.5,1.0,1.0,1.0,1.0,1.0,0.5 },
+    { 0.0,1.0,1.0,1.0,1.0,1.0,0.0 },
+    { 0.0,0.0,0.5,1.0,0.5,0.0,0.0 }
+};
+
 float shadow_hw( float4 tc )
 {
-  	float	s0		= sample_hw_pcf( tc, float4( -1, -1, 0, 0) );
-  	float	s1		= sample_hw_pcf( tc, float4( +1, -1, 0, 0) );
-  	float	s2		= sample_hw_pcf( tc, float4( -1, +1, 0, 0) );
-  	float	s3		= sample_hw_pcf( tc, float4( +1, +1, 0, 0) );
+float shadow_sample = 0.0;	
+[unroll]for (int i = -4; i < 4; i++) //4 is enough for a nice shadow
+{
+    shadow_sample += sample_hw_pcf( tc, Disc_Kernel[4][4] + 1 );
+}	
+return float(shadow_sample / 4.0);
+	
+#if 0
+    float	s0		= sample_hw_pcf( tc, float4( -1, -1, 0, 0) );
+    float	s1		= sample_hw_pcf( tc, float4( +1, -1, 0, 0) );
+    float	s2		= sample_hw_pcf( tc, float4( -1, +1, 0, 0) );
+    float	s3		= sample_hw_pcf( tc, float4( +1, +1, 0, 0) );
+    return	(s0+s1+s2+s3)/4.h;
+#endif
 
-	return	(s0+s1+s2+s3)/4.h;
 }
 
 #if SUN_QUALITY>=4

@@ -64,6 +64,9 @@
     <Filter Include="OS\CPU">
       <UniqueIdentifier>{43e61e50-6b82-48c9-9842-72591a05e3fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="xrDelegate">
+      <UniqueIdentifier>{102de92f-17ea-4faf-b741-9994cdef4877}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -454,6 +457,15 @@
     </ClInclude>
     <ClInclude Include="StringsUtils.h">
       <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="xrDelegate\xrDelegate.h">
+      <Filter>xrDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="xrDelegate\xrDelegateArguments.h">
+      <Filter>xrDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="xrDelegate\xrDelegateBinder.h">
+      <Filter>xrDelegate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
