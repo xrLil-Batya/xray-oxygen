@@ -1,6 +1,8 @@
-#ifndef        COMMON_H
-#define        COMMON_H
-
+#ifndef COMMON_H
+#define COMMON_H
+#ifdef __INTELLISENSE__
+#include "../toolbox/VSIntelliSenceForHLSL.h"
+#endif
 #include "shared\common.h"
 
 #include "common_defines.h"

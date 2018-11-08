@@ -100,7 +100,7 @@ void CAI_Stalker::reinit()
 	CCustomMonster::reinit();
 	animation().reinit();
 
-	//загрузка спецевической звуковой схемы для сталкера согласно m_SpecificCharacter
+	//загрузка спецефической звуковой схемы для сталкера согласно m_SpecificCharacter
 	sound().sound_prefix(SpecificCharacter().sound_voice_prefix());
 	LoadSounds(*cNameSect());
 

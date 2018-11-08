@@ -35,7 +35,7 @@ size_t TTAPI ttapi_Init(processor_info* ID)
 	R_ASSERT(hCleanupEnv != nullptr);
 	SetThreadpoolCallbackCleanupGroup(&CallbackEnv, hCleanupEnv, NULL);
 
-	WorkerCount = ID->n_threads * 2;
+	WorkerCount = ID->n_threads;
 
 	SetThreadpoolThreadMinimum(hPool, ID->n_threads);
 	SetThreadpoolThreadMaximum(hPool, WorkerCount);

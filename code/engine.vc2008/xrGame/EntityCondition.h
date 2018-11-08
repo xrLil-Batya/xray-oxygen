@@ -77,7 +77,7 @@ struct SMedicineInfluenceValues{
 
 class CEntityConditionSimple
 {
-	float					m_fHealth;
+	volatile float			m_fHealth;
 	float					m_fHealthMax;
 public:
 							CEntityConditionSimple	();
