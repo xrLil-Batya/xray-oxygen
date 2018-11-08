@@ -49,23 +49,20 @@ float sample_hw_pcf (float4 tc,float4 shift)
 #define GS2 3
 
 // -- 7x7 disc kernel
-static const float Disc_Kernel[7][7] =
+static const float4 Disc_Kernel[4] =
 {
-    { 0.0,0.0,0.5,1.0,0.5,0.0,0.0 },
-    { 0.0,1.0,1.0,1.0,1.0,1.0,0.0 },
-    { 0.5,1.0,1.0,1.0,1.0,1.0,0.5 },
-    { 1.0,1.0,1.0,1.0,1.0,1.0,1.0 },
-    { 0.5,1.0,1.0,1.0,1.0,1.0,0.5 },
-    { 0.0,1.0,1.0,1.0,1.0,1.0,0.0 },
-    { 0.0,0.0,0.5,1.0,0.5,0.0,0.0 }
+    { 0.0, 0.0, 0.5, 1.0},
+    { 0.0, 1.0, 1.0, 1.0},
+    { 0.5, 1.0, 1.0, 1.0},
+    { 1.0, 1.0, 1.0, 1.0}
 };
 
 float shadow_hw( float4 tc )
 {
 float shadow_sample = 0.0;	
-[unroll]for (int i = -4; i < 4; i++) //4 is enough for a nice shadow
+[unroll]for (int i = 0; i < 4; i++) //4 is enough for a nice shadow
 {
-    shadow_sample += sample_hw_pcf( tc, Disc_Kernel[4][4] + 1 );
+    shadow_sample += sample_hw_pcf( tc, Disc_Kernel[i]);
 }	
 return float(shadow_sample / 4.0);
 	

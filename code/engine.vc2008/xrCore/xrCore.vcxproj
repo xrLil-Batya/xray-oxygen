@@ -420,7 +420,6 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="_std_extensions.h" />
     <ClInclude Include="_stl_extensions.h" />
     <ClInclude Include="clsid.h" />
-    <ClInclude Include="fastdelegate.h" />
     <ClInclude Include="string_concatenations.h" />
     <ClInclude Include="string_concatenations_inline.h" />
     <ClInclude Include="xr_trims.h" />
