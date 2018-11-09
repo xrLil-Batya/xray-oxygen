@@ -473,41 +473,45 @@ void CCustomMonster::update_range_fov(float &new_range, float &new_fov, float st
 void CCustomMonster::eye_pp_s1			()
 {
 	float									new_range = eye_range, new_fov = eye_fov;
-	if (g_Alive()) {
+	if (g_Alive()) 
+	{
 #ifndef USE_STALKER_VISION_FOR_MONSTERS
 		update_range_fov					(new_range, new_fov, human_being() ? memory().visual().current_state().m_max_view_distance*eye_range : eye_range, eye_fov);
 #else 
 		update_range_fov					(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
 #endif
 	}
+
 	// Standart visibility
-	Device.Statistic->AI_Vis_Query.Begin		();
 	Fmatrix									mProject,mFull,mView;
 	mView.build_camera_dir					(eye_matrix.c,eye_matrix.k,eye_matrix.j);
 	VERIFY									(_valid(eye_matrix));
 	mProject.build_projection				(deg2rad(new_fov),1,0.1f,new_range);
 	mFull.mul								(mProject,mView);
 	feel_vision_query						(mFull,eye_matrix.c);
-	Device.Statistic->AI_Vis_Query.End		();
 }
 
 void CCustomMonster::eye_pp_s2				( )
 {
 	// Tracing
-	Device.Statistic->AI_Vis_RayTests.Begin	();
 	u32 dwTime			= Level().timeServer();
 	u32 dwDT			= dwTime-eye_pp_timestamp;
 	eye_pp_timestamp	= dwTime;
-	feel_vision_update						(this,eye_matrix.c,float(dwDT)/1000.f,memory().visual().transparency_threshold());
-	Device.Statistic->AI_Vis_RayTests.End	();
+	feel_vision_update(this,eye_matrix.c,float(dwDT)/1000.f,memory().visual().transparency_threshold());
 }
 
-void CCustomMonster::Exec_Visibility	( )
+void CCustomMonster::Exec_Visibility()
 {
-	//if (0==Sector())				return;
-	if (!g_Alive())					return;
+	try 
+	{
+		if (!CEntityAlive::g_Alive())
+			return;
+	}
+	catch (...)
+	{
+		return;
+	}
 
-	Device.Statistic->AI_Vis.Begin	();
 	switch (eye_pp_stage%2)	
 	{
 	case 0:	
@@ -516,7 +520,6 @@ void CCustomMonster::Exec_Visibility	( )
 	case 1:	eye_pp_s2();			break;
 	}
 	++eye_pp_stage					;
-	Device.Statistic->AI_Vis.End		();
 }
 
 void CCustomMonster::UpdateCamera()

@@ -188,7 +188,7 @@ void CRenderDevice::on_idle()
 {
 	if (!b_is_Ready) 
 	{
-		Sleep(50);
+		Sleep(100);
 		return; 
 	}
 

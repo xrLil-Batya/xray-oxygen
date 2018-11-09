@@ -32,16 +32,16 @@
 
 const float wounded_enemy_reached_distance = 3.f;
 
-IC u32 population(const squad_mask_type &b)
+IC size_t population(const squad_mask_type &b)
 {
 	std::bitset<std::numeric_limits<squad_mask_type>::digits> mask(b);
 	return mask.count();
 }
 
-IC u32 population(const u64 &b)
-{
-	return (population((squad_mask_type)b) + population(u32(b >> 32)));
-}
+//IC u32 population(const u64 &b)
+//{
+//	return (population((squad_mask_type)b) + population(u32(b >> 32)));
+//}
 
 struct CEnemyFiller 
 {
@@ -455,16 +455,18 @@ void CAgentEnemyManager::assign_wounded			()
 		}
 	}
 
-	u32						combat_member_count = population(object().member().combat_mask());
+	u32						combat_member_count = (u32)population(object().member().combat_mask());
 	VERIFY					(combat_member_count == object().member().combat_members().size());
 
 	u32						population_level = 0;
-	while (population(assigned) < combat_member_count) {
+	while (population(assigned) < combat_member_count) 
+	{
 		CMemberEnemy		*enemy = 0;
 		const CAI_Stalker	*processor = 0;
 		float				best_distance_sqr = flt_max;
 
-		for (int i=0; i<2; ++i) {
+		for (int i=0; i<2; ++i)
+		{
 			ENEMIES::iterator	I = m_enemies.begin();
 			ENEMIES::iterator	E = m_enemies.end();
 			for ( ; I != E; ++I) {
