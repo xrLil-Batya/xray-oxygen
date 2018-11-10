@@ -20,7 +20,6 @@
 #include "../alife_object_registry.h"
 #include "../xrServer.h"
 #include "../../xrServerEntities/xrServer_Objects_ALife_Monsters.h"
-#include "../../FrayBuildConfig.hpp"
 
 using namespace InventoryUtilities;
 
