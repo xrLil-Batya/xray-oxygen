@@ -374,6 +374,17 @@ void CTorch::UpdateCL()
 
 			glow_render->set_position(M.c);
 
+			if (!actor->HUDview())
+			{
+				u16 head_bone = actor->Visual()->dcast_PKinematics()->LL_BoneID("bip01_head");
+
+				CBoneInstance& BI2 = actor->Visual()->dcast_PKinematics()->LL_GetBoneInstance(head_bone);
+				Fmatrix M2;
+				M2.mul(actor->XFORM(), BI2.mTransform);
+
+				light_render->set_rotation(M2.k, M2.i);
+			}
+			else
 			light_render->set_rotation(dir, right);
 			light_omni->set_rotation(dir, right);
 
