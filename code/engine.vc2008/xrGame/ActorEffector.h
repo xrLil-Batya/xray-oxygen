@@ -44,7 +44,7 @@ public:
 				void			SetPP					(CEffectorPP* p)	{m_pe = p;}
 				void			SetCam					(CEffectorCam* p)	{m_ce = p;}
 	virtual		BOOL			Valid					()					{return m_ce || m_pe;};
-	virtual	float 	GetFactor				()					= 0;
+	virtual		float __stdcall	GetFactor				()					= 0;
 };
 
 class CAnimatorCamEffector : public CEffectorCam
@@ -103,7 +103,7 @@ protected:
 public:
 						CAnimatorCamLerpEffectorConst	();
 	void				SetFactor						(float v)		{m_factor = v; clamp(m_factor, 0.0f, 1.0f);}
-	float		GetFactor						()				{return m_factor;}
+	float	__stdcall	GetFactor						()				{return m_factor;}
 };
 
 class CCameraEffectorControlled : public CAnimatorCamLerpEffector
@@ -136,7 +136,7 @@ public:
 
 	virtual		BOOL			Valid				();
 				BOOL			InWork				();
-	virtual	float 	GetFactor			();
+	virtual		float __stdcall	GetFactor			();
 };
 
 //////////////////////////////////////////////////////////////////////////
