@@ -8,7 +8,7 @@
 #include "PHDestroyable.h"
 #include "Car.h"
 
-#include "Weapon.h"
+#include "items/Weapon.h"
 #include "Inventory.h"
 
 #include "SleepEffector.h"
@@ -29,13 +29,6 @@
 ENGINE_API extern float psHUD_FOV;
 ENGINE_API extern float psHUD_FOV_def;
 
-void CActor::cam_Set	(EActorCameras style)
-{
-	CCameraBase* old_cam = cam_Active();
-	cam_active = style;
-	old_cam->OnDeactivate();
-	cam_Active()->OnActivate(old_cam);
-}
 float CActor::f_Ladder_cam_limit=1.f;
 void CActor::cam_SetLadder()
 {
@@ -145,41 +138,11 @@ IC bool test_point( const Fvector	&pt, const Fmatrix33& mat, const Fvector& ext,
 	fmat.j.set( mat.j );
 	fmat.k.set( mat.k );
 	fmat.c.set( pt );
-	//IPhysicsShellHolder * ve = smart_cast<IPhysicsShellHolder*> ( Level().CurrentEntity() ) ;
+
 	VERIFY( actor );
 	return test_camera_box( ext, fmat, actor );
 }
 
-#ifdef	DEBUG
-template<typename T>
-void	dbg_draw_viewport( const T &cam_info, float _viewport_near )
-{
-	
-	VERIFY( _viewport_near > 0.f );
-	const Fvector near_plane_center = Fvector().mad( cam_info.Position(), cam_info.Direction(), _viewport_near );
-	float h_w, h_h;
-	viewport_size ( _viewport_near, cam_info, h_w, h_h );
-	const Fvector right	= Fvector().mul( cam_info.Right(), h_w );
-	const Fvector up	= Fvector().mul( cam_info.Up(), h_h );
-
-	
-	const Fvector	top_left = Fvector().sub( near_plane_center,  right ).add( up );
-	const Fvector	top_right = Fvector().add( near_plane_center,  right ).add( up );
-	const Fvector	bottom_left = Fvector().sub( near_plane_center,  right ).sub( up );
-	const Fvector	bottom_right = Fvector().add( near_plane_center,  right ).sub( up );
-	
-	DBG_DrawLine( cam_info.Position(), top_left, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( cam_info.Position(), top_right, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( cam_info.Position(), bottom_left, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( cam_info.Position(), bottom_right, D3DCOLOR_XRGB(255, 0, 0 ) );
-
-	DBG_DrawLine( top_right, top_left, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( bottom_right, top_right, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( top_left, bottom_left, D3DCOLOR_XRGB(255, 0, 0 ) );
-	DBG_DrawLine( bottom_left, bottom_right, D3DCOLOR_XRGB(255, 0, 0 ) );
-
-}
-#endif
 IC void get_box_mat( Fmatrix33	&mat, float alpha, const SRotation	&r_torso  )
 {
 	float dZ			= ((PI_DIV_2-((PI+alpha)/2)));
@@ -303,10 +266,10 @@ void CActor::cam_Update(float dt, float fFOV)
 			psHUD_FOV = psHUD_FOV_def;
 	}
 
-	if( (mstate_real & mcClimb) && (cam_active!=eacFreeLook) )
+	if ((mstate_real & mcClimb) && (cam_active != eacFreeLook))
 		camUpdateLadder(dt);
 	on_weapon_shot_update();
-	float y_shift =0;
+	float y_shift = 0;
 	current_ik_cam_shift = 0;
 
 	// Alex ADD: smooth crouch fix
@@ -314,75 +277,69 @@ void CActor::cam_Update(float dt, float fFOV)
 
 	if (CurrentHeight != CameraHeight())
 	{
-		CurrentHeight = (CurrentHeight * (1.0f - HeightInterpolationSpeed*dt)) + (CameraHeight() * HeightInterpolationSpeed*dt);
+		CurrentHeight = (CurrentHeight * (1.0f - HeightInterpolationSpeed * dt)) + (CameraHeight() * HeightInterpolationSpeed*dt);
 	}
 
 	Fvector point = { 0, CurrentHeight + current_ik_cam_shift, 0 };
-	Fvector dangle		= {0,0,0};
+	Fvector dangle = { 0,0,0 };
 	Fmatrix				xform;
-	xform.setXYZ		(0,r_torso.yaw,0);
+	xform.setXYZ(0, r_torso.yaw, 0);
 	xform.translate_over(XFORM().c);
 
 	// lookout
 	if (this == Level().CurrentControlEntity())
-		cam_Lookout( xform, point.y  );
+		cam_Lookout(xform, point.y);
 
 
 	if (!fis_zero(r_torso.roll))
 	{
-		float radius		= point.y*0.5f;
-		float valid_angle	= r_torso.roll/2.f;
-		calc_point			(point,radius,0,valid_angle);
-		dangle.z			= (PI_DIV_2-((PI+valid_angle)/2));
+		float radius = point.y*0.5f;
+		float valid_angle = r_torso.roll / 2.f;
+		calc_point(point, radius, 0, valid_angle);
+		dangle.z = (PI_DIV_2 - ((PI + valid_angle) / 2));
 	}
 
-	float flCurrentPlayerY	= xform.c.y;
+	float flCurrentPlayerY = xform.c.y;
 
 	// Smooth out stair step ups
-	if ((character_physics_support()->movement()->Environment()==CPHMovementControl::peOnGround) && (flCurrentPlayerY-fPrevCamPos>0)){
-		fPrevCamPos			+= dt*1.5f;
+	if ((character_physics_support()->movement()->Environment() == CPHMovementControl::peOnGround) && (flCurrentPlayerY - fPrevCamPos > 0)) {
+		fPrevCamPos += dt * 1.5f;
 		if (fPrevCamPos > flCurrentPlayerY)
-			fPrevCamPos		= flCurrentPlayerY;
-		if (flCurrentPlayerY-fPrevCamPos>0.2f)
-			fPrevCamPos		= flCurrentPlayerY-0.2f;
-		point.y				+= fPrevCamPos-flCurrentPlayerY;
-	}else{
-		fPrevCamPos			= flCurrentPlayerY;
+			fPrevCamPos = flCurrentPlayerY;
+		if (flCurrentPlayerY - fPrevCamPos > 0.2f)
+			fPrevCamPos = flCurrentPlayerY - 0.2f;
+		point.y += fPrevCamPos - flCurrentPlayerY;
+	}
+	else {
+		fPrevCamPos = flCurrentPlayerY;
 	}
 
-	float _viewport_near			= VIEWPORT_NEAR;
+	float _viewport_near = VIEWPORT_NEAR;
 	// calc point
-	xform.transform_tiny			(point);
+	xform.transform_tiny(point);
 
-	CCameraBase* C					= cam_Active();
+	CCameraBase* C = cam_Active();
 
-	C->Update						(point,dangle);
-	C->f_fov						= fFOV;
-
-	if (Level().CurrentEntity() == this)
-	{
-		collide_camera( *cameras[eacFirstEye], _viewport_near, this );
-	}
-
-	Cameras().UpdateFromCamera			(C);	
-
-	fCurAVelocity			= vPrevCamDir.sub(cameras[eacFirstEye]->vDirection).magnitude()/Device.fTimeDelta;
-	vPrevCamDir				= cameras[eacFirstEye]->vDirection;
-
-#ifdef DEBUG
-	if( dbg_draw_camera_collision )
-	{
-		dbg_draw_viewport( *cameras[eacFirstEye], _viewport_near );
-		dbg_draw_viewport( Cameras(), _viewport_near );
-	}
-#endif
+	C->Update(point, dangle);
+	C->f_fov = fFOV;
 
 	if (Level().CurrentEntity() == this)
 	{
-		Level().Cameras().UpdateFromCamera	(C);
-		if(!Level().Cameras().GetCamEffector(cefDemo)){
-			Cameras().ApplyDevice	(_viewport_near);
-		}
+		collide_camera(*cameras[eacFirstEye], _viewport_near, this);
+	}
+
+	Cameras().UpdateFromCamera(C);
+
+	fCurAVelocity = vPrevCamDir.sub(cameras[eacFirstEye]->vDirection).magnitude() / Device.fTimeDelta;
+	vPrevCamDir = cameras[eacFirstEye]->vDirection;
+
+	if (Level().CurrentEntity() == this)
+	{
+		Level().Cameras().UpdateFromCamera(C);
+
+		const bool allow = !Level().Cameras().GetCamEffector(cefDemo) && !Level().Cameras().GetCamEffector(cefAnsel);
+		if (eacFirstEye == cam_active && allow)
+			Cameras().ApplyDevice(_viewport_near);
 	}
 }
 

@@ -17,7 +17,7 @@
 #include "ai/stalker/ai_stalker.h"
 #include "stalker_animation_manager.h"
 #include "stalker_planner.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "inventory.h"
 #include "customzone.h"
 #include "patrol_path_manager.h"
@@ -224,7 +224,7 @@ bool CScriptGameObject::deadbody_can_take_status()
 	}
 	return  inventoryOwner->deadbody_can_take_status();
 }
-#include "CustomOutfit.h"
+#include "items/CustomOutfit.h"
 
 CScriptGameObject *CScriptGameObject::GetCurrentOutfit() const
 {

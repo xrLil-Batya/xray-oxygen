@@ -11,35 +11,35 @@
 IC CGameGraph &CAI_Space::game_graph() const
 {
 	VERIFY(m_game_graph);
-	return *m_game_graph;
+	return *m_game_graph.get();
 }
 
 IC CGameGraph *CAI_Space::get_game_graph() const
 {
-	return m_game_graph;
+	return m_game_graph.get();
 }
 
 IC CLevelGraph &CAI_Space::level_graph() const
 {
 	VERIFY(m_level_graph);
-	return *m_level_graph;
+	return *m_level_graph.get();
 }
 
 IC const CLevelGraph *CAI_Space::get_level_graph() const
 {
-	return m_level_graph;
+	return m_level_graph.get();
 }
 
 IC CEF_Storage &CAI_Space::ef_storage() const
 {
 	VERIFY(m_ef_storage);
-	return *m_ef_storage;
+	return *m_ef_storage.get();
 }
 
 IC CGraphEngine &CAI_Space::graph_engine() const
 {
 	VERIFY(m_graph_engine);
-	return *m_graph_engine;
+	return *m_graph_engine.get();
 }
 
 IC const CALifeSimulator &CAI_Space::alife() const
@@ -87,14 +87,4 @@ IC CPatrolPathStorage &CAI_Space::patrol_paths_raw()
 {
 	VERIFY(m_patrol_path_storage);
 	return *m_patrol_path_storage;
-}
-
-IC CAI_Space &ai()
-{
-	if (!g_ai_space) 
-	{
-		g_ai_space = xr_new<CAI_Space>();
-		g_ai_space->init();
-	}
-	return *g_ai_space;
 }

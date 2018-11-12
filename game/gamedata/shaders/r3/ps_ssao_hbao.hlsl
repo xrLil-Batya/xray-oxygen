@@ -330,7 +330,7 @@ float4 calc_hbao(float z, float3 N, float2 tc0, float4 pos2d)
 {
     float3 P = uv_to_eye(tc0, z);
 
-	float2 	step_size	= float2	(.5f / 1024.0f, .5f / 768.0f)*ssao_kernel_size/max(z,1.3);
+	float2 	step_size	= float2	(.5f / 1024.0f, .5f / 768.0f)*ssao_params.y/max(z,1.3);
   	float numSteps = min ( g_NumSteps, min(step_size.x * g_Resolution.x, step_size.y * g_Resolution.y));
 	float numDirs = min ( g_NumDir, min(step_size.x / 4 * g_Resolution.x, step_size.y / 4 * g_Resolution.y));
     if( numSteps < 1.0 ) return 1.0;

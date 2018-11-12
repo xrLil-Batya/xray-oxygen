@@ -10,9 +10,9 @@
 #include "../xrUICore/UIXmlInit.h"
 #include "../xrUICore/UIProgressBar.h"
 
-#include "Weapon.h"
-#include "CustomOutfit.h"
-#include "ActorHelmet.h"
+#include "items/Weapon.h"
+#include "items/CustomOutfit.h"
+#include "items/Helmet.h"
 
 CUICellItem* CUICellItem::m_mouse_selected_item = NULL;
 

@@ -3,7 +3,7 @@
 #include "../xrEngine/feel_touch.h"
 #include "hudsound.h"
 #include "customzone.h"
-#include "artefact.h"
+#include "items/Artefact.h"
 #include "ai_sounds.h"
 //#include "ui/ArtefactDetectorUI.h"
 

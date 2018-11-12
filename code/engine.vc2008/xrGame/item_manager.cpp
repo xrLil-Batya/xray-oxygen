@@ -17,7 +17,7 @@
 #include "profiler.h"
 #include "ai/stalker/ai_stalker.h"
 #include "stalker_movement_manager_smart_cover.h"
-#include "Weapon.h"
+#include "items/Weapon.h"
 
 CItemManager::CItemManager(CCustomMonster *object)
 {

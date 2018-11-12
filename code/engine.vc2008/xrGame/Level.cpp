@@ -31,6 +31,7 @@
 #include "ai_space.h"
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
+#include "../xrEngine/IGame_AnselSDK.h"
 
 #ifdef DEBUG
 #	include "ai_debug.h"
@@ -157,8 +158,6 @@ CLevel::CLevel() :IPureClient(Device.GetTimerGlobal()), Server(nullptr)
 
 	thread_spawn(mtLevelScriptUpdater, "X-Ray: Level Script Update", 0, this);
 }
-
-extern CAI_Space *g_ai_space;
 
 CLevel::~CLevel()
 {
@@ -419,10 +418,13 @@ void CLevel::OnFrame()
 	DBG_RenderUpdate();
 #endif // #ifdef DEBUG
 
-	m_map_manager->Update();
+	if (!pGameAnsel->isActive)
+	{
+		m_map_manager->Update();
 
-	if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
-		GameTaskManager().UpdateTasks();
+		if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
+			GameTaskManager().UpdateTasks();
+	}
 
 	// Inherited update
 	inherited::OnFrame();
@@ -491,12 +493,20 @@ extern void draw_wnds_rects();
 void CLevel::OnRender()
 {
 	::Render->BeforeWorldRender();
-	inherited::OnRender();
+	
+	// There is an exception while loading the level.
+	try
+	{
+		inherited::OnRender();
+	}
+	catch (...)
+	{
+		R_ASSERT(game && game->Type() == eGameIDNoGame);
+	}
+	 
+	if(!pGameAnsel->isActive)
+		HUD().RenderUI();
 
-	if (!game)
-		return;
-
-	HUD().RenderUI();
 	BulletManager().Render();
 	::Render->AfterWorldRender();
 

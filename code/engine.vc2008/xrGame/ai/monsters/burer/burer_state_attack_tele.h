@@ -1,10 +1,10 @@
 #pragma once
 #include "../state.h"
-#include "../../../grenade.h"
-
+#include "../../../items/Grenade.h"
 
 template<typename Object>
-class CStateBurerAttackTele : public CState<Object> {
+class CStateBurerAttackTele : public CState<Object> 
+{
 	typedef CState<Object> inherited;	
 
 	xr_vector<CPhysicsShellHolder *>	tele_objects;
@@ -54,7 +54,7 @@ private:
 
 			// internal for FindObjects
 			void		FindFreeObjects			(xr_vector<CObject*> &tpObjects, const Fvector &pos);
-			void xr_stdcall OnGrenadeDestroyed	(CGrenade* const grenade);
+			void  OnGrenadeDestroyed	(CGrenade* const grenade);
 
 			void		FireAllToEnemy			();
 			void		deactivate				();

@@ -98,7 +98,7 @@ BOOL CPostprocessAnimatorLerpConst::Process(SPPInfo& PPInfo)
 CPostprocessAnimatorControlled::CPostprocessAnimatorControlled(CEffectorController* c) : m_controller(c)
 {
 	m_controller->SetPP(this);
-	SetFactorFunc(std::bind(&CEffectorController::GetFactor, m_controller));
+	SetFactorFunc(BindDelegate(m_controller, &CEffectorController::GetFactor));
 }
 
 CPostprocessAnimatorControlled::~CPostprocessAnimatorControlled()

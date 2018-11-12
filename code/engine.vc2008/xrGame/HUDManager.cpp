@@ -6,12 +6,12 @@
 #include "../xrEngine/xr_input.h"
 #include "GamePersistent.h"
 #include "../xrUICore/MainMenu.h"
-#include "grenade.h"
+#include "items/Grenade.h"
 #include "Car.h"
 #include "UIGame.h"
 #include "../xrUICore/UICursor.h"
-#include "..\xrEngine\string_table.h"
-
+#include "../xrEngine/string_table.h"
+#include "../xrEngine/IGame_AnselSDK.h"
 #ifdef	DEBUG
 #include "phdebug.h"
 #endif
@@ -81,19 +81,19 @@ void CHUDManager::Render_First()
 
 bool need_render_hud()
 {
-	CObject *O = g_pGameLevel ? g_pGameLevel->CurrentViewEntity() : nullptr;
+	if (!pGameAnsel->isActive)
+	{
+		if (g_pGameLevel && g_pGameLevel->CurrentViewEntity())
+		{
+			CActor* A = smart_cast<CActor*> (g_pGameLevel->CurrentViewEntity());
+			if (A && (!A->HUDview() || !A->g_Alive()))
+				return false;
 
-	if (!O)
-		return false;
-
-	CActor*		A = smart_cast<CActor*> (O);
-	if (A && (!A->HUDview() || !A->g_Alive()))
-		return false;
-
-	if (smart_cast<CCar*>(O))
-		return false;
-
-	return true;
+			if (!smart_cast<CCar*>(g_pGameLevel->CurrentViewEntity()))
+				return true;
+		}
+	}
+	return false;
 }
 
 void CHUDManager::Render_Last()

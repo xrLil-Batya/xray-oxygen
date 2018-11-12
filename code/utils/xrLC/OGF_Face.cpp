@@ -215,17 +215,9 @@ void OGF::Optimize	()
 	}
 }
 
-
-
-<<<<<<< HEAD
 // Make Progressive
 xrCriticalSection			progressive_cs;
 void OGF::MakeProgressive	(float metric_limit)
-=======
-// Make Logger.Progressive
-std::recursive_mutex			Progressive_cs;
-void OGF::MakeProgressive(float metric_limit)
->>>>>>> origin/xrLC_Redux
 {
 	// test
 	// there is no-sense to simplify small models

@@ -14,6 +14,7 @@ enum ECameraStyle
 enum ECamEffectorType 
 {
 	cefDemo = 0,
+	cefAnsel,
 	cefNext
 };
 

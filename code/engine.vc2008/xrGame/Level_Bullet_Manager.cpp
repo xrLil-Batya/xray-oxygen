@@ -6,7 +6,7 @@
 #include "GamePersistent.h"
 #include "xrMessages.h"
 #include "character_info.h"
-#include "Weapon.h"
+#include "items/Weapon.h"
 #include "AI/stalker/ai_stalker.h"
 #include "AI/monsters/basemonster/base_monster.h"
 #include "../Include/xrRender/UIRender.h"

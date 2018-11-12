@@ -749,8 +749,8 @@ u8 get_active_cam()
 void set_active_cam(u8 mode)
 {
 	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
-	if (actor && mode <= ACTOR_DEFS::EActorCameras::eacMaxCam)
-		actor->cam_Set((ACTOR_DEFS::EActorCameras)mode);
+	if (actor && mode <= EActorCameras::eacMaxCam)
+		actor->cam_Set((EActorCameras)mode);
 }
 
 CScriptGameObject* get_view_entity_script()

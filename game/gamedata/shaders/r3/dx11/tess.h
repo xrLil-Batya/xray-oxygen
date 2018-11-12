@@ -31,6 +31,33 @@ struct HS_CONSTANT_DATA_OUTPUT
 
 float triLOD;
 
+#if 0 //untested and unfinished (adding so I don't forget)
+//https://developer.nvidia.com/content/dynamic-hardware-tessellation-basics
+
+#define PIXELS_PER_EDGE 3 //should be changed IMO, too few. Has to match C++ though.
+#define EDGES_PER_SCREEN_HEIGHT float(screen_res.y / PIXELS_PER_EDGE)
+//#define g_fDynamicTessFactor float(triLOD)
+
+float GetPostProjectionSphereExtent(float3 Origin, float Diameter)
+{
+    float4 ClipPos = mul( m_P, float4( Origin, 1.0 ) );
+    return abs(Diameter * g_mTessProj11 / ClipPos.w); //g_mTessProj11 should be replaced with f3B111 right?
+}
+
+float CalculateTessellationFactor(float3 Control0, float3 Control1)
+{
+    float e0 = distance(Control0,Control1);
+    float3 m0 = (Control0 + Control1)/2;
+    return max(1,triLOD * GetPostProjectionSphereExtent(m0,e0));
+}
+
+float DesiredEdges(float3 Control0, float3 Control11, out float TessFactor)
+{
+ return CalculateTessellationFactor(Control0, Control1) * EDGES_PER_SCREEN_HEIGHT;	
+}
+
+#else
+
 void ComputeTessFactor(out float Edges[3] : SV_TessFactor, out float Inside : SV_InsideTessFactor)
 {
 	//float factor = clamp(triLOD, 1, 1);//factor = (Output.N.z>0)?-1:10;//max(factor*10, 1);
@@ -38,6 +65,8 @@ void ComputeTessFactor(out float Edges[3] : SV_TessFactor, out float Inside : SV
     Edges[0] = Edges[1] = Edges[2] = /*63;//*/triLOD;//factor;
     Inside = /*63;//*/triLOD;//factor;
 }
+
+#endif
 
 void ComputePNPatch(float3 P[3], float3 N[3], out PNPatch patch)
 {
@@ -96,6 +125,7 @@ Texture2D 	s_tbump;             	//
 Texture2D 	s_tbumpX;                //
 Texture2D 	s_tdetailBumpX;          //	Error for bump detail
 
+//TODO: Rewrite this for decent displacement mapping, toggle with console variable
 void ComputeDisplacedVertex(inout float3 P, float3 N, float2 tc, float2 tcd)
 {
 #ifdef USE_TDETAIL

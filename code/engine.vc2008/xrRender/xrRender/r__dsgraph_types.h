@@ -26,16 +26,16 @@ namespace R_dsgraph
 		dxRender_Visual*		pVisual;
 	};
 
-#if defined(USE_DX10) || defined(USE_DX11)	//	DX10 needs shader signature to propperly bind deometry to shader
+//	DX10 needs shader signature to propperly bind deometry to shader
+#ifdef USE_DX11
 	typedef	SVS*					vs_type;
 	typedef	ID3DGeometryShader*		gs_type;
-#	ifdef USE_DX11
 	typedef	ID3D11HullShader*		hs_type;
 	typedef	ID3D11DomainShader*		ds_type;
-#	endif
-#else	//	USE_DX10
+#else
 	typedef	ID3DVertexShader*		vs_type;
-#endif	//	USE_DX10
+#endif
+
 	typedef	ID3DPixelShader*		ps_type;
 
 	// NORMAL
@@ -59,7 +59,7 @@ namespace R_dsgraph
 	struct mapNormalPS : public xr_unordered_map<ps_type, mapNormalCS> { float ssa; };
 #endif
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	struct mapNormalGS : public xr_unordered_map<gs_type, mapNormalPS> { float ssa; };
 	struct mapNormalVS : public xr_unordered_map<vs_type, mapNormalGS> {};
 #else
@@ -90,7 +90,7 @@ namespace R_dsgraph
 	struct mapMatrixPS : public xr_unordered_map<ps_type, mapMatrixCS> { float ssa; };
 #endif
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	struct mapMatrixGS : public xr_unordered_map<gs_type, mapMatrixPS> { float ssa; };
 	struct mapMatrixVS : public xr_unordered_map<vs_type, mapMatrixGS> {};
 #else

@@ -29,7 +29,6 @@ enum: unsigned long
 	rsCameraPos						= (1<<18),
 	rsRefresh120hz					= (1<<19),
 	rsR2							= (1<<20),
-	rsR3							= (1<<21),
 	rsR4							= (1<<22), // was reserved to Editor
 	rsDrawFPS						= (1<<23), // was reserved to Editor
 	rsHWInfo						= (1<<24)

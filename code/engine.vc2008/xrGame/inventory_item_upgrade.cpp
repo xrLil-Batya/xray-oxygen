@@ -18,7 +18,7 @@
 #include "inventory_upgrade_manager.h"
 #include "inventory_upgrade.h"
 #include "Level.h"
-#include "WeaponMagazinedWGrenade.h"
+#include "items/WeaponMagazinedWGrenade.h"
 
 bool CInventoryItem::has_upgrade_group( const shared_str& upgrade_group_id )
 {

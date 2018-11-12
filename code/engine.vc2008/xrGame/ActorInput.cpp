@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <dinput.h>
 #include "Actor.h"
-#include "Torch.h"
+#include "items/Torch.h"
 #include "trade.h"
 #include "../xrEngine/CameraBase.h"
 
@@ -31,7 +31,7 @@
 #include "CustomDetector.h"
 #include "clsid_game.h"
 #include "hudmanager.h"
-#include "Weapon.h"
+#include "items/Weapon.h"
 #include "ZoneCampfire.h"
 #include "../xrEngine/XR_IOConsole.h"
 #include "script_callback_ex.h"
@@ -589,9 +589,9 @@ void CActor::set_input_external_handler(CActorInputHandler *handler)
 }
 
 
-#include "WeaponBinoculars.h"
-#include "WeaponBinocularsVision.h"
-#include "ActorHelmet.h"
+#include "items/WeaponBinoculars.h"
+#include "items/WeaponBinocularsVision.h"
+#include "items/Helmet.h"
 void CActor::SwitchNightVision()
 {
 	CWeapon* wpn1 = nullptr;

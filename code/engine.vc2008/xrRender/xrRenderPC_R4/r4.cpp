@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "r4.h"
+#include "../../xrCore/xrDelegate/xrDelegate.h"
 #include "../xrRender/fbasicvisual.h"
 #include "../../xrEngine/xr_object.h"
 #include "../../xrEngine/CustomHUD.h"
@@ -53,7 +54,6 @@ ShaderElement* CRender::rimp_select_sh_static	(dxRender_Visual *pVisual,
 	return pVisual->shader->E[id]._get();
 }
 
-extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;	//	advanced post process and effects
 //////////////////////////////////////////////////////////////////////////
 // Just two static storage
@@ -96,7 +96,6 @@ void					CRender::create()
 	// options
 	o.sunfilter				= (strstr(Core.Params, "-sunfilter")) ? TRUE : FALSE;
 	/////////////////////////////////////////////
-	o.sunstatic				= r2_sun_static;
 	o.advancedpp			= r2_advanced_pp;
 	o.volumetricfog			= ps_r3_flags.test(R3_FLAG_VOLUMETRIC_SMOKE);
 	/////////////////////////////////////////////
@@ -310,11 +309,11 @@ void CRender::OnFrame()
 
 	Models->DeleteQueue();
 	Device.seqParallel.insert(Device.seqParallel.begin(),
-		fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
+		xrDelegate(BindDelegate(Details, &CDetailManager::MT_CALC)));
 
 	// MT-HOM (@front)
 	Device.seqParallel.insert(Device.seqParallel.begin(),
-		fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
+		xrDelegate(BindDelegate(&HOM, &CHOM::MT_RENDER)));
 }
 
 // Implementation
@@ -670,7 +669,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		SGS* sgs_result = (SGS*)result;
 #ifdef USE_DX11
 		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, nullptr, &sgs_result->gs);
-#else // USE_DX10
+#else
 		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, &sgs_result->gs);
 #endif
 
@@ -864,13 +863,6 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		def_it						++	;
 	}
 	sh_name[len]='0'+char(o.sunfilter); ++len;
-
-	if (o.sunstatic)		{
-		defines[def_it].Name		=	"USE_R2_STATIC_SUN";
-		defines[def_it].Definition	=	"1";
-		def_it						++	;
-	}
-	sh_name[len]='0'+char(o.sunstatic); ++len;
 
 	if (o.forceskinw)		{
 		defines[def_it].Name		=	"SKIN_COLOR";

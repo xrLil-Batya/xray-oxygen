@@ -22,10 +22,10 @@
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "CharacterPhysicsSupport.h"
-#include "Grenade.h"
-#include "WeaponMagazined.h"
-#include "WeaponKnife.h"
-#include "CustomOutfit.h"
+#include "items/Grenade.h"
+#include "items/WeaponMagazined.h"
+#include "items/WeaponKnife.h"
+#include "items/CustomOutfit.h"
 
 #include "actor_anim_defs.h"
 
@@ -41,7 +41,7 @@
 #include "holder_custom.h"
 #include "actor_memory.h"
 #include "characterphysicssupport.h"
-#include "../xrengine/xr_collide_form.h"
+#include "../xrEngine/xr_collide_form.h"
 #ifdef DEBUG
 #	include "debug_renderer.h"
 #	include "../xrPhysics/phvalide.h"
@@ -279,11 +279,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	unaffected_r_torso.yaw = r_torso.yaw;
 	unaffected_r_torso.pitch = r_torso.pitch;
 	unaffected_r_torso.roll = r_torso.roll;
-
-	if (psActorFlags.test(AF_PSP))
-		cam_Set(eacLookAt);
-	else
-		cam_Set(eacFirstEye);
 
 	cam_Active()->Set(-E->o_torso.yaw, E->o_torso.pitch, 0);
 

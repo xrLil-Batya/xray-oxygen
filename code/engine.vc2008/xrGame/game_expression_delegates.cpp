@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "../xrCore/XMLCore/Expression.h"
 #include "Actor.h"
-#include "CustomOutfit.h"
+#include "items/CustomOutfit.h"
 #include "EntityCondition.h"
 #include "inventory.h"
-#include "ActorHelmet.h"
+#include "items/Helmet.h"
 #include "ActorCondition.h"
 #include "PDA.h"
 

@@ -8,7 +8,7 @@
 #include "../../xrServerEntities/script_engine.h"
 #include "inventory_item_object.h"
 #include "UIInventoryUtilities.h"
-#include "Weapon.h"
+#include "items/Weapon.h"
 #include <luabind/luabind.hpp>
 
 struct SLuaWpnParams

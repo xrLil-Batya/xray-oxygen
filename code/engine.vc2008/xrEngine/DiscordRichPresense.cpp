@@ -5,6 +5,7 @@
 #include "DiscordRichPresense/discord_rpc.h"
 #include "x_ray.h"
 #include "IGame_Level.h"
+#include "IGame_Persistent.h"
 
 ENGINE_API xrDiscordPresense g_discord;
 
@@ -56,7 +57,7 @@ void xrDiscordPresense::SetStatus(StatusId status)
 			}
 		}
 	}
-
+	presenseInfo.startTimestamp = time(0);
 	presenseInfo.largeImageText = "Zone Awaits...";
 	presenseInfo.details = "Level: ";
 
@@ -69,7 +70,6 @@ void xrDiscordPresense::SetStatus(StatusId status)
 	case StatusId::Upiter:	presenseInfo.largeImageKey  = "ypiter"; break;
 	case StatusId::Pripyat:	presenseInfo.largeImageKey  = "pripyat"; break;
 	case StatusId::Menu:
-	default:
 		presenseInfo.details		= "Main Menu";
 		presenseInfo.largeImageKey	= "menu_final";
 		bOnLevel = false;
@@ -83,7 +83,7 @@ void xrDiscordPresense::SetStatus(StatusId status)
 		strconcat(sizeof(LevelName), LevelName, "Level: ", ConvertToUTF8(g_pGameLevel->name_translated().c_str()));
 		presenseInfo.details = std::move(LevelName);
 	}
-	else if (!g_pGameLevel)
+	else if (!g_pGameLevel && !g_pGamePersistent->m_pMainMenu->IsActive())
 	{
 		presenseInfo.details = "Loading...";
 	}

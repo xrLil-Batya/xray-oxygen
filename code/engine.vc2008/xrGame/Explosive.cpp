@@ -10,7 +10,7 @@
 #include "../xrParticles/ParticlesObject.h"
 
 //для вызова статических функций поражения осколками
-#include "Weapon.h"
+#include "items/Weapon.h"
 
 #include "actor.h"
 #include "actoreffector.h"

@@ -22,7 +22,18 @@
 #include "doors_manager.h"
 #include "../FrayBuildConfig.hpp"
 
-CAI_Space *g_ai_space = 0;
+static CAI_Space* g_ai_space = nullptr;
+
+CAI_Space& CAI_Space::GetInstance()
+{
+	if (!g_ai_space)
+	{
+		g_ai_space = new CAI_Space();
+		g_ai_space->init();
+	}
+
+	return *g_ai_space;
+}
 
 CAI_Space::CAI_Space				()
 {
@@ -43,89 +54,68 @@ CAI_Space::CAI_Space				()
 
 void CAI_Space::init				()
 {
-	m_ef_storage			= xr_new<CEF_Storage>();
-	m_graph_engine			= xr_new<CGraphEngine>(1024);
-	m_cover_manager			= xr_new<CCoverManager>();
-	m_patrol_path_storage	= xr_new<CPatrolPathStorage>();
-	m_moving_objects		= xr_new<::moving_objects>();
-	m_script_engine			= xr_new<CScriptEngine>();
-	script_engine().init	();
+	m_ef_storage			= std::make_unique<CEF_Storage>();
+	m_cover_manager			= std::make_unique<CCoverManager>();
+	m_moving_objects		= std::make_unique<::moving_objects>();
+
+	m_graph_engine			= std::make_unique<CGraphEngine>(1024);
+	m_patrol_path_storage	= std::make_unique<CPatrolPathStorage>();
+	m_script_engine			= new CScriptEngine();
+	script_engine().init	();    
+	
 }
 
 CAI_Space::~CAI_Space()
 {
 	unload();
-	
-	try {
-		xr_delete			(m_script_engine);
-	}
-	catch(...) {
-	}
-
-	xr_delete				(m_doors_manager);
-	xr_delete				(m_moving_objects);
-	xr_delete				(m_patrol_path_storage);
-	xr_delete				(m_cover_manager);
-	xr_delete				(m_graph_engine);
-	xr_delete				(m_ef_storage);
-	VERIFY					(!m_game_graph);
+	xr_delete(m_script_engine);
 }
 
-void CAI_Space::load				(LPCSTR level_name)
+void CAI_Space::load(LPCSTR level_name)
 {
-	VERIFY					(m_game_graph);
+	VERIFY(m_game_graph);
 
-	unload					(true);
+	unload(true);
 
 #ifdef DEBUG
-	Memory.mem_compact		();
+	Memory.mem_compact();
 	u32						mem_usage = Memory.mem_usage();
 	CTimer					timer;
-	timer.Start				();
+	timer.Start();
 #endif
 
 	const CGameGraph::SLevel &current_level = game_graph().header().level(level_name);
 
-	m_level_graph			= new CLevelGraph();
+	m_level_graph.reset(new CLevelGraph());
 	game_graph().set_current_level(current_level.id());
-	R_ASSERT2				(cross_table().header().level_guid() == level_graph().header().guid(), "cross_table doesn't correspond to the AI-map");
-	R_ASSERT2				(cross_table().header().game_guid() == game_graph().header().guid(), "graph doesn't correspond to the cross table");
-	m_graph_engine			= xr_new<CGraphEngine>(
-        std::max(
-			(u32)game_graph().header().vertex_count(),
-			level_graph().header().vertex_count()
-		)
-	);
-	
-	R_ASSERT2				(current_level.guid() == level_graph().header().guid(), "graph doesn't correspond to the AI-map");
-	
-#ifdef DEBUG
-	if (!xr_strcmp(current_level.name(),level_name))
-		validate			(current_level.id());
-#endif
-
-	level_graph().level_id	(current_level.id());
-	m_cover_manager->compute_static_cover	();
-	m_moving_objects->on_level_load			();
-
-	VERIFY					(!m_doors_manager);
-	m_doors_manager			= xr_new<::doors::manager>( ai().level_graph().header().box() );
+	R_ASSERT2(cross_table().header().level_guid() == level_graph().header().guid(), "cross_table doesn't correspond to the AI-map");
+	R_ASSERT2(cross_table().header().game_guid() == game_graph().header().guid(), "graph doesn't correspond to the cross table");
+	m_graph_engine.reset(new CGraphEngine(std::max((u32)game_graph().header().vertex_count(), level_graph().header().vertex_count())));
+	R_ASSERT2(current_level.guid() == level_graph().header().guid(), "graph doesn't correspond to the AI-map");
 
 #ifdef DEBUG
-	Msg						("* Loading ai space is successfully completed (%.3fs, %7.3f Mb)",timer.GetElapsed_sec(),float(Memory.mem_usage() - mem_usage)/1048576.0);
+	if (!xr_strcmp(current_level.name(), level_name))
+		validate(current_level.id());
 #endif
+
+	level_graph().level_id(current_level.id());
+	m_cover_manager->compute_static_cover();
+	m_moving_objects->on_level_load();
+
+	VERIFY(!m_doors_manager);
+	m_doors_manager.reset(new ::doors::manager(level_graph().header().box()));
 }
 
 void CAI_Space::unload				(bool reload)
 {
 	script_engine().unload	();
 
-	xr_delete				(m_doors_manager);
-	xr_delete				(m_graph_engine);
-	xr_delete				(m_level_graph);
+	m_doors_manager.reset(nullptr);
+	m_graph_engine.reset(nullptr);
+	m_level_graph.reset(nullptr);
 
 	if (!reload && m_game_graph)
-		m_graph_engine		= xr_new<CGraphEngine>( game_graph().header().vertex_count() );
+		m_graph_engine.reset(new CGraphEngine(game_graph().header().vertex_count()));
 }
 
 #ifdef DEBUG
@@ -162,16 +152,14 @@ void CAI_Space::validate			(const u32 level_id) const
 
 void CAI_Space::patrol_path_storage_raw	(IReader &stream)
 {
-	xr_delete						(m_patrol_path_storage);
-	m_patrol_path_storage			= xr_new<CPatrolPathStorage>();
+	m_patrol_path_storage.reset(new CPatrolPathStorage());
 	m_patrol_path_storage->load_raw	(get_level_graph(),get_cross_table(),get_game_graph(),stream);
 }
 
 void CAI_Space::patrol_path_storage		(IReader &stream)
 {
-	xr_delete						(m_patrol_path_storage);
-	m_patrol_path_storage			= xr_new<CPatrolPathStorage>();
-	m_patrol_path_storage->load		(stream);
+	m_patrol_path_storage.reset(new CPatrolPathStorage());
+	m_patrol_path_storage->load(stream);
 }
 
 void CAI_Space::set_alife(CALifeSimulator *alife_simulator)
@@ -182,27 +170,25 @@ void CAI_Space::set_alife(CALifeSimulator *alife_simulator)
 		return;
 
 	m_game_graph = nullptr;
-	xr_delete(m_graph_engine);
+//	m_graph_engine.reset(nullptr);
 }
 
-void CAI_Space::game_graph				(CGameGraph *game_graph)
+void CAI_Space::game_graph(CGameGraph *game_graph)
 {
-	VERIFY					(m_alife_simulator);
-	VERIFY					(game_graph);
-	VERIFY					(!m_game_graph);
-	m_game_graph			= game_graph;
+	VERIFY(m_alife_simulator);
+	VERIFY(game_graph);
+	VERIFY(!m_game_graph);
 
-//	VERIFY					(!m_graph_engine);
-	xr_delete				(m_graph_engine);
-	m_graph_engine			= xr_new<CGraphEngine>(this->game_graph().header().vertex_count());
+	m_game_graph.reset(game_graph);
+	m_graph_engine.reset(new CGraphEngine(this->game_graph().header().vertex_count()));
 }
 
-const CGameLevelCrossTable &CAI_Space::cross_table		() const
+const CGameLevelCrossTable &CAI_Space::cross_table() const
 {
-	return					(game_graph().cross_table());
+	return (game_graph().cross_table());
 }
 
-const CGameLevelCrossTable *CAI_Space::get_cross_table	() const
+const CGameLevelCrossTable *CAI_Space::get_cross_table() const
 {
-	return					(&game_graph().cross_table());
+	return (&game_graph().cross_table());
 }

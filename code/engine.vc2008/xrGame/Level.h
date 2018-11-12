@@ -123,16 +123,16 @@ protected:
 	LevelMapSyncData			map_data;
 	bool						synchronize_client		();
 
-	bool	xr_stdcall			net_start1				();
-	bool	xr_stdcall			net_start2				();
-	bool	xr_stdcall			net_start4				();
-	bool	xr_stdcall			net_start6				();
+	bool				net_start1				();
+	bool				net_start2				();
+	bool				net_start4				();
+	bool				net_start6				();
 
-	bool	xr_stdcall			net_start_client1				();
-	bool	xr_stdcall			net_start_client3				();
-	bool	xr_stdcall			net_start_client4				();
-	bool	xr_stdcall			net_start_client5				();
-	bool	xr_stdcall			net_start_client6				();
+	bool				net_start_client1				();
+	bool				net_start_client3				();
+	bool				net_start_client4				();
+	bool				net_start_client5				();
+	bool				net_start_client6				();
 public:
 
 	// sounds

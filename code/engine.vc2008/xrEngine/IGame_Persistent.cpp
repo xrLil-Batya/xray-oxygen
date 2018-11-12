@@ -12,7 +12,7 @@
 #	include "ps_instance.h"
 #	include "CustomHUD.h"
 #endif
-
+#include "Spectre\Spectre.h"
 #ifdef INGAME_EDITOR
 #	include "editor_environment_manager.hpp"
 #endif // INGAME_EDITOR
@@ -154,40 +154,38 @@ void IGame_Persistent::OnGameEnd	()
 #endif
 }
 
-void IGame_Persistent::OnFrame		()
+void IGame_Persistent::OnFrame()
 {
-#ifndef _EDITOR
+	if (!Device.Paused() || Device.dwPrecacheFrame)
+	{
+		Environment().OnFrame();
+		SpectreCallback::shedule_update->Invoke(SpectreObjectId, Device.dwTimeDelta);
+	}
 
-	if(!Device.Paused() || Device.dwPrecacheFrame)
-		Environment().OnFrame	();
-
-
-	Device.Statistic->Particles_starting= (u32)ps_needtoplay.size	();
-	Device.Statistic->Particles_active	= (u32)ps_active.size		();
-	Device.Statistic->Particles_destroy	= (u32)ps_destroy.size		();
+	Device.Statistic->Particles_starting = (u32)ps_needtoplay.size();
+	Device.Statistic->Particles_active = (u32)ps_active.size();
+	Device.Statistic->Particles_destroy = (u32)ps_destroy.size();
 
 	// Play req particle systems
 	while (ps_needtoplay.size())
 	{
-		CPS_Instance*	psi		= ps_needtoplay.back	();
-		ps_needtoplay.pop_back	();
-		psi->Play				(false);
+		CPS_Instance* pInstance = ps_needtoplay.back();
+		ps_needtoplay.pop_back();
+		pInstance->Play(false);
 	}
+
 	// Destroy inactive particle systems
 	while (ps_destroy.size())
 	{
-//		u32 cnt					= ps_destroy.size();
-		CPS_Instance*	psi		= ps_destroy.back();
-		VERIFY					(psi);
-		if (psi->Locked())
+		CPS_Instance* pInstance = ps_destroy.back();
+		if (pInstance->Locked())
 		{
 			Log("--locked");
 			break;
 		}
-		ps_destroy.pop_back		();
-		psi->PSI_internal_delete();
+		ps_destroy.pop_back();
+		pInstance->PSI_internal_delete();
 	}
-#endif
 }
 
 void IGame_Persistent::destroy_particles		(const bool &all_particles)

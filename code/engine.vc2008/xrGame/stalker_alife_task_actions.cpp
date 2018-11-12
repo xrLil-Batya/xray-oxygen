@@ -11,7 +11,7 @@
 #include "ai/stalker/ai_stalker.h"
 #include "ai/trader/ai_trader.h"
 #include "inventory_item.h"
-#include "weapon.h"
+#include "items/weapon.h"
 #include "script_game_object.h"
 #include "inventory.h"
 #include "alife_simulator.h"
@@ -31,8 +31,6 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "alife_human_brain.h"
 #include "alife_smart_terrain_task.h"
-
-#include "stdafx.h"
 #include "patrol_path_manager.h"
 
 using namespace StalkerSpace;

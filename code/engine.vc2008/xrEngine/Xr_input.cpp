@@ -5,8 +5,9 @@
 #include "../include/editor/ide.hpp"
 #include "../FrayBuildConfig.hpp"
 #include "OffSetOfWrapper.inl"
+#include "IGame_AnselSDK.h"
 
-CInput *	pInput = NULL;
+CInput *	pInput = nullptr;
 IInputReceiver		dummyController;
 
 ENGINE_API float	psMouseSens = 1.f;
@@ -543,11 +544,13 @@ void CInput::OnAppDeactivate(void)
 
 void CInput::OnFrame(void)
 {
-	RDEVICE.Statistic->Input.Begin();
 	dwCurTime = RDEVICE.TimerAsync_MMT();
-	if (pKeyboard)	KeyUpdate();
-	if (pMouse)		MouseUpdate();
-	RDEVICE.Statistic->Input.End();
+
+	if (Device.dwPrecacheFrame == 0 && !pGameAnsel->isActive)
+	{
+		KeyUpdate();
+		MouseUpdate();
+	}
 }
 
 IInputReceiver*	 CInput::CurrentIR()

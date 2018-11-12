@@ -39,7 +39,7 @@
 #include "stalker_search_planner.h"
 #include "smart_cover_evaluators.h"
 #include "inventory.h"
-#include "weaponmagazined.h"
+#include "items/weaponmagazined.h"
 
 using namespace StalkerSpace;
 using namespace StalkerDecisionSpace;

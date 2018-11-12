@@ -4,10 +4,10 @@
 #include "../xrUICore/UIStatic.h"
 #include "../xrUICore/UIDoubleProgressBar.h"
 
-#include "..\CustomOutfit.h"
-#include "..\ActorHelmet.h"
+#include "..\items/CustomOutfit.h"
+#include "..\items/Helmet.h"
 #include "../../xrEngine/string_table.h"
-#include "..\actor.h"
+#include "..\Actor.h"
 #include "..\ActorCondition.h"
 #include "..\player_hud.h"
 

@@ -4,7 +4,7 @@
 #include "InfoPortion.h"
 #include "Pda.h"
 
-#include "Grenade.h"
+#include "items/Grenade.h"
 #include "level.h"
 
 
@@ -39,10 +39,9 @@ void CUIZoneMap::Init()
 	CUIXml uiXml;
 	uiXml.Load						(CONFIG_PATH, UI_PATH, "ui_HUD.xml");
 
-	CUIXmlInit						xml_init;
-	xml_init.InitStatic				(uiXml, "minimap:background",	0, &m_background);
-	xml_init.InitWindow				(uiXml, "minimap:level_frame",	0, &m_clipFrame);
-	xml_init.InitStatic				(uiXml, "minimap:center",		0, &m_center);
+	CUIXmlInit::InitStatic(uiXml, "minimap:background",	0, &m_background);
+	CUIXmlInit::InitWindow(uiXml, "minimap:level_frame",	0, &m_clipFrame);
+	CUIXmlInit::InitStatic(uiXml, "minimap:center",		0, &m_center);
 	
 	m_clock_wnd	= UIHelper::CreateStatic(uiXml, "minimap:clock_wnd", &m_background);
     m_clock_wnd->SetAutoDelete(false);
@@ -54,7 +53,7 @@ void CUIZoneMap::Init()
 	m_activeMap->SetAutoDelete		(false);
 
 	m_activeMap->EnableHeading		(true);  
-	xml_init.InitStatic				(uiXml, "minimap:compass", 0, &m_compass);
+	CUIXmlInit::InitStatic				(uiXml, "minimap:compass", 0, &m_compass);
 	m_background.AttachChild		(&m_compass);
 
 	m_clipFrame.AttachChild			(&m_center);
@@ -96,10 +95,11 @@ void CUIZoneMap::Init()
 	rel_pos.mul				(m_background.GetWndSize());
 	m_clock_wnd->SetWndPos	(rel_pos);
 
-	xml_init.InitStatic			(uiXml, "minimap:static_counter", 0, &m_Counter);
-	m_background.AttachChild	(&m_Counter);
-	xml_init.InitTextWnd		(uiXml, "minimap:static_counter:text_static", 0, &m_Counter_text);
-	m_Counter.AttachChild		(&m_Counter_text);
+	CUIXmlInit::InitStatic(uiXml, "minimap:static_counter", 0, &m_Counter);
+	m_background.AttachChild(&m_Counter);
+
+	CUIXmlInit::InitTextWnd(uiXml, "minimap:static_counter:text_static", 0, &m_Counter_text);
+	m_Counter.AttachChild(&m_Counter_text);
 
 	rel_pos						= m_Counter.GetWndPos();
 	rel_pos.mul					(m_background.GetWndSize());

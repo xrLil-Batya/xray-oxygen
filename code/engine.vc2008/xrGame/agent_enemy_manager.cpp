@@ -26,31 +26,25 @@
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
+#include <bitset>
+#include <limits>
 #pragma warning(pop)
 
 const float wounded_enemy_reached_distance = 3.f;
 
-const unsigned __int32 __c0					= 0x55555555;
-const unsigned __int32 __c1					= 0x33333333;
-const unsigned __int32 __c2					= 0x0f0f0f0f;
-const unsigned __int32 __c3					= 0x00ff00ff;
-const unsigned __int32 __c4					= 0x0000003f;
-
-IC	u32 population(const u32 &b) {
-	u32		a = b;
-	a		= (a & __c0) + ((a >> 1) & __c0);
-	a		= (a & __c1) + ((a >> 2) & __c1);
-	a		= (a + (a >> 4)) & __c2;
-	a		= (a + (a >> 8)) & __c3;
-	a		= (a + (a >> 16)) & __c4;
-	return	(a);
+IC size_t population(const squad_mask_type &b)
+{
+	std::bitset<std::numeric_limits<squad_mask_type>::digits> mask(b);
+	return mask.count();
 }
 
-IC	u32 population(const u64 &b) {
-	return	( population( (u32)b ) + population(u32(b >> 32)) );
-}
+//IC u32 population(const u64 &b)
+//{
+//	return (population((squad_mask_type)b) + population(u32(b >> 32)));
+//}
 
-struct CEnemyFiller {
+struct CEnemyFiller 
+{
 	typedef CAgentEnemyManager::ENEMIES ENEMIES;
 	ENEMIES			*m_enemies;
 	squad_mask_type	m_mask;
@@ -461,16 +455,18 @@ void CAgentEnemyManager::assign_wounded			()
 		}
 	}
 
-	u32						combat_member_count = population(object().member().combat_mask());
+	u32						combat_member_count = (u32)population(object().member().combat_mask());
 	VERIFY					(combat_member_count == object().member().combat_members().size());
 
 	u32						population_level = 0;
-	while (population(assigned) < combat_member_count) {
+	while (population(assigned) < combat_member_count) 
+	{
 		CMemberEnemy		*enemy = 0;
 		const CAI_Stalker	*processor = 0;
 		float				best_distance_sqr = flt_max;
 
-		for (int i=0; i<2; ++i) {
+		for (int i=0; i<2; ++i)
+		{
 			ENEMIES::iterator	I = m_enemies.begin();
 			ENEMIES::iterator	E = m_enemies.end();
 			for ( ; I != E; ++I) {

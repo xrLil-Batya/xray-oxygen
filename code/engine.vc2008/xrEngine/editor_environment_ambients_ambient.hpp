@@ -56,8 +56,8 @@ public:
 	virtual	SSndChannelVec&	get_snd_channels	();
 
 private:
-			LPCSTR xr_stdcall id_getter	() const;
-			void xr_stdcall id_setter	(LPCSTR value);
+			LPCSTR  id_getter	() const;
+			void  id_setter	(LPCSTR value);
 
 public:
 	effects::manager const&			effects_manager	() const;

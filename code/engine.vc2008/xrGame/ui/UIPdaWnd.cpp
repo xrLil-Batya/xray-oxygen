@@ -148,7 +148,7 @@ void CUIPdaWnd::Update()
 	m_pActiveDialog->Update();
 	m_clock->TextItemControl().SetText(InventoryUtilities::GetGameTimeAsString(InventoryUtilities::etpTimeToMinutes).c_str());
 
-	Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(pUILogsWnd,&CUILogsWnd::PerformWork));
+	Device.seqParallel.emplace_back(pUILogsWnd, &CUILogsWnd::PerformWork);
 }
 
 #include <luabind/luabind.hpp>

@@ -418,10 +418,8 @@ public:
 	}
 };
 
-ENGINE_API BOOL r2_sun_static = TRUE;
 ENGINE_API BOOL r2_advanced_pp = FALSE;	//	advanced post process and effects
-
-u32	renderer_value = 3;
+u32	renderer_value = 0;
 u32 isLoaded = 2;
 extern bool g_bRendererForced;
 
@@ -445,14 +443,10 @@ public:
 
 			inherited::Execute(args);
 
-			//	0 - r1
-			//	1..3 - r2
-			//	4 - r3
-			psDeviceFlags.set(rsR2, ((renderer_value > 0) && renderer_value < 4));
-			psDeviceFlags.set(rsR3, (renderer_value == 4));
-			psDeviceFlags.set(rsR4, (renderer_value >= 5));
-
-			r2_sun_static = (renderer_value < 2);
+			// 0..2 - r2
+			// 3 - r4
+			psDeviceFlags.set(rsR2, ((renderer_value >= 0) && renderer_value < 3));
+			psDeviceFlags.set(rsR4, (renderer_value == 3));
 
 			r2_advanced_pp = (renderer_value >= 3);
 

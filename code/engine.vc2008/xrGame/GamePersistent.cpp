@@ -525,8 +525,7 @@ void CGamePersistent::OnFrame	()
     // Update sun before updating other enviroment settings
     if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
     {
-        if (!::Render->is_sun_static())
-            Environment().calculate_dynamic_sun_dir();
+		Environment().calculate_dynamic_sun_dir();
     }
 
 	MySuper::OnFrame			();

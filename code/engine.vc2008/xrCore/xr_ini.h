@@ -1,6 +1,5 @@
 #pragma once
-#include "fastdelegate.h"
-#include "string"
+#include <string>
 
 // refs
 struct	xr_token;
@@ -9,7 +8,8 @@ class   CInifile;
 struct  xr_token;
 
 
-class XRCORE_API CInifile {
+class XRCORE_API CInifile 
+{
 public:
 	typedef std::pair<shared_str, shared_str> Item;
 	struct XRCORE_API Sect 

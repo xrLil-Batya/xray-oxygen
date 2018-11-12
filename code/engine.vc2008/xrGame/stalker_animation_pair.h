@@ -29,7 +29,7 @@ public:
 	using BLEND_ID = std::pair<LPCSTR,LPCSTR>;
 
 public:
-	using CALLBACK_ID = fastdelegate::FastDelegate0<>;
+	using CALLBACK_ID = xrDelegate<void()>;
 	using CALLBACKS = xr_vector<CALLBACK_ID>;
 
 private:

@@ -353,6 +353,7 @@ void ImplicitLightingTreadNetExec(void *p)
 	ImplicitLightingExec(2);
 }
 
+void ImplicitLighting(u32 thCount)
 {
 	if (g_params().m_quality != ebqDraft)
 	{

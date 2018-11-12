@@ -48,9 +48,11 @@ public:
 
 	// Runtime structures 
 	xr_vector<R_dsgraph::mapNormalVS::value_type*,xalloc<R_dsgraph::mapNormalVS::value_type*> >				nrmVS;
-#if defined(USE_DX10) || defined(USE_DX11)
+
+#ifdef USE_DX11
 	xr_vector<R_dsgraph::mapNormalGS::value_type*,xalloc<R_dsgraph::mapNormalGS::value_type*> >				nrmGS;
-#endif	//	USE_DX10
+#endif
+
 	xr_vector<R_dsgraph::mapNormalPS::value_type*,xalloc<R_dsgraph::mapNormalPS::value_type*> >				nrmPS;
 	xr_vector<R_dsgraph::mapNormalCS::value_type*,xalloc<R_dsgraph::mapNormalCS::value_type*> >				nrmCS;
 	xr_vector<R_dsgraph::mapNormalStates::value_type*,xalloc<R_dsgraph::mapNormalStates::value_type*> >		nrmStates;
@@ -58,9 +60,11 @@ public:
 	xr_vector<R_dsgraph::mapNormalTextures::value_type*,xalloc<R_dsgraph::mapNormalTextures::value_type*> >	nrmTexturesTemp;
 
 	xr_vector<R_dsgraph::mapMatrixVS::value_type*,xalloc<R_dsgraph::mapMatrixVS::value_type*> >				matVS;
-#if defined(USE_DX10) || defined(USE_DX11)
+
+#ifdef USE_DX11
 	xr_vector<R_dsgraph::mapMatrixGS::value_type*,xalloc<R_dsgraph::mapMatrixGS::value_type*> >				matGS;
-#endif	//	USE_DX10
+#endif
+
 	xr_vector<R_dsgraph::mapMatrixPS::value_type*,xalloc<R_dsgraph::mapMatrixPS::value_type*> >				matPS;
 	xr_vector<R_dsgraph::mapMatrixCS::value_type*,xalloc<R_dsgraph::mapMatrixCS::value_type*> >				matCS;
 	xr_vector<R_dsgraph::mapMatrixStates::value_type*,xalloc<R_dsgraph::mapMatrixStates::value_type*> >		matStates;

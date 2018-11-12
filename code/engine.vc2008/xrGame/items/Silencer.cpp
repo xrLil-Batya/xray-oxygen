@@ -1,0 +1,15 @@
+///////////////////////////////////////////////////////////////
+// Silencer.cpp
+// Silencer - апгрейд оружия глушитель 
+///////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "items/Silencer.h"
+
+CSilencer::CSilencer()
+{
+}
+
+CSilencer::~CSilencer() 
+{
+}

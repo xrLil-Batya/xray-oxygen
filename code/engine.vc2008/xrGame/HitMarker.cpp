@@ -5,7 +5,7 @@
 #include "../xrEngine/LightAnimLibrary.h"
 #include "../xrUICore/UIStaticItem.h"
 
-#include "grenade.h"
+#include "items/Grenade.h"
 
 #include "../Include/xrRender/UIRender.h"
 #include "../Include/xrRender/UIShader.h"

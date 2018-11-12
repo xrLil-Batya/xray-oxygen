@@ -10,12 +10,6 @@
     <ClCompile Include="RendererList.cpp">
       <Filter>PlayCore\Kernel</Filter>
     </ClCompile>
-    <ClCompile Include="xrLauncherWnd.cxx">
-      <Filter>PlayCore\Launcher</Filter>
-    </ClCompile>
-    <ClCompile Include="AssemblyInfo.cxx">
-      <Filter>PlayCore\Launcher</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resources">
@@ -23,9 +17,6 @@
     </Filter>
     <Filter Include="PlayCore">
       <UniqueIdentifier>{d7d1bc4c-0bb7-405b-91f3-659a4331bd50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PlayCore\Launcher">
-      <UniqueIdentifier>{552545a6-b39d-45f9-b306-8533722aed38}</UniqueIdentifier>
     </Filter>
     <Filter Include="PlayCore\Kernel">
       <UniqueIdentifier>{f07c72d4-f864-4201-86d5-cd9322a93414}</UniqueIdentifier>
@@ -42,9 +33,6 @@
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="xrLauncherWnd.h">
-      <Filter>PlayCore\Launcher</Filter>
     </ClInclude>
     <ClInclude Include="IParserSystem.h">
       <Filter>PlayCore\Kernel</Filter>

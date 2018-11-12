@@ -20,7 +20,7 @@
 #include "../../../hit_memory_manager.h"
 #include "../../../actor_memory.h"
 #include "../../../inventory.h"
-#include "../../../weapon.h"
+#include "../../../items/weapon.h"
 #include "../../../ai_object_location.h"
 #include "../../../movement_manager_space.h"
 #include "../control_animation_base.h"

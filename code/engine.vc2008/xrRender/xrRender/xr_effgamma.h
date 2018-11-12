@@ -8,7 +8,7 @@ private:
 	float	fContrast;
 	Fvector	cBalance;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	DXGI_GAMMA_CONTROL_CAPABILITIES GC;
 	DXGI_GAMMA_CONTROL G;
 	IDXGIOutput* pOutput;
@@ -23,7 +23,7 @@ public:
 	IC	void	SetBalance		(float r, float g, float b)		{ cBalance.set(r, g, b); }
 	IC	void	SetBalance		(Fvector &C)					{ SetBalance(C.x, C.y, C.z); }
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	IC DXGI_GAMMA_CONTROL	GetLUT() const { return G; }
 #else
 	IC D3DGAMMARAMP			GetLUT() const { return G; }

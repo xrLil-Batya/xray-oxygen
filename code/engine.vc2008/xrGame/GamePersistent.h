@@ -52,16 +52,16 @@ class GAME_API CGamePersistent: public IGame_Persistent, public IEventReceiver
     shared_str					m_ServerOptions;
     shared_str					m_ClientOptions;
 
-	fastdelegate::FastDelegate0<> m_intro_event;
+	xrDelegate<void()>			m_intro_event;
 
-	void xr_stdcall		start_logo_intro		();
-	void xr_stdcall		update_logo_intro		();
+	void 		start_logo_intro		();
+	void 		update_logo_intro		();
 
-	void xr_stdcall		game_loaded				();
-	void xr_stdcall		update_game_loaded		();
+	void 		game_loaded				();
+	void 		update_game_loaded		();
 
-	void xr_stdcall		start_game_intro		();
-	void xr_stdcall		update_game_intro		();
+	void 		start_game_intro		();
+	void 		update_game_intro		();
 
 #ifdef DEBUG
 	u32					m_frame_counter;

@@ -40,19 +40,25 @@ ref_constant R_constant_table::get	(LPCSTR S)
 	if (I==table.end() || (0!=xr_strcmp(*(*I)->name,S)))	return 0;
 	else												return *I;
 }
-ref_constant R_constant_table::get	(shared_str& S)
+ref_constant R_constant_table::get(shared_str& S)
 {
-	// linear search, but only ptr-compare
-	c_table::iterator I	= table.begin	();
-	c_table::iterator E	= table.end		();
-	for (; I!=E; ++I)	{
-		ref_constant	C		= *I;
-		if (C->name.equal(S))	return C;
+	try
+	{
+		// linear search, but only ptr-compare
+		for (ref_constant &refConstant : table)
+		{
+			if (refConstant->name.equal(S))
+				return refConstant;
+		}
 	}
-	return	0;
+	catch (...)
+	{
+		Msg("![ERROR] Error checking constant table!");
+	}
+	return nullptr;
 }
 
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#ifndef USE_DX11
 BOOL	R_constant_table::parse	(void* _desc, u32 destination)
 {
 	D3DXSHADER_CONSTANTTABLE* desc	= (D3DXSHADER_CONSTANTTABLE*) _desc;
@@ -181,7 +187,7 @@ BOOL	R_constant_table::parse	(void* _desc, u32 destination)
 	std::sort	(table.begin(),table.end(),p_sort);
 	return		TRUE;
 }
-#endif	//	USE_DX10
+#endif
 
 /// !!!!!!!!FIX THIS FOR DX11!!!!!!!!!
 void R_constant_table::merge(R_constant_table* T)
@@ -201,13 +207,11 @@ void R_constant_table::merge(R_constant_table* T)
 			C->type				=	src->type;
 			C->ps				=	src->ps;
 			C->vs				=	src->vs;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 			C->gs				=	src->gs;
-#	ifdef USE_DX11
 			C->hs				=	src->hs;
 			C->ds				=	src->ds;
 			C->cs				=	src->cs;
-#	endif
 #endif
 			C->samp				=	src->samp;
 			table.push_back		(C);
@@ -227,21 +231,21 @@ void R_constant_table::merge(R_constant_table* T)
 	// Sort
 	std::sort		(table.begin(),table.end(),p_sort);
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	//	TODO:	DX10:	Implement merge with validity check
 	m_CBTable.reserve( m_CBTable.size() + T->m_CBTable.size());
 	for ( u32 i = 0; i < T->m_CBTable.size(); ++i )
 		m_CBTable.push_back(T->m_CBTable[i]);
-#endif	//	USE_DX10
+#endif
 }
 
 void R_constant_table::clear	()
 {
 	//.
 	for (u32 it=0; it<table.size(); it++)
-		table[it]	= 0;//.g_constant_allocator.destroy(table[it]);
+		table[it]	= 0;
 	table.clear		();
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	m_CBTable.clear();
 #endif	//	
 }

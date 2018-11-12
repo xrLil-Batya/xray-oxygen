@@ -122,9 +122,9 @@ void CRenderDevice::End		()
 #	endif // #ifdef INGAME_EDITOR
 }
 
+volatile u32 mt_Thread_marker = 0x12345678;
 
-volatile u32	mt_Thread_marker		= 0x12345678;
-void 			mt_Thread	(void *ptr)	
+void mt_Thread(void *ptr)	
 {
     gSecondaryThreadId = GetCurrentThreadId();
 
@@ -133,18 +133,17 @@ void 			mt_Thread	(void *ptr)
 		// waiting for Device permission to execute
 		Device.mt_csEnter.Enter	();
 
-		if (Device.mt_bMustExit) {
-			Device.mt_bMustExit = FALSE;				// Important!!!
-			Device.mt_csEnter.Leave();					// Important!!!
+		if (Device.mt_bMustExit) 
+		{
+			Device.mt_bMustExit = FALSE; // Important!!!
 			return;
 		}
 		// we has granted permission to execute
-		mt_Thread_marker			= Device.dwFrame;
+		mt_Thread_marker = Device.dwFrame;
  
-		for (fastdelegate::FastDelegate0<> & pit : Device.seqParallel)
-		{
-			pit();
-		}
+		for (xrDelegate<void()> &refParallelDelegate : Device.seqParallel)
+			refParallelDelegate();
+
 		Device.seqParallel.clear();
 		Device.seqFrameMT.Process(rp_Frame);
 
@@ -158,37 +157,42 @@ void 			mt_Thread	(void *ptr)
 }
 
 #include "igame_level.h"
-void CRenderDevice::PreCache	(u32 amount, bool b_draw_loadscreen, bool b_wait_user_input)
+void CRenderDevice::PreCache(u32 amount, bool b_draw_loadscreen, bool b_wait_user_input)
 {
-	if (m_pRender->GetForceGPU_REF()) 
-		amount = NULL; 
+	if (m_pRender->GetForceGPU_REF()) { amount = NULL; }
 
-	dwPrecacheFrame	= dwPrecacheTotal = amount;
-	if (amount && !precache_light && g_pGameLevel && g_loading_events.empty()) {
-		precache_light					= ::Render->light_create();
-		precache_light->set_shadow		(false);
-		precache_light->set_position	(vCameraPosition);
-		precache_light->set_color		(255,255,255);
-		precache_light->set_range		(5.0f);
-		precache_light->set_active		(true);
-	}
+	dwPrecacheFrame = dwPrecacheTotal = amount;
 
-	if(amount && b_draw_loadscreen && load_screen_renderer.b_registered==false)
+	if (dwPrecacheFrame)
 	{
-		load_screen_renderer.start	(b_wait_user_input);
+		if (!precache_light && g_pGameLevel && g_loading_events.empty())
+		{
+			precache_light = ::Render->light_create();
+			precache_light->set_shadow(false);
+			precache_light->set_position(vCameraPosition);
+			precache_light->set_color(255, 255, 255);
+			precache_light->set_range(5.0f);
+			precache_light->set_active(true);
+		}
+
+		if (b_draw_loadscreen && !load_screen_renderer.b_registered)
+		{
+			load_screen_renderer.start(b_wait_user_input);
+		}
 	}
 }
 
-ENGINE_API xr_list<LOADING_EVENT>			g_loading_events;
+ENGINE_API xr_list<LOADING_EVENT> g_loading_events;
 
-void CRenderDevice::on_idle		()
+void CRenderDevice::on_idle()
 {
-	if (!b_is_Ready) { Sleep(100); return; }
+	if (!b_is_Ready) 
+	{
+		Sleep(100);
+		return; 
+	}
 
-	if (psDeviceFlags.test(rsStatistic))
-		g_bEnableStatGather = TRUE;
-	else
-		g_bEnableStatGather = FALSE;
+	g_bEnableStatGather = psDeviceFlags.test(rsStatistic);
 
 	if (!g_loading_events.empty())
 	{
@@ -240,8 +244,9 @@ void CRenderDevice::on_idle		()
 		if (Begin())
 		{
 			seqRender.Process(rp_Render);
-			if (psDeviceFlags.test(rsCameraPos) || psDeviceFlags.test(rsStatistic)
-			   || psDeviceFlags.test(rsDrawFPS) || psDeviceFlags.test(rsHWInfo) || !Statistic->errors.empty())
+			if (psDeviceFlags.test(rsCameraPos) || psDeviceFlags.test(rsStatistic)  || 
+				psDeviceFlags.test(rsDrawFPS)	|| psDeviceFlags.test(rsHWInfo)		|| 
+				!Statistic->errors.empty())
 			{
 				Statistic->Show();
 			}
@@ -263,20 +268,25 @@ void CRenderDevice::on_idle		()
 	// Ensure, that second thread gets chance to execute anyway
 	if (dwFrame != mt_Thread_marker)
 	{
-		for (auto & pit : Device.seqParallel) { pit(); }
+		for (auto & refParallelDelegate : Device.seqParallel) 
+			refParallelDelegate();
+
 		Device.seqParallel.clear();
 		seqFrameMT.Process(rp_Frame);
 	}
 
-	if (!b_is_Active)
-		Sleep(1);
+	if (!b_is_Active) 
+	{ 
+		Sleep(1); 
+	}
 }
 
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
-	std::string buf = "vid_mode " + std::to_string(width) + "x" + std::to_string(height);
-	Console->Execute(buf.c_str());
+	static char buf[128] = { NULL };
+	xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
 
+	Console->Execute(buf);
 	m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
 }
 
@@ -350,7 +360,7 @@ void CRenderDevice::BeginToWork()
 
 	Msg("Value of system displays: %d.", GetNumOfDisplays());
 
-	thread_name("X-RAY Primary thread");
+	thread_name("X-Ray: Primary thread");
 
 	// Startup timers and calculate timer delta
 	dwTimeGlobal = 0;

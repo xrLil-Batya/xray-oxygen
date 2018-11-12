@@ -7,15 +7,15 @@
 #include "actoreffector.h"
 #include "Missile.h"
 #include "inventory.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "map_manager.h"
 #include "level.h"
 #include "CharacterPhysicsSupport.h"
 #include "EffectorShot.h"
-#include "WeaponMagazined.h"
-#include "Grenade.h"
+#include "items/WeaponMagazined.h"
+#include "items/Grenade.h"
 #include "game_base.h"
-#include "Artefact.h"
+#include "items/Artefact.h"
 
 static const float VEL_MAX = 10.f;
 static const float VEL_A_MAX = 10.f;

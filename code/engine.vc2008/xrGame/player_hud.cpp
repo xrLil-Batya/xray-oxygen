@@ -6,7 +6,7 @@
 #include "actoreffector.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "inventory_item.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "actor.h"
 player_hud* g_player_hud = nullptr;
 Fvector _ancor_pos;

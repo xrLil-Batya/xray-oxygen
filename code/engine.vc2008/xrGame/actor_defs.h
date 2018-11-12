@@ -13,12 +13,6 @@ enum ESoundCcount {
 	SND_DIE_COUNT=4
 };
 
-enum EActorCameras {
-	eacFirstEye		= 0,
-	eacLookAt,
-	eacFreeLook,
-	eacMaxCam
-};
 enum EDamages {DAMAGE_FX_COUNT = 12};
 
 

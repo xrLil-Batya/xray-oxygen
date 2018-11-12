@@ -66,13 +66,13 @@ public:
 			return (xr_strcmp( x, y ) < 0);
 		}
 	};
-	using vecCMD =  xr_map<LPCSTR,IConsole_Command*,str_pred>;
-	using vecCMD_IT =  vecCMD::iterator;
-	using vecCMD_CIT =  vecCMD::const_iterator;
-	using Callback =  fastdelegate::FastDelegate0<void>;
-	using vecHistory =  xr_vector<shared_str>;
-	using vecTips =  xr_vector<shared_str>;
-	using vecTipsEx =  xr_vector<TipString>;
+	using vecCMD     = xr_map<LPCSTR,IConsole_Command*,str_pred>;
+	using vecCMD_IT  = vecCMD::iterator;
+	using vecCMD_CIT = vecCMD::const_iterator;
+	using Callback   = xrDelegate<void()>;
+	using vecHistory = xr_vector<shared_str>;
+	using vecTips    = xr_vector<shared_str>;
+	using vecTipsEx  = xr_vector<TipString>;
 
 	enum			{ CONSOLE_BUF_SIZE = 1024 };
 	enum			{ VIEW_TIPS_COUNT = 14, MAX_TIPS_COUNT = 220 };

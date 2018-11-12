@@ -18,13 +18,13 @@
 #include "EffectorZoomInertion.h"
 #include "SleepEffector.h"
 #include "character_info.h"
-#include "CustomOutfit.h"
+#include "items/CustomOutfit.h"
 #include "actorcondition.h"
 #include "UIGame.h"
 #include "../xrphysics/matrix_utils.h"
 #include "clsid_game.h"
-#include "Grenade.h"
-#include "Torch.h"
+#include "items/Grenade.h"
+#include "items/Torch.h"
 
 // breakpoints
 #include "../xrEngine/xr_input.h"
@@ -44,7 +44,7 @@
 #include "usablescriptobject.h"
 #include "alife_registry_wrappers.h"
 #include "../Include/xrRender/Kinematics.h"
-#include "artefact.h"
+#include "items/Artefact.h"
 #include "CharacterPhysicsSupport.h"
 #include "material_manager.h"
 #include "../xrphysics/IColisiondamageInfo.h"
@@ -64,7 +64,7 @@
 #include "ai_object_location.h"
 #include "ui/uiMotionIcon.h"
 #include "ui/UIActorMenu.h"
-#include "ActorHelmet.h"
+#include "items/Helmet.h"
 #include "UI/UIDragDropReferenceList.h"
 #include "ZoneCampfire.h"
 
@@ -95,18 +95,11 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 		if (pActor != g_actor) return;
 
+		pActor->setSVU(true);
+
 		// if player flags changed
 		if (!lastActorFlagsState.equal(psActorFlags)) 
 		{
-			// Switch to third person view and vice versa
-			if (psActorFlags.test(AF_PSP)) 
-			{
-				pActor->cam_Set(eacLookAt);
-			} else 
-			{
-				pActor->cam_Set(eacFirstEye);
-			}
-
 			// Update hardcode mode
 			if (psActorFlags.test(AF_HARDCORE))
 				pActor->cam_Set(eacFirstEye);
@@ -385,10 +378,6 @@ void CActor::Load	(LPCSTR section )
 		GamePersistent().m_pGShaderConstants.m_blender_mode.set(0.f, 0.f, 0.f, 0.f);
 	}
 
-	if( psActorFlags.test(AF_PSP) )
-		cam_Set					(eacLookAt);
-	else
-		cam_Set					(eacFirstEye);
 
 	// scheduler
 	shedule.t_min				= shedule.t_max = 1;
@@ -435,54 +424,39 @@ void CActor::PHHit(SHit &H)
 	m_pPhysics_support->in_Hit( H, false );
 }
 
-struct playing_pred
-{
-	IC	bool	operator()			(ref_sound &s)
-	{
-		return	(nullptr != s._feedback() );
-	}
-};
-
-void	CActor::Hit(SHit* pHDS)
+void CActor::Hit(SHit* pHDS)
 {
 	bool b_initiated = pHDS->aim_bullet; // physics strike by poltergeist
 
 	pHDS->aim_bullet = false;
 
-	SHit& HDS = *pHDS;
-	if (HDS.hit_type < ALife::eHitTypeBurn || HDS.hit_type >= ALife::eHitTypeMax)
+	if (pHDS->hit_type < ALife::eHitTypeBurn || pHDS->hit_type >= ALife::eHitTypeMax)
 	{
 		string256	err;
-		xr_sprintf(err, "Unknown/unregistered hit type [%d]", HDS.hit_type);
+		xr_sprintf(err, "Unknown/unregistered hit type [%d]", pHDS->hit_type);
 		R_ASSERT2(0, err);
-
 	}
-#ifdef DEBUG
-	if (ph_dbg_draw_mask.test(phDbgCharacterControl)) {
-		DBG_OpenCashedDraw();
-		Fvector to; to.add(Position(), Fvector().mul(HDS.dir, HDS.phys_impulse()));
-		DBG_DrawLine(Position(), to, D3DCOLOR_XRGB(124, 124, 0));
-		DBG_ClosedCashedDraw(500);
-	}
-#endif // DEBUG
 
-	bool bPlaySound = true;
-	if (!g_Alive()) bPlaySound = false;
+	bool bPlaySound = g_Alive();
 
-	if (!sndHit[HDS.hit_type].empty() &&
-		conditions().PlayHitSound(pHDS))
+	if (!sndHit[pHDS->hit_type].empty() && conditions().PlayHitSound(pHDS))
 	{
-		ref_sound& S = sndHit[HDS.hit_type][Random.randI((u32)sndHit[HDS.hit_type].size())];
-		bool b_snd_hit_playing = sndHit[HDS.hit_type].end() != std::find_if(sndHit[HDS.hit_type].begin(), sndHit[HDS.hit_type].end(), playing_pred());
+		ref_sound& S = sndHit[pHDS->hit_type][Random.randI((u32)sndHit[pHDS->hit_type].size())];
+		bool b_snd_hit_playing = sndHit[pHDS->hit_type].end() != std::find_if(sndHit[pHDS->hit_type].begin(), sndHit[pHDS->hit_type].end(),
+			[](ref_sound &s)
+			{
+				return	(nullptr != s._feedback());
+			}
+		);
 
-		if (ALife::eHitTypeExplosion == HDS.hit_type)
+		if (ALife::eHitTypeExplosion == pHDS->hit_type)
 		{
 			if (this == Level().CurrentControlEntity())
 			{
 				S.set_volume(10.0f);
 				if (!m_sndShockEffector) {
 					m_sndShockEffector = xr_new<SndShockEffector>();
-					m_sndShockEffector->Start(this, float(S.get_length_sec()*1000.0f), HDS.damage());
+					m_sndShockEffector->Start(this, float(S.get_length_sec()*1000.0f), pHDS->damage());
 				}
 			}
 			else
@@ -495,8 +469,6 @@ void	CActor::Hit(SHit* pHDS)
 			S.play_at_pos(this, point);
 		}
 	}
-
-
 	//slow actor, only when he gets hit
 	m_hit_slowmo = conditions().HitSlowmo(pHDS);
 
@@ -508,27 +480,28 @@ void	CActor::Hit(SHit* pHDS)
 		if (!is_special_burn_hit_2_self)
 			mstate_wishful &= ~mcSprint;
 	}
+
 	if (!m_disabled_hitmarks)
 	{
 		bool b_fireWound = (pHDS->hit_type == ALife::eHitTypeFireWound || pHDS->hit_type == ALife::eHitTypeWound_2);
 		b_initiated = b_initiated && (pHDS->hit_type == ALife::eHitTypeStrike);
 
 		if (b_fireWound || b_initiated)
-			HitMark(HDS.damage(), HDS.dir, HDS.who, HDS.bone(), HDS.p_in_bone_space, HDS.impulse, HDS.hit_type);
+			HitMark(pHDS->damage(), pHDS->dir, pHDS->who, pHDS->bone(), pHDS->p_in_bone_space, pHDS->impulse, pHDS->hit_type);
 	}
 
-	float hit_power = HitArtefactsOnBelt(HDS.damage(), HDS.hit_type);
+	float hit_power = HitArtefactsOnBelt(pHDS->damage(), pHDS->hit_type);
 
 	if (GodMode())
 	{
-		HDS.power = 0.0f;
+		pHDS->power = 0.0f;
 	}
 	else
 	{
-		HDS.power = hit_power;
-		HDS.add_wound = true;
+		pHDS->power = hit_power;
+		pHDS->add_wound = true;
 	}
-	inherited::Hit(&HDS);
+	inherited::Hit(pHDS);
 }
 
 void CActor::HitMark(float P, Fvector dir, CObject* who_object, s16 element, Fvector position_in_bone_space, float impulse, ALife::EHitType hit_type_)
@@ -538,16 +511,16 @@ void CActor::HitMark(float P, Fvector dir, CObject* who_object, s16 element, Fve
 		HUD().HitMarked(0, P, dir);
 
 		CEffectorCam* ce = Cameras().GetCamEffector((ECamEffectorType)effFireHit);
-		if (ce)					return;
+		if (ce) return;
 
 		int id = -1;
-		Fvector						cam_pos, cam_dir, cam_norm;
+		Fvector cam_pos, cam_dir, cam_norm;
 		cam_Active()->Get(cam_pos, cam_dir, cam_norm);
 		cam_dir.normalize_safe();
 		dir.normalize_safe();
 
 		float ang_diff = angle_difference(cam_dir.getH(), dir.getH());
-		Fvector						cp;
+		Fvector cp;
 		cp.crossproduct(cam_dir, dir);
 		bool bUp = (cp.y > 0.0f);
 
@@ -620,10 +593,11 @@ void CActor::Die(CObject* who)
 		{
 			CCustomOutfit *pOutfit = smart_cast<CCustomOutfit *> (item_in_slot);
 			if (pOutfit) continue;
-		};
+		}
+
 		if (item_in_slot)
 			inventory().Ruck(item_in_slot);
-	};
+	}
 
 	TIItemContainer &l_blist = inventory().m_belt;
 	while (!l_blist.empty())
@@ -772,7 +746,6 @@ void CActor::UpdateCL()
 					S->SetParams(full_fire_disp);
 
 				SetZoomAimingMode(true);
-				//Alun: Force switch to first-person for zooming
 				if (!bLook_cam_fp_zoom && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
 				{
 					cam_Set(eacFirstEye);
@@ -781,7 +754,6 @@ void CActor::UpdateCL()
 			}
 			else
 			{
-				//Alun: Switch back to third-person if was forced
 				if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
 				{
 					cam_Set(eacLookAt);
@@ -802,12 +774,12 @@ void CActor::UpdateCL()
 
 				if (!bLook_cam_fp_zoom && g_Alive() && Level().CurrentViewEntity() == this && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
 				{
-					Actor()->IR_OnKeyboardPress(kCAM_1);
+					cam_Set(eacFirstEye);
 					bLook_cam_fp_zoom = true;
 				}
 				else if (bLook_cam_fp_zoom && cam_active == eacFirstEye && g_Alive() && Level().CurrentViewEntity() == this)
 				{
-					Actor()->IR_OnKeyboardPress(kCAM_2);
+					cam_Set(eacLookAt);
 					bLook_cam_fp_zoom = false;
 				}
 			}
@@ -891,15 +863,15 @@ void CActor::UpdateCL()
 			if (!m_sndShockEffector->InWork() || !g_Alive())
 				xr_delete(m_sndShockEffector);
 		}
-		else
-			xr_delete(m_sndShockEffector);
+		else xr_delete(m_sndShockEffector);
 	}
-	Fmatrix							trans;
-
-	Cameras().hud_camera_Matrix(trans);
 
 	if (IsFocused())
+	{
+		Fmatrix trans;
+		Cameras().hud_camera_Matrix(trans);
 		g_player_hud->update(trans);
+	}
 }
 
 float	NET_Jump = 0;
@@ -918,8 +890,6 @@ void CActor::set_state_box(u32	mstate)
 
 void CActor::shedule_Update	(u32 DT)
 {
-	setSVU(true);
-
 	if (IsFocused())
 	{
 		if (HUDview())

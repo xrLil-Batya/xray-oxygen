@@ -11,7 +11,7 @@
 #include "level.h"
 #include "../xrEngine/igame_persistent.h"
 #include "../xrengine/xr_collide_form.h"
-#include "artefact.h"
+#include "items/Artefact.h"
 #include "ai_object_location.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "zone_effector.h"
@@ -270,7 +270,6 @@ void CCustomZone::Load(LPCSTR section)
 		m_fIdleLightHeight = pSettings->r_float(section, "idle_light_height");
 		m_zone_flags.set(eIdleLightVolumetric, pSettings->r_bool(section, "idle_light_volumetric"));
 		m_zone_flags.set(eIdleLightShadow, pSettings->r_bool(section, "idle_light_shadow"));
-		m_zone_flags.set(eIdleLightR1, pSettings->r_bool(section, "idle_light_r1"));
 
 		// Загрузка параметров для волуметрик-луча;
 		volumetric_distance = READ_IF_EXISTS(pSettings, r_float, section, "volumetric_distance", 0.80);
@@ -313,12 +312,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 	m_zone_flags.set			(eUseOnOffTime,	(m_TimeToDisable!=0)&&(m_TimeToEnable!=0) );
 
 	//добавить источники света
-	bool br1 = (0==psDeviceFlags.test(rsR2|rsR3|rsR4));
-	
-	
-	bool render_ver_allowed = !br1 || (br1&&m_zone_flags.test(eIdleLightR1)) ;
-
-	if ( m_zone_flags.test(eIdleLight) && render_ver_allowed)
+	if (m_zone_flags.test(eIdleLight))
 	{
 		m_pIdleLight = ::Render->light_create();
 		m_pIdleLight->set_shadow(!!m_zone_flags.test(eIdleLightShadow));
@@ -766,7 +760,7 @@ void CCustomZone::PlayHitParticles(CGameObject* pObject)
 		}
 	}
 }
-#include "bolt.h"
+#include "items/bolt.h"
 void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 {
 	m_entrance_sound.play_at_pos		(nullptr, pObject->Position());

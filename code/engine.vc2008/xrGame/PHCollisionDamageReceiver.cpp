@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "phcollisiondamagereceiver.h"
-#include "../xrphysics/IPhysicsShellHolder.h"
-#include "../xrcore/xr_ini.h"
+#include "PHCollisionDamageReceiver.h"
+#include "PhysicsShellHolder.h"
+#include "../xrPhysics/IPhysicsShellHolder.h"
 #include "../Include/xrRender/Kinematics.h"
-#include "../xrphysics/geometry.h"
-#include "../xrphysics/PhysicsShell.h"
+#include "../xrPhysics/geometry.h"
+#include "../xrPhysics/PhysicsShell.h"
 #include "xrMessages.h"
 #include "CharacterPhysicsSupport.h"
 
@@ -13,7 +13,6 @@ void CPHCollisionDamageReceiver::BoneInsert(u16 id,float k)
 	R_ASSERT2(FindBone(id)==m_controled_bones.end(),"duplicate bone!");
 	m_controled_bones.emplace_back(id,k);
 }
-#include "PhysicsShellHolder.h"
 void CPHCollisionDamageReceiver::Init()
 {
 	CPhysicsShellHolder *sh	=PPhysicsShellHolder	();

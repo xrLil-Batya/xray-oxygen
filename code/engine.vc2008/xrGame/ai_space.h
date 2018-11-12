@@ -32,17 +32,18 @@ private:
 	friend class CLevel;
 
 private:
-	CGameGraph							*m_game_graph;
-	CLevelGraph							*m_level_graph;
-	CGraphEngine						*m_graph_engine;
-	CEF_Storage							*m_ef_storage;
-	CALifeSimulator						*m_alife_simulator;
-	CCoverManager						*m_cover_manager;
-	CScriptEngine						*m_script_engine;
-	CPatrolPathStorage					*m_patrol_path_storage;
-	moving_objects						*m_moving_objects;
-	doors::manager						*m_doors_manager;
 
+	std::unique_ptr<CGameGraph			>			m_game_graph;
+	std::unique_ptr<CLevelGraph			>			m_level_graph;
+	std::unique_ptr<CGraphEngine		>			m_graph_engine;
+	std::unique_ptr<CEF_Storage			>			m_ef_storage;
+	std::unique_ptr<CCoverManager		>			m_cover_manager;
+	std::unique_ptr<CPatrolPathStorage	>			m_patrol_path_storage;
+	std::unique_ptr<moving_objects		>			m_moving_objects;
+	std::unique_ptr<doors::manager		>			m_doors_manager;
+
+	CALifeSimulator* m_alife_simulator = nullptr;
+	CScriptEngine*   m_script_engine   = nullptr;
 private:
 			void						load					(LPCSTR level_name);
 			void						unload					(bool reload = false);
@@ -52,7 +53,9 @@ private:
 			void						game_graph				(CGameGraph *game_graph);
 
 public:
-										CAI_Space				();
+	CAI_Space				();
+
+	static CAI_Space&					GetInstance				();
 	virtual								~CAI_Space				();
 			void						init					();
 	IC		CGameGraph					&game_graph				() const;
@@ -77,8 +80,9 @@ public:
 #endif
 };
 
-IC	CAI_Space	&ai	();
-
-extern GAME_API CAI_Space *g_ai_space;
+IC CAI_Space &ai()
+{
+	return CAI_Space::GetInstance();
+}
 
 #include "ai_space_inline.h"

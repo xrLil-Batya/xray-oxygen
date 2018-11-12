@@ -20,7 +20,7 @@
 #include "../../../Inventory.h"
 #include "../../../ActorCondition.h"
 #include "../../../../xrEngine/xr_level_controller.h"
-#include "../../../weapon.h"
+#include "../../../items/weapon.h"
 
 #include "../control_direction_base.h"
 
@@ -226,7 +226,7 @@ void CBurer::CheckSpecParams(u32 spec_params)
 {
 }
 
-void xr_stdcall CBurer::StaminaHit ()
+void  CBurer::StaminaHit ()
 {
 	if ( GodMode() )
 	{

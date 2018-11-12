@@ -145,7 +145,7 @@ virtual	void	write_vertices		( IWriter	&w )const;
 	void	CalcNormal2	()
 	{
 		FPU::m64r		();
-		Dvector			v0,v1,v2,t1,t2,dN;
+		Fvector			v0,v1,v2,t1,t2,dN;
 		v0.set			(v[0]->P);
 		v1.set			(v[1]->P);
 		v2.set			(v[2]->P);
@@ -156,7 +156,7 @@ virtual	void	write_vertices		( IWriter	&w )const;
 		if (mag<dbl_zero)
 		{
 			Failure		();
-			Dvector Nabs;
+			Fvector Nabs;
 			Nabs.abs	(dN);
 
 	#define SIGN(a) ((a>=0.f)?1.f:-1.f)

@@ -42,8 +42,8 @@ public:
 			void	UpdateList			();
 
 protected:
-	void xr_stdcall	OnBtnClose			( CUIWindow* w, void* d);
-	bool xr_stdcall	SortingLessFunction	( CUIWindow* left, CUIWindow* right );
+	void 	OnBtnClose			( CUIWindow* w, void* d);
+	bool 	SortingLessFunction	( CUIWindow* left, CUIWindow* right );
 
 public:
 	UIHint*				hint_wnd;
