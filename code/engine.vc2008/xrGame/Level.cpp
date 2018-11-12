@@ -493,10 +493,16 @@ extern void draw_wnds_rects();
 void CLevel::OnRender()
 {
 	::Render->BeforeWorldRender();
-	inherited::OnRender();
-
-	if (!game)
-		return;
+	
+	// There is an exception while loading the level.
+	try
+	{
+		inherited::OnRender();
+	}
+	catch (...)
+	{
+		R_ASSERT(game && game->Type() == eGameIDNoGame);
+	}
 	 
 	if(!pGameAnsel->isActive)
 		HUD().RenderUI();

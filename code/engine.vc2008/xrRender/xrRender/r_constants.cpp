@@ -40,16 +40,22 @@ ref_constant R_constant_table::get	(LPCSTR S)
 	if (I==table.end() || (0!=xr_strcmp(*(*I)->name,S)))	return 0;
 	else												return *I;
 }
-ref_constant R_constant_table::get	(shared_str& S)
+ref_constant R_constant_table::get(shared_str& S)
 {
-	// linear search, but only ptr-compare
-	c_table::iterator I	= table.begin	();
-	c_table::iterator E	= table.end		();
-	for (; I!=E; ++I)	{
-		ref_constant	C		= *I;
-		if (C->name.equal(S))	return C;
+	try
+	{
+		// linear search, but only ptr-compare
+		for (ref_constant &refConstant : table)
+		{
+			if (refConstant->name.equal(S))
+				return refConstant;
+		}
 	}
-	return	0;
+	catch (...)
+	{
+		Msg("![ERROR] Error checking constant table!");
+	}
+	return nullptr;
 }
 
 #ifndef USE_DX11

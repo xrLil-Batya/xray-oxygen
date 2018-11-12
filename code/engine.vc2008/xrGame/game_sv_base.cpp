@@ -102,7 +102,14 @@ game_sv_GameState::game_sv_GameState()
 game_sv_GameState::~game_sv_GameState()
 {
 	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorGame);
-	delete_data(m_alife_simulator);
+	try
+	{
+		xr_delete(m_alife_simulator);
+	}
+	catch (...)
+	{
+		m_alife_simulator = nullptr;
+	}
 }
 
 bool game_sv_GameState::change_level (NET_Packet &net_packet)

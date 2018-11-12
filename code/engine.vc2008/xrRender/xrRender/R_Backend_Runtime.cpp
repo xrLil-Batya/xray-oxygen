@@ -179,7 +179,9 @@ void	CBackend::set_ClipPlanes	(u32 _enable, Fmatrix*	_xform  /*=NULL */, u32 fma
 void CBackend::set_Textures			(STextureList* _T)
 {
 	if (T == _T)	return;
-	T				= _T;
+	T = _T;
+	if (!_T) return;
+
 	//	If resources weren't set at all we should clear from resource #0.
 	int _last_ps	= -1;
 	int _last_vs	= -1;
@@ -189,12 +191,9 @@ void CBackend::set_Textures			(STextureList* _T)
 	int _last_ds	= -1;
 	int _last_cs	= -1;
 #endif
-	STextureList::iterator	_it		= _T->begin	();
-	STextureList::iterator	_end	= _T->end	();
 
-	for (; _it!=_end; _it++)
+	for (auto loader : *T)
 	{
-		std::pair<u32,ref_texture>&		loader	=	*_it;
 		u32			load_id		= loader.first		;
 		CTexture*	load_surf	= &*loader.second	;
 		if (load_id < CTexture::rstVertex)
