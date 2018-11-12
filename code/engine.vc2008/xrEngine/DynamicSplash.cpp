@@ -293,7 +293,7 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	DSplashScreen* pInstance = reinterpret_cast<DSplashScreen*>(GetWindowLongPtr(hwnd, (-21)));
-	if (!pInstance) { return DefWindowProcA(hwnd, uMsg, wParam, lParam); }
+	if (!pInstance) { return DefWindowProc(hwnd, uMsg, wParam, lParam); }
 	
 	Gdiplus::Image* pSplashImage = reinterpret_cast<Gdiplus::Image*>(pInstance->pMainImage);
 
@@ -307,17 +307,16 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 
 			if (pInstance->progressMsg.size() > 0)
 			{
-				Gdiplus::Font msgFont(L"Segoe UI Emoji", 16, 0, Gdiplus::UnitPixel);
+				Gdiplus::Font msgFont(L"Cambria", 18, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::UnitPixel);
 
 				Gdiplus::SolidBrush msgBrush(static_cast<DWORD>(Gdiplus::Color::White));
-
 				//#VERTVER: PLS REWORK IT
 				//////////////////////////////////////
 				xr_string prgress = pInstance->progressMsg.c_str();
 				std::wstring progressName(prgress.begin(), prgress.end());
 				//////////////////////////////////////
 
-				gdip.DrawString(progressName.c_str(), -1, &msgFont, Gdiplus::PointF(22.0f, pSplashImage->GetHeight() - 183.0f), &msgBrush);
+				gdip.DrawString(progressName.c_str(), -1, &msgFont, Gdiplus::PointF(3.0f, pSplashImage->GetHeight() - 45.0f), &msgBrush);
 			}
 			ValidateRect(hwnd, NULL);
 			return 0;
@@ -330,7 +329,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 			RECT clientRect = { NULL };
 			GetClientRect(hwnd, &clientRect);
 
-			pInstance->hwndProgress = CreateWindowA(PROGRESS_CLASS, NULL,
+			pInstance->hwndProgress = CreateWindow(PROGRESS_CLASS, NULL,
 				WS_CHILD | WS_VISIBLE | PBS_SMOOTH,
 				4, clientRect.bottom - 20, clientRect.right - 8, 16,
 				hwnd, NULL, GetModuleHandle(NULL), NULL
