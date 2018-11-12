@@ -39,11 +39,11 @@ public:
 						);
 
 private:
-	LPCSTR	xr_stdcall	shader_getter	() const;
-	void	xr_stdcall	shader_setter	(LPCSTR	value);
+	LPCSTR		shader_getter	() const;
+	void		shader_setter	(LPCSTR	value);
 
-	LPCSTR	xr_stdcall	texture_getter	() const;
-	void	xr_stdcall	texture_setter	(LPCSTR	value);
+	LPCSTR		texture_getter	() const;
+	void		texture_setter	(LPCSTR	value);
 
 private:
 	property_holder*	m_property_holder;

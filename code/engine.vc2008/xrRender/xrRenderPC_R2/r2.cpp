@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "r2.h"
+#include "../../xrCore/xrDelegate/xrDelegate.h"
 #include "../xrRender/fbasicvisual.h"
 #include "../../xrEngine/xr_object.h"
 #include "../../xrEngine/CustomHUD.h"
@@ -242,11 +243,11 @@ void CRender::OnFrame()
 	Models->DeleteQueue();
 	// MT-details (@front)
 	Device.seqParallel.insert(Device.seqParallel.begin(),
-		fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
+		xrDelegate(BindDelegate(Details, &CDetailManager::MT_CALC)));
 
 	// MT-HOM (@front)
 	Device.seqParallel.insert(Device.seqParallel.begin(),
-		fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
+		xrDelegate(BindDelegate(&HOM, &CHOM::MT_RENDER)));
 }
 
 

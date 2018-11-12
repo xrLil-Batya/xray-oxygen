@@ -38,8 +38,8 @@ public:
 	virtual	property_holder_type* object	();
 
 private:
-	LPCSTR const* xr_stdcall collection		();
-	u32  xr_stdcall			collection_size	();
+	LPCSTR const*  collection		();
+	u32  			collection_size	();
 
 private:
 	property_holder_type*					m_property_holder;

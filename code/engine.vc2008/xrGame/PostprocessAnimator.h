@@ -17,10 +17,10 @@ public:
 class CPostprocessAnimatorLerp : public CPostprocessAnimator
 {
 protected:
-	std::function<float()> m_get_factor_func;
+	xrDelegate<float()> m_get_factor_func;
 
 public:
-	void SetFactorFunc(std::function<float()> f) { m_get_factor_func = f; }
+	void SetFactorFunc(xrDelegate<float()> f) { m_get_factor_func = f; }
 	virtual BOOL Process(SPPInfo& PPInfo);
 };
 

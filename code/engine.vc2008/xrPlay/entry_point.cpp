@@ -7,27 +7,10 @@
 #include <intrin.h>  
 #include <windows.h>
 ////////////////////////////////////
-#include "xrLauncherWnd.h"
 #include "../xrCore/xrCore.h"
 ////////////////////////////////////
 
 void CreateRendererList();					// In RenderList.cpp
-
-/// <summary> Method for init launcher </summary>
-int RunXRLauncher()
-{
-	// Get initialize launcher
-	xrPlay::Application::EnableVisualStyles();
-	xrPlay::Application::SetCompatibleTextRenderingDefault(false);
-	xrPlay::Application::Run(gcnew xrPlay::xrLauncherWnd);
-	return xrPlay::ret_values.type_ptr;
-}
-
-/// <summary> Return the list of parameters </summary>
-const char* GetParams()
-{
-	return xrPlay::ret_values.params_list;
-}
 
 /// <summary> Dll import </summary>
 using IsRunFunc = void(__cdecl*)(const char*);
@@ -107,34 +90,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		memset(tempdir, 0, len);
 		strcpy(tempdir, ShadersCacheFolderPath.c_str());
 
-		SHFILEOPSTRUCT file_op = {
-			NULL,
-			FO_DELETE,
-			tempdir,
-			"",
-			FOF_NOCONFIRMATION |
-			FOF_NOERRORUI |
-			FOF_SILENT,
-			false,
-			0,
-			""
+		SHFILEOPSTRUCT file_op = 
+		{
+			NULL, FO_DELETE,
+			tempdir, "",
+			FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT,
+			false, 0, ""
 		};
 		SHFileOperation(&file_op);
 		free(tempdir); // Since we malloc-ed
 	}
 
-
-	// If we want to start launcher
-	if (strstr(lpCmdLine, "-launcher"))
-	{
-		const int l_res = RunXRLauncher();
-		switch (l_res)
-		{
-		case 0:
-			return 0;
-		}
-		params = GetParams();
-	}
+	params = lpCmdLine;
 
 	if (!IsDebuggerPresent())
 	{
@@ -175,7 +142,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	else
 	{
-		MessageBoxA(NULL, "xrEngine module doesn't seems to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, "xrEngine module doesn't seems to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 #ifdef NO_MULTI_INSTANCES		

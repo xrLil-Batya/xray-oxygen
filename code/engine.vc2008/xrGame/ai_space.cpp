@@ -170,7 +170,7 @@ void CAI_Space::set_alife(CALifeSimulator *alife_simulator)
 		return;
 
 	m_game_graph = nullptr;
-	m_graph_engine.reset(nullptr);
+//	m_graph_engine.reset(nullptr);
 }
 
 void CAI_Space::game_graph(CGameGraph *game_graph)

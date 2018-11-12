@@ -1,7 +1,7 @@
 #pragma once
 #include "monster_event_manager_defs.h"
 
-typedef fastdelegate::FastDelegate1<IEventData*> typeEvent;
+typedef xrDelegate<void(IEventData*)> typeEvent;
 
 class CMonsterEventManager {
 	

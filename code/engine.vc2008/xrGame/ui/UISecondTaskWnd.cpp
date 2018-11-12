@@ -39,32 +39,32 @@ UITaskListWnd::~UITaskListWnd()
 {
 }
 
-void UITaskListWnd::init_from_xml( CUIXml& xml, LPCSTR path )
+void UITaskListWnd::init_from_xml(CUIXml& xml, LPCSTR path)
 {
-	VERIFY( hint_wnd );
-	CUIXmlInit::InitWindow( xml, path, 0, this );
+	VERIFY(hint_wnd);
+	CUIXmlInit::InitWindow(xml, path, 0, this);
 
 	XML_NODE*  stored_root = xml.GetLocalRoot();
-	XML_NODE*  tmpl_root   = xml.NavigateToNode( path, 0 );
-	xml.SetLocalRoot( tmpl_root );
-	
-	m_background = UIHelper::CreateFrameWindow( xml, "background_frame", this );
-	m_caption    = UIHelper::CreateStatic( xml, "t_caption", this );
-	m_bt_close   = UIHelper::Create3tButton( xml, "btn_close", this );
+	XML_NODE*  tmpl_root = xml.NavigateToNode(path, 0);
+	xml.SetLocalRoot(tmpl_root);
 
-	Register( m_bt_close );
-	AddCallback( m_bt_close, BUTTON_DOWN, CUIWndCallback::void_function( this, &UITaskListWnd::OnBtnClose ) );
+	m_background = UIHelper::CreateFrameWindow(xml, "background_frame", this);
+	m_caption = UIHelper::CreateStatic(xml, "t_caption", this);
+	m_bt_close = UIHelper::Create3tButton(xml, "btn_close", this);
+
+	Register(m_bt_close);
+	AddCallback(m_bt_close, BUTTON_DOWN, CUIWndCallback::void_function(this, &UITaskListWnd::OnBtnClose));
 
 	m_list = xr_new<CUIScrollView>();
-	m_list->SetAutoDelete( true );
-	AttachChild( m_list );
-	CUIXmlInit::InitScrollView( xml, "task_list", 0, m_list );
+	m_list->SetAutoDelete(true);
+	AttachChild(m_list);
+	CUIXmlInit::InitScrollView(xml, "task_list", 0, m_list);
 	m_orig_h = GetHeight();
 
 	m_list->SetWindowName("---second_task_list");
-	m_list->m_sort_function = fastdelegate::MakeDelegate( this, &UITaskListWnd::SortingLessFunction );
+	m_list->m_sort_function = xrDelegate(BindDelegate(this, &UITaskListWnd::SortingLessFunction));
 
-	xml.SetLocalRoot( stored_root );
+	xml.SetLocalRoot(stored_root);
 }
 
 bool UITaskListWnd::OnMouseAction( float x, float y, EUIMessages mouse_action )

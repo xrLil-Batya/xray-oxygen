@@ -19,7 +19,7 @@ class CGameObject;
 
 class CClientSpawnManager {
 public:
-	using CALLBACK_TYPE = fastdelegate::FastDelegate1<CObject*>;
+	using CALLBACK_TYPE = xrDelegate<void(CObject*)>;
 
 public:
 	struct CSpawnCallback {

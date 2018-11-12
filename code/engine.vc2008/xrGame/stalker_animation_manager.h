@@ -83,9 +83,9 @@ private:
 	bool							m_special_danger_move;
 
 public:
-	using AnimationSelector = fastdelegate::FastDelegate<MotionID (bool&)>;
-	using AnimationCallback = fastdelegate::FastDelegate<void ()>;
-	using AnimationModifier = fastdelegate::FastDelegate<void (CBlend*)>;
+	using AnimationSelector = xrDelegate<MotionID (bool&)>;
+	using AnimationCallback = xrDelegate<void ()>;
+	using AnimationModifier = xrDelegate<void (CBlend*)>;
 
 private:
 	AnimationSelector				m_global_selector;

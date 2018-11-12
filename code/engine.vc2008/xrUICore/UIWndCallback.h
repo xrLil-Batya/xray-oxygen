@@ -6,7 +6,7 @@ class CUIWindow;
 class UI_API CUIWndCallback
 {
 public:
-	using void_function = fastdelegate::FastDelegate2<CUIWindow*,void*,void>;
+	using void_function = xrDelegate<void(CUIWindow*,void*)>;
 private:
 	using CALLBACKS = xr_vector<SCallbackInfo*>;
 private:

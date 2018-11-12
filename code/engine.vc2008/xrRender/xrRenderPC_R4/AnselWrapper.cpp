@@ -6,6 +6,7 @@
 
 #include <AnselSDK/AnselSDK.h>
 #pragma comment(lib, "AnselSDK64.lib")
+static bool bInited = false;
 
 AnselCamera::AnselCamera(CObject* p, u32 flags) : CCameraBase(p, flags) 
 {
@@ -58,19 +59,19 @@ AnselManager::AnselManager() : CGameAnsel(), pAnselModule(nullptr), Camera(this,
 
 bool AnselManager::Load()
 {
-	Init();
-	pAnselModule = LoadLibrary("AnselSDK64.dll");
-	return pAnselModule;
+	//Init();
+	//pAnselModule = LoadLibrary("AnselSDK64.dll");
+	return true;
 }
 
 void AnselManager::Unload()
 {
-	pAnselModule = nullptr;
+	//pAnselModule = nullptr;
 }
 
 bool AnselManager::Init() const
 {
-	if (pAnselModule && ansel::isAnselAvailable())
+	if (!bInited && ansel::isAnselAvailable())
 	{
 		ansel::Configuration config;
 		config.titleNameUtf8 = u8"X-Ray Oxygen";
@@ -154,6 +155,7 @@ bool AnselManager::Init() const
 			Log("! Nvidia Ansel: SDK wasn't loaded");
 			break;
 		}
+		bInited = true;
 	}
 	else
 		Log("! Nvidia Ansel:: failed to load AnselSDKxx.dll");

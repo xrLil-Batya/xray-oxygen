@@ -77,16 +77,16 @@ struct SMedicineInfluenceValues{
 
 class CEntityConditionSimple
 {
-	float					m_fHealth;
+	volatile float			m_fHealth;
 	float					m_fHealthMax;
 public:
 							CEntityConditionSimple	();
 	virtual					~CEntityConditionSimple	();
 
 	IC		 float				GetHealth				() const				{return m_fHealth;}
-	IC		 void				SetHealth				( const float value ) 	{ m_fHealth = value; }
-	IC		 float 				GetMaxHealth			() const				{return m_fHealthMax;}
-	IC const float&				health					() const				{return	m_fHealth;}
+	IC		 void				SetHealth				(const float value) 	{ m_fHealth = value; }
+	IC const float 				GetMaxHealth			() const				{return m_fHealthMax;}
+	IC const volatile float&	health					() const				{return	m_fHealth;}
 	IC		 float&				max_health				()						{return	m_fHealthMax;}
 };
 

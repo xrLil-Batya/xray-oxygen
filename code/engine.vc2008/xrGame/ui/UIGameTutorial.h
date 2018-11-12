@@ -49,7 +49,7 @@ public:
 	void IR_OnActivate() override;
 	bool Persistent() { return !!m_flags.test(etsPersistent); }
 
-	fastdelegate::FastDelegate0<> m_on_destroy_event;
+	xrDelegate<void()> m_on_destroy_event;
 
 	enum {
 		etsNeedPauseOn = (1 << 0),

@@ -18,13 +18,13 @@ enum EItemType{
 	TYPE_OBJECT	= 1
 };
 
-using TOnILItemsFocused = fastdelegate::FastDelegate1<ListItemsVec&>;
-using TOnILCloseEvent = fastdelegate::FastDelegate0<>;      
-using TOnItemRename = fastdelegate::FastDelegate3<LPCSTR, LPCSTR, EItemType>;
-using TOnItemRemove = fastdelegate::FastDelegate3<LPCSTR, EItemType, bool&>;
-using TOnItemAfterRemove = fastdelegate::FastDelegate0<>;
-using TOnCloseEvent = fastdelegate::FastDelegate0<>;
-using TOnModifiedEvent = fastdelegate::FastDelegate0<>;
+using TOnILItemsFocused		= xrDelegate<void(ListItemsVec&)>;
+using TOnILCloseEvent		= xrDelegate<void()>;
+using TOnItemRename			= xrDelegate<void(LPCSTR, LPCSTR, EItemType)>;
+using TOnItemRemove			= xrDelegate<void(LPCSTR, EItemType, bool&)>;
+using TOnItemAfterRemove	= xrDelegate<void()>;
+using TOnCloseEvent			= xrDelegate<void()>;
+using TOnModifiedEvent		= xrDelegate<void()>;
 
 #ifdef __BORLANDC__
 #	include "mxPlacemnt.hpp"

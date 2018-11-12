@@ -11,10 +11,11 @@
 #include "..\xrEngine\xr_level_controller.h"
 #include "xrServer_Objects_Alife.h"
 
-const float default_grenade_detonation_threshold_hit=100;
+constexpr float default_grenade_detonation_threshold_hit = 100;
+
 CGrenade::CGrenade() 
 {	
-	m_destroy_callback.clear();
+	m_destroy_callback.reset();
 	m_eSoundCheckout = ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING);
 }
 

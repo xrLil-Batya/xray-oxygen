@@ -100,15 +100,6 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 		// if player flags changed
 		if (!lastActorFlagsState.equal(psActorFlags)) 
 		{
-			// Switch to third person view and vice versa
-			if (psActorFlags.test(AF_PSP)) 
-			{
-				pActor->cam_Set(eacLookAt);
-			} else 
-			{
-				pActor->cam_Set(eacFirstEye);
-			}
-
 			// Update hardcode mode
 			if (psActorFlags.test(AF_HARDCORE))
 				pActor->cam_Set(eacFirstEye);
@@ -387,10 +378,6 @@ void CActor::Load	(LPCSTR section )
 		GamePersistent().m_pGShaderConstants.m_blender_mode.set(0.f, 0.f, 0.f, 0.f);
 	}
 
-	if( psActorFlags.test(AF_PSP) )
-		cam_Set					(eacLookAt);
-	else
-		cam_Set					(eacFirstEye);
 
 	// scheduler
 	shedule.t_min				= shedule.t_max = 1;
@@ -759,7 +746,6 @@ void CActor::UpdateCL()
 					S->SetParams(full_fire_disp);
 
 				SetZoomAimingMode(true);
-				//Alun: Force switch to first-person for zooming
 				if (!bLook_cam_fp_zoom && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
 				{
 					cam_Set(eacFirstEye);
@@ -768,7 +754,6 @@ void CActor::UpdateCL()
 			}
 			else
 			{
-				//Alun: Switch back to third-person if was forced
 				if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
 				{
 					cam_Set(eacLookAt);
@@ -789,12 +774,12 @@ void CActor::UpdateCL()
 
 				if (!bLook_cam_fp_zoom && g_Alive() && Level().CurrentViewEntity() == this && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
 				{
-					Actor()->IR_OnKeyboardPress(kCAM_1);
+					cam_Set(eacFirstEye);
 					bLook_cam_fp_zoom = true;
 				}
 				else if (bLook_cam_fp_zoom && cam_active == eacFirstEye && g_Alive() && Level().CurrentViewEntity() == this)
 				{
-					Actor()->IR_OnKeyboardPress(kCAM_2);
+					cam_Set(eacLookAt);
 					bLook_cam_fp_zoom = false;
 				}
 			}

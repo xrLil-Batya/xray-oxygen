@@ -329,9 +329,6 @@
     <ClInclude Include="clsid.h">
       <Filter>Math\Extensions</Filter>
     </ClInclude>
-    <ClInclude Include="fastdelegate.h">
-      <Filter>Math\Extensions</Filter>
-    </ClInclude>
     <ClInclude Include="string_concatenations.h">
       <Filter>Math\Extensions</Filter>
     </ClInclude>

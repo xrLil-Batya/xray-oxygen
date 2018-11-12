@@ -519,13 +519,13 @@ void CParticleEffect::Render(float)
 			FVF::LIT* pv_start = (FVF::LIT*)RCache.Vertex.Lock(p_cnt * 4 * 4, geom->vb_stride, dwOffset);
 			FVF::LIT* pv = pv_start;
 
-			u32 nWorkers = ttapi_GetWorkersCount();
+			u32 nWorkers = (p_cnt < 16) ? (u32)ttapi_GetWorkersCount() - 1 : 1u;
 
-			PRS_PARAMS* prsParams = (PRS_PARAMS*)_alloca(sizeof(PRS_PARAMS) * nWorkers);
+			PRS_PARAMS* prsParams = new PRS_PARAMS[nWorkers];
 
 			// Give ~1% more for the last worker
 			// to minimize wait in final spin
-			u32 nSlice = p_cnt / 128;
+			u32 nSlice = p_cnt / 32;
 
 			u32 nStep = ((p_cnt - nSlice) / nWorkers);
 
@@ -540,6 +540,7 @@ void CParticleEffect::Render(float)
 			}
 
 			ttapi_RunAllWorkers();
+			delete prsParams;
 
 			dwCount = p_cnt << 2;
 
