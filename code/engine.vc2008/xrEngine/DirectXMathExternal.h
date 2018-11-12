@@ -23,6 +23,9 @@
  *   OTHER DEALINGS IN THE SOFTWARE.
  ***************************************************************************/
 
+
+
+
 /// <summary>Generate new cam direction </summary>
 inline void BuildCamDir(const Fvector &vFrom, const Fvector &vView, const Fvector &vWorldUp, DirectX::XMMATRIX &Matrics)
 {
@@ -107,3 +110,35 @@ inline void TransformVectorsByMatrix(const DirectX::XMMATRIX &m, Fvector &dest, 
 	dest.y = (v.x* m.r[0].m128_f32[1] + v.y* m.r[1].m128_f32[1] + v.z* m.r[2].m128_f32[1] + m.r[3].m128_f32[1])*iw;
 	dest.z = (v.x* m.r[0].m128_f32[2] + v.y* m.r[1].m128_f32[2] + v.z* m.r[2].m128_f32[2] + m.r[3].m128_f32[2])*iw;
 }
+
+/// <summary>GSC Transform func for DirectX::XMMATRIX</summary>
+inline void TransformVector4ByMatrix(const DirectX::XMMATRIX &m, Fvector4 &dest, const Fvector &v)
+{
+	dest.w = v.x*m.r[0].m128_f32[3] + v.y*m.r[1].m128_f32[3] + v.z*m.r[2].m128_f32[3] + m.r[3].m128_f32[3];
+	dest.x = (v.x*m.r[0].m128_f32[0] + v.y*m.r[1].m128_f32[0] + v.z*m.r[2].m128_f32[0] + m.r[3].m128_f32[0]) / dest.w;
+	dest.y = (v.x*m.r[0].m128_f32[1] + v.y*m.r[1].m128_f32[1] + v.z*m.r[2].m128_f32[1] + m.r[3].m128_f32[1]) / dest.w;
+	dest.z = (v.x*m.r[0].m128_f32[2] + v.y*m.r[1].m128_f32[2] + v.z*m.r[2].m128_f32[2] + m.r[3].m128_f32[2]) / dest.w;
+}
+
+
+/* Hot tip delete this after implemented all methods
+	_11 - m.r[0].m128_f32[0]
+	_12 - m.r[0].m128_f32[1]
+	_13 - m.r[0].m128_f32[2]
+	_14 - m.r[0].m128_f32[3]
+
+	_21 - m.r[1].m128_f32[0]
+	_22 - m.r[1].m128_f32[1]
+	_23 - m.r[1].m128_f32[2]
+	_24 - m.r[1].m128_f32[3]
+
+	_31 - m.r[2].m128_f32[0]
+	_32 - m.r[2].m128_f32[1]
+	_33 - m.r[2].m128_f32[2]
+	_34 - m.r[2].m128_f32[3]
+
+	_41 - m.r[3].m128_f32[0]
+	_42 - m.r[3].m128_f32[1]
+	_43 - m.r[3].m128_f32[2]
+	_44 - m.r[3].m128_f32[3]
+*/
