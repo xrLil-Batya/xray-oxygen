@@ -120,6 +120,28 @@ inline void TransformVector4ByMatrix(const DirectX::XMMATRIX &m, Fvector4 &dest,
 	dest.z = (v.x*m.r[0].m128_f32[2] + v.y*m.r[1].m128_f32[2] + v.z*m.r[2].m128_f32[2] + m.r[3].m128_f32[2]) / dest.w;
 }
 
+/// <summary>GSC TransformDir func for DirectX::XMMATRIX</summary>
+inline void TransformDirByMatrix(const DirectX::XMMATRIX &m, Fvector &dest, const Fvector &v)
+{
+	dest.x = v.x*m.r[0].m128_f32[0] + v.y*m.r[1].m128_f32[0] + v.z*m.r[2].m128_f32[0];
+	dest.y = v.x*m.r[0].m128_f32[1] + v.y*m.r[1].m128_f32[1] + v.z*m.r[2].m128_f32[1];
+	dest.z = v.x*m.r[0].m128_f32[2] + v.y*m.r[1].m128_f32[2] + v.z*m.r[2].m128_f32[2];
+}
+
+/// <summary>GSC TransformTiny23 func for DirectX::XMMATRIX</summary>
+inline void TransformTiny23ByMatrix(const DirectX::XMMATRIX &m, Fvector &dest, const Fvector2 &v)
+{
+	dest.x = v.x*m.r[0].m128_f32[0] + v.y*m.r[1].m128_f32[0] + m.r[3].m128_f32[0];
+	dest.y = v.x*m.r[0].m128_f32[1] + v.y*m.r[1].m128_f32[1] + m.r[3].m128_f32[1];
+	dest.z = v.x*m.r[0].m128_f32[2] + v.y*m.r[1].m128_f32[2] + m.r[3].m128_f32[2];
+}
+
+/// <summary>GSC TransformTiny32 func for DirectX::XMMATRIX</summary>
+inline void TransformTiny32ByMatrix(const DirectX::XMMATRIX &m, Fvector2 &dest, const Fvector &v)
+{
+	dest.x = v.x*m.r[0].m128_f32[0] + v.y*m.r[1].m128_f32[0] + v.z*m.r[2].m128_f32[0] + m.r[3].m128_f32[0];
+	dest.y = v.x*m.r[0].m128_f32[1] + v.y*m.r[1].m128_f32[1] + v.z*m.r[2].m128_f32[1] + m.r[3].m128_f32[1];
+}
 
 /* Hot tip delete this after implemented all methods
 	_11 - m.r[0].m128_f32[0]
