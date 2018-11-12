@@ -92,10 +92,9 @@ void game_sv_GameState::Update()
 	}
 }
 
-game_sv_GameState::game_sv_GameState()
+game_sv_GameState::game_sv_GameState() : m_alife_simulator(nullptr)
 {
 	VERIFY(g_pGameLevel);
-	m_alife_simulator = nullptr;
 	m_type = eGameIDSingle;
 }
 
@@ -273,7 +272,9 @@ void game_sv_GameState::restart_simulator(LPCSTR saved_game_name)
 {
 	shared_str options = GamePersistent().GetServerOption();
 
-	delete_data(m_alife_simulator);
+	try { xr_delete(m_alife_simulator); }
+	catch (...) { m_alife_simulator = nullptr; }
+
 	Level().Server->clear_ids();
 
 	xr_strcpy(g_pGamePersistent->m_game_params.m_game_or_spawn, saved_game_name);

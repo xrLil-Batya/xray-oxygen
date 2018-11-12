@@ -94,26 +94,26 @@ virtual CPhysicsShellHolder*			PPhysicsShellHolder				( )	{ return m_EntityAlife
 virtual bool							CanRemoveObject					( );
 
 public:
-virtual		const Fvector				MovementVelocity				( ) { return m_PhysicMovementControl->GetVelocity(); }
-IC		CPHMovementControl				*movement						( )	{ return m_PhysicMovementControl; }
-IC		const CPHMovementControl		*movement						( ) const{ return m_PhysicMovementControl; }
-IC		CPHSoundPlayer					*ph_sound_player				( )	{ return &m_ph_sound_player; }
-IC		CIKLimbsController				*ik_controller					( )	{ return m_ik_controller; }
-		bool							interactive_motion				( ) ;
-		bool							can_drop_active_weapon			( ) ;
-		void							SetRemoved						( );
-		bool							IsRemoved						( ){ return m_eState == esRemoved; }
-		bool							IsSpecificDamager				( )																{return !!m_flags.test(fl_specific_bonce_demager)	; }
-		float							BonceDamageFactor				( ){ return m_BonceDamageFactor; }
-		void							set_movement_position			( const Fvector &pos);
-		void							ForceTransform					( const Fmatrix &m);
-		void							set_use_hit_anims				( bool v ){ m_flags.set( fl_use_hit_anims, (BOOL)v );}
+virtual		const Fvector				MovementVelocity		()					{ return m_PhysicMovementControl->GetVelocity(); }
+IC		CPHMovementControl				*movement				()					{ return m_PhysicMovementControl; }
+IC		const CPHMovementControl		*movement				() const			{ return m_PhysicMovementControl; }
+IC		CPHSoundPlayer					*ph_sound_player		()					{ return &m_ph_sound_player; }
+IC		CIKLimbsController				*ik_controller			()					{ return m_ik_controller; }
+		bool							IsRemoved				()					{ return m_eState == esRemoved; }
+		bool							IsSpecificDamager		() noexcept			{ return !!m_flags.test(fl_specific_bonce_demager); }
+		float							BonceDamageFactor		()					{ return m_BonceDamageFactor; }
+		void							set_use_hit_anims		(bool v) noexcept	{ m_flags.set( fl_use_hit_anims, (BOOL)v );}
+		bool							interactive_motion		();
+		bool							can_drop_active_weapon	();
+		void							SetRemoved				();
+		void							set_movement_position	(const Fvector &pos);
+		void							ForceTransform			(const Fmatrix &m);
 //////////////////base hierarchi methods///////////////////////////////////////////////////
-		void							CreateCharacterSafe				( );
-		void							CreateCharacter					( );
-		bool							CollisionCorrectObjPos			( );
+		void							CreateCharacterSafe				();
+		void							CreateCharacter					();
+		bool							CollisionCorrectObjPos			();
 	
-		void 							in_UpdateCL()																																		;
+		void 							in_UpdateCL						( )																																		;
 		void 							in_shedule_Update				( u32 DT )																											;
 		void 							in_NetSpawn						( CSE_Abstract* e )																									;
 		void 							in_NetDestroy					( )																													;
@@ -144,7 +144,8 @@ public:
 		bool							has_shell_collision_place		( const CPhysicsShellHolder* obj ) const;
 		virtual void					on_child_shell_activate			( CPhysicsShellHolder* obj );
 /////////////////////////////////////////////////////////////////
-		CCharacterPhysicsSupport& operator = ( CCharacterPhysicsSupport& /**asup/**/ ){ R_ASSERT2( false, "Can not assign it" ); }
+		void							SyncNetState					();
+CCharacterPhysicsSupport&				operator=						(CCharacterPhysicsSupport&){ R_ASSERT2( false, "Can not assign it" ); }
 										CCharacterPhysicsSupport		( EType atype, CEntityAlive* aentity )																				;
 virtual									~CCharacterPhysicsSupport		( )																													;
 private:

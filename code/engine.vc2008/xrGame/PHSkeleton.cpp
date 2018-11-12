@@ -10,6 +10,8 @@
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
 #include "ai_space.h"
+#include "alife_simulator.h"
+#include "alife_object_registry.h"
 #include "game_graph.h"
 #include "PHDestroyable.h"
 
@@ -142,129 +144,61 @@ void CPHSkeleton::Load(LPCSTR section)
 
 void CPHSkeleton::Update(u32 dt)
 {
-	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	IPhysicsShellEx* pPhysicsShell=obj->PPhysicsShell();
-	if ( pPhysicsShell && pPhysicsShell->isFractured()) //!ai().get_alife() &&
+	CPhysicsShellHolder* obj = PPhysicsShellHolder();
+	IPhysicsShellEx* pPhysicsShell = obj->PPhysicsShell();
+
+	if (pPhysicsShell && pPhysicsShell->isFractured())
 	{
 		PHSplit();
 	}
 
-	if(b_removing&&
-		Device.dwTimeGlobal>m_remove_time&&
-		m_unsplited_shels.empty()) 
+	if (b_removing && Device.dwTimeGlobal > m_remove_time && m_unsplited_shels.empty())
 	{
-		if (obj->Local())	obj->DestroyObject	();
-		b_removing=false;
-	}
+		if (obj->Local())
+			obj->DestroyObject();
 
+		b_removing = false;
+	}
 }
+
 void CPHSkeleton::SaveNetState(NET_Packet& P)
 {
-
-	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	IPhysicsShellEx* pPhysicsShell=obj->PPhysicsShell();
-	IKinematics* K	=smart_cast<IKinematics*>(obj->Visual());
-	if(pPhysicsShell&&pPhysicsShell->isActive())			m_flags.set(CSE_PHSkeleton::flActive,pPhysicsShell->isEnabled());
-
-	P.w_u8 (m_flags.get());
-	if(K)
-	{
-		P.w_u64(K->LL_GetBonesVisible());
-		P.w_u16(K->LL_GetBoneRoot());
-	}
-	else
-	{
-		P.w_u64(u64(-1));
-		P.w_u16(0);
-	}
-	/////////////////////////////
-	Fvector min,max;
-
-	min.set(F_MAX,F_MAX,F_MAX);
-	max.set(-F_MAX,-F_MAX,-F_MAX);
-	/////////////////////////////////////
-
-	u16 bones_number=obj->PHGetSyncItemsNumber();
-	for(u16 i=0;i<bones_number;i++)
-	{
-		SPHNetState state;
-		obj->PHGetSyncItem(i)->get_State(state);
-		Fvector& p=state.position;
-		if(p.x<min.x)min.x=p.x;
-		if(p.y<min.y)min.y=p.y;
-		if(p.z<min.z)min.z=p.z;
-
-		if(p.x>max.x)max.x=p.x;
-		if(p.y>max.y)max.y=p.y;
-		if(p.z>max.z)max.z=p.z;
-	}
-
-	min.sub(2.f*EPS_L);
-	max.add(2.f*EPS_L);
-
-	P.w_vec3(min);
-	P.w_vec3(max);
-
-	P.w_u16(bones_number);
-
-	for(u16 i=0;i<bones_number;i++)
-	{
-		SPHNetState state;
-		obj->PHGetSyncItem(i)->get_State(state);
-		state.net_Save(P,min,max);
-	}
+	SyncNetState();
 }
 
-void CPHSkeleton::LoadNetState(NET_Packet& P)
+void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po) 
 {
-	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	IKinematics* K=smart_cast<IKinematics*>(obj->Visual());
-	P.r_u8 (m_flags.flags);
-	if(K)
-	{
-		K->LL_SetBonesVisible(P.r_u64());
-		K->LL_SetBoneRoot(P.r_u16());
-	}
+	auto obj = PPhysicsShellHolder();
+	if (!obj) return;
+	auto se_obj = ai().get_alife()->objects().object(obj->ID(), true);
+	if (!se_obj) return;
 
-	u16 bones_number=P.r_u16();
-	for(u16 i=0;i<bones_number;i++)
-	{
-		SPHNetState state;
-		state.net_Load(P);
-		obj->PHGetSyncItem(i)->set_State(state);
-	}
-}
-void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po)
-{
-	VERIFY( po );
-	if(!po->_flags.test(CSE_PHSkeleton::flSavedData))
-		return;
-	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	PHNETSTATE_VECTOR& saved_bones=po->saved_bones.bones;
-	
-	if(obj->PPhysicsShell()&&obj->PPhysicsShell()->isActive())
+	po = smart_cast<CSE_PHSkeleton*>(se_obj);
+	VERIFY(po);
+
+	if (!po->_flags.test(CSE_PHSkeleton::flSavedData)) return;
+
+	PHNETSTATE_VECTOR& saved_bones = po->saved_bones.bones;
+
+	if (obj->PPhysicsShell() && obj->PPhysicsShell()->isActive())
 	{
 		obj->PPhysicsShell()->Disable();
 	}
-	
+
 	if (saved_bones.size() == obj->PHGetSyncItemsNumber())
 	{
 		u16 bone = 0;
-		for(SPHNetState state : saved_bones)
+		for (const auto& state : saved_bones)
 		{
 			obj->PHGetSyncItem(bone)->set_State(state);
 			bone++;
-		}
+		};
 	}
-	else
-	{
-		Msg("~ WARNING [%s] has different state in saved_bones[%d] PHGetSyncItemsNumber[%d] Visual[%s]", 
-			obj->Name(), saved_bones.size(), obj->PHGetSyncItemsNumber(), obj->cNameVisual().c_str());
-	}
+	else Log("![ERROR] Error on bone sync!");
 	
 	saved_bones.clear();
-	po->_flags.set(CSE_PHSkeleton::flSavedData,false);
-	m_flags.set(CSE_PHSkeleton::flSavedData,false);
+	po->_flags.set(CSE_PHSkeleton::flSavedData, FALSE);
+	m_flags.set(CSE_PHSkeleton::flSavedData, FALSE);
 }
 
 void CPHSkeleton::ClearUnsplited()
@@ -434,9 +368,8 @@ void CPHSkeleton::InitServerObject(CSE_Abstract * D)
 
 	l_tpALifePhysicObject->source_id	= u16(obj->ID());
 	l_tpALifePhysicObject->startup_animation=m_startup_anim;
-	D->s_name			= "ph_skeleton_object";//*cNameSect()
+	D->s_name			= "ph_skeleton_object";
 	D->set_name_replace	("");
-//.	D->s_gameid			=	u8(GameID());
 	D->s_RP				=	0xff;
 	D->ID				=	0xffff;
 	D->ID_Parent		=	0xffff;//u16(ID());//
@@ -454,4 +387,55 @@ void CPHSkeleton::InitServerObject(CSE_Abstract * D)
 void	CPHSkeleton::SetNotNeedSave		()
 {
 	m_flags.set(CSE_PHSkeleton::flNotSave,true);
+}
+
+void CPHSkeleton::SyncNetState() 
+{
+	auto obj = PPhysicsShellHolder();
+	if (!obj) return;
+
+	auto se_obj = ai().get_alife()->objects().object(obj->ID(), true);
+	if (!se_obj) return;
+
+	m_flags.set(CSE_PHSkeleton::flSavedData, TRUE);
+	if (obj->PPhysicsShell() && obj->PPhysicsShell()->isActive())
+		m_flags.set(CSE_PHSkeleton::flActive, obj->PPhysicsShell()->isEnabled());
+
+	auto po = smart_cast<CSE_PHSkeleton*>(se_obj);
+	R_ASSERT4(po, "[%s]: %s is not CSE_PHSkeleton", __FUNCTION__, obj->Name());
+	po->_flags.assign(m_flags.get());
+	auto& saved_bones = po->saved_bones;
+	u16 bones_number = obj->PHGetSyncItemsNumber();
+	auto K = smart_cast<IKinematics*>(obj->Visual());
+
+	if (K)
+	{
+		saved_bones.bones_mask = K->LL_GetBonesVisible();
+		saved_bones.root_bone = K->LL_GetBoneRoot();
+	}
+	else 
+	{
+		saved_bones.bones_mask = 0;
+		saved_bones.root_bone = 0;
+	}
+
+	Fvector min, max;
+	min.set(F_MAX, F_MAX, F_MAX);
+	max.set(-F_MAX, -F_MAX, -F_MAX);
+	saved_bones.bones.clear();
+	for (u16 i = 0; i < bones_number; i++) {
+		SPHNetState state;
+		obj->PHGetSyncItem(i)->get_State(state);
+		Fvector& p = state.position;
+		if (p.x < min.x) min.x = p.x;
+		if (p.y < min.y) min.y = p.y;
+		if (p.z < min.z) min.z = p.z;
+		if (p.x > max.x) max.x = p.x;
+		if (p.y > max.y) max.y = p.y;
+		if (p.z > max.z) max.z = p.z;
+		saved_bones.bones.push_back(state);
+	}
+	min.sub(2.f * EPS_L);
+	max.add(2.f * EPS_L);
+	saved_bones.set_min_max(min, max);
 }
