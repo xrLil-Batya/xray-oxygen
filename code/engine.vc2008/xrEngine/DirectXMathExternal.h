@@ -215,6 +215,14 @@ inline void Set_c(DirectX::XMMATRIX &m, const float &x, const float &y, const fl
 	m.r[3].m128_f32[3] = w;
 }
 
+/// <summary>Returns Zero Vector func for DirectX::XMMATRIX</summary>
+inline DirectX::XMVECTOR GetZeroVector(const float &w = 0)
+{
+	DirectX::XMVECTOR F = DirectX::XMVectorZero();
+	F.m128_f32[3] = w;
+	return F;
+}
+
 /// <summary>Set i vector is some value func for DirectX::XMMATRIX</summary>
 inline void Set_r0_w(DirectX::XMMATRIX &m, const float &w = 0)
 {
@@ -239,13 +247,6 @@ inline void Set_r3_w(DirectX::XMMATRIX &m, const float &w = 0)
 	m.r[3] = GetZeroVector(w);
 }
 
-/// <summary>Returns Zero Vector func for DirectX::XMMATRIX</summary>
-inline DirectX::XMVECTOR GetZeroVector(const float &w = 0)
-{
-	DirectX::XMVECTOR F = DirectX::XMVectorZero();
-	F.m128_f32[3] = w;
-	return F;
-}
  
 inline float XMV_square_magnitude(const DirectX::XMVECTOR &v)
 {
