@@ -159,7 +159,9 @@ inline void InertionByMatrix(DirectX::XMMATRIX &m, DirectX::XMMATRIX &m1, const 
 inline void InertionByVector(DirectX::XMVECTOR &origin, const DirectX::XMVECTOR &g, const float &v)
 {
 	float inv = 1.0f - v;
-	origin.
+	origin.m128_f32[0] = v * origin.m128_f32[0] + inv * g.m128_f32[0];
+	origin.m128_f32[1] = v * origin.m128_f32[1] + inv * g.m128_f32[1];
+	origin.m128_f32[2] = v * origin.m128_f32[2] + inv * g.m128_f32[2];
 }
 
 
