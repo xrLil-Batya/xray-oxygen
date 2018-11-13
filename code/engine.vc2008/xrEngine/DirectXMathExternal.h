@@ -143,6 +143,87 @@ inline void TransformTiny32ByMatrix(const DirectX::XMMATRIX &m, Fvector2 &dest, 
 	dest.y = v.x*m.r[0].m128_f32[1] + v.y*m.r[1].m128_f32[1] + v.z*m.r[2].m128_f32[1] + m.r[3].m128_f32[1];
 }
 
+/// <summary>GSC Inertion func for DirectX::XMMATRIX</summary>
+inline void InertionByMatrix(DirectX::XMMATRIX &m, DirectX::XMMATRIX &m1, const float &v)
+{
+	float iv = 1.f - v;
+	for (int i = 0; i < 4; ++i)
+	{
+		m.r[i].m128_f32[0] = m.r[i].m128_f32[0] * v + m1.r[i].m128_f32[0] * iv;
+		m.r[i].m128_f32[1] = m.r[i].m128_f32[1] * v + m1.r[i].m128_f32[1] * iv;
+		m.r[i].m128_f32[2] = m.r[i].m128_f32[2] * v + m1.r[i].m128_f32[2] * iv;
+		m.r[i].m128_f32[3] = m.r[i].m128_f32[3] * v + m1.r[i].m128_f32[3] * iv;
+	}
+}
+
+/// <summary>Set i vector func for DirectX::XMMATRIX</summary>
+inline void Set_i(DirectX::XMMATRIX &m, const float &x, const float &y, const float &z, const float &w = 0)
+{
+	m.r[0].m128_f32[0] = x;
+	m.r[0].m128_f32[1] = y;
+	m.r[0].m128_f32[2] = z;
+	m.r[0].m128_f32[3] = w;
+}
+
+/// <summary>Set j vector func for DirectX::XMMATRIX</summary>
+inline void Set_j(DirectX::XMMATRIX &m, const float &x, const float &y, const float &z, const float &w = 0)
+{
+	m.r[1].m128_f32[0] = x;
+	m.r[1].m128_f32[1] = y;
+	m.r[1].m128_f32[2] = z;
+	m.r[1].m128_f32[3] = w;
+}
+
+/// <summary>Set z vector func for DirectX::XMMATRIX</summary>
+inline void Set_z(DirectX::XMMATRIX &m, const float &x, const float &y, const float &z, const float &w = 0)
+{
+	m.r[2].m128_f32[0] = x;
+	m.r[2].m128_f32[1] = y;
+	m.r[2].m128_f32[2] = z;
+	m.r[2].m128_f32[3] = w;
+}
+
+/// <summary>Set c vector func for DirectX::XMMATRIX (vector c is 4 vector in matrix (e. g. _14 _24 _34 _44)</summary>
+inline void Set_c(DirectX::XMMATRIX &m, const float &x, const float &y, const float &z, const float &w = 0)
+{
+	m.r[3].m128_f32[0] = x;
+	m.r[3].m128_f32[1] = y;
+	m.r[3].m128_f32[2] = z;
+	m.r[3].m128_f32[3] = w;
+}
+
+/// <summary>Set i vector is some value func for DirectX::XMMATRIX</summary>
+inline void Set_r0_w(DirectX::XMMATRIX &m, const float &w = 0)
+{
+	m.r[0] = Get_Zero(w);
+}
+
+/// <summary>Set j vector to 0 but w is some value func for DirectX::XMMATRIX</summary>
+inline void Set_r1_w(DirectX::XMMATRIX &m, const float &w = 0)
+{
+	m.r[1] = Get_Zero(w);
+}
+
+/// <summary>Set z vector to 0 but w is some value func for DirectX::XMMATRIX</summary>
+inline void Set_r2_w(DirectX::XMMATRIX &m, const float &w = 0)
+{
+	m.r[2] = Get_Zero(w);
+}
+
+/// <summary>Set c vector to 0 but w is some value func for DirectX::XMMATRIX</summary>
+inline void Set_r3_w(DirectX::XMMATRIX &m, const float &w = 0)
+{
+	m.r[3] = Get_Zero(w);
+}
+
+/// <summary>Returns Zero Vector func for DirectX::XMMATRIX</summary>
+inline DirectX::XMVECTOR& Get_Zero(const float &w = 0)
+{
+	return { 0, 0, 0, w };
+}
+ 
+
+
 /* Hot tip delete this after implemented all methods
 	_11 - m.r[0].m128_f32[0]
 	_12 - m.r[0].m128_f32[1]
