@@ -202,25 +202,25 @@ inline void Set_c(DirectX::XMMATRIX &m, const float &x, const float &y, const fl
 /// <summary>Set i vector is some value func for DirectX::XMMATRIX</summary>
 inline void Set_r0_w(DirectX::XMMATRIX &m, const float &w = 0)
 {
-	m.r[0] = Get_Zero(w);
+	m.r[0] = GetZeroVector(w);
 }
 
 /// <summary>Set j vector to 0 but w is some value func for DirectX::XMMATRIX</summary>
 inline void Set_r1_w(DirectX::XMMATRIX &m, const float &w = 0)
 {
-	m.r[1] = Get_Zero(w);
+	m.r[1] = GetZeroVector(w);
 }
 
 /// <summary>Set z vector to 0 but w is some value func for DirectX::XMMATRIX</summary>
 inline void Set_r2_w(DirectX::XMMATRIX &m, const float &w = 0)
 {
-	m.r[2] = Get_Zero(w);
+	m.r[2] = GetZeroVector(w);
 }
 
 /// <summary>Set c vector to 0 but w is some value func for DirectX::XMMATRIX</summary>
 inline void Set_r3_w(DirectX::XMMATRIX &m, const float &w = 0)
 {
-	m.r[3] = Get_Zero(w);
+	m.r[3] = GetZeroVector(w);
 }
 
 /// <summary>Returns Zero Vector func for DirectX::XMMATRIX</summary>
