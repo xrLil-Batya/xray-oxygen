@@ -162,8 +162,22 @@ inline void InertionByVector(DirectX::XMVECTOR &origin, const DirectX::XMVECTOR 
 	origin.m128_f32[0] = v * origin.m128_f32[0] + inv * g.m128_f32[0];
 	origin.m128_f32[1] = v * origin.m128_f32[1] + inv * g.m128_f32[1];
 	origin.m128_f32[2] = v * origin.m128_f32[2] + inv * g.m128_f32[2];
+} 
+
+inline void InertionByVector(DirectX::XMVECTOR &origin, const Fvector &g, const float &v)
+{
+	float inv = 1.0f - v;
+	origin.m128_f32[0] = v * origin.m128_f32[0] + inv * g.x;
+	origin.m128_f32[1] = v * origin.m128_f32[1] + inv * g.y;
+	origin.m128_f32[2] = v * origin.m128_f32[2] + inv * g.z;
 }
 
+inline void ClampByVector(DirectX::XMVECTOR &origin, const Fvector &mn, const Fvector &mx)
+{
+	::clamp<float>(origin.m128_f32[0], mn.x, mx.x);
+	::clamp<float>(origin.m128_f32[1], mn.y, mx.y);
+	::clamp<float>(origin.m128_f32[2], mn.z, mx.z);
+}
 
 /// <summary>Set i vector func for DirectX::XMMATRIX</summary>
 inline void Set_i(DirectX::XMMATRIX &m, const float &x, const float &y, const float &z, const float &w = 0)
@@ -233,6 +247,15 @@ inline DirectX::XMVECTOR GetZeroVector(const float &w = 0)
 	return F;
 }
  
+inline float XMV_square_magnitude(const DirectX::XMVECTOR &v)
+{
+	return (v.m128_f32[0]* v.m128_f32[0] + v.m128_f32[1] * v.m128_f32[1] + v.m128_f32[2] * v.m128_f32[2]);
+}
+
+inline float XMV_magnitude(const DirectX::XMVECTOR &v)
+{
+	return (::_sqrt(XMV_square_magnitude(v)));
+}
 
 
 /* Hot tip delete this after implemented all methods
