@@ -156,6 +156,13 @@ inline void InertionByMatrix(DirectX::XMMATRIX &m, DirectX::XMMATRIX &m1, const 
 	}
 }
 
+inline void InertionByVector(DirectX::XMVECTOR &origin, const DirectX::XMVECTOR &g, const float &v)
+{
+	float inv = 1.0f - v;
+	origin.
+}
+
+
 /// <summary>Set i vector func for DirectX::XMMATRIX</summary>
 inline void Set_i(DirectX::XMMATRIX &m, const float &x, const float &y, const float &z, const float &w = 0)
 {
@@ -217,9 +224,11 @@ inline void Set_r3_w(DirectX::XMMATRIX &m, const float &w = 0)
 }
 
 /// <summary>Returns Zero Vector func for DirectX::XMMATRIX</summary>
-inline DirectX::XMVECTOR& Get_Zero(const float &w = 0)
+inline DirectX::XMVECTOR GetZeroVector(const float &w = 0)
 {
-	return { 0, 0, 0, w };
+	DirectX::XMVECTOR F = DirectX::XMVectorZero();
+	F.m128_f32[3] = w;
+	return F;
 }
  
 
