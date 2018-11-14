@@ -111,20 +111,21 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	Caps.id_vendor = Desc.VendorId;
 	Caps.id_device = Desc.DeviceId;
 
-	// MatthewKush to all: Please change to DXGI_SWAP_CHAIN_DESC1 (for lots of reasons)
+	//Please change to DXGI_SWAP_CHAIN_DESC1, (HDR10 support, less stuttering!)
 	DXGI_SWAP_CHAIN_DESC &sd = m_ChainDesc;
 	memset(&sd, 0, sizeof(sd));
 
 	SelectResolution(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
 	//	TODO: DX10: implement dynamic format selection
-	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Prep for HDR10; breaks nothing
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; 
+	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
 
 	// Multisample
 	sd.SampleDesc.Count = 1;
 	sd.SampleDesc.Quality = 0;
 
-	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; //todo: EFFECT_FLIP_DISCARD
 	sd.OutputWindow = m_hWnd;
 	sd.Windowed = bWindowed;
 	sd.BufferDesc.RefreshRate = SelectRefresh(sd.BufferDesc.Width, sd.BufferDesc.Height, sd.BufferDesc.Format);
@@ -185,11 +186,15 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	D3D11_FEATURE_DATA_THREADING threadingFeature;
 	R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_THREADING, &threadingFeature, sizeof(threadingFeature)));
-        //MatthewKush to all: If we keep data threading, make use of async resources. Otherwise we
-        //should make it a single-threaded device.
+    //MatthewKush to all: If we keep data threading, make use of async resources. Otherwise we
+    //should make it a single-threaded device.
 
 	if (IsWindows10OrGreater())
 	{
+	    //D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
+	    //R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
+        //arch.TileBasedDeferredRenderer == TRUE;
+		//todo: Implement tiled rendering (switch to Forward Plus first)
 
 		IDXGIDevice3 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
@@ -197,15 +202,14 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 		IDXGIAdapter3 * pDXGIAdapter;
 		R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter3), (void **)&pDXGIAdapter));
-		//pDXGIAdapter.
 
 		R = pDXGIDevice->SetMaximumFrameLatency(1);
 	}
 	else if (IsWindows8OrGreater())
 	{
-	        D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-                arch.TileBasedDeferredRenderer == TRUE;
+	    //D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
+	    //R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
+        //arch.TileBasedDeferredRenderer == TRUE;
 
 		IDXGIDevice2 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&pDXGIDevice));
@@ -308,8 +312,6 @@ void CHW::Reset(HWND hwnd)
 
 	sd.Windowed		= bWindowed;
 	sd.BufferCount	= psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
-	sd.BufferCount	= 2;
-
 	m_pSwapChain->SetFullscreenState(!bWindowed, NULL);
 
 	DXGI_MODE_DESC	&desc = m_ChainDesc.BufferDesc;
@@ -387,6 +389,11 @@ DXGI_RATIONAL CHW::SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
 		res.Numerator = 120;
 		return res;
 	}
+	//else if (psDeviceFlags.is(rsRefresh144hz))
+	//{
+	//	res.Numerator = 144;
+	//	return res;
+	//}
 	else
 	{
 		xr_vector<DXGI_MODE_DESC>	modes;
@@ -559,7 +566,6 @@ void CHW::UpdateViews()
 	descDepth.MipLevels = 1;
 	descDepth.ArraySize = 1;
 	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	descDepth.Format = DXGI_FORMAT_D32_FLOAT;//DXGI_FORMAT_D24_UNORM_S8_UINT;
 	descDepth.SampleDesc.Count = 1;
 	descDepth.SampleDesc.Quality = 0;
 	descDepth.Usage = D3D_USAGE_DEFAULT;

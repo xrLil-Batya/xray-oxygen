@@ -310,13 +310,11 @@ CRenderTarget::CRenderTarget()
 	//	NORMAL
 	{
 		u32		w = Device.dwWidth, h = Device.dwHeight;
-                //MatthewKush: to hell with s_position. We should use rt_Depth and re-create the 3 dimensions
+        //To hell with s_position. We should use rt_Depth and re-create the 3 dimensions
 		rt_Position.create					(r2_RT_P, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 
-        //rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //not needed for depth prepass..
-
 		if (RImplementation.o.dx10_msaa)
-			rt_MSAADepth.create				(r2_RT_MSAAdepth, w, h, D3DFMT_D32, SampleCount);
+			rt_MSAADepth.create				(r2_RT_MSAAdepth, w, h, D3DFMT_D24S8, SampleCount);
 
 		if (!RImplementation.o.dx10_gbuffer_opt)
 			rt_Normal.create				(r2_RT_N, w, h, D3DFMT_A16B16G16R16F, SampleCount);
@@ -571,8 +569,8 @@ CRenderTarget::CRenderTarget()
 		}
 		else
 		{
-			w = Device.dwWidth / 2;
-			h = Device.dwHeight / 2;
+			w = Device.dwWidth;
+			h = Device.dwHeight;
 		}
 
 		D3DFORMAT	fmt = HW.Caps.id_vendor == 0x10DE ? D3DFMT_R32F : D3DFMT_R16F;
