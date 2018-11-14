@@ -105,7 +105,7 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 		float3 _tsLight = -Ldynamic_dir.xyz;
 		
 	float4	light	= float4(L.rgb + hdiffuse, L.w);
-	float roughness = 1.0 - P.w;
+	float roughness = 1.0 - D.w;
 	roughness = roughness * roughness;
 	float real_ruff = roughness * roughness;
 	float3 _F0 = float3(0.04,0.04,0.04);
