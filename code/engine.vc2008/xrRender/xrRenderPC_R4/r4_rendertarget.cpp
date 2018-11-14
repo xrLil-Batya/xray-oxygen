@@ -313,10 +313,10 @@ CRenderTarget::CRenderTarget()
                 //MatthewKush: to hell with s_position. We should use rt_Depth and re-create the 3 dimensions
 		rt_Position.create					(r2_RT_P, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 
-        rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //not needed for depth prepass..
 
 		if (RImplementation.o.dx10_msaa)
 			rt_MSAADepth.create				(r2_RT_MSAAdepth, w, h, D3DFMT_D24S8, SampleCount);
+			rt_MSAADepth.create				(r2_RT_MSAAdepth, w, h, D3DFMT_D32, SampleCount);
 
 		if (!RImplementation.o.dx10_gbuffer_opt)
 			rt_Normal.create				(r2_RT_N, w, h, D3DFMT_A16B16G16R16F, SampleCount);
@@ -342,6 +342,7 @@ CRenderTarget::CRenderTarget()
 				else
 				{
 					rt_Color.create			(r2_RT_albedo, w, h, D3DFMT_A8R8G8B8, SampleCount);	// expand to full
+					rt_Color.create			(r2_RT_albedo, w, h, D3DFMT_A16B16G16R16F, SampleCount);	// expand to full
 					rt_Accumulator.create	(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 				}
 			}
@@ -355,7 +356,6 @@ CRenderTarget::CRenderTarget()
 		}
 
         // Mrmnwar SunShaft Screen Space
-//		if (RImplementation.o.sunshaft_mrmnwar)
         {
             rt_SunShaftsMask.create			(r2_RT_SunShaftsMask,			w, h, D3DFMT_A8R8G8B8);
             rt_SunShaftsMaskSmoothed.create	(r2_RT_SunShaftsMaskSmoothed,	w, h, D3DFMT_A8R8G8B8);
@@ -364,7 +364,6 @@ CRenderTarget::CRenderTarget()
         }
 
         // RT - KD Screen space sunshafts
-//		if (RImplementation.o.sunshaft_screenspace)
         {
             rt_sunshafts_0.create			(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
             rt_sunshafts_1.create			(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
@@ -535,7 +534,6 @@ CRenderTarget::CRenderTarget()
 	// BLOOM
 	{
 		/////////////////////////////////////////
-		D3DFORMAT fmt = D3DFMT_A8R8G8B8;	
 		/////////////////////////////////////////
 		u32	w = BLOOM_size_X, h = BLOOM_size_Y;
 		u32 fvf_build = D3DFVF_XYZRHW | D3DFVF_TEX4 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) | D3DFVF_TEXCOORDSIZE2(2) | D3DFVF_TEXCOORDSIZE2(3);
@@ -547,8 +545,6 @@ CRenderTarget::CRenderTarget()
 		g_bloom_build.create		(fvf_build, RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_bloom_filter.create		(fvf_filter, RCache.Vertex.Buffer(), RCache.QuadIB);
 		/////////////////////////////////////////
-		s_bloom_dbg_1.create		("effects\\screen_set", r2_RT_bloom1);
-		s_bloom_dbg_2.create		("effects\\screen_set", r2_RT_bloom2);
 		/////////////////////////////////////////
 		s_bloom.create				("effects\\bloom_build");
 		f_bloom_factor				= 0.5f;
@@ -557,7 +553,6 @@ CRenderTarget::CRenderTarget()
 	// TONEMAP
 	{
 		rt_LUM_64.create			(r2_RT_luminance_t64, 64, 64, D3DFMT_A16B16G16R16F);
-		rt_LUM_8.create				(r2_RT_luminance_t8, 8, 8, D3DFMT_A16B16G16R16F);
 		s_luminance.create			("effects\\bloom_luminance");
 		f_luminance_adapt			= 0.5f;
 
@@ -590,6 +585,8 @@ CRenderTarget::CRenderTarget()
 		{
 			w = Device.dwWidth;
 			h = Device.dwHeight;
+			w = Device.dwWidth / 2;
+			h = Device.dwHeight / 2;
 		}
 
 		D3DFORMAT	fmt = HW.Caps.id_vendor == 0x10DE ? D3DFMT_R32F : D3DFMT_R16F;
@@ -607,9 +604,6 @@ CRenderTarget::CRenderTarget()
 		};
 		s_combine.create				(b_combine, "r2\\combine");
 		s_combine_volumetric.create		("combine_volumetric");
-		s_combine_dbg_0.create			("effects\\screen_set", r2_RT_smap_surf);
-		s_combine_dbg_1.create			("effects\\screen_set", r2_RT_luminance_t8);
-		s_combine_dbg_Accumulator.create("effects\\screen_set", r2_RT_accum);
 		/////////////////////////////////////////
 		g_combine_VP.create				(dwDecl, RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine.create				(FVF::F_TL, RCache.Vertex.Buffer(), RCache.QuadIB);
@@ -648,14 +642,12 @@ CRenderTarget::CRenderTarget()
 	if (RImplementation.o.dx10_msaa)
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing_msaa");
-		s_pp_taa.create			("effects\\taa_msaa");
 		s_rain_drops.create		("effects\\screen_rain_droplets_msaa");
 		s_vignette.create		("effects\\vignette_msaa");
 	}
 	else
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing");
-		s_pp_taa.create			("effects\\taa");
 		s_rain_drops.create		("effects\\screen_rain_droplets");
 		s_vignette.create		("effects\\vignette");
 	}
@@ -695,19 +687,16 @@ CRenderTarget::CRenderTarget()
 						u16* p = (u16*)(LPBYTE(subData.pSysMem) + slice * subData.SysMemSlicePitch + y * subData.SysMemPitch + x * 2);
 						float ld = float(x) / float(TEX_material_LdotN - 1);
 						float ls = float(y) / float(TEX_material_LdotH - 1) + EPS_S;
-						ls *= powf(ld, 1.0f / 32.0f);
 						float fd, fs = 1.0f; // (ls * 1.01f)^0
 
 						switch (slice)
 						{
 						case 0: // Looks like OrenNayar
 						{
-							fd = powf(ld, 0.75f);		// 0.75
 							fs = powf(ls, 16.0f)*0.5f;
 						}	break;
 						case 1: // Looks like Blinn
 						{
-							fd = powf(ld, 0.90f);		// 0.90
 							fs = powf(ls, 24.0f);
 						}	break;
 						case 2: // Looks like Phong
@@ -720,7 +709,6 @@ CRenderTarget::CRenderTarget()
 							float s0 = _abs(1.0f - _abs(0.05f*_sin(33.0f*ld) + ld - ls));
 							float s1 = _abs(1.0f - _abs(0.05f*_cos(33.0f*ld*ls) + ld - ls));
 							float s2 = _abs(1.0f - _abs(ld - ls));
-							fd = ld;					// 1.0
 							fs = powf(std::max(std::max(s0, s1), s2), 24.0f);
 							fs *= powf(ld, 1.0f / 7.0f);
 						}	break;

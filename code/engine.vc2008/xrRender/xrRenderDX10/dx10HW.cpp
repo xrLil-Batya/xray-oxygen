@@ -119,7 +119,6 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	//	TODO: DX10: implement dynamic format selection
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Prep for HDR10; breaks nothing
-	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
 
 	// Multisample
 	sd.SampleDesc.Count = 1;
@@ -191,15 +190,14 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	if (IsWindows10OrGreater())
 	{
-	        D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-                arch.TileBasedDeferredRenderer == TRUE;
 
 		IDXGIDevice3 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
+		
 
 		IDXGIAdapter3 * pDXGIAdapter;
 		R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter3), (void **)&pDXGIAdapter));
+		//pDXGIAdapter.
 
 		R = pDXGIDevice->SetMaximumFrameLatency(1);
 	}
@@ -310,6 +308,7 @@ void CHW::Reset(HWND hwnd)
 
 	sd.Windowed		= bWindowed;
 	sd.BufferCount	= psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
+	sd.BufferCount	= 2;
 
 	m_pSwapChain->SetFullscreenState(!bWindowed, NULL);
 
@@ -560,6 +559,7 @@ void CHW::UpdateViews()
 	descDepth.MipLevels = 1;
 	descDepth.ArraySize = 1;
 	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	descDepth.Format = DXGI_FORMAT_D32_FLOAT;//DXGI_FORMAT_D24_UNORM_S8_UINT;
 	descDepth.SampleDesc.Count = 1;
 	descDepth.SampleDesc.Quality = 0;
 	descDepth.Usage = D3D_USAGE_DEFAULT;

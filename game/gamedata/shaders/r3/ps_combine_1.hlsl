@@ -1,12 +1,8 @@
 #include "common.h"
 
-//#define USE_SUPER_SPECULAR
-//#define USE_ORIGINAL_SSAO
-//#define HBAO_WORLD_JITTER
-
 #include "lmodel.h"
 #include "hmodel.h"
-
+#include "BRDF.hlsl"
 uniform	Texture2D s_half_depth;
 
 #include "ps_ssao.hlsl"
@@ -105,14 +101,22 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 	hmodel(hdiffuse, hspecular, mtl, N.w, D.w, P.xyz, N.xyz);
 	hdiffuse	*= occ;
 	hspecular	*= occ;
-
+		float3 _tsView = -normalize(P.xyz);
+		float3 _tsLight = -Ldynamic_dir.xyz;
+		
 	float4	light	= float4(L.rgb + hdiffuse, L.w);
+	float roughness = 1.0 - P.w;
+	roughness = roughness * roughness;
+	float real_ruff = roughness * roughness;
+	float3 _F0 = float3(0.04,0.04,0.04);
+//float	NdotV = dot( N, _tsView );
+float3 BRDF_Light = ComputeBRDF_Full( N, _tsView, _tsLight, real_ruff, _F0, roughness, D.rgb, true, true );	
+	BRDF_Light.z += hdiffuse;
+	BRDF_Light.x += hspecular;
+	
 	float4	C		= D*light;						// rgb.gloss * light(diffuse.specular)
 	float3	spec	= C.www * L.rgb + hspecular;	// replicated specular
 
-#ifdef USE_SUPER_SPECULAR
-			spec	= (C.rgb*0.5f + 0.5f)*C.w + hspecular;
-#endif
 	float3	color	= C.rgb + spec;
 
 	// here should be distance fog
