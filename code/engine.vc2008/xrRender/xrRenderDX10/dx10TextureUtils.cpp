@@ -28,10 +28,9 @@ TextureFormatPairs	TextureFormatList[] =
 	{ D3DFMT_R32F,			DXGI_FORMAT_R32_FLOAT},
 	{ D3DFMT_R16F,			DXGI_FORMAT_R16_FLOAT},
 	{ D3DFMT_A32B32G32R32F, DXGI_FORMAT_R32G32B32A32_FLOAT },
-    { D3DFMT_DXT1, DXGI_FORMAT_BC1_UNORM},
-    { D3DFMT_DXT3, DXGI_FORMAT_BC2_UNORM},
-    { D3DFMT_DXT5, DXGI_FORMAT_BC3_UNORM}
-    //Higher quality with minor perf. loss on old hardware
+    //{ D3DFMT_DXT1, DXGI_FORMAT_BC1_UNORM},
+    //{ D3DFMT_DXT5, DXGI_FORMAT_BC3_UNORM}
+    //Swartz to all: This could increase performance for some people
 };
 
 DXGI_FORMAT	ConvertTextureFormat(D3DFORMAT dx9FMT)

@@ -84,6 +84,6 @@ float4 main ( v2p_volume I ) : SV_Target
 #endif
 	#endif
 
-	return 		0;
+	return 		blend( Ldynamic_color * light * s/*float4( 1.f, 0.2f, 0.2f, 1.f)*/, I.tc );
 }
 #endif
