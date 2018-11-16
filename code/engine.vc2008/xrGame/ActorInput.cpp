@@ -660,37 +660,40 @@ void CActor::SwitchTorchMode()
 
 void CActor::NoClipFly(int cmd)
 {
-	Fvector cur_pos;// = Position();
+
+	Fvector cur_pos, right, left;
 	cur_pos.set(0,0,0);
-	float scale = 1.0f;
+	float scale = 0.55f;
 	if(pInput->iGetAsyncKeyState(DIK_LSHIFT))
 		scale = 0.25f;
 	else if(pInput->iGetAsyncKeyState(DIK_X))
-		scale = 8.0f;
+		scale = 1.0f;
 	else if(pInput->iGetAsyncKeyState(DIK_LMENU))
-		scale = 12.0f;//LALT
+		scale = 2.0f;//LALT
 	else if(pInput->iGetAsyncKeyState(DIK_TAB))
-		scale = 20.0f;
+		scale = 5.0f;
 
 	switch(cmd)
 	{
 	case kJUMP:		
-		cur_pos.y += 0.1f;
+		cur_pos.y += 0.12f;
 		break;
 	case kCROUCH:	
-		cur_pos.y -= 0.1f;
+		cur_pos.y -= 0.12f;
 		break;
 	case kFWD:	
-		cur_pos.z += 0.1f;
+		cur_pos.mad(cam_Active()->vDirection, scale / 2.0f);
 		break;
 	case kBACK:
-		cur_pos.z -= 0.1f;
+		cur_pos.mad(cam_Active()->vDirection, -scale / 2.0f);
 		break;
 	case kL_STRAFE:
-		cur_pos.x -= 0.1f;
+		left.crossproduct(cam_Active()->vNormal, cam_Active()->vDirection);
+		cur_pos.mad(left, -scale / 2.0f);
 		break;
 	case kR_STRAFE:
-		cur_pos.x += 0.1f;
+		right.crossproduct(cam_Active()->vNormal, cam_Active()->vDirection);
+		cur_pos.mad(right, scale / 2.0f);
 		break;
 	case kCAM_1:	
 		cam_Set(eacFirstEye);				
@@ -723,9 +726,8 @@ void CActor::NoClipFly(int cmd)
 		break;
 	}
 	cur_pos.mul(scale);
-	Fmatrix	mOrient;
-	mOrient.rotateY(-(cam_Active()->GetWorldYaw()));
-	mOrient.transform_dir(cur_pos);
 	Position().add(cur_pos);
+	cur_pos.y + 1.0f;
+	XFORM().c.add(cur_pos);
 	character_physics_support()->movement()->SetPosition(Position());
 }

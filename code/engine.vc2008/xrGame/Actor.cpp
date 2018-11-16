@@ -689,9 +689,6 @@ float g_fov = 67.5f;
 
 float CActor::currentFOV()
 {
-	if (!psHUD_Flags.is(HUD_WEAPON|HUD_WEAPON_RT|HUD_WEAPON_RT2))
-		return g_fov;
-
 	CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());	
 
 	if (pWeapon && pWeapon->IsZoomed() && ( !pWeapon->ZoomTexture() || (!pWeapon->IsRotatingToZoom() && pWeapon->ZoomTexture())))
@@ -839,13 +836,10 @@ void CActor::UpdateCL()
 		}
 	} while (WaitResult == WAIT_TIMEOUT);
 
-	float cs_min = pSettings->r_float(cNameSect(), "ph_crash_speed_min");
-	float cs_max = pSettings->r_float(cNameSect(), "ph_crash_speed_max");
-
-	if (psActorFlags.test(AF_GODMODE || AF_NO_CLIP))
-		character_physics_support()->movement()->SetCrashSpeeds(8000, 9000);
-	else
-		character_physics_support()->movement()->SetCrashSpeeds(cs_min, cs_max);
+	if (psActorFlags.test(AF_NO_CLIP))
+		character_physics_support()->movement()->SetNonInteractive(true);
+	if (!psActorFlags.test(AF_NO_CLIP))
+		character_physics_support()->movement()->SetNonInteractive(false);
 
 	UpdateDefferedMessages();
 
