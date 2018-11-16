@@ -727,7 +727,6 @@ void CActor::NoClipFly(int cmd)
 	}
 	cur_pos.mul(scale);
 	Position().add(cur_pos);
-	cur_pos.y + 1.0f;
-	XFORM().c.add(cur_pos);
+	XFORM().translate_add(cur_pos);
 	character_physics_support()->movement()->SetPosition(Position());
 }
