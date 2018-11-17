@@ -31,6 +31,7 @@
 #define HALF_MIN 6.103515625e-5  // 2^-14, the same value for 10, 11 and 16-bit: https://www.khronos.org/opengl/wiki/Small_Float_Formats
 #define HALF_MAX 65504.0
 #define UINT_MAX 0xFFFFFFFFu
+#define COLOR_EPSILON 1e-10
 
 
 #ifdef TEXTURE_SAMPLING
@@ -152,6 +153,24 @@ float linearizeColor(float component)
     return lC;
 }
 
+float3 HUEToRGB(float H)
+{
+	float R = abs(H * 6 - 3) - 1;
+	float G = 2 - abs(H * 6 - 2);
+	float B = 2 - abs(H * 6 - 4);
+	return saturate(float3(R,G,B));
+}
+
+float3 RGBToHCV(float3 rgb)
+{
+	// Based on work by Sam Hocevar and Emil Persson
+	float4 P = (rgb.g < rgb.b) ? float4(rgb.bg, -1.0, 2.0/3.0) : float4(rgb.gb, 0.0, -1.0/3.0);
+	float4 Q = (rgb.r < P.x) ? float4(P.xyw, rgb.r) : float4(rgb.r, P.yzx);
+	float C = Q.x - min(Q.w, Q.y);
+	float H = abs((Q.w - Q.y) / (6 * C + COLOR_EPSILON) + Q.z);
+	return float3(H, C, Q.x);
+}
+
 float3 RGBToHSL(float3 rgb)
 {
     float3 hcv = RGBToHCV(rgb);
@@ -200,13 +219,11 @@ float3 VibranceFilter(float3 rgb, float vibrance)
 
 //  Function from Iñigo Quiles
 //  https://www.shadertoy.com/view/MsS3Wc
-vec3 hsb2rgb( in vec3 c ){
-    vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),
-                             6.0)-3.0)-1.0,
-                     0.0,
-                     1.0 );
-    rgb = rgb*rgb*(3.0-2.0*rgb);
-    return c.z * mix( vec3(1.0), rgb, c.y);
+float3 HSBToRGB(float3 c)
+{
+	float3 rgb = clamp(abs(fmod(c.x*6.0 + float3(0.0,4.0,2.0), 6.0) - 3.0)-1.0, 0.0, 1.0);
+	rgb = rgb*rgb*(3.0-2.0*rgb);
+	return lerp(1.0, rgb, c.y) * c.z;
 }
 
 // Reference: http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/
@@ -338,7 +355,7 @@ float3 FastInverseToneMap(float3 sdr)
 #endif
 
 
-#ifdef 0 //giant mess, clean me.
+#if 0 //giant mess, clean me.
 // Helper functions:
 float slopeFromT (float t, float A, float B, float C){
   float dtdx = 1.0/(3.0*A*t*t + 2.0*B*t + C); 
