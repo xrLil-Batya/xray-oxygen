@@ -37,9 +37,5 @@ float4 main(v2p I) : COLOR
 	float	alpha		= abs(faded_dot);
 			faded		= faded*POWER - 0.5f*POWER + 0.5f;
 
-#ifdef NEED_SOFT_WATER
 	return float4(faded, 0.0f, alpha);
-#else
-	return float4(faded, 0.08f, alpha);
-#endif
 }
