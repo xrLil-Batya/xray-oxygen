@@ -29,18 +29,9 @@ Texture2D	s_leaves;
 float3	water_intensity;
 #endif	//	defined(USE_SOFT_WATER) && defined(NEED_SOFT_WATER)
 
-////////////////////////////////////////////////////////////////////////////////
-// Pixel
 
-#ifdef GBUFFER_OPTIMIZATION
 float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
-#else
-float4 main( vf I ) : SV_Target
-#endif
 {
-//	float4	base	= tex2D (s_base,I.tbase);
-//	float3	n0	= tex2D (s_nmap,I.tnorm0);
-//	float3	n1	= tex2D (s_nmap,I.tnorm1);
 	float4	base= s_base.Sample( smp_base, I.tbase);
 	float3	n0	= s_nmap.Sample( smp_base, I.tnorm0);
 	float3	n1	= s_nmap.Sample( smp_base, I.tnorm1);
@@ -68,13 +59,6 @@ float4 main( vf I ) : SV_Target
 
 			final	*= I.c0*2;
 
-        // tonemap
-#ifdef        USE_VTF
-//                final                *= I.c0.w        ;
-#else
-//                 final                 *= tex2D        (s_tonemap,I.tbase).x        ;        // any TC - OK
-#endif
-
 #ifdef	NEED_SOFT_WATER
 
 	float	alpha	= 0.75h+0.25h*power;                        // 1=full env, 0=no env
@@ -83,11 +67,8 @@ float4 main( vf I ) : SV_Target
 	//	Igor: additional depth test
 //	float4 _P = 	tex2Dproj( s_position, I.tctexgen);
 	float2 PosTc = I.tctexgen.xy/I.tctexgen.z;
-#ifdef GBUFFER_OPTIMIZATION
 	gbuffer_data gbd = gbuffer_load_data( PosTc, pos2d );
-#else
-	gbuffer_data gbd = gbuffer_load_data( PosTc );
-#endif
+
 	float4 _P = 	float4( gbd.P, gbd.mtl );
 	float waterDepth = _P.z-I.tctexgen.z;
 

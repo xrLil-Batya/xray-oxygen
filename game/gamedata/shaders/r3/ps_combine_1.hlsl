@@ -39,18 +39,10 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 	float4	N		= float4(gbd.N, gbd.hemi);			// normal.hemi
 	float4	D		= float4(gbd.C, gbd.gloss);			// rgb.gloss
 #ifndef USE_MSAA
-#	ifdef GBUFFER_OPTIMIZATION
 	float4	L		= s_accumulator[int2(I.pos2d.xy)];	// diffuse.specular
 	// MatthewKush to all: If non-MSAA, this is better (but only if the sampler uses is smp_nofilter)
-#	else
-	float4	L		= s_accumulator.Load(int3(I.tc0 * screen_res.xy, 0));
-#	endif
 #else
-#	ifdef GBUFFER_OPTIMIZATION
 	float4	L		= s_accumulator.Load(int3(I.pos2d.xy, 0), ISAMPLE);	// diffuse.specular
-#	else
-	float4	L		= s_accumulator.Load(int3(I.tc0 * screen_res.xy, 0), ISAMPLE);
-#	endif
 #endif
 
 #ifdef USE_SUPER_SPECULAR

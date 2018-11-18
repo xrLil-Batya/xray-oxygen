@@ -4,7 +4,6 @@
 #define ISAMPLE 0
 #endif
 
-uniform float4 ssao_params;
 uniform	Texture2D s_half_depth;
 
 #include "ps_ssao.hlsl"

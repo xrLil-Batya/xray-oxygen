@@ -78,17 +78,9 @@ float3 fetch_eye_pos(float2 uv)
 ////#define SSAO_OPT_DATA
 #ifndef SSAO_OPT_DATA
 #ifdef USE_MSAA
-#ifdef GBUFFER_OPTIMIZATION
-		gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d, iSample ); // this is wrong - need to correct this
+	gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d, iSample ); // this is wrong - need to correct this
 #else
-		gbuffer_data gbd = gbuffer_load_data( tap, iSample );
-#endif
-#else
-#ifdef GBUFFER_OPTIMIZATION
-		gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d ); // this is wrong - need to correct this
-#else
-		gbuffer_data gbd = gbuffer_load_data( tap );
-#endif
+	gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d ); // this is wrong - need to correct this
 #endif
 
 		//float3	tap_pos	= s_position.Sample(smp_nofilter,tap);
@@ -328,6 +320,8 @@ float horizon_occlusion2_4way(float2 deltaUV0,
 
 float4 calc_hbao(float z, float3 N, float2 tc0, float4 pos2d)
 {
+	const float ssao_kernel_size = ssao_params.y;
+	
     float3 P = uv_to_eye(tc0, z);
 
 	float2 	step_size	= float2	(.5f / 1024.0f, .5f / 768.0f)*ssao_params.y/max(z,1.3);

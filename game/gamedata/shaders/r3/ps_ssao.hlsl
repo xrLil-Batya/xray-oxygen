@@ -2,31 +2,13 @@
 
 #ifndef	SSAO_QUALITY
 #ifdef USE_MSAA
-#ifdef GBUFFER_OPTIMIZATION
 float	calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, float4 pos2d, uint iSample )
-{
-	return 1.0;
-}
 #else
-float	calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, uint iSample )
-{
-	return 1.0;
-}
-#endif
-#else
-#ifdef GBUFFER_OPTIMIZATION
-
 float	calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, float4 pos2d )
+#endif
 {
 	return 1.0;
 }
-#else
-float	calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ )
-{
-	return 1.0;
-}
-#endif
-#endif
 #else	//	SSAO_QUALITY
 #if SSAO_QUALITY >= 3
 #define RINGS 3
@@ -90,8 +72,7 @@ static const float angles[5] =
 Texture2D	jitter0;
 sampler		smp_jitter;
 Texture2D	jitterMipped;
-
-float4 ssao_params;
+uniform float4 ssao_params;
 
 float3 uv_to_eye(float2 uv, float eye_z)
 {
@@ -104,17 +85,9 @@ float3 uv_to_eye(float2 uv, float eye_z)
 //	N	screen space normal of the original point
 //	tc	G-buffer coordinates of the original point
 #ifndef USE_MSAA
-#	ifdef GBUFFER_OPTIMIZATION
 float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, float4 pos2d )
-#	else
-float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ )
-#	endif
 #else
-#	ifdef GBUFFER_OPTIMIZATION
 float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, float4 pos2d, uint iSample )
-#	else
-float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, uint iSample)
-#	endif
 #endif
 {
 	const float ssao_noise_tile_factor = ssao_params.x;
@@ -150,19 +123,11 @@ float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, uint iSample)
 				tap		+= tc;
 #ifndef SSAO_OPT_DATA
 #	ifdef USE_MSAA
-#		ifdef GBUFFER_OPTIMIZATION
-			// this is wrong - need to correct this
-			gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d, iSample ); 
-#		else
-			gbuffer_data gbd = gbuffer_load_data( tap, iSample );
-#		endif
+	// this is wrong - need to correct this
+	gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d, iSample ); 
 #	else
-#		ifdef GBUFFER_OPTIMIZATION
-			// this is wrong - need to correct this
-			gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d ); 
-#		else
-			gbuffer_data gbd = gbuffer_load_data( tap );
-#		endif
+	// this is wrong - need to correct this
+	gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d ); 
 #	endif
 		float3	tap_pos	= gbd.P;
 #else // SSAO_OPT_DATA
