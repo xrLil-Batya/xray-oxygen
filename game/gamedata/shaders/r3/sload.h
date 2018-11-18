@@ -217,25 +217,19 @@ surface_bumped sload_i( p_bumped I, float2 pixeloffset )
 	return S;
 }
 
-surface_bumped sload ( p_bumped I)
+surface_bumped sload(p_bumped I)
 {
-      surface_bumped      S   = sload_i	(I);
-		S.normal.z			*=	0.5;		//. make bump twice as contrast (fake, remove me if possible)
-
-#ifdef	GBUFFER_OPTIMIZATION
-	   S.height = 0;
-#endif	//	GBUFFER_OPTIMIZATION
-      return              S;
+	surface_bumped S	= sload_i(I);
+	S.normal.z		   *= 0.5;		//. make bump twice as contrast (fake, remove me if possible)
+	S.height 			= 0;
+	return S;
 }
 
-surface_bumped sload ( p_bumped I, float2 pixeloffset )
+surface_bumped sload(p_bumped I, float2 pixeloffset)
 {
-      surface_bumped      S   = sload_i	(I, pixeloffset );
-		S.normal.z			*=	0.5;		//. make bump twice as contrast (fake, remove me if possible)
-#ifdef	GBUFFER_OPTIMIZATION
-	   S.height = 0;
-#endif	//	GBUFFER_OPTIMIZATION
-      return              S;
+	surface_bumped S	= sload_i(I, pixeloffset);
+	S.normal.z		   *= 0.5;		//. make bump twice as contrast (fake, remove me if possible)
+	S.height 			= 0;
+	return S;
 }
-
 #endif

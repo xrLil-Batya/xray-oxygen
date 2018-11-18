@@ -23,11 +23,7 @@ c2_out main(p_screen I)
 	int		iSample = 0;
 	float2	center	= I.tc0;
 
-#ifdef GBUFFER_OPTIMIZATION
 	gbuffer_data gbd = gbuffer_load_data(I.tc0, I.hpos, iSample);
-#else
-	gbuffer_data gbd = gbuffer_load_data(I.tc0, iSample);
-#endif
 	
 #ifdef USE_DISTORT
 	float4 	distort	= s_distort.Load(int3(I.hpos.xy, 0), iSample);
