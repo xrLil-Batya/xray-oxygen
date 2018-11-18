@@ -114,7 +114,8 @@ public:
 
 	virtual void				PlayAnimIdleMoving	();
 	virtual void				PlayAnimIdleSprint	();
-
+	/// <summary>Check if animation exists by name</summary>
+			bool				AnimIsFound			(const char* AnimName) noexcept;
 	virtual void				UpdateCL			();
 	virtual void				renderable_Render	();
 

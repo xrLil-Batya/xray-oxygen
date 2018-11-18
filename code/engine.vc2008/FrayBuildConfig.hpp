@@ -8,6 +8,3 @@
 
 /* Scripts */
 //#define LUACP_API				// attaching luaicp.dll
-
-/* xrGame */
-//#define NEW_ANIMS_WPN			// Enable anm_..._crouch, anm_reload_empty
