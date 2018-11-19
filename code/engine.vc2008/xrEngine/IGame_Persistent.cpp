@@ -28,6 +28,7 @@ IGame_Persistent::IGame_Persistent	()
 	RDEVICE.seqAppDeactivate.Add	(this);
 
 	m_pMainMenu						= nullptr;
+	Environment().load();
 	m_pGShaderConstants = ShadersExternalData();
 }
 
@@ -50,9 +51,6 @@ void IGame_Persistent::OnAppDeactivate		()
 
 void IGame_Persistent::OnAppStart	()
 {
-#ifndef _EDITOR
-	Environment().load				();
-#endif    
 }
 
 void IGame_Persistent::OnAppEnd		()

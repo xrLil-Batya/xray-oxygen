@@ -158,6 +158,9 @@ void execUserScript()
 
 void Startup()
 {
+	if (Device.editor())
+		bEngineloaded = true;
+
 	splashScreen.SetProgressPosition(60, "Init sound");
 	InitSound1		();
 	splashScreen.SetProgressPosition(65, "Init user scripts");
@@ -192,7 +195,7 @@ void Startup()
 	bEngineloaded = true;
 	Device.UpdateWindowPropStyle();
 	splashScreen.HideSplash();
-	Device.Create(false);
+	Device.Create(Device.editor());
 
 	pApp = xr_new<CApplication>();
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);

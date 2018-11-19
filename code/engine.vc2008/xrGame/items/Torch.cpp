@@ -363,9 +363,9 @@ void CTorch::UpdateCL()
 			light_omni->set_position(offset);
 
 			const bool isFirstActorCam = actor->cam_FirstEye();
-			light_omni->set_shadow(isFirstActorCam);
+			light_omni->set_shadow(!isFirstActorCam);
 			// Not remove! Please!
-			light_render->set_volumetric(isFirstActorCam);
+			light_render->set_volumetric(!isFirstActorCam);
 
 			glow_render->set_position(M.c);
 

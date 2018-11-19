@@ -55,7 +55,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	////////////////////////////////////////////////////
 
 #ifndef DEBUG
-	if (!strstr(lpCmdLine, "-silent") && !strstr(lpCmdLine, "-launcher"))
+	if (!strstr(lpCmdLine, "-silent"))
 	{
 		// Checking for SSE2
 		if (!CPU::Info.hasFeature(CPUFeature::SSE2))
@@ -110,19 +110,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	// Check for another instance
 #ifdef NO_MULTI_INSTANCES
-#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
-
+	constexpr char* STALKER_PRESENCE_MUTEX = "Local\\STALKER-COP";
 	HANDLE hCheckPresenceMutex = OpenMutex(READ_CONTROL, FALSE, STALKER_PRESENCE_MUTEX);
-	if (hCheckPresenceMutex == NULL)
+	if (!strstr(lpCmdLine, "-editor"))
 	{
-		hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX);	// New mutex
 		if (hCheckPresenceMutex == NULL)
-			return 2;
-	}
-	else
-	{
-		CloseHandle(hCheckPresenceMutex);		// Already running
-		return 1;
+		{
+			hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX);	// New mutex
+			if (hCheckPresenceMutex == NULL)
+				return 2;
+		}
+		else
+		{
+			CloseHandle(hCheckPresenceMutex);		// Already running
+			return 1;
+		}
 	}
 #endif
 	CreateRendererList();
