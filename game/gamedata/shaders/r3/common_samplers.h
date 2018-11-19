@@ -4,7 +4,7 @@
 #ifdef SM_2_0
 #define AUTO_SAMPLER sampler2D
 #else
-#define AUTO_SAMPLER AUTO_SAMPLER
+#define AUTO_SAMPLER Texture2D
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////////////

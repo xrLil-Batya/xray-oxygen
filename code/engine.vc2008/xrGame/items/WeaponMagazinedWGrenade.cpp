@@ -535,8 +535,13 @@ void CWeaponMagazinedWGrenade::PlayAnimReload()
 
 	if(IsGrenadeLauncherAttached())
 	{
+		if (bMisfire)
+		{
+			if (AnimIsFound("anm_reload_misfire_w_gl"))
+				PlayHUDMotion("anm_reload_misfire_w_gl", true, this, GetState());
+		}
 		// [FX] GSC Design... I know that is a logical error  
-		if (!AnimIsFound("anm_reload_empty_w_gl"))
+		else if (!AnimIsFound("anm_reload_empty_w_gl"))
 		{
 			PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
 		}
