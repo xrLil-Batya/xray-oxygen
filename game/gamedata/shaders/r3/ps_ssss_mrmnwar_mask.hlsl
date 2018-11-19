@@ -7,7 +7,7 @@ float NormalizeDepth(float Depth)
 
 float4 main(p_screen I) : SV_Target
 {
-#if SM_2_0
+#ifdef SM_2_0
 	float3 	scene 		= tex2D(s_image, I.tc0.xy * screen_res.xy).xyz;
 	float 	sceneDepth 	= tex2D(s_position, I.tc0.xy * screen_res.xy).z;
 #else
