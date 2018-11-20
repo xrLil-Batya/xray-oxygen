@@ -16,7 +16,7 @@
 	class HPoint;
 	class Plane;
 	class Matrix3x3;
-	class Matrix4x4;
+	class IceMatrix4x4;
 
 	#define CROSS2D(a, b)	(a.x*b.y - b.x*a.y)
 
@@ -30,7 +30,7 @@
 		inline_					Point()														{}
 		//! Constructor from a single float
 //		inline_					Point(float val) : x(val), y(val), z(val)					{}
-// Removed since it introduced the nasty "Point T = *Matrix4x4.GetTrans();" bug.......
+// Removed since it introduced the nasty "Point T = *IceMatrix4x4.GetTrans();" bug.......
 		//! Constructor from floats
 		inline_					Point(float _x, float _y, float _z) : x(_x), y(_y), z(_z)	{}
 		//! Constructor from array
@@ -374,7 +374,7 @@
 				Point&			ProjectToPlane(const Plane& p);
 
 		//! Projects the point onto the screen
-				void			ProjectToScreen(float halfrenderwidth, float halfrenderheight, const Matrix4x4& mat, HPoint& projected) const;
+				void			ProjectToScreen(float halfrenderwidth, float halfrenderheight, const IceMatrix4x4& mat, HPoint& projected) const;
 
 		//! Unfolds the point onto a plane according to edge(a,b)
 				Point&			Unfold(Plane& p, Point& a, Point& b);
@@ -468,11 +468,11 @@
 									x * Mat->m[0][2] + y * Mat->m[1][2] + z * Mat->m[2][2] );
 								}
 
-		//! Operator for Point Mul = Point * Matrix4x4.
-		inline_	Point			operator*(const Matrix4x4& mat)		const
+		//! Operator for Point Mul = Point * IceMatrix4x4.
+		inline_	Point			operator*(const IceMatrix4x4& mat)		const
 								{
-									class ShadowMatrix4x4{ public: float m[4][4]; };	// To allow inlining
-									const ShadowMatrix4x4* Mat = (const ShadowMatrix4x4*)&mat;
+									class ShadowIceMatrix4x4{ public: float m[4][4]; };	// To allow inlining
+									const ShadowIceMatrix4x4* Mat = (const ShadowIceMatrix4x4*)&mat;
 
 									return Point(
 									x * Mat->m[0][0] + y * Mat->m[1][0] + z * Mat->m[2][0] + Mat->m[3][0],
@@ -495,11 +495,11 @@
 									return *this;
 								}
 
-		//! Operator for Point *= Matrix4x4.
-		inline_	Point&			operator*=(const Matrix4x4& mat)
+		//! Operator for Point *= IceMatrix4x4.
+		inline_	Point&			operator*=(const IceMatrix4x4& mat)
 								{
-									class ShadowMatrix4x4{ public: float m[4][4]; };	// To allow inlining
-									const ShadowMatrix4x4* Mat = (const ShadowMatrix4x4*)&mat;
+									class ShadowIceMatrix4x4{ public: float m[4][4]; };	// To allow inlining
+									const ShadowIceMatrix4x4* Mat = (const ShadowIceMatrix4x4*)&mat;
 
 									float xp = x * Mat->m[0][0] + y * Mat->m[1][0] + z * Mat->m[2][0] + Mat->m[3][0];
 									float yp = x * Mat->m[0][1] + y * Mat->m[1][1] + z * Mat->m[2][1] + Mat->m[3][1];

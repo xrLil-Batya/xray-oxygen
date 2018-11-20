@@ -74,7 +74,7 @@ public:
 	DSplashScreen();
 	DSplashScreen(HWND hwnd);
 	DSplashScreen(const DSplashScreen&) {};
-	DSplashScreen& operator=(const DSplashScreen&) {};
+	DSplashScreen& operator=(const DSplashScreen& a) { return *this; };
 	~DSplashScreen() { delete pTask; };
 
 	ICF HWND GetSplashWindow() { return hwndSplash; }

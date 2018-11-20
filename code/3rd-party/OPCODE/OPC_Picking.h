@@ -38,7 +38,7 @@
 
 	OPCODE_API	bool Picking(
 						CollisionFace& picked_face,
-						const Ray& world_ray, const Model& model, const Matrix4x4* world,
+						const Ray& world_ray, const Model& model, const IceMatrix4x4* world,
 						float min_dist, float max_dist, const Point& view_point, CullModeCallback callback, void* user_data);
 #endif
 

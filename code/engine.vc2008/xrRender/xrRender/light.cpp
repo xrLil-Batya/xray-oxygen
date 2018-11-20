@@ -226,11 +226,11 @@ void	light::xform_calc			()
 	}
 
 	// matrix
-	Fmatrix					mR;
-	mR.i					= L_right;	mR._14	= 0;
-	mR.j					= L_up;		mR._24	= 0;
-	mR.k					= L_dir;	mR._34	= 0;
-	mR.c					= position;	mR._44	= 1;
+	Matrix4x4 mR;
+	mR.x	= { L_right.x, L_right.y, L_right.z, 0};
+	mR.y	= { L_up.x, L_up.y, L_up.z, 0 };
+	mR.z	= { L_dir.x, L_dir.y, L_dir.z, 0 };
+	mR.w	= { position.x, position.y, position.z, 1 };
 
 	// switch
 	switch(flags.type)	{
@@ -239,27 +239,45 @@ void	light::xform_calc			()
 		{
 			// scale of identity sphere
 			float		L_R			= range;
-			Fmatrix		mScale;		mScale.scale	(L_R,L_R,L_R);
-			m_xform.mul_43			(mR,mScale);
+			Matrix4x4		mScale;
+			mScale = DirectX::XMMatrixScaling(L_R, L_R, L_R);
+			m_xform = DirectX::XMMatrixMultiply(mScale, mR);
+
+			m_xform.x.m128_f32[3] = 0;
+			m_xform.y.m128_f32[3] = 0;
+			m_xform.z.m128_f32[3] = 0;
+			m_xform.w.m128_f32[3] = 1;
 		}
 		break;
 	case IRender_Light::SPOT		:
 		{
 			// scale to account range and angle
 			float		s			= 2.f*range*tanf(cone/2.f);	
-			Fmatrix		mScale;		mScale.scale(s,s,range);	// make range and radius
-			m_xform.mul_43			(mR,mScale);
+			Matrix4x4		mScale;
+			mScale = DirectX::XMMatrixScaling(s, s, range);
+			m_xform = DirectX::XMMatrixMultiply(mScale, mR);
+
+			m_xform.x.m128_f32[3] = 0;
+			m_xform.y.m128_f32[3] = 0;
+			m_xform.z.m128_f32[3] = 0;
+			m_xform.w.m128_f32[3] = 1;
 		}
 		break;
 	case IRender_Light::OMNIPART	:
 		{
 			float		L_R			= 2*range;		// volume is half-radius
-			Fmatrix		mScale;		mScale.scale	(L_R,L_R,L_R);
-			m_xform.mul_43			(mR,mScale);
+			Matrix4x4		mScale;
+			mScale = DirectX::XMMatrixScaling(L_R, L_R, L_R);
+			m_xform = DirectX::XMMatrixMultiply(mScale, mR);
+
+			m_xform.x.m128_f32[3] = 0;
+			m_xform.y.m128_f32[3] = 0;
+			m_xform.z.m128_f32[3] = 0;
+			m_xform.w.m128_f32[3] = 1;
 		}
 		break;
 	default:
-		m_xform.identity	();
+		m_xform = DirectX::XMMatrixIdentity	();
 		break;
 	}
 }

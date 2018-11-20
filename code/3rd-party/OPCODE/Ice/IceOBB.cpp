@@ -57,7 +57,7 @@ bool OBB::ContainsPoint(const Point& p) const
  *	\param		mat		[in] the world transform
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void OBB::Create(const AABB& aabb, const Matrix4x4& mat)
+void OBB::Create(const AABB& aabb, const IceMatrix4x4& mat)
 {
 	// Note: must be coherent with Rotate()
 
@@ -288,9 +288,9 @@ void OBB::ComputeLSS(LSS& lss) const
 BOOL OBB::IsInside(const OBB& box) const
 {
 	// Make a 4x4 from the box & inverse it
-	Matrix4x4 M0Inv;
+	IceMatrix4x4 M0Inv;
 	{
-		Matrix4x4 M0 = box.mRot;
+		IceMatrix4x4 M0 = box.mRot;
 		M0.SetTrans(box.mCenter);
 		InvertPRMatrix(M0Inv, M0);
 	}

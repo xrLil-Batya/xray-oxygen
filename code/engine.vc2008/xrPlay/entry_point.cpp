@@ -48,7 +48,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		MessageBoxA(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONHAND);
 	}
-
 	////////////////////////////////////////////////////
 	// If we don't needy for a exceptions - we can 
 	// delete exceptions with option "-silent"

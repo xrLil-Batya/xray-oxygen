@@ -74,7 +74,7 @@ void CRenderTarget::accum_spot(light* L)
 	Fmatrix	m_Texgen_J;			u_compute_texgen_jitter(m_Texgen_J);
 
 	// Shadow xform (+texture adjustment matrix)
-	Fmatrix	m_Shadow, m_Lmap;
+	Matrix4x4	m_Shadow, m_Lmap;
 	{
 		float			smapsize = float(RImplementation.o.smapsize);
 		float			fTexelOffs = (.5f / smapsize);
@@ -84,7 +84,7 @@ void CRenderTarget::accum_spot(light* L)
 		float fRange = float(1.f)*ps_r_ls_depth_scale;
 		float fBias = ps_r_ls_depth_bias;
 
-		Fmatrix m_TexelAdjust = 
+		Matrix4x4 m_TexelAdjust = 
 		{
 			view_dim / 2.f,							0.0f,									0.0f,		0.0f,
 			0.0f,									-view_dim / 2.f,						0.0f,		0.0f,
@@ -93,18 +93,22 @@ void CRenderTarget::accum_spot(light* L)
 		};
 
 		// compute xforms
-		Fmatrix xf_world;		xf_world.invert(CastToGSCMatrix(Device.mView));
-		Fmatrix xf_view = L->X.S.view;
-		Fmatrix xf_project;		xf_project.mul(m_TexelAdjust, L->X.S.project);
-		m_Shadow.mul(xf_view, xf_world);
-		m_Shadow.mulA_44(xf_project);
+		Matrix4x4 xf_world;
+		xf_world.InvertMatrixByMatrix(Device.mView);
+		Matrix4x4 xf_view = L->X.S.view;
+
+		Matrix4x4 xf_project;
+		xf_project.Multiply(m_TexelAdjust, L->X.S.project);
+
+		m_Shadow.Multiply(xf_world, xf_view);
+		m_Shadow.Multiply(m_Shadow, xf_project);
 
 		// lmap
 		view_dim = 1.f;
 		view_sx = 0.f;
 		view_sy = 0.f;
 
-		Fmatrix m_TexelAdjust2 =
+		Matrix4x4 m_TexelAdjust2 =
 		{
 			view_dim / 2.f,							0.0f,									0.0f,		0.0f,
 			0.0f,									-view_dim / 2.f,						0.0f,		0.0f,
@@ -113,9 +117,9 @@ void CRenderTarget::accum_spot(light* L)
 		};
 
 		// compute xforms
-		xf_project.mul(m_TexelAdjust2, L->X.S.project);
-		m_Lmap.mul(xf_view, xf_world);
-		m_Lmap.mulA_44(xf_project);
+		xf_project.Multiply(L->X.S.project, m_TexelAdjust2);
+		m_Lmap.Multiply(xf_world, xf_view);
+		m_Lmap.Multiply(m_Lmap, xf_project);
 	}
 
 	// Common constants
@@ -156,8 +160,8 @@ void CRenderTarget::accum_spot(light* L)
 		RCache.set_c("m_texgen", m_Texgen);
 		RCache.set_c("m_texgen_J", m_Texgen_J);
 		RCache.set_c("m_shadow", m_Shadow);
-		RCache.set_ca("m_lmap", 0, m_Lmap._11, m_Lmap._21, m_Lmap._31, m_Lmap._41);
-		RCache.set_ca("m_lmap", 1, m_Lmap._12, m_Lmap._22, m_Lmap._32, m_Lmap._42);
+		RCache.set_ca("m_lmap", 0, m_Lmap.x.m128_f32[0], m_Lmap.y.m128_f32[0], m_Lmap.z.m128_f32[0], m_Lmap.w.m128_f32[0]);
+		RCache.set_ca("m_lmap", 1, m_Lmap.x.m128_f32[1], m_Lmap.y.m128_f32[1], m_Lmap.z.m128_f32[1], m_Lmap.w.m128_f32[1]);
 
 		if (!RImplementation.o.dx10_msaa)
 		{
@@ -300,9 +304,13 @@ void CRenderTarget::accum_volumetric(light* L)
 		};
 
 		// compute xforms
-		Fmatrix			xf_world;		xf_world.invert(CastToGSCMatrix(Device.mView));
-		Fmatrix			xf_view = L->X.S.view;
-		Fmatrix			xf_project;		xf_project.mul(m_TexelAdjust, L->X.S.project);
+		Fmatrix xf_world;		
+		xf_world.invert(CastToGSCMatrix(Device.mView));
+
+		Fmatrix xf_view = CastToGSCMatrix(L->X.S.view);
+		Fmatrix xf_project;		
+		xf_project.mul(m_TexelAdjust, CastToGSCMatrix(L->X.S.project));
+
 		m_Shadow.mul(xf_view, xf_world);
 		m_Shadow.mulA_44(xf_project);
 
@@ -318,12 +326,12 @@ void CRenderTarget::accum_volumetric(light* L)
 		};
 
 		// compute xforms
-		xf_project.mul(m_TexelAdjust2, L->X.S.project);
+		xf_project.mul(m_TexelAdjust2, CastToGSCMatrix(L->X.S.project));
 		m_Lmap.mul(xf_view, xf_world);
 		m_Lmap.mulA_44(xf_project);
 
 		// Compute light frustum in world space
-		mFrustumSrc.mul(L->X.S.project, xf_view);
+		mFrustumSrc.mul(CastToGSCMatrix(L->X.S.project), xf_view);
 		ClipFrustum.CreateFromMatrix(mFrustumSrc, FRUSTUM_P_ALL);
 		//	Adjust frustum far plane
 		//	4 - far, 5 - near

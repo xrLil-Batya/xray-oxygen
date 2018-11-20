@@ -50,10 +50,10 @@
 		 *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-							bool			Collide(PlanesCache& cache, const Plane* planes, uqword nb_planes, const Model& model, const Matrix4x4* worldm=null);
+							bool			Collide(PlanesCache& cache, const Plane* planes, uqword nb_planes, const Model& model, const IceMatrix4x4* worldm=null);
 
 		// Mutant box-with-planes collision queries
-		inline_				bool			Collide(PlanesCache& cache, const OBB& box, const Model& model, const Matrix4x4* worldb=null, const Matrix4x4* worldm=null)
+		inline_				bool			Collide(PlanesCache& cache, const OBB& box, const Model& model, const IceMatrix4x4* worldb=null, const IceMatrix4x4* worldm=null)
 											{
 												Plane PL[6];
 
@@ -103,7 +103,7 @@
 		inline_				BOOL			PlanesAABBOverlap(const Point& center, const Point& extents, uqword& out_clip_mask, uqword in_clip_mask);
 		inline_				BOOL			PlanesTriOverlap(uqword in_clip_mask);
 			// Init methods
-							BOOL			InitQuery(PlanesCache& cache, const Plane* planes, uqword nb_planes, const Matrix4x4* worldm=null);
+							BOOL			InitQuery(PlanesCache& cache, const Plane* planes, uqword nb_planes, const IceMatrix4x4* worldm=null);
 	};
 
 	class OPCODE_API HybridPlanesCollider : public PlanesCollider
@@ -113,7 +113,7 @@
 											HybridPlanesCollider();
 		virtual								~HybridPlanesCollider();
 
-							bool			Collide(PlanesCache& cache, const Plane* planes, uqword nb_planes, const HybridModel& model, const Matrix4x4* worldm=null);
+							bool			Collide(PlanesCache& cache, const Plane* planes, uqword nb_planes, const HybridModel& model, const IceMatrix4x4* worldm=null);
 		protected:
 							Container		mTouchedBoxes;
 	};

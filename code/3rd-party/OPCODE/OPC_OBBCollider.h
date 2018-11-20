@@ -58,7 +58,7 @@
 		 *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-							bool			Collide(OBBCache& cache, const OBB& box, const Model& model, const Matrix4x4* worldb=null, const Matrix4x4* worldm=null);
+							bool			Collide(OBBCache& cache, const OBB& box, const Model& model, const IceMatrix4x4* worldb=null, const IceMatrix4x4* worldm=null);
 
 		// Settings
 
@@ -124,7 +124,7 @@
 		inline_				BOOL			BoxBoxOverlap(const Point& extents, const Point& center);
 		inline_				BOOL			TriBoxOverlap();
 			// Init methods
-							BOOL			InitQuery(OBBCache& cache, const OBB& box, const Matrix4x4* worldb=null, const Matrix4x4* worldm=null);
+							BOOL			InitQuery(OBBCache& cache, const OBB& box, const IceMatrix4x4* worldb=null, const IceMatrix4x4* worldm=null);
 	};
 
 	class OPCODE_API HybridOBBCollider : public OBBCollider
@@ -134,7 +134,7 @@
 											HybridOBBCollider();
 		virtual								~HybridOBBCollider();
 
-							bool			Collide(OBBCache& cache, const OBB& box, const HybridModel& model, const Matrix4x4* worldb=null, const Matrix4x4* worldm=null);
+							bool			Collide(OBBCache& cache, const OBB& box, const HybridModel& model, const IceMatrix4x4* worldb=null, const IceMatrix4x4* worldm=null);
 		protected:
 							Container		mTouchedBoxes;
 	};

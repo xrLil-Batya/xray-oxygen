@@ -3,13 +3,11 @@
 #include "../../xrEngine/irenderable.h"
 #include "../xrRender/FBasicVisual.h"
 
-#include "r4_R_sun_support.h"
+#define NO_INIT_CTOR
+#include "../xrRender/Frustum.inl"
 
 const	float	tweak_rain_COP_initial_offs			= 1200.f;
 const	float	tweak_rain_ortho_xform_initial_offs	= 1000.f	;	//. ?
-
-//	Defined in r2_R_sun.cpp
-Fvector3		wform	(Fmatrix& m, Fvector3 const& v);
 
 //////////////////////////////////////////////////////////////////////////
 // tables to calculate view-frustum bounds in world space
@@ -50,11 +48,11 @@ void CRender::render_rain()
 	float	fBoundingSphereRadius = 0;
 
 	// calculate view-frustum bounds in world space
-	DirectX::XMMATRIX ex_project, ex_full, ex_full_inverse;
+	Matrix4x4 ex_project, ex_full, ex_full_inverse;
 	{
 		//	
 		const float fRainFar = ps_r3_dyn_wet_surf_far;
-		BuildProj(deg2rad(Device.fFOV),Device.fASPECT,VIEWPORT_NEAR, fRainFar, ex_project);
+		ex_project.BuildProj(deg2rad(Device.fFOV),Device.fASPECT,VIEWPORT_NEAR, fRainFar);
 		ex_full = DirectX::XMMatrixMultiply(Device.mView, ex_project);
 		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
 
@@ -176,7 +174,7 @@ void CRender::render_rain()
 		float	view_dim			= float(limit);
 		float	fTexelOffs			= (.5f / RImplementation.o.smapsize);
 
-		const DirectX::XMMATRIX mViewPort
+		const Matrix4x4 mViewPort
 		(
 			view_dim/2.f,	0.0f,				0.0f,		0.0f,
 			0.0f,			-view_dim/2.f,		0.0f,		0.0f,
@@ -184,7 +182,7 @@ void CRender::render_rain()
 			view_dim/2.f+fTexelOffs,	view_dim/2.f+fTexelOffs,		0.0f,		1.0f
 		);
 
-		Fmatrix mViewPortInverse = CastToGSCMatrix(DirectX::XMMatrixInverse(0, mViewPort));
+		Matrix4x4 mViewPortInverse = DirectX::XMMatrixInverse(0, mViewPort);
 
 		// snap view-position to pixel
 		//	snap zero point to pixel
@@ -192,7 +190,7 @@ void CRender::render_rain()
 		Fvector	cam_pixel	= wform		(CastToGSCMatrix(mViewPort),cam_proj);
 		cam_pixel.x			= floorf	(cam_pixel.x);
 		cam_pixel.y			= floorf	(cam_pixel.y);
-		Fvector cam_snapped	= wform		(mViewPortInverse,cam_pixel);
+		Fvector cam_snapped	= wform		((Fmatrix)mViewPortInverse,cam_pixel);
 
 		Fvector diff;		
 		diff.sub(cam_snapped,cam_proj);
@@ -224,7 +222,7 @@ void CRender::render_rain()
 	r_dsgraph_render_subspace				(cull_sector, &cull_frustum, cull_xform, cull_COP, FALSE);
 
 	// Finalize & Cleanup
-	RainLight.X.D.combine					= cull_xform;	//*((Fmatrix*)&m_LightViewProj);
+	RainLight.X.D.combine = cull_xform;
 
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)

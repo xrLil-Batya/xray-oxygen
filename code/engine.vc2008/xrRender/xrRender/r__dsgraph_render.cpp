@@ -489,25 +489,26 @@ void R_dsgraph_structure::r_dsgraph_render_hud()
 	//PIX_EVENT(r_dsgraph_render_hud);
 
 	// Change projection
-	DirectX::XMMATRIX Pold =  Device.mProject;
-	DirectX::XMMATRIX FTold = Device.mFullTransform;
-	BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane, Device.mProject);
+	Matrix4x4 Pold =  Device.mProject;
+	Matrix4x4 FTold = Device.mFullTransform;
+	Device.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
 
-	Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mView, Device.mProject);
-	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+	Device.mFullTransform.Multiply(Device.mView, Device.mProject);
+	RCache.set_xform_project(Device.mProject);
 
 	// Rendering
 	rmNear();
 	std::sort(mapHUD.begin(), mapHUD.end(), cmp_first_l<R_dsgraph::mapHUD_T::value_type>); // front-to-back
 	for (auto &i : mapHUD)
 		sorted_L1(i);
+
 	mapHUD.clear();
 	rmNormal();
 
 	// Restore projection
 	Device.mProject = Pold;
 	Device.mFullTransform = FTold;
-	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+	RCache.set_xform_project(Device.mProject);
 }
 
 void R_dsgraph_structure::r_dsgraph_render_hud_ui()
@@ -517,12 +518,12 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 	extern ENGINE_API float		psHUD_FOV;
 
 	// Change projection	
-	DirectX::XMMATRIX Pold =  Device.mProject;
-	DirectX::XMMATRIX FTold = Device.mFullTransform;
-	BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane, Device.mProject);
+	Matrix4x4 Pold =  Device.mProject;
+	Matrix4x4 FTold = Device.mFullTransform;
+	Device.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
 
 	Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mView, Device.mProject);
-	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+	RCache.set_xform_project(Device.mProject);
 
 	// Targets, use accumulator for temporary storage
 	const ref_rt	rt_null;
@@ -567,9 +568,9 @@ void	R_dsgraph_structure::r_dsgraph_render_sorted	()
 	extern ENGINE_API float	psHUD_FOV;
 
 	// Change projection
-	DirectX::XMMATRIX Pold = Device.mProject;
-	DirectX::XMMATRIX FTold = Device.mFullTransform;
-	BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane, Device.mProject);
+	Matrix4x4 Pold = Device.mProject;
+	Matrix4x4 FTold = Device.mFullTransform;
+	Device.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
 
 	Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mView, Device.mProject);
 	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
@@ -604,9 +605,9 @@ void	R_dsgraph_structure::r_dsgraph_render_emissive	()
 	extern ENGINE_API float		psHUD_FOV;
 
 	// Change projection
-	DirectX::XMMATRIX Pold = Device.mProject;
-	DirectX::XMMATRIX FTold = Device.mFullTransform;
-	BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane, Device.mProject);
+	Matrix4x4 Pold = Device.mProject;
+	Matrix4x4 FTold = Device.mFullTransform;
+	Device.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
 
 	Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mView, Device.mProject);
 	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));

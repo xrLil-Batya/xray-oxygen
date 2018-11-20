@@ -322,7 +322,7 @@ ICF void FlushStream(ref_geom hGeom, ref_shader shader, u32& w_offset, FVF::LIT*
 		Device.Statistic->RenderDUMP_WMT_Count += w_count/3;
 	}
 }
-#include "../../xrEngine/DirectXMathExternal.h"
+
 void CWallmarksEngine::Render()
 {
 	// Projection and xform
@@ -332,10 +332,10 @@ void CWallmarksEngine::Render()
 	RCache.set_xform_world		(Fidentity);
 	RCache.set_xform_project	(WallmarksProject);
 
-	DirectX::XMMATRIX mSavedView = Device.mView;
+	Matrix4x4 mSavedView = Device.mView;
 	Fvector	mViewPos			;
-			mViewPos.mad		(Device.vCameraPosition, Device.vCameraDirection,ps_r_WallmarkSHIFT_V);
-	BuildCamDir(mViewPos,Device.vCameraDirection,Device.vCameraTop, Device.mView);
+	mViewPos.mad(Device.vCameraPosition, Device.vCameraDirection, ps_r_WallmarkSHIFT_V);
+	Device.mView.BuildCamDir(mViewPos, Device.vCameraDirection, Device.vCameraTop);
 	RCache.set_xform_view		(CastToGSCMatrix(Device.mView));
 
 	Device.Statistic->RenderDUMP_WM.Begin	();

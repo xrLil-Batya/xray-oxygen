@@ -101,7 +101,7 @@ const char* OBBCollider::ValidateSettings()
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool OBBCollider::Collide(OBBCache& cache, const OBB& box, const Model& model, const Matrix4x4* worldb, const Matrix4x4* worldm)
+bool OBBCollider::Collide(OBBCache& cache, const OBB& box, const Model& model, const IceMatrix4x4* worldb, const IceMatrix4x4* worldm)
 {
 	// Checkings
 	if(!Setup(&model))	return false;
@@ -174,7 +174,7 @@ bool OBBCollider::Collide(OBBCache& cache, const OBB& box, const Model& model, c
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL OBBCollider::InitQuery(OBBCache& cache, const OBB& box, const Matrix4x4* worldb, const Matrix4x4* worldm)
+BOOL OBBCollider::InitQuery(OBBCache& cache, const OBB& box, const IceMatrix4x4* worldb, const IceMatrix4x4* worldm)
 {
 	// 1) Call the base method
 	VolumeCollider::InitQuery();
@@ -182,11 +182,11 @@ BOOL OBBCollider::InitQuery(OBBCache& cache, const OBB& box, const Matrix4x4* wo
 	// 2) Compute obb in world space
 	mBoxExtents = box.mExtents;
 
-	Matrix4x4 WorldB;
+	IceMatrix4x4 WorldB;
 
 	if(worldb)
 	{
-		WorldB = Matrix4x4( box.mRot * Matrix3x3(*worldb) );
+		WorldB = IceMatrix4x4( box.mRot * Matrix3x3(*worldb) );
 		WorldB.SetTrans(box.mCenter * *worldb);
 	}
 	else
@@ -196,16 +196,16 @@ BOOL OBBCollider::InitQuery(OBBCache& cache, const OBB& box, const Matrix4x4* wo
 	}
 
 	// Setup matrices
-	Matrix4x4 InvWorldB;
+	IceMatrix4x4 InvWorldB;
 	InvertPRMatrix(InvWorldB, WorldB);
 
 	if(worldm)
 	{
-		Matrix4x4 InvWorldM;
+		IceMatrix4x4 InvWorldM;
 		InvertPRMatrix(InvWorldM, *worldm);
 
-		Matrix4x4 WorldBtoM = WorldB * InvWorldM;
-		Matrix4x4 WorldMtoB = *worldm * InvWorldB;
+		IceMatrix4x4 WorldBtoM = WorldB * InvWorldM;
+		IceMatrix4x4 WorldMtoB = *worldm * InvWorldB;
 
 		mRModelToBox = WorldMtoB;		WorldMtoB.GetTrans(mTModelToBox);
 		mRBoxToModel = WorldBtoM;		WorldBtoM.GetTrans(mTBoxToModel);
@@ -641,7 +641,7 @@ HybridOBBCollider::~HybridOBBCollider()
 {
 }
 
-bool HybridOBBCollider::Collide(OBBCache& cache, const OBB& box, const HybridModel& model, const Matrix4x4* worldb, const Matrix4x4* worldm)
+bool HybridOBBCollider::Collide(OBBCache& cache, const OBB& box, const HybridModel& model, const IceMatrix4x4* worldb, const IceMatrix4x4* worldm)
 {
 	// We don't want primitive tests here!
 	mFlags |= OPC_NO_PRIMITIVE_TESTS;
