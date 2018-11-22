@@ -21,6 +21,7 @@ public:
 	TaskbarValue(HWND hwnd)
 	{
 		// if failed - OS is lower then Windows 7, because TaskbarList3 is not exist at Vista
+		CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
 		R_CHK(CoCreateInstance(CLSID_TaskbarList, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&pTaskbar)));
 
 		currentHwnd = hwnd;
@@ -29,33 +30,33 @@ public:
 		pTaskbar->SetProgressValue(currentHwnd, 0, 100);
 	}
 
-	VOID SetValue(DWORD Value)
+	void SetValue(DWORD Value)
 	{
 		if (Value == 100)
 		{
-			pTaskbar->SetProgressState(currentHwnd, TBPF_NOPROGRESS);
+			SetCompleted();
 		}
-
-		pTaskbar->SetProgressValue(currentHwnd, Value, 100);
+		else pTaskbar->SetProgressValue(currentHwnd, Value, 100);
 	}
 
-	VOID SetError()
+	void SetError()
 	{
 		pTaskbar->SetProgressState(currentHwnd, TBPF_ERROR);
 	}
 
-	VOID SetPause()
+	void SetPause()
 	{
 		pTaskbar->SetProgressState(currentHwnd, TBPF_PAUSED);
 	}
 
-	VOID SetCompleted()
+	void SetCompleted()
 	{
 		pTaskbar->SetProgressState(currentHwnd, TBPF_NOPROGRESS);
 	}
 
 	~TaskbarValue()
 	{
+		CoUninitialize();
 		_RELEASE1(pTaskbar);
 	}
 
@@ -78,15 +79,15 @@ public:
 	~DSplashScreen() { delete pTask; };
 
 	ICF HWND GetSplashWindow() { return hwndSplash; }
-	VOID SetBackgroundImage(LPVOID pImage);
-	VOID ShowSplash();
-	VOID HideSplash();
+	void SetBackgroundImage(LPVOID pImage);
+	void ShowSplash();
+	void HideSplash();
 
-	VOID SetSplashWindowName(xr_string windowName);
-	VOID SetProgressPosition(DWORD percent);
-	VOID SetProgressPosition(DWORD percent, xr_string messageString);
-	VOID SetProgressPosition(DWORD percent, DWORD resourceId, HMODULE hModule);
-	VOID SetProgressColor(COLORREF refColor);
+	void SetSplashWindowName(xr_string windowName);
+	void SetProgressPosition(DWORD percent);
+	void SetProgressPosition(DWORD percent, xr_string messageString);
+	void SetProgressPosition(DWORD percent, DWORD resourceId, HMODULE hModule);
+	void SetProgressColor(COLORREF refColor);
 
 protected:
 	HANDLE hThread;
@@ -106,4 +107,4 @@ protected:
 	static UINT WINAPI SplashThreadProc(LPVOID pData);
 };
 
-VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc);
+void WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc);

@@ -85,14 +85,14 @@ namespace XRay
 			}
 		}
 
-		property Matrix4x4 XForm
+		property Numerics::Matrix4x4 XForm
 		{
-			Matrix4x4 get()
+			Numerics::Matrix4x4 get()
 			{
 				return CONVERT_FMATRIX(pNativeObject->XFORM());
 			}
 
-			void set(Matrix4x4 value)
+			void set(Numerics::Matrix4x4 value)
 			{
 				Fmatrix& matrix = pNativeObject->XFORM();
 				matrix.m[1][1] = value.M11; matrix.m[1][2] = value.M12; matrix.m[1][3] = value.M13; matrix.m[1][4] = value.M14;
