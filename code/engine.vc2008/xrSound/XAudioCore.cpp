@@ -59,7 +59,6 @@ XCore::~XCore()
 
 	// free library and unitialize COM-pointers
 	if (XAudioDLL) { FreeLibrary(XAudioDLL); }
-	if (!strstr(Core.Params, "-editor")) { CoUninitialize(); }
 
 	// reset XAudio2 data pointer
 	xData.waveData.reset();

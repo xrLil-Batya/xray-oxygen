@@ -60,9 +60,6 @@ void ALDeviceList::Enumerate()
 	// -- empty all the lists and reserve space for 10 devices
 	m_devices.clear();
 
-// 	if (!strstr(Core.Params, "-editor"))
-// 		CoUninitialize();
-
 	// grab function pointers for 1.0-API functions, and if successful proceed to enumerate all devices
 	if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT"))
 	{
