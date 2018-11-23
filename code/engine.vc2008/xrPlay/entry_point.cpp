@@ -25,7 +25,7 @@ void CheckOpenAL()
 
 	DWORD dwOpenALInstalled = GetFileAttributesA(szOpenALDir);
 
-	//if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
+	if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
 	{
 		xr_string StrCmd = xr_string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
 
