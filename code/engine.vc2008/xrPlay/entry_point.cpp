@@ -6,6 +6,7 @@
 #include <string>
 #include <intrin.h>  
 #include <windows.h>
+#include <tlhelp32.h>
 ////////////////////////////////////
 #include "../xrCore/xrCore.h"
 ////////////////////////////////////
@@ -16,28 +17,70 @@ void CreateRendererList();					// In RenderList.cpp
 using IsRunFunc = void(__cdecl*)(const char*);
 
 /// <summary> Start engine or install OpenAL </summary>
-void CheckOpenAL(const char* params)
+void CheckOpenAL()
 {
-	DWORD dwOpenALInstalled = GetFileAttributes("C:\\Windows\\System32\\OpenAL32.dll");
-	if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
+	CHAR szOpenALDir[MAX_PATH] = { 0 };
+	R_ASSERT(GetSystemDirectoryA(szOpenALDir, MAX_PATH * sizeof(CHAR)));
+	_snprintf_s(szOpenALDir, MAX_PATH * sizeof(CHAR), "%s%s", szOpenALDir, "\\OpenAL32.dll");
+
+	DWORD dwOpenALInstalled = GetFileAttributesA(szOpenALDir);
+
+	//if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
 	{
-		xr_string StrCmd = "/select, " + xr_string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
-		StrCmd[11] = '\\';
-		//WinExec(StrCmd.c_str(), 1);
-		ShellExecute(NULL, NULL, "explorer.exe", StrCmd.c_str(), NULL, SW_SHOWNORMAL);
-		system(StrCmd.c_str());
-		MessageBox(0, "ENG: Click just after installing OpenAL. \n"
-					  "RUS: Нажмите после установки OpenAL.", "OpenAL Not Found!", MB_OK);
+		xr_string StrCmd = xr_string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
+
+		dwOpenALInstalled = GetFileAttributesA(StrCmd.c_str());
+		if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
+		{
+			xr_string szCmd = "/select, " + StrCmd + "\\fsgame.ltx";
+
+			MessageBoxA(NULL,
+				"ENG: X-Ray Oxygen can't detect OpenAL installer. Please, install library manually. \n"
+				"RUS: X-Ray Oxygen не смог обнаружить установщик OpenAL. Пожалуйста, установите библиотеку самостоятельно.",
+				"OpenAL Not Found!",
+				MB_OK | MB_ICONERROR
+			);
+
+			ShellExecuteA(nullptr, nullptr, "explorer.exe", szCmd.c_str(), nullptr, SW_SHOWNORMAL);
+			system(szCmd.c_str());
+			ExitProcess(0);
+		}
+
+		// create parent process with admin rights
+		SHELLEXECUTEINFOA shellInfo = { sizeof(SHELLEXECUTEINFOA) };
+		shellInfo.lpVerb = "runas";
+		shellInfo.lpFile = StrCmd.c_str();
+		shellInfo.lpParameters = nullptr;
+		shellInfo.hwnd = NULL;
+		shellInfo.nShow = SW_NORMAL;
+		shellInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+
+		// if user didn't press 'No' at Shell desktop notification
+		if (ShellExecuteExA(&shellInfo))
+		{
+			WaitForSingleObject(shellInfo.hProcess, INFINITE);
+		}
+
+		if ((dwOpenALInstalled = GetFileAttributesA(szOpenALDir) == INVALID_FILE_ATTRIBUTES))
+		{
+			MessageBoxA(NULL,
+				"ENG: X-Ray Oxygen can't detect OpenAL library. Please, re-install library manually. \n"
+				"RUS: X-Ray Oxygen не смог обнаружить библиотеку OpenAL. Пожалуйста, переустановите библиотеку самостоятельно.",
+				"OpenAL Not Found!",
+				MB_OK | MB_ICONERROR
+			);
+
+			ExitProcess(0);
+		}
 	}
 }
 
 /// <summary> Main method for initialize xrEngine </summary>
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	////////////////////////////////////////////////////
     gModulesLoaded = true;
 	LPCSTR params = lpCmdLine;
-	////////////////////////////////////////////////////
+
 	try
 	{
 		// Init X-ray core
@@ -48,10 +91,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		MessageBoxA(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONHAND);
 	}
-	////////////////////////////////////////////////////
-	// If we don't needy for a exceptions - we can 
-	// delete exceptions with option "-silent"
-	////////////////////////////////////////////////////
 
 #ifndef DEBUG
 	if (!strstr(lpCmdLine, "-silent"))
@@ -127,7 +166,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 #endif
 	CreateRendererList();
-	CheckOpenAL(params);
+	CheckOpenAL();
 
 	HMODULE hLib = LoadLibrary("xrEngine.dll");
 	if (hLib == NULL)
