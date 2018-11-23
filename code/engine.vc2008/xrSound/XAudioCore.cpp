@@ -17,7 +17,7 @@ XCore::XCore()
 { 
 	// init COM-pointers if not editor 
 	// because xrEditor written on C# + C++/CLI and use COM-pointers
-	if (!strstr(Core.Params, "-editor")) { CoInitializeEx(NULL, COINIT_MULTITHREADED); }
+	//if (!strstr(Core.Params, "-editor")) { CoInitializeEx(NULL, COINIT_MULTITHREADED); }
 
 	// load any version of XAudio2
 	XAudioDLL = ::LoadLibraryExA("XAudio2_9.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);

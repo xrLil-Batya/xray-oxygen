@@ -153,8 +153,7 @@ VOID DSplashScreen::SetProgressPosition(DWORD percent, xr_string messageString)
 {
 	if (hThread)
 	{
-		xr_string* tempMsg = new xr_string(messageString);
-		PostThreadMessage(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(tempMsg));
+		PostThreadMessage(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(&messageString));
 		pTask->SetValue(percent);
 	}
 }
