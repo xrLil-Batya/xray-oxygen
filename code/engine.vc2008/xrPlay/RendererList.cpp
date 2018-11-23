@@ -21,7 +21,6 @@ constexpr const char* r4_name = "xrRender_R4";
 /////////////////////////////////////////////////////
 bool SupportsAdvancedRendering()
 {
-
 	D3DCAPS9 caps;
 
 	IDirect3D9* pD3D = Direct3DCreate9(D3D_SDK_VERSION);
@@ -127,9 +126,14 @@ void CreateRendererList()
 	modes.emplace_back(xr_token(nullptr, -1));
 
 	Msg("Available render modes[%d]:", modes.size());
+
 	for (xr_token& mode : modes)
+	{
 		if (mode.name)
+		{
 			Log(mode.name);
+		}
+	}
 
 	vid_quality_token = std::move(modes);
 }

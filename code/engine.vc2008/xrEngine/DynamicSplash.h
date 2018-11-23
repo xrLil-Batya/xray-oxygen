@@ -56,7 +56,6 @@ public:
 
 	~TaskbarValue()
 	{
-		CoUninitialize();
 		_RELEASE1(pTaskbar);
 	}
 

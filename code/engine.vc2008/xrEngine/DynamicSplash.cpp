@@ -345,14 +345,19 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 		}
 		SendMessage(pInstance->hwndProgress, PBM_SETPOS, wParam, NULL);
 
-		xr_string msgThread = *reinterpret_cast<xr_string*>(lParam);
+		xr_string* msgThread = reinterpret_cast<xr_string*>(lParam);
+		if (msgThread->size() > 1000000) 
+		{
+			return 0;
+		}
 
 		// if our message is not a previos 
-		if (!msgThread.empty() && pInstance->progressMsg != msgThread)
+		if (!msgThread->empty() && pInstance->progressMsg != *msgThread)
 		{
-			pInstance->progressMsg = msgThread;
+			pInstance->progressMsg = *msgThread;
 			SendMessage(pInstance->hwndSplash, WM_PAINT, 0, 0);
 		}
+
 		return 0;
 		break;
 	}
