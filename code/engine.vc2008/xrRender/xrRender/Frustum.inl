@@ -551,7 +551,18 @@ inline Fvector3 wform(Fmatrix& m, Fvector3 const& v)
 	Fvector3	r3 = { r.x*invW, r.y*invW, r.z*invW };
 	return		r3;
 }
-
+inline Fvector3 wform(Matrix4x4& m, Fvector3 const& v)
+{
+	Fvector4 r;
+	r.x = v.x*m.x.m128_f32[0] + v.y*m.y.m128_f32[0] + v.z*m.z.m128_f32[0] + m.w.m128_f32[0];
+	r.y = v.x*m.x.m128_f32[1] + v.y*m.y.m128_f32[1] + v.z*m.z.m128_f32[1] + m.w.m128_f32[1];
+	r.z = v.x*m.x.m128_f32[2] + v.y*m.y.m128_f32[2] + v.z*m.z.m128_f32[2] + m.w.m128_f32[2];
+	r.w = v.x*m.x.m128_f32[3] + v.y*m.y.m128_f32[3] + v.z*m.z.m128_f32[3] + m.w.m128_f32[3];
+	
+	float invW = 1.0f / r.w;
+	Fvector3	r3 = { r.x*invW, r.y*invW, r.z*invW };
+	return		r3;
+}
 //////////////////////////////////////////////////////////////////////////
 // OLES: naive 3D clipper - roubustness around 0, but works for this sample
 // note: normals points to 'outside'

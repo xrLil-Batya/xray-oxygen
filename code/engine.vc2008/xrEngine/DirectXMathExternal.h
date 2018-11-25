@@ -40,6 +40,28 @@ namespace XRay
 
 		struct Matrix4x4
 		{
+			struct IntricsVect
+			{
+				DirectX::XMVECTOR Vect;
+
+			public:
+
+				DirectX::XMVECTOR operator()()
+				{
+					return Vect;
+				};
+
+				float operator[](size_t id)
+				{
+					return Vect.m128_f32[id];
+				}
+
+				void operator=(DirectX::XMVECTOR &VectObj)
+				{
+					Vect = VectObj;
+				}
+			};
+
 		protected:
 			/// <summary>Half fov <-> angle <-> tangent</summary>
 			inline void build_projection_HAT(float HAT, float fAspect, float fNearPlane, float fFarPlane, DirectX::XMMATRIX &Matrics);
@@ -48,6 +70,11 @@ namespace XRay
 			Matrix4x4(DirectX::XMMATRIX a) 
 			{ 
 				Matrix = a;
+
+				x = Matrix.r[0];
+				y = Matrix.r[1];
+				z = Matrix.r[2];
+				w = Matrix.r[3];
 			}
 
 			Matrix4x4()
@@ -60,6 +87,11 @@ namespace XRay
 					0, 0, 0, 0,
 					0, 0, 0, 0
 				};
+
+				x = Matrix.r[0];
+				y = Matrix.r[1];
+				z = Matrix.r[2];
+				w = Matrix.r[3];
 			}
 
 			Matrix4x4
@@ -77,6 +109,11 @@ namespace XRay
 					c1, c2, c3, c4,
 					d1, d2, d3, d4
 				};
+
+				x = Matrix.r[0];
+				y = Matrix.r[1];
+				z = Matrix.r[2];
+				w = Matrix.r[3];
 			}
 
 			/// <summary>Generate new cam direction </summary>
@@ -97,11 +134,11 @@ namespace XRay
 
 		public:
 			DirectX::XMMATRIX Matrix;
-			DirectX::XMVECTOR &x = Matrix.r[0];
-			DirectX::XMVECTOR &y = Matrix.r[1];
-			DirectX::XMVECTOR &z = Matrix.r[2];
-			DirectX::XMVECTOR &w = Matrix.r[3];
-
+			IntricsVect x;
+			IntricsVect y;
+			IntricsVect z;
+			IntricsVect w;
+						
 		public:
 			inline operator Fmatrix () { return CastToGSCMatrix(Matrix); }
 			inline operator Fmatrix () const { return CastToGSCMatrix(Matrix); }
