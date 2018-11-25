@@ -226,16 +226,15 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	light_render->set_texture(pUserData->r_string("torch_definition", "spot_texture"));
 
 	//--[[ Volumetric light
-	light_render->set_volumetric(!!READ_IF_EXISTS(pUserData, r_bool, "torch_definition", "volumetric", true));
+	light_render->set_volumetric
+	(
+		!smart_cast<CActor*>(H_Parent()) &&
+		!!READ_IF_EXISTS(pUserData, r_bool, "torch_definition", "volumetric", true)
+	);
 
-	if (smart_cast<CActor*>(H_Parent()))
-	{
-		light_render->set_volumetric(false);
-	}
-
-	light_render->set_volumetric_distance(pUserData->r_float("torch_definition", "volumetric_distance"));
+	light_render->set_volumetric_distance(pUserData->r_float ("torch_definition", "volumetric_distance"));
 	light_render->set_volumetric_intensity(pUserData->r_float("torch_definition", "volumetric_intensity"));
-	light_render->set_volumetric_quality(pUserData->r_float("torch_definition", "volumetric_quality"));
+	light_render->set_volumetric_quality(pUserData->r_float  ("torch_definition", "volumetric_quality"));
 	//--]]
 
 	glow_render->set_color(clr);
@@ -243,7 +242,6 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	glow_render->set_radius(glow_radius);
 
 	Switch(torch->m_active);
-	VERIFY(!torch->m_active || (torch->ID_Parent != 0xffff));
 
 	if (torch->ID_Parent == 0)
 		SwitchNightVision(torch->m_nightvision_active, false);
@@ -364,13 +362,10 @@ void CTorch::UpdateCL()
 			offset.mad(M.k, OMNI_OFFSET.z);
 			light_omni->set_position(offset);
 
-			if (actor->cam_FirstEye())
-			{
-				light_omni->set_shadow(false);
-
-				// Not remove! Please!
-				light_render->set_volumetric(false);
-			}
+			const bool isFirstActorCam = actor->cam_FirstEye();
+			light_omni->set_shadow(!isFirstActorCam);
+			// Not remove! Please!
+			light_render->set_volumetric(!isFirstActorCam);
 
 			glow_render->set_position(M.c);
 

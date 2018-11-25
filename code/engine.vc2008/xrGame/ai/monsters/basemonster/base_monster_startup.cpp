@@ -376,6 +376,7 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 void CBaseMonster::net_Destroy()
 {
 	// функция должена быть вызвана перед inherited
+	m_pPhysics_support->SyncNetState();
 	if (m_controlled) m_controlled->on_destroy	();
 	if (StateMan) StateMan->critical_finalize	();
 

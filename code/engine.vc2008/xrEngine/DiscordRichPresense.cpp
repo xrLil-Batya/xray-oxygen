@@ -83,7 +83,7 @@ void xrDiscordPresense::SetStatus(StatusId status)
 		strconcat(sizeof(LevelName), LevelName, "Level: ", ConvertToUTF8(g_pGameLevel->name_translated().c_str()));
 		presenseInfo.details = std::move(LevelName);
 	}
-	else if (!g_pGameLevel && !g_pGamePersistent->m_pMainMenu->IsActive())
+	else if (!g_pGameLevel && g_pGamePersistent->m_pMainMenu && !g_pGamePersistent->m_pMainMenu->IsActive())
 	{
 		presenseInfo.details = "Loading...";
 	}

@@ -26,10 +26,8 @@ float4 main ( v2p_volume I  ) : SV_Target
 
 	gbuffer_data gbd = gbuffer_load_data( GLD_P(I.tc, I.hpos, ISAMPLE) );
 
-#ifdef	GBUFFER_OPTIMIZATION
-	//	Emulate virtual offset
+	// Emulate virtual offset
 	gbd.P += gbd.N*0.015f;
-#endif	//	GBUFFER_OPTIMIZATION
 
 	float4 _P = float4( gbd.P, 1.f);
 
@@ -51,14 +49,12 @@ float4 main ( v2p_volume I ) : SV_Target
 
 	gbuffer_data gbd = gbuffer_load_data( GLD_P(I.tc.xy/I.tc.w, I.hpos, ISAMPLE) );
 
-#ifdef	GBUFFER_OPTIMIZATION
-	//	Emulate virtual offset
+	// Emulate virtual offset
 	gbd.P += gbd.N*0.015f;
-#endif	//	GBUFFER_OPTIMIZATION
 
 	float4 _P = float4( gbd.P, gbd.mtl );
 	float4  _N = float4( gbd.N, gbd.hemi );
-
+	
 	// ----- light-model
 	float	m	= xmaterial;
 # ifndef USE_R2_STATIC_SUN
@@ -84,6 +80,6 @@ float4 main ( v2p_volume I ) : SV_Target
 #endif
 	#endif
 
-	return 		blend( Ldynamic_color * light * s/*float4( 1.f, 0.2f, 0.2f, 1.f)*/, I.tc );
+	return 		blend(Ldynamic_color * light * s/*float4( 1.f, 0.2f, 0.2f, 1.f)*/, I.tc );
 }
 #endif

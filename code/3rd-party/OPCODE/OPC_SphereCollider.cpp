@@ -91,7 +91,7 @@ SphereCollider::~SphereCollider()
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool SphereCollider::Collide(SphereCache& cache, const Sphere& sphere, const Model& model, const Matrix4x4* worlds, const Matrix4x4* worldm)
+bool SphereCollider::Collide(SphereCache& cache, const Sphere& sphere, const Model& model, const IceMatrix4x4* worlds, const IceMatrix4x4* worldm)
 {
 	// Checkings
 	if(!Setup(&model))	return false;
@@ -163,7 +163,7 @@ bool SphereCollider::Collide(SphereCache& cache, const Sphere& sphere, const Mod
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL SphereCollider::InitQuery(SphereCache& cache, const Sphere& sphere, const Matrix4x4* worlds, const Matrix4x4* worldm)
+BOOL SphereCollider::InitQuery(SphereCache& cache, const Sphere& sphere, const IceMatrix4x4* worlds, const IceMatrix4x4* worldm)
 {
 	// 1) Call the base method
 	VolumeCollider::InitQuery();
@@ -179,7 +179,7 @@ BOOL SphereCollider::InitQuery(SphereCache& cache, const Sphere& sphere, const M
 	if(worldm)
 	{
 		// Invert model matrix
-		Matrix4x4 InvWorldM;
+		IceMatrix4x4 InvWorldM;
 		InvertPRMatrix(InvWorldM, *worldm);
 
 		mCenter *= InvWorldM;
@@ -600,7 +600,7 @@ HybridSphereCollider::~HybridSphereCollider()
 {
 }
 
-bool HybridSphereCollider::Collide(SphereCache& cache, const Sphere& sphere, const HybridModel& model, const Matrix4x4* worlds, const Matrix4x4* worldm)
+bool HybridSphereCollider::Collide(SphereCache& cache, const Sphere& sphere, const HybridModel& model, const IceMatrix4x4* worlds, const IceMatrix4x4* worldm)
 {
 	// We don't want primitive tests here!
 	mFlags |= OPC_NO_PRIMITIVE_TESTS;

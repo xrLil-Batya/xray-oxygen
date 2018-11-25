@@ -87,7 +87,7 @@ LSSCollider::~LSSCollider()
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool LSSCollider::Collide(LSSCache& cache, const LSS& lss, const Model& model, const Matrix4x4* worldl, const Matrix4x4* worldm)
+bool LSSCollider::Collide(LSSCache& cache, const LSS& lss, const Model& model, const IceMatrix4x4* worldl, const IceMatrix4x4* worldm)
 {
 	// Checkings
 	if(!Setup(&model))	return false;
@@ -160,7 +160,7 @@ bool LSSCollider::Collide(LSSCache& cache, const LSS& lss, const Model& model, c
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL LSSCollider::InitQuery(LSSCache& cache, const LSS& lss, const Matrix4x4* worldl, const Matrix4x4* worldm)
+BOOL LSSCollider::InitQuery(LSSCache& cache, const LSS& lss, const IceMatrix4x4* worldl, const IceMatrix4x4* worldm)
 {
 	// 1) Call the base method
 	VolumeCollider::InitQuery();
@@ -181,7 +181,7 @@ BOOL LSSCollider::InitQuery(LSSCache& cache, const LSS& lss, const Matrix4x4* wo
 	if(worldm)
 	{
 		// Invert model matrix
-		Matrix4x4 InvWorldM;
+		IceMatrix4x4 InvWorldM;
 		InvertPRMatrix(InvWorldM, *worldm);
 
 		mSeg.mP0 *= InvWorldM;
@@ -599,7 +599,7 @@ HybridLSSCollider::~HybridLSSCollider()
 {
 }
 
-bool HybridLSSCollider::Collide(LSSCache& cache, const LSS& lss, const HybridModel& model, const Matrix4x4* worldl, const Matrix4x4* worldm)
+bool HybridLSSCollider::Collide(LSSCache& cache, const LSS& lss, const HybridModel& model, const IceMatrix4x4* worldl, const IceMatrix4x4* worldm)
 {
 	// We don't want primitive tests here!
 	mFlags |= OPC_NO_PRIMITIVE_TESTS;

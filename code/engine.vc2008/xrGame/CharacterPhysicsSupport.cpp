@@ -1183,8 +1183,7 @@ void CCharacterPhysicsSupport::in_Die()
 
 		m_PhysicMovementControl->DestroyCharacter();
 	}
-	else
-		in_Hit(m_sv_hit, true);
+	else in_Hit(m_sv_hit, true);
 }
 
 u16	CCharacterPhysicsSupport::PHGetSyncItemsNumber()
@@ -1201,4 +1200,9 @@ CPHSynchronize*	CCharacterPhysicsSupport::PHGetSyncItem(u16 item)
 		return movement()->GetSyncItem();
 	else
 		return m_EntityAlife.CPhysicsShellHolder::PHGetSyncItem(item);
+}
+
+void CCharacterPhysicsSupport::SyncNetState() 
+{
+	CPHSkeleton::SyncNetState();
 }

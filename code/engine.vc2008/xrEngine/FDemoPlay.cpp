@@ -242,9 +242,6 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 			dwCyclesLeft--;
 			if (0 == dwCyclesLeft)	return FALSE;
 			fStartTime = 0;
-			// just continue
-			// stat_Stop			();
-			// stat_Start			();
 		}
 
 		int f1 = frame;   FIX(f1);
@@ -265,15 +262,15 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 			v[1].x = m2->m[i][0]; v[1].y = m2->m[i][1];  v[1].z = m2->m[i][2];
 			v[2].x = m3->m[i][0]; v[2].y = m3->m[i][1];  v[2].z = m3->m[i][2];
 			v[3].x = m4->m[i][0]; v[3].y = m4->m[i][1];  v[3].z = m4->m[i][2];
-			spline1(t, &(v[0]), (Fvector *) &(Device.mView.r[i].m128_f32[0]));
+			spline1(t, &(v[0]), (Fvector *) &(Device.mView.Matrix.r[i].m128_f32[0]));
 		}
 
-		DirectX::XMMATRIX mInvCamera;
-		mInvCamera = DirectX::XMMatrixInverse(Device.mView.r, Device.mView);
+		Matrix4x4 mInvCamera;
+		mInvCamera.InvertMatrixByMatrix(Device.mView);
 
-		info.n.set(mInvCamera.r[1].m128_f32[0], mInvCamera.r[1].m128_f32[1], mInvCamera.r[1].m128_f32[2]);
-		info.d.set(mInvCamera.r[2].m128_f32[0], mInvCamera.r[2].m128_f32[1], mInvCamera.r[2].m128_f32[2]);
-		info.p.set(mInvCamera.r[3].m128_f32[0], mInvCamera.r[3].m128_f32[1], mInvCamera.r[3].m128_f32[2]);
+		info.n.set(mInvCamera.y.m128_f32[0], mInvCamera.y.m128_f32[1], mInvCamera.y.m128_f32[2]);
+		info.d.set(mInvCamera.z.m128_f32[0], mInvCamera.z.m128_f32[1], mInvCamera.z.m128_f32[2]);
+		info.p.set(mInvCamera.w.m128_f32[0], mInvCamera.w.m128_f32[1], mInvCamera.w.m128_f32[2]);
 
 		fLifeTime -= Device.fTimeDelta;
 	}

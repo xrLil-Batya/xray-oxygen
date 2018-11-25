@@ -134,66 +134,40 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	UINT createDeviceFlags = 0;
 	if (isGraphicDebugging)
 	{
-#ifdef USE_DX11
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#else
-		createDeviceFlags |= D3D10_CREATE_DEVICE_DEBUG;
-#endif
 	}
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	HRESULT R;
-#ifdef USE_DX11
+
 	D3D_FEATURE_LEVEL pFeatureLevels[] =
 	{
 		D3D_FEATURE_LEVEL_11_1,
-		D3D_FEATURE_LEVEL_11_0
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_10_0,
+		D3D_FEATURE_LEVEL_9_3,
 	};
+	HRESULT R;
 
-	R = D3D11CreateDeviceAndSwapChain(
-		NULL,
-		m_DriverType,
-		NULL,
-		createDeviceFlags,
-		pFeatureLevels,
-		sizeof(pFeatureLevels) / sizeof(pFeatureLevels[0]),
-		D3D11_SDK_VERSION,
-		&sd,
-		&m_pSwapChain,
-		&pDevice,
-		&FeatureLevel,
-		&pContext
-	);
-
-	if (FAILED(R))
+	for (u32 FeatIter = 0; FeatIter < sizeof(pFeatureLevels) / sizeof(D3D_FEATURE_LEVEL); FeatIter++)
 	{
-
-		R_CHK(D3D11CreateDeviceAndSwapChain(
-			NULL,
-			m_DriverType,
-			NULL,
-			createDeviceFlags,
-			&pFeatureLevels[1],
-			sizeof(pFeatureLevels) / sizeof(pFeatureLevels[0] - 1),
+		D3D_FEATURE_LEVEL &refFeature = pFeatureLevels[FeatIter];
+		R = D3D11CreateDeviceAndSwapChain
+		(
+			nullptr, m_DriverType, nullptr, createDeviceFlags,
+			&refFeature, sizeof(refFeature),
 			D3D11_SDK_VERSION,
-			&sd,
-			&m_pSwapChain,
-			&pDevice,
-			&FeatureLevel,
-			&pContext
-			)
+			&sd, &m_pSwapChain, &pDevice,
+			&FeatureLevel, &pContext
 		);
-	}
 
-	D3D11_FEATURE_DATA_THREADING threadingFeature;
-	R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_THREADING, &threadingFeature, sizeof(threadingFeature)));
-        //MatthewKush to all: If we keep data threading, make use of async resources. Otherwise we
-        //should make it a single-threaded device.
+		if (!FAILED(R)) break;
+	}
 
 	if (IsWindows10OrGreater())
 	{
-	        D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-                arch.TileBasedDeferredRenderer == TRUE;
+		D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
+		R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
+		arch.TileBasedDeferredRenderer == TRUE;
 
 		IDXGIDevice3 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
@@ -205,9 +179,9 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	}
 	else if (IsWindows8OrGreater())
 	{
-	        D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-	        R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-                arch.TileBasedDeferredRenderer == TRUE;
+		D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
+		R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
+		arch.TileBasedDeferredRenderer == TRUE;
 
 		IDXGIDevice2 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&pDXGIDevice));
@@ -227,20 +201,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 		R = pDXGIDevice->SetMaximumFrameLatency(1);
 	}
-#else
-	R = D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, NULL, createDeviceFlags, &sd, &m_pSwapChain, &pDevice);
 
-	pContext = pDevice;
-	FeatureLevel = D3D_FEATURE_LEVEL_10_0;
-	if (SUCCEEDED(R))
-	{
-		if (SUCCEEDED(D3DX10GetFeatureLevel1(pDevice, &pDevice1)))
-		{
-			FeatureLevel = D3D_FEATURE_LEVEL_10_1;
-			pContext1 = pDevice1;
-		}
-	}
-#endif
 
 	if (FAILED(R))
 	{
@@ -281,13 +242,7 @@ void CHW::DestroyDevice()
 	_SHOW_REF("refCount:m_pSwapChain", m_pSwapChain);
 	_RELEASE(m_pSwapChain);
 
-#ifdef USE_DX11
 	_RELEASE(pContext);
-#endif
-
-#ifndef USE_DX11
-	_RELEASE(HW.pDevice1);
-#endif
 	_SHOW_REF("refCount:DeviceREF:", HW.pDevice);
 	_RELEASE(HW.pDevice);
 

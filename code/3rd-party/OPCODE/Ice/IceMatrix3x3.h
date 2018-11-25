@@ -479,8 +479,8 @@ void FromQuatL2(const Quat &q, float l2);
 								}
 
 		// Cast operators
-		//! Cast a Matrix3x3 to a Matrix4x4.
-								operator Matrix4x4()	const;
+		//! Cast a Matrix3x3 to a IceMatrix4x4.
+								operator IceMatrix4x4()	const;
 		//! Cast a Matrix3x3 to a Quat.
 								operator Quat()			const;
 

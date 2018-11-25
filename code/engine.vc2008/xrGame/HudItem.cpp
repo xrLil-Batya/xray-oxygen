@@ -11,6 +11,7 @@
 #include "player_hud.h"
 #include "../xrEngine/SkeletonMotions.h"
 #include "../FrayBuildConfig.hpp"
+#include "../xrUICore/ui_base.h"
 
 CHudItem::CHudItem()
 {
@@ -347,12 +348,9 @@ void CHudItem::PlayAnimIdleMoving()
 		CEntity::SEntityState st;
 		pActor->g_State(st);
 
-#ifdef NEW_ANIMS_WPN
-		if (st.bCrouch)
+		if (st.bCrouch && AnimIsFound("anm_idle_moving_crouch"))
 			PlayHUDMotion("anm_idle_moving_crouch", TRUE, NULL, GetState());
 		else
-#endif	
-
 			PlayHUDMotion("anm_idle_moving", TRUE, nullptr, GetState());
 	}
 }
@@ -360,6 +358,23 @@ void CHudItem::PlayAnimIdleMoving()
 void CHudItem::PlayAnimIdleSprint()
 {
 	PlayHUDMotion("anm_idle_sprint", TRUE, nullptr, GetState());
+}
+
+bool CHudItem::AnimIsFound(const char * AnimName) noexcept
+{
+	if (HudItemData())
+	{
+		string256 anim_name_r;
+		u16 attach_place_idx = pSettings->r_u16(HudItemData()->m_sect_name, "attach_place_idx");
+		xr_sprintf(anim_name_r, "%s%s", AnimName, ((attach_place_idx == 1) && UI().is_widescreen()) ? "_16x9" : "");
+		player_hud_motion* anm = HudItemData()->m_hand_motions.find_motion(anim_name_r);
+
+		if (anm) return true;
+	}
+	else if (g_player_hud->motion_length(AnimName, HudSection(), m_current_motion_def) > 100)
+		return true;
+
+	return false;
 }
 
 void CHudItem::OnMovementChanged(ACTOR_DEFS::EMoveCommand cmd)

@@ -137,7 +137,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 
 		//	TODO: DX10: Remove this when fix inverse culling for far region
 		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r_sun_depth_near_bias):ps_r_sun_depth_far_bias;
-		Fmatrix			m_TexelAdjust		= 
+		Matrix4x4 m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
 			0.0f,				-0.5f,				0.0f,			0.0f,
@@ -152,8 +152,9 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 		// shadow xform
 		Fmatrix				m_shadow;
 		{
-			Fmatrix			xf_project;		xf_project.mul		(m_TexelAdjust,fuckingsun->X.D.combine);
-			m_shadow.mul	(xf_project,	xf_invview);
+			Matrix4x4 xf_project;
+			xf_project.Multiply(fuckingsun->X.D.combine, m_TexelAdjust);
+			m_shadow.mul(CastToGSCMatrix(xf_project), xf_invview);
 
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
@@ -375,7 +376,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
 
 		//	TODO: DX10: Remove this when fix inverse culling for far region
-		Fmatrix			m_TexelAdjust		= 
+		Matrix4x4 m_TexelAdjust		=
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
 			0.0f,				-0.5f,				0.0f,			0.0f,
@@ -390,17 +391,18 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		// shadow xform
 		Fmatrix				m_shadow;
 		{
-			Fmatrix			xf_project;		xf_project.mul		(m_TexelAdjust,fuckingsun->X.D.combine);
-			m_shadow.mul	(xf_project,	xf_invview);
+			Matrix4x4 xf_project;
+			xf_project.Multiply(fuckingsun->X.D.combine, m_TexelAdjust);
+			m_shadow.mul(CastToGSCMatrix(xf_project), xf_invview);
 
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul		(L_dir,ps_r_sun_tsm_bias);
+				Fvector		bias;	bias.mul(L_dir, ps_r_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
-				m_shadow.mulB_44	(bias_t);
+				m_shadow.mulB_44(bias_t);
 			}
-			FPU::m24r		();
+			FPU::m24r();
 		}
 
 		// clouds xform
@@ -770,7 +772,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
 		//	TODO: DX10: Remove this when fix inverse culling for far region
 		float			fBias				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_bias:-ps_r_sun_depth_far_bias;
-		Fmatrix			m_TexelAdjust		= 
+		Matrix4x4			m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
 			0.0f,				-0.5f,				0.0f,			0.0f,
@@ -779,21 +781,27 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 		};
 
 		// compute xforms
-		Fmatrix				m_shadow;
+		Matrix4x4 m_shadow;
 		{
 			FPU::m64r		();
-			Fmatrix			xf_invview;		xf_invview.invert	(CastToGSCMatrix(Device.mView))	;
-			Fmatrix			xf_project;		xf_project.mul		(m_TexelAdjust,fuckingsun->X.D.combine);
-			m_shadow.mul	(xf_project,	xf_invview);
+			Matrix4x4 xf_invview;
+			xf_invview.InvertMatrixByMatrix(Device.mView);
+
+			Matrix4x4 xf_project;		
+			xf_project.Multiply(m_TexelAdjust, fuckingsun->X.D.combine);
+			m_shadow.Multiply(xf_project, xf_invview);
 
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul		(L_dir,ps_r_sun_tsm_bias);
-				Fmatrix		bias_t;	bias_t.translate(bias);
-				m_shadow.mulB_44	(bias_t);
+				Fvector bias;	
+				bias.mul(L_dir, ps_r_sun_tsm_bias);
+
+				Matrix4x4 bias_t = DirectX::XMMatrixTranslation(bias.x, bias.y, bias.z);
+
+				m_shadow.Multiply(bias_t, m_shadow);
 			}
-			FPU::m24r		();
+			FPU::m24r();
 		}
 
 		// Make jitter texture

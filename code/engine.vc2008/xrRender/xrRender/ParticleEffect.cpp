@@ -547,17 +547,16 @@ void CParticleEffect::Render(float)
 			RCache.Vertex.Unlock(dwCount, geom->vb_stride);
 			if (dwCount)
 			{
-				DirectX::XMMATRIX Pold = Device.mProject;
-				DirectX::XMMATRIX FTold = Device.mFullTransform;
+				Matrix4x4 Pold = Device.mProject;
+				Matrix4x4 FTold = Device.mFullTransform;
 				if (GetHudMode())
 				{
-					BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane, RDEVICE.mProject);
-
-
-					Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mView, Device.mProject);
-					RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+					RDEVICE.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
+					
+					Device.mFullTransform.Multiply(Device.mView, Device.mProject);
+					RCache.set_xform_project(Device.mProject);
 					RImplementation.rmNear();
-					ApplyTexgen(CastToGSCMatrix(Device.mFullTransform));
+					ApplyTexgen(Device.mFullTransform);
 				}
 
 				RCache.set_xform_world(Fidentity);

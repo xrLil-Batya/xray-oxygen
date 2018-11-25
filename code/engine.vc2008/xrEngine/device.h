@@ -71,16 +71,16 @@ public:
 	Fvector									vCameraTop;
 	Fvector									vCameraRight;
 
-	DirectX::XMMATRIX						mView;
-	DirectX::XMMATRIX						mProject;
-	DirectX::XMMATRIX						mFullTransform;
+	Matrix4x4						mView;
+	Matrix4x4						mProject;
+	Matrix4x4						mFullTransform;
 
 	// Copies of corresponding members. Used for synchronization.
-	Fvector									vCameraPosition_saved;
+	Fvector							vCameraPosition_saved;
 
-	DirectX::XMMATRIX						mView_saved;
-	DirectX::XMMATRIX						mProject_saved;
-	DirectX::XMMATRIX						mFullTransform_saved;
+	Matrix4x4						mView_saved;
+	Matrix4x4						mProject_saved;
+	Matrix4x4						mFullTransform_saved;
 
 	float									fFOV;
 	float									fASPECT;
@@ -164,12 +164,12 @@ public:
 		if (enabled && !m_bNearer)
 		{
 			m_bNearer = TRUE;
-			mProject -= DirectX::XMMATRIX(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, EPS_L);
+			mProject.w.m128_f32[4] -= EPS_L;
 		}
 		else if (!enabled && m_bNearer)
 		{
 			m_bNearer = FALSE;
-			mProject += DirectX::XMMATRIX(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, EPS_L);
+			mProject.w.m128_f32[4] += EPS_L;
 		}
 		m_pRender->SetCacheXform(CastToGSCMatrix(mView), CastToGSCMatrix(mProject));
 	}

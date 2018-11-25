@@ -21,7 +21,7 @@
 			float			MakeCube(AABB& cube)																			const;	\
 			void			MakeSphere(Sphere& sphere)																		const;	\
 			const sbyte*	ComputeOutline(const Point& local_eye, sdword& num)												const;	\
-			float			ComputeBoxArea(const Point& eye, const Matrix4x4& mat, float width, float height, sdword& num)	const;	\
+			float			ComputeBoxArea(const Point& eye, const IceMatrix4x4& mat, float width, float height, sdword& num)	const;	\
 			bool			IsInside(const AABB& box)																		const;	\
 			bool			ComputePlanes(Plane* planes)																	const;	\
 			bool			ComputePoints(Point* pts)																		const;	\
@@ -192,7 +192,7 @@
 		 *	\param		aabb		[out] the transformed AABB [can be *this]
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_			void		Rotate(const Matrix4x4& mtx, AABB& aabb)	const
+		inline_			void		Rotate(const IceMatrix4x4& mtx, AABB& aabb)	const
 									{
 										// The three edges transformed: you can efficiently transform an X-only vector
 										// by just getting the "X" column of the matrix
@@ -421,7 +421,7 @@
 		 *	\param		aabb		[out] the transformed AABB [can be *this]
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_			void		Rotate(const Matrix4x4& mtx, AABB& aabb)	const
+		inline_			void		Rotate(const IceMatrix4x4& mtx, AABB& aabb)	const
 									{
 										// Compute new center
 										aabb.mCenter = mCenter * mtx;

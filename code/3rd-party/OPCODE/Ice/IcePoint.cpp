@@ -112,7 +112,7 @@ Point& Point::ProjectToPlane(const Plane& p)
 	return *this;
 }
 
-void Point::ProjectToScreen(float halfrenderwidth, float halfrenderheight, const Matrix4x4& mat, HPoint& projected) const
+void Point::ProjectToScreen(float halfrenderwidth, float halfrenderheight, const IceMatrix4x4& mat, HPoint& projected) const
 {
 	projected = HPoint(x, y, z, 1.0f) * mat;
 	projected.w = 1.0f / projected.w;

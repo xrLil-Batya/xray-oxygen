@@ -794,6 +794,26 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		xr_strcat(sh_name, c_smapsize); len+=4;
 	}
 
+	if (HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0)
+	{
+		defines[def_it].Name = "SM_5";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	else if (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_0)
+	{
+		defines[def_it].Name = "SM_4_0";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	else if (HW.FeatureLevel == D3D_FEATURE_LEVEL_9_3)
+	{
+		defines[def_it].Name = "SM_2_0";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	else R_ASSERT2(false, "Your PC unsupport DirectX version!");
+
 	if (o.fp16_filter)		{
 		defines[def_it].Name		=	"FP16_FILTER";
 		defines[def_it].Definition	=	"1";
@@ -1056,13 +1076,6 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
    }
    sh_name[len]='0'+char(o.dx10_sm4_1); ++len;
 
-   R_ASSERT						( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 );
-   //if( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 )
-   {
-	   defines[def_it].Name		=	"SM_5";
-	   defines[def_it].Definition	=	"1";
-	   def_it++;
-   }
 	sh_name[len]='0'; ++len;
 
    if (o.dx10_minmax_sm)

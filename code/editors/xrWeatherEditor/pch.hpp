@@ -56,5 +56,5 @@ inline System::String ^to_string(LPCSTR string)
 {
 	return						(gcnew System::String(string));
 }
-
+#include <xrDelegate\xrDelegate.h>
 using namespace  XRay::SdkControls;

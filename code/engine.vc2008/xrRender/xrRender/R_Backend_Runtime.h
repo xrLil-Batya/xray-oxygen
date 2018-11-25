@@ -10,6 +10,7 @@
 #include "../xrRenderDX10/StateManager/dx10State.h"
 #else
 #include "../xrRenderDX9/dx9R_Backend_Runtime.h"
+#include "R_Backend.h"
 #endif
 
 IC void		R_xforms::set_c_w			(R_constant* C)		{	c_w		= C;	RCache.set_c(C,m_w);	};
@@ -22,9 +23,14 @@ IC void		R_xforms::set_c_wv			(R_constant* C)		{	c_wv	= C;	RCache.set_c(C,m_wv);
 IC void		R_xforms::set_c_vp			(R_constant* C)		{	c_vp	= C;	RCache.set_c(C,m_vp);	};
 IC void		R_xforms::set_c_wvp			(R_constant* C)		{	c_wvp	= C;	RCache.set_c(C,m_wvp);	};
 
-IC	void	CBackend::set_xform_world	(const Fmatrix& fM)
-{ 
-	xforms.set_W(fM);	
+IC	void	CBackend::set_xform_world(const Fmatrix& fM)
+{
+	xforms.set_W(fM);
+}
+
+IC	void	CBackend::set_xform_world(const Matrix4x4& fM)
+{
+	xforms.set_W(CastToGSCMatrix(fM));
 }
 IC	void	CBackend::set_xform_view	(const Fmatrix& fM)					
 { 

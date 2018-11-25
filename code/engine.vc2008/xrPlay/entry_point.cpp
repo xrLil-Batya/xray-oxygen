@@ -6,6 +6,7 @@
 #include <string>
 #include <intrin.h>  
 #include <windows.h>
+#include <tlhelp32.h>
 ////////////////////////////////////
 #include "../xrCore/xrCore.h"
 ////////////////////////////////////
@@ -16,28 +17,90 @@ void CreateRendererList();					// In RenderList.cpp
 using IsRunFunc = void(__cdecl*)(const char*);
 
 /// <summary> Start engine or install OpenAL </summary>
-void CheckOpenAL(const char* params)
+void CheckOpenAL()
 {
-	DWORD dwOpenALInstalled = GetFileAttributes("C:\\Windows\\System32\\OpenAL32.dll");
+	CHAR szOpenALDir[MAX_PATH] = { 0 };
+	R_ASSERT(GetSystemDirectoryA(szOpenALDir, MAX_PATH * sizeof(CHAR)));
+	_snprintf_s(szOpenALDir, MAX_PATH * sizeof(CHAR), "%s%s", szOpenALDir, "\\OpenAL32.dll");
+
+	DWORD dwOpenALInstalled = GetFileAttributesA(szOpenALDir);
+
 	if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
 	{
-		xr_string StrCmd = "/select, " + xr_string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
-		StrCmd[11] = '\\';
-		//WinExec(StrCmd.c_str(), 1);
-		ShellExecute(NULL, NULL, "explorer.exe", StrCmd.c_str(), NULL, SW_SHOWNORMAL);
-		system(StrCmd.c_str());
-		MessageBox(0, "ENG: Click just after installing OpenAL. \n"
-					  "RUS: Нажмите после установки OpenAL.", "OpenAL Not Found!", MB_OK);
+		xr_string StrCmd = xr_string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
+
+		dwOpenALInstalled = GetFileAttributesA(StrCmd.c_str());
+		if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
+		{
+			xr_string szCmd = "/select, " + StrCmd + "\\fsgame.ltx";
+			string_path szPath = { 0 };
+
+			MessageBoxA(NULL,
+				"ENG: X-Ray Oxygen can't detect OpenAL installer. Please, specify path to installer manually. \n"
+				"RUS: X-Ray Oxygen не смог обнаружить установщик OpenAL. Пожалуйста, укажите путь до установщика самостоятельно.",
+				"OpenAL Not Found!",
+				MB_OK | MB_ICONERROR
+			);
+
+			OPENFILENAMEA oFN = {};
+			// get params to our struct
+			ZeroMemory(&oFN, sizeof(OPENFILENAMEA));
+			oFN.lStructSize = sizeof(OPENFILENAMEA);
+			oFN.hwndOwner = NULL;
+			oFN.nMaxFile = MAX_PATH;
+			oFN.lpstrFile = szPath;
+			oFN.lpstrFilter = "(*.exe) Windows Executable\0*.exe\0";
+			oFN.lpstrTitle = "Open file";
+			oFN.lpstrFileTitle = NULL;
+			oFN.lpstrInitialDir = NULL;
+			oFN.nFilterIndex = 1;
+			oFN.nMaxFileTitle = 0;
+			oFN.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+			// if we can't open filedialog - exit
+			if (!GetOpenFileNameA(&oFN))
+			{
+				ExitProcess(0);
+			}
+			
+			StrCmd = szPath;
+		}
+
+		// create parent process with admin rights
+		SHELLEXECUTEINFOA shellInfo = { sizeof(SHELLEXECUTEINFOA) };
+		shellInfo.lpVerb = "runas";
+		shellInfo.lpFile = StrCmd.c_str();
+		shellInfo.lpParameters = nullptr;
+		shellInfo.hwnd = NULL;
+		shellInfo.nShow = SW_NORMAL;
+		shellInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+
+		// if user didn't press 'No' at Shell desktop notification
+		if (ShellExecuteExA(&shellInfo))
+		{
+			WaitForSingleObject(shellInfo.hProcess, INFINITE);
+		}
+
+		if ((dwOpenALInstalled = GetFileAttributesA(szOpenALDir) == INVALID_FILE_ATTRIBUTES))
+		{
+			MessageBoxA(NULL,
+				"ENG: X-Ray Oxygen can't detect OpenAL library. Please, re-install library manually. \n"
+				"RUS: X-Ray Oxygen не смог обнаружить библиотеку OpenAL. Пожалуйста, переустановите библиотеку самостоятельно.",
+				"OpenAL Not Found!",
+				MB_OK | MB_ICONERROR
+			);
+
+			ExitProcess(0);
+		}
 	}
 }
 
 /// <summary> Main method for initialize xrEngine </summary>
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	////////////////////////////////////////////////////
     gModulesLoaded = true;
 	LPCSTR params = lpCmdLine;
-	////////////////////////////////////////////////////
+
 	try
 	{
 		// Init X-ray core
@@ -49,13 +112,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBoxA(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONHAND);
 	}
 
-	////////////////////////////////////////////////////
-	// If we don't needy for a exceptions - we can 
-	// delete exceptions with option "-silent"
-	////////////////////////////////////////////////////
-
 #ifndef DEBUG
-	if (!strstr(lpCmdLine, "-silent") && !strstr(lpCmdLine, "-launcher"))
+	if (!strstr(lpCmdLine, "-silent"))
 	{
 		// Checking for SSE2
 		if (!CPU::Info.hasFeature(CPUFeature::SSE2))
@@ -108,25 +166,72 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		size_t HeapFragValue = 2;
 		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
 	}
-	// Check for another instance
-#ifdef NO_MULTI_INSTANCES
-#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
 
-	HANDLE hCheckPresenceMutex = OpenMutex(READ_CONTROL, FALSE, STALKER_PRESENCE_MUTEX);
-	if (hCheckPresenceMutex == NULL)
-	{
-		hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX);	// New mutex
-		if (hCheckPresenceMutex == NULL)
-			return 2;
-	}
-	else
-	{
-		CloseHandle(hCheckPresenceMutex);		// Already running
-		return 1;
-	}
-#endif
 	CreateRendererList();
-	CheckOpenAL(params);
+	CheckOpenAL();
+
+	if (!strstr(Core.Params, "-unlimited_game_instances"))
+	{
+#ifndef OLD_INSTANCE_SYSTEM
+		PROCESSENTRY32W processInfo = { NULL };
+		processInfo.dwSize = sizeof(PROCESSENTRY32W);
+		DWORD CurrentProcessId = GetCurrentProcessId();
+		DWORD CustomProcessId = 0;
+		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+		HANDLE hProcess = NULL;
+		WCHAR szBuf[MAX_PATH] = { NULL };
+		BOOL bSearch = Process32FirstW(hSnapshot, &processInfo);
+		BOOL isReady = FALSE;
+
+		while (bSearch)
+		{
+			//#NOTE: it's only game module: no editor or other module
+			int iCompareString = wcsncmp(L"xrPlay.exe", processInfo.szExeFile, MAX_PATH);
+
+			// we found our second process. Show our parent process window and terminate this.
+			if (!iCompareString && processInfo.th32ProcessID != CurrentProcessId)
+			{
+				HWND hWindow = FindWindowA("_XRAY_1.7", "X-Ray Oxygen");
+
+				if (hWindow)
+				{
+					ShowWindow(hWindow, 0);
+				}
+
+				ExitProcess(0x2);
+			}
+
+			// search next process
+			bSearch = Process32NextW(hSnapshot, &processInfo);
+		}
+
+		CloseHandle(hSnapshot);
+#else
+		constexpr char* STALKER_PRESENCE_MUTEX = "Local\\STALKER-COP";
+		HANDLE hCheckPresenceMutex = OpenMutex(READ_CONTROL, FALSE, STALKER_PRESENCE_MUTEX);
+		if (!strstr(lpCmdLine, "-editor"))
+		{
+			if (hCheckPresenceMutex == NULL)
+			{
+				hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX);	// New mutex
+				if (hCheckPresenceMutex == NULL)
+					return 2;
+			}
+			else
+			{
+				HWND hWindow = FindWindowA("_XRAY_1.7", "X-Ray Oxygen");
+
+				if (hWindow)
+				{
+					ShowWindow(hWindow, 0);
+				}
+
+				CloseHandle(hCheckPresenceMutex);		// Already running
+				return 1;
+			}
+		}
+#endif
+	}
 
 	HMODULE hLib = LoadLibrary("xrEngine.dll");
 	if (hLib == NULL)
@@ -142,7 +247,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	else
 	{
-		MessageBox(NULL, "xrEngine module doesn't seems to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
+		MessageBoxA(NULL, "xrEngine module doesn't seems to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 #ifdef NO_MULTI_INSTANCES		

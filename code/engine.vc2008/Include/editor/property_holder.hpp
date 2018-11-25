@@ -8,7 +8,6 @@
 
 #ifndef EDITOR_PROPERTY_HOLDER_HPP_INCLUDED
 #define EDITOR_PROPERTY_HOLDER_HPP_INCLUDED
-
 class shared_str;
 
 namespace editor {
@@ -63,10 +62,10 @@ public:
 	typedef xrDelegate<color()>			color_getter_type;
 	typedef xrDelegate<void(color)>		color_setter_type;
 
-	typedef xrDelegate<vec3f>			vec3f_getter_type;
+	typedef xrDelegate<vec3f()>			vec3f_getter_type;
 	typedef xrDelegate<void(vec3f)>		vec3f_setter_type;
 
-	typedef xrDelegate<property_holder_collection*> collection_getter_type;
+	typedef xrDelegate<property_holder_collection*()> collection_getter_type;
 
 	typedef xrDelegate<LPCSTR const*()>	string_collection_getter_type;
 	typedef xrDelegate<u32()>			string_collection_size_getter_type;

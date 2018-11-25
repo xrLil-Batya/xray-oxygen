@@ -273,15 +273,15 @@ void CWallmarksEngine::AddStaticWallmark	(CDB::TRI* pTri, const Fvector* pVerts,
 	AddWallmark_internal	(pTri,pVerts,contact_point,hShader,sz);
 }
 
-void CWallmarksEngine::AddSkeletonWallmark	(const Fmatrix* xf, CKinematics* obj, ref_shader& sh, const Fvector& start, const Fvector& dir, float size)
-{	
-	if(::RImplementation.phase != CRender::PHASE_NORMAL)				return;
+void CWallmarksEngine::AddSkeletonWallmark(const Fmatrix* xf, CKinematics* obj, ref_shader& sh, const Fvector& start, const Fvector& dir, float size)
+{
+	if (::RImplementation.phase != CRender::PHASE_NORMAL)				return;
 	// optimization cheat: don't allow wallmarks more than 50 m from viewer/actor
 	if (xf->c.distance_to_sqr(Device.vCameraPosition) > _sqr(50.f))				return;
 
-	VERIFY					(obj&&xf&&(size>EPS_L));
+	VERIFY(obj&&xf && (size > EPS_L));
 	xrCriticalSectionGuard guard(lock);
-	obj->AddWallmark		(xf,start,dir,sh,size);
+	obj->AddWallmark(xf, start, dir, sh, size);
 }
 
 void CWallmarksEngine::AddSkeletonWallmark(intrusive_ptr<CSkeletonWallmark> wm)
@@ -322,7 +322,7 @@ ICF void FlushStream(ref_geom hGeom, ref_shader shader, u32& w_offset, FVF::LIT*
 		Device.Statistic->RenderDUMP_WMT_Count += w_count/3;
 	}
 }
-#include "../../xrEngine/DirectXMathExternal.h"
+
 void CWallmarksEngine::Render()
 {
 	// Projection and xform
@@ -330,12 +330,12 @@ void CWallmarksEngine::Render()
 
 	WallmarksProject._43			-= ps_r_WallmarkSHIFT;
 	RCache.set_xform_world		(Fidentity);
-	RCache.set_xform_project	(CastToGSCMatrix(Device.mProject));
+	RCache.set_xform_project	(WallmarksProject);
 
-	DirectX::XMMATRIX mSavedView = Device.mView;
+	Matrix4x4 mSavedView = Device.mView;
 	Fvector	mViewPos			;
-			mViewPos.mad		(Device.vCameraPosition, Device.vCameraDirection,ps_r_WallmarkSHIFT_V);
-	BuildCamDir(mViewPos,Device.vCameraDirection,Device.vCameraTop, Device.mView);
+	mViewPos.mad(Device.vCameraPosition, Device.vCameraDirection, ps_r_WallmarkSHIFT_V);
+	Device.mView.BuildCamDir(mViewPos, Device.vCameraDirection, Device.vCameraTop);
 	RCache.set_xform_view		(CastToGSCMatrix(Device.mView));
 
 	Device.Statistic->RenderDUMP_WM.Begin	();
@@ -347,60 +347,59 @@ void CWallmarksEngine::Render()
 
 	lock.Enter();			// Physics may add wallmarks in parallel with rendering
 
-	for (wm_slot* slot : marks){
+	for (wm_slot* slot : marks) 
+	{
 		u32			w_offset;
 		FVF::LIT	*w_verts, *w_start;
-		BeginStream	(hGeom,w_offset,w_verts,w_start);
+		BeginStream(hGeom, w_offset, w_verts, w_start);
 		// static wallmarks
-		for (auto w_it=slot->static_items.begin(); w_it!=slot->static_items.end(); ){
-			static_wallmark* W	= *w_it;
-			if (RImplementation.ViewBase.testSphere_dirty(W->bounds.P,W->bounds.R)){
+		for (auto w_it = slot->static_items.begin(); w_it != slot->static_items.end(); )
+		{
+			static_wallmark* W = *w_it;
+			if (RImplementation.ViewBase.testSphere_dirty(W->bounds.P, W->bounds.R)) {
 				Device.Statistic->RenderDUMP_WMS_Count++;
-				float dst	= Device.vCameraPosition.distance_to_sqr(W->bounds.P);
-				float ssa	= W->bounds.R * W->bounds.R / dst;
-				if (ssa>=ssaCLIP)	{
-					u32 w_count		= u32(w_verts-w_start);
-					if ((w_count+W->verts.size())>=(MAX_TRIS*3)){
-						FlushStream	(hGeom,slot->shader,w_offset,w_verts,w_start,FALSE);
-						BeginStream	(hGeom,w_offset,w_verts,w_start);
+				float dst = Device.vCameraPosition.distance_to_sqr(W->bounds.P);
+				float ssa = W->bounds.R * W->bounds.R / dst;
+				if (ssa >= ssaCLIP) 
+				{
+					u32 w_count = u32(w_verts - w_start);
+					if ((w_count + W->verts.size()) >= (MAX_TRIS * 3)) {
+						FlushStream(hGeom, slot->shader, w_offset, w_verts, w_start, FALSE);
+						BeginStream(hGeom, w_offset, w_verts, w_start);
 					}
-					static_wm_render	(W,w_verts);
+					static_wm_render(W, w_verts);
 				}
-				W->ttl	-= 0.1f*Device.fTimeDelta;	// visible wallmarks fade much slower
-			} else {
-				W->ttl	-= Device.fTimeDelta;
+				W->ttl -= 0.1f*Device.fTimeDelta;	// visible wallmarks fade much slower
 			}
-			if (W->ttl<=EPS){	
-				static_wm_destroy	(W);
-				*w_it				= slot->static_items.back();
+			else 
+			{
+				W->ttl -= Device.fTimeDelta;
+			}
+
+			if (W->ttl <= EPS) 
+			{
+				static_wm_destroy(W);
+				*w_it = slot->static_items.back();
 				slot->static_items.pop_back();
-			}else{
+			}
+			else 
+			{
 				w_it++;
 			}
 		}
 		// Flush stream
-		FlushStream				(hGeom,slot->shader,w_offset,w_verts,w_start,FALSE);	//. remove line if !(suppress cull needed)
-		BeginStream				(hGeom,w_offset,w_verts,w_start);
+		FlushStream(hGeom, slot->shader, w_offset, w_verts, w_start, FALSE);	//. remove line if !(suppress cull needed)
+		BeginStream(hGeom, w_offset, w_verts, w_start);
 
 		// dynamic wallmarks
-		for (xr_vector<intrusive_ptr<CSkeletonWallmark> >::iterator w_it=slot->skeleton_items.begin(); w_it!=slot->skeleton_items.end(); w_it++){
-			intrusive_ptr<CSkeletonWallmark> W	= *w_it;
-			if (!W){
-				continue	;
-			}
-
-#ifdef DEBUG
-			if(W->used_in_render != Device.dwFrame)			
-			{
-				Log("W->used_in_render",W->used_in_render);
-				Log("Device.dwFrame",Device.dwFrame);
-				VERIFY(W->used_in_render == Device.dwFrame);
-			}
-#endif
+		for (intrusive_ptr<CSkeletonWallmark> pSkeletonWallmark: slot->skeleton_items)
+		{
+			if (!pSkeletonWallmark)
+				continue;
 
 			Device.Statistic->RenderDUMP_WMD_Count++;
 			u32 w_count = u32(w_verts - w_start);
-			if ((w_count + W->VCount()) >= (MAX_TRIS * 3))
+			if ((w_count + pSkeletonWallmark->VCount()) >= (MAX_TRIS * 3))
 			{
 				FlushStream(hGeom, slot->shader, w_offset, w_verts, w_start, TRUE);
 				BeginStream(hGeom, w_offset, w_verts, w_start);
@@ -409,18 +408,18 @@ void CWallmarksEngine::Render()
 			FVF::LIT *w_save = w_verts;
 			try
 			{
-				W->Parent()->RenderWallmark(W, w_verts);
+				pSkeletonWallmark->Parent()->RenderWallmark(pSkeletonWallmark, w_verts);
 			}
 			catch (...)
 			{
 				Msg("! Failed to render dynamic wallmark");
 				w_verts = w_save;
 			}
-			W->used_in_render = u32(-1);
+			pSkeletonWallmark->used_in_render = u32(-1);
 		}
 		slot->skeleton_items.clear();
 		// Flush stream
-		FlushStream				(hGeom,slot->shader,w_offset,w_verts,w_start,TRUE);
+		FlushStream(hGeom, slot->shader, w_offset, w_verts, w_start, TRUE);
 	}
 
 	lock.Leave();				// Physics may add wallmarks in parallel with rendering

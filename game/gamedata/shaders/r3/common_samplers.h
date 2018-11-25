@@ -1,6 +1,12 @@
 #ifndef	common_samplers_h_included
 #define	common_samplers_h_included
 
+#ifdef SM_2_0
+#define AUTO_SAMPLER sampler2D
+#else
+#define AUTO_SAMPLER Texture2D
+#endif
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // Geometry phase / deferring               	//
 
@@ -9,31 +15,31 @@ sampler 	smp_rtlinear;	//	Use D3DTADDRESS_CLAMP,	D3DTEXF_LINEAR,			D3DTEXF_NONE,
 sampler 	smp_linear;		//	Use	D3DTADDRESS_WRAP,	D3DTEXF_LINEAR,			D3DTEXF_LINEAR,	D3DTEXF_LINEAR
 sampler 	smp_base;		//	Use D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, 	D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC
 
-Texture2D 	s_base;		//	smp_base
+AUTO_SAMPLER 	s_base;		//	smp_base
 #ifdef USE_MSAA
 Texture2DMS<float4, MSAA_SAMPLES>	s_generic;	//	smp_generic
 #else
-Texture2D   s_generic;
+AUTO_SAMPLER   s_generic;
 #endif
-Texture2D 	s_bump;             	//
-Texture2D 	s_bumpX;                //
-Texture2D 	s_detail;               //
-Texture2D 	s_detailBump;           //	
-Texture2D 	s_detailBumpX;          //	Error for bump detail
-//Texture2D 	s_bumpD;                //
-Texture2D 	s_hemi;             	//
+AUTO_SAMPLER 	s_bump;             	//
+AUTO_SAMPLER 	s_bumpX;                //
+AUTO_SAMPLER 	s_detail;               //
+AUTO_SAMPLER 	s_detailBump;           //	
+AUTO_SAMPLER 	s_detailBumpX;          //	Error for bump detail
+//AUTO_SAMPLER 	s_bumpD;                //
+AUTO_SAMPLER 	s_hemi;             	//
 
-Texture2D 	s_mask;             	//
+AUTO_SAMPLER 	s_mask;             	//
 
-Texture2D 	s_dt_r;                	//
-Texture2D 	s_dt_g;                	//
-Texture2D 	s_dt_b;                	//
-Texture2D 	s_dt_a;                	//
+AUTO_SAMPLER 	s_dt_r;                	//
+AUTO_SAMPLER 	s_dt_g;                	//
+AUTO_SAMPLER 	s_dt_b;                	//
+AUTO_SAMPLER 	s_dt_a;                	//
 
-Texture2D 	s_dn_r;                	//
-Texture2D 	s_dn_g;                	//
-Texture2D 	s_dn_b;                	//
-Texture2D 	s_dn_a;                	//
+AUTO_SAMPLER 	s_dn_r;                	//
+AUTO_SAMPLER 	s_dn_g;                	//
+AUTO_SAMPLER 	s_dn_b;                	//
+AUTO_SAMPLER 	s_dn_a;                	//
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Lighting/shadowing phase                     //
@@ -46,11 +52,11 @@ Texture2DMS<float4, MSAA_SAMPLES>	s_position;	//	smp_nofilter or Load
 Texture2DMS<float4, MSAA_SAMPLES>	s_normal;	//	smp_nofilter or Load
 Texture2DMS<float4, MSAA_SAMPLES>	s_depth;	
 #else
-Texture2D	s_position;	//	smp_nofilter or Load
-Texture2D	s_normal;	//	smp_nofilter or Load
-Texture2D s_depth;
+AUTO_SAMPLER	s_position;	//	smp_nofilter or Load
+AUTO_SAMPLER	s_normal;	//	smp_nofilter or Load
+AUTO_SAMPLER    s_depth;
 #endif
-Texture2D	s_lmap;		// 2D/???cube projector lightmap
+AUTO_SAMPLER	s_lmap;		// 2D/???cube projector lightmap
 Texture3D	s_material;	//	smp_material
 //uniform sampler1D       s_attenuate;        	//
 
@@ -61,13 +67,13 @@ Texture3D	s_material;	//	smp_material
 Texture2DMS<float4, MSAA_SAMPLES>	s_diffuse;	// rgb.a = diffuse.gloss
 Texture2DMS<float4, MSAA_SAMPLES>	s_accumulator;      	// rgb.a = diffuse.specular
 #else
-Texture2D	s_diffuse;	// rgb.a = diffuse.gloss
-Texture2D	s_accumulator;      	// rgb.a = diffuse.specular
+AUTO_SAMPLER	s_diffuse;	// rgb.a = diffuse.gloss
+AUTO_SAMPLER	s_accumulator;      	// rgb.a = diffuse.specular
 #endif
 //uniform sampler2D       s_generic;              //
-Texture2D	s_bloom;	//
-Texture2D	s_image;	// used in various post-processing
-Texture2D	s_tonemap;	// actually MidleGray / exp(Lw + eps)
+AUTO_SAMPLER	s_bloom;	//
+AUTO_SAMPLER	s_image;	// used in various post-processing
+AUTO_SAMPLER	s_tonemap;	// actually MidleGray / exp(Lw + eps)
 
 
 #endif	//	#ifndef	common_samplers_h_included

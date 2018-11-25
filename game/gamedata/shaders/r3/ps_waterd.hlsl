@@ -32,11 +32,8 @@ float4 main(v2p I) : SV_Target
 #ifdef USE_SOFT_WATER
 #ifdef NEED_SOFT_WATER
 	float2	PosTc		= I.tctexgen.xy/I.tctexgen.z;
-#ifdef GBUFFER_OPTIMIZATION
 	gbuffer_data gbd	= gbuffer_load_data(PosTc, I.hpos);
-#else
-	gbuffer_data gbd	= gbuffer_load_data(PosTc);
-#endif
+
 	float4	_P			= float4(gbd.P, gbd.mtl);
 	float	waterDepth	= _P.z - I.tctexgen.z;
 	float	alphaDistort = saturate(5*waterDepth);

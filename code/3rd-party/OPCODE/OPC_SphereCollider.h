@@ -55,7 +55,7 @@
 		 *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-							bool			Collide(SphereCache& cache, const Sphere& sphere, const Model& model, const Matrix4x4* worlds=null, const Matrix4x4* worldm=null);
+							bool			Collide(SphereCache& cache, const Sphere& sphere, const Model& model, const IceMatrix4x4* worlds=null, const IceMatrix4x4* worldm=null);
 
 		// 
 							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBTree* tree);
@@ -78,7 +78,7 @@
 		inline_				BOOL			SphereAABBOverlap(const Point& center, const Point& extents);
 							BOOL			SphereTriOverlap(const Point& vert0, const Point& vert1, const Point& vert2);
 			// Init methods
-							BOOL			InitQuery(SphereCache& cache, const Sphere& sphere, const Matrix4x4* worlds=null, const Matrix4x4* worldm=null);
+							BOOL			InitQuery(SphereCache& cache, const Sphere& sphere, const IceMatrix4x4* worlds=null, const IceMatrix4x4* worldm=null);
 	};
 
 	class OPCODE_API HybridSphereCollider : public SphereCollider
@@ -88,7 +88,7 @@
 											HybridSphereCollider();
 		virtual								~HybridSphereCollider();
 
-							bool			Collide(SphereCache& cache, const Sphere& sphere, const HybridModel& model, const Matrix4x4* worlds=null, const Matrix4x4* worldm=null);
+							bool			Collide(SphereCache& cache, const Sphere& sphere, const HybridModel& model, const IceMatrix4x4* worlds=null, const IceMatrix4x4* worldm=null);
 		protected:
 							Container		mTouchedBoxes;
 	};

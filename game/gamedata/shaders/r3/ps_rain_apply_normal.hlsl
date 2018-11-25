@@ -28,9 +28,5 @@ float4 main ( float2 tc : TEXCOORD0, float2 tcJ : TEXCOORD1 ) : SV_Target
 #endif	
 #endif
 
-#ifndef GBUFFER_OPTIMIZATION	
-	return float4(_N,1);
-#else
 	return float4( gbuf_pack_normal( _N ), 0, 0 );
-#endif
 }

@@ -14,17 +14,9 @@
 uniform float4              m_lmap        [2]        ;
 //float4 main( float4 tc : TEXCOORD0, float4 tcJ : TEXCOORD1 ) : SV_Target
 #ifdef MSAA_OPTIMIZATION
-#ifdef GBUFFER_OPTIMIZATION
 float4 main( p_volume I, float4 pos2d : SV_Position, uint iSample : SV_SAMPLEINDEX ) : SV_Target
 #else
-float4 main( p_volume I, uint iSample : SV_SAMPLEINDEX  ) : SV_Target
-#endif
-#else
-#ifdef GBUFFER_OPTIMIZATION
 float4 main( p_volume I, float4 pos2d : SV_Position ) : SV_Target
-#else
-float4 main( p_volume I ) : SV_Target
-#endif
 #endif
 {
 //	float4 _P               = tex2Dproj         (s_position,         tc);
@@ -34,10 +26,8 @@ float4 main( p_volume I ) : SV_Target
 
 	gbuffer_data gbd = gbuffer_load_data( GLD_P(tcProj, pos2d, ISAMPLE) );
 
-#ifdef	GBUFFER_OPTIMIZATION
-	//	Emulate virtual offset
+	// Emulate virtual offset
 	gbd.P += gbd.N*0.015f;
-#endif	//	GBUFFER_OPTIMIZATION
 
 	float4 _P				= float4( gbd.P, gbd.mtl );
 	float4 _N				= float4( gbd.N, gbd.hemi );

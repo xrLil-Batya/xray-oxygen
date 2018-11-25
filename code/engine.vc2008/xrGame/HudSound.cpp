@@ -169,6 +169,16 @@ void HUD_SOUND_COLLECTION::StopAllSounds()
 		HUD_SOUND_ITEM::StopSound	(it);
 }
 
+bool HUD_SOUND_COLLECTION::SoundIsFound(const char* SndName)
+{
+	auto it = std::find(m_sound_items.begin(), m_sound_items.end(), SndName);
+
+	if (it != m_sound_items.end())
+		return &*it;
+
+	return false;
+}
+
 void HUD_SOUND_COLLECTION::LoadSound(	LPCSTR section, 
 										LPCSTR line,
 										LPCSTR alias,

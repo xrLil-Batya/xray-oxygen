@@ -217,13 +217,13 @@ void CRenderDevice::on_idle()
 		vCameraDirection.set(_sin(angle), 0, _cos(angle));	vCameraDirection.normalize();
 		vCameraTop.set(0, 1, 0);
 		vCameraRight.crossproduct(vCameraTop, vCameraDirection);
-		BuildCamDir(vCameraPosition, vCameraDirection, vCameraTop, mView);
+		mView.BuildCamDir(vCameraPosition, vCameraDirection, vCameraTop);
 	}
 
 	// Matrices
-	mFullTransform = DirectX::XMMatrixMultiply(mView, mProject);
-	m_pRender->SetCacheXform(CastToGSCMatrix(mView), CastToGSCMatrix(mProject));
-	mInvFullTransform = CastToGSCMatrix(DirectX::XMMatrixInverse(0, mFullTransform));
+	mFullTransform.Multiply(mView, mProject);
+	m_pRender->SetCacheXform(mView, mProject);
+	mInvFullTransform = XRay::Math::CastToGSCMatrix(DirectX::XMMatrixInverse(0, mFullTransform));
 
 	vCameraPosition_saved = vCameraPosition;
 	mFullTransform_saved = mFullTransform;

@@ -224,8 +224,10 @@ public:
 	// API
 	IC	void						set_xform			(u32 ID, const Fmatrix& M_);
 	IC	void						set_xform_world		(const Fmatrix& M);
+	IC void set_xform_world(const Matrix4x4 & fM);
 	IC	void						set_xform_view		(const Fmatrix& M);
 	IC	void						set_xform_project	(const Fmatrix& M);
+	IC	void						set_xform_project	(const Matrix4x4& M) { set_xform_project(CastToGSCMatrix(M)); }
 	IC	const Fmatrix&				get_xform_world		();
 	IC	const Fmatrix&				get_xform_view		();
 	IC	const Fmatrix&				get_xform_project	();
@@ -328,6 +330,7 @@ public:
 
 	// constants - LPCSTR (slow)
 	ICF	void						set_c				(LPCSTR n, const Fmatrix& A)										{ if(ctable)	set_c	(&*ctable->get(n),A);		}
+	ICF	void						set_c				(LPCSTR n, const Matrix4x4& A)								{ if(ctable)	set_c	(&*ctable->get(n),CastToGSCMatrix(A));		}
 	ICF	void						set_c				(LPCSTR n, const Fvector4& A)										{ if(ctable)	set_c	(&*ctable->get(n),A);		}
 	ICF	void						set_c				(LPCSTR n, float x, float y, float z, float w)						{ if(ctable)	set_c	(&*ctable->get(n),x,y,z,w);	}
 	ICF	void						set_ca				(LPCSTR n, u32 e, const Fmatrix& A)									{ if(ctable)	set_ca	(&*ctable->get(n),e,A);		}

@@ -13,10 +13,9 @@
 #include "game_base.h"
 #include "../xrphysics/MathUtils.h"
 #include "player_hud.h"
-#include "../FrayBuildConfig.hpp"
 
 #ifdef DEBUG
-#	include "phdebug.h"
+#	include "PHDebug.h"
 #endif
 
 CWeaponMagazinedWGrenade::CWeaponMagazinedWGrenade(ESoundTypes eSoundType) : CWeaponMagazined(eSoundType)
@@ -536,22 +535,26 @@ void CWeaponMagazinedWGrenade::PlayAnimReload()
 
 	if(IsGrenadeLauncherAttached())
 	{
-#ifdef NEW_ANIMS_WPN
-   	    if(iAmmoElapsed == 0)
+		if (bMisfire)
+		{
+			if (AnimIsFound("anm_reload_misfire_w_gl"))
+				PlayHUDMotion("anm_reload_misfire_w_gl", true, this, GetState());
+		}
+		// [FX] GSC Design... I know that is a logical error  
+		else if (!AnimIsFound("anm_reload_empty_w_gl"))
 		{
 			PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
-		}	    
-	    else
+		}
+	    else if (iAmmoElapsed == 0)
 		{
 			PlayHUDMotion("anm_reload_empty_w_gl", TRUE, this, GetState());
 		}
-	    
-#else
-	    PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
-#endif
+		else
+		{
+			PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
+		}
 	}
-	else
-        inherited::PlayAnimReload();
+	else inherited::PlayAnimReload();
 }
 
 void CWeaponMagazinedWGrenade::PlayAnimIdle()
@@ -578,42 +581,29 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 				}
 				else if(pActor->AnyMove())
 				{
-					act_state = 2;
+					act_state = st.bCrouch ? 3 : 2;
 				}
-				#ifdef NEW_ANIMS_WPN
-				else if(pActor->AnyMove() && (st.bCrouch))
-				{
-					act_state = 3;
-				}
-				#endif
 			}
+			
+			switch (act_state)
+			{
+			case 0: PlayHUDMotion(m_bGrenadeMode ? "anm_idle_g"		   : "anm_idle_w_gl", FALSE, nullptr, GetState()); break;
+			case 1: PlayHUDMotion(m_bGrenadeMode ? "anm_idle_sprint_g" : "anm_idle_sprint_w_gl", TRUE, nullptr, GetState()); break;
+			case 2: PlayHUDMotion(m_bGrenadeMode ? "anm_idle_moving_g" : "anm_idle_moving_w_gl", TRUE, nullptr, GetState()); break;
+			case 3:
+			{
+				if (AnimIsFound(m_bGrenadeMode ? "anm_idle_crouch" : "anm_idle_crouch_w_gl"))
+					PlayHUDMotion(m_bGrenadeMode ? "anm_idle_crouch" : "anm_idle_crouch_w_gl", TRUE, NULL, GetState());
+				else
+					PlayHUDMotion(m_bGrenadeMode ? "anm_idle_g" : "anm_idle_w_gl", FALSE, nullptr, GetState()); break;
 
-			if(m_bGrenadeMode)
-			{
-				switch (act_state)
-				{
-				case 0: PlayHUDMotion("anm_idle_g", FALSE, nullptr, GetState()); break;
-				case 1: PlayHUDMotion("anm_idle_sprint_g", TRUE, nullptr, GetState()); break;
-				case 2: PlayHUDMotion("anm_idle_moving_g", TRUE, nullptr, GetState());	break;
-#ifdef NEW_ANIMS_WPN
-				case 3: PlayHUDMotion("anm_idle_moving_crouch_g", TRUE, NULL, GetState()); break;
-#endif
-				}
+				break;
 			}
-			else
-			{
-				switch (act_state)
-				{
-				case 0: PlayHUDMotion("anm_idle_w_gl", FALSE, nullptr, GetState()); break;
-				case 1: PlayHUDMotion("anm_idle_sprint_w_gl", TRUE, nullptr, GetState()); break;
-				case 2: PlayHUDMotion("anm_idle_moving_w_gl", TRUE, nullptr, GetState());	break;
-				}
 			}
 		
 		}
 	}
-	else
-		inherited::PlayAnimIdle();
+	else inherited::PlayAnimIdle();
 }
 
 void CWeaponMagazinedWGrenade::PlayAnimShoot()

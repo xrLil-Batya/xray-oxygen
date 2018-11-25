@@ -259,7 +259,7 @@ const char* RayCollider::ValidateSettings()
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool RayCollider::Collide(const Ray& world_ray, const Model& model, const Matrix4x4* world, uqword* cache)
+bool RayCollider::Collide(const Ray& world_ray, const Model& model, const IceMatrix4x4* world, uqword* cache)
 {
 	// Checkings
 	if(!Setup(&model))	return false;
@@ -334,7 +334,7 @@ bool RayCollider::Collide(const Ray& world_ray, const Model& model, const Matrix
  *	\warning	SCALE NOT SUPPORTED. The matrix must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL RayCollider::InitQuery(const Ray& world_ray, const Matrix4x4* world, uqword* face_id)
+BOOL RayCollider::InitQuery(const Ray& world_ray, const IceMatrix4x4* world, uqword* face_id)
 {
 	// Reset stats & contact status
 	Collider::InitQuery();
@@ -352,7 +352,7 @@ BOOL RayCollider::InitQuery(const Ray& world_ray, const Matrix4x4* world, uqword
 		Matrix3x3 InvWorld = *world;
 		mDir = InvWorld * world_ray.mDir;
 
-		Matrix4x4 World;
+		IceMatrix4x4 World;
 		InvertPRMatrix(World, *world);
 		mOrigin = world_ray.mOrig * World;
 	}

@@ -15,7 +15,7 @@ private:
 			Fvector p;
 	} g_position;
 
-	DirectX::XMMATRIX m_Camera;
+	Matrix4x4 m_Camera;
 
 	int			iCount;
 	IWriter*	file;

@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Contains code for 4x4 matrices.
- *	\file		IceMatrix4x4.h
+ *	\file		IceIceMatrix4x4.h
  *	\author		Pierre Terdiman
  *	\date		April, 4, 2000
  */
@@ -9,25 +9,25 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include Guard
-#ifndef __ICEMATRIX4X4_H__
-#define __ICEMATRIX4X4_H__
+#ifndef __ICEIceMatrix4x4_H__
+#define __ICEIceMatrix4x4_H__
 
 	// Forward declarations
 	class PRS;
 	class PR;
 
-	#define	MATRIX4X4_EPSILON		(1.0e-7f)
+	#define	IceMatrix4x4_EPSILON		(1.0e-7f)
 
-	class ICEMATHS_API Matrix4x4
+	class ICEMATHS_API IceMatrix4x4
 	{
 //				void	LUBackwardSubstitution( sdword *indx, float* b );
 //				void	LUDecomposition( sdword* indx, float* d );
 
 		public:
 		//! Empty constructor.
-		inline_						Matrix4x4()									{}
+		inline_						IceMatrix4x4()									{}
 		//! Constructor from 16 values
-		inline_						Matrix4x4(	float m00, float m01, float m02, float m03,
+		inline_						IceMatrix4x4(	float m00, float m01, float m02, float m03,
 												float m10, float m11, float m12, float m13,
 												float m20, float m21, float m22, float m23,
 												float m30, float m31, float m32, float m33)
@@ -38,12 +38,12 @@
 										m[3][0] = m30;	m[3][1] = m31;	m[3][2] = m32;	m[3][3] = m33;
 									}
 		//! Copy constructor
-		inline_						Matrix4x4(const Matrix4x4& mat)				{ CopyMemory(m, &mat.m, 16*sizeof(float));	}
+		inline_						IceMatrix4x4(const IceMatrix4x4& mat)				{ CopyMemory(m, &mat.m, 16*sizeof(float));	}
 		//! Destructor.
-		inline_						~Matrix4x4()								{}
+		inline_						~IceMatrix4x4()								{}
 
 		//! Assign values (rotation only)
-		inline_	Matrix4x4&			Set(	float m00, float m01, float m02,
+		inline_	IceMatrix4x4&			Set(	float m00, float m01, float m02,
 											float m10, float m11, float m12,
 											float m20, float m21, float m22)
 									{
@@ -53,7 +53,7 @@
 										return *this;
 									}
 		//! Assign values
-		inline_	Matrix4x4&			Set(	float m00, float m01, float m02, float m03,
+		inline_	IceMatrix4x4&			Set(	float m00, float m01, float m02, float m03,
 											float m10, float m11, float m12, float m13,
 											float m20, float m21, float m22, float m23,
 											float m30, float m31, float m32, float m33)
@@ -65,8 +65,8 @@
 										return *this;
 									}
 
-		//! Copy from a Matrix4x4
-		inline_	void				Copy(const Matrix4x4& source)				{ CopyMemory(m, source.m, 16*sizeof(float));	}
+		//! Copy from a IceMatrix4x4
+		inline_	void				Copy(const IceMatrix4x4& source)				{ CopyMemory(m, source.m, 16*sizeof(float));	}
 
 		// Row-column access
 		//! Returns a row.
@@ -125,9 +125,9 @@
 		//! Returns a row.
 		inline_	HPoint		GetRow(const uqword row)	const			{ return mRow[row];														}
 		//! Sets a row.
-		inline_	Matrix4x4&	SetRow(const uqword row, const HPoint& p)	{ mRow[row] = p;	return *this;										}
+		inline_	IceMatrix4x4&	SetRow(const uqword row, const HPoint& p)	{ mRow[row] = p;	return *this;										}
 		//! Sets a row.
-						Matrix4x4&	SetRow(const uqword row, const Point& p)
+						IceMatrix4x4&	SetRow(const uqword row, const Point& p)
 						{
 							m[row][0] = p.x;
 							m[row][1] = p.y;
@@ -146,7 +146,7 @@
 							return	Res;
 						}
 		//! Sets a column.
-						Matrix4x4&	SetCol(const uqword col, const HPoint& p)
+						IceMatrix4x4&	SetCol(const uqword col, const HPoint& p)
 						{
 							m[0][col] = p.x;
 							m[1][col] = p.y;
@@ -155,7 +155,7 @@
 							return	*this;
 						}
 		//! Sets a column.
-						Matrix4x4&	SetCol(const uqword col, const Point& p)
+						IceMatrix4x4&	SetCol(const uqword col, const Point& p)
 						{
 							m[0][col] = p.x;
 							m[1][col] = p.y;
@@ -218,7 +218,7 @@
 				void				RotZ(float angle)	{ float Cos = cosf(angle), Sin = sinf(angle); Identity(); m[0][0] = m[1][1] = Cos; m[1][0] = -Sin;	m[0][1] = Sin;	}
 
 		//! Makes a rotation matrix about an arbitrary axis
-				Matrix4x4&			Rot(float angle, Point& p1, Point& p2);
+				IceMatrix4x4&			Rot(float angle, Point& p1, Point& p2);
 
 		//! Transposes the matrix.
 				void				Transpose()
@@ -236,11 +236,11 @@
 		//! Computes the determinant of the matrix.
 				float				Determinant()	const;
 		//! Inverts the matrix. Determinant must be different from zero, else matrix can't be inverted.
-				Matrix4x4&			Invert();
+				IceMatrix4x4&			Invert();
 //				Matrix&	ComputeAxisMatrix(Point& axis, float angle);
 
 		// Cast operators
-		//! Casts a Matrix4x4 to a Matrix3x3.
+		//! Casts a IceMatrix4x4 to a Matrix3x3.
 		inline_	operator			Matrix3x3()	const
 									{
 										return Matrix3x3(
@@ -248,36 +248,36 @@
 										m[1][0],	m[1][1],	m[1][2],
 										m[2][0],	m[2][1],	m[2][2]);
 									}
-		//! Casts a Matrix4x4 to a Quat.
+		//! Casts a IceMatrix4x4 to a Quat.
 				operator			Quat()	const;
-		//! Casts a Matrix4x4 to a PR.
+		//! Casts a IceMatrix4x4 to a PR.
 				operator			PR()	const;
 
 		// Arithmetic operators
-		//! Operator for Matrix4x4 Plus = Matrix4x4 + Matrix4x4;
-		inline_	Matrix4x4			operator+(const Matrix4x4& mat)	const
+		//! Operator for IceMatrix4x4 Plus = IceMatrix4x4 + IceMatrix4x4;
+		inline_	IceMatrix4x4			operator+(const IceMatrix4x4& mat)	const
 									{
-										return Matrix4x4(
+										return IceMatrix4x4(
 										m[0][0]+mat.m[0][0], m[0][1]+mat.m[0][1], m[0][2]+mat.m[0][2], m[0][3]+mat.m[0][3], 
 										m[1][0]+mat.m[1][0], m[1][1]+mat.m[1][1], m[1][2]+mat.m[1][2], m[1][3]+mat.m[1][3], 
 										m[2][0]+mat.m[2][0], m[2][1]+mat.m[2][1], m[2][2]+mat.m[2][2], m[2][3]+mat.m[2][3], 
 										m[3][0]+mat.m[3][0], m[3][1]+mat.m[3][1], m[3][2]+mat.m[3][2], m[3][3]+mat.m[3][3]);
 									}
 
-		//! Operator for Matrix4x4 Minus = Matrix4x4 - Matrix4x4;
-		inline_	Matrix4x4			operator-(const Matrix4x4& mat)	const
+		//! Operator for IceMatrix4x4 Minus = IceMatrix4x4 - IceMatrix4x4;
+		inline_	IceMatrix4x4			operator-(const IceMatrix4x4& mat)	const
 									{
-										return Matrix4x4(
+										return IceMatrix4x4(
 										m[0][0]-mat.m[0][0], m[0][1]-mat.m[0][1], m[0][2]-mat.m[0][2], m[0][3]-mat.m[0][3], 
 										m[1][0]-mat.m[1][0], m[1][1]-mat.m[1][1], m[1][2]-mat.m[1][2], m[1][3]-mat.m[1][3], 
 										m[2][0]-mat.m[2][0], m[2][1]-mat.m[2][1], m[2][2]-mat.m[2][2], m[2][3]-mat.m[2][3], 
 										m[3][0]-mat.m[3][0], m[3][1]-mat.m[3][1], m[3][2]-mat.m[3][2], m[3][3]-mat.m[3][3]);
 									}
 
-		//! Operator for Matrix4x4 Mul = Matrix4x4 * Matrix4x4;
-		inline_	Matrix4x4			operator*(const Matrix4x4& mat)	const
+		//! Operator for IceMatrix4x4 Mul = IceMatrix4x4 * IceMatrix4x4;
+		inline_	IceMatrix4x4			operator*(const IceMatrix4x4& mat)	const
 									{
-										return Matrix4x4(
+										return IceMatrix4x4(
 										m[0][0]*mat.m[0][0] + m[0][1]*mat.m[1][0] + m[0][2]*mat.m[2][0] + m[0][3]*mat.m[3][0],
 										m[0][0]*mat.m[0][1] + m[0][1]*mat.m[1][1] + m[0][2]*mat.m[2][1] + m[0][3]*mat.m[3][1],
 										m[0][0]*mat.m[0][2] + m[0][1]*mat.m[1][2] + m[0][2]*mat.m[2][2] + m[0][3]*mat.m[3][2],
@@ -299,10 +299,10 @@
 										m[3][0]*mat.m[0][3] + m[3][1]*mat.m[1][3] + m[3][2]*mat.m[2][3] + m[3][3]*mat.m[3][3]);
 									}
 
-		//! Operator for HPoint Mul = Matrix4x4 * HPoint;
+		//! Operator for HPoint Mul = IceMatrix4x4 * HPoint;
 		inline_	HPoint				operator*(const HPoint& v)		const	{ return HPoint(GetRow(0)|v, GetRow(1)|v, GetRow(2)|v, GetRow(3)|v); }
 
-		//! Operator for Point Mul = Matrix4x4 * Point;
+		//! Operator for Point Mul = IceMatrix4x4 * Point;
 		inline_	Point				operator*(const Point& v)		const
 									{
 										return Point(	m[0][0]*v.x + m[0][1]*v.y + m[0][2]*v.z + m[0][3],
@@ -310,50 +310,50 @@
 														m[2][0]*v.x + m[2][1]*v.y + m[2][2]*v.z + m[2][3]	);
 									}
 
-		//! Operator for Matrix4x4 Scale = Matrix4x4 * float;
-		inline_	Matrix4x4			operator*(float s)				const
+		//! Operator for IceMatrix4x4 Scale = IceMatrix4x4 * float;
+		inline_	IceMatrix4x4			operator*(float s)				const
 									{
-										return Matrix4x4(
+										return IceMatrix4x4(
 										m[0][0]*s,	m[0][1]*s,	m[0][2]*s,	m[0][3]*s,
 										m[1][0]*s,	m[1][1]*s,	m[1][2]*s,	m[1][3]*s,
 										m[2][0]*s,	m[2][1]*s,	m[2][2]*s,	m[2][3]*s,
 										m[3][0]*s,	m[3][1]*s,	m[3][2]*s,	m[3][3]*s);
 									}
 
-		//! Operator for Matrix4x4 Scale = float * Matrix4x4;
-		inline_	friend Matrix4x4	operator*(float s, const Matrix4x4& mat)
+		//! Operator for IceMatrix4x4 Scale = float * IceMatrix4x4;
+		inline_	friend IceMatrix4x4	operator*(float s, const IceMatrix4x4& mat)
 									{
-										return Matrix4x4(
+										return IceMatrix4x4(
 										s*mat.m[0][0],	s*mat.m[0][1],	s*mat.m[0][2],	s*mat.m[0][3],
 										s*mat.m[1][0],	s*mat.m[1][1],	s*mat.m[1][2],	s*mat.m[1][3],
 										s*mat.m[2][0],	s*mat.m[2][1],	s*mat.m[2][2],	s*mat.m[2][3],
 										s*mat.m[3][0],	s*mat.m[3][1],	s*mat.m[3][2],	s*mat.m[3][3]);
 									}
 
-		//! Operator for Matrix4x4 Div = Matrix4x4 / float;
-		inline_	Matrix4x4			operator/(float s)				const
+		//! Operator for IceMatrix4x4 Div = IceMatrix4x4 / float;
+		inline_	IceMatrix4x4			operator/(float s)				const
 									{
 										if(s) s = 1.0f / s;
 
-										return Matrix4x4(
+										return IceMatrix4x4(
 										m[0][0]*s,	m[0][1]*s,	m[0][2]*s,	m[0][3]*s,
 										m[1][0]*s,	m[1][1]*s,	m[1][2]*s,	m[1][3]*s,
 										m[2][0]*s,	m[2][1]*s,	m[2][2]*s,	m[2][3]*s,
 										m[3][0]*s,	m[3][1]*s,	m[3][2]*s,	m[3][3]*s);
 									}
 
-		//! Operator for Matrix4x4 Div = float / Matrix4x4;
-		inline_	friend Matrix4x4	operator/(float s, const Matrix4x4& mat)
+		//! Operator for IceMatrix4x4 Div = float / IceMatrix4x4;
+		inline_	friend IceMatrix4x4	operator/(float s, const IceMatrix4x4& mat)
 									{
-										return Matrix4x4(
+										return IceMatrix4x4(
 										s/mat.m[0][0],	s/mat.m[0][1],	s/mat.m[0][2],	s/mat.m[0][3],
 										s/mat.m[1][0],	s/mat.m[1][1],	s/mat.m[1][2],	s/mat.m[1][3],
 										s/mat.m[2][0],	s/mat.m[2][1],	s/mat.m[2][2],	s/mat.m[2][3],
 										s/mat.m[3][0],	s/mat.m[3][1],	s/mat.m[3][2],	s/mat.m[3][3]);
 									}
 
-		//! Operator for Matrix4x4 += Matrix4x4;
-		inline_	Matrix4x4&			operator+=(const Matrix4x4& mat)
+		//! Operator for IceMatrix4x4 += IceMatrix4x4;
+		inline_	IceMatrix4x4&			operator+=(const IceMatrix4x4& mat)
 									{
 										m[0][0]+=mat.m[0][0];	m[0][1]+=mat.m[0][1];	m[0][2]+=mat.m[0][2];	m[0][3]+=mat.m[0][3];
 										m[1][0]+=mat.m[1][0];	m[1][1]+=mat.m[1][1];	m[1][2]+=mat.m[1][2];	m[1][3]+=mat.m[1][3];
@@ -362,8 +362,8 @@
 										return	*this;
 									}
 
-		//! Operator for Matrix4x4 -= Matrix4x4;
-		inline_	Matrix4x4&			operator-=(const Matrix4x4& mat)
+		//! Operator for IceMatrix4x4 -= IceMatrix4x4;
+		inline_	IceMatrix4x4&			operator-=(const IceMatrix4x4& mat)
 									{
 										m[0][0]-=mat.m[0][0];	m[0][1]-=mat.m[0][1];	m[0][2]-=mat.m[0][2];	m[0][3]-=mat.m[0][3];
 										m[1][0]-=mat.m[1][0];	m[1][1]-=mat.m[1][1];	m[1][2]-=mat.m[1][2];	m[1][3]-=mat.m[1][3];
@@ -372,8 +372,8 @@
 										return	*this;
 									}
 
-		//! Operator for Matrix4x4 *= Matrix4x4;
-				Matrix4x4&			operator*=(const Matrix4x4& mat)
+		//! Operator for IceMatrix4x4 *= IceMatrix4x4;
+				IceMatrix4x4&			operator*=(const IceMatrix4x4& mat)
 									{
 										HPoint TempRow;
 
@@ -404,8 +404,8 @@
 										return	*this;
 									}
 
-		//! Operator for Matrix4x4 *= float;
-		inline_	Matrix4x4&		operator*=(float s)
+		//! Operator for IceMatrix4x4 *= float;
+		inline_	IceMatrix4x4&		operator*=(float s)
 								{
 									m[0][0]*=s;	m[0][1]*=s;	m[0][2]*=s;	m[0][3]*=s;
 									m[1][0]*=s;	m[1][1]*=s;	m[1][2]*=s;	m[1][3]*=s;
@@ -414,8 +414,8 @@
 									return	*this;
 								}
 
-		//! Operator for Matrix4x4 /= float;
-		inline_	Matrix4x4&		operator/=(float s)
+		//! Operator for IceMatrix4x4 /= float;
+		inline_	IceMatrix4x4&		operator/=(float s)
 								{
 									if(s)  s = 1.0f / s;
 									m[0][0]*=s;	m[0][1]*=s;	m[0][2]*=s;	m[0][3]*=s;
@@ -434,7 +434,7 @@
 	};
 
 	//! Quickly rotates & translates a vector, using the 4x3 part of a 4x4 matrix
-	inline_ void TransformPoint4x3(Point& dest, const Point& source, const Matrix4x4& rot)
+	inline_ void TransformPoint4x3(Point& dest, const Point& source, const IceMatrix4x4& rot)
 	{
 		dest.x = rot.m[3][0] + source.x * rot.m[0][0] + source.y * rot.m[1][0] + source.z * rot.m[2][0];
 		dest.y = rot.m[3][1] + source.x * rot.m[0][1] + source.y * rot.m[1][1] + source.z * rot.m[2][1];
@@ -442,14 +442,14 @@
 	}
 
 	//! Quickly rotates a vector, using the 3x3 part of a 4x4 matrix
-	inline_ void TransformPoint3x3(Point& dest, const Point& source, const Matrix4x4& rot)
+	inline_ void TransformPoint3x3(Point& dest, const Point& source, const IceMatrix4x4& rot)
 	{
 		dest.x = source.x * rot.m[0][0] + source.y * rot.m[1][0] + source.z * rot.m[2][0];
 		dest.y = source.x * rot.m[0][1] + source.y * rot.m[1][1] + source.z * rot.m[2][1];
 		dest.z = source.x * rot.m[0][2] + source.y * rot.m[1][2] + source.z * rot.m[2][2];
 	}
 
-	ICEMATHS_API void InvertPRMatrix(Matrix4x4& dest, const Matrix4x4& src);
+	ICEMATHS_API void InvertPRMatrix(IceMatrix4x4& dest, const IceMatrix4x4& src);
 
-#endif // __ICEMATRIX4X4_H__
+#endif // __ICEIceMatrix4x4_H__
 

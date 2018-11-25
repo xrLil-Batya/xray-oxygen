@@ -22,7 +22,6 @@
 #include <locale.h>
 #include "DynamicSplash.h"
 #include "DiscordRichPresense.h"
-#include <tlhelp32.h>
 
 #include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
@@ -158,6 +157,9 @@ void execUserScript()
 
 void Startup()
 {
+	if (Device.editor())
+		bEngineloaded = true;
+
 	splashScreen.SetProgressPosition(60, "Init sound");
 	InitSound1		();
 	splashScreen.SetProgressPosition(65, "Init user scripts");
@@ -192,7 +194,7 @@ void Startup()
 	bEngineloaded = true;
 	Device.UpdateWindowPropStyle();
 	splashScreen.HideSplash();
-	Device.Create(false);
+	Device.Create(Device.editor());
 
 	pApp = xr_new<CApplication>();
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);
@@ -350,38 +352,6 @@ extern "C"
 void ENGINE_API RunApplication(LPCSTR commandLine)
 {
 	gMainThreadId = GetCurrentThreadId();
-	
-	PROCESSENTRY32W processInfo = { NULL };
-	processInfo.dwSize = sizeof(PROCESSENTRY32W);
-	DWORD CurrentProcessId = GetCurrentProcessId();
-	DWORD CustomProcessId = 0;
-	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	HANDLE hProcess = NULL;
-	WCHAR szBuf[MAX_PATH] = { NULL };
-	BOOL bSearch = Process32FirstW(hSnapshot, &processInfo);
-	BOOL isReady = FALSE;
-
-	while (bSearch)
-	{
-		int iCompareString = wcsncmp(L"xrPlay.exe", processInfo.szExeFile, MAX_PATH);
-
-		// we found our second process. Show our parent process window and terminate this.
-		if (!iCompareString && processInfo.th32ProcessID != CurrentProcessId)
-		{
-			HWND hWindow = FindWindowA("_XRAY_1.7", "X-Ray Oxygen");
-
-			if (hWindow)
-			{
-				ShowWindow(hWindow, 0);
-				ExitProcess(0x2);
-			}
-		}
-
-		// search next process
-		bSearch = Process32NextW(hSnapshot, &processInfo);
-	}
-
-	CloseHandle(hSnapshot);
 
 	// Title window
 	HWND logoInsertPos = HWND_TOPMOST;

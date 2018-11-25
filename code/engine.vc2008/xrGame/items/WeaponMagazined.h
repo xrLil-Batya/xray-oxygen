@@ -3,16 +3,12 @@
 #include "items/Weapon.h"
 #include "hudsound.h"
 #include "ai_sounds.h"
-#include "../FrayBuildConfig.hpp"
 
 class ENGINE_API CMotionDef;
 
 //размер очереди считается бесконечность
 //заканчиваем стрельбу, только, если кончились патроны
 #define WEAPON_ININITE_QUEUE -1
-
-
-//#define NEW_ANIMS_WPN
 
 class CWeaponMagazined: public CWeapon
 {
@@ -33,12 +29,10 @@ protected:
 	ESoundTypes		m_eSoundShot;
 	ESoundTypes		m_eSoundEmptyClick;
 	ESoundTypes		m_eSoundReload;
-	
-	#ifdef NEW_ANIMS_WPN
+
 	ESoundTypes		m_eSoundReloadEmpty;
 	ESoundTypes		m_eSoundReloadFast;
 	ESoundTypes		m_eSoundReloadBoltOnly;
-	#endif
 
 	bool			m_sounds_enabled;
 	// General
