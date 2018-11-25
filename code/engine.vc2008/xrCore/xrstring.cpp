@@ -220,29 +220,33 @@ u32			str_container::stat_economy()
 str_container::~str_container()
 {
     clean();
-    //dump ();
     xr_delete(impl);
 }
 
-
 //xr_string class
-
-xr_vector<xr_string> xr_string::Split(LPCSTR Str, size_t StrSize, char splitCh)
+xr_vector<xr_string> xr_string::Split(LPCSTR pStr, size_t StrSize, char splitCh)
 {
-    xr_vector<xr_string> Result;
+	xr_vector<xr_string> Result;
+	xr_string temp_str = pStr,
+			  Str      = pStr;
 
-    size_t SubStrBeginCursor = 0;
-    for (size_t StrCursor = 0; StrCursor < StrSize; ++StrCursor)
-    {
-        if (Str[StrCursor] == splitCh)
-        {
-            //Don't create empty string
-            if ((StrCursor - 1 - SubStrBeginCursor) > 0)
-            {
-                Result.emplace_back(&Str[SubStrBeginCursor], (int)StrCursor - 1);
-            }
-        }
-    }
+	size_t SubStrBeginCursor = 0;
+	size_t Len = 0;
+
+	for (size_t StrCursor = 0; StrCursor < StrSize; ++StrCursor)
+	{
+		if (Str[StrCursor] == splitCh)
+		{
+			//Don't create empty string
+			if ((StrCursor - 1 - SubStrBeginCursor) > 0)
+			{
+				Len = StrCursor - 1 - SubStrBeginCursor;
+				temp_str = Str.substr(SubStrBeginCursor, Len);
+				Result.push_back(temp_str);
+				SubStrBeginCursor = StrCursor + 1;
+			}
+		}
+	}
 
     return Result;
 }
@@ -391,7 +395,6 @@ bool xr_string::StartWith(LPCSTR Str, size_t Size) const
 
     return true;
 }
-
 
 xr_string xr_string::ToString(int Value)
 {
