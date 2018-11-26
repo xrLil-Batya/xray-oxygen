@@ -82,10 +82,10 @@ Frustum::Frustum()
 Frustum::Frustum(const Matrix4x4* matrix)
 {
 	//  build a view frustum based on the current view & projection matrices...
-	DirectX::XMVECTOR column4 = { (matrix->x.m128_f32[4], matrix->y.m128_f32[4], matrix->z.m128_f32[4], matrix->w.m128_f32[4]) };
-	DirectX::XMVECTOR column1 = { (matrix->x.m128_f32[1], matrix->y.m128_f32[1], matrix->z.m128_f32[1], matrix->w.m128_f32[1]) };
-	DirectX::XMVECTOR column2 = { (matrix->x.m128_f32[2], matrix->y.m128_f32[2], matrix->z.m128_f32[2], matrix->w.m128_f32[2]) };
-	DirectX::XMVECTOR column3 = { (matrix->x.m128_f32[3], matrix->y.m128_f32[3], matrix->z.m128_f32[3], matrix->w.m128_f32[3]) };
+	DirectX::XMVECTOR column4 = { matrix->Matrix.r[0].m128_f32[3], matrix->Matrix.r[1].m128_f32[3], matrix->Matrix.r[2].m128_f32[3], matrix->Matrix.r[3].m128_f32[3] };
+	DirectX::XMVECTOR column1 = { matrix->Matrix.r[0].m128_f32[0], matrix->Matrix.r[1].m128_f32[0], matrix->Matrix.r[2].m128_f32[0], matrix->Matrix.r[3].m128_f32[0] };
+	DirectX::XMVECTOR column2 = { matrix->Matrix.r[0].m128_f32[1], matrix->Matrix.r[1].m128_f32[1], matrix->Matrix.r[2].m128_f32[1], matrix->Matrix.r[3].m128_f32[1] };
+	DirectX::XMVECTOR column3 = { matrix->Matrix.r[0].m128_f32[2], matrix->Matrix.r[1].m128_f32[2], matrix->Matrix.r[2].m128_f32[2], matrix->Matrix.r[3].m128_f32[2] };
 
 	DirectX::XMVECTOR planes[6];
 	planes[0] = { column4.m128_f32[0] - column1.m128_f32[0], column4.m128_f32[1] - column1.m128_f32[1], column4.m128_f32[2] - column1.m128_f32[2], column4.m128_f32[3] - column1.m128_f32[3] };  // left
@@ -554,10 +554,10 @@ inline Fvector3 wform(Fmatrix& m, Fvector3 const& v)
 inline Fvector3 wform(Matrix4x4& m, Fvector3 const& v)
 {
 	Fvector4 r;
-	r.x = v.x*m.x.m128_f32[0] + v.y*m.y.m128_f32[0] + v.z*m.z.m128_f32[0] + m.w.m128_f32[0];
-	r.y = v.x*m.x.m128_f32[1] + v.y*m.y.m128_f32[1] + v.z*m.z.m128_f32[1] + m.w.m128_f32[1];
-	r.z = v.x*m.x.m128_f32[2] + v.y*m.y.m128_f32[2] + v.z*m.z.m128_f32[2] + m.w.m128_f32[2];
-	r.w = v.x*m.x.m128_f32[3] + v.y*m.y.m128_f32[3] + v.z*m.z.m128_f32[3] + m.w.m128_f32[3];
+	r.x = v.x*m.x[0] + v.y*m.y[0] + v.z*m.z[0] + m.w[0];
+	r.y = v.x*m.x[1] + v.y*m.y[1] + v.z*m.z[1] + m.w[1];
+	r.z = v.x*m.x[2] + v.y*m.y[2] + v.z*m.z[2] + m.w[2];
+	r.w = v.x*m.x[3] + v.y*m.y[3] + v.z*m.z[3] + m.w[3];
 	
 	float invW = 1.0f / r.w;
 	Fvector3	r3 = { r.x*invW, r.y*invW, r.z*invW };

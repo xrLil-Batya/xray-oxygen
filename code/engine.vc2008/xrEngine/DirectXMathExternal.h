@@ -51,15 +51,17 @@ namespace XRay
 					return Vect;
 				};
 
-				float operator[](size_t id)
+				float& operator[](size_t id)
 				{
 					return Vect.m128_f32[id];
 				}
+
 
 				void operator=(DirectX::XMVECTOR &VectObj)
 				{
 					Vect = VectObj;
 				}
+
 			};
 
 		protected:
@@ -133,11 +135,15 @@ namespace XRay
 			inline void BuildXForm(Fbox &B);
 
 		public:
-			DirectX::XMMATRIX Matrix;
-			IntricsVect x;
-			IntricsVect y;
-			IntricsVect z;
-			IntricsVect w;
+			union
+			{
+				IntricsVect x;
+				IntricsVect y;
+				IntricsVect z;
+				IntricsVect w;
+
+				DirectX::XMMATRIX Matrix;
+			};
 						
 		public:
 			inline operator Fmatrix () { return CastToGSCMatrix(Matrix); }

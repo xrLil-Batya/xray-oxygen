@@ -46,7 +46,7 @@ void CRender::render_sun()
 		float _far_ = min(ps_r_sun_far, Environment().CurrentEnv->far_plane);
 		ex_project.BuildProj(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR, _far_);
 		ex_full = DirectX::XMMatrixMultiply(Device.mView, ex_project);
-		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
+		ex_full_inverse = DirectX::XMMatrixInverse(nullptr, ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -69,22 +69,22 @@ void CRender::render_sun()
 				hull.points.push_back(xf);
 			}
 
-			for (int plane = 0; plane < 6; plane++)
+			for (auto & plane : facetable)
 			{
-				hull.polys.push_back(DumbConvexVolume<false>::_poly());
-				for (int pt = 0; pt < 4; pt++)
-					hull.polys.back().points.push_back(facetable[plane][pt]);
+				hull.polys.emplace_back();
+				for (int pt : plane)
+					hull.polys.back().points.push_back(pt);
 			}
 		}
 		hull.compute_caster_model(cull_planes, fuckingsun->direction);
 
 		// Search for default sector - assume "default" or "outdoor" sector is the largest one
 		//. hack: need to know real outdoor sector
-		CSector*	largest_sector = 0;
+		CSector*	largest_sector = nullptr;
 		float		largest_sector_vol = 0;
-		for (u32 s = 0; s < Sectors.size(); s++)
+		for (auto & Sector : Sectors)
 		{
-			CSector*			S = (CSector*)Sectors[s];
+			CSector*			S = (CSector*)Sector;
 			dxRender_Visual*		V = S->root();
 			float				vol = V->vis.box.getvolume();
 			if (vol > largest_sector_vol) {
@@ -99,8 +99,8 @@ void CRender::render_sun()
 
 		// Create frustum for query
 		cull_frustum._clear();
-		for (u32 p = 0; p < cull_planes.size(); p++)
-			cull_frustum._add(cull_planes[p]);
+		for (auto & cull_plane : cull_planes)
+			cull_frustum._add(cull_plane);
 
 		// Create approximate ortho-xform
 		// view: auto find 'up' and 'right' vectors
@@ -153,9 +153,9 @@ void CRender::render_sun()
 	// IGNORE PORTALS
 	if (ps_r_flags.test(R_FLAG_SUN_IGNORE_PORTALS))
 	{
-		for (u32 s = 0; s < Sectors.size(); s++)
+		for (auto & Sector : Sectors)
 		{
-			CSector*			S = (CSector*)Sectors[s];
+			CSector*			S = (CSector*)Sector;
 			dxRender_Visual*		root = S->root();
 
 			set_Frustum(&cull_frustum);
@@ -170,9 +170,9 @@ void CRender::render_sun()
 	//  these are the limits specified by the physical camera
 	//  gamma is the "tilt angle" between the light and the view direction.
 	float m_fCosGamma = 
-		m_lightDir.x * Device.mView.x.m128_f32[2] +
-		m_lightDir.y * Device.mView.y.m128_f32[2] +
-		m_lightDir.z * Device.mView.z.m128_f32[2];
+		m_lightDir.x * Device.mView.x[2] +
+		m_lightDir.y * Device.mView.y[2] +
+		m_lightDir.z * Device.mView.z[2];
 
 	float m_fTSM_Delta = ps_r_sun_tsm_projection;
 
@@ -317,14 +317,14 @@ void CRender::render_sun()
 		float max_slope = -1e32f;
 		float min_slope = 1e32f;
 
-		for (int i = 0; i < sizeof(frustumPnts) / sizeof(D3DXVECTOR3); i++)
+		for (DirectX::XMFLOAT3 & frustumPnt : frustumPnts)
 		{
-			D3DXVECTOR2 tmp(frustumPnts[i].x*x_scale, frustumPnts[i].y*y_scale);
+			D3DXVECTOR2 tmp(frustumPnt.x*x_scale, frustumPnt.y*y_scale);
 			float x_dist = tmp.x - projectionPtQ.x;
 			if (!(ALMOST_ZERO(tmp.y) || ALMOST_ZERO(x_dist)))
 			{
-				max_slope = max(max_slope, tmp.y / x_dist);
-				min_slope = min(min_slope, tmp.y / x_dist);
+				max_slope = std::max(max_slope, tmp.y / x_dist);
+				min_slope = std::min(min_slope, tmp.y / x_dist);
 			}
 		}
 
@@ -391,7 +391,7 @@ void CRender::render_sun()
 		for (int p = 0; p < view_clipper.frustum.p_count; p++)
 		{
 			Fplane&		P = view_clipper.frustum.planes[p];
-			view_clipper.planes.push_back(D3DXPLANE(P.n.x, P.n.y, P.n.z, P.d));
+			view_clipper.planes.emplace_back(P.n.x, P.n.y, P.n.z, P.d);
 		}
 
 		// 
@@ -400,10 +400,10 @@ void CRender::render_sun()
 
 		// casters
 		b_casters.invalidate();
-		for (u32 c = 0; c < s_casters.size(); c++) {
+		for (auto & s_caster : s_casters) {
 			for (int e = 0; e < 8; e++)
 			{
-				s_casters[c].getpoint(e, pt);
+				s_caster.getpoint(e, pt);
 				pt = wform(xform, pt);
 				b_casters.modify(pt);
 			}
@@ -417,11 +417,11 @@ void CRender::render_sun()
 			x_project.build_projection(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, ps_r_sun_near, ps_r_sun_near + tweak_guaranteed_range);
 			x_project.build_projection(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR, ps_r_sun_near + tweak_guaranteed_range);
 			x_full.mul(x_project, CastToGSCMatrix(Device.mView));
-			D3DXMatrixInverse((D3DXMATRIX*)&x_full_inverse, 0, (D3DXMATRIX*)&x_full);
+			D3DXMatrixInverse((D3DXMATRIX*)&x_full_inverse, nullptr, (D3DXMATRIX*)&x_full);
 		}
-		for (int e = 0; e < 8; e++)
+		for (Fvector3 corner : corners)
 		{
-			pt = wform(x_full_inverse, corners[e]);	// world space
+			pt = wform(x_full_inverse, corner);	// world space
 			pt = wform(xform, pt);						// trapezoid space
 			b_receivers.modify(pt);
 		}
@@ -463,8 +463,8 @@ void CRender::render_sun()
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
 	{
-		bool	bNormal = mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-		bool	bSpecial = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool	bNormal = !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+		bool	bSpecial = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		if (bNormal || bSpecial) {
 			Target->phase_smap_direct(fuckingsun, SE_SUN_FAR);
 			RCache.set_xform_world(Fidentity);
@@ -507,7 +507,7 @@ void CRender::render_sun_near()
 	{
 		ex_project.BuildProj(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR, ps_r_sun_near);
 		ex_full = DirectX::XMMatrixMultiply(Device.mView, ex_project);
-		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
+		ex_full_inverse = DirectX::XMMatrixInverse(nullptr, ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -524,19 +524,19 @@ void CRender::render_sun_near()
 #ifdef	_DEBUG
 		typedef		DumbConvexVolume<true>	t_volume;
 #else
-		typedef		DumbConvexVolume<false>	t_volume;
+		using t_volume =		DumbConvexVolume<false>;
 #endif
 		t_volume					hull;
 		{
 			hull.points.reserve(9);
-			for (int p = 0; p < 8; p++) {
-				Fvector3				xf = wform(fullxform_inv, corners[p]);
+			for (Fvector3 corner : corners) {
+				Fvector3				xf = wform(fullxform_inv, corner);
 				hull.points.push_back(xf);
 			}
-			for (int plane = 0; plane < 6; plane++) {
-				hull.polys.push_back(t_volume::_poly());
-				for (int pt = 0; pt < 4; pt++)
-					hull.polys.back().points.push_back(facetable[plane][pt]);
+			for (auto & plane : facetable) {
+				hull.polys.emplace_back();
+				for (int pt : plane)
+					hull.polys.back().points.push_back(pt);
 			}
 		}
 		hull.compute_caster_model(cull_planes, fuckingsun->direction);
@@ -547,11 +547,11 @@ void CRender::render_sun_near()
 
 		// Search for default sector - assume "default" or "outdoor" sector is the largest one
 		//. hack: need to know real outdoor sector
-		CSector*	largest_sector = 0;
+		CSector*	largest_sector = nullptr;
 		float		largest_sector_vol = 0;
-		for (u32 s = 0; s < Sectors.size(); s++)
+		for (auto & Sector : Sectors)
 		{
-			CSector*			S = (CSector*)Sectors[s];
+			CSector*			S = (CSector*)Sector;
 			dxRender_Visual*		V = S->root();
 			float				vol = V->vis.box.getvolume();
 			if (vol > largest_sector_vol) {
@@ -566,8 +566,8 @@ void CRender::render_sun_near()
 
 		// Create frustum for query
 		cull_frustum._clear();
-		for (u32 p = 0; p < cull_planes.size(); p++)
-			cull_frustum._add(cull_planes[p]);
+		for (auto & cull_plane : cull_planes)
+			cull_frustum._add(cull_plane);
 
 		// Create approximate ortho-xform
 		// view: auto find 'up' and 'right' vectors
@@ -601,7 +601,7 @@ void CRender::render_sun_near()
 			view_dim / 2.f,	view_dim / 2.f,		0.0f,		1.0f
 		};
 		Fmatrix				m_viewport_inv;
-		D3DXMatrixInverse((D3DXMATRIX*)&m_viewport_inv, 0, (D3DXMATRIX*)&m_viewport);
+		D3DXMatrixInverse((D3DXMATRIX*)&m_viewport_inv, nullptr, (D3DXMATRIX*)&m_viewport);
 
 		// snap view-position to pixel
 		cull_xform.mul(mdir_Project, mdir_View);
@@ -634,7 +634,7 @@ void CRender::render_sun_near()
 
 	// Begin SMAP-render
 	{
-		bool	bSpecialFull = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool	bSpecialFull = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		VERIFY(!bSpecialFull);
 		HOM.Disable();
 		phase = PHASE_SMAP;
@@ -651,8 +651,8 @@ void CRender::render_sun_near()
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
 	{
-		bool	bNormal = mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-		bool	bSpecial = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool	bNormal = !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+		bool	bSpecial = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		if (bNormal || bSpecial) {
 			Target->phase_smap_direct(fuckingsun, SE_SUN_NEAR);
 			RCache.set_xform_world(Fidentity);
@@ -734,7 +734,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 	{
 		ex_project = Device.mProject;
 		ex_full = DirectX::XMMatrixMultiply(Device.mView, ex_project);
-		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
+		ex_full_inverse = DirectX::XMMatrixInverse(nullptr, ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -751,17 +751,17 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 #ifdef	_DEBUG
 		typedef		DumbConvexVolume<true>	t_volume;
 #else
-		typedef		DumbConvexVolume<false>	t_volume;
+		using t_volume =		DumbConvexVolume<false>;
 #endif
 
 		//******************************* Need to be placed after cuboid built **************************
 		// Search for default sector - assume "default" or "outdoor" sector is the largest one
 		//. hack: need to know real outdoor sector
-		CSector*	largest_sector = 0;
+		CSector*	largest_sector = nullptr;
 		float		largest_sector_vol = 0;
-		for (u32 s = 0; s < Sectors.size(); s++)
+		for (auto & Sector : Sectors)
 		{
-			CSector*			S = (CSector*)Sectors[s];
+			CSector*			S = (CSector*)Sector;
 			dxRender_Visual*		V = S->root();
 			float				vol = V->vis.box.getvolume();
 			if (vol > largest_sector_vol) {
@@ -791,7 +791,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 #ifdef	_DEBUG
 		typedef		FixedConvexVolume<true>		t_cuboid;
 #else
-		typedef		FixedConvexVolume<false>	t_cuboid;
+		using t_cuboid =		FixedConvexVolume<false>;
 #endif
 
 		t_cuboid light_cuboid;
@@ -807,7 +807,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 					edge_vec.sub(near_p);
 					edge_vec.normalize();
 
-					light_cuboid.view_frustum_rays.push_back(sun::ray(near_p, edge_vec));
+					light_cuboid.view_frustum_rays.emplace_back(near_p, edge_vec);
 				}
 			}
 			else
@@ -836,7 +836,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			view_dim / 2.f,	view_dim / 2.f,		0.0f,		1.0f
 		};
 		Fmatrix				m_viewport_inv;
-		D3DXMatrixInverse((D3DXMATRIX*)&m_viewport_inv, 0, (D3DXMATRIX*)&m_viewport);
+		D3DXMatrixInverse((D3DXMATRIX*)&m_viewport_inv, nullptr, (D3DXMATRIX*)&m_viewport);
 
 		cull_xform.mul(mdir_Project, mdir_View);
 		Fmatrix	cull_xform_inv; cull_xform_inv.invert(cull_xform);
@@ -886,8 +886,8 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 
 		// Create frustum for query
 		cull_frustum._clear();
-		for (u32 p = 0; p < cull_planes.size(); p++)
-			cull_frustum._add(cull_planes[p]);
+		for (auto & cull_plane : cull_planes)
+			cull_frustum._add(cull_plane);
 
 		{
 			Fvector cam_proj = Device.vCameraPosition;
@@ -936,7 +936,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 
 	// Begin SMAP-render
 	{
-		bool	bSpecialFull = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool	bSpecialFull = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		VERIFY(!bSpecialFull);
 		HOM.Disable();
 		phase = PHASE_SMAP;
@@ -953,8 +953,8 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
 	{
-		bool bNormal = mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-		bool bSpecial = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool bNormal = !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+		bool bSpecial = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 
 		if (bNormal || bSpecial) 
 		{

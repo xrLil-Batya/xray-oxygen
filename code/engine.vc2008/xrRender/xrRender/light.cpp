@@ -28,8 +28,8 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	virtual_size	= 0.1f;
 
     std::memset(omnipart,0,sizeof(omnipart));
-	s_spot			= NULL;
-	s_point			= NULL;
+	s_spot			= nullptr;
+	s_point			= nullptr;
 	vis.frame2test	= 0;	// xffffffff;
 	vis.query_id	= 0;
 	vis.query_order	= 0;
@@ -50,7 +50,7 @@ light::~light()
 
 void light::set_texture		(LPCSTR name)
 {
-	if ((0==name) || (0==name[0]))
+	if ((nullptr==name) || (0==name[0]))
 	{
 		// default shaders
 		s_spot.destroy		();
@@ -243,10 +243,10 @@ void	light::xform_calc			()
 			mScale = DirectX::XMMatrixScaling(L_R, L_R, L_R);
 			m_xform = DirectX::XMMatrixMultiply(mScale, mR);
 
-			m_xform.x.m128_f32[3] = 0;
-			m_xform.y.m128_f32[3] = 0;
-			m_xform.z.m128_f32[3] = 0;
-			m_xform.w.m128_f32[3] = 1;
+			m_xform.x[3] = 0;
+			m_xform.y[3] = 0;
+			m_xform.z[3] = 0;
+			m_xform.w[3] = 1;
 		}
 		break;
 	case IRender_Light::SPOT		:
@@ -257,10 +257,10 @@ void	light::xform_calc			()
 			mScale = DirectX::XMMatrixScaling(s, s, range);
 			m_xform = DirectX::XMMatrixMultiply(mScale, mR);
 
-			m_xform.x.m128_f32[3] = 0;
-			m_xform.y.m128_f32[3] = 0;
-			m_xform.z.m128_f32[3] = 0;
-			m_xform.w.m128_f32[3] = 1;
+			m_xform.x[3] = 0;
+			m_xform.y[3] = 0;
+			m_xform.z[3] = 0;
+			m_xform.w[3] = 1;
 		}
 		break;
 	case IRender_Light::OMNIPART	:
@@ -270,10 +270,10 @@ void	light::xform_calc			()
 			mScale = DirectX::XMMatrixScaling(L_R, L_R, L_R);
 			m_xform = DirectX::XMMatrixMultiply(mScale, mR);
 
-			m_xform.x.m128_f32[3] = 0;
-			m_xform.y.m128_f32[3] = 0;
-			m_xform.z.m128_f32[3] = 0;
-			m_xform.w.m128_f32[3] = 1;
+			m_xform.x[3] = 0;
+			m_xform.y[3] = 0;
+			m_xform.z[3] = 0;
+			m_xform.w[3] = 1;
 		}
 		break;
 	default:
@@ -295,7 +295,7 @@ void	light::export_		(light_Package& package)
 			case IRender_Light::POINT:
 				{
 					// tough: create/update 6 shadowed lights
-					if (0==omnipart[0])	for (int f=0; f<6; f++)	omnipart[f] = xr_new<light> ();
+					if (nullptr==omnipart[0])	for (int f=0; f<6; f++)	omnipart[f] = xr_new<light> ();
 					for (int f=0; f<6; f++)	
 					{
 						light*	L			= omnipart[f];

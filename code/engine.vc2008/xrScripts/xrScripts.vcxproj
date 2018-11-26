@@ -106,7 +106,7 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <BaseAddress>0x34000000</BaseAddress>
+      <BaseAddress>0x30000000</BaseAddress>
       <FixedBaseAddress>true</FixedBaseAddress>
     </Link>
     <PreBuildEvent>

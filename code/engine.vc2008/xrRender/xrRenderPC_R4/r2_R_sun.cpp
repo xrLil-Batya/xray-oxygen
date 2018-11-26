@@ -48,7 +48,7 @@ void CRender::render_sun				()
 		float _far_ = min(ps_r_sun_far, Environment().CurrentEnv->far_plane);
 		ex_project.BuildProj(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR, _far_);
 		ex_full = DirectX::XMMatrixMultiply(Device.mView, ex_project);
-		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
+		ex_full_inverse = DirectX::XMMatrixInverse(nullptr, ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -72,7 +72,7 @@ void CRender::render_sun				()
 			}
 			for (int plane=0; plane<6; plane++)	
 			{
-				hull.polys.push_back(DumbConvexVolume<false>::_poly());
+				hull.polys.emplace_back();
 				for (int pt=0; pt<4; pt++)	
 					hull.polys.back().points.push_back(facetable[plane][pt]);
 			}
@@ -81,7 +81,7 @@ void CRender::render_sun				()
 
 		// Search for default sector - assume "default" or "outdoor" sector is the largest one
 		//. hack: need to know real outdoor sector
-		CSector*	largest_sector		= 0;
+		CSector*	largest_sector		= nullptr;
 		float		largest_sector_vol	= 0;
 		for		(u32 s=0; s<Sectors.size(); s++)
 		{
@@ -155,7 +155,7 @@ void CRender::render_sun				()
 			add_Geometry		(root);
 		}
 	}
-	set_Recorder						(NULL);
+	set_Recorder						(nullptr);
 
 	//	Prepare to interact with D3DX code
 	const Matrix4x4&	m_Projection	= ex_project;
@@ -163,9 +163,9 @@ void CRender::render_sun				()
 
 	//  these are the limits specified by the physical camera
 	//  gamma is the "tilt angle" between the light and the view direction.
-	float m_fCosGamma = m_lightDir.x * Device.mView.x.m128_f32[2] +
-						m_lightDir.y * Device.mView.y.m128_f32[2] +
-						m_lightDir.z * Device.mView.z.m128_f32[2] ;
+	float m_fCosGamma = m_lightDir.x * Device.mView.x[2] +
+		m_lightDir.y * Device.mView.y[2] +
+		m_lightDir.z * Device.mView.z[2];
 	float m_fTSM_Delta= ps_r_sun_tsm_projection;
 
 	// Compute REAL sheared xform based on receivers/casters information
@@ -386,7 +386,7 @@ void CRender::render_sun				()
 		for		(int p=0; p<view_clipper.frustum.p_count; p++)
 		{
 			Fplane&		P	= view_clipper.frustum.planes	[p];
-			view_clipper.planes.push_back(D3DXPLANE(P.n.x,P.n.y,P.n.z,P.d));
+			view_clipper.planes.emplace_back(P.n.x,P.n.y,P.n.z,P.d);
 		}
 
 		// 
@@ -411,7 +411,7 @@ void CRender::render_sun				()
 		{
 			x_project.build_projection	(deg2rad(Device.fFOV),Device.fASPECT,VIEWPORT_NEAR,ps_r_sun_near+tweak_guaranteed_range);
 			x_full.mul					(x_project, CastToGSCMatrix(Device.mView));
-			D3DXMatrixInverse			((D3DXMATRIX*)&x_full_inverse,0,(D3DXMATRIX*)&x_full);
+			D3DXMatrixInverse			((D3DXMATRIX*)&x_full_inverse,nullptr,(D3DXMATRIX*)&x_full);
 		}
 		for		(int e=0; e<8; e++)
 		{
@@ -456,8 +456,8 @@ void CRender::render_sun				()
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
 	{
-		bool	bNormal							= mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-		bool	bSpecial						= mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool	bNormal							= !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+		bool	bSpecial						= !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		if ( bNormal || bSpecial)	{
 			Target->phase_smap_direct			(fuckingsun, SE_SUN_FAR		);
 			RCache.set_xform_world				(Fidentity					);
@@ -507,7 +507,7 @@ void CRender::render_sun_near()
 	{
 		ex_project.build_projection(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR, ps_r_sun_near);
 		ex_full.mul(ex_project, CastToGSCMatrix(Device.mView));
-		D3DXMatrixInverse((D3DXMATRIX*)&ex_full_inverse, 0, (D3DXMATRIX*)&ex_full);
+		D3DXMatrixInverse((D3DXMATRIX*)&ex_full_inverse, nullptr, (D3DXMATRIX*)&ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -534,7 +534,7 @@ void CRender::render_sun_near()
 				hull.points.push_back(xf);
 			}
 			for (int plane = 0; plane < 6; plane++) {
-				hull.polys.push_back(t_volume::_poly());
+				hull.polys.emplace_back();
 				for (int pt = 0; pt < 4; pt++)
 					hull.polys.back().points.push_back(facetable[plane][pt]);
 			}
@@ -547,7 +547,7 @@ void CRender::render_sun_near()
 
 		// Search for default sector - assume "default" or "outdoor" sector is the largest one
 		//. hack: need to know real outdoor sector
-		CSector*	largest_sector = 0;
+		CSector*	largest_sector = nullptr;
 		float		largest_sector_vol = 0;
 		for (u32 s = 0; s < Sectors.size(); s++)
 		{
@@ -601,7 +601,7 @@ void CRender::render_sun_near()
 			view_dim / 2.f,	view_dim / 2.f,		0.0f,		1.0f
 		};
 		Fmatrix				m_viewport_inv;
-		D3DXMatrixInverse((D3DXMATRIX*)&m_viewport_inv, 0, (D3DXMATRIX*)&m_viewport);
+		D3DXMatrixInverse((D3DXMATRIX*)&m_viewport_inv, nullptr, (D3DXMATRIX*)&m_viewport);
 
 		// snap view-position to pixel
 		cull_xform.mul(mdir_Project, mdir_View);
@@ -634,7 +634,7 @@ void CRender::render_sun_near()
 
 	// Begin SMAP-render
 	{
-		bool	bSpecialFull = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool	bSpecialFull = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		VERIFY(!bSpecialFull);
 		HOM.Disable();
 		phase = PHASE_SMAP;
@@ -651,8 +651,8 @@ void CRender::render_sun_near()
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
 	{
-		bool	bNormal = mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-		bool	bSpecial = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool	bNormal = !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+		bool	bSpecial = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		if (bNormal || bSpecial) {
 			Target->phase_smap_direct(fuckingsun, SE_SUN_NEAR);
 			RCache.set_xform_world(Fidentity);
@@ -743,7 +743,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 	{
 		ex_project = Device.mProject;
 		ex_full = DirectX::XMMatrixMultiply(Device.mView, ex_project);
-		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
+		ex_full_inverse = DirectX::XMMatrixInverse(nullptr, ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -766,7 +766,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 		//******************************* Need to be placed after cuboid built **************************
 		// Search for default sector - assume "default" or "outdoor" sector is the largest one
 		//. hack: need to know real outdoor sector
-		CSector*	largest_sector		= 0;
+		CSector*	largest_sector		= nullptr;
 		float		largest_sector_vol	= 0;
 		for		(u32 s=0; s<Sectors.size(); s++)
 		{
@@ -817,7 +817,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 					edge_vec.sub(near_p);
 					edge_vec.normalize();
 
-					light_cuboid.view_frustum_rays.push_back	( sun::ray(near_p,edge_vec) );
+					light_cuboid.view_frustum_rays.emplace_back	( near_p,edge_vec );
 				}
 			}
 			else
@@ -846,7 +846,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 			view_dim/2.f,	view_dim/2.f,		0.0f,		1.0f
 		};
 		Fmatrix				m_viewport_inv;
-		D3DXMatrixInverse	((D3DXMATRIX*)&m_viewport_inv,0,(D3DXMATRIX*)&m_viewport);
+		D3DXMatrixInverse	((D3DXMATRIX*)&m_viewport_inv,nullptr,(D3DXMATRIX*)&m_viewport);
 
 		// snap view-position to pixel
 		cull_xform.mul		(mdir_Project,mdir_View	);
@@ -944,7 +944,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 
 	// Begin SMAP-render
 	{
-		bool	bSpecialFull					= mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool	bSpecialFull					= !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		VERIFY									(!bSpecialFull);
 		HOM.Disable								();
 		phase									= PHASE_SMAP;
@@ -961,8 +961,8 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
 	{
-		bool	bNormal							= mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-		bool	bSpecial						= mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+		bool	bNormal							= !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+		bool	bSpecial						= !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		if ( bNormal || bSpecial)	{
 			Target->phase_smap_direct			(fuckingsun	, SE_SUN_FAR	);
 			RCache.set_xform_world				(Fidentity					);
