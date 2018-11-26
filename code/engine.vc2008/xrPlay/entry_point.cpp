@@ -9,12 +9,35 @@
 #include <tlhelp32.h>
 ////////////////////////////////////
 #include "../xrCore/xrCore.h"
+#include <shlwapi.h>
 ////////////////////////////////////
+#pragma comment(lib, "shlwapi.lib")
 
 void CreateRendererList();					// In RenderList.cpp
 
 /// <summary> Dll import </summary>
 using IsRunFunc = void(__cdecl*)(const char*);
+
+
+BOOL
+IsProcessWithAdminPrivilege()
+{
+	SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
+	LPVOID pAdministratorsGroup = nullptr;
+	BOOL bRet = FALSE;
+
+	// init SID to control privileges
+	AllocateAndInitializeSid(&NtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &pAdministratorsGroup);
+
+	// ckeck membership
+	CheckTokenMembership(nullptr, pAdministratorsGroup, &bRet);
+
+	// clean pointer
+	if (pAdministratorsGroup) { FreeSid(pAdministratorsGroup); pAdministratorsGroup = nullptr; }
+
+	return bRet;
+}
+
 
 /// <summary> Start engine or install OpenAL </summary>
 void CheckOpenAL()
@@ -29,15 +52,34 @@ void CheckOpenAL()
 	{
 		xr_string StrCmd = xr_string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
 
-		dwOpenALInstalled = GetFileAttributesA(StrCmd.c_str());
+		string_path szPath = { 0 };
+
+		// if current user is admin - go to run this application
+		if (!IsProcessWithAdminPrivilege())
+		{
+			string_path szPath = { 0 };
+			GetModuleFileNameA(nullptr, szPath, ARRAYSIZE(szPath));
+
+			SHELLEXECUTEINFOA shellInfo = { sizeof(SHELLEXECUTEINFOA) };
+			shellInfo.lpVerb = "runas";
+			shellInfo.lpFile = szPath;
+			shellInfo.hwnd = nullptr;
+			shellInfo.nShow = SW_NORMAL;
+
+			if (ShellExecuteExA(&shellInfo)) { ExitProcess(GetCurrentProcessId()); }
+		}
+
+ 		GetModuleFileNameA(GetModuleHandleA(nullptr), szPath, MAX_PATH);
+		PathRemoveFileSpecA(szPath);
+
+		_snprintf_s(szPath, MAX_PATH * sizeof(CHAR), "%s%s", szPath, "\\OpenAL32.dll");
+
+		dwOpenALInstalled = GetFileAttributesA(szPath);
 		if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
 		{
-			xr_string szCmd = "/select, " + StrCmd + "\\fsgame.ltx";
-			string_path szPath = { 0 };
-
 			MessageBoxA(NULL,
-				"ENG: X-Ray Oxygen can't detect OpenAL installer. Please, specify path to installer manually. \n"
-				"RUS: X-Ray Oxygen не смог обнаружить установщик OpenAL. Пожалуйста, укажите путь до установщика самостоятельно.",
+				"ENG: X-Ray Oxygen can't detect OpenAL library. Please, specify path to installer manually. \n"
+				"RUS: X-Ray Oxygen не смог обнаружить библиотеку OpenAL. Пожалуйста, укажите путь до установщика самостоятельно.",
 				"OpenAL Not Found!",
 				MB_OK | MB_ICONERROR
 			);
@@ -62,24 +104,46 @@ void CheckOpenAL()
 			{
 				ExitProcess(0);
 			}
-			
-			StrCmd = szPath;
+
+			//StrCmd = szPath;
+
+			// create parent process with admin rights
+			SHELLEXECUTEINFOA shellInfo = { sizeof(SHELLEXECUTEINFOA) };
+			shellInfo.lpVerb = "runas";
+			shellInfo.lpFile = StrCmd.c_str();
+			shellInfo.lpParameters = nullptr;
+			shellInfo.hwnd = NULL;
+			shellInfo.nShow = SW_NORMAL;
+			shellInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+
+			// if user didn't press 'No' at Shell desktop notification
+			if (ShellExecuteExA(&shellInfo))
+			{
+				WaitForSingleObject(shellInfo.hProcess, INFINITE);
+			}
 		}
-
-		// create parent process with admin rights
-		SHELLEXECUTEINFOA shellInfo = { sizeof(SHELLEXECUTEINFOA) };
-		shellInfo.lpVerb = "runas";
-		shellInfo.lpFile = StrCmd.c_str();
-		shellInfo.lpParameters = nullptr;
-		shellInfo.hwnd = NULL;
-		shellInfo.nShow = SW_NORMAL;
-		shellInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-
-		// if user didn't press 'No' at Shell desktop notification
-		if (ShellExecuteExA(&shellInfo))
+		else
 		{
-			WaitForSingleObject(shellInfo.hProcess, INFINITE);
+			DWORD LibrarySize = 0;
+			HANDLE hFile = CreateFileA(szPath, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+			R_ASSERT(hFile != INVALID_HANDLE_VALUE);
+
+			FILE_STANDARD_INFO fileInfo = {};
+			GetFileInformationByHandleEx(hFile, FileStandardInfo, &fileInfo, sizeof(fileInfo));
+
+			LPVOID pImage = HeapAlloc(GetProcessHeap(), NULL, fileInfo.EndOfFile.QuadPart);
+			ReadFile(hFile, pImage, fileInfo.EndOfFile.QuadPart, &LibrarySize, nullptr);
+
+			CloseHandle(hFile);
+
+			//szOpenALDir
+			hFile = CreateFileA(szOpenALDir, GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+			R_ASSERT(hFile != INVALID_HANDLE_VALUE);
+
+			WriteFile(hFile, pImage, fileInfo.EndOfFile.QuadPart, &LibrarySize, nullptr);
+			CloseHandle(hFile);
 		}
+
 
 		if ((dwOpenALInstalled = GetFileAttributesA(szOpenALDir) == INVALID_FILE_ATTRIBUTES))
 		{
