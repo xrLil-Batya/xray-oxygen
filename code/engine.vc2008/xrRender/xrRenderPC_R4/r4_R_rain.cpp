@@ -34,7 +34,7 @@ void CRender::render_rain()
 
 	PIX_EVENT(render_rain);
 
-	D3DXMATRIX		m_LightViewProj;
+	Matrix4x4		m_LightViewProj;
 
 	//	Use light as placeholder for rain data.
 	light			RainLight;
@@ -168,7 +168,6 @@ void CRender::render_rain()
 		bb.min.y = -fBoundingSphereRadius + vRectOffset.z;
 		bb.max.y = fBoundingSphereRadius + vRectOffset.z;
 
-
 		mdir_Project = DirectX::XMMatrixOrthographicOffCenterLH(bb.min.x, bb.max.x, bb.min.y, bb.max.y, bb.min.z - tweak_rain_ortho_xform_initial_offs, bb.min.z + 2 * tweak_rain_ortho_xform_initial_offs);
 
 		cull_xform.Multiply(mdir_View, mdir_Project);
@@ -179,20 +178,20 @@ void CRender::render_rain()
 		float view_dim = float(limit);
 		float fTexelOffs = (.5f / RImplementation.o.smapsize);
 
-		const Matrix4x4 mViewPort
-		(
+		Matrix4x4 mViewPort =
+		{
 			view_dim / 2.f, 0.0f, 0.0f, 0.0f,
 			0.0f, -view_dim / 2.f, 0.0f, 0.0f,
 			0.0f, 0.0f, 1.0f, 0.0f,
 			view_dim / 2.f + fTexelOffs, view_dim / 2.f + fTexelOffs, 0.0f, 1.0f
-		);
+		};
 
 		Matrix4x4 mViewPortInverse = DirectX::XMMatrixInverse(0, mViewPort);
 
 		// snap view-position to pixel
 		//	snap zero point to pixel
 		Fvector cam_proj = wform(cull_xform, Fvector().set(0, 0, 0));
-		Fvector	cam_pixel = wform(CastToGSCMatrix(mViewPort), cam_proj);
+		Fvector	cam_pixel = wform(mViewPort, cam_proj);
 		cam_pixel.x = floorf(cam_pixel.x);
 		cam_pixel.y = floorf(cam_pixel.y);
 		Fvector cam_snapped = wform((Matrix4x4)mViewPortInverse, cam_pixel);
@@ -244,14 +243,12 @@ void CRender::render_rain()
 	}
 
 	// End SMAP-render
-	{
-		r_pmask(true, false);
-	}
+	r_pmask(true, false);
 
 	// Restore XForms
 	RCache.set_xform_world(Fidentity);
-	RCache.set_xform_view(CastToGSCMatrix(Device.mView));
-	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+	RCache.set_xform_view(Device.mView);
+	RCache.set_xform_project(Device.mProject);
 
 	// Accumulate
 	Target->phase_rain();
