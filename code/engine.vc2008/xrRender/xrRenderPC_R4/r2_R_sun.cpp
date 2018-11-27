@@ -57,7 +57,7 @@ void CRender::render_sun				()
 	xr_vector<Fplane>			cull_planes		;
 	Fvector3					cull_COP		;
 	CSector*					cull_sector		;
-	Fmatrix						cull_xform		;
+	Matrix4x4						cull_xform		;
 	{
 		FPU::m64r					();
 		// Lets begin from base frustum
@@ -93,40 +93,47 @@ void CRender::render_sun				()
 				largest_sector			= S;
 			}
 		}
-		cull_sector					= largest_sector;
+		cull_sector = largest_sector;
 
 		// COP - 100 km away
-		cull_COP.mad				(Device.vCameraPosition, fuckingsun->direction, -tweak_COP_initial_offs	);
+		cull_COP.mad(Device.vCameraPosition, fuckingsun->direction, -tweak_COP_initial_offs);
 
 		// Create frustum for query
-		cull_frustum._clear			();
-		for (u32 p=0; p<cull_planes.size(); p++)
-			cull_frustum._add		(cull_planes[p]);
+		cull_frustum._clear();
+		for (u32 p = 0; p < cull_planes.size(); p++)
+			cull_frustum._add(cull_planes[p]);
 
 		// Create approximate ortho-xform
 		// view: auto find 'up' and 'right' vectors
-		Fmatrix						mdir_View, mdir_Project;
-		Fvector						L_dir,L_up,L_right,L_pos;
-		L_pos.set					(fuckingsun->position);
-		L_dir.set					(fuckingsun->direction).normalize	();
-		L_up.set					(0,1,0);					if (_abs(L_up.dotproduct(L_dir))>.99f)	L_up.set(0,0,1);
-		L_right.crossproduct		(L_up,L_dir).normalize		();
-		L_up.crossproduct			(L_dir,L_right).normalize	();
-		mdir_View.build_camera_dir	(L_pos,L_dir,L_up);
+		Matrix4x4 mdir_View, mdir_Project;
+		Fvector L_dir, L_up, L_right, L_pos;
+		L_pos.set(fuckingsun->position);
+		L_dir.set(fuckingsun->direction).normalize();
+		L_up.set(0, 1, 0);
+
+		if (_abs(L_up.dotproduct(L_dir)) > .99f)	
+			L_up.set(0, 0, 1);
+
+		L_right.crossproduct(L_up, L_dir).normalize();
+		L_up.crossproduct(L_dir, L_right).normalize();
+		mdir_View.BuildCamDir(L_pos,L_dir,L_up);
 
 		// projection: box
-		Fbox	frustum_bb;			frustum_bb.invalidate();
-		for (int it=0; it<8; it++)	{
-			Fvector	xf	= wform		(mdir_View,hull.points[it]);
-			frustum_bb.modify		(xf);
+		Fbox frustum_bb;
+		frustum_bb.invalidate();
+		for (int it = 0; it < 8; it++)
+		{
+			Fvector	xf	= wform(mdir_View,hull.points[it]);
+			frustum_bb.modify(xf);
 		}
+
 		Fbox&	bb					= frustum_bb;
 				bb.grow				(EPS);
-		D3DXMatrixOrthoOffCenterLH	((D3DXMATRIX*)&mdir_Project,bb.min.x,bb.max.x,  bb.min.y,bb.max.y,  bb.min.z-tweak_ortho_xform_initial_offs,bb.max.z);
+		mdir_Project = DirectX::XMMatrixOrthographicOffCenterLH(bb.min.x,bb.max.x,  bb.min.y,bb.max.y,  bb.min.z-tweak_ortho_xform_initial_offs,bb.max.z);
 
 		// full-xform
-		cull_xform.mul				(mdir_Project,mdir_View);
-		FPU::m24r					();
+		cull_xform.Multiply(mdir_View, mdir_Project);
+		FPU::m24r();
 	}
 
 	// Begin SMAP-render
@@ -141,7 +148,7 @@ void CRender::render_sun				()
 	xr_vector<Fbox3,xalloc<Fbox3> >		&s_receivers = main_coarse_structure;
 	s_casters.reserve							(s_receivers.size());
 	set_Recorder								(&s_casters);
-	r_dsgraph_render_subspace					(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
+	r_dsgraph_render_subspace					(cull_sector, &cull_frustum, CastToGSCMatrix(cull_xform), cull_COP, TRUE);
 
 	// IGNORE PORTALS
 	if	(ps_r_flags.test(R_FLAG_SUN_IGNORE_PORTALS))
@@ -159,7 +166,7 @@ void CRender::render_sun				()
 
 	//	Prepare to interact with D3DX code
 	const Matrix4x4&	m_Projection	= ex_project;
-	const D3DXVECTOR3	m_lightDir		= -D3DXVECTOR3(fuckingsun->direction.x,fuckingsun->direction.y,fuckingsun->direction.z);
+	const DirectX::XMFLOAT3	m_lightDir = { -fuckingsun->direction.x, -fuckingsun->direction.y, -fuckingsun->direction.z };
 
 	//  these are the limits specified by the physical camera
 	//  gamma is the "tilt angle" between the light and the view direction.
@@ -235,7 +242,7 @@ void CRender::render_sun				()
 		//  transform the view frustum by the new matrix
 		DirectX::XMVector3TransformCoordStream(frustumPnts, sizeof(DirectX::XMFLOAT3), frustumPnts, sizeof(DirectX::XMFLOAT3), sizeof(frustumPnts) / sizeof(DirectX::XMFLOAT3), lightSpaceOrtho);
 
-		D3DXVECTOR2 centerPts	[2];
+		DirectX::XMFLOAT2 centerPts	[2];
 		//  near plane
 		centerPts[0].x = 0.25f * (frustumPnts[4].x + frustumPnts[5].x + frustumPnts[6].x + frustumPnts[7].x);
 		centerPts[0].y = 0.25f * (frustumPnts[4].y + frustumPnts[5].y + frustumPnts[6].y + frustumPnts[7].y);
@@ -243,7 +250,11 @@ void CRender::render_sun				()
 		centerPts[1].x = 0.25f * (frustumPnts[0].x + frustumPnts[1].x + frustumPnts[2].x + frustumPnts[3].x);
 		centerPts[1].y = 0.25f * (frustumPnts[0].y + frustumPnts[1].y + frustumPnts[2].y + frustumPnts[3].y);
 
-		D3DXVECTOR2 centerOrig = (centerPts[0] + centerPts[1])*0.5f;
+		DirectX::XMFLOAT2 centerOrig = 
+		{
+			(centerPts[0].x + centerPts[1].x) * 0.5f,
+			(centerPts[0].y + centerPts[1].y) * 0.5f
+		};
 
 		Matrix4x4 trapezoid_space;
 
@@ -253,8 +264,13 @@ void CRender::render_sun				()
 			0.f, 0.f, 1.f, 0.f,
 			-centerOrig.x, -centerOrig.y, 0.f, 1.f);
 
-		D3DXVECTOR2	center_dirl = { centerPts[1] - centerOrig };
-		float half_center_len = D3DXVec2Length(&center_dirl);
+		DirectX::XMFLOAT2 center_dirl =
+		{
+			centerPts[0].x - centerPts[1].x,
+			centerPts[0].y - centerPts[1].y
+		};
+
+		float half_center_len = XRay::Math::XMFloat2Len(center_dirl);
 		float x_len = centerPts[1].x - centerOrig.x;
 		float y_len = centerPts[1].y - centerOrig.y;
 
@@ -273,7 +289,7 @@ void CRender::render_sun				()
 		trapezoid_space = DirectX::XMMatrixMultiply(xlate_center, rot_center);
 		DirectX::XMVector3TransformCoordStream(frustumPnts, sizeof(DirectX::XMFLOAT3), frustumPnts, sizeof(DirectX::XMFLOAT3), sizeof(frustumPnts) / sizeof(DirectX::XMFLOAT3), trapezoid_space);
 
-		BoundingBox frustumAABB2D(frustumPnts, sizeof(frustumPnts) / sizeof(D3DXVECTOR3));
+		BoundingBox frustumAABB2D(frustumPnts, sizeof(frustumPnts) / sizeof(DirectX::XMFLOAT3));
 
 		float x_scale = max( _abs(frustumAABB2D.maxPt.x), _abs(frustumAABB2D.minPt.x) );
 		float y_scale = max( _abs(frustumAABB2D.maxPt.y), _abs(frustumAABB2D.minPt.y) );
@@ -303,16 +319,16 @@ void CRender::render_sun				()
 		float		eta		= (lambda*delta_proj*(1.f+xi)) / (lambda*(1.f-xi)-2.f*delta_proj);
 
 		//  compute the projection point a distance eta from the top line.  this point is on the center line, y=0
-		D3DXVECTOR2 projectionPtQ( frustumAABB2D.maxPt.x + eta, 0.f );
+		DirectX::XMFLOAT2 projectionPtQ( frustumAABB2D.maxPt.x + eta, 0.f );
 
 		//  find the maximum slope from the projection point to any point in the frustum.  this will be the
 		//  projection field-of-view
 		float max_slope = -1e32f;
 		float min_slope =  1e32f;
 
-		for ( int i=0; i < sizeof(frustumPnts)/sizeof(D3DXVECTOR3); i++ )
+		for ( int i=0; i < sizeof(frustumPnts)/sizeof(DirectX::XMFLOAT3); i++ )
 		{
-			D3DXVECTOR2 tmp( frustumPnts[i].x*x_scale, frustumPnts[i].y*y_scale );
+			DirectX::XMFLOAT2 tmp( frustumPnts[i].x*x_scale, frustumPnts[i].y*y_scale );
 			float x_dist = tmp.x - projectionPtQ.x;
 			if ( !(ALMOST_ZERO(tmp.y) || ALMOST_ZERO(x_dist)))
 			{
@@ -377,47 +393,50 @@ void CRender::render_sun				()
 	// perform "refit" or "focusing" on relevant
 	if	(ps_r_flags.test(R_FLAG_SUN_FOCUS))
 	{
-		FPU::m64r				();
+		FPU::m64r();
 
 		// create clipper
 		DumbClipper	view_clipper;
-		Fmatrix&	xform = CastToGSCMatrix(m_LightViewProj);
-		view_clipper.frustum.CreateFromMatrix(CastToGSCMatrix(ex_full), FRUSTUM_P_ALL);
-		for		(int p=0; p<view_clipper.frustum.p_count; p++)
+		Matrix4x4&	xform = m_LightViewProj;
+		view_clipper.frustum.CreateFromMatrix(ex_full, FRUSTUM_P_ALL);
+
+		for (int p = 0; p < view_clipper.frustum.p_count; p++)
 		{
-			Fplane&		P	= view_clipper.frustum.planes	[p];
-			view_clipper.planes.emplace_back(P.n.x,P.n.y,P.n.z,P.d);
+			Fplane& P = view_clipper.frustum.planes[p];
+			view_clipper.planes.emplace_back(P.n.x, P.n.y, P.n.z, P.d);
 		}
 
 		// 
-		Fbox3		b_casters, b_receivers;
-		Fvector3	pt			;
+		Fbox3 b_casters, b_receivers;
+		Fvector3 pt;
 
 		// casters
-		b_casters.invalidate	();
-		for		(u32 c=0; c<s_casters.size(); c++)		{
-			for		(int e=0; e<8; e++)
+		b_casters.invalidate();
+		for (u32 c = 0; c < s_casters.size(); c++)
+		{
+			for (int e = 0; e < 8; e++)
 			{
-				s_casters[c].getpoint	(e,pt);
-				pt				= wform	(xform,pt);
-				b_casters.modify		(pt);
+				s_casters[c].getpoint(e, pt);
+				pt = wform(xform, pt);
+				b_casters.modify(pt);
 			}
 		}
 
 		// receivers
 		b_receivers.invalidate	();
-		b_receivers		= view_clipper.clipped_AABB	(s_receivers,xform);
-		Fmatrix	x_project, x_full, x_full_inverse;
+		b_receivers = view_clipper.clipped_AABB(s_receivers, xform);
+		Matrix4x4 x_project, x_full, x_full_inverse;
 		{
-			x_project.build_projection	(deg2rad(Device.fFOV),Device.fASPECT,VIEWPORT_NEAR,ps_r_sun_near+tweak_guaranteed_range);
-			x_full.mul					(x_project, CastToGSCMatrix(Device.mView));
-			D3DXMatrixInverse			((D3DXMATRIX*)&x_full_inverse,nullptr,(D3DXMATRIX*)&x_full);
+			x_project.BuildProj(deg2rad(Device.fFOV),Device.fASPECT,VIEWPORT_NEAR,ps_r_sun_near+tweak_guaranteed_range);
+			x_full.Multiply(Device.mView, x_project);
+			x_full_inverse.Inverse(nullptr, x_full);
 		}
-		for		(int e=0; e<8; e++)
+
+		for (int e = 0; e < 8; e++)
 		{
-			pt				= wform	(x_full_inverse,corners[e]);	// world space
-			pt				= wform	(xform,pt);						// trapezoid space
-			b_receivers.modify		(pt);
+			pt = wform(x_full_inverse, corners[e]);	// world space
+			pt = wform(xform, pt);						// trapezoid space
+			b_receivers.modify(pt);
 		}
 
 		// some tweaking
@@ -500,14 +519,14 @@ void CRender::render_sun				()
 void CRender::render_sun_near()
 {
 	light*			fuckingsun = (light*)Lights.sun._get();
-	D3DXMATRIX		m_LightViewProj;
+	Matrix4x4		m_LightViewProj;
 
 	// calculate view-frustum bounds in world space
-	Fmatrix	ex_project, ex_full, ex_full_inverse;
+	Matrix4x4	ex_project, ex_full, ex_full_inverse;
 	{
-		ex_project.build_projection(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR, ps_r_sun_near);
-		ex_full.mul(ex_project, CastToGSCMatrix(Device.mView));
-		D3DXMatrixInverse((D3DXMATRIX*)&ex_full_inverse, nullptr, (D3DXMATRIX*)&ex_full);
+		ex_project.BuildProj(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, VIEWPORT_NEAR, ps_r_sun_near);
+		ex_full.Multiply(Device.mView, ex_project);
+		ex_full_inverse.Inverse(nullptr, ex_full);
 	}
 
 	// Compute volume(s) - something like a frustum for infinite directional light
@@ -516,11 +535,11 @@ void CRender::render_sun_near()
 	xr_vector<Fplane>			cull_planes;
 	Fvector3					cull_COP;
 	CSector*					cull_sector;
-	Fmatrix						cull_xform;
+	Matrix4x4					cull_xform;
 	{
 		FPU::m64r();
 		// Lets begin from base frustum
-		Fmatrix		fullxform_inv = ex_full_inverse;
+		Matrix4x4 fullxform_inv = ex_full_inverse;
 #ifdef	_DEBUG
 		typedef		DumbConvexVolume<true>	t_volume;
 #else
@@ -571,53 +590,59 @@ void CRender::render_sun_near()
 
 		// Create approximate ortho-xform
 		// view: auto find 'up' and 'right' vectors
-		Fmatrix						mdir_View, mdir_Project;
-		Fvector						L_dir, L_up, L_right, L_pos;
+		Matrix4x4 mdir_View, mdir_Project;
+		Fvector L_dir, L_up, L_right, L_pos;
 		L_pos.set(fuckingsun->position);
 		L_dir.set(fuckingsun->direction).normalize();
-		L_right.set(1, 0, 0);					if (_abs(L_right.dotproduct(L_dir)) > .99f)	L_right.set(0, 0, 1);
+		L_right.set(1, 0, 0);					
+		
+		if (_abs(L_right.dotproduct(L_dir)) > .99f)	
+			L_right.set(0, 0, 1);
+
 		L_up.crossproduct(L_dir, L_right).normalize();
 		L_right.crossproduct(L_up, L_dir).normalize();
-		mdir_View.build_camera_dir(L_pos, L_dir, L_up);
+		mdir_View.BuildCamDir(L_pos, L_dir, L_up);
 
 		//	Simple
-		Fbox	frustum_bb;			frustum_bb.invalidate();
-		for (int it = 0; it < 8; it++) {
-			//for (int it=0; it<9; it++)	{
+		Fbox	frustum_bb;	
+		frustum_bb.invalidate();
+
+		for (int it = 0; it < 8; it++) 
+		{
 			Fvector	xf = wform(mdir_View, hull.points[it]);
 			frustum_bb.modify(xf);
 		}
-		Fbox&	bb = frustum_bb;
+		Fbox& bb = frustum_bb;
 		bb.grow(EPS);
-		D3DXMatrixOrthoOffCenterLH((D3DXMATRIX*)&mdir_Project, bb.min.x, bb.max.x, bb.min.y, bb.max.y, bb.min.z - tweak_ortho_xform_initial_offs, bb.max.z);
-
+		mdir_Project = DirectX::XMMatrixOrthographicOffCenterLH(bb.min.x, bb.max.x, bb.min.y, bb.max.y, bb.min.z - tweak_ortho_xform_initial_offs, bb.max.z);
 
 		// build viewport xform
 		float	view_dim = float(RImplementation.o.smapsize);
-		Fmatrix	m_viewport = {
+		Matrix4x4	m_viewport = 
+		{
 			view_dim / 2.f,	0.0f,				0.0f,		0.0f,
 			0.0f,			-view_dim / 2.f,		0.0f,		0.0f,
 			0.0f,			0.0f,				1.0f,		0.0f,
 			view_dim / 2.f,	view_dim / 2.f,		0.0f,		1.0f
 		};
-		Fmatrix				m_viewport_inv;
-		D3DXMatrixInverse((D3DXMATRIX*)&m_viewport_inv, nullptr, (D3DXMATRIX*)&m_viewport);
+		Matrix4x4 m_viewport_inv;
+		m_viewport_inv.Inverse(nullptr, m_viewport);
 
 		// snap view-position to pixel
-		cull_xform.mul(mdir_Project, mdir_View);
+		cull_xform.Multiply(mdir_View, mdir_Project);
 		Fvector cam_proj = wform(cull_xform, Device.vCameraPosition);
 		Fvector	cam_pixel = wform(m_viewport, cam_proj);
 		cam_pixel.x = floorf(cam_pixel.x);
 		cam_pixel.y = floorf(cam_pixel.y);
 		Fvector cam_snapped = wform(m_viewport_inv, cam_pixel);
 		Fvector diff;		diff.sub(cam_snapped, cam_proj);
-		Fmatrix adjust;		adjust.translate(diff);
-		cull_xform.mulA_44(adjust);
+		Matrix4x4 adjust;		adjust.Translate(diff);
+		cull_xform.Multiply(cull_xform, adjust);
 
 		// calculate scissor
 		Fbox		scissor;	scissor.invalidate();
-		Fmatrix		scissor_xf;
-		scissor_xf.mul(m_viewport, cull_xform);
+		Matrix4x4		scissor_xf;
+		scissor_xf.Multiply(cull_xform, m_viewport);
 		for (int it = 0; it < 9; it++) {
 			Fvector	xf = wform(scissor_xf, hull.points[it]);
 			scissor.modify(xf);
@@ -643,7 +668,7 @@ void CRender::render_sun_near()
 	}
 
 	// Fill the database
-	r_dsgraph_render_subspace(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
+	r_dsgraph_render_subspace(cull_sector, &cull_frustum, CastToGSCMatrix(cull_xform), cull_COP, TRUE);
 
 	// Finalize & Cleanup
 	fuckingsun->X.D.combine = cull_xform;
@@ -752,11 +777,11 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 	xr_vector<Fplane>			cull_planes;
 	Fvector3					cull_COP;
 	CSector*					cull_sector;
-	Fmatrix						cull_xform;
+	Matrix4x4						cull_xform;
 	{
 		FPU::m64r					();
 		// Lets begin from base frustum
-		Fmatrix		fullxform_inv	= CastToGSCMatrix(ex_full_inverse);
+		Matrix4x4		fullxform_inv	= ex_full_inverse;
 #ifdef	_DEBUG
 		typedef		DumbConvexVolume<true>	t_volume;
 #else
@@ -785,14 +810,14 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 
 		// Create approximate ortho-xform
 		// view: auto find 'up' and 'right' vectors
-		Fmatrix						mdir_View, mdir_Project;
+		Matrix4x4						mdir_View, mdir_Project;
 		Fvector						L_dir,L_up,L_right,L_pos;
 		L_pos.set					(fuckingsun->position);
 		L_dir.set					(fuckingsun->direction).normalize	();
 		L_right.set					(1,0,0);					if (_abs(L_right.dotproduct(L_dir))>.99f)	L_right.set(0,0,1);
 		L_up.crossproduct			(L_dir,L_right).normalize	();
 		L_right.crossproduct		(L_up,L_dir).normalize		();
-		mdir_View.build_camera_dir	(L_pos,L_dir,L_up);
+		mdir_View.BuildCamDir	(L_pos,L_dir,L_up);
 
 
 
@@ -835,22 +860,22 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 		float dist = light_top_plane.classify( Device.vCameraPosition );
 
 		float map_size = m_sun_cascades[cascade_ind].size;
-		D3DXMatrixOrthoOffCenterLH	((D3DXMATRIX*)&mdir_Project,-map_size*0.5f, map_size*0.5f, -map_size*0.5f, map_size*0.5f,  0.1, dist + 1.41421f*map_size );
+		mdir_Project = DirectX::XMMatrixOrthographicOffCenterLH(-map_size*0.5f, map_size*0.5f, -map_size*0.5f, map_size*0.5f,  0.1, dist + 1.41421f*map_size );
 
 		// build viewport xform
 		float	view_dim			= float(RImplementation.o.smapsize);
-		Fmatrix	m_viewport			= {
+		Matrix4x4	m_viewport			= {
 			view_dim/2.f,	0.0f,				0.0f,		0.0f,
 			0.0f,			-view_dim/2.f,		0.0f,		0.0f,
 			0.0f,			0.0f,				1.0f,		0.0f,
 			view_dim/2.f,	view_dim/2.f,		0.0f,		1.0f
 		};
-		Fmatrix				m_viewport_inv;
-		D3DXMatrixInverse	((D3DXMATRIX*)&m_viewport_inv,nullptr,(D3DXMATRIX*)&m_viewport);
+		Matrix4x4				m_viewport_inv;
+		m_viewport_inv.Inverse(nullptr, m_viewport);
 
 		// snap view-position to pixel
-		cull_xform.mul		(mdir_Project,mdir_View	);
-		Fmatrix	cull_xform_inv; cull_xform_inv.invert(cull_xform);
+		cull_xform.Multiply(mdir_View, mdir_Project);
+		Matrix4x4	cull_xform_inv; cull_xform_inv.InvertMatrixByMatrix(cull_xform);
 
 		for	(int p=0; p < 8; p++)	{
 			Fvector3				xf	= wform		(cull_xform_inv,corners[p]);
@@ -885,11 +910,11 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 			cam_shifted.add(lightXZshift);
 
 			// rebuild the view transform with the shift.
-			mdir_View.identity();
-			mdir_View.build_camera_dir	( cam_shifted, L_dir, L_up );
-			cull_xform.identity();
-			cull_xform.mul		( mdir_Project, mdir_View );
-			cull_xform_inv.invert(cull_xform);
+			mdir_View = DirectX::XMMatrixIdentity();
+			mdir_View.BuildCamDir(cam_shifted, L_dir, L_up);
+			cull_xform = DirectX::XMMatrixIdentity();
+			cull_xform.Multiply(mdir_View, mdir_Project);
+			cull_xform_inv.InvertMatrixByMatrix(cull_xform);
 
 
 			// Create frustum for query
@@ -905,8 +930,8 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 				Fvector	cam_pixel	= wform		(cull_xform, cam_proj );
 				cam_pixel			= wform		(m_viewport, cam_pixel );
 				Fvector shift_proj	= lightXZshift;
-				cull_xform.transform_dir( shift_proj );
-				m_viewport.transform_dir( shift_proj );
+				XRay::Math::TransformDirByMatrix(cull_xform, shift_proj);
+				XRay::Math::TransformDirByMatrix(m_viewport, shift_proj);
 
 				const float	align_granularity = 4.f;
 				shift_proj.x = shift_proj.x > 0 ? align_granularity : -align_granularity;
@@ -921,13 +946,14 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 
 				cam_pixel.sub		( shift_proj );
 
-				m_viewport_inv.transform_dir	(cam_pixel);
-				cull_xform_inv.transform_dir	(cam_pixel);
+				XRay::Math::TransformDirByMatrix(m_viewport_inv, cam_pixel);
+				XRay::Math::TransformDirByMatrix(cull_xform_inv, cam_pixel);
+
 				Fvector diff		= cam_pixel;
 				static float sign_test = -1.f;
 				diff.mul			(sign_test);
-				Fmatrix adjust;		adjust.translate(diff);
-				cull_xform.mulB_44	(adjust);
+				Matrix4x4 adjust;		adjust.Translate(diff);
+				cull_xform.Multiply(adjust, cull_xform);
 			}
 
 			m_sun_cascades[cascade_ind].xform = cull_xform;
@@ -953,7 +979,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 	}
 
 	// Fill the database
-	r_dsgraph_render_subspace				(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
+	r_dsgraph_render_subspace				(cull_sector, &cull_frustum, CastToGSCMatrix(cull_xform), cull_COP, TRUE);
 
 	// Finalize & Cleanup
 	fuckingsun->X.D.combine = cull_xform;

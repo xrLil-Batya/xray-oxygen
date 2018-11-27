@@ -1,5 +1,5 @@
 #pragma once
-
+#include <DirectXMath.h>
 /***************************************************************************
  *   Copyright (C) 2018 - ForserX & Oxydev
  *
@@ -56,6 +56,10 @@ namespace XRay
 					return Vect.m128_f32[id];
 				}
 
+				const float& operator[](size_t id) const 
+				{
+					return Vect.m128_f32[id];
+				}
 
 				void operator=(DirectX::XMVECTOR &VectObj)
 				{
@@ -130,17 +134,29 @@ namespace XRay
 
 			/// <summary>Inversion matrix by matrix</summary>
 			inline void InvertMatrixByMatrix(const DirectX::XMMATRIX &a);
-
 			/// <summary>Call Fbox::xform for DirectX::XMMATRIX</summary>
 			inline void BuildXForm(Fbox &B);
+
+			inline void Translate(Fvector3 diff)
+			{
+				Matrix = DirectX::XMMatrixTranslation(diff.x, diff.y, diff.z);
+			}
+
+			inline void Inverse(DirectX::XMVECTOR* pDeterminant, const DirectX::XMMATRIX& refMatrix)
+			{
+				Matrix = DirectX::XMMatrixInverse(pDeterminant, refMatrix);
+			}
 
 		public:
 			union
 			{
-				IntricsVect x;
-				IntricsVect y;
-				IntricsVect z;
-				IntricsVect w;
+				struct
+				{
+					IntricsVect x;
+					IntricsVect y;
+					IntricsVect z;
+					IntricsVect w;
+				};
 
 				DirectX::XMMATRIX Matrix;
 			};
@@ -247,6 +263,13 @@ namespace XRay
 			dest.z = v.x*m.r[0].m128_f32[2] + v.y*m.r[1].m128_f32[2] + v.z*m.r[2].m128_f32[2];
 		}
 
+		/// <summary>GSC TransformDir func for DirectX::XMMATRIX</summary>
+		inline void TransformDirByMatrix(const DirectX::XMMATRIX &m, Fvector &v)
+		{
+			Fvector res;
+			TransformDirByMatrix(m, res, v);
+			v.set(res);
+		}
 		/// <summary>GSC TransformTiny23 func for DirectX::XMMATRIX</summary>
 		inline void TransformTiny23ByMatrix(const DirectX::XMMATRIX &m, Fvector &dest, const Fvector2 &v)
 		{
@@ -376,6 +399,11 @@ namespace XRay
 		{
 			return (::_sqrt(XMV_square_magnitude(v)));
 		}
+		
+		inline float XMFloat2Len(const DirectX::XMFLOAT2& Flt2)
+		{
+			return sqrtf(Flt2.x * Flt2.x + Flt2.y * Flt2.y);
+		}
 
 		inline void Matrix4x4::InvertMatrixByMatrix(const DirectX::XMMATRIX &a)
 		{
@@ -409,6 +437,5 @@ namespace XRay
 		}
 	}
 };
-#ifndef __ICEMATRIX4X4_H__
+
 using Matrix4x4 = XRay::Math::Matrix4x4;
-#endif

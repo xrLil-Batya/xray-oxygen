@@ -599,7 +599,7 @@ struct	DumbClipper
 		return	true;
 	}
 	D3DXVECTOR3			point(Fbox& bb, int i) const { return D3DXVECTOR3((i & 1) ? bb.min.x : bb.max.x, (i & 2) ? bb.min.y : bb.max.y, (i & 4) ? bb.min.z : bb.max.z); }
-	Fbox				clipped_AABB(xr_vector<Fbox, xalloc<Fbox3> >& src, Fmatrix& xf)
+	Fbox				clipped_AABB(xr_vector<Fbox, xalloc<Fbox3> >& src, Matrix4x4& xf)
 	{
 		Fbox3		result;		result.invalidate();
 		for (int it = 0; it<int(src.size()); it++) {

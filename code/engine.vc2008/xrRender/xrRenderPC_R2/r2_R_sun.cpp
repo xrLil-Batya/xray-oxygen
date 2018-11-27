@@ -386,11 +386,12 @@ void CRender::render_sun()
 
 		// create clipper
 		DumbClipper	view_clipper;
-		Fmatrix&	xform = CastToGSCMatrix(m_LightViewProj);
-		view_clipper.frustum.CreateFromMatrix(CastToGSCMatrix(ex_full), FRUSTUM_P_ALL);
+		Matrix4x4&	xform = m_LightViewProj;
+		view_clipper.frustum.CreateFromMatrix(ex_full, FRUSTUM_P_ALL);
+
 		for (int p = 0; p < view_clipper.frustum.p_count; p++)
 		{
-			Fplane&		P = view_clipper.frustum.planes[p];
+			Fplane& P = view_clipper.frustum.planes[p];
 			view_clipper.planes.emplace_back(P.n.x, P.n.y, P.n.z, P.d);
 		}
 
@@ -400,7 +401,8 @@ void CRender::render_sun()
 
 		// casters
 		b_casters.invalidate();
-		for (auto & s_caster : s_casters) {
+		for (auto & s_caster : s_casters) 
+		{
 			for (int e = 0; e < 8; e++)
 			{
 				s_caster.getpoint(e, pt);
