@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}</ProjectGuid>
-    <TargetFrameworkVersion>4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>4.6.1</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>xrManagedUILib</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>

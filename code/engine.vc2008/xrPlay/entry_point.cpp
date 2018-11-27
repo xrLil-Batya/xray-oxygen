@@ -7,9 +7,9 @@
 #include <intrin.h>  
 #include <windows.h>
 #include <tlhelp32.h>
+#include <shlwapi.h>
 ////////////////////////////////////
 #include "../xrCore/xrCore.h"
-////////////////////////////////////
 
 void CreateRendererList();					// In RenderList.cpp
 
@@ -17,83 +17,7 @@ void CreateRendererList();					// In RenderList.cpp
 using IsRunFunc = void(__cdecl*)(const char*);
 
 /// <summary> Start engine or install OpenAL </summary>
-void CheckOpenAL()
-{
-	CHAR szOpenALDir[MAX_PATH] = { 0 };
-	R_ASSERT(GetSystemDirectoryA(szOpenALDir, MAX_PATH * sizeof(CHAR)));
-	_snprintf_s(szOpenALDir, MAX_PATH * sizeof(CHAR), "%s%s", szOpenALDir, "\\OpenAL32.dll");
-
-	DWORD dwOpenALInstalled = GetFileAttributesA(szOpenALDir);
-
-	if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
-	{
-		xr_string StrCmd = xr_string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
-
-		dwOpenALInstalled = GetFileAttributesA(StrCmd.c_str());
-		if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
-		{
-			xr_string szCmd = "/select, " + StrCmd + "\\fsgame.ltx";
-			string_path szPath = { 0 };
-
-			MessageBoxA(NULL,
-				"ENG: X-Ray Oxygen can't detect OpenAL installer. Please, specify path to installer manually. \n"
-				"RUS: X-Ray Oxygen не смог обнаружить установщик OpenAL. Пожалуйста, укажите путь до установщика самостоятельно.",
-				"OpenAL Not Found!",
-				MB_OK | MB_ICONERROR
-			);
-
-			OPENFILENAMEA oFN = {};
-			// get params to our struct
-			ZeroMemory(&oFN, sizeof(OPENFILENAMEA));
-			oFN.lStructSize = sizeof(OPENFILENAMEA);
-			oFN.hwndOwner = NULL;
-			oFN.nMaxFile = MAX_PATH;
-			oFN.lpstrFile = szPath;
-			oFN.lpstrFilter = "(*.exe) Windows Executable\0*.exe\0";
-			oFN.lpstrTitle = "Open file";
-			oFN.lpstrFileTitle = NULL;
-			oFN.lpstrInitialDir = NULL;
-			oFN.nFilterIndex = 1;
-			oFN.nMaxFileTitle = 0;
-			oFN.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-			// if we can't open filedialog - exit
-			if (!GetOpenFileNameA(&oFN))
-			{
-				ExitProcess(0);
-			}
-			
-			StrCmd = szPath;
-		}
-
-		// create parent process with admin rights
-		SHELLEXECUTEINFOA shellInfo = { sizeof(SHELLEXECUTEINFOA) };
-		shellInfo.lpVerb = "runas";
-		shellInfo.lpFile = StrCmd.c_str();
-		shellInfo.lpParameters = nullptr;
-		shellInfo.hwnd = NULL;
-		shellInfo.nShow = SW_NORMAL;
-		shellInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-
-		// if user didn't press 'No' at Shell desktop notification
-		if (ShellExecuteExA(&shellInfo))
-		{
-			WaitForSingleObject(shellInfo.hProcess, INFINITE);
-		}
-
-		if ((dwOpenALInstalled = GetFileAttributesA(szOpenALDir) == INVALID_FILE_ATTRIBUTES))
-		{
-			MessageBoxA(NULL,
-				"ENG: X-Ray Oxygen can't detect OpenAL library. Please, re-install library manually. \n"
-				"RUS: X-Ray Oxygen не смог обнаружить библиотеку OpenAL. Пожалуйста, переустановите библиотеку самостоятельно.",
-				"OpenAL Not Found!",
-				MB_OK | MB_ICONERROR
-			);
-
-			ExitProcess(0);
-		}
-	}
-}
+void CheckOpenAL();
 
 /// <summary> Main method for initialize xrEngine </summary>
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -109,7 +33,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	catch (...)
 	{
-		MessageBoxA(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONHAND);
+		MessageBoxA(nullptr, "Can't load xrCore!", "Init error", MB_OK | MB_ICONHAND);
 	}
 
 #ifndef DEBUG
@@ -123,14 +47,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Checking for SSE3
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
 		{
-			MessageBox(NULL, "It's can affect on the stability of the game.", "SSE3 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
+			MessageBox(nullptr, "It's can affect on the stability of the game.", "SSE3 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 		// Checking for AVX
 #ifndef RELEASE_IA32
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
-			MessageBox(NULL, "It's can affect on the stability of the game.", "AVX isn't supported on your CPU!", MB_OK | MB_ICONWARNING);
+			MessageBox(nullptr, "It's can affect on the stability of the game.", "AVX isn't supported on your CPU!", MB_OK | MB_ICONWARNING);
 		}
 #endif
 	}
@@ -150,10 +74,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		SHFILEOPSTRUCT file_op = 
 		{
-			NULL, FO_DELETE,
+			nullptr, FO_DELETE,
 			tempdir, "",
 			FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT,
-			false, 0, ""
+			false, nullptr, ""
 		};
 		SHFileOperation(&file_op);
 		free(tempdir); // Since we malloc-ed
@@ -178,7 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		DWORD CurrentProcessId = GetCurrentProcessId();
 		DWORD CustomProcessId = 0;
 		HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-		HANDLE hProcess = NULL;
+		HANDLE hProcess = nullptr;
 		WCHAR szBuf[MAX_PATH] = { NULL };
 		BOOL bSearch = Process32FirstW(hSnapshot, &processInfo);
 		BOOL isReady = FALSE;
@@ -234,9 +158,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	HMODULE hLib = LoadLibrary("xrEngine.dll");
-	if (hLib == NULL)
+	if (hLib == nullptr)
 	{
-		MessageBoxA(NULL, "Can't load xrEngine.dll!", "Init error", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, "Can't load xrEngine.dll!", "Init error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 
@@ -247,10 +171,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	else
 	{
-		MessageBoxA(NULL, "xrEngine module doesn't seems to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, "xrEngine module doesn't seems to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
-#ifdef NO_MULTI_INSTANCES		
+#ifdef OLD_INSTANCE_SYSTEM		
 	// Delete application presence mutex
 	CloseHandle(hCheckPresenceMutex);
 #endif

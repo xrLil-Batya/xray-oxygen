@@ -67,6 +67,9 @@
     <Filter Include="xrDelegate">
       <UniqueIdentifier>{102de92f-17ea-4faf-b741-9994cdef4877}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math\General elements">
+      <UniqueIdentifier>{d1c840ce-89f9-435c-8e42-22ccfd648842}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -82,9 +85,6 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="_math.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="_sphere.cpp">
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="dump_string.cpp">
@@ -106,9 +106,6 @@
       <Filter>Math\Extensions</Filter>
     </ClCompile>
     <ClCompile Include="FileSystem.cpp">
-      <Filter>FS</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSystem_borland.cpp">
       <Filter>FS</Filter>
     </ClCompile>
     <ClCompile Include="FS.cpp">
@@ -145,9 +142,6 @@
       <Filter>Memory manager</Filter>
     </ClCompile>
     <ClCompile Include="xrMemory_pso_Fill.cpp">
-      <Filter>Memory manager</Filter>
-    </ClCompile>
-    <ClCompile Include="xrMemory_pso_Fill32.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
     <ClCompile Include="xrMemory_subst_msvc.cpp">
@@ -216,6 +210,9 @@
     <ClCompile Include="thread_utils.cpp">
       <Filter>OS</Filter>
     </ClCompile>
+    <ClCompile Include="_sphere.cpp">
+      <Filter>Math\General elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -242,37 +239,7 @@
     <ClInclude Include="_compressed_normal.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="_cylinder.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_fbox.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_fbox2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_flags.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="_math.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_matrix.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_matrix33.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_obb.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_plane.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_plane2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_quaternion.h">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="_random.h">
@@ -281,35 +248,11 @@
     <ClInclude Include="_rect.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="_sphere.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_types.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_vector2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_vector3d.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_vector3d_ext.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="_vector4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="dump_string.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="vector.h">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="cpuid.h">
       <Filter>OS\CPU</Filter>
-    </ClInclude>
-    <ClInclude Include="FixedMap.h">
-      <Filter>Math\STLext</Filter>
     </ClInclude>
     <ClInclude Include="FixedSet.h">
       <Filter>Math\STLext</Filter>
@@ -463,6 +406,57 @@
     </ClInclude>
     <ClInclude Include="xrDelegate\xrDelegateBinder.h">
       <Filter>xrDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="_cylinder.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_fbox.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_fbox2.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_flags.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_matrix.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_matrix33.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_obb.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_plane.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_plane2.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_quaternion.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_sphere.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_types.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_vector2.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_vector3d.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_vector3d_ext.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="_vector4.h">
+      <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>Math\General elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

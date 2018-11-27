@@ -451,6 +451,8 @@ CEnvAmbient* CEnvironment::AppendEnvAmb		(const shared_str& sect)
 	return					(Ambients.back());
 }
 
+#pragma warning(push)
+#pragma warning(disable: 4267)
 void	CEnvironment::mods_load()
 {
 	Modifiers.clear();
@@ -461,8 +463,6 @@ void	CEnvironment::mods_load()
 		u32			id = 0;
 		u32 ver = 0x0015;
 		u32 sz;
-#pragma warning(push)
-#pragma warning(disable: 4267)
 		while (0 != (sz = fs->find_chunk(id)))
 		{
 			if (id == 0 && sz == sizeof(u32))
@@ -477,12 +477,12 @@ void	CEnvironment::mods_load()
 			}
 			id++;
 		}
-#pragma warning(pop)
 		FS.r_close(fs);
 	}
 
 	load_level_specific_ambients();
 }
+#pragma warning(pop)
 
 void	CEnvironment::mods_unload		()
 {

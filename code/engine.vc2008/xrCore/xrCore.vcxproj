@@ -335,7 +335,6 @@ start GitParser\GitParser.exe</Command>
     <ClCompile Include="string_concatenations.cpp" />
     <ClCompile Include="xr_trims.cpp" />
     <ClCompile Include="FileSystem.cpp" />
-    <ClCompile Include="FileSystem_borland.cpp" />
     <ClCompile Include="FS.cpp" />
     <ClCompile Include="LocatorAPI.cpp" />
     <ClCompile Include="LocatorAPI_defs.cpp" />
@@ -348,11 +347,6 @@ start GitParser\GitParser.exe</Command>
     <ClCompile Include="xrMemory.cpp" />
     <ClCompile Include="xrMemory_align.cpp" />
     <ClCompile Include="xrMemory_pso_Fill.cpp">
-      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
-      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">AssemblyAndSourceCode</AssemblerOutput>
-      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">AssemblyAndSourceCode</AssemblerOutput>
-    </ClCompile>
-    <ClCompile Include="xrMemory_pso_Fill32.cpp">
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">AssemblyAndSourceCode</AssemblerOutput>
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">AssemblyAndSourceCode</AssemblerOutput>
@@ -413,7 +407,6 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="XMLCore\tinyxml.h" />
     <ClInclude Include="XMLCore\xrXMLParser.h" />
     <ClInclude Include="cpuid.h" />
-    <ClInclude Include="FixedMap.h" />
     <ClInclude Include="FixedSet.h" />
     <ClInclude Include="FixedVector.h" />
     <ClInclude Include="xrPool.h" />

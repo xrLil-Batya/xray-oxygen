@@ -1,10 +1,10 @@
 #pragma once
-#include "../../xrcdb/ispatial.h"
+#include "../../xrCDB/ISpatial.h"
 
 #ifndef ENGINE_BUILD
 #	include "light_package.h"
 #	include "light_smapvis.h"
-#	include "light_GI.h"
+#	include "RenderLightGI.h"
 #endif
 
 class light: public IRender_Light, public ISpatial

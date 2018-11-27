@@ -8,7 +8,10 @@
       <Filter>PlayCore\Kernel</Filter>
     </ClCompile>
     <ClCompile Include="RendererList.cpp">
-      <Filter>PlayCore\Kernel</Filter>
+      <Filter>PlayCore\Drivers</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenAL.cpp">
+      <Filter>PlayCore\Drivers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -20,6 +23,9 @@
     </Filter>
     <Filter Include="PlayCore\Kernel">
       <UniqueIdentifier>{f07c72d4-f864-4201-86d5-cd9322a93414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayCore\Drivers">
+      <UniqueIdentifier>{155c69db-ba12-44c8-9a84-85ef85754351}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,8 +48,5 @@
     <ResourceCompile Include="resource.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="xrLauncherWnd.resx" />
   </ItemGroup>
 </Project>

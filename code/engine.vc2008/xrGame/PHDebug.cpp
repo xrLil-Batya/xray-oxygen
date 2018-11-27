@@ -597,12 +597,12 @@ void DBG_DrawStatAfterFrameStep()
 CFunctionGraph::CFunctionGraph()
 {
 	m_stat_graph = nullptr;
-	m_function.clear();
+	m_function.reset();
 }
 CFunctionGraph::~CFunctionGraph()
 {
 	xr_delete(m_stat_graph);
-	m_function.clear();
+	m_function.reset();
 }
 void CFunctionGraph::Init(type_function fun, float x0, float x1, int l, int t, int w, int h, int points_num/*=500*/, u32 color/*=*/, u32 bk_color)
 {
@@ -660,7 +660,7 @@ void CFunctionGraph::ScaleMarkerPos(CStatGraph::EStyle Style, float &p)
 void CFunctionGraph::Clear()
 {
 	xr_delete(m_stat_graph);
-	m_function.clear();
+	m_function.reset();
 }
 
 bool CFunctionGraph::IsActive()

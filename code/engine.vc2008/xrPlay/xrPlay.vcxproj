@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="IParser.cpp" />
+    <ClCompile Include="OpenAL.cpp" />
     <ClCompile Include="RendererList.cpp" />
   </ItemGroup>
   <ItemGroup>

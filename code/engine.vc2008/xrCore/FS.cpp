@@ -8,49 +8,9 @@
 #include <direct.h>
 #include <fcntl.h>
 #include <sys\stat.h>
+#include <Shlobj.h>
 #pragma warning(default:4995)
 
-#ifdef FS_DEBUG
-	XRCORE_API	u32					g_file_mapped_memory = 0;
-	u32								g_file_mapped_count	= 0;
-	typedef xr_map<u32,std::pair<u32,shared_str> >	FILE_MAPPINGS;
-	FILE_MAPPINGS					g_file_mappings;
-
-void register_file_mapping			(void *address, const u32 &size, const char* file_name)
-{
-	FILE_MAPPINGS::const_iterator	I = g_file_mappings.find(*(u32*)&address);
-	VERIFY							(I == g_file_mappings.end());
-	g_file_mappings.insert			(std::make_pair(*(u32*)&address,std::make_pair(size,shared_str(file_name))));
-
-	g_file_mapped_memory			+= size;
-	++g_file_mapped_count;
-}
-
-void unregister_file_mapping		(void *address, const u32 &size)
-{
-	FILE_MAPPINGS::iterator			I = g_file_mappings.find(*(u32*)&address);
-	VERIFY							(I != g_file_mappings.end());
-	g_file_mapped_memory			-= (*I).second.first;
-	--g_file_mapped_count;
-
-	g_file_mappings.erase			(I);
-}
-
-XRCORE_API void dump_file_mappings	()
-{
-	Msg								("* active file mappings (%d):",g_file_mappings.size());
-
-	FILE_MAPPINGS::const_iterator	I = g_file_mappings.begin();
-	FILE_MAPPINGS::const_iterator	E = g_file_mappings.end();
-	for ( ; I != E; ++I)
-		Msg							(
-			"* [0x%08x][%d][%s]",
-			(*I).first,
-			(*I).second.first,
-			(*I).second.second.c_str()
-		);
-}
-#endif // DEBUG
 //////////////////////////////////////////////////////////////////////
 // Tools
 //////////////////////////////////////////////////////////////////////
@@ -354,26 +314,31 @@ void IReader::skip_stringZ() {
 
 //---------------------------------------------------
 // temp stream
-CTempReader::~CTempReader() { xr_free(data); };
+CTempReader::~CTempReader()
+{ 
+	xr_free(data); 
+};
 //---------------------------------------------------
 // pack stream
-CPackReader::~CPackReader() {
-#ifdef FS_DEBUG
-    unregister_file_mapping(base_address, Size);
-#endif // DEBUG
-
+CPackReader::~CPackReader() 
+{
     UnmapViewOfFile(base_address);
 };
 //---------------------------------------------------
 // file stream
-CFileReader::CFileReader(const char* name) {
+CFileReader::CFileReader(const char* name) 
+{
     // TODO: pay attention!
     size_t sz = Size;
     data = static_cast<char*>(FileDownload(name, &sz));
     Size = sz;
     Pos = 0;
 };
-CFileReader::~CFileReader() { xr_free(data); };
+
+CFileReader::~CFileReader() 
+{ 
+	xr_free(data); 
+};
 //---------------------------------------------------
 // compressed stream
 CCompressedReader::CCompressedReader(const char* name, const char* sign) {
@@ -382,9 +347,14 @@ CCompressedReader::CCompressedReader(const char* name, const char* sign) {
     Size = sz;
     Pos = 0;
 }
-CCompressedReader::~CCompressedReader() { xr_free(data); };
 
-CVirtualFileRW::CVirtualFileRW(const char* cFileName) {
+CCompressedReader::~CCompressedReader() 
+{ 
+	xr_free(data);
+};
+
+CVirtualFileRW::CVirtualFileRW(const char* cFileName) 
+{
     // Open the file
     hSrcFile = CreateFile(cFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, nullptr,
                           OPEN_EXISTING, 0, nullptr);
@@ -397,23 +367,17 @@ CVirtualFileRW::CVirtualFileRW(const char* cFileName) {
 
     data = static_cast<char*>(MapViewOfFile(hSrcMap, FILE_MAP_ALL_ACCESS, 0, 0, 0));
     R_ASSERT3(data, cFileName, Debug.error2string(GetLastError()));
-
-#ifdef FS_DEBUG
-    register_file_mapping(data, Size, cFileName);
-#endif // DEBUG
 }
 
-CVirtualFileRW::~CVirtualFileRW() {
-#ifdef FS_DEBUG
-    unregister_file_mapping(data, Size);
-#endif // DEBUG
-
+CVirtualFileRW::~CVirtualFileRW() 
+{
     UnmapViewOfFile(data);
     CloseHandle(hSrcMap);
     CloseHandle(hSrcFile);
 }
 
-CVirtualFileReader::CVirtualFileReader(const char* cFileName) {
+CVirtualFileReader::CVirtualFileReader(const char* cFileName)
+{
     // Open the file
     hSrcFile = CreateFile(cFileName, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
                           OPEN_EXISTING, 0, nullptr);
@@ -426,18 +390,65 @@ CVirtualFileReader::CVirtualFileReader(const char* cFileName) {
 
     data = static_cast<char*>(MapViewOfFile(hSrcMap, FILE_MAP_READ, 0, 0, 0));
     R_ASSERT3(data, cFileName, Debug.error2string(GetLastError()));
-
-#ifdef FS_DEBUG
-    register_file_mapping(data, Size, cFileName);
-#endif // DEBUG
 }
 
-CVirtualFileReader::~CVirtualFileReader() {
-#ifdef FS_DEBUG
-    unregister_file_mapping(data, Size);
-#endif // DEBUG
-
+CVirtualFileReader::~CVirtualFileReader() 
+{
     UnmapViewOfFile(data);
     CloseHandle(hSrcMap);
     CloseHandle(hSrcFile);
+}
+
+int CALLBACK BrowseCallbackProc(HWND hWnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
+{
+	if (uMsg == BFFM_INITIALIZED)
+		SendMessage(hWnd, BFFM_SETSELECTION, TRUE, lpData);
+
+	return 0;
+}
+
+bool EFS_Utils::GetOpenName(const char* initial, xr_string& buffer, bool bMulti, const char* offset, int start_flt_ext)
+{
+	char buf[255 * 255]; //max files to select
+	xr_strcpy(buf, buffer.c_str());
+
+	const bool bRes = GetOpenNameInternal(initial, buf, sizeof(buf), bMulti, offset, start_flt_ext);
+
+	if (bRes)
+		buffer = (char*)buf;
+
+	return bRes;
+}
+
+
+bool EFS_Utils::GetSaveName(const char* initial, xr_string& buffer, const char* offset, int start_flt_ext)
+{
+	string_path buf;
+	xr_strcpy(buf, sizeof(buf), buffer.c_str());
+	const bool bRes = GetSaveName(initial, buf, offset, start_flt_ext);
+	if (bRes)
+		buffer = buf;
+
+	return bRes;
+}
+//----------------------------------------------------
+
+void EFS_Utils::MarkFile(const char* fn, bool bDeleteSource)
+{
+	xr_string ext = strext(fn);
+	ext.insert(1, "~");
+	xr_string backup_fn = EFS.ChangeFileExt(fn, ext.c_str());
+
+	if (bDeleteSource)
+		FS.file_rename(fn, backup_fn.c_str(), true);
+	else
+		FS.file_copy(fn, backup_fn.c_str());
+}
+
+xr_string EFS_Utils::AppendFolderToName(xr_string& tex_name, int depth, BOOL full_name)
+{
+	string1024 nm;
+	xr_strcpy(nm, tex_name.c_str());
+	tex_name = AppendFolderToName(nm, sizeof(nm), depth, full_name);
+	return tex_name;
 }

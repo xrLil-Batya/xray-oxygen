@@ -225,6 +225,7 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h" />
     <ClInclude Include="..\xrRender\dxGlowManager.h" />
+    <ClInclude Include="..\xrRender\RenderLightGI.h" />
     <ClInclude Include="..\xrRender\r_types.h" />
     <ClInclude Include="..\xrRender\ScreenshotManager.h" />
     <ClInclude Include="..\xrRender\xrRenderTarget.h" />
@@ -252,7 +253,6 @@
     <ClInclude Include="..\xrRender\xrStripify.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="..\xrRender\Light_DB.h" />
-    <ClInclude Include="light_gi.h" />
     <ClInclude Include="..\xrRender\Light_Package.h" />
     <ClInclude Include="Light_Render_Direct.h" />
     <ClInclude Include="light_smapvis.h" />
@@ -410,6 +410,10 @@
   <ItemGroup>
     <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
     <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp" />
+    <ClCompile Include="..\xrRender\RenderCalculate.cpp" />
+    <ClCompile Include="..\xrRender\RenderLightGI.cpp" />
+    <ClCompile Include="..\xrRender\RenderLights.cpp" />
+    <ClCompile Include="..\xrRender\RenderSun.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseAA.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseCombine.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseGamma.cpp" />
@@ -431,9 +435,6 @@
     <ClCompile Include="..\xrRenderDX10\dx10Texture.cpp" />
     <ClCompile Include="..\xrRender\PSLibrary.cpp" />
     <ClCompile Include="r2_blenders.cpp" />
-    <ClCompile Include="r2_R_calculate.cpp" />
-    <ClCompile Include="r2_R_lights.cpp" />
-    <ClCompile Include="r2_R_sun.cpp" />
     <ClCompile Include="r2_sector_detect.cpp" />
     <ClCompile Include="r4.cpp" />
     <ClCompile Include="r4_loader.cpp" />
@@ -458,7 +459,6 @@
     <ClCompile Include="..\xrRender\xrStripify.cpp" />
     <ClCompile Include="..\xrRender\light.cpp" />
     <ClCompile Include="..\xrRender\Light_DB.cpp" />
-    <ClCompile Include="light_GI.cpp" />
     <ClCompile Include="..\xrRender\Light_Package.cpp" />
     <ClCompile Include="light_smapvis.cpp" />
     <ClCompile Include="light_vis.cpp" />
