@@ -94,11 +94,10 @@ void CRenderTarget::accum_spot(light* L)
 
 		// compute xforms
 		Matrix4x4 xf_world;
-		xf_world.InvertMatrixByMatrix(Device.mView);
+		xf_world.Inverse(nullptr, Device.mView);
 		Matrix4x4 xf_view = L->X.S.view;
-
 		Matrix4x4 xf_project;
-		xf_project.Multiply(m_TexelAdjust, L->X.S.project);
+		xf_project.Multiply(L->X.S.project, m_TexelAdjust);
 
 		m_Shadow.Multiply(xf_world, xf_view);
 		m_Shadow.Multiply(m_Shadow, xf_project);
