@@ -45,27 +45,46 @@ void CScreenshotManager::ProcessImage(u32* pData, u32 size, bool bGammaCorrectio
 
 ID3DBlob* CScreenshotManager::MakeScreenshotNormal(u32 fmt)
 {
+	ID3DTexture2D* pSmallTexture = nullptr;
 	ID3DResource* pBackBufferRes = nullptr;
 	ID3DBlob* pData = nullptr;
 
 	D3D_SUBRESOURCE_DATA TexData;
+	D3D_TEXTURE2D_DESC desc;
 
 	// Copy back buffer to resource
 	HW.pBaseRT->GetResource(&pBackBufferRes);
 	VERIFY(pBackBufferRes);
 
+	std::memset(&desc, 0, sizeof(desc));
+	desc.Width = Device.dwWidth;
+	desc.Height = Device.dwHeight;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_SNORM;
+	desc.Usage = D3D_USAGE_DEFAULT;
+	desc.BindFlags = D3D_BIND_SHADER_RESOURCE;
+	desc.SampleDesc.Count = 1;
+
 	// Apply gamma settings to screenshot
 	//// [FX]: For the correctness of the code is not sure. DirectX i not studied. 
 	std::memset(&TexData, 0, sizeof(D3D_SUBRESOURCE_DATA));
 	TexData.pSysMem = (u32*)malloc(Device.dwWidth * Device.dwHeight * sizeof(u32));
+	TexData.SysMemPitch = desc.Width * 2;
+	TexData.SysMemSlicePitch = desc.Height * TexData.SysMemPitch;
 
 	bool bGammaCorrection = psDeviceFlags.test(rsFullscreen) ? ps_r_flags.test(R_FLAG_SS_GAMMA_CORRECTION) : false;
 	ProcessImage((u32*)TexData.pSysMem, Device.dwWidth * Device.dwHeight, bGammaCorrection);
-	free(const_cast<void*>(TexData.pSysMem));
 
 	// Save resource to buffer and return it
-	CHK_DX(D3DX11SaveTextureToMemory(HW.pContext, pBackBufferRes, (D3DX11_IMAGE_FILE_FORMAT)fmt, &pData, 0));
+	CHK_DX(HW.pDevice->CreateTexture2D(&desc, &TexData , &pSmallTexture));
+	CHK_DX(D3DX11LoadTextureFromTexture(HW.pContext, pBackBufferRes, nullptr, pSmallTexture));
+	CHK_DX(D3DX11SaveTextureToMemory(HW.pContext, pBackBufferRes, (D3DX11_IMAGE_FILE_FORMAT)fmt, &pData, 0)); // Use pSmallTexture for gamma
+
+	// Cleanup
+	_RELEASE(pSmallTexture);
 	_RELEASE(pBackBufferRes);
+	//free(const_cast<void*>(TexData.pSysMem));
 
 	return pData;
 }
@@ -89,7 +108,7 @@ ID3DBlob* CScreenshotManager::MakeScreenshotForSavedGame()
 	desc.Format = DXGI_FORMAT_BC1_UNORM;
 	desc.SampleDesc.Count = 1;
 	desc.Usage = D3D_USAGE_DEFAULT;
-	desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
 	// Create small texture, copy (and resize) resourse to it
 	CHK_DX(HW.pDevice->CreateTexture2D(&desc, nullptr, &pSmallTexture));
