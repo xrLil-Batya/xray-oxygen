@@ -1,9 +1,46 @@
 #include "stdafx.h"
+#include "../xrRender/dxRenderDeviceRender.h"
 #include "../xrRender/ScreenshotManager.h"
 
 void CScreenshotManager::ProcessImage(u32* pData, u32 size, bool bGammaCorrection)
 {
-	//#TODO: implement CScreenshotManager::ProcessImage for DX11
+	u32* pPixel = pData;
+	u32* pEnd = pPixel + size;
+
+	if (bGammaCorrection)
+	{
+		DXGI_GAMMA_CONTROL G = dxRenderDeviceRender::Instance().GetGammaLUT();
+		for (int i = 0; i < 256; ++i)
+		{
+			G.GammaCurve[i].Red   /= 256;
+			G.GammaCurve[i].Green /= 256;
+			G.GammaCurve[i].Blue  /= 256;
+		}
+
+		// Apply gamma correction and kill aplha
+		for (; pPixel != pEnd; ++pPixel)
+		{
+			u32 p = *pPixel;
+			*pPixel = color_xrgb(
+				G.GammaCurve[color_get_R(p)].Red,
+				G.GammaCurve[color_get_G(p)].Green,
+				G.GammaCurve[color_get_B(p)].Blue
+			);
+		}
+	}
+	else
+	{
+		// Just kill alpha
+		for (; pPixel != pEnd; ++pPixel)
+		{
+			u32 p = *pPixel;
+			*pPixel = color_xrgb(
+				color_get_R(p),
+				color_get_G(p),
+				color_get_B(p)
+			);
+		}
+	}
 }
 
 ID3DBlob* CScreenshotManager::MakeScreenshotNormal(u32 fmt)
@@ -11,11 +48,20 @@ ID3DBlob* CScreenshotManager::MakeScreenshotNormal(u32 fmt)
 	ID3DResource* pBackBufferRes = nullptr;
 	ID3DBlob* pData = nullptr;
 
+	D3D_SUBRESOURCE_DATA TexData;
+
 	// Copy back buffer to resource
 	HW.pBaseRT->GetResource(&pBackBufferRes);
 	VERIFY(pBackBufferRes);
 
-	//#TODO: apply gamma settings to screenshot
+	// Apply gamma settings to screenshot
+	//// [FX]: For the correctness of the code is not sure. DirectX i not studied. 
+	std::memset(&TexData, 0, sizeof(D3D_SUBRESOURCE_DATA));
+	TexData.pSysMem = (u32*)malloc(Device.dwWidth * Device.dwHeight * sizeof(u32));
+
+	bool bGammaCorrection = psDeviceFlags.test(rsFullscreen) ? ps_r_flags.test(R_FLAG_SS_GAMMA_CORRECTION) : false;
+	ProcessImage((u32*)TexData.pSysMem, Device.dwWidth * Device.dwHeight, bGammaCorrection);
+	free(const_cast<void*>(TexData.pSysMem));
 
 	// Save resource to buffer and return it
 	CHK_DX(D3DX11SaveTextureToMemory(HW.pContext, pBackBufferRes, (D3DX11_IMAGE_FILE_FORMAT)fmt, &pData, 0));

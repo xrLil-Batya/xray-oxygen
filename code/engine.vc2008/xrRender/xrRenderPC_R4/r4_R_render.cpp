@@ -22,10 +22,9 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 	marker					++;
 
 	// Calculate sector(s) and their objects
-	if (pLastSector)		{
-		//!!!
+	if (pLastSector)	
+	{
 		//!!! BECAUSE OF PARALLEL HOM RENDERING TRY TO DELAY ACCESS TO HOM AS MUCH AS POSSIBLE
-		//!!!
 		{
 			// Traverse object database
 			g_SpatialSpace->q_frustum
@@ -150,13 +149,14 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 				break;	// exit loop on frustums
 			}
 		}
-		if (g_pGameLevel && (phase==PHASE_NORMAL))	g_hud->Render_Last();		// HUD
 	}
 	else
 	{
-		set_Object									(nullptr);
-		if (g_pGameLevel && (phase==PHASE_NORMAL))	g_hud->Render_Last();		// HUD
+		set_Object(nullptr);
 	}
+	// Render HUD Mesh
+	if (g_pGameLevel && g_hud && (phase == PHASE_NORMAL))
+		g_hud->Render_Last();
 }
 
 void CRender::render_menu	()
@@ -165,7 +165,7 @@ void CRender::render_menu	()
 	//	Globals
 	RCache.set_CullMode				(CULL_CCW);
 	RCache.set_Stencil				(FALSE);
-	RCache.set_ColorWriteEnable		();
+	RCache.set_ColorWriteEnable();
 
 	// Main Render
 	{
