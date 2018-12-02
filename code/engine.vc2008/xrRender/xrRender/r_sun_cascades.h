@@ -1,4 +1,5 @@
 #pragma once
+#include <concurrent_vector.h>
 
 namespace sun
 {
@@ -17,7 +18,7 @@ struct cascade
 	cascade () : reset_chain( false )	{}
 
 	Fmatrix			xform;
-	xr_vector<ray>	rays;
+	concurrency::concurrent_vector<ray>	rays;
 	float			size;
 	float			bias;
 	bool			reset_chain;

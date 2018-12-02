@@ -71,7 +71,7 @@ void CRender::render_rain()
 	// Compute volume(s) - something like a frustum for infinite directional light
 	// Also compute virtual light position and sector it is inside
 	CFrustum			cull_frustum;
-	xr_vector<Fplane>	cull_planes;
+	concurrency::concurrent_vector<Fplane>	cull_planes;
 	Fvector3			cull_COP;
 	CSector*			cull_sector;
 	Matrix4x4			cull_xform;

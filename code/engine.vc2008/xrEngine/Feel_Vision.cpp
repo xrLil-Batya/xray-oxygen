@@ -5,6 +5,7 @@
 #include "xr_collide_form.h"
 #include "igame_level.h"
 #include "../xrCDB/cl_intersect.h"
+#include <ppl.h>
 
 namespace Feel {
 
@@ -108,7 +109,7 @@ namespace Feel {
 		}
 		if (seen.size()>1) 
 		{
-			std::sort							(seen.begin(),seen.end());
+			concurrency::parallel_sort							(seen.begin(),seen.end());
 			xr_vector<CObject*>::iterator end	= std::unique	(seen.begin(),seen.end());
 			if (end!=seen.end()) seen.erase		(end,seen.end());
 		}

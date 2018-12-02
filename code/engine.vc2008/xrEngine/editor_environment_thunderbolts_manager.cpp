@@ -5,8 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment thunderbolts manager class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_thunderbolts_manager.hpp"
@@ -382,7 +382,7 @@ manager::thunderbolts_ids_type const& manager::thunderbolts_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j							= xr_strdup((*i)->id());
 
-	std::sort						(m_thunderbolts_ids.begin(), m_thunderbolts_ids.end(), logical_string_predicate());
+	concurrency::parallel_sort						(m_thunderbolts_ids.begin(), m_thunderbolts_ids.end(), logical_string_predicate());
 
 	return							(m_thunderbolts_ids);
 }
@@ -403,7 +403,7 @@ manager::thunderbolts_ids_type const& manager::collections_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j							= xr_strdup((*i)->id());
 
-	std::sort						(m_collections_ids.begin(), m_collections_ids.end(), logical_string_predicate());
+	concurrency::parallel_sort						(m_collections_ids.begin(), m_collections_ids.end(), logical_string_predicate());
 
 	return							(m_collections_ids);
 }

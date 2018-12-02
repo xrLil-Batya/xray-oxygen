@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_effects_manager.hpp"
@@ -112,7 +113,7 @@ manager::effects_ids_type const& manager::effects_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j					= xr_strdup((*i)->id());
 
-	std::sort				(m_effects_ids.begin(), m_effects_ids.end(), logical_string_predicate());
+	concurrency::parallel_sort				(m_effects_ids.begin(), m_effects_ids.end(), logical_string_predicate());
 
 	return					(m_effects_ids);
 }

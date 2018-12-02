@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "../xrRender/light.h"
+#include <ppl.h>
 
 IC bool pred_LI(const light_indirect& A, const light_indirect& B)
 {
@@ -54,7 +55,7 @@ void light::gi_generate()
 	}
 
 	// sort & clip
-	std::sort(indirect.begin(), indirect.end(), pred_LI);
+	concurrency::parallel_sort(indirect.begin(), indirect.end(), pred_LI);
 	if (indirect.size() > indirect_photons)
 		indirect.erase(indirect.begin() + indirect_photons, indirect.end());
 

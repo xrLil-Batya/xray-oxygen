@@ -2,6 +2,8 @@
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/irenderable.h"
 #include "../xrRender/FBasicVisual.h"
+#include <ppl.h>
+#include <concurrent_vector.h>
 
 xr_vector<Fbox, xalloc<Fbox> >	s_casters;
 
@@ -54,7 +56,7 @@ void CRender::render_sun()
 	// Compute volume(s) - something like a frustum for infinite directional light
 	// Also compute virtual light position and sector it is inside
 	CFrustum					cull_frustum;
-	xr_vector<Fplane>			cull_planes;
+	concurrency::concurrent_vector<Fplane> cull_planes;
 	Fvector3					cull_COP;
 	CSector*					cull_sector;
 	Matrix4x4					cull_xform;
@@ -541,11 +543,11 @@ void CRender::render_sun_near()
 
 	// Compute volume(s) - something like a frustum for infinite directional light
 	// Also compute virtual light position and sector it is inside
-	CFrustum					cull_frustum;
-	xr_vector<Fplane>			cull_planes;
-	Fvector3					cull_COP;
-	CSector*					cull_sector;
-	Matrix4x4					cull_xform;
+	CFrustum							   cull_frustum;
+	concurrency::concurrent_vector<Fplane> cull_planes;
+	Fvector3							   cull_COP;
+	CSector*							   cull_sector;
+	Matrix4x4							   cull_xform;
 	{
 		FPU::m64r();
 		// Lets begin from base frustum
@@ -788,11 +790,11 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 
 	// Compute volume(s) - something like a frustum for infinite directional light
 	// Also compute virtual light position and sector it is inside
+	concurrency::concurrent_vector<Fplane> cull_planes;
 	CFrustum					cull_frustum;
-	xr_vector<Fplane>			cull_planes;
 	Fvector3					cull_COP;
 	CSector*					cull_sector;
-	Matrix4x4						cull_xform;
+	Matrix4x4					cull_xform;
 	{
 		FPU::m64r();
 		// Lets begin from base frustum
@@ -860,7 +862,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 					edge_vec.sub(near_p);
 					edge_vec.normalize();
 
-					light_cuboid.view_frustum_rays.emplace_back(near_p, edge_vec);
+					light_cuboid.view_frustum_rays.push_back(sun::ray(near_p, edge_vec));
 				}
 			}
 			else

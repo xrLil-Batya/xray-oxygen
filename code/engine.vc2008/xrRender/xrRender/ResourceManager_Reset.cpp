@@ -75,7 +75,7 @@ void	CResourceManager::reset_end				()
 		{
 			rt.push_back(rt_it->second);
 		}
-		std::sort(rt.begin(),rt.end(), [](const CRT* A, const CRT* B) { return A->_order < B->_order; });
+		concurrency::parallel_sort(rt.begin(),rt.end(), [](const CRT* A, const CRT* B) { return A->_order < B->_order; });
 		for (u32 _it=0; _it<rt.size(); _it++)	rt[_it]->reset_end	();
 	}
 

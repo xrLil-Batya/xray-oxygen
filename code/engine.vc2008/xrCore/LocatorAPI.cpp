@@ -9,6 +9,7 @@
 #include <direct.h>
 #include <fcntl.h>
 #include <sys\stat.h>
+#include <ppl.h>
 #pragma warning(default:4995)
 
 #include "FS_internal.h"
@@ -547,7 +548,7 @@ bool CLocatorAPI::Recurse(const char* path)
 	size_t newSize = rec_files.size();
 	if (newSize > oldSize)
 	{
-		std::sort(rec_files.begin() + oldSize, rec_files.end(), pred_str_ff);
+		concurrency::parallel_sort(rec_files.begin() + oldSize, rec_files.end(), pred_str_ff);
 		for (size_t i = oldSize; i < newSize; i++)
 			ProcessOne(path, rec_files[i]);
 		rec_files.erase(rec_files.begin() + oldSize, rec_files.end());

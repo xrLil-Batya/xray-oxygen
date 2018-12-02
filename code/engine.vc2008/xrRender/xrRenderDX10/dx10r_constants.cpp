@@ -3,6 +3,7 @@
 
 #pragma warning(disable:4995)
 #include <d3dx9.h>
+#include <ppl.h>
 #pragma warning(default:4995)
 
 #include "../xrRender/ResourceManager.h"
@@ -331,6 +332,6 @@ BOOL	R_constant_table::parse	(void* _desc, u32 destination)
 		parseResources(pReflection, ShaderDesc.BoundResources, destination);
 	}
 
-	std::sort	(table.begin(),table.end(),p_sort);
+	concurrency::parallel_sort(table.begin(),table.end(),p_sort);
 	return		TRUE;
 }

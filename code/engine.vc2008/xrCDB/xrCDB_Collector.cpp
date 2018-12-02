@@ -3,6 +3,7 @@
 #pragma hdrstop
 #pragma warning(disable: 4267)
 #include "xrCDB.h"
+#include <ppl.h>
 
 namespace CDB
 {
@@ -141,7 +142,7 @@ namespace CDB
 			++i;
 		}
 
-		std::sort(edges, edges + edge_count, sort_predicate());
+		concurrency::parallel_sort(edges, edges + edge_count, sort_predicate());
 
 		dest.assign(edge_count, u32(-1));
 

@@ -208,9 +208,9 @@ void CFrustum::CreateFromPortal(sPoly* poly, Fvector& vPN, Fvector& vBase, Fmatr
 	M = mFullXFORM;
 
 	P.n.x		= -(M.x[3] - M.x[2]);
-	P.n.y		= -(M.y[3] - M.x[2]);
-	P.n.z		= -(M.z[3] - M.y[2]);
-	P.d			= -(M.w[3] - M.z[2]);
+	P.n.y		= -(M.y[3] - M.y[2]);
+	P.n.z		= -(M.z[3] - M.z[2]);
+	P.d			= -(M.w[3] - M.w[2]);
 
 	float denom = 1.0f / P.n.magnitude();
 	P.n.x		*= denom;

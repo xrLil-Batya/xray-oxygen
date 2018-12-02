@@ -84,7 +84,7 @@ ID3DBlob* CScreenshotManager::MakeScreenshotNormal(u32 fmt)
 	// Cleanup
 	_RELEASE(pSmallTexture);
 	_RELEASE(pBackBufferRes);
-	//free(const_cast<void*>(TexData.pSysMem));
+	free(const_cast<void*>(TexData.pSysMem));
 
 	return pData;
 }
