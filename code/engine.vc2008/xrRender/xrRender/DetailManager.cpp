@@ -205,6 +205,12 @@ void CDetailManager::Unload()
 	m_visibles[2].clear();
 	FS.r_close(dtFS);
 	dtFS = nullptr;
+
+	// Wait MT_Details
+	while (MTLock.TryLock())
+	{
+		Sleep(2);
+	}
 }
 
 extern ECORE_API float r_ssaDISCARD;
