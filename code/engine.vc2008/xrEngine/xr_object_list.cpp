@@ -146,7 +146,7 @@ void CObjectList::Update		(bool bForce)
 			}
 
 #ifdef DEBUG
-			std::sort					(crows.begin(), crows.end());
+			concurrency::parallel_sort					(crows.begin(), crows.end());
 			VERIFY						(
 				std::unique(
 					crows.begin(),

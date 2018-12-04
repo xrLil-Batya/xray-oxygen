@@ -303,7 +303,7 @@ public:
 
 	inline EGameMtlIt FirstMaterial() { return materials.begin(); }
 	inline EGameMtlIt LastMaterial() { return materials.end(); }
-	inline u32 CountMaterial() { return materials.size(); }
+	inline u32 CountMaterial() { return (u32)materials.size(); }
 
 	// material pair routine
 #ifdef _EDITOR

@@ -30,7 +30,8 @@ void CRenderTarget::phase_ssao	()
 	RCache.set_Stencil	(FALSE);
 
 	// Compute params
-	Fmatrix		m_v2w;			m_v2w.invert				(CastToGSCMatrix(Device.mView)		);
+	Matrix4x4 m_v2w;			
+	m_v2w.InvertMatrixByMatrix(Device.mView);
 
 	float		fSSAONoise = 2.0f;
 	fSSAONoise *= tan(deg2rad(67.5f));
@@ -100,7 +101,8 @@ void CRenderTarget::phase_downsamp	()
 	RCache.set_Stencil	(FALSE);
 
 	{
-		Fmatrix		m_v2w;			m_v2w.invert				(CastToGSCMatrix(Device.mView)		);
+		Matrix4x4 m_v2w;
+		m_v2w.InvertMatrixByMatrix(Device.mView);
 
 		// Fill VB
 		float	scale_X				= float(w)	/ float(TEX_jitter);

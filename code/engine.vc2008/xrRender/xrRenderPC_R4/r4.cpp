@@ -306,7 +306,6 @@ void CRender::reset_end()
 #pragma todo("VERTVER to every1: that's function so strange for me")
 void CRender::OnFrame()
 {
-
 	Models->DeleteQueue();
 	Device.seqParallel.insert(Device.seqParallel.begin(),
 		xrDelegate(BindDelegate(Details, &CDetailManager::MT_CALC)));

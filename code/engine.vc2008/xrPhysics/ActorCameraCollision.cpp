@@ -242,17 +242,11 @@ void	do_collide_and_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, IPh
 	if (cam_collided)
 	{
 		cam_step = true;
-		for (u16 i = 0; i < cam_correction_steps_num; ++i)
-		{
-			shell->set_LinearVel(Fvector().set(0, 0, 0));
-			shell->set_AngularVel(Fvector().set(0, 0, 0));
-			roote->setQuaternion(Fquaternion().set(xform));
-			cam_collided = false;
-			shell->PureStep();
-
-			if (!cam_collided)
-				break;
-		}
+		shell->set_LinearVel(Fvector().set(0, 0, 0));
+		shell->set_AngularVel(Fvector().set(0, 0, 0));
+		roote->setQuaternion(Fquaternion().set(xform));
+		cam_collided = false;
+		shell->PureStep();
 		cam_step = false;
 	}
 

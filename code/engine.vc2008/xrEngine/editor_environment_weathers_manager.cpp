@@ -5,8 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment manager class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_weathers_manager.hpp"
@@ -207,7 +207,7 @@ manager::weather_ids_type const& manager::weather_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j							= xr_strdup((*i)->id().c_str());
 
-	std::sort						(m_weather_ids.begin(), m_weather_ids.end(), logical_string_predicate());
+	concurrency::parallel_sort						(m_weather_ids.begin(), m_weather_ids.end(), logical_string_predicate());
 
 	return							(m_weather_ids);
 }

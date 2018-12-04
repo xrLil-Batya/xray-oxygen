@@ -408,6 +408,6 @@ void CROS_impl::prepare_lights(Fvector& position, IRenderable* O)
 		}
 
 		// Sort lights by importance - important for R1-shadows
-		std::sort(lights.begin(), lights.end(), pred_energy);
+		concurrency::parallel_sort(lights.begin(), lights.end(), pred_energy);
 	}
 }

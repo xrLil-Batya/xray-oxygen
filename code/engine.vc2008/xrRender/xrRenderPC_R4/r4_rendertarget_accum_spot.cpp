@@ -94,11 +94,10 @@ void CRenderTarget::accum_spot(light* L)
 
 		// compute xforms
 		Matrix4x4 xf_world;
-		xf_world.InvertMatrixByMatrix(Device.mView);
+		xf_world.Inverse(nullptr, Device.mView);
 		Matrix4x4 xf_view = L->X.S.view;
-
 		Matrix4x4 xf_project;
-		xf_project.Multiply(m_TexelAdjust, L->X.S.project);
+		xf_project.Multiply(L->X.S.project, m_TexelAdjust);
 
 		m_Shadow.Multiply(xf_world, xf_view);
 		m_Shadow.Multiply(m_Shadow, xf_project);
@@ -160,8 +159,8 @@ void CRenderTarget::accum_spot(light* L)
 		RCache.set_c("m_texgen", m_Texgen);
 		RCache.set_c("m_texgen_J", m_Texgen_J);
 		RCache.set_c("m_shadow", m_Shadow);
-		RCache.set_ca("m_lmap", 0, m_Lmap.x.m128_f32[0], m_Lmap.y.m128_f32[0], m_Lmap.z.m128_f32[0], m_Lmap.w.m128_f32[0]);
-		RCache.set_ca("m_lmap", 1, m_Lmap.x.m128_f32[1], m_Lmap.y.m128_f32[1], m_Lmap.z.m128_f32[1], m_Lmap.w.m128_f32[1]);
+		RCache.set_ca("m_lmap", 0, m_Lmap.x[0], m_Lmap.y[0], m_Lmap.z[0], m_Lmap.w[0]);
+		RCache.set_ca("m_lmap", 1, m_Lmap.x[1], m_Lmap.y[1], m_Lmap.z[1], m_Lmap.w[1]);
 
 		if (!RImplementation.o.dx10_msaa)
 		{
@@ -203,9 +202,9 @@ void CRenderTarget::accum_spot(light* L)
 	if (!RImplementation.o.fp16_blend) 
 	{
 		if (!RImplementation.o.dx10_msaa)
-			u_setrt(rt_Accumulator, NULL, NULL, HW.pBaseZB);
+			u_setrt(rt_Accumulator, nullptr, nullptr, HW.pBaseZB);
 		else
-			u_setrt(rt_Accumulator, NULL, NULL, rt_MSAADepth->pZRT);
+			u_setrt(rt_Accumulator, nullptr, nullptr, rt_MSAADepth->pZRT);
 
 		RCache.set_Element(s_accum_mask->E[SE_MASK_ACCUM_VOL]);
 		RCache.set_c("m_texgen", m_Texgen);
@@ -244,7 +243,7 @@ void CRenderTarget::accum_spot(light* L)
 		}
 	}
 
-	RCache.set_Scissor(0);
+	RCache.set_Scissor(nullptr);
 	increment_light_marker();
 }
 
@@ -441,7 +440,7 @@ void CRenderTarget::accum_volumetric(light* L)
 		RCache.set_ColorWriteEnable();
 
 		//	Restore clip planes
-		RCache.set_ClipPlanes(FALSE, (Fmatrix *)0, 0);
+		RCache.set_ClipPlanes(FALSE, (Fmatrix *)nullptr, 0);
 	}
-	RCache.set_Scissor(0);
+	RCache.set_Scissor(nullptr);
 }

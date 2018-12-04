@@ -78,6 +78,7 @@ void CPHCharacter::get_State(SPHNetState& state)
 	}
 	state.enabled = CPHObject::is_active();//!!dBodyIsEnabled(m_body);
 }
+
 void CPHCharacter::set_State(const SPHNetState& state)
 {
 	m_body_interpolation.SetPosition(state.previous_position, 0);
@@ -86,18 +87,18 @@ void CPHCharacter::set_State(const SPHNetState& state)
 	SetVelocity(state.linear_vel);
 	setForce(state.force);
 
-	if (!b_exist)
-		return;
-
-	if (state.enabled)
+	if (b_exist)
 	{
-		Enable();
-	};
-	if (!state.enabled)
-	{
-		Disable();
-	};
-	VERIFY2(dBodyStateValide(m_body), "WRONG BODYSTATE WAS SET");
+		if (state.enabled)
+		{
+			Enable();
+		}
+		else if (!state.enabled)
+		{
+			Disable();
+		}
+		VERIFY2(dBodyStateValide(m_body), "WRONG BODYSTATE WAS SET");
+	}
 }
 
 void CPHCharacter::Disable()

@@ -5,8 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment suns manager class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_suns_manager.hpp"
@@ -146,7 +146,7 @@ manager::suns_ids_type const& manager::suns_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j					= xr_strdup((*i)->id().c_str());
 
-	std::sort				(m_suns_ids.begin(), m_suns_ids.end(), logical_string_predicate());
+	concurrency::parallel_sort				(m_suns_ids.begin(), m_suns_ids.end(), logical_string_predicate());
 
 	return					(m_suns_ids);
 }

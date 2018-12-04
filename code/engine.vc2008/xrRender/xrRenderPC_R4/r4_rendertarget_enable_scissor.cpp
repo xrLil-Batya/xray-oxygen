@@ -1,17 +1,17 @@
 #include "stdafx.h"
 #include "../../xrEngine/DirectXMathExternal.h"
 
-BOOL CRenderTarget::enable_scissor		(light* L)		// true if intersects near plane
+// true if intersects near plane
+BOOL CRenderTarget::enable_scissor(light* L)
 {
 	// Near plane intersection
 	BOOL	near_intersect				= FALSE;
 	{
-		Fmatrix& M						= CastToGSCMatrix(Device.mFullTransform);
 		Fvector4 plane;
-		plane.x							= -(M._14 + M._13);
-		plane.y							= -(M._24 + M._23);
-		plane.z							= -(M._34 + M._33);
-		plane.w							= -(M._44 + M._43);
+		plane.x							= -(Device.mFullTransform.x[3] + Device.mFullTransform.x[2]);
+		plane.y							= -(Device.mFullTransform.y[3] + Device.mFullTransform.y[2]);
+		plane.z							= -(Device.mFullTransform.z[3] + Device.mFullTransform.z[2]);
+		plane.w							= -(Device.mFullTransform.w[3] + Device.mFullTransform.w[2]);
 		float denom						= -1.0f / _sqrt(_sqr(plane.x)+_sqr(plane.y)+_sqr(plane.z));
 		plane.mul						(denom);
 		Fplane	P;	P.n.set(plane.x,plane.y,plane.z); P.d = plane.w;

@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "eventapi.h"
 #include "xr_ioconsole.h"
+#include <ppl.h>
 
 class ENGINE_API CEvent
 {
@@ -65,7 +66,7 @@ IC bool ev_sort(CEvent*E1, CEvent*E2)
 
 void CEventAPI::Dump()
 {
-	std::sort(Events.begin(), Events.end(), ev_sort);
+	concurrency::parallel_sort(Events.begin(), Events.end(), ev_sort);
 	for (EVENT &it: Events)
 		Msg("* [%d] %s", it->RefCount(), it->GetFull());
 }

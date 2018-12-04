@@ -5,8 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment sound channels manager class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_sound_channels_manager.hpp"
@@ -129,7 +129,7 @@ manager::channels_ids_type const& manager::channels_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j					= xr_strdup((*i)->id());
 
-	std::sort				(m_channels_ids.begin(), m_channels_ids.end(), logical_string_predicate());
+	concurrency::parallel_sort				(m_channels_ids.begin(), m_channels_ids.end(), logical_string_predicate());
 
 	return					(m_channels_ids);
 }

@@ -24,8 +24,8 @@ CDemoPlay::CDemoPlay(const char *name, float ms, u32 cycles, float life_time) : 
 	fSpeed				= ms;
 	dwCyclesLeft		= cycles?cycles:1;
 
-	m_pMotion			= 0;
-	m_MParam			= 0;
+	m_pMotion			= nullptr;
+	m_MParam			= nullptr;
 	string_path			nm, fn;
 	xr_strcpy			(nm,sizeof(nm),name);	
 	LPSTR extp			=strext(nm);
@@ -268,9 +268,9 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 		Matrix4x4 mInvCamera;
 		mInvCamera.InvertMatrixByMatrix(Device.mView);
 
-		info.n.set(mInvCamera.y.m128_f32[0], mInvCamera.y.m128_f32[1], mInvCamera.y.m128_f32[2]);
-		info.d.set(mInvCamera.z.m128_f32[0], mInvCamera.z.m128_f32[1], mInvCamera.z.m128_f32[2]);
-		info.p.set(mInvCamera.w.m128_f32[0], mInvCamera.w.m128_f32[1], mInvCamera.w.m128_f32[2]);
+		info.n.set(mInvCamera.y[0], mInvCamera.y[1], mInvCamera.y[2]);
+		info.d.set(mInvCamera.z[0], mInvCamera.z[1], mInvCamera.z[2]);
+		info.p.set(mInvCamera.w[0], mInvCamera.w[1], mInvCamera.w[2]);
 
 		fLifeTime -= Device.fTimeDelta;
 	}

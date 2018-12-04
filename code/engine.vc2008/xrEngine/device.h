@@ -164,12 +164,12 @@ public:
 		if (enabled && !m_bNearer)
 		{
 			m_bNearer = TRUE;
-			mProject.w.m128_f32[4] -= EPS_L;
+			mProject.Matrix.r[1].m128_f32[3] -= EPS_L;
 		}
 		else if (!enabled && m_bNearer)
 		{
 			m_bNearer = FALSE;
-			mProject.w.m128_f32[4] += EPS_L;
+			mProject.Matrix.r[1].m128_f32[3] += EPS_L;
 		}
 		m_pRender->SetCacheXform(CastToGSCMatrix(mView), CastToGSCMatrix(mProject));
 	}
@@ -188,16 +188,16 @@ public:
 	
 	CRenderDevice			()
 		:
-		m_pRender(0)
+		m_pRender(nullptr)
 #ifdef INGAME_EDITOR
-		,m_editor_module(0),
-		m_editor_initialize(0),
-		m_editor_finalize(0),
-		m_editor(0),
-		m_engine(0)
+		,m_editor_module(nullptr),
+		m_editor_initialize(nullptr),
+		m_editor_finalize(nullptr),
+		m_editor(nullptr),
+		m_engine(nullptr)
 #endif // #ifdef INGAME_EDITOR
 	{
-	    m_hWnd              = NULL;
+	    m_hWnd              = nullptr;
 		b_is_Active			= FALSE;
 		b_is_Ready			= FALSE;
 		Timer.Start			();
@@ -230,16 +230,16 @@ public:
 	// Creation & Destroying
 	void ConnectToRender();
 	void Create								(bool bIsEditor);
-	void Run								(void);
+	void Run								();
 
 	void BeginToWork();
 
-	void Destroy(void);
+	void Destroy();
 	void Reset								(bool precache = true);
 
-	void Initialize							(void);
-	HWND CreateXRayWindow (HWND parent = NULL, int Width = 0, int Height = 0);
-	void ShutDown							(void);
+	void Initialize							();
+	HWND CreateXRayWindow (HWND parent = nullptr, int Width = 0, int Height = 0);
+	void ShutDown							();
 
     void UpdateWindowPropStyle              (WindowPropStyle PropStyle = (WindowPropStyle)ps_vid_windowtype);
 
@@ -293,8 +293,8 @@ private:
 			void				message_loop_editor	();
 
 private:
-	typedef editor::initialize_function_ptr			initialize_function_ptr;
-	typedef editor::finalize_function_ptr			finalize_function_ptr;
+	using initialize_function_ptr = editor::initialize_function_ptr;
+	using finalize_function_ptr = editor::finalize_function_ptr;
 
 private:
 	HMODULE						m_editor_module;

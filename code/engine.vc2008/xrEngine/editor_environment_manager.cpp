@@ -5,8 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment manager class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_manager.hpp"
@@ -125,7 +125,7 @@ void manager::load_weathers										()
 	auto _E=WeatherCycles.end();
 	for (; _I!=_E; _I++){
 		R_ASSERT3	(_I->second.size()>1,"Environment in weather must >=2",*_I->first);
-		std::sort(_I->second.begin(),_I->second.end(),sort_env_etl_pred);
+		concurrency::parallel_sort(_I->second.begin(),_I->second.end(),sort_env_etl_pred);
 	}
 	R_ASSERT2	(!WeatherCycles.empty(),"Empty weathers.");
 	SetWeather	((*WeatherCycles.begin()).first.c_str());
@@ -155,7 +155,7 @@ manager::shader_ids_type const& manager::shader_ids				() const
 	stream->close				();
 	FS.r_close					(reader);
 
-	std::sort					(m_shader_ids.begin(), m_shader_ids.end(), logical_string_predicate());
+	concurrency::parallel_sort					(m_shader_ids.begin(), m_shader_ids.end(), logical_string_predicate());
 
 	return						(m_shader_ids);
 }
@@ -171,7 +171,7 @@ manager::particle_ids_type const& manager::particle_ids			() const
 	for ( ; i != e; library.particles_group_next(i))
 		m_particle_ids.push_back(library.particles_group_id(**i).c_str());
 
-	std::sort					(m_particle_ids.begin(), m_particle_ids.end(), logical_string_predicate());
+	concurrency::parallel_sort					(m_particle_ids.begin(), m_particle_ids.end(), logical_string_predicate());
 	return						(m_particle_ids);
 }
 
@@ -189,7 +189,7 @@ manager::light_animator_ids_type const& manager::light_animator_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j									= xr_strdup((*i)->cName.c_str());
 
-	std::sort								(m_light_animator_ids.begin(), m_light_animator_ids.end(), logical_string_predicate());
+	concurrency::parallel_sort								(m_light_animator_ids.begin(), m_light_animator_ids.end(), logical_string_predicate());
 
 	return									(m_light_animator_ids);
 }

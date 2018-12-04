@@ -249,9 +249,6 @@
     <ClInclude Include="..\xrRender\Light_DB.h">
       <Filter>Lights</Filter>
     </ClInclude>
-    <ClInclude Include="light_gi.h">
-      <Filter>Lights</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\Light_Package.h">
       <Filter>Lights</Filter>
     </ClInclude>
@@ -736,6 +733,9 @@
     <ClInclude Include="..\xrRender\r_types.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\xrRender\RenderLightGI.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -754,15 +754,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="r2_blenders.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_R_calculate.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_R_lights.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="r2_R_sun.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="r2_sector_detect.cpp">
@@ -835,9 +826,6 @@
       <Filter>Lights</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\Light_DB.cpp">
-      <Filter>Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="light_GI.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\Light_Package.cpp">
@@ -1331,6 +1319,18 @@
       <Filter>Core_Target</Filter>
     </ClCompile>
     <ClCompile Include="AnselWrapper.cpp" />
+    <ClCompile Include="..\xrRender\RenderSun.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\RenderLights.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\RenderCalculate.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\RenderLightGI.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\..\xrCore.natvis" />
