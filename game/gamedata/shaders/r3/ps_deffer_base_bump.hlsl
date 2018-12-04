@@ -12,21 +12,12 @@ f_deffer main ( p_bumped I )
 		Ne				= normalize	(Ne);
 
 	// hemi,sun,material
-	float 	ms	= xmaterial		;
+	float 	ms	= xmaterial;
 #ifdef USE_LM_HEMI
-//	float4	lm 	= tex2D			(s_hemi, I.lmh);
 	float4	lm 	= s_hemi.Sample( smp_rtlinear, I.lmh);
-//	float 	h  	= dot			(lm.rgb,1.h/3.h);
 	float 	h  	= get_hemi(lm);
-# ifdef USE_R2_STATIC_SUN
-//		 	ms 	= lm.w;
-			ms 	= get_sun(lm);
-# endif
 #else
-	float 	h	= I.position.w	;
-# ifdef USE_R2_STATIC_SUN
-		 	ms	= I.tcdh.w		;
-# endif
+	float 	h	= I.position.w;
 #endif
 
 	O			= pack_gbuffer(

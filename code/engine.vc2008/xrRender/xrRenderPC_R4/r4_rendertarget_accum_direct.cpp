@@ -589,7 +589,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 		//	Igor: draw volumetric here
 		//if (ps_r_flags.test(R2FLAG_SUN_SHAFTS))
-		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0) && sub_phase == SE_SUN_FAR && ps_r_sunshafts_mode == SS_VOLUMETRIC)
+		if (need_to_render_sunshafts() && sub_phase == SE_SUN_FAR && ps_r_sunshafts_mode == SS_VOLUMETRIC)
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
 }
@@ -975,14 +975,6 @@ void CRenderTarget::accum_direct_lum	()
 void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, const Fmatrix &mShadow)
 {
 	PIX_EVENT(accum_direct_volumetric);
-
-	if (!need_to_render_sunshafts())
-		return;
-
-    if (ps_r_sunshafts_mode != SS_VOLUMETRIC)
-        return;
-
-	if ( (sub_phase!=SE_SUN_NEAR) && (sub_phase!=SE_SUN_FAR) ) return;
 
 	phase_vol_accumulator();
 

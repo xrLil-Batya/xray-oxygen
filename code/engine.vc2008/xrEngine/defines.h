@@ -13,7 +13,6 @@ enum: unsigned long
 	rsFullscreen					= (1<<0),
 	rsClearBB						= (1<<1),
 	rsVSync							= (1<<2),
-	rsWireframe						= (1<<3),
 	rsTripleBuffering				= (1<<4),
 	rsStatistic						= (1<<5),
 	rsDetails						= (1<<6),

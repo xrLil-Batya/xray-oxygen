@@ -39,6 +39,8 @@ cbuffer	static_globals
 	uniform float4		L_hemi_color;
 
 	uniform float3 		eye_position;
+	uniform float3		eye_direction;
+	uniform float3		eye_normal;
 
 	uniform float4 		pos_decompression_params;
 
@@ -100,9 +102,6 @@ inline bool isThermalMode()
 uniform float4x4 	m_texgen;
 //uniform float4x4 	mVPTexgen;
 uniform float3		L_sun_dir_e;
-
-//uniform float3		eye_direction;
-uniform float3		eye_normal;
 */
 
 float 	calc_cyclic 	(float x)				

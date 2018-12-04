@@ -3,7 +3,6 @@
 #define NUM_SAMPLES int(11)
 
 uniform float4 ssss_params;
-uniform float3 eye_direction;
 uniform	Texture2D s_mask_blur; // smoothed mask
 
 float4 main(p_screen I) : SV_Target

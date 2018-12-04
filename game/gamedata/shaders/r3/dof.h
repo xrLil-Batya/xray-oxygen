@@ -36,12 +36,8 @@ float DOFFactor( float depth)
 #define EPSDEPTH	0.0001h
 float3	dof(float2 center)
 {
+	float	depth		= s_position.Load(int3(center * screen_res.xy, 0), 0).z;
 
-#ifndef USE_MSAA
-   float 	depth		= s_position.Sample( smp_nofilter, center).z;
-#else
-   float 	depth		= s_position.Load( int3( center * screen_res.xy ,0),0 ).z;
-#endif
 	if (depth <= EPSDEPTH)	depth = dof_params.w;
 	float	blur 		= DOFFactor(depth);
 

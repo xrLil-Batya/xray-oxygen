@@ -75,7 +75,8 @@ void	R_xforms::apply_invp()
 	if (!m_bInvPValid)
 	{
 		//#TODO: check if we need 4x4 invert for projection matrix. There is no one in xrCore :(
-		m_invp.invert(m_p);
+		//m_invp.invert(m_p);
+		D3DXMatrixInverse((D3DXMATRIX*)&m_invp, nullptr, (D3DXMATRIX*)&m_p);
 		m_bInvPValid = true;
 	}
 	RCache.set_c(c_invp, m_invp);

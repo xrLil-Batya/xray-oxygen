@@ -141,18 +141,48 @@ float3	calc_reflection( float3 pos_w, float3 norm_w )
 // Holger Gruen AMD - I change normal packing and unpacking to make sure N.z is accessible without ALU cost
 // this help the HDAO compute shader to run more efficiently
 // Swartz to all: you removed HDAO, so this is better :)
-float2 gbuf_pack_normal( float3 n )
+// RainbowZerg: use spheremap transform (Crytek's implementation) for normals packing
+// as it affords good quality and cheaper for encoding/decoding than using spherical coords
+float2 gbuf_pack_normal(float3 N)
 {
-	return (float2(atan2(n.y, n.x) / PI, n.z) + 1.0)*0.5;
+	float2 res;
+	
+	// Vanilla
+//	res.x  = N.z;
+//	res.y  = 0.5f * (N.x + 1.0f);
+//	res.y *= (N.y < 0.0f ? -1.0f : 1.0f);
+
+	// Spherical coords
+//	res = (float2(atan2(N.y, N.x) / PI, N.z) + 1.0)*0.5;
+
+	// Spheremap transform
+	res = normalize(N.xy)*sqrt(N.z*0.5 + 0.5);
+	
+	return res;
 }
 
-float3 gbuf_unpack_normal( float2 enc )
+float3 gbuf_unpack_normal(float2 enc)
 {
-	float2 ang = enc * 2 - 1;
-	float2 scth;
-	sincos(ang.x * PI, scth.x, scth.y);
-	float2 scphi = float2(sqrt(1.0 - ang.y*ang.y), ang.y);
-	return float3(scth.y*scphi.x, scth.x*scphi.x, scphi.y);
+	float3 res;
+	
+	// Vanilla
+//	res.z  = enc.x;
+//	res.x  = (2.0f * abs(enc.y)) - 1.0f;
+//	res.y = (enc.y < 0 ? -1.0 : 1.0) * sqrt(abs(1 - res.x * res.x - res.z * res.z));
+
+	// Spherical coords
+//	float2 ang = enc * 2 - 1;
+//	float2 scth;
+//	sincos(ang.x * PI, scth.x, scth.y);
+//	float2 scphi = float2(sqrt(1.0 - ang.y*ang.y), ang.y);
+//	res = float3(scth.y*scphi.x, scth.x*scphi.x, scphi.y);
+
+	// Spheremap transform
+	float l = length(enc.xy);
+	res.z = l*l*2.0 - 1.0;
+	res.xy = normalize(enc.xy)*sqrt(1.0 - res.z*res.z);
+
+	return res;
 }
 
 float gbuf_pack_hemi_mtl( float hemi, float mtl )
@@ -192,14 +222,8 @@ f_deffer pack_gbuffer( float4 norm, float4 pos, float4 col, uint imask )
 {
 	f_deffer res;
 
-#ifndef GBUFFER_OPTIMIZATION
-	res.position	= pos;
-	res.Ne			= norm;
-	res.C			   = col;
-#else
 	res.position	= float4( gbuf_pack_normal( norm ), pos.z, gbuf_pack_hemi_mtl( norm.w, pos.w ) );
-	res.C			   = col;
-#endif
+	res.C			= col;
 
 #ifdef EXTEND_F_DEFFER
    res.mask = imask;
@@ -208,7 +232,6 @@ f_deffer pack_gbuffer( float4 norm, float4 pos, float4 col, uint imask )
 	return res;
 }
 
-#ifdef GBUFFER_OPTIMIZATION
 gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample )
 {
 	gbuffer_data gbd;
@@ -276,66 +299,6 @@ gbuffer_data gbuffer_load_data_offset( float2 tc : TEXCOORD, float2 OffsetTC : T
 
    return gbuffer_load_data( OffsetTC, pos2d + delta, iSample );
 }
-
-#else // GBUFFER_OPTIMIZATION
-gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, uint iSample )
-{
-	gbuffer_data gbd;
-
-#ifndef USE_MSAA
-#ifdef SM_2_0
-	float4 P	= tex2D(s_position, int3(tc * screen_res.xy, 0))
-#else
-	float4 P	= s_position.Load(int3(tc * screen_res.xy, 0));
-#endif
-#else
-   float4 P	= s_position.Load( int3( tc * screen_res.xy, 0 ), iSample );
-#endif
-
-	gbd.P		= P.xyz;
-	gbd.mtl		= P.w;
-
-#ifndef USE_MSAA
-#ifdef SM_2_0
-	float4 N	= tex2D(s_normal, int3(tc * screen_res.xy, 0))
-#else
-	float4 N	= s_normal.Load(int3( tc * screen_res.xy, 0 ));
-#endif
-#else
-	float4 N	= s_normal.Load( int3( tc * screen_res.xy, 0 ), iSample );
-#endif
-
-	gbd.N		= N.xyz;
-	gbd.hemi	= N.w;
-
-#ifndef USE_MSAA
-#ifdef SM_2_0
-	float4 C	= tex2D(s_diffuse, int3(tc * screen_res.xy, 0))
-#else
-	float4 C	= s_diffuse.Load( int3( tc * screen_res.xy, 0 ) );
-#endif
-#else
-	float4 C	= s_diffuse.Load( int3( tc * screen_res.xy, 0 ), iSample );
-#endif
-
-
-	gbd.C		= C.xyz;
-	gbd.gloss	= C.w;
-
-	return gbd;
-}
-
-gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD  )
-{
-   return gbuffer_load_data( tc, 0 );
-}
-
-gbuffer_data gbuffer_load_data_offset( float2 tc : TEXCOORD, float2 OffsetTC : TEXCOORD, uint iSample )
-{
-   return gbuffer_load_data( OffsetTC, iSample );
-}
-
-#endif // GBUFFER_OPTIMIZATION
 
 //////////////////////////////////////////////////////////////////////////
 //	Aplha to coverage code

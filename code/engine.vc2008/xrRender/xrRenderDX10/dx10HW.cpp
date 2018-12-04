@@ -163,11 +163,12 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 		if (!FAILED(R)) break;
 	}
 
-	if (IsWindows10OrGreater())
+	if (IsWindows8Point1OrGreater())
 	{
-		D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-		R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-		arch.TileBasedDeferredRenderer == TRUE;
+		// RainbowZerg: this code does nothing, let it be commented until this check become useful for something.
+		//D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
+		//R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
+		//arch.TileBasedDeferredRenderer == TRUE;
 
 		IDXGIDevice3 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
@@ -177,11 +178,11 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 		R = pDXGIDevice->SetMaximumFrameLatency(1);
 	}
-	else if (IsWindows8OrGreater())
+	else if (IsWindows7SP1OrGreater())
 	{
-		D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-		R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-		arch.TileBasedDeferredRenderer == TRUE;
+		//D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
+		//R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
+		//arch.TileBasedDeferredRenderer == TRUE;
 
 		IDXGIDevice2 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&pDXGIDevice));
@@ -502,7 +503,7 @@ void CHW::UpdateViews()
 	R = m_pSwapChain->GetBuffer(0, __uuidof(ID3DTexture2D), (LPVOID*)&pBuffer);
 	R_CHK(R);
 
-	R = pDevice->CreateRenderTargetView(pBuffer, NULL, &pBaseRT);
+	R = pDevice->CreateRenderTargetView(pBuffer, nullptr, &pBaseRT);
 	pBuffer->Release();
 	R_CHK(R);
 

@@ -12,7 +12,6 @@ static struct _DF {
 	{"rsFullscreen",	rsFullscreen	},
 	{"rsClearBB",		rsClearBB 		},
 	{"rsVSync",			rsVSync 		},
-	{"rsWireframe",		rsWireframe		},
     {NULL,0}
 };
 
