@@ -1,5 +1,4 @@
 #include "common.h"
-#include "ogse_config.h"
 #include "ogse_functions.h"
 
 float4 main(p_screen I) : SV_Target
