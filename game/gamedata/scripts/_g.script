@@ -1,8 +1,11 @@
----------------------------------------------------------------
+﻿---------------------------------------------------------------
 -- // LuaJIT 
 if (jit == nil) then profiler.setup_hook() end
 -- // Math::Random init 
 math.randomseed(os.time())
+
+if not string.gfind then string.gfind = string.gmatch end
+if not math.mod then math.mod = math.fmod end
 ---------------------------------------------------------------
 function empty	(container)
 	if (type(container) == "function") then
