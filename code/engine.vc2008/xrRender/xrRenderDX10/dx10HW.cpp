@@ -163,7 +163,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 		if (!FAILED(R)) break;
 	}
 
-	if (IsWindows8Point1OrGreater())
+	if (IsWindows10OrGreater())
 	{
 		// RainbowZerg: this code does nothing, let it be commented until this check become useful for something.
 		//D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
@@ -178,7 +178,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 		R = pDXGIDevice->SetMaximumFrameLatency(1);
 	}
-	else if (IsWindows7SP1OrGreater())
+	else if (IsWindows8Point1OrGreater())
 	{
 		//D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
 		//R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));

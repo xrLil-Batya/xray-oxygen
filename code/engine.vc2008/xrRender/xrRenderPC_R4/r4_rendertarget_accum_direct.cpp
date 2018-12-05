@@ -788,8 +788,8 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 			xf_invview.InvertMatrixByMatrix(Device.mView);
 
 			Matrix4x4 xf_project;		
-			xf_project.Multiply(m_TexelAdjust, fuckingsun->X.D.combine);
-			m_shadow.Multiply(xf_project, xf_invview);
+			xf_project.Multiply(fuckingsun->X.D.combine, m_TexelAdjust);
+			m_shadow.Multiply(xf_invview, xf_project);
 
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)

@@ -227,13 +227,13 @@ void CEffectRain::InvalidateState()
 	state = stIdle;
 }
 
-void CEffectRain::UpdateTimer(RainTimer& timer, States state, bool bNeedRayPick)
+void CEffectRain::UpdateTimer(RainTimer& timer, States NewState, bool bNeedRayPick)
 {
 	float factor = Environment().CurrentEnv->rain_density;
 	if (factor > EPS_L)
 	{
 		// Is raining	
-		if (state == States::stWorking)
+		if (NewState == States::stWorking)
 		{
 			// Effect is enabled
 			Fvector P, D;
@@ -245,7 +245,7 @@ void CEffectRain::UpdateTimer(RainTimer& timer, States state, bool bNeedRayPick)
 			if (!bNeedRayPick || !RayPick(P, D, max_dist, material, collide::rqtBoth))
 			{
 				// Under the sky
-				if (timer.bFirstRainingFrame)
+				if (timer.bFirstRainingFrame && !Device.dwPrecacheFrame)
 				{
 					// First frame
 					timer.bFirstRainingFrame = false;

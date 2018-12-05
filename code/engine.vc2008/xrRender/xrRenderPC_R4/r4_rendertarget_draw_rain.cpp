@@ -92,12 +92,12 @@ void CRenderTarget::draw_rain( light &RainSetup )
 			TransformDirByMatrix(m_xform, localnormal, normal);
 			localnormal.normalize();
 
-			m_clouds_shadow.Multiply(m_xform, xf_invview);
+			m_clouds_shadow.Multiply(xf_invview, m_xform);
 			m_xform = DirectX::XMMatrixScaling(1.f, 1.f, 1.f);
-			m_clouds_shadow.Multiply(m_xform, m_clouds_shadow);
+			m_clouds_shadow.Multiply(m_clouds_shadow, m_xform);
 			Fvector ToTranslation = localnormal.mul(w_shift);
 			m_xform = DirectX::XMMatrixTranslation(ToTranslation.x, ToTranslation.y, ToTranslation.z);
-			m_clouds_shadow.Multiply(m_xform, m_clouds_shadow);
+			m_clouds_shadow.Multiply(m_clouds_shadow, m_xform);
 		}
 
 		// Make jitter texture
