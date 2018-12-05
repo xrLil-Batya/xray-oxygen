@@ -108,10 +108,9 @@ BOOL CLevel::Load_GameSpecific_After()
 		Sounds_Random_Enabled = FALSE;
 	}
 
-	if (CEffect_Rain* rain = Environment().eff_Rain)
-	{
-		rain->InvalidateState();
-	}
+	CEffectRain* pRain = Environment().eff_Rain;
+	if (pRain)
+		pRain->InvalidateState();
 
 	if (FS.exist(fn_game, "$level$", "level.fog_vol"))
 	{

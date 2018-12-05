@@ -122,7 +122,7 @@ xr_token pp_aa_quality_token[] =
 BOOL SkyGodEdition						= false;
 
 int			ps_rs_loading_stages		= 0;
-float		droplets_power_debug		= 0.f;
+extern ENGINE_API float ps_r_sunshafts_intensity;
 
 int			ps_r_pp_aa_use_taa			= 0;
 int			ps_r_Supersample			= 1;
@@ -300,7 +300,6 @@ Flags32	ps_r3_flags =
 	| R3_FLAG_VOLUMETRIC_SMOKE
 	//| R3_FLAG_MSAA 
 	//| R3_FLAG_MSAA_OPT
-	| R3_FLAG_GBUFFER_OPT
 };
 
 // R4-specific /////////////////////////////////////////////////////
@@ -771,7 +770,6 @@ void xrRender_initconsole()
 	CMD4(CCC_Float,		"r_gloss_factor",		&ps_r_gloss_factor,			0.0f,	10.0f	);
 	CMD4(CCC_Integer,	"r_wait_sleep",			&ps_r_wait_sleep,			0,		1		);
 	CMD3(CCC_Mask,		"r_volumetric_lights",	&ps_r_flags,				R_FLAG_VOLUMETRIC_LIGHTS);
-	CMD4(CCC_Float,     "r_rain_drops_power_debug",&droplets_power_debug,	0.0f, 3.0f		);
 
 	// Anti-aliasing
 	CMD4(CCC_Integer,	"r_supersample",		&ps_r_Supersample,			1,		8		); // doesn't work
@@ -919,7 +917,6 @@ void xrRender_initconsole()
 
 	// MSAA
 	CMD3(CCC_Token,		"r3_msaa",						&ps_r3_msaa,				qmsaa_token);
-	CMD3(CCC_Mask,		"r3_gbuffer_opt",				&ps_r3_flags,				R3_FLAG_GBUFFER_OPT);
 	CMD3(CCC_Mask,		"r3_use_dx10_1",				&ps_r3_flags,				R3_FLAG_USE_DX10_1);
 	CMD3(CCC_Token,		"r3_msaa_alphatest",			&ps_r3_msaa_atest,			qmsaa_atest_token);
 	CMD3(CCC_Token,		"r3_minmax_sm",					&ps_r3_minmax_sm,			qminmax_sm_token);

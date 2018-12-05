@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #pragma hdrstop
 
 #include "IGame_Persistent.h"
@@ -28,7 +28,7 @@ IGame_Persistent::IGame_Persistent	()
 	RDEVICE.seqAppDeactivate.Add	(this);
 
 	m_pMainMenu						= nullptr;
-	Environment().load();
+	Environment().Load();
 	m_pGShaderConstants = ShadersExternalData();
 }
 
@@ -56,8 +56,8 @@ void IGame_Persistent::OnAppStart	()
 void IGame_Persistent::OnAppEnd		()
 {
 #ifndef _EDITOR
-	Environment().unload			 ();
-#endif    
+	Environment().Unload			 ();
+#endif
 	OnGameEnd						();
 
 #ifndef _EDITOR

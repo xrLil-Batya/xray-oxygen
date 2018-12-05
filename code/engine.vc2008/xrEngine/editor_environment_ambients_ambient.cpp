@@ -86,7 +86,7 @@ void ambient::load			(
 	)
 {
 	VERIFY					(m_load_section == section);
-	inherited::load			(
+	inherited::Load			(
 		ambients_config,
 		sound_channels_config,
 		effects_config,

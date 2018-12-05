@@ -17,8 +17,8 @@
 #include "editor_environment_ambients_manager.hpp"
 #include "editor_environment_suns_manager.hpp"
 #include "editor_environment_thunderbolts_manager.hpp"
-#include "xr_efflensflare.h"
-#include "thunderbolt.h"
+#include "LensFlare.h"
+#include "Thunderbolt.h"
 
 using editor::environment::weathers::time;
 using editor::environment::weathers::weather;
@@ -110,7 +110,7 @@ void time::load				(CInifile& config)
 //	((Fvector&)clouds_color).mul(.5f*(float)atof(_GetItem(clouds,4,temp)));
 
 //	on_device_create			();
-	inherited::load				(m_manager, config);
+	inherited::Load				(m_manager, config);
 }
 
 void time::save				(CInifile& config)
@@ -673,7 +673,7 @@ void time::lerp	(CEnvironment* parent, CEnvDescriptor& A, CEnvDescriptor& B, flo
 	m_sun					= a.m_sun;
 	m_thunderbolt_collection= a.m_thunderbolt_collection;
 
-	inherited::lerp			(parent, A, B, f, M, m_power);
+	inherited::Lerp			(parent, A, B, f, M, m_power);
 }
 
 #endif // #ifdef INGAME_EDITOR

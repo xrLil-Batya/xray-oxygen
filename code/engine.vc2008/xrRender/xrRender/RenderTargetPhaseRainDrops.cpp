@@ -1,9 +1,14 @@
 #include "stdafx.h"
-#include "../../xrEngine/igame_persistent.h"
-#include "../../xrEngine/environment.h"
+#include "../../xrEngine/IGame_Persistent.h"
+#include "../../xrEngine/Environment.h"
+#include "../../xrEngine/Rain.h"
 
 void CRenderTarget::PhaseRainDrops()
 {
+	float wetness = Environment().eff_Rain->GetCurrViewEntityWetness();
+	if (wetness < EPS_L)
+		return;
+
 	//#TODO: RZ to self: improve rain drops effect.
 	// 1. Check if actor is _really_ under rain.
 	// 2. Use wet/dry timers for proper effect accumulation.

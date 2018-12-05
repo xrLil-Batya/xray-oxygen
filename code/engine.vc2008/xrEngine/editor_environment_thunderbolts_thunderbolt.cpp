@@ -52,7 +52,7 @@ void thunderbolt::create_center_gradient(CInifile& config, shared_str const& sec
 
 void thunderbolt::load			(CInifile& config)
 {
-	inherited::load		(config, m_id);
+	inherited::Load		(config, m_id);
 	m_color_animator	= config.r_string	(m_id, "color_anim");
 	m_lighting_model	= config.r_string	(m_id, "lightning_model");
 	m_sound				= config.r_string	(m_id, "sound");

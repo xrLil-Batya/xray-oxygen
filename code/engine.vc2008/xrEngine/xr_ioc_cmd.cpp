@@ -10,6 +10,15 @@
 #include <regex>
 #include "../Include/xrRender/RenderDeviceRender.h"
 
+float	view_port_near_koef = 0.5f;
+
+extern ENGINE_API float		psVisDistance;
+extern ENGINE_API float		psFogDistance;
+extern ENGINE_API float		psFogDensity;
+extern ENGINE_API float		psFogNear;
+extern ENGINE_API float		psFogFar;
+extern ENGINE_API Fvector3	psFogColor;
+
 extern XRCORE_API xr_vector<xr_token> vid_quality_token;
 
 xr_token vid_bpp_token[ ]=
@@ -19,7 +28,6 @@ xr_token vid_bpp_token[ ]=
 	{ 0,	0}
 };
 //-----------------------------------------------------------------------
-float view_port_near_koef = 0.5f;
 void IConsole_Command::add_to_LRU( shared_str const& arg )
 {
 	if ( arg.size() == 0 || bEmptyArgsHandled )
@@ -570,7 +578,6 @@ ENGINE_API float psHUD_FOV = psHUD_FOV_def;
 
 extern int			rsDVB_Size;
 extern int			rsDIB_Size;
-extern Flags32		psEnvFlags;
 
 extern int			g_ErrorLineCount;
 extern int			ps_rs_loading_stages;

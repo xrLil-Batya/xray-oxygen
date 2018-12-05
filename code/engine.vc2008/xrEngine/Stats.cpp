@@ -4,6 +4,7 @@
 
 #include "../xrcdb/ISpatial.h"
 #include "IGame_Persistent.h"
+#include "IGame_Level.h"
 #include "render.h"
 #include "xr_object.h"
 #include "psapi.h"
@@ -271,6 +272,15 @@ void CStats::Show()
 		F.SetHeightI						(f_base_size);
 		seqStats.Process				(rp_Stats);
 		pFont->OnRender					();
+
+		//////////////////////////////////////////////////////////////////////////
+		// Environment stats
+		if (g_pGameLevel && g_pGameLevel->bReady)
+		{
+			F.SetHeightI				(f_base_size);
+			F.OutSet					(800, 0);
+			Environment().Statistics(&F);
+		}
 	};
 
 	if( psDeviceFlags.test(rsDrawFPS) )

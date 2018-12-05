@@ -57,7 +57,7 @@ channel::~channel			()
 
 void channel::load			(CInifile& config)
 {
-	inherited::load		(config, m_load_section.c_str());
+	inherited::Load		(config, m_load_section.c_str());
 
 	VERIFY				(m_sounds.empty());
 	LPCSTR sounds		= config.r_string		(m_load_section,	"sounds");

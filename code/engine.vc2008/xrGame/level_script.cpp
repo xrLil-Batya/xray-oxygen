@@ -154,7 +154,7 @@ bool start_weather_fx_from_time	(LPCSTR weather_name, float time)
 
 bool is_wfx_playing	()
 {
-	return			(Environment().IsWFXPlaying());
+	return			(Environment().IsWeatherFXPlaying());
 }
 
 float get_wfx_time	()
@@ -164,7 +164,7 @@ float get_wfx_time	()
 
 void stop_weather_fx()
 {
-	Environment().StopWFX();
+	Environment().StopWeatherFX();
 }
 
 void set_time_factor(float time_factor)

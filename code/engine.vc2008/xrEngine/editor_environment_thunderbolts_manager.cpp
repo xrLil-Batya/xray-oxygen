@@ -429,7 +429,7 @@ shared_str manager::unique_collection_id	(shared_str const& id) const
 	return					(m_collections_collection->generate_unique_id(id.c_str()));
 }
 
-SThunderboltDesc* manager::description		(CInifile& config, shared_str const& section) const
+CThunderboltDesc* manager::description		(CInifile& config, shared_str const& section) const
 {
 	thunderbolt_container_type::const_iterator	i = m_thunderbolts.begin();
 	thunderbolt_container_type::const_iterator	e = m_thunderbolts.end();
@@ -443,7 +443,7 @@ SThunderboltDesc* manager::description		(CInifile& config, shared_str const& sec
 #endif // #ifdef DEBUG
 }
 
-SThunderboltCollection* manager::get_collection	(shared_str const& section)
+CThunderboltCollection* manager::get_collection	(shared_str const& section)
 {
 	collection_container_type::iterator	i = m_collections.begin();
 	collection_container_type::iterator	e = m_collections.end();

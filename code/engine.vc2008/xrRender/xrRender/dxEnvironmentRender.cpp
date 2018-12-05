@@ -6,7 +6,7 @@
 #include "../../xrEngine/environment.h"
 #include "../../xrRender/xrRender/ResourceManager.h"
 
-#include "../../xrEngine/xr_efflensflare.h"
+#include "../../xrEngine/LensFlare.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -125,7 +125,7 @@ void dxEnvDescriptorMixerRender::Clear()
 	clouds_r_textures.push_back	(zero);
 }
 
-void dxEnvDescriptorMixerRender::lerp(IEnvDescriptorRender *inA, IEnvDescriptorRender *inB)
+void dxEnvDescriptorMixerRender::Lerp(IEnvDescriptorRender *inA, IEnvDescriptorRender *inB)
 {
 	dxEnvDescriptorRender *pA = (dxEnvDescriptorRender *)inA;
 	dxEnvDescriptorRender *pB = (dxEnvDescriptorRender *)inB;

@@ -134,7 +134,6 @@ extern ECORE_API float			ps_r_prop_ss_radius;
 extern ECORE_API float			ps_r_prop_ss_intensity;
 extern ECORE_API float			ps_r_prop_ss_blend;
 
-extern ECORE_API float	        droplets_power_debug;
 
 extern ECORE_API Flags32 ps_r_flags;
 enum RenderFlags : u32
@@ -223,7 +222,6 @@ enum
 	R3_FLAG_VOLUMETRIC_SMOKE		= (1<<1),
 	R3_FLAG_MSAA_HYBRID				= (1<<2),
 	R3_FLAG_MSAA_OPT				= (1<<3),
-	R3_FLAG_GBUFFER_OPT				= (1<<4),
 	R3_FLAG_USE_DX10_1				= (1<<5),
 	//R3FLAG_MSAA					= (1<<6),
 	//R3FLAG_MSAA_ALPHATEST			= (1<<7),
