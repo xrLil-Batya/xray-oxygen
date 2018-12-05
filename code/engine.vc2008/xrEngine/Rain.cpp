@@ -4,6 +4,7 @@
 #include "Rain.h"
 #include "IGame_Persistent.h"
 #include "Environment.h"
+#include "GameMtlLib.h"
 
 #ifdef _EDITOR
     #include "ui_toolscustom.h"
@@ -44,11 +45,7 @@ CEffectRain::CEffectRain() : sndVolume(0.0f)
 	else
 		Msg("! Rain sound ambient not created - sound engine is null");
 
-	{
-	}
-	{
-	}
-
+	//#TODO: RainbowZerg to self: make separate values for wetting/drying speed and load them from config
 	timerWorld			= xr_new<RainTimer>();
 	timerCurrViewEntity = xr_new<RainTimer>();
 
@@ -70,7 +67,7 @@ CEffectRain::~CEffectRain()
 
 void CEffectRain::Load()
 {
-	//#TODO: RZ to self: load all rain parameters from config, for each rain descriptor separately
+	//#TODO: RainbowZerg to self: load all rain parameters from config, for each rain descriptor separately
 }
 
 float CEffectRain::GetWorldWetness() const
@@ -79,7 +76,8 @@ float CEffectRain::GetWorldWetness() const
 	float lastRainDuration	= timerWorld->lastRainDuration;
 	float rainDropTime		= timerWorld->rainDropTime;
 
-	return ((rainTimer - lastRainDuration) / 20.f + lerp(0.0f, saturate(lastRainDuration / 20.f), saturate(lastRainDuration)));
+	float res = ((rainTimer - lastRainDuration) / rainDropTime + lerp(0.0f, saturate(lastRainDuration / rainDropTime), saturate(lastRainDuration)));
+	return saturate(res);
 }
 
 float CEffectRain::GetCurrViewEntityWetness() const
@@ -88,7 +86,8 @@ float CEffectRain::GetCurrViewEntityWetness() const
 	float lastRainDuration	= timerCurrViewEntity->lastRainDuration;
 	float rainDropTime		= timerCurrViewEntity->rainDropTime;
 
-	return ((rainTimer - lastRainDuration) / rainDropTime + lerp(0.0f, saturate(lastRainDuration / rainDropTime), saturate(lastRainDuration)));
+	float res = ((rainTimer - lastRainDuration) / rainDropTime + lerp(0.0f, saturate(lastRainDuration / rainDropTime), saturate(lastRainDuration)));
+	return saturate(res);
 }
 
 // Born

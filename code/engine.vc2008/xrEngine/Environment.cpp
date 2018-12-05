@@ -346,7 +346,8 @@ bool CEnvironment::StartWeatherFXFromTime(shared_str name, float time)
 	if (!SetWeatherFX(name))
 		return false;
 
-		envDesc->exec_time = NormalizeTime(envDesc->exec_time - wfx_time + time);
+	for (CEnvDescriptor* pEnvDesc : *CurrentWeather)
+		pEnvDesc->exec_time = NormalizeTime(pEnvDesc->exec_time - wfx_time + time);
 
 	wfx_time = time;
 	return true;
@@ -445,7 +446,7 @@ void CEnvironment::Lerp(float& current_weight)
 
 	Fvector	view			= Device.vCameraPosition;
 	float mpower			= 0;
-
+	for (CEnvModifier& envMod : Modifiers)
 		mpower += EM.sum(envMod, view);
 
 	// final lerp
