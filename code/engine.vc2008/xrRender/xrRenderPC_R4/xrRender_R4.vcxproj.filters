@@ -768,9 +768,6 @@
     <ClCompile Include="r4_R_rain.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="r4_R_render.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\r__dsgraph_build.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -1330,6 +1327,9 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\RenderLightGI.cpp">
       <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\Render.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
