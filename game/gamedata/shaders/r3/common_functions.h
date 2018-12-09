@@ -1,5 +1,6 @@
-#ifndef	common_functions_h_included
-#define	common_functions_h_included
+#ifndef COMMON_FUNCTIONS_H
+#define COMMON_FUNCTIONS_H
+
 #include "configurator_defines.h"
 
 float4 proj2screen(float4 Project)
@@ -26,11 +27,12 @@ float Contrast(float Input, float ContrastPower)
 
 void tonemap( out float4 low, out float4 high, float3 rgb, float scale)
 {
-	rgb		=	rgb*scale;
+	rgb		= rgb * scale;
 
-	const float fWhiteIntensity = 1.7;
-
-	const float fWhiteIntensitySQR = fWhiteIntensity*fWhiteIntensity;
+	//const float fWhiteIntensity = 1.7;
+    //TODO: Base upon middlegray, not white (it'll look better, I lost the link for this) 
+	//TODO: Find link and explain.
+	const float fWhiteIntensitySQR = 2.89;//fWhiteIntensity*fWhiteIntensity;
 
 	low		=	( (rgb*(1+rgb/fWhiteIntensitySQR)) / (rgb+1) ).xyzz;
 
@@ -47,15 +49,9 @@ float calc_fogging( float4 w_pos )
 	return dot(w_pos,fog_plane);         
 }
 
-#ifdef SM_5_0
-//Swartz27: I can't remember if all DX11 cards support doubles.
-//if not revert this.
-double2 unpack_tc_base( float2 tc, float du, float dv )
-#else
-float2 unpack_tc_base( float2 tc, float du, float dv )
-#endif
+float2 unpack_tc_base( float2 tc, float du, float dv)
 {
-	return (tc.xy + float2	(du,dv))*(32.f/32768.f); 
+	return float2(tc.xy + float2(du,dv))*(32.f/32768.f); 
 }
 
 float3 calc_sun_r1( float3 norm_w )    
@@ -67,7 +63,15 @@ float3 calc_model_hemi_r1( float3 norm_w )
 {
  return max(0,norm_w.y)*L_hemi_color;
 }
-
+float3 true_stereographic(float x, float y)
+{
+float3 output = float3(
+    (x+x)/(1+(x*x)+(y*y)),
+    (y+y)/(1+(x*x)+(y*y)),
+    (1-(x*x + y*y))/(1+(x*x)+(y*y))
+    );
+return output;
+}
 float3 calc_model_lq_lighting( float3 norm_w )    
 {
 	return L_material.x*calc_model_hemi_r1(norm_w) + L_ambient + L_material.y*calc_sun_r1(norm_w);
@@ -75,11 +79,10 @@ float3 calc_model_lq_lighting( float3 norm_w )
 
 float3 	unpack_normal( float3 v )	{ return 2*v-1; }
 float3 	unpack_bx2( float3 v )	{ return 2*v-1; }
-#ifdef SM_5_0
-[precise] double3 unpack_bx4( float3 v ) { return 4*v-2; } 
-#else
-float3 	unpack_bx4( float3 v )	{ return 4*v-2; } 
-#endif
+float3 	unpack_bx4( float3 v )	
+{
+	return 4*v-2; 
+} 
 float2 	unpack_tc_lmap( float2 tc )	{ return tc*(1.f/32768.f);	} // [-1  .. +1 ] 
 float4	unpack_color( float4 c ) { return c.bgra; }
 float4	unpack_D3DCOLOR( float4 c ) { return c.bgra; }
@@ -157,7 +160,6 @@ float2 gbuf_pack_normal(float3 N)
 
 	// Spheremap transform
 	res = normalize(N.xy)*sqrt(N.z*0.5 + 0.5);
-	
 	return res;
 }
 
@@ -244,9 +246,9 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample 
 
 #ifndef USE_MSAA
 #ifdef SM_2_0
-	float4 P	= tex2D(s_position, int3(pos2d, 0));
+	float4 P	= tex2D(s_position, int3(pos2d, 0)); //I'd change this to [pos2d] but I don't know how SM_2_0 works yet.
 #else
-	float4 P	= s_position.Load( int3( pos2d, 0 ) );
+	float4 P	= s_position[pos2d];
 #endif
 #else
 	float4 P	= s_position.Load( int3( pos2d, 0 ), iSample );
@@ -269,7 +271,7 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample 
 #ifdef SM_2_0
    float4 C	= tex2D(s_diffuse, int3(pos2d, 0));
 #else
-   float4 C	= s_diffuse.Load( int3( pos2d, 0 ) );
+   float4 C	= s_diffuse[pos2d];
 #endif
 #else
    float4	C	= s_diffuse.Load( int3( pos2d, 0 ), iSample );
@@ -303,7 +305,8 @@ gbuffer_data gbuffer_load_data_offset( float2 tc : TEXCOORD, float2 OffsetTC : T
 //////////////////////////////////////////////////////////////////////////
 //	Aplha to coverage code
 #if ( defined( MSAA_ALPHATEST_DX10_1_ATOC ) || defined( MSAA_ALPHATEST_DX10_1 ) )
-
+//TODO: Non-MSAA version (you don't need MSAA to do this)
+//Basically if(alpha < 0.5) either "discard" or (faster) alternative to discard may be needed
 #if MSAA_SAMPLES == 2
 uint alpha_to_coverage ( float alpha, float2 pos2d )
 {
@@ -434,6 +437,4 @@ uint alpha_to_coverage ( float alpha, float2 pos2d )
 #endif
 #endif
 
-
-
-#endif	//	common_functions_h_included
+#endif //EOF
