@@ -119,7 +119,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	//	TODO: DX10: implement dynamic format selection
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // HDR10 = DXGI_FORMAT_R10G10B10A2_UNORM
-	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 2 : 1; //wouldn't triple-buffering be 3 frames? Typo? Or do you want double-buffering?
+	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 3 : 2;
 
 	// Multisample
 	sd.SampleDesc.Count = 1;
@@ -265,7 +265,7 @@ void CHW::Reset(HWND hwnd)
 	bool bWindowed = !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
 
 	sd.Windowed		= bWindowed;
-	sd.BufferCount	= psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
+	sd.BufferCount	= psDeviceFlags.test(rsTripleBuffering) ? 3 : 2;
 
 	m_pSwapChain->SetFullscreenState(!bWindowed, NULL);
 
