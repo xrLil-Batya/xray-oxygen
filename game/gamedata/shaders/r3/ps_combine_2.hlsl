@@ -15,7 +15,7 @@ struct c2_out
 	float	Depth : SV_Depth;
 #endif
 };
-
+[earlydepthstencil]
 c2_out main(p_screen I)
 {
 	c2_out res;

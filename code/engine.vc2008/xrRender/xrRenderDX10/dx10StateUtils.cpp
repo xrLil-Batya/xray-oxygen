@@ -191,12 +191,12 @@ void ResetDescription( D3D_DEPTH_STENCIL_DESC &desc )
    }
 
 	desc.FrontFace.StencilFailOp = D3D_STENCIL_OP_KEEP;
-	desc.FrontFace.StencilDepthFailOp = D3D_STENCIL_OP_KEEP;
+	desc.FrontFace.StencilDepthFailOp = D3D_STENCIL_OP_INCR;
 	desc.FrontFace.StencilPassOp = D3D_STENCIL_OP_KEEP;
 	desc.FrontFace.StencilFunc = D3D_COMPARISON_ALWAYS;
 
 	desc.BackFace.StencilFailOp = D3D_STENCIL_OP_KEEP;
-	desc.BackFace.StencilDepthFailOp = D3D_STENCIL_OP_KEEP;
+	desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;//D3D11_STENCIL_OP_DECR;
 	desc.BackFace.StencilPassOp = D3D_STENCIL_OP_KEEP;
 	desc.BackFace.StencilFunc = D3D_COMPARISON_ALWAYS;
 }

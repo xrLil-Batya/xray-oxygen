@@ -48,6 +48,7 @@ public:
 	adopt_compiler&			_o_wmark		(bool	E)								{	C->SH->flags.bWmark=E;						return	*this;		}
 	adopt_compiler&			_pass			(LPCSTR	vs,		LPCSTR ps)				{	TryEndPass();	C->r_Pass(vs,ps,true);		return	*this;		}
 	adopt_compiler&			_passgs			(LPCSTR	vs,		LPCSTR	gs,		LPCSTR ps){	TryEndPass();	C->r_Pass(vs,gs,ps,true);	return	*this;		}
+	adopt_compiler&			_passcs(LPCSTR	vs, LPCSTR	cs) { TryEndPass();	C->r_Pass(vs, cs, true);	return	*this; }
 	adopt_compiler&			_fog			(bool	_fog)							{	C->PassSET_LightFog	(FALSE,_fog);			return	*this;		}
 	adopt_compiler&			_ZB				(bool	_test,	bool _write)			{	C->PassSET_ZB		(_test,_write);			return	*this;		}
 	adopt_compiler&			_blend			(bool	_blend, u32 abSRC, u32 abDST)	{	C->PassSET_ablend_mode(_blend,abSRC,abDST);	return 	*this;		}
@@ -105,6 +106,7 @@ void	CResourceManager::LS_Load()
 			.def(								constructor<const adopt_compiler&>())
 			.def("begin",						&adopt_compiler::_pass			,return_reference_to<1>())
 			.def("begin",						&adopt_compiler::_passgs		,return_reference_to<1>())
+		    .def("cs_begin", &adopt_compiler::_passcs, return_reference_to<1>())
 			.def("sorting",						&adopt_compiler::_options		,return_reference_to<1>())
 			.def("emissive",					&adopt_compiler::_o_emissive	,return_reference_to<1>())
 			.def("distort",						&adopt_compiler::_o_distort		,return_reference_to<1>())

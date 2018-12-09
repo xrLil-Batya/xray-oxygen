@@ -9,53 +9,53 @@
 //	Used by VS
 cbuffer	dynamic_transforms
 {
-	uniform float3x4		m_W;			// local2world
-	uniform float3x4		m_invW;			// world2local
-	uniform float3x4		m_V;			// world2view
-	uniform float3x4		m_invV;			// view2world
-	uniform float4x4 		m_P;			// view2proj
-	uniform float4x4		m_invP;			// proj2view
-	uniform float3x4		m_WV;			// local2world2view
-	uniform float4x4 		m_VP;			// world2view2proj
-	uniform float4x4 		m_WVP;			// local2world2view2proj
+	float3x4		m_W;			// local2world
+	float3x4		m_invW;			// world2local
+	float3x4		m_V;			// world2view
+	float3x4		m_invV;			// view2world
+	float4x4 		m_P;			// view2proj
+	float4x4		m_invP;			// proj2view
+	float3x4		m_WV;			// local2world2view
+	float4x4 		m_VP;			// world2view2proj
+	float4x4 		m_WVP;			// local2world2view2proj
 	//	Used by VS only
-	uniform float4			L_material;	// 0,0,0,mid
-	uniform float4          hemi_cube_pos_faces;
-	uniform float4          hemi_cube_neg_faces;
-	uniform	float4 			dt_params;	//	Detail params
+	float4			L_material;	// 0,0,0,mid
+	float4          hemi_cube_pos_faces;
+	float4          hemi_cube_neg_faces;
+	float4 			dt_params;	//	Detail params
 }
 
 cbuffer	static_globals
 {
-	uniform float4		timers;
+	float4		timers;
 
-	uniform float4		fog_plane;
-	uniform float4		fog_params;		// x=near*(1/(far-near)), ?,?, w = -1/(far-near)
-	uniform float4		fog_color;
+	float4		fog_plane;
+	float4		fog_params;		// x=near*(1/(far-near)), ?,?, w = -1/(far-near)
+	float4		fog_color;
 
-	uniform float4		L_ambient;		// L_ambient.w = skynbox-lerp-factor
-	uniform float3		L_sun_color;
-	uniform float3		L_sun_dir_w;
-	uniform float4		L_hemi_color;
+	float4		L_ambient;		// L_ambient.w = skynbox-lerp-factor
+	float3		L_sun_color;
+	float3		L_sun_dir_w;
+	float4		L_hemi_color;
 
-	uniform float3 		eye_position;
-	uniform float3		eye_direction;
-	uniform float3		eye_normal;
+	float3 		eye_position;
+	float3		eye_direction;
+	float3		eye_normal;
 
-	uniform float4 		pos_decompression_params;
+	float4 		pos_decompression_params;
 
-	uniform float4		screen_res;		// Screen resolution (x=width, y=height, z=1/width, w=1/height)
-	uniform float4		parallax;
+	float4		screen_res;		// Screen resolution (x=width, y=height, z=1/width, w=1/height)
+	float4		parallax;
 
 	// Глобальные параметры шейдеров --#SM+#--
-	uniform float4x4	m_script_params; 
-	uniform	float4		m_hud_params;	// zoom_rotate_factor, secondVP_zoom_factor, NULL, NULL
-	uniform	float4		m_blender_mode;	// x\y = [0 - default, 1 - night vision, 2 - thermal vision]; x - основной вьюпорт, y - второй впьюпорт, z = ?, w = [0 - идёт рендер обычного объекта, 1 - идёт рендер детальных объектов (трава, мусор)]
+	float4x4	m_script_params; 
+	float4		m_hud_params;	// zoom_rotate_factor, secondVP_zoom_factor, NULL, NULL
+	float4		m_blender_mode;	// x\y = [0 - default, 1 - night vision, 2 - thermal vision]; x - основной вьюпорт, y - второй впьюпорт, z = ?, w = [0 - идёт рендер обычного объекта, 1 - идёт рендер детальных объектов (трава, мусор)]
 
 	// Параметры, уникальные для разных моделей --#SM+#--
-	uniform float4x4	m_obj_camo_data; 
-	uniform float4		m_obj_custom_data;
-	uniform float4		m_obj_generic_data;
+	float4x4	m_obj_camo_data; 
+	float4		m_obj_custom_data;
+	float4		m_obj_generic_data;
 }
 
 // Активен-ли двойной рендер --#SM+#--

@@ -118,8 +118,8 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	SelectResolution(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
 	//	TODO: DX10: implement dynamic format selection
-	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Prep for HDR10; breaks nothing
-	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // HDR10 = DXGI_FORMAT_R10G10B10A2_UNORM
+	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 2 : 1; //wouldn't triple-buffering be 3 frames? Typo? Or do you want double-buffering?
 
 	// Multisample
 	sd.SampleDesc.Count = 1;
