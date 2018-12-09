@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-
+#ifdef TOO_EXPENSIVE_CURRENTLY 
 float3 Diffuse_OrenNayar( float Roughness, float NoV, float NoL, float VoH )
 {
 	float a = Roughness * Roughness;
@@ -22,17 +22,12 @@ float D_GGX( float a2, float NoH )
 	return a2 / ( PI*d*d );					// 4 mul, 1 rcp
 }
 
-float Vis_SmithJointApprox( float a2, float NoV, float NoL )
+float Vis_Term( float a2, float NoV, float NoL )
 {
 	float a = sqrt(a2);
 	float Vis_SmithV = NoL * ( NoV * ( 1 - a ) + a );
 	float Vis_SmithL = NoV * ( NoL * ( 1 - a ) + a );
 	return 0.5 * rcp( Vis_SmithV + Vis_SmithL );
-}
-float Pow4( float x )
-{
-	float xx = x*x;
-	return xx * xx;
 }
 
 float sqr(float x)
@@ -57,13 +52,7 @@ float3	FresnelDielectric( float _cosTheta, float _fresnelStrength=1.0 ) {
 
 	return 0.5 * a * b;
 }
-float3 F_Fresnel(float3 SpecularColor, float VoH)
-{
-	float3 SpecularColorSqrt = sqrt(min(SpecularColor, float3(0.99, 0.99, 0.99)));
-	float3 n = (1 + SpecularColorSqrt) / (1 - SpecularColorSqrt);
-	float3 g = sqrt(n*n + VoH*VoH - 1);
-	return 0.5 * sqr((g - VoH) / (g + VoH)) * (1 + sqr(((g + VoH)*VoH - 1) / ((g - VoH)*VoH + 1)));
-}
+#endif
 //////////////////////////////////////////////////////////////////////////////////////////
 // Lighting formulas			// 
 float4 plight_infinity( float m, float3 pnt, float3 normal, float3 light_direction )
@@ -72,24 +61,7 @@ float4 plight_infinity( float m, float3 pnt, float3 normal, float3 light_directi
   	float3 V 		= -normalize	(pnt);					// vector2eye
   	float3 L 		= -light_direction;						// vector2light
   	float3 H			= normalize	(L+V);						// float-angle-vector 
-//	return tex3D 		(s_material,	float3( dot(L,N), dot(H,N), m ) );		// sample material
-	//return s_material.Sample( smp_material, float3( dot(L,N), dot(H,N), m ) ).xxxy;		// sample material
-	//float3 H = normalize(V + L);			// 3 add, 2 mad, 4 mul, 1 rsqrt
-	float NoL = saturate( dot(N, L) );		// 2 mad, 1 mul
-	float NoH = saturate( dot(N, H) );		// 2 mad, 1 mul
-	float VoH = saturate( dot(V, H) );		// 2 mad, 1 mul
-    float NoV = dot(N, V);	
-	float Roughness = saturate(1.0 - L_material.w);//0.5;
-	float a2 = Pow4(Roughness);
-	    // refractive index
-	float GGX = D_GGX(a2, NoH);
-	float Vis = Vis_SmithJointApprox(a2, NoV, NoL);
-	float3 F0 = (0.04,0.04,0.04);
-	float Fresnel = F_Fresnel(F0,VoH);//FresnelDielectric(VoH, 0.5).x;
-	//float DFresenel = FresnelDielectric(NoL).x;
-	float3 Diffuse = NoL * (1/PI);
-	float Specular = GGX * Vis * Fresnel * (1/PI);
-	return float4(Diffuse,Specular).xxxy;
+	return s_material.Sample( smp_material, float3( dot(L,N), dot(H,N), m ) ).xxxy;		// sample material
 }
 /*
 float plight_infinity2( float m, float3 pnt, float3 normal, float3 light_direction )
@@ -118,7 +90,6 @@ float4 plight_local( float m, float3 pnt, float3 normal, float3 light_position, 
   	float3 H		= normalize	(L+V);						// float-angle-vector
 		rsqr	= dot		(L2P,L2P);					// distance 2 light (squared)
   	float  att 	= saturate	(1 - rsqr*light_range_rsq);			// q-linear attenuate
-//	float4 light	= tex3D		(s_material, float3( dot(L,N), dot(H,N), m ) ); 	// sample material
 	float4 light	= s_material.Sample( smp_material, float3( dot(L,N), dot(H,N), m ) ).xxxy;		// sample material
   	return att*light;
 }
