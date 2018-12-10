@@ -13,6 +13,17 @@ struct v2p
 	float4 hpos	: SV_Position;
 };
 
+//	contrast function
+float Contrast(float Input, float ContrastPower)
+{
+     //piecewise contrast function
+     bool IsAboveHalf = Input > 0.5 ;
+     float ToRaise = saturate(2*(IsAboveHalf ? 1-Input : Input));
+     float Output = 0.5*pow(ToRaise, ContrastPower); 
+     Output = IsAboveHalf ? 1-Output : Output;
+     return Output;
+}
+
 //	Must be less than view near
 #define	DEPTH_EPSILON	0.1h
 //////////////////////////////////////////////////////////////////////////////////////////

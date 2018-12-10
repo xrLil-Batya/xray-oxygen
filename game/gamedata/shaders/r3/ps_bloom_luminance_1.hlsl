@@ -14,13 +14,13 @@ struct 	v2p
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////
-#define	LUMINANCE_BASE		0.0001h
+#define	LUMINANCE_BASE		0.0001f
 
 float	luminance	(float2	tc)	
 {
 	//float3	source 	= tex2D(s_image,tc);
 	float3	source 	= s_image.Sample( smp_rtlinear, tc );
-	return 	dot( source, LUMINANCE_VECTOR*def_hdr );
+	return 	clamp(dot( source, LUMINANCE_VECTOR),0.0001f,1.0f);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 // 	perform 2x2=4s convolution, working on 4x4=16p area

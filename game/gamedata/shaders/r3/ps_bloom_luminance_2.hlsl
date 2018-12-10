@@ -11,7 +11,7 @@ struct 	v2p
   float4 tc6: 		TEXCOORD6;	// -6,+6
   float4 tc7: 		TEXCOORD7;	// -7,+7
 };
-
+//TODO: Rework or put in Compute shader
 //////////////////////////////////////////////////////////////////////////////////////////
 //	perform 4x4 bilinear, 8x8p, the step (B)
 //	b):	64x64p	=> 8x8p

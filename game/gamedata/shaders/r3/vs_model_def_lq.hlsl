@@ -1,14 +1,5 @@
 #include "common.h"
 #include "skin.h"
-/*
-struct vf
-{
-	float2 tc0	: TEXCOORD0;		// base
-	float3 c0	: COLOR0;		// color
-	float  fog	: FOG;
-	float4 hpos	: POSITION;
-};
-*/
 
 struct v2p
 {

@@ -3,28 +3,6 @@
 
 #include "configurator_defines.h"
 
-float4 proj2screen(float4 Project)
-{
-	float4	Screen;
-			Screen.x = (Project.x + Project.w) * 0.5f;
-			Screen.y = (Project.w - Project.y) * 0.5f;
-			Screen.z = Project.z;
-			Screen.w = Project.w;
-			
-	return Screen;
-}
-
-//	contrast function
-float Contrast(float Input, float ContrastPower)
-{
-     //piecewise contrast function
-     bool IsAboveHalf = Input > 0.5 ;
-     float ToRaise = saturate(2*(IsAboveHalf ? 1-Input : Input));
-     float Output = 0.5*pow(ToRaise, ContrastPower); 
-     Output = IsAboveHalf ? 1-Output : Output;
-     return Output;
-}
-
 void tonemap( out float4 low, out float4 high, float3 rgb, float scale)
 {
 	rgb		= rgb * scale;
@@ -37,11 +15,6 @@ void tonemap( out float4 low, out float4 high, float3 rgb, float scale)
 	low		=	( (rgb*(1+rgb/fWhiteIntensitySQR)) / (rgb+1) ).xyzz;
 
 	high	=	rgb.xyzz/def_hdr;	// 8x dynamic range
-}
-
-float4 combine_bloom( float3  low, float4 high)	
-{
-        return float4(low + high * high.a, 1.h );
 }
 
 float calc_fogging( float4 w_pos )      
@@ -63,15 +36,7 @@ float3 calc_model_hemi_r1( float3 norm_w )
 {
  return max(0,norm_w.y)*L_hemi_color;
 }
-float3 true_stereographic(float x, float y)
-{
-float3 output = float3(
-    (x+x)/(1+(x*x)+(y*y)),
-    (y+y)/(1+(x*x)+(y*y)),
-    (1-(x*x + y*y))/(1+(x*x)+(y*y))
-    );
-return output;
-}
+
 float3 calc_model_lq_lighting( float3 norm_w )    
 {
 	return L_material.x*calc_model_hemi_r1(norm_w) + L_ambient + L_material.y*calc_sun_r1(norm_w);
@@ -84,8 +49,8 @@ float3 	unpack_bx4( float3 v )
 	return 4*v-2; 
 } 
 float2 	unpack_tc_lmap( float2 tc )	{ return tc*(1.f/32768.f);	} // [-1  .. +1 ] 
-float4	unpack_color( float4 c ) { return c.bgra; }
-float4	unpack_D3DCOLOR( float4 c ) { return c.bgra; }
+//float4	unpack_color( float4 c ) { return c.bgra; } //Not even used, identical to below
+float4	unpack_D3DCOLOR( float4 c ) { return c.bgra; } 
 float3	unpack_D3DCOLOR( float3 c ) { return c.bgr; }
 
 float3   p_hemi( float2 tc )
@@ -123,6 +88,7 @@ float3	calc_reflection( float3 pos_w, float3 norm_w )
     return reflect(normalize(pos_w-eye_position), norm_w);
 }
 
+//Could be very useful if I understood how to use it
 #define USABLE_BIT_1                uint(0x00002000)
 #define USABLE_BIT_2                uint(0x00004000)
 #define USABLE_BIT_3                uint(0x00008000)
@@ -180,11 +146,10 @@ float3 gbuf_unpack_normal(float2 enc)
 //	res = float3(scth.y*scphi.x, scth.x*scphi.x, scphi.y);
 
 	// Spheremap transform
-	float l = length(enc.xy);
-	res.z = l*l*2.0 - 1.0;
-	res.xy = normalize(enc.xy)*sqrt(1.0 - res.z*res.z);
-
-	return res;
+  float l = length(enc.xy);
+  res.z = l*l*2.0 - 1.0;
+  res.xy = normalize(enc.xy)*sqrt(1.0 - res.z*res.z);
+    return res;
 }
 
 float gbuf_pack_hemi_mtl( float hemi, float mtl )
@@ -254,13 +219,15 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample 
 	float4 P	= s_position.Load( int3( pos2d, 0 ), iSample );
 #endif
 
-	// 3d view space pos reconstruction math
-	// center of the plane (0,0) or (0.5,0.5) at distance 1 is eyepoint(0,0,0) + lookat (assuming |lookat| == 1)
+// 3d view space pos reconstruction math
+// center of the plane (0,0) or (0.5,0.5) at distance 1 is eyepoint(0,0,0) + lookat (assuming |lookat| == 1)
 	gbd.P  = float3( P.z * ( pos2d * pos_decompression_params.zw - pos_decompression_params.xy ), P.z );
 
-	// reconstruct N
-	gbd.N = gbuf_unpack_normal( P.xy );
-
+// reconstruct N
+    gbd.N = gbuf_unpack_normal( P.xy );	
+	
+//  I don't understand the material reconstruction at all. I could
+//  make things more efficient if I could understand how to use it	
 	// reconstruct material
 	gbd.mtl	= gbuf_unpack_mtl( P.w );
 
