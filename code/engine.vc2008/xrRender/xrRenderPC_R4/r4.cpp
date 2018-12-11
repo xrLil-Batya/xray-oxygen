@@ -794,7 +794,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 
 	if (HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0)
 	{
-		defines[def_it].Name = "SM_5";
+		defines[def_it].Name = "SM_5_0"; // :P
 		defines[def_it].Definition = "1";
 		def_it++;
 	}
