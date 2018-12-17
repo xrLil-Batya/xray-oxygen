@@ -112,29 +112,6 @@ BOOL CLevel::Load_GameSpecific_After()
 	if (pRain)
 		pRain->InvalidateState();
 
-	if (FS.exist(fn_game, "$level$", "level.fog_vol"))
-	{
-		IReader *F = FS.r_open(fn_game);
-		u16 version = F->r_u16();
-		if (version == 2)
-		{
-			u32 cnt = F->r_u32();
-
-			Fmatrix					volume_matrix;
-			for (u32 i = 0; i < cnt; ++i)
-			{
-				F->r(&volume_matrix, sizeof(volume_matrix));
-				u32 sub_cnt = F->r_u32();
-				for (u32 is = 0; is < sub_cnt; ++is)
-				{
-					F->r(&volume_matrix, sizeof(volume_matrix));
-				}
-
-			}
-		}
-		FS.r_close(F);
-	}
-
 	// loading scripts
 	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 

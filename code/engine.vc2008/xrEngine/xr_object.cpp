@@ -453,3 +453,14 @@ Fvector CObject::get_last_local_point_on_mesh	( Fvector const& local_point, u16 
 
 	return				result;
 }
+
+bool CObject::CheckPosition() const noexcept
+{
+	const Fvector& pos = Position();
+	bool result = abs(pos.x) < 5000.f && abs(pos.y) < 5000.f && abs(pos.z) < 5000.f;
+	if (!result)
+	{
+		((CObject*)(this))->Position().set(0.f, 0.f, 0.f); // dirty hack
+	}
+	return result;
+}
