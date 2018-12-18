@@ -306,6 +306,7 @@ Global
 		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Mixed|x64.ActiveCfg = Release|x64
 		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Mixed|x64.Build.0 = Release|x64
 		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Release|x64.ActiveCfg = Release|x64
+		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
