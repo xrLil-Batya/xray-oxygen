@@ -135,7 +135,6 @@ void CGamePersistent::OnAppStart()
 	// load game materials
 	GMLib.Load					();
 	thread_spawn(mtInitGlobals, "X-Ray: Init kernel info...", 0, 0);
-	init_game_globals			();
 	MySuper::OnAppStart			();
 	m_pUI_core					= xr_new<ui_core>();
 	m_pMainMenu					= xr_new<CMainMenu>();
