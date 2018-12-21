@@ -676,30 +676,27 @@ void CGameObject::DestroyObject()
 
 void CGameObject::shedule_Update	(u32 dt)
 {
-	// Уничтожить
-	if (NeedToDestroyObject())
+	//����������
+	if(NeedToDestroyObject())
 	{
-		DestroyObject();
-	}
-	else if (!CheckPosition())
-	{
-		PositionStack.clear();
-
-		on_matrix_change(m_previous_matrix);
-		m_previous_matrix = XFORM();
+#ifndef MASTER_GOLD
+		Msg("--NeedToDestroyObject for [%d][%d]", ID(), Device.dwFrame);
+#endif // #ifndef MASTER_GOLD
+		DestroyObject			();
 	}
 
-	inherited::shedule_Update(dt);
-
+	// Msg							("-SUB-:[%x][%s] CGameObject::shedule_Update",smart_cast<void*>(this),*cName());
+	inherited::shedule_Update	(dt);
+	
 	CScriptBinder::shedule_Update(dt);
-	}
+}
 
 BOOL CGameObject::net_SaveRelevant	()
 {
 	return	(CScriptBinder::net_SaveRelevant());
 }
 
-// Игровое имя объекта
+//������� ��� �������
 LPCSTR CGameObject::Name () const
 {
 	return	(*cName());
@@ -862,26 +859,23 @@ IC	bool similar						(const Fmatrix &_0, const Fmatrix &_1, const float &epsilon
 	return							(true);
 }
 
-void CGameObject::UpdateCL()
+void CGameObject::UpdateCL			()
 {
-	inherited::UpdateCL();
-
+	inherited::UpdateCL				();
+	
 	if (H_Parent())
 		return;
 
-	if (!CheckPosition())
-	{
-		if (similar(XFORM(), m_previous_matrix, EPS))
-			return;
+	if (similar(XFORM(),m_previous_matrix,EPS))
+		return;
 
-		on_matrix_change(m_previous_matrix);
-		m_previous_matrix = XFORM();
-	}
+	on_matrix_change				(m_previous_matrix);
+	m_previous_matrix				= XFORM();
 }
 
 void CGameObject::on_matrix_change	(const Fmatrix &previous)
 {
-	obstacle().on_move();
+	obstacle().on_move				();
 }
 
 #ifdef DEBUG
