@@ -55,7 +55,7 @@ void CSoundRender_TargetB::start(CSoundRender_Emitter * E)
 void CSoundRender_TargetB::render()
 {
 	for (u32 buf_idx = 0; buf_idx < sdef_target_count; buf_idx++)
-		fill_block(*(u32*)pBuffers[buf_idx]);
+		fill_block(*(u32*)pBuffers[buf_idx]); //-V206
 
 	inherited::render();
 }

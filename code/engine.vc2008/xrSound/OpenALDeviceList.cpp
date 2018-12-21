@@ -90,8 +90,8 @@ void ALDeviceList::Enumerate()
 						alcGetIntegerv(device, ALC_MINOR_VERSION, sizeof(int), &minor);
 						m_devices.push_back(ALDeviceDesc(actualDeviceName, minor, major));
 
-						m_devices.back().props.efx = alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX");
-						m_devices.back().props.xram = alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "EAX_RAM");
+						m_devices.back().props.efx = alcIsExtensionPresent(device, "ALC_EXT_EFX");
+						m_devices.back().props.xram = alcIsExtensionPresent(device, "EAX_RAM");
 
 						Msg("[OpenAL] device: %s, EFX Support: %s", actualDeviceName, m_devices.back().props.efx ? "yes" : "no");
 

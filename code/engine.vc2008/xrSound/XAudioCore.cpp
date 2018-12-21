@@ -209,14 +209,13 @@ XSTATUS XCore::GetDeviceInfo(XAUDIO_DEVICE DeviceInfo, XAUDIO2_DEVICE_DETAILS* D
 XSTATUS XCore::SimpleAudioPlay(CSoundRender_Emitter* soundEmitter, CSoundRender_Source* soundSource)
 {
 	HANDLE hFile = NULL;
-	LPVOID lpData = nullptr;
 	DWORD dwFileSize = NULL;
 	DWORD dwSizeWritten = NULL;
 
 	hFile = CreateFileA("I:\\glint_preview.wav", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	R_ASSERT(hFile);
 	dwFileSize = GetFileSize(hFile, NULL);
-	lpData =  malloc(dwFileSize);
+	LPVOID lpData =  malloc(dwFileSize);
 	R_ASSERT(ReadFile(hFile, lpData, dwFileSize, &dwSizeWritten, NULL));
 
 	// copy wave data from WAVEFORMATEX;
