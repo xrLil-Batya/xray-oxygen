@@ -538,20 +538,20 @@ void CGamePersistent::OnFrame	()
 		Environment().CalculateDynamicSunDir();
     }
 
-	MySuper::OnFrame			();
+	MySuper::OnFrame();
+	if (!Device.Paused())
+	{
+		Engine.Sheduler.Update();
 
-	if(!Device.Paused())
-		Engine.Sheduler.Update		();
-
-	// update weathers ambient
-	if(!Device.Paused())
-		WeathersUpdate				();
+		// update weathers ambient
+		WeathersUpdate();
+		UpdateDof();
+	}
 
 #ifdef DEBUG
 	if ((m_last_stats_frame + 1) < m_frame_counter)
 		profiler().clear();
 #endif
-	UpdateDof();
 }
 
 void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)

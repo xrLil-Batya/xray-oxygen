@@ -114,7 +114,6 @@ public:
 	ICF const Fvector&					Position			() 			const	{ return renderable.xform.c;		}
 	virtual float						Radius				()			const;
 	virtual const Fbox&					BoundingBox			()			const;
-	bool								CheckPosition		() const noexcept;
 	IC IRender_Sector*					Sector				()					{ return H_Root()->spatial.sector;	}
 	IC IRender_ObjectSpecific*			ROS					()					{ return renderable_ROS();			}
 	BOOL								renderable_ShadowGenerate	() override			{ return TRUE;						}

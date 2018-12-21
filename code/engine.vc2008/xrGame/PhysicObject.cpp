@@ -337,7 +337,6 @@ void CPhysicObject::PHObjectPositionUpdate()
 		}
 		else
 			m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
-
 	}
 }
 
