@@ -245,7 +245,7 @@ public:
 	inline bool is_sun()
 	{
 		Fcolor sun_color = ((light*)Lights.sun._get())->color;
-		return (ps_r_flags.test(R_FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b)>EPS));
+		return (ps_r_flags.test(R_FLAG_SUN) && (Diffuse::u_diffuse2s(sun_color.r, sun_color.g, sun_color.b)>EPS));
 	}
 
 public:

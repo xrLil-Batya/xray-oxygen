@@ -121,6 +121,11 @@ xr_token pp_aa_quality_token[] =
 
 BOOL SkyGodEdition						= false;
 
+namespace Diffuse
+{
+	float ps_r_gloss_factor = 3.f;
+}
+
 int			ps_rs_loading_stages		= 0;
 extern ENGINE_API float ps_r_sunshafts_intensity;
 
@@ -131,7 +136,6 @@ int			ps_r_SkeletonUpdate			= 32;
 float		ps_r_pps_u					= 0.0f;
 float		ps_r_pps_v					= 0.0f;
 float		ps_r_mblur					= 0.0f;
-float		ps_r_gloss_factor			= 0.03f;
 float		ps_r_gmaterial				= 2.2f;
 float		ps_r_zfill					= 0.25f;			// .1f
 int			ps_r_wait_sleep				= 0;
@@ -767,7 +771,7 @@ void xrRender_initconsole()
 	CMD4(CCC_Float,		"r_wallmark_ttl",		&ps_r_WallmarkTTL,			1.0f,	5.f*60.f);
 	CMD3(CCC_Mask,		"r_allow_r1_lights",	&ps_r_flags,				R_FLAG_R1LIGHTS	);
 	CMD2(CCC_R2GM,		"r_em",					&ps_r_gmaterial								);
-	CMD4(CCC_Float,		"r_gloss_factor",		&ps_r_gloss_factor,			0.0f,	10.0f	);
+	CMD4(CCC_Float,		"r_gloss_factor",		&Diffuse::ps_r_gloss_factor,1.0f,	12.0f	);
 	CMD4(CCC_Integer,	"r_wait_sleep",			&ps_r_wait_sleep,			0,		1		);
 	CMD3(CCC_Mask,		"r_volumetric_lights",	&ps_r_flags,				R_FLAG_VOLUMETRIC_LIGHTS);
 

@@ -202,11 +202,11 @@ void dxRenderDeviceRender::Create( HWND hWnd, u32 &dwWidth, u32 &dwHeight, float
 	Resources			= xr_new<CResourceManager>		();
 }
 
-void dxRenderDeviceRender::SetupGPU( BOOL bForceGPU_SW, BOOL bForceGPU_NonPure, BOOL bForceGPU_REF)
+void dxRenderDeviceRender::SetupGPU(BOOL bForceGPU_SW, BOOL bForceGPU_NonPure, BOOL bForceGPU_REF)
 {
-	HW.Caps.bForceGPU_SW		= bForceGPU_SW;
-	HW.Caps.bForceGPU_NonPure	= bForceGPU_NonPure;
-	HW.Caps.bForceGPU_REF		= bForceGPU_REF;
+	HW.Caps.bForceGPU_SW = bForceGPU_SW;
+	HW.Caps.bForceGPU_NonPure = bForceGPU_NonPure;
+	HW.Caps.bForceGPU_REF = bForceGPU_REF;
 }
 
 void dxRenderDeviceRender::overdrawBegin()

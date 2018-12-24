@@ -129,7 +129,7 @@ void CRenderTarget::phase_combine()
 			light* pSun = (light*)RImplementation.Lights.sun._get();
 			Fvector L_dir, L_clr;
 			L_clr.set(pSun->color.r, pSun->color.g, pSun->color.b);
-			float L_spec = u_diffuse2s(L_clr);
+			float L_spec = Diffuse::u_diffuse2s(L_clr);
 			CastToGSCMatrix(Device.mView).transform_dir(L_dir, pSun->direction);
 			L_dir.normalize();
 

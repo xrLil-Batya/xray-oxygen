@@ -129,13 +129,16 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	sd.OutputWindow = m_hWnd;
 	sd.Windowed = bWindowed;
 	sd.BufferDesc.RefreshRate = SelectRefresh(sd.BufferDesc.Width, sd.BufferDesc.Height, sd.BufferDesc.Format);
+	//sd.Flags = DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
 
 	//	Additional set up
-	UINT createDeviceFlags = 0;
+	UINT createDeviceFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 	if (isGraphicDebugging)
 	{
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 	}
+
+	// Front buffer
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	D3D_FEATURE_LEVEL pFeatureLevels[] =
@@ -165,11 +168,6 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	if (IsWindows10OrGreater())
 	{
-		// RainbowZerg: this code does nothing, let it be commented until this check become useful for something.
-		//D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-		//R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-		//arch.TileBasedDeferredRenderer == TRUE;
-
 		IDXGIDevice3 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
 
@@ -180,10 +178,6 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	}
 	else if (IsWindows8Point1OrGreater())
 	{
-		//D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-		//R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-		//arch.TileBasedDeferredRenderer == TRUE;
-
 		IDXGIDevice2 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&pDXGIDevice));
 
