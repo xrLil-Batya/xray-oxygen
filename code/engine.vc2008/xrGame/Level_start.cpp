@@ -137,26 +137,17 @@ bool CLevel::net_start6				()
 			LPCSTR dialog_string = nullptr;
 			CStringTable	st;
 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
-			
-			STRCONCAT(level_id_string, st.translate("st_level"), ":",
-				map_data.m_name.c_str(), "(", tmp_map_ver, "). ");
+
+			STRCONCAT(level_id_string, st.translate("st_level"), ":", map_data.m_name.c_str(), "(", tmp_map_ver, "). ");
 			STRCONCAT(dialog_string, level_id_string, st.translate("ui_st_map_not_found"));
-
-			DEL_INSTANCE	(g_pGameLevel);
-			Console->Execute("main_menu on");
-
 		}
-		else 
-		{
-			DEL_INSTANCE	(g_pGameLevel);
-			Console->Execute("main_menu on");
-		}
+		DEL_INSTANCE(g_pGameLevel);
+		Console->Execute("main_menu on");
 
 		return true;
 	}
 
-	if (GameUI())
-		GameUI()->OnConnected();
+	GameUI()->OnConnected();
 
 	return true;
 }
