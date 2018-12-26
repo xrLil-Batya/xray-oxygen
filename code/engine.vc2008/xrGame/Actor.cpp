@@ -79,11 +79,6 @@ extern float cammera_into_collision_shift ;
 string32		ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
 //skeleton
 
-static Fbox		bbStandBox;
-static Fbox		bbCrouchBox;
-static Fvector	vFootCenter;
-static Fvector	vFootExt;
-
 void CActor::MtSecondActorUpdate(void* pActorPointer)
 {
 	Flags32 lastActorFlagsState = psActorFlags;
@@ -701,10 +696,10 @@ float CActor::currentFOV()
 	}
 }
 
-static bool bLook_cam_fp_zoom = false;
 
 void CActor::UpdateCL()
 {
+	static bool bLook_cam_fp_zoom = false;
 	ResetEvent(MtSecondUpdaterEventEnd);
 	SetEvent(MtSecondUpdaterEventStart);
 
@@ -1655,7 +1650,7 @@ bool CActor::unlimited_ammo()
 #include "level_changer.h"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CActor::script_register(lua_State *L)
 {
 	module(L)

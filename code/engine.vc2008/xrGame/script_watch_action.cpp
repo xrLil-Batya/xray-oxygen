@@ -34,7 +34,7 @@ void CScriptWatchAction::SetWatchObject	(CScriptGameObject *tpObjectToWatch)
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptWatchAction::script_register(lua_State *L)
 {
 	module(L)

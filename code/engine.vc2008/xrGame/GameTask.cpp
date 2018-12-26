@@ -338,7 +338,7 @@ void SGameTaskKey::destroy()
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CGameTask::script_register(lua_State *L)
 {
 	module(L)

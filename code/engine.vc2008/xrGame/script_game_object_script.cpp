@@ -20,7 +20,7 @@ extern class_<CScriptGameObject> script_register_game_object1(class_<CScriptGame
 extern class_<CScriptGameObject> script_register_game_object2(class_<CScriptGameObject>&&);
 extern class_<CScriptGameObject> script_register_game_object_trader(class_<CScriptGameObject>&&);
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptGameObject::script_register(lua_State *L)
 {
 	class_<CScriptGameObject>	instance("game_object");

@@ -176,7 +176,7 @@ xrTime CSavedGameWrapper__game_time(const CSavedGameWrapper *self)
 	return			(xrTime(self->game_time()));
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CSavedGameWrapper::script_register(lua_State *L)
 {
 	module(L)

@@ -804,7 +804,7 @@ void patrol_path_remove(LPCSTR patrol_path) {
 #include "../../SDK/include/luabind/operator.hpp"
 #include "../../SDK/include/luabind/out_value_policy.hpp"
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CLevel::script_register(lua_State *L)
 {
 	class_<CEnvDescriptor>("CEnvDescriptor")

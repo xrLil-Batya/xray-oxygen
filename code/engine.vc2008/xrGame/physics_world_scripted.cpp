@@ -15,7 +15,7 @@ void	cphysics_world_scripted::	AddCall			(	CPHCondition*c, CPHAction*a )
 }
 
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void cphysics_world_scripted::script_register(lua_State *L)
 {
 	module(L)

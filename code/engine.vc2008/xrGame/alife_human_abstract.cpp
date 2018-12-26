@@ -97,7 +97,7 @@ void CSE_ALifeHumanAbstract::add_offline							(const xr_vector<ALife::_OBJECT_I
 #include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CALifeHumanBrain::script_register(lua_State *L)
 {
 	module(L)

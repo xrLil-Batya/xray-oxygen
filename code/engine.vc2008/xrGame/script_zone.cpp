@@ -140,7 +140,7 @@ bool CScriptZone::active_contact(u16 id) const
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptZone::script_register(lua_State *L)
 {
 	module(L)

@@ -365,7 +365,7 @@ void CDialogScriptHelper::AddDisableInfo(LPCSTR str)
 	m_DisableInfo.emplace_back(str);
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CPhraseDialogExporter::script_register(lua_State *L)
 {
 	module(L)

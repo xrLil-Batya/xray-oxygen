@@ -229,7 +229,7 @@ bool CScriptXmlInit::NodeExists(LPCSTR path, int index)
 }
 
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptXmlInit::script_register(lua_State *L)
 {
 	module(L)
@@ -276,7 +276,7 @@ void CScriptXmlInit::script_register(lua_State *L)
 #include "../xrUICore/UIComboBox.h"
 #include "../xrUICore/UIOptionsManagerScript.h"
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void UIRegistrator::script_register(lua_State *L)
 {
 	CUIWindow::script_register(L);

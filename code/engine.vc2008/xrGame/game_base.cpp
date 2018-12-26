@@ -157,7 +157,7 @@ xr_token	difficulty_type_token[] =
 	{ 0,			0 } 
 };
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptGameDifficulty::script_register(lua_State *L)
 {
 	module(L)

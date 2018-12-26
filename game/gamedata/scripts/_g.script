@@ -1,6 +1,4 @@
 ﻿---------------------------------------------------------------
--- // LuaJIT 
-if (jit == nil) then profiler.setup_hook() end
 -- // Math::Random init 
 math.randomseed(os.time())
 
@@ -565,9 +563,13 @@ function start_game_callback()
 	printf("start_game_callback called")
 	
 	smart_names.init_smart_names_table()
+	printf("start_game_callback called 1")
 	task_manager.clear_task_manager()
+	printf("start_game_callback called 2")
 	sound_theme.load_sound()
+	printf("start_game_callback called 3")
 	xr_sound.start_game_callback()
+	printf("start_game_callback called 4")
 	dialog_manager.fill_phrase_table()
 	xr_s.init()
 	sim_objects.clear()
