@@ -1,5 +1,5 @@
 #include "common_iostructs.h"
-#include "ogse_config.h"
+#include "oxy_config.h"
 #include "ogse_functions.h"
 #include "shared\common.h"
 #include "shared\wmark.h"
@@ -25,8 +25,8 @@ float4 main(p_screen I) : SV_Target
 	float2	sun_vec_screen 		= normalize(sun_pos_screen.xy - I.tc0.xy);
 	// smooth shafts
 	float4	cSunShafts 			= s_sun_shafts.Sample(smp_rtlinear, I.tc0.xy);
-#ifdef SUNSHAFTS_QUALITY
-#	if SUNSHAFTS_QUALITY > 1
+#ifdef SUN_SHAFTS_QUALITY
+#	if SUN_SHAFTS_QUALITY > 1
 			cSunShafts 		   *= 0.5;
 			cSunShafts 		   += s_sun_shafts.Sample(smp_rtlinear, I.tc0.xy + sun_vec_screen.yx * screen_res.zw) * 0.25f;
 			cSunShafts 		   += s_sun_shafts.Sample(smp_rtlinear, I.tc0.xy - sun_vec_screen.yx * screen_res.zw) * 0.25f;
@@ -61,7 +61,7 @@ float4 main(p_screen I) : SV_Target
 	dust = lerp(0.0f, dust, (1.0f - saturate(dep * 0.2f)) * (1.0f - saturate(is_sky(dep))));
 	dust += 1.0f;
 	
-	float3 Color =  img + cSunShafts.xyz * L_sun_color.xyz * (1.0f - img) * SS_INTENSITY * ssss_params.x * dust;
+	float3 Color =  img + cSunShafts.xyz * L_sun_color.xyz * (1.0f - img) * ssss_params.x * dust;
 
 	return float4(Color, 1.0f);
 }

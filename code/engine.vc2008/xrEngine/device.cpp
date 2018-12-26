@@ -235,7 +235,6 @@ void CRenderDevice::on_idle()
 	// Release start point - allow thread to run
 	mt_csLeave.Enter();
 	mt_csEnter.Leave();
-    Sleep(0);
 
 	Statistic->RenderTOTAL_Real.FrameStart();
 	Statistic->RenderTOTAL_Real.Begin();

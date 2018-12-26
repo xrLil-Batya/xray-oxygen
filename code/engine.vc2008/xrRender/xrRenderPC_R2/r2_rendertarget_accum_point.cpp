@@ -28,7 +28,7 @@ void CRenderTarget::accum_point		(light* L)
 	float		L_spec;
 	float		L_R					= L->range*0.95f;
 	Fvector		L_clr;				L_clr.set		(L->color.r,L->color.g,L->color.b);
-	L_spec							= u_diffuse2s	(L_clr);
+	L_spec							= Diffuse::u_diffuse2s	(L_clr);
 	CastToGSCMatrix(Device.mView).transform_tiny		(L_pos,L->position);
 
 	// Xforms

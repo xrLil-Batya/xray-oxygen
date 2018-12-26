@@ -62,15 +62,15 @@ void light::gi_generate()
 	// normalize
 	if (indirect.size()) 
 	{
-		float target_E = ps_r_GI_refl;
+		const float &target_E = ps_r_GI_refl;
 		float total_E = 0;
 
-		for (u32 it = 0; it < indirect.size(); it++)
-			total_E += indirect[it].E;
+		for (light_indirect &refLightInd : indirect)
+			total_E += refLightInd.E;
 
-		float scale_E = target_E / total_E;
+		const float scale_E = target_E / total_E;
 
-		for (u32 it = 0; it < indirect.size(); it++)
-			indirect[it].E *= scale_E;
+		for (light_indirect &refLightInd: indirect)
+			refLightInd.E *= scale_E;
 	}
 }

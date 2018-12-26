@@ -162,7 +162,6 @@ void					CRender::create()
 		}
 	}
 	/////////////////////////////////////////////
-	o.dx10_gbuffer_opt		= ps_r3_flags.test(R3_FLAG_GBUFFER_OPT);
 	o.dx10_minmax_sm		= ps_r3_minmax_sm;
 	o.dx10_minmax_sm_screenarea_threshold = 1600 * 1200;
 	o.dx11_enable_tessellation = HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0 && ps_r4_flags.test(R4_FLAG_ENABLE_TESSELLATION);
@@ -795,7 +794,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 
 	if (HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0)
 	{
-		defines[def_it].Name = "SM_5";
+		defines[def_it].Name = "SM_5_0"; // :P
 		defines[def_it].Definition = "1";
 		def_it++;
 	}
@@ -1058,14 +1057,6 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	}
 	else
 		sh_name[len]='0'; ++len;
-
-   if( o.dx10_gbuffer_opt )
-	{
-		defines[def_it].Name		=	"GBUFFER_OPTIMIZATION";
-		defines[def_it].Definition	=	"1";
-		def_it						++;
-	}
-	sh_name[len]='0'+char(o.dx10_gbuffer_opt); ++len;
 
    if( o.dx10_sm4_1 )
    {

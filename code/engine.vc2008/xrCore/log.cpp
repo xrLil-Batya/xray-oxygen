@@ -90,28 +90,49 @@ void AddOne(const char *split)
 	FlushLog();
 }
 
-void Log(const char *s) 
+static xr_vector<xr_string> LogMessage;
+
+void mtLogProc(void* ThreadArgs)
 {
-	int i,j;
-
-	u32 length = xr_strlen( s );
-	PSTR split = (PSTR)_alloca((length + 1) * sizeof(char));
-
-	for (i = 0, j = 0; s[i] != 0; i++) 
+	LogMessage.emplace_back("[Msg] Logger thread: starting... Please wait...");
+	while (true)
 	{
-		if (s[i] == '\n') {
-			split[j] = 0;	// end of line
-			if (split[0] == 0) { split[0] = ' '; split[1] = 0; }
-			AddOne(split);
-			j = 0;
-		}
-		else 
+		while (LogMessage.empty())
+			Sleep(0);
+
+		int i, j;
+		xr_string StringMessage = *LogMessage.begin();
+		PSTR split = (PSTR)_alloca((StringMessage.length() + 1) * sizeof(char));
+
+		for (i = 0, j = 0; StringMessage[i] != 0; i++)
 		{
-			split[j++] = s[i];
+			if (StringMessage[i] == '\n')
+			{
+				split[j] = 0;	// end of line
+				if (split[0] == 0) 
+				{ 
+					split[0] = ' '; 
+					split[1] = 0; 
+				}
+
+				AddOne(split);
+				j = 0;
+			}
+			else
+			{
+				split[j++] = StringMessage[i];
+			}
 		}
+		split[j] = 0;
+		AddOne(split);
+
+		LogMessage.erase(LogMessage.begin());
 	}
-	split[j]=0;
-	AddOne(split);
+}
+
+void Log(const char* s)
+{
+	LogMessage.emplace_back(s);
 }
 
 void __cdecl Msg(const char *format, ...)
@@ -224,7 +245,7 @@ void InitLog()
 
 void CreateLog(BOOL nl)
 {
-
+	thread_spawn(mtLogProc, "X-Ray: Logger", 0, nullptr);
     no_log = !!nl;
 	strconcat(sizeof(log_file_name),	 log_file_name,	"[", Core.UserDate, Core.UserTime, "]", ".log");
 	strconcat(sizeof(lua_log_file_name), lua_log_file_name, Core.ApplicationName, "_", Core.UserName, "_lua.log");

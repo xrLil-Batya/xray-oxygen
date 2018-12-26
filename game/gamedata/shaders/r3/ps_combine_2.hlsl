@@ -16,6 +16,7 @@ struct c2_out
 #endif
 };
 
+[earlydepthstencil]
 c2_out main(p_screen I)
 {
 	c2_out res;
@@ -64,7 +65,7 @@ c2_out main(p_screen I)
  	float3	blurred	= bloom*def_hdr	;
 			img		= lerp(img, blurred, distort.z);
 #endif
-	res.Color		= combine_bloom(img, bloom);
+	res.Color		= float4(img + bloom * bloom.a, 1.0);
 #ifdef USE_MSAA
 	float4	ptp		= mul(m_P, float4(gbd.P, 1.0f));
 	res.Depth		= (ptp.w == 0.0f) ? 1.0f : ptp.z/ptp.w;

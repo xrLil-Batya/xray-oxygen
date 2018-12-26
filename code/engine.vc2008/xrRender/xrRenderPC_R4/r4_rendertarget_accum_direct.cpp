@@ -59,7 +59,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
@@ -299,7 +299,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
@@ -589,7 +589,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 		//	Igor: draw volumetric here
 		//if (ps_r_flags.test(R2FLAG_SUN_SHAFTS))
-		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0) && sub_phase == SE_SUN_FAR && ps_r_sunshafts_mode == SS_VOLUMETRIC)
+		if (need_to_render_sunshafts() && sub_phase == SE_SUN_FAR && ps_r_sunshafts_mode == SS_VOLUMETRIC)
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
 }
@@ -690,7 +690,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
@@ -788,8 +788,8 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 			xf_invview.InvertMatrixByMatrix(Device.mView);
 
 			Matrix4x4 xf_project;		
-			xf_project.Multiply(m_TexelAdjust, fuckingsun->X.D.combine);
-			m_shadow.Multiply(xf_project, xf_invview);
+			xf_project.Multiply(fuckingsun->X.D.combine, m_TexelAdjust);
+			m_shadow.Multiply(xf_invview, xf_project);
 
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
@@ -886,7 +886,7 @@ void CRenderTarget::accum_direct_lum	()
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
@@ -975,14 +975,6 @@ void CRenderTarget::accum_direct_lum	()
 void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, const Fmatrix &mShadow)
 {
 	PIX_EVENT(accum_direct_volumetric);
-
-	if (!need_to_render_sunshafts())
-		return;
-
-    if (ps_r_sunshafts_mode != SS_VOLUMETRIC)
-        return;
-
-	if ( (sub_phase!=SE_SUN_NEAR) && (sub_phase!=SE_SUN_FAR) ) return;
 
 	phase_vol_accumulator();
 

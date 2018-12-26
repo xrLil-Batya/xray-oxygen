@@ -43,18 +43,16 @@ IC	bool CALifeSpawnRegistry::spawned_item				(CSE_Abstract &abstract, SPAWN_IDS 
 	return						((I != objects.end()) && (*I == abstract.m_tSpawnID));
 }
 
-IC	bool CALifeSpawnRegistry::spawned_item				(SPAWN_GRAPH::CVertex *vertex, SPAWN_IDS &objects)
+IC	bool CALifeSpawnRegistry::spawned_item(SPAWN_GRAPH::CVertex *vertex, SPAWN_IDS &objects)
 {
 	if (vertex->edges().empty())
-		return					(spawned_item(vertex->data()->object(),objects));
+		return(spawned_item(vertex->data()->object(), objects));
 
-	SPAWN_GRAPH::const_iterator	I = vertex->edges().begin();
-	SPAWN_GRAPH::const_iterator	E = vertex->edges().end();
-	for ( ; I != E; ++I)
-		if (spawned_item(m_spawns.vertex((*I).vertex_id()),objects))
-			return				(true);
+	for (auto &refEdges: vertex->edges())
+		if (spawned_item(m_spawns.vertex(refEdges.vertex_id()), objects))
+			return (true);
 
-	return						(false);
+	return (false);
 }
 
 IC	bool CALifeSpawnRegistry::object_existance_limit	(CSE_Abstract &abstract, SPAWN_IDS &objects) const

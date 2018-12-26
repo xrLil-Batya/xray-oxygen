@@ -156,8 +156,7 @@ void dxRenderDeviceRender::SetupStates()
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_MULTISAMPLEANTIALIAS,	FALSE			));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_NORMALIZENORMALS,		TRUE			));
 
-	if (psDeviceFlags.test(rsWireframe))	{ CHK_DX(HW.pDevice->SetRenderState( D3DRS_FILLMODE,			D3DFILL_WIREFRAME	)); }
-	else									{ CHK_DX(HW.pDevice->SetRenderState( D3DRS_FILLMODE,			D3DFILL_SOLID		)); }
+	CHK_DX(HW.pDevice->SetRenderState( D3DRS_FILLMODE,			D3DFILL_SOLID		));
 
 	// ******************** Fog parameters
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_FOGCOLOR,			0					));
@@ -203,11 +202,11 @@ void dxRenderDeviceRender::Create( HWND hWnd, u32 &dwWidth, u32 &dwHeight, float
 	Resources			= xr_new<CResourceManager>		();
 }
 
-void dxRenderDeviceRender::SetupGPU( BOOL bForceGPU_SW, BOOL bForceGPU_NonPure, BOOL bForceGPU_REF)
+void dxRenderDeviceRender::SetupGPU(BOOL bForceGPU_SW, BOOL bForceGPU_NonPure, BOOL bForceGPU_REF)
 {
-	HW.Caps.bForceGPU_SW		= bForceGPU_SW;
-	HW.Caps.bForceGPU_NonPure	= bForceGPU_NonPure;
-	HW.Caps.bForceGPU_REF		= bForceGPU_REF;
+	HW.Caps.bForceGPU_SW = bForceGPU_SW;
+	HW.Caps.bForceGPU_NonPure = bForceGPU_NonPure;
+	HW.Caps.bForceGPU_REF = bForceGPU_REF;
 }
 
 void dxRenderDeviceRender::overdrawBegin()

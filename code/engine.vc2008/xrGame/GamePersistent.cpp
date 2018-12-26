@@ -120,17 +120,27 @@ void CGamePersistent::RegisterModel(IRenderVisual* V)
 
 extern void clean_game_globals	();
 extern void init_game_globals	();
+volatile size_t g_threads = 0;
+
+void mtInitGlobals(void *)
+{
+	InterlockedIncrement(&g_threads);
+	Log("* Init game globals...");
+	init_game_globals();
+	InterlockedDecrement(&g_threads);
+}
 
 void CGamePersistent::OnAppStart()
 {
 	// load game materials
 	GMLib.Load					();
-	init_game_globals			();
+	thread_spawn(mtInitGlobals, "X-Ray: Init kernel info...", 0, 0);
 	MySuper::OnAppStart			();
 	m_pUI_core					= xr_new<ui_core>();
 	m_pMainMenu					= xr_new<CMainMenu>();
-}
 
+	while (g_threads > 0) Sleep(10);
+}
 
 void CGamePersistent::OnAppEnd	()
 {
@@ -525,26 +535,24 @@ void CGamePersistent::OnFrame	()
     // Update sun before updating other enviroment settings
     if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
     {
-		Environment().calculate_dynamic_sun_dir();
+		Environment().CalculateDynamicSunDir();
     }
 
-	MySuper::OnFrame			();
+	MySuper::OnFrame();
+	if (!Device.Paused())
+	{
+		Engine.Sheduler.Update();
 
-	if(!Device.Paused())
-		Engine.Sheduler.Update		();
-
-	// update weathers ambient
-	if(!Device.Paused())
-		WeathersUpdate				();
+		// update weathers ambient
+		WeathersUpdate();
+		UpdateDof();
+	}
 
 #ifdef DEBUG
 	if ((m_last_stats_frame + 1) < m_frame_counter)
-		profiler().clear		();
+		profiler().clear();
 #endif
-	UpdateDof();
 }
-
-
 
 void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 {

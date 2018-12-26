@@ -17,6 +17,7 @@
 */
 
 #define lj_char_c
+#define LUA_CORE
 
 #include "lj_char.h"
 

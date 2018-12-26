@@ -18,7 +18,7 @@ CBlender_BmmD::CBlender_BmmD	()
 	xr_strcpy				(oT2_xform,	"$null");
 	description.version	= 3;
 	oTessellation.Count         = 4;
-	oTessellation.IDselected	= 3;    
+	oTessellation.IDselected	= 0; //THIS! I accidentally set tesselation to always on! I'm stupid as fuck! :)
 	xr_strcpy				(oR_Name,	"detail\\detail_grnd_grass");	//"$null");
 	xr_strcpy				(oG_Name,	"detail\\detail_grnd_asphalt");	//"$null");
 	xr_strcpy				(oB_Name,	"detail\\detail_grnd_earth");	//"$null");

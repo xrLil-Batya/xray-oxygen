@@ -53,7 +53,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
@@ -250,7 +250,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
@@ -542,7 +542,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
@@ -670,7 +670,7 @@ void CRenderTarget::accum_direct_lum	()
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 

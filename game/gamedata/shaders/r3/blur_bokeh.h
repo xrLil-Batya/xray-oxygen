@@ -6,11 +6,11 @@ https://github.com/orthecreedence/ghostie/blob/master/opengl/glsl/dof.bokeh.2.4.
 
 ------------------------------------------
 Перенос шейдера глубины резкости с боке из OGSE 
-Большое спасибо за помощь SGM 3.0 Team 
-Перенес на XrOxygen - NuclearFG
+Большое спасибо за помощь SGM 3.0 Team
+Перенес на xrOxygen - NuclearFG
 */
 #include "common.h"
-#include "ogse_config.h"
+#include "oxy_config.h"
 
 #if !defined(BOKEH_QUALITY)
 	#define	BOKEH_RINGS int(1)

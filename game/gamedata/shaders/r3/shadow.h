@@ -9,7 +9,7 @@
 Texture2D	s_smap : register(ps, t0);		// 2D/cube shadowmap
 
 Texture2D<float>	s_smap_minmax;		// 2D/cube shadowmap
-#include "gather.ps"
+#include "ps_gather.hlsl"
 
 SamplerComparisonState		smp_smap;	//	Special comare sampler
 sampler		smp_jitter;

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "igame_level.h"
 #include "igame_persistent.h"
 
@@ -10,6 +10,7 @@
 #include "../xrCore/net_utils.h"
 #include "../FrayBuildConfig.hpp"
 #include "CustomHUD.h"
+#include <ppl.h>
 
 class fClassEQ {
 	CLASS_ID cls;

@@ -310,16 +310,17 @@ CRenderTarget::CRenderTarget()
 	//	NORMAL
 	{
 		u32		w = Device.dwWidth, h = Device.dwHeight;
-                //MatthewKush: to hell with s_position. We should use rt_Depth and re-create the 3 dimensions
+                //TODO: Recreate position with s_depth, use striclty as new z-buffer.
+		//Then we'll have a new RGBA16F gbuffer slot open :) We'd pack what was previously in
+		//s_position in there, and maybe some new stuff.
+		//You'll actually save performance with a third RT bound to GBUFFER.
+		//This is why on modern machines turning "r3_gbuffer_opt off" can be faster.
 		rt_Position.create					(r2_RT_P, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 
-        rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //not needed for depth prepass..
+        //rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //not needed for depth prepass..
 
 		if (RImplementation.o.dx10_msaa)
 			rt_MSAADepth.create				(r2_RT_MSAAdepth, w, h, D3DFMT_D24S8, SampleCount);
-
-		if (!RImplementation.o.dx10_gbuffer_opt)
-			rt_Normal.create				(r2_RT_N, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 
 		// select albedo & accum
 		if (RImplementation.o.mrtmixdepth)
@@ -334,16 +335,8 @@ CRenderTarget::CRenderTarget()
 			if (RImplementation.o.fp16_blend)
 			{
 				// NV40
-				if (!RImplementation.o.dx10_gbuffer_opt)
-				{
-					rt_Color.create			(r2_RT_albedo, w, h, D3DFMT_A16B16G16R16F, SampleCount);	// expand to full
-					rt_Accumulator.create	(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
-				}
-				else
-				{
-					rt_Color.create			(r2_RT_albedo, w, h, D3DFMT_A8R8G8B8, SampleCount);	// expand to full
-					rt_Accumulator.create	(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
-				}
+				rt_Color.create			(r2_RT_albedo, w, h, D3DFMT_A8R8G8B8, SampleCount);	// expand to full
+				rt_Accumulator.create	(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 			}
 			else 
 			{
@@ -352,8 +345,24 @@ CRenderTarget::CRenderTarget()
 				rt_Accumulator.create		(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 				rt_Accumulator_temp.create	(r2_RT_accum_temp, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 			}
+
+#if 0
+//Suggested new Gbuffer
+rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //z-buffer for depth
+rt_Color.create(r2_RT_albedo, w, h, D3DFMT_A16B16G16R16F, SampleCount); //Pack with 8bit Color, 8-bit gloss in Alpha
+
+//AND 8-bit Normals, int (or uint) material-type, 7-bit (right?) hemi (do we even need to reconstruct it?)
+//Currently won't work: game uses both Normals and "Normal Error map" equaling 2 * 8bit RGB.
+//Someone would need to recreate all games normal maps, either in DXT5NM (compatible with DX9) OR
+//BC5 format (best quality, but DX11 only, can't use on DX10 or DX9)
+
+//then, if you need to store more, you have two open Gbuffer (actually 3 more is supported by D3D11) slots :) 
+//could be used for PBR among many other things.
+#endif
 		}
 
+// Note: We should re-add the "RImplementation.o..) because otherwise these textures
+// are loaded even when not used. Same with the rain.
         // Mrmnwar SunShaft Screen Space
 //		if (RImplementation.o.sunshaft_mrmnwar)
         {
@@ -1067,7 +1076,7 @@ bool CRenderTarget::need_to_render_sunshafts()
 	light* sun = (light*)RImplementation.Lights.sun._get();
 	CEnvDescriptor&	E = *Environment().CurrentEnv;
 	Fcolor sun_color = sun->color;
-	float fValue = E.m_fSunShaftsIntensity * u_diffuse2s(sun_color.r, sun_color.g, sun_color.b);
+	float fValue = E.m_fSunShaftsIntensity * Diffuse::u_diffuse2s(sun_color.r, sun_color.g, sun_color.b);
 	if (fValue < EPS)
 		return false;
 

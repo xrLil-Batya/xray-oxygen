@@ -93,8 +93,11 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 
 		compute_build_id();
 		Msg("xrCore build %d, %s\n", build_id, build_date);
+#ifdef _AUTHOR
+		Msg("xrOxygen Version: branch[%s], commit[%s: %s]", _BRANCH, _AUTHOR, _HASH);
+#else
 		Msg("xrOxygen Version: branch[%s], commit[%s]", _BRANCH, _HASH); 
-
+#endif
 		EFS._initialize();
 	}
 	SetLogCB(cb);
@@ -136,4 +139,12 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvRese
 		break;
 	}
     return TRUE;
+}
+
+extern "C"
+{
+	__declspec(dllexport) char* GetCurrentHash()
+	{
+		return _HASH;
+	}
 }

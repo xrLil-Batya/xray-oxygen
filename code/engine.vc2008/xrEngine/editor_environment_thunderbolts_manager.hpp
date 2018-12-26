@@ -10,8 +10,8 @@
 
 #include "property_collection_forward.hpp"
 
-struct SThunderboltDesc;
-struct SThunderboltCollection;
+class CThunderboltDesc;
+class CThunderboltCollection;
 
 namespace editor {
 
@@ -36,8 +36,8 @@ public:
 			void			load		();
 			void			save		();
 			void			fill		(editor::property_holder* holder);
-			SThunderboltDesc*		description		(CInifile& config, shared_str const& section) const;
-			SThunderboltCollection*	get_collection	(shared_str const& section);
+			CThunderboltDesc*		description		(CInifile& config, shared_str const& section) const;
+			CThunderboltCollection*	get_collection	(shared_str const& section);
 
 public:
 			shared_str		unique_thunderbolt_id	(shared_str const& id) const;

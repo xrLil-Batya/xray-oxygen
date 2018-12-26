@@ -125,7 +125,7 @@ void CRender::render_sun()
 		// projection: box
 		Fbox frustum_bb;
 		frustum_bb.invalidate();
-		for (int it = 0; it < 8; it++)
+		for (u32 it = 0; it < 8; it++)
 		{
 			Fvector	xf = wform(mdir_View, hull.points[it]);
 			frustum_bb.modify(xf);
@@ -144,8 +144,7 @@ void CRender::render_sun()
 	{
 		HOM.Disable();
 		phase = PHASE_SMAP;
-		if (RImplementation.o.Tshadows)	r_pmask(true, true);
-		else							r_pmask(true, false);
+		r_pmask(true, RImplementation.o.Tshadows);
 	}
 
 	// Fill the database

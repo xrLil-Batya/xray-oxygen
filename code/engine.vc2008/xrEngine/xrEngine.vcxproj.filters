@@ -91,9 +91,6 @@
     <Filter Include="Engine\Console">
       <UniqueIdentifier>{7a4f13ec-5100-4600-8870-155f26d1228d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Console\commands">
-      <UniqueIdentifier>{2110994a-df87-4459-aa52-2560d716bb23}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core">
       <UniqueIdentifier>{eff2fdef-e738-4789-bdd5-a258812b1e44}</UniqueIdentifier>
     </Filter>
@@ -111,99 +108,6 @@
     </Filter>
     <Filter Include="Engine\text_editor\edit_actions">
       <UniqueIdentifier>{b52f146a-c846-492c-be78-a724c4bc8c9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor">
-      <UniqueIdentifier>{1aa52b9f-3ee3-4a22-bb57-ac792f9abb49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\engine_impl">
-      <UniqueIdentifier>{9f443edb-351e-49cc-a6f9-9b1ca50f42e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment">
-      <UniqueIdentifier>{b6556842-63df-4232-9a6f-2ce8f0327495}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\suns_manager">
-      <UniqueIdentifier>{5692ac0b-ddbe-4551-9da7-8a33eb4fbd0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\suns_manager\sun">
-      <UniqueIdentifier>{1d850336-40cc-4977-9b67-bb60d6b467a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\suns_manager\sun\gradient">
-      <UniqueIdentifier>{53574596-8f6c-4230-9fd1-6e641da79141}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\suns_manager\sun\blend">
-      <UniqueIdentifier>{4032484a-f9f0-4374-acfe-a2dbdadb0e7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\suns_manager\sun\flares">
-      <UniqueIdentifier>{89874af7-bdbd-4aa8-b195-ffd0e62e8fcf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\suns_manager\sun\flares\flare">
-      <UniqueIdentifier>{46a6682a-0361-4392-9a1d-129355f302a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\levels_manager">
-      <UniqueIdentifier>{c1ec3c68-fbb9-4f52-88d9-90d49b236a33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\effects_manager">
-      <UniqueIdentifier>{dcb7c091-41fd-4a12-95a1-5154eedd005d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\effects_manager\effect">
-      <UniqueIdentifier>{cc26bc43-dbe6-4ce4-b84c-c3cd37189761}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\sound_channels_manager">
-      <UniqueIdentifier>{3cfdb695-c992-4200-a2e7-a8ec7e272073}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\sound_channels_manager\channel">
-      <UniqueIdentifier>{5190740d-b840-4862-b2d4-4adab6acb90f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\sound_channels_manager\channel\source">
-      <UniqueIdentifier>{3012c65a-1e1d-4a3c-a2f7-5ed5b1a36708}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\manager">
-      <UniqueIdentifier>{fb135291-17e6-4ec1-80c8-9a1282630815}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\ambients">
-      <UniqueIdentifier>{36794782-3e1c-4316-8e87-437d146de975}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\ambients\ambient">
-      <UniqueIdentifier>{db9d7300-c085-47d3-acd0-f8f599d7f62f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\ambients\ambient\effect_id">
-      <UniqueIdentifier>{c1512a0f-ef97-4c34-aa3a-5e3d0fa6db85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\ambients\ambient\sound_id">
-      <UniqueIdentifier>{be553731-03b8-43a5-be70-1a8981d1ba9f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\thunderbolts">
-      <UniqueIdentifier>{56cff25f-40c7-4499-9566-e52c697cd138}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\thunderbolts\thunderbolt">
-      <UniqueIdentifier>{9a844ef7-deae-4b48-b32f-62f7ce4a4e25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\thunderbolts\thunderbolt\gradient">
-      <UniqueIdentifier>{25afe682-4cc3-4bd0-ac60-64511f41b49a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\thunderbolts\thunderbolt_id">
-      <UniqueIdentifier>{45891685-7f7a-4144-9f60-f186aceaaf33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\thunderbolts\collection">
-      <UniqueIdentifier>{64e87906-8507-41b2-9bb3-b8635fe5d33c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\weathers">
-      <UniqueIdentifier>{17e9af04-63a1-4192-a6b8-ee92922cc124}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\weathers\weather">
-      <UniqueIdentifier>{e8a5f6fb-13ee-4902-ada2-7c91f71ee84f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\weathers\weather\time">
-      <UniqueIdentifier>{e38bb4e7-7621-4e60-ba21-57fe0b4bf4a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\environment\detail">
-      <UniqueIdentifier>{64eafd30-d3b6-4770-9d55-6d808647a0c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\property_collection">
-      <UniqueIdentifier>{665b4561-5b3f-4f5c-a504-b7bf8c1b7d32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="editor\ide">
-      <UniqueIdentifier>{6735c398-0fd3-4aca-97bc-987415da016a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Device">
       <UniqueIdentifier>{0bcaaabd-28be-4fc6-aee0-5c8529d8e19e}</UniqueIdentifier>
@@ -232,6 +136,123 @@
     <Filter Include="Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton">
       <UniqueIdentifier>{51dac9fb-ca56-44cc-b86b-4bcbe28922da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game API\Level">
+      <UniqueIdentifier>{f95a2f74-5e20-47a4-9614-4353cd722baf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\Stats">
+      <UniqueIdentifier>{2c2e368f-497f-4dce-a130-d87a6e85b061}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Console\Commands">
+      <UniqueIdentifier>{2110994a-df87-4459-aa52-2560d716bb23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{1aa52b9f-3ee3-4a22-bb57-ac792f9abb49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\engine_impl">
+      <UniqueIdentifier>{9f443edb-351e-49cc-a6f9-9b1ca50f42e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment">
+      <UniqueIdentifier>{b6556842-63df-4232-9a6f-2ce8f0327495}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\suns_manager">
+      <UniqueIdentifier>{5692ac0b-ddbe-4551-9da7-8a33eb4fbd0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\suns_manager\sun">
+      <UniqueIdentifier>{1d850336-40cc-4977-9b67-bb60d6b467a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\suns_manager\sun\gradient">
+      <UniqueIdentifier>{53574596-8f6c-4230-9fd1-6e641da79141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\suns_manager\sun\blend">
+      <UniqueIdentifier>{4032484a-f9f0-4374-acfe-a2dbdadb0e7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\suns_manager\sun\flares">
+      <UniqueIdentifier>{89874af7-bdbd-4aa8-b195-ffd0e62e8fcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\suns_manager\sun\flares\flare">
+      <UniqueIdentifier>{46a6682a-0361-4392-9a1d-129355f302a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\levels_manager">
+      <UniqueIdentifier>{c1ec3c68-fbb9-4f52-88d9-90d49b236a33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\effects_manager">
+      <UniqueIdentifier>{dcb7c091-41fd-4a12-95a1-5154eedd005d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\effects_manager\effect">
+      <UniqueIdentifier>{cc26bc43-dbe6-4ce4-b84c-c3cd37189761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\sound_channels_manager">
+      <UniqueIdentifier>{3cfdb695-c992-4200-a2e7-a8ec7e272073}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\sound_channels_manager\channel">
+      <UniqueIdentifier>{5190740d-b840-4862-b2d4-4adab6acb90f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\sound_channels_manager\channel\source">
+      <UniqueIdentifier>{3012c65a-1e1d-4a3c-a2f7-5ed5b1a36708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\manager">
+      <UniqueIdentifier>{fb135291-17e6-4ec1-80c8-9a1282630815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\ambients">
+      <UniqueIdentifier>{36794782-3e1c-4316-8e87-437d146de975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\ambients\ambient">
+      <UniqueIdentifier>{db9d7300-c085-47d3-acd0-f8f599d7f62f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\ambients\ambient\effect_id">
+      <UniqueIdentifier>{c1512a0f-ef97-4c34-aa3a-5e3d0fa6db85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\ambients\ambient\sound_id">
+      <UniqueIdentifier>{be553731-03b8-43a5-be70-1a8981d1ba9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\thunderbolts">
+      <UniqueIdentifier>{56cff25f-40c7-4499-9566-e52c697cd138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\thunderbolts\thunderbolt">
+      <UniqueIdentifier>{9a844ef7-deae-4b48-b32f-62f7ce4a4e25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\thunderbolts\thunderbolt\gradient">
+      <UniqueIdentifier>{25afe682-4cc3-4bd0-ac60-64511f41b49a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\thunderbolts\thunderbolt_id">
+      <UniqueIdentifier>{45891685-7f7a-4144-9f60-f186aceaaf33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\thunderbolts\collection">
+      <UniqueIdentifier>{64e87906-8507-41b2-9bb3-b8635fe5d33c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\weathers">
+      <UniqueIdentifier>{17e9af04-63a1-4192-a6b8-ee92922cc124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\weathers\weather">
+      <UniqueIdentifier>{e8a5f6fb-13ee-4902-ada2-7c91f71ee84f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\weathers\weather\time">
+      <UniqueIdentifier>{e38bb4e7-7621-4e60-ba21-57fe0b4bf4a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\environment\detail">
+      <UniqueIdentifier>{64eafd30-d3b6-4770-9d55-6d808647a0c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\property_collection">
+      <UniqueIdentifier>{665b4561-5b3f-4f5c-a504-b7bf8c1b7d32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\ide">
+      <UniqueIdentifier>{6735c398-0fd3-4aca-97bc-987415da016a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\Environment\Effects\LensFlare">
+      <UniqueIdentifier>{41979ba2-8649-44c1-bf4d-5b5a77a82a29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\Environment\Effects\Rain">
+      <UniqueIdentifier>{0cebaf05-231d-45fa-82b2-2b6cff49312b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\Environment\Effects\Thunderbolt">
+      <UniqueIdentifier>{5cff94a2-2753-4c83-a32b-5294308f4a62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\RenderRef\Execution &amp; 3D\Visuals">
+      <UniqueIdentifier>{51ebe306-482a-4643-8c2c-f16953b5e3d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton">
+      <UniqueIdentifier>{51dac9fb-ca56-44cc-b86b-4bcbe28922da}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Spectre">
       <UniqueIdentifier>{814d34e1-3873-4ffd-a040-ed3993c26022}</UniqueIdentifier>
     </Filter>
@@ -246,6 +267,9 @@
     </Filter>
     <Filter Include="Interfaces\Ansel SDK">
       <UniqueIdentifier>{4748e55e-298c-4d97-a139-2ec3b9c51b87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\Environment\Hemisphere">
+      <UniqueIdentifier>{6deaf446-9248-4ae4-93cc-3d7855bfcbed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -323,18 +347,6 @@
     </ClInclude>
     <ClInclude Include="Environment.h">
       <Filter>Game API\Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="xrHemisphere.h">
-      <Filter>Game API\Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="Rain.h">
-      <Filter>Game API\Environment\Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="thunderbolt.h">
-      <Filter>Game API\Environment\Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="xr_efflensflare.h">
-      <Filter>Game API\Environment\Effects</Filter>
     </ClInclude>
     <ClInclude Include="CameraBase.h">
       <Filter>Game API\Cameras</Filter>
@@ -441,11 +453,8 @@
     <ClInclude Include="std_classes.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="XR_IOConsole.h">
-      <Filter>Engine\Console</Filter>
-    </ClInclude>
     <ClInclude Include="xr_ioc_cmd.h">
-      <Filter>Engine\Console\commands</Filter>
+      <Filter>Engine\Console\Commands</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>Engine\Core</Filter>
@@ -481,97 +490,97 @@
       <Filter>Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton</Filter>
     </ClInclude>
     <ClInclude Include="engine_impl.hpp">
-      <Filter>editor\engine_impl</Filter>
+      <Filter>Editor\engine_impl</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_suns_manager.hpp">
-      <Filter>editor\environment\suns_manager</Filter>
+      <Filter>Editor\environment\suns_manager</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_suns_sun.hpp">
-      <Filter>editor\environment\suns_manager\sun</Filter>
+      <Filter>Editor\environment\suns_manager\sun</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_suns_gradient.hpp">
-      <Filter>editor\environment\suns_manager\sun\gradient</Filter>
+      <Filter>Editor\environment\suns_manager\sun\gradient</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_suns_blend.hpp">
-      <Filter>editor\environment\suns_manager\sun\blend</Filter>
+      <Filter>Editor\environment\suns_manager\sun\blend</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_suns_flares.hpp">
-      <Filter>editor\environment\suns_manager\sun\flares</Filter>
+      <Filter>Editor\environment\suns_manager\sun\flares</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_suns_flare.hpp">
-      <Filter>editor\environment\suns_manager\sun\flares\flare</Filter>
+      <Filter>Editor\environment\suns_manager\sun\flares\flare</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_levels_manager.hpp">
-      <Filter>editor\environment\levels_manager</Filter>
+      <Filter>Editor\environment\levels_manager</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_effects_manager.hpp">
-      <Filter>editor\environment\effects_manager</Filter>
+      <Filter>Editor\environment\effects_manager</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_effects_effect.hpp">
-      <Filter>editor\environment\effects_manager\effect</Filter>
+      <Filter>Editor\environment\effects_manager\effect</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_sound_channels_manager.hpp">
-      <Filter>editor\environment\sound_channels_manager</Filter>
+      <Filter>Editor\environment\sound_channels_manager</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_sound_channels_channel.hpp">
-      <Filter>editor\environment\sound_channels_manager\channel</Filter>
+      <Filter>Editor\environment\sound_channels_manager\channel</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_sound_channels_source.hpp">
-      <Filter>editor\environment\sound_channels_manager\channel\source</Filter>
+      <Filter>Editor\environment\sound_channels_manager\channel\source</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_manager.hpp">
-      <Filter>editor\environment\manager</Filter>
+      <Filter>Editor\environment\manager</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_ambients_manager.hpp">
-      <Filter>editor\environment\ambients</Filter>
+      <Filter>Editor\environment\ambients</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_ambients_ambient.hpp">
-      <Filter>editor\environment\ambients\ambient</Filter>
+      <Filter>Editor\environment\ambients\ambient</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_ambients_effect_id.hpp">
-      <Filter>editor\environment\ambients\ambient\effect_id</Filter>
+      <Filter>Editor\environment\ambients\ambient\effect_id</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_ambients_sound_id.hpp">
-      <Filter>editor\environment\ambients\ambient\sound_id</Filter>
+      <Filter>Editor\environment\ambients\ambient\sound_id</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_thunderbolts_manager.hpp">
-      <Filter>editor\environment\thunderbolts</Filter>
+      <Filter>Editor\environment\thunderbolts</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_thunderbolts_thunderbolt.hpp">
-      <Filter>editor\environment\thunderbolts\thunderbolt</Filter>
+      <Filter>Editor\environment\thunderbolts\thunderbolt</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_thunderbolts_gradient.hpp">
-      <Filter>editor\environment\thunderbolts\thunderbolt\gradient</Filter>
+      <Filter>Editor\environment\thunderbolts\thunderbolt\gradient</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_thunderbolts_thunderbolt_id.hpp">
-      <Filter>editor\environment\thunderbolts\thunderbolt_id</Filter>
+      <Filter>Editor\environment\thunderbolts\thunderbolt_id</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_thunderbolts_collection.hpp">
-      <Filter>editor\environment\thunderbolts\collection</Filter>
+      <Filter>Editor\environment\thunderbolts\collection</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_weathers_manager.hpp">
-      <Filter>editor\environment\weathers</Filter>
+      <Filter>Editor\environment\weathers</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_weathers_weather.hpp">
-      <Filter>editor\environment\weathers\weather</Filter>
+      <Filter>Editor\environment\weathers\weather</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_weathers_time.hpp">
-      <Filter>editor\environment\weathers\weather\time</Filter>
+      <Filter>Editor\environment\weathers\weather\time</Filter>
     </ClInclude>
     <ClInclude Include="editor_environment_detail.hpp">
-      <Filter>editor\environment\detail</Filter>
+      <Filter>Editor\environment\detail</Filter>
     </ClInclude>
     <ClInclude Include="property_collection.hpp">
-      <Filter>editor\property_collection</Filter>
+      <Filter>Editor\property_collection</Filter>
     </ClInclude>
     <ClInclude Include="property_collection_forward.hpp">
-      <Filter>editor\property_collection</Filter>
+      <Filter>Editor\property_collection</Filter>
     </ClInclude>
     <ClInclude Include="property_collection_inline.hpp">
-      <Filter>editor\property_collection</Filter>
+      <Filter>Editor\property_collection</Filter>
     </ClInclude>
     <ClInclude Include="ide.hpp">
-      <Filter>editor\ide</Filter>
+      <Filter>Editor\ide</Filter>
     </ClInclude>
     <ClInclude Include="ClS\NET_Client.h">
       <Filter>Game API\NetServer</Filter>
@@ -611,6 +620,42 @@
     </ClInclude>
     <ClInclude Include="DynamicSplash.h">
       <Filter>Device\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvDescriptorMixer.h">
+      <Filter>Game API\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvDescriptor.h">
+      <Filter>Game API\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvModifier.h">
+      <Filter>Game API\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvAmbient.h">
+      <Filter>Game API\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="XR_IOConsole.h">
+      <Filter>Engine\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="LensFlareDescriptor.h">
+      <Filter>Game API\Environment\Effects\LensFlare</Filter>
+    </ClInclude>
+    <ClInclude Include="LensFlare.h">
+      <Filter>Game API\Environment\Effects\LensFlare</Filter>
+    </ClInclude>
+    <ClInclude Include="Rain.h">
+      <Filter>Game API\Environment\Effects\Rain</Filter>
+    </ClInclude>
+    <ClInclude Include="Thunderbolt.h">
+      <Filter>Game API\Environment\Effects\Thunderbolt</Filter>
+    </ClInclude>
+    <ClInclude Include="xrHemisphere.h">
+      <Filter>Game API\Environment\Hemisphere</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderboltDesc.h">
+      <Filter>Game API\Environment\Effects\Thunderbolt</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderboltCollection.h">
+      <Filter>Game API\Environment\Effects\Thunderbolt</Filter>
     </ClInclude>
     <ClInclude Include="IGame_Actor.h">
       <Filter>Game API</Filter>
@@ -682,24 +727,6 @@
     </ClCompile>
     <ClCompile Include="Environment.cpp">
       <Filter>Game API\Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="Environment_misc.cpp">
-      <Filter>Game API\Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="Environment_render.cpp">
-      <Filter>Game API\Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="xrHemisphere.cpp">
-      <Filter>Game API\Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="Rain.cpp">
-      <Filter>Game API\Environment\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="thunderbolt.cpp">
-      <Filter>Game API\Environment\Effects</Filter>
-    </ClCompile>
-    <ClCompile Include="xr_efflensflare.cpp">
-      <Filter>Game API\Environment\Effects</Filter>
     </ClCompile>
     <ClCompile Include="CameraBase.cpp">
       <Filter>Game API\Cameras</Filter>
@@ -779,20 +806,8 @@
     <ClCompile Include="pure.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="XR_IOConsole.cpp">
-      <Filter>Engine\Console</Filter>
-    </ClCompile>
-    <ClCompile Include="XR_IOConsole_callback.cpp">
-      <Filter>Engine\Console</Filter>
-    </ClCompile>
-    <ClCompile Include="XR_IOConsole_control.cpp">
-      <Filter>Engine\Console</Filter>
-    </ClCompile>
-    <ClCompile Include="XR_IOConsole_get.cpp">
-      <Filter>Engine\Console</Filter>
-    </ClCompile>
     <ClCompile Include="xr_ioc_cmd.cpp">
-      <Filter>Engine\Console\commands</Filter>
+      <Filter>Engine\Console\Commands</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Engine\Core</Filter>
@@ -843,88 +858,88 @@
       <Filter>Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton</Filter>
     </ClCompile>
     <ClCompile Include="engine_impl.cpp">
-      <Filter>editor\engine_impl</Filter>
+      <Filter>Editor\engine_impl</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_suns_manager.cpp">
-      <Filter>editor\environment\suns_manager</Filter>
+      <Filter>Editor\environment\suns_manager</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_suns_sun.cpp">
-      <Filter>editor\environment\suns_manager\sun</Filter>
+      <Filter>Editor\environment\suns_manager\sun</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_suns_gradient.cpp">
-      <Filter>editor\environment\suns_manager\sun\gradient</Filter>
+      <Filter>Editor\environment\suns_manager\sun\gradient</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_suns_blend.cpp">
-      <Filter>editor\environment\suns_manager\sun\blend</Filter>
+      <Filter>Editor\environment\suns_manager\sun\blend</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_suns_flares.cpp">
-      <Filter>editor\environment\suns_manager\sun\flares</Filter>
+      <Filter>Editor\environment\suns_manager\sun\flares</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_suns_flare.cpp">
-      <Filter>editor\environment\suns_manager\sun\flares\flare</Filter>
+      <Filter>Editor\environment\suns_manager\sun\flares\flare</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_levels_manager.cpp">
-      <Filter>editor\environment\levels_manager</Filter>
+      <Filter>Editor\environment\levels_manager</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_effects_manager.cpp">
-      <Filter>editor\environment\effects_manager</Filter>
+      <Filter>Editor\environment\effects_manager</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_effects_effect.cpp">
-      <Filter>editor\environment\effects_manager\effect</Filter>
+      <Filter>Editor\environment\effects_manager\effect</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_sound_channels_manager.cpp">
-      <Filter>editor\environment\sound_channels_manager</Filter>
+      <Filter>Editor\environment\sound_channels_manager</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_sound_channels_channel.cpp">
-      <Filter>editor\environment\sound_channels_manager\channel</Filter>
+      <Filter>Editor\environment\sound_channels_manager\channel</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_sound_channels_source.cpp">
-      <Filter>editor\environment\sound_channels_manager\channel\source</Filter>
+      <Filter>Editor\environment\sound_channels_manager\channel\source</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_manager.cpp">
-      <Filter>editor\environment\manager</Filter>
+      <Filter>Editor\environment\manager</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_manager_properties.cpp">
-      <Filter>editor\environment\manager</Filter>
+      <Filter>Editor\environment\manager</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_ambients_manager.cpp">
-      <Filter>editor\environment\ambients</Filter>
+      <Filter>Editor\environment\ambients</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_ambients_ambient.cpp">
-      <Filter>editor\environment\ambients\ambient</Filter>
+      <Filter>Editor\environment\ambients\ambient</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_ambients_effect_id.cpp">
-      <Filter>editor\environment\ambients\ambient\effect_id</Filter>
+      <Filter>Editor\environment\ambients\ambient\effect_id</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_ambients_sound_id.cpp">
-      <Filter>editor\environment\ambients\ambient\sound_id</Filter>
+      <Filter>Editor\environment\ambients\ambient\sound_id</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_thunderbolts_manager.cpp">
-      <Filter>editor\environment\thunderbolts</Filter>
+      <Filter>Editor\environment\thunderbolts</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_thunderbolts_thunderbolt.cpp">
-      <Filter>editor\environment\thunderbolts\thunderbolt</Filter>
+      <Filter>Editor\environment\thunderbolts\thunderbolt</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_thunderbolts_gradient.cpp">
-      <Filter>editor\environment\thunderbolts\thunderbolt\gradient</Filter>
+      <Filter>Editor\environment\thunderbolts\thunderbolt\gradient</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_thunderbolts_thunderbolt_id.cpp">
-      <Filter>editor\environment\thunderbolts\thunderbolt_id</Filter>
+      <Filter>Editor\environment\thunderbolts\thunderbolt_id</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_thunderbolts_collection.cpp">
-      <Filter>editor\environment\thunderbolts\collection</Filter>
+      <Filter>Editor\environment\thunderbolts\collection</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_weathers_manager.cpp">
-      <Filter>editor\environment\weathers</Filter>
+      <Filter>Editor\environment\weathers</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_weathers_weather.cpp">
-      <Filter>editor\environment\weathers\weather</Filter>
+      <Filter>Editor\environment\weathers\weather</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_weathers_time.cpp">
-      <Filter>editor\environment\weathers\weather\time</Filter>
+      <Filter>Editor\environment\weathers\weather\time</Filter>
     </ClCompile>
     <ClCompile Include="editor_environment_detail.cpp">
-      <Filter>editor\environment\detail</Filter>
+      <Filter>Editor\environment\detail</Filter>
     </ClCompile>
     <ClCompile Include="BoneEditor.cpp">
       <Filter>Game API\RenderRef</Filter>
@@ -971,6 +986,57 @@
     <ClCompile Include="Stats.cpp">
       <Filter>Device\Stats</Filter>
     </ClCompile>
+    <ClCompile Include="EnvAmbient.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvModifier.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvDescriptor.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvDescriptorMixer.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="XR_IOConsole.cpp">
+      <Filter>Engine\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="XR_IOConsole_callback.cpp">
+      <Filter>Engine\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="XR_IOConsole_control.cpp">
+      <Filter>Engine\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="XR_IOConsole_get.cpp">
+      <Filter>Engine\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="LensFlareDescriptor.cpp">
+      <Filter>Game API\Environment\Effects\LensFlare</Filter>
+    </ClCompile>
+    <ClCompile Include="LensFlare.cpp">
+      <Filter>Game API\Environment\Effects\LensFlare</Filter>
+    </ClCompile>
+    <ClCompile Include="Rain.cpp">
+      <Filter>Game API\Environment\Effects\Rain</Filter>
+    </ClCompile>
+    <ClCompile Include="Thunderbolt.cpp">
+      <Filter>Game API\Environment\Effects\Thunderbolt</Filter>
+    </ClCompile>
+    <ClCompile Include="xrHemisphere.cpp">
+      <Filter>Game API\Environment\Hemisphere</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentRender.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentMisc.cpp">
+      <Filter>Game API\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderboltDesc.cpp">
+      <Filter>Game API\Environment\Effects\Thunderbolt</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderboltCollection.cpp">
+      <Filter>Game API\Environment\Effects\Thunderbolt</Filter>
+    </ClCompile>
     <ClCompile Include="IGame_Actor.cpp">
       <Filter>Game API</Filter>
     </ClCompile>
@@ -994,15 +1060,13 @@
     <None Include="TODO.txt">
       <Filter>Engine</Filter>
     </None>
-    <None Include="features.txt">
-      <Filter>Engine</Filter>
-    </None>
     <None Include="Effects description.txt">
       <Filter>Engine</Filter>
     </None>
     <None Include="OffSetOfWrapper.inl">
       <Filter>Interfaces\Input</Filter>
     </None>
+    <None Include="features.txt" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\xrCore.natvis">

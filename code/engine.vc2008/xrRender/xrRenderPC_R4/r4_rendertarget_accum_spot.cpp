@@ -125,7 +125,7 @@ void CRenderTarget::accum_spot(light* L)
 	Fvector		L_dir, L_clr, L_pos;	float L_spec;
 	L_clr.set(L->color.r, L->color.g, L->color.b);
 	L_clr.mul(L->get_LOD());
-	L_spec = u_diffuse2s(L_clr);
+	L_spec = Diffuse::u_diffuse2s(L_clr);
 	CastToGSCMatrix(Device.mView).transform_tiny(L_pos, L->position);
 	CastToGSCMatrix(Device.mView).transform_dir(L_dir, L->direction);
 	L_dir.normalize();
@@ -367,7 +367,7 @@ void CRenderTarget::accum_volumetric(light* L)
 	L_clr.mul(L->m_volumetric_distance);
 	L_clr.mul(1 / fQuality);
 	L_clr.mul(L->get_LOD());
-	L_spec = u_diffuse2s(L_clr);
+	L_spec = Diffuse::u_diffuse2s(L_clr);
 	CastToGSCMatrix(Device.mView).transform_tiny(L_pos, L->position);
 	CastToGSCMatrix(Device.mView).transform_dir(L_dir, L->direction);
 	L_dir.normalize();

@@ -319,9 +319,9 @@ void CPhysicObject::UpdateCL()
 	bones_snd_player->update(Device.fTimeDelta, *this);
 
 }
+
 void CPhysicObject::PHObjectPositionUpdate()
 {
-
 	if (m_pPhysicsShell)
 	{
 		if (m_type == epotBox)
@@ -329,15 +329,14 @@ void CPhysicObject::PHObjectPositionUpdate()
 			m_pPhysicsShell->Update();
 			XFORM().set(m_pPhysicsShell->mXFORM);
 		}
+		else if (m_pPhysicsShell->PPhysicsShellAnimator())
+		{
+			Fmatrix m;
+			m_pPhysicsShell->InterpolateGlobalTransform(&m);
+			XFORM().set(m);
+		}
 		else
-			if (m_pPhysicsShell->PPhysicsShellAnimator())
-			{
-				Fmatrix m;
-				m_pPhysicsShell->InterpolateGlobalTransform(&m);
-				XFORM().set(m);
-			}
-			else
-				m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
+			m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
 	}
 }
 
@@ -349,7 +348,6 @@ void CPhysicObject::AddElement(IPhysicsElementEx* root_e, int id)
 	CBoneInstance& B = K->LL_GetBoneInstance(u16(id));
 	E->mXFORM.set(K->LL_GetTransform(u16(id)));
 	Fobb bb = K->LL_GetBox(u16(id));
-
 
 	if (bb.m_halfsize.magnitude()<0.05f)
 	{

@@ -352,6 +352,20 @@ static class cl_screen_params : public R_constant_setup
 	}
 } binder_screen_params;
 
+static class cl_rain_params : public R_constant_setup
+{
+    u32 marker;
+    Fvector4 result;
+    virtual void setup(R_constant* C)
+	{
+		float wetnessW		= Environment().eff_Rain->GetWorldWetness();
+		float wetnessCVE	= Environment().eff_Rain->GetCurrViewEntityWetness();
+		float rainDensity	= Environment().CurrentEnv->rain_density;
+
+        RCache.set_c(C, wetnessW, wetnessCVE, rainDensity, 0.0f);
+    }
+} binder_rain_params;
+
 static class cl_parallax : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
@@ -474,6 +488,8 @@ void CBlender_Compile::SetMapping()
 	r_Constant				("fog_color",		&binder_fog_color);
 	// Wind
 	r_Constant				("wind_params",		&binder_wind_params);
+	// Rain
+	r_Constant				("rain_params",		&binder_rain_params);
 	// Water
 	r_Constant				("water_intensity", &binder_water_intensity);
 	// Sunshafts

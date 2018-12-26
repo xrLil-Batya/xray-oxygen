@@ -1,9 +1,11 @@
 /*
 ** Bytecode instruction modes.
-** Copyright (C) 2005-2015 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2017 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #define lj_bc_c
+#define LUA_CORE
+
 #include "lj_obj.h"
 #include "lj_bc.h"
 

@@ -50,13 +50,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			MessageBox(nullptr, "It's can affect on the stability of the game.", "SSE3 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
-		// Checking for AVX
-#ifndef RELEASE_IA32
-		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
-		{
-			MessageBox(nullptr, "It's can affect on the stability of the game.", "AVX isn't supported on your CPU!", MB_OK | MB_ICONWARNING);
-		}
-#endif
 	}
 #endif
 

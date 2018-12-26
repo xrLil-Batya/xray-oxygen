@@ -92,12 +92,12 @@ void CRenderTarget::draw_rain( light &RainSetup )
 			TransformDirByMatrix(m_xform, localnormal, normal);
 			localnormal.normalize();
 
-			m_clouds_shadow.Multiply(m_xform, xf_invview);
+			m_clouds_shadow.Multiply(xf_invview, m_xform);
 			m_xform = DirectX::XMMatrixScaling(1.f, 1.f, 1.f);
-			m_clouds_shadow.Multiply(m_xform, m_clouds_shadow);
+			m_clouds_shadow.Multiply(m_clouds_shadow, m_xform);
 			Fvector ToTranslation = localnormal.mul(w_shift);
 			m_xform = DirectX::XMMatrixTranslation(ToTranslation.x, ToTranslation.y, ToTranslation.z);
-			m_clouds_shadow.Multiply(m_xform, m_clouds_shadow);
+			m_clouds_shadow.Multiply(m_clouds_shadow, m_xform);
 		}
 
 		// Make jitter texture
@@ -184,20 +184,7 @@ void CRenderTarget::draw_rain( light &RainSetup )
 		RCache.set_c				("m_shadow",			m_shadow						);
 		RCache.set_c				("m_sunmask",			m_clouds_shadow					);
 
-		if( !RImplementation.o.dx10_gbuffer_opt )
-		{
-			if( ! RImplementation.o.dx10_msaa )
-				u_setrt	(rt_Normal,NULL,NULL,HW.pBaseZB);
-			else
-				u_setrt	(rt_Normal,NULL,NULL,rt_MSAADepth->pZRT);
-		}
-		else
-		{
-			if( ! RImplementation.o.dx10_msaa )
-				u_setrt	(rt_Position,NULL,NULL,HW.pBaseZB); 
-			else
-				u_setrt	(rt_Position,NULL,NULL,rt_MSAADepth->pZRT); 
-		}
+		u_setrt(rt_Position, NULL, NULL, RImplementation.o.dx10_msaa ? rt_MSAADepth->pZRT : HW.pBaseZB);
 
 		if( ! RImplementation.o.dx10_msaa )
 		{
