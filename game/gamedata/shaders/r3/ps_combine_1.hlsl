@@ -24,10 +24,10 @@ struct _out
 
 //	TODO:	DX10: Replace Sample with Load
 #ifndef MSAA_OPTIMIZATION
-//[earlydepthstencil] <-- I don't think this works the way I thought it did
+[earlydepthstencil]
 _out main (_input I)
 #else
-//[earlydepthstencil]
+[earlydepthstencil]
 _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 #endif
 {
@@ -96,13 +96,13 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 	float4	light	= float4(L.rgb + hdiffuse, L.w);
 	
 	float4	C		= D*light;						// rgb.gloss * light(diffuse.specular)
-	float3	spec	= C.www + hspecular;	//Colored differently (faster) now // replicated specular
+	float3	spec	= C.www * L.rgb + hspecular;	// replicated specular
 
 	float3	color	= C.rgb + spec;
 
 	// here should be distance fog
-	//float3	pos			= P.xyz;
-	float	dist		= length(P.z);
+	float3	pos			= P.xyz;
+	float	dist		= length(pos);
 	float	fog			= saturate(dist*fog_params.w + fog_params.x);
 			color		= lerp(color,fog_color,fog);
 	float	skyblend	= saturate(fog*fog);

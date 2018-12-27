@@ -132,7 +132,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	//sd.Flags = DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
 
 	//	Additional set up
-	UINT createDeviceFlags = 0;//Temp reverted (this is causing the CTD's) //D3D11_CREATE_DEVICE_SINGLETHREADED;
+	UINT createDeviceFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 	if (isGraphicDebugging)
 	{
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;

@@ -9,15 +9,15 @@
 //	Used by VS
 cbuffer	dynamic_transforms
 {
-	row_major float3x4		m_W;			// local2world
-	//row_major float3x4		m_invW;			// world2local
-	row_major float3x4		m_V;			// world2view
-	row_major float3x4		m_invV;			// view2world
-	row_major float4x4 		m_P;			// view2proj
-	//row_major float4x4		m_invP;			// proj2view
-	row_major float3x4		m_WV;			// local2world2view
-	row_major float4x4 		m_VP;			// world2view2proj
-	row_major float4x4 		m_WVP;			// local2world2view2proj
+	float3x4		m_W;			// local2world
+	float3x4		m_invW;			// world2local
+	float3x4		m_V;			// world2view
+	float3x4		m_invV;			// view2world
+	float4x4 		m_P;			// view2proj
+	float4x4		m_invP;			// proj2view
+	float3x4		m_WV;			// local2world2view
+	float4x4 		m_VP;			// world2view2proj
+	float4x4 		m_WVP;			// local2world2view2proj
 	//	Used by VS only
 	float4			L_material;	// 0,0,0,mid
 	float4          hemi_cube_pos_faces;
@@ -31,7 +31,7 @@ cbuffer	static_globals
 
 	float4		fog_plane;
 	float4		fog_params;		// x=near*(1/(far-near)), ?,?, w = -1/(far-near)
-	float4		fog_color; //maybe we should remove this, color the fog differently. Save a constant buffer call.
+	float4		fog_color;
 
 	float4		L_ambient;		// L_ambient.w = skynbox-lerp-factor
 	float3		L_sun_color;
@@ -46,9 +46,52 @@ cbuffer	static_globals
 
 	float4		screen_res;		// Screen resolution (x=width, y=height, z=1/width, w=1/height)
 	float4		parallax;
+
+	// Глобальные параметры шейдеров --#SM+#--
+	float4x4	m_script_params; 
+	float4		m_hud_params;	// zoom_rotate_factor, secondVP_zoom_factor, NULL, NULL
+	float4		m_blender_mode;	// x\y = [0 - default, 1 - night vision, 2 - thermal vision]; x - основной вьюпорт, y - второй впьюпорт, z = ?, w = [0 - идёт рендер обычного объекта, 1 - идёт рендер детальных объектов (трава, мусор)]
+
+	// Параметры, уникальные для разных моделей --#SM+#--
+	float4x4	m_obj_camo_data; 
+	float4		m_obj_custom_data;
+	float4		m_obj_generic_data;
 }
 
+// Активен-ли двойной рендер --#SM+#--
+inline bool isSecondVPActive()
+{
+	return (m_blender_mode.z == 1.f);
+}
 
+// Возвращает 1.f, если сейчас идёт рендер второго вьюпорта --#SM+#--
+inline bool isSecondVP()
+{
+	return m_blender_mode.z > 0.5f;
+}
+
+// Возвращает режим блендинга для текущего вьюпорта --#SM+#--
+float blender_mode()
+{
+	float ret = m_blender_mode.x;
+	
+	if (isSecondVP() == true)
+		ret = m_blender_mode.y;
+		
+	return ret;
+}
+
+// В данный момент рендерятся детальные элементы (трава, мусор) --#SM+#--
+inline bool isDetailRender()
+{
+	return (m_blender_mode.w == 1.f);
+}
+
+// Включён термо-режим --#SM+#--
+inline bool isThermalMode()
+{
+	return (blender_mode() == 2.f);
+}
 
 /*
 //
