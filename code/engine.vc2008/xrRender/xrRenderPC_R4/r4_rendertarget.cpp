@@ -316,7 +316,6 @@ CRenderTarget::CRenderTarget()
 		//You'll actually save performance with a third RT bound to GBUFFER.
 		//This is why on modern machines turning "r3_gbuffer_opt off" can be faster.
 		rt_Position.create					(r2_RT_P, w, h, D3DFMT_A16B16G16R16F, SampleCount);
-
         //rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //not needed for depth prepass..
 
 		if (RImplementation.o.dx10_msaa)
@@ -345,6 +344,7 @@ CRenderTarget::CRenderTarget()
 				rt_Accumulator.create		(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 				rt_Accumulator_temp.create	(r2_RT_accum_temp, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 			}
+			//rt_Normal.create(r2_RT_N, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 
 #if 0
 //Suggested new Gbuffer
@@ -550,8 +550,8 @@ rt_Color.create(r2_RT_albedo, w, h, D3DFMT_A16B16G16R16F, SampleCount); //Pack w
 		u32 fvf_build = D3DFVF_XYZRHW | D3DFVF_TEX4 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) | D3DFVF_TEXCOORDSIZE2(2) | D3DFVF_TEXCOORDSIZE2(3);
 		u32 fvf_filter = (u32)D3DFVF_XYZRHW | D3DFVF_TEX8 | D3DFVF_TEXCOORDSIZE4(0) | D3DFVF_TEXCOORDSIZE4(1) | D3DFVF_TEXCOORDSIZE4(2) | D3DFVF_TEXCOORDSIZE4(3) | D3DFVF_TEXCOORDSIZE4(4) | D3DFVF_TEXCOORDSIZE4(5) | D3DFVF_TEXCOORDSIZE4(6) | D3DFVF_TEXCOORDSIZE4(7);
 		/////////////////////////////////////////
-		rt_Bloom_1.create			(r2_RT_bloom1, w, h, fmt);
-		rt_Bloom_2.create			(r2_RT_bloom2, w, h, fmt);
+		rt_Bloom_1.create			(r2_RT_bloom1, BLOOM_size_X, BLOOM_size_Y, fmt);
+		rt_Bloom_2.create			(r2_RT_bloom2, BLOOM_size_X, BLOOM_size_Y, fmt);
 		/////////////////////////////////////////
 		g_bloom_build.create		(fvf_build, RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_bloom_filter.create		(fvf_filter, RCache.Vertex.Buffer(), RCache.QuadIB);

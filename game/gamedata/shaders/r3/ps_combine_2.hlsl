@@ -16,7 +16,7 @@ struct c2_out
 #endif
 };
 
-[earlydepthstencil]
+//[earlydepthstencil]
 c2_out main(p_screen I)
 {
 	c2_out res;
@@ -26,7 +26,7 @@ c2_out main(p_screen I)
 
 	gbuffer_data gbd = gbuffer_load_data(I.tc0, I.hpos, iSample);
 	
-#ifdef USE_DISTORT
+#ifdef USE_DISTORT //This looks fantastic, but it seems more expensive than GSC's method. Maybe 4x4 pixels instead of 7x7?
 	float4 	distort	= s_distort.Load(int3(I.hpos.xy, 0), iSample);
 	float2	offset	= (distort.xy - (127.0f/255.0f))*def_distort;  // fix newtral offset
 	
