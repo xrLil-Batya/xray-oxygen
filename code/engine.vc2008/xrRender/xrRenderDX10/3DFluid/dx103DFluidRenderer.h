@@ -82,7 +82,7 @@ private:
 
 	D3DXMATRIX	m_gridMatrix;
 
-	D3DFORMAT				RTFormats[ RRT_NumRT ];
+	DXGI_FORMAT				RTFormats[ RRT_NumRT ];
 	ref_rt					RT[ RRT_NumRT ];
 	static LPCSTR			m_pRTNames[ RRT_NumRT ];
 	static LPCSTR			m_pResourceRTNames[ RRT_NumRT ];

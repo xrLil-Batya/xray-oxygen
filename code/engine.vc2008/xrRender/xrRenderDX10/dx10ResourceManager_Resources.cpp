@@ -439,7 +439,7 @@ void				CResourceManager::_DeleteConstantTable	(const R_constant_table* C)
 
 //--------------------------------------------------------------------------------------------------------------
 #ifdef USE_DX11
-CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount, bool useUAV )
+CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	DXGI_FORMAT f, u32 SampleCount, bool useUAV )
 #else
 CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 #endif

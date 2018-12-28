@@ -73,8 +73,8 @@ void					CRender::create()
 	o.HW_smap		= true;
 	o.HW_smap_PCF	= true;
 
-	//	For ATI it's much faster on DX10 to use D32F format
-	o.HW_smap_FORMAT = (HW.Caps.id_vendor == 0x1002) ? D3DFMT_D32F_LOCKABLE : D3DFMT_D24X8;
+	//	For AMD it's much faster on DX10 to use R32 format
+	o.HW_smap_FORMAT = (HW.Caps.id_vendor == 0x1002) ? DXGI_FORMAT_R32_TYPELESS : DXGI_FORMAT_R24G8_TYPELESS;
 
 	Msg("* HWDST/PCF supported and used");
 
@@ -811,6 +811,14 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		def_it++;
 	}
 	else R_ASSERT2(false, "Your PC unsupport DirectX version!");
+
+	// [FX] #TODO: Key for tests 
+	if (strstr(Core.Params, "-ssr_use"))
+	{
+		defines[def_it].Name = "USE_SSR";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
 
 	if (o.fp16_filter)		{
 		defines[def_it].Name		=	"FP16_FILTER";

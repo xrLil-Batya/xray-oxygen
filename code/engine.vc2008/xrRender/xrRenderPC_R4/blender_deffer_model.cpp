@@ -28,27 +28,28 @@ void	CBlender_deffer_model::Save	(	IWriter& fs )
 	I.ID = 2; xr_strcpy(I.str,"TESS_HM");	fs.w		(&I,sizeof(I));
 	I.ID = 3; xr_strcpy(I.str,"TESS_PN+HM");	fs.w		(&I,sizeof(I));
 }
-void	CBlender_deffer_model::Load	(	IReader& fs, u16 version )
+void	CBlender_deffer_model::Load(IReader& fs, u16 version)
 {
-	IBlender::Load		(fs,version);
+	IBlender::Load(fs, version);
 
-	switch (version)	
+	switch (version)
 	{
-	case 0: 
-		oAREF.value			= 32;
-		oAREF.min			= 0;
-		oAREF.max			= 255;
-		oBlend.value		= FALSE;
+	case 0:
+		oAREF.value = 32;
+		oAREF.min = 0;
+		oAREF.max = 255;
+		oBlend.value = FALSE;
 		break;
-	case 1:
+
 	default:
-		xrPREAD_PROP	(fs,xrPID_BOOL,		oBlend);
-		xrPREAD_PROP	(fs,xrPID_INTEGER,	oAREF);
+		xrPREAD_PROP(fs, xrPID_BOOL, oBlend);
+		xrPREAD_PROP(fs, xrPID_INTEGER, oAREF);
 		break;
 	}
-	if (version>1)
+
+	if (version > 1)
 	{
-		xrPREAD_PROP(fs,xrPID_TOKEN,oTessellation);
+		xrPREAD_PROP(fs, xrPID_TOKEN, oTessellation);
 	}
 }
 
