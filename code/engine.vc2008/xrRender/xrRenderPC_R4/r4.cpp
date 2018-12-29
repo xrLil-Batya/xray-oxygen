@@ -69,17 +69,16 @@ void					CRender::create()
 	o.mrt = (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth = (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Òîëüêî true!
-	o.HW_smap		= true;
-	o.HW_smap_PCF	= true;
-
 	//	For AMD it's much faster on DX10 to use R32 format
-	o.HW_smap_FORMAT = (HW.Caps.id_vendor == 0x1002) ? DXGI_FORMAT_R32_TYPELESS : DXGI_FORMAT_R24G8_TYPELESS;
+	DXGI_FORMAT CurrentFormat = (HW.Caps.id_vendor == 0x1002) ? DXGI_FORMAT_R32_TYPELESS : DXGI_FORMAT_R24G8_TYPELESS;
+	o.HW_smap		= HW.IsFormatSupported(CurrentFormat);
+	o.HW_smap_PCF	= o.HW_smap;
+	o.HW_smap_FORMAT = o.HW_smap ? CurrentFormat : DXGI_FORMAT_UNKNOWN;
 
 	Msg("* HWDST/PCF supported and used");
 
-	o.fp16_filter	= true;
-	o.fp16_blend	= true;
+	o.fp16_filter = HW.IsFormatSupported(DXGI_FORMAT_R16G16B16A16_FLOAT);
+	o.fp16_blend  = HW.IsFormatSupported(DXGI_FORMAT_R16G16B16A16_FLOAT);
 
 	VERIFY2(o.mrt && (HW.Caps.raster.dwInstructions >= 256), "Hardware doesn't meet minimum feature-level");
 	/////////////////////////////////////////////

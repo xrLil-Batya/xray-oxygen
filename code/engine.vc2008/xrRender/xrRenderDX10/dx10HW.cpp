@@ -405,9 +405,13 @@ void CHW::OnAppDeactivate()
 }
 
 
-bool CHW::IsFormatSupported(D3DFORMAT fmt, DWORD type, DWORD usage)
+bool CHW::IsFormatSupported(DXGI_FORMAT fmt)
 {
-	VERIFY(!"Implement CHW::support");
+	u32 FormatSupport;
+	HRESULT hr = pDevice->CheckFormatSupport(fmt, &FormatSupport);;
+	if (FAILED(hr))
+		return false;
+
 	return true;
 }
 

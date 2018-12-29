@@ -36,7 +36,6 @@ public:
 	u32						SelectPresentInterval	();
 	u32						SelectGPU				();
 	u32						SelectRefresh			(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt);
-	bool					IsFormatSupported		(D3DFORMAT fmt, DWORD type, DWORD usage);
 
 	void					FillVidModeList			();
 	void					FreeVidModeList			();
@@ -67,6 +66,7 @@ public:
 	DXGI_SWAP_CHAIN_DESC	m_ChainDesc;	//	DevPP equivalent
 	bool					m_bUsePerfhud;
 	D3D_FEATURE_LEVEL		FeatureLevel;
+	bool					IsFormatSupported		(DXGI_FORMAT fmt);
 #else
 	IDirect3D9* 			pD3D;		// D3D
 	IDirect3DDevice9*		pDevice;	// render device
@@ -79,6 +79,7 @@ public:
 	UINT					DevAdapter;
 	D3DDEVTYPE				DevT;
 	D3DPRESENT_PARAMETERS	DevPP;
+	bool					IsFormatSupported		(D3DFORMAT fmt, DWORD type, DWORD usage);
 #endif
 
 #ifndef _MAYA_EXPORT
