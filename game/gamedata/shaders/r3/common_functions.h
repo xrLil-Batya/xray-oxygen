@@ -213,7 +213,7 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample 
 #ifdef SM_2_0
 	float4 P	= tex2D(s_position, int3(pos2d, 0)); //I'd change this to [pos2d] but I don't know how SM_2_0 works yet.
 #else
-	float4 P	= s_position[pos2d];
+	float4 P	= s_position.Sample(smp_nofilter, tc); //this is faster for reasons I don't understand (it's how GSC did it).
 #endif
 #else
 	float4 P	= s_position.Load( int3( pos2d, 0 ), iSample );
@@ -238,7 +238,7 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample 
 #ifdef SM_2_0
    float4 C	= tex2D(s_diffuse, int3(pos2d, 0));
 #else
-   float4 C	= s_diffuse[pos2d];
+   float4 C	= s_diffuse.Sample(smp_nofilter, tc);
 #endif
 #else
    float4	C	= s_diffuse.Load( int3( pos2d, 0 ), iSample );
