@@ -1,4 +1,5 @@
 #pragma once
+#include <vcclr.h>
 
 template <int Size>
 void ConvertWidecharToAscii(const wchar_t* pData, unsigned int size, char(&OutStr)[Size])
