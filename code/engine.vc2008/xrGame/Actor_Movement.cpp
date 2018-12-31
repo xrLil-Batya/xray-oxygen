@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "Actor.h"
 #include "inventory.h"
@@ -383,7 +383,7 @@ void CActor::g_Orientate	(u32 mstate_rl, float dt)
 	}
 
 	// lerp angle for "effect" and capture torso data from camera
-	angle_lerp		(r_model_yaw_delta,calc_yaw,PI_MUL_4,dt);
+	angle_lerp		(r_model_yaw_delta,calc_yaw,5,dt);
 
 	// build matrix
 	Fmatrix mXFORM;
@@ -460,11 +460,6 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 		r_torso.yaw		=	cam_Active()->GetWorldYaw	();
 		r_torso.pitch	=	cam_Active()->GetWorldPitch	();
 	}
-	else
-	{
-		r_torso.yaw		=	cam_FirstEye()->GetWorldYaw	();
-		r_torso.pitch	=	cam_FirstEye()->GetWorldPitch	();
-	}
 
 	unaffected_r_torso.yaw		= r_torso.yaw;
 	unaffected_r_torso.pitch	= r_torso.pitch;
@@ -495,7 +490,7 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 			mstate_real	&=~mcTurn;
 		}
 		if (mstate_rl&mcTurn){
-			angle_lerp	(r_model_yaw,r_model_yaw_dest,PI_MUL_2,dt);
+			angle_lerp	(r_model_yaw,r_model_yaw_dest,26,dt);
 		}
 	}
 }
