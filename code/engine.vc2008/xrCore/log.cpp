@@ -4,6 +4,7 @@
 #include <time.h>
 #include "resource.h"
 #include "log.h"
+#include <concurrent_vector.h>
 #include "../FrayBuildConfig.hpp"
 extern BOOL					LogExecCB		= TRUE;
 static string_path			log_file_name;
@@ -91,14 +92,19 @@ void AddOne(const char *split)
 }
 
 static xr_vector<xr_string> LogMessage;
-
+static xrCriticalSection mtLogStop;
+XRCORE_API bool mtLogThreadInit = false;
 void mtLogProc(void* ThreadArgs)
 {
-	LogMessage.emplace_back("[Msg] Logger thread: starting... Please wait...");
-	while (true)
+	if (mtLogThreadInit) return;
+
+	LogMessage.emplace(LogMessage.begin(), "[Msg] Logger thread: starting... Please wait...");
+	mtLogThreadInit = true;
+
+	while (mtLogThreadInit)
 	{
-		while (LogMessage.empty())
-			Sleep(0);
+		// Check messages size
+		if(LogMessage.empty()) continue;
 
 		int i, j;
 		xr_string StringMessage = *LogMessage.begin();
@@ -126,13 +132,17 @@ void mtLogProc(void* ThreadArgs)
 		split[j] = 0;
 		AddOne(split);
 
+		mtLogStop.Lock();
 		LogMessage.erase(LogMessage.begin());
+		mtLogStop.Unlock();
 	}
 }
 
 void Log(const char* s)
 {
+	mtLogStop.Lock();
 	LogMessage.emplace_back(s);
+	mtLogStop.Unlock();
 }
 
 void __cdecl Msg(const char *format, ...)

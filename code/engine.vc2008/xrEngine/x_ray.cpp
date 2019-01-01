@@ -29,6 +29,7 @@ ENGINE_API CInifile* pGameIni = nullptr;
 volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
 ENGINE_API BOOL g_appLoaded = FALSE;
+extern XRCORE_API bool mtLogThreadInit;
 extern ENGINE_API DSplashScreen splashScreen;
 bool bEngineloaded = false;
 //---------------------------------------------------------------------
@@ -479,12 +480,14 @@ CApplication::~CApplication()
 {
 	Console->Hide();
 
+	// Shutdown log thread
+	mtLogThreadInit = false;
+
 	// font
 	xr_delete(pFontSystem);
 
 	Device.seqFrameMT.Remove(&SoundProcessor);
 	Device.seqFrame.Remove(this);
-
 
 	// events
 	Engine.Event.Handler_Detach(eConsole, this);
@@ -492,7 +495,6 @@ CApplication::~CApplication()
 	Engine.Event.Handler_Detach(eStartLoad, this);
 	Engine.Event.Handler_Detach(eStart, this);
 	Engine.Event.Handler_Detach(eQuit, this);
-	
 }
 
 extern CRenderDevice Device;
