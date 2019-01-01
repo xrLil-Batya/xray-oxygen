@@ -110,7 +110,7 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
 		C.r_dx10Sampler		("smp_rtlinear");
 		C.r_End				();
 		break;
-	case 1:	// combine_2: dof, mblur, bloom
+	case 2:	// combine_2: dof, mblur, bloom
 		C.r_Pass			("stub_screen_space", "combine_2", FALSE, FALSE, FALSE);
 
 		C.r_dx10Texture		("s_position",		r2_RT_P);
@@ -122,7 +122,7 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
 		C.r_dx10Sampler		("smp_rtlinear");
 		C.r_End				();
 		break;
-	case 2:	// combine_2 (with distortion)
+	case 1:	// combine_2 (with distortion)
 		C.r_Pass			("stub_screen_space", "combine_2_d", FALSE, FALSE, FALSE);
 		C.r_dx10Texture		("s_position",		r2_RT_P);
 		C.r_dx10Texture		("s_normal",		r2_RT_N);

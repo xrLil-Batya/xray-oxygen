@@ -69,6 +69,8 @@
       <OptimizeReferences Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</OptimizeReferences>
       <EnableCOMDATFolding Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</EnableCOMDATFolding>
     </Link>
+    <Link />
+    <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="entry_point.cpp" />

@@ -94,11 +94,12 @@ static xr_vector<xr_string> LogMessage;
 
 void mtLogProc(void* ThreadArgs)
 {
-	LogMessage.emplace_back("[Msg] Logger thread: starting... Please wait...");
+    return;
+    LogMessage.emplace_back("[Msg] Logger thread: starting... Please wait...");
 	while (true)
 	{
 		while (LogMessage.empty())
-			Sleep(0);
+			Sleep(10);
 
 		int i, j;
 		xr_string StringMessage = *LogMessage.begin();
@@ -132,7 +133,10 @@ void mtLogProc(void* ThreadArgs)
 
 void Log(const char* s)
 {
-	LogMessage.emplace_back(s);
+	OutputDebugStringA(s);
+    OutputDebugStringA("\r\n");
+    return;
+    LogMessage.emplace_back(s);
 }
 
 void __cdecl Msg(const char *format, ...)

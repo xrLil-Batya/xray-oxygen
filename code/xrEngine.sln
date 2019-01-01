@@ -125,8 +125,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Physical External", "Physic
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrShaders", "engine.vc2008\xrRender\xrShaders\xrShaders.vcxproj", "{58818F0E-2DA2-48E4-9BB8-4D7629426F25}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrDebugger", "engine.vc2008\xrDebugger\xrDebugger.vcxproj", "{D518816E-B82A-4E7D-8637-9B210FBA2213}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -301,11 +299,6 @@ Global
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25}.Debug|x64.Build.0 = Debug|x64
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25}.Mixed|x64.ActiveCfg = Release|x64
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25}.Release|x64.ActiveCfg = Release|x64
-		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Debug|x64.ActiveCfg = Debug|x64
-		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Debug|x64.Build.0 = Debug|x64
-		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Mixed|x64.ActiveCfg = Release|x64
-		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Mixed|x64.Build.0 = Release|x64
-		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
