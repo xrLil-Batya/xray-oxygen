@@ -918,7 +918,7 @@ void CActor::shedule_Update	(u32 DT)
 	if (Level().CurrentControlEntity() == this)
 	{
 		g_cl_CheckControls		(mstate_wishful,NET_SavedAccel,NET_Jump,dt);
-		if (!pInput->iGetAsyncKeyState(DIK_LALT))
+		if (!pInput->iGetAsyncKeyState(DIK_LALT) || cam_active == eacFirstEye)
 		g_cl_Orientate			(mstate_real,dt);
 
 		g_Orientate				(mstate_real,dt);
@@ -1032,12 +1032,6 @@ void CActor::shedule_Update	(u32 DT)
 		m_pPersonWeLookingAt		 = smart_cast<CInventoryOwner*>(game_object);
 		m_pVehicleWeLookingAt		 = smart_cast<CHolderCustom*>(game_object);
 		CEntityAlive* pEntityAlive   = smart_cast<CEntityAlive*>(game_object);
-		CInventoryItem* item		 = smart_cast<CInventoryItem*>(game_object);
-
-		if (item)
-		{
-			PickupInfoDraw(RQ.O);
-		}
 
         if (g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY) && smart_cast<CBaseMonster*>(game_object) && !pEntityAlive->g_Alive())
         {

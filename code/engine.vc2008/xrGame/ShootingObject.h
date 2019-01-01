@@ -50,7 +50,7 @@ public:
 	IC BOOL					IsWorking			()	const	{return bWorking;}
 	virtual BOOL			ParentMayHaveAimBullet()		{return FALSE;}
 	virtual BOOL			ParentIsActor()					{return FALSE;}
-
+	float					fireDistance;
 protected:
 	// Weapon fires now
 	bool					bWorking;
@@ -63,7 +63,7 @@ protected:
 	//скорость вылета пули из ствола
 	float					m_fStartBulletSpeed;
 	//максимальное расстояние стрельбы
-	float					fireDistance;
+
 
 	//рассеивание во время стрельбы
 	float					fireDispersionBase;
