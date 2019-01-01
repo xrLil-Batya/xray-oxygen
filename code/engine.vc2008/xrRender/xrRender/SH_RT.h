@@ -1,5 +1,5 @@
 #pragma once
-
+#include "DXGIFormat.h"
 //////////////////////////////////////////////////////////////////////////
 class		CRT		:	public xr_resource_named	{
 public:
@@ -26,8 +26,13 @@ public:
 
 	u32						dwWidth;
 	u32						dwHeight;
-	DXGI_FORMAT				fmt;
 
+
+#ifdef USE_DX11
+	DXGI_FORMAT				fmt;
+#else
+	D3DFORMAT				fmt;
+#endif
 	u64						_order;
 };
 struct 		resptrcode_crt	: public resptr_base<CRT>
