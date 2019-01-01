@@ -99,6 +99,8 @@ Flags32 g_extraFeatures;
 void CCC_RegisterCommands()
 {
 	// game
+	CMD3(CCC_Mask, "g_binded_camera", &psActorFlags, AF_BINDED_CAMERA);
+	CMD3(CCC_Mask, "g_aim_assist", &psActorFlags, AF_AIM_ASSIST);
 	CMD3(CCC_Mask, "g_crouch_toggle", &psActorFlags, AF_CROUCH_TOGGLE);
 	CMD3(CCC_Mask, "g_colored_feel", &psActorFlags, AF_COLORED_FEEL);
 	CMD1(CCC_GameDifficulty, "g_game_difficulty");

@@ -21,21 +21,23 @@ public:
 	virtual float	GetWorldYaw		( )	{ return -yaw;	};
 	virtual float	GetWorldPitch	( )	{ return pitch; };
 protected:
-			void	UpdateDistance	( Fvector& point );
+			void	 UpdateDistance	( Fvector& point );
 };
 
 class CCameraLook2	: public CCameraLook
 {
 public:
 	static Fvector	m_cam_offset;
+	ref_light enemy_spotlight;
 protected:
+
 	CObject*		m_locked_enemy;
 	Fvector2		m_autoaim_inertion_yaw;
 	Fvector2		m_autoaim_inertion_pitch;
 	void			UpdateAutoAim	();
 public:
-					CCameraLook2	( CObject* p, u32 flags=0):CCameraLook(p, flags){m_locked_enemy=nullptr;};
-	virtual			~CCameraLook2	(){}
+					CCameraLook2	( CObject* p, u32 flags=0):CCameraLook(p, flags){m_locked_enemy=nullptr;	enemy_spotlight = ::Render->light_create(); enemy_spotlight->set_active(0);};
+	virtual			~CCameraLook2	(){ enemy_spotlight.destroy();}
 	virtual	void	OnActivate		( CCameraBase* old_cam );
 	virtual void	Update			( Fvector& point, Fvector& noise_dangle );
 	virtual void	Load			(LPCSTR section);
