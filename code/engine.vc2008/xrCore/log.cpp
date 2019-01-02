@@ -101,7 +101,7 @@ void mtLogProc(void* ThreadArgs)
 	LogMessage.emplace(LogMessage.begin(), "[Msg] Logger thread: starting... Please wait...");
 	mtLogThreadInit = true;
 
-	while (mtLogThreadInit)
+	while (mtLogThreadInit || LogMessage.size())
 	{
 		// Check messages size
 		if(LogMessage.empty()) continue;
