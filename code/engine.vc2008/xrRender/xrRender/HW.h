@@ -11,7 +11,7 @@
 #endif
 
 class  CHW
-#ifdef USE_DX11
+#if defined(USE_DX11) || defined(USE_VK)
 	:	public pureAppActivate, 
 		public pureAppDeactivate
 #endif
@@ -30,22 +30,24 @@ public:
 	void					Reset					(HWND hw);
 
 	void					SelectResolution		(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed);
-	D3DFORMAT				SelectFmtTarget			();
-	D3DFORMAT				SelectFmtDepthStencil	(D3DFORMAT);
+#ifdef USE_VK
+	VkFormat				SelectFmtTarget();
+	VkFormat				SelectFmtDepthStencil(VkFormat);
+	u32						SelectRefresh(u32 dwWidth, u32 dwHeight, VkFormat fmt);
+#else
+	D3DFORMAT				SelectFmtTarget();
+	D3DFORMAT				SelectFmtDepthStencil(D3DFORMAT);
+	u32						SelectRefresh(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt);
+#endif
 	void					ResizeWindowProc		(WORD h, WORD w);
 	u32						SelectPresentInterval	();
 	u32						SelectGPU				();
-	u32						SelectRefresh			(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt);
 
 	void					FillVidModeList			();
 	void					FreeVidModeList			();
 
-#ifdef DEBUG
-#ifdef USE_DX11
-	void	Validate(void)	{};
-#else
+#if defined(DEBUG) && (!defined(USE_DX11) || !defined(USE_VK))
 	void	Validate(void)	{	VERIFY(pDevice); VERIFY(pD3D); };
-#endif
 #else
 	void	Validate(void)	{};
 #endif
@@ -67,13 +69,23 @@ public:
 	bool					m_bUsePerfhud;
 	D3D_FEATURE_LEVEL		FeatureLevel;
 	bool					IsFormatSupported		(DXGI_FORMAT fmt);
+#elif defined(USE_VK)
+	VkPhysicalDevice*		m_pAdapter;	//	pD3D equivalent
+	VkDevice*				pDevice;	//	combine with DX9 pDevice via typedef
+	VkInstance*				pContext;	//	combine with DX9 pDevice via typedef
+	VkSwapchainKHR*			m_pSwapChain;
+	VkImageView*			pBaseRT;	//	combine with DX9 pBaseRT via typedef
+	VkImageView*			pBaseZB;
+	bool					m_bUsePerfhud;
+
+	CHWCaps					Caps;
+	VkSwapchainKHR			m_ChainDesc;
 #else
 	IDirect3D9* 			pD3D;		// D3D
 	IDirect3DDevice9*		pDevice;	// render device
 
 	IDirect3DSurface9*		pBaseRT;
 	IDirect3DSurface9*		pBaseZB;
-
 	CHWCaps					Caps;
 
 	UINT					DevAdapter;
@@ -82,17 +94,18 @@ public:
 	bool					IsFormatSupported		(D3DFORMAT fmt, DWORD type, DWORD usage);
 #endif
 
-#ifndef _MAYA_EXPORT
-	stats_manager			stats_manager;
-#endif
 #ifdef USE_DX11
-	void			UpdateViews();
 	DXGI_RATIONAL	SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
+#endif
 
+#if defined(USE_DX11) || defined(USE_VK)
+	void			UpdateViews();
 	virtual	void	OnAppActivate();
 	virtual void	OnAppDeactivate();
 #endif
-
+#ifndef _MAYA_EXPORT
+	stats_manager			stats_manager;
+#endif
 private:
 	bool					m_move_window;
 };
