@@ -57,7 +57,7 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		LONG width = ClientRect.right - ClientRect.left;
 		LONG height = ClientRect.bottom - ClientRect.top;
 
-		if (Device.dwWidth != width || Device.dwHeight != height)
+		if (Device.dwWidth != u32(width) || Device.dwHeight != u32(height))
 		{
 			if (height >= NULL && width >= NULL) 
 			{ 
