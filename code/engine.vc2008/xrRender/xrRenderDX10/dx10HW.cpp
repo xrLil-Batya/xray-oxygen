@@ -204,7 +204,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 		Msg("Failed to initialize graphics hardware.\n"
 			"Please try to restart the game.\n"
 			"CreateDevice returned 0x%08x", R);
-		FlushLog();
+		xrLogger::FlushLog();
 		FATAL("Failed to initialize graphics hardware.\nPlease try to restart the game.");
 	};
 	R_CHK(R);

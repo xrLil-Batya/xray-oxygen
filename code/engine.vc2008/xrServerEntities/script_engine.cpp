@@ -186,7 +186,7 @@ void CScriptEngine::setup_auto_load()
 		_splitpath(fit.name.c_str(), 0, fn1, fn2, 0);
 
 		FS.update_path(fn1, "$game_scripts$", fn1);
-		strconcat(sizeof(fn1), fn1, fn1, fn2, ".script");
+		xr_strconcat(fn1, fn1, fn2, ".script");
 
 		xray_scripts.insert(std::make_pair(xr_string(fn2), xr_string(fn1)));
 	}

@@ -272,7 +272,7 @@ void time::sky_texture_setter				(LPCSTR value)
 	sky_texture_name	= value;
 
 	string_path			st_env;
-	strconcat			(sizeof(st_env), st_env, value, "#small");
+	xr_strconcat (st_env, value, "#small");
 	sky_texture_env_name= st_env;
 	m_pDescriptor->OnDeviceCreate(*this);
 }

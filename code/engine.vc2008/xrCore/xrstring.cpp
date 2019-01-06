@@ -224,30 +224,37 @@ str_container::~str_container()
 }
 
 //xr_string class
-xr_vector<xr_string> xr_string::Split(LPCSTR pStr, size_t StrSize, char splitCh)
+xr_vector<xr_string> xr_string::Split(char splitCh)
 {
 	xr_vector<xr_string> Result;
-	xr_string temp_str = pStr,
-			  Str      = pStr;
 
-	size_t SubStrBeginCursor = 0;
-	size_t Len = 0;
+	u32 SubStrBeginCursor = 0;
+	u32 Len = 0;
 
-	for (size_t StrCursor = 0; StrCursor < StrSize; ++StrCursor)
+	u32 StrCursor = 0;
+	for (; StrCursor < size(); ++StrCursor)
 	{
-		if (Str[StrCursor] == splitCh)
+		if (at(StrCursor) == splitCh)
 		{
-			//Don't create empty string
-			if ((StrCursor - 1 - SubStrBeginCursor) > 0)
+			if ((StrCursor - SubStrBeginCursor) > 0)
 			{
-				Len = StrCursor - 1 - SubStrBeginCursor;
-				temp_str = Str.substr(SubStrBeginCursor, Len);
-				Result.push_back(temp_str);
+				Len = StrCursor - SubStrBeginCursor;
+				Result.emplace_back(xr_string(&at(SubStrBeginCursor), Len));
+				SubStrBeginCursor = StrCursor + 1;
+			}
+			else
+			{
+				Result.emplace_back("");
 				SubStrBeginCursor = StrCursor + 1;
 			}
 		}
 	}
 
+	if (StrCursor > SubStrBeginCursor)
+	{
+		Len = StrCursor - SubStrBeginCursor;
+		Result.emplace_back(xr_string(&at(SubStrBeginCursor), Len));
+	}
     return Result;
 }
 
@@ -256,7 +263,7 @@ xr_string::xr_string()
 {
 }
 
-xr_string::xr_string(LPCSTR Str, int Size)
+xr_string::xr_string(LPCSTR Str, u32 Size)
     : Super(Str, Size)
 {
 }
@@ -299,12 +306,6 @@ xr_string& xr_string::operator=(const Super& other)
     return *this;
 }
 
-xr_vector<xr_string> xr_string::Split(char splitCh)
-{
-    return Split(data(), size(), splitCh);
-}
-
-
 xr_vector<xr_string> xr_string::Split(u32 NumberOfSplits, ...)
 {
     xr_vector<xr_string> intermediateTokens;
@@ -320,12 +321,12 @@ xr_vector<xr_string> xr_string::Split(u32 NumberOfSplits, ...)
         //special case for first try
         if (i == 0)
         {
-            Result = Split(data(), size(), splitCh);
+            Result = Split(splitCh);
         }
 
         for (xr_string& str : Result)
         {
-            xr_vector<xr_string> TokenStrResult = Split(str.data(), str.size(), splitCh);
+            xr_vector<xr_string> TokenStrResult = str.Split(splitCh);
             intermediateTokens.insert(intermediateTokens.end(), TokenStrResult.begin(), TokenStrResult.end());
         }
 

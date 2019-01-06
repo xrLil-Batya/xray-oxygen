@@ -274,17 +274,6 @@ u32	CObjectList::net_Export			(NET_Packet* _Packet,	u32 start, u32 max_object_si
 void CObjectList::Load		()
 {
 	R_ASSERT				(objects_active.empty() && destroy_queue.empty() && objects_sleeping.empty());
-#ifdef LUACP_API
-	LogXrayOffset("GameLevel.ObjectList",		g_pGameLevel, this);
-	LogXrayOffset("GameLevel.map_NETID",		g_pGameLevel, &this->map_NETID);
-	LogXrayOffset("GameLevel.destroy_queue",	g_pGameLevel, &this->destroy_queue);
-	LogXrayOffset("GameLevel.objects_active",	g_pGameLevel, &this->objects_active);
-	LogXrayOffset("GameLevel.objects_sleeping", g_pGameLevel, &this->objects_sleeping);
-	//LogXrayOffset("GameLevel.crows",			g_pGameLevel, &this->crows);
-
-	//LogXrayOffset("xr_vector.first",			&this->objects_active, &objects_active._Myfirst);
-	//LogXrayOffset("xr_vector.last",				&this->objects_active, &objects_active._Mylast);
-#endif
 }
 
 void CObjectList::Unload	( )

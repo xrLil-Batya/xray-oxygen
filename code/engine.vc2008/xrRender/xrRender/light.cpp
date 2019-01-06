@@ -61,7 +61,7 @@ void light::set_texture		(LPCSTR name)
 
 	string256				temp;
 	
-	strconcat(sizeof(temp),temp,"r2\\accum_spot_",name);
+	xr_strconcat(temp,"r2\\accum_spot_",name);
 	s_spot.create			(RImplementation.Target->b_accum_spot,temp,name);
 
 #if	(RENDER==R_R2)
@@ -77,9 +77,9 @@ void light::set_texture		(LPCSTR name)
 
 		for( int i = 0; i < bound; ++i )
 		{
-			s_spot_msaa[i].create(RImplementation.Target->b_accum_spot_msaa[i], strconcat(sizeof(temp), temp, "r2\\accum_spot_", name), name);
-			s_point_msaa[i].create(RImplementation.Target->b_accum_point_msaa[i], strconcat(sizeof(temp), temp, "r2\\accum_point_", name), name);
-			s_volumetric_msaa[i].create	(RImplementation.Target->b_accum_volumetric_msaa[i],strconcat(sizeof(temp),temp,"r2\\accum_volumetric_",name),name);
+			s_spot_msaa[i].create(RImplementation.Target->b_accum_spot_msaa[i], xr_strconcat( temp, "r2\\accum_spot_", name), name);
+			s_point_msaa[i].create(RImplementation.Target->b_accum_point_msaa[i], xr_strconcat( temp, "r2\\accum_point_", name), name);
+			s_volumetric_msaa[i].create	(RImplementation.Target->b_accum_volumetric_msaa[i], xr_strconcat(temp,"r2\\accum_volumetric_",name),name);
 		}
 	}
 #endif

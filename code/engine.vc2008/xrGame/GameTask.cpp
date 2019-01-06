@@ -296,7 +296,7 @@ void SScriptTaskHelper::init_functors(xr_vector<shared_str>& v_src, task_state_f
 	{
 		bool functor_exists = ai().script_engine().functor(v_src[idx].c_str(), v_dest[idx]);
 		if (!functor_exists)	
-			Log("Cannot find script function described in task objective  ", v_src[idx].c_str());
+			Msg("Cannot find script function described in task objective  %s", v_src[idx].c_str());
 	}
 }
 

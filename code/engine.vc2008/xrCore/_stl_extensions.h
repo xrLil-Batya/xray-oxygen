@@ -107,9 +107,14 @@ void clearAndReserve(xr_vector<T, Alloc>& vec) {
     }
 }
 
+
 // deque
 template <typename T, typename allocator = xalloc<T>>
 using xr_deque = std::deque<T, allocator>;
+
+// queue
+template <typename T, typename container = xr_deque<T>>
+using xr_queue = std::queue<T, container>;
 
 // stack
 template <typename T, class C = xr_deque<T>>
@@ -140,7 +145,7 @@ public:
     typedef std::basic_string<char, std::char_traits<char>, xalloc<char>> Super;
 
     xr_string(LPCSTR Str);
-    xr_string(LPCSTR Str, int Size);
+    xr_string(LPCSTR Str, u32 Size);
     xr_string(const xr_string& other);
     xr_string(const xr_string&& other);
     xr_string(const Super&& other);
@@ -155,8 +160,6 @@ public:
     {
         assign(InArray, ArrayLenght);
     }
-
-    static xr_vector<xr_string> Split(LPCSTR Str, size_t StrSize, char splitCh);
 
     xr_vector<xr_string> Split(char splitCh);
     xr_vector<xr_string> Split(u32 NumberOfSplits, ...);

@@ -499,7 +499,7 @@ void LoadGameExtraFeatures()
     FS.update_path(configFilePath, "$game_config$", "GameExtra.ltx");
 
     string_path cmdLoadCfg;
-    strconcat(sizeof(cmdLoadCfg), cmdLoadCfg, "cfg_load", " ", configFilePath);
+	xr_strconcat( cmdLoadCfg, "cfg_load", " ", configFilePath);
     Console->Execute(cmdLoadCfg);
 
     Msg("Extra feature mask: %u", g_extraFeatures.get());

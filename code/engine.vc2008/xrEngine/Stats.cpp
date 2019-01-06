@@ -389,14 +389,18 @@ void CStats::Show()
 #ifdef DEBUG
 	//////////////////////////////////////////////////////////////////////////
 	// Show errors
-	if (!g_bDisableRedText && !errors.empty())
+	if (!g_bDisableRedText)
 	{
-		F.SetColor	(color_rgba(255,16,16,191));
-		F.OutSet	(200,0);
-		F.SetHeightI	(f_base_size);
-		for (u32 it=(u32) std::max(int(0),(int)errors.size() - g_ErrorLineCount); it<errors.size(); it++)
-			F.OutNext("%s",errors[it].c_str());
-		F.OnRender	();
+		xrCriticalSectionGuard guard(errorsGuard);
+		if (!errors.empty())
+		{
+			F.SetColor(color_rgba(255, 16, 16, 191));
+			F.OutSet(200, 0);
+			F.SetHeightI(f_base_size);
+			for (u32 it = (u32)std::max(int(0), (int)errors.size() - g_ErrorLineCount); it < errors.size(); it++)
+				F.OutNext("%s", errors[it].c_str());
+			F.OnRender();
+		}
 	}
 #endif
 
@@ -468,8 +472,11 @@ void CStats::Show()
 
 void	_LogCallback				(LPCSTR string)
 {
-	if (string && '!'==string[0] && ' '==string[1])
-		Device.Statistic->errors.push_back	(shared_str(string));
+	if (string && '!' == string[0] && ' ' == string[1])
+	{
+		xrCriticalSectionGuard guard(Device.Statistic->errorsGuard);
+		Device.Statistic->errors.emplace_back	(string);
+	}
 }
 
 void CStats::OnDeviceCreate			()
@@ -479,13 +486,16 @@ void CStats::OnDeviceCreate			()
 	pFont	= xr_new<CGameFont>		("stat_font", CGameFont::fsDeviceIndependent);
 
 #ifdef DEBUG
-	if (!g_bDisableRedText)			SetLogCB	(_LogCallback);
+	if (!g_bDisableRedText)
+	{
+		xrLogger::AddLogCallback(_LogCallback);
+	}
 #endif
 }
 
 void CStats::OnDeviceDestroy		()
 {
-	SetLogCB(0);
+	xrLogger::RemoveLogCallback(_LogCallback);
 	xr_delete	(pFont);
 }
 

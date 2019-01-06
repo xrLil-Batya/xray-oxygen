@@ -470,7 +470,7 @@ public:
 		for (_binding & g_key_binding : g_key_bindings)
 		{
 			_binding* pbinding = &g_key_binding;
-			Log("-", pbinding->m_action->action_name);
+			Msg("-%s", pbinding->m_action->action_name);
 		}
 
 		Log("- --- Action list end   ---");
@@ -509,7 +509,7 @@ public:
 		string_path _cfg;
 		string_path	cmd;
 		FS.update_path(_cfg, "$game_config$", "default_controls.ltx");
-		strconcat(sizeof(cmd), cmd, "cfg_load", " ", _cfg);
+		xr_strconcat(cmd, "cfg_load", " ", _cfg);
 		Console->Execute(cmd);
 	}
 };

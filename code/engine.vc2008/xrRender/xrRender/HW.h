@@ -46,12 +46,6 @@ public:
 	void					FillVidModeList			();
 	void					FreeVidModeList			();
 
-#if defined(DEBUG) && (!defined(USE_DX11) || !defined(USE_VK))
-	void	Validate(void)	{	VERIFY(pDevice); VERIFY(pD3D); };
-#else
-	void	Validate(void)	{};
-#endif
-
 //	Variables section
 public:
 #ifdef USE_DX11
@@ -92,6 +86,12 @@ public:
 	D3DDEVTYPE				DevT;
 	D3DPRESENT_PARAMETERS	DevPP;
 	bool					IsFormatSupported		(D3DFORMAT fmt, DWORD type, DWORD usage);
+#endif
+
+#if defined(DEBUG) && (!defined(USE_DX11) || !defined(USE_VK))
+	void	Validate() { VERIFY(pDevice); /*VERIFY(pD3D);*/ };
+#else
+	void	Validate() {};
 #endif
 
 #ifdef USE_DX11

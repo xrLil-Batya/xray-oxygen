@@ -110,7 +110,7 @@ void CLight_DB::LoadHemi()
 						L->spatial.type		= STYPE_LIGHTSOURCEHEMI;
 						L->set_attenuation_params(Ldata.attenuation0, Ldata.attenuation1, Ldata.attenuation2, Ldata.falloff);
 
-						v_hemi.push_back(L);
+						v_hemi.emplace_back(L);
 					}
 				}
 				chunk->close();
@@ -161,24 +161,24 @@ void CLight_DB::Update()
 		light* _sun = (light*)sun._get();
 		CEnvDescriptor&	E = *Environment().CurrentEnv;
 		VERIFY(_valid(E.sun_dir));
-#ifdef DEBUG
-		if (E.sun_dir.y >= 0)
-		{
-//			Log("sect_name", E.sect_name.c_str());
-			Log("E.sun_dir", E.sun_dir);
-			Log("E.wind_direction",E.wind_direction);
-			Log("E.wind_velocity",E.wind_velocity);
-			Log("E.sun_color",E.sun_color);
-			Log("E.rain_color",E.rain_color);
-			Log("E.rain_density",E.rain_density);
-			Log("E.fog_distance",E.fog_distance);
-			Log("E.fog_density",E.fog_density);
-			Log("E.fog_color",E.fog_color);
-			Log("E.far_plane",E.far_plane);
-			Log("E.sky_rotation",E.sky_rotation);
-			Log("E.sky_color",E.sky_color);
-		}
-#endif
+// #ifdef DEBUG
+// 		if (E.sun_dir.y >= 0)
+// 		{
+// //			Log("sect_name", E.sect_name.c_str());
+// 			Log("E.sun_dir", E.sun_dir);
+// 			Msg("E.wind_direction %f", E.wind_direction);
+// 			Msg("E.wind_velocity %f", E.wind_velocity);
+// 			Log("E.sun_color",E.sun_color);
+// 			Log("E.rain_color",E.rain_color);
+// 			Msg("E.rain_density %f", E.rain_density);
+// 			Msg("E.fog_distance %f", E.fog_distance);
+// 			Msg("E.fog_density %f", E.fog_density);
+// 			Log("E.fog_color",E.fog_color);
+// 			Msg("E.far_plane %f",E.far_plane);
+// 			Msg("E.sky_rotation %f",E.sky_rotation);
+// 			Log("E.sky_color",E.sky_color);
+// 		}
+// #endif
 
 		VERIFY2(E.sun_dir.y < 0,"Invalid sun direction settings in evironment-config");
 		Fvector dir, pos;

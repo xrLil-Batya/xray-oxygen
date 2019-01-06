@@ -290,6 +290,7 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="DateTime.hpp" />
     <ClInclude Include="envelope.h" />
     <ClInclude Include="FTimer.h" />
+    <ClInclude Include="RingBuffer.h" />
     <ClInclude Include="StringsUtils.h" />
     <ClInclude Include="XMLCore\Expression.h" />
     <ClInclude Include="xrDelegate\xrDelegate.h" />
@@ -339,7 +340,6 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="_stl_extensions.h" />
     <ClInclude Include="clsid.h" />
     <ClInclude Include="string_concatenations.h" />
-    <ClInclude Include="string_concatenations_inline.h" />
     <ClInclude Include="xr_trims.h" />
     <ClInclude Include="buffer_vector.h" />
     <ClInclude Include="buffer_vector_inline.h" />

@@ -47,9 +47,6 @@ CAI_Space::CAI_Space				()
 	m_script_engine			= 0;
 	m_moving_objects		= 0;
 	m_doors_manager			= 0;
-#ifdef LUACP_API
-	LogXrayOffset("CALifeSimulatorBase.rel_ai_space", this, &this->m_alife_simulator);
-#endif
 }
 
 void CAI_Space::init				()

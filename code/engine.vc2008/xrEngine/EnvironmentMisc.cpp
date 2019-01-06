@@ -43,7 +43,7 @@ void CEnvironment::ModsLoad()
 		u32 ver = 0x0015;
 		u32 sz;
 
-		while (0 != (sz = fs->find_chunk(id)))
+		while (0 != (sz = (u32)fs->find_chunk(id)))
 		{
 			if (id == 0 && sz == sizeof(u32))
 			{
@@ -72,7 +72,7 @@ void CEnvironment::LoadLevelSpecificAmbients()
 	const shared_str level_name = g_pGameLevel->name();
 
 	string_path path;
-	strconcat(sizeof(path), path, "environment\\ambients\\", level_name.c_str(), ".ltx");
+	xr_strconcat(path, "environment\\ambients\\", level_name.c_str(), ".ltx");
 
 	string_path full_path;
 	FS.update_path(full_path, "$game_config$", path);

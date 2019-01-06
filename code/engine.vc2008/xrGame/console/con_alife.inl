@@ -25,24 +25,22 @@ void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 	FS.m_Flags.set( CLocatorAPI::flNeedCheck, TRUE );
 	FS.rescan_pathes();
 
-	LPCSTR fext;
-	STRCONCAT( fext, "*", file_ext );
+	string256 fext;
+	xr_strconcat( fext, "*", file_ext );
 
 	FS_FileSet  files_set;
 	FS.file_list( files_set, dir, FS_ListFiles, fext );
 	u32 len_str_ext = xr_strlen( file_ext );
 
-    auto itb = files_set.begin();
-    auto ite = files_set.end();
-
-	for( ; itb != ite; ++itb )
+	for (const FS_File& elem : files_set)
 	{
-		LPCSTR fn_ext = (*itb).name.c_str();
-		VERIFY( xr_strlen(fn_ext) > len_str_ext );
+		LPCSTR fn_ext = elem.name.c_str();
+		VERIFY(xr_strlen(fn_ext) > len_str_ext);
 		string_path fn;
-		strncpy_s( fn, sizeof(fn), fn_ext, xr_strlen(fn_ext)-len_str_ext );
-		files.emplace_back( fn );
+		strncpy_s(fn, sizeof(fn), fn_ext, xr_strlen(fn_ext) - len_str_ext);
+		files.emplace_back(fn);
 	}
+
 	FS.m_Flags.set( CLocatorAPI::flNeedCheck, FALSE );
 }
 
@@ -107,8 +105,8 @@ public:
 		Msg("Game save overhead  : %f milliseconds", timer.GetElapsed_sec()*1000.f);
 #endif
 		SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
-		LPSTR save_name;
-		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", GameSaveName);
+		string256 save_name;
+		xr_strconcat(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", GameSaveName);
 		_s->wnd()->TextItemControl()->SetText(save_name);
 
 		xr_strcat(GameSaveName, ".dds");

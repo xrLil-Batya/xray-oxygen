@@ -110,6 +110,7 @@ public:
 	void			OnDeviceDestroy	(void);
 public:
 	xr_vector		<shared_str>	errors;
+	xrCriticalSection errorsGuard;
 	CRegistrator	<pureStats>		seqStats;
 public:
 					CStats			();

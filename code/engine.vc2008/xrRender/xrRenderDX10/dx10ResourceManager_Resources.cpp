@@ -165,9 +165,9 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		}
 
 		string_path					cname;
-		strconcat					(sizeof(cname),cname,::Render->getShaderPath(), "vs_",/*_name*/shName,".hlsl");
+		xr_strconcat				(cname,::Render->getShaderPath(), "vs_",/*_name*/shName,".hlsl");
         string512                   shaderName;
-        strconcat                   (sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
+        xr_strconcat                ( shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 		//		LPCSTR						target		= NULL;
 
@@ -267,9 +267,9 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR _name)
 
 		// Open file
 		string_path					cname;
-		strconcat					(sizeof(cname), cname,::Render->getShaderPath(), "ps_",/*_name*/shName,".hlsl");
+		xr_strconcat				( cname,::Render->getShaderPath(), "ps_",/*_name*/shName,".hlsl");
         string512                   shaderName;
-        strconcat(sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
+        xr_strconcat				( shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
@@ -339,9 +339,9 @@ SGS*	CResourceManager::_CreateGS			(LPCSTR name)
 
 		// Open file
 		string_path					cname;
-		strconcat					(sizeof(cname), cname, ::Render->getShaderPath(), "gs_", name,".hlsl");
+		xr_strconcat				( cname, ::Render->getShaderPath(), "gs_", name,".hlsl");
         string512                   shaderName;
-        strconcat(sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
+		xr_strconcat				( shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate

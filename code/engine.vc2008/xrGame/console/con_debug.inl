@@ -272,12 +272,12 @@ public:
 			return;
 		}
 
-		LPCSTR					name;
+		string128				name;
 
 		if (0==strext(arguments))
-			STRCONCAT			(name, arguments, ".ogf");
+			xr_strconcat		(name, arguments, ".ogf");
 		else
-			STRCONCAT			(name, arguments);
+			xr_strconcat		(name, arguments);
 
 		string_path				fn;
 

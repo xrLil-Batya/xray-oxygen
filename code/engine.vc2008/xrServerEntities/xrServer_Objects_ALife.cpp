@@ -133,7 +133,7 @@ void	SFillPropData::load			()
 	for (int i=0; i<GameGraph::LOCATION_TYPE_COUNT; ++i){
         VERIFY				(locations[i].empty());
         string256			caSection, T;
-        strconcat			(sizeof(caSection),caSection,SECTION_HEADER,itoa(i,T,10));
+        xr_strconcat		(caSection, SECTION_HEADER, itoa(i,T,10));
         R_ASSERT			(Ini->section_exist(caSection));
         for (k = 0; Ini->r_line(caSection,k,&N,&V); ++k)
             locations[i].push_back	(xr_rtoken(V,atoi(N)));
@@ -376,15 +376,6 @@ CSE_ALifeObject::CSE_ALifeObject			(LPCSTR caSection) : CSE_Abstract(caSection)
 	m_spawn_story_id			= INVALID_SPAWN_STORY_ID;
 #ifdef XRGAME_EXPORTS
 	m_alife_simulator			= nullptr;
-#	ifdef LUACP_API
-		static bool _saved = false;
-		if (!_saved)
-		{
-			_saved = true;
-			LogXrayOffset("CSE_AlifeObject.story_id",	this, &this->m_story_id);
-			LogXrayOffset("CSE_AlifeObject.spawn_sid",  this, &this->m_spawn_story_id);
-		}
-#	endif
 #endif
 #ifdef XRSE_FACTORY_EXPORTS
     fp_data.inc					();

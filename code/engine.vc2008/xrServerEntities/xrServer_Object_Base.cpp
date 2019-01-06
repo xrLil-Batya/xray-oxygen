@@ -94,19 +94,6 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 	m_spawn_flags.set			(flSpawnIfDestroyedOnly	,true);
 	m_spawn_flags.set			(flSpawnInfiniteCount	,true);
 	m_ini_file					= nullptr;
-	
-#if defined(LUACP_API) && defined(XRGAME_EXPORTS)
-static bool _saved = false;
-	if (!_saved)
-	{
-		_saved = true;
-		LogXrayOffset("CSE_AlifeObject.id",			this, &this->ID);
-		LogXrayOffset("CSE_AlifeObject.parent_id",  this, &this->ID_Parent);
-		LogXrayOffset("CSE_AlifeObject.name",		this, &this->s_name_replace);
-		LogXrayOffset("CSE_AlifeObject.section",	this, &this->s_name);
-		LogXrayOffset("CSE_AlifeObject.clsid",		this, &this->m_script_clsid);
-	}
-#endif
 
 	if (pSettings->line_exist(caSection,"custom_data")) {
 		pcstr const raw_file_name	= pSettings->r_string(caSection,"custom_data");

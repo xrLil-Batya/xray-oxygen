@@ -86,7 +86,7 @@ void _check_open_file(const shared_str& _fname)
 {
 	xr_vector<_open_file>::iterator it = std::find_if(g_open_files.begin(), g_open_files.end(), eq_fname_check(_fname));
 	if (it != g_open_files.end())
-		Log("file opened at least twice", _fname.c_str());
+		Msg("file opened at least twice %s", _fname.c_str());
 }
 
 _open_file& find_free_item(const shared_str& _fname)
@@ -160,7 +160,7 @@ XRCORE_API void _dump_open_files(int mode)
 		}
 	}
 	if (bShow)
-		Log("----total count = ", g_open_files.size());
+		Msg("----total count = %zu", g_open_files.size());
 }
 
 CLocatorAPI::CLocatorAPI()
@@ -357,7 +357,7 @@ void CLocatorAPI::LoadArchive(archive& A, const char* entrypoint)
 		u32 ptr = *(u32*)buffer;
 		buffer += sizeof(ptr);
 
-		strconcat(sizeof(full), full, fs_entry_point, name);
+		xr_strconcat(full, fs_entry_point, name);
 
 		Register(full, A.vfs_idx, crc, ptr, size_real, size_compr, 0);
 	}
@@ -639,7 +639,7 @@ IReader *CLocatorAPI::setup_fs_ltx(const char* fs_name)
 	fsRoot = std::experimental::filesystem::absolute(fsRoot);
 	fsRoot = fsRoot.parent_path();
 
-	Log("using fs-ltx", fs_path);
+	Msg("using fs-ltx %s", fs_path);
 
 	int	file_handle;
 	size_t file_size;
@@ -780,13 +780,15 @@ void CLocatorAPI::_initialize(u32 flags, const char* target_folder, const char* 
 	rec_files.clear();
 	//-----------------------------------------------------------
 
-	CreateLog(nullptr != strstr(Core.Params, "-nolog"));
-
+	if (strstr(Core.Params, "-nolog") != nullptr)
+	{
+		xrLogger::OpenLogFile();
+	}
 }
 
 void CLocatorAPI::_destroy()
 {
-	CloseLog();
+	xrLogger::CloseLog();
 
 	for (const auto & file : m_files)
 	{
@@ -831,7 +833,7 @@ const CLocatorAPI::file* CLocatorAPI::exist(string_path& fn, const char* path, c
 const CLocatorAPI::file* CLocatorAPI::exist(string_path& fn, const char* path, const char* name, const char* ext)
 {
 	string_path		nm;
-	strconcat(sizeof(nm), nm, name, ext);
+	xr_strconcat(nm, name, ext);
 	update_path(fn, path, nm);
 	return			exist(fn);
 }
@@ -1141,7 +1143,7 @@ void CLocatorAPI::copy_file_to_build(T *&r, const char* source_name)
 
 	IWriter* W = w_open(cpy_name);
 	if (!W) {
-		Log("!Can't build:", source_name);
+		Msg("!Can't build: %s", source_name);
 		return;
 	}
 
@@ -1593,7 +1595,7 @@ BOOL CLocatorAPI::can_write_to_folder(const char* path)
 	{
 		string_path temp;
 		const char* fn = "$!#%TEMP%#!$.$$$";
-		strconcat(sizeof(temp), temp, path, path[xr_strlen(path) - 1] != '\\' ? "\\" : "", fn);
+		xr_strconcat(temp, path, path[xr_strlen(path) - 1] != '\\' ? "\\" : "", fn);
 		FILE* hf = fopen(temp, "wb");
 		if (!hf)
 			return FALSE;

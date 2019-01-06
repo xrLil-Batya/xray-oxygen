@@ -578,7 +578,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, &sps_result->ps);
 #endif // #ifdef USE_DX11
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! PS: ", file_name);
+			Msg			("! PS: %s", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -607,7 +607,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		}
 		else
 		{
-			Log	("! PS: ", file_name);
+			Msg	("! PS: %s", file_name);
 			Msg	("! D3DReflectShader hr == 0x%08x", _result);
 		}
 	}
@@ -619,7 +619,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, &svs_result->vs);
 #endif // #ifdef USE_DX11
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! VS: ", file_name);
+			Msg			("! VS: %s", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -658,7 +658,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		}
 		else
 		{
-			Log			("! VS: ", file_name);
+			Msg			("! VS: %s", file_name);
 			Msg			("! D3DXFindShaderComment hr == 0x%08x", _result);
 		}
 	}
@@ -671,7 +671,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 #endif
 
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! GS: ", file_name);
+			Msg			("! GS: %s", file_name);
 			Msg			("! CreateGeometryShaderhr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -700,7 +700,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		}
 		else
 		{
-			Log	("! PS: ", file_name);
+			Msg	("! PS: %s", file_name);
 			Msg	("! D3DReflectShader hr == 0x%08x", _result);
 		}
 	}
@@ -719,7 +719,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &disasm );
 		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), FALSE, 0, &disasm );
 		string_path		dname;
-		strconcat		(sizeof(dname),dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
+		xr_strconcat	(dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
 		IWriter*		W		= FS.w_open("$logs$",dname);
 		W->w			(disasm->GetBufferPointer(),(u32)disasm->GetBufferSize());
 		FS.w_close		(W);
@@ -736,7 +736,7 @@ public:
 	HRESULT __stdcall	Open	(D3D10_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
 	{
 		string_path				pname;
-		strconcat				(sizeof(pname),pname,::Render->getShaderPath(),pFileName);
+		xr_strconcat			(pname,::Render->getShaderPath(),pFileName);
 		IReader*		R		= FS.r_open	("$game_shaders$",pname);
 		if (nullptr==R)				{
 			// possibly in shared directory or somewhere else - open directly
@@ -1281,9 +1281,9 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		}
 		else {
 //			Msg						( "! shader compilation failed" );
-			Log						("! ", sh_filePath);
+			Msg						("! %s", sh_filePath);
 			if ( pErrorBuf )
-				Log					("! error: ",(LPCSTR)pErrorBuf->GetBufferPointer());
+				Msg					("! error: %s",(LPCSTR)pErrorBuf->GetBufferPointer());
 			else
 				Msg					("Can't compile shader hr=0x%08x", _result);
 		}

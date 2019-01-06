@@ -43,7 +43,7 @@ void ParseFile(const char* path, CMemoryWriter& W, IReader *F, CXml* xml)
 				{
 					shared_str fn = xml->correct_file_name("ui", strchr(inc_name, '\\') + 1);
 					string_path		buff;
-					strconcat(sizeof(buff), buff, "ui\\", fn.c_str());
+					xr_strconcat(buff, "ui\\", fn.c_str());
 					I = FS.r_open(path, buff);
 				}
 

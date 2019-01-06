@@ -89,6 +89,9 @@ protected:
 	bool			m_disable_tips;
 
 private:
+	RingBuffer<shared_str, 512> m_log_history;
+	xrCriticalSection m_log_history_guard;
+
 	vecHistory		m_cmd_history;
 	u32				m_cmd_history_max;
 	int				m_cmd_history_idx;
@@ -108,6 +111,9 @@ public:
 	virtual			~CConsole			();
 	virtual	void	Initialize			();
 	virtual void	Destroy				();
+
+	void			AddLogEntry(LPCSTR line);
+	void			ClearLog();
 
 	virtual void		OnRender			();
 	virtual void _BCL	OnFrame				();

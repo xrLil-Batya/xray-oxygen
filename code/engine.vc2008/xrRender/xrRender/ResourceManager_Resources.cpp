@@ -159,7 +159,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		}
 
 		string_path					cname;
-		strconcat					(sizeof(cname),cname,::Render->getShaderPath(),"vs_",_name,".hlsl");
+		xr_strconcat				(cname,::Render->getShaderPath(),"vs_",_name,".hlsl");
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		IReader*					fs			= FS.r_open(cname);
@@ -193,7 +193,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		HRESULT const _hr		= ::Render->shader_compile( name, (DWORD const*)data, size, c_entry, c_target, shaderCompileFlags, (void*&)_vs);
 
 		if ( FAILED(_hr) ) {
-			FlushLog();
+			xrLogger::FlushLog();
 		}
 
 		CHECK_OR_EXIT			(
@@ -238,7 +238,7 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 		// Open file
 		string_path					cname;
         LPCSTR						shader_path = ::Render->getShaderPath();
-		strconcat					(sizeof(cname), cname,shader_path,"ps_", name,".hlsl");
+		xr_strconcat				( cname,shader_path,"ps_", name,".hlsl");
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
@@ -270,7 +270,7 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 
 		if (FAILED(_hr))
 		{
-			FlushLog();
+			xrLogger::FlushLog();
 		}
 
 		R_ASSERT3(SUCCEEDED(_hr), "Can't compile shader", name);
@@ -580,7 +580,7 @@ public:
 	HRESULT __stdcall	Open	(D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
 	{
 		string_path				pname;
-		strconcat				(sizeof(pname),pname,::Render->getShaderPath(),pFileName);
+		xr_strconcat			(pname,::Render->getShaderPath(),pFileName);
 		IReader*		R		= FS.r_open	("$game_shaders$",pname);
 		if (0==R)				{
 			// possibly in shared directory or somewhere else - open directly
@@ -634,7 +634,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		LPD3DXSHADER_CONSTANTTABLE	pConstants	= NULL;
 		HRESULT						_hr			= S_OK;
 		string_path					cname;
-		strconcat					(sizeof(cname),cname,::Render->getShaderPath(),_name,".vs");
+		xr_strconcat				(cname,::Render->getShaderPath(),_name,".vs");
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		IReader*					fs			= FS.r_open(cname);
@@ -677,29 +677,29 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 					} 
 					else
 					{
-						Log	("! VS: ", _name);
+						Msg	("! VS: %s", _name);
 						Msg	("! D3DXFindShaderComment hr == 0x%08x", _hr);
 						_hr = E_FAIL;
 					}
 				}
 				else
 				{
-					Log	("! VS: ", _name);
+					Msg	("! VS: %s", _name);
 					Msg	("! CreateVertexShader hr == 0x%08x", _hr);
 				}
 			}
 			else
 			{
-				Log	("! VS: ", _name);
+				Msg	("! VS: %s", _name);
 				Log	("! pShaderBuf == NULL");
 				_hr = E_FAIL;
 			}
 		}
 		else
 		{
-			Log("! VS: ", _name);
+			Msg("! VS: %s", _name);
 			if(pErrorBuf)
-				Log("! error: ",(LPCSTR)pErrorBuf->GetBufferPointer());
+				Msg("! error: %s",(LPCSTR)pErrorBuf->GetBufferPointer());
 			else
 				Msg("Can't compile shader hr=0x%08x", _hr);
 		}
@@ -737,7 +737,7 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 		includer					Includer;
 		string_path					cname;
         LPCSTR						shader_path = ::Render->getShaderPath();
-		strconcat					(sizeof(cname), cname,shader_path,name,".ps");
+		xr_strconcat				( cname,shader_path,name,".ps");
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
@@ -782,29 +782,29 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 					}
 					else
 					{
-						Log	("! PS: ", name);
+						Msg	("! PS: %s", name);
 						Msg	("! D3DXFindShaderComment hr == 0x%08x", _hr);
 						_hr = E_FAIL;
 					}
 				}
 				else
 				{
-					Log	("! PS: ", name);
+					Msg	("! PS: %s", name);
 					Msg	("! CreatePixelShader hr == 0x%08x", _hr);
 				}
 			}
 			else
 			{
-				Log	("! PS: ", name);
+				Msg	("! PS: %s", name);
 				Log	("! pShaderBuf == NULL");
 				_hr = E_FAIL;
 			}
 		}
 		else
 		{
-			Log("! PS: ", name);
+			Msg("! PS: %s", name);
 			if(pErrorBuf)
-				Log("! error: ",(LPCSTR)pErrorBuf->GetBufferPointer());
+				Msg("! error: %s",(LPCSTR)pErrorBuf->GetBufferPointer());
 			else
 				Msg("Can't compile shader hr=0x%08x", _hr);
 		}

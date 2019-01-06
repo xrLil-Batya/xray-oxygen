@@ -29,7 +29,6 @@ ENGINE_API CInifile* pGameIni = nullptr;
 volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
 ENGINE_API BOOL g_appLoaded = FALSE;
-extern XRCORE_API bool mtLogThreadInit;
 extern ENGINE_API DSplashScreen splashScreen;
 bool bEngineloaded = false;
 //---------------------------------------------------------------------
@@ -180,7 +179,7 @@ void Startup()
 	{
 		string256 buf, cmd, param;
 		sscanf(strstr(Core.Params, "-$") + 2, "%[^ ] %[^ ] ", cmd, param);
-		strconcat(sizeof(buf), buf, cmd, " ", param);
+		xr_strconcat(buf, cmd, " ", param);
 		Console->Execute(buf);
 	}
 	
@@ -480,9 +479,6 @@ CApplication::~CApplication()
 {
 	Console->Hide();
 
-	// Shutdown log thread
-	mtLogThreadInit = false;
-
 	// font
 	xr_delete(pFontSystem);
 
@@ -663,10 +659,10 @@ void CApplication::OnFrame	( )
 void CApplication::Level_Append		(LPCSTR folder)
 {
 	string_path	N1,N2,N3,N4;
-	strconcat	(sizeof(N1),N1,folder,"level");
-	strconcat	(sizeof(N2),N2,folder,"level.ltx");
-	strconcat	(sizeof(N3),N3,folder,"level.geom");
-	strconcat	(sizeof(N4),N4,folder,"level.cform");
+	xr_strconcat(N1, folder, "level");
+	xr_strconcat(N2, folder, "level.ltx");
+	xr_strconcat(N3, folder, "level.geom");
+	xr_strconcat(N4, folder, "level.cform");
 	if	(
 		FS.exist("$game_levels$",N1)		&&
 		FS.exist("$game_levels$",N2)		&&
@@ -700,7 +696,7 @@ void CApplication::Level_Scan()
 
 void gen_logo_name(string_path& dest, LPCSTR level_name, int num)
 {
-	strconcat	(sizeof(dest), dest, "intro\\intro_", level_name);
+	xr_strconcat(dest, "intro\\intro_", level_name);
 	
 	u32 len = xr_strlen(dest);
 	if(dest[len-1]=='\\')
@@ -771,7 +767,7 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 		Level_Scan							();
 	
 	string256		buffer;
-	strconcat		(sizeof(buffer),buffer,name,"\\");
+	xr_strconcat (buffer,name,"\\");
 	for (u32 I=0; I<Levels.size(); ++I)
 	{
 		if (0==stricmp(buffer,Levels[I].folder))	

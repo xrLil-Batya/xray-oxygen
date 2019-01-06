@@ -130,7 +130,7 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 		m_flags.set( ePosToActor, true);
 	}
 	
-	strconcat(sizeof(path),path,path_base,":level_map");
+	xr_strconcat(path,path_base,":level_map");
 	node = g_uiSpotXml->NavigateToNode(path,0);
 	if ( node )
 	{
@@ -157,7 +157,7 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 		else VERIFY( !(bReload && m_level_spot_pointer) );
 	}
 
-	strconcat(sizeof(path),path,path_base,":mini_map");
+	xr_strconcat(path,path_base,":mini_map");
 	node = g_uiSpotXml->NavigateToNode(path,0);
 	if (node)
 	{
@@ -185,7 +185,7 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 		else VERIFY( !(bReload && m_minimap_spot_pointer) );
 	}
 
-	strconcat( sizeof(path), path, path_base, ":complex_spot" );
+	xr_strconcat( path, path_base, ":complex_spot" );
 	node = g_uiSpotXml->NavigateToNode(path, 0);
 	if (node)
 	{

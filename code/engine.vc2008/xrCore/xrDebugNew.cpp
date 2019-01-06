@@ -97,7 +97,7 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 		if (!i) 
 		{
 			Msg("%s", assertion_info);
-			FlushLog();
+			xrLogger::FlushLog();
 
 			buffer = assertion_info;
 			endline = "\r\n";
@@ -105,14 +105,14 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 		}
 	}
 
-	FlushLog();
+	xrLogger::FlushLog();
 
 	os_clipboard::copy_to_clipboard(assertion_info);
 }
 
 void xrDebug::do_exit(HWND hWnd, const xr_string &message)
 {
-	FlushLog();
+	xrLogger::FlushLog();
 
 	if (MessageBoxA(nullptr, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
@@ -127,7 +127,7 @@ void xrDebug::do_exit(HWND hWnd, const xr_string &message)
 
 void xrDebug::do_exit(const xr_string &message, const xr_string &message2)
 {
-	FlushLog();
+	xrLogger::FlushLog();
 
 	xr_string szMsg = "Expression: "	+
 						message			+ 
@@ -271,8 +271,6 @@ int out_of_memory_handler(size_t size)
 	Debug.fatal(DEBUG_INFO, "Out of memory. Memory request: %d K", size / 1024);
 	return					1;
 }
-
-extern const char* log_name();
 
 XRCORE_API string_path g_bug_report_file;
 
@@ -435,7 +433,7 @@ using MINIDUMPWRITEDUMP = BOOL(WINAPI*)(HANDLE hProcess, DWORD dwPid, HANDLE hFi
 LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
     // Flush, after crashhandler. We include log file in a minidump
-    FlushLog();
+	xrLogger::FlushLog();
 
     long retval = EXCEPTION_CONTINUE_SEARCH;
     bException = true;
@@ -520,12 +518,10 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
                 {
                     do
                     {
-                        const char* logFileName = log_name();
-
-						if (logFileName == nullptr) { break; }
+						const string_path& logFileName2 = xrLogger::GetLogPath();
 
                         // Don't use X-Ray FS - it can be corrupted at this point
-                        HANDLE hLogFile = CreateFileA(logFileName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+                        HANDLE hLogFile = CreateFileA(logFileName2, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
                         if (hLogFile == INVALID_HANDLE_VALUE) break;
 
                         LARGE_INTEGER FileSize;
@@ -631,7 +627,7 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
     }
 
     Log(szResult);
-    FlushLog();
+	xrLogger::FlushLog();
 
     return retval;
 }

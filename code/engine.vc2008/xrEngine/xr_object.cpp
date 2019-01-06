@@ -156,18 +156,6 @@ CObject::CObject		( )		:
 	NameObject					= NULL;
 	NameSection					= NULL;
 	NameVisual					= NULL;
-#ifdef LUACP_API
-	static bool _saved 			= false;
-	
-	if (!_saved)
-	{
-		_saved = true;
-		LogXrayOffset("GameObject.id",		this, &this->Props);
-		LogXrayOffset("GameObject.name",	this, &this->NameObject);
-		LogXrayOffset("GameObject.section", this, &this->NameSection);
-		LogXrayOffset("GameObject.visual",  this, &this->NameVisual);
-	}
-#endif
 #ifdef DEBUG
 	dbg_update_shedule			= u32(-1)/2;
 	dbg_update_cl				= u32(-1)/2;

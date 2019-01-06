@@ -282,7 +282,7 @@ void CRenderDevice::on_idle()
 
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
-	static char buf[128] = { NULL };
+	string128 buf = {0};
 	xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
 
 	Console->Execute(buf);

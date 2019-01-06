@@ -87,6 +87,11 @@ bool CConsole::is_mark( Console_mark type )
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void ConsoleLogCallback(LPCSTR line)
+{
+	Console->AddLogEntry(line);
+}
+
 CConsole::CConsole()
 :m_hShader_back(NULL)
 {
@@ -95,6 +100,8 @@ CConsole::CConsole()
 	m_disable_tips    = false;
 	Register_callbacks();
 	Device.seqResolutionChanged.Add(this);
+
+	xrLogger::AddLogCallback(ConsoleLogCallback);
 }
 
 void CConsole::Initialize()
@@ -129,6 +136,7 @@ void CConsole::Initialize()
 
 CConsole::~CConsole()
 {
+	xrLogger::RemoveLogCallback(ConsoleLogCallback);
 	xr_delete( m_hShader_back );
 	xr_delete( m_editor );
 	Destroy();
@@ -140,6 +148,24 @@ void CConsole::Destroy()
 	xr_delete( pFont );
 	xr_delete( pFont2 );
 	Commands.clear();
+}
+
+void CConsole::AddLogEntry(LPCSTR line)
+{
+	xrCriticalSectionGuard guard(m_log_history_guard);
+
+	m_log_history.Get(m_log_history.GetHead())._set(line);
+	m_log_history.MoveHead(1);
+}
+
+void CConsole::ClearLog()
+{
+	xrCriticalSectionGuard guard(m_log_history_guard);
+
+	for (u32 i = 0; i < m_log_history.GetSize(); ++i)
+	{
+		m_log_history.Get(i)._set(nullptr);
+	}
 }
 
 void CConsole::AddCommand( IConsole_Command* cc )
@@ -325,27 +351,33 @@ void CConsole::OnRender()
 	}
 	
 	// ---------------------
-	u32 log_line = (u32)LogFile->size()-1;
+	m_log_history_guard.Enter();
+	u32 log_line = m_log_history.GetSize();
 	ypos -= LDIST;
-	for( int i = log_line - scroll_delta; i >= 0; --i ) 
+	for( u32 i = 0 + scroll_delta; i < log_line; ++i )
 	{
-		ypos -= LDIST;
-		if ( ypos < -1.0f )
-		{
-			break;
-		}
-		LPCSTR ls = ((*LogFile)[i]).c_str();
-		
-		if ( !ls )
+		const shared_str& logLine = m_log_history.GetLooped(m_log_history.GetTail() - i);
+
+		if (!logLine.size())
 		{
 			continue;
 		}
+
+		ypos -= LDIST;
+		if (ypos < -1.0f)
+		{
+			break;
+		}
+		
+		LPCSTR ls = logLine.c_str();
+		
 		Console_mark cm = (Console_mark)ls[0];
 		pFont->SetColor( get_mark_color( cm ) );
 		//u8 b = (is_mark( cm ))? 2 : 0;
 		//OutFont( ls + b, ypos );
 		OutFont( ls, ypos );
 	}
+	m_log_history_guard.Leave();
 	
 	string16 q;
 	itoa( log_line, q, 10 );
@@ -529,7 +561,7 @@ void CConsole::ExecuteCommand( LPCSTR cmd_str, bool record_cmd )
 
 		if ( m_last_cmd.c_str() == 0 || xr_strcmp( m_last_cmd, edt ) != 0 )
 		{
-			Log( c, edt );
+			Msg( "%s %s", c, edt );
 			add_cmd_history( edt );
 			m_last_cmd = edt;
 		}
@@ -574,7 +606,7 @@ void CConsole::ExecuteCommand( LPCSTR cmd_str, bool record_cmd )
 			Log("! Command disabled.");
 		}
 	}
-	else Log( "! Unknown command: ", first );
+	else Msg( "! Unknown command: %s", first );
 
 	if ( record_cmd )
 	{
@@ -660,8 +692,8 @@ IConsole_Command* CConsole::find_next_cmd( LPCSTR in_str, shared_str& out_str )
 	bool b_ra  = (in_str == strstr( in_str, radmin_cmd_name ) );
 	u32 offset = (b_ra)? xr_strlen( radmin_cmd_name ) : 0;
 
-	LPSTR t2;
-	STRCONCAT( t2, in_str + offset, " " );
+	string256 t2;
+	xr_strconcat( t2, in_str + offset, " " );
 
 	vecCMD_IT it = Commands.lower_bound( t2 );
 	if ( it != Commands.end() )
@@ -688,8 +720,8 @@ bool CConsole::add_next_cmds(LPCSTR in_str, vecTipsEx& out_v)
 		return false;
 	}
 
-	LPSTR t2;
-	STRCONCAT(t2, in_str, " ");
+	string512 t2;
+	xr_strconcat(t2, in_str, " ");
 
 	shared_str temp;
 	IConsole_Command* cc = find_next_cmd(t2, temp);
@@ -713,8 +745,8 @@ bool CConsole::add_next_cmds(LPCSTR in_str, vecTipsEx& out_v)
 		{
 			break; // for
 		}
-		LPSTR t3;
-		STRCONCAT(t3, out_v.back().text.c_str(), " ");
+		string512 t3;
+		xr_strconcat(t3, out_v.back().text.c_str(), " ");
 		cc = find_next_cmd(t3, temp);
 		if (!cc)
 		{

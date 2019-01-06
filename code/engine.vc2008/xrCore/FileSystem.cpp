@@ -189,7 +189,7 @@ bool EFS_Utils::GetOpenNameInternal( const char* initial,  char* buffer, int sz_
 	}
     if (bRes && bMulti)
     {
-    	Log				("buff=",buffer);
+    	Msg				("buff=%s",buffer);
 		int cnt			= _GetItemCount(buffer,0x0);
         if (cnt>1)
         {
@@ -290,7 +290,7 @@ const char* EFS_Utils::GenerateName(const char* base_path, const char* base_name
     int cnt = 0;
 	string_path fn;
     if (base_name)	
-		strconcat		(sizeof(fn), fn, base_path,base_name,def_ext);
+		xr_strconcat(fn, base_path, base_name, def_ext);
 	else 			
 		xr_sprintf		(fn, sizeof(fn), "%s%02d%s",base_path,cnt++,def_ext);
 

@@ -324,7 +324,7 @@ void CSoundRender_CoreB::_initialize(int stage)
 			}
 			else
 			{
-				Log("[xAudio2] ! SOUND: xAudio2: Max targets - ", tit);
+				Msg("[xAudio2] ! SOUND: xAudio2: Max targets - %u", tit);
 				T->_destroy();
 				xr_delete(T);
 				break;
