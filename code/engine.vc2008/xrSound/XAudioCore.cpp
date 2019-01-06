@@ -130,7 +130,7 @@ XSTATUS XCore::InitXAudioDevice()
 	return XAUDIO_OK;
 }
 
-XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& refDeviceList)
+XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, xr_vector<XAUDIO_DEVICE>& refDeviceList)
 {
 	DWORD32 DeviceCount = 0;
 	HRESULT hr = NULL;

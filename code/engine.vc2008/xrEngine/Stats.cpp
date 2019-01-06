@@ -105,13 +105,6 @@ void CStats::Show()
 		clBOX.FrameEnd				();
 		clFRUSTUM.FrameEnd			();
 		
-		netClient1.FrameEnd			();
-		netClient2.FrameEnd			();
-		netServer.FrameEnd			();
-
-		netClientCompressor.FrameEnd();
-		netServerCompressor.FrameEnd();
-		
 		TEST0.FrameEnd				();
 		TEST1.FrameEnd				();
 		TEST2.FrameEnd				();
@@ -236,11 +229,6 @@ void CStats::Show()
 		F.OutNext	("clBOX:       %2.2fms, %d, %2.0fK",clBOX.result,		clBOX.count,b_ps);
 		F.OutNext	("clFRUSTUM:   %2.2fms, %d",		clFRUSTUM.result,	clFRUSTUM.count	);
 		F.OutSkip	();
-		F.OutNext	("netClientRecv:   %2.2fms, %d",	netClient1.result,netClient1.count);
-		F.OutNext	("netClientSend:   %2.2fms, %d",	netClient2.result,netClient2.count);
-		F.OutNext	("netServer:   %2.2fms, %d",		netServer.result,netServer.count);
-		F.OutNext	("netClientCompressor:   %2.2fms",	netClientCompressor.result);
-		F.OutNext	("netServerCompressor:   %2.2fms",	netServerCompressor.result);
 		
 		F.OutSkip	();
 
@@ -275,11 +263,14 @@ void CStats::Show()
 
 		//////////////////////////////////////////////////////////////////////////
 		// Environment stats
-		if (g_pGameLevel && g_pGameLevel->bReady)
+		if (psDeviceFlags.test(rsEnviromentInfo))
 		{
-			F.SetHeightI				(f_base_size);
-			F.OutSet					(800, 0);
-			Environment().Statistics(&F);
+			if (g_pGameLevel && g_pGameLevel->bReady)
+			{
+				F.SetHeightI(f_base_size);
+				F.OutSet(800, 0);
+				Environment().Statistics(&F);
+			}
 		}
 	};
 
@@ -445,12 +436,6 @@ void CStats::Show()
 		clBOX.FrameStart			();
 		clFRUSTUM.FrameStart		();
 		
-		netClient1.FrameStart		();
-		netClient2.FrameStart		();
-		netServer.FrameStart		();
-		netClientCompressor.FrameStart();
-		netServerCompressor.FrameStart();
-
 		TEST0.FrameStart			();
 		TEST1.FrameStart			();
 		TEST2.FrameStart			();

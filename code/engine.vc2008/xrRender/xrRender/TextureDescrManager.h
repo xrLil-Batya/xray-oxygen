@@ -21,7 +21,7 @@ class CTextureDescrMngr
 		bool				m_use_steep_parallax;
 	};
 public:
-	static std::vector<void*> hThreads;
+	static xr_vector<void*> hThreads;
 
 	struct texture_desc
 	{

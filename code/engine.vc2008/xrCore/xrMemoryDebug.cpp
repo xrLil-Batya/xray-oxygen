@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "xrMemoryDebug.h"
 
-std::set<void*, std::less<>, PointerAllocator<void*>> gPointerRegistry;
+xr_set<void*, std::less<>, PointerAllocator<void*>> gPointerRegistry;
 xrCriticalSection gPointerRegistryProtector;
 
 void RegisterPointer(void* ptr)

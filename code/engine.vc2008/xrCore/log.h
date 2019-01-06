@@ -58,5 +58,5 @@ private:
 	std::atomic_bool bFlushRequested;
 
 	//LogCallback onLogMsg;
-	std::list<LogCallback> logCallbackList;
+	xr_list<LogCallback> logCallbackList;
 };

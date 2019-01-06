@@ -141,7 +141,7 @@ void CTextureDescrMngr::LoadTHM(FS_FileSet& flist, LPCSTR initial, map_TD &s_tex
 	}
 }
 
-std::vector<void*> CTextureDescrMngr::hThreads;
+xr_vector<void*> CTextureDescrMngr::hThreads;
 void CTextureDescrMngr::Load()
 {
 	TH_LoadTHM lvltex( "$level_textures$", m_texture_details, m_detail_scalers );
@@ -150,7 +150,7 @@ void CTextureDescrMngr::Load()
 
     hThreads.reserve(3);
 
-    auto StartLoadTHMThreadLambda = [](TH_LoadTHM& ThmLoader, LPCSTR ThreadName, std::vector<void*> &hThreads)
+    auto StartLoadTHMThreadLambda = [](TH_LoadTHM& ThmLoader, LPCSTR ThreadName, xr_vector<void*>& hThreads)
     {
         if (!ThmLoader.flist.empty())
         {

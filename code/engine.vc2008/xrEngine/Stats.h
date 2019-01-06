@@ -81,12 +81,6 @@ public:
 	CStatTimer	clBOX;				// total: box query
 	CStatTimer	clFRUSTUM;			// total: frustum query
 	
-	CStatTimer	netClient1;
-	CStatTimer	netClient2;
-	CStatTimer	netServer;
-	CStatTimer	netClientCompressor;
-	CStatTimer	netServerCompressor;
-	
 	CStatTimer	TEST0;				// debug counter
 	CStatTimer	TEST1;				// debug counter
 	CStatTimer	TEST2;				// debug counter

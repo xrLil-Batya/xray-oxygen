@@ -30,7 +30,8 @@ enum: unsigned long
 	rsR2							= (1<<20),
 	rsR4							= (1<<22), // was reserved to Editor
 	rsDrawFPS						= (1<<23), // was reserved to Editor
-	rsHWInfo						= (1<<24)
+	rsHWInfo						= (1<<24),
+	rsEnviromentInfo				= (1<<25)
 	// 22-32 bit - reserved to Editor
 };
 
