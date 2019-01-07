@@ -117,7 +117,6 @@ void CUIWindow::Draw()
 		if (!pWnd->IsShown())		continue;
 		if (pWnd->GetCustomDraw())	continue;
 		pWnd->Draw();
-		Msg("[Warning] %s wnd drawing error!", pWnd->m_windowName.c_str());
 	}
 #ifdef DEBUG
 	if(g_show_wnd_rect2){
