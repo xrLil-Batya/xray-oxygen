@@ -42,9 +42,9 @@ void UpdateTC( inout p_bumped I)
 {
 	if (I.position.z < fParallaxStopFade)
 	{
-		const float maxSamples = 25;
-		const float minSamples = 5; //Reverted: too expensive
-		const float fParallaxOffset = -0.013;
+		const float maxSamples = 32;
+		const float minSamples = 4; //Reverted: too expensive
+		const float fParallaxOffset = -0.02;
 
 		float3	 eye = mul (float3x3(I.M1.x, I.M2.x, I.M3.x,
 									 I.M1.y, I.M2.y, I.M3.y,
@@ -61,6 +61,8 @@ void UpdateTC( inout p_bumped I)
 
 		//	Prepare start data for cycle
 		float2	vTexCurrentOffset	= I.tcdh;
+		float2 vddx = ddx_coarse(I.tcdh);
+		float2 vddy = ddy_coarse(I.tcdh);
 		float	fCurrHeight			= 0.0;
 		float	fCurrentBound		= 1.0;
 
@@ -69,14 +71,14 @@ void UpdateTC( inout p_bumped I)
 			if (fCurrHeight < fCurrentBound)
 			{	
 				vTexCurrentOffset += vTexOffsetPerStep;		
-				fCurrHeight = s_bumpX.SampleLevel( smp_base, vTexCurrentOffset.xy, 0 ).a; 
+				fCurrHeight = s_bumpX.SampleGrad( smp_linear, vTexCurrentOffset.xy, vddx, vddy ).a; 
 				fCurrentBound -= fStepSize;
 			}
 		}
 
 		//	Reconstruct previouse step's data
 		vTexCurrentOffset -= vTexOffsetPerStep;
-		float fPrevHeight = s_bumpX.Sample( smp_base, float3(vTexCurrentOffset.xy,0) ).a;
+		float fPrevHeight = s_bumpX.SampleGrad( smp_linear, vTexCurrentOffset.xy, vddx, vddy ).a;
 
 		//	Smooth tc position between current and previouse step
 		float	fDelta2 = ((fCurrentBound + fStepSize) - fPrevHeight);
@@ -103,8 +105,9 @@ void UpdateTC( inout p_bumped I)
 	float3	 eye = mul (float3x3(I.M1.x, I.M2.x, I.M3.x,
 								 I.M1.y, I.M2.y, I.M3.y,
 								 I.M1.z, I.M2.z, I.M3.z), -I.position.xyz);
-								 
-	float	height	= s_bumpX.Sample( smp_base, I.tcdh).w;
+		float2 vddx = ddx_coarse(I.tcdh);
+		float2 vddy = ddy_coarse(I.tcdh);								 
+	float	height	= s_bumpX.SampleGrad( smp_linear, I.tcdh, vddx, vddy).w;
 			height	= height*(parallax.x) + (parallax.y);
 	float2	new_tc  = I.tcdh + height * normalize(eye);	//
 
