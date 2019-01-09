@@ -234,11 +234,15 @@ void CPHShell::Deactivate()
 	if (isFullActive())
 	{
 		vis_update_deactivate();
+
+		// Giperion: Why that was written?
+#if 0
 		CPHObject::activate();
 		ph_world->Freeze();
 		CPHObject::UnFreeze();
 		ph_world->StepTouch();
 		ph_world->UnFreeze();
+#endif
 	}
 	spatial_unregister();
 
