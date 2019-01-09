@@ -69,7 +69,7 @@ ID3DBlob* CScreenshotManager::MakeScreenshotNormal(u32 fmt)
 	// Apply gamma settings to screenshot
 	//// [FX]: For the correctness of the code is not sure. DirectX i not studied. 
 	std::memset(&TexData, 0, sizeof(D3D_SUBRESOURCE_DATA));
-	TexData.pSysMem = (u32*)malloc(Device.dwWidth * Device.dwHeight * sizeof(u32));
+	TexData.pSysMem = (u32*)Memory.mem_alloc(Device.dwWidth * Device.dwHeight * sizeof(u32));
 	TexData.SysMemPitch = desc.Width * 2;
 	TexData.SysMemSlicePitch = desc.Height * TexData.SysMemPitch;
 

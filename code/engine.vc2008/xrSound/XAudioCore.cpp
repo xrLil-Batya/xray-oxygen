@@ -67,7 +67,7 @@ XCore::~XCore()
 LPCSTR GetAnsiStringFromUnicodeString(LPCWSTR wString)
 {
 	size_t outputSize = wcslen(wString) + 1;
-	LPSTR newString = (LPSTR)malloc(outputSize);
+	LPSTR newString = (LPSTR)Memory.mem_alloc(outputSize);
 	size_t charsConverted = 0;
 
 	wcstombs_s(&charsConverted, newString, outputSize, wString, strlen(newString));
@@ -215,7 +215,7 @@ XSTATUS XCore::SimpleAudioPlay(CSoundRender_Emitter* soundEmitter, CSoundRender_
 	hFile = CreateFileA("I:\\glint_preview.wav", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	R_ASSERT(hFile);
 	dwFileSize = GetFileSize(hFile, NULL);
-	LPVOID lpData =  malloc(dwFileSize);
+	LPVOID lpData =  Memory.mem_alloc(dwFileSize);
 	R_ASSERT(ReadFile(hFile, lpData, dwFileSize, &dwSizeWritten, NULL));
 
 	// copy wave data from WAVEFORMATEX;

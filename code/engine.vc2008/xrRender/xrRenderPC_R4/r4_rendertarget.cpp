@@ -904,7 +904,7 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 				desc.CPUAccessFlags		= 0;
 				desc.MiscFlags			= 0;
 
-				u32* tempData = (u32*)malloc(w * h * sizeof(u32));
+				u32* tempData = (u32*)Memory.mem_alloc(w * h * sizeof(u32));
 				D3D_SUBRESOURCE_DATA subData;
 				std::memset(&subData, 0, sizeof(D3D_SUBRESOURCE_DATA));
 				subData.pSysMem = tempData;
@@ -926,7 +926,7 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 				t_noise_hq = dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_jitter_hq);
 				t_noise_hq->surface_set(t_noise_hq_surf);
 
-				free(tempData);
+				Memory.mem_free(tempData);
 			}
 		}
 	}
