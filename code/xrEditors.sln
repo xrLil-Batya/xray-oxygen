@@ -68,6 +68,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xrLayoutEditor", "editors\x
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrEngine", "engine.vc2008\xrEngine\xrEngine.vcxproj", "{2578C6D8-660D-48AE-9322-7422F8664F06}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69} = {A5E0EC2A-4783-4A53-AE1E-228464FC8F69}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrUICore", "engine.vc2008\xrUICore\xrUICore.vcxproj", "{295BF6D3-FE39-41FC-82B3-E94F97E24845}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -79,6 +82,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedUILib", "engine.vc
 		{C4DEFC31-A910-4339-99B3-6C410DC19AD0} = {C4DEFC31-A910-4339-99B3-6C410DC19AD0}
 		{295BF6D3-FE39-41FC-82B3-E94F97E24845} = {295BF6D3-FE39-41FC-82B3-E94F97E24845}
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{BE0170B5-B5C9-4BD8-87CD-12B3C7DF3EDA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiscordRichPresense", "3rd-party\DiscordRPC\DiscordRichPresense.vcxproj", "{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -259,6 +266,14 @@ Global
 		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Release_IA32|x64.Build.0 = Release|x64
 		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Release|x64.ActiveCfg = Release|x64
 		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB}.Release|x64.Build.0 = Release|x64
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Debug|x64.ActiveCfg = Debug|x64
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Debug|x64.Build.0 = Debug|x64
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Mixed|x64.ActiveCfg = Release|x64
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Mixed|x64.Build.0 = Release|x64
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Release_IA32|x64.ActiveCfg = Release|x64
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Release_IA32|x64.Build.0 = Release|x64
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Release|x64.ActiveCfg = Release|x64
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -281,6 +296,7 @@ Global
 		{2578C6D8-660D-48AE-9322-7422F8664F06} = {582A3259-7499-4576-8573-EBC568143CF9}
 		{295BF6D3-FE39-41FC-82B3-E94F97E24845} = {582A3259-7499-4576-8573-EBC568143CF9}
 		{D5AB4347-A96F-478D-9B44-9E3CBBDFCBDB} = {EE367C9E-D255-4A7D-8CF4-BFFDE0FAFC1D}
+		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69} = {BE0170B5-B5C9-4BD8-87CD-12B3C7DF3EDA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBBB23C5-0934-4F23-B836-B0BF6F1E4040}

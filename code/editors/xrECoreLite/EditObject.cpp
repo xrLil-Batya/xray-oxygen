@@ -277,7 +277,7 @@ void CEditableObject::PrepareOGFDesc(ogf_desc& desc)
 	desc.create_time = m_CreateTime;
 	desc.modif_name = m_ModifName.c_str();
 	desc.modif_time = m_ModifTime;
-	desc.build_name = strconcat(sizeof(tmp), tmp, "\\\\", Core.CompName, "\\", Core.UserName);
+	desc.build_name = xr_strconcat(tmp, "\\\\", Core.CompName, "\\", Core.UserName);
 	ctime(&desc.build_time);
 }
 
@@ -286,12 +286,12 @@ void CEditableObject::SetVersionToCurrent(BOOL bCreate, BOOL bModif)
 	string512 tmp;
 	if (bCreate)
 	{
-		m_CreateName = strconcat(sizeof(tmp), tmp, "\\\\", Core.CompName, "\\", Core.UserName);
+		m_CreateName = xr_strconcat(tmp, "\\\\", Core.CompName, "\\", Core.UserName);
 		m_CreateTime = time(NULL);
 	}
 	if (bModif)
 	{
-		m_ModifName = strconcat(sizeof(tmp), tmp, "\\\\", Core.CompName, "\\", Core.UserName);
+		m_ModifName = xr_strconcat(tmp, "\\\\", Core.CompName, "\\", Core.UserName);
 		m_ModifTime = time(NULL);
 	}
 }
