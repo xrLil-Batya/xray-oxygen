@@ -48,7 +48,7 @@ public:
 	{
 		m_object				= object;
 		m_area					= &area;
-		m_level_graph			= &ai().level_graph();
+		m_level_graph			= ai().get_level_graph();
 	}
 
 	IC	void	operator()		(const CLevelGraph::CVertex &vertex) const

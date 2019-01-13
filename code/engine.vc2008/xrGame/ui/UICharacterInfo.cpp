@@ -25,7 +25,7 @@ using namespace InventoryUtilities;
 
 CSE_ALifeTraderAbstract* ch_info_get_from_id(u16 id)
 {
-	if (ai().get_alife() && ai().get_game_graph())
+	if (ai().get_alife() && ai().is_game_graph_presented())
 	{
 		return	smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(id));
 	}

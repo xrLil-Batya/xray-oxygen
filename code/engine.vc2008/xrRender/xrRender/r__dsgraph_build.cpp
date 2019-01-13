@@ -263,7 +263,7 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 	}
 
 	// Emissive geometry should be marked and R2 special-cases it
-	// a) Allow to skeep already lit pixels
+	// a) Allow to skip already lit pixels
 	// b) Allow to make them 100% lit and really bright
 	// c) Should not cast shadows
 	// d) Should be rendered to accumulation buffer in the second pass
@@ -302,9 +302,9 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 		mapNormal_T& map = mapNormalPasses[sh->flags.iPriority/2][iPass];
 
 #ifdef USE_DX11
-		auto &Nvs = map[&*pass.vs];
-		auto &Ngs = Nvs[pass.gs->gs];
-		auto &Nps = Ngs[pass.ps->ps];
+		R_dsgraph::mapNormalGS& Nvs = map[&*pass.vs];
+		R_dsgraph::mapNormalPS& Ngs = Nvs[pass.gs->gs];
+		R_dsgraph::mapNormalAdvStages& Nps = Ngs[pass.ps->ps];
 #else
 		auto &Nvs = map[pass.vs->vs];
 		auto &Nps = Nvs[pass.ps->ps];
@@ -370,21 +370,25 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 {
-	if (0==pVisual)				return;
+	if (pVisual == nullptr) return;
 
 	// Visual is 100% visible - simply add it
-	xr_vector<dxRender_Visual*>::iterator I,E;	// it may be useful for 'hierrarhy' visual
 
 	switch (pVisual->Type) {
 	case MT_PARTICLE_GROUP:
 		{
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG	= (PS::CParticleGroup*)pVisual;
-			for (auto i_it=pG->items.begin(); i_it!=pG->items.end(); i_it++)	{
-				PS::CParticleGroup::SItem&			I		= *i_it;
+			for (PS::CParticleGroup::SItem& I : pG->items)	{
 				if (I._effect)		add_leafs_Dynamic		(I._effect);
-				for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
-				for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_leafs_Dynamic(*pit);
+				for (dxRender_Visual* pChildRelated : I._children_related)
+				{
+					add_leafs_Dynamic(pChildRelated);
+				}
+				for (dxRender_Visual* pChildFree : I._children_free)
+				{
+					add_leafs_Dynamic(pChildFree);
+				}
 			}
 		}
 		return;
@@ -392,12 +396,11 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 		{
 			// Add all children, doesn't perform any tests
 			FHierrarhyVisual* pV = (FHierrarhyVisual*)pVisual;
-			I = pV->children.begin	();
-			E = pV->children.end	();
-			for (; I != E; I++)
+
+			for (dxRender_Visual* pChildVisual : pV->children)
 			{
-				(*I)->vis.obj_data = pV->getVisData().obj_data;
-				add_leafs_Dynamic(*I);
+				pChildVisual->vis.obj_data = pV->getVisData().obj_data;
+				add_leafs_Dynamic(pChildVisual);
 			}
 		}
 		return;
@@ -414,19 +417,20 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 				float		ssa		=	CalcSSA	(D,Tpos,pV->vis.sphere.R/2.f);	// assume dynamics never consume full sphere
 				if (ssa<r_ssaLOD_A)	_use_lod	= TRUE;
 			}
+
 			if (_use_lod)				
 			{
 				add_leafs_Dynamic			(pV->m_lod)		;
-			} else {
+			} 
+			else 
+			{
 				pV->CalculateBones			(TRUE);
 				pV->CalculateWallmarks		();		//. bug?
-				I = pV->children.begin		();
-				E = pV->children.end		();
 
-				for (; I != E; I++)
+				for (dxRender_Visual* pChildVisual : pV->children)
 				{
-					(*I)->vis.obj_data = pV->getVisData().obj_data;
-					add_leafs_Dynamic(*I);
+					pChildVisual->vis.obj_data = pV->getVisData().obj_data;
+					add_leafs_Dynamic(pChildVisual);
 				}
 			}
 		}

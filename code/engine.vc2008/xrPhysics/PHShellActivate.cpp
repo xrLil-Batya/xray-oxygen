@@ -236,13 +236,15 @@ void CPHShell::Deactivate()
 		vis_update_deactivate();
 
 		// Giperion: Why that was written?
-#if 0
+		// UPDATE: Shell should be updated last time.
+		// Related to ObjectCounter.
+		// If you comment out - check out CInventory::Take assert inside pIItem->object().processing_deactivate();
+		// Still this routine can crash when trying play a sound
 		CPHObject::activate();
 		ph_world->Freeze();
 		CPHObject::UnFreeze();
 		ph_world->StepTouch();
 		ph_world->UnFreeze();
-#endif
 	}
 	spatial_unregister();
 

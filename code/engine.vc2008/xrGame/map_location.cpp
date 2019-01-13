@@ -327,7 +327,7 @@ void CMapLocation::CalcLevelName()
 	if (IsUserDefined())
 		return;
 
-	if(m_owner_se_object && ai().get_game_graph())
+	if(m_owner_se_object && ai().is_game_graph_presented())
 	{
 		if(m_cached.m_graphID != m_owner_se_object->m_tGraphID)
 		{

@@ -151,7 +151,7 @@ void CEnvironment::LoadWeathers()
 	for (auto& envDesc : WeatherCycles)
 	{
 		R_ASSERT3(envDesc.second.size() > 1, "Environment in weather must >=2", envDesc.first.data());
-		concurrency::parallel_sort(envDesc.second.begin(), envDesc.second.end(), sort_env_etl_pred);
+		std::sort(envDesc.second.begin(), envDesc.second.end(), sort_env_etl_pred);
 	}
 	R_ASSERT2(!WeatherCycles.empty(), "Empty weathers.");
 	SetWeather((*WeatherCycles.begin()).first);
@@ -211,7 +211,7 @@ void CEnvironment::LoadWeatherEffects()
 	for (auto& it : WeatherFXs)
 	{
 		R_ASSERT3(it.second.size() > 1, "Must be >=2 environments in weather", it.first.c_str());
-		concurrency::parallel_sort(it.second.begin(), it.second.end(), sort_env_etl_pred);
+		std::sort(it.second.begin(), it.second.end(), sort_env_etl_pred);
 	}
 }
 

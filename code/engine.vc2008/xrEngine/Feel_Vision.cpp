@@ -109,7 +109,7 @@ namespace Feel {
 		}
 		if (seen.size()>1) 
 		{
-			concurrency::parallel_sort							(seen.begin(),seen.end());
+			std::sort							(seen.begin(),seen.end());
 			xr_vector<CObject*>::iterator end	= std::unique	(seen.begin(),seen.end());
 			if (end!=seen.end()) seen.erase		(end,seen.end());
 		}

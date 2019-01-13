@@ -154,11 +154,9 @@ void CParticlesObject::shedule_Update(u32 _dt)
 	u32 dt = Device.dwTimeGlobal - dwLastTime;
 	if (dt)
 	{
-		
 		mt_dt = 0;
 		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 		V->OnFrame(dt);
-		
 
 		dwLastTime = Device.dwTimeGlobal;
 	}

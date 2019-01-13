@@ -355,7 +355,14 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 
 	// Title window
 	HWND logoInsertPos = HWND_TOPMOST;
-	if (IsDebuggerPresent()) { logoInsertPos = HWND_NOTOPMOST; }
+	if (IsDebuggerPresent()) 
+	{ 
+		if (strstr(Core.Params, "-debugmsg"))
+		{
+			xrLogger::EnableFastDebugLog();
+		}
+		logoInsertPos = HWND_NOTOPMOST; 
+	}
 
 	InitSplash(GetModuleHandle(NULL), "OXYGEN_SPLASH", logDlgProc);
 	splashScreen.SetProgressColor(RGB(0x6F, 0x3B, 0x9B));
@@ -649,6 +656,7 @@ void CApplication::LoadSwitch	()
 // Sequential
 void CApplication::OnFrame	( )
 {
+	ScopeStatTimer frameTimer(Device.Statistic->Engine_ApplicationFrame);
 	Engine.Event.OnFrame			();
 	g_SpatialSpace->update			();
 	g_SpatialSpacePhysic->update	();
@@ -774,7 +782,7 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 		{
 			if (Levels[I].name == nullptr)
 			{
-				Levels[I].name = strdup(name);
+				Levels[I].name = xr_strdup(name);
 			}
 			result = int(I);	
 			break;

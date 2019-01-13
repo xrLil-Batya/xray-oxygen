@@ -466,7 +466,7 @@ void CGameObject::update_ai_locations			(bool decrement_reference)
 
 	ai_location().level_vertex		(l_dwNewLevelVertexID);
 
-	if (!ai().get_game_graph() && ai().get_cross_table())
+	if (!ai().is_game_graph_presented() && ai().get_cross_table())
 		return;
 
 	ai_location().game_vertex		(ai().cross_table().vertex(ai_location().level_vertex_id()).game_vertex_id());

@@ -52,6 +52,96 @@ public:
     }
 };
 
+#if 0
+// for list container ONLY!!
+// do NOT use in std::vector or any container that allowing sequence access to elements
+template <typename T>
+class xrLazyAllocator
+{
+	using size_type = size_t;
+	using difference_type = ptrdiff_t;
+	using pointer = T * ;
+	using const_pointer = const T*;
+	using reference = T & ;
+	using const_reference = const T&;
+	using value_type = T;
+
+	template<typename Elem = T>
+	struct AllocatorNode
+	{
+		bool isDeleted;
+		Elem theElement;
+	};
+
+	pointer address(reference ref) const { return &ref; }
+	const_pointer address(const_reference ref) const { return &ref; }
+
+	template <class Other>
+	xrLazyAllocator(const xrLazyAllocator<Other>&) {}
+
+	template <class Other>
+	xrLazyAllocator& operator=(const xrLazyAllocator<Other>&) {
+		return *this;
+	}
+#pragma warning(push)
+#pragma warning(disable: 4267)
+	pointer allocate(const size_type n, const void* p = nullptr) const 
+	{ 
+		// we should allocate very rare. Most of the time - use existent allocated space
+
+		if (pBuffer == nullptr)
+		{
+			AllocatedNum = n * 5;
+			Size = n;
+			pBuffer = xr_alloc<AllocatorNode<T>>(n * 5);
+		}
+		else
+		{
+			// check if we don't have enough space
+			if (Size + n > AllocatedNum)
+			{
+				AllocatedNum = AllocatedNum + n + 5;
+				pBuffer = xr_realloc(pBuffer, AllocatedNum * sizeof(AllocatorNode<T>));
+			}
+			Size += n;
+		}
+
+		return (pointer)pBuffer[Size - n];
+	}
+#pragma warning(pop)
+
+	void internalDeallocate(void* p)
+	{
+		size_t InternalIndex = (p - pBuffer) / sizeof(T);
+		
+	}
+
+	void deallocate(pointer p, const size_type) const 
+	{ 
+		xr_free(p); 
+	}
+
+	void deallocate(void* p, const size_type) const 
+	{ 
+		xr_free(p); 
+	}
+
+	void construct(pointer p, const T& _Val) { new (p) T(_Val); }
+
+	void destroy(pointer p) { p->~T(); }
+
+	size_type max_size() const {
+		const unsigned long long count = std::numeric_limits<size_type>::max() / sizeof(T);
+		return 0 < count ? count : 1;
+	}
+
+	size_t AllocatedNum;
+	size_t Size;
+	void* pBuffer;
+};
+
+#endif
+
 struct xr_allocator {
     template <typename T>
     struct helper {

@@ -1,20 +1,12 @@
 #pragma once
-#define DUMP_PHASE	do {} while (0)
 
 XRCORE_API u32 mem_usage_impl(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr);
 
 class XRCORE_API xrMemory
 {
 public:
-	struct mdbg
-	{
-		void*			_p;
-		size_t 			_size;
-		const char*		_name;
-		u32				_dummy;
-	};
-public:
-	xrMemory()			= default;
+	xrMemory();
+	~xrMemory();
 	void				_initialize();
 	void				_destroy();
 
@@ -30,6 +22,9 @@ public:
 
 	void*				mem_realloc(void* p, size_t size);
 	void				mem_free(void* p);
+
+	void				debug_MarkPointerAsChoosenOne(void* ptr);
+
 };
 
 extern XRCORE_API xrMemory Memory;

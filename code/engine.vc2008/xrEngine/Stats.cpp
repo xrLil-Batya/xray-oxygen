@@ -65,9 +65,21 @@ void CStats::Show()
 {
 	// Stop timers
 	{
-		EngineTOTAL.FrameEnd		();	
-		Sheduler.FrameEnd			();	
-		UpdateClient.FrameEnd		();	
+		EngineTOTAL.FrameEnd		();
+
+		// Giperion Engine specific timers
+		Engine_RenderFrame.FrameEnd();
+		Engine_ApplicationFrame.FrameEnd();
+		Engine_InputFrame.FrameEnd();
+		Engine_MenuFrame.FrameEnd();
+		Engine_PersistanceFrame.FrameEnd();
+		Engine_PersistanceFrame_Begin.FrameEnd();
+		Engine_PersistanceFrame_EnvAndSpectre.FrameEnd();
+		Engine_PersistanceFrame_ParticlePlay.FrameEnd();
+		Engine_PersistanceFrame_ParticleDestroy.FrameEnd();
+		Engine_PersistanceFrame_Scheduler.FrameEnd();
+		Engine_PersistanceFrame_WeatherAndDOF.FrameEnd();
+
 		Physics.FrameEnd			();	
 		ph_collision.FrameEnd		();
 		ph_core.FrameEnd			();
@@ -81,13 +93,13 @@ void CStats::Show()
 		AI_Vis_RayTests.FrameEnd	();
 		
 		RenderTOTAL.FrameEnd		();
-		RenderCALC.FrameEnd			();
+		Render_CRenderRender_render_main.FrameEnd			();
 		RenderCALC_HOM.FrameEnd		();
 		RenderDUMP.FrameEnd			();	
 		RenderDUMP_RT.FrameEnd		();
 		RenderDUMP_SKIN.FrameEnd	();	
 		RenderDUMP_Wait.FrameEnd	();	
-		RenderDUMP_Wait_S.FrameEnd	();	
+		Render_CRenderRender_WaitForFrame.FrameEnd	();	
 		RenderDUMP_HUD.FrameEnd		();	
 		RenderDUMP_Glows.FrameEnd	();	
 		RenderDUMP_Lights.FrameEnd	();	
@@ -98,6 +110,24 @@ void CStats::Show()
 		RenderDUMP_Pcalc.FrameEnd	();	
 		RenderDUMP_Scalc.FrameEnd	();	
 		RenderDUMP_Srender.FrameEnd	();	
+
+		// Giperion Render specific Frame end section
+		Render_CRenderRender.FrameEnd();
+		Render_CRenderRender_MainMenu.FrameEnd();
+		Render_CRenderRender_ScenePrepare.FrameEnd();
+		Render_CRenderRender_DeferPart0.FrameEnd();
+		Render_CRenderRender_LightVisibility.FrameEnd();
+		Render_CRenderRender_ItemUIWallmarks.FrameEnd();
+		Render_CRenderRender_FlushOcclusion.FrameEnd();
+		Render_CRenderRender_MSAA_Rain.FrameEnd();
+		Render_CRenderRender_Sun.FrameEnd();
+		Render_CRenderRender_LightRender.FrameEnd();
+		Render_CRenderRender_Combine.FrameEnd();
+		Render_Combine_Begin.FrameEnd();
+		Render_Combine_Sky.FrameEnd();
+		Render_Combine_Cloud.FrameEnd();
+		Render_Combine_Combine1.FrameEnd();
+		Render_Combine_ForwardRendering.FrameEnd();
 		
 		Sound.FrameEnd				();
 		Input.FrameEnd				();
@@ -177,16 +207,35 @@ void CStats::Show()
 		m_pRender->OutData3(F);
 		F.OutSkip	();
 
-#define PPP(a) (100.f*float(a)/float(EngineTOTAL.result))
-		F.OutNext	("*** ENGINE:  %2.2fms",EngineTOTAL.result);	
+#define GetPercentOf(local, global) (100.0f * float(local) / float (global.result))
+
+		F.OutNext	("*** ENGINE:  %2.2fms",EngineTOTAL.result);
+		F.OutNext	(" -> Render      : %2.2fms, %2.1f%%", Engine_RenderFrame.result,				GetPercentOf(Engine_RenderFrame.result, EngineTOTAL));
+		F.OutNext	(" -> Application : %2.2fms, %2.1f%%", Engine_ApplicationFrame.result,			GetPercentOf(Engine_ApplicationFrame.result, EngineTOTAL));
+		F.OutNext	(" -> Input       : %2.2fms, %2.1f%%", Engine_InputFrame.result,				GetPercentOf(Engine_InputFrame.result, EngineTOTAL));
+		F.OutNext	(" -> Menu        : %2.2fms, %2.1f%%", Engine_MenuFrame.result,					GetPercentOf(Engine_MenuFrame.result, EngineTOTAL));
+		F.OutNext	(" -> Persistence : %2.2fms, %2.1f%%", Engine_PersistanceFrame.result,			GetPercentOf(Engine_PersistanceFrame.result, EngineTOTAL));
+		F.OutNext	(" -> -> Begin                : %2.2fms, %2.1f%%", Engine_PersistanceFrame_Begin.result,		   GetPercentOf(Engine_PersistanceFrame_Begin.result, Engine_PersistanceFrame));
+		F.OutNext	(" -> -> Environment & Spectre: %2.2fms, %2.1f%%", Engine_PersistanceFrame_EnvAndSpectre.result,   GetPercentOf(Engine_PersistanceFrame_EnvAndSpectre.result, Engine_PersistanceFrame));
+		F.OutNext	(" -> -> Playing Particles    : %2.2fms, %2.1f%%", Engine_PersistanceFrame_ParticlePlay.result,    GetPercentOf(Engine_PersistanceFrame_ParticlePlay.result, Engine_PersistanceFrame));
+		F.OutNext	(" -> -> Destroying Particles : %2.2fms, %2.1f%%", Engine_PersistanceFrame_ParticleDestroy.result, GetPercentOf(Engine_PersistanceFrame_ParticleDestroy.result, Engine_PersistanceFrame));
+		F.OutNext	(" -> -> Scheduler            : %2.2fms, %2.1f%%", Engine_PersistanceFrame_Scheduler.result,	   GetPercentOf(Engine_PersistanceFrame_Scheduler.result, Engine_PersistanceFrame));
+		F.OutNext	(" -> -> Weather and DOF      : %2.2fms, %2.1f%%", Engine_PersistanceFrame_WeatherAndDOF.result,   GetPercentOf(Engine_PersistanceFrame_WeatherAndDOF.result, Engine_PersistanceFrame));
+		F.OutSkip();
+
 		F.OutNext	("Memory:      %2.2fa",fMem_calls);
-		F.OutNext	("uClients:    %2.2fms, %2.1f%%, crow(%d)/active(%d)/total(%d)",UpdateClient.result,PPP(UpdateClient.result),UpdateClient_crows,UpdateClient_active,UpdateClient_total);
-		F.OutNext	("uSheduler:   %2.2fms, %2.1f%%",Sheduler.result,		PPP(Sheduler.result));
-		F.OutNext	("uSheduler_L: %2.2fms",fShedulerLoad);
 		F.OutNext	("uParticles:  Qstart[%d] Qactive[%d] Qdestroy[%d]",	Particles_starting,Particles_active,Particles_destroy);
-		F.OutNext	("spInsert:    o[%.2fms, %2.1f%%], p[%.2fms, %2.1f%%]",	g_SpatialSpace->stat_insert.result, PPP(g_SpatialSpace->stat_insert.result),	g_SpatialSpacePhysic->stat_insert.result, PPP(g_SpatialSpacePhysic->stat_insert.result));
-		F.OutNext	("spRemove:    o[%.2fms, %2.1f%%], p[%.2fms, %2.1f%%]",	g_SpatialSpace->stat_remove.result, PPP(g_SpatialSpace->stat_remove.result),	g_SpatialSpacePhysic->stat_remove.result, PPP(g_SpatialSpacePhysic->stat_remove.result));
-		F.OutNext	("Physics:     %2.2fms, %2.1f%%",Physics.result,		PPP(Physics.result));	
+		F.OutNext	("spInsert:    o[%.2fms, %2.1f%%], p[%.2fms, %2.1f%%]",	
+			g_SpatialSpace->stat_insert.result, 
+			GetPercentOf(g_SpatialSpace->stat_insert.result, EngineTOTAL),	
+			g_SpatialSpacePhysic->stat_insert.result, 
+			GetPercentOf(g_SpatialSpacePhysic->stat_insert.result, EngineTOTAL));
+		F.OutNext	("spRemove:    o[%.2fms, %2.1f%%], p[%.2fms, %2.1f%%]",	
+			g_SpatialSpace->stat_remove.result, 
+			GetPercentOf(g_SpatialSpace->stat_remove.result, EngineTOTAL),	
+			g_SpatialSpacePhysic->stat_remove.result, 
+			GetPercentOf(g_SpatialSpacePhysic->stat_remove.result, EngineTOTAL));
+		F.OutNext	("Physics:     %2.2fms, %2.1f%%",Physics.result, GetPercentOf(Physics.result, EngineTOTAL));
 		F.OutNext	("  collider:  %2.2fms", ph_collision.result);	
 		F.OutNext	("  solver:    %2.2fms, %d",ph_core.result,ph_core.count);	
 		F.OutNext	("aiThink:     %2.2fms, %d",AI_Think.result,AI_Think.count);	
@@ -198,15 +247,38 @@ void CStats::Show()
 		F.OutNext	("  RayCast:   %2.2fms",	AI_Vis_RayTests.result);
 		F.OutSkip	();
 								   
-#undef  PPP
-#define PPP(a) (100.f*float(a)/float(RenderTOTAL.result))
-		F.OutNext	("*** RENDER:  %2.2fms",RenderTOTAL.result);
-		F.OutNext	("R_CALC:      %2.2fms, %2.1f%%",RenderCALC.result,	PPP(RenderCALC.result));	
-		F.OutNext	("  HOM:       %2.2fms, %d",RenderCALC_HOM.result,	RenderCALC_HOM.count);
+        F.OutNext	("*** RENDER:  %2.2fms",RenderTOTAL.result);
+        F.OutNext	(" -> CRender::Render()     : %2.2fms, %2.1f%%",	Render_CRenderRender.result,			    GetPercentOf(Render_CRenderRender.result, RenderTOTAL));
+        F.OutNext	(" -> -> CRender::render_menu(): %2.2fms, %2.1f%%",	Render_CRenderRender_MainMenu.result,       GetPercentOf(Render_CRenderRender_MainMenu.result, RenderTOTAL));
+        F.OutNext	(" -> -> Scene prepare         : %2.2fms, %2.1f%%",	Render_CRenderRender_WaitForFrame.result,   GetPercentOf(Render_CRenderRender_WaitForFrame.result, RenderTOTAL));
+        F.OutNext	(" -> -> Wait for frame        : %2.2fms, %2.1f%%",	Render_CRenderRender_ScenePrepare.result,   GetPercentOf(Render_CRenderRender_ScenePrepare.result, RenderTOTAL));
+        F.OutNext	(" -> -> Occlusion, renderables: %2.2fms, %2.1f%%",	Render_CRenderRender_render_main.result,    GetPercentOf(Render_CRenderRender_render_main.result, RenderTOTAL));
+        F.OutNext	(" -> -> DEFER_PART0           : %2.2fms, %2.1f%%",	Render_CRenderRender_DeferPart0.result,     GetPercentOf(Render_CRenderRender_DeferPart0.result, RenderTOTAL));
+        F.OutNext	(" -> -> Lights visibility     : %2.2fms, %2.1f%%",	Render_CRenderRender_LightVisibility.result,GetPercentOf(Render_CRenderRender_LightVisibility.result, RenderTOTAL));
+        F.OutNext	(" -> -> Item UI and Wallmarks : %2.2fms, %2.1f%%",	Render_CRenderRender_ItemUIWallmarks.result,GetPercentOf(Render_CRenderRender_ItemUIWallmarks.result, RenderTOTAL));
+        F.OutNext	(" -> -> Light flush occlussion: %2.2fms, %2.1f%%",	Render_CRenderRender_FlushOcclusion.result, GetPercentOf(Render_CRenderRender_FlushOcclusion.result, RenderTOTAL));
+        F.OutNext	(" -> -> MSAA and Rain FX(DX11): %2.2fms, %2.1f%%",	Render_CRenderRender_MSAA_Rain.result,		GetPercentOf(Render_CRenderRender_MSAA_Rain.result, RenderTOTAL));
+        F.OutNext	(" -> -> Sun                   : %2.2fms, %2.1f%%",	Render_CRenderRender_Sun.result,			GetPercentOf(Render_CRenderRender_Sun.result, RenderTOTAL));
+        F.OutNext	(" -> -> Lights rendering      : %2.2fms, %2.1f%%",	Render_CRenderRender_LightRender.result,	GetPercentOf(Render_CRenderRender_LightRender.result, RenderTOTAL));
+        F.OutNext	(" -> -> PostProcess, combine  : %2.2fms, %2.1f%%",	Render_CRenderRender_Combine.result,		GetPercentOf(Render_CRenderRender_Combine.result, RenderTOTAL));
+        F.OutNext	(" -> -> -> Begin              : %2.2fms, %2.1f%%", Render_Combine_Begin.result,				GetPercentOf(Render_Combine_Begin.result, Render_CRenderRender_Combine));
+        F.OutNext	(" -> -> -> Sky                : %2.2fms, %2.1f%%", Render_Combine_Sky.result,					GetPercentOf(Render_Combine_Sky.result, Render_CRenderRender_Combine));
+        F.OutNext	(" -> -> -> Cloud              : %2.2fms, %2.1f%%", Render_Combine_Cloud.result,				GetPercentOf(Render_Combine_Cloud.result, Render_CRenderRender_Combine));
+        F.OutNext	(" -> -> -> Combine1           : %2.2fms, %2.1f%%", Render_Combine_Combine1.result,				GetPercentOf(Render_Combine_Combine1.result, Render_CRenderRender_Combine));
+        F.OutNext	(" -> -> -> Forward Render     : %2.2fms, %2.1f%%", Render_Combine_ForwardRendering.result,		GetPercentOf(Render_Combine_ForwardRendering.result, Render_CRenderRender_Combine));
+        F.OutNext	(" -> Presenter	            : %2.2fms, %2.1f%%",	Render_End.result,							GetPercentOf(Render_End.result, RenderTOTAL));
+
+        float UnprofiledPartsOfRender = RenderTOTAL.result - Render_CRenderRender.result - Render_End.result;
+        F.OutNext	(" -> Other                 : %2.2fms, %2.1f%%", UnprofiledPartsOfRender, GetPercentOf(UnprofiledPartsOfRender, RenderTOTAL));
+		F.OutSkip	();
+
+		F.OutNext	("  HOM:       %2.2fms, %d", RenderCALC_HOM.result, RenderCALC_HOM.count);
+
+#if 0
 		F.OutNext	("  Skeletons: %2.2fms, %d",Animation.result,		Animation.count);
-		F.OutNext	("R_DUMP:      %2.2fms, %2.1f%%",RenderDUMP.result,	PPP(RenderDUMP.result));	
+		F.OutNext	("R_DUMP:      %2.2fms, %2.1f%%",RenderDUMP.result, GetPercentOf(RenderDUMP.result, RenderTOTAL));
 		F.OutNext	("  Wait-L:    %2.2fms",RenderDUMP_Wait.result);	
-		F.OutNext	("  Wait-S:    %2.2fms",RenderDUMP_Wait_S.result);	
+		F.OutNext	("  Wait-S:    %2.2fms", Render_CRenderRender_WaitForFrame.result);
 		F.OutNext	("  Skinning:  %2.2fms",RenderDUMP_SKIN.result);	
 		F.OutNext	("  DT_Vis/Cnt:%2.2fms/%d",RenderDUMP_DT_VIS.result,RenderDUMP_DT_Count);	
 		F.OutNext	("  DT_Render: %2.2fms",RenderDUMP_DT_Render.result);	
@@ -219,7 +291,10 @@ void CStats::Show()
 		F.OutNext	("  P_calc:    %2.2fms",RenderDUMP_Pcalc.result);
 		F.OutNext	("  S_calc:    %2.2fms",RenderDUMP_Scalc.result);
 		F.OutNext	("  S_render:  %2.2fms, %d",RenderDUMP_Srender.result,RenderDUMP_Srender.count);
+#endif
 		F.OutSkip	();
+
+
 		F.OutNext	("*** SOUND:   %2.2fms",Sound.result);
 		F.OutNext	("  TGT/SIM/E: %d/%d/%d",  snd_stat._rendered, snd_stat._simulated, snd_stat._events);
 		F.OutNext	("  HIT/MISS:  %d/%d",  snd_stat._cache_hits, snd_stat._cache_misses);
@@ -397,8 +472,20 @@ void CStats::Show()
 
 	{
 		EngineTOTAL.FrameStart		();	
-		Sheduler.FrameStart			();	
-		UpdateClient.FrameStart		();	
+
+		// Giperion Engine specific timers
+		Engine_RenderFrame.FrameStart();
+		Engine_ApplicationFrame.FrameStart();
+		Engine_InputFrame.FrameStart();
+		Engine_MenuFrame.FrameStart();
+		Engine_PersistanceFrame.FrameStart();
+		Engine_PersistanceFrame_Begin.FrameStart();
+		Engine_PersistanceFrame_EnvAndSpectre.FrameStart();
+		Engine_PersistanceFrame_ParticlePlay.FrameStart();
+		Engine_PersistanceFrame_ParticleDestroy.FrameStart();
+		Engine_PersistanceFrame_Scheduler.FrameStart();
+		Engine_PersistanceFrame_WeatherAndDOF.FrameStart();
+
 		Physics.FrameStart			();	
 		ph_collision.FrameStart		();
 		ph_core.FrameStart			();
@@ -412,13 +499,13 @@ void CStats::Show()
 		AI_Vis_RayTests.FrameStart	();
 		
 		RenderTOTAL.FrameStart		();
-		RenderCALC.FrameStart		();
+		Render_CRenderRender_render_main.FrameStart		();
 		RenderCALC_HOM.FrameStart	();
 		RenderDUMP.FrameStart		();	
 		RenderDUMP_RT.FrameStart	();
 		RenderDUMP_SKIN.FrameStart	();	
 		RenderDUMP_Wait.FrameStart	();	
-		RenderDUMP_Wait_S.FrameStart();	
+		Render_CRenderRender_WaitForFrame.FrameStart();	
 		RenderDUMP_HUD.FrameStart	();	
 		RenderDUMP_Glows.FrameStart	();	
 		RenderDUMP_Lights.FrameStart();	
@@ -429,6 +516,24 @@ void CStats::Show()
 		RenderDUMP_Pcalc.FrameStart	();	
 		RenderDUMP_Scalc.FrameStart	();	
 		RenderDUMP_Srender.FrameStart();	
+
+		// Giperion Render specific
+		Render_CRenderRender.FrameStart();
+		Render_CRenderRender_MainMenu.FrameStart();
+		Render_CRenderRender_ScenePrepare.FrameStart();
+		Render_CRenderRender_DeferPart0.FrameStart();
+		Render_CRenderRender_LightVisibility.FrameStart();
+		Render_CRenderRender_ItemUIWallmarks.FrameStart();
+		Render_CRenderRender_FlushOcclusion.FrameStart();
+		Render_CRenderRender_MSAA_Rain.FrameStart();
+		Render_CRenderRender_Sun.FrameStart();
+		Render_CRenderRender_LightRender.FrameStart();
+		Render_CRenderRender_Combine.FrameStart();
+		Render_Combine_Begin.FrameStart();
+		Render_Combine_Sky.FrameStart();
+		Render_Combine_Cloud.FrameStart();
+		Render_Combine_Combine1.FrameStart();
+		Render_Combine_ForwardRendering.FrameStart();
 		
 		Sound.FrameStart			();
 		Input.FrameStart			();

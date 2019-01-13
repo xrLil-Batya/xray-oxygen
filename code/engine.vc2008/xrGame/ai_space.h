@@ -50,7 +50,7 @@ private:
 			void						patrol_path_storage_raw	(IReader &stream);
 			void						patrol_path_storage		(IReader &stream);
 			void						set_alife				(CALifeSimulator *alife_simulator);
-			void						game_graph				(CGameGraph *game_graph);
+			void create_game_graph (IReader& chunk);
 
 public:
 	CAI_Space				();
@@ -59,7 +59,7 @@ public:
 	virtual								~CAI_Space				();
 			void						init					();
 	IC		CGameGraph					&game_graph				() const;
-	IC		CGameGraph					*get_game_graph			() const;
+	IC		bool						is_game_graph_presented () const;
 	IC		CLevelGraph					&level_graph			() const;
 	IC		const CLevelGraph			*get_level_graph		() const;
 			const CGameLevelCrossTable	&cross_table			() const;

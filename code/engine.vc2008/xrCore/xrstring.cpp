@@ -44,8 +44,8 @@ struct str_container_impl
 
     void			 clean()
     {
-        for (auto & i : buffer)
-        {
+        for (str_value*& i : buffer)
+        { 
             str_value** current = &i;
 
             while (*current != nullptr)

@@ -174,7 +174,6 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "ai_dbg_vision", &psAI_Flags, aiVision);
 	CMD3(CCC_Mask, "ai_dbg_monster", &psAI_Flags, aiMonsterDebug);
 	CMD3(CCC_Mask, "ai_dbg_stalker", &psAI_Flags, aiStalker);
-	CMD3(CCC_Mask, "ai_stats", &psAI_Flags, aiStats);
 	CMD3(CCC_Mask, "ai_dbg_destroy", &psAI_Flags, aiDestroy);
 	CMD3(CCC_Mask, "ai_dbg_serialize", &psAI_Flags, aiSerialize);
 	CMD3(CCC_Mask, "ai_dbg_dialogs", &psAI_Flags, aiDialogs);
@@ -184,8 +183,6 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "ai_draw_game_graph_stalkers", &psAI_Flags, aiDrawGameGraphStalkers);
 	CMD3(CCC_Mask, "ai_draw_game_graph_objects", &psAI_Flags, aiDrawGameGraphObjects);
 	CMD3(CCC_Mask, "ai_draw_game_graph_real_pos", &psAI_Flags, aiDrawGameGraphRealPos);
-
-	CMD3(CCC_Mask, "ai_nil_object_access", &psAI_Flags, aiNilObjectAccess);
 
 	CMD3(CCC_Mask, "ai_draw_visibility_rays", &psAI_Flags, aiDrawVisibilityRays);
 	CMD3(CCC_Mask, "ai_animation_stats", &psAI_Flags, aiAnimationStats);

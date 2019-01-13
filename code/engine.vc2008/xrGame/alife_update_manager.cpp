@@ -20,7 +20,7 @@
 #include "graph_engine.h"
 #include "../xrEngine/x_ray.h"
 #include "restriction_space.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "GamePersistent.h"
 
 #ifdef DEBUG

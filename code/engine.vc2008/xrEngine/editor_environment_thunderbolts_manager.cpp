@@ -382,7 +382,7 @@ manager::thunderbolts_ids_type const& manager::thunderbolts_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j							= xr_strdup((*i)->id());
 
-	concurrency::parallel_sort						(m_thunderbolts_ids.begin(), m_thunderbolts_ids.end(), logical_string_predicate());
+	std::sort						(m_thunderbolts_ids.begin(), m_thunderbolts_ids.end(), logical_string_predicate());
 
 	return							(m_thunderbolts_ids);
 }
@@ -403,7 +403,7 @@ manager::thunderbolts_ids_type const& manager::collections_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j							= xr_strdup((*i)->id());
 
-	concurrency::parallel_sort						(m_collections_ids.begin(), m_collections_ids.end(), logical_string_predicate());
+	std::sort						(m_collections_ids.begin(), m_collections_ids.end(), logical_string_predicate());
 
 	return							(m_collections_ids);
 }

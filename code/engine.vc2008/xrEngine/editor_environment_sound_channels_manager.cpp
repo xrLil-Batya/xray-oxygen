@@ -129,7 +129,7 @@ manager::channels_ids_type const& manager::channels_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j					= xr_strdup((*i)->id());
 
-	concurrency::parallel_sort				(m_channels_ids.begin(), m_channels_ids.end(), logical_string_predicate());
+	std::sort				(m_channels_ids.begin(), m_channels_ids.end(), logical_string_predicate());
 
 	return					(m_channels_ids);
 }

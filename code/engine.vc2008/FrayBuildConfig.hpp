@@ -8,3 +8,5 @@
 
 /* Scripts */
 //#define LUACP_API				// attaching luaicp.dll
+
+//#define TBB_ALLOC

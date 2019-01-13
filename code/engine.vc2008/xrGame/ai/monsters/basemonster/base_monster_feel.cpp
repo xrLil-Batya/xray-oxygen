@@ -22,7 +22,7 @@
 #include "../../../UIGame.h"
 #include "../../../../xrUICore/UIStatic.h"
 #include "../../../ai_object_location.h"
-#include "../../../profiler.h"
+#include "../xrEngine/profiler.h"
 #include "../../../ActorEffector.h"
 #include "../../../../xrEngine/CameraBase.h"
 
@@ -105,7 +105,7 @@ void CBaseMonster::HitEntity(const CEntity *pEntity, float fDamage, float impuls
 		u_EventSend	(l_P);
 		
 		if (pEntityNC == Actor() && draw_hit_marks) {
-			START_PROFILE("BaseMonster/Animation/HitEntity");
+			START_PROFILE("Base Monster/Animation/HitEntity");
 
 			SDrawStaticStruct* s = GameUI()->AddCustomStatic("monster_claws", false);
 			

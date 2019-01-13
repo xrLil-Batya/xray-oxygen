@@ -66,7 +66,7 @@ IC bool ev_sort(CEvent*E1, CEvent*E2)
 
 void CEventAPI::Dump()
 {
-	concurrency::parallel_sort(Events.begin(), Events.end(), ev_sort);
+	std::sort(Events.begin(), Events.end(), ev_sort);
 	for (EVENT &it: Events)
 		Msg("* [%d] %s", it->RefCount(), it->GetFull());
 }

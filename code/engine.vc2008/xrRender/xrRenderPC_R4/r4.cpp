@@ -301,9 +301,9 @@ void CRender::reset_end()
 	m_bFirstFrameAfterReset		= true;
 }
 
-#pragma todo("VERTVER to every1: that's function so strange for me")
 void CRender::OnFrame()
 {
+	ScopeStatTimer frameTimer(Device.Statistic->Engine_RenderFrame);
 	Models->DeleteQueue();
 	Device.seqParallel.insert(Device.seqParallel.begin(),
 		xrDelegate(BindDelegate(Details, &CDetailManager::MT_CALC)));

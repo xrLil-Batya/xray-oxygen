@@ -142,7 +142,7 @@ public:
 		Fplane			plane;
 	};
 
-	concurrency::concurrent_vector<sun::ray> view_frustum_rays;
+	xr_vector<sun::ray> view_frustum_rays;
 	sun::ray					view_ray;
 	sun::ray					light_ray;
 	Fvector3					light_cuboid_points[LIGHT_CUBOIDVERTICES_COUNT];
@@ -174,7 +174,7 @@ public:
 		}
 	}
 
-	void		compute_caster_model_fixed(concurrency::concurrent_vector<Fplane>& dest, Fvector3& translation, float map_size, bool clip_by_view_near)
+	void		compute_caster_model_fixed(xr_vector<Fplane>& dest, Fvector3& translation, float map_size, bool clip_by_view_near)
 	{
 		translation.set(0.f, 0.f, 0.f);
 
@@ -453,7 +453,7 @@ public:
 	}
 
 
-	void				compute_caster_model(concurrency::concurrent_vector<Fplane>& dest, Fvector3 direction)
+	void				compute_caster_model(xr_vector<Fplane>& dest, Fvector3 direction)
 	{
 		CRenderTarget&	T = *RImplementation.Target;
 

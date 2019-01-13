@@ -14,7 +14,7 @@
 #include "level_graph.h"
 #include "restricted_object.h"
 #include "ai_space.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "ai/stalker/ai_stalker.h"
 #include "stalker_movement_manager_smart_cover.h"
 #include "items/Weapon.h"

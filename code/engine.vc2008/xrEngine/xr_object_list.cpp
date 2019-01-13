@@ -147,7 +147,7 @@ void CObjectList::Update		(bool bForce)
 			}
 
 #ifdef DEBUG
-			concurrency::parallel_sort					(crows.begin(), crows.end());
+			std::sort					(crows.begin(), crows.end());
 			VERIFY						(
 				std::unique(
 					crows.begin(),
@@ -165,10 +165,6 @@ void CObjectList::Update		(bool bForce)
 				clear_crow_vec			(crows);
 			}
 
-			Device.Statistic->UpdateClient.Begin	();
-			Device.Statistic->UpdateClient_active	= (u32)objects_active.size();
-			Device.Statistic->UpdateClient_total	= (u32)objects_active.size() + (u32)objects_sleeping.size();
-
 			size_t const objects_count	= workload->size();
 			CObject** objects			= (CObject**)_alloca(objects_count*sizeof(CObject*));
 			std::copy					( workload->begin(), workload->end(), objects );
@@ -185,7 +181,6 @@ void CObjectList::Update		(bool bForce)
 			for (CObject** i = b; i != e; ++i)
 				SingleUpdate			(*i);
 
-			Device.Statistic->UpdateClient.End		();
 		}
 	}
 

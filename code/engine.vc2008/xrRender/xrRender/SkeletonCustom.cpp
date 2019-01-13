@@ -212,13 +212,13 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 
 		// It's parent
 		data->r_stringZ				(buf,sizeof(buf));	strlwr(buf);
-		L_parents.push_back			(buf);
+		L_parents.emplace_back			(buf);
 
 		data->r						(&pBone->obb,sizeof(Fobb));
         visimask.set				(u64(1)<<ID,TRUE);
 	}
-	concurrency::parallel_sort	(bone_map_N->begin(),bone_map_N->end(),pred_sort_N);
-	concurrency::parallel_sort	(bone_map_P->begin(),bone_map_P->end(),pred_sort_P);
+	std::sort	(bone_map_N->begin(),bone_map_N->end(),pred_sort_N);
+	std::sort	(bone_map_P->begin(),bone_map_P->end(),pred_sort_P);
 
 	// Attach bones to their parents
 	iRoot = BI_NONE;
@@ -278,7 +278,7 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 			CBoneData*	B 	= (*bones)[bone_idx];
 			for (u32 child_idx=0; child_idx<children.size(); child_idx++){
 				CBoneData::FacesVec faces		= B->child_faces[child_idx];
-				concurrency::parallel_sort						(faces.begin(),faces.end());
+				std::sort						(faces.begin(),faces.end());
                 auto new_end	= std::unique(faces.begin(),faces.end());
 				faces.erase						(new_end,faces.end());
 				B->child_faces[child_idx].clear();

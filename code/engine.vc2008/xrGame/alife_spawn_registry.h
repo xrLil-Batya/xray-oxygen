@@ -41,7 +41,6 @@ private:
 private:
 	IReader									*m_file;
 	IReader									*m_chunk;
-	CGameGraph								*m_game_graph;
 
 protected:
 			void							save_updates				(IWriter &stream);

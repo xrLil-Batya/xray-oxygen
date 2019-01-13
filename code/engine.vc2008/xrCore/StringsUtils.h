@@ -9,3 +9,6 @@ const char* ConvertToUTF8(const shared_str& pStr, string64& OutUtf8String)
 	WideCharToMultiByte(CP_UTF8, 0, utfRusStr, sizeof(utfRusStr), OutUtf8String, sizeof(OutUtf8String), 0, 0);
 	return &OutUtf8String[0];
 };
+
+
+

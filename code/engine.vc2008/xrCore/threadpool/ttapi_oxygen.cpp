@@ -77,7 +77,7 @@ void TTAPI ttapi_RunAllWorkers()
 
 void NTAPI ttapi_worker_threadentry(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_WORK Work)
 {
-    thread_name("XRay_TTAPI_Child");
+    //thread_name("XRay_TTAPI_Child");
 	ttapi_ThreadParams* pParams = (ttapi_ThreadParams*)Context;
 	pParams->Func(pParams->FuncParams);
 	delete pParams;

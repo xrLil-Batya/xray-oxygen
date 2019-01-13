@@ -30,15 +30,24 @@ public:
 	float		fMem_calls			;
 	u32			dwMem_calls			;
 	u32			dwSND_Played,dwSND_Allocated;	// Play/Alloc
-	float		fShedulerLoad		;
 
 	CStatTimer	EngineTOTAL;			// 
-	CStatTimer	Sheduler;				// 
-	CStatTimer	UpdateClient;			// 
+
+	// Giperion Engine Stat timers
+	CStatTimer  Engine_RenderFrame;		 // void CRender::OnFrame()
+	CStatTimer  Engine_ApplicationFrame; // void CApplication::OnFrame()
+	CStatTimer  Engine_InputFrame;		 // void CInput::OnFrame()
+	CStatTimer  Engine_MenuFrame;		 // void CMainMenu::OnFrame()
+	CStatTimer  Engine_PersistanceFrame; // void CGamePersistent::OnFrame()
+	CStatTimer  Engine_PersistanceFrame_Begin; // void CGamePersistent::OnFrame() - Beginning
+	CStatTimer  Engine_PersistanceFrame_EnvAndSpectre; // void CGamePersistent::OnFrame() - Environment & Spectre
+	CStatTimer  Engine_PersistanceFrame_ParticlePlay; // void CGamePersistent::OnFrame() - Playing particles
+	CStatTimer  Engine_PersistanceFrame_ParticleDestroy; // void CGamePersistent::OnFrame() - Destroying inactive particles
+	CStatTimer  Engine_PersistanceFrame_Scheduler; // void CGamePersistent::OnFrame() - Engine.Sheduler.Update();
+	CStatTimer  Engine_PersistanceFrame_WeatherAndDOF; // void CGamePersistent::OnFrame() - WeathersUpdate() and UpdateDof()
+
 	u32			UpdateClient_updated;	//
 	u32			UpdateClient_crows;		//
-	u32			UpdateClient_active;	//
-	u32			UpdateClient_total;		//
 	u32			Particles_starting;	// starting
 	u32			Particles_active;	// active
 	u32			Particles_destroy;	// destroying
@@ -52,12 +61,12 @@ public:
 
 	CStatTimer	RenderTOTAL;		// 
 	CStatTimer	RenderTOTAL_Real;	
-	CStatTimer	RenderCALC;			// portal traversal, frustum culling, entities "renderable_Render"
+	CStatTimer	Render_CRenderRender_render_main;			// portal traversal, frustum culling, entities "renderable_Render"
 	CStatTimer	RenderCALC_HOM;		// HOM rendering
 	CStatTimer	Animation;			// skeleton calculation
 	CStatTimer	RenderDUMP;			// actual primitive rendering
 	CStatTimer	RenderDUMP_Wait;	// ...waiting something back (queries results, etc.)
-	CStatTimer	RenderDUMP_Wait_S;	// ...frame-limit sync
+	CStatTimer	Render_CRenderRender_WaitForFrame;	// ...frame-limit sync
 	CStatTimer	RenderDUMP_RT;		// ...render-targets
 	CStatTimer	RenderDUMP_SKIN;	// ...skinning
 	CStatTimer	RenderDUMP_HUD;		// ...hud rendering
@@ -74,7 +83,26 @@ public:
 	CStatTimer	RenderDUMP_Pcalc;	// ...projectors	building
 	CStatTimer	RenderDUMP_Scalc;	// ...shadows		building
 	CStatTimer	RenderDUMP_Srender;	// ...shadows		render
-	
+
+	// Giperion Render specific timers
+	CStatTimer  Render_CRenderRender;				// void CRender::Render()
+	CStatTimer  Render_CRenderRender_MainMenu;		// void CRender::render_menu()
+	CStatTimer  Render_CRenderRender_ScenePrepare;	// scene preparing: create view matrix, clear render targets and depth stencil
+	CStatTimer  Render_CRenderRender_DeferPart0;	// main pass - albedo, normal
+	CStatTimer  Render_CRenderRender_LightVisibility; // lights visibility and GI (?)
+	CStatTimer  Render_CRenderRender_ItemUIWallmarks;// Actor item (weapon, detector, bolt etc.) and wallmarks
+	CStatTimer  Render_CRenderRender_FlushOcclusion;// strange thing. The special lights, that need a different occlusion testing (we already has one occlusion testing in LightVisibility)
+	CStatTimer  Render_CRenderRender_MSAA_Rain;		// MSAA and rain effect
+	CStatTimer  Render_CRenderRender_Sun;			// The Fucking Sun
+	CStatTimer  Render_CRenderRender_LightRender;	// Lights and self-illuminate objects
+	CStatTimer  Render_CRenderRender_Combine;		// Post process, forward rendering (wtf is this, btw?), and tons of shit
+	CStatTimer  Render_Combine_Begin;				// SSAO
+	CStatTimer  Render_Combine_Sky;					// SSAO
+	CStatTimer  Render_Combine_Cloud;				// SSAO
+	CStatTimer  Render_Combine_Combine1;			// SSAO
+	CStatTimer  Render_Combine_ForwardRendering;	// SSAO
+	CStatTimer  Render_End;		// presenter
+
 	CStatTimer	Sound;				// total time taken by sound subsystem (accurate only in single-threaded mode)
 	CStatTimer	Input;				// total time taken by input subsystem (accurate only in single-threaded mode)
 	CStatTimer	clRAY;				// total: ray-testing

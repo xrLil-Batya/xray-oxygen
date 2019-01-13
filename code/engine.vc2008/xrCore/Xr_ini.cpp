@@ -100,7 +100,11 @@ CInifile::~CInifile()
 	}
 	if(fName && fName[0])
 		xr_free(fName);
-	for (auto &I : DATA) xr_delete(I.second);
+
+	for (std::pair<const shared_str, Sect*>& SectionsLine : DATA)
+	{
+		xr_delete(SectionsLine.second);
+	}
 }
 
 static void insert_item(CInifile::Sect *tgt, const CInifile::Item& I) 

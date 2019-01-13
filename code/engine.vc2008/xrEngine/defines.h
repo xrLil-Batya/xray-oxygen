@@ -25,6 +25,9 @@ enum: unsigned long
 	rsOcclusionDraw					= (1<<12),
 	rsOcclusionStats				= (1<<13),
 
+	rsGameProfiler					= (1<<14),
+	rsScheduleProfiler				= (1<<15),
+
 	rsCameraPos						= (1<<18),
 	rsRefresh120hz					= (1<<19),
 	rsR2							= (1<<20),

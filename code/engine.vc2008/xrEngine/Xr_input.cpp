@@ -544,6 +544,7 @@ void CInput::OnAppDeactivate(void)
 
 void CInput::OnFrame(void)
 {
+	ScopeStatTimer frameTimer(Device.Statistic->Engine_InputFrame);
 	dwCurTime = RDEVICE.TimerAsync_MMT();
 
 	if (Device.dwPrecacheFrame == 0 && !pGameAnsel->isActive)

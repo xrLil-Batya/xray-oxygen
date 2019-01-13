@@ -184,7 +184,7 @@ BOOL	R_constant_table::parse	(void* _desc, u32 destination)
 			L.cls				=	r_type;
 		}
 	}
-	concurrency::parallel_sort	(table.begin(),table.end(),p_sort);
+	std::sort	(table.begin(),table.end(),p_sort);
 	return		TRUE;
 }
 #endif
@@ -229,7 +229,7 @@ void R_constant_table::merge(R_constant_table* T)
 	}
 
 	// Sort
-	concurrency::parallel_sort		(table.begin(),table.end(),p_sort);
+	std::sort		(table.begin(),table.end(),p_sort);
 
 #ifdef USE_DX11
 	//	TODO:	DX10:	Implement merge with validity check

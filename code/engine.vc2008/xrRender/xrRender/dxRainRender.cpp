@@ -98,7 +98,6 @@ void dxRainRender::Render(CEffectRain &owner)
 
 		item.P.mad(item.D, item.fSpeed * Device.fTimeDelta);
 
-		Device.Statistic->TEST1.Begin();
 		Fvector	wdir; wdir.set(item.P.x - vEye.x, 0.0f, item.P.z - vEye.z);
 		float wlen = wdir.square_magnitude();
 		if (wlen > b_radius_wrap_sqr)
@@ -143,7 +142,6 @@ void dxRainRender::Render(CEffectRain &owner)
 				}
 			}
 		}
-		Device.Statistic->TEST1.End();
 
 		// Build line
 		Fvector&	pos_head	= item.P;

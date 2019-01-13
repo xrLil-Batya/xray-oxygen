@@ -14,11 +14,6 @@ IC CGameGraph &CAI_Space::game_graph() const
 	return *m_game_graph.get();
 }
 
-IC CGameGraph *CAI_Space::get_game_graph() const
-{
-	return m_game_graph.get();
-}
-
 IC CLevelGraph &CAI_Space::level_graph() const
 {
 	VERIFY(m_level_graph);

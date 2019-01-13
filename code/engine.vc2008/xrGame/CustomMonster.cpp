@@ -25,7 +25,7 @@
 #include "material_manager.h"
 #include "sound_user_data_visitor.h"
 #include "PHMovementControl.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "characterphysicssupport.h"
 #include "ai/monsters/snork/snork.h"
 #include "ai/monsters/burer/burer.h"
@@ -36,13 +36,13 @@
 #include "moving_object.h"
 #include "level_path_manager.h"
 #include "ai_object_location.h"
+#include "ai_debug.h"
 
 // Lain: added
 #include "../xrEngine/IGame_Level.h"
 #include "../xrPhysics/IPHWorld.h"
 
 #ifdef DEBUG
-#	include "ai_debug.h"
 #	include "debug_text_tree.h"
 #	include "debug_renderer.h"
 #   include "../xrPhysics/animation_movement_controller.h"
@@ -51,9 +51,7 @@
 void SetActorVisibility(u16 who, float value);
 extern int g_AI_inactive_time;
 
-#ifndef MASTER_GOLD
-	Flags32		psAI_Flags	= {aiObstaclesAvoiding | aiUseSmartCovers};
-#endif // MASTER_GOLD
+Flags32		psAI_Flags	= {aiObstaclesAvoiding | aiUseSmartCovers};
 
 void CCustomMonster::SAnimState::Create(IKinematicsAnimated* K, LPCSTR base)
 {
@@ -238,7 +236,6 @@ void CCustomMonster::shedule_Update	( u32 DT )
 		// here is monster AI call
 		m_fTimeUpdateDelta				= dt;
 		Device.Statistic->AI_Think.Begin	();
-		Device.Statistic->TEST1.Begin();
 		if (GetScriptControl())
 			ProcessScripts();
 		else {
@@ -246,7 +243,6 @@ void CCustomMonster::shedule_Update	( u32 DT )
 				Think					();
 		}
 		m_dwLastUpdateTime				= Device.dwTimeGlobal;
-		Device.Statistic->TEST1.End();
 		Device.Statistic->AI_Think.End	();
 
 		// Look and action streams

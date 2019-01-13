@@ -14,7 +14,7 @@
 #include "custommonster.h"
 #include "../xrphysics/IColisiondamageInfo.h"
 
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 
 // Lain: added 
 #include "steering_behaviour.h"

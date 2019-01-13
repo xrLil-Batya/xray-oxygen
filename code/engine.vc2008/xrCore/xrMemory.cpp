@@ -2,10 +2,15 @@
 #pragma hdrstop
 
 #include	"xrsharedmem.h"
-#include	<malloc.h>
 
 xrMemory Memory;
 bool mem_initialized = false;
+
+xrMemory::xrMemory()
+{}
+
+xrMemory::~xrMemory()
+{}
 
 void xrMemory::_initialize()
 {
@@ -17,7 +22,9 @@ void xrMemory::_initialize()
 
 void xrMemory::_destroy()
 {
+	g_pSharedMemoryContainer_isDestroyed = true;
 	xr_delete(g_pSharedMemoryContainer);
+	g_pSharedMemoryContainer = nullptr;
 
 	mem_initialized = false;
 }

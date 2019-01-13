@@ -90,6 +90,7 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 #else
 		Msg("xrOxygen Version: branch[%s], commit[%s]", _BRANCH, _HASH); 
 #endif
+
 		EFS._initialize();
 	}
 	xrLogger::AddLogCallback(cb);
