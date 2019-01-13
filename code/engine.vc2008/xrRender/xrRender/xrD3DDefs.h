@@ -1,10 +1,8 @@
 #pragma once
 
-#ifdef USE_DX11
-
-#	include "..\xrRenderDX10\DXCommonTypes.h"
-
-#else
+#if defined(USE_DX11)
+#include "..\xrRenderDX10\DXCommonTypes.h"
+#elif !defined(USE_VK)
 
 typedef	IDirect3DVertexShader9	ID3DVertexShader;
 typedef	IDirect3DPixelShader9	ID3DPixelShader;

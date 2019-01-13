@@ -21,7 +21,7 @@ BOOL CLevel::Load_GameSpecific_Before()
 	g_pGamePersistent->LoadTitle();
 	string_path fn_game;
 
-	if (!ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game"))
+	if (!ai().get_alife() && ai().is_game_graph_presented() && FS.exist(fn_game, "$level$", "level.game"))
 	{
 		IReader *stream = FS.r_open(fn_game);
 		ai().patrol_path_storage_raw(*stream);

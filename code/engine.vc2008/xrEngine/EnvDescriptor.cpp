@@ -73,7 +73,7 @@ void CEnvDescriptor::Load(CEnvironment& environment, CInifile& config)
 
 	string_path st, st_env;
 	xr_strcpy				(st, config.r_string(identifier, "sky_texture"));
-	strconcat				(sizeof(st_env), st_env, st, "#small");
+	xr_strconcat			(st_env, st, "#small");
 	sky_texture_name		= st;
 	sky_texture_env_name	= st_env;
 	clouds_texture_name		= config.r_string(identifier,"clouds_texture");

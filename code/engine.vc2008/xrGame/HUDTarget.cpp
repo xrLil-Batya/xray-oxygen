@@ -20,6 +20,9 @@
 #include "inventory_item.h"
 #include "inventory.h"
 #include "Actor_Flags.h"
+#include "Actor.h"
+#include "items/Weapon.h"
+#include "items/weaponknife.h"
 #include <ai/monsters/poltergeist/poltergeist.h>
 
 
@@ -28,7 +31,8 @@ u32 C_ON_NEUTRAL	D3DCOLOR_RGBA(0xff,0xff,0x80,0x80);
 u32 C_ON_FRIEND		D3DCOLOR_RGBA(0,0xff,0,0x80);
 
 
-#define C_DEFAULT	D3DCOLOR_RGBA(0xff,0xff,0xff,0x80)
+#define C_DEFAULT	D3DCOLOR_RGBA(250,250,250,255)
+#define C_NO_ALLOW	D3DCOLOR_RGBA(160,160,160,200)
 #define C_SIZE		0.025f
 #define NEAR_LIM	0.5f
 
@@ -164,6 +168,11 @@ void CHUDTarget::Render()
 	{ 
 		bool const is_poltergeist	= PP.RQ.O && !!smart_cast<CPoltergeist*> (PP.RQ.O);
 
+		CWeapon* pWeapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+		CWeaponKnife* pKnife = smart_cast<CWeaponKnife*>(pWeapon);
+		if (pWeapon && PP.RQ.range > pWeapon->fireDistance && !pKnife)
+			C = C_NO_ALLOW;
+
 		if( (PP.RQ.O && PP.RQ.O->getVisible()) || is_poltergeist )
 		{
 			CEntityAlive*	E		= smart_cast<CEntityAlive*>	(PP.RQ.O);
@@ -204,16 +213,16 @@ void CHUDTarget::Render()
 
 					fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
 				}
-				else 
-					if (l_pI && our_inv_owner && PP.RQ.range < 2.0f*2.0f)
-					{
-						if (fuzzyShowInfo>0.5f && l_pI->NameItem())
-						{
-							F->SetColor	(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));
-							F->OutNext	("%s",l_pI->NameItem());
-						}
-						fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
-					}
+				//else 
+				//	if (l_pI && our_inv_owner && PP.RQ.range < 2.0f*2.0f)
+				//	{
+				//		if (fuzzyShowInfo>0.5f && l_pI->NameItem())
+				//		{
+				//			F->SetColor	(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));
+				//			F->OutNext	("%s",l_pI->NameItem());
+				//		}
+				//		fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
+				//	}
 			}
 
 		}

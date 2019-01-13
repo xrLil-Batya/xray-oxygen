@@ -17,7 +17,8 @@ IC bool pred_sp_sort(ISpatial* _1, ISpatial* _2)
 //MatthewKush to all: I was completely wrong before
 //I shouldn't smoke so much cheeba
 //Current goal: deffered lighting > deffered shading > forward+ shading
-void CRender::render_main(Fmatrix&	m_ViewProjection, bool _fportals)
+// Giperion to MatthewKush: smoking is bad for you health and our engine >_< .
+void CRender::render_main(Fmatrix& mCombined)
 {
 	PIX_EVENT(render_main);
 	marker++;
@@ -37,7 +38,7 @@ void CRender::render_main(Fmatrix&	m_ViewProjection, bool _fportals)
 				ViewBase);
 
 			// (almost) Exact sorting order (front-to-back)
-			concurrency::parallel_sort(lstRenderables.begin(), lstRenderables.end(), pred_sp_sort);
+			std::sort(lstRenderables.begin(), lstRenderables.end(), pred_sp_sort);
 
 			// Determine visibility for dynamic part of scene
 			set_Object(nullptr);
@@ -78,17 +79,17 @@ void CRender::render_main(Fmatrix&	m_ViewProjection, bool _fportals)
 			pLastSector,
 			ViewBase,
 			Device.vCameraPosition,
-			m_ViewProjection,
+			mCombined,
 			CPortalTraverser::VQ_HOM + CPortalTraverser::VQ_SSA + CPortalTraverser::VQ_FADE
 			//. disabled scissoring (HW.Caps.bScissor?CPortalTraverser::VQ_SCISSOR:0) // Generate scissoring info
 			);
 
 		// Determine visibility for static geometry hierrarhy
-		for (auto& r_sector : PortalTraverser.r_sectors)
+		for (IRender_Sector* r_sector : PortalTraverser.r_sectors)
 		{
 			CSector* pSector = (CSector*)r_sector;
 			dxRender_Visual* pSectorRoot = pSector->root();
-			for (auto& r_frustum : pSector->r_frustums)
+			for (CFrustum& r_frustum : pSector->r_frustums)
 			{
 				set_Frustum(&r_frustum);
 				add_Geometry(pSectorRoot);
@@ -231,6 +232,7 @@ void CRender::render_menu()
 
 void CRender::Render()
 {
+	ScopeStatTimer scopeTimer(Device.Statistic->Render_CRenderRender);
 	PIX_EVENT(CRender_Render);
 
 	VERIFY(mapDistort.empty());
@@ -240,6 +242,7 @@ void CRender::Render()
 	bool bMenuPP = g_pGamePersistent ? g_pGamePersistent->OnRenderPPUI_query() : false;
 	if (bMenuPP)
 	{
+		ScopeStatTimer mainMenuScopeTimer(Device.Statistic->Render_CRenderRender_MainMenu);
 		render_menu();
 		return;
 	};
@@ -256,6 +259,7 @@ void CRender::Render()
 		return;
 	}
 
+	Device.Statistic->Render_CRenderRender_ScenePrepare.Begin();
 	// Configure
 	RImplementation.o.distortion = FALSE;		// disable distorion
 	Fcolor sun_color = ((light*)Lights.sun._get())->color;
@@ -268,9 +272,10 @@ void CRender::Render()
 	Target->phase_scene_prepare();
     //RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //NOT EVEN a depth prepass :P
 
+	Device.Statistic->Render_CRenderRender_ScenePrepare.End();
 	//*******
 	// Sync point
-	Device.Statistic->RenderDUMP_Wait_S.Begin();
+	Device.Statistic->Render_CRenderRender_WaitForFrame.Begin();
 		
 	CTimer T; T.Start();
 	BOOL result = FALSE;
@@ -287,22 +292,23 @@ void CRender::Render()
 		}
 	}
 	
-	Device.Statistic->RenderDUMP_Wait_S.End();
 	q_sync_count = (q_sync_count+1)%HW.Caps.iGPUNum;
 	CHK_DX(EndQuery(q_sync_point[q_sync_count]));
+	Device.Statistic->Render_CRenderRender_WaitForFrame.End();
 
 	//******* Main calc - DEFERRED RENDERER
-	Device.Statistic->RenderCALC.Begin();
+	Device.Statistic->Render_CRenderRender_render_main.Begin();
 	r_pmask(true, false, true);	// Enable priority "0",+ capture wmarks
 	set_Recorder(bSUN ? &main_coarse_structure : nullptr);
 	phase = PHASE_NORMAL;
-	render_main(CastToGSCMatrix(Device.mFullTransform), true);
+	render_main(CastToGSCMatrix(Device.mFullTransform));
 	set_Recorder(nullptr);
 	r_pmask(true, false); // Disable priority "1"
-	Device.Statistic->RenderCALC.End();
+	Device.Statistic->Render_CRenderRender_render_main.End();
 
 	//******* Main render :: PART-0	-- first
 	{
+		ScopeStatTimer deferPart0Timer(Device.Statistic->Render_CRenderRender_DeferPart0);
 		PIX_EVENT(DEFER_PART0);
 
 		Target->phase_scene_begin();
@@ -315,6 +321,7 @@ void CRender::Render()
 	} 
 
 	//******* Occlusion testing of volume-limited light-sources
+	Device.Statistic->Render_CRenderRender_LightVisibility.Begin();
 	Target->phase_occq();
 	LP_normal.clear();
 	LP_pending.clear();
@@ -324,6 +331,7 @@ void CRender::Render()
 		RCache.set_ZB(RImplementation.Target->rt_MSAADepth->pZRT);
 #endif
 
+	
 	{
 		PIX_EVENT(DEFER_TEST_LIGHT_VIS);
 
@@ -373,24 +381,29 @@ void CRender::Render()
 	}
 	LP_normal.sort();
 	LP_pending.sort();
+	Device.Statistic->Render_CRenderRender_LightVisibility.End();
 
-
-	if (g_hud && g_hud->RenderActiveItemUIQuery())
+	// Active item and wallmarks
 	{
-		Target->phase_wallmarks();
-		r_dsgraph_render_hud_ui();
-	}
+		ScopeStatTimer itemUIWallmarksTimer(Device.Statistic->Render_CRenderRender_ItemUIWallmarks);
+		if (g_hud && g_hud->RenderActiveItemUIQuery())
+		{
+			Target->phase_wallmarks();
+			r_dsgraph_render_hud_ui();
+		}
 
-	// Wallmarks
-	if (Wallmarks)	
-	{
-		PIX_EVENT(DEFER_WALLMARKS);
-		Target->phase_wallmarks();
-		Wallmarks->Render(); // Wallmarks has priority as normal geometry
+		// Wallmarks
+		if (Wallmarks)
+		{
+			PIX_EVENT(DEFER_WALLMARKS);
+			Target->phase_wallmarks();
+			Wallmarks->Render(); // Wallmarks has priority as normal geometry
+		}
 	}
 
 	// Update incremental shadowmap-visibility solver
 	{
+		ScopeStatTimer flushOcclusionTimer(Device.Statistic->Render_CRenderRender_FlushOcclusion);
 		PIX_EVENT(DEFER_FLUSH_OCCLUSION);
 		for (u32 it = 0; it < Lights_LastFrame.size(); it++)
 		{
@@ -410,6 +423,7 @@ void CRender::Render()
 	}
 
 #ifdef USE_DX11
+	Device.Statistic->Render_CRenderRender_MSAA_Rain.Begin();
     // full screen pass to mark msaa-edge pixels in highest stencil bit
     if (RImplementation.o.dx10_msaa)
     {
@@ -422,11 +436,13 @@ void CRender::Render()
         PIX_EVENT(DEFER_RAIN);
         render_rain();
     }
+	Device.Statistic->Render_CRenderRender_MSAA_Rain.End();
 #endif
 
 	// Directional light - sun
 	if (bSUN)	
 	{
+		ScopeStatTimer sunTimer(Device.Statistic->Render_CRenderRender_Sun);
 		PIX_EVENT(DEFER_SUN);
 		RImplementation.stats.l_visible++;
 		if (!ps_r_flags.is(R_FLAG_SUN_OLD))
@@ -441,6 +457,7 @@ void CRender::Render()
 	}
 
 	{
+		ScopeStatTimer lightTimer(Device.Statistic->Render_CRenderRender_LightRender);
 		PIX_EVENT(DEFER_SELF_ILLUM);
 		Target->phase_accumulator();
 
@@ -478,6 +495,7 @@ void CRender::Render()
     
 	// Postprocess
 	{
+		ScopeStatTimer lightTimer(Device.Statistic->Render_CRenderRender_Combine);
 		PIX_EVENT(DEFER_LIGHT_COMBINE);
 		Target->phase_combine();
 	}
@@ -495,7 +513,7 @@ void CRender::render_forward()
 		// Level
 		r_pmask(false, true); // enable priority "1"
 		phase = PHASE_NORMAL;
-		render_main(CastToGSCMatrix(Device.mFullTransform), false);
+		render_main(CastToGSCMatrix(Device.mFullTransform));
 
 		//	Igor: we don't want to render old lods on next frame.
 		mapLOD.clear				();

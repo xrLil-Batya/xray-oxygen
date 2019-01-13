@@ -26,20 +26,20 @@ IC	const shared_str &CPatrolPoint::name						() const
 	return				(m_name);
 }
 
-IC	const u32 &CPatrolPoint::level_vertex_id					(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph) const
+IC	const u32 &CPatrolPoint::level_vertex_id					(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross) const
 {
 	VERIFY				(m_initialized);
 #ifdef DEBUG
-	verify_vertex_id	(level_graph,cross,game_graph);
+	verify_vertex_id	(level_graph,cross);
 #endif
 	return				(m_level_vertex_id);
 }
 
-IC	const GameGraph::_GRAPH_ID &CPatrolPoint::game_vertex_id	(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph) const
+IC	const GameGraph::_GRAPH_ID &CPatrolPoint::game_vertex_id	(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross) const
 {
 	VERIFY				(m_initialized);
 #ifdef DEBUG
-	verify_vertex_id	(level_graph,cross,game_graph);
+	verify_vertex_id	(level_graph,cross);
 #endif
 	return				(m_game_vertex_id);
 }

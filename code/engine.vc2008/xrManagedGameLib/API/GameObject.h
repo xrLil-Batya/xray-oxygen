@@ -38,7 +38,7 @@ namespace XRay
 			}
 		}
 
-		property GameVertex gameVertex
+		property GameVertex GameVertexPtr
 		{
 			GameVertex get()
 			{

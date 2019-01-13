@@ -78,11 +78,11 @@ IC u32 GetPowerOf2Plus1	(u32 v)
 
 void				TW_Save	(ID3DTexture2D* T, LPCSTR name, LPCSTR prefix, LPCSTR postfix)
 {
-	string256		fn;		strconcat	(sizeof(fn),fn,name,"_",prefix,"-",postfix);
+	string256		fn;		xr_strconcat	(fn,name,"_",prefix,"-",postfix);
 	for (int it=0; it<int(xr_strlen(fn)); it++)	
 		if ('\\'==fn[it])	fn[it]	= '_';
-	string256		fn2;	strconcat	(sizeof(fn2),fn2,"debug\\",fn,".dds");
-	Log						("* debug texture save: ",fn2);
+	string256		fn2;	xr_strconcat	(fn2,"debug\\",fn,".dds");
+	Msg						("* debug texture save: %s",fn2);
 #ifdef USE_DX11
 	R_CHK					(D3DX11SaveTextureToFile(HW.pContext, T, D3DX11_IFF_DDS, fn2));
 #else

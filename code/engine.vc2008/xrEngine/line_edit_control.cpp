@@ -76,7 +76,7 @@ line_edit_control::~line_edit_control()
 
 	size_t const array_size	= sizeof(m_actions)/sizeof(m_actions[0]);
 	buffer_vector<Base*>	actions(m_actions, array_size, &m_actions[0], &m_actions[0] + array_size);
-	concurrency::parallel_sort				(actions.begin(), actions.end());
+	std::sort				(actions.begin(), actions.end());
 	actions.erase			(
 		std::unique(
 			actions.begin(),

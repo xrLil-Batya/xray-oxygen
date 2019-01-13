@@ -96,11 +96,15 @@ CInifile::~CInifile()
 {
 	if (!bReadOnly && bSaveAtEnd) {
 		if (!save_as())
-			Log("!Can't save inifile:", fName);
+			Msg("!Can't save inifile:%s", fName);
 	}
 	if(fName && fName[0])
 		xr_free(fName);
-	for (auto &I : DATA) xr_delete(I.second);
+
+	for (std::pair<const shared_str, Sect*>& SectionsLine : DATA)
+	{
+		xr_delete(SectionsLine.second);
+	}
 }
 
 static void insert_item(CInifile::Sect *tgt, const CInifile::Item& I) 
@@ -148,7 +152,7 @@ void CInifile::Load(IReader* F, const char* path)
 			R_ASSERT(path && path[0]);
 			if (_GetItem(str, 1, inc_name, '"')) {
 				string_path fn, inc_path, folder;
-				strconcat(sizeof(fn), fn, path, inc_name);
+				xr_strconcat(fn, path, inc_name);
 				_splitpath(fn, inc_path, folder, nullptr, nullptr);
 				strcat(inc_path, folder);
 				IReader* I = FS.r_open(fn);

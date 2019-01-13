@@ -219,10 +219,10 @@ void CDetailManager::UpdateVisibleM()
 {
 	for (int i = 0; i != 3; i++)
 	{
-		Concurrency::parallel_for_each(m_visibles[i].begin(), m_visibles[i].end(), [](auto &vis)
+		for (xr_vector <SlotItemVec* >& list : m_visibles[i])
 		{
-			vis.clear();
-		});
+			list.clear();
+		}
 	}
 
 	Fvector EYE = RDEVICE.vCameraPosition_saved;

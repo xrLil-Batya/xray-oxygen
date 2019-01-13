@@ -9,6 +9,7 @@ uniform	Texture2D s_half_depth;
 #include "ps_ssao_hbao.hlsl"
 #endif                                 
 
+
 struct _input
 {
 	float4	tc0		: TEXCOORD0;	// tc.xy, tc.w = tonemap scale
@@ -24,10 +25,10 @@ struct _out
 
 //	TODO:	DX10: Replace Sample with Load
 #ifndef MSAA_OPTIMIZATION
-[earlydepthstencil]
+//[earlydepthstencil] 
 _out main (_input I)
 #else
-[earlydepthstencil]
+//[earlydepthstencil]
 _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 #endif
 {
@@ -38,7 +39,7 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 	float4	N		= float4(gbd.N, gbd.hemi);			// normal.hemi
 	float4	D		= float4(gbd.C, gbd.gloss);			// rgb.gloss
 #ifndef USE_MSAA
-	float4	L		= s_accumulator[int2(I.pos2d.xy)];	// diffuse.specular
+	float4	L		= s_accumulator.Sample(smp_nofilter, I.tc0);
 	// MatthewKush to all: If non-MSAA, this is better (but only if the sampler uses is smp_nofilter)
 #else
 	float4	L		= s_accumulator.Load(int3(I.pos2d.xy, 0), ISAMPLE);	// diffuse.specular
@@ -68,41 +69,32 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 	// hemisphere
 	float3 hdiffuse, hspecular;
 
-	//  Calculate SSAO
-#ifdef USE_MSAA
-#	ifdef GBUFFER_OPTIMIZATION
-	int2	texCoord = I.pos2d;
-#	else
-	int2	texCoord = int2(I.tc0 * screen_res.xy);
-#	endif
-#endif
-	
-/*#ifdef USE_SSAO_BLUR	
-#	ifndef USE_MSAA
-	float	occ = ssao_blur_ps(I.tc0);
-#	else
-	float   occ = ssao_blur_ps( texCoord, ISAMPLE );
-#	endif*/
-
 #ifdef USE_HBAO
 	float	occ = calc_hbao(P.z, N, I.tc0, I.pos2d);
 #else
 	float	occ = calc_ssao(CS_P(P, N, I.tc0, I.tcJ, I.pos2d, ISAMPLE));
 #endif
+
+/*#ifdef USE_SSAO_BLUR	
+#	ifndef USE_MSAA
+	occ += ssao_blur_ps(I.tc0 * screen_res.xy);
+#	else
+	occ += ssao_blur_ps( I.pos2d, ISAMPLE );
+#	endif*/
+
 	hmodel(hdiffuse, hspecular, mtl, N.w, D.w, P.xyz, N.xyz);
 	hdiffuse	*= occ;
 	hspecular	*= occ;
 	
 	float4	light	= float4(L.rgb + hdiffuse, L.w);
-	
+	//light *= occ;
 	float4	C		= D*light;						// rgb.gloss * light(diffuse.specular)
-	float3	spec	= C.www * L.rgb + hspecular;	// replicated specular
-
+	float3	spec	= C.www + hspecular;	//Colored differently (faster) now // replicated specular
 	float3	color	= C.rgb + spec;
 
 	// here should be distance fog
-	float3	pos			= P.xyz;
-	float	dist		= length(pos);
+	//float3	pos			= P.xyz;
+	float	dist		= length(P.z);
 	float	fog			= saturate(dist*fog_params.w + fog_params.x);
 			color		= lerp(color,fog_color,fog);
 	float	skyblend	= saturate(fog*fog);

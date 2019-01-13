@@ -30,7 +30,7 @@
 #include "../xrphysics/iActivationShape.h"
 #include "../xrphysics/iphworld.h"
 #include "game_base.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 
 #include "../Include/xrRender/Kinematics.h"
 #define EFFECTOR_RADIUS 30.f

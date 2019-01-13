@@ -4,9 +4,6 @@
     <ClCompile Include="entry_point.cpp">
       <Filter>PlayCore\Kernel</Filter>
     </ClCompile>
-    <ClCompile Include="IParser.cpp">
-      <Filter>PlayCore\Kernel</Filter>
-    </ClCompile>
     <ClCompile Include="RendererList.cpp">
       <Filter>PlayCore\Drivers</Filter>
     </ClCompile>
@@ -39,9 +36,6 @@
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="IParserSystem.h">
-      <Filter>PlayCore\Kernel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

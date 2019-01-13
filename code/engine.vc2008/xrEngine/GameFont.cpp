@@ -64,7 +64,7 @@ void CGameFont::Initialize(LPCSTR cShader, LPCSTR cTextureName)
 		strstr(cTextureName, "ui_font_hud_02") ||
 		strstr(cTextureName, "ui_font_console_02");
 	if (_lang && !is_di)
-		strconcat(sizeof(cTexture), cTexture, cTextureName, _lang);
+		xr_strconcat(cTexture, cTextureName, _lang);
 	else
 		xr_strcpy(cTexture, sizeof(cTexture), cTextureName);
 

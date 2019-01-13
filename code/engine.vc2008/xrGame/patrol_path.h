@@ -30,7 +30,7 @@ public:
 public:
 							CPatrolPath		(shared_str name = "");
 	virtual					~CPatrolPath	();
-			CPatrolPath		&load_raw		(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph, IReader &stream);
+			CPatrolPath &load_raw (const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, IReader &stream);
 			CPatrolPoint	add_point		(Fvector position);
 			CPatrolPoint	point			(u32 index);
 	IC		const CVertex	*point			(shared_str name) const;

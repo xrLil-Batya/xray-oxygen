@@ -63,10 +63,8 @@ class GAME_API CGamePersistent: public IGame_Persistent, public IEventReceiver
 	void 		start_game_intro		();
 	void 		update_game_intro		();
 
-#ifdef DEBUG
 	u32					m_frame_counter;
 	u32					m_last_stats_frame;
-#endif
 
 	void				WeathersUpdate			();
 	void				UpdateDof				();

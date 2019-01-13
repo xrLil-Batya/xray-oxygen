@@ -18,7 +18,7 @@ struct cascade
 	cascade () : reset_chain( false )	{}
 
 	Fmatrix			xform;
-	concurrency::concurrent_vector<ray>	rays;
+	xr_vector<ray>	rays;
 	float			size;
 	float			bias;
 	bool			reset_chain;

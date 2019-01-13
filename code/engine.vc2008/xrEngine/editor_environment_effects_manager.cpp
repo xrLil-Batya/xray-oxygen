@@ -113,7 +113,7 @@ manager::effects_ids_type const& manager::effects_ids	() const
 	for ( ; i != e; ++i, ++j)
 		*j					= xr_strdup((*i)->id());
 
-	concurrency::parallel_sort				(m_effects_ids.begin(), m_effects_ids.end(), logical_string_predicate());
+	std::sort				(m_effects_ids.begin(), m_effects_ids.end(), logical_string_predicate());
 
 	return					(m_effects_ids);
 }

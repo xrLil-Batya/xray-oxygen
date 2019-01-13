@@ -6,7 +6,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //private data
-static unsigned int cacheSize    = CACHESIZE_GEFORCE1_2;
+static unsigned int cacheSize    = CACHESIZE_GEFORCE3;
 static bool bStitchStrips        = true;
 static unsigned int minStripSize = 0;
 static bool bListsOnly           = false;

@@ -403,7 +403,7 @@ BOOL CHangingLamp::UsedAI_Locations()
 	return					(FALSE);
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CHangingLamp::script_register(lua_State *L)
 {
 	luabind::module(L)

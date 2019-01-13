@@ -55,19 +55,19 @@ void CUIMMShniaga::InitShniaga(CXml& xml_doc, LPCSTR path)
 	string256 _path;
 
 	CUIXmlInit::InitWindow(xml_doc, path, 0, this);
-	strconcat(sizeof(_path), _path, path, ":shniaga:magnifire");
+	xr_strconcat( _path, path, ":shniaga:magnifire");
 	CUIXmlInit::InitStatic(xml_doc, _path, 0, m_magnifier);
 	m_mag_pos = m_magnifier->GetWndPos().x;
-	strconcat(sizeof(_path), _path, path, ":shniaga");
+	xr_strconcat( _path, path, ":shniaga");
 	CUIXmlInit::InitStatic(xml_doc, _path, 0, m_shniaga);
-	strconcat(sizeof(_path), _path, path, ":buttons_region");
+	xr_strconcat( _path, path, ":buttons_region");
 	CUIXmlInit::InitScrollView(xml_doc, _path, 0, m_view);
-	strconcat(sizeof(_path), _path, path, ":shniaga:magnifire:y_offset");
+	xr_strconcat( _path, path, ":shniaga:magnifire:y_offset");
 	m_offset = xml_doc.ReadFlt(_path, 0, 0);
 
 	if (!g_pGameLevel || !g_pGameLevel->bReady)
 	{
-		auto valid_saved_gameS = [](IReader &stream)
+		auto valid_saved_gameS = [](IReader &stream) -> bool
 		{
 			if (stream.length() < 8)
 				return					(false);
@@ -80,18 +80,15 @@ void CUIMMShniaga::InitShniaga(CXml& xml_doc, LPCSTR path)
 
 			return						(true);
 		};
-		auto saved_game_full_name = [](LPCSTR saved_game_name, string_path& result)
-		{
-			string_path					temp;
-			strconcat(sizeof(temp), temp, saved_game_name, ".scop");
-			FS.update_path(result, "$game_saves$", temp);
-			return						(result);
-		};
 
-		auto valid_saved_game = [valid_saved_gameS, saved_game_full_name](LPCSTR saved_game_name)
+		auto valid_saved_game = [valid_saved_gameS](LPCSTR saved_game_name) -> bool
 		{
 			string_path					file_name;
-			if (!FS.exist(saved_game_full_name(saved_game_name, file_name)))
+
+			xr_strconcat(file_name, saved_game_name, ".scop");
+			FS.update_path(file_name, "$game_saves$", file_name);
+
+			if (!FS.exist(file_name))
 				return					(false);
 
 			IReader						*stream = FS.r_open(file_name);
@@ -99,6 +96,7 @@ void CUIMMShniaga::InitShniaga(CXml& xml_doc, LPCSTR path)
 			FS.r_close(stream);
 			return						(result);
 		};
+
 
 		if (!*g_last_saved_game || !valid_saved_game(g_last_saved_game))
 			CreateList(m_buttons, xml_doc, "menu_main");

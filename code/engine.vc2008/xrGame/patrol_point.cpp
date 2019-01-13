@@ -43,11 +43,11 @@ CPatrolPoint::CPatrolPoint(const CLevelGraph *level_graph, const CGameLevelCross
 #ifdef DEBUG
 	m_initialized = true;
 #endif
-	correct_position(level_graph, cross, game_graph);
+	correct_position(level_graph, cross);
 }
 
 #ifdef DEBUG
-void CPatrolPoint::verify_vertex_id(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph) const
+void CPatrolPoint::verify_vertex_id(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross) const
 {
 	if (!level_graph)
 		return;
@@ -63,18 +63,18 @@ void CPatrolPoint::verify_vertex_id(const CLevelGraph *level_graph, const CGameL
 }
 #endif
 
-IC void CPatrolPoint::correct_position(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph)
+IC void CPatrolPoint::correct_position(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross)
 {
 	if (!level_graph || !level_graph->valid_vertex_position(position()) || !level_graph->valid_vertex_id(m_level_vertex_id))
 		return;
 
-	if (!level_graph->inside(level_vertex_id(level_graph, cross, game_graph), position()))
-		m_position = level_graph->vertex_position(level_vertex_id(level_graph, cross, game_graph));
+	if (!level_graph->inside(level_vertex_id(level_graph, cross), position()))
+		m_position = level_graph->vertex_position(level_vertex_id(level_graph, cross));
 
-	m_game_vertex_id = cross->vertex(level_vertex_id(level_graph, cross, game_graph)).game_vertex_id();
+	m_game_vertex_id = cross->vertex(level_vertex_id(level_graph, cross)).game_vertex_id();
 }
 
-CPatrolPoint &CPatrolPoint::load_raw(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph, IReader &stream)
+CPatrolPoint &CPatrolPoint::load_raw(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, IReader &stream)
 {
 	stream.r_fvector3(m_position);
 	m_flags = stream.r_u32();
@@ -89,7 +89,7 @@ CPatrolPoint &CPatrolPoint::load_raw(const CLevelGraph *level_graph, const CGame
 #ifdef DEBUG
 	m_initialized = true;
 #endif
-	correct_position(level_graph, cross, game_graph);
+	correct_position(level_graph, cross);
 	return *this;
 }
 
@@ -119,7 +119,7 @@ void CPatrolPoint::save(IWriter &stream)
 const u32 &CPatrolPoint::level_vertex_id() const
 {
 	if (ai().game_graph().vertex(m_game_vertex_id)->level_id() == ai().level_graph().level_id())
-		return level_vertex_id(&ai().level_graph(), &ai().cross_table(), &ai().game_graph());
+		return level_vertex_id(ai().get_level_graph(), &ai().cross_table());
 
 	return m_level_vertex_id;
 }
@@ -132,7 +132,7 @@ const GameGraph::_GRAPH_ID &CPatrolPoint::game_vertex_id() const
 			m_game_vertex_id, m_level_vertex_id, m_name.c_str(), m_path->m_name.c_str(), VPUSH(m_position));
 
 	if (vertex->level_id() == ai().level_graph().level_id())
-		return game_vertex_id(&ai().level_graph(), &ai().cross_table(), &ai().game_graph());
+		return game_vertex_id(ai().get_level_graph(), &ai().cross_table());
 
 	return m_game_vertex_id;
 }
@@ -141,7 +141,7 @@ const GameGraph::_GRAPH_ID &CPatrolPoint::game_vertex_id() const
 CPatrolPoint &CPatrolPoint::position(Fvector position)
 {
 	m_position = position;
-	auto level_graph = &ai().level_graph();
+	const CLevelGraph* level_graph = ai().get_level_graph();
 	if (level_graph && level_graph->valid_vertex_position(m_position))
 	{
 		Fvector pos = m_position;
@@ -150,6 +150,6 @@ CPatrolPoint &CPatrolPoint::position(Fvector position)
 	}
 	else
 		m_level_vertex_id = u32(-1);
-	correct_position(level_graph, &ai().cross_table(), &ai().game_graph());
+	correct_position(level_graph, &ai().cross_table());
 	return *this;
 }

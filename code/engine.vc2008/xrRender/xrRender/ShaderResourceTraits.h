@@ -107,7 +107,7 @@
 
 			// Open file
 			string_path					cname;
-			strconcat					(sizeof(cname), cname, ::Render->getShaderPath(), PrependPath, "\\", ShaderTypeTraits<T>::GetShaderExt(),/*name*/ClearShaderName, ".hlsl");
+			xr_strconcat				( cname, ::Render->getShaderPath(), PrependPath, "\\", ShaderTypeTraits<T>::GetShaderExt(),/*name*/ClearShaderName, ".hlsl");
 			FS.update_path				(cname,	"$game_shaders$", cname);
 
 			// duplicate and zero-terminate

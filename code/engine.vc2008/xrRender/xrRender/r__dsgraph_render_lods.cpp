@@ -19,8 +19,8 @@ template <class T> IC bool cmp_first_h(const T &lhs, const T &rhs) { return (lhs
 ICF		bool	pred_dot(const std::pair<float, u32>& _1, const std::pair<float, u32>& _2) { return _1.first < _2.first; }
 void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 {
-	if (_setup_zb)	concurrency::parallel_sort(mapLOD.begin(), mapLOD.end(), cmp_first_l<R_dsgraph::mapLOD_T::value_type>); // front-to-back
-	else			concurrency::parallel_sort(mapLOD.begin(), mapLOD.end(), cmp_first_h<R_dsgraph::mapLOD_T::value_type>); // back-to-front
+	if (_setup_zb)	std::sort(mapLOD.begin(), mapLOD.end(), cmp_first_l<R_dsgraph::mapLOD_T::value_type>); // front-to-back
+	else			std::sort(mapLOD.begin(), mapLOD.end(), cmp_first_h<R_dsgraph::mapLOD_T::value_type>); // back-to-front
 	if (lstLODs.empty()) return;
 
 	// *** Fill VB and generate groups
@@ -70,7 +70,7 @@ void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 			{
 				selector.push_back(std::make_pair(Ldir.dotproduct(facets[s].N), s));
 			}
-			concurrency::parallel_sort(selector.begin(), selector.end(), pred_dot);
+			std::sort(selector.begin(), selector.end(), pred_dot);
 
 			float dot_best = selector[selector.size() - 1].first;
 			float dot_next = selector[selector.size() - 2].first;

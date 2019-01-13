@@ -28,7 +28,7 @@ IC	bool	cmp_normal_items		(const _NormalItem& N1, const _NormalItem& N2)
 void __fastcall mapNormal_Render	(mapNormalItems& N)
 {
 	// *** DIRECT ***
-	concurrency::parallel_sort				(N.begin(),N.end(),cmp_normal_items);
+	std::sort				(N.begin(),N.end(),cmp_normal_items);
 	_NormalItem				*I=&*N.begin(), *E = &*N.end();
 	for (; I!=E; I++)		{
 		_NormalItem&		Ni	= *I;
@@ -92,7 +92,7 @@ template <class T> void sort_tlist(xr_vector<T::template value_type *>& lst, xr_
 		// Just sort by SSA
 		lst.reserve(textures.size());
 		for (auto &i : textures) lst.push_back(&i);
-		concurrency::parallel_sort(lst.begin(), lst.end(), cmp_second_ssa<T::template value_type *>);
+		std::sort(lst.begin(), lst.end(), cmp_second_ssa<T::template value_type *>);
 	}
 	else
 	{
@@ -106,13 +106,13 @@ template <class T> void sort_tlist(xr_vector<T::template value_type *>& lst, xr_
 		}
 
 		// 1st - part - SSA, 2nd - lexicographically
-		concurrency::parallel_sort(lst.begin(), lst.end(), cmp_second_ssa<T::template value_type *>);
+		std::sort(lst.begin(), lst.end(), cmp_second_ssa<T::template value_type *>);
 		if (2 == amount)
-			concurrency::parallel_sort(temp.begin(), temp.end(), cmp_textures_lex2<T::template value_type *>);
+			std::sort(temp.begin(), temp.end(), cmp_textures_lex2<T::template value_type *>);
 		else if (3 == amount)
-			concurrency::parallel_sort(temp.begin(), temp.end(), cmp_textures_lex3<T::template value_type *>);
+			std::sort(temp.begin(), temp.end(), cmp_textures_lex3<T::template value_type *>);
 		else
-			concurrency::parallel_sort(temp.begin(), temp.end(), cmp_textures_lexN<T::template value_type *>);
+			std::sort(temp.begin(), temp.end(), cmp_textures_lexN<T::template value_type *>);
 
 		// merge lists
 		lst.insert(lst.end(), temp.begin(), temp.end());
@@ -122,7 +122,7 @@ template <class T> void sort_tlist(xr_vector<T::template value_type *>& lst, xr_
 void __fastcall mapMatrix_Render	(mapMatrixItems& N)
 {
 	// *** DIRECT ***
-	concurrency::parallel_sort				(N.begin(),N.end(),cmp_matrix_items);
+	std::sort				(N.begin(),N.end(),cmp_matrix_items);
 	_MatrixItem				*I=&*N.begin(), *E = &*N.end();
 	for (; I!=E; I++)		{
 		_MatrixItem&	Ni				= *I;
@@ -259,7 +259,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool)
 
 			nrmVS.reserve(vs.size());
 			for (auto &i : vs) nrmVS.push_back(&i);
-			concurrency::parallel_sort(nrmVS.begin(), nrmVS.end(), cmp_second_ssa<mapNormalVS::value_type *>);
+			std::sort(nrmVS.begin(), nrmVS.end(), cmp_second_ssa<mapNormalVS::value_type *>);
 			for (auto & vs_it : nrmVS)
 			{
 				RCache.set_VS(vs_it->first);
@@ -271,7 +271,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool)
 
 				nrmGS.reserve(gs.size());
 				for (auto &i : gs) nrmGS.push_back(&i);
-				concurrency::parallel_sort(nrmGS.begin(), nrmGS.end(), cmp_second_ssa<mapNormalGS::value_type *>);
+				std::sort(nrmGS.begin(), nrmGS.end(), cmp_second_ssa<mapNormalGS::value_type *>);
 				for (auto & gs_it : nrmGS)
 				{
 					RCache.set_GS(gs_it->first);
@@ -284,7 +284,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool)
 
 				nrmPS.reserve(ps.size());
 				for (auto &i : ps) nrmPS.push_back(&i);
-				concurrency::parallel_sort(nrmPS.begin(), nrmPS.end(), cmp_ps_second_ssa<mapNormalPS::value_type *>);
+				std::sort(nrmPS.begin(), nrmPS.end(), cmp_ps_second_ssa<mapNormalPS::value_type *>);
 				for (auto &ps_it : nrmPS)
 				{
 					RCache.set_PS(ps_it->first);
@@ -300,7 +300,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool)
 
 					nrmCS.reserve(cs.size());
 					for (auto &i : cs) nrmCS.push_back(&i);
-					concurrency::parallel_sort(nrmCS.begin(), nrmCS.end(), cmp_second_ssa<mapNormalCS::value_type *>);
+					std::sort(nrmCS.begin(), nrmCS.end(), cmp_second_ssa<mapNormalCS::value_type *>);
 					for (auto &cs_it : nrmCS)
 					{
 						RCache.set_Constants(cs_it->first);
@@ -310,7 +310,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool)
 
 						nrmStates.reserve(states.size());
 						for (auto &i : states) nrmStates.push_back(&i);
-						concurrency::parallel_sort(nrmStates.begin(), nrmStates.end(), cmp_second_ssa<mapNormalStates::value_type *>);
+						std::sort(nrmStates.begin(), nrmStates.end(), cmp_second_ssa<mapNormalStates::value_type *>);
 						for (auto &state_it : nrmStates)
 						{
 							RCache.set_States(*state_it->first);
@@ -327,7 +327,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph(u32 _priority, bool)
 								mapNormalItems& items = tex_it->second;
 								items.ssa = 0;
 
-								concurrency::parallel_sort(items.begin(), items.end(), cmp_ssa<_NormalItem>);
+								std::sort(items.begin(), items.end(), cmp_ssa<_NormalItem>);
 								for (auto &it_it : items)
 								{
 									float LOD = calcLOD(it_it.ssa, it_it.pVisual->vis.sphere.R);
@@ -371,7 +371,7 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 
 	matVS.reserve(vs.size());
 	for (auto &i : vs) matVS.push_back(&i);
-	concurrency::parallel_sort(matVS.begin(), matVS.end(), cmp_second_ssa<mapMatrixVS::value_type *>);
+	std::sort(matVS.begin(), matVS.end(), cmp_second_ssa<mapMatrixVS::value_type *>);
 	for (auto &vs_id : matVS)
 	{
 		RCache.set_VS(vs_id->first);
@@ -382,7 +382,7 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 
 		matGS.reserve(gs.size());
 		for (auto &i : gs) matGS.push_back(&i);
-		concurrency::parallel_sort(matGS.begin(), matGS.end(), cmp_second_ssa<mapMatrixGS::value_type *>);
+		std::sort(matGS.begin(), matGS.end(), cmp_second_ssa<mapMatrixGS::value_type *>);
 		for (auto &gs_it : matGS)
 		{
 			RCache.set_GS(gs_it->first);
@@ -395,7 +395,7 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 
 		matPS.reserve(ps.size());
 		for (auto &i : ps) matPS.push_back(&i);
-		concurrency::parallel_sort(matPS.begin(), matPS.end(), cmp_ps_second_ssa<mapMatrixPS::value_type *>);
+		std::sort(matPS.begin(), matPS.end(), cmp_ps_second_ssa<mapMatrixPS::value_type *>);
 		for (auto &ps_it : matPS)
 		{
 			RCache.set_PS(ps_it->first);
@@ -411,7 +411,7 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 
 			matCS.reserve(cs.size());
 			for (auto &i : cs) matCS.push_back(&i);
-			concurrency::parallel_sort(matCS.begin(), matCS.end(), cmp_second_ssa<mapMatrixCS::value_type *>);
+			std::sort(matCS.begin(), matCS.end(), cmp_second_ssa<mapMatrixCS::value_type *>);
 			for (auto &cs_it : matCS)
 			{
 				RCache.set_Constants(cs_it->first);
@@ -421,7 +421,7 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 
 				matStates.reserve(states.size());
 				for (auto &i : states) matStates.push_back(&i);
-				concurrency::parallel_sort(matStates.begin(), matStates.end(), cmp_second_ssa<mapMatrixStates::value_type *>);
+				std::sort(matStates.begin(), matStates.end(), cmp_second_ssa<mapMatrixStates::value_type *>);
 				for (auto &state_it : matStates)
 				{
 					RCache.set_States(*state_it->first);
@@ -438,7 +438,7 @@ for (u32 iPass = 0; iPass < SHADER_PASSES_MAX; ++iPass)
 						mapMatrixItems& items = tex_it->second;
 						items.ssa = 0;
 
-						concurrency::parallel_sort(items.begin(), items.end(), cmp_ssa<_MatrixItem>);
+						std::sort(items.begin(), items.end(), cmp_ssa<_MatrixItem>);
 						for (auto &ni_it : items)
 						{
 							RCache.set_xform_world(ni_it.Matrix);
@@ -498,7 +498,7 @@ void R_dsgraph_structure::r_dsgraph_render_hud()
 
 	// Rendering
 	rmNear();
-	concurrency::parallel_sort(mapHUD.begin(), mapHUD.end(), cmp_first_l<R_dsgraph::mapHUD_T::value_type>); // front-to-back
+	std::sort(mapHUD.begin(), mapHUD.end(), cmp_first_l<R_dsgraph::mapHUD_T::value_type>); // front-to-back
 	for (auto &i : mapHUD)
 		sorted_L1(i);
 
@@ -560,7 +560,7 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 void	R_dsgraph_structure::r_dsgraph_render_sorted	()
 {
 	// Sorted (back to front)
-	concurrency::parallel_sort(mapSorted.begin(), mapSorted.end(), cmp_first_h<R_dsgraph::mapSorted_T::value_type>); // back-to-front
+	std::sort(mapSorted.begin(), mapSorted.end(), cmp_first_h<R_dsgraph::mapSorted_T::value_type>); // back-to-front
 	for (auto &i : mapSorted)
 		sorted_L1(i);
 	mapSorted.clear();
@@ -578,7 +578,7 @@ void	R_dsgraph_structure::r_dsgraph_render_sorted	()
 
 	// Rendering
 	rmNear();
-	concurrency::parallel_sort(mapHUDSorted.begin(), mapHUDSorted.end(), cmp_first_h<R_dsgraph::mapSorted_T::value_type>); // back-to-front
+	std::sort(mapHUDSorted.begin(), mapHUDSorted.end(), cmp_first_h<R_dsgraph::mapSorted_T::value_type>); // back-to-front
 	for (auto &i : mapHUDSorted)
 		 sorted_L1(i);
 	mapHUDSorted.clear(); // Fix!
@@ -595,7 +595,7 @@ void	R_dsgraph_structure::r_dsgraph_render_sorted	()
 void	R_dsgraph_structure::r_dsgraph_render_emissive	()
 {
 	// Sorted (back to front)
-	concurrency::parallel_sort(mapEmissive.begin(), mapEmissive.end(), cmp_first_l<R_dsgraph::mapSorted_T::value_type>); // front-to-back
+	std::sort(mapEmissive.begin(), mapEmissive.end(), cmp_first_l<R_dsgraph::mapSorted_T::value_type>); // front-to-back
 	for (auto &it : mapEmissive)
 		sorted_L1(it);
 	mapEmissive.clear();
@@ -616,7 +616,7 @@ void	R_dsgraph_structure::r_dsgraph_render_emissive	()
 	// Rendering
 	rmNear						();
 	// Sorted (back to front)
-	concurrency::parallel_sort(mapHUDEmissive.begin(), mapHUDEmissive.end(), cmp_first_l<R_dsgraph::mapSorted_T::value_type>); // front-to-back
+	std::sort(mapHUDEmissive.begin(), mapHUDEmissive.end(), cmp_first_l<R_dsgraph::mapSorted_T::value_type>); // front-to-back
 	for (auto &it : mapHUDEmissive)
 		sorted_L1(it);
 	mapHUDEmissive.clear();
@@ -633,7 +633,7 @@ void	R_dsgraph_structure::r_dsgraph_render_emissive	()
 // strict-sorted render
 void	R_dsgraph_structure::r_dsgraph_render_wmarks	()
 {
-	concurrency::parallel_sort(mapWmark.begin(), mapWmark.end(), cmp_first_l<R_dsgraph::mapSorted_T::value_type>);
+	std::sort(mapWmark.begin(), mapWmark.end(), cmp_first_l<R_dsgraph::mapSorted_T::value_type>);
 	for (auto &it : mapWmark)
 		sorted_L1(it);
 	mapWmark.clear();
@@ -644,7 +644,7 @@ void	R_dsgraph_structure::r_dsgraph_render_wmarks	()
 void	R_dsgraph_structure::r_dsgraph_render_distort	()
 {
 	// Sorted (back to front) 
-	concurrency::parallel_sort(mapDistort.begin(), mapDistort.end(), cmp_first_h<R_dsgraph::mapSorted_T::value_type>); 
+	std::sort(mapDistort.begin(), mapDistort.end(), cmp_first_h<R_dsgraph::mapSorted_T::value_type>); 
 	for (auto &it : mapDistort)
 		sorted_L1(it);
 	mapDistort.clear();

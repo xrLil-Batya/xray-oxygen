@@ -162,7 +162,7 @@ void set_new_dir(LPCSTR path, LPCSTR new_path, int Recurse)
 	FS.rescan_path(fname, Recurse);
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void fs_registrator::script_register(lua_State *L)
 {
 	module(L)

@@ -7,12 +7,8 @@
 #include "stdafx.h"
 #include "xrSheduler.h"
 #include "xr_object.h"
+#include "profiler.h"
 
-#include <future>
-
-float			psShedulerCurrent = 10.f;
-float			psShedulerTarget = 10.f;
-const	float	psShedulerReaction = 0.1f;
 BOOL			g_bSheduleInProgress = FALSE;
 
 //-------------------------------------------------------------------------------------
@@ -110,7 +106,7 @@ bool CSheduler::internal_Unregister(ISheduled* O, BOOL RT, bool warn_on_not_foun
 		}
 	}
 	else {
-		for (auto& ItemIter : Items)
+		for (Item& ItemIter : Items)
 		{
 			if (ItemIter.Object == O) {
 				ItemIter.Object = nullptr;
@@ -133,7 +129,7 @@ bool CSheduler::Registered(ISheduled *object) const
 	using ITEMS = xr_vector<Item>;
 	using ITEMS_REG = xr_vector<ItemReg>;
 
-	for (auto& ItemIter : ItemsRT)
+	for (const Item& ItemIter : ItemsRT)
 	{
 		if (ItemIter.Object == object)
 		{
@@ -142,17 +138,7 @@ bool CSheduler::Registered(ISheduled *object) const
 		}
 	}
 
-	for (auto& ItemIter : Items)
-	{
-		if (ItemIter.Object == object)
-		{
-			VERIFY(!count);
-			count = 1;
-			break;
-		}
-	}
-
-	for (auto& ItemIter : ItemsProcessed)
+	for (const Item& ItemIter : Items)
 	{
 		if (ItemIter.Object == object)
 		{
@@ -162,7 +148,17 @@ bool CSheduler::Registered(ISheduled *object) const
 		}
 	}
 
-	for (auto& ItemIter : Registration)
+	for (const Item& ItemIter : ItemsProcessed)
+	{
+		if (ItemIter.Object == object)
+		{
+			VERIFY(!count);
+			count = 1;
+			break;
+		}
+	}
+
+	for (const ItemReg& ItemIter : Registration)
 	{
 		if (ItemIter.Object == object)
 		{
@@ -247,8 +243,6 @@ void CSheduler::Pop()
 	Items.pop_back();
 }
 
-static bool MtStepProcessDone = true;
-
 void CSheduler::ProcessStep()
 {
 	// Normal priority
@@ -275,7 +269,7 @@ void CSheduler::ProcessStep()
 #endif
 
 		// Calc next update interval
-		u32		dwMin = std::max(u32(30), T.Object->shedule.t_min);
+		u32		dwMin = std::max(u32(30), T.Object->shedule.t_min); 
 		u32		dwMax = (1000 + T.Object->shedule.t_max) / 2;
 		float	scale = T.Object->shedule_Scale();
 		u32		dwUpdate = dwMin + iFloor(float(dwMax - dwMin)*scale);
@@ -283,11 +277,12 @@ void CSheduler::ProcessStep()
 
 		m_current_step_obj = T.Object;
 
-		// FX: Update only for is need
-		if (!m_current_step_obj && m_current_step_obj->shedule_Needed()) continue;
-
 		u32 dt = clampr(Elapsed, u32(1), u32(std::max(u32(T.Object->shedule.t_max), u32(1000))));
-		T.Object->shedule_Update(dt);
+		{
+			CProfileSchedule scheduleProfile(T.Object->shedule_Class_Name());
+			
+			T.Object->shedule_Update(dt);
+		}
 
 		m_current_step_obj = nullptr;
 
@@ -305,26 +300,13 @@ void CSheduler::ProcessStep()
 		Push(ItemsProcessed.back());
 		ItemsProcessed.pop_back();
 	}
-
-	// always try to decrease target
-	psShedulerTarget -= psShedulerReaction;
-	MtStepProcessDone = true; // Syns
 }
 
 void CSheduler::Update()
 {
 	R_ASSERT(Device.Statistic);
 
-	// Waiting old update
-	if (MtStepProcessDone) MtStepProcessDone = false;
-	else return;
-
 	// Initialize
-	Device.Statistic->Sheduler.Begin();
-
-	cycles_start = CPU::QPC();
-	cycles_limit = CPU::qpc_freq * u64(iCeil(psShedulerCurrent)) / 1000i64 + cycles_start;
-
 	internal_Registration();
 	g_bSheduleInProgress = TRUE;
 
@@ -357,12 +339,7 @@ void CSheduler::Update()
 	ProcessStep();
 	m_processing_now = false;
 
-	clamp(psShedulerTarget, 3.f, 66.f);
-	psShedulerCurrent = 0.9f*psShedulerCurrent + 0.1f*psShedulerTarget;
-	Device.Statistic->fShedulerLoad = psShedulerCurrent;
-
 	// Finalize
 	g_bSheduleInProgress = FALSE;
 	internal_Registration();
-	Device.Statistic->Sheduler.End();
 }

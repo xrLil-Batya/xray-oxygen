@@ -5,7 +5,6 @@
 #include "../xrEngine/Cameramanager.h"
 #include "..\xrEngine\xr_level_controller.h"
 #include "actor.h"
-
 CCameraLook::CCameraLook(CObject* p, u32 flags ) :CCameraBase(p, flags)
 {
 }
@@ -128,70 +127,51 @@ void CCameraLook::OnActivate( CCameraBase* old_cam )
 #include "../xrEngine/xr_input.h"
 #include "visual_memory_manager.h"
 #include "actor_memory.h"
-
-int cam_dik = DIK_LSHIFT;
+#include "../Include/xrRender/Kinematics.h"
+#include "relation_registry.h"
+#include "character_info.h"
+#include "ai/stalker/ai_stalker.h"
+#include "ai/monsters/basemonster/base_monster.h"
+#include <ai/monsters/poltergeist/poltergeist.h>
 
 Fvector CCameraLook2::m_cam_offset;
 void CCameraLook2::OnActivate(CCameraBase* old_cam)
 {
 	CCameraLook::OnActivate(old_cam);
+
 }
 
-void CCameraLook2::Update(Fvector& point, Fvector&)
+
+void CCameraLook2::Update(Fvector& point, Fvector& noise_dangle)
 {
 	if (psActorFlags.test(AF_RIGHT_SHOULDER))
 		m_cam_offset = Fvector().set(-0.400f, 0.2f, 0.0f);
 	else
 		m_cam_offset = Fvector().set(0.314f, 0.2f, 0.0f);
 
-	// autoaim
-	if (!m_locked_enemy)
+	Fmatrix			mR, R;
+	Fmatrix			rX, rY, rZ;
+	rX.rotateX(noise_dangle.x);
+	rY.rotateY(-noise_dangle.y);
+	rZ.rotateZ(noise_dangle.z);
+	R.mul_43(rY, rX);
+	R.mulB_43(rZ);
+
+	mR.identity();
+	Fquaternion		Q;
+	Q.rotationYawPitchRoll(roll, yaw, pitch);
+	mR.rotation(Q);
+	mR.transpose();
+	mR.mulB_43(R);
+
+	vDirection.set(mR.k);
+	vNormal.set(mR.j);
+
+	if (m_Flags.is(flRelativeLink))
 	{
-		if (pInput->iGetAsyncKeyState(cam_dik))
-		{
-			const CVisualMemoryManager::VISIBLES& vVisibles = Actor()->memory().visual().objects();
-			CVisualMemoryManager::VISIBLES::const_iterator v_it = vVisibles.begin();
-			float nearest_dst = flt_max;
-
-			for (; v_it != vVisibles.end(); ++v_it)
-			{
-				const CObject* _object_ = (*v_it).m_object;
-				if (!Actor()->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_)))
-					continue;
-
-				CObject* object_ = const_cast<CObject*>(_object_);
-
-				CEntityAlive* EA = smart_cast<CEntityAlive*>(object_);
-				if (!EA || !EA->g_Alive())
-					continue;
-				
-				float dst = object_->Position().distance_to_xz(Actor()->Position());
-				if (!m_locked_enemy || dst < nearest_dst)
-				{
-					m_locked_enemy = object_;
-					nearest_dst	= dst;
-				}
-			}
-//.			if (m_locked_enemy)
-//.				Msg("enemy is %s", *m_locked_enemy->cNameSect());
-		}
+		parent->XFORM().transform_dir(vDirection);
+		parent->XFORM().transform_dir(vNormal);
 	}
-	else
-	{
-		if (!pInput->iGetAsyncKeyState(cam_dik))
-		{
-			m_locked_enemy = nullptr;
-//.			Msg("enemy is NILL");
-		}
-		else
-			UpdateAutoAim();
-	}
-
-	Fmatrix mR;
-	mR.setHPB						(-yaw,-pitch,-roll);
-
-	vDirection.set					(mR.k);
-	vNormal.set						(mR.j);
 
 	Fmatrix							a_xform;
 	a_xform.setXYZ					(0, -yaw, 0);
@@ -201,36 +181,13 @@ void CCameraLook2::Update(Fvector& point, Fvector&)
 	vPosition.set					(_off);
 
 	UpdateDistance					(_off);
+
 }
 
 void CCameraLook2::UpdateAutoAim()
 {
-	Fvector _dest_point;
-	m_locked_enemy->Center				(_dest_point);
-	_dest_point.y						+= 0.2f;
 
-	Fvector _dest_dir;
-	_dest_dir.sub						(_dest_point, vPosition);
-	
-	Fmatrix _m;
-	_m.identity							();
-	_m.k.normalize_safe					(_dest_dir);
-	Fvector::generate_orthonormal_basis	(_m.k, _m.j, _m.i);
 
-	Fvector xyz;
-	_m.getXYZi							(xyz);
-
-	yaw				= angle_inertion_var(	yaw,xyz.y,
-											m_autoaim_inertion_yaw.x,
-											m_autoaim_inertion_yaw.y,
-											PI,
-											Device.fTimeDelta);
-
-	pitch			= angle_inertion_var(	pitch,xyz.x,
-											m_autoaim_inertion_pitch.x,
-											m_autoaim_inertion_pitch.y,
-											PI,
-											Device.fTimeDelta);
 }
 
 void CCameraLook2::Load(LPCSTR section)
@@ -240,6 +197,11 @@ void CCameraLook2::Load(LPCSTR section)
 	dist = 1.4f;
 	prev_d = 0.0f;
 
+	enemy_spotlight->set_type(IRender_Light::SPOT);
+	enemy_spotlight->set_shadow(true);
+	enemy_spotlight->set_cone(deg2rad(30.f));
+	enemy_spotlight->set_color(Fcolor().set(5.0f, 2.0f, 0.0f, 25.0f));
+	enemy_spotlight->set_range(4.0f);
 	// hide aimbot hack at release
 	if (strstr(Core.Params,"-dbg")) 
 	{

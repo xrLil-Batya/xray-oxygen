@@ -171,5 +171,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Delete application presence mutex
 	CloseHandle(hCheckPresenceMutex);
 #endif
+	gModulesLoaded = false;
 	return 0;
 }

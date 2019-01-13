@@ -43,7 +43,7 @@ void CEnvironment::ModsLoad()
 		u32 ver = 0x0015;
 		u32 sz;
 
-		while (0 != (sz = fs->find_chunk(id)))
+		while (0 != (sz = (u32)fs->find_chunk(id)))
 		{
 			if (id == 0 && sz == sizeof(u32))
 			{
@@ -72,7 +72,7 @@ void CEnvironment::LoadLevelSpecificAmbients()
 	const shared_str level_name = g_pGameLevel->name();
 
 	string_path path;
-	strconcat(sizeof(path), path, "environment\\ambients\\", level_name.c_str(), ".ltx");
+	xr_strconcat(path, "environment\\ambients\\", level_name.c_str(), ".ltx");
 
 	string_path full_path;
 	FS.update_path(full_path, "$game_config$", path);
@@ -151,7 +151,7 @@ void CEnvironment::LoadWeathers()
 	for (auto& envDesc : WeatherCycles)
 	{
 		R_ASSERT3(envDesc.second.size() > 1, "Environment in weather must >=2", envDesc.first.data());
-		concurrency::parallel_sort(envDesc.second.begin(), envDesc.second.end(), sort_env_etl_pred);
+		std::sort(envDesc.second.begin(), envDesc.second.end(), sort_env_etl_pred);
 	}
 	R_ASSERT2(!WeatherCycles.empty(), "Empty weathers.");
 	SetWeather((*WeatherCycles.begin()).first);
@@ -211,7 +211,7 @@ void CEnvironment::LoadWeatherEffects()
 	for (auto& it : WeatherFXs)
 	{
 		R_ASSERT3(it.second.size() > 1, "Must be >=2 environments in weather", it.first.c_str());
-		concurrency::parallel_sort(it.second.begin(), it.second.end(), sort_env_etl_pred);
+		std::sort(it.second.begin(), it.second.end(), sort_env_etl_pred);
 	}
 }
 

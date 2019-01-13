@@ -187,7 +187,7 @@ void	CResourceManager::LS_Load()
 		if (!namesp[0])
 			xr_strcpy(namesp, "_G");
 
-		strconcat(sizeof(fn), fn, ::Render->getShaderPath(), (*folder)[it]);
+		xr_strconcat( fn, ::Render->getShaderPath(), (*folder)[it]);
 		FS.update_path(fn, "$game_shaders$", fn);
 
 		try

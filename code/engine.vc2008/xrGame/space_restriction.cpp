@@ -12,7 +12,7 @@
 #include "ai_space.h"
 #include "level_graph.h"
 #include "space_restriction_base.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 
 const float dependent_distance = 100.f;
 
@@ -184,20 +184,13 @@ void CSpaceRestriction::merge_in_out_restrictions	()
 
 CSpaceRestriction::CBaseRestrictionPtr CSpaceRestriction::merge(CBaseRestrictionPtr bridge, const RESTRICTIONS &temp_restrictions) const
 {
-	u32 acc_length = xr_strlen(*bridge->name()) + 1;
-	{
-		for (const SpaceRestrictionHolder::CBaseRestrictionPtr &it: temp_restrictions)
-			acc_length += xr_strlen(it->name().c_str()) + 1;
-	}
-
-	LPSTR							S = xr_alloc<char>(acc_length);
-	S[0] = 0;
+	string2048 tempBuffer;
 	shared_str						temp = bridge->name();
 
 	for (const SpaceRestrictionHolder::CBaseRestrictionPtr &it : temp_restrictions)
-		temp = strconcat(sizeof(S), S, *temp, ",", it->name().c_str());
-
-	xr_free(S);
+	{
+		temp = xr_strconcat(tempBuffer, *temp, ",", it->name().c_str());
+	}
 
 	return (m_space_restriction_manager->restriction(temp));
 }

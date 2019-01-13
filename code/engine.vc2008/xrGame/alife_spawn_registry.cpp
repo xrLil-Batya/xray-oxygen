@@ -24,14 +24,12 @@ CALifeSpawnRegistry::CALifeSpawnRegistry	(LPCSTR section)
 {
 	m_spawn_name				= "";
 	seed						(u32(CPU::QPC() & 0xffffffff));
-	m_game_graph				= 0;
 	m_chunk						= 0;
 	m_file						= 0;
 }
 
 CALifeSpawnRegistry::~CALifeSpawnRegistry	()
 {
-	xr_delete					(m_game_graph);
 	m_chunk->close				();
 	FS.r_close					(m_file);
 }
@@ -146,9 +144,8 @@ void CALifeSpawnRegistry::load(IReader &file_stream, xrGUID *save_guid)
 	m_chunk = file_stream.open_chunk(4);
 	R_ASSERT2(m_chunk, "Spawn version mismatch - REBUILD SPAWN!");
 
-	VERIFY(!m_game_graph);
-	m_game_graph = xr_new<CGameGraph>(*m_chunk);
-	ai().game_graph(m_game_graph);
+	//m_game_graph = xr_new<CGameGraph>(*m_chunk);
+	ai().create_game_graph(*m_chunk);
 	VERIFY(ai().game_graph().validate());
 
 	R_ASSERT2((header().graph_guid() == ai().game_graph().header().guid()) || ignore_save_incompatibility(), "Spawn doesn't correspond to the graph : REBUILD SPAWN!");
@@ -218,18 +215,6 @@ void CALifeSpawnRegistry::build_root_spawns	()
 	);
 
 	m_spawn_roots.erase						(I,m_spawn_roots.end());
-	
-#ifdef LUACP_API
-	LogXrayOffset("CALifeSpawnRegistry.spawns",		this, &this->m_spawns);
-	LogXrayOffset("CALifeSpawnRegistry.vertices",	this, &this->m_spawns.vertices());
-	if (m_spawns.vertices().size() > 0)
-	{
-		SPAWN_GRAPH::const_vertex_iterator	I = m_spawns.vertices().begin();
-		void *pVal = I._Ptr->_Myval.second;
-		void *pWrap = &I._Ptr->_Myval.second->data();
-		LogXrayOffset("CGraphVertex.CServerEntityWrapper", pVal, pWrap);
-	}
-#endif
 }
 
 void CALifeSpawnRegistry::build_story_spawns()

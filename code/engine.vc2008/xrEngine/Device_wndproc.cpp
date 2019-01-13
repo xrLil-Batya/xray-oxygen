@@ -57,7 +57,13 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		LONG width = ClientRect.right - ClientRect.left;
 		LONG height = ClientRect.bottom - ClientRect.top;
 
-		if (height >= NULL && width >= NULL) { Device.ResizeProc(height, width); }
+		if (Device.dwWidth != u32(width) || Device.dwHeight != u32(height))
+		{
+			if (height >= NULL && width >= NULL) 
+			{ 
+				Device.ResizeProc(height, width); 
+			}
+		}
 
 		break;
 	}

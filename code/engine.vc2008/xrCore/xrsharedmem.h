@@ -52,6 +52,8 @@ public:
 						~smem_container	();
 };
 XRCORE_API	extern		smem_container*	g_pSharedMemoryContainer;
+XRCORE_API	extern		bool			g_pSharedMemoryContainer_isDestroyed;
+
 
 //////////////////////////////////////////////////////////////////////////
 template <class T>
@@ -73,6 +75,11 @@ public:
 
 	void				create		(u32 dwCRC, u32 dwLength, T* ptr)
 	{
+		if (g_pSharedMemoryContainer == nullptr)
+		{
+			R_ASSERT(!g_pSharedMemoryContainer_isDestroyed);
+			g_pSharedMemoryContainer = new smem_container();
+		}
 		smem_value* v	= g_pSharedMemoryContainer->dock(dwCRC,dwLength*sizeof(T),ptr); 
 		if (0!=v)		v->dwReference++; _dec(); p_ = v;	
 	}

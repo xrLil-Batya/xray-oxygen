@@ -165,9 +165,9 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		}
 
 		string_path					cname;
-		strconcat					(sizeof(cname),cname,::Render->getShaderPath(), "vs_",/*_name*/shName,".hlsl");
+		xr_strconcat				(cname,::Render->getShaderPath(), "vs_",/*_name*/shName,".hlsl");
         string512                   shaderName;
-        strconcat                   (sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
+        xr_strconcat                ( shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 		//		LPCSTR						target		= NULL;
 
@@ -267,9 +267,9 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR _name)
 
 		// Open file
 		string_path					cname;
-		strconcat					(sizeof(cname), cname,::Render->getShaderPath(), "ps_",/*_name*/shName,".hlsl");
+		xr_strconcat				( cname,::Render->getShaderPath(), "ps_",/*_name*/shName,".hlsl");
         string512                   shaderName;
-        strconcat(sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
+        xr_strconcat				( shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
@@ -339,9 +339,9 @@ SGS*	CResourceManager::_CreateGS			(LPCSTR name)
 
 		// Open file
 		string_path					cname;
-		strconcat					(sizeof(cname), cname, ::Render->getShaderPath(), "gs_", name,".hlsl");
+		xr_strconcat				( cname, ::Render->getShaderPath(), "gs_", name,".hlsl");
         string512                   shaderName;
-        strconcat(sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
+		xr_strconcat				( shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
@@ -439,7 +439,7 @@ void				CResourceManager::_DeleteConstantTable	(const R_constant_table* C)
 
 //--------------------------------------------------------------------------------------------------------------
 #ifdef USE_DX11
-CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount, bool useUAV )
+CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	DXGI_FORMAT f, u32 SampleCount, bool useUAV )
 #else
 CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 #endif
@@ -643,7 +643,7 @@ bool	cmp_tl	(const std::pair<u32,ref_texture>& _1, const std::pair<u32,ref_textu
 }
 STextureList*	CResourceManager::_CreateTextureList(STextureList& L)
 {
-	concurrency::parallel_sort	(L.begin(),L.end(),cmp_tl);
+	std::sort	(L.begin(),L.end(),cmp_tl);
 	for (u32 it=0; it<lst_textures.size(); it++)
 	{
 		STextureList*	base		= lst_textures[it];

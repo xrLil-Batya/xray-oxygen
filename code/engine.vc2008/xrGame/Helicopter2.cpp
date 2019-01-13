@@ -229,7 +229,7 @@ void	CHelicopter::Hit							(SHit* pHDS)
 		curHealth -= pHDS->damage()*It->second*1000.0f;
 		SetfHealth(curHealth);
 #ifdef DEBUG
-		if (bDebug)	Log("----Helicopter::PilotHit(). health=",curHealth);
+		if (bDebug)	Msg("----Helicopter::PilotHit(). health=%f",curHealth);
 #endif
 	}else {
 		float hit_power		= pHDS->damage();
@@ -238,7 +238,7 @@ void	CHelicopter::Hit							(SHit* pHDS)
 		SetfHealth(GetfHealth()-hit_power);
 #ifdef DEBUG
 		if (bDebug)
-			Log("----Helicopter::Hit(). health=",GetfHealth());
+			Msg("----Helicopter::Hit(). health=%f",GetfHealth());
 #endif
 	};
 	if (pHDS->who&&

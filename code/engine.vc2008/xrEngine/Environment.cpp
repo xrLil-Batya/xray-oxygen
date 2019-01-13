@@ -303,7 +303,7 @@ bool CEnvironment::SetWeatherFX(shared_str name)
 		}
 		clamp				(current_weight, 0.0f, 1.0f);
 
-		concurrency::parallel_sort(CurrentWeather->begin(), CurrentWeather->end(), sort_env_etl_pred);
+		std::sort(CurrentWeather->begin(), CurrentWeather->end(), sort_env_etl_pred);
 		CEnvDescriptor* C0	= CurrentWeather->at(0);
 		CEnvDescriptor* C1	= CurrentWeather->at(1);
 		CEnvDescriptor* CE	= CurrentWeather->at(CurrentWeather->size() - 2);
@@ -322,7 +322,7 @@ bool CEnvironment::SetWeatherFX(shared_str name)
 		bWFX				= true;
 
 		// sort wfx envs
-		concurrency::parallel_sort(CurrentWeather->begin(), CurrentWeather->end(), sort_env_pred);
+		std::sort(CurrentWeather->begin(), CurrentWeather->end(), sort_env_pred);
 
 		Current[0]			= C0;
 		Current[1]			= C1;

@@ -62,10 +62,10 @@ LPCSTR			dx103DFluidRenderer::m_pResourceRTNames[ RRT_NumRT ] =
 dx103DFluidRenderer::dx103DFluidRenderer():
 	m_bInited(false)
 {
-	RTFormats[RRT_RayDataTex] = D3DFMT_A32B32G32R32F;
-	RTFormats[RRT_RayDataTexSmall] = D3DFMT_A32B32G32R32F;
-	RTFormats[RRT_RayCastTex] = D3DFMT_A32B32G32R32F;
-	RTFormats[RRT_EdgeTex] = D3DFMT_R32F;
+	RTFormats[RRT_RayDataTex] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTFormats[RRT_RayDataTexSmall] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTFormats[RRT_RayCastTex] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTFormats[RRT_EdgeTex] = DXGI_FORMAT_R32_FLOAT;
 }
 
 dx103DFluidRenderer::~dx103DFluidRenderer()

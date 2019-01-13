@@ -91,6 +91,7 @@
     <ClInclude Include="API\EntityAlive.h" />
     <ClInclude Include="API\Game.h" />
     <ClInclude Include="API\GameClassIDs.h" />
+    <ClInclude Include="API\GameInfo.h" />
     <ClInclude Include="API\GameObject.h" />
     <ClInclude Include="API\GameVertex.h" />
     <ClInclude Include="API\Inventory.h" />
@@ -109,6 +110,7 @@
     <ClCompile Include="API\EntityAlive.cpp" />
     <ClCompile Include="API\Game.cpp" />
     <ClCompile Include="API\GameClassIDs.cpp" />
+    <ClCompile Include="API\GameInfo.cpp" />
     <ClCompile Include="API\GameObject.cpp" />
     <ClCompile Include="API\GameVertex.cpp" />
     <ClCompile Include="API\Inventory.cpp" />

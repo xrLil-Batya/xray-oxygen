@@ -142,7 +142,7 @@ namespace CDB
 			++i;
 		}
 
-		concurrency::parallel_sort(edges, edges + edge_count, sort_predicate());
+		std::sort(edges, edges + edge_count, sort_predicate());
 
 		dest.assign(edge_count, u32(-1));
 

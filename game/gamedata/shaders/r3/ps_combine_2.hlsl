@@ -2,6 +2,124 @@
 #include "mblur.h"
 #include "dof.h"
 
+
+#ifdef USE_SSR //warning: unoptimized/wip. Don't turn on without a beefy computer!
+//Shader from "Wicked Engine"
+
+// Avoid stepping zero distance
+static const float	g_fMinRayStep = 0.01f;
+// Crude raystep count
+static const int	g_iMaxSteps = 8;
+// Crude raystep scaling
+static const float	g_fRayStep = 1.18f;
+// Fine raystep count
+static const int	g_iNumBinarySearchSteps = 8;
+// Approximate the precision of the search (smaller is more precise)
+static const float  g_fRayhitThreshold = 0.9f;
+#define g_xFrame_MainCamera_ZFarP 150.0
+bool bInsideScreen(in float2 vCoord)
+{
+	if (vCoord.x < 0 || vCoord.x > 1 || vCoord.y < 0 || vCoord.y > 1)
+		return false;
+	return true;
+}
+
+float4 SSRBinarySearch(float3 vDir, inout float3 vHitCoord)
+{
+	float fDepth;
+
+	for (int i = 0; i < g_iNumBinarySearchSteps; i++)
+	{
+		float4 vProjectedCoord = mul(float4(vHitCoord, 1.0f), m_P);
+		vProjectedCoord.xy /= vProjectedCoord.w;
+		vProjectedCoord.xy = vProjectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+
+		fDepth = s_position.SampleLevel(smp_nofilter, vProjectedCoord.xy, 0).z * g_xFrame_MainCamera_ZFarP;
+		float fDepthDiff = vHitCoord.z - fDepth;
+
+		if (fDepthDiff <= 0.0f)
+			vHitCoord += vDir;
+
+		vDir *= 0.5f;
+		vHitCoord -= vDir;
+	}
+
+	float4 vProjectedCoord = mul(float4(vHitCoord, 1.0f), m_P);
+	vProjectedCoord.xy /= vProjectedCoord.w;
+	vProjectedCoord.xy = vProjectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+
+	fDepth = s_position.SampleLevel(smp_nofilter, vProjectedCoord.xy, 0).z * g_xFrame_MainCamera_ZFarP;
+	float fDepthDiff = vHitCoord.z - fDepth;
+
+	return float4(vProjectedCoord.xy, fDepth, abs(fDepthDiff) < g_fRayhitThreshold ? 1.0f : 0.0f);
+}
+
+float4 SSRRayMarch(float3 vDir, inout float3 vHitCoord)
+{
+	float fDepth;
+
+	for (int i = 0; i < g_iMaxSteps; i++)
+	{
+		vHitCoord += vDir;
+
+		float4 vProjectedCoord = mul(float4(vHitCoord, 1.0f), m_P);
+		vProjectedCoord.xy /= vProjectedCoord.w;
+		vProjectedCoord.xy = vProjectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+
+		fDepth = s_position.SampleLevel(smp_nofilter, vProjectedCoord.xy, 0).z * g_xFrame_MainCamera_ZFarP;
+
+		float fDepthDiff = vHitCoord.z - fDepth;
+
+		[branch]
+		if (fDepthDiff > 0.0f)
+			return SSRBinarySearch(vDir, vHitCoord);
+
+		vDir *= g_fRayStep;
+
+	}
+
+	return float4(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
+void SSR(float3 N, float3 P)
+{
+	//float3 N = decode(texture_gbuffer1.Load(int3(input.pos.xy, 0)).xy);
+	//float3 P = getPosition(input.tex, texture_depth.Load(int3(input.pos.xy, 0)));
+
+
+	//Reflection vector
+	float3 vViewPos = mul(float4(P.xyz, 1), m_P).xyz;
+	float3 vViewNor = mul(float4(N, 0), m_P).xyz;
+	float3 vReflectDir = normalize(reflect(vViewPos.xyz, vViewNor.xyz));
+
+
+	//Raycast
+	float3 vHitPos = vViewPos;
+
+	float4 vCoords = SSRRayMarch(vReflectDir /** max( g_fMinRayStep, vViewPos.z )*/, vHitPos);
+
+	float2 vCoordsEdgeFact = float2(1, 1) - pow(saturate(abs(vCoords.xy - float2(0.5f, 0.5f)) * 2), 8);
+	float fScreenEdgeFactor = saturate(min(vCoordsEdgeFact.x, vCoordsEdgeFact.y));
+
+
+	//Color
+	float reflectionIntensity =
+		saturate(
+			fScreenEdgeFactor *		// screen fade
+			saturate(vReflectDir.z)	// camera facing fade
+			* vCoords.w				// rayhit binary fade
+			);
+
+
+	float3 reflectionColor = s_image.SampleLevel(smp_rtlinear, vCoords.xy, 0).rgb;
+reflectionColor *= reflectionIntensity;
+	//return max(0, float4(reflectionColor, reflectionIntensity));
+
+}
+#endif
+
+
+
 #ifndef USE_MSAA
 Texture2D s_distort;
 #else
@@ -16,7 +134,7 @@ struct c2_out
 #endif
 };
 
-[earlydepthstencil]
+//[earlydepthstencil]
 c2_out main(p_screen I)
 {
 	c2_out res;
@@ -26,7 +144,7 @@ c2_out main(p_screen I)
 
 	gbuffer_data gbd = gbuffer_load_data(I.tc0, I.hpos, iSample);
 	
-#ifdef USE_DISTORT
+#ifdef USE_DISTORT //This looks fantastic, but it seems more expensive than GSC's method. Maybe 4x4 pixels instead of 7x7?
 	float4 	distort	= s_distort.Load(int3(I.hpos.xy, 0), iSample);
 	float2	offset	= (distort.xy - (127.0f/255.0f))*def_distort;  // fix newtral offset
 	
@@ -61,13 +179,17 @@ c2_out main(p_screen I)
 	float3	img		= dof(center);
 	float4 	bloom	= s_bloom.Sample(smp_rtlinear, center);
 			img 	= mblur(center, gbd.P, img.rgb);
+	float4	ptp		= mul(m_P, float4(gbd.P, 1.0f));
+#ifdef USE_SSR	
+    SSR(gbd.N, ptp.xyz);	
+#endif		
+
 #ifdef USE_DISTORT
  	float3	blurred	= bloom*def_hdr	;
 			img		= lerp(img, blurred, distort.z);
 #endif
 	res.Color		= float4(img + bloom * bloom.a, 1.0);
 #ifdef USE_MSAA
-	float4	ptp		= mul(m_P, float4(gbd.P, 1.0f));
 	res.Depth		= (ptp.w == 0.0f) ? 1.0f : ptp.z/ptp.w;
 #endif
 	return res;

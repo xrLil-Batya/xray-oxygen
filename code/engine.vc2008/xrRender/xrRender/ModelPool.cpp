@@ -94,7 +94,7 @@ dxRender_Visual* CModelPool::TryLoadOgf(const char* N)
 
 	// Add default ext if no ext at all
 	if (!strext(N))	
-		strconcat(sizeof(name), name, N, ".ogf");
+		xr_strconcat( name, N, ".ogf");
 	else				
 		strcpy_s(name, sizeof(name), N);
 
@@ -374,7 +374,7 @@ void CModelPool::Prefetch()
 	Logging(FALSE);
 	// prefetch visuals
 	string256 section;
-	strconcat(sizeof(section), section, "prefetch_visuals_", g_pGamePersistent->m_game_params.m_game_type);
+	xr_strconcat( section, "prefetch_visuals_", g_pGamePersistent->m_game_params.m_game_type);
 	CInifile::Sect& sect = pSettings->r_section(section);
 
     for (const CInifile::Item &it : sect.Data)

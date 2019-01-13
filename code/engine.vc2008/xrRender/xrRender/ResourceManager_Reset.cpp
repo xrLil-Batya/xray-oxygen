@@ -15,10 +15,10 @@ void	CResourceManager::reset_begin			()
 	::Render->reset_begin		();
 	size_t it = 0;
 
-	concurrency::parallel_for_each(v_states.begin(), v_states.end(), [](SState* pState)
+	for (SState* theState : v_states)
 	{
-		_RELEASE(pState->state);
-	});
+		_RELEASE(theState->state);
+	}
 
 	// destroy RTs
 	for (auto &rt_it:m_rtargets)
@@ -75,7 +75,7 @@ void	CResourceManager::reset_end				()
 		{
 			rt.push_back(rt_it->second);
 		}
-		concurrency::parallel_sort(rt.begin(),rt.end(), [](const CRT* A, const CRT* B) { return A->_order < B->_order; });
+		std::sort(rt.begin(),rt.end(), [](const CRT* A, const CRT* B) { return A->_order < B->_order; });
 		for (u32 _it=0; _it<rt.size(); _it++)	rt[_it]->reset_end	();
 	}
 

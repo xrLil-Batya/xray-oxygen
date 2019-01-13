@@ -132,7 +132,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	//sd.Flags = DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
 
 	//	Additional set up
-	UINT createDeviceFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
+	UINT createDeviceFlags = 0;//Temp reverted (this is causing the CTD's) //D3D11_CREATE_DEVICE_SINGLETHREADED;
 	if (isGraphicDebugging)
 	{
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -204,7 +204,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 		Msg("Failed to initialize graphics hardware.\n"
 			"Please try to restart the game.\n"
 			"CreateDevice returned 0x%08x", R);
-		FlushLog();
+		xrLogger::FlushLog();
 		FATAL("Failed to initialize graphics hardware.\nPlease try to restart the game.");
 	};
 	R_CHK(R);
@@ -405,9 +405,13 @@ void CHW::OnAppDeactivate()
 }
 
 
-bool CHW::IsFormatSupported(D3DFORMAT fmt, DWORD type, DWORD usage)
+bool CHW::IsFormatSupported(DXGI_FORMAT fmt)
 {
-	VERIFY(!"Implement CHW::support");
+	u32 FormatSupport;
+	HRESULT hr = pDevice->CheckFormatSupport(fmt, &FormatSupport);;
+	if (FAILED(hr))
+		return false;
+
 	return true;
 }
 

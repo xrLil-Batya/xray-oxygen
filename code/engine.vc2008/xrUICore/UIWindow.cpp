@@ -42,7 +42,7 @@ void draw_rect(Frect& r, u32 color)
 
 void UI_API draw_wnds_rects()
 {
-	if(0==g_wnds_rects.size())	return;
+	if(g_wnds_rects.empty())	return;
 
 	xr_vector<Frect>::iterator it = g_wnds_rects.begin();
 	xr_vector<Frect>::iterator it_e = g_wnds_rects.end();
@@ -116,14 +116,7 @@ void CUIWindow::Draw()
 	{
 		if (!pWnd->IsShown())		continue;
 		if (pWnd->GetCustomDraw())	continue;
-		try
-		{
-			pWnd->Draw();
-		}
-		catch (...)
-		{
-			Msg("[Warning] %s wnd drawing error!", pWnd->m_windowName.c_str());
-		}
+		pWnd->Draw();
 	}
 #ifdef DEBUG
 	if(g_show_wnd_rect2){

@@ -18,7 +18,7 @@ Fvector CALifeMonsterPatrolPathManager__target_position	(CALifeMonsterPatrolPath
 	return	(self->target_position());
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CALifeMonsterPatrolPathManager::script_register	(lua_State *L)
 {
 	module(L)

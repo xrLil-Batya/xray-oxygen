@@ -56,7 +56,7 @@ void CRender::render_sun()
 	// Compute volume(s) - something like a frustum for infinite directional light
 	// Also compute virtual light position and sector it is inside
 	CFrustum					cull_frustum;
-	concurrency::concurrent_vector<Fplane> cull_planes;
+	xr_vector<Fplane> cull_planes;
 	Fvector3					cull_COP;
 	CSector*					cull_sector;
 	Matrix4x4					cull_xform;
@@ -543,7 +543,7 @@ void CRender::render_sun_near()
 	// Compute volume(s) - something like a frustum for infinite directional light
 	// Also compute virtual light position and sector it is inside
 	CFrustum							   cull_frustum;
-	concurrency::concurrent_vector<Fplane> cull_planes;
+	xr_vector<Fplane> cull_planes;
 	Fvector3							   cull_COP;
 	CSector*							   cull_sector;
 	Matrix4x4							   cull_xform;
@@ -789,7 +789,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 
 	// Compute volume(s) - something like a frustum for infinite directional light
 	// Also compute virtual light position and sector it is inside
-	concurrency::concurrent_vector<Fplane> cull_planes;
+	xr_vector<Fplane> cull_planes;
 	CFrustum					cull_frustum;
 	Fvector3					cull_COP;
 	CSector*					cull_sector;

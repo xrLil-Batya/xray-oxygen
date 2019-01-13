@@ -328,6 +328,7 @@ void CMainMenu::OnRenderPPUI_main()
 //pureFrame
 void CMainMenu::OnFrame()
 {
+	ScopeStatTimer frameTimer(Device.Statistic->Engine_MenuFrame);
 	if (m_Flags.test(flNeedChangeCapture))
 	{
 		m_Flags.set(flNeedChangeCapture, FALSE);

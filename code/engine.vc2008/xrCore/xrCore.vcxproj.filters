@@ -275,9 +275,6 @@
     <ClInclude Include="string_concatenations.h">
       <Filter>Math\Extensions</Filter>
     </ClInclude>
-    <ClInclude Include="string_concatenations_inline.h">
-      <Filter>Math\Extensions</Filter>
-    </ClInclude>
     <ClInclude Include="xr_trims.h">
       <Filter>Math\Extensions</Filter>
     </ClInclude>
@@ -457,6 +454,9 @@
     </ClInclude>
     <ClInclude Include="vector.h">
       <Filter>Math\General elements</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuffer.h">
+      <Filter>Kernel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

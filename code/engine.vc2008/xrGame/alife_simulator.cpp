@@ -468,7 +468,7 @@ xr_vector<u16>& get_children(const CALifeSimulator *self, CSE_Abstract *object)
 
 #include "../../SDK/include/luabind/iterator_policy.hpp"
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CALifeSimulator::script_register(lua_State *L)
 {
 	module(L)

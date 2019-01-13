@@ -129,12 +129,12 @@ void CSoundRender_Source::LoadWave(const char* pName)
 			m_fMaxAIDist = F.r_float();
 			break;
 		default:
-			Log("! Invalid ogg-comment version, file: ", pName);
+			Msg("! Invalid ogg-comment version, file: %s", pName);
 			break;
 		}
 	}
 	else
-		Log("! Missing ogg-comment, file: ", pName);
+		Msg("! Missing ogg-comment, file: %s", pName);
 
 	R_ASSERT3((m_fMaxAIDist >= 0.1f) && (m_fMaxDist >= 0.1f), "Invalid max distance.", pName);
 
@@ -153,7 +153,7 @@ void CSoundRender_Source::load(const char* name)
 
 	fname = N;
 
-	strconcat(sizeof(fn), fn, N, ".ogg");
+	xr_strconcat( fn, N, ".ogg");
 	if (!FS.exist("$level$", fn))	FS.update_path(fn, "$game_sounds$", fn);
 
 	if (!FS.exist(fn))

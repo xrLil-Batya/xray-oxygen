@@ -22,6 +22,7 @@ public:
 						CAutosaveManager		();
 	virtual				~CAutosaveManager		();
 	virtual	shared_str	shedule_Name			() const		{ return shared_str("autosave_manager"); }
+	virtual	shared_str	shedule_Class_Name		() const		{ return shared_str("CAutosaveManager"); }
 	virtual	void		shedule_Update			(u32 dt);
 	virtual float		shedule_Scale			();
 	virtual bool		shedule_Needed			()				{ return true; }

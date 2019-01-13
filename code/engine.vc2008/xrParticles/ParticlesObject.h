@@ -28,6 +28,7 @@ public:
 	virtual bool shedule_Needed() { return true; };
 	virtual float shedule_Scale();
 	virtual void shedule_Update(u32 dt);
+	virtual	shared_str shedule_Class_Name() const override { return shared_str("particle_object"); };
 	virtual void renderable_Render();
 	void PerformAllTheWork(u32 dt);
 	void	__stdcall	PerformAllTheWork_mt();

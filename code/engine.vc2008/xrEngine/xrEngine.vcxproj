@@ -206,6 +206,7 @@
     <ClInclude Include="IGame_AnselSDK.h" />
     <ClInclude Include="ILoadingScreen.h" />
     <ClInclude Include="DiscordRichPresense.h" />
+    <ClInclude Include="profiler.h" />
     <ClInclude Include="spectre\ExternalCallbackTypes.h" />
     <ClInclude Include="spectre\Spectre.h" />
     <ClInclude Include="LensFlareDescriptor.h" />
@@ -340,6 +341,7 @@
     <ClCompile Include="defines.cpp" />
     <ClCompile Include="DiscordRichPresense.cpp" />
     <ClCompile Include="IGame_AnselSDK.cpp" />
+    <ClCompile Include="profiler.cpp" />
     <ClCompile Include="spectre\ExternalCallbackTypes.cpp" />
     <ClCompile Include="spectre\Spectre.cpp" />
     <ClCompile Include="DynamicSplash.cpp" />

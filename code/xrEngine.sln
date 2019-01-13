@@ -127,6 +127,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrShaders", "engine.vc2008\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrDebugger", "engine.vc2008\xrDebugger\xrDebugger.vcxproj", "{D518816E-B82A-4E7D-8637-9B210FBA2213}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrRender_VK", "engine.vc2008\xrRender\xrRenderVK\xrRender_VK.vcxproj", "{9FB10D09-B11C-4D5C-AC31-F871781EF6EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -306,6 +308,11 @@ Global
 		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Mixed|x64.ActiveCfg = Release|x64
 		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Mixed|x64.Build.0 = Release|x64
 		{D518816E-B82A-4E7D-8637-9B210FBA2213}.Release|x64.ActiveCfg = Release|x64
+		{9FB10D09-B11C-4D5C-AC31-F871781EF6EB}.Debug|x64.ActiveCfg = Debug|x64
+		{9FB10D09-B11C-4D5C-AC31-F871781EF6EB}.Debug|x64.Build.0 = Debug|x64
+		{9FB10D09-B11C-4D5C-AC31-F871781EF6EB}.Mixed|x64.ActiveCfg = Debug|x64
+		{9FB10D09-B11C-4D5C-AC31-F871781EF6EB}.Mixed|x64.Build.0 = Debug|x64
+		{9FB10D09-B11C-4D5C-AC31-F871781EF6EB}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -331,6 +338,7 @@ Global
 		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69} = {9A6A94C9-26FC-450C-986F-AA512F84C030}
 		{4983DCA1-9704-4220-8AF7-4001775FD3F5} = {9A6A94C9-26FC-450C-986F-AA512F84C030}
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25} = {FB339160-99FE-47BD-B161-B3EB1C4C5974}
+		{9FB10D09-B11C-4D5C-AC31-F871781EF6EB} = {7A76B1EB-9731-4FA0-8B13-5B5046FF7FC6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC8D3737-61A4-4A70-AE4C-C66D5F07767A}

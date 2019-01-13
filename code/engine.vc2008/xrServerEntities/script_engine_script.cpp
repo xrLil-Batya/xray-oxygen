@@ -25,7 +25,7 @@ void ErrorLog(LPCSTR caMessage)
 void FlushLogs()
 {
 #ifdef DEBUG
-	FlushLog();
+	xrLogger::FlushLog();
 	ai().script_engine().flush_log();
 #endif // DEBUG
 }

@@ -75,7 +75,7 @@ Fvector CALifeSmartTerrainTask::position () const
 #include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CALifeSmartTerrainTask::script_register(lua_State *L)
 {
 	module(L)

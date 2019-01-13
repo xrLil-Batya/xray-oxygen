@@ -16,7 +16,7 @@ CScriptActionCondition::~CScriptActionCondition	()
 #include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptActionCondition::script_register(lua_State *L)
 {
 	module(L)

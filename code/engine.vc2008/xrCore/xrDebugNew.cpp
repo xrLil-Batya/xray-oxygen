@@ -97,7 +97,7 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 		if (!i) 
 		{
 			Msg("%s", assertion_info);
-			FlushLog();
+			xrLogger::FlushLog();
 
 			buffer = assertion_info;
 			endline = "\r\n";
@@ -105,14 +105,14 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 		}
 	}
 
-	FlushLog();
+	xrLogger::FlushLog();
 
 	os_clipboard::copy_to_clipboard(assertion_info);
 }
 
 void xrDebug::do_exit(HWND hWnd, const xr_string &message)
 {
-	FlushLog();
+	xrLogger::FlushLog();
 
 	if (MessageBoxA(nullptr, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
@@ -127,7 +127,7 @@ void xrDebug::do_exit(HWND hWnd, const xr_string &message)
 
 void xrDebug::do_exit(const xr_string &message, const xr_string &message2)
 {
-	FlushLog();
+	xrLogger::FlushLog();
 
 	xr_string szMsg = "Expression: "	+
 						message			+ 
@@ -158,17 +158,21 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 		handler();
 
 	// Sometimes if we crashed not in main thread, we can stuck at ShowWindow
+	HWND gameWindow = NULL;
+
 	if (GetCurrentThreadId() == m_mainThreadId)
 	{
 		ShowWindow(gGameWindow, SW_HIDE);
+		gameWindow = gGameWindow;
 	}
 	while (ShowCursor(TRUE) < 0);
 
+
 #if !defined(DEBUG) && !defined(MIXED_NEW)
-	do_exit(gGameWindow, assertion_info);
+	do_exit(gameWindow, assertion_info);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
-	do_exit2(gGameWindow, assertion_info, ignore_always);
+	do_exit2(gameWindow, assertion_info, ignore_always);
 #endif
 
 	// And we should show window again, damn pause manager
@@ -264,15 +268,13 @@ int out_of_memory_handler(size_t size)
 		u32					process_heap = mem_usage_impl();
 		int					eco_strings = g_pStringContainer.stat_economy();
 		int					eco_smem = g_pSharedMemoryContainer->stat_economy();
-		Msg("* [X-ray]: Process heap[%d K]", process_heap / 1024);
-		Msg("* [X-ray]: Economy: strings[%d K], smem[%d K]", eco_strings / 1024, eco_smem);
+	    Msg("* [X-ray]: Process heap[%d K]", process_heap / 1024);
+	    Msg("* [X-ray]: Economy: strings[%d K], smem[%d K]", eco_strings / 1024, eco_smem);
 	}
 
 	Debug.fatal(DEBUG_INFO, "Out of memory. Memory request: %d K", size / 1024);
 	return					1;
 }
-
-extern const char* log_name();
 
 XRCORE_API string_path g_bug_report_file;
 
@@ -435,7 +437,7 @@ using MINIDUMPWRITEDUMP = BOOL(WINAPI*)(HANDLE hProcess, DWORD dwPid, HANDLE hFi
 LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
     // Flush, after crashhandler. We include log file in a minidump
-    FlushLog();
+	xrLogger::FlushLog();
 
     long retval = EXCEPTION_CONTINUE_SEARCH;
     bException = true;
@@ -520,12 +522,10 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
                 {
                     do
                     {
-                        const char* logFileName = log_name();
-
-						if (logFileName == nullptr) { break; }
+						const string_path& logFileName2 = xrLogger::GetLogPath();
 
                         // Don't use X-Ray FS - it can be corrupted at this point
-                        HANDLE hLogFile = CreateFileA(logFileName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+                        HANDLE hLogFile = CreateFileA(logFileName2, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
                         if (hLogFile == INVALID_HANDLE_VALUE) break;
 
                         LARGE_INTEGER FileSize;
@@ -631,7 +631,7 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
     }
 
     Log(szResult);
-    FlushLog();
+	xrLogger::FlushLog();
 
     return retval;
 }

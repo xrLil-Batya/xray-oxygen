@@ -232,7 +232,7 @@ void CHWCaps::Update()
 	geometry.dwRegisters		= cnt;
 	geometry.dwInstructions		= 256;
 	geometry.dwClipPlanes		= std::min(6,15);
-	geometry.bVTF				= TRUE;
+	geometry.bVTF				= HW.IsFormatSupported(DXGI_FORMAT_R32_FLOAT);
 
 	// ***************** PIXEL processing
 	raster_major				= 4;

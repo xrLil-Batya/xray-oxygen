@@ -1402,8 +1402,6 @@
     <ClInclude Include="..\xrServerEntities\object_item_script.h" />
     <ClInclude Include="..\xrServerEntities\object_item_single.h" />
     <ClInclude Include="..\xrServerEntities\object_item_single_inline.h" />
-    <ClInclude Include="profiler.h" />
-    <ClInclude Include="profiler_inline.h" />
     <ClInclude Include="quadtree.h" />
     <ClInclude Include="quadtree_inline.h" />
     <ClInclude Include="ai\weighted_random.h" />
@@ -2196,9 +2194,6 @@
     <ClCompile Include="..\xrServerEntities\object_factory_register.cpp" />
     <ClCompile Include="..\xrServerEntities\object_factory_script.cpp" />
     <ClCompile Include="..\xrServerEntities\object_item_script.cpp" />
-    <ClCompile Include="profiler.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="ai\weighted_random.cpp" />
     <ClCompile Include="random32.cpp" />
     <ClCompile Include="xrGame.cpp" />

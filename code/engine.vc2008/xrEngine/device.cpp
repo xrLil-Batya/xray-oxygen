@@ -76,6 +76,7 @@ void CRenderDevice::Clear()
 
 void CRenderDevice::End		()
 {
+	ScopeStatTimer endTimer(Device.Statistic->Render_End);
 #ifdef INGAME_EDITOR
 	bool load_finished = false;
 #endif // #ifdef INGAME_EDITOR
@@ -120,6 +121,7 @@ void CRenderDevice::End		()
 		if (load_finished && m_editor)
 			m_editor->on_load_finished();
 #	endif // #ifdef INGAME_EDITOR
+
 }
 
 volatile u32 mt_Thread_marker = 0x12345678;
@@ -251,7 +253,9 @@ void CRenderDevice::on_idle()
 			}
 
 			//	Present goes here
+			Device.Statistic->Render_End.FrameStart();
 			End();
+			Device.Statistic->Render_End.FrameEnd();
 		}
 	}
 	Statistic->RenderTOTAL_Real.End();
@@ -267,7 +271,7 @@ void CRenderDevice::on_idle()
 	// Ensure, that second thread gets chance to execute anyway
 	if (dwFrame != mt_Thread_marker)
 	{
-		for (auto & refParallelDelegate : Device.seqParallel) 
+		for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
 			refParallelDelegate();
 
 		Device.seqParallel.clear();
@@ -282,7 +286,7 @@ void CRenderDevice::on_idle()
 
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
-	static char buf[128] = { NULL };
+	string128 buf = {0};
 	xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
 
 	Console->Execute(buf);
