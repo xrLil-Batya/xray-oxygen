@@ -19,7 +19,7 @@ namespace xrLayoutEditor
         {
             base.OnStartup(e);
 
-            SpectreEngine.xrCoreInit("Layout Editor");
+          //  SpectreEngine.xrCoreInit("Layout Editor");
         }
     }
 }

@@ -83,6 +83,10 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
         // FS is valid at this point, signal to debug system
         Debug._initializeAfterFS();
 
+		// Create log file
+		xrLogger::OpenLogFile();
+
+		// Calc build number
 		compute_build_id();
 		Msg("xrCore build %d, %s\n", build_id, build_date);
 #ifdef _AUTHOR

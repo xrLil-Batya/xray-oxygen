@@ -19,7 +19,7 @@ namespace xrLayoutEditor
 			InitializeComponent();
 
 			// Init Spectre System and UI Parser
-			SpectreEngine.xrCoreInit("Post Process Editor");
+			SpectreEngine.xrCoreInit("Post Process Editor", "fsgame.ltx");
 			UIParser = new XRay.xrManagedUILib.UIXMLParser();
 
 			XRay.Log.Info("LayOut Editor inited!");
