@@ -59,13 +59,14 @@ void xrLogger::Msg(LPCSTR Msg, va_list argList)
 
 void xrLogger::SimpleMessage(LPCSTR Message, u32 MessageSize /*= 0*/)
 {
-	u32 MsgSize = MessageSize;
-	if (MsgSize == 0)
+	switch (MessageSize)
 	{
-		MsgSize = xr_strlen(Message);
+	case (u32(-1)): return;
+	case 0:			MessageSize = xr_strlen(Message); break;
+	default:		break;
 	}
 	xrCriticalSectionGuard guard(logDataGuard);
-	logData.emplace(LogRecord(Message, MsgSize));
+	logData.emplace(LogRecord(Message, MessageSize));
 }
 
 void xrLogger::OpenLogFile()
