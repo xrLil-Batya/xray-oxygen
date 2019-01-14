@@ -3,7 +3,7 @@
 #include "../Include/xrRender/FactoryPtr.h"
 #include "../Include/xrRender/UIRender.h"
 #include "../Include/xrRender/UIShader.h"
-using ui_shader =	FactoryPtr<IUIShader>;
+using ui_shader = FactoryPtr<IUIShader>;
 
 #define UI_BASE_WIDTH	1024.0f
 #define UI_BASE_HEIGHT	768.0f

@@ -268,6 +268,21 @@ const char* CXml::ReadAttrib(XML_NODE* node, const char* attrib, const char* def
 	return default_str_val;
 }
 
+bool CXml::ReadAttribBool(XML_NODE* node, const char* attrib, bool default_value)
+{
+	return ReadAttribInt(node, attrib, 0) ? true : default_value;
+}
+
+bool CXml::ReadAttribBool(const char* path, int index, const char* attrib, bool default_value)
+{
+	return ReadAttribInt(path, index, attrib, 0) ? true : default_value;
+}
+
+bool CXml::ReadAttribBool(XML_NODE* start_node, const char* path, int index, const char* attrib, bool default_value)
+{
+	return ReadAttribInt(start_node, path, index, attrib, 0) ? true : default_value;
+}
+
 int CXml::ReadAttribInt(XML_NODE* node, const char* attrib, int default_int_val)
 {
 	const char* result_str = ReadAttrib(node, attrib, nullptr);
