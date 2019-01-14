@@ -41,7 +41,7 @@ private:
 	void InternalOpenLogFile();
 
 	string_path logFileName;
-	std::ofstream* TryLogFile;
+	volatile IWriter* logFile;
 
 	struct LogRecord
 	{

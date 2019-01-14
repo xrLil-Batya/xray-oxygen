@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include <time.h>
-#include <fstream>
 #include "resource.h"
 #include "log.h"
 
@@ -117,19 +116,22 @@ void xrLogger::RemoveLogCallback(LogCallback logCb)
 
 void xrLogger::InternalCloseLog()
 {
-	if (hLogThread != nullptr)
+	if (hLogThread != NULL)
 	{
 		bIsAlive = false;
 		WaitForSingleObject(hLogThread, INFINITE);
-		hLogThread = nullptr;
+		hLogThread = NULL;
 	}
 
-	if(TryLogFile) TryLogFile->close();
+	IWriter* tempCopy = (IWriter*)logFile;
+	logFile = nullptr;
+	FS.w_close(tempCopy);
 }
 
 xrLogger::xrLogger()
-	: TryLogFile(nullptr), bFastDebugLog(false), 
-	bIsAlive(true), hLogThread(nullptr), bFlushRequested(false)
+	: logFile(nullptr), bFastDebugLog(false), 
+	bIsAlive(true), hLogThread(NULL), 
+	bFlushRequested(false)
 {}
 
 xrLogger::~xrLogger()
@@ -144,21 +146,31 @@ void xrLogger::InternalOpenLogFile()
 	
 	Time time;
 	xr_strconcat(CurrentDate, time.GetDayString().c_str(), "." , time.GetMonthString().c_str(), "." , time.GetDayString().c_str());
-	xr_strconcat(CurrentTime, time.GetHoursString().c_str(), "h", time.GetMinutesString().c_str(), "m", time.GetSecondsString().c_str(), "s");
+	xr_strconcat(CurrentTime, time.GetHoursString().c_str(), ":", time.GetMinutesString().c_str(), ":", time.GetSecondsString().c_str());
 
 	xr_strconcat(logFileName, "[", CurrentDate, " " , CurrentTime, "]", ".log");
 	if (FS.path_exist("$logs$"))
 	{
 		FS.update_path(logFileName, "$logs$", logFileName);
 	}
-
-	// Check and close
-	TryLogFile = new std::ofstream(logFileName, std::ios::app);
-	CHECK_OR_EXIT(TryLogFile, "Can't create log file");
+	logFile = FS.w_open(logFileName);
+	CHECK_OR_EXIT(logFile, "Can't create log file");
 }
 
 void xrLogger::LogThreadEntry()
 {
+	auto FlushLogIfRequestedLambda = [this]()
+	{
+		if (bFlushRequested)
+		{
+			if (logFile != nullptr)
+			{
+				IWriter* mutableWritter = (IWriter*)logFile;
+				mutableWritter->flush();
+			}
+		}
+	};
+
 	while (bIsAlive)
 	{
 		bool bHaveMore = true;
@@ -188,6 +200,9 @@ void xrLogger::LogThreadEntry()
 				string4096 finalLine;
 				xr_strconcat(finalLine, TimeOfDay, line.c_str());
 
+				int FinalSize = TimeOfDaySize + (int)line.size();
+				// line is ready, ready up everything
+
 				// Output to MSVC debug output
 				if (IsDebuggerPresent() && !bFastDebugLog)
 				{
@@ -195,13 +210,11 @@ void xrLogger::LogThreadEntry()
 					OutputDebugStringA("\n");
 				}
 
-				if (TryLogFile != nullptr)
+				if (logFile != nullptr)
 				{
-					(*TryLogFile) << (finalLine) << std::endl;
-
-					// Write buffer to file
-					if(bFlushRequested)
-						TryLogFile->flush();
+					IWriter* mutableWritter = (IWriter*)logFile;
+					// write to file
+					mutableWritter->w(finalLine, FinalSize);
 				}
 
 				for (const LogCallback& FnCallback : logCallbackList)
@@ -212,12 +225,12 @@ void xrLogger::LogThreadEntry()
 
 		} while (bHaveMore);
 
-		// Write buffer to file
-		if(TryLogFile)
-			TryLogFile->flush();
+		FlushLogIfRequestedLambda();
 
 		Sleep(13); // work at 60 FPS roughly
 	}
+
+	FlushLogIfRequestedLambda();
 }
 
 xrLogger::LogRecord::LogRecord(LPCSTR Msg, u32 sizeMsg)
