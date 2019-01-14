@@ -82,12 +82,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="API\UILines.h" />
+    <ClInclude Include="API\UIStatic.h" />
     <ClInclude Include="API\Window.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="xrManagedUILib.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="API\UILines.cpp" />
+    <ClCompile Include="API\UIStatic.cpp" />
     <ClCompile Include="API\Window.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="stdafx.cpp">
