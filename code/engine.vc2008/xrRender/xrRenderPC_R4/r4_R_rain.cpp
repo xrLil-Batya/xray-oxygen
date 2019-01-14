@@ -48,13 +48,13 @@ void CRender::render_rain()
 	float	fBoundingSphereRadius = 0;
 
 	// calculate view-frustum bounds in world space
-	Matrix4x4 ex_project, ex_full, ex_full_inverse;
+	Fmatrix ex_project, ex_full, ex_full_inverse;
 	{
 		//	
 		const float fRainFar = ps_r3_dyn_wet_surf_far;
-		ex_project.BuildProj(deg2rad(Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, fRainFar);
-		ex_full = DirectX::XMMatrixMultiply(Device.mView, ex_project);
-		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
+		ex_project.build_projection(deg2rad(Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, fRainFar);
+		ex_full.mul(Device.mView, ex_project);
+		ex_full_inverse.invert(ex_full);
 
 		//	Calculate view frustum were we can see dynamic rain radius
 		{
@@ -78,7 +78,7 @@ void CRender::render_rain()
 	{
 		FPU::m64r();
 		// Lets begin from base frustum
-		Matrix4x4 fullxform_inv = ex_full_inverse;
+		Fmatrix fullxform_inv = ex_full_inverse;
 #ifdef	_DEBUG
 		typedef		DumbConvexVolume<true>	t_volume;
 #else
@@ -95,7 +95,7 @@ void CRender::render_rain()
 
 			for (int plane = 0; plane < 6; plane++)
 			{
-				hull.polys.push_back(t_volume::_poly());
+				hull.polys.emplace_back();
 				for (int pt = 0; pt < 4; pt++)
 					hull.polys.back().points.push_back(facetable[plane][pt]);
 			}
@@ -109,7 +109,7 @@ void CRender::render_rain()
 
 		// Search for default sector - assume "default" or "outdoor" sector is the largest one
 		//. hack: need to know real outdoor sector
-		CSector*	largest_sector = 0;
+		CSector*	largest_sector = nullptr;
 		float		largest_sector_vol = 0;
 		for (u32 s = 0; s < Sectors.size(); s++)
 		{
@@ -127,12 +127,11 @@ void CRender::render_rain()
 		cull_COP.mad(Device.vCameraPosition, RainLight.direction, -tweak_rain_COP_initial_offs);
 		cull_COP.x += fBoundingSphereRadius * Device.vCameraDirection.x;
 		cull_COP.z += fBoundingSphereRadius * Device.vCameraDirection.z;
-
+		
 		// Create frustum for query
 		cull_frustum._clear();
 		for (u32 p = 0; p < cull_planes.size(); p++)
 			cull_frustum._add(cull_planes[p]);
-
 
 		// Create approximate ortho-xform
 		// view: auto find 'up' and 'right' vectors
@@ -186,7 +185,7 @@ void CRender::render_rain()
 			view_dim / 2.f + fTexelOffs, view_dim / 2.f + fTexelOffs, 0.0f, 1.0f
 		};
 
-		Matrix4x4 mViewPortInverse = DirectX::XMMatrixInverse(0, mViewPort);
+		Matrix4x4 mViewPortInverse = DirectX::XMMatrixInverse(nullptr, mViewPort);
 
 		// snap view-position to pixel
 		//	snap zero point to pixel

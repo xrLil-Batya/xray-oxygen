@@ -330,7 +330,7 @@ void CLensFlare::OnFrame(shared_str id)
 	if (m_Current->m_Flags.is(CLensFlareDescriptor::flGradient))
     {
 		Fvector scr_pos;
-		CastToGSCMatrix(Device.mFullTransform).transform(scr_pos, vecLight);
+		Device.mFullTransform.transform(scr_pos, vecLight);
 		float kx = 1.0f, ky = 1.0f;
 		float sun_blend		= 0.5f;
 		float sun_max		= 2.5f;

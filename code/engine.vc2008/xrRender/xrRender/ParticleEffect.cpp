@@ -61,12 +61,12 @@ CParticleEffect::CParticleEffect()
 	m_HandleEffect = ParticleManager()->CreateEffect(1);		VERIFY(m_HandleEffect >= 0);
 	m_HandleActionList = ParticleManager()->CreateActionList();	VERIFY(m_HandleActionList >= 0);
 	m_RT_Flags.zero();
-	m_Def = 0;
+	m_Def = nullptr;
 	m_fElapsedLimit = 0.f;
 	m_MemDT = 0;
 	m_InitialPosition.set(0, 0, 0);
-	m_DestroyCallback = 0;
-	m_CollisionCallback = 0;
+	m_DestroyCallback = nullptr;
+	m_CollisionCallback = nullptr;
 	m_XFORM.identity();
 }
 CParticleEffect::~CParticleEffect()
@@ -547,13 +547,13 @@ void CParticleEffect::Render(float)
 			RCache.Vertex.Unlock(dwCount, geom->vb_stride);
 			if (dwCount)
 			{
-				Matrix4x4 Pold = Device.mProject;
-				Matrix4x4 FTold = Device.mFullTransform;
+				Fmatrix Pold = Device.mProject;
+				Fmatrix FTold = Device.mFullTransform;
 				if (GetHudMode())
 				{
-					RDEVICE.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
+					RDEVICE.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
 					
-					Device.mFullTransform.Multiply(Device.mView, Device.mProject);
+					Device.mFullTransform.mul(Device.mProject, Device.mView);
 					RCache.set_xform_project(Device.mProject);
 					RImplementation.rmNear();
 					ApplyTexgen(Device.mFullTransform);
@@ -571,8 +571,8 @@ void CParticleEffect::Render(float)
 					RImplementation.rmNormal();
 					Device.mProject = Pold;
 					Device.mFullTransform = FTold;
-					RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
-					ApplyTexgen(CastToGSCMatrix(Device.mFullTransform));
+					RCache.set_xform_project(Device.mProject);
+					ApplyTexgen(Device.mFullTransform);
 				}
 			}
 		}

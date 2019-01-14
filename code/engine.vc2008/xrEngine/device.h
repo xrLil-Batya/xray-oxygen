@@ -71,16 +71,16 @@ public:
 	Fvector									vCameraTop;
 	Fvector									vCameraRight;
 
-	Matrix4x4						mView;
-	Matrix4x4						mProject;
-	Matrix4x4						mFullTransform;
+	Fmatrix					mView;
+	Fmatrix					mProject;
+	Fmatrix					mFullTransform;
 
 	// Copies of corresponding members. Used for synchronization.
 	Fvector							vCameraPosition_saved;
 
-	Matrix4x4						mView_saved;
-	Matrix4x4						mProject_saved;
-	Matrix4x4						mFullTransform_saved;
+	Fmatrix						mView_saved;
+	Fmatrix						mProject_saved;
+	Fmatrix						mFullTransform_saved;
 
 	float									fFOV;
 	float									fASPECT;
@@ -164,14 +164,14 @@ public:
 		if (enabled && !m_bNearer)
 		{
 			m_bNearer = TRUE;
-			mProject.Matrix.r[1].m128_f32[3] -= EPS_L;
+			mProject._43 -= EPS_L;
 		}
 		else if (!enabled && m_bNearer)
 		{
 			m_bNearer = FALSE;
-			mProject.Matrix.r[1].m128_f32[3] += EPS_L;
+			mProject._43 += EPS_L;
 		}
-		m_pRender->SetCacheXform(CastToGSCMatrix(mView), CastToGSCMatrix(mProject));
+		m_pRender->SetCacheXform(mView, mProject);
 	}
 public:
 	// Registrators

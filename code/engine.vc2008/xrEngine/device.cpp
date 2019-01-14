@@ -219,13 +219,13 @@ void CRenderDevice::on_idle()
 		vCameraDirection.set(_sin(angle), 0, _cos(angle));	vCameraDirection.normalize();
 		vCameraTop.set(0, 1, 0);
 		vCameraRight.crossproduct(vCameraTop, vCameraDirection);
-		mView.BuildCamDir(vCameraPosition, vCameraDirection, vCameraTop);
+		mView.build_camera_dir(vCameraPosition, vCameraDirection, vCameraTop);
 	}
 
 	// Matrices
-	mFullTransform.Multiply(mView, mProject);
+	mFullTransform.mul(mProject, mView);
 	m_pRender->SetCacheXform(mView, mProject);
-	mInvFullTransform = XRay::Math::CastToGSCMatrix(DirectX::XMMatrixInverse(0, mFullTransform));
+	D3DXMatrixInverse((D3DXMATRIX*)&mInvFullTransform, nullptr, (D3DXMATRIX*)&mFullTransform);
 
 	vCameraPosition_saved = vCameraPosition;
 	mFullTransform_saved = mFullTransform;
@@ -489,6 +489,7 @@ void CRenderDevice::FrameMove()
 	if (psDeviceFlags.test(rsConstantFPS))	{
 		// 20ms = 50fps
 		// 33ms = 30fps
+
 		fTimeDelta		=	0.033f;
         Statistic->fRawFrameDeltaTime = fTimeDelta;
 		fTimeGlobal		+=	0.033f;

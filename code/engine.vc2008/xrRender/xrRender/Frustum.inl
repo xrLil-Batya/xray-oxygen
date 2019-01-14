@@ -24,6 +24,13 @@ struct BoundingBox
 			Merge(&points[i]);
 	}
 
+	explicit BoundingBox(const D3DXVECTOR3* points, UINT n) : minPt(1e33f, 1e33f, 1e33f), maxPt(-1e33f, -1e33f, -1e33f)
+	{
+		for (unsigned int i = 0; i < n; i++)
+			Merge(&points[i]);
+	}
+
+
 	explicit BoundingBox(const xr_vector<DirectX::XMFLOAT3>* points) : minPt(1e33f, 1e33f, 1e33f), maxPt(-1e33f, -1e33f, -1e33f)
 	{
 		for (unsigned int i = 0; i < points->size(); i++)
@@ -39,6 +46,16 @@ struct BoundingBox
 	}
 	//void Centroid( DirectX::XMFLOAT3* vec) const { *vec = 0.5f*(minPt + maxPt); }
 	void Merge(const DirectX::XMFLOAT3* vec)
+	{
+		minPt.x = std::min(minPt.x, vec->x);
+		minPt.y = std::min(minPt.y, vec->y);
+		minPt.z = std::min(minPt.z, vec->z);
+		maxPt.x = std::max(maxPt.x, vec->x);
+		maxPt.y = std::max(maxPt.y, vec->y);
+		maxPt.z = std::max(maxPt.z, vec->z);
+	}
+
+	void Merge(const D3DXVECTOR3* vec)
 	{
 		minPt.x = std::min(minPt.x, vec->x);
 		minPt.y = std::min(minPt.y, vec->y);
@@ -599,7 +616,7 @@ struct	DumbClipper
 		return	true;
 	}
 	D3DXVECTOR3			point(Fbox& bb, int i) const { return D3DXVECTOR3((i & 1) ? bb.min.x : bb.max.x, (i & 2) ? bb.min.y : bb.max.y, (i & 4) ? bb.min.z : bb.max.z); }
-	Fbox				clipped_AABB(xr_vector<Fbox, xalloc<Fbox3> >& src, Matrix4x4& xf)
+	Fbox				clipped_AABB(xr_vector<Fbox, xalloc<Fbox3> >& src, Fmatrix& xf)
 	{
 		Fbox3		result;		result.invalidate();
 		for (int it = 0; it<int(src.size()); it++) {
@@ -650,14 +667,14 @@ inline const _Tp& max(const _Tp& __a, const _Tp& __b) {
 
 extern xr_vector<Fbox, xalloc<Fbox> >	s_casters;
 
-inline DirectX::XMFLOAT2 BuildTSMProjectionMatrix_caster_depth_bounds(Matrix4x4& lightSpaceBasis)
+inline DirectX::XMFLOAT2 BuildTSMProjectionMatrix_caster_depth_bounds(D3DXMATRIX& lightSpaceBasis)
 {
 	float min_z = 1e32f,
 		max_z = -1e32f;
 
-	Matrix4x4 minmax_xf;
-	minmax_xf = DirectX::XMMatrixMultiply(Device.mView, lightSpaceBasis);
-	Fmatrix&	minmax_xform = CastToGSCMatrix(minmax_xf);
+	Fmatrix minmax_xf;
+	D3DXMatrixMultiply((D3DXMATRIX*)&minmax_xf, (D3DXMATRIX*)&Device.mView, &lightSpaceBasis);
+	Fmatrix&	minmax_xform = minmax_xf;
 
 	for (u32 c = 0; c < s_casters.size(); c++)
 	{

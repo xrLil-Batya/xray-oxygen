@@ -12,7 +12,7 @@ void	SetupGPU(IRenderDeviceRender *pRender)
 	BOOL bForceGPU_NonPure;
 	BOOL bForceGPU_REF;
 
-	if (strstr(Core.Params, "-gpu_sw") != NULL) 
+	if (strstr(Core.Params, "-gpu_sw") != nullptr) 
 	{
 		bForceGPU_SW = TRUE; 
 	}
@@ -20,7 +20,7 @@ void	SetupGPU(IRenderDeviceRender *pRender)
 	{
 		bForceGPU_SW = FALSE;
 	}
-	if (strstr(Core.Params, "-gpu_nopure") != NULL) 
+	if (strstr(Core.Params, "-gpu_nopure") != nullptr) 
 	{
 		bForceGPU_NonPure = TRUE; 
 	}
@@ -28,7 +28,7 @@ void	SetupGPU(IRenderDeviceRender *pRender)
 	{
 		bForceGPU_NonPure = FALSE;
 	}
-	if (strstr(Core.Params, "-gpu_ref") != NULL) 
+	if (strstr(Core.Params, "-gpu_ref") != nullptr) 
 	{ 
 		bForceGPU_REF = TRUE; 
 	}
@@ -43,9 +43,9 @@ void	SetupGPU(IRenderDeviceRender *pRender)
 void CRenderDevice::_SetupStates	()
 {
 	// General Render States
-	mView = DirectX::XMMatrixIdentity();
-	mProject = DirectX::XMMatrixIdentity();
-	mFullTransform = DirectX::XMMatrixIdentity();
+	mView.identity();
+	mProject.identity();
+	mFullTransform.identity();
 
 	vCameraPosition.set		(0,0,0);
 	vCameraDirection.set	(0,0,1);

@@ -301,7 +301,7 @@ void CRender::Render()
 	r_pmask(true, false, true);	// Enable priority "0",+ capture wmarks
 	set_Recorder(bSUN ? &main_coarse_structure : nullptr);
 	phase = PHASE_NORMAL;
-	render_main(CastToGSCMatrix(Device.mFullTransform));
+	render_main(Device.mFullTransform);
 	set_Recorder(nullptr);
 	r_pmask(true, false); // Disable priority "1"
 	Device.Statistic->Render_CRenderRender_render_main.End();
@@ -513,7 +513,7 @@ void CRender::render_forward()
 		// Level
 		r_pmask(false, true); // enable priority "1"
 		phase = PHASE_NORMAL;
-		render_main(CastToGSCMatrix(Device.mFullTransform));
+		render_main(Device.mFullTransform);
 
 		//	Igor: we don't want to render old lods on next frame.
 		mapLOD.clear				();

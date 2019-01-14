@@ -63,8 +63,8 @@ dx103DFluidManager::dx103DFluidManager()
 	m_nIterations(6), m_bUseBFECC(true),
 	m_fSaturation(0.78f), m_bAddDensity(true),
 	m_fImpulseSize(0.15f), m_fConfinementScale(0.0f),
-	m_fDecay(1.0f), m_pGrid(0), m_pRenderer(0),
-	m_pObstaclesHandler(0)
+	m_fDecay(1.0f), m_pGrid(nullptr), m_pRenderer(nullptr),
+	m_pObstaclesHandler(nullptr)
 {
     std::memset(pRenderTargetViews,0,sizeof(pRenderTargetViews));
 
@@ -117,7 +117,7 @@ void dx103DFluidManager::Initialize( int width, int height, int depth )
 	for(int rtIndex=0; rtIndex<NUM_RENDER_TARGETS; rtIndex++)
 	{
 		PrepareTexture(rtIndex);
-		pRenderTargetViews[rtIndex] = 0;
+		pRenderTargetViews[rtIndex] = nullptr;
 	}
 
 	for(int rtIndex=0; rtIndex<NUM_OWN_RENDER_TARGETS; rtIndex++)
@@ -196,7 +196,7 @@ void dx103DFluidManager::DestroyShaders()
 	for (int i=0; i<SS_NumShaders; ++i)
 	{
 		//	Release shader's element.
-		m_SimulationTechnique[i] = 0;
+		m_SimulationTechnique[i] = nullptr;
 	}
 }
 
@@ -212,7 +212,7 @@ void dx103DFluidManager::CreateRTTextureAndViews(int rtIndex, D3D_TEXTURE3D_DESC
 	ID3DTexture3D	*pRT;
 
 	// Create the texture
-	CHK_DX( HW.pDevice->CreateTexture3D(&TexDesc,NULL,&pRT));
+	CHK_DX( HW.pDevice->CreateTexture3D(&TexDesc,nullptr,&pRT));
 
 	// Create the render target view
 	D3D_RENDER_TARGET_VIEW_DESC DescRT;
@@ -231,7 +231,7 @@ void dx103DFluidManager::CreateRTTextureAndViews(int rtIndex, D3D_TEXTURE3D_DESC
 }
 void dx103DFluidManager::DestroyRTTextureAndViews(int rtIndex)
 {
-	pRTTextures[rtIndex] = 0;
+	pRTTextures[rtIndex] = nullptr;
 	_RELEASE(pRenderTargetViews[rtIndex]);
 }
 
@@ -267,7 +267,7 @@ void dx103DFluidManager::Update( dx103DFluidData &FluidData, float timestep )
 
 	HW.pContext->RSSetViewports(1,&rtViewport);
 
-	RCache.set_ZB(0);
+	RCache.set_ZB(nullptr);
 
 	UpdateObstacles( FluidData, timestep );
 
@@ -317,9 +317,9 @@ void dx103DFluidManager::Update( dx103DFluidData &FluidData, float timestep )
 	//	Restore render state
 	CRenderTarget* pTarget = RImplementation.Target;
 	if( !RImplementation.o.dx10_msaa )
-		pTarget->u_setrt( pTarget->rt_Generic_0,0,0,HW.pBaseZB);		// LDR RT
+		pTarget->u_setrt( pTarget->rt_Generic_0,nullptr,nullptr,HW.pBaseZB);		// LDR RT
 	else
-		pTarget->u_setrt( pTarget->rt_Generic_0_r,0,0,pTarget->rt_MSAADepth->pZRT);		// LDR RT
+		pTarget->u_setrt( pTarget->rt_Generic_0_r,nullptr,nullptr,pTarget->rt_MSAADepth->pZRT);		// LDR RT
 
 	RImplementation.rmNormal();
 }
@@ -357,7 +357,7 @@ void dx103DFluidManager::DetachAndSwapFluidData(dx103DFluidData &FluidData)
 	
 	for (int i=0; i<dx103DFluidData::VP_NUM_TARGETS; ++i)
 	{
-		pRTTextures[RENDER_TARGET_VELOCITY0+i]->surface_set(0);
+		pRTTextures[RENDER_TARGET_VELOCITY0+i]->surface_set(nullptr);
 		_RELEASE(pRenderTargetViews[RENDER_TARGET_VELOCITY0+i]);
 	}
 }
@@ -519,7 +519,7 @@ void dx103DFluidManager::ComputePressure( float timestep )
 	float color[4] = {0, 0, 0, 0 };
 	HW.pContext->ClearRenderTargetView( pRenderTargetViews[RENDER_TARGET_TEMPSCALAR], color );
 
-	RCache.set_RT(0);
+	RCache.set_RT(nullptr);
 	ref_selement	CurrentTechnique = m_SimulationTechnique[SS_Jacobi];
 	RCache.set_Element(CurrentTechnique);
 
@@ -563,14 +563,14 @@ void dx103DFluidManager::RenderFluid(dx103DFluidData &FluidData)
 	m_pRenderer->Draw(FluidData);
 
 	//	Unbind input texture
-	pRTTextures[RENDER_TARGET_COLOR_IN]->surface_set(0);
+	pRTTextures[RENDER_TARGET_COLOR_IN]->surface_set(nullptr);
 
 	//	Restore render state
 	CRenderTarget* pTarget = RImplementation.Target;
 	if( !RImplementation.o.dx10_msaa )
-		pTarget->u_setrt( pTarget->rt_Generic_0,0,0,HW.pBaseZB);		// LDR RT
+		pTarget->u_setrt( pTarget->rt_Generic_0,nullptr,nullptr,HW.pBaseZB);		// LDR RT
 	else
-		pTarget->u_setrt( pTarget->rt_Generic_0_r,0,0,pTarget->rt_MSAADepth->pZRT);		// LDR RT
+		pTarget->u_setrt( pTarget->rt_Generic_0_r,nullptr,nullptr,pTarget->rt_MSAADepth->pZRT);		// LDR RT
 
 	RImplementation.rmNormal();
 }
@@ -593,8 +593,8 @@ void dx103DFluidManager::UpdateObstacles( const dx103DFluidData &FluidData, floa
 	//	later only rt 0 will be reassigned so rt1 
 	//	would be bound all the time
 	//	Reset to avoid confusion. 
-	RCache.set_RT(0, 0);
-	RCache.set_RT(0, 1);
+	RCache.set_RT(nullptr, 0);
+	RCache.set_RT(nullptr, 1);
 }
 
 //	Allow real-time config reload
