@@ -37,6 +37,10 @@ public:
 	const char*			ReadAttrib				(XML_NODE* start_node, const char* path,  int index, const char* attrib, const char* default_str_val = "");
 	const char*			ReadAttrib				(XML_NODE* node, const char* attrib, const char* default_str_val);
 
+	bool				ReadAttribBool			(const char* path, int index, const char* attrib, bool default_value = false);
+	bool				ReadAttribBool			(XML_NODE* start_node, const char* path, int index, const char* attrib, bool default_value = false);
+	bool				ReadAttribBool			(XML_NODE* node, const char* attrib, bool default_value = false);
+
 	int					ReadAttribInt			(const char* path, int index, const char* attrib, int default_int_val = 0);
 	int					ReadAttribInt			(XML_NODE* start_node, const char* path, int index, const char* attrib, int default_int_val = 0);
 	int					ReadAttribInt			(XML_NODE* node, const char* attrib, int default_int_val);
