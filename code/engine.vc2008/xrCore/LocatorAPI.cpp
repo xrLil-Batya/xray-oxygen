@@ -780,7 +780,7 @@ void CLocatorAPI::_initialize(u32 flags, const char* target_folder, const char* 
 	rec_files.clear();
 	//-----------------------------------------------------------
 
-	if (strstr(Core.Params, "-nolog") != nullptr)
+	if (strstr(Core.Params, "-nolog") == nullptr)
 	{
 		xrLogger::OpenLogFile();
 	}

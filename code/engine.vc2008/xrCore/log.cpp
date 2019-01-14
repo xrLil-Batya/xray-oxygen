@@ -146,7 +146,7 @@ void xrLogger::InternalOpenLogFile()
 	
 	Time time;
 	xr_strconcat(CurrentDate, time.GetDayString().c_str(), "." , time.GetMonthString().c_str(), "." , time.GetDayString().c_str());
-	xr_strconcat(CurrentTime, time.GetHoursString().c_str(), ":", time.GetMinutesString().c_str(), ":", time.GetSecondsString().c_str());
+	xr_strconcat(CurrentTime, time.GetHoursString().c_str(), ".", time.GetMinutesString().c_str(), ".", time.GetSecondsString().c_str());
 
 	xr_strconcat(logFileName, "[", CurrentDate, " " , CurrentTime, "]", ".log");
 	if (FS.path_exist("$logs$"))
@@ -215,6 +215,7 @@ void xrLogger::LogThreadEntry()
 					IWriter* mutableWritter = (IWriter*)logFile;
 					// write to file
 					mutableWritter->w(finalLine, FinalSize);
+					mutableWritter->w("\r\n", 2);
 				}
 
 				for (const LogCallback& FnCallback : logCallbackList)
