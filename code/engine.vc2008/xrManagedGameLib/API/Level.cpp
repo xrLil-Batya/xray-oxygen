@@ -1,12 +1,18 @@
 ﻿#include "stdafx.h"
 #include "Level.h"
+#include "../xrCore/LocatorAPI.h"
+#include "../xrGame/patrol_path_storage.h"
 #include "../xrGame/ai_space.h"
+#include "../xrGame/alife_simulator.h"
+#include "../xrGame/alife_time_manager.h"
 #include "../xrGame/level_graph.h"
 #include "../xrGame/Level.h"
 #include "../xrGame/Actor.h"
-#include "../xrGame/alife_simulator.h"
-#include "../xrGame/alife_time_manager.h"
 #include "../xrEngine/date_time.h"
+#include "../xrGame/map_location.h"
+#include "../xrGame/map_manager.h"
+
+
 
 u32 XRay::LevelGraph::LevelID::get()
 {
@@ -38,7 +44,7 @@ void XRay::Level::Weather::set(::System::String^ str)
 	}
 }
 
-void XRay::Level::SetWeatherFX(::System::String^ str)
+void XRay::Level::WeatherFX::set(::System::String^ str)
 {
 	if (!Device.editor())
 	{
@@ -58,17 +64,17 @@ void XRay::Level::StartWeatherFXfromTime(::System::String^ str, float time)
 	}
 }
 
-bool XRay::Level::is_wfx_playing()
+bool XRay::Level::iSWfxPlaying()
 {
 	return (::Environment().IsWeatherFXPlaying());
 }
 
-float XRay::Level::Get_wfx_time()
+float XRay::Level::WfxTime::get()
 {
 	return (::Environment().wfx_time);
 }
 
-void XRay::Level::Stop_weather_fx()
+void XRay::Level::StopWeatherFX()
 {
 	(::Environment().StopWeatherFX());
 }
@@ -96,50 +102,97 @@ XRay::ESingleGameDifficulty XRay::Level::GameDifficulty::get()
 	return (ESingleGameDifficulty)u32(g_SingleGameDifficulty);
 }
 
-u32 XRay::Level::Get_time_days()
+float XRay::Level::RainFactor::get()
 {
-	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
-	split_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(), year, month, day, hours, mins, secs, milisecs);
-	return			day;
+	return (::Environment().CurrentEnv->rain_density);
 }
 
-u32 XRay::Level::Get_time_hours()
+u32	XRay::Level::VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance)
 {
-	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
-	split_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(), year, month, day, hours, mins, secs, milisecs);
-	return			hours;
+	direction.normalize_safe();
+	direction.mul(max_distance);
+	Fvector			start_position = ai().level_graph().vertex_position(level_vertex_id);
+	Fvector			finish_position = Fvector(start_position).add(direction);
+	u32				result = u32(-1);
+	ai().level_graph().farthest_vertex_in_direction(level_vertex_id, start_position, finish_position, result, nullptr);
+	return			(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
 }
 
-u32 XRay::Level::Get_time_minutes()
+Fvector XRay::Level::VertexPosition(u32 level_vertex_id)
 {
-	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
-	split_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(), year, month, day, hours, mins, secs, milisecs);
-	return			mins;
+	return			(ai().level_graph().vertex_position(level_vertex_id));
 }
 
-void XRay::Level::Change_game_time(u32 days, u32 hours, u32 mins)
-{	
-	if (::Level().Server->game && ai().get_alife())
-	{
-		u32 value = days * 86400 + hours * 3600 + mins * 60;
-		float fValue = static_cast<float> (value);
-		value *= 1000;//msec		
-		Environment().ChangeGameTime(fValue);
-		::Level().Server->game->alife().time_manager().change_game_time(value);
-	}
-}
-/*
-float XRay::Level::High_cover_in_direction(u32 level_vertex_id, const Fvector &direction)
+float XRay::Level::HighCoverInDirection(u32 level_vertex_id, const Fvector &direction)
 {
 	float			y, p;
 	direction.getHP(y, p);
 	return			(ai().level_graph().high_cover_in_direction(y, level_vertex_id));
 }
 
-float XRay::Level::Low_cover_in_direction(u32 level_vertex_id, const Fvector &direction)
+float XRay::Level::LowCoverInDirection(u32 level_vertex_id, const Fvector &direction)
 {
 	float			y, p;
 	direction.getHP(y, p);
 	return			(ai().level_graph().low_cover_in_direction(y, level_vertex_id));
 }
-*/
+
+bool XRay::Level::ValidVertex(u32 level_vertex_id)
+{
+	return ai().level_graph().valid_vertex_id(level_vertex_id);
+}
+
+void XRay::Level::MapAddObjectSpot(u16 id, LPCSTR spot_type, LPCSTR text)
+{
+	CMapLocation* ml = (::Level().MapManager().AddMapLocation(spot_type, id));
+	if (xr_strlen(text))
+	{
+		ml->SetHint(text);
+	}
+}
+
+void XRay::Level::MapAddObjectSpotSer(u16 id, LPCSTR spot_type, LPCSTR text)
+{
+	CMapLocation* ml = (::Level().MapManager().AddMapLocation(spot_type, id));
+	if (xr_strlen(text))
+		ml->SetHint(text);
+
+	ml->SetSerializable(true);
+}
+
+void XRay::Level::MapChangeSpotHint(u16 id, LPCSTR spot_type, LPCSTR text)
+{
+	CMapLocation* ml = (::Level().MapManager().GetMapLocation(spot_type, id));
+	if (!ml)				return;
+	ml->SetHint(text);
+}
+
+void XRay::Level::MapRemoveObjectSpot(u16 id, LPCSTR spot_type)
+{
+	(::Level().MapManager().RemoveMapLocation(spot_type, id));
+}
+
+u16 XRay::Level::MapHasObjectSpot(u16 id, LPCSTR spot_type)
+{
+	return (::Level().MapManager().HasMapLocation(spot_type, id));
+}
+
+bool XRay::Level::PatrolPathExists(LPCSTR patrol_path)
+{
+	return		(!!ai().patrol_paths().path(patrol_path, true));
+}
+
+LPCSTR XRay::Level::Name::get()
+{
+	return		*(::Level().name());
+}
+
+void XRay::Level::PrefetchSnd(LPCSTR name)
+{
+	(::Level().PrefetchSound(name));
+}
+// CClientSpawnManager нет в Managed, нужно писать ему класс
+XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
+{
+	return gcnew ClientSpawnManager(&(::Level().client_spawn_manager()));
+}
