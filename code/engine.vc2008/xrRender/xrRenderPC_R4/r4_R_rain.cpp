@@ -53,8 +53,8 @@ void CRender::render_rain()
 		//	
 		const float fRainFar = ps_r3_dyn_wet_surf_far;
 		ex_project.build_projection(deg2rad(Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, fRainFar);
-		ex_full.mul(Device.mView, ex_project);
-		ex_full_inverse.invert(ex_full);
+		ex_full.mul(ex_project, Device.mView);
+		D3DXMatrixInverse((D3DXMATRIX*)&ex_full_inverse, 0, (D3DXMATRIX*)&ex_full);
 
 		//	Calculate view frustum were we can see dynamic rain radius
 		{
