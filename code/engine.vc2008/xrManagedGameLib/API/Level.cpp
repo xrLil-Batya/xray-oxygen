@@ -118,9 +118,11 @@ u32	XRay::Level::VertexInDirection(u32 level_vertex_id, Fvector direction, float
 	return			(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
 }
 
-Fvector XRay::Level::VertexPosition(u32 level_vertex_id)
+System::Numerics::Vector3^ XRay::Level::VertexPosition(u32 level_vertex_id)
 {
-	return			(ai().level_graph().vertex_position(level_vertex_id));
+	const Fvector& NativeVec = ai().level_graph().vertex_position(level_vertex_id);
+
+	return gcnew ::System::Numerics::Vector3(NativeVec.x, NativeVec.y, NativeVec.z);
 }
 
 float XRay::Level::HighCoverInDirection(u32 level_vertex_id, const Fvector &direction)

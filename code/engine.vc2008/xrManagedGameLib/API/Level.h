@@ -37,7 +37,7 @@ namespace XRay
 
 	
 
-		static Fvector VertexPosition(u32 level_vertex_id);
+		static ::System::Numerics::Vector3^ VertexPosition(u32 level_vertex_id);
 
 		bool ValidVertex(u32 level_vertex_id);
 		void MapAddObjectSpot(u16 id, LPCSTR spot_type, LPCSTR text);
