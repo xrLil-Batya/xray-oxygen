@@ -159,6 +159,7 @@
 #include "_types.h"
 #include "RingBuffer.h"
 #include "xrMemory.h"
+#include "XAlloc.h"
 #include "_stl_extensions.h"
 #include "thread_utils.h"
 #include "xrDebug.h"

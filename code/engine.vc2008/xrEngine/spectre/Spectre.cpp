@@ -7,14 +7,14 @@ ISpectreEngineLib* SpectreEngineClient::EngineLibAPI;
 void SpectreEngineClient::Initialize()
 {
 	// Get interface ptr from xrManagedLib
-	HMODULE hManagedLib = NULL;
-	HMODULE hGameManagedLib = NULL;
+	HMODULE hManagedLib = nullptr;
+	HMODULE hGameManagedLib = nullptr;
 	FARPROC pGetInterface = nullptr;
 	INT_PTR pAPI = NULL;
 	FuncNode* pServerNode = nullptr;
 
 	// Get main manage core interface
-	if ((hManagedLib = GetModuleHandleA("xrManagedCoreLib.dll")) == NULL)
+	if ((hManagedLib = GetModuleHandleA("xrManagedCoreLib.dll")) == nullptr)
 	{
 		// If managed library module is not exist - load it from bit path
 		hManagedLib = LoadLibraryA("xrManagedCoreLib.dll");
@@ -31,7 +31,7 @@ void SpectreEngineClient::Initialize()
 	CoreAPI->CompileScripts();
 
 	// Get interface ptr from game lib
-	if ((hGameManagedLib = GetModuleHandleA("xrManagedEngineLib.dll")) == NULL)
+	if ((hGameManagedLib = GetModuleHandleA("xrManagedEngineLib.dll")) == nullptr)
 	{
 		hGameManagedLib = LoadLibraryA("xrManagedEngineLib.dll");
 		R_ASSERT(hGameManagedLib);
