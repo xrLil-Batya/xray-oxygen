@@ -512,7 +512,7 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 #if	RENDER!=R_R1
 	// Targets, use accumulator for temporary storage
 	const ref_rt	rt_null;
-<<<<<<< Updated upstream
+
 	RCache.set_RT(nullptr,	1);
 	RCache.set_RT(nullptr,	2);
 
@@ -531,7 +531,7 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 	rmNear						();
 	g_hud->RenderActiveItemUI	();
 	rmNormal					();
-=======
+
 	RCache.set_RT(0, 1);
 	RCache.set_RT(0, 2);
 #if	(RENDER==R_R3) || (RENDER==R_R4)
@@ -554,7 +554,7 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 	rmNear();
 	g_hud->RenderActiveItemUI();
 	rmNormal();
->>>>>>> Stashed changes
+
 
 	// Restore projection
 	Device.mProject = Pold;
