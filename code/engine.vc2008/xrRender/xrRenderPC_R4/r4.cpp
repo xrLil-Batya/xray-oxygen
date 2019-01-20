@@ -20,6 +20,8 @@
 
 ENGINE_API BOOL isGraphicDebugging;
 
+//#DELETE_ME: !!!
+
 CRender RImplementation;
 
 template<UINT TNameLength>
