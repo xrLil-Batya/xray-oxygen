@@ -619,7 +619,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic(dxRender_Visual *pVisual, Fve
 					{
 						if (I._effect)		add_Dynamic(I._effect, planes);
 						for (auto & pit : I._children_related)	add_Dynamic(pit, planes);
-						for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin(); pit != I._children_free.end(); pit++)	add_Dynamic(*pit, planes);
+						for (auto & pit : I._children_free)	add_Dynamic(pit, planes);
 					}
 					else
 					{
