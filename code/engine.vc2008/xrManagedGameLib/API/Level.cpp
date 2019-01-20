@@ -12,8 +12,6 @@
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
 
-
-
 u32 XRay::LevelGraph::LevelID::get()
 {
 	return ai().level_graph().level_id();
@@ -174,7 +172,7 @@ void XRay::Level::MapRemoveObjectSpot(u16 id, LPCSTR spot_type)
 	(::Level().MapManager().RemoveMapLocation(spot_type, id));
 }
 
-u16 XRay::Level::MapHasObjectSpot(u16 id, LPCSTR spot_type)
+bool XRay::Level::MapHasObjectSpot(u16 id, LPCSTR spot_type)
 {
 	return (::Level().MapManager().HasMapLocation(spot_type, id));
 }

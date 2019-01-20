@@ -20,36 +20,40 @@ namespace XRay
 			u32 get();
 		}
 	};
-	// А теперь давай рефакторь всё в Pascal Case стайл, никаких set и get. Все set и get - property35
+
 	public ref class Level abstract
 	{
 	public:
-			
 		static void StartWeatherFXfromTime(::System::String^ str, float time);		
 		static bool iSWfxPlaying();
 		static void StopWeatherFX();
-		
-		static u32 	VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance);
 		
 		
 		static float HighCoverInDirection(u32 level_vertex_id, const Fvector &direction);
 		static float LowCoverInDirection(u32 level_vertex_id, const Fvector &direction);
 
-	
-
 		static ::System::Numerics::Vector3^ VertexPosition(u32 level_vertex_id);
 
-		bool ValidVertex(u32 level_vertex_id);
-		void MapAddObjectSpot(u16 id, LPCSTR spot_type, LPCSTR text);
-		void MapAddObjectSpotSer(u16 id, LPCSTR spot_type, LPCSTR text);
-		void MapChangeSpotHint(u16 id, LPCSTR spot_type, LPCSTR text);
-		void MapRemoveObjectSpot(u16 id, LPCSTR spot_type);
-		u16 MapHasObjectSpot(u16 id, LPCSTR spot_type);
-		bool PatrolPathExists(LPCSTR patrol_path);
-		void PrefetchSnd(LPCSTR name);
+		/// <summary>Check: Current level vertex be at level</summary>
+		static bool ValidVertex(u32 level_vertex_id);
+
+		static u32 	VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance);
+
+		// Map
+		/// <summary>Check: Map has is current spot by object ID?</summary>
+		static bool MapHasObjectSpot(u16 id, LPCSTR spot_type);
+		/// <summary>Set: Set spot to level map by object ID</summary>
+		static void MapAddObjectSpot(u16 id, LPCSTR spot_type, LPCSTR text);
+		/// <summary>Set: Del spot from level map by object ID</summary>
+		static void MapRemoveObjectSpot(u16 id, LPCSTR spot_type);
+		/// <summary>Set: Set spot to level map by object ID</summary>
+		static void MapAddObjectSpotSer(u16 id, LPCSTR spot_type, LPCSTR text);
+		/// <summary>Set: Change spot hint from level map by object ID</summary>
+		static void MapChangeSpotHint(u16 id, LPCSTR spot_type, LPCSTR text);
+
+		static bool PatrolPathExists(LPCSTR patrol_path);
+		static void PrefetchSnd(LPCSTR name);
 		
-
-
 		static property ClientSpawnManager^ ClientSpawnMngr
 		{
 			ClientSpawnManager^ get();
@@ -98,6 +102,5 @@ namespace XRay
 			ESingleGameDifficulty get ();
 			void set(ESingleGameDifficulty dif);
 		}
-
 	};
 }
