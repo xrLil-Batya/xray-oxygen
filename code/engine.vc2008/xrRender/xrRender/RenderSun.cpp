@@ -148,7 +148,7 @@ void CRender::render_sun()
 	}
 
 	// Fill the database
-	xr_vector<Fbox3, render_alloc<Fbox3>> &s_receivers = main_coarse_structure;
+	xr_vector<Fbox3, xalloc<Fbox3> >		&s_receivers = main_coarse_structure;
 	s_casters.reserve(s_receivers.size());
 	set_Recorder(&s_casters);
 	r_dsgraph_render_subspace(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
@@ -485,18 +485,16 @@ void CRender::render_sun()
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
 	{
-		bool bNormal = mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-		bool bSpecial = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
-		if (bNormal || bSpecial) 
-		{
+		bool	bNormal = !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+		bool	bSpecial = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
+		if (bNormal || bSpecial) {
 			Target->phase_smap_direct(fuckingsun, SE_SUN_FAR);
 			RCache.set_xform_world(Fidentity);
 			RCache.set_xform_view(Fidentity);
 			RCache.set_xform_project(fuckingsun->X.D.combine);
 			r_dsgraph_render_graph(0);
 			fuckingsun->X.D.transluent = FALSE;
-			if (bSpecial) 
-			{
+			if (bSpecial) {
 				fuckingsun->X.D.transluent = TRUE;
 				Target->phase_smap_direct_tsh(fuckingsun, SE_SUN_FAR);
 				r_dsgraph_render_graph(1);			// normal level, secondary priority
@@ -678,7 +676,7 @@ void CRender::render_sun_near()
 
 	// Begin SMAP-render
 	{
-		bool	bSpecialFull = !mapNormalPasses[1][0].size() || !mapMatrixPasses[1][0].size() || !mapSorted.size();
+		bool	bSpecialFull = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 		VERIFY(!bSpecialFull);
 		HOM.Disable();
 		phase = PHASE_SMAP;
@@ -695,10 +693,9 @@ void CRender::render_sun_near()
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
 	{
-		bool	bNormal = mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-		bool	bSpecial = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
-		if (bNormal || bSpecial) 
-		{
+		bool	bNormal = !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+		bool	bSpecial = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
+		if (bNormal || bSpecial) {
 			Target->phase_smap_direct(fuckingsun, SE_SUN_NEAR);
 			RCache.set_xform_world(Fidentity);
 			RCache.set_xform_view(Fidentity);
@@ -998,7 +995,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 	}
 
 	// Begin SMAP-render
-	bool	bSpecialFull = !mapNormalPasses[1][0].size() || !mapMatrixPasses[1][0].size() || !mapSorted.size();
+	bool	bSpecialFull = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 	VERIFY(!bSpecialFull);
 	HOM.Disable();
 	phase = PHASE_SMAP;
@@ -1012,8 +1009,8 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
-	bool bNormal = mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-	bool bSpecial = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+	bool bNormal = !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+	bool bSpecial = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 	if (bNormal || bSpecial)
 	{
 		Target->phase_smap_direct(fuckingsun, SE_SUN_FAR);

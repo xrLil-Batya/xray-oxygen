@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "xrMemoryDebug.h"
 
-xr_set<void*, std::less<>, XAllocPtr<void*>> gSpecialPointers;
-xr_set<void*, std::less<>, XAllocPtr<void*>> gPointerRegistry;
+xr_set<void*, std::less<>, PointerAllocator<void*>> gSpecialPointers;
+xr_set<void*, std::less<>, PointerAllocator<void*>> gPointerRegistry;
 xrCriticalSection gPointerRegistryProtector;
 
 void RegisterPointer(void* ptr)

@@ -292,7 +292,6 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="FTimer.h" />
     <ClInclude Include="RingBuffer.h" />
     <ClInclude Include="StringsUtils.h" />
-    <ClInclude Include="XAlloc.h" />
     <ClInclude Include="XMLCore\Expression.h" />
     <ClInclude Include="xrDelegate\xrDelegate.h" />
     <ClInclude Include="xrDelegate\xrDelegateArguments.h" />
