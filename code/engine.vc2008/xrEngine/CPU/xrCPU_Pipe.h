@@ -9,6 +9,11 @@ class light;
 // D: AGP,			32b aligned
 // S: SysMem		non-aligned
 // Bones: SysMem	64b aligned
+namespace tbb
+{
+	class task_scheduler_init;
+}
+extern tbb::task_scheduler_init* pTaskSheduler;
 
 using xrSkin1W = void	__stdcall		(vertRender* D, vertBoned1W* S, u32 vCount, CBoneInstance* Bones);
 using xrSkin2W = void	__stdcall		(vertRender* D, vertBoned2W* S, u32 vCount, CBoneInstance* Bones);
@@ -31,3 +36,4 @@ struct xrDispatchTable
 // Binder
 // NOTE: Engine calls function named "_xrBindPSGP"
 void xrBind_PSGP(xrDispatchTable* T, processor_info* ID);
+

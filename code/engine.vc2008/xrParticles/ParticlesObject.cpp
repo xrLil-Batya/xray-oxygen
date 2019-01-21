@@ -217,7 +217,6 @@ float CParticlesObject::shedule_Scale()
 
 void CParticlesObject::renderable_Render()
 {
-//	if (m_lastUpdatedFrame == Device.dwFrame) return;
 	VERIFY(renderable.visual);
 
 	if (m_lastUpdatedFrame == Device.dwFrame)

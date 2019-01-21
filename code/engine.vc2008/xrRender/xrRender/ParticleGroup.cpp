@@ -470,58 +470,59 @@ void CParticleGroup::OnFrame(u32 u_dt)
         float currentTime	= m_CurrentTime;
         float fdeltaTime	= float(u_dt)/1000.f;
         for (CPGDef::EffectVec::const_iterator e_it=m_Def->m_Effects.begin(); e_it!=m_Def->m_Effects.end(); e_it++)
-		{	
-            if ((*e_it)->m_Flags.is(CPGDef::SEffect::flEnabled))
+		{
+			PS::CPGDef::SEffect* pEffect = *e_it;
+            if (pEffect->m_Flags.is(CPGDef::SEffect::flEnabled))
 			{
             	VERIFY				(items.size()==m_Def->m_Effects.size());
                 SItem& I			= items[e_it-m_Def->m_Effects.begin()];
-                if (I.IsPlaying()){
-                    if ((currentTime<=(*e_it)->m_Time1)&&(currentTime+fdeltaTime>=(*e_it)->m_Time1))	
-                        I.Stop((*e_it)->m_Flags.is(CPGDef::SEffect::flDefferedStop));
-                }else{
-                    if (!m_RT_Flags.is(flRT_DefferedStop))
-                        if ((currentTime<=(*e_it)->m_Time0)&&(currentTime+fdeltaTime>=(*e_it)->m_Time0))	
-                            I.Play();
+                if (I.IsPlaying())
+				{
+					// should we stop by time?
+					if ((currentTime <= pEffect->m_Time1) && (currentTime + fdeltaTime >= pEffect->m_Time1))
+					{
+                        I.Stop(pEffect->m_Flags.is(CPGDef::SEffect::flDefferedStop));
+					}
+                }
+				else
+				{
+					if (!m_RT_Flags.is(flRT_DefferedStop))
+					{
+						if ((currentTime <= pEffect->m_Time0) && (currentTime + fdeltaTime >= pEffect->m_Time0))
+						{
+							I.Play();
+						}
+					}
                 }
             }
         }
 
-		//#TODO: !!! Finish this
-// 		for (PS::CPGDef::SEffect* val : m_Def->m_Effects)
-// 		{
-// 			if (val->m_Flags.is(CPGDef::SEffect::flEnabled))
-// 			{
-// 				VERIFY(items.size() == m_Def->m_Effects.size());
-// 				SItem& I = items[e_it - m_Def->m_Effects.begin()];
-// 				if (I.IsPlaying()) {
-// 					if ((currentTime <= (*e_it)->m_Time1) && (currentTime + fdeltaTime >= (*e_it)->m_Time1))
-// 						I.Stop((*e_it)->m_Flags.is(CPGDef::SEffect::flDefferedStop));
-// 				}
-// 				else {
-// 					if (!m_RT_Flags.is(flRT_DefferedStop))
-// 						if ((currentTime <= (*e_it)->m_Time0) && (currentTime + fdeltaTime >= (*e_it)->m_Time0))
-// 							I.Play();
-// 				}
-// 			}
-// 		}
-
+		// Update playing time
         m_CurrentTime 	+= fdeltaTime;
-        if ((m_CurrentTime>m_Def->m_fTimeLimit)&&(m_Def->m_fTimeLimit>0.f))
+
+        if ((m_CurrentTime > m_Def->m_fTimeLimit) && (m_Def->m_fTimeLimit > 0.0f))
             if (!m_RT_Flags.is(flRT_DefferedStop)) Stop(true);
 
         bool bPlaying = false;
         Fbox box; box.invalidate();
-        for (auto i_it=items.begin(); i_it!=items.end(); i_it++)
-        	i_it->OnFrame(u_dt,*m_Def->m_Effects[i_it-items.begin()],box,bPlaying);
+		for (auto particleItemIter = items.begin(); particleItemIter != items.end(); particleItemIter++)
+		{
+        	particleItemIter->OnFrame(u_dt, *m_Def->m_Effects[particleItemIter-items.begin()], box, bPlaying);
+		}
 
-        if (m_RT_Flags.is(flRT_DefferedStop)&&!bPlaying){
+        if (m_RT_Flags.is(flRT_DefferedStop) && !bPlaying)
+		{
             m_RT_Flags.set		(flRT_Playing|flRT_DefferedStop,FALSE);
         }
-        if (box.is_valid()){
+
+        if (box.is_valid())
+		{
         	vis.box.set			(box);
 			vis.box.getsphere	(vis.sphere.P,vis.sphere.R);
 		}
-	} else {
+	}
+	else 
+	{
 		vis.box.set			(m_InitialPosition,m_InitialPosition);
 		vis.box.grow		(EPS_L);
 		vis.box.getsphere	(vis.sphere.P,vis.sphere.R);

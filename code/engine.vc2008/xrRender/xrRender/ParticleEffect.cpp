@@ -2,8 +2,9 @@
 #pragma hdrstop
 #include "ParticleEffect.h"
 #include <xmmintrin.h>
-#include "../../xrCore/threadpool/ttapi.h"
 #include "../../xrEngine/DirectXMathExternal.h"
+#include "tbb/task.h"
+#include "tbb/task_group.h"
 
 using namespace PAPI;
 using namespace PS;
@@ -403,14 +404,12 @@ __forceinline void magnitude_sse(Fvector &vec, float &res)
 	_mm_store_ss((float*)&res, tv);
 }
 
-void ParticleRenderStream(LPVOID lpvParams)
+void ParticleRenderStream(PRS_PARAMS* pParams)
 {
 	float sina = 0.0f, cosa = 0.0f;
 	// Xottab_DUTY: changed angle to be float instead of DWORD
 	// But it must be 0xFFFFFFFF or otherwise some particles won't play
 	float angle = 0xFFFFFFFF;
-
-	PRS_PARAMS* pParams = (PRS_PARAMS *)lpvParams;
 
 	FVF::LIT* pv = pParams->pv;
 	u32 p_from = pParams->p_from;
@@ -508,7 +507,6 @@ void ParticleRenderStream(LPVOID lpvParams)
 	}
 }
 
-static bool bPreCachedParticles = false;
 void CParticleEffect::Render(float)
 {
 	if (Device.dwPrecacheFrame) return;
@@ -526,30 +524,43 @@ void CParticleEffect::Render(float)
 			FVF::LIT* pv_start = (FVF::LIT*)RCache.Vertex.Lock(p_cnt * 4 * 4, geom->vb_stride, dwOffset);
 			FVF::LIT* pv = pv_start;
 
-			u32 nWorkers = (p_cnt < 16) ? (u32)ttapi_GetWorkersCount() - 1 : 1u;
-
-			PRS_PARAMS* prsParams = new PRS_PARAMS[nWorkers];
-
-			// Give ~1% more for the last worker
-			// to minimize wait in final spin
-			u32 nSlice = p_cnt / 32;
-			u32 nStep = ((p_cnt - nSlice) / nWorkers);
-
-			for (u32 i = 0; i < nWorkers; ++i)
+			if (p_cnt < 16)
 			{
-				prsParams[i].pv = pv + i * nStep * 4;
-				prsParams[i].p_from = i * nStep;
-				prsParams[i].p_to = (i == (nWorkers - 1)) ? p_cnt : (prsParams[i].p_from + nStep);
-				prsParams[i].particles = particles;
-				prsParams[i].pPE = this;
-				ttapi_AddTask(ParticleRenderStream, (LPVOID)&prsParams[i]);
+				PRS_PARAMS singleParam;
+				singleParam.pv = pv;
+				singleParam.p_from = 0;
+				singleParam.p_to = p_cnt;
+				singleParam.particles = particles;
+				singleParam.pPE = this;
+				ParticleRenderStream(&singleParam);
 			}
+			else
+			{
+				tbb::task_group ParticleEffectTasks;
+				size_t nWorkers = CPU::Info.n_threads;
+				constexpr size_t SkinParamSize = 64;
+				PRS_PARAMS prsParams[SkinParamSize];
+				R_ASSERT(SkinParamSize > nWorkers);
 
-			ttapi_RunAllWorkers();
+				u32 nSlice = p_cnt / 32;
+				u32 nStep = ((p_cnt - nSlice) / nWorkers);
 
-			if (bPreCachedParticles) xr_delete(prsParams);
-			else for (u32 i = 0; i < nWorkers; ++i)
-				prsParams[i].particles.clear();
+				for (u32 i = 0; i < nWorkers; ++i)
+				{
+					prsParams[i].pv = pv + i * nStep * 4;
+					prsParams[i].p_from = i * nStep;
+					prsParams[i].p_to = (i == (nWorkers - 1)) ? p_cnt : (prsParams[i].p_from + nStep);
+					prsParams[i].particles = particles;
+					prsParams[i].pPE = this;
+
+					ParticleEffectTasks.run([&prsParams, i]()
+					{
+						ParticleRenderStream(&prsParams[i]);
+					});
+				}
+
+				ParticleEffectTasks.wait();
+			}
 
 			dwCount = p_cnt << 2;
 

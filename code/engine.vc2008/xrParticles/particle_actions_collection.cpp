@@ -3,6 +3,8 @@
 
 #include "particle_actions_collection.h"
 #include "particle_effect.h"
+#include "tbb/task.h"
+#include "tbb/task_group.h"
 
 using namespace PAPI;
 
@@ -1531,7 +1533,6 @@ extern void	noise3Init();
 
 #ifndef DEBUG
 #include <xmmintrin.h>
-#include "../xrCore/threadpool/ttapi.h"
 
 __forceinline __m128 _mm_load_fvector(const Fvector& v)
 {
@@ -1571,21 +1572,12 @@ struct TES_PARAMS
 	float magnitude;
 };
 
-void PATurbulenceExecuteStream(LPVOID lpvParams)
+void PATurbulenceExecuteStream(TES_PARAMS* pParams)
 {
-#ifdef _GPA_ENABLED
-	TAL_SCOPED_TASK_NAMED("PATurbulenceExecuteStream()");
-
-	TAL_ID rtID = TAL_MakeID(1, Core.dwFrame, 0);
-	TAL_AddRelationThis(TAL_RELATION_IS_CHILD_OF, rtID);
-#endif // _GPA_ENABLED
-
 	pVector pV;
 	pVector vX;
 	pVector vY;
 	pVector vZ;
-
-	TES_PARAMS* pParams = (TES_PARAMS *)lpvParams;
 
 	u32 p_from = pParams->p_from;
 	u32 p_to = pParams->p_to;
@@ -1662,32 +1654,55 @@ void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max
 	if (!p_cnt)
 		return;
 
-	size_t nWorkers = (p_cnt < 16) ? ttapi_GetWorkersCount() - 1 : 1;
-
-	TES_PARAMS* tesParams = new TES_PARAMS[nWorkers];
-
-	// Give ~1% more for the last worker
-	// to minimize wait in final spin
-	size_t nSlice = p_cnt / 32;
-	size_t nStep = ((p_cnt - nSlice) / nWorkers);
-
-	for (size_t i = 0ul; i < nWorkers; ++i)
+	if (p_cnt < 16)
 	{
-		tesParams[i].p_from = u32(i * nStep);
-		tesParams[i].p_to = (i == (nWorkers - 1)) ? (u32)p_cnt : (tesParams[i].p_from + (u32)nStep);
-
-		tesParams[i].effect = effect;
-		tesParams[i].offset = offset;
-		tesParams[i].age = age;
-		tesParams[i].epsilon = epsilon;
-		tesParams[i].frequency = frequency;
-		tesParams[i].octaves = octaves;
-		tesParams[i].magnitude = magnitude;
-
-		ttapi_AddTask(PATurbulenceExecuteStream, (LPVOID)&tesParams[i]);
+		TES_PARAMS singleParam;
+		singleParam.p_from = 0;
+		singleParam.p_to = p_cnt;
+		singleParam.effect = effect;
+		singleParam.offset = offset;
+		singleParam.age = age;
+		singleParam.epsilon = epsilon;
+		singleParam.frequency = frequency;
+		singleParam.octaves = octaves;
+		singleParam.magnitude = magnitude;
+		PATurbulenceExecuteStream(&singleParam);
 	}
-	ttapi_RunAllWorkers();
-	delete tesParams;
+	else
+	{
+		tbb::task_group ParticleTurbulenceTasks;
+		size_t nWorkers = CPU::Info.n_threads;
+
+		constexpr size_t ParticleTurbulenceTPSize = 64;
+		TES_PARAMS tesParams[ParticleTurbulenceTPSize];
+		R_ASSERT(ParticleTurbulenceTPSize > nWorkers);
+
+		// Give ~1% more for the last worker
+		// to minimize wait in final spin
+		size_t nSlice = p_cnt / 32;
+		size_t nStep = ((p_cnt - nSlice) / nWorkers);
+
+		for (size_t i = 0ul; i < nWorkers; ++i)
+		{
+			tesParams[i].p_from = u32(i * nStep);
+			tesParams[i].p_to = (i == (nWorkers - 1)) ? (u32)p_cnt : (tesParams[i].p_from + (u32)nStep);
+
+			tesParams[i].effect = effect;
+			tesParams[i].offset = offset;
+			tesParams[i].age = age;
+			tesParams[i].epsilon = epsilon;
+			tesParams[i].frequency = frequency;
+			tesParams[i].octaves = octaves;
+			tesParams[i].magnitude = magnitude;
+
+			ParticleTurbulenceTasks.run([&tesParams, i]()
+			{
+				PATurbulenceExecuteStream(&tesParams[i]);
+			});
+		}
+
+		ParticleTurbulenceTasks.wait();
+	}
 }
 
 #else
