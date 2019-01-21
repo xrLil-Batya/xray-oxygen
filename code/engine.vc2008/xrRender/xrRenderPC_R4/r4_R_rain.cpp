@@ -5,7 +5,6 @@
 
 #define NO_INIT_CTOR
 #include "../xrRender/Frustum.inl"
-xr_vector<Fbox, xalloc<Fbox>> s_casters;
 
 const	float	tweak_rain_COP_initial_offs			= 1200.f;
 const	float	tweak_rain_ortho_xform_initial_offs	= 1000.f	;	//. ?

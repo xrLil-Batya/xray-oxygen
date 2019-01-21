@@ -31,6 +31,7 @@ static int			facetable[6][4] = {
 #include "../xrRender/Frustum.inl"
 #define DW_AS_FLT(DW) (*(FLOAT*)&(DW))
 #define FLT_SIGN(F) ((FLT_AS_DW(F) & 0x80000000L))
+xr_vector<Fbox, xalloc<Fbox>> s_casters;
 
 void CRender::render_sun()
 {
