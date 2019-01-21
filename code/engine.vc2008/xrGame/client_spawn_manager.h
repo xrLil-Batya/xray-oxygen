@@ -17,12 +17,14 @@ class CScriptCallbackEx;
 
 class CGameObject;
 
-class CClientSpawnManager {
+class GAME_API CClientSpawnManager 
+{
 public:
 	using CALLBACK_TYPE = xrDelegate<void(CObject*)>;
 
 public:
-	struct CSpawnCallback {
+	struct CSpawnCallback 
+	{
 		CALLBACK_TYPE			m_object_callback;
 		CScriptCallbackEx<void>	m_callback;
 	};
@@ -31,10 +33,8 @@ public:
 	using REQUESTED_REGISTRY = xr_map<ALife::_OBJECT_ID,CSpawnCallback>;
 	using REQUEST_REGISTRY = xr_map<ALife::_OBJECT_ID,REQUESTED_REGISTRY>;
 
-private:
 	REQUEST_REGISTRY	m_registry;
 
-protected:
 			void		remove					(REQUESTED_REGISTRY &registry, ALife::_OBJECT_ID requesting_id, ALife::_OBJECT_ID requested_id, bool no_warning = false);
 			void		merge_spawn_callbacks	(CSpawnCallback &new_callback, CSpawnCallback &old_callback);
 

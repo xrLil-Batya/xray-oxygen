@@ -15,7 +15,7 @@ namespace XRay
 	public ref class Game abstract sealed
 	{
 	public:
-		static ref struct SGameTime
+		ref struct SGameTime
 		{
 			u32 Days;
 			u32 Hours;
