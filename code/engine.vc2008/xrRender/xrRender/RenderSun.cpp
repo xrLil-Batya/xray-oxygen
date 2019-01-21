@@ -5,8 +5,6 @@
 #include <ppl.h>
 #include <concurrent_vector.h>
 
-xr_vector<Fbox, xalloc<Fbox> >	s_casters;
-
 const	float	tweak_COP_initial_offs = 1200.f;
 const	float	tweak_ortho_xform_initial_offs = 1000.f;	//. ?
 const	float	tweak_guaranteed_range = 20.f;	//. ?
@@ -30,12 +28,9 @@ static int			facetable[6][4] = {
 	{ 0, 3, 5, 7 },		{  1, 6, 4, 2 },
 };
 //////////////////////////////////////////////////////////////////////////
-#define DW_AS_FLT(DW) (*(FLOAT*)&(DW))
-#define FLT_AS_DW(F) (*(DWORD*)&(F))
-#define FLT_SIGN(F) ((FLT_AS_DW(F) & 0x80000000L))
-#define ALMOST_ZERO(F) ((FLT_AS_DW(F) & 0x7f800000L)==0)
-#define IS_SPECIAL(F) ((FLT_AS_DW(F) & 0x7f800000L)==0x7f800000L)
 #include "../xrRender/Frustum.inl"
+#define DW_AS_FLT(DW) (*(FLOAT*)&(DW))
+#define FLT_SIGN(F) ((FLT_AS_DW(F) & 0x80000000L))
 
 void CRender::render_sun()
 {
@@ -57,9 +52,9 @@ void CRender::render_sun()
 	// Also compute virtual light position and sector it is inside
 	CFrustum					cull_frustum;
 	xr_vector<Fplane> cull_planes;
-	Fvector3					cull_COP;
-	CSector*					cull_sector;
-	Fmatrix					cull_xform;
+	Fvector3 cull_COP;
+	CSector* cull_sector;
+	Fmatrix  cull_xform;
 	{
 		
 			FPU::m64r();
@@ -170,7 +165,7 @@ void CRender::render_sun()
 	//	Prepare to interact with D3DX code
 
 	const D3DXMATRIX&	m_View = *((D3DXMATRIX*)(&Device.mView));
-	const Matrix4x4&	m_Projection = *((Matrix4x4*)(&ex_project));
+	const D3DXMATRIX&	m_Projection = *((D3DXMATRIX*)&ex_project);
 	const D3DXVECTOR3	m_lightDir = -D3DXVECTOR3(fuckingsun->direction.x, fuckingsun->direction.y, fuckingsun->direction.z);
 
 	//  these are the limits specified by the physical camera
@@ -191,8 +186,8 @@ void CRender::render_sun()
 
 		for (int i = 0; i < 4; i++)
 		{
-			frustumPnts[i] = { eyeFrustum.pntList[(i << 1) | 0x1].m128_f32[0], eyeFrustum.pntList[(i << 1)].m128_f32[1], eyeFrustum.pntList[(i << 1)].m128_f32[2] };       // far plane
-			frustumPnts[i + 4] = { eyeFrustum.pntList[(i << 1) | 0x1].m128_f32[0], eyeFrustum.pntList[(i << 1) | 0x1].m128_f32[1], eyeFrustum.pntList[(i << 1) | 0x1].m128_f32[2] };       // far plane
+			frustumPnts[i] = eyeFrustum.pntList[(i << 1)];       // far plane
+			frustumPnts[i + 4] = eyeFrustum.pntList[(i << 1) | 0x1]; // near plane
 		}
 
 		//   we need to transform the eye into the light's post-projective space.
@@ -225,7 +220,7 @@ void CRender::render_sun()
 
 		//  also - transform the shadow caster bounding boxes into light projective space.  we want to translate along the Z axis so that
 		//  all shadow casters are in front of the near plane.
-		DirectX::XMFLOAT2 depthbounds = BuildTSMProjectionMatrix_caster_depth_bounds(lightSpaceBasis);
+		D3DXVECTOR2 depthbounds = BuildTSMProjectionMatrix_caster_depth_bounds(lightSpaceBasis);
 
 		float min_z = min(depthbounds.x, frustumBox.minPt.z);
 		float max_z = max(depthbounds.y, frustumBox.maxPt.z);
