@@ -9,7 +9,6 @@ class UI_API CUIViewGroup : public CUIView
 {
 public:
 	using CHILD_LIST = list<CUIView*>;
-	using CHILD_LIST_IT = CHILD_LIST::iterator;
 
 private:
 	CHILD_LIST m_childViews;
@@ -20,9 +19,14 @@ public:
 
 	virtual void AddView(CUIView* child);
 	virtual void RemoveView(CUIView* child);
+	virtual void RemoveAllViews();
 
+	virtual bool OnMouseAction(float x, float y, EUIMessages action) override;
+
+	virtual bool OnKeyboardHold(int dik) override;
+	virtual bool OnKeyboardAction(int dik, EUIMessages action) override;
+
+	virtual void Draw(IUIRender* render) override;
 protected:
 	virtual CUIView* FindViewByNameInternal(shared_str name) override;
-
-	virtual void Draw() override;
 };
