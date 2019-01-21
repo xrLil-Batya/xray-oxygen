@@ -345,28 +345,33 @@ void OnGroupParticleDead(void* owner, u32 param, PAPI::Particle& m, u32 idx)
 
 void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& box, bool& bPlaying)
 {
-    CParticleEffect* E		= static_cast<CParticleEffect*>(_effect);
+    CParticleEffect* E = static_cast<CParticleEffect*>(_effect);
     if (E)
 	{
-        E->OnFrame			(u_dt);
-        if (E->IsPlaying()){
-            bPlaying		= true;
-            if (E->vis.box.is_valid())     box.merge	(E->vis.box);
-            if (def.m_Flags.is(CPGDef::SEffect::flOnPlayChild)&&def.m_OnPlayChildName.size()){
-                PAPI::Particle* particles;
-                u32 p_cnt;
-                PAPI::ParticleManager()->GetParticles(E->GetHandleEffect(),particles,p_cnt);
-                VERIFY(p_cnt==_children_related.size());
-                if (p_cnt){
-                    for(u32 i = 0; i < p_cnt; i++){
-                        PAPI::Particle &m	= particles[i]; 
-                        CParticleEffect* C 	= static_cast<CParticleEffect*>(_children_related[i]);
-                        Fmatrix M; 			M.translate(m.pos);
-                        Fvector vel; 		vel.sub(m.pos,m.posB); vel.div(fDT_STEP);
-                        C->UpdateParent		(M,vel,FALSE);
-                    }
-                }
-            }
+        E->OnFrame(u_dt);
+        if (E->IsPlaying())
+		{
+            bPlaying = true;
+            if (E->vis.box.is_valid())     
+				box.merge(E->vis.box);
+
+			if (def.m_Flags.is(CPGDef::SEffect::flOnPlayChild) && def.m_OnPlayChildName.size())
+			{
+				xr_vector<PAPI::Particle> particles;
+				u32 p_cnt;
+				PAPI::ParticleManager()->GetParticles(E->GetHandleEffect(), particles, p_cnt);
+				VERIFY(p_cnt == _children_related.size());
+
+				u32 iter = 0;
+				for (PAPI::Particle &refParticle : particles)
+				{
+					CParticleEffect* C = static_cast<CParticleEffect*>(_children_related[iter]);
+					Fmatrix M; 			M.translate(refParticle.pos);
+					Fvector vel; 		vel.sub(refParticle.pos, refParticle.posB); vel.div(fDT_STEP);
+					C->UpdateParent(M, vel, FALSE);
+					iter++;
+				}
+			}
         }
     }
     

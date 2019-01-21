@@ -135,7 +135,7 @@ void CParticleEffect::OnFrame(u32 frame_dt)
 			}
 			ParticleManager()->Update(m_HandleEffect, m_HandleActionList, fDT_STEP);
 
-			PAPI::Particle* particles;
+			xr_vector<PAPI::Particle> particles;
 			u32 p_cnt;
 			ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
 
@@ -369,12 +369,17 @@ IC void FillSprite(FVF::LIT*& pv, const Fvector& pos, const Fvector& dir, const 
 
 extern ENGINE_API float		psHUD_FOV;
 
-struct PRS_PARAMS {
+struct PRS_PARAMS 
+{
 	FVF::LIT* pv;
 	u32 p_from;
 	u32 p_to;
-	PAPI::Particle* particles;
+	xr_vector<PAPI::Particle> particles;
 	CParticleEffect* pPE;
+
+	~PRS_PARAMS()
+	{
+	}
 };
 
 __forceinline void fsincos(const float angle, float &sine, float &cosine)
@@ -410,7 +415,7 @@ void ParticleRenderStream(LPVOID lpvParams)
 	FVF::LIT* pv = pParams->pv;
 	u32 p_from = pParams->p_from;
 	u32 p_to = pParams->p_to;
-	PAPI::Particle* particles = pParams->particles;
+	xr_vector<PAPI::Particle>& particles = (pParams->particles);
 	CParticleEffect &pPE = *pParams->pPE;
 
 	for (u32 i = p_from; i < p_to; i++) {
@@ -503,13 +508,15 @@ void ParticleRenderStream(LPVOID lpvParams)
 	}
 }
 
+static bool bPreCachedParticles = false;
 void CParticleEffect::Render(float)
 {
-	u32 dwOffset, dwCount;
-	// Get a pointer to the particles in gp memory
-	PAPI::Particle* particles;
-	u32 p_cnt;
+	if (Device.dwPrecacheFrame) return;
 
+	// Get a pointer to the particles in gp memory
+	u32 dwOffset, dwCount;
+	xr_vector<PAPI::Particle> particles;
+	u32 p_cnt;
 	ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
 
 	if (p_cnt > 0)
@@ -526,7 +533,6 @@ void CParticleEffect::Render(float)
 			// Give ~1% more for the last worker
 			// to minimize wait in final spin
 			u32 nSlice = p_cnt / 32;
-
 			u32 nStep = ((p_cnt - nSlice) / nWorkers);
 
 			for (u32 i = 0; i < nWorkers; ++i)
@@ -540,7 +546,10 @@ void CParticleEffect::Render(float)
 			}
 
 			ttapi_RunAllWorkers();
-			delete prsParams;
+
+			if (bPreCachedParticles) xr_delete(prsParams);
+			else for (u32 i = 0; i < nWorkers; ++i)
+				prsParams[i].particles.clear();
 
 			dwCount = p_cnt << 2;
 
