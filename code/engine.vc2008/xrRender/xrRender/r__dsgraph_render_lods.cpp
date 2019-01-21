@@ -1,34 +1,44 @@
 #include "stdafx.h"
 #include "flod.h"
-#include "../../xrEngine/IGame_Persistent.h"
-#include "../../xrEngine/Environment.h"
+
+#ifdef _EDITOR
+#include "igame_persistent.h"
+#include "environment.h"
+#else
+#include "../../xrEngine/igame_persistent.h"
+#include "../../xrEngine/environment.h"
+#endif
 
 extern float	r_ssaLOD_A;
 extern float	r_ssaLOD_B;
 
+
+template <class T> IC bool cmp_first_l(const T &lhs, const T &rhs) { return (lhs.first < rhs.first); }
+template <class T> IC bool cmp_first_h(const T &lhs, const T &rhs) { return (lhs.first > rhs.first); }
+
 ICF		bool	pred_dot(const std::pair<float, u32>& _1, const std::pair<float, u32>& _2) { return _1.first < _2.first; }
 void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 {
-	if (_setup_zb)	mapLOD.getLR(lstLODs);	// front-to-back
-	else			mapLOD.getRL(lstLODs);	// back-to-front
-	if (lstLODs.empty())			return;
+	if (_setup_zb)	std::sort(mapLOD.begin(), mapLOD.end(), cmp_first_l<R_dsgraph::mapLOD_T::value_type>); // front-to-back
+	else			std::sort(mapLOD.begin(), mapLOD.end(), cmp_first_h<R_dsgraph::mapLOD_T::value_type>); // back-to-front
+	if (lstLODs.empty()) return;
 
 	// *** Fill VB and generate groups
-	u32				shid = _setup_zb ? SE_R1_LMODELS : SE_R1_NORMAL_LQ;
-	FLOD*			firstV = (FLOD*)lstLODs[0].pVisual;
-	ref_selement	cur_S = firstV->shader->E[shid];
-	float			ssaRange = r_ssaLOD_A - r_ssaLOD_B;
-	if (ssaRange < EPS_S)	ssaRange = EPS_S;
+	u32 shid = _setup_zb ? SE_R1_LMODELS : SE_R1_NORMAL_LQ;
+	FLOD* firstV = (FLOD*)lstLODs[0].pVisual;
+	ref_selement cur_S = firstV->shader->E[shid];
+	float ssaRange = r_ssaLOD_A - r_ssaLOD_B;
+	if (ssaRange<EPS_S)	ssaRange = EPS_S;
 
-	const u32		uiVertexPerImposter = 4;
-	const size_t	uiImpostersFit = RCache.Vertex.GetSize() / (firstV->geom->vb_stride*uiVertexPerImposter);
+	const u32 uiVertexPerImposter = 4;
+	const size_t uiImpostersFit = RCache.Vertex.GetSize() / (firstV->geom->vb_stride*uiVertexPerImposter);
 
 	for (size_t i = 0; i < lstLODs.size(); i++)
 	{
-		const size_t	iBatchSize = std::min(lstLODs.size() - i, uiImpostersFit);
-		int			cur_count = 0;
-		u32			vOffset;
-		FLOD::_hw*	V = (FLOD::_hw*)RCache.Vertex.Lock(iBatchSize*uiVertexPerImposter, firstV->geom->vb_stride, vOffset);
+		const size_t iBatchSize = std::min(lstLODs.size() - i, uiImpostersFit);
+		int cur_count = 0;
+		u32 vOffset;
+		FLOD::_hw* V = (FLOD::_hw*)RCache.Vertex.Lock(u32(iBatchSize) * uiVertexPerImposter, firstV->geom->vb_stride, vOffset);
 
 		for (size_t j = 0; j < iBatchSize; ++j, ++i)
 		{
@@ -42,28 +52,31 @@ void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 			}
 
 			// calculate alpha
-			float	ssaDiff = P.ssa - r_ssaLOD_B;
-			float	scale = ssaDiff / ssaRange;
-			int		iA = iFloor((1 - scale)*255.f);
-			u32		uA = u32(clampr(iA, 0, 255));
+			float ssaDiff = P.ssa - r_ssaLOD_B;
+			float scale = ssaDiff / ssaRange;
+			int iA = iFloor((1 - scale)*255.f);
+			u32 uA = u32(clampr(iA, 0, 255));
 
 			// calculate direction and shift
-			FLOD*							lodV = (FLOD*)P.pVisual;
-			Fvector							Ldir, shift;
+			FLOD* lodV = (FLOD*)P.pVisual;
+			Fvector Ldir, shift;
 			Ldir.sub(lodV->vis.sphere.P, Device.vCameraPosition).normalize();
 			shift.mul(Ldir, -.5f * lodV->vis.sphere.R);
 
 			// gen geometry
-			FLOD::_face*					facets = lodV->facets;
-			svector<std::pair<float, u32>, 8>	selector;
-			for (u32 s = 0; s < 8; s++)			selector.push_back(std::make_pair(Ldir.dotproduct(facets[s].N), s));
+			FLOD::_face* facets = lodV->facets;
+			svector<std::pair<float, u32>, 8> selector;
+			for (u32 s = 0; s < 8; s++)
+			{
+				selector.push_back(std::make_pair(Ldir.dotproduct(facets[s].N), s));
+			}
 			std::sort(selector.begin(), selector.end(), pred_dot);
 
-			float							dot_best = selector[selector.size() - 1].first;
-			float							dot_next = selector[selector.size() - 2].first;
-			float							dot_next_2 = selector[selector.size() - 3].first;
-			u32								id_best = selector[selector.size() - 1].second;
-			u32								id_next = selector[selector.size() - 2].second;
+			float dot_best = selector[selector.size() - 1].first;
+			float dot_next = selector[selector.size() - 2].first;
+			float dot_next_2 = selector[selector.size() - 3].first;
+			u32	  id_best = selector[selector.size() - 1].second;
+			u32	  id_next = selector[selector.size() - 2].second;
 
 			// Now we have two "best" planes, calculate factor, and approx normal
 			float	fA = dot_best, fB = dot_next, fC = dot_next_2;
@@ -75,7 +88,7 @@ void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 			FLOD::_face&	FA = facets[id_best];
 			FLOD::_face&	FB = facets[id_next];
 			static int		vid[4] = { 3,0,2,1 };
-			for (u32 vit = 0; vit < 4; vit++) {
+			for (u32 vit = 0; vit<4; vit++) {
 				int			id = vid[vit];
 				V->p0.add(FB.v[id].v, shift);
 				V->p1.add(FA.v[id].v, shift);
@@ -90,7 +103,7 @@ void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 			}
 		}
 		lstLODgroups.push_back(cur_count);
-		RCache.Vertex.Unlock(iBatchSize*uiVertexPerImposter, firstV->geom->vb_stride);
+		RCache.Vertex.Unlock(u32(iBatchSize) * uiVertexPerImposter, firstV->geom->vb_stride);
 
 		// *** Render
 		RCache.set_xform_world(Fidentity);
@@ -99,11 +112,11 @@ void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 			int current = 0;
 			u32 vCurOffset = vOffset;
 
-			for (u32 g = 0; g < lstLODgroups.size(); g++)
+			for (u32 g = 0; g<lstLODgroups.size(); g++)
 			{
 				int p_count = lstLODgroups[g];
 				u32 uiNumPasses = lstLODs[current].pVisual->shader->E[shid]->passes.size();
-				if (uiPass < uiNumPasses)
+				if (uiPass<uiNumPasses)
 				{
 					RCache.set_Element(lstLODs[current].pVisual->shader->E[shid], uiPass);
 					RCache.set_Geometry(firstV->geom);
@@ -115,11 +128,9 @@ void R_dsgraph_structure::r_dsgraph_render_lods(bool _setup_zb, bool _clear)
 			}
 
 		}
-
 		lstLODgroups.clear();
 	}
-
 	lstLODs.clear();
 
-	if (_clear)			mapLOD.clear();
+	if (_clear) mapLOD.clear();
 }

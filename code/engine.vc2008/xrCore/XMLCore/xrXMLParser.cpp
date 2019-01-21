@@ -88,7 +88,7 @@ void CXml::Load(const char* path, const char* xml_filename)
 
 	if (m_Doc.Error())
 	{
-        string4096 ErrorInfo = { 0 };
+        string4096 ErrorInfo = {};
         m_Doc.DumpError(ErrorInfo, xml_filename);
 
         Debug.fatal(DEBUG_INFO, ErrorInfo);

@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "UIView.h"
-#include "ui_base.h"
 //#include "../Include/xrRender/DebugRender.h"
-//#include "../Include/xrRender/UIRender.h"
 
 CUIView::CUIView(CUIXml& xml, XML_NODE* node)
 {
-	m_bVisible = xml.ReadAttribBool(node, "visibility");
+	m_bVisible = xml.ReadAttribBool(node, "visible");
 	m_bEnabled = xml.ReadAttribBool(node, "enabled");
 	m_position.x = xml.ReadAttribFlt(node, "x");
 	m_position.y = xml.ReadAttribFlt(node, "y");
@@ -14,12 +12,6 @@ CUIView::CUIView(CUIXml& xml, XML_NODE* node)
 	m_size.y = xml.ReadAttribFlt(node, "height");
 
 	m_name = xml.ReadAttrib(node, "name", nullptr);
-
-	/*xr_string alignment = xml.ReadAttrib(node, "alignment", nullptr);
-	if (strchr(alignment.c_str(), 'c'))
-	{
-		m_alignment = waCenter;
-	}*/
 }
 
 CUIView::~CUIView()
@@ -38,6 +30,21 @@ void CUIView::AssignParent(CUIView* parent)
 	}
 }
 
+bool CUIView::OnMouseAction(float x, float y, EUIMessages action)
+{
+	return false;
+}
+
+bool CUIView::OnKeyboardHold(int dik)
+{
+	return false;
+}
+
+bool CUIView::OnKeyboardAction(int dik, EUIMessages action)
+{
+	return false;
+}
+
 CUIView* CUIView::FindViewByName(shared_str name)
 {
 	R_ASSERT(name);
@@ -54,9 +61,8 @@ CUIView* CUIView::FindViewByNameInternal(shared_str name)
 	return nullptr;
 }
 
-void CUIView::Draw()
+void CUIView::Draw(IUIRender* render)
 {
-
 }
 
 

@@ -260,6 +260,9 @@
     <ClInclude Include="FixedVector.h">
       <Filter>Math\STLext</Filter>
     </ClInclude>
+    <ClInclude Include="xrPool.h">
+      <Filter>Math\STLext</Filter>
+    </ClInclude>
     <ClInclude Include="_std_extensions.h">
       <Filter>Math\Extensions</Filter>
     </ClInclude>
@@ -454,12 +457,6 @@
     </ClInclude>
     <ClInclude Include="RingBuffer.h">
       <Filter>Kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="XAlloc.h">
-      <Filter>Memory manager</Filter>
-    </ClInclude>
-    <ClInclude Include="xrPool.h">
-      <Filter>Memory manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

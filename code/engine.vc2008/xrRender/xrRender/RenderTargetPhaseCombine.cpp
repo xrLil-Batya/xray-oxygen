@@ -263,7 +263,7 @@ void CRenderTarget::phase_combine()
 	phase_bloom(); // HDR RT invalidated here
 
 	// Distortion filter
-	bool bDistort = (RImplementation.o.distortion_enabled && !!RImplementation.mapDistort.size());
+	bool bDistort = (RImplementation.o.distortion_enabled && !RImplementation.mapDistort.empty());
 	if (bDistort)
 	{
 		RCache.set_CullMode			(CULL_CCW);

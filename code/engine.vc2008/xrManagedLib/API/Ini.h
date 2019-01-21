@@ -1,6 +1,5 @@
 #pragma once
 #include "Filesystem.h"
-#include <msclr\marshal.h>
 using namespace System;
 using namespace System::Numerics;
 
@@ -9,20 +8,19 @@ namespace XRay
 	/// <summary> X-Ray CInifile wrapper </summary>
 	public ref class Ini sealed
 	{
+	internal:
+		CInifile* pNativeObject;
+
 	public:
 		/// <summary> Returns file name </summary>
 		property String^ FileName
 		{
-			String^ get()
+			String^ get() override
 			{
-				return gcnew System::String(pNativeObject->fname());
+				return gcnew String(pNativeObject->fname());
 			}
 		};
 
-	private:
-		CInifile* pNativeObject;
-
-	public:
 		Ini(String^ fileName);
 		Ini(String^ fileName, bool readOnly);
 		Ini(String^ fileName, bool readOnly, bool load);
