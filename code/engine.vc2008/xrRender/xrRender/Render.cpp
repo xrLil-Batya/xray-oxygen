@@ -269,7 +269,34 @@ void CRender::Render()
 	ViewBase.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View = nullptr;
 
-	Target->phase_scene_prepare();
+	if (ps_r_flags.test(R_FLAG_ZFILL))
+	{
+		PIX_EVENT(DEFER_Z_FILL);
+	//	Device.Statistic->RenderCALC.Begin();
+		float		z_distance = ps_r_zfill;
+		Fmatrix		m_zfill, m_project;
+		m_project.build_projection(
+			deg2rad(Device.fFOV),
+			Device.fASPECT, VIEWPORT_NEAR,
+			z_distance * Environment().CurrentEnv->far_plane);
+		m_zfill.mul(m_project, Device.mView);
+		r_pmask(true, false);	// enable priority "0"
+		set_Recorder(NULL);
+		phase = PHASE_SMAP;
+		render_main(m_zfill);
+		r_pmask(true, false);	// disable priority "1"
+	//	Device.Statistic->RenderCALC.End();
+
+		// flush
+		Target->phase_scene_prepare();
+		RCache.set_ColorWriteEnable(FALSE);
+		r_dsgraph_render_graph(0);
+		RCache.set_ColorWriteEnable();
+	}
+	else
+	{
+		Target->phase_scene_prepare();
+	}
     //RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //NOT EVEN a depth prepass :P
 
 	Device.Statistic->Render_CRenderRender_ScenePrepare.End();
@@ -307,6 +334,8 @@ void CRender::Render()
 	Device.Statistic->Render_CRenderRender_render_main.End();
 
 	//******* Main render :: PART-0	-- first
+	bool split_the_scene_to_minimize_wait = !!ps_r_flags.test(R_FLAG_EXP_SPLIT_SCENE);
+	if (!split_the_scene_to_minimize_wait)
 	{
 		ScopeStatTimer deferPart0Timer(Device.Statistic->Render_CRenderRender_DeferPart0);
 		PIX_EVENT(DEFER_PART0);
@@ -319,7 +348,15 @@ void CRender::Render()
 			Details->Render();
 		Target->phase_scene_end();
 	} 
+	else
+	{
+		PIX_EVENT(DEFER_PART0_SPLIT);
 
+		// level, SPLIT
+		Target->phase_scene_begin();
+		r_dsgraph_render_graph(0);
+		Target->disable_aniso();
+	}
 	//******* Occlusion testing of volume-limited light-sources
 	Device.Statistic->Render_CRenderRender_LightVisibility.Begin();
 	Target->phase_occq();
@@ -382,6 +419,18 @@ void CRender::Render()
 	LP_normal.sort();
 	LP_pending.sort();
 	Device.Statistic->Render_CRenderRender_LightVisibility.End();
+
+	//******* Main render :: PART-1 (second)
+	if (split_the_scene_to_minimize_wait)
+	{
+		PIX_EVENT(DEFER_PART1_SPLIT);
+		// level
+		Target->phase_scene_begin();
+		r_dsgraph_render_hud();
+		r_dsgraph_render_lods(true, true);
+		if (Details)	Details->Render();
+		Target->phase_scene_end();
+	}
 
 	// Active item and wallmarks
 	{

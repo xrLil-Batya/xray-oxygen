@@ -835,6 +835,7 @@ void xrRender_initconsole()
 	// Z-Fill
 	CMD3(CCC_Mask,		"r_zfill",				&ps_r_flags,				R_FLAG_ZFILL	);
 	CMD4(CCC_Float,		"r_zfill_depth",		&ps_r_zfill,				0.001f,	0.5f	);
+	CMD3(CCC_Mask,		"r_exp_splitscene",	&ps_r_flags,				R_FLAG_EXP_SPLIT_SCENE);
 
 	// Sun
 	CMD3(CCC_Mask,		"r_sun",				&ps_r_flags,				R_FLAG_SUN		);
