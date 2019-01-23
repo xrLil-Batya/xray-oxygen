@@ -269,34 +269,7 @@ void CRender::Render()
 	ViewBase.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View = nullptr;
 
-	if (ps_r_flags.test(R_FLAG_ZFILL))
-	{
-		PIX_EVENT(DEFER_Z_FILL);
-	//	Device.Statistic->RenderCALC.Begin();
-		float		z_distance = ps_r_zfill;
-		Fmatrix		m_zfill, m_project;
-		m_project.build_projection(
-			deg2rad(Device.fFOV),
-			Device.fASPECT, VIEWPORT_NEAR,
-			z_distance * Environment().CurrentEnv->far_plane);
-		m_zfill.mul(m_project, Device.mView);
-		r_pmask(true, false);	// enable priority "0"
-		set_Recorder(NULL);
-		phase = PHASE_SMAP;
-		render_main(m_zfill);
-		r_pmask(true, false);	// disable priority "1"
-	//	Device.Statistic->RenderCALC.End();
-
-		// flush
-		Target->phase_scene_prepare();
-		RCache.set_ColorWriteEnable(FALSE);
-		r_dsgraph_render_graph(0);
-		RCache.set_ColorWriteEnable();
-	}
-	else
-	{
-		Target->phase_scene_prepare();
-	}
+	Target->phase_scene_prepare();
     //RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //NOT EVEN a depth prepass :P
 
 	Device.Statistic->Render_CRenderRender_ScenePrepare.End();
@@ -350,6 +323,7 @@ void CRender::Render()
 	} 
 	else
 	{
+		ScopeStatTimer deferPart0Timer(Device.Statistic->Render_CRenderRender_DeferPart0);
 		PIX_EVENT(DEFER_PART0_SPLIT);
 
 		// level, SPLIT
@@ -423,6 +397,7 @@ void CRender::Render()
 	//******* Main render :: PART-1 (second)
 	if (split_the_scene_to_minimize_wait)
 	{
+		ScopeStatTimer deferPart0Timer(Device.Statistic->Render_CRenderRender_DeferPart0);
 		PIX_EVENT(DEFER_PART1_SPLIT);
 		// level
 		Target->phase_scene_begin();
@@ -459,6 +434,7 @@ void CRender::Render()
 			if (0 == Lights_LastFrame[it])
 				continue;
 
+			//#GIPERION: This makes me sad
 			try
 			{
 				Lights_LastFrame[it]->svis.flushoccq();
@@ -530,6 +506,7 @@ void CRender::Render()
 
 		// Lighting, non dependant on OCCQ
 		{
+			ScopeStatTimer lightTimer(Device.Statistic->TEST2);
 			PIX_EVENT(DEFER_LIGHT_NO_OCCQ);
 			HOM.Disable();
 			render_lights(LP_normal);
@@ -537,6 +514,7 @@ void CRender::Render()
         
 		// Lighting, dependant on OCCQ
 		{
+			ScopeStatTimer lightTimer(Device.Statistic->TEST3);
 			PIX_EVENT(DEFER_LIGHT_OCCQ);
 			render_lights(LP_pending);
 		}

@@ -76,7 +76,7 @@ void CRender::render_lights(light_Package& LP)
 	//	if (left_some_lights_that_doesn't cast shadows)
 	//		accumulate them
 	HOM.Disable();
-	while (LP.v_shadowed.size())
+	while (!LP.v_shadowed.empty())
 	{
 		// if (has_spot_shadowed)
 		xr_vector<light*>	L_spot_s;
@@ -107,13 +107,17 @@ void CRender::render_lights(light_Package& LP)
 
 			L->svis.begin();
 			PIX_EVENT(SHADOWED_LIGHTS_RENDER_SUBSPACE);
-			r_dsgraph_render_subspace(L->spatial.sector, CastToGSCMatrix(L->X.S.combine), L->position, TRUE);
+			{
+				ScopeStatTimer lightTimer(Device.Statistic->TEST0);
+				r_dsgraph_render_subspace(L->spatial.sector, CastToGSCMatrix(L->X.S.combine), L->position, TRUE);
+			}
 
-			bool bNormal = mapNormalPasses[0][0].size() || mapMatrixPasses[0][0].size();
-			bool bSpecial = mapNormalPasses[1][0].size() || mapMatrixPasses[1][0].size() || mapSorted.size();
+			bool bNormal = !mapNormalPasses[0][0].empty() || !mapMatrixPasses[0][0].empty();
+			bool bSpecial = !mapNormalPasses[1][0].empty() || !mapMatrixPasses[1][0].empty() || !mapSorted.empty();
 
 			if (bNormal || bSpecial) 
 			{
+				ScopeStatTimer lightTimer(Device.Statistic->TEST1);
 				stats.s_merged++;
 				L_spot_s.push_back(L);
 				Target->phase_smap_spot(L);
@@ -121,9 +125,6 @@ void CRender::render_lights(light_Package& LP)
 				RCache.set_xform_view(L->X.S.view);
 				RCache.set_xform_project(L->X.S.project);
 				r_dsgraph_render_graph(0);
-
-				if (ps_r_flags.test(R_FLAG_DETAIL_SHADOW))
-					Details->Render();
 
 				L->X.S.transluent = FALSE;
 
@@ -186,16 +187,20 @@ void CRender::render_lights(light_Package& LP)
 		if (!L_spot_s.empty())
 		{
 			PIX_EVENT(ACCUM_SPOT);
-			for (u32 it = 0; it < L_spot_s.size(); it++)
+			for (light* L_spot : L_spot_s)
 			{
-				Target->accum_spot(L_spot_s[it]);
-				render_indirect(L_spot_s[it]);
+				Target->accum_spot(L_spot);
+				render_indirect(L_spot);
 			}
 
 			PIX_EVENT(ACCUM_VOLUMETRIC);
 			if (RImplementation.o.advancedpp && ps_r_flags.is(R_FLAG_VOLUMETRIC_LIGHTS))
-				for (u32 it = 0; it < L_spot_s.size(); it++)
-					Target->accum_volumetric(L_spot_s[it]);
+			{
+				for (light* L_spot : L_spot_s)
+				{
+					Target->accum_volumetric(L_spot);
+				}
+			}
 
 			L_spot_s.clear();
 		}
@@ -206,13 +211,13 @@ void CRender::render_lights(light_Package& LP)
 	if (!LP.v_point.empty()) 
 	{
 		xr_vector<light*>&	Lvec = LP.v_point;
-		for (u32 pid = 0; pid < Lvec.size(); pid++) 
+		for (light* pid : Lvec) 
 		{
-			Lvec[pid]->vis_update();
-			if (Lvec[pid]->vis.visible) 
+			pid->vis_update();
+			if (pid->vis.visible) 
 			{
-				render_indirect(Lvec[pid]);
-				Target->accum_point(Lvec[pid]);
+				render_indirect(pid);
+				Target->accum_point(pid);
 			}
 		}
 		Lvec.clear();
@@ -223,14 +228,14 @@ void CRender::render_lights(light_Package& LP)
 	if (!LP.v_spot.empty()) 
 	{
 		xr_vector<light*>&	Lvec = LP.v_spot;
-		for (u32 pid = 0; pid < Lvec.size(); pid++) 
+		for (light* pid : Lvec)
 		{
-			Lvec[pid]->vis_update();
-			if (Lvec[pid]->vis.visible) 
+			pid->vis_update();
+			if (pid->vis.visible) 
 			{
-				LR.compute_xf_spot(Lvec[pid]);
-				render_indirect(Lvec[pid]);
-				Target->accum_spot(Lvec[pid]);
+				LR.compute_xf_spot(pid);
+				render_indirect(pid);
+				Target->accum_spot(pid);
 			}
 		}
 		Lvec.clear();
@@ -249,10 +254,8 @@ void	CRender::render_indirect(light* L)
 	xr_vector<light_indirect>&	Lvec = L->indirect;
 	if (Lvec.empty())						return;
 	float	LE = L->color.intensity();
-	for (u32 it = 0; it < Lvec.size(); it++) 
+	for (light_indirect& LI : Lvec) 
 	{
-		light_indirect&	LI = Lvec[it];
-
 		// energy and color
 		float LIE = LE * LI.E;
 

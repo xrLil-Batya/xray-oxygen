@@ -137,7 +137,6 @@ float		ps_r_pps_u					= 0.0f;
 float		ps_r_pps_v					= 0.0f;
 float		ps_r_mblur					= 0.0f;
 float		ps_r_gmaterial				= 2.2f;
-float		ps_r_zfill					= 0.25f;			// .1f
 int			ps_r_wait_sleep				= 0;
 
 // Textures
@@ -833,8 +832,6 @@ void xrRender_initconsole()
 	CMD4(CCC_Float,		"r_ls_fade",			&ps_r_ls_fade,				0.2f,	1.0f	);
 
 	// Z-Fill
-	CMD3(CCC_Mask,		"r_zfill",				&ps_r_flags,				R_FLAG_ZFILL	);
-	CMD4(CCC_Float,		"r_zfill_depth",		&ps_r_zfill,				0.001f,	0.5f	);
 	CMD3(CCC_Mask,		"r_exp_splitscene",	&ps_r_flags,				R_FLAG_EXP_SPLIT_SCENE);
 
 	// Sun
