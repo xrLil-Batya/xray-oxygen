@@ -1657,9 +1657,6 @@
     <Filter Include="Core\Common\ObjectFactory\object_item_single">
       <UniqueIdentifier>{5cbd19f4-a7b9-4e92-869e-5218df6e242b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Common\Profiler">
-      <UniqueIdentifier>{a0b41753-b643-4fc2-9a83-af342eb51709}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Common\QuadTree">
       <UniqueIdentifier>{144e3e98-cc83-44cf-ad23-3cc727c6e34e}</UniqueIdentifier>
     </Filter>
@@ -1926,6 +1923,9 @@
     </Filter>
     <Filter Include="Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Vintorez">
       <UniqueIdentifier>{80d2e311-1158-4b92-b296-2dee03e307d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Common\Profiler">
+      <UniqueIdentifier>{fc37e30b-150d-4639-a0b9-0aa45567c073}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -5058,12 +5058,6 @@
     <ClInclude Include="..\xrServerEntities\object_item_single_inline.h">
       <Filter>Core\Common\ObjectFactory\object_item_single</Filter>
     </ClInclude>
-    <ClInclude Include="profiler.h">
-      <Filter>Core\Common\Profiler</Filter>
-    </ClInclude>
-    <ClInclude Include="profiler_inline.h">
-      <Filter>Core\Common\Profiler</Filter>
-    </ClInclude>
     <ClInclude Include="quadtree.h">
       <Filter>Core\Common\QuadTree</Filter>
     </ClInclude>
@@ -7258,9 +7252,6 @@
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\object_item_script.cpp">
       <Filter>Core\Common\ObjectFactory\object_item_script</Filter>
-    </ClCompile>
-    <ClCompile Include="profiler.cpp">
-      <Filter>Core\Common\Profiler</Filter>
     </ClCompile>
     <ClCompile Include="ai\weighted_random.cpp">
       <Filter>Core\Common\Random\weighted</Filter>

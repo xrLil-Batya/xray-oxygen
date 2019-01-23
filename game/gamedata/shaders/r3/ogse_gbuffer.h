@@ -32,59 +32,6 @@ struct GB
 	float4	_rt3	:	COLOR2;
 };
 	float2	encode_normal			(float3 _N)	{return (_N.xy/sqrt(_N.z*8+8) + 0.5);}
-/*	GB		make_gbuffer	(float3 _P, float3 _N, float3 _D, float4 params)	// params: x - hemi, y - mat, z - gloss, w - refl
-	{
-		GB _out;
-		_out._rt1	= float4(_P.z, params.yyy);
-		_out._rt2	= float4(encode_normal(_N), params.wx);
-		_out._rt3	= float4(_D.xyz, params.z);
-		return _out;
-	}
-	float	get_material			(float2 tc)	{return tex2D(s_position, tc).y;}
-	float3	get_xyz_position		(float2 tc)
-	{
-		float3 view;
-		view.z = tex2D(s_position, tc).x;
-		view.xy = screen_to_proj(tc, view.z).xy;
-		view.xy *= float2(ogse_c_screen.z / ogse_c_screen.y, ogse_c_screen.z) * view.z;
-//		view.xy *= (float2(1,1) + float2(ogse_c_screen.z / ogse_c_screen.y, ogse_c_screen.z) * view.z);// saturate(view.z - 0.2)* ogse_c_screen.w/( ogse_c_screen.w-0.2));
-		return view;
-	}
-	float3	get_xyz_position_fast	(float2 tc)
-	{
-		float3 view;
-		view.z = tex2Dlod(s_position, float4(tc,0,0)).x;
-		view.xy = screen_to_proj(tc, view.z).xy;
-		view.xy *= float2(ogse_c_screen.z / ogse_c_screen.y, ogse_c_screen.z) * view.z;
-//		view.xy *= (float2(1,1) + float2(ogse_c_screen.z / ogse_c_screen.y, ogse_c_screen.z) * view.z);// saturate(view.z - 0.2)* ogse_c_screen.w/( ogse_c_screen.w-0.2));
-		return view;
-	}
-	float3	get_xyz_position_proj	(float4 tc)
-	{
-		float3 view;
-		view.z = tex2Dproj(s_position, tc).x;
-		view.xy = screen_to_proj(tc.xy/tc.w, view.z).xy;
-		view.xy *= float2(ogse_c_screen.z / ogse_c_screen.y, ogse_c_screen.z) * view.z;
-//		view.xy *= (float2(1,1) + float2(ogse_c_screen.z / ogse_c_screen.y, ogse_c_screen.z) * view.z);// saturate(view.z - 0.2)* ogse_c_screen.w/( ogse_c_screen.w-0.2));
-		return view;
-	}
-	float4	get_full_position		(float2 tc)
-	{
-		float4 pos;
-		pos.xyz = get_xyz_position(tc);
-		pos.w = get_material(tc);
-		return pos;
-	}
-	float4	get_full_position_proj	(float4 tc)
-	{
-		float4 pos;
-		pos.xyz = get_xyz_position_proj(tc);
-		pos.w = get_material(tc);
-		return pos;
-	}
-	float	get_depth				(float2 tc)	{return tex2D(s_position, tc).x;}
-	float	get_depth_fast			(float2 tc)	{return tex2Dlod(s_position, float4(tc, 0, 0)).x;}
-	float	get_depth_proj			(float4 tc)	{return tex2Dproj(s_position, tc).x;}*/
 	GB		make_gbuffer	(float3 _P, float3 _N, float3 _D, float4 params)	// params: x - hemi, y - mat, z - gloss, w - refl
 	{
 		GB _out;
@@ -103,7 +50,7 @@ struct GB
 	float	get_gloss				(float2 tc)	{return tex2D(s_diffuse, tc).w;}
 	float	get_depth				(float2 tc)	{return s_position.Sample(smp_nofilter, tc).z;}
 	float	get_depth_fast			(float2 tc)	{return tex2Dlod(s_position, float4(tc,0,0)).z;}
-	float	get_depth_proj			(float4 tc)	{return tex2Dproj(s_position, tc).z;}
+	float	get_depth_proj			(float4 tc)	{return s_position.SampleLevel(tc).z;}
 	
 	// NORMALS COMPRESSION
 	float4	decode_normal			(float4 _N)
@@ -139,58 +86,6 @@ struct GB
 		return _N.xyz;
 	}
 	float	get_refl_power			(float2 tc)	{return tex2D(s_normal, tc).z;}
-/*	
-	float	get_material			(float2 tc)	{return tex2D(s_position, tc).y;}
-	float3	get_xyz_position		(float2 tc)
-	{
-		float3 view;
-		view.z = tex2D(s_position, tc).x;
-		float4 proj = screen_to_proj(tc, view.z);
-		view.xyz = float3(proj.x * ogse_c_screen.z / ogse_c_screen.y, proj.y * ogse_c_screen.z, 1.0) * proj.z;
-		return view;
-	}
-	float3	get_xyz_position_fast	(float2 tc)
-	{
-		float3 view;
-		view.z = tex2Dlod(s_position, float4(tc,0,0)).x;
-		float4 proj = screen_to_proj(tc, view.z);
-		view.xyz = float3(proj.x * ogse_c_screen.z / ogse_c_screen.y, proj.y * ogse_c_screen.z, 1.0) * proj.z;
-		return view;
-	}
-	float3	get_xyz_position_proj	(float4 tc)
-	{
-		float3 view;
-		view.z = tex2Dproj(s_position, tc).x;
-		float4 proj = screen_to_proj(tc.xy/tc.w, view.z);
-		view.xyz = float3(proj.x * ogse_c_screen.z / ogse_c_screen.y, proj.y * ogse_c_screen.z, 1.0) * proj.z;
-		return view;
-	}
-	float4	get_full_position		(float2 tc)
-	{
-		float4 pos;
-		pos.xyz = get_xyz_position(tc);
-		pos.w = get_material(tc);
-		return pos;
-	}
-	float4	get_full_position_proj	(float4 tc)
-	{
-		float4 pos;
-		pos.xyz = get_xyz_position_proj(tc);
-		pos.w = get_material(tc);
-		return pos;
-	}
-	float	get_gloss				(float2 tc)	{return tex2D(s_diffuse, tc).w;}
-	float	get_hemi				(float2 tc)	{return tex2D(s_normal, tc).w;}
-	float	get_depth				(float2 tc)	{return tex2D(s_position, tc).x;}
-	float	get_depth_fast			(float2 tc)	{return tex2Dlod(s_position, float4(tc, 0, 0)).x;}
-	float	get_depth_proj			(float4 tc)	{return tex2Dproj(s_position, tc).x;}
-	#ifdef USE_WET_SURFACES
-		float	get_refl_power			(float2 tc)	{return tex2D(s_position, tc).z;}
-		float4	encode_pos				(float3 _P, float _M, float _R)	{return float4(_P.z, _M, _R, _R);}
-	#else
-		float	get_refl_power			(float2 tc)	{return 0;}
-		float4	encode_pos				(float3 _P, float _M, float _R)	{return float4(_P.z, _M, _M, _M);}
-	#endif*/
 #else
 struct GB
 {

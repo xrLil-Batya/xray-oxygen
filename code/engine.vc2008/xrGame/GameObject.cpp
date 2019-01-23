@@ -53,19 +53,6 @@ CGameObject::CGameObject		()
 
 	m_callbacks					= xr_new<CALLBACK_MAP>();
 	m_anim_mov_ctrl				= nullptr;
-	
-#ifdef LUACP_API
-	static bool _saved = true;
-	if (!_saved)
-	{
-		_saved = true;
-		
-		LogXrayOffset("GameObject.b_spawned", this, &this->m_spawned);
-		LogXrayOffset("GameObject.clsid", this, &this->m_script_clsid);
-		LogXrayOffset("GameObject.story_id", this, &this->m_story_id);
-		LogXrayOffset("GameObject.ai_location", this, &this->m_ai_location);		
-	}
-#endif
 }
 
 CGameObject::~CGameObject		()
@@ -479,7 +466,7 @@ void CGameObject::update_ai_locations			(bool decrement_reference)
 
 	ai_location().level_vertex		(l_dwNewLevelVertexID);
 
-	if (!ai().get_game_graph() && ai().get_cross_table())
+	if (!ai().is_game_graph_presented() && ai().get_cross_table())
 		return;
 
 	ai_location().game_vertex		(ai().cross_table().vertex(ai_location().level_vertex_id()).game_vertex_id());
@@ -676,18 +663,14 @@ void CGameObject::DestroyObject()
 
 void CGameObject::shedule_Update	(u32 dt)
 {
-	//����������
-	if(NeedToDestroyObject())
+	// Уничтожить
+	if (NeedToDestroyObject())
 	{
-#ifndef MASTER_GOLD
-		Msg("--NeedToDestroyObject for [%d][%d]", ID(), Device.dwFrame);
-#endif // #ifndef MASTER_GOLD
-		DestroyObject			();
+		DestroyObject();
 	}
 
-	// Msg							("-SUB-:[%x][%s] CGameObject::shedule_Update",smart_cast<void*>(this),*cName());
-	inherited::shedule_Update	(dt);
-	
+	inherited::shedule_Update(dt);
+
 	CScriptBinder::shedule_Update(dt);
 }
 
@@ -696,7 +679,7 @@ BOOL CGameObject::net_SaveRelevant	()
 	return	(CScriptBinder::net_SaveRelevant());
 }
 
-//������� ��� �������
+// Игровое имя объекта
 LPCSTR CGameObject::Name () const
 {
 	return	(*cName());
@@ -859,23 +842,23 @@ IC	bool similar						(const Fmatrix &_0, const Fmatrix &_1, const float &epsilon
 	return							(true);
 }
 
-void CGameObject::UpdateCL			()
+void CGameObject::UpdateCL()
 {
-	inherited::UpdateCL				();
-	
+	inherited::UpdateCL();
+
 	if (H_Parent())
 		return;
-
-	if (similar(XFORM(),m_previous_matrix,EPS))
+	 
+	if (similar(XFORM(), m_previous_matrix, EPS))
 		return;
 
-	on_matrix_change				(m_previous_matrix);
-	m_previous_matrix				= XFORM();
+	on_matrix_change(m_previous_matrix);
+	m_previous_matrix = XFORM();
 }
 
 void CGameObject::on_matrix_change	(const Fmatrix &previous)
 {
-	obstacle().on_move				();
+	obstacle().on_move();
 }
 
 #ifdef DEBUG

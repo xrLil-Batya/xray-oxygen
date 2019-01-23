@@ -29,7 +29,7 @@ template <class T>
 IC T LoadParamInternal(LPCSTR section, LPCSTR prefix, LPCSTR param, T(CInifile::*method)(LPCSTR, LPCSTR)const, T defVal)
 {
 	static string256 full_name;
-	strconcat(sizeof(full_name), full_name, prefix, param);
+	xr_strconcat( full_name, prefix, param);
 
 	if (pSettings->line_exist(section, full_name))
 		return (pSettings->*method)(section, full_name);

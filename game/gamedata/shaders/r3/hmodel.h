@@ -10,8 +10,8 @@
 
 TextureCube		env_s0;
 TextureCube		env_s1;
-TextureCube		sky_s0;
-TextureCube		sky_s1;
+//TextureCube		sky_s0;
+//TextureCube		sky_s1;
 
 uniform float4	env_color;        // color.w  = lerp factor
 
@@ -38,7 +38,8 @@ void hmodel
 	// material	// sample material
 	//float4	light	= tex3D( s_material, float3(hscale, hspec, m) );
 //	float4	light	= s_material.Sample( smp_material, float3( hscale, hspec, m ) ).xxxy;
-	float4	light	= s_material.SampleLevel( smp_material, float3( hscale, hspec, m ), 0 ).xxxy;
+hspec = pow(hspec,64);
+	float4	light	= float4(hscale.xxx,hspec);//s_material.SampleLevel( smp_material, float3( hscale, hspec, m ), 0 ).xxxy;
 //	float4	light	= float4(1,1,1,1);
 
 	// diffuse color

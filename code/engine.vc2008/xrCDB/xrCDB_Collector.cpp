@@ -3,6 +3,7 @@
 #pragma hdrstop
 #pragma warning(disable: 4267)
 #include "xrCDB.h"
+#include <ppl.h>
 
 namespace CDB
 {

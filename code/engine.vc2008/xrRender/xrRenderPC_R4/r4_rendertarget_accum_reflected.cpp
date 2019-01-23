@@ -13,9 +13,9 @@ void CRenderTarget::accum_reflected		(light* L)
 
 	BOOL	bIntersect			= FALSE; //enable_scissor(L);
 	L->xform_calc				();
-	RCache.set_xform_world		(L->m_xform			);
-	RCache.set_xform_view		(CastToGSCMatrix(Device.mView		));
-	RCache.set_xform_project	(CastToGSCMatrix(Device.mProject	));
+	RCache.set_xform_world		(L->m_xform);
+	RCache.set_xform_view		(Device.mView);
+	RCache.set_xform_project	(Device.mProject);
 	bIntersect					= enable_scissor	(L);
 
 	// *****************************	Minimize overdraw	*************************************
@@ -44,9 +44,9 @@ void CRenderTarget::accum_reflected		(light* L)
 	// Common constants
 	Fvector		L_dir,L_clr,L_pos;	float L_spec;
 	L_clr.set					(L->color.r,L->color.g,L->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
-	CastToGSCMatrix(Device.mView).transform_tiny	(L_pos,L->position);
-	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,L->direction);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
+	Device.mView.transform_tiny	(L_pos,L->position);
+	Device.mView.transform_dir	(L_dir,L->direction);
 	L_dir.normalize				();
 
 	{
@@ -99,9 +99,9 @@ void CRenderTarget::accum_reflected		(light* L)
 	// blend-copy
 	if (!RImplementation.o.fp16_blend)	{
       if( ! RImplementation.o.dx10_msaa )
-   		u_setrt						(rt_Accumulator,NULL,NULL,HW.pBaseZB);
+   		u_setrt						(rt_Accumulator,nullptr,nullptr,HW.pBaseZB);
       else
-		   u_setrt						(rt_Accumulator,NULL,NULL,rt_MSAADepth->pZRT);
+		   u_setrt						(rt_Accumulator,nullptr,nullptr,rt_MSAADepth->pZRT);
 		RCache.set_Element	(s_accum_mask->E[SE_MASK_ACCUM_VOL]	);
 		RCache.set_c				("m_texgen",		m_Texgen);
       if( ! RImplementation.o.dx10_msaa )

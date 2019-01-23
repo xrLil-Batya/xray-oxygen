@@ -1,5 +1,3 @@
-#ifndef	_PHYSICS_EXTERNAL_COMMON_
-#define _PHYSICS_EXTERNAL_COMMON_
 #pragma once
 struct dContactGeom;
 struct dContact;
@@ -12,19 +10,15 @@ namespace CDB
 
 class CBoneInstance;
 
-typedef void  ContactCallbackFun(CDB::TRI* T, dContactGeom* c);
+typedef void ContactCallbackFun(CDB::TRI* T, dContactGeom* c);
 typedef	void ObjectContactCallbackFun(bool& do_colide, bool bo1, dContact& c, SGameMtl* material_1, SGameMtl* material_2);
 
 typedef void __stdcall BoneCallbackFun(CBoneInstance* B);
 
-typedef void	PhysicsStepTimeCallback(u32	step_start, u32	step_end);
-
-struct dxGeomUserData;
-struct dContactGeom;
-XRPHYSICS_API	bool ContactShotMarkGetEffectPars(dContactGeom *c, dxGeomUserData* &data, float &vel_cret, bool &b_invert_normal);
+typedef void PhysicsStepTimeCallback(u32 step_start, u32	step_end);
 
 template <typename geom_type>
-void t_get_box(const geom_type*	shell, const	Fmatrix& form, Fvector&	sz, Fvector&	c)
+void t_get_box(const geom_type*	shell, const Fmatrix& form, Fvector& sz, Fvector& c)
 {
 	c.set(0, 0, 0);
 	VERIFY(sizeof(form.i) + sizeof(form._14_) == 4 * sizeof(float));
@@ -45,4 +39,3 @@ enum ERestrictionType
 	rtNone,
 	rtActor
 };
-#endif

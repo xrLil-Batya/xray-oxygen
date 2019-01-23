@@ -12,6 +12,7 @@
 
 #if __has_include("hack.appveyor")
 #define ITS_CI_BUILD
+// https://www.appveyor.com/docs/environment-variables/
 #define NewStr(str) #str
 #define xstr(ToStr) NewStr(ToStr)
 #endif 
@@ -72,6 +73,7 @@ int main()
 	HeaderString << "#pragma once" << std::endl;
 	
 #ifdef ITS_CI_BUILD
+	HeaderString << "#define _AUTHOR " << "\"" << xstr(APPVEYOR_REPO_COMMIT_AUTHOR) << "\"" << std::endl;
 	HeaderString << "#define _BRANCH " << "\"" << xstr(APPVEYOR_REPO_BRANCH) << "\"" << std::endl;
 	HeaderString << "#define _HASH " << "\"" << xstr(APPVEYOR_REPO_COMMIT) << "\"" << std::endl;
 #else

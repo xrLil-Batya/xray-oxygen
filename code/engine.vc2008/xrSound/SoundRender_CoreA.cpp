@@ -106,7 +106,7 @@ void CSoundRender_CoreA::_initialize(int stage)
 			}
 			else
 			{
-				Log("[OpenAL] ! SOUND: OpenAL: Max targets - ", tit);
+				Msg("[OpenAL] ! SOUND: OpenAL: Max targets - %u", tit);
 				T->_destroy();
 				xr_delete(T);
 				break;

@@ -48,7 +48,11 @@ static Fvector GetColumn(Fmatrix &self, const u32 &index)
 		case 0 : return(Fvector().set(self._11,self._21,self._31));
 		case 1 : return(Fvector().set(self._12,self._22,self._32));
 		case 2 : return(Fvector().set(self._13,self._23,self._33));
-		default : NODEFAULT;
+		default : 
+		{
+			NODEFAULT;
+			return Fvector();
+		}
 	}
 }
 

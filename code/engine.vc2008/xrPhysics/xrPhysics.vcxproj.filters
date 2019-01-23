@@ -195,9 +195,6 @@
     <ClCompile Include="PHActivationShape.cpp">
       <Filter>physics\ActivationBox</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsExternalCommon.cpp">
-      <Filter>physics\Base</Filter>
-    </ClCompile>
     <ClCompile Include="phvalide.cpp">
       <Filter>physics\Base\Objects\Utils</Filter>
     </ClCompile>
@@ -365,9 +362,6 @@
     </ClCompile>
     <ClCompile Include="physics_shell_scripted.cpp">
       <Filter>Client\scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsGamePars.cpp">
-      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="ActorCameraCollision.cpp">
       <Filter>Client</Filter>
@@ -691,9 +685,6 @@
     </ClInclude>
     <ClInclude Include="physics_shell_scripted.h">
       <Filter>Client\scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsGamePars.h">
-      <Filter>Client</Filter>
     </ClInclude>
     <ClInclude Include="ICharacterPhysicsSupport.h">
       <Filter>physics</Filter>

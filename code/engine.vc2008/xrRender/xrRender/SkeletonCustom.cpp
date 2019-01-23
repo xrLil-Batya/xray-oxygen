@@ -212,7 +212,7 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 
 		// It's parent
 		data->r_stringZ				(buf,sizeof(buf));	strlwr(buf);
-		L_parents.push_back			(buf);
+		L_parents.emplace_back			(buf);
 
 		data->r						(&pBone->obb,sizeof(Fobb));
         visimask.set				(u64(1)<<ID,TRUE);

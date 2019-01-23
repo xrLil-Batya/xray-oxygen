@@ -24,8 +24,8 @@ void CRenderTarget::accum_spot	(light* L)
 		// setup xform
 		L->xform_calc					();
 		RCache.set_xform_world			(L->m_xform			);
-		RCache.set_xform_view			(CastToGSCMatrix(Device.mView	));
-		RCache.set_xform_project		(CastToGSCMatrix(Device.mProject));
+		RCache.set_xform_view			(Device.mView	);
+		RCache.set_xform_project		(Device.mProject);
 		bIntersect						= enable_scissor	(L);
 		enable_dbt_bounds				(L);
 
@@ -76,7 +76,7 @@ void CRenderTarget::accum_spot	(light* L)
 		};
 
 		// compute xforms
-		Fmatrix			xf_world;		xf_world.invert	(CastToGSCMatrix(Device.mView));
+		Fmatrix			xf_world;		xf_world.invert	(Device.mView);
 		Fmatrix			xf_view			= L->X.S.view;
 		Fmatrix			xf_project;		xf_project.mul	(m_TexelAdjust,L->X.S.project);
 		m_Shadow.mul					(xf_view, xf_world);
@@ -103,9 +103,9 @@ void CRenderTarget::accum_spot	(light* L)
 	Fvector		L_dir,L_clr,L_pos;	float L_spec;
 	L_clr.set					(L->color.r,L->color.g,L->color.b);
 	L_clr.mul					(L->get_LOD());
-	L_spec						= u_diffuse2s	(L_clr);
-	CastToGSCMatrix(Device.mView).transform_tiny	(L_pos,L->position);
-	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,L->direction);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
+	Device.mView.transform_tiny	(L_pos,L->position);
+	Device.mView.transform_dir	(L_dir,L->direction);
 	L_dir.normalize				();
 
 	// Draw volume with projective texgen
@@ -154,7 +154,7 @@ void CRenderTarget::accum_spot	(light* L)
 
 	// blend-copy
 	if (!RImplementation.o.fp16_blend)	{
-		u_setrt						(rt_Accumulator,NULL,NULL,HW.pBaseZB);
+		u_setrt						(rt_Accumulator,nullptr,nullptr,HW.pBaseZB);
 		RCache.set_Element			(s_accum_mask->E[SE_MASK_ACCUM_VOL]	);
 		RCache.set_c				("m_texgen",		m_Texgen);
 		RCache.set_c				("m_texgen_J",		m_Texgen_J	);
@@ -185,8 +185,8 @@ void CRenderTarget::accum_volumetric(light* L)
 		// setup xform
 		L->xform_calc					();
 		RCache.set_xform_world			(L->m_xform			);
-		RCache.set_xform_view			(CastToGSCMatrix(Device.mView		));
-		RCache.set_xform_project		(CastToGSCMatrix(Device.mProject	));
+		RCache.set_xform_view			(Device.mView		);
+		RCache.set_xform_project		(Device.mProject	);
 		bIntersect						= enable_scissor	(L);
 	}
 
@@ -217,7 +217,7 @@ void CRenderTarget::accum_volumetric(light* L)
 		};
 
 		// compute xforms
-		Fmatrix			xf_world;		xf_world.invert	(CastToGSCMatrix(Device.mView));
+		Fmatrix			xf_world;		xf_world.invert	(Device.mView);
 		Fmatrix			xf_view			= L->X.S.view;
 		Fmatrix			xf_project;		xf_project.mul	(m_TexelAdjust,L->X.S.project);
 		m_Shadow.mul					(xf_view, xf_world);
@@ -260,7 +260,7 @@ void CRenderTarget::accum_volumetric(light* L)
 	pt.sub(L->position);
 	pt.mul(L->m_volumetric_distance);
 	pt.add(L->position);
-	CastToGSCMatrix(Device.mView).transform(pt);
+	Device.mView.transform(pt);
 	aabb.setb( pt, rr);
 
 	// Common constants
@@ -277,9 +277,9 @@ void CRenderTarget::accum_volumetric(light* L)
 	L_clr.mul					(L->m_volumetric_distance);
 	L_clr.mul					(1/fQuality);
 	L_clr.mul					(L->get_LOD());
-	L_spec						= u_diffuse2s	(L_clr);
-	CastToGSCMatrix(Device.mView).transform_tiny	(L_pos,L->position);
-	CastToGSCMatrix(Device.mView).transform_dir	(L_dir,L->direction);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
+	Device.mView.transform_tiny	(L_pos,L->position);
+	Device.mView.transform_dir	(L_dir,L->direction);
 	L_dir.normalize				();
 
 	// Draw volume with projective texgen

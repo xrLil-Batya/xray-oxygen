@@ -62,7 +62,7 @@ void CEngineAPI::InitializeRenderer()
 	if (psDeviceFlags.test(rsR4))
 	{
 		// try to initialize R4
-		Log("Loading DLL:", r4_name);
+		Msg("Loading DLL: %s", r4_name);
 		hRender = LoadLibrary(r4_name);
 		if (!hRender)
 		{
@@ -75,7 +75,7 @@ void CEngineAPI::InitializeRenderer()
 	if (psDeviceFlags.test(rsR2))
 	{
 		// try to initialize R2
-		Log("Loading DLL:", r2_name);
+		Msg("Loading DLL: %s", r2_name);
 		hRender = LoadLibrary(r2_name);
 		R_ASSERT2(hRender, "! ...Failed - incompatible hardware.");
 	}
@@ -113,7 +113,7 @@ void CEngineAPI::Initialize(void)
 		if (strstr(Core.Params, "-debug_game"))
 			g_name = "xrGame_debug";
 
-		Log				("Loading DLL:",g_name);
+		Msg				("Loading DLL: %s",g_name);
 		hGame			= LoadLibrary	(g_name);
 		if (!hGame)
 			R_CHK(GetLastError());

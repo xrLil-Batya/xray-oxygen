@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #pragma hdrstop
 
 #include "IGame_Persistent.h"
@@ -28,7 +28,7 @@ IGame_Persistent::IGame_Persistent	()
 	RDEVICE.seqAppDeactivate.Add	(this);
 
 	m_pMainMenu						= nullptr;
-	Environment().load();
+	Environment().Load();
 	m_pGShaderConstants = ShadersExternalData();
 }
 
@@ -56,8 +56,8 @@ void IGame_Persistent::OnAppStart	()
 void IGame_Persistent::OnAppEnd		()
 {
 #ifndef _EDITOR
-	Environment().unload			 ();
-#endif    
+	Environment().Unload			 ();
+#endif
 	OnGameEnd						();
 
 #ifndef _EDITOR
@@ -156,6 +156,7 @@ void IGame_Persistent::OnFrame()
 {
 	if (!Device.Paused() || Device.dwPrecacheFrame)
 	{
+		ScopeStatTimer envAndSpectreTimer(Device.Statistic->Engine_PersistanceFrame_EnvAndSpectre);
 		Environment().OnFrame();
 		SpectreCallback::shedule_update->Invoke(SpectreObjectId, Device.dwTimeDelta);
 	}
@@ -165,15 +166,18 @@ void IGame_Persistent::OnFrame()
 	Device.Statistic->Particles_destroy = (u32)ps_destroy.size();
 
 	// Play req particle systems
-	while (ps_needtoplay.size())
+	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.Begin();
+	while (!ps_needtoplay.empty())
 	{
 		CPS_Instance* pInstance = ps_needtoplay.back();
 		ps_needtoplay.pop_back();
 		pInstance->Play(false);
 	}
+	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.End();
 
 	// Destroy inactive particle systems
-	while (ps_destroy.size())
+	Device.Statistic->Engine_PersistanceFrame_ParticleDestroy.Begin();
+	while (!ps_destroy.empty())
 	{
 		CPS_Instance* pInstance = ps_destroy.back();
 		if (pInstance->Locked())
@@ -184,6 +188,7 @@ void IGame_Persistent::OnFrame()
 		ps_destroy.pop_back();
 		pInstance->PSI_internal_delete();
 	}
+	Device.Statistic->Engine_PersistanceFrame_ParticleDestroy.End();
 }
 
 void IGame_Persistent::destroy_particles		(const bool &all_particles)

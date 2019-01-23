@@ -108,7 +108,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GamePersistence.cpp">
-      <Filter>Header Files\API</Filter>
+      <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

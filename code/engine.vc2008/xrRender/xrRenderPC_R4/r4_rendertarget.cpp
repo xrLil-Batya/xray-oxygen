@@ -310,23 +310,23 @@ CRenderTarget::CRenderTarget()
 	//	NORMAL
 	{
 		u32		w = Device.dwWidth, h = Device.dwHeight;
-                //MatthewKush: to hell with s_position. We should use rt_Depth and re-create the 3 dimensions
-		rt_Position.create					(r2_RT_P, w, h, D3DFMT_A16B16G16R16F, SampleCount);
-
-        rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //not needed for depth prepass..
+                //TODO: Recreate position with s_depth, use striclty as new z-buffer.
+		//Then we'll have a new RGBA16F gbuffer slot open :) We'd pack what was previously in
+		//s_position in there, and maybe some new stuff.
+		//You'll actually save performance with a third RT bound to GBUFFER.
+		//This is why on modern machines turning "r3_gbuffer_opt off" can be faster.
+		rt_Position.create					(r2_RT_P, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
+        //rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //not needed for depth prepass..
 
 		if (RImplementation.o.dx10_msaa)
-			rt_MSAADepth.create				(r2_RT_MSAAdepth, w, h, D3DFMT_D24S8, SampleCount);
-
-		if (!RImplementation.o.dx10_gbuffer_opt)
-			rt_Normal.create				(r2_RT_N, w, h, D3DFMT_A16B16G16R16F, SampleCount);
+			rt_MSAADepth.create				(r2_RT_MSAAdepth, w, h, DXGI_FORMAT_D24_UNORM_S8_UINT, SampleCount);
 
 		// select albedo & accum
 		if (RImplementation.o.mrtmixdepth)
 		{
 			// NV50
-			rt_Color.create					(r2_RT_albedo, w, h, D3DFMT_A8R8G8B8, SampleCount);
-			rt_Accumulator.create			(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
+			rt_Color.create					(r2_RT_albedo, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, SampleCount);
+			rt_Accumulator.create			(r2_RT_accum, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
 		}
 		else
 		{
@@ -334,61 +334,70 @@ CRenderTarget::CRenderTarget()
 			if (RImplementation.o.fp16_blend)
 			{
 				// NV40
-				if (!RImplementation.o.dx10_gbuffer_opt)
-				{
-					rt_Color.create			(r2_RT_albedo, w, h, D3DFMT_A16B16G16R16F, SampleCount);	// expand to full
-					rt_Accumulator.create	(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
-				}
-				else
-				{
-					rt_Color.create			(r2_RT_albedo, w, h, D3DFMT_A8R8G8B8, SampleCount);	// expand to full
-					rt_Accumulator.create	(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
-				}
+				rt_Color.create			(r2_RT_albedo, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, SampleCount);	// expand to full
+				rt_Accumulator.create	(r2_RT_accum, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
 			}
 			else 
 			{
 				VERIFY(RImplementation.o.albedo_wo);
-				rt_Color.create				(r2_RT_albedo, w, h, D3DFMT_A8R8G8B8, SampleCount);	// normal
-				rt_Accumulator.create		(r2_RT_accum, w, h, D3DFMT_A16B16G16R16F, SampleCount);
-				rt_Accumulator_temp.create	(r2_RT_accum_temp, w, h, D3DFMT_A16B16G16R16F, SampleCount);
+				rt_Color.create				(r2_RT_albedo, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, SampleCount);	// normal
+				rt_Accumulator.create		(r2_RT_accum, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
+				rt_Accumulator_temp.create	(r2_RT_accum_temp, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
 			}
+			//rt_Normal.create(r2_RT_N, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
+
+#if 0
+//Suggested new Gbuffer
+rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //z-buffer for depth
+rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount); //Pack with 8bit Color, 8-bit gloss in Alpha
+
+//AND 8-bit Normals, int (or uint) material-type, 7-bit (right?) hemi (do we even need to reconstruct it?)
+//Currently won't work: game uses both Normals and "Normal Error map" equaling 2 * 8bit RGB.
+//Someone would need to recreate all games normal maps, either in DXT5NM (compatible with DX9) OR
+//BC5 format (best quality, but DX11 only, can't use on DX10 or DX9)
+
+//then, if you need to store more, you have two open Gbuffer (actually 3 more is supported by D3D11) slots :) 
+//could be used for PBR among many other things.
+#endif
 		}
 
+// Note: We should re-add the "RImplementation.o..) because otherwise these textures
+// are loaded even when not used. Same with the rain.
         // Mrmnwar SunShaft Screen Space
 //		if (RImplementation.o.sunshaft_mrmnwar)
         {
-            rt_SunShaftsMask.create			(r2_RT_SunShaftsMask,			w, h, D3DFMT_A8R8G8B8);
-            rt_SunShaftsMaskSmoothed.create	(r2_RT_SunShaftsMaskSmoothed,	w, h, D3DFMT_A8R8G8B8);
-            rt_SunShaftsPass0.create		(r2_RT_SunShaftsPass0,			w, h, D3DFMT_A8R8G8B8);
+            rt_SunShaftsMask.create			(r2_RT_SunShaftsMask,			w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
+            rt_SunShaftsMaskSmoothed.create	(r2_RT_SunShaftsMaskSmoothed,	w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
+            rt_SunShaftsPass0.create		(r2_RT_SunShaftsPass0,			w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
             s_ssss_mrmnwar.create			("effects\\ss_sunshafts_mrmnwar");
         }
 
         // RT - KD Screen space sunshafts
 //		if (RImplementation.o.sunshaft_screenspace)
         {
-            rt_sunshafts_0.create			(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
-            rt_sunshafts_1.create			(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
+            rt_sunshafts_0.create			(r2_RT_sunshafts0, w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
+            rt_sunshafts_1.create			(r2_RT_sunshafts1, w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
             s_ssss_ogse.create				("effects\\ss_sunshafts_ogse");
         }
 
 		// generic(LDR) RTs
-		rt_Generic_0.create					(r2_RT_generic0, w, h, D3DFMT_A8R8G8B8, 1);
-		rt_Generic_1.create					(r2_RT_generic1, w, h, D3DFMT_A8R8G8B8, 1);
-		rt_Generic_2.create					(r2_RT_generic2, w, h, D3DFMT_A8R8G8B8, 1);
-		rt_Generic.create					(r2_RT_generic, w, h, D3DFMT_A8R8G8B8, 1);
+		rt_Generic_0.create					(r2_RT_generic0, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
+		rt_Generic_1.create					(r2_RT_generic1, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
+		rt_Generic_2.create					(r2_RT_generic2, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
+		rt_Generic.create					(r2_RT_generic, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 
 		// Second viewport
-		rt_secondVP.create					(r2_RT_secondVP, w, h, D3DFMT_A8R8G8B8, 1);
+		rt_secondVP.create					(r2_RT_secondVP, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 
 		if (RImplementation.o.dx10_msaa)
 		{
-			rt_Generic_0_r.create			(r2_RT_generic0_r, w, h, D3DFMT_A8R8G8B8, SampleCount);
-			rt_Generic_1_r.create			(r2_RT_generic1_r, w, h, D3DFMT_A8R8G8B8, SampleCount);
+			rt_Generic_0_r.create			(r2_RT_generic0_r, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, SampleCount);
+			rt_Generic_1_r.create			(r2_RT_generic1_r, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, SampleCount);
 		}
 
 		// For higher quality blends
 		if (RImplementation.o.advancedpp)
-			rt_Volumetric.create			(r2_RT_volumetric, w, h, D3DFMT_A16B16G16R16F, SampleCount);
+			rt_Volumetric.create			(r2_RT_volumetric, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
 	}
 
 	// OCCLUSION
@@ -398,14 +407,14 @@ CRenderTarget::CRenderTarget()
 	s_water.create							("effects\\puddles", "water\\water_water");
 
 	// DIRECT (spot)
-	D3DFORMAT depth_format					= (D3DFORMAT)RImplementation.o.HW_smap_FORMAT;
+	DXGI_FORMAT depth_format					= (DXGI_FORMAT)RImplementation.o.HW_smap_FORMAT;
 
 	u32	size								= RImplementation.o.smapsize;
 	rt_smap_depth.create					(r2_RT_smap_depth, size, size, depth_format);
 
 	if (RImplementation.o.dx10_minmax_sm)
 	{
-		rt_smap_depth_minmax.create			(r2_RT_smap_depth_minmax,	size/4,size/4, D3DFMT_R32F);
+		rt_smap_depth_minmax.create			(r2_RT_smap_depth_minmax,	size/4,size/4, DXGI_FORMAT_R32_FLOAT);
 		CBlender_createminmax TempBlender;
 		s_create_minmax_sm.create			(&TempBlender, "null");
 	}
@@ -535,14 +544,14 @@ CRenderTarget::CRenderTarget()
 	// BLOOM
 	{
 		/////////////////////////////////////////
-		D3DFORMAT fmt = D3DFMT_A8R8G8B8;	
+		DXGI_FORMAT fmt = DXGI_FORMAT_R8G8B8A8_UNORM;	
 		/////////////////////////////////////////
 		u32	w = BLOOM_size_X, h = BLOOM_size_Y;
 		u32 fvf_build = D3DFVF_XYZRHW | D3DFVF_TEX4 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) | D3DFVF_TEXCOORDSIZE2(2) | D3DFVF_TEXCOORDSIZE2(3);
 		u32 fvf_filter = (u32)D3DFVF_XYZRHW | D3DFVF_TEX8 | D3DFVF_TEXCOORDSIZE4(0) | D3DFVF_TEXCOORDSIZE4(1) | D3DFVF_TEXCOORDSIZE4(2) | D3DFVF_TEXCOORDSIZE4(3) | D3DFVF_TEXCOORDSIZE4(4) | D3DFVF_TEXCOORDSIZE4(5) | D3DFVF_TEXCOORDSIZE4(6) | D3DFVF_TEXCOORDSIZE4(7);
 		/////////////////////////////////////////
-		rt_Bloom_1.create			(r2_RT_bloom1, w, h, fmt);
-		rt_Bloom_2.create			(r2_RT_bloom2, w, h, fmt);
+		rt_Bloom_1.create			(r2_RT_bloom1, BLOOM_size_X, BLOOM_size_Y, fmt);
+		rt_Bloom_2.create			(r2_RT_bloom2, BLOOM_size_X, BLOOM_size_Y, fmt);
 		/////////////////////////////////////////
 		g_bloom_build.create		(fvf_build, RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_bloom_filter.create		(fvf_filter, RCache.Vertex.Buffer(), RCache.QuadIB);
@@ -556,8 +565,8 @@ CRenderTarget::CRenderTarget()
 
 	// TONEMAP
 	{
-		rt_LUM_64.create			(r2_RT_luminance_t64, 64, 64, D3DFMT_A16B16G16R16F);
-		rt_LUM_8.create				(r2_RT_luminance_t8, 8, 8, D3DFMT_A16B16G16R16F);
+		rt_LUM_64.create			(r2_RT_luminance_t64, 64, 64, DXGI_FORMAT_R16G16B16A16_FLOAT);
+		rt_LUM_8.create				(r2_RT_luminance_t8, 8, 8, DXGI_FORMAT_R16G16B16A16_FLOAT);
 		s_luminance.create			("effects\\bloom_luminance");
 		f_luminance_adapt			= 0.5f;
 
@@ -569,7 +578,7 @@ CRenderTarget::CRenderTarget()
 		{
 			string256 name;
 			xr_sprintf(name, "%s_%d", r2_RT_luminance_pool, it);
-			rt_LUM_pool[it].create(name, 1, 1, D3DFMT_R32F);
+			rt_LUM_pool[it].create(name, 1, 1, DXGI_FORMAT_R32_FLOAT);
 			FLOAT ColorRGBA[4] = { 127.0f / 255.0f, 127.0f / 255.0f, 127.0f / 255.0f, 127.0f / 255.0f };
 			HW.pContext->ClearRenderTargetView(rt_LUM_pool[it]->pRT, ColorRGBA);
 		}
@@ -592,7 +601,7 @@ CRenderTarget::CRenderTarget()
 			h = Device.dwHeight;
 		}
 
-		D3DFORMAT	fmt = HW.Caps.id_vendor == 0x10DE ? D3DFMT_R32F : D3DFMT_R16F;
+		DXGI_FORMAT	fmt = HW.Caps.id_vendor == 0x10DE ? DXGI_FORMAT_R32_FLOAT : DXGI_FORMAT_R16_FLOAT;
 		rt_half_depth.create			(r2_RT_half_depth, w, h, fmt);
 
 		s_ssao.create(b_ssao, "r2\\ssao");
@@ -626,7 +635,7 @@ CRenderTarget::CRenderTarget()
 	// Gamma correction 
 	{
 		// RT, used as look up table
-		rt_GammaLUT.create			(r2_RT_gamma_lut, 256, 1, D3DFMT_A8R8G8B8);
+		rt_GammaLUT.create			(r2_RT_gamma_lut, 256, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 		s_gamma.create				("effects\\pp_gamma");
 	}
 
@@ -640,9 +649,9 @@ CRenderTarget::CRenderTarget()
 		u32	w = Device.dwWidth;
 		u32 h = Device.dwHeight;
 
-//		rt_prev_frame0.create	(r2_RT_prev_frame0,		w, h, D3DFMT_A8R8G8B8);
-		rt_smaa_edgetex.create	(r2_RT_smaa_edgetex,	w, h, D3DFMT_A8R8G8B8);
-		rt_smaa_blendtex.create	(r2_RT_smaa_blendtex,	w, h, D3DFMT_A8R8G8B8);
+//		rt_prev_frame0.create	(r2_RT_prev_frame0,		w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
+		rt_smaa_edgetex.create	(r2_RT_smaa_edgetex,	w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
+		rt_smaa_blendtex.create	(r2_RT_smaa_blendtex,	w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
 	}
 
 	if (RImplementation.o.dx10_msaa)
@@ -895,7 +904,7 @@ CRenderTarget::CRenderTarget()
 				desc.CPUAccessFlags		= 0;
 				desc.MiscFlags			= 0;
 
-				u32* tempData = (u32*)malloc(w * h * sizeof(u32));
+				u32* tempData = (u32*)Memory.mem_alloc(w * h * sizeof(u32));
 				D3D_SUBRESOURCE_DATA subData;
 				std::memset(&subData, 0, sizeof(D3D_SUBRESOURCE_DATA));
 				subData.pSysMem = tempData;
@@ -917,7 +926,7 @@ CRenderTarget::CRenderTarget()
 				t_noise_hq = dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_jitter_hq);
 				t_noise_hq->surface_set(t_noise_hq_surf);
 
-				free(tempData);
+				Memory.mem_free(tempData);
 			}
 		}
 	}
@@ -1067,7 +1076,7 @@ bool CRenderTarget::need_to_render_sunshafts()
 	light* sun = (light*)RImplementation.Lights.sun._get();
 	CEnvDescriptor&	E = *Environment().CurrentEnv;
 	Fcolor sun_color = sun->color;
-	float fValue = E.m_fSunShaftsIntensity * u_diffuse2s(sun_color.r, sun_color.g, sun_color.b);
+	float fValue = E.m_fSunShaftsIntensity * Diffuse::u_diffuse2s(sun_color.r, sun_color.g, sun_color.b);
 	if (fValue < EPS)
 		return false;
 

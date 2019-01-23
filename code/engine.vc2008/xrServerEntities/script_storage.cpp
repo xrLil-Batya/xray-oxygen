@@ -250,8 +250,8 @@ bool CScriptStorage::parse_namespace(const char* caNamespaceName, char* b, u32 c
 	*b = 0;
 	*c = 0;
 	
-	char*			S2;
- 	STRCONCAT		(S2,caNamespaceName);
+	string256			S2;
+ 	xr_strconcat		(S2,caNamespaceName);
  	char*			S	= S2;
 	
 	for (int i = 0;; ++i)
@@ -340,7 +340,7 @@ bool CScriptStorage::do_file(const char* caScriptName, const char* caNameSpaceNa
 		script_log(eLuaMessageTypeError, "Cannot open file \"%s\"", caScriptName);
 		return		(false);
 	}
-	strconcat(sizeof(l_caLuaFileName), l_caLuaFileName, "@", caScriptName);
+	xr_strconcat( l_caLuaFileName, "@", caScriptName);
 
 	if (!load_buffer(lua(), static_cast<const char*>(l_tpFileReader->pointer()), (size_t)l_tpFileReader->length(), l_caLuaFileName, caNameSpaceName))
 	{

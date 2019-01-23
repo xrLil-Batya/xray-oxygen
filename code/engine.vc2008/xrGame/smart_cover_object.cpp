@@ -199,7 +199,7 @@ bool smart_cover::object::inside			(Fvector const &position) const
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void smart_cover::object::script_register(lua_State *L)
 {
 	module(L)[

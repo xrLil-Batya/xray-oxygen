@@ -1,12 +1,12 @@
 #pragma once
-
+#include "DXGIFormat.h"
 //////////////////////////////////////////////////////////////////////////
 class		CRT		:	public xr_resource_named	{
 public:
 	CRT();
 	~CRT();
 #ifdef USE_DX11
-	void	create(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount = 1, bool useUAV = false );
+	void	create(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 SampleCount = 1, bool useUAV = false );
 #else
 	void	create(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount = 1 );
 #endif
@@ -26,14 +26,19 @@ public:
 
 	u32						dwWidth;
 	u32						dwHeight;
-	D3DFORMAT				fmt;
 
+
+#ifdef USE_DX11
+	DXGI_FORMAT				fmt;
+#else
+	D3DFORMAT				fmt;
+#endif
 	u64						_order;
 };
 struct 		resptrcode_crt	: public resptr_base<CRT>
 {
 #ifdef USE_DX11
-	void				create			(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount = 1, bool useUAV = false );
+	void				create			(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 SampleCount = 1, bool useUAV = false );
 #else
 	void				create			(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount = 1);
 #endif

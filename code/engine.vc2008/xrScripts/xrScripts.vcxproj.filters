@@ -361,6 +361,18 @@
     <ClCompile Include="VMLua.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="luajit\lj_strfmt.c">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClCompile>
+    <ClCompile Include="luajit\lj_strfmt_num.c">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClCompile>
+    <ClCompile Include="luajit\lj_buf.c">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClCompile>
+    <ClCompile Include="luajit\lj_profile.c">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SDK\include\luabind\config.hpp">

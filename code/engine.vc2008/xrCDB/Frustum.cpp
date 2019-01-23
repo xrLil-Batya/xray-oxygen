@@ -204,13 +204,13 @@ void CFrustum::CreateFromPortal(sPoly* poly, Fvector& vPN, Fvector& vBase, Fmatr
 	_add		(P);
 
 	// Far clipping plane
-	Matrix4x4 M;
-	M = mFullXFORM;
 
-	P.n.x		= -(M.x[3] - M.x[2]);
-	P.n.y		= -(M.y[3] - M.x[2]);
-	P.n.z		= -(M.z[3] - M.y[2]);
-	P.d			= -(M.w[3] - M.z[2]);
+	Fmatrix &M = mFullXFORM;
+
+	P.n.x = -(M._14 - M._13);
+	P.n.y = -(M._24 - M._23);
+	P.n.z = -(M._34 - M._33);
+	P.d   = -(M._44 - M._43);
 
 	float denom = 1.0f / P.n.magnitude();
 	P.n.x		*= denom;
@@ -444,80 +444,5 @@ void CFrustum::CreateFromMatrix(const Fmatrix &M, u32 mask) noexcept
 		planes[i].n.z	*= denom;
 		planes[i].d		*= denom;
 		planes[i].cache	();
-	}
-}
-
-void CFrustum::CreateFromMatrix(const Matrix4x4 & M, u32 mask) noexcept
-{
-	p_count = 0;
-
-	// Left clipping plane
-	if (mask&FRUSTUM_P_LEFT)
-	{
-		planes[p_count].n.x = -(M.x[3] + M.x[0]);
-		planes[p_count].n.y = -(M.y[3] + M.y[0]);
-		planes[p_count].n.z = -(M.z[3] + M.z[0]);
-		planes[p_count].d   = -(M.w[3] + M.w[0]);
-		p_count++;
-	}
-
-	// Right clipping plane
-	if (mask&FRUSTUM_P_RIGHT)
-	{
-		planes[p_count].n.x = -(M.x[3] - M.x[0]);
-		planes[p_count].n.y = -(M.y[3] - M.y[0]);
-		planes[p_count].n.z = -(M.z[3] - M.z[0]);
-		planes[p_count].d   = -(M.w[3] - M.w[0]);
-		p_count++;
-	}
-
-	// Top clipping plane
-	if (mask&FRUSTUM_P_TOP)
-	{
-		planes[p_count].n.x = -(M.x[3] - M.x[1]);
-		planes[p_count].n.y = -(M.y[3] - M.y[1]);
-		planes[p_count].n.z = -(M.z[3] - M.z[1]);
-		planes[p_count].d   = -(M.w[3] - M.w[1]);
-		p_count++;
-	}
-
-	// Bottom clipping plane
-	if (mask&FRUSTUM_P_BOTTOM)
-	{
-		planes[p_count].n.x = -(M.x[3] + M.x[1]);
-		planes[p_count].n.y = -(M.y[3] + M.y[1]);
-		planes[p_count].n.z = -(M.z[3] + M.z[1]);
-		planes[p_count].d   = -(M.w[3] + M.w[1]);
-		p_count++;
-	}
-
-	// Far clipping plane
-	if (mask&FRUSTUM_P_FAR)
-	{
-		planes[p_count].n.x = -(M.x[3] - M.x[2]);
-		planes[p_count].n.y = -(M.y[3] - M.y[2]);
-		planes[p_count].n.z = -(M.z[3] - M.z[2]);
-		planes[p_count].d   = -(M.w[3] - M.w[2]);
-		p_count++;
-	}
-
-	// Near clipping plane
-	if (mask&FRUSTUM_P_NEAR)
-	{
-		planes[p_count].n.x = -(M.x[3] + M.x[2]);
-		planes[p_count].n.y = -(M.y[3] + M.y[2]);
-		planes[p_count].n.z = -(M.z[3] + M.z[2]);
-		planes[p_count].d   = -(M.w[3] + M.w[2]);
-		p_count++;
-	}
-
-	for (int i = 0; i < p_count; i++)
-	{
-		float denom = 1.0f / planes[i].n.magnitude();// Get magnitude of Vector
-		planes[i].n.x *= denom;
-		planes[i].n.y *= denom;
-		planes[i].n.z *= denom;
-		planes[i].d   *= denom;
-		planes[i].cache();
 	}
 }

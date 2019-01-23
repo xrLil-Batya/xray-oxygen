@@ -64,7 +64,7 @@ void CScriptSound::PlayNoFeedback	(CScriptGameObject *object,	u32 flags/*!< Loop
 #include <luabind/luabind.hpp>
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptSound::script_register(lua_State *L)
 {
 	module(L)

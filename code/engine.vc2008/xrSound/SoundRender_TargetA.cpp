@@ -88,7 +88,7 @@ void	CSoundRender_TargetA::stop()
 	{
 		A_CHK(alSourceStop(pSource));
 		A_CHK(alSourcei(pSource, AL_BUFFER, 0));
-		A_CHK(alSourcei(pSource, AL_SOURCE_RELATIVE, true));
+		A_CHK(alSourcei(pSource, AL_SOURCE_RELATIVE, 1));
 	}
 	inherited::stop();
 }

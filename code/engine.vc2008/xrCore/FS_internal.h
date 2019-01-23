@@ -40,7 +40,7 @@ public:
 		{
             fclose(hf);
             // release RO attrib
-            auto dwAttr = GetFileAttributes(*fName);
+            DWORD dwAttr = GetFileAttributes(*fName);
             if ((dwAttr != DWORD(-1)) && (dwAttr & FILE_ATTRIBUTE_READONLY)) {
                 dwAttr &= ~FILE_ATTRIBUTE_READONLY;
                 SetFileAttributes(*fName, dwAttr);
@@ -53,7 +53,7 @@ public:
         if (hf && (0 != count)) 
 		{
             const size_t mb_sz = 0x1000000;
-            const auto* ptr = static_cast<const u8*>(_ptr);
+            const u8* ptr = static_cast<const u8*>(_ptr);
             size_t req_size = 0;
             for (req_size = count; req_size > mb_sz; req_size -= mb_sz, ptr += mb_sz)
                 R_ASSERT3(fwrite(ptr, mb_sz, 1, hf) == 1, "Can't write mem block to file. Disk maybe full.", _sys_errlist[errno]);

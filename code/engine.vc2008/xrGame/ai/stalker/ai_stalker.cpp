@@ -49,7 +49,7 @@
 #include "../../visual_memory_manager.h"
 #include "../../enemy_manager.h"
 #include "../../../xrServerEntities/alife_human_brain.h"
-#include "../../profiler.h"
+#include "../xrEngine/profiler.h"
 #include "../../BoneProtections.h"
 #include "../../stalker_animation_names.h"
 #include "../../stalker_decision_space.h"
@@ -498,7 +498,7 @@ BOOL CAI_Stalker::net_Spawn(CSE_Abstract* DC)
 	if (ai().game_graph().valid_vertex_id(tpHuman->m_tNextGraphID) && movement().restrictions().accessible(ai().game_graph().vertex(tpHuman->m_tNextGraphID)->level_point()))
 		movement().set_game_dest_vertex(tpHuman->m_tNextGraphID);
 
-	R_ASSERT2(ai().get_game_graph() && ai().get_level_graph() && ai().get_cross_table() &&
+	R_ASSERT2(ai().is_game_graph_presented() && ai().get_level_graph() && ai().get_cross_table() &&
 		(ai().level_graph().level_id() != u32(-1)), "There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!");
 
 	setEnabled(TRUE);

@@ -65,7 +65,7 @@ void try_change_current_entity()
 	g_debug_actor						= actor;
 
 	CFrustum							frustum;
-	frustum.CreateFromMatrix			(CastToGSCMatrix(Device.mFullTransform),FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix			(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
 	typedef xr_vector<ISpatial*>		OBJECTS;
 	OBJECTS								ISpatialResult;
@@ -501,7 +501,7 @@ void CAI_Stalker::debug_text			()
 	string256							temp;
 
 	const CObjectHandlerPlanner			&objects = planner();
-	strconcat							(sizeof(temp),temp,indent,indent);
+	xr_strconcat						(temp, indent, indent);
 	draw_planner						(objects,temp,indent,"root");
 
 	DBG_TextOutSet		(330,up_indent);
@@ -766,7 +766,7 @@ void CAI_Stalker::debug_text			()
 		DBG_OutText	("%s%s%sfire object target    : %s",indent,indent,indent,movement().target_params().cover_fire_object()->cName().c_str());
 
 	DBG_OutText	("%s%s%sdefault behaviour   : %c",indent,indent,indent, movement().current_params().cover() && movement().default_behaviour() ? '+' : '-');
-	strconcat								(sizeof(temp),temp,indent,indent,indent);
+	xr_strconcat (temp, indent, indent, indent);
 	draw_planner							(movement().target_selector(),temp,indent,"target selector");
 
 	if	(
@@ -776,7 +776,7 @@ void CAI_Stalker::debug_text			()
 			movement().restrictions().base_in_restrictions().size()
 		) {
 		DBG_OutText	("%s%srestrictions",indent,indent);
-		strconcat							(sizeof(temp),temp,indent,indent,indent);
+		xr_strconcat(temp, indent, indent, indent);
 		draw_restrictions					(movement().restrictions().out_restrictions(),temp,indent,"out");
 		draw_restrictions					(movement().restrictions().in_restrictions(),temp,indent,"in");
 		draw_restrictions					(movement().restrictions().base_out_restrictions(),temp,indent,"base out");
@@ -945,7 +945,7 @@ void CAI_Stalker::dbg_draw_vision	()
 	shift.set					(0.f,2.5f,0.f);
 
 	Fmatrix						res;
-	res.mul						(CastToGSCMatrix(Device.mFullTransform),XFORM());
+	res.mul						(Device.mFullTransform,XFORM());
 
 	Fvector4					v_res;
 

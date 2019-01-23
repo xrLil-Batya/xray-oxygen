@@ -80,7 +80,7 @@ enum ESingleGameDifficulty
 	egd_force_u32 = u32(-1)
 };
 enum EGameLanguage;
-extern ESingleGameDifficulty g_SingleGameDifficulty;
+extern GAME_API ESingleGameDifficulty g_SingleGameDifficulty;
 extern EGameLanguage g_Language;
 
 xr_token		difficulty_type_token[];

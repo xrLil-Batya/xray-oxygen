@@ -51,7 +51,14 @@ struct XRCORE_API xr_token2
 };
 
 // generic
-template <class T>	IC T		_sqr	(T a)		{ return a*a;		}
+template <class T>
+IC T		_sqr	(T a)			{ return a*a;		}
+
+template <class T>
+IC T		saturate(T a)			{ return std::clamp(a, (T)0, (T)1); }
+
+template <class T>
+IC T		lerp	(T v0, T v1, T t) { return fma(t, v1, fma(-t, v0, v0)); }
 
 // float
 IC float	_abs	(float x)		{ return fabsf(x); }

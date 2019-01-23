@@ -42,7 +42,7 @@ void CMatrix::Calculate()
 			return;
 		case modeS_refl:
 			{
-			Fmatrix	mView = CastToGSCMatrix(RDEVICE.mView);
+			Fmatrix	mView = RDEVICE.mView;
 				float Ux= .5f* mView._11, Uy= .5f* mView._21, Uz= .5f* mView._31, Uw = .5f;
 				float Vx=-.5f* mView._12, Vy=-.5f* mView._22, Vz=-.5f* mView._32, Vw = .5f;
 
@@ -54,7 +54,7 @@ void CMatrix::Calculate()
 			return;
 		case modeC_refl:
 			{
-				Fmatrix	M	= CastToGSCMatrix(RDEVICE.mView);
+				Fmatrix	M	= RDEVICE.mView;
 				M._41		= 0.f;
 				M._42		= 0.f;
 				M._43		= 0.f;

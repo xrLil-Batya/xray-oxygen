@@ -48,7 +48,7 @@ void CRenderDevice::Destroy	(void) {
 
 #include "IGame_Level.h"
 #include "CustomHUD.h"
-extern BOOL bNeed_re_create_env;
+extern bool bNeed_re_create_env;
 void CRenderDevice::Reset(bool precache)
 {
 	u32 dwWidth_before = dwWidth;
@@ -61,7 +61,7 @@ void CRenderDevice::Reset(bool precache)
 
 	if (g_pGamePersistent)
 	{
-		Environment().bNeed_re_create_env = TRUE;
+		Environment().bNeed_re_create_env = true;
 	}
 
 	_SetupStates();

@@ -21,6 +21,7 @@
 #include "moving_objects.h"
 #include "doors_manager.h"
 #include "../FrayBuildConfig.hpp"
+#include <memory>
 
 static CAI_Space* g_ai_space = nullptr;
 
@@ -37,19 +38,16 @@ CAI_Space& CAI_Space::GetInstance()
 
 CAI_Space::CAI_Space				()
 {
-	m_ef_storage			= 0;
-	m_game_graph			= 0;
-	m_graph_engine			= 0;
-	m_cover_manager			= 0;
-	m_level_graph			= 0;
-	m_alife_simulator		= 0;
-	m_patrol_path_storage	= 0;
-	m_script_engine			= 0;
-	m_moving_objects		= 0;
-	m_doors_manager			= 0;
-#ifdef LUACP_API
-	LogXrayOffset("CALifeSimulatorBase.rel_ai_space", this, &this->m_alife_simulator);
-#endif
+	m_ef_storage			= nullptr;
+	m_game_graph			= nullptr;
+	m_graph_engine			= nullptr;
+	m_cover_manager			= nullptr;
+	m_level_graph			= nullptr;
+	m_alife_simulator		= nullptr;
+	m_patrol_path_storage	= nullptr;
+	m_script_engine			= nullptr;
+	m_moving_objects		= nullptr;
+	m_doors_manager			= nullptr;
 }
 
 void CAI_Space::init				()
@@ -86,11 +84,11 @@ void CAI_Space::load(LPCSTR level_name)
 
 	const CGameGraph::SLevel &current_level = game_graph().header().level(level_name);
 
-	m_level_graph.reset(new CLevelGraph());
+	m_level_graph = std::make_unique<CLevelGraph>();
 	game_graph().set_current_level(current_level.id());
 	R_ASSERT2(cross_table().header().level_guid() == level_graph().header().guid(), "cross_table doesn't correspond to the AI-map");
 	R_ASSERT2(cross_table().header().game_guid() == game_graph().header().guid(), "graph doesn't correspond to the cross table");
-	m_graph_engine.reset(new CGraphEngine(std::max((u32)game_graph().header().vertex_count(), level_graph().header().vertex_count())));
+	m_graph_engine = std::make_unique<CGraphEngine>(std::max((u32)game_graph().header().vertex_count(), level_graph().header().vertex_count()));
 	R_ASSERT2(current_level.guid() == level_graph().header().guid(), "graph doesn't correspond to the AI-map");
 
 #ifdef DEBUG
@@ -103,7 +101,7 @@ void CAI_Space::load(LPCSTR level_name)
 	m_moving_objects->on_level_load();
 
 	VERIFY(!m_doors_manager);
-	m_doors_manager.reset(new ::doors::manager(level_graph().header().box()));
+	m_doors_manager = std::make_unique<::doors::manager>(level_graph().header().box());
 }
 
 void CAI_Space::unload				(bool reload)
@@ -115,7 +113,7 @@ void CAI_Space::unload				(bool reload)
 	m_level_graph.reset(nullptr);
 
 	if (!reload && m_game_graph)
-		m_graph_engine.reset(new CGraphEngine(game_graph().header().vertex_count()));
+		m_graph_engine = std::make_unique<CGraphEngine>(game_graph().header().vertex_count());
 }
 
 #ifdef DEBUG
@@ -152,13 +150,13 @@ void CAI_Space::validate			(const u32 level_id) const
 
 void CAI_Space::patrol_path_storage_raw	(IReader &stream)
 {
-	m_patrol_path_storage.reset(new CPatrolPathStorage());
-	m_patrol_path_storage->load_raw	(get_level_graph(),get_cross_table(),get_game_graph(),stream);
+	m_patrol_path_storage = std::make_unique<CPatrolPathStorage>();
+	m_patrol_path_storage->load_raw	(get_level_graph(),get_cross_table(),stream);
 }
 
 void CAI_Space::patrol_path_storage		(IReader &stream)
 {
-	m_patrol_path_storage.reset(new CPatrolPathStorage());
+	m_patrol_path_storage = std::make_unique<CPatrolPathStorage>();
 	m_patrol_path_storage->load(stream);
 }
 
@@ -173,14 +171,19 @@ void CAI_Space::set_alife(CALifeSimulator *alife_simulator)
 //	m_graph_engine.reset(nullptr);
 }
 
-void CAI_Space::game_graph(CGameGraph *game_graph)
+void CAI_Space::create_game_graph(IReader& chunk)
 {
 	VERIFY(m_alife_simulator);
-	VERIFY(game_graph);
+	VERIFY(!m_game_graph);
 	VERIFY(!m_game_graph);
 
-	m_game_graph.reset(game_graph);
-	m_graph_engine.reset(new CGraphEngine(this->game_graph().header().vertex_count()));
+	m_game_graph = std::make_unique<CGameGraph>(chunk);
+	m_graph_engine = std::make_unique<CGraphEngine>(this->game_graph().header().vertex_count());
+}
+
+IC bool CAI_Space::is_game_graph_presented() const
+{
+	return static_cast<bool> (m_game_graph);
 }
 
 const CGameLevelCrossTable &CAI_Space::cross_table() const

@@ -41,8 +41,8 @@ CUIPdaMsgListItem* CUIGameLog::AddPdaMessage()
 
 void CUIGameLog::AddChatMessage(LPCSTR msg, LPCSTR author)
 {
-	LPSTR fullLine;
-	STRCONCAT(fullLine, author, " ", msg);
+	string512 fullLine;
+	xr_strconcat(fullLine, author, " ", msg);
 
 	_TrimRight(fullLine);
 

@@ -10,6 +10,15 @@
 #include <regex>
 #include "../Include/xrRender/RenderDeviceRender.h"
 
+float	view_port_near_koef = 0.5f;
+
+extern ENGINE_API float		psVisDistance;
+extern ENGINE_API float		psFogDistance;
+extern ENGINE_API float		psFogDensity;
+extern ENGINE_API float		psFogNear;
+extern ENGINE_API float		psFogFar;
+extern ENGINE_API Fvector3	psFogColor;
+
 extern XRCORE_API xr_vector<xr_token> vid_quality_token;
 
 xr_token vid_bpp_token[ ]=
@@ -19,7 +28,6 @@ xr_token vid_bpp_token[ ]=
 	{ 0,	0}
 };
 //-----------------------------------------------------------------------
-float view_port_near_koef = 0.5f;
 void IConsole_Command::add_to_LRU( shared_str const& arg )
 {
 	if ( arg.size() == 0 || bEmptyArgsHandled )
@@ -570,7 +578,6 @@ ENGINE_API float psHUD_FOV = psHUD_FOV_def;
 
 extern int			rsDVB_Size;
 extern int			rsDIB_Size;
-extern Flags32		psEnvFlags;
 
 extern int			g_ErrorLineCount;
 extern int			ps_rs_loading_stages;
@@ -595,7 +602,6 @@ void CCC_Register()
 	CMD1(CCC_E_Dump,	"e_list"				);
 	CMD1(CCC_E_Signal,	"e_signal"				);
 
-	CMD3(CCC_Mask,		"rs_wireframe",			&psDeviceFlags,		rsWireframe);
 	CMD3(CCC_Mask,		"rs_clear_bb",			&psDeviceFlags,		rsClearBB);
 
 //	CMD3(CCC_Mask,		"rs_constant_fps",		&psDeviceFlags,		rsConstantFPS			);
@@ -604,6 +610,7 @@ void CCC_Register()
 #endif
 	CMD3(CCC_Mask,		"rs_draw_fps",			&psDeviceFlags,		rsDrawFPS				);
 	CMD3(CCC_Mask,		"rs_hw_stats",			&psDeviceFlags,		rsHWInfo				);
+	CMD3(CCC_Mask,		"rs_env_stats",			&psDeviceFlags,		rsEnviromentInfo		);
 	// Render device states
 	CMD3(CCC_Mask,		"rs_detail",			&psDeviceFlags,		rsDetails				);
 
@@ -614,6 +621,10 @@ void CCC_Register()
 	CMD3(CCC_Mask,		"rs_refresh_60hz",		&psDeviceFlags,		rsRefresh60hz			);
 	CMD3(CCC_Mask,		"rs_refresh_120hz",		&psDeviceFlags,		rsRefresh120hz			);
 	CMD3(CCC_Mask,		"rs_stats",				&psDeviceFlags,		rsStatistic				);
+	CMD3(CCC_Mask,		"rs_stats_game",		&psDeviceFlags,		rsGameProfiler			);
+	CMD3(CCC_Mask,		"rs_stats_schedule",    &psDeviceFlags,		rsScheduleProfiler		);
+	CMD3(CCC_Mask,		"rs_cam_pos",			&psDeviceFlags,		rsCameraPos				);
+
 	CMD4(CCC_Float,		"rs_vis_distance",		&psVisDistance,		0.4f,	2.0f			);
 	if (strstr(Core.Params,"-fog_mixer"))
 	{
@@ -623,7 +634,6 @@ void CCC_Register()
 	CMD4(CCC_Vector3,	"rs_fog_color",			&psFogColor, Fvector().set(0, 0, 0), Fvector().set(256, 256, 256));
 	CMD4(CCC_Float,		"rs_fog_far",			&psFogFar,			0.0f,	10.0f			);
 	}
-	CMD3(CCC_Mask,		"rs_cam_pos",			&psDeviceFlags,		rsCameraPos				);
 #ifdef DEBUG
 	CMD3(CCC_Mask,		"rs_occ_draw",			&psDeviceFlags,		rsOcclusionDraw			);
 	CMD3(CCC_Mask,		"rs_occ_stats",			&psDeviceFlags,		rsOcclusionStats		);

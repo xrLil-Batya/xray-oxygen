@@ -13,13 +13,15 @@
 
 CScriptParticleAction::~CScriptParticleAction()
 {
+
 }
 
-void CScriptParticleAction::SetParticle			(const char* caParticleToRun, bool bAutoRemove)
+void CScriptParticleAction::SetParticle(const char* caParticleToRun, bool bAutoRemove)
 {
+	m_bAutoRemove           = bAutoRemove;
 	m_caParticleToRun	= caParticleToRun;
-	m_tGoalType			= eGoalTypeParticleAttached;
-	m_tpParticleSystem	= CParticlesObject::Create(*m_caParticleToRun,BOOL(m_bAutoRemove = bAutoRemove));
+	m_tGoalType		= eGoalTypeParticleAttached;
+	m_tpParticleSystem	= CParticlesObject::Create(*m_caParticleToRun, m_bAutoRemove);
 	m_bStartedToPlay	= false;
 	m_bCompleted		= false;
 }

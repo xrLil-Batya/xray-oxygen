@@ -4,6 +4,12 @@
 #	define	INGAME_EDITOR
 #endif // #ifndef INGAME_EDITOR
 
+#ifdef INGAME_EDITOR
+#	define	INGAME_EDITOR_VIRTUAL	virtual
+#else
+#	define	INGAME_EDITOR_VIRTUAL
+#endif
+
 #ifndef _WIN32_WINNT
 #	define _WIN32_WINNT 0x0600
 #endif

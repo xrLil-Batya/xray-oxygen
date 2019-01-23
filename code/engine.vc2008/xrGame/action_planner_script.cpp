@@ -33,7 +33,7 @@ CScriptActionPlanner *cast_planner(CScriptActionBase *action)
 
 
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptActionPlanner::script_register(lua_State *L)
 {
 	module(L)

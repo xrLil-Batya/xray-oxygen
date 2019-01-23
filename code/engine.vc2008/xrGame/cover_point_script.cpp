@@ -17,7 +17,7 @@ bool CCoverPoint__is_smart_cover	(CCoverPoint const* cover)
 	return		(cover->m_is_smart_cover);
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CCoverPoint::script_register(lua_State *L)
 {
 	module(L)

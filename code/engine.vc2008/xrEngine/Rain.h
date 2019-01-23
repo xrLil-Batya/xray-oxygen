@@ -1,24 +1,31 @@
-﻿// Rain.h: interface for the CRain class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#ifndef RainH
-#define RainH
 #pragma once
 
-#include "../xrcdb/xr_collide_defs.h"
-
-//refs
-class ENGINE_API IRender_DetailModel;
-
+#include "../xrCDB/xr_collide_defs.h"
 #include "../Include/xrRender/FactoryPtr.h"
 #include "../Include/xrRender/RainRender.h"
-//
-class ENGINE_API CEffect_Rain
+
+class ENGINE_API CEffectRain
 {
 	friend class dxRainRender;
 private:
-	struct	Item
+	// Timers for simulating smooth wetting/drying effect
+	struct RainTimer
+	{
+		bool			bFirstRainingFrame;
+		float			rainTimestamp;
+		float			rainDropTimeBasic;
+		float			previousFrameTime;
+		float			lastRainDuration;
+		float			rainDropTime;
+		float			rainTimer;
+
+		RainTimer() : bFirstRainingFrame(true), rainTimestamp(0.0f), rainDropTimeBasic(20.0f), previousFrameTime(0.0f),
+			lastRainDuration(0.0f), rainDropTime(0.0f), rainTimer(0.0f)
+		{
+		};
+	};
+	// Rain droplet (while flying)
+	struct Item
 	{
 		Fvector			P;
 		Fvector			Phit;
@@ -27,36 +34,35 @@ private:
 		u32				dwTime_Life;
 		u32				dwTime_Hit;
 		u32				uv_set;
-		void			invalidate	()
+		u16				targetMaterial;
+		void			Invalidate()
 		{
 			dwTime_Life	= 0;
 		}
 	};
-	struct	Particle
+	// Drop particles (when hitted something)
+	struct Particle
 	{
 		Particle		*next,*prev;
 		Fmatrix			mXForm;
 		Fsphere			bounds;
 		float			time;
 	};
-	enum	States
+	enum States
 	{
 		stIdle		= 0,
 		stWorking
 	};
-private:
-	// Visualization	(rain) and (drops)
-	FactoryPtr<IRainRender>	m_pRender;
-	/*
-	// Visualization	(rain)
-	ref_shader						SH_Rain;
-	ref_geom						hGeom_Rain;
+public:
+	struct RainParams
+	{
+		float			rainTimer;
+	};
 
-	// Visualization	(drops)
-	IRender_DetailModel*			DM_Drop;
-	ref_geom						hGeom_Drops;
-	*/
-	
+private:
+	// Visualization (rain and drops)
+	FactoryPtr<IRainRender>			m_pRender;
+
 	// Data and logic
 	xr_vector<Item>					items;
 	States							state;
@@ -67,62 +73,39 @@ private:
 	Particle*						particle_idle;
 
 	// Sounds
+	float							sndVolume;
+
 	ref_sound						snd_Ambient;
 
-	// Utilities
-	void							p_create		();
-	void							p_destroy		();
+	RainTimer*						timerWorld;
+	RainTimer*						timerCurrViewEntity;
 
-	void							p_remove		(Particle* P, Particle* &LST);
-	void							p_insert		(Particle* P, Particle* &LST);
-	int								p_size			(Particle* LST);
-	Particle*						p_allocate		();
-	void							p_free			(Particle* P);
+private:
+	// Utilities
+	void							ParticlePoolCreate	();
+	void							ParticlePoolDestroy	();
+
+	void							ParticleRemove	(Particle* P, Particle* &LST);
+	void							ParticleInsert	(Particle* P, Particle* &LST);
+	int								ParticleListSize(Particle* LST);
+	Particle*						ParticleAllocate();
+	void							ParticleFree	(Particle* P);
 
 	// Some methods
 	void							Born			(Item& dest, float radius);
-	void							Hit				(Fvector& pos);
-	BOOL							RayPick			(const Fvector& s, const Fvector& d, float& range, collide::rq_target tgt);
-	void							RenewItem		(Item& dest, float height, BOOL bHit);
+	void							Hit				(Item& item);
+	bool							RayPick			(const Fvector& s, const Fvector& d, float& range, u16& targetMaterial, collide::rq_target tgt);
+	void							RenewItem		(Item& dest, float height, u16 targetMaterial, bool bHit);
 public:
-									CEffect_Rain	();
-									~CEffect_Rain	();
+									CEffectRain		();
+									~CEffectRain	();
 
+	float							GetWorldWetness			() const;
+	float							GetCurrViewEntityWetness() const;
+
+	void							Load			();
 	void							Render			();
+	void							UpdateTimer		(RainTimer& timer, States state, bool bNeedRayPick);
 	void							OnFrame			();
-	void							InvalidateState	()		{state = stIdle;}
+	void							InvalidateState	();
 };
-
-#ifndef _EDITOR
-enum
-{
-    NO_RAIN,
-    IS_RAIN,
-};
-
-class ENGINE_API rain_timer_params
-{
-public:
-    Fvector		timer;
-    bool		not_first_frame;
-    float		rain_timestamp;
-    float		rain_drop_time_basic;
-    float		previous_frame_time;
-    float		last_rain_duration;
-    float		rain_drop_time;
-    float		rain_timer;
-
-    rain_timer_params() :not_first_frame(FALSE), rain_timestamp(0), rain_drop_time_basic(20.0), previous_frame_time(0), last_rain_duration(0), rain_drop_time(0), rain_timer(0) { timer.set(0.0, 0.0, 0.0); };
-    IC void SetDropTime(float time)
-    {
-        rain_drop_time_basic = time;
-    }
-    int Update(BOOL state, bool need_raypick);
-    BOOL RayPick(const Fvector& s, const Fvector& d, float& range, collide::rq_target tgt);
-};
-
-ENGINE_API extern rain_timer_params* rain_timers;
-ENGINE_API extern Fvector4* rain_params;
-#endif
-
-#endif //RainH

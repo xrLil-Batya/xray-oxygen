@@ -58,7 +58,7 @@ Fvector CDangerObject__position	(const CDangerObject *self)
 #include "../../SDK/include/luabind/operator.hpp"
 
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CMemoryInfo::script_register(lua_State *L)
 {
 	module(L)

@@ -10,7 +10,7 @@
 #ifdef INGAME_EDITOR
 #include "../include/editor/property_holder.hpp"
 #include "property_collection_forward.hpp"
-#include "thunderbolt.h"
+#include "ThunderboltCollection.h"
 
 namespace editor {
 
@@ -23,7 +23,7 @@ class manager;
 class thunderbolt_id;
 
 class collection :
-	public SThunderboltCollection,
+	public CThunderboltCollection,
 	public editor::property_holder_holder {
 public:
 							collection		(manager const& manager, shared_str const& id);

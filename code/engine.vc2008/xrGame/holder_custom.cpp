@@ -19,7 +19,7 @@ void CHolderCustom::detach_Actor()
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CHolderCustom::script_register(lua_State *L)
 {
 	module(L)

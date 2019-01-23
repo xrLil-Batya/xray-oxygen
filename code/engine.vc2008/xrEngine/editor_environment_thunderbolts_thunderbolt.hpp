@@ -10,7 +10,7 @@
 
 #include "../include/editor/property_holder.hpp"
 #include "editor_environment_thunderbolts_gradient.hpp"
-#include "thunderbolt.h"
+#include "ThunderboltDesc.h"
 
 namespace editor {
 namespace environment {
@@ -22,11 +22,11 @@ namespace thunderbolts {
 class manager;
 
 class thunderbolt :
-	public SThunderboltDesc,
+	public CThunderboltDesc,
 	public editor::property_holder_holder
 {
 private:
-	typedef SThunderboltDesc			inherited;
+	typedef CThunderboltDesc			inherited;
 
 public:
 							thunderbolt				(manager* manager, shared_str const& id);

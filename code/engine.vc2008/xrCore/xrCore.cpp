@@ -24,7 +24,7 @@ static u32	init_counter = 0;
 void compute_build_id();
 
 #include "DateTime.hpp"
-void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init_fs, const char* fs_fname)
+void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb, BOOL init_fs, const char* fs_fname)
 {
 	std::set_terminate(abort);
 	if (!init_counter)
@@ -40,7 +40,7 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 		// application path
 		GetModuleFileName(GetModuleHandle("xrCore"), fn, sizeof(fn));
 		_splitpath(fn, dr, di, nullptr, nullptr);
-		strconcat(sizeof(ApplicationPath), ApplicationPath, dr, di);
+		xr_strconcat(ApplicationPath, dr, di);
 
 		GetCurrentDirectory(sizeof(WorkingPath), WorkingPath);
 
@@ -53,18 +53,10 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 		DWORD	sz_comp = sizeof(CompName);
 		GetComputerName(CompName, &sz_comp);
 
-		//Date
-		Time *time = new Time();
-		strconcat(sizeof(UserDate), UserDate, time->GetDay().c_str(), ".", time->GetMonth().c_str(), ".", time->GetYear().c_str(), " ");
-
-		//Time
-		strconcat(sizeof(UserTime), UserTime, time->GetHours().c_str(), ".", time->GetMinutes().c_str(), ".", time->GetSeconds().c_str());
-		xr_delete(time);
-
 		// Mathematics & PSI detection
 		Memory._initialize();
 
-		InitLog();
+		xrLogger::InitLog();
 		_initialize_cpu();
 		XRay::Compress::RT::RtcInitialize();
 
@@ -93,11 +85,15 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 
 		compute_build_id();
 		Msg("xrCore build %d, %s\n", build_id, build_date);
+#ifdef _AUTHOR
+		Msg("xrOxygen Version: branch[%s], commit[%s: %s]", _BRANCH, _AUTHOR, _HASH);
+#else
 		Msg("xrOxygen Version: branch[%s], commit[%s]", _BRANCH, _HASH); 
+#endif
 
 		EFS._initialize();
 	}
-	SetLogCB(cb);
+	xrLogger::AddLogCallback(cb);
 	init_counter++;
 }
 
@@ -136,4 +132,12 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvRese
 		break;
 	}
     return TRUE;
+}
+
+extern "C"
+{
+	__declspec(dllexport) char* GetCurrentHash()
+	{
+		return _HASH;
+	}
 }

@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_effects_manager.hpp"

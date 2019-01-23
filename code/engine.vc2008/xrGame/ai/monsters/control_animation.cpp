@@ -2,7 +2,7 @@
 #include "control_animation.h"
 #include "BaseMonster/base_monster.h"
 #include "control_manager.h"
-#include "../../profiler.h"
+#include "../xrEngine/profiler.h"
 
 //#ifdef _DEBUG
 //#include "control_animation_base.h"
@@ -42,19 +42,19 @@ void CControlAnimation::update_frame()
 	if (m_freeze) return;
 	
 	// move to schedule update
-	START_PROFILE("BaseMonster/Animation/Update Tracks");
+	START_PROFILE("Base Monster/Animation/Update Tracks");
 	m_skeleton_animated->UpdateTracks	();	
 	STOP_PROFILE;
 	
-	START_PROFILE("BaseMonster/Animation/Check callbacks");
+	START_PROFILE("Base Monster/Animation/Check callbacks");
 	check_callbacks						();
 	STOP_PROFILE;
 	
-	START_PROFILE("BaseMonster/Animation/Play");
+	START_PROFILE("Base Monster/Animation/Play");
 	play								();	
 	STOP_PROFILE;
 
-	START_PROFILE("BaseMonster/Animation/Check Events");
+	START_PROFILE("Base Monster/Animation/Check Events");
 	check_events						(m_data.global);
 	check_events						(m_data.torso);
 	check_events						(m_data.legs);

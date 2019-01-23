@@ -93,12 +93,13 @@ u32 GetGpuNum()
 {
 	u32 res						= GetNVGpuNum();
 	res							= std::max(res, GetATIGpuNum());
+	res							= std::max(res, 2u);
 
-    if (!res)
-    {
-        Msg			("* Can't detect graphic card. Assuming that you have at least one (maybe from intel)");
-        res			= 1;
-    }
+	if (!res)
+	{
+		Msg("* Can't detect graphic card. Assuming that you have at least one (maybe from intel)");
+		res = 1;
+	}
 
 	Msg("* Starting rendering as %d-GPU.", res);
 	
@@ -231,7 +232,7 @@ void CHWCaps::Update()
 	geometry.dwRegisters		= cnt;
 	geometry.dwInstructions		= 256;
 	geometry.dwClipPlanes		= std::min(6,15);
-	geometry.bVTF				= TRUE;
+	geometry.bVTF				= HW.IsFormatSupported(DXGI_FORMAT_R32_FLOAT);
 
 	// ***************** PIXEL processing
 	raster_major				= 4;

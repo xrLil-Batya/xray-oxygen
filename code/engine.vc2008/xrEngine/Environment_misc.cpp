@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include <ppl.h>
 #pragma hdrstop
 
 #include "Environment.h"
@@ -582,7 +583,7 @@ void CEnvironment::load_weathers		()
 	for (auto _I: WeatherCycles)
 	{
 		R_ASSERT3(_I.second.size()>1,"Environment in weather must >=2",_I.first.data());
-		std::sort(_I.second.begin(),_I.second.end(),sort_env_etl_pred);
+		concurrency::parallel_sort(_I.second.begin(),_I.second.end(),sort_env_etl_pred);
 	}
 	R_ASSERT2	(!WeatherCycles.empty(),"Empty weathers.");
 	SetWeather	((*WeatherCycles.begin()).first);
@@ -642,7 +643,7 @@ void CEnvironment::load_weather_effects	()
 	for (auto WeatherFX: WeatherFXs)
 	{
 		R_ASSERT3	(WeatherFX.second.size() > 1,"Environment in weather must >=2", WeatherFX.first.c_str());
-		std::sort	(WeatherFX.second.begin(), WeatherFX.second.end(), sort_env_etl_pred);
+		concurrency::parallel_sort	(WeatherFX.second.begin(), WeatherFX.second.end(), sort_env_etl_pred);
 	}
 }
 

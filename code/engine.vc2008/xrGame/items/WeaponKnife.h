@@ -48,7 +48,7 @@ public:
 						CWeaponKnife(); 
 	virtual				~CWeaponKnife(); 
 
-	void				Load							(LPCSTR section);
+	virtual void		Load							(LPCSTR section);
 
 	virtual bool		IsZoomEnabled					()	const	{return false;}
 

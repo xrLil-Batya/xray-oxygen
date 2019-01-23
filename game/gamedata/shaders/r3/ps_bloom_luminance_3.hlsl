@@ -1,20 +1,10 @@
 #include "common.h"
-/*
-struct 	v2p
-{
-  float4 tc0: 		TEXCOORD0;	// Central
-  float4 tc1: 		TEXCOORD1;	// -1,+1
-  float4 tc2: 		TEXCOORD2;	// -2,+2
-  float4 tc3: 		TEXCOORD3;	// -3,+3
-  float4 tc4: 		TEXCOORD4;	// -4,+4
-  float4 tc5: 		TEXCOORD5;	// -5,+5
-  float4 tc6: 		TEXCOORD6;	// -6,+6
-  float4 tc7: 		TEXCOORD7;	// -7,+7
-};
-*/
 
-//////////////////////////////////////////////////////////////////////////////////////////
-uniform float4	MiddleGray;
+float4	MiddleGray;
+
+//These Bloom shaders are likely a cause of many slowdowns.
+//I'm going to suggest we use an alternate implementation and ditch GSC's method. 
+//Just my opinion (bloom + luminance are easier to do than this)
 //////////////////////////////////////////////////////////////////////////////////////////
 //	perform 4x4 bilinear, 8x8p, the step (C)
 //	c):	8x8p	=> 1x1p		with exp

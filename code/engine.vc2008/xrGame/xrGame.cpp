@@ -10,7 +10,7 @@
 #include "object_factory.h"
 #include "../xrUICore/xrUIXmlParser.h"
 #include "..\xrEngine\xr_level_controller.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "../xrEngine/spectre/Spectre.h"
 #pragma comment (lib, "xrCore.lib")
 #pragma comment (lib,"xrEngine.lib")
@@ -56,9 +56,7 @@ BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 
             // register expression delegates
             RegisterExpressionDelegates();
-#ifdef DEBUG
 			g_profiler			= xr_new<CProfiler>();
-#endif
 
 			break;
 		}

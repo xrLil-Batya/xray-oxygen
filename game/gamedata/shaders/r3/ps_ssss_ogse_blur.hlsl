@@ -1,5 +1,5 @@
 #include "common_iostructs.h"
-#include "ogse_config.h"
+#include "oxy_config.h"
 #include "ogse_functions.h"
 #include "shared\common.h"
 #include "shared\wmark.h"
@@ -7,23 +7,16 @@
 uniform float4 ssss_params; // x - exposure, y - density, z - sample size, w - radius
 Texture2D s_sun_shafts; // current sunshafts texture
 
-#ifndef SUNSHAFTS_QUALITY
-	#define num_iter int(1)
+#if !defined(SUN_SHAFTS_QUALITY) || (SUN_SHAFTS_QUALITY <= 1) || (SUN_SHAFTS_QUALITY > 4)
+	#define num_iter int(25) // Low
+#elif SUN_SHAFTS_QUALITY==2
+	#define num_iter int(35) // Medium
+#elif SUN_SHAFTS_QUALITY==3
+	#define num_iter int(45) // High
 #else
-	#if SUNSHAFTS_QUALITY==1
-		#define num_iter int(25)
-	#else
-		#if SUNSHAFTS_QUALITY==2
-			#define num_iter int(35)
-		#else
-			#if SUNSHAFTS_QUALITY==3
-				#define num_iter int(45)
-			#else
-				#define num_iter int(55)
-			#endif
-		#endif
-	#endif
+	#define num_iter int(55) // Extreme
 #endif
+
 float4 main(p_screen I): SV_Target
 {
 	// Prepare some constants

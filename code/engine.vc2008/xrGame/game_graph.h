@@ -12,25 +12,25 @@
 #include "../xrScripts/export/script_export_space.h"
 #include "game_level_cross_table.h"
 
-class CGameGraph {
+class GAME_API CGameGraph {
 private:
 	friend class CRenumbererConverter;
 
 public:
-	typedef GameGraph::_GRAPH_ID    _GRAPH_ID;
-	typedef GameGraph::_LEVEL_ID	_LEVEL_ID;
-	typedef GameGraph::_LOCATION_ID	_LOCATION_ID;
-	typedef GameGraph::SLevel		SLevel;
-	typedef GameGraph::CEdge		CEdge;
-	typedef GameGraph::CVertex		CVertex;
-	typedef GameGraph::CHeader		CHeader;
-	typedef GameGraph::CLevelPoint	CLevelPoint;
+	using _GRAPH_ID = GameGraph::_GRAPH_ID;
+	using _LEVEL_ID = GameGraph::_LEVEL_ID;
+	using _LOCATION_ID = GameGraph::_LOCATION_ID;
+	using SLevel = GameGraph::SLevel;
+	using CEdge = GameGraph::CEdge;
+	using CVertex = GameGraph::CVertex;
+	using CHeader = GameGraph::CHeader;
+	using CLevelPoint = GameGraph::CLevelPoint;
 
 public:		
-	typedef const CEdge				*const_iterator;
-	typedef const CLevelPoint		*const_spawn_iterator;
-	typedef xr_vector<CLevelPoint>	LEVEL_POINT_VECTOR;
-	typedef xr_vector<bool>			ENABLED;
+	using const_iterator = const CEdge				*;
+	using const_spawn_iterator = const CLevelPoint		*;
+	using LEVEL_POINT_VECTOR = xr_vector<CLevelPoint>;
+	using ENABLED = xr_vector<bool>;
 
 private:
 	CHeader							m_header;

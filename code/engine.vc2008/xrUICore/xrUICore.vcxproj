@@ -5,10 +5,6 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_IA32|x64">
-      <Configuration>Release_IA32</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -18,7 +14,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{295BF6D3-FE39-41FC-82B3-E94F97E24845}</ProjectGuid>
     <RootNamespace>xrUICore</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -28,13 +24,6 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
@@ -54,10 +43,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\F-Ray.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\F-Ray.props" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -69,31 +54,11 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <ExceptionHandling>false</ExceptionHandling>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>UICORE_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-    </ClCompile>
-    <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>xrCore.lib;xrEngine.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>false</ConformanceMode>
-      <ExceptionHandling>false</ExceptionHandling>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>UICORE_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -124,8 +89,6 @@
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="UI3tButton.cpp" />
     <ClCompile Include="UIAnimatedStatic.cpp" />
@@ -153,6 +116,7 @@
     <ClCompile Include="UIInteractiveBackground.cpp" />
     <ClCompile Include="UIKeyBinding.cpp" />
     <ClCompile Include="UILanimController.cpp" />
+    <ClCompile Include="UILayoutInflater.cpp" />
     <ClCompile Include="UILine.cpp" />
     <ClCompile Include="UILines.cpp" />
     <ClCompile Include="UIListBox.cpp" />
@@ -185,6 +149,9 @@
     <ClCompile Include="UITextureMaster.cpp" />
     <ClCompile Include="UITrackBar.cpp" />
     <ClCompile Include="UITreeViewItem.cpp" />
+    <ClCompile Include="UIView.cpp" />
+    <ClCompile Include="UIViewGroup.cpp" />
+    <ClCompile Include="UIViewInflater.cpp" />
     <ClCompile Include="UIWindow.cpp" />
     <ClCompile Include="UIWndCallback.cpp" />
     <ClCompile Include="UIXmlInit.cpp" />
@@ -225,6 +192,7 @@
     <ClInclude Include="UIInteractiveBackground.h" />
     <ClInclude Include="UIKeyBinding.h" />
     <ClInclude Include="UILanimController.h" />
+    <ClInclude Include="UILayoutInflater.h" />
     <ClInclude Include="UILine.h" />
     <ClInclude Include="UILines.h" />
     <ClInclude Include="uilinestd.h" />
@@ -258,6 +226,9 @@
     <ClInclude Include="UITextureMaster.h" />
     <ClInclude Include="UITrackBar.h" />
     <ClInclude Include="UITreeViewItem.h" />
+    <ClInclude Include="UIView.h" />
+    <ClInclude Include="UIViewGroup.h" />
+    <ClInclude Include="UIViewInflater.h" />
     <ClInclude Include="UIWindow.h" />
     <ClInclude Include="UIWndCallback.h" />
     <ClInclude Include="UIXmlInit.h" />

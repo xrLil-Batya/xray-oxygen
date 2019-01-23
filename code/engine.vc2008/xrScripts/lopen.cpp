@@ -91,20 +91,6 @@ static int loadjitmodule(lua_State *L, const char *notfound)
 	return 0;
 }
 
-#ifndef DEBUG
-/* start optimizer */
-SCRIPT_API int dojitopt(lua_State *L, const char *opt)
-{
-	lua_pushliteral(L, "opt");
-	if (loadjitmodule(L, "LuaJIT optimizer module not installed"))
-		return 1;
-	lua_remove(L, -2);  /* drop module name */
-	if (*opt) lua_pushstring(L, opt);
-	return report(L, lua_pcall(L, *opt ? 1 : 0, 0, 0));
-}
-/* ---- end of LuaJIT extensions */
-#endif // #ifndef DEBUG
-
 SCRIPT_API int dojitcmd(lua_State *L, const char *cmd)
 {
 	const char *val = strchr(cmd, '=');

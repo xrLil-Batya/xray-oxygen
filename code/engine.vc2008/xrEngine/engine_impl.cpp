@@ -248,8 +248,8 @@ void engine_impl::track_weather			(float const& time)
 	Environment().m_paused = paused;
 
 	float weight;
-	Environment().Invalidate	();
-	Environment().lerp		(weight);
+	Environment().Invalidate();
+	Environment().Lerp(weight);
 }
 
 float engine_impl::track_weather			()
@@ -329,7 +329,7 @@ void engine_impl::save_weathers			()
 {
 	CEnvironment&					environment = Environment();
 	editor::environment::manager&	manager = dynamic_cast<editor::environment::manager&>(environment);
-	manager.save					();
+	manager.Save					();
 }
 
 bool engine_impl::save_time_frame		(char* buffer, u32 const& buffer_size)
@@ -399,7 +399,7 @@ void engine_impl::weather_current_time			(char const* time)
 
 	float weight;
 	refEnvironment.Invalidate	();
-	refEnvironment.lerp		(weight);
+	refEnvironment.Lerp		(weight);
 }
 
 void engine_impl::reload_current_time_frame		()

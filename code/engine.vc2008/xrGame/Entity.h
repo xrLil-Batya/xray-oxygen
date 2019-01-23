@@ -30,8 +30,23 @@ protected:
 	virtual	CEntityConditionSimple	*create_entity_condition	(CEntityConditionSimple* ec);
 
 public:
-	IC float					GetfHealth			() const			{ return m_entity_condition->GetHealth(); }
-	IC float					SetfHealth			(float value)		{ m_entity_condition->SetHealth( value ) ; return value;}
+	IC float					GetfHealth			() const			
+	{
+		if (m_entity_condition != nullptr)
+		{
+			return m_entity_condition->GetHealth(); 
+		}
+		return 0.0f;
+	}
+	IC float					SetfHealth			(float value)		
+	{ 
+		if (m_entity_condition != nullptr)
+		{
+			m_entity_condition->SetHealth( value ); 
+		}
+		return value;
+	}
+
 	float						m_fMorale;
 	// Team params
 	int							id_Team;

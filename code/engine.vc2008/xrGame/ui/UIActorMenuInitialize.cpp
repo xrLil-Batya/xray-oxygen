@@ -258,6 +258,10 @@ void CUIActorMenu::Construct()
     {
         m_pInventoryRuckList = CreateDragDropListEx(uiXml, "dragdrop_ruck", this);
     }
+	else
+	{
+		m_pInventoryRuckList = nullptr;
+	}
 
     m_pInventoryKnifeList       = CreateDragDropListEx(uiXml, "dragdrop_knife", this);
     m_pInventoryBinocularList   = CreateDragDropListEx(uiXml, "dragdrop_binocular", this);

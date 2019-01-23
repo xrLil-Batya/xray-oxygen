@@ -3,8 +3,21 @@
 #define NUM_SAMPLES int(11)
 
 uniform float4 ssss_params;
-uniform float3 eye_direction;
 uniform	Texture2D s_mask_blur; // smoothed mask
+
+//This function is only used in this one file
+//that's why it's been moved from common_functions.h
+
+float4 proj2screen(float4 Project)
+{
+	float4	Screen;
+			Screen.x = (Project.x + Project.w) * 0.5f;
+			Screen.y = (Project.w - Project.y) * 0.5f;
+			Screen.z = Project.z;
+			Screen.w = Project.w;
+			
+	return Screen;
+}
 
 float4 main(p_screen I) : SV_Target
 {

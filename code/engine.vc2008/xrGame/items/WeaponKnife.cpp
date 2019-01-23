@@ -127,7 +127,7 @@ void CWeaponKnife::KnifeStrike(const Fvector& pos, const Fvector& dir)
 	CObject* real_victim = TryPick(pos, dir, m_hit_dist);
 	if (real_victim)
 	{
-		float new_khit = m_eHitType == m_eHitType_1 ? float(m_Splash1PerVictimsHCount) : float(m_Splash2HitsCount);
+		float new_khit = (m_eHitType == m_eHitType_1 ? float(m_Splash1PerVictimsHCount) : float(m_Splash2HitsCount));
 		MakeShot(pos, dir, new_khit);
 		return;
 	}

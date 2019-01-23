@@ -39,8 +39,8 @@ public:
 	BOOL					equal	(SimulatorStates& S);
 	void					clear	();
 	IDirect3DStateBlock9*	record	();
-#ifdef USE_DX11
-	void	UpdateState( dx10State &state) const;
+#if defined(USE_DX11) || defined(USE_VK)
+	void	UpdateState(ID3DState &state) const;
 	void	UpdateDesc( D3D_RASTERIZER_DESC &desc ) const;
 	void	UpdateDesc( D3D_DEPTH_STENCIL_DESC &desc ) const;
 	void	UpdateDesc( D3D_BLEND_DESC &desc ) const;

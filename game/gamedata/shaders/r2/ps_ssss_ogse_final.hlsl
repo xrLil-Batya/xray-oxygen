@@ -20,8 +20,8 @@ float4 main(p_screen I) : COLOR0
 	float2 sun_vec_screen = normalize(sun_pos_screen.xy - I.tc0.xy);
 	// smooth shafts
 	float4 cSunShafts = tex2D(s_sun_shafts, I.tc0.xy);
-	#ifdef SUNSHAFTS_QUALITY
-		#if SUNSHAFTS_QUALITY > 1
+	#ifdef SUN_SHAFTS_QUALITY
+		#if SUN_SHAFTS_QUALITY > 1
 			cSunShafts *= 0.5f;
 			cSunShafts += tex2D(s_sun_shafts, I.tc0.xy + sun_vec_screen.yx * screen_res.zw)*0.25f;
 			cSunShafts += tex2D(s_sun_shafts, I.tc0.xy - sun_vec_screen.yx * screen_res.zw)*0.25f;

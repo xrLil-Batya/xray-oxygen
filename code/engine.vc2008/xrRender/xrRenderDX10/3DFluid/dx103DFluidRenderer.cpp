@@ -62,10 +62,10 @@ LPCSTR			dx103DFluidRenderer::m_pResourceRTNames[ RRT_NumRT ] =
 dx103DFluidRenderer::dx103DFluidRenderer():
 	m_bInited(false)
 {
-	RTFormats[RRT_RayDataTex] = D3DFMT_A32B32G32R32F;
-	RTFormats[RRT_RayDataTexSmall] = D3DFMT_A32B32G32R32F;
-	RTFormats[RRT_RayCastTex] = D3DFMT_A32B32G32R32F;
-	RTFormats[RRT_EdgeTex] = D3DFMT_R32F;
+	RTFormats[RRT_RayDataTex] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTFormats[RRT_RayDataTexSmall] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTFormats[RRT_RayCastTex] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTFormats[RRT_EdgeTex] = DXGI_FORMAT_R32_FLOAT;
 }
 
 dx103DFluidRenderer::~dx103DFluidRenderer()
@@ -448,12 +448,12 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 
 	// invWorldViewProjection is used to transform positions in the "near" plane into grid space
 	D3DXMATRIX InvWorldViewProjection;
-	D3DXMatrixInverse((D3DXMATRIX*)&InvWorldViewProjection, NULL, (D3DXMATRIX*)&WorldViewProjection);
+	D3DXMatrixInverse((D3DXMATRIX*)&InvWorldViewProjection, nullptr, (D3DXMATRIX*)&WorldViewProjection);
 	RCache.set_c(strInvWorldViewProjection, *(Fmatrix*)&InvWorldViewProjection);
 
 	// Compute the inverse of the worldView matrix ;
 	D3DXMATRIX WorldViewInv;
-	D3DXMatrixInverse((D3DXMATRIX*)&WorldViewInv, NULL, (D3DXMATRIX*)&WorldView);
+	D3DXMatrixInverse((D3DXMATRIX*)&WorldViewInv, nullptr, (D3DXMATRIX*)&WorldView);
 
 	// Compute the eye's position in "grid space" (the 0-1 texture coordinate cube)
 	D3DXVECTOR4 EyeInGridSpace;

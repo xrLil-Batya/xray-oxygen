@@ -13,7 +13,7 @@
 #include <luabind/luabind.hpp>
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CActionBase<CScriptGameObject>::script_register(lua_State *L)
 {
 	module(L)

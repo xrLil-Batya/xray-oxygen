@@ -480,7 +480,9 @@ bool CUIDragDropListEx::IsOwner(CUICellItem* itm){
 
 CUICellItem* CUIDragDropListEx::GetItemIdx(u32 idx)
 {
-	R_ASSERT(idx<ItemsCount());
+	if(idx >= ItemsCount()) 
+		return nullptr;
+
 	WINDOW_LIST_it it = m_container->GetChildWndList().begin();
 	std::advance	(it, idx);
 	return smart_cast<CUICellItem*>(*it);

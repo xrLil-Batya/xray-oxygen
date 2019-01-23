@@ -99,17 +99,6 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 
 	u16 actor_id = Level().CurrentEntity()->ID();
 
-	if (GetOwner()->object_id() == actor_id && this->m_pOwner->object_id() == actor_id)		//actors inventory
-	{
-		CWeaponMagazined*	pWeapon = smart_cast<CWeaponMagazined*>(pIItem);
-		if (pWeapon && pWeapon->strapped_mode())
-		{
-			pWeapon->strapped_mode(false);
-			Ruck(pWeapon);
-		}
-
-	}
-
 	m_all.push_back(pIItem);
 
 	if (!strict_placement)

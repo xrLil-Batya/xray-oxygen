@@ -177,7 +177,7 @@ void ResetDescription( D3D_DEPTH_STENCIL_DESC &desc )
     std::memset(&desc,0,sizeof(desc));
 	desc.DepthEnable = TRUE;
 	desc.DepthWriteMask = D3D_DEPTH_WRITE_MASK_ALL;
-	desc.DepthFunc = D3D_COMPARISON_LESS;
+	desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	desc.StencilEnable = TRUE;
    if( !RImplementation.o.dx10_msaa )
    {
@@ -196,7 +196,7 @@ void ResetDescription( D3D_DEPTH_STENCIL_DESC &desc )
 	desc.FrontFace.StencilFunc = D3D_COMPARISON_ALWAYS;
 
 	desc.BackFace.StencilFailOp = D3D_STENCIL_OP_KEEP;
-	desc.BackFace.StencilDepthFailOp = D3D_STENCIL_OP_KEEP;
+	desc.BackFace.StencilDepthFailOp = D3D_STENCIL_OP_KEEP;//D3D11_STENCIL_OP_DECR;
 	desc.BackFace.StencilPassOp = D3D_STENCIL_OP_KEEP;
 	desc.BackFace.StencilFunc = D3D_COMPARISON_ALWAYS;
 }

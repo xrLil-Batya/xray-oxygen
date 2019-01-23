@@ -64,7 +64,7 @@ bool CLevel::net_start1()
 
 		if (id<0)
 		{
-			Log("Can't find level: ",map_data.m_name.c_str());
+			Msg("Can't find level: %s",map_data.m_name.c_str());
 			net_start_result_total	= FALSE;
 			return true;
 		}
@@ -123,7 +123,7 @@ bool CLevel::net_start6				()
 		{
 			string256 buf,cmd,param;
 			sscanf(strstr(Core.Params,"-$")+2,"%[^ ] %[^ ] ",cmd,param);
-			strconcat(sizeof(buf),buf,cmd," ",param);
+			xr_strconcat(buf,cmd," ",param);
 			Console->Execute(buf);
 		}
 	}
@@ -131,32 +131,23 @@ bool CLevel::net_start6				()
 	{
 		Msg("! Failed to start client. Check the connection or level existance.");
 		
-		if (!map_data.m_map_loaded && !map_data.m_name.size())
-		{
-			LPCSTR level_id_string = nullptr;
-			LPCSTR dialog_string = nullptr;
-			CStringTable	st;
-			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
-			
-			STRCONCAT(level_id_string, st.translate("st_level"), ":",
-				map_data.m_name.c_str(), "(", tmp_map_ver, "). ");
-			STRCONCAT(dialog_string, level_id_string, st.translate("ui_st_map_not_found"));
-
-			DEL_INSTANCE	(g_pGameLevel);
-			Console->Execute("main_menu on");
-
-		}
-		else 
-		{
-			DEL_INSTANCE	(g_pGameLevel);
-			Console->Execute("main_menu on");
-		}
+// 		if (!map_data.m_map_loaded && !map_data.m_name.size())
+// 		{
+// 			LPCSTR level_id_string = nullptr;
+// 			LPCSTR dialog_string = nullptr;
+// 			CStringTable	st;
+// 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
+// 
+// 			STRCONCAT(level_id_string, st.translate("st_level"), ":", map_data.m_name.c_str(), "(", tmp_map_ver, "). ");
+// 			STRCONCAT(dialog_string, level_id_string, st.translate("ui_st_map_not_found"));
+// 		}
+		DEL_INSTANCE(g_pGameLevel);
+		Console->Execute("main_menu on");
 
 		return true;
 	}
 
-	if (GameUI())
-		GameUI()->OnConnected();
+	GameUI()->OnConnected();
 
 	return true;
 }

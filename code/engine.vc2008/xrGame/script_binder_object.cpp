@@ -76,7 +76,7 @@ void CScriptBinderObject::net_Relcase		(CScriptGameObject *object)
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptBinderObject::script_register(lua_State *L)
 {
 	module(L)

@@ -135,15 +135,15 @@ void SHit::Write_Packet			(NET_Packet	&Packet)
 void SHit::_dump()
 {
 	Msg("SHit::_dump()---begin");
-	Log("power=",power);
-	Log("impulse=",impulse);
+	Msg("power=%f", power);
+	Msg("impulse=%f", impulse);
 	Log("dir=",dir);
-	Log("whoID=",whoID);
-	Log("weaponID=",weaponID);
-	Log("element=",boneID);
+	Msg("whoID=%hu",whoID);
+	Msg("weaponID==%hu",weaponID);
+	Msg("element==%hu",boneID);
 	Log("p_in_bone_space=",p_in_bone_space);
-	Log("hit_type=",(int)hit_type);
-	Log("armor_piercing=",armor_piercing);
+	Msg("hit_type=%d",(int)hit_type);
+	Msg("armor_piercing=%f",armor_piercing);
 	Msg("SHit::_dump()---end");
 }
 #endif

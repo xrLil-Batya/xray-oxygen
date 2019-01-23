@@ -7,7 +7,7 @@
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CCar::script_register(lua_State *L)
 {
 	module(L)
