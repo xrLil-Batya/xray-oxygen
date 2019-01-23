@@ -46,6 +46,7 @@ public:
 	virtual float					shedule_Scale			();
 	virtual void					shedule_Update			(u32 dt);
 	virtual	shared_str				shedule_Name			() const;
+	virtual shared_str				shedule_Class_Name		() const override { return shared_str("vision_client"); }
 	virtual bool					shedule_Needed			();
 
 public:

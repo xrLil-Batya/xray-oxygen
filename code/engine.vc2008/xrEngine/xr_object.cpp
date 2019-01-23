@@ -101,6 +101,16 @@ void CObject::cNameVisual_set	(shared_str N)
 	OnChangeVisual				();
 }
 
+shared_str CObject::shedule_Class_Name() const
+{
+	if (ClassName.size() == 0)
+	{
+		LPCSTR pClassName = typeid(*this).name();
+		ClassName = pClassName;
+	}
+	return ClassName;
+}
+
 // flagging
 void CObject::processing_activate	()
 {
@@ -108,6 +118,7 @@ void CObject::processing_activate	()
 	Props.bActiveCounter			++;
 	if (0==(Props.bActiveCounter-1))	g_pGameLevel->Objects.o_activate	(this);
 }
+
 void CObject::processing_deactivate	()
 {
 	VERIFY3	(0	!= Props.bActiveCounter, "Invalid sequence of processing enable/disable calls: underflow",*cName());
@@ -156,18 +167,6 @@ CObject::CObject		( )		:
 	NameObject					= NULL;
 	NameSection					= NULL;
 	NameVisual					= NULL;
-#ifdef LUACP_API
-	static bool _saved 			= false;
-	
-	if (!_saved)
-	{
-		_saved = true;
-		LogXrayOffset("GameObject.id",		this, &this->Props);
-		LogXrayOffset("GameObject.name",	this, &this->NameObject);
-		LogXrayOffset("GameObject.section", this, &this->NameSection);
-		LogXrayOffset("GameObject.visual",  this, &this->NameVisual);
-	}
-#endif
 #ifdef DEBUG
 	dbg_update_shedule			= u32(-1)/2;
 	dbg_update_cl				= u32(-1)/2;

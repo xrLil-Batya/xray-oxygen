@@ -70,7 +70,7 @@ void CObjectSpace::Load(CDB::build_callback build_callback)
 	// Cache for cform
 	u32 crc = crc32(F->pointer(), F->length());
 	string_path LevelName;
-	strconcat(sizeof(LevelName), LevelName, FS.get_path("$level$")->m_Add, "cform.cache");
+	xr_strconcat(LevelName, FS.get_path("$level$")->m_Add, "cform.cache");
 
 	IReader* pReaderCache = FS.r_open("$level_cache$", LevelName);
 

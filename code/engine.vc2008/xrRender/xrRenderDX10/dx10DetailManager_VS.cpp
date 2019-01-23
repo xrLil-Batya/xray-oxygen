@@ -125,15 +125,15 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 				RCache.set_c(strConsts, consts);
 				RCache.set_c(strWave, wave);
 				RCache.set_c(strDir2D, wind);
-				RCache.set_c(strXForm, CastToGSCMatrix(Device.mFullTransform));
+				RCache.set_c(strXForm, Device.mFullTransform);
 
-				Fvector4*	c_storage=0;
+				Fvector4*	c_storage = nullptr;
 				//	Map constants to memory directly
 				{
 					void*	pVData;
 					RCache.get_ConstantDirect( strArray, 
 						hw_BatchSize*sizeof(Fvector4)*4,
-						&pVData, 0, 0);
+						&pVData, nullptr, nullptr);
 					c_storage = (Fvector4*) pVData;
 				}
 				VERIFY(c_storage);
@@ -179,7 +179,7 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 								void*	pVData;
 								RCache.get_ConstantDirect( strArray, 
 									hw_BatchSize*sizeof(Fvector4)*4,
-									&pVData, 0, 0);
+									&pVData, nullptr, nullptr);
 								c_storage = (Fvector4*) pVData;
 							}
 							VERIFY(c_storage);

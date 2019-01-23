@@ -2,13 +2,13 @@
 #include "alife_abstract_registry.h"
 
 class CMapLocation;
-struct SLocationKey : public IPureSerializeObject<IReader,IWriter>,public IPureDestroyableObject {
+struct GAME_API SLocationKey : public IPureSerializeObject<IReader,IWriter>,public IPureDestroyableObject {
 	shared_str		spot_type;
 	u16				object_id;
 	CMapLocation*	location;
 	bool			actual;
-	SLocationKey (shared_str s, u16 id):spot_type(s),object_id(id),location(NULL),actual(true){};
-	SLocationKey ():spot_type(NULL),object_id(0),location(NULL),actual(true){};
+	SLocationKey (shared_str s, u16 id):spot_type(s),object_id(id),location(nullptr),actual(true){};
+	SLocationKey ():spot_type(nullptr),object_id(0),location(nullptr),actual(true){};
 
 	bool operator < (const SLocationKey& key)const
 	{

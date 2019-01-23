@@ -2,7 +2,7 @@
 
 #include "tss_def.h"
 
-#ifdef USE_DX11
+#if defined(USE_DX11) || defined(USE_VK)
 enum	XRDX10SAMPLERSTATETYPE
 {
 	XRDX10SAMP_ANISOTROPICFILTER	=	256,

@@ -180,7 +180,7 @@ void CLevelDebug::draw_object_info()
 		}
 
 		Fmatrix		res;
-		res.mul		(CastToGSCMatrix(Device.mFullTransform),it->first->XFORM());
+		res.mul		(Device.mFullTransform,it->first->XFORM());
 
 		Fvector4	v_res;
 

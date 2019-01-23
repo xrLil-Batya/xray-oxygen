@@ -2,6 +2,7 @@
 #pragma hdrstop
 
 #include "ObjectAnimator.h"
+#include <ppl.h>
 #include "motion.h"
  
 bool motion_sort_pred	(COMotion* a, 	COMotion* b)	{	return a->name<b->name;}

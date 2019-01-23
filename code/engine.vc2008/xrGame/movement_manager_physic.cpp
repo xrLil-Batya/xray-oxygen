@@ -14,7 +14,7 @@
 #include "custommonster.h"
 #include "../xrphysics/IColisiondamageInfo.h"
 
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 
 // Lain: added 
 #include "steering_behaviour.h"
@@ -71,15 +71,24 @@ void CMovementManager::apply_collision_hit	(CPHMovementControl *movement_control
 		Fvector dir;
 		di->HitDir(dir);
 
-		SHit	HDS = SHit(	movement_control->gcontact_HealthLost,
-							dir,
-							di->DamageInitiator(),
-							movement_control->ContactBone(),
-							di->HitPos(),
-							0.f,
-							di->HitType(),
-							0.0f,
-							false);
+		CObject *who = di->DamageInitiator();
+		SHit HDS = SHit(movement_control->gcontact_HealthLost, dir, who, 
+						movement_control->ContactBone(), di->HitPos(), 0.f, di->HitType(), 0.0f, false);
+
+		float coef = 0.01f;
+
+		if (who)
+		{
+			// FX: When is damage to himself, but the energy of the hit will be zero. 
+			if (object().ID() == who->ID())
+				coef = 0;
+		}
+
+		CGameObject *obj = smart_cast<CGameObject*>(who);
+
+		if (obj && obj->cast_stalker())
+			HDS.power *= coef;
+
 		object().Hit(&HDS);
 	}
 }

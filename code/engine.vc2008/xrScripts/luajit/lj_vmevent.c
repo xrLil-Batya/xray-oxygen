@@ -1,11 +1,12 @@
 /*
 ** VM event handling.
-** Copyright (C) 2005-2015 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2017 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #include <stdio.h>
 
 #define lj_vmevent_c
+#define LUA_CORE
 
 #include "lj_obj.h"
 #include "lj_str.h"
@@ -26,6 +27,7 @@ ptrdiff_t lj_vmevent_prepare(lua_State *L, VMEvent ev)
     if (tv && tvisfunc(tv)) {
       lj_state_checkstack(L, LUA_MINSTACK);
       setfuncV(L, L->top++, funcV(tv));
+      if (LJ_FR2) setnilV(L->top++);
       return savestack(L, L->top);
     }
   }
@@ -50,6 +52,7 @@ void lj_vmevent_call(lua_State *L, ptrdiff_t argbase)
     fputc('\n', stderr);
   }
   hook_restore(g, oldh);
-  g->vmevmask = oldmask;  /* Restore event mask, but not if not modified. */
+  if (g->vmevmask != VMEVENT_NOCACHE)
+    g->vmevmask = oldmask;  /* Restore event mask, but not if not modified. */
 }
 

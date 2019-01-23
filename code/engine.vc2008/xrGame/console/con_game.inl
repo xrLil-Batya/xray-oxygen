@@ -149,8 +149,8 @@ public:
 			if (MainMenu()->IsActive())
 				MainMenu()->Activate(false);
 
-			LPSTR			fn_;
-			STRCONCAT(fn_, args, ".xrdemo");
+			string128		fn_;
+			xr_strconcat(fn_, args, ".xrdemo");
 			string_path		fn;
 			FS.update_path(fn, "$game_saves$", fn_);
 
@@ -195,7 +195,7 @@ public:
 				loops = atoi(comma + 1);
 				*comma = 0;	//. :)
 			}
-			strconcat(sizeof(fn), fn, args, ".xrdemo");
+			xr_strconcat(fn, args, ".xrdemo");
 			FS.update_path(fn, "$game_saves$", fn);
 			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay>(fn, 1.0f, loops));
 		}
@@ -248,14 +248,14 @@ public:
 			return;
 		}
 
-		LPSTR					command;
+		string256					command;
 		if (ai().get_alife()) {
-			STRCONCAT			(command, "load ", g_last_saved_game);
+			xr_strconcat		(command, "load ", g_last_saved_game);
 			Console->Execute	(command);
 			return;
 		}
 
-		STRCONCAT				(command, "start server(", g_last_saved_game, "/single/alife/load)");
+		xr_strconcat			(command, "start server(", g_last_saved_game, "/single/alife/load)");
 		Console->Execute		(command);
 	}
 	
@@ -272,7 +272,7 @@ class CCC_FlushLog : public IConsole_Command {
 public:
 	CCC_FlushLog(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void Execute(LPCSTR /**args/**/) {
-		FlushLog();
+		xrLogger::FlushLog();
 		Msg		("* Log file has been saved successfully!");
 	}
 };
@@ -281,8 +281,8 @@ class CCC_ClearLog : public IConsole_Command {
 public:
 	CCC_ClearLog(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void Execute(LPCSTR) {
-		LogFile->clear	();
-		FlushLog				();
+		Console->ClearLog();
+		xrLogger::FlushLog();
 		Msg						("* Log file has been cleaned successfully!");
 	}
 };

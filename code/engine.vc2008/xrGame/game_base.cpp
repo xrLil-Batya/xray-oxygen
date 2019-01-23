@@ -146,7 +146,7 @@ void game_GameState::SetEnvironmentGameTimeFactor	(u64 GameTime, const float fTi
 #include <luabind\luabind.hpp>
 using namespace luabind;
 
-ESingleGameDifficulty g_SingleGameDifficulty = egdStalker;
+GAME_API ESingleGameDifficulty g_SingleGameDifficulty = egdStalker;
 
 xr_token	difficulty_type_token[] = 
 {
@@ -157,7 +157,7 @@ xr_token	difficulty_type_token[] =
 	{ 0,			0 } 
 };
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptGameDifficulty::script_register(lua_State *L)
 {
 	module(L)

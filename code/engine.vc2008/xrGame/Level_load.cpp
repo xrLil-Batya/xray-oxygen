@@ -21,7 +21,7 @@ BOOL CLevel::Load_GameSpecific_Before()
 	g_pGamePersistent->LoadTitle();
 	string_path fn_game;
 
-	if (!ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game"))
+	if (!ai().get_alife() && ai().is_game_graph_presented() && FS.exist(fn_game, "$level$", "level.game"))
 	{
 		IReader *stream = FS.r_open(fn_game);
 		ai().patrol_path_storage_raw(*stream);
@@ -108,33 +108,9 @@ BOOL CLevel::Load_GameSpecific_After()
 		Sounds_Random_Enabled = FALSE;
 	}
 
-	if (CEffect_Rain* rain = Environment().eff_Rain)
-	{
-		rain->InvalidateState();
-	}
-
-	if (FS.exist(fn_game, "$level$", "level.fog_vol"))
-	{
-		IReader *F = FS.r_open(fn_game);
-		u16 version = F->r_u16();
-		if (version == 2)
-		{
-			u32 cnt = F->r_u32();
-
-			Fmatrix					volume_matrix;
-			for (u32 i = 0; i < cnt; ++i)
-			{
-				F->r(&volume_matrix, sizeof(volume_matrix));
-				u32 sub_cnt = F->r_u32();
-				for (u32 is = 0; is < sub_cnt; ++is)
-				{
-					F->r(&volume_matrix, sizeof(volume_matrix));
-				}
-
-			}
-		}
-		FS.r_close(F);
-	}
+	CEffectRain* pRain = Environment().eff_Rain;
+	if (pRain)
+		pRain->InvalidateState();
 
 	// loading scripts
 	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);

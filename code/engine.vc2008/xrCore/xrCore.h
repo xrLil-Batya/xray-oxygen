@@ -136,6 +136,7 @@
 #include <algorithm>
 #include <limits>
 #include <vector>
+#include <queue>
 #include <stack>
 #include <list>
 #include <set>
@@ -156,6 +157,7 @@
 #endif
 
 #include "_types.h"
+#include "RingBuffer.h"
 #include "xrMemory.h"
 #include "_stl_extensions.h"
 #include "thread_utils.h"
@@ -255,13 +257,11 @@ public:
 	string_path	WorkingPath;
 	string64	UserName;
 	string64	CompName;
-	string64	UserDate;
-	string64	UserTime;
 	string1024	Params;
 	DWORD		dwFrame;
 
 public:
-	void		_initialize(const char* ApplicationName, LogCallback cb = 0, BOOL init_fs = TRUE, const char* fs_fname = 0);
+	void		_initialize(const char* ApplicationName, xrLogger::LogCallback cb = 0, BOOL init_fs = TRUE, const char* fs_fname = 0);
 	void		_destroy();
 	IC	void		SetPluginMode() { PluginMode = true; }
 

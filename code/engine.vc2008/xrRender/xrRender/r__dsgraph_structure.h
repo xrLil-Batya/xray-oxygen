@@ -27,7 +27,7 @@ public:
 	BOOL														val_bRecordMP;		// record nearest for multi-pass
 	R_feedback*													val_feedback;		// feedback for geometry being rendered
 	u32															val_feedback_breakp;// breakpoint
-	xr_vector<Fbox3, xalloc<Fbox3>>*							val_recorder;		// coarse structure recorder
+	xr_vector<Fbox3>*											val_recorder;		// coarse structure recorder
 	u32															phase;
 	u32															marker;
 	bool														pmask		[2]		;
@@ -47,32 +47,32 @@ public:
 	R_dsgraph::mapSorted_T										mapHUDEmissive;
 
 	// Runtime structures 
-	xr_vector<R_dsgraph::mapNormalVS::value_type*,xalloc<R_dsgraph::mapNormalVS::value_type*> >				nrmVS;
+	xr_vector<R_dsgraph::mapNormalVS::value_type*>				nrmVS;
 
 #ifdef USE_DX11
-	xr_vector<R_dsgraph::mapNormalGS::value_type*,xalloc<R_dsgraph::mapNormalGS::value_type*> >				nrmGS;
+	xr_vector<R_dsgraph::mapNormalGS::value_type*>				nrmGS;
 #endif
 
-	xr_vector<R_dsgraph::mapNormalPS::value_type*,xalloc<R_dsgraph::mapNormalPS::value_type*> >				nrmPS;
-	xr_vector<R_dsgraph::mapNormalCS::value_type*,xalloc<R_dsgraph::mapNormalCS::value_type*> >				nrmCS;
-	xr_vector<R_dsgraph::mapNormalStates::value_type*,xalloc<R_dsgraph::mapNormalStates::value_type*> >		nrmStates;
-	xr_vector<R_dsgraph::mapNormalTextures::value_type*,xalloc<R_dsgraph::mapNormalTextures::value_type*> >	nrmTextures;
-	xr_vector<R_dsgraph::mapNormalTextures::value_type*,xalloc<R_dsgraph::mapNormalTextures::value_type*> >	nrmTexturesTemp;
+	xr_vector<R_dsgraph::mapNormalPS::value_type*>				nrmPS;
+	xr_vector<R_dsgraph::mapNormalCS::value_type*>				nrmCS;
+	xr_vector<R_dsgraph::mapNormalStates::value_type*>			nrmStates;
+	xr_vector<R_dsgraph::mapNormalTextures::value_type*>		nrmTextures;
+	xr_vector<R_dsgraph::mapNormalTextures::value_type*>		nrmTexturesTemp;
 
-	xr_vector<R_dsgraph::mapMatrixVS::value_type*,xalloc<R_dsgraph::mapMatrixVS::value_type*> >				matVS;
+	xr_vector<R_dsgraph::mapMatrixVS::value_type*>				matVS;
 
 #ifdef USE_DX11
-	xr_vector<R_dsgraph::mapMatrixGS::value_type*,xalloc<R_dsgraph::mapMatrixGS::value_type*> >				matGS;
+	xr_vector<R_dsgraph::mapMatrixGS::value_type*>				matGS;
 #endif
 
-	xr_vector<R_dsgraph::mapMatrixPS::value_type*,xalloc<R_dsgraph::mapMatrixPS::value_type*> >				matPS;
-	xr_vector<R_dsgraph::mapMatrixCS::value_type*,xalloc<R_dsgraph::mapMatrixCS::value_type*> >				matCS;
-	xr_vector<R_dsgraph::mapMatrixStates::value_type*,xalloc<R_dsgraph::mapMatrixStates::value_type*> >		matStates;
-	xr_vector<R_dsgraph::mapMatrixTextures::value_type*,xalloc<R_dsgraph::mapMatrixTextures::value_type*> >	matTextures;
-	xr_vector<R_dsgraph::mapMatrixTextures::value_type*,xalloc<R_dsgraph::mapMatrixTextures::value_type*> >	matTexturesTemp;
+	xr_vector<R_dsgraph::mapMatrixPS::value_type*>				matPS;
+	xr_vector<R_dsgraph::mapMatrixCS::value_type*>				matCS;
+	xr_vector<R_dsgraph::mapMatrixStates::value_type*>			matStates;
+	xr_vector<R_dsgraph::mapMatrixTextures::value_type*>		matTextures;
+	xr_vector<R_dsgraph::mapMatrixTextures::value_type*>		matTexturesTemp;
 
-	xr_vector<R_dsgraph::_LodItem,xalloc<R_dsgraph::_LodItem> >	lstLODs		;
-	xr_vector<int,xalloc<int> >									lstLODgroups;
+	xr_vector<R_dsgraph::_LodItem>								lstLODs;
+	xr_vector<int>												lstLODgroups;
 	xr_vector<ISpatial*>				                        lstRenderables;
 	xr_vector<ISpatial*>				                        lstSpatial	;
 

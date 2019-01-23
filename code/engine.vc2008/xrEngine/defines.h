@@ -2,7 +2,7 @@
 ENGINE_API	extern bool			bDebug;
 
 #define _RELEASE(x)			{ if(x) { (x)->Release(); (x)=NULL; } }
-#define _SHOW_REF(msg, x)   { if(x) { x->AddRef(); Log(msg,u32(x->Release()));}}
+#define _SHOW_REF(msg, x)   { if(x) { x->AddRef(); Msg("%s%d", msg, u32(x->Release()));}}
 
 // textures
 ENGINE_API extern	int		psTextureLOD;
@@ -13,7 +13,6 @@ enum: unsigned long
 	rsFullscreen					= (1<<0),
 	rsClearBB						= (1<<1),
 	rsVSync							= (1<<2),
-	rsWireframe						= (1<<3),
 	rsTripleBuffering				= (1<<4),
 	rsStatistic						= (1<<5),
 	rsDetails						= (1<<6),
@@ -26,12 +25,16 @@ enum: unsigned long
 	rsOcclusionDraw					= (1<<12),
 	rsOcclusionStats				= (1<<13),
 
+	rsGameProfiler					= (1<<14),
+	rsScheduleProfiler				= (1<<15),
+
 	rsCameraPos						= (1<<18),
 	rsRefresh120hz					= (1<<19),
 	rsR2							= (1<<20),
 	rsR4							= (1<<22), // was reserved to Editor
 	rsDrawFPS						= (1<<23), // was reserved to Editor
-	rsHWInfo						= (1<<24)
+	rsHWInfo						= (1<<24),
+	rsEnviromentInfo				= (1<<25)
 	// 22-32 bit - reserved to Editor
 };
 

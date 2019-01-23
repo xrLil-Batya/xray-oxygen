@@ -756,7 +756,7 @@ bool CExpression::IsValidIntConstantDeclaration(xr_string& LexemStr) const
 
 void CExpression::SetCompileError(LPCSTR reason) const
 {
-    m_dbgCompileError = strdup(reason);
+    m_dbgCompileError = xr_strdup(reason);
 }
 
 void CExpression::FlushCompileError()

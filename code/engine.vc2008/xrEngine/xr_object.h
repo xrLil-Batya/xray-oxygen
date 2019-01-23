@@ -68,6 +68,7 @@ protected:
 
 	// Geometric (transformation)
 	svector<SavedPosition,4>			PositionStack;
+	mutable shared_str					ClassName;
 public:
 	u32									dbg_update_cl;
 	u32									dwFrame_UpdateCL;
@@ -114,7 +115,6 @@ public:
 	ICF const Fvector&					Position			() 			const	{ return renderable.xform.c;		}
 	virtual float						Radius				()			const;
 	virtual const Fbox&					BoundingBox			()			const;
-	
 	IC IRender_Sector*					Sector				()					{ return H_Root()->spatial.sector;	}
 	IC IRender_ObjectSpecific*			ROS					()					{ return renderable_ROS();			}
 	BOOL								renderable_ShadowGenerate	() override			{ return TRUE;						}
@@ -138,6 +138,7 @@ public:
 	ICF shared_str						cNameVisual			()			const	{ return NameVisual;				}
 	void								cNameVisual_set		(shared_str N);
 	shared_str							shedule_Name		() const override			{ return cName(); };
+	virtual shared_str					shedule_Class_Name  () const override;
 	
 	// Properties
 	void								processing_activate		();				// request	to enable	UpdateCL

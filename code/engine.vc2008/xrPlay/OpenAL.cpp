@@ -42,7 +42,6 @@ void CheckOpenAL()
 #else
 		std::wstring StrCmd = std::wstring(FS.get_path("$fs_root$")->m_Path) + L"external\\oalinst.exe"''
 #endif
-		TCHAR szPath[MAX_PATH] = { 0 };
 
 		// if current user is admin - go to run this application
 		if (!IsProcessWithAdminPrivilege())
@@ -59,6 +58,7 @@ void CheckOpenAL()
 			if (ShellExecuteEx(&shellInfo)) { ExitProcess(GetCurrentProcessId()); }
 		}
 
+		TCHAR szPath[MAX_PATH] = { 0 };
 		GetModuleFileName(GetModuleHandle(nullptr), szPath, MAX_PATH);
 		PathRemoveFileSpec(szPath);
 

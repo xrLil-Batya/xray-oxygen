@@ -36,17 +36,22 @@ namespace LevelGraph {
 
 class CCoverPoint;
 
-class CLevelGraph {
+#ifdef AI_COMPILER
+class CLevelGraph 
+#else
+class GAME_API CLevelGraph
+#endif
+{
 private:
 	friend class CRenumbererConverter;
 
 public:
-	typedef LevelGraph::CPosition			CPosition;
-	typedef LevelGraph::CHeader				CHeader;
-	typedef LevelGraph::CVertex				CVertex;
-	typedef LevelGraph::SSegment			SSegment;
-	typedef LevelGraph::SContour			SContour;
-	typedef LevelGraph::ELineIntersections	ELineIntersections;
+	using CPosition = LevelGraph::CPosition;
+	using CHeader = LevelGraph::CHeader;
+	using CVertex = LevelGraph::CVertex;
+	using SSegment = LevelGraph::SSegment;
+	using SContour = LevelGraph::SContour;
+	using ELineIntersections = LevelGraph::ELineIntersections;
 
 private:
 	IReader					*m_reader;		// level graph virtual storage
@@ -64,10 +69,10 @@ private:
 			u32		guess_vertex_id				(u32 const &current_vertex_id, Fvector const &position) const;
 
 public:
-	typedef u32 const_iterator;
-	typedef u32 const_spawn_iterator;
-	typedef u32 const_death_iterator;
-	typedef const CVertex* const_vertex_iterator;
+	using const_iterator = u32;
+	using const_spawn_iterator = u32;
+	using const_death_iterator = u32;
+	using const_vertex_iterator = const CVertex*;
 
 private:
 	struct vertex {
@@ -195,7 +200,7 @@ public:
 	IC		float	vertex_high_cover_angle		(u32 vertex_id, float inc_angle, _predicate compare_predicate) const;
 	template <class _predicate>
 	IC		float	vertex_low_cover_angle		(u32 vertex_id, float inc_angle, _predicate compare_predicate) const;
-	IC		void	set_invalid_vertex			(u32 &vertex_id, CVertex **vertex = NULL) const;
+	IC		void	set_invalid_vertex			(u32 &vertex_id, CVertex **vertex = nullptr) const;
 	IC		const u32 vertex_id					(const CLevelGraph::CVertex *vertex) const;
 			u32		vertex_id					(const Fvector &position) const;
 			u32		vertex						(u32 current_vertex_id, const Fvector &position) const;

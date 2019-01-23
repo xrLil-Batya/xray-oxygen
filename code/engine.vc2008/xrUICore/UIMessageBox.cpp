@@ -47,13 +47,13 @@ void CUIMessageBox::InitMessageBox(LPCSTR box_template)
 
 	string512 str;
 
-	strconcat								(sizeof(str),str,box_template,":picture");
+	xr_strconcat								(str, box_template, ":picture");
 	if (uiXml.NavigateToNode(str,0)){
 		m_UIStaticPicture						= xr_new<CUIStatic>();AttachChild(m_UIStaticPicture);
 		xml_init.InitStatic						(uiXml, str, 0, m_UIStaticPicture);
 	}
 
-	strconcat								(sizeof(str),str,box_template,":message_text");
+	xr_strconcat								(str, box_template, ":message_text");
 	if (uiXml.NavigateToNode(str,0)){
         m_UIStaticText						= xr_new<CUITextWnd>();
 		AttachChild							(m_UIStaticText);
@@ -94,7 +94,7 @@ void CUIMessageBox::InitMessageBox(LPCSTR box_template)
 
 		case MESSAGEBOX_OK:
 		{
-			strconcat							(sizeof(str),str,box_template,":button_ok");
+			xr_strconcat						(str, box_template, ":button_ok");
 			m_UIButtonYesOk						= xr_new<CUI3tButton>();
 			AttachChild							(m_UIButtonYesOk);
 			xml_init.Init3tButton				(uiXml, str, 0, m_UIButtonYesOk);
@@ -109,46 +109,46 @@ void CUIMessageBox::InitMessageBox(LPCSTR box_template)
 		case MESSAGEBOX_QUIT_GAME:
 		case MESSAGEBOX_YES_NO:
 			{
-			strconcat							(sizeof(str),str,box_template,":button_yes");
+			xr_strconcat						(str,box_template,":button_yes");
 			m_UIButtonYesOk						= xr_new<CUI3tButton>();
 			AttachChild							(m_UIButtonYesOk);
 			xml_init.Init3tButton				(uiXml, str, 0, m_UIButtonYesOk);
 
-			strconcat							(sizeof(str),str,box_template,":button_no");
+			xr_strconcat						(str,box_template,":button_no");
 			m_UIButtonNo						= xr_new<CUI3tButton>();
 			AttachChild							(m_UIButtonNo);
 			xml_init.Init3tButton				(uiXml, str, 0, m_UIButtonNo);
 		}break;
 
 		case MESSAGEBOX_YES_NO_CANCEL:{
-			strconcat							(sizeof(str),str,box_template,":button_yes");
+			xr_strconcat						(str,box_template,":button_yes");
 			m_UIButtonYesOk						= xr_new<CUI3tButton>();
 			AttachChild							(m_UIButtonYesOk);
 			xml_init.Init3tButton				(uiXml, str, 0, m_UIButtonYesOk);
 
-			strconcat							(sizeof(str),str,box_template,":button_no");
+			xr_strconcat						(str,box_template,":button_no");
 			m_UIButtonNo						= xr_new<CUI3tButton>();
 			AttachChild							(m_UIButtonNo);
 			xml_init.Init3tButton				(uiXml, str, 0, m_UIButtonNo);
 
-			strconcat							(sizeof(str),str,box_template,":button_cancel");
+			xr_strconcat						(str,box_template,":button_cancel");
 			m_UIButtonCancel					= xr_new<CUI3tButton>();
 			AttachChild							(m_UIButtonCancel);
 			xml_init.Init3tButton				(uiXml, str, 0, m_UIButtonCancel);
 		}break;
 
 		case MESSAGEBOX_YES_NO_COPY:{
-			strconcat							(sizeof(str),str,box_template,":button_yes");
+			xr_strconcat						(str,box_template,":button_yes");
 			m_UIButtonYesOk						= xr_new<CUI3tButton>();
 			AttachChild							(m_UIButtonYesOk);
 			xml_init.Init3tButton				(uiXml, str, 0, m_UIButtonYesOk);
 
-			strconcat							(sizeof(str),str,box_template,":button_no");
+			xr_strconcat						(str,box_template,":button_no");
 			m_UIButtonNo						= xr_new<CUI3tButton>();
 			AttachChild							(m_UIButtonNo);
 			xml_init.Init3tButton				(uiXml, str, 0, m_UIButtonNo);
 
-			strconcat							(sizeof(str),str,box_template,":button_copy");
+			xr_strconcat						(str,box_template,":button_copy");
 			m_UIButtonCopy						= xr_new<CUI3tButton>();
 			AttachChild							(m_UIButtonCopy);
 			xml_init.Init3tButton				(uiXml, str, 0, m_UIButtonCopy);

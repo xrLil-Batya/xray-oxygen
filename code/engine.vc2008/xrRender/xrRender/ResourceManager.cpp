@@ -13,7 +13,8 @@
 #include "tss.h"
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
-#include "../../xrCore/threadpool/ttapi.h"
+#include "tbb/task.h"
+#include "tbb/task_group.h"
 
 //	Already defined in Texture.cpp
 void fix_texture_name(LPSTR fn);
@@ -291,12 +292,16 @@ void CResourceManager::DeferredUpload()
 		}
 		else
 		{
+			tbb::task_group textureLoaders;
 			for (auto& tex : m_textures)
 			{
-				ttapi_AddTask(TextureLoading, tex.second);
+				CTexture* pTexture = tex.second;
+				textureLoaders.run([pTexture]()
+				{
+					pTexture->Load();
+				});
 			}
-	
-			ttapi_RunAllWorkers();
+			textureLoaders.wait();
 		}
 	
 		Msg("texture loading time: %d", timer.GetElapsed_ms());

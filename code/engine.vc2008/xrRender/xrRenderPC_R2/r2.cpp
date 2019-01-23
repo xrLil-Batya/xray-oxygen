@@ -453,7 +453,7 @@ static HRESULT create_shader (
 		SPS* sps_result = (SPS*)result;
 		_result			= HW.pDevice->CreatePixelShader(buffer, &sps_result->ps);
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! PS: ", file_name);
+			Msg			("! PS: %s", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -467,7 +467,7 @@ static HRESULT create_shader (
 		} 
 		else
 		{
-			Log			("! PS: ", file_name);
+			Msg			("! PS: %s", file_name);
 			Msg			("! D3DXFindShaderComment hr == 0x%08x", _result);
 		}
 	}
@@ -475,7 +475,7 @@ static HRESULT create_shader (
 		SVS* svs_result = (SVS*)result;
 		_result			= HW.pDevice->CreateVertexShader(buffer, &svs_result->vs);
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! VS: ", file_name);
+			Msg			("! VS: %s", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -489,7 +489,7 @@ static HRESULT create_shader (
 		} 
 		else
 		{
-			Log			("! VS: ", file_name);
+			Msg			("! VS: %s", file_name);
 			Msg			("! D3DXFindShaderComment hr == 0x%08x", _result);
 		}
 	}
@@ -499,7 +499,7 @@ static HRESULT create_shader (
 		ID3DXBuffer*	pDisasm = 0;
 		D3DXDisassembleShader(LPDWORD(buffer), FALSE, 0, &pDisasm);
 		string_path		dname;
-		strconcat(sizeof(dname), dname, "disasm\\", file_name, ('v' == pTarget[0]) ? ".vs" : ".ps");
+		xr_strconcat( dname, "disasm\\", file_name, ('v' == pTarget[0]) ? ".vs" : ".ps");
 		IWriter*		W = FS.w_open("$logs$", dname);
 		W->w(pDisasm->GetBufferPointer(), pDisasm->GetBufferSize());
 		FS.w_close(W);
@@ -517,7 +517,7 @@ public:
 	HRESULT __stdcall	Open	(D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
 	{
 		string_path				pname;
-		strconcat				(sizeof(pname),pname,::Render->getShaderPath(),pFileName);
+		xr_strconcat			(pname, ::Render->getShaderPath(), pFileName);
 		IReader*		R		= FS.r_open	("$game_shaders$",pname);
 		if (0==R)				{
 			// possibly in shared directory or somewhere else - open directly
@@ -936,9 +936,9 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 			_result					= create_shader(name, pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
 		}
 		else {
-			Log						("! ", file_name);
+			Msg						("! %s", file_name);
 			if ( pErrorBuf )
-				Log					("! error: ",(LPCSTR)pErrorBuf->GetBufferPointer());
+				Msg					("! error: %s",(LPCSTR)pErrorBuf->GetBufferPointer());
 			else
 				Msg					("Can't compile shader hr=0x%08x", _result);
 		}

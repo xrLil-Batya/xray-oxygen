@@ -310,7 +310,7 @@ bool CVMLua::DoFile(LPCSTR caScriptName, LPCSTR caNameSpaceName, bool bCall)
 	string_path l_caLuaFileName;
 	IReader *l_tpFileReader = FS.r_open(caScriptName);
 	R_ASSERT(l_tpFileReader);
-	strconcat(sizeof(l_caLuaFileName), l_caLuaFileName, "@", caScriptName);
+	xr_strconcat( l_caLuaFileName, "@", caScriptName);
 
 	if (!LoadBuffer(static_cast<LPCSTR>(l_tpFileReader->pointer()), (size_t)l_tpFileReader->length(), l_caLuaFileName, caNameSpaceName)) 
 	{

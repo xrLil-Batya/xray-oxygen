@@ -1,9 +1,15 @@
 #include	"stdafx.h"
 #include	"animation.h"
 
-using	namespace animation;
+using namespace animation;
 
-const channal_rule channels::rules[channels::max] = {{lerp, lerp}, {lerp, lerp}, {lerp, add}, {lerp, add}};
+const channal_rule channels::rules[channels::max] = 
+{
+	{ mix_type::lerp, mix_type::lerp}, 
+	{ mix_type::lerp, mix_type::lerp}, 
+	{ mix_type::lerp, mix_type::add},
+	{ mix_type::lerp, mix_type::add}
+};
 
 channels::channels()
 {

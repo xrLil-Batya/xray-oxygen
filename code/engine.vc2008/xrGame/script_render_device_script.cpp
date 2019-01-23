@@ -34,7 +34,7 @@ u32 time_global(const CRenderDevice *self)
 	return		(self->dwTimeGlobal);
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptRenderDevice::script_register(lua_State *L)
 {
 	module(L)

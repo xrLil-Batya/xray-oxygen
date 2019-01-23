@@ -135,7 +135,7 @@ void CScriptMovementAction::SetObjectToGo		(CScriptGameObject *tpObjectToGo)
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptMovementAction::script_register(lua_State *L)
 {
 	module(L)

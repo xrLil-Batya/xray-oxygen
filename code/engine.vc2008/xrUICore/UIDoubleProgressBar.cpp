@@ -20,9 +20,9 @@ void CUIDoubleProgressBar::InitFromXml( CXml& xml_doc, LPCSTR path )
 	CUIXmlInit::InitProgressBar( xml_doc, path,	0, &m_progress_two );
 	
 	string256 buf;
-	strconcat( sizeof(buf), buf, path, ":color_less" );
+	xr_strconcat(  buf, path, ":color_less" );
 	m_less_color = CUIXmlInit::GetColor( xml_doc, buf, 0, color_rgba( 255,   0, 0, 255 ) );
-	strconcat( sizeof(buf), buf, path, ":color_more" );
+	xr_strconcat(  buf, path, ":color_more" );
 	m_more_color = CUIXmlInit::GetColor( xml_doc, buf, 0, color_rgba(   0, 255, 0, 255 ) );
 
 	m_progress_one.SetRange( 0.0f, 100.0f );

@@ -56,14 +56,14 @@ void CScreenshotManager::MakeScreenshot(IRender_interface::ScreenshotMode mode, 
 	case IRender_interface::SM_FOR_LEVELMAP:
 	{
 		pSaved = MakeScreenshotForLevelMap(fmt);
-		strconcat(sizeof(fileName), fileName, name, ext);
+		xr_strconcat( fileName, name, ext);
 		FS.update_path(filePath, "$screenshots$", fileName);
 	}
 	break;
 	case IRender_interface::SM_FOR_CUBEMAP:
 	{
 		pSaved = MakeScreenshotForCubeMap(fmt);
-		strconcat(sizeof(fileName), fileName, name, ext);
+		xr_strconcat( fileName, name, ext);
 		FS.update_path(filePath, "$screenshots$", fileName);
 	}
 	break;

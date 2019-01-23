@@ -4,14 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace xrLayoutEditor
 {
@@ -20,10 +12,14 @@ namespace xrLayoutEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-			XRay.xrManagedUILib.UIXMLParser UIParser = new XRay.xrManagedUILib.UIXMLParser();
-        }
+		public MainWindow()
+		{
+			InitializeComponent();
+
+            XRay.Xml xml = new XRay.Xml("ui", "ui_mm_loading_screen.xml");
+            XRay.Log.Info(String.Format("result {0}", xml.ReadAttributeInt("View", 0, "x", 0)));
+
+            XRay.Test test = new XRay.Test();
+		}
     }
 }

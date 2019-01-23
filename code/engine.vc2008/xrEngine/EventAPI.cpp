@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "eventapi.h"
 #include "xr_ioconsole.h"
+#include <ppl.h>
 
 class ENGINE_API CEvent
 {

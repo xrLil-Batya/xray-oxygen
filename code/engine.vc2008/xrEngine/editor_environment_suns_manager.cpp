@@ -5,8 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment suns manager class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_suns_manager.hpp"

@@ -15,11 +15,11 @@ public:
 	struct XRCORE_API Sect 
 	{
 		shared_str Name;
-		std::unordered_map<shared_str, shared_str> Data;
-		std::vector<Item> Unordered;
+		xr_hash_map<shared_str, shared_str> Data;
+		xr_vector<Item> Unordered;
 		bool line_exist(const char*, const char** = 0);
 	};
-	typedef std::unordered_map<shared_str, Sect*> Root;
+	typedef xr_hash_map<shared_str, Sect*> Root;
 
 	// factorisation
 	static CInifile* Create(const char*, bool = TRUE);

@@ -114,13 +114,13 @@ public:
 	~XCore();
 
 	XSTATUS InitXAudioDevice();
-	XSTATUS GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& refDeviceList);
+	XSTATUS GetDeviceList(IXAudio2* pXAudio, xr_vector<XAUDIO_DEVICE>& refDeviceList);
 	XSTATUS GetDeviceInfo(XAUDIO_DEVICE DeviceInfo, XAUDIO2_DEVICE_DETAILS* DeviceDetails);
 
 	XSTATUS SimpleAudioPlay(CSoundRender_Emitter* soundEmitter, CSoundRender_Source* soundSource);
 	XSTATUS SetMasterVolume(float Volume);
 
-	std::vector<XAUDIO_DEVICE> deviceList;
+	xr_vector<XAUDIO_DEVICE> deviceList;
 	XAUDIO_DATA xData;
 	XAUDIO_STATE xState;
 

@@ -115,7 +115,7 @@ public:
 	light_Package												LP_normal;
 	light_Package												LP_pending;
 
-	xr_vector<Fbox3,xalloc<Fbox3> >								main_coarse_structure;
+	xr_vector<Fbox3>											main_coarse_structure;
 
 	shared_str													c_sbase			;
 	shared_str													c_lmaterial		;
@@ -146,7 +146,7 @@ private:
 
 public:
 	IRender_Sector*					rimp_detectSector			(Fvector& P, Fvector& D);
-	void							render_main					(Fmatrix& mCombined, bool _fportals);
+	void							render_main					(Fmatrix& mCombined);
 	void							render_forward				();
 	void							render_smap_direct			(Fmatrix& mCombined);
 	void							render_indirect				(light*			L	);
@@ -211,7 +211,7 @@ public:
 	inline bool is_sun()
 	{
 		Fcolor sun_color = ((light*)Lights.sun._get())->color;
-		return (ps_r_flags.test(R_FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS));
+		return (ps_r_flags.test(R_FLAG_SUN) && (Diffuse::u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS));
 	}
 
 public:

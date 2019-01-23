@@ -32,7 +32,7 @@ extern float g_fov;
 class CBulletManager;
 class CMapManager;
 
-class CLevel : public IGame_Level, public IPureClient
+class GAME_API CLevel : public IGame_Level, public IPureClient
 {
 	void						ClearAllObjects			();
 private:
@@ -139,35 +139,37 @@ public:
 	xr_vector<ref_sound*>		static_Sounds;
 
 	// Starting/Loading
-	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
-	virtual void				net_Stop				( );
-	virtual void				net_Update				( );
+	virtual BOOL				net_Start				(LPCSTR op_server, LPCSTR op_client);
+	virtual void				net_Stop				();
+	virtual void				net_Update				();
 
 
-	virtual BOOL				Load_GameSpecific_Before( );
-	virtual BOOL				Load_GameSpecific_After ( );
-	virtual void				Load_GameSpecific_CFORM	( CDB::TRI* T, u32 count );
+	virtual BOOL				Load_GameSpecific_Before();
+	virtual BOOL				Load_GameSpecific_After ();
+	virtual void				Load_GameSpecific_CFORM	(CDB::TRI* T, u32 count);
 
 	// Events
-	virtual void				OnEvent					( EVENT E, u64 P1, u64 P2 );
-	virtual void	_BCL		OnFrame					(  );
-	virtual void				OnRender				( );
-	
+	virtual void				OnEvent					(EVENT E, u64 P1, u64 P2);
+	virtual void				OnFrame					();
+	virtual void				OnRender				();
+
+	virtual void				RenderBullets			();
+
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
 	void						cl_Process_Spawn		(NET_Packet& P);
-	void						ProcessGameEvents		( );
-	void						ProcessGameSpawns		( );
+	void						ProcessGameEvents		();
+	void						ProcessGameSpawns		();
 	
 	// Input
-	virtual	void				IR_OnKeyboardPress		( int btn );
-	virtual void				IR_OnKeyboardRelease	( int btn );
-	virtual void				IR_OnKeyboardHold		( int btn );
-	virtual void				IR_OnMousePress			( int btn );
-	virtual void				IR_OnMouseRelease		( int btn );
-	virtual void				IR_OnMouseHold			( int btn );
-	virtual void				IR_OnMouseMove			( int, int);
-	virtual void				IR_OnMouseStop			( int, int);
-	virtual void				IR_OnMouseWheel			( int direction);
+	virtual	void				IR_OnKeyboardPress		(int btn);
+	virtual void				IR_OnKeyboardRelease	(int btn);
+	virtual void				IR_OnKeyboardHold		(int btn);
+	virtual void				IR_OnMousePress			(int btn);
+	virtual void				IR_OnMouseRelease		(int btn);
+	virtual void				IR_OnMouseHold			(int btn);
+	virtual void				IR_OnMouseMove			(int, int);
+	virtual void				IR_OnMouseStop			(int, int);
+	virtual void				IR_OnMouseWheel			(int direction);
 	virtual void				IR_OnActivate			();
 
 	// Game

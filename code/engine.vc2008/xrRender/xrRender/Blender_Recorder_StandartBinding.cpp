@@ -142,7 +142,7 @@ static class cl_fog_plane : public R_constant_setup
 		{
 			// Plane
 			Fvector4 plane;
-			Fmatrix& M		= CastToGSCMatrix(Device.mFullTransform);
+			Fmatrix& M		= Device.mFullTransform;
 			plane.x			= -(M._14 + M._13);
 			plane.y			= -(M._24 + M._23);
 			plane.z			= -(M._34 + M._33);
@@ -292,7 +292,7 @@ static class cl_sun0_dir_e : public R_constant_setup
 		{
 			Fvector D;
 			CEnvDescriptor&	desc = *Environment().CurrentEnv;
-			CastToGSCMatrix(Device.mView).transform_dir(D, desc.sun_dir);
+			Device.mView.transform_dir(D, desc.sun_dir);
 			D.normalize();
 			result.set(D.x, D.y, D.z, 0);
 		}
@@ -351,6 +351,20 @@ static class cl_screen_params : public R_constant_setup
 		RCache.set_c(C, result);
 	}
 } binder_screen_params;
+
+static class cl_rain_params : public R_constant_setup
+{
+    u32 marker;
+    Fvector4 result;
+    virtual void setup(R_constant* C)
+	{
+		float wetnessW		= Environment().eff_Rain->GetWorldWetness();
+		float wetnessCVE	= Environment().eff_Rain->GetCurrViewEntityWetness();
+		float rainDensity	= Environment().CurrentEnv->rain_density;
+
+        RCache.set_c(C, wetnessW, wetnessCVE, rainDensity, 0.0f);
+    }
+} binder_rain_params;
 
 static class cl_parallax : public R_constant_setup
 {
@@ -474,6 +488,8 @@ void CBlender_Compile::SetMapping()
 	r_Constant				("fog_color",		&binder_fog_color);
 	// Wind
 	r_Constant				("wind_params",		&binder_wind_params);
+	// Rain
+	r_Constant				("rain_params",		&binder_rain_params);
 	// Water
 	r_Constant				("water_intensity", &binder_water_intensity);
 	// Sunshafts

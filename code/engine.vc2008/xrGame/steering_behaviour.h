@@ -314,7 +314,7 @@ protected:
 	void        remove_scheduled ();
 	static void deleter (base* p);
 	
-	typedef std::set<base*> Behaviours;
+	typedef xr_set<base*> Behaviours;
 
 	Behaviours  m_behaviours;
 	Behaviours  m_schedule_remove;

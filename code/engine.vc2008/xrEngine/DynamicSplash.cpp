@@ -235,58 +235,59 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 
 	MSG msg = { nullptr };
 	LONG timerCount = 0;
-
-	PeekMessage(&msg, nullptr, 0, 0, 0);
 	SetEvent(pSplash->hEvent);
 
-	// while game isn't runned
-	for (int bRet = GetMessage(&msg, nullptr, 0, 0); bRet; bRet = GetMessage(&msg, nullptr, 0, 0))
+	while (true)
 	{
-		if (msg.message == WM_QUIT) break;
-
-		if (msg.message == PBM_SETPOS)
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			KillTimer(nullptr, pSplash->timerID);
-			SendMessage(pSplash->hwndSplash, PBM_SETPOS, msg.wParam, msg.lParam);
-			continue;
-		}
+			if (msg.message == WM_QUIT) break;
 
-		if (msg.message == PBM_SETSTEP)
-		{
-			SendMessage(pSplash->hwndSplash, PBM_SETPOS, LOWORD(msg.wParam), 0); // initiate progress bar creation
-			SendMessage(pSplash->hwndProgress, PBM_SETSTEP, (HIWORD(msg.wParam) - LOWORD(msg.wParam)) / msg.lParam, 0);
-			timerCount = static_cast<LONG>(msg.lParam);
-			pSplash->timerID = SetTimer(nullptr, 0, 1000, nullptr);
-			continue;
-		}
-
-		if (msg.message == WM_TIMER && msg.wParam == pSplash->timerID)
-		{
-			SendMessage(pSplash->hwndProgress, PBM_STEPIT, 0, 0);
-			timerCount--;
-			if (timerCount <= 0) 
+			if (msg.message == PBM_SETPOS)
 			{
-				timerCount = 0;
 				KillTimer(nullptr, pSplash->timerID);
-				Sleep(0);
+				SendMessage(pSplash->hwndSplash, PBM_SETPOS, msg.wParam, msg.lParam);
+				continue;
 			}
-			continue;
-		}
 
-		if (msg.message == PBM_SETBARCOLOR)
-		{
-			if (!IsWindow(pSplash->hwndProgress)) 
+			if (msg.message == PBM_SETSTEP)
 			{
-				SendMessage(pSplash->hwndSplash, PBM_SETPOS, 0, 0); // initiate progress bar creation
+				SendMessage(pSplash->hwndSplash, PBM_SETPOS, LOWORD(msg.wParam), 0); // initiate progress bar creation
+				SendMessage(pSplash->hwndProgress, PBM_SETSTEP, (HIWORD(msg.wParam) - LOWORD(msg.wParam)) / msg.lParam, 0);
+				timerCount = static_cast<LONG>(msg.lParam);
+				pSplash->timerID = SetTimer(nullptr, 0, 1000, nullptr);
+				continue;
 			}
-			SendMessage(pSplash->hwndProgress, PBM_SETBARCOLOR, msg.wParam, msg.lParam);
-			continue;
-		}
 
-		if (bRet != -1)
-		{
+			if (msg.message == WM_TIMER && msg.wParam == pSplash->timerID)
+			{
+				SendMessage(pSplash->hwndProgress, PBM_STEPIT, 0, 0);
+				timerCount--;
+				if (timerCount <= 0)
+				{
+					timerCount = 0;
+					KillTimer(nullptr, pSplash->timerID);
+					Sleep(0);
+				}
+				continue;
+			}
+
+			if (msg.message == PBM_SETBARCOLOR)
+			{
+				if (!IsWindow(pSplash->hwndProgress))
+				{
+					SendMessage(pSplash->hwndSplash, PBM_SETPOS, 0, 0); // initiate progress bar creation
+				}
+				SendMessage(pSplash->hwndProgress, PBM_SETBARCOLOR, msg.wParam, msg.lParam);
+				continue;
+			}
+
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+		}
+		else
+		{
+			Sleep(5);
 		}
 	}
 

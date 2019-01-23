@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 #include "xrCPU_Pipe.h"
-#include "../xrCore/threadpool/ttapi.h"
+#include "tbb/task_scheduler_init.h"
 
 extern xrSkin1W			xrSkin1W_x86;
 extern xrSkin2W			xrSkin2W_x86;
@@ -12,6 +12,7 @@ extern xrSkin4W			xrSkin4W_thread;
 extern xrPLC_calc3		PLC_calc3_x86;
 extern xrPLC_calc3		PLC_calc3_SSE;
 
+tbb::task_scheduler_init* pTaskSheduler = nullptr;
 
 void xrBind_PSGP(xrDispatchTable* T, processor_info* ID)
 {
@@ -31,5 +32,6 @@ void xrBind_PSGP(xrDispatchTable* T, processor_info* ID)
 		T->PLC_calc3 = PLC_calc3_x86;
 	}
 	// Init helper threads
-	ttapi_Init(ID);
+	//ttapi_Init(ID);
+	pTaskSheduler = new tbb::task_scheduler_init(CPU::Info.n_threads);
 }

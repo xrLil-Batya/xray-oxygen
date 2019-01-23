@@ -20,18 +20,18 @@ void CRenderTarget::phase_ssao	()
 	// low/hi RTs
 	if( !RImplementation.o.dx10_msaa )
 	{
-		u_setrt				( rt_ssao_temp,0,0,0);
+		u_setrt				( rt_ssao_temp,nullptr,nullptr,nullptr);
 	}
 	else
 	{
-		u_setrt				( rt_ssao_temp, 0, 0, 0);
+		u_setrt				( rt_ssao_temp, nullptr, nullptr, nullptr);
 	}
 
 	RCache.set_Stencil	(FALSE);
 
 	// Compute params
-	Matrix4x4 m_v2w;			
-	m_v2w.InvertMatrixByMatrix(Device.mView);
+	Fmatrix m_v2w;			
+	m_v2w.invert(Device.mView);
 
 	float		fSSAONoise = 2.0f;
 	fSSAONoise *= tan(deg2rad(67.5f));
@@ -85,7 +85,7 @@ void CRenderTarget::phase_downsamp	()
 {
 	u32			Offset = 0;
 
-    u_setrt( rt_half_depth,0,0,0);
+    u_setrt( rt_half_depth,nullptr,nullptr,nullptr);
 	FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     HW.pContext->ClearRenderTargetView(rt_half_depth->pRT, ColorRGBA);
 	u32 w = Device.dwWidth;
@@ -101,8 +101,8 @@ void CRenderTarget::phase_downsamp	()
 	RCache.set_Stencil	(FALSE);
 
 	{
-		Matrix4x4 m_v2w;
-		m_v2w.InvertMatrixByMatrix(Device.mView);
+		Fmatrix m_v2w;
+		m_v2w.invert(Device.mView);
 
 		// Fill VB
 		float	scale_X				= float(w)	/ float(TEX_jitter);

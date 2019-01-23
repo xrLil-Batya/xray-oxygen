@@ -12,9 +12,6 @@
 #include "../FrayBuildConfig.hpp"
 CALifeObjectRegistry::CALifeObjectRegistry	(LPCSTR section)
 {
-#ifdef LUACP_API
-	LogXrayOffset("CALifeObjectRegistry.list", this, &this->m_objects);
-#endif
 }
 
 CALifeObjectRegistry::~CALifeObjectRegistry	()

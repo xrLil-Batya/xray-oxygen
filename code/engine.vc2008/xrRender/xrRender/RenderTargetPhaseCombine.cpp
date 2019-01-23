@@ -14,6 +14,7 @@ float hclip(float v, float dim)
 
 void CRenderTarget::phase_combine()
 {
+	Device.Statistic->Render_Combine_Begin.Begin();
 	//*** exposure-pipeline
 	u32 gpu_id = Device.dwFrame%HW.Caps.iGPUNum;
 	if (Device.m_SecondViewport.IsSVPActive())	//+SecondVP+ Fix for screen flickering
@@ -55,6 +56,7 @@ void CRenderTarget::phase_combine()
 	u_setrt				(rt_Generic_0, rt_Generic_1, nullptr, HW.pBaseZB);
 #endif
 	RCache.set_Stencil	(FALSE);
+	Device.Statistic->Render_Combine_Begin.End();
 
 	// Draw skybox & clouds without Z-test to avoid silhouettes.
 	// However, it's a bit slower process.
@@ -63,8 +65,12 @@ void CRenderTarget::phase_combine()
 	// RCache.set_Z(FALSE);
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
 #endif
+	Device.Statistic->Render_Combine_Sky.Begin();
 	Environment().RenderSky();
+	Device.Statistic->Render_Combine_Sky.End();
+	Device.Statistic->Render_Combine_Cloud.Begin();
 	Environment().RenderClouds();
+	Device.Statistic->Render_Combine_Cloud.End();
 #ifndef USE_DX11
 	// RCache.set_Z(TRUE);
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
@@ -80,15 +86,16 @@ void CRenderTarget::phase_combine()
 #endif
 
 	// calc m-blur matrices
+	Device.Statistic->Render_Combine_Combine1.Begin();
 	Fmatrix m_previous, m_current;
 	Fvector2 m_blur_scale;
 	{
 		static Fmatrix m_saved_viewproj;
 		
 		// (new-camera) -> (world) -> (old_viewproj)
-		m_previous.mul		(m_saved_viewproj, RCache.xforms.m_invv);
-		m_current.set		(CastToGSCMatrix(Device.mProject));
-		m_saved_viewproj.set(CastToGSCMatrix(Device.mFullTransform));
+		m_previous.mul		( m_saved_viewproj, RCache.xforms.m_invv );
+		m_current.set		(Device.mProject);
+		m_saved_viewproj.set(Device.mFullTransform);
 		float scale			= ps_r_mblur / 2.0f;
 		m_blur_scale.set	(scale, -scale).div(12.0f);
 	}
@@ -129,8 +136,8 @@ void CRenderTarget::phase_combine()
 			light* pSun = (light*)RImplementation.Lights.sun._get();
 			Fvector L_dir, L_clr;
 			L_clr.set(pSun->color.r, pSun->color.g, pSun->color.b);
-			float L_spec = u_diffuse2s(L_clr);
-			CastToGSCMatrix(Device.mView).transform_dir(L_dir, pSun->direction);
+			float L_spec = Diffuse::u_diffuse2s(L_clr);
+			Device.mView.transform_dir(L_dir, pSun->direction);
 			L_dir.normalize();
 
 			sunclr.set(L_clr.x, L_clr.y, L_clr.z, L_spec);
@@ -158,7 +165,7 @@ void CRenderTarget::phase_combine()
 #else
 		// Half-pixel offset
 		Fvector2 p0, p1;
-		p0.set(0.5f / _w, 0.5f / _h);
+		p0.set(0.5f / _w, 0.5f / _h); 
 		p1.set((_w + 0.5f) / _w, (_h + 0.5f) / _h);
 
 		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine_VP->vb_stride, Offset);
@@ -211,8 +218,11 @@ void CRenderTarget::phase_combine()
 #endif
 	}
 
+	Device.Statistic->Render_Combine_Combine1.End();
+
 	// Forward rendering
 	{
+		ScopeStatTimer forwardRenderingTimer(Device.Statistic->Render_Combine_ForwardRendering);
 		PIX_EVENT(Forward_rendering);
 		// LDR RT
 #ifdef USE_DX11
@@ -230,6 +240,7 @@ void CRenderTarget::phase_combine()
 
 		RImplementation.render_forward();
 	}
+
 
 	// Combine light volume here
 	if (m_bHasActiveVolumetric)

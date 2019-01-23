@@ -1,45 +1,20 @@
-#ifndef	common_functions_h_included
-#define	common_functions_h_included
+#ifndef COMMON_FUNCTIONS_H
+#define COMMON_FUNCTIONS_H
+
 #include "configurator_defines.h"
-
-float4 proj2screen(float4 Project)
-{
-	float4	Screen;
-			Screen.x = (Project.x + Project.w) * 0.5f;
-			Screen.y = (Project.w - Project.y) * 0.5f;
-			Screen.z = Project.z;
-			Screen.w = Project.w;
-			
-	return Screen;
-}
-
-//	contrast function
-float Contrast(float Input, float ContrastPower)
-{
-     //piecewise contrast function
-     bool IsAboveHalf = Input > 0.5 ;
-     float ToRaise = saturate(2*(IsAboveHalf ? 1-Input : Input));
-     float Output = 0.5*pow(ToRaise, ContrastPower); 
-     Output = IsAboveHalf ? 1-Output : Output;
-     return Output;
-}
 
 void tonemap( out float4 low, out float4 high, float3 rgb, float scale)
 {
-	rgb		=	rgb*scale;
+	rgb		= rgb * scale;
 
-	const float fWhiteIntensity = 1.7;
-
-	const float fWhiteIntensitySQR = fWhiteIntensity*fWhiteIntensity;
+	//const float fWhiteIntensity = 1.7;
+    //TODO: Base upon middlegray, not white (it'll look better, I lost the link for this) 
+	//TODO: Find link and explain.
+	const float fWhiteIntensitySQR = 2.89;//fWhiteIntensity*fWhiteIntensity;
 
 	low		=	( (rgb*(1+rgb/fWhiteIntensitySQR)) / (rgb+1) ).xyzz;
 
 	high	=	rgb.xyzz/def_hdr;	// 8x dynamic range
-}
-
-float4 combine_bloom( float3  low, float4 high)	
-{
-        return float4(low + high * high.a, 1.h );
 }
 
 float calc_fogging( float4 w_pos )      
@@ -47,15 +22,9 @@ float calc_fogging( float4 w_pos )
 	return dot(w_pos,fog_plane);         
 }
 
-#ifdef SM_5_0
-//Swartz27: I can't remember if all DX11 cards support doubles.
-//if not revert this.
-double2 unpack_tc_base( float2 tc, float du, float dv )
-#else
-float2 unpack_tc_base( float2 tc, float du, float dv )
-#endif
+float2 unpack_tc_base( float2 tc, float du, float dv)
 {
-	return (tc.xy + float2	(du,dv))*(32.f/32768.f); 
+	return float2(tc.xy + float2(du,dv))*(32.f/32768.f); 
 }
 
 float3 calc_sun_r1( float3 norm_w )    
@@ -75,14 +44,13 @@ float3 calc_model_lq_lighting( float3 norm_w )
 
 float3 	unpack_normal( float3 v )	{ return 2*v-1; }
 float3 	unpack_bx2( float3 v )	{ return 2*v-1; }
-#ifdef SM_5_0
-[precise] double3 unpack_bx4( float3 v ) { return 4*v-2; } 
-#else
-float3 	unpack_bx4( float3 v )	{ return 4*v-2; } 
-#endif
+float3 	unpack_bx4( float3 v )	
+{
+	return 4*v-2; 
+} 
 float2 	unpack_tc_lmap( float2 tc )	{ return tc*(1.f/32768.f);	} // [-1  .. +1 ] 
-float4	unpack_color( float4 c ) { return c.bgra; }
-float4	unpack_D3DCOLOR( float4 c ) { return c.bgra; }
+//float4	unpack_color( float4 c ) { return c.bgra; } //Not even used, identical to below
+float4	unpack_D3DCOLOR( float4 c ) { return c.bgra; } 
 float3	unpack_D3DCOLOR( float3 c ) { return c.bgr; }
 
 float3   p_hemi( float2 tc )
@@ -120,6 +88,7 @@ float3	calc_reflection( float3 pos_w, float3 norm_w )
     return reflect(normalize(pos_w-eye_position), norm_w);
 }
 
+//Could be very useful if I understood how to use it
 #define USABLE_BIT_1                uint(0x00002000)
 #define USABLE_BIT_2                uint(0x00004000)
 #define USABLE_BIT_3                uint(0x00008000)
@@ -141,18 +110,46 @@ float3	calc_reflection( float3 pos_w, float3 norm_w )
 // Holger Gruen AMD - I change normal packing and unpacking to make sure N.z is accessible without ALU cost
 // this help the HDAO compute shader to run more efficiently
 // Swartz to all: you removed HDAO, so this is better :)
-float2 gbuf_pack_normal( float3 n )
+// RainbowZerg: use spheremap transform (Crytek's implementation) for normals packing
+// as it affords good quality and cheaper for encoding/decoding than using spherical coords
+float2 gbuf_pack_normal(float3 N)
 {
-	return (float2(atan2(n.y, n.x) / PI, n.z) + 1.0)*0.5;
+	float2 res;
+	
+	// Vanilla
+//	res.x  = N.z;
+//	res.y  = 0.5f * (N.x + 1.0f);
+//	res.y *= (N.y < 0.0f ? -1.0f : 1.0f);
+
+	// Spherical coords
+//	res = (float2(atan2(N.y, N.x) / PI, N.z) + 1.0)*0.5;
+
+	// Spheremap transform
+	res = normalize(N.xy)*sqrt(N.z*0.5 + 0.5);
+	return res;
 }
 
-float3 gbuf_unpack_normal( float2 enc )
+float3 gbuf_unpack_normal(float2 enc)
 {
-	float2 ang = enc * 2 - 1;
-	float2 scth;
-	sincos(ang.x * PI, scth.x, scth.y);
-	float2 scphi = float2(sqrt(1.0 - ang.y*ang.y), ang.y);
-	return float3(scth.y*scphi.x, scth.x*scphi.x, scphi.y);
+	float3 res;
+	
+	// Vanilla
+//	res.z  = enc.x;
+//	res.x  = (2.0f * abs(enc.y)) - 1.0f;
+//	res.y = (enc.y < 0 ? -1.0 : 1.0) * sqrt(abs(1 - res.x * res.x - res.z * res.z));
+
+	// Spherical coords
+//	float2 ang = enc * 2 - 1;
+//	float2 scth;
+//	sincos(ang.x * PI, scth.x, scth.y);
+//	float2 scphi = float2(sqrt(1.0 - ang.y*ang.y), ang.y);
+//	res = float3(scth.y*scphi.x, scth.x*scphi.x, scphi.y);
+
+	// Spheremap transform
+  float l = length(enc.xy);
+  res.z = l*l*2.0 - 1.0;
+  res.xy = normalize(enc.xy)*sqrt(1.0 - res.z*res.z);
+    return res;
 }
 
 float gbuf_pack_hemi_mtl( float hemi, float mtl )
@@ -192,14 +189,8 @@ f_deffer pack_gbuffer( float4 norm, float4 pos, float4 col, uint imask )
 {
 	f_deffer res;
 
-#ifndef GBUFFER_OPTIMIZATION
-	res.position	= pos;
-	res.Ne			= norm;
-	res.C			   = col;
-#else
 	res.position	= float4( gbuf_pack_normal( norm ), pos.z, gbuf_pack_hemi_mtl( norm.w, pos.w ) );
-	res.C			   = col;
-#endif
+	res.C			= col;
 
 #ifdef EXTEND_F_DEFFER
    res.mask = imask;
@@ -208,7 +199,6 @@ f_deffer pack_gbuffer( float4 norm, float4 pos, float4 col, uint imask )
 	return res;
 }
 
-#ifdef GBUFFER_OPTIMIZATION
 gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample )
 {
 	gbuffer_data gbd;
@@ -221,21 +211,23 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample 
 
 #ifndef USE_MSAA
 #ifdef SM_2_0
-	float4 P	= tex2D(s_position, int3(pos2d, 0));
+	float4 P	= tex2D(s_position, int3(pos2d, 0)); //I'd change this to [pos2d] but I don't know how SM_2_0 works yet.
 #else
-	float4 P	= s_position.Load( int3( pos2d, 0 ) );
+	float4 P	= s_position.Sample(smp_nofilter, tc); //this is faster for reasons I don't understand (it's how GSC did it).
 #endif
 #else
 	float4 P	= s_position.Load( int3( pos2d, 0 ), iSample );
 #endif
 
-	// 3d view space pos reconstruction math
-	// center of the plane (0,0) or (0.5,0.5) at distance 1 is eyepoint(0,0,0) + lookat (assuming |lookat| == 1)
+// 3d view space pos reconstruction math
+// center of the plane (0,0) or (0.5,0.5) at distance 1 is eyepoint(0,0,0) + lookat (assuming |lookat| == 1)
 	gbd.P  = float3( P.z * ( pos2d * pos_decompression_params.zw - pos_decompression_params.xy ), P.z );
 
-	// reconstruct N
-	gbd.N = gbuf_unpack_normal( P.xy );
-
+// reconstruct N
+    gbd.N = gbuf_unpack_normal( P.xy );	
+	
+//  I don't understand the material reconstruction at all. I could
+//  make things more efficient if I could understand how to use it	
 	// reconstruct material
 	gbd.mtl	= gbuf_unpack_mtl( P.w );
 
@@ -246,7 +238,7 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample 
 #ifdef SM_2_0
    float4 C	= tex2D(s_diffuse, int3(pos2d, 0));
 #else
-   float4 C	= s_diffuse.Load( int3( pos2d, 0 ) );
+   float4 C	= s_diffuse.Sample(smp_nofilter, tc);
 #endif
 #else
    float4	C	= s_diffuse.Load( int3( pos2d, 0 ), iSample );
@@ -277,70 +269,11 @@ gbuffer_data gbuffer_load_data_offset( float2 tc : TEXCOORD, float2 OffsetTC : T
    return gbuffer_load_data( OffsetTC, pos2d + delta, iSample );
 }
 
-#else // GBUFFER_OPTIMIZATION
-gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, uint iSample )
-{
-	gbuffer_data gbd;
-
-#ifndef USE_MSAA
-#ifdef SM_2_0
-	float4 P	= tex2D(s_position, int3(tc * screen_res.xy, 0))
-#else
-	float4 P	= s_position.Load(int3(tc * screen_res.xy, 0));
-#endif
-#else
-   float4 P	= s_position.Load( int3( tc * screen_res.xy, 0 ), iSample );
-#endif
-
-	gbd.P		= P.xyz;
-	gbd.mtl		= P.w;
-
-#ifndef USE_MSAA
-#ifdef SM_2_0
-	float4 N	= tex2D(s_normal, int3(tc * screen_res.xy, 0))
-#else
-	float4 N	= s_normal.Load(int3( tc * screen_res.xy, 0 ));
-#endif
-#else
-	float4 N	= s_normal.Load( int3( tc * screen_res.xy, 0 ), iSample );
-#endif
-
-	gbd.N		= N.xyz;
-	gbd.hemi	= N.w;
-
-#ifndef USE_MSAA
-#ifdef SM_2_0
-	float4 C	= tex2D(s_diffuse, int3(tc * screen_res.xy, 0))
-#else
-	float4 C	= s_diffuse.Load( int3( tc * screen_res.xy, 0 ) );
-#endif
-#else
-	float4 C	= s_diffuse.Load( int3( tc * screen_res.xy, 0 ), iSample );
-#endif
-
-
-	gbd.C		= C.xyz;
-	gbd.gloss	= C.w;
-
-	return gbd;
-}
-
-gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD  )
-{
-   return gbuffer_load_data( tc, 0 );
-}
-
-gbuffer_data gbuffer_load_data_offset( float2 tc : TEXCOORD, float2 OffsetTC : TEXCOORD, uint iSample )
-{
-   return gbuffer_load_data( OffsetTC, iSample );
-}
-
-#endif // GBUFFER_OPTIMIZATION
-
 //////////////////////////////////////////////////////////////////////////
 //	Aplha to coverage code
 #if ( defined( MSAA_ALPHATEST_DX10_1_ATOC ) || defined( MSAA_ALPHATEST_DX10_1 ) )
-
+//TODO: Non-MSAA version (you don't need MSAA to do this)
+//Basically if(alpha < 0.5) either "discard" or (faster) alternative to discard may be needed
 #if MSAA_SAMPLES == 2
 uint alpha_to_coverage ( float alpha, float2 pos2d )
 {
@@ -471,6 +404,4 @@ uint alpha_to_coverage ( float alpha, float2 pos2d )
 #endif
 #endif
 
-
-
-#endif	//	common_functions_h_included
+#endif //EOF

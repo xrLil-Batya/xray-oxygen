@@ -358,7 +358,7 @@ void CUITaskItem::Init(CUIXml& uiXml, LPCSTR path)
 	string256		buff;
 	CUIStatic* S					= nullptr;
 
-	strconcat( sizeof(buff), buff, path, ":t_icon" );
+	xr_strconcat( buff, path, ":t_icon" );
 	if ( uiXml.NavigateToNode( buff ) )
 	{
 		S = init_static_field		(uiXml, path, "t_icon");
@@ -366,7 +366,7 @@ void CUITaskItem::Init(CUIXml& uiXml, LPCSTR path)
 	}
 	m_info["t_icon"]				= S;
 	
-	strconcat( sizeof(buff), buff, path, ":t_icon_over" );
+	xr_strconcat(  buff, path, ":t_icon_over" );
 	if ( uiXml.NavigateToNode( buff ) )
 	{
 		S = init_static_field		(uiXml, path, "t_icon_over");

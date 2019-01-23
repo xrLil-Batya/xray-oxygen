@@ -214,3 +214,13 @@ public:
         return _result;
     }
 };
+
+struct XRCORE_API ScopeStatTimer
+{
+	ScopeStatTimer(CStatTimer& destTimer);
+	~ScopeStatTimer();
+
+private:
+
+	CStatTimer& _timer;
+};

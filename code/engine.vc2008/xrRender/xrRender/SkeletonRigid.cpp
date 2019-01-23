@@ -65,13 +65,14 @@ void CKinematics::CalculateBones			(BOOL bForceExact)
 			A.set(  S.x, 	 S.y,	 S.z ); X.transform_tiny(P,A); Box.modify(P);
 			A.set(  S.x, 	 S.y,	-S.z ); X.transform_tiny(P,A); Box.modify(P);
 		}
-	if(bones->size())
-	{
-		// previous frame we have updated box - update sphere
-		vis.box.min			= (Box.min);
-		vis.box.max			= (Box.max);
-		vis.box.getsphere	(vis.sphere.P,vis.sphere.R);
-	}
+
+		if(!bones->empty())
+		{
+			// previous frame we have updated box - update sphere
+			vis.box.min			= (Box.min);
+			vis.box.max			= (Box.max);
+			vis.box.getsphere	(vis.sphere.P,vis.sphere.R);
+		}
 #ifdef DEBUG
 		// Validate
 		VERIFY3	(_valid(vis.box.min)&&_valid(vis.box.max),	"Invalid bones-xform in model", dbg_name.c_str());
@@ -80,7 +81,7 @@ void CKinematics::CalculateBones			(BOOL bForceExact)
 			for(u16 ii=0; ii<LL_BoneCount();++ii){
 				Fmatrix tr;
 				tr = LL_GetTransform(ii);
-				Log("bone ",LL_BoneName_dbg(ii));
+				Msg("bone %s",LL_BoneName_dbg(ii));
 				Log("bone_matrix",tr);
 			}
 			Log("end-------");
@@ -106,7 +107,7 @@ void check_kinematics(CKinematics* _k, LPCSTR s)
 			Fmatrix tr;
 
 			tr = K->LL_GetTransform(ii);
-			Log("bone ",K->LL_BoneName_dbg(ii));
+			Msg("bone %s",K->LL_BoneName_dbg(ii));
 			Log("bone_matrix",tr);
 		}
 		Log("end-------");

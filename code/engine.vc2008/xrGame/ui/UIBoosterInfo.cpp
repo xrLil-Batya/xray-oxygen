@@ -301,11 +301,11 @@ void UIBoosterInfoItem::SetValue(float value)
 	else
 		xr_sprintf(buf, "%.0f", value);
 	
-	LPSTR str;
+	string64 str;
 	if(m_unit_str.size())
-		STRCONCAT(str, buf, " ", m_unit_str.c_str());
+		xr_strconcat(str, buf, " ", m_unit_str.c_str());
 	else
-		STRCONCAT(str, buf);
+		xr_strconcat(str, buf);
 
 	m_value->SetText(str);
 

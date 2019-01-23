@@ -15,10 +15,10 @@ void	CResourceManager::reset_begin			()
 	::Render->reset_begin		();
 	size_t it = 0;
 
-	concurrency::parallel_for_each(v_states.begin(), v_states.end(), [](SState* pState)
+	for (SState* theState : v_states)
 	{
-		_RELEASE(pState->state);
-	});
+		_RELEASE(theState->state);
+	}
 
 	// destroy RTs
 	for (auto &rt_it:m_rtargets)

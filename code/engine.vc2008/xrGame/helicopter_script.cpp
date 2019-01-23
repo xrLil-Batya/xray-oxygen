@@ -20,7 +20,7 @@ int CHelicopter::GetBodyState()
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CHelicopter::script_register(lua_State *L)
 {
 	module(L)

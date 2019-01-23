@@ -6,7 +6,7 @@
 IDirect3DStateBlock9* SimulatorStates::record	()
 {
 //	TODO: DX10: Implement equivalent for SimulatorStates::record for DX10
-#ifdef USE_DX11
+#if defined(USE_DX11) || defined(USE_VK)
 	//VERIFY(!"SimulatorStates::record not implemented!");
 	return 0;
 #else
@@ -98,11 +98,399 @@ void	SimulatorStates::clear	()
 	States.clear();
 }
 
-#ifdef USE_DX11
+#if defined(USE_VK)
+
+#include "../xrRenderVK/core/vkStateCacheUtils.h"
+
+void SimulatorStates::UpdateState(ID3DState &state) const
+{
+	for (u32 it = 0; it < States.size(); it++)
+	{
+		const State& S = States[it];
+		if (S.type == 0)
+		{
+			switch (S.v1)
+			{
+			case D3DRS_STENCILREF:
+				state.UpdateStencilRef(S.v2);
+				break;
+			case D3DRS_ALPHAREF:
+				state.UpdateAlphaRef(S.v2);
+				break;
+			}
+		}
+	}
+}
+
+void SimulatorStates::UpdateDesc(D3D_RASTERIZER_DESC &desc) const
+{
+	for (u32 it = 0; it < States.size(); it++)
+	{
+		const State& S = States[it];
+		if (S.type == 0)
+		{
+			//CHK_DX(HW.pDevice->SetRenderState		((D3DRENDERSTATETYPE)S.v1,S.v2));
+			switch (S.v1)
+			{
+			case D3DRS_FILLMODE:
+				if (S.v2 == D3DFILL_SOLID)
+					desc.polygonMode = D3D_FILL_SOLID;
+				else
+				{
+					VERIFY(S.v2 == D3DFILL_WIREFRAME);
+					desc.polygonMode = D3D_FILL_WIREFRAME;
+				}
+				break;
+
+			case D3DRS_CULLMODE:
+				desc.cullMode = vkStateUtils::ConvertCullMode((D3DCULL)S.v2);
+				break;
+				/*
+				switch (S.v2)
+				{
+				case D3DCULL_NONE:
+				desc.CullMode = D3Dxx_CULL_NONE;
+				break;
+				case D3DCULL_CW:
+				desc.CullMode = D3Dxx_CULL_FRONT;
+				break;
+				case D3DCULL_CCW:
+				desc.CullMode = D3Dxx_CULL_BACK;
+				break;
+				default:
+				VERIFY(!"Unexpected cull mode!");
+				}
+				break;
+				*/
+
+				//	desc.FrontCounterClockwise = FALSE;
+
+				//	TODO: DX10: Check how to scale unit for depth bias
+			case D3DRS_DEPTHBIAS:
+				VERIFY(0);
+				break;
+
+				//	desc.DepthBiasClamp = 0.0f;
+
+				//	TODO: DX10: Check slope scaled depth bias is used
+			case D3DRS_SLOPESCALEDEPTHBIAS:
+				//desc.SlopeScaledDepthBias = 0.0f;
+				VERIFY(0);
+				break;
+
+				//	desc.DepthClipEnable = TRUE;
+
+				//	TODO: VK: This is never actually used and we can't set it here
+			case D3DRS_SCISSORTESTENABLE:
+				//desc.scissorEnable = S.v2;
+				VERIFY(0);
+				break;
+
+				//desc.MultisampleEnable = FALSE;
+				//desc.AntialiasedLineEnable = FALSE;
+			}
+		}
+
+		//case 1: 
+		//	
+		//CHK_DX(HW.pDevice->SetTextureStageState	(S.v1,(D3DTEXTURESTAGESTATETYPE)S.v2,S.v3));
+		//	TODO: DX10: Enable
+		//	VERIFY(!"DirectX 10 doesn't support texture stage states. Implement shader instead!");
+		//	break;
+	}
+}
+
+void SimulatorStates::UpdateDesc(D3D_DEPTH_STENCIL_DESC &desc) const
+{
+	for (u32 it = 0; it < States.size(); it++)
+	{
+		const State& S = States[it];
+		if (S.type == 0)
+		{
+			switch (S.v1)
+			{
+			case D3DRS_ZENABLE:
+				desc.depthTestEnable = S.v2 ? 1 : 0;
+				break;
+
+			case D3DRS_ZWRITEENABLE:
+				desc.depthWriteEnable = S.v2 ? D3D_DEPTH_WRITE_MASK_ALL : D3D_DEPTH_WRITE_MASK_ZERO;
+				break;
+
+			case D3DRS_ZFUNC:
+				desc.depthCompareOp = vkStateUtils::ConvertCmpFunction((D3DCMPFUNC)S.v2);
+				break;
+
+			case D3DRS_STENCILENABLE:
+				desc.stencilTestEnable = S.v2 ? 1 : 0;
+				break;
+
+			case D3DRS_STENCILMASK:
+				desc.front.compareMask = (UINT8)S.v2;
+				desc.back.compareMask = (UINT8)S.v2;
+				break;
+
+			case D3DRS_STENCILWRITEMASK:
+				desc.front.writeMask = (UINT8)S.v2;
+				desc.back.writeMask = (UINT8)S.v2;
+				break;
+
+			case D3DRS_STENCILFAIL:
+				desc.front.failOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				break;
+
+			case D3DRS_STENCILZFAIL:
+				desc.front.depthFailOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				break;
+
+			case D3DRS_STENCILPASS:
+				desc.front.passOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				break;
+
+			case D3DRS_STENCILFUNC:
+				desc.front.compareOp = vkStateUtils::ConvertCmpFunction((D3DCMPFUNC)S.v2);
+				break;
+
+			case D3DRS_CCW_STENCILFAIL:
+				desc.back.failOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				break;
+
+			case D3DRS_CCW_STENCILZFAIL:
+				desc.back.depthFailOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				break;
+
+			case D3DRS_CCW_STENCILPASS:
+				desc.back.passOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				break;
+
+			case D3DRS_CCW_STENCILFUNC:
+				desc.back.compareOp = vkStateUtils::ConvertCmpFunction((D3DCMPFUNC)S.v2);
+				break;
+			}
+		}
+	}
+}
+
+void SimulatorStates::UpdateDesc(D3D_BLEND_DESC &desc) const
+{
+	for (u32 it = 0; it < States.size(); it++)
+	{
+		const State& S = States[it];
+		if (S.type == 0)
+		{
+			switch (S.v1)
+			{
+			case XRDX10RS_ALPHATOCOVERAGE:
+				VERIFY(0);
+				// TODO: VK: Implement alpha-to-coverage support
+				break;
+
+			case D3DRS_SRCBLEND:
+				for (int i = 0; i < 8; ++i)
+				//	desc.RenderTarget[i].srcColorBlendFactor = vkStateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+				break;
+
+			case D3DRS_DESTBLEND:
+				for (int i = 0; i < 8; ++i)
+				//	desc.RenderTarget[i].dstColorBlendFactor = vkStateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+				break;
+
+				//D3DRS_ALPHAFUNC
+
+			case D3DRS_BLENDOP:
+				for (int i = 0; i < 8; ++i)
+				//	desc.RenderTarget[i].colorBlendOp = vkStateUtils::ConvertBlendOp((D3DBLENDOP)S.v2);
+				break;
+
+			case D3DRS_SRCBLENDALPHA:
+				for (int i = 0; i < 8; ++i)
+				//	desc.RenderTarget[i].srcAlphaBlendFactor = vkStateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+				break;
+
+			case D3DRS_DESTBLENDALPHA:
+				for (int i = 0; i < 8; ++i)
+				//	desc.RenderTarget[i].dstAlphaBlendFactor = vkStateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+				break;
+
+			case D3DRS_BLENDOPALPHA:
+				for (int i = 0; i < 8; ++i)
+				//	desc.RenderTarget[i].alphaBlendOp = vkStateUtils::ConvertBlendOp((D3DBLENDOP)S.v2);
+				break;
+
+			case D3DRS_ALPHABLENDENABLE:
+				for (int i = 0; i < 8; ++i)
+				//	desc.RenderTarget[i].blendEnable = S.v2 ? 1 : 0;
+				break;
+
+			case D3DRS_COLORWRITEENABLE:
+				//desc.RenderTarget[0].colorWriteMask = (u8)S.v2;
+				break;
+
+			case D3DRS_COLORWRITEENABLE1:
+				//desc.RenderTarget[1].colorWriteMask = (u8)S.v2;
+				break;
+
+			case D3DRS_COLORWRITEENABLE2:
+				//desc.RenderTarget[2].colorWriteMask = (u8)S.v2;
+				break;
+
+			case D3DRS_COLORWRITEENABLE3:
+				//desc.RenderTarget[3].colorWriteMask = (u8)S.v2;
+				break;
+			}
+		}
+	}
+}
+
+void SimulatorStates::UpdateDesc(D3D_SAMPLER_DESC descArray[D3D_COMMONSHADER_SAMPLER_SLOT_COUNT], bool SamplerUsed[D3D_COMMONSHADER_SAMPLER_SLOT_COUNT], int iBaseSamplerIndex) const
+{
+	for (u32 it = 0; it < States.size(); it++)
+	{
+		const State& S = States[it];
+		if (S.type == 2)
+		{
+			int iSamplerIndex = int(S.v1);
+			iSamplerIndex -= iBaseSamplerIndex;
+
+			if ((iSamplerIndex >= D3D_COMMONSHADER_SAMPLER_SLOT_COUNT)
+				|| iSamplerIndex < 0)
+				continue;
+
+			SamplerUsed[iSamplerIndex] = true;
+			D3D_SAMPLER_DESC &desc = descArray[iSamplerIndex];
+
+			switch (S.v2)
+			{
+				//D3D_FILTER Filter;
+			case D3DSAMP_MAGFILTER:	/* D3DTEXTUREFILTER filter to use for magnification */
+				switch (S.v3)
+				{
+				case D3DTEXF_NONE:
+				case D3DTEXF_POINT:
+					desc.magFilter = VK_FILTER_NEAREST;
+					break;
+				case D3DTEXF_LINEAR:
+					desc.magFilter = VK_FILTER_LINEAR;
+					break;
+				default:
+					NODEFAULT;
+				}
+				break;
+
+			case D3DSAMP_MINFILTER:	/* D3DTEXTUREFILTER filter to use for minification */
+				switch (S.v3)
+				{
+				case D3DTEXF_NONE:
+				case D3DTEXF_POINT:
+					desc.minFilter = VK_FILTER_NEAREST;
+					break;
+				case D3DTEXF_LINEAR:
+					desc.minFilter = VK_FILTER_LINEAR;
+					break;
+				default:
+					NODEFAULT;
+				}
+				break;
+
+			case D3DSAMP_MIPFILTER:	/* D3DTEXTUREFILTER filter to use between mipmaps during minification */
+				switch (S.v3)
+				{
+				case D3DTEXF_NONE:
+				case D3DTEXF_POINT:
+					desc.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+					break;
+				case D3DTEXF_LINEAR:
+					desc.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+					break;
+				default:
+					NODEFAULT;
+				}
+				break;
+
+			case XRDX10SAMP_ANISOTROPICFILTER:
+				desc.anisotropyEnable = S.v3;
+				break;
+
+			case XRDX10SAMP_COMPARISONFILTER:
+				desc.compareEnable = S.v3;
+				break;
+
+				//D3Dxx_TEXTURE_ADDRESS_MODE AddressU;
+			case D3DSAMP_ADDRESSU:	/* D3DTEXTUREADDRESS for U coordinate */
+				desc.addressModeU = vkStateUtils::ConvertTextureAddressMode(D3DTEXTUREADDRESS(S.v3));
+				break;
+
+			case D3DSAMP_ADDRESSV:	/* D3DTEXTUREADDRESS for V coordinate */
+				desc.addressModeV = vkStateUtils::ConvertTextureAddressMode(D3DTEXTUREADDRESS(S.v3));
+				break;
+
+			case D3DSAMP_ADDRESSW:	/* D3DTEXTUREADDRESS for W coordinate */
+				desc.addressModeW = vkStateUtils::ConvertTextureAddressMode(D3DTEXTUREADDRESS(S.v3));
+				break;
+
+				//	FLOAT MipLODBias
+			case D3DSAMP_MIPMAPLODBIAS:
+				desc.mipLodBias = *((float*)(&(S.v3)));
+				break;
+
+				//	UINT MaxAnisotropy;
+			case D3DSAMP_MAXANISOTROPY:
+				desc.maxAnisotropy = S.v3;
+				break;
+
+				//	D3Dxx_COMPARISON_FUNC ComparisonFunc;
+			case XRDX10SAMP_COMPARISONFUNC:
+				desc.compareOp = (D3D_COMPARISON_FUNC)S.v3;
+				break;
+
+				//	FLOAT BorderColor[4];
+			case D3DSAMP_BORDERCOLOR:
+			{
+				if ((S.v3 >> 24) & 0xff > 0)
+				{
+					if ((S.v3) & 0xffffff > 0)
+						desc.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+					else
+						desc.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
+				}
+				else
+				{
+					desc.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
+				}
+			}
+			break;
+
+			//	FLOAT MinLOD;
+			case XRDX10SAMP_MINLOD:
+				desc.minLod = (FLOAT)S.v3;
+				break;
+
+				//	FLOAT MaxLOD;
+			case D3DSAMP_MAXMIPLEVEL:
+				desc.maxLod = (FLOAT)S.v3;
+				break;
+			}
+		}
+	}
+
+	//	Validate data
+	for (int i = 0; i < D3D_COMMONSHADER_SAMPLER_SLOT_COUNT; ++i)
+	{
+		D3D_SAMPLER_DESC &desc = descArray[i];
+		if (desc.anisotropyEnable)
+			desc.minFilter = VK_FILTER_LINEAR;
+
+		VERIFY(desc.minLod <= desc.maxLod);
+		if (desc.minLod > desc.maxLod)
+			desc.maxLod = desc.minLod;
+	}
+}
+
+#elif defined(USE_DX10) || defined(USE_DX11)
 
 #include "../xrRenderDX10/dx10StateUtils.h"
 
-void SimulatorStates::UpdateState( dx10State &state) const
+void SimulatorStates::UpdateState(ID3DState &state) const
 {
 	for (u32 it=0; it<States.size(); it++)
 	{

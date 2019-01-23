@@ -250,6 +250,81 @@ static const BOOL	ik_cam_shift = true;
 static const float	ik_cam_shift_tolerance = 0.2f;
 static const float	ik_cam_shift_speed = 0.01f;
 #endif
+#include "../xrEngine/xr_input.h"
+#include "visual_memory_manager.h"
+#include "actor_memory.h"
+#include "../Include/xrRender/Kinematics.h"
+#include "relation_registry.h"
+#include "character_info.h"
+#include "ai/stalker/ai_stalker.h"
+#include "ai/monsters/basemonster/base_monster.h"
+#include <ai/monsters/poltergeist/poltergeist.h>
+int cam_dik = DIK_LSHIFT;
+Fvector vel = { 0, 0, 0 };
+ref_light enemy_spotlight2;
+static shared_str pname = "_samples_particles_\\orbit_point_01";
+CObject*		m_locked_enemy = nullptr;
+Fvector coords = { 0.23f, 0.1f, 0.4f };
+
+void UpdateAutoAim()
+{
+
+	Fmatrix transform;
+	u16 head_bone;//kinematics->LL_BoneID("bip01_head");
+	CEntityAlive* Enemy_Alive = smart_cast<CEntityAlive*>(m_locked_enemy);
+
+	CPoltergeist* Polt = smart_cast<CPoltergeist*> (m_locked_enemy);
+	if (Enemy_Alive->cast_base_monster())
+	{
+
+		head_bone = m_locked_enemy->Visual()->dcast_PKinematics()->LL_BoneID(Enemy_Alive->cast_base_monster()->get_head_bone_name());
+
+	}
+	else
+		head_bone = m_locked_enemy->Visual()->dcast_PKinematics()->LL_BoneID("bip01_head");
+
+	m_locked_enemy->Visual()->dcast_PKinematics()->Bone_GetAnimPos(transform, u16(head_bone), u8(-1), false);
+
+	CBoneInstance& BI = smart_cast<IKinematics*>(m_locked_enemy->Visual())->LL_GetBoneInstance(head_bone);
+	Fmatrix M;
+	M.mul(m_locked_enemy->XFORM(), BI.mTransform);
+	enemy_spotlight2->set_rotation(Fvector().set(0.1f, -180.f, 0.f), M.i);
+
+	Fvector result;
+
+	transform.transform_tiny(result, Fvector().set(0.1f, 0.f, 0.f));
+
+	m_locked_enemy->XFORM().transform_tiny(result, Fvector(result));
+
+
+
+	enemy_spotlight2->set_position(Fvector().set(m_locked_enemy->XFORM().c.x, result.y + 1.0f, m_locked_enemy->XFORM().c.z));
+	Fvector _dest_dir;
+
+	_dest_dir.sub(result, Actor()->cam_Active()->vPosition);
+
+	Fmatrix _m;
+	_m.identity();
+	_m.k.normalize_safe(_dest_dir);
+	Fvector::generate_orthonormal_basis(_m.k, _m.j, _m.i);
+
+	Fvector xyz;
+	_m.getXYZi(xyz);
+	
+	Actor()->cam_Active()->yaw = angle_inertion_var(Actor()->cam_Active()->yaw, xyz.y,
+		100.f,
+		100.f,
+		PI,
+		Device.fTimeDelta);
+
+	Actor()->cam_Active()->pitch = angle_inertion_var(Actor()->cam_Active()->pitch, xyz.x,
+		100.f,
+		100.f,
+		PI,
+		Device.fTimeDelta);
+}
+
+
 
 void CActor::cam_Update(float dt, float fFOV)
 {
@@ -320,7 +395,121 @@ void CActor::cam_Update(float dt, float fFOV)
 
 	CCameraBase* C = cam_Active();
 
-	C->Update(point, dangle);
+	if (psActorFlags.test(AF_BINDED_CAMERA))
+	{
+		if (mstate_real & mcLLookout && cam_active == eacLookAt)
+		{
+			coords.y = .5f;
+			coords.x = .5f;
+		}
+		else
+		{
+			coords.y = 0.1f;
+			coords.x = 0.23f;
+		}
+
+		IKinematics*  kinematics = smart_cast<IKinematics*>(Visual());
+
+		Fvector result;
+
+		kinematics->LL_GetTransform(u16(m_head)).transform_tiny(result, coords);
+
+		XFORM().transform_tiny(result, Fvector(result));
+
+		kinematics->CalculateBones_Invalidate();
+
+		C->Update(result, dangle);
+	}
+	else
+		C->Update(point, dangle);
+
+	if (psActorFlags.test(AF_AIM_ASSIST))
+	{
+		enemy_spotlight2 = ::Render->light_create(); enemy_spotlight2->set_active(0);
+		enemy_spotlight2->set_type(IRender_Light::SPOT);
+		enemy_spotlight2->set_shadow(true);
+		enemy_spotlight2->set_cone(deg2rad(30.f));
+		enemy_spotlight2->set_color(Fcolor().set(5.0f, 2.0f, 0.0f, 25.0f));
+		enemy_spotlight2->set_range(4.0f);
+
+
+
+		CEntityAlive* Enemy_Alive = smart_cast<CEntityAlive*>(m_locked_enemy);
+		CInventoryOwner* our_inv_owner = smart_cast<CInventoryOwner*>(this);
+		CInventoryOwner* others_inv_owner = smart_cast<CInventoryOwner*>(smart_cast<CAI_Stalker*>(Enemy_Alive));
+		CParticlesPlayer* PP = smart_cast<CParticlesPlayer*>(Enemy_Alive);
+		CPoltergeist* Polt = smart_cast<CPoltergeist*> (m_locked_enemy);
+		float aldist = ai().alife().switch_distance();
+
+		if (!m_locked_enemy)
+		{
+			if (pInput->iGetAsyncKeyState(cam_dik))
+			{
+
+				const CVisualMemoryManager::VISIBLES& vVisibles = memory().visual().objects();
+				CVisualMemoryManager::VISIBLES::const_iterator v_it = vVisibles.begin();
+				float nearest_dst = flt_max;
+
+				for (; v_it != vVisibles.end(); ++v_it)
+				{
+					const CObject* _object_ = (*v_it).m_object;
+					CObject* object_ = const_cast<CObject*>(_object_);
+
+					CEntityAlive* EA = smart_cast<CEntityAlive*>(object_);
+					if (!EA || !EA->g_Alive() || (Polt && !EA->getVisible()))
+						continue;
+
+					if (!memory().visual().visible_right_now(smart_cast<const CGameObject*>(_object_)))
+						continue;
+
+					float dst = object_->Position().distance_to_xz(Position());
+					if (!m_locked_enemy || dst < nearest_dst)
+					{
+						m_locked_enemy = object_;
+						nearest_dst = dst;
+					}
+				}
+				//.			if (m_locked_enemy)
+				//.				Msg("enemy is %s", *m_locked_enemy->cNameSect());
+			}
+		}
+		else if (!Enemy_Alive || !Enemy_Alive->getEnabled() || !Enemy_Alive->g_Alive() || Enemy_Alive->Position().distance_to(Actor()->Position()) > aldist - 10.0f)//|| (!Enemy_Alive->cast_base_monster() && RELATION_REGISTRY().GetRelationType(others_inv_owner, our_inv_owner) != ALife::eRelationTypeEnemy))
+		{
+
+			m_locked_enemy = nullptr;
+		}
+		else
+		{
+			if (!pInput->iGetAsyncKeyState(cam_dik))
+			{
+				m_locked_enemy = nullptr;
+				enemy_spotlight2->set_active(0);
+				if (PP && PP->IsPlaying() || m_locked_enemy == nullptr)
+					PP->StopParticles(pname, BI_NONE, false);
+			}
+			else
+			{
+				enemy_spotlight2->set_active(1);
+
+
+				if (Enemy_Alive->PPhysicsShell())
+					Enemy_Alive->PHGetLinearVell(vel);
+				if (PP)
+				{
+					PP->StartParticles(pname, Fvector().set(0.0f, 1.0f, 0.0f), m_locked_enemy->ID(), -1, false);
+					PP->SetParentVel(vel);
+				}
+				UpdateAutoAim();
+			}
+		}
+		if (m_locked_enemy == nullptr)
+		{
+			enemy_spotlight2->set_active(0);
+			if (PP && PP->IsPlaying() && m_locked_enemy == nullptr)
+				PP->StopParticles(pname, BI_NONE, false);
+		}
+	}
+
 	C->f_fov = fFOV;
 
 	if (Level().CurrentEntity() == this)

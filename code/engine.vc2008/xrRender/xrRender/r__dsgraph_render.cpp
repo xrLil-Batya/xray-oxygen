@@ -489,11 +489,11 @@ void R_dsgraph_structure::r_dsgraph_render_hud()
 	//PIX_EVENT(r_dsgraph_render_hud);
 
 	// Change projection
-	Matrix4x4 Pold =  Device.mProject;
-	Matrix4x4 FTold = Device.mFullTransform;
-	Device.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
-
-	Device.mFullTransform.Multiply(Device.mView, Device.mProject);
+	Fmatrix Pold =  Device.mProject;
+	Fmatrix FTold = Device.mFullTransform;
+	Device.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
+		
+	Device.mFullTransform.mul(Device.mProject, Device.mView);
 	RCache.set_xform_project(Device.mProject);
 
 	// Rendering
@@ -518,32 +518,29 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 	extern ENGINE_API float		psHUD_FOV;
 
 	// Change projection	
-	Matrix4x4 Pold =  Device.mProject;
-	Matrix4x4 FTold = Device.mFullTransform;
-	Device.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
+	Fmatrix Pold =  Device.mProject;
+	Fmatrix FTold = Device.mFullTransform;
+	Device.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
 
-	Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mView, Device.mProject);
+	Device.mFullTransform.mul(Device.mProject,Device.mView);
 	RCache.set_xform_project(Device.mProject);
 
 	// Targets, use accumulator for temporary storage
 	const ref_rt	rt_null;
-	RCache.set_RT(0,	1);
-	RCache.set_RT(0,	2);
+	RCache.set_RT(nullptr,	1);
+	RCache.set_RT(nullptr,	2);
+
+	// Auto! (R2 type != R4 type)
+	auto zb = HW.pBaseZB;
 #if	(RENDER!=R_R2)
-	if( !RImplementation.o.dx10_msaa )
-	{
-		if (RImplementation.o.albedo_wo)	RImplementation.Target->u_setrt		(RImplementation.Target->rt_Accumulator,	rt_null,	rt_null,	HW.pBaseZB);
-		else								RImplementation.Target->u_setrt		(RImplementation.Target->rt_Color,			rt_null,	rt_null,	HW.pBaseZB);
-	}
-	else
-	{
-		if (RImplementation.o.albedo_wo)	RImplementation.Target->u_setrt		(RImplementation.Target->rt_Accumulator,	rt_null,	rt_null,	RImplementation.Target->rt_MSAADepth->pZRT);
-		else								RImplementation.Target->u_setrt		(RImplementation.Target->rt_Color,			rt_null,	rt_null,	RImplementation.Target->rt_MSAADepth->pZRT);
-	}
-#else
-	if (RImplementation.o.albedo_wo)	RImplementation.Target->u_setrt		(RImplementation.Target->rt_Accumulator,	rt_null,	rt_null,	HW.pBaseZB);
-	else								RImplementation.Target->u_setrt		(RImplementation.Target->rt_Color,			rt_null,	rt_null,	HW.pBaseZB);
+	if (RImplementation.o.dx10_msaa)
+		zb = RImplementation.Target->rt_MSAADepth->pZRT;
 #endif
+
+	RImplementation.Target->u_setrt
+	(
+		RImplementation.o.albedo_wo ? RImplementation.Target->rt_Accumulator : RImplementation.Target->rt_Color, rt_null, rt_null, zb
+	);
 
 	rmNear						();
 	g_hud->RenderActiveItemUI	();
@@ -552,7 +549,7 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 	// Restore projection
 	Device.mProject = Pold;
 	Device.mFullTransform = FTold;
-	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+	RCache.set_xform_project(Device.mProject);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -568,12 +565,12 @@ void	R_dsgraph_structure::r_dsgraph_render_sorted	()
 	extern ENGINE_API float	psHUD_FOV;
 
 	// Change projection
-	Matrix4x4 Pold = Device.mProject;
-	Matrix4x4 FTold = Device.mFullTransform;
-	Device.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
+	Fmatrix Pold = Device.mProject;
+	Fmatrix FTold = Device.mFullTransform;
+	Device.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
 
-	Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mView, Device.mProject);
-	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+	Device.mFullTransform.mul(Device.mProject, Device.mView);
+	RCache.set_xform_project(Device.mProject);
 
 
 	// Rendering
@@ -587,7 +584,7 @@ void	R_dsgraph_structure::r_dsgraph_render_sorted	()
 	// Restore projection
 	Device.mProject = Pold;
 	Device.mFullTransform = FTold;
-	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+	RCache.set_xform_project(Device.mProject);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -605,12 +602,12 @@ void	R_dsgraph_structure::r_dsgraph_render_emissive	()
 	extern ENGINE_API float		psHUD_FOV;
 
 	// Change projection
-	Matrix4x4 Pold = Device.mProject;
-	Matrix4x4 FTold = Device.mFullTransform;
-	Device.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
+	Fmatrix Pold = Device.mProject;
+	Fmatrix FTold = Device.mFullTransform;
+	Device.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
 
-	Device.mFullTransform = DirectX::XMMatrixMultiply(Device.mView, Device.mProject);
-	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+	Device.mFullTransform.mul(Device.mProject, Device.mView);
+	RCache.set_xform_project(Device.mProject);
 
 
 	// Rendering
@@ -626,7 +623,7 @@ void	R_dsgraph_structure::r_dsgraph_render_emissive	()
 	// Restore projection
 	Device.mProject				= Pold;
 	Device.mFullTransform		= FTold;
-	RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+	RCache.set_xform_project(Device.mProject);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -698,7 +695,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 
 	if (_dynamic)
 	{
-		set_Object						(0);
+		set_Object						(nullptr);
 
 		// Traverse object database
 		g_SpatialSpace->q_frustum
@@ -714,7 +711,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 		{
 			ISpatial*	spatial		= lstRenderables[o_it];
 			CSector*	sector		= (CSector*)spatial->spatial.sector;
-			if	(sector == NULL)								continue;	// disassociated from S/P structure
+			if	(sector == nullptr)								continue;	// disassociated from S/P structure
 			if	(PortalTraverser.i_marker != sector->r_marker)	continue;	// inactive (untouched) sector
 			for (u32 v_it=0; v_it<sector->r_frustums.size(); v_it++)
 			{
@@ -723,7 +720,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 
 				// renderable
 				IRenderable*	renderable		= spatial->dcast_Renderable	();
-				if (renderable == NULL)							continue;	// unknown, but renderable object (r1_glow???)
+				if (renderable == nullptr)							continue;	// unknown, but renderable object (r1_glow???)
 
 				renderable->renderable_Render	();
 			}
@@ -734,7 +731,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 
 	// Restore
 	ViewBase						= ViewSave;
-	View							= 0;
+	View							= nullptr;
 }
 
 #include "fhierrarhyvisual.h"

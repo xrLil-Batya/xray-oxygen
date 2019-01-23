@@ -16,7 +16,7 @@
     <TargetFrameworkVersion>4.6.1</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>xrManagedUILib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -73,20 +73,27 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_XRLAUNCHER;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>./;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <AdditionalDependencies>xrUICore.lib;xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="API\UILines.h" />
+    <ClInclude Include="API\UIStatic.h" />
+    <ClInclude Include="API\View.h" />
     <ClInclude Include="API\Window.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="xrManagedUILib.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="API\UILines.cpp" />
+    <ClCompile Include="API\UIStatic.cpp" />
+    <ClCompile Include="API\View.cpp" />
     <ClCompile Include="API\Window.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="stdafx.cpp">

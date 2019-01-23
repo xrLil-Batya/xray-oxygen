@@ -21,7 +21,7 @@
 #include "location_manager.h"
 #include "level_path_builder.h"
 #include "detail_path_builder.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 
 // Lain: added 
 #include "steering_behaviour.h"

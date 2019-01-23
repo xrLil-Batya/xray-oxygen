@@ -69,17 +69,16 @@ void					CRender::create()
 	o.mrt = (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth = (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Òîëüêî true!
-	o.HW_smap		= true;
-	o.HW_smap_PCF	= true;
-
-	//	For ATI it's much faster on DX10 to use D32F format
-	o.HW_smap_FORMAT = (HW.Caps.id_vendor == 0x1002) ? D3DFMT_D32F_LOCKABLE : D3DFMT_D24X8;
+	//	For AMD it's much faster on DX10 to use R32 format
+	DXGI_FORMAT CurrentFormat = (HW.Caps.id_vendor == 0x1002) ? DXGI_FORMAT_R32_TYPELESS : DXGI_FORMAT_R24G8_TYPELESS;
+	o.HW_smap		= HW.IsFormatSupported(CurrentFormat);
+	o.HW_smap_PCF	= o.HW_smap;
+	o.HW_smap_FORMAT = o.HW_smap ? CurrentFormat : DXGI_FORMAT_UNKNOWN;
 
 	Msg("* HWDST/PCF supported and used");
 
-	o.fp16_filter	= true;
-	o.fp16_blend	= true;
+	o.fp16_filter = HW.IsFormatSupported(DXGI_FORMAT_R16G16B16A16_FLOAT);
+	o.fp16_blend  = HW.IsFormatSupported(DXGI_FORMAT_R16G16B16A16_FLOAT);
 
 	VERIFY2(o.mrt && (HW.Caps.raster.dwInstructions >= 256), "Hardware doesn't meet minimum feature-level");
 	/////////////////////////////////////////////
@@ -162,7 +161,6 @@ void					CRender::create()
 		}
 	}
 	/////////////////////////////////////////////
-	o.dx10_gbuffer_opt		= ps_r3_flags.test(R3_FLAG_GBUFFER_OPT);
 	o.dx10_minmax_sm		= ps_r3_minmax_sm;
 	o.dx10_minmax_sm_screenarea_threshold = 1600 * 1200;
 	o.dx11_enable_tessellation = HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0 && ps_r4_flags.test(R4_FLAG_ENABLE_TESSELLATION);
@@ -303,10 +301,9 @@ void CRender::reset_end()
 	m_bFirstFrameAfterReset		= true;
 }
 
-#pragma todo("VERTVER to every1: that's function so strange for me")
 void CRender::OnFrame()
 {
-
+	ScopeStatTimer frameTimer(Device.Statistic->Engine_RenderFrame);
 	Models->DeleteQueue();
 	Device.seqParallel.insert(Device.seqParallel.begin(),
 		xrDelegate(BindDelegate(Details, &CDetailManager::MT_CALC)));
@@ -581,7 +578,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, &sps_result->ps);
 #endif // #ifdef USE_DX11
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! PS: ", file_name);
+			Msg			("! PS: %s", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -610,7 +607,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		}
 		else
 		{
-			Log	("! PS: ", file_name);
+			Msg	("! PS: %s", file_name);
 			Msg	("! D3DReflectShader hr == 0x%08x", _result);
 		}
 	}
@@ -622,7 +619,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, &svs_result->vs);
 #endif // #ifdef USE_DX11
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! VS: ", file_name);
+			Msg			("! VS: %s", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -661,7 +658,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		}
 		else
 		{
-			Log			("! VS: ", file_name);
+			Msg			("! VS: %s", file_name);
 			Msg			("! D3DXFindShaderComment hr == 0x%08x", _result);
 		}
 	}
@@ -674,7 +671,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 #endif
 
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! GS: ", file_name);
+			Msg			("! GS: %s", file_name);
 			Msg			("! CreateGeometryShaderhr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -703,7 +700,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		}
 		else
 		{
-			Log	("! PS: ", file_name);
+			Msg	("! PS: %s", file_name);
 			Msg	("! D3DReflectShader hr == 0x%08x", _result);
 		}
 	}
@@ -722,7 +719,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &disasm );
 		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), FALSE, 0, &disasm );
 		string_path		dname;
-		strconcat		(sizeof(dname),dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
+		xr_strconcat	(dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
 		IWriter*		W		= FS.w_open("$logs$",dname);
 		W->w			(disasm->GetBufferPointer(),(u32)disasm->GetBufferSize());
 		FS.w_close		(W);
@@ -739,7 +736,7 @@ public:
 	HRESULT __stdcall	Open	(D3D10_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
 	{
 		string_path				pname;
-		strconcat				(sizeof(pname),pname,::Render->getShaderPath(),pFileName);
+		xr_strconcat			(pname,::Render->getShaderPath(),pFileName);
 		IReader*		R		= FS.r_open	("$game_shaders$",pname);
 		if (nullptr==R)				{
 			// possibly in shared directory or somewhere else - open directly
@@ -796,7 +793,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 
 	if (HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0)
 	{
-		defines[def_it].Name = "SM_5";
+		defines[def_it].Name = "SM_5_0"; // :P
 		defines[def_it].Definition = "1";
 		def_it++;
 	}
@@ -813,6 +810,14 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		def_it++;
 	}
 	else R_ASSERT2(false, "Your PC unsupport DirectX version!");
+
+	// [FX] #TODO: Key for tests 
+	if (strstr(Core.Params, "-ssr_use"))
+	{
+		defines[def_it].Name = "USE_SSR";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
 
 	if (o.fp16_filter)		{
 		defines[def_it].Name		=	"FP16_FILTER";
@@ -1060,14 +1065,6 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	else
 		sh_name[len]='0'; ++len;
 
-   if( o.dx10_gbuffer_opt )
-	{
-		defines[def_it].Name		=	"GBUFFER_OPTIMIZATION";
-		defines[def_it].Definition	=	"1";
-		def_it						++;
-	}
-	sh_name[len]='0'+char(o.dx10_gbuffer_opt); ++len;
-
    if( o.dx10_sm4_1 )
    {
 	   defines[def_it].Name		=	"SM_4_1";
@@ -1284,9 +1281,9 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		}
 		else {
 //			Msg						( "! shader compilation failed" );
-			Log						("! ", sh_filePath);
+			Msg						("! %s", sh_filePath);
 			if ( pErrorBuf )
-				Log					("! error: ",(LPCSTR)pErrorBuf->GetBufferPointer());
+				Msg					("! error: %s",(LPCSTR)pErrorBuf->GetBufferPointer());
 			else
 				Msg					("Can't compile shader hr=0x%08x", _result);
 		}

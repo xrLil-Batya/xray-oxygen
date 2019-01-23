@@ -8,6 +8,7 @@
 #include "../../xrEngine/stdafx.h"
 #pragma warning(disable:4995 4005)
 #include <d3dx9.h>
+#include <ppl.h>
 #pragma warning(default:4995 4005)
 #pragma warning(disable:4714)
 #pragma warning( 4 : 4018 )

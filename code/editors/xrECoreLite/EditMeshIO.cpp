@@ -176,7 +176,7 @@ bool CEditableMesh::LoadMesh(IReader& F)
 		face_lst.resize(F.r_u32());
 		if (face_lst.empty())
 		{
-			Log("!Empty surface found: %s", surf->_Name());
+			Msg("!Empty surface found: %s", surf->_Name());
 			return false;
 		}
 		F.r(&*face_lst.begin(), face_lst.size() * sizeof(int));

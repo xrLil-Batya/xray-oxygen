@@ -263,7 +263,7 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 	}
 
 	// Emissive geometry should be marked and R2 special-cases it
-	// a) Allow to skeep already lit pixels
+	// a) Allow to skip already lit pixels
 	// b) Allow to make them 100% lit and really bright
 	// c) Should not cast shadows
 	// d) Should be rendered to accumulation buffer in the second pass
@@ -302,9 +302,9 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 		mapNormal_T& map = mapNormalPasses[sh->flags.iPriority/2][iPass];
 
 #ifdef USE_DX11
-		auto &Nvs = map[&*pass.vs];
-		auto &Ngs = Nvs[pass.gs->gs];
-		auto &Nps = Ngs[pass.ps->ps];
+		R_dsgraph::mapNormalGS& Nvs = map[&*pass.vs];
+		R_dsgraph::mapNormalPS& Ngs = Nvs[pass.gs->gs];
+		R_dsgraph::mapNormalAdvStages& Nps = Ngs[pass.ps->ps];
 #else
 		auto &Nvs = map[pass.vs->vs];
 		auto &Nps = Nvs[pass.ps->ps];
@@ -370,21 +370,25 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 {
-	if (0==pVisual)				return;
+	if (pVisual == nullptr) return;
 
 	// Visual is 100% visible - simply add it
-	xr_vector<dxRender_Visual*>::iterator I,E;	// it may be useful for 'hierrarhy' visual
 
 	switch (pVisual->Type) {
 	case MT_PARTICLE_GROUP:
 		{
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG	= (PS::CParticleGroup*)pVisual;
-			for (auto i_it=pG->items.begin(); i_it!=pG->items.end(); i_it++)	{
-				PS::CParticleGroup::SItem&			I		= *i_it;
+			for (PS::CParticleGroup::SItem& I : pG->items)	{
 				if (I._effect)		add_leafs_Dynamic		(I._effect);
-				for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
-				for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_leafs_Dynamic(*pit);
+				for (dxRender_Visual* pChildRelated : I._children_related)
+				{
+					add_leafs_Dynamic(pChildRelated);
+				}
+				for (dxRender_Visual* pChildFree : I._children_free)
+				{
+					add_leafs_Dynamic(pChildFree);
+				}
 			}
 		}
 		return;
@@ -392,12 +396,11 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 		{
 			// Add all children, doesn't perform any tests
 			FHierrarhyVisual* pV = (FHierrarhyVisual*)pVisual;
-			I = pV->children.begin	();
-			E = pV->children.end	();
-			for (; I != E; I++)
+
+			for (dxRender_Visual* pChildVisual : pV->children)
 			{
-				(*I)->vis.obj_data = pV->getVisData().obj_data;
-				add_leafs_Dynamic(*I);
+				pChildVisual->vis.obj_data = pV->getVisData().obj_data;
+				add_leafs_Dynamic(pChildVisual);
 			}
 		}
 		return;
@@ -414,19 +417,20 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 				float		ssa		=	CalcSSA	(D,Tpos,pV->vis.sphere.R/2.f);	// assume dynamics never consume full sphere
 				if (ssa<r_ssaLOD_A)	_use_lod	= TRUE;
 			}
+
 			if (_use_lod)				
 			{
 				add_leafs_Dynamic			(pV->m_lod)		;
-			} else {
+			} 
+			else 
+			{
 				pV->CalculateBones			(TRUE);
 				pV->CalculateWallmarks		();		//. bug?
-				I = pV->children.begin		();
-				E = pV->children.end		();
 
-				for (; I != E; I++)
+				for (dxRender_Visual* pChildVisual : pV->children)
 				{
-					(*I)->vis.obj_data = pV->getVisData().obj_data;
-					add_leafs_Dynamic(*I);
+					pChildVisual->vis.obj_data = pV->getVisData().obj_data;
+					add_leafs_Dynamic(pChildVisual);
 				}
 			}
 		}
@@ -627,31 +631,53 @@ void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
 	// Check frustum visibility and calculate distance to visual's center
 	EFC_Visible	VIS;
 	vis_data&	vis			= pVisual->vis;
-	VIS = View->testSAABB	(vis.sphere.P,vis.sphere.R,vis.box.data(),planes);
-	if (fcvNone==VIS)		
+	VIS = View->testSAABB	(vis.sphere.P, vis.sphere.R, vis.box.data(), planes);
+	if (VIS == fcvNone)
+	{
 		return;
+	}
 
-	if (!HOM.visible(vis))	
+	if (!HOM.visible(vis))
+	{
 		return;
+	}
 
 	// If we get here visual is visible or partially visible
-	xr_vector<dxRender_Visual*>::iterator I,E;	// it may be usefull for 'hierrarhy' visuals
-
-	switch (pVisual->Type) {
+	switch (pVisual->Type) 
+	{
 	case MT_PARTICLE_GROUP:
 		{
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
-			for (auto i_it=pG->items.begin(); i_it!=pG->items.end(); i_it++){
-				PS::CParticleGroup::SItem&			I		= *i_it;
-				if (fcvPartial==VIS) {
-					if (I._effect)		add_Dynamic				(I._effect,planes);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_Dynamic(*pit,planes);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_Dynamic(*pit,planes);
-				} else {
-					if (I._effect)		add_leafs_Dynamic		(I._effect);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_leafs_Dynamic(*pit);
+			for (PS::CParticleGroup::SItem& I : pG->items)
+			{
+				if (fcvPartial==VIS) 
+				{
+					if (I._effect) add_Dynamic (I._effect,planes);
+
+					for (dxRender_Visual* childRelated : I._children_related)
+					{
+						add_Dynamic(childRelated, planes);
+					}
+
+					for (dxRender_Visual* childFree : I._children_free)
+					{
+						add_Dynamic(childFree, planes);
+					}
+				} 
+				else
+				{
+					if (I._effect) add_leafs_Dynamic (I._effect);
+
+					for (dxRender_Visual* childRelated : I._children_related)
+					{
+						add_leafs_Dynamic(childRelated);
+					}
+
+					for (dxRender_Visual* childFree : I._children_free)
+					{
+						add_leafs_Dynamic(childFree);
+					}
 				}
 			}
 		}
@@ -660,12 +686,19 @@ void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
 		{
 			// Add all children
 			FHierrarhyVisual* pV = (FHierrarhyVisual*)pVisual;
-			I = pV->children.begin	();
-			E = pV->children.end		();
-			if (fcvPartial==VIS) {
-				for (; I!=E; I++)	add_Static			(*I,planes);
-			} else {
-				for (; I!=E; I++)	add_leafs_Static	(*I);
+			if (VIS == fcvPartial) 
+			{
+				for (dxRender_Visual* childRenderable : pV->children)
+				{
+					add_Static(childRenderable, planes);
+				}
+			} 
+			else 
+			{
+				for (dxRender_Visual* childRenderable : pV->children)
+				{
+					add_leafs_Static(childRenderable);
+				}
 			}
 		}
 		break;
@@ -675,40 +708,47 @@ void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
 			// Add all children, doesn't perform any tests
 			CKinematics * pV		= (CKinematics*)pVisual;
 			pV->CalculateBones		(TRUE);
-			I = pV->children.begin	();
-			E = pV->children.end	();
-			if (fcvPartial==VIS) {
-				for (; I!=E; I++)	add_Static			(*I,planes);
-			} else {
-				for (; I!=E; I++)	add_leafs_Static	(*I);
+			if (VIS == fcvPartial)
+			{
+				for (dxRender_Visual* childRenderable : pV->children)
+				{
+					add_Static(childRenderable, planes);
+				}
+			} 
+			else 
+			{
+				for (dxRender_Visual* childRenderable : pV->children)
+				{
+					add_leafs_Static(childRenderable);
+				}
 			}
 		}
 		break;
 	case MT_LOD:
 		{
-			FLOD		* pV	= (FLOD*) pVisual;
+			FLOD* pV	= (FLOD*) pVisual;
 			float		D;
 			float		ssa		= CalcSSA	(D,pV->vis.sphere.P,pV);
-			ssa					*= pV->lod_factor;
-			if (ssa<r_ssaLOD_A)	
+			ssa	*= pV->lod_factor;
+			if (ssa < r_ssaLOD_A)	
 			{
 				if (ssa<r_ssaDISCARD)	return;
 				mapLOD.emplace_back(std::make_pair(D, _LodItem({ ssa, pVisual })));
 			}
 
-			if (ssa>r_ssaLOD_B || phase==PHASE_SMAP)
+			if (ssa > r_ssaLOD_B || phase == PHASE_SMAP)
 			{
 				// Add all children, perform tests
-				I = pV->children.begin	();
-				E = pV->children.end	();
-				for (; I!=E; I++)	add_leafs_Static	(*I);
+				for (dxRender_Visual* childRenderable : pV->children)
+				{
+					add_leafs_Static(childRenderable);
+				}
 			}
 		}
 		break;
 	case MT_TREE_ST:
 	case MT_TREE_PM:
 		{
-			// General type of visual
 			r_dsgraph_insert_static		(pVisual);
 		}
 		return;

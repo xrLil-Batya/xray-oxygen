@@ -159,7 +159,7 @@ void CSCompiler::compile(const char* name)
 	}
 
 	string_path					cname;
-	strconcat					(sizeof(cname),cname, ::Render->getShaderPath(), "cs_", name,".hlsl");
+	xr_strconcat				(cname, ::Render->getShaderPath(), "cs_", name,".hlsl");
 	FS.update_path				(cname,	"$game_shaders$", cname);
 
 	IReader* file				= FS.r_open(cname);

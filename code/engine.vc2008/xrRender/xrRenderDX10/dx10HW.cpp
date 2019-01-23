@@ -118,8 +118,8 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	SelectResolution(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
 	//	TODO: DX10: implement dynamic format selection
-	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Prep for HDR10; breaks nothing
-	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // HDR10 = DXGI_FORMAT_R10G10B10A2_UNORM
+	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 3 : 2;
 
 	// Multisample
 	sd.SampleDesc.Count = 1;
@@ -129,13 +129,16 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	sd.OutputWindow = m_hWnd;
 	sd.Windowed = bWindowed;
 	sd.BufferDesc.RefreshRate = SelectRefresh(sd.BufferDesc.Width, sd.BufferDesc.Height, sd.BufferDesc.Format);
+	//sd.Flags = DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
 
 	//	Additional set up
-	UINT createDeviceFlags = 0;
+	UINT createDeviceFlags = 0;//Temp reverted (this is causing the CTD's) //D3D11_CREATE_DEVICE_SINGLETHREADED;
 	if (isGraphicDebugging)
 	{
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 	}
+
+	// Front buffer
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	D3D_FEATURE_LEVEL pFeatureLevels[] =
@@ -165,10 +168,6 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	if (IsWindows10OrGreater())
 	{
-		D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-		R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-		arch.TileBasedDeferredRenderer == TRUE;
-
 		IDXGIDevice3 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
 
@@ -177,12 +176,8 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 		R = pDXGIDevice->SetMaximumFrameLatency(1);
 	}
-	else if (IsWindows8OrGreater())
+	else if (IsWindows8Point1OrGreater())
 	{
-		D3D11_FEATURE_DATA_ARCHITECTURE_INFO arch;
-		R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_ARCHITECTURE_INFO, &arch, sizeof(arch)));
-		arch.TileBasedDeferredRenderer == TRUE;
-
 		IDXGIDevice2 * pDXGIDevice;
 		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&pDXGIDevice));
 
@@ -209,7 +204,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 		Msg("Failed to initialize graphics hardware.\n"
 			"Please try to restart the game.\n"
 			"CreateDevice returned 0x%08x", R);
-		FlushLog();
+		xrLogger::FlushLog();
 		FATAL("Failed to initialize graphics hardware.\nPlease try to restart the game.");
 	};
 	R_CHK(R);
@@ -264,7 +259,7 @@ void CHW::Reset(HWND hwnd)
 	bool bWindowed = !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
 
 	sd.Windowed		= bWindowed;
-	sd.BufferCount	= psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
+	sd.BufferCount	= psDeviceFlags.test(rsTripleBuffering) ? 3 : 2;
 
 	m_pSwapChain->SetFullscreenState(!bWindowed, NULL);
 
@@ -410,9 +405,13 @@ void CHW::OnAppDeactivate()
 }
 
 
-bool CHW::IsFormatSupported(D3DFORMAT fmt, DWORD type, DWORD usage)
+bool CHW::IsFormatSupported(DXGI_FORMAT fmt)
 {
-	VERIFY(!"Implement CHW::support");
+	u32 FormatSupport;
+	HRESULT hr = pDevice->CheckFormatSupport(fmt, &FormatSupport);;
+	if (FAILED(hr))
+		return false;
+
 	return true;
 }
 
@@ -502,7 +501,7 @@ void CHW::UpdateViews()
 	R = m_pSwapChain->GetBuffer(0, __uuidof(ID3DTexture2D), (LPVOID*)&pBuffer);
 	R_CHK(R);
 
-	R = pDevice->CreateRenderTargetView(pBuffer, NULL, &pBaseRT);
+	R = pDevice->CreateRenderTargetView(pBuffer, nullptr, &pBaseRT);
 	pBuffer->Release();
 	R_CHK(R);
 

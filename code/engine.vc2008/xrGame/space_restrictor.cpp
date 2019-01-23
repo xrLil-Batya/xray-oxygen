@@ -256,7 +256,7 @@ void CSpaceRestrictor::OnRender	()
 //DRAW name
 
 		Fmatrix		res;
-		res.mul		(CastToGSCMatrix(Device.mFullTransform), XFORM());
+		res.mul		(Device.mFullTransform, XFORM());
 
 		Fvector4	v_res;
 
@@ -302,7 +302,7 @@ void CSpaceRestrictor::OnRender	()
 #include <luabind/luabind.hpp>
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CSpaceRestrictor::script_register(lua_State *L)
 {
 	module(L)

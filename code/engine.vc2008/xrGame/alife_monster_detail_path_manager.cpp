@@ -294,7 +294,7 @@ Fvector CALifeMonsterDetailPathManager::draw_level_position	() const
 #include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CALifeMonsterDetailPathManager::script_register	(lua_State *L)
 {
 	module(L)

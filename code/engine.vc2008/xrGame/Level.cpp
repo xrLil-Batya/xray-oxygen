@@ -507,7 +507,6 @@ void CLevel::OnRender()
 	if(!pGameAnsel->isActive)
 		HUD().RenderUI();
 
-	BulletManager().Render();
 	::Render->AfterWorldRender();
 
 #ifdef DEBUG
@@ -609,6 +608,11 @@ void CLevel::OnRender()
 		}
 	}
 #endif
+}
+
+void CLevel::RenderBullets()
+{
+	BulletManager().Render();
 }
 
 void CLevel::OnEvent(EVENT E, u64 P1, u64 /**P2/**/)

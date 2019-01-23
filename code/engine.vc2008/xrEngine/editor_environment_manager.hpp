@@ -54,16 +54,16 @@ public:
 public:
 												manager					();
 	virtual										~manager				();
-	virtual	void								load_weathers			();
-	virtual	void								load					();
-	virtual	void								unload					();
-	virtual	void								create_mixer			();
+	virtual	void								LoadWeathers			();
+	virtual	void								Load					();
+	virtual	void								Unload					();
+	virtual	void								CreateMixer				();
 	virtual	CEnvAmbient*						AppendEnvAmb			(const shared_str& sect);
-	virtual	SThunderboltDesc*					thunderbolt_description	(CInifile& config, shared_str const& section);
-	virtual	SThunderboltCollection*				thunderbolt_collection	(CInifile* pIni, CInifile* thunderbolts, LPCSTR section);
-	virtual	SThunderboltCollection*				thunderbolt_collection	(xr_vector<SThunderboltCollection*>& collection,  shared_str const& id);
-	virtual	CLensFlareDescriptor*				add_flare				(xr_vector<CLensFlareDescriptor*>& collection, shared_str const& id);
-			void								save					();
+	virtual	CThunderboltDesc*					ThunderboltDescription	(CInifile& config, shared_str const& section);
+	virtual	CThunderboltCollection*				ThunderboltCollection	(CInifile* pIni, CInifile* thunderbolts, LPCSTR section);
+	virtual	CThunderboltCollection*				ThunderboltCollection	(xr_vector<CThunderboltCollection*>& collection,  shared_str const& id);
+	virtual	CLensFlareDescriptor*				AddFlare				(xr_vector<CLensFlareDescriptor*>& collection, shared_str const& id);
+			void								Save					();
 			shader_ids_type const&				shader_ids				() const;
 			particle_ids_type const&			particle_ids			() const;
 			light_animator_ids_type const&		light_animator_ids		() const;

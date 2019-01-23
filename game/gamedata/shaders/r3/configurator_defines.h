@@ -1,8 +1,6 @@
 #ifndef CONFIGURATOR_DEFINES_H
 #define CONFIGURATOR_DEFINES_H
-#define SS_DUST
-#define USE_VOLUMETRIC_DUST
-#define USE_MOON_ROAD
+
 #define FL_USE_LONG_FLARE
 //#define SSDO_USE_INDIRECT_BOUNCES
 //#define DDOF_VIGNETTING
@@ -18,4 +16,5 @@
 #define RDOF_INTENSITY float(0.400)
 #define PUDDLES_GROW_SPEED float(0.500)
 #define PI  3.14159265f
+
 #endif

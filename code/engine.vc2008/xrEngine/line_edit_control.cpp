@@ -4,8 +4,8 @@
 //	Author		: Evgeniy Sokolov
 //	Description : line edit control class implementation
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 #include "line_edit_control.h"
 
 #include "../xrCore/os_clipboard.h"

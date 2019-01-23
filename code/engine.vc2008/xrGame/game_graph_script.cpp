@@ -53,7 +53,7 @@ GameGraph::LEVEL_MAP const& get_levels	( CGameGraph const* graph )
 
 #include "../../SDK/include/luabind/iterator_policy.hpp"
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CGameGraph::script_register		(lua_State *L)
 {
 	module(L)

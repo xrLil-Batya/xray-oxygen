@@ -77,12 +77,12 @@ CBaseMonster::CBaseMonster() :	m_psy_aura(this, "psy"),
 
 	// Инициализация параметров анимации	
 
-	StateMan						= 0;
+	StateMan						= nullptr;
 
 	MeleeChecker.init_external		(this);
 	Morale.init_external			(this);
 
-	m_controlled					= 0;
+	m_controlled					= nullptr;
 	
 	control().add					(&m_com_manager,  ControlCom::eControlCustom);
 	
@@ -97,16 +97,16 @@ CBaseMonster::CBaseMonster() :	m_psy_aura(this, "psy"),
 
 	com_man().add_ability				(ControlCom::eComCriticalWound);
 
-	EatedCorpse								=	NULL;
+	EatedCorpse								=	nullptr;
 
-	m_steer_manager							=	NULL;
-	m_grouping_behaviour					=	NULL;
+	m_steer_manager							=	nullptr;
+	m_grouping_behaviour					=	nullptr;
 
 	m_last_grouping_behaviour_update_tick	=	0;
 	m_feel_enemy_who_just_hit_max_distance	=	0;
 	m_feel_enemy_max_distance				=	0;
 
-	m_anti_aim								=	NULL;
+	m_anti_aim								=	nullptr;
 	m_head_bone_name						=	"bip01_head";
 
 	m_first_tick_enemy_inaccessible			=	0;
@@ -334,7 +334,7 @@ void CBaseMonster::UpdateCL()
 
 	if ( EatedCorpse && !CorpseMemory.is_valid_corpse(EatedCorpse) )
 	{
-		EatedCorpse = NULL;
+		EatedCorpse = nullptr;
 	}
 
 	inherited::UpdateCL();
@@ -420,7 +420,7 @@ void CBaseMonster::Die(CObject* who)
 
 	if ( m_grouping_behaviour )
 	{
-		m_grouping_behaviour->set_squad(NULL);
+		m_grouping_behaviour->set_squad(nullptr);
 	}
 	
 	
@@ -1072,7 +1072,7 @@ float CBaseMonster::get_screen_space_coverage_diagonal()
 	Fbox		b		= Visual()->getVisData().box;
 
 	Fmatrix				xform;
-	xform.mul			(CastToGSCMatrix(Device.mFullTransform),XFORM());
+	xform.mul			(Device.mFullTransform,XFORM());
 	Fvector2	mn		={flt_max,flt_max},mx={flt_min,flt_min};
 
 	for (u32 k=0; k<8; ++k)

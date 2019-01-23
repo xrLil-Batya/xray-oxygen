@@ -30,7 +30,7 @@ private:
     static CVMLua*				luaVM;
 	CScriptThread*				m_current_thread	;
 	BOOL						m_jit				;
-    std::set<void*>             m_dumpedObjList     ;
+    xr_set<void*>				m_dumpedObjList     ;
 
 public:
 protected:

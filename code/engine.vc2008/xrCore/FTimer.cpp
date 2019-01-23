@@ -23,3 +23,14 @@ void CStatTimer::FrameEnd()
 }
 
 XRCORE_API pauseMngr g_pauseMngr;
+
+ScopeStatTimer::ScopeStatTimer(CStatTimer& destTimer)
+	: _timer(destTimer)
+{
+	_timer.Begin();
+}
+
+ScopeStatTimer::~ScopeStatTimer()
+{
+	_timer.End();
+}

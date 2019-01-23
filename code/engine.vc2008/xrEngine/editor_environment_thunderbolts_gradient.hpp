@@ -9,7 +9,7 @@
 
 #ifdef INGAME_EDITOR
 #include "../include/editor/property_holder.hpp"
-#include "thunderbolt.h"
+#include "ThunderboltDesc.h"
 
 namespace editor {
 
@@ -22,7 +22,7 @@ class manager;
 namespace thunderbolts {
 
 class gradient :
-	public SThunderboltDesc::SFlare
+	public CThunderboltDesc::SFlare
 {
 public:
 						gradient		();

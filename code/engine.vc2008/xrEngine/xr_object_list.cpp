@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "igame_level.h"
 #include "igame_persistent.h"
 
@@ -10,6 +10,7 @@
 #include "../xrCore/net_utils.h"
 #include "../FrayBuildConfig.hpp"
 #include "CustomHUD.h"
+#include <ppl.h>
 
 class fClassEQ {
 	CLASS_ID cls;
@@ -164,10 +165,6 @@ void CObjectList::Update		(bool bForce)
 				clear_crow_vec			(crows);
 			}
 
-			Device.Statistic->UpdateClient.Begin	();
-			Device.Statistic->UpdateClient_active	= (u32)objects_active.size();
-			Device.Statistic->UpdateClient_total	= (u32)objects_active.size() + (u32)objects_sleeping.size();
-
 			size_t const objects_count	= workload->size();
 			CObject** objects			= (CObject**)_alloca(objects_count*sizeof(CObject*));
 			std::copy					( workload->begin(), workload->end(), objects );
@@ -184,7 +181,6 @@ void CObjectList::Update		(bool bForce)
 			for (CObject** i = b; i != e; ++i)
 				SingleUpdate			(*i);
 
-			Device.Statistic->UpdateClient.End		();
 		}
 	}
 
@@ -273,17 +269,6 @@ u32	CObjectList::net_Export			(NET_Packet* _Packet,	u32 start, u32 max_object_si
 void CObjectList::Load		()
 {
 	R_ASSERT				(objects_active.empty() && destroy_queue.empty() && objects_sleeping.empty());
-#ifdef LUACP_API
-	LogXrayOffset("GameLevel.ObjectList",		g_pGameLevel, this);
-	LogXrayOffset("GameLevel.map_NETID",		g_pGameLevel, &this->map_NETID);
-	LogXrayOffset("GameLevel.destroy_queue",	g_pGameLevel, &this->destroy_queue);
-	LogXrayOffset("GameLevel.objects_active",	g_pGameLevel, &this->objects_active);
-	LogXrayOffset("GameLevel.objects_sleeping", g_pGameLevel, &this->objects_sleeping);
-	//LogXrayOffset("GameLevel.crows",			g_pGameLevel, &this->crows);
-
-	//LogXrayOffset("xr_vector.first",			&this->objects_active, &objects_active._Myfirst);
-	//LogXrayOffset("xr_vector.last",				&this->objects_active, &objects_active._Mylast);
-#endif
 }
 
 void CObjectList::Unload	( )

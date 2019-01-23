@@ -21,7 +21,7 @@ public:
 	virtual void		SetTextureColor			(u32 color)										= 0;
 	virtual u32			GetTextureColor			()										const	= 0;
 	virtual void		SetStretchTexture		(bool stretch)									= 0;
-	virtual bool		GetStretchTexture		()												= 0;	
+	virtual bool		GetStretchTexture		()												= 0;
 };
 
 // Window

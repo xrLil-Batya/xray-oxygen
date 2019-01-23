@@ -4,7 +4,7 @@
 #include "../xrEngine/xr_ioconsole.h"
 #include "../xrEngine/gamemtllib.h"
 #include "../Include/xrRender/Kinematics.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "../xrUICore/MainMenu.h"
 #include "../xrUICore/UICursor.h"
 #include "game_base.h"
@@ -68,10 +68,8 @@ CGamePersistent::CGamePersistent()
 	m_pMainMenu					= nullptr;
 	m_intro						= nullptr;
 	m_intro_event.bind			(this, &CGamePersistent::start_logo_intro);
-#ifdef DEBUG
 	m_frame_counter				= 0;
 	m_last_stats_frame			= u32(-2);
-#endif
 
 	eQuickLoad				= Engine.Event.Handler_Attach("Game:QuickLoad",this);
 	Fvector3* DofValue		= Console->GetFVectorPtr("r_dof");
@@ -120,17 +118,27 @@ void CGamePersistent::RegisterModel(IRenderVisual* V)
 
 extern void clean_game_globals	();
 extern void init_game_globals	();
+volatile size_t g_threads = 0;
+
+void mtInitGlobals(void *)
+{
+	InterlockedIncrement(&g_threads);
+	Log("* Init game globals...");
+	init_game_globals();
+	InterlockedDecrement(&g_threads);
+}
 
 void CGamePersistent::OnAppStart()
 {
 	// load game materials
 	GMLib.Load					();
-	init_game_globals			();
+	thread_spawn(mtInitGlobals, "X-Ray: Init kernel info...", 0, 0);
 	MySuper::OnAppStart			();
 	m_pUI_core					= xr_new<ui_core>();
 	m_pMainMenu					= xr_new<CMainMenu>();
-}
 
+	while (g_threads > 0) Sleep(10);
+}
 
 void CGamePersistent::OnAppEnd	()
 {
@@ -457,6 +465,9 @@ extern CUISequencer * g_tutorial2;
 
 void CGamePersistent::OnFrame	()
 {
+	ScopeStatTimer frameTimer(Device.Statistic->Engine_PersistanceFrame);
+
+	Device.Statistic->Engine_PersistanceFrame_Begin.Begin();
 	if(Device.dwPrecacheFrame==5 && m_intro_event.empty())
 	{
 		SetLoadStageTitle();
@@ -487,8 +498,11 @@ void CGamePersistent::OnFrame	()
 	if( !m_pMainMenu->IsActive() )
 		m_pMainMenu->DestroyInternal(false);
 
-	if(!g_pGameLevel)			return;
-	if(!g_pGameLevel->bReady)	return;
+	if (!g_pGameLevel || !g_pGameLevel->bReady)
+	{
+		Device.Statistic->Engine_PersistanceFrame_Begin.End();
+		return;
+	}
 
 	if (Device.Paused())
 	{
@@ -525,26 +539,25 @@ void CGamePersistent::OnFrame	()
     // Update sun before updating other enviroment settings
     if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
     {
-		Environment().calculate_dynamic_sun_dir();
+		Environment().CalculateDynamicSunDir();
     }
 
-	MySuper::OnFrame			();
+	Device.Statistic->Engine_PersistanceFrame_Begin.End();
 
-	if(!Device.Paused())
-		Engine.Sheduler.Update		();
+	MySuper::OnFrame();
+	if (!Device.Paused())
+	{
+		Device.Statistic->Engine_PersistanceFrame_Scheduler.Begin();
+		Engine.Sheduler.Update();
+		Device.Statistic->Engine_PersistanceFrame_Scheduler.End();
 
-	// update weathers ambient
-	if(!Device.Paused())
-		WeathersUpdate				();
-
-#ifdef DEBUG
-	if ((m_last_stats_frame + 1) < m_frame_counter)
-		profiler().clear		();
-#endif
-	UpdateDof();
+		// update weathers ambient
+		Device.Statistic->Engine_PersistanceFrame_WeatherAndDOF.Begin();
+		WeathersUpdate();
+		UpdateDof();
+		Device.Statistic->Engine_PersistanceFrame_WeatherAndDOF.End();
+	}
 }
-
-
 
 void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 {
@@ -578,12 +591,15 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 
 void CGamePersistent::Statistics	(CGameFont* F)
 {
-#ifdef DEBUG
-#	ifndef _EDITOR
-		m_last_stats_frame		= m_frame_counter;
-		profiler().show_stats	(F,!!psAI_Flags.test(aiStats));
-#	endif
-#endif
+	m_last_stats_frame = m_frame_counter;
+	if (!!psDeviceFlags.test(rsGameProfiler) || !!psDeviceFlags.test(rsScheduleProfiler))
+	{
+		profiler().show_stats(F);
+	}
+	else
+	{
+		profiler().clear();
+	}
 }
 
 float CGamePersistent::MtlTransparent(u32 mtl_idx)

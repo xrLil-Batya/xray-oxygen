@@ -43,6 +43,7 @@ public:
 						CALifeUpdateManager		(xrServer *server, LPCSTR section);
 	virtual 			~CALifeUpdateManager	();
 	virtual	shared_str	shedule_Name			() const		{ return shared_str("alife_simulator"); };
+	virtual	shared_str	shedule_Class_Name		() const		{ return shared_str("CALifeUpdateManager"); };
 	virtual float		shedule_Scale			();
 	virtual void		shedule_Update			(u32 dt);	
 	virtual bool		shedule_Needed			()				{return true;};

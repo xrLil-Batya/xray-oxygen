@@ -3,7 +3,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Defines
-#define def_gloss       	float(2.0f / 255.0f)
+#define def_gloss       	float(12.0f / 255.0f) //you can color specular this way it turns out
 #define def_aref        	float(200.0f / 255.0f)
 #define def_dbumph      	float(0.333f)
 #define def_virtualh    	float(0.05f)	// 5cm

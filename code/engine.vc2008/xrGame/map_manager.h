@@ -6,7 +6,7 @@ class CMapLocationWrapper;
 class CInventoryOwner;
 class CMapLocation;
 
-class CMapManager
+class GAME_API CMapManager
 {
 	CMapLocationWrapper*	m_locations_wrapper;
 	Locations*				m_locations;

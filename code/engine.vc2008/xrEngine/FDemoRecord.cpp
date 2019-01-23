@@ -35,12 +35,12 @@ void setup_lm_screenshot_matrices()
 	Device.vCameraDirection.set(0.f, -1.f, 0.f);
 	Device.vCameraTop.set(0.f, 0.f, 1.f);
 	Device.vCameraRight.set(1.f, 0.f, 0.f);
-	Device.mView.BuildCamDir(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+	Device.mView.build_camera_dir(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
 
-	Device.mView.BuildXForm(bb);
+	bb.xform(Device.mView);
 
 	// build project matrix
-	Device.mProject.BuildProjOrtho(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.min.z, bb.max.z);
+	Device.mProject.build_projection_ortho(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.min.z, bb.max.z);
 }
 
 Fbox get_level_screenshot_bound()
@@ -75,10 +75,10 @@ CDemoRecord::CDemoRecord(const char *name, float life_time) : CEffectorCam(cefDe
 		g_position.set_position = false;
 		IR_Capture();	// capture input
 
-		m_Camera.InvertMatrixByMatrix(Device.mView);
+		m_Camera.invert(Device.mView);
 
 		// parse yaw
-		Fvector dir = { m_Camera.z[0], m_Camera.z[1], m_Camera.z[2] };
+		Fvector dir = { m_Camera._31, m_Camera._32, m_Camera._33 };
 		Fvector DYaw;	
 		DYaw.set(dir.x, 0.f, dir.z); DYaw.normalize_safe();
 
@@ -92,7 +92,7 @@ CDemoRecord::CDemoRecord(const char *name, float life_time) : CEffectorCam(cefDe
 		m_HPB.y = asinf(dir.y);
 		m_HPB.z = 0;
 
-		m_Position.set({ m_Camera.w[0], m_Camera.w[1], m_Camera.w[2] });
+		m_Position.set({ m_Camera._41, m_Camera._42, m_Camera._43 });
 
 		m_vVelocity.set(0, 0, 0);
 		m_vAngularVelocity.set(0, 0, 0);
@@ -280,8 +280,8 @@ void CDemoRecord::MakeCubeMapFace(Fvector &D, Fvector &N)
 
 		case 6:
 			Render->Screenshot(IRender_interface::SM_FOR_CUBEMAP, itoa(m_Stage, buf, 10));
-			N.set({ m_Camera.y[0], m_Camera.y[1], m_Camera.y[2] });
-			D.set({ m_Camera.z[0], m_Camera.z[1], m_Camera.z[2] });
+			N.set(m_Camera.j);
+			D.set(m_Camera.k);
 			psHUD_Flags.assign(s_hud_flag);
 			m_bMakeCubeMap = false;
 			break;
@@ -302,9 +302,9 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		MakeScreenshotFace();
 
 		// update camera
-		info.n.set({ m_Camera.y[0], m_Camera.y[1], m_Camera.y[2] });
-		info.d.set({ m_Camera.z[0], m_Camera.z[1], m_Camera.z[2] });
-		info.p.set({ m_Camera.w[0], m_Camera.w[1], m_Camera.w[3] });
+		info.n.set(m_Camera.j);
+		info.d.set(m_Camera.k);
+		info.p.set(m_Camera.c);
 
 		
 
@@ -317,7 +317,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 	else if (m_bMakeCubeMap)
 	{
 		MakeCubeMapFace(info.d, info.n);
-		info.p.set({ m_Camera.w[0], m_Camera.w[1], m_Camera.w[3] });
+		info.p.set({ m_Camera._41, m_Camera._42, m_Camera._43 });
 		info.fAspect = 1.f;
 	}
 	else
@@ -386,17 +386,17 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		// move
 		Fvector vmove;
 
-		vmove.set({ m_Camera.z[0], m_Camera.z[1], m_Camera.z[2] });
+		vmove.set({ m_Camera._31, m_Camera._32, m_Camera._33 });
 		vmove.normalize_safe();
 		vmove.mul(m_vT.z);
 		m_Position.add(vmove);
 
-		vmove.set({ m_Camera.x[0], m_Camera.x[1], m_Camera.x[2] });
+		vmove.set({ m_Camera._11, m_Camera._12, m_Camera._13 });
 		vmove.normalize_safe();
 		vmove.mul(m_vT.x);
 		m_Position.add(vmove);
 
-		vmove.set({ m_Camera.y[0], m_Camera.y[1], m_Camera.y[2] });
+		vmove.set({ m_Camera._21, m_Camera._22, m_Camera._23 });
 		vmove.normalize_safe();
 		vmove.mul(m_vT.y);
 		m_Position.add(vmove);
@@ -405,9 +405,9 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		//m_Camera.translate_over(m_Position);
 
 		// update camera
-		info.n.set({ m_Camera.y[0], m_Camera.y[1], m_Camera.y[2] });
-		info.d.set({ m_Camera.z[0], m_Camera.z[1], m_Camera.z[2] });
-		info.p.set({ m_Camera.w[0], m_Camera.w[1], m_Camera.w[2] });
+		info.n.set({ m_Camera._21, m_Camera._22, m_Camera._23 });
+		info.d.set({ m_Camera._31, m_Camera._32, m_Camera._33 });
+		info.p.set({ m_Camera._41, m_Camera._42, m_Camera._43 });
 
 		fLifeTime -= Device.fTimeDelta;
 
@@ -452,7 +452,7 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
 	{
 		if (g_pGameLevel->CurrentEntity())
 		{
-			g_pGameLevel->CurrentEntity()->ForceTransform(CastToGSCMatrix(m_Camera));
+			g_pGameLevel->CurrentEntity()->ForceTransform(m_Camera);
 			fLifeTime = -1;
 		}
 	}
@@ -578,10 +578,10 @@ void CDemoRecord::IR_OnMouseHold(int btn)
 
 void CDemoRecord::RecordKey()
 {
-	Matrix4x4 g_matView;
-	g_matView.InvertMatrixByMatrix(m_Camera);
+	Fmatrix g_matView;
+	g_matView.invert(m_Camera);
 
-	file->w(&g_matView, sizeof(Matrix4x4));
+	file->w(&g_matView, sizeof(Fmatrix));
 	iCount++;
 }
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "actor.h"
 #include "items/Weapon.h"
 #include "mercuryball.h"
@@ -122,7 +122,7 @@ void CActor::PickupModeUpdate()
 {
 	feel_touch_update	(Position(), m_fPickupInfoRadius);
 	CFrustum frustum;
-	frustum.CreateFromMatrix(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
 	xrCriticalSectionGuard guard(MtFeelTochMutex);
     for (CObject* obj : feel_touch)
@@ -169,7 +169,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 	}
 	
 	CFrustum						frustum;
-	frustum.CreateFromMatrix		(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix		(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
 	ISpatialResult.clear	();
 	g_SpatialSpace->q_frustum		(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
@@ -214,7 +214,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
         if (CGameObject* pNearestGameObject = InPickableItem->cast_game_object())
         {
             CFrustum					frustum;
-            frustum.CreateFromMatrix(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
+            frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
             if (!CanPickItem(frustum, act_and_cam_pos, &InPickableItem->object()))
             {
                 return nullptr;
@@ -285,12 +285,12 @@ void CActor::PickupInfoDraw(CObject* object)
 	if (!item)		return;
 
 	Fmatrix			res;
-	res.mul(CastToGSCMatrix(Device.mFullTransform), object->XFORM());
+	res.mul(Device.mFullTransform, object->XFORM());
 	Fvector4		v_res;
 	Fvector			shift;
-
+	
 	draw_str = item->NameItem();
-	shift.set(0, 0, 0);
+	shift.set(0, 0.1f, 0);
 
 	res.transform(v_res, shift);
 
@@ -300,9 +300,9 @@ void CActor::PickupInfoDraw(CObject* object)
 	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
 	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
 
-	UI().Font().GetFont("ui_font_letterica16_russian")->SetAligment(CGameFont::alCenter);
+	UI().Font().GetFont("ui_font_letterica18_russian")->SetAligment(CGameFont::alCenter);
 	if (!psActorFlags.test(AF_COLORED_FEEL))
-		UI().Font().GetFont("ui_font_letterica16_russian")->SetColor(PICKUP_INFO_COLOR);
+		UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(PICKUP_INFO_COLOR);
 	else
 	{
 		if (doc)

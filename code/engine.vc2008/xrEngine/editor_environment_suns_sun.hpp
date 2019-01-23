@@ -9,7 +9,7 @@
 #ifdef INGAME_EDITOR
 
 #include "../include/editor/property_holder.hpp"
-#include "xr_efflensflare.h"
+#include "LensFlare.h"
 
 namespace editor {
 

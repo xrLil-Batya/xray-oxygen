@@ -15,7 +15,7 @@
 #include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptWorldStateWrapper::script_register(lua_State *L)
 {
 	module(L)
@@ -37,7 +37,7 @@ void CScriptWorldStateWrapper::script_register(lua_State *L)
 #include "operator_abstract.h"
 
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptWorldPropertyWrapper::script_register(lua_State *L)
 {
 	module(L)

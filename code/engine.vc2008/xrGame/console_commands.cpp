@@ -99,6 +99,8 @@ Flags32 g_extraFeatures;
 void CCC_RegisterCommands()
 {
 	// game
+	CMD3(CCC_Mask, "g_binded_camera", &psActorFlags, AF_BINDED_CAMERA);
+	CMD3(CCC_Mask, "g_aim_assist", &psActorFlags, AF_AIM_ASSIST);
 	CMD3(CCC_Mask, "g_crouch_toggle", &psActorFlags, AF_CROUCH_TOGGLE);
 	CMD3(CCC_Mask, "g_colored_feel", &psActorFlags, AF_COLORED_FEEL);
 	CMD1(CCC_GameDifficulty, "g_game_difficulty");
@@ -172,7 +174,6 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "ai_dbg_vision", &psAI_Flags, aiVision);
 	CMD3(CCC_Mask, "ai_dbg_monster", &psAI_Flags, aiMonsterDebug);
 	CMD3(CCC_Mask, "ai_dbg_stalker", &psAI_Flags, aiStalker);
-	CMD3(CCC_Mask, "ai_stats", &psAI_Flags, aiStats);
 	CMD3(CCC_Mask, "ai_dbg_destroy", &psAI_Flags, aiDestroy);
 	CMD3(CCC_Mask, "ai_dbg_serialize", &psAI_Flags, aiSerialize);
 	CMD3(CCC_Mask, "ai_dbg_dialogs", &psAI_Flags, aiDialogs);
@@ -182,8 +183,6 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "ai_draw_game_graph_stalkers", &psAI_Flags, aiDrawGameGraphStalkers);
 	CMD3(CCC_Mask, "ai_draw_game_graph_objects", &psAI_Flags, aiDrawGameGraphObjects);
 	CMD3(CCC_Mask, "ai_draw_game_graph_real_pos", &psAI_Flags, aiDrawGameGraphRealPos);
-
-	CMD3(CCC_Mask, "ai_nil_object_access", &psAI_Flags, aiNilObjectAccess);
 
 	CMD3(CCC_Mask, "ai_draw_visibility_rays", &psAI_Flags, aiDrawVisibilityRays);
 	CMD3(CCC_Mask, "ai_animation_stats", &psAI_Flags, aiAnimationStats);
@@ -497,7 +496,7 @@ void LoadGameExtraFeatures()
     FS.update_path(configFilePath, "$game_config$", "GameExtra.ltx");
 
     string_path cmdLoadCfg;
-    strconcat(sizeof(cmdLoadCfg), cmdLoadCfg, "cfg_load", " ", configFilePath);
+	xr_strconcat( cmdLoadCfg, "cfg_load", " ", configFilePath);
     Console->Execute(cmdLoadCfg);
 
     Msg("Extra feature mask: %u", g_extraFeatures.get());

@@ -97,6 +97,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\engine.vc2008\xrManagedEngineLib\xrManagedEngineLib.vcxproj">
+      <Project>{09dc3343-46ca-4d55-bfe3-317c0ff02e52}</Project>
+      <Name>xrManagedEngineLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\engine.vc2008\xrManagedLib\xrManagedLib.vcxproj">
       <Project>{c4defc31-a910-4339-99b3-6c410dc19ad0}</Project>
       <Name>xrManagedCoreLib</Name>

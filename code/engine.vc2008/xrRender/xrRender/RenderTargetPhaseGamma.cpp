@@ -41,25 +41,6 @@ void CRenderTarget::PhaseGammaGenerateLUT()
 	RCache.set_c		("color_grading", color_grading.x, color_grading.y, color_grading.z, 0.0f);
 	RCache.set_Geometry	(g_combine);
 	RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-
-/*
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
-
-	// Consts
-	float brightness		= dxRenderDeviceRender::Instance().GetBrightness();
-	float gamma				= dxRenderDeviceRender::Instance().GetGamma();
-	float contrast			= dxRenderDeviceRender::Instance().GetContrast();
-	Fvector color_grading	= dxRenderDeviceRender::Instance().GetBalance();
-
-	Fvector4 color_params	= { brightness, gamma, contrast, 0.0f };
-	Fvector4 color_grading4	= { color_grading.x, color_grading.y, color_grading.z, 0.0f };
-	xr_unordered_map<LPCSTR, Fvector4*> consts;
-	consts.insert(std::make_pair("color_params", &color_params));
-	consts.insert(std::make_pair("color_grading", &color_grading4));
-
-	RenderScreenQuad(_w, _h, rt_GammaLUT, s_gamma->E[0], &consts);
-*/
 }
 
 void CRenderTarget::PhaseGammaApply()
@@ -90,11 +71,7 @@ void CRenderTarget::SaveGammaLUT()
 	rt_GammaLUT->pRT->GetResource(&pSrcTexture);
 	VERIFY(pSrcTexture);
 
-#ifdef USE_DX11
 	CHK_DX(D3DX11SaveTextureToMemory(HW.pContext, pSrcTexture, D3DX11_IFF_PNG, &saved, 0));
-#else
-	CHK_DX(D3DX10SaveTextureToMemory(pSrcTexture, D3DX10_IFF_PNG, &saved, 0));
-#endif
 	_RELEASE(pSrcTexture);
 #else
 	IDirect3DSurface9* pFB;

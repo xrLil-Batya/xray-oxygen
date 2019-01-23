@@ -15,7 +15,7 @@ UInt32 XRay::ObjectPool::CreateObject(IntPtr pDllPure)
 	{
 		string16 temp; CLSID2TEXT(DllPure->CLS_ID, temp);
 		string256 Msg;
-		strconcat(sizeof(Msg), Msg, "There is no class type: ", temp);
+		xr_strconcat( Msg, "There is no class type: ", temp);
 		XRay::Log::Warning(gcnew String(Msg));
 		return 0;
 	}
