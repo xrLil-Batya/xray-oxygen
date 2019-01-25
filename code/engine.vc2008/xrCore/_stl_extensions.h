@@ -260,6 +260,24 @@ public:
     xr_string RemoveWhitespaces() const;
 
 	static xr_string ToString(int Value);
+	static xr_string FixSlashes(const xr_string& InStr);
+
+	template<typename StringType>
+	static void FixSlashes(StringType& str)
+	{
+		// Should be array of chars
+		static_assert(std::is_same<std::remove_extent<StringType>::type, char>::value);
+
+		constexpr size_t sizeArray = sizeof(str);
+		
+		for (int i = 0; i < sizeArray; ++i)
+		{
+			if (str[i] == '/')
+			{
+				str[i] = '\\';
+			}
+		}
+	}
 };
 
 

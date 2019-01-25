@@ -1458,7 +1458,7 @@ FS_Path* CLocatorAPI::append_path(const char* path_alias, const char* root, cons
 {
 	VERIFY(root);
 	VERIFY(!path_exist(path_alias));
-	auto* P = new FS_Path(root, add, nullptr, nullptr, 0);
+	FS_Path* P = new FS_Path(root, add, nullptr, nullptr, 0);
 	bNoRecurse = !recursive;
 	Recurse(P->m_Path);
 	pathes.insert(std::make_pair(xr_strdup(path_alias), P));
