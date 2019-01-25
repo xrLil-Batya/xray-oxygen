@@ -404,3 +404,21 @@ xr_string xr_string::ToString(int Value)
 
 	return xr_string(buf);
 }
+
+xr_string xr_string::FixSlashes(const xr_string& InStr)
+{
+	xr_string Result;
+	Result.reserve(InStr.size());
+
+	for (char ch : InStr)
+	{
+		if (ch == '/')
+		{
+			Result.push_back('\\');
+			continue;
+		}
+		Result.push_back(ch);
+	}
+
+	return Result;
+}

@@ -33,12 +33,9 @@ FS_Path::FS_Path	(const char* _Root, const char* _Add, const char* _DefExt, cons
 	string_path		temp;
     xr_strcpy		(temp,sizeof(temp),_Root);
     //Giperion: fs_root can goes without trailing slash, add one, if we miss that on root
-    if (temp[0])
-    {
-        char lastCharOfTemp = temp[xr_strlen(temp) - 1];
-        if (lastCharOfTemp != '\\' && lastCharOfTemp != '/') xr_strcat(temp, "\\");
-    }
+	xr_string::FixSlashes(temp);
     //Giperion end
+
     if (_Add) 		xr_strcat(temp,_Add);
 	if (temp[0] && temp[xr_strlen(temp)-1]!='\\') xr_strcat(temp,"\\");
 	m_Path			= xr_strlwr(xr_strdup(temp));
