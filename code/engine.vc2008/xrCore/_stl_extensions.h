@@ -260,7 +260,9 @@ public:
     xr_string RemoveWhitespaces() const;
 
 	static xr_string ToString(int Value);
-	static xr_string FixSlashes(const xr_string& InStr);
+
+	using xrStringVector = xr_vector<xr_string>;
+	static xr_string Join(xrStringVector::iterator beginIter, xrStringVector::iterator endIter, const char delimeter = '\0');
 
 	template<typename StringType>
 	static void FixSlashes(StringType& str)
@@ -278,8 +280,19 @@ public:
 			}
 		}
 	}
-};
 
+	template<>
+	static void FixSlashes<xr_string>(xr_string& InStr)
+	{
+		for (int i = 0; i < InStr.size(); ++i)
+		{
+			if (InStr[i] == '/')
+			{
+				InStr[i] = '\\';
+			}
+		}
+	}
+};
 
 
 namespace std {

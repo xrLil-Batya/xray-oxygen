@@ -405,19 +405,29 @@ xr_string xr_string::ToString(int Value)
 	return xr_string(buf);
 }
 
-xr_string xr_string::FixSlashes(const xr_string& InStr)
+// xr_string xr_string::FixSlashes(const xr_string& InStr)
+// {
+// 
+// }
+
+xr_string xr_string::Join(xrStringVector::iterator beginIter, xrStringVector::iterator endIter, const char delimeter /*= '\0'*/)
 {
 	xr_string Result;
-	Result.reserve(InStr.size());
+	xrStringVector::iterator cursorIter = beginIter;
 
-	for (char ch : InStr)
+	while (cursorIter != endIter)
 	{
-		if (ch == '/')
+		Result.append(*cursorIter);
+		if (delimeter != '\0')
 		{
-			Result.push_back('\\');
-			continue;
+			Result.push_back(delimeter);
 		}
-		Result.push_back(ch);
+		cursorIter++;
+	}
+
+	if (delimeter != '\0')
+	{
+		Result.erase(Result.end() - 1);
 	}
 
 	return Result;

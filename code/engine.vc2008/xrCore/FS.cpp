@@ -15,14 +15,21 @@
 // Tools
 //////////////////////////////////////////////////////////////////////
 //---------------------------------------------------
-void createPath(const std::string_view path)
+XRCORE_API void createPath(LPCSTR path, bool bIsFileName /*= false*/)
 {
-	const size_t lastSepPos = path.find_last_of('\\');
-    // TODO [imdex]: remove in 15.3
-    const std::string_view foldersPath = (lastSepPos != std::string_view::npos) ? path.substr(0, lastSepPos) : path;
-    std::error_code e;
-	std::experimental::filesystem::create_directories(std::experimental::filesystem::path(foldersPath.begin(), foldersPath.end()), e);
-    (void)e;
+	xr_string targetPath = path;
+	xr_string::FixSlashes(targetPath);
+	xr_vector<xr_string> pathTokens = targetPath.Split('\\');
+	if (pathTokens.size() < 2) return;
+
+	// if we have filename, we should omit it
+	int pathTokensSize = bIsFileName ? pathTokens.size() : pathTokens.size() + 1;
+
+	for (int i = 1; i < pathTokensSize; i++)
+	{
+		xr_string targetDir = xr_string::Join(pathTokens.begin(), pathTokens.begin() + i, '\\');
+		CreateDirectoryA(targetDir.c_str(), NULL);
+	}
 }
 
 static errno_t open_internal(const char* fn, int& handle) 
