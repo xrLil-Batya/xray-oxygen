@@ -120,7 +120,7 @@
       <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>copy ..\..\SDK\binaries\x64\amd_ags_x64.dll $(xrBinOut)</Command>
+      <Command>copy "..\..\SDK\binaries\x64\amd_ags_x64.dll" "$(xrBinOut)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -189,7 +189,7 @@
       <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>copy ..\..\SDK\binaries\x64\amd_ags_x64.dll $(xrBinOut)</Command>
+      <Command>copy "..\..\SDK\binaries\x64\amd_ags_x64.dll" "$(xrBinOut)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

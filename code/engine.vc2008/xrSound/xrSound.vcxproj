@@ -98,7 +98,7 @@
       <AdditionalLibraryDirectories>../../SDK/libraries/x64/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\SDK\binaries\x64\soft_oal.dll $(xrBinOut)</Command>
+      <Command>copy "..\..\SDK\binaries\x64\soft_oal.dll" "$(xrBinOut)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -156,7 +156,7 @@
       <AdditionalLibraryDirectories>../../SDK/libraries/x64/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\SDK\binaries\x64\soft_oal.dll $(xrBinOut)</Command>
+      <Command>copy "..\..\SDK\binaries\x64\soft_oal.dll" "$(xrBinOut)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
