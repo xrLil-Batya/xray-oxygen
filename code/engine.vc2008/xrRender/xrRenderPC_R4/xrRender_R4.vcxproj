@@ -145,7 +145,7 @@
       <IgnoreSpecificDefaultLibraries>luabind.beta7-devel.rc4.lib;</IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>copy $(xrSDKBins)AnselSDK64.dll $(xrBinOut)</Command>
+      <Command>copy "$(xrSDKBins)AnselSDK64.dll" "$(xrBinOut)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
