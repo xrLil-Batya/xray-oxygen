@@ -43,8 +43,11 @@ XRCORE_API void createPath(LPCSTR path, bool bIsFileName /*= false*/)
 			bool bDir = ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) > 0);
 			FindClose(hFind);
 
-			// the path can't be be file
-			R_ASSERT(bDir);
+			// the path can't be be file, so we delete it
+			if (!bDir)
+			{
+				DeleteFileA(targetDir.c_str());
+			}
 		}
 	}
 }
