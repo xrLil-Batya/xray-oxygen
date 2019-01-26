@@ -975,7 +975,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			static float sign_test = -1.f;
 			diff.mul(sign_test);
 			Fmatrix adjust;		adjust.translate(diff);
-			cull_xform.mul(cull_xform, adjust);
+			cull_xform.mulB_44(adjust); 
 		}
 
 		m_sun_cascades[cascade_ind].xform = cull_xform;

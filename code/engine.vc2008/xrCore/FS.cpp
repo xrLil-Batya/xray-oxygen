@@ -15,7 +15,7 @@
 // Tools
 //////////////////////////////////////////////////////////////////////
 //---------------------------------------------------
-XRCORE_API void createPath(LPCSTR path, bool bIsFileName /*= false*/)
+XRCORE_API void createPath(LPCSTR path, bool bIsFileName /*= false*/, bool bIsAbsolute /*= false*/)
 {
 	xr_string targetPath = path;
 	xr_string::FixSlashes(targetPath);
@@ -25,7 +25,9 @@ XRCORE_API void createPath(LPCSTR path, bool bIsFileName /*= false*/)
 	// if we have filename, we should omit it
 	int pathTokensSize = bIsFileName ? pathTokens.size() : pathTokens.size() + 1;
 
-	for (int i = 1; i < pathTokensSize; i++)
+	int i = 1;
+	if (bIsAbsolute) i++;
+	for (; i < pathTokensSize; i++)
 	{
 		xr_string targetDir = xr_string::Join(pathTokens.begin(), pathTokens.begin() + i, '\\');
 
@@ -35,7 +37,8 @@ XRCORE_API void createPath(LPCSTR path, bool bIsFileName /*= false*/)
 		if (!hFind || hFind == INVALID_HANDLE_VALUE)
 		{
 			// if this path don't include any path - create new directory
-			R_ASSERT(CreateDirectoryA(targetDir.c_str(), nullptr));
+			BOOL bCreateDir = CreateDirectoryA(targetDir.c_str(), nullptr);
+			VERIFY(bCreateDir);
 		}
 		else
 		{
@@ -52,12 +55,13 @@ XRCORE_API void createPath(LPCSTR path, bool bIsFileName /*= false*/)
 	}
 }
 
-static errno_t open_internal(const char* fn, int& handle) 
+static bool open_internal(const char* fn, HANDLE& handle) 
 {
-    return (errno_t)(handle = (int)CreateFileA(fn, GENERIC_READ, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr));	//_sopen_s(&handle, fn, _O_RDONLY | _O_BINARY, _SH_DENYNO, _S_IREAD);
+	handle = CreateFileA(fn, GENERIC_READ, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	return handle != INVALID_HANDLE_VALUE;
 }
 
-bool file_handle_internal(const char* file_name, size_t& size, int& file_handle) 
+bool file_handle_internal(const char* file_name, size_t& size, HANDLE& file_handle) 
 {
     if (!open_internal(file_name, file_handle)) 
 	{
@@ -65,26 +69,26 @@ bool file_handle_internal(const char* file_name, size_t& size, int& file_handle)
     }
 
 	LARGE_INTEGER largeInt = {};
-	GetFileSizeEx((HANDLE)file_handle, &largeInt);	
+	GetFileSizeEx(file_handle, &largeInt);	
 	size = largeInt.QuadPart;
     return true;
 }
 
-void* FileDownload(const char* file_name, const int& file_handle, size_t& file_size) 
+void* FileDownload(const char* file_name, HANDLE file_handle, size_t file_size) 
 {
     void* buffer = Memory.mem_alloc(file_size);
 
 	DWORD r_bytes = 0;		//_read(file_handle, buffer, file_size);
-	ReadFile((HANDLE)file_handle, buffer, file_size, &r_bytes, nullptr);
+	ReadFile(file_handle, buffer, file_size, &r_bytes, nullptr);
 
     R_ASSERT3(file_size == static_cast<size_t>(r_bytes), "can't read from file : ", file_name);
 
-	if (file_handle) { CloseHandle((HANDLE)file_handle); }		//R_ASSERT3(!_close(file_handle), "can't close file : ", file_name);
+	if (file_handle) { CloseHandle(file_handle); }
     return buffer;
 }
 
 void* FileDownload(const char* file_name, size_t* buffer_size) {
-    int file_handle;
+    HANDLE file_handle = INVALID_HANDLE_VALUE;
     R_ASSERT3(file_handle_internal(file_name, *buffer_size, file_handle),
               "can't open file : ", file_name);
 
@@ -102,14 +106,13 @@ void FileCompress(const char* fn, const char* sign, void* data, const size_t siz
     mk_mark(M, sign);
 	DWORD SizeOut = 0;
 
-	//#VERTVER: It's too bad to convert 64-bit pointer to 32-bit integer
-    const int H = (int)CreateFileA(fn, GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);    // _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
-    R_ASSERT2(H, fn);
+    HANDLE hFile = CreateFileA(fn, GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+    R_ASSERT2(hFile, fn);
 
-	WriteFile((HANDLE)H, &M, sizeof(size_t), &SizeOut, nullptr);	//_write(H, &M, 8);
+	WriteFile(hFile, &M, sizeof(size_t), &SizeOut, nullptr);
 
-	XRay::Compress::LZ::WriteLZ(H, data, (u32)size);
-	CloseHandle((HANDLE)H);		//_close(H);
+	XRay::Compress::LZ::WriteLZ(hFile, data, (u32)size);
+	CloseHandle(hFile);
 }
 
 void* FileDecompress(const char* fn, const char* sign, size_t* size) {
@@ -117,10 +120,10 @@ void* FileDecompress(const char* fn, const char* sign, size_t* size) {
     mk_mark(M, sign);
 	DWORD SizeOut = 0;
 
-    const int H = (int)CreateFileA(fn, GENERIC_READ, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);//_open(fn, O_BINARY | O_RDONLY);
-    R_ASSERT2(H, fn);
+    HANDLE hFile = CreateFileA(fn, GENERIC_READ, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    R_ASSERT2(hFile, fn);
 
-	ReadFile((HANDLE)H, &F, sizeof(size_t), &SizeOut, nullptr);		//_read(H, &F, 8);
+	ReadFile(hFile, &F, sizeof(size_t), &SizeOut, nullptr);
 
     if (strncmp(M.data(), F.data(), 8) != 0) {
         F[8] = 0;
@@ -130,11 +133,11 @@ void* FileDecompress(const char* fn, const char* sign, size_t* size) {
 
     void* ptr = nullptr;
 	LARGE_INTEGER largeInt = {};
-	GetFileSizeEx((HANDLE)fn, &largeInt);	// don't use here GetFileSize, it can't open file < Page size (default - 64KB)
+	GetFileSizeEx(hFile, &largeInt);	// don't use here GetFileSize, it can't open file < Page size (default - 64KB)
 
-    const size_t SZ = XRay::Compress::LZ::ReadLZ(H, ptr, /*_filelength(H)*/ largeInt.QuadPart - 8);
+    const size_t SZ = XRay::Compress::LZ::ReadLZ(hFile, ptr, largeInt.LowPart - 8);
 
-	CloseHandle((HANDLE)H);	//_close(H);
+	CloseHandle(hFile);
     if (size)
         *size = SZ;
     return ptr;

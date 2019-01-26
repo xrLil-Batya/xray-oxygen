@@ -12,6 +12,7 @@
 
 
 void* FileDownload(const char* fn, size_t* pdwSize = nullptr);
+void* FileDownload(const char* file_name, HANDLE file_handle, size_t file_size);
 void FileCompress(const char* fn, const char* sign, void* data, const size_t size);
 void* FileDecompress(const char* fn, const char* sign, size_t* size = nullptr);
 
@@ -30,7 +31,7 @@ public:
 		if (!valid())
 		{
 			// try create path
-			createPath(*fName, true);
+			createPath(*fName, true, true);
 			hf = CreateFileA(*fName, GENERIC_ALL, shareMode, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 			if (!valid())
 			{

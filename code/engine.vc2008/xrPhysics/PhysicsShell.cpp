@@ -281,17 +281,17 @@ bool __stdcall	can_create_phys_shell(string1024 &reason, IPhysicsShellHolder& O)
 	IKinematics* K = O.ObjectKinematics();
 	if (!K)
 	{
-		xr_strcpy(reason, make_string("Can not create physics shell for object %s, model %s is not skeleton", O.ObjectName(), O.ObjectNameVisual()).c_str());
+		xr_sprintf(reason, "Can not create physics shell for object %s, model %s is not skeleton", O.ObjectName(), O.ObjectNameVisual());
 		return false;
 	}
 	if (!has_physics_collision_shapes(*K))
 	{
-		xr_strcpy(reason, make_string("Can not create physics shell for object %s, model %s has no physics collision shapes set", O.ObjectName(), O.ObjectNameVisual()).c_str());
+		xr_sprintf(reason, "Can not create physics shell for object %s, model %s has no physics collision shapes set", O.ObjectName(), O.ObjectNameVisual());
 		return false;
 	}
 	if (!_valid(O.ObjectXFORM()))
 	{
-		xr_strcpy(reason, make_string("create physics shell: object matrix is not valid").c_str());
+		xr_strcpy(reason, "create physics shell: object matrix is not valid");
 		return false;
 	}
 	if (!valid_pos(O.ObjectXFORM().c))

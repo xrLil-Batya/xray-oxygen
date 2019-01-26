@@ -633,7 +633,7 @@ void Decode()  /* recover */
 	tim_size = count;
 }
 
-unsigned XRay::Compress::LZ::WriteLZ(int hf, void* d, unsigned size)
+XRCORE_API unsigned XRay::Compress::LZ::WriteLZ(HANDLE hf, void* d, unsigned size)
 {
 	u8*	start = (u8*) d;
 	fs.Init_Input(start,start+size);
@@ -645,7 +645,7 @@ unsigned XRay::Compress::LZ::WriteLZ(int hf, void* d, unsigned size)
 	int size_out = fs.OutSize();
 	if (size_out)
 	{
-		WriteFile((HANDLE)hf, fs.OutPointer(), size_out, &SizeOut, nullptr);			//_write(hf, fs.OutPointer(), size_out);
+		WriteFile(hf, fs.OutPointer(), size_out, &SizeOut, nullptr);			//_write(hf, fs.OutPointer(), size_out);
 	}
 
 	fs.OutRelease	();
@@ -670,12 +670,12 @@ void XRay::Compress::LZ::DecompressLZ(u8** dest, unsigned* dest_sz, void* src, u
 	*dest_sz	= fs.OutSize();
 }
 
-unsigned XRay::Compress::LZ::ReadLZ(int hf, void* &d, unsigned size)
+XRCORE_API unsigned XRay::Compress::LZ::ReadLZ(HANDLE hf, void* &d, unsigned size)
 {
 	// Read file in memory
 	u8*	data	= (u8*)xr_malloc(size);
 	DWORD SizeOut = 0;
-	ReadFile((HANDLE)hf, data, size, &SizeOut, nullptr);	//_read	(hf,data,size);
+	ReadFile(hf, data, size, &SizeOut, nullptr);	//_read	(hf,data,size);
 	
 	fs.Init_Input(data,data+size);
 	

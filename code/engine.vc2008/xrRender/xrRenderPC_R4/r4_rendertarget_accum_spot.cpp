@@ -116,7 +116,7 @@ void CRenderTarget::accum_spot(light* L)
 		// compute xforms
 		xf_project.mul(m_TexelAdjust2, L->X.S.project);
 		m_Lmap.mul(xf_view, xf_world);
-		m_Lmap.mul(xf_project, m_Lmap);
+		m_Lmap.mulB_44(xf_project);
 	}
 
 	// Common constants
