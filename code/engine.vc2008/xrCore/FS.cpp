@@ -28,23 +28,42 @@ XRCORE_API void createPath(LPCSTR path, bool bIsFileName /*= false*/)
 	for (int i = 1; i < pathTokensSize; i++)
 	{
 		xr_string targetDir = xr_string::Join(pathTokens.begin(), pathTokens.begin() + i, '\\');
-		CreateDirectoryA(targetDir.c_str(), NULL);
+
+		WIN32_FIND_DATAA findData = { 0 };
+		HANDLE hFind = FindFirstFileA(targetDir.c_str(), &findData);
+
+		if (!hFind || hFind == INVALID_HANDLE_VALUE)
+		{
+			// if this path don't include any path - create new directory
+			R_ASSERT(CreateDirectoryA(targetDir.c_str(), nullptr));
+		}
+		else
+		{
+			// get type of path
+			bool bDir = ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) > 0);
+			FindClose(hFind);
+
+			// the path can't be be file
+			R_ASSERT(bDir);
+		}
 	}
 }
 
 static errno_t open_internal(const char* fn, int& handle) 
 {
-    return _sopen_s(&handle, fn, _O_RDONLY | _O_BINARY, _SH_DENYNO, _S_IREAD);
+    return (errno_t)(handle = (int)CreateFileA(fn, GENERIC_READ, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr));	//_sopen_s(&handle, fn, _O_RDONLY | _O_BINARY, _SH_DENYNO, _S_IREAD);
 }
 
 bool file_handle_internal(const char* file_name, size_t& size, int& file_handle) 
 {
-    if (open_internal(file_name, file_handle)) 
+    if (!open_internal(file_name, file_handle)) 
 	{
-            return false;
+		return false;
     }
 
-    size = _filelength(file_handle);
+	LARGE_INTEGER largeInt = {};
+	GetFileSizeEx((HANDLE)file_handle, &largeInt);	
+	size = largeInt.QuadPart;
     return true;
 }
 
@@ -52,10 +71,12 @@ void* FileDownload(const char* file_name, const int& file_handle, size_t& file_s
 {
     void* buffer = Memory.mem_alloc(file_size);
 
-    const int r_bytes = _read(file_handle, buffer, file_size);
+	DWORD r_bytes = 0;		//_read(file_handle, buffer, file_size);
+	ReadFile((HANDLE)file_handle, buffer, file_size, &r_bytes, nullptr);
+
     R_ASSERT3(file_size == static_cast<size_t>(r_bytes), "can't read from file : ", file_name);
 
-    R_ASSERT3(!_close(file_handle), "can't close file : ", file_name);
+	if (file_handle) { CloseHandle((HANDLE)file_handle); }		//R_ASSERT3(!_close(file_handle), "can't close file : ", file_name);
     return buffer;
 }
 
@@ -74,23 +95,30 @@ inline void mk_mark(MARK& M, const char* S) {
 }
 
 void FileCompress(const char* fn, const char* sign, void* data, const size_t size) {
-    MARK M;
+	MARK M = {};
     mk_mark(M, sign);
+	DWORD SizeOut = 0;
 
-    const int H = _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
-    R_ASSERT2(H > 0, fn);
-    _write(H, &M, 8);
+	//#VERTVER: It's too bad to convert 64-bit pointer to 32-bit integer
+    const int H = (int)CreateFileA(fn, GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);    // _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
+    R_ASSERT2(H, fn);
+
+	WriteFile((HANDLE)H, &M, sizeof(size_t), &SizeOut, nullptr);	//_write(H, &M, 8);
+
 	XRay::Compress::LZ::WriteLZ(H, data, (u32)size);
-    _close(H);
+	CloseHandle((HANDLE)H);		//_close(H);
 }
 
 void* FileDecompress(const char* fn, const char* sign, size_t* size) {
     MARK M, F;
     mk_mark(M, sign);
+	DWORD SizeOut = 0;
 
-    const int H = _open(fn, O_BINARY | O_RDONLY);
-    R_ASSERT2(H > 0, fn);
-    _read(H, &F, 8);
+    const int H = (int)CreateFileA(fn, GENERIC_READ, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);//_open(fn, O_BINARY | O_RDONLY);
+    R_ASSERT2(H, fn);
+
+	ReadFile((HANDLE)H, &F, sizeof(size_t), &SizeOut, nullptr);		//_read(H, &F, 8);
+
     if (strncmp(M.data(), F.data(), 8) != 0) {
         F[8] = 0;
         Msg("FATAL: signatures doesn't match, file(%s) / requested(%s)", F, sign);
@@ -98,8 +126,12 @@ void* FileDecompress(const char* fn, const char* sign, size_t* size) {
     R_ASSERT(strncmp(M.data(), F.data(), 8) == 0);
 
     void* ptr = nullptr;
-    const size_t SZ = XRay::Compress::LZ::ReadLZ(H, ptr, _filelength(H) - 8);
-    _close(H);
+	LARGE_INTEGER largeInt = {};
+	GetFileSizeEx((HANDLE)fn, &largeInt);	// don't use here GetFileSize, it can't open file < Page size (default - 64KB)
+
+    const size_t SZ = XRay::Compress::LZ::ReadLZ(H, ptr, /*_filelength(H)*/ largeInt.QuadPart - 8);
+
+	CloseHandle((HANDLE)H);	//_close(H);
     if (size)
         *size = SZ;
     return ptr;
@@ -278,7 +310,7 @@ size_t IReader::advance_term_string() {
 
 void IReader::r_string(char* dest, const size_t tgt_sz) {
     char* src = data + Pos;
-    const auto sz = advance_term_string();
+    const size_t sz = advance_term_string();
     R_ASSERT2(sz < (tgt_sz - 1), "Dest string less than needed.");
     R_ASSERT(!IsBadReadPtr(src, sz));
 
@@ -366,7 +398,10 @@ CVirtualFileRW::CVirtualFileRW(const char* cFileName)
     hSrcFile = CreateFile(cFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, nullptr,
                           OPEN_EXISTING, 0, nullptr);
     R_ASSERT3(hSrcFile != INVALID_HANDLE_VALUE, cFileName, Debug.error2string(GetLastError()));
-    Size = static_cast<int>(GetFileSize(hSrcFile, nullptr));
+
+	LARGE_INTEGER li = {};
+	GetFileSizeEx(hSrcFile, &li);
+    Size = static_cast<int>(li.QuadPart);
     R_ASSERT3(Size, cFileName, Debug.error2string(GetLastError()));
 
     hSrcMap = CreateFileMapping(hSrcFile, nullptr, PAGE_READWRITE, 0, 0, nullptr);
@@ -389,8 +424,11 @@ CVirtualFileReader::CVirtualFileReader(const char* cFileName)
     hSrcFile = CreateFile(cFileName, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
                           OPEN_EXISTING, 0, nullptr);
     R_ASSERT3(hSrcFile != INVALID_HANDLE_VALUE, cFileName, Debug.error2string(GetLastError()));
-    Size = static_cast<int>(GetFileSize(hSrcFile, nullptr));
-    R_ASSERT3(Size, cFileName, Debug.error2string(GetLastError()));
+
+	LARGE_INTEGER li = {};
+	GetFileSizeEx(hSrcFile, &li);
+	Size = static_cast<int>(li.QuadPart);
+	R_ASSERT3(Size, cFileName, Debug.error2string(GetLastError()));
 
     hSrcMap = CreateFileMapping(hSrcFile, nullptr, PAGE_READONLY, 0, 0, nullptr);
     R_ASSERT3(hSrcMap != INVALID_HANDLE_VALUE, cFileName, Debug.error2string(GetLastError()));
