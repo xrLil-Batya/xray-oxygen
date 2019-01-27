@@ -12,6 +12,8 @@ namespace XRay
 
 	public:
 		UIStatic();
+		UIStatic(::System::IntPtr pObject);
+
 		~UIStatic();
 		
 		UILines^ TextItemControl();
