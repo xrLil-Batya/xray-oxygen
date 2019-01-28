@@ -71,10 +71,10 @@ void CheckOpenAL()
 		dwOpenALInstalled = GetFileAttributes(szPath);
 		if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
 		{
-			MessageBox(nullptr,
-				TEXT("ENG: X-Ray Oxygen can't detect OpenAL library. Please, specify path to installer manually. \n")
-				TEXT("RUS: X-Ray Oxygen не смог обнаружить библиотеку OpenAL. Пожалуйста, укажите путь до установщика самостоятельно."),
-				TEXT("OpenAL Not Found!"),
+			MessageBoxW(nullptr,
+				L"ENG: X-Ray Oxygen can't detect OpenAL library. Please, specify path to installer manually. \n"
+				L"RUS: X-Ray Oxygen не смог обнаружить библиотеку OpenAL. Пожалуйста, укажите путь до установщика самостоятельно.",
+				L"OpenAL Not Found!",
 				MB_OK | MB_ICONERROR
 			);
 
@@ -139,10 +139,10 @@ void CheckOpenAL()
 
 		if ((dwOpenALInstalled = GetFileAttributes(szOpenALDir) == INVALID_FILE_ATTRIBUTES))
 		{
-			MessageBox(nullptr,
-				TEXT("ENG: X-Ray Oxygen can't detect OpenAL library. Please, re-install library manually. \n")
-				TEXT("RUS: X-Ray Oxygen не смог обнаружить библиотеку OpenAL. Пожалуйста, переустановите библиотеку самостоятельно."),
-				TEXT("OpenAL Not Found!"),
+			MessageBoxW(nullptr,
+				L"ENG: X-Ray Oxygen can't detect OpenAL library. Please, re-install library manually. \n"
+				L"RUS: X-Ray Oxygen не смог обнаружить библиотеку OpenAL. Пожалуйста, переустановите библиотеку самостоятельно.",
+				L"OpenAL Not Found!",
 				MB_OK | MB_ICONERROR
 			);
 
