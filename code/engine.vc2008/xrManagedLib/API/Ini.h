@@ -15,7 +15,7 @@ namespace XRay
 		/// <summary> Returns file name </summary>
 		property String^ FileName
 		{
-			String^ get() override
+			virtual String^ get()
 			{
 				return gcnew String(pNativeObject->fname());
 			}

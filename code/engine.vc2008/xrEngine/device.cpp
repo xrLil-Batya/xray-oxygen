@@ -289,27 +289,27 @@ void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 	string128 buf = {0};
 	MONITORINFO mi = { 0 };
 	mi.cbSize = sizeof(MONITORINFO);
-	int monitor_width = 0;
-	int monitor_height = 0;
+	long monitor_width = 0;
+	long monitor_height = 0;
 	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
 
 	if (GetMonitorInfo(hMonitor, &mi))
 	{
 		monitor_width = mi.rcMonitor.right - mi.rcMonitor.left;
 		monitor_height = mi.rcMonitor.bottom - mi.rcMonitor.top;
+
+		if ((DWORD)monitor_width >= width && (DWORD)monitor_height >= height)
+		{
+			xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
+
+			Console->Execute(buf);
+			m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
+		}
 	}
 	else
 	{
 		DWORD dwError = GetLastError();
 		R_CHK(dwError);
-	}
-
-	if (monitor_height > 0 && monitor_width > 0 && monitor_width >= width && monitor_height >= height)
-	{
-		xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
-
-		Console->Execute(buf);
-		m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2); 
 	}
 }
 

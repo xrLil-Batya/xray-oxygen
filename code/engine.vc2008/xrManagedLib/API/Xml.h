@@ -23,7 +23,7 @@ namespace XRay
 
 		property Node^ Root
 		{
-			Node^ get() override
+			virtual Node^ get()
 			{
 				return gcnew Node(pNativeXml->GetRoot());
 			}
@@ -31,12 +31,12 @@ namespace XRay
 
 		property Node^ LocalRoot
 		{
-			Node^ get() override
+			virtual Node^ get()
 			{
 				return gcnew Node(pNativeXml->GetLocalRoot());
 			}
 
-			void set(Node^ node) override
+			virtual void set(Node^ node)
 			{
 				pNativeXml->SetLocalRoot(node->pNativeNode);
 			}

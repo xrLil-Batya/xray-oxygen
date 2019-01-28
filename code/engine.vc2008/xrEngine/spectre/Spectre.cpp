@@ -3,6 +3,7 @@
 
 ISpectreCoreServer* SpectreEngineClient::CoreAPI;
 ISpectreEngineLib* SpectreEngineClient::EngineLibAPI;
+bool gSpectreIsLoaded = false;
 
 void SpectreEngineClient::Initialize()
 {
@@ -14,15 +15,17 @@ void SpectreEngineClient::Initialize()
 	FuncNode* pServerNode = nullptr;
 
 	// Get main manage core interface
-	if ((hManagedLib = GetModuleHandleA("xrManagedCoreLib.dll")) == NULL)
+	if ((hManagedLib = GetModuleHandle("xrManagedCoreLib.dll")) == NULL)
 	{
 		// If managed library module is not exist - load it from bit path
-		hManagedLib = LoadLibraryA("xrManagedCoreLib.dll");
+		hManagedLib = LoadLibrary("xrManagedCoreLib.dll");
 		R_ASSERT2(hManagedLib, "No 'xrManagedCoreLib.dll' library at bit path.");
+		return;
 	}
 
  	pGetInterface = GetProcAddress(hManagedLib, "GetCoreInterface");
 	R_ASSERT2(pGetInterface, "Can't get 'GetCoreInterface' function from xrManagedLib.dll. DLL corrupted?");
+	if (!pGetInterface) return;
 	pAPI = pGetInterface();
 	CoreAPI = reinterpret_cast<ISpectreCoreServer*>(pAPI);
 
@@ -31,20 +34,24 @@ void SpectreEngineClient::Initialize()
 	CoreAPI->CompileScripts();
 
 	// Get interface ptr from game lib
-	if ((hGameManagedLib = GetModuleHandleA("xrManagedEngineLib.dll")) == NULL)
+	if ((hGameManagedLib = GetModuleHandle("xrManagedEngineLib.dll")) == NULL)
 	{
-		hGameManagedLib = LoadLibraryA("xrManagedEngineLib.dll");
+		hGameManagedLib = LoadLibrary("xrManagedEngineLib.dll");
 		R_ASSERT(hGameManagedLib);
+		return;
 	}
 
 	pGetInterface = GetProcAddress(hGameManagedLib, "GetEngineInterface");
 	R_ASSERT2(pGetInterface, "Can't get 'GetGameInterface' function from xrManagedLib.dll. DLL corrupted?");
+	if (!pGetInterface) return;
+
 	pAPI = pGetInterface();
 	EngineLibAPI = reinterpret_cast<ISpectreEngineLib*>(pAPI);
 
 	// Get all callbacks prototype, and hook up all our interface prototypes
 	pServerNode = EngineLibAPI->GetFunctionLinkedListStart();
 	R_ASSERT2(pServerNode, "No Spectre callbacks in xrManaged libs");
+	if (!pServerNode) return;
 
 	do
 	{
@@ -60,6 +67,8 @@ void SpectreEngineClient::Initialize()
 
 		pServerNode = pServerNode->NextNode;
 	} while (pServerNode != nullptr);
+
+	gSpectreIsLoaded = true;
 }
 
 void SpectreEngineClient::Shutdown()
