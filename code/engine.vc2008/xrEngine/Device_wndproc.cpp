@@ -22,7 +22,6 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	case WM_SYSKEYDOWN : return true;
 	case WM_ENTERSIZEMOVE: bResize = true; break;
 	case WM_TIMER: break;
-	case WM_SIZE: break;
 	case WM_CLOSE:  if (editor()) break; result = 0; return (true);
 	case WM_HOTKEY: break;// prevent 'ding' sounds caused by Alt+key combinations
 	case WM_SYSCHAR: result = 0; return true;
@@ -48,23 +47,29 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		result			= 1;
 		return			(true);
 	}
+	case WM_SIZE:
+	{
+		break;
+	}
 	case WM_EXITSIZEMOVE:
 	{
-		bResize = false;
-		RECT ClientRect;
-
-		GetClientRect(hWnd, &ClientRect);
-		LONG width = ClientRect.right - ClientRect.left;
-		LONG height = ClientRect.bottom - ClientRect.top;
-
-		if (Device.dwWidth != u32(width) || Device.dwHeight != u32(height))
+		if (wParam != SIZE_MINIMIZED)
 		{
-			if (height >= NULL && width >= NULL) 
-			{ 
-				Device.ResizeProc(height, width); 
+			bResize = false;
+			RECT ClientRect;
+
+			GetClientRect(hWnd, &ClientRect);
+			LONG width = ClientRect.right - ClientRect.left;
+			LONG height = ClientRect.bottom - ClientRect.top;
+
+			if (Device.dwWidth != u32(width) || Device.dwHeight != u32(height))
+			{
+				if (height >= NULL && width >= NULL)
+				{
+					Device.ResizeProc(height, width);
+				}
 			}
 		}
-
 		break;
 	}
 	case WM_SYSCOMMAND : 
@@ -80,6 +85,7 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		case SC_MOVE:
 		case SC_SIZE:
 		case SC_MAXIMIZE:
+			break;
 		case SC_MONITORPOWER:
 			result = 1;
 			bRet = true;
