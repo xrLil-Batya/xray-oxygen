@@ -299,7 +299,7 @@ bool __stdcall	can_create_phys_shell(string1024 &reason, IPhysicsShellHolder& O)
 #ifdef	DEBUG
 		xr_strcpy(reason, dbg_valide_pos_string(O.ObjectXFORM().c, &O, "create physics shell").c_str());
 #else
-		xr_strcpy(reason, make_string("create physics shell: object position is not valid").c_str());
+		xr_strcpy(reason, "create physics shell: object position is not valid");
 #endif
 		return false;
 	}
