@@ -103,7 +103,7 @@ bool xrScriptCompiler::ErrorHadler(CompilerResults^ result)
 	//check for warnings
 	if (result->Errors->HasWarnings)
 	{
-		Log("@ CSharp compile have warnings");
+		Log("@ CSharp compile has warnings");
 		System::Text::StringBuilder^ sb = gcnew System::Text::StringBuilder();
 		for (int errInd = 0; errInd < result->Errors->Count; errInd++)
 		{
@@ -165,9 +165,9 @@ bool xrScriptCompiler::CompileScripts()
 	Parameters->GenerateInMemory = false;
 	Parameters->GenerateExecutable = false;
 
-	///#TODO: Generate release version without debug info
-	Parameters->IncludeDebugInformation = true;
+	Parameters->IncludeDebugInformation = strstr(Core.Params, "-spectre_debug") ? true : false;
 	Parameters->OutputAssembly = GetPathToBuildAssembly("xrDotScripts.dll");
+
 	//list all files in directory
 	Parameters->CompilerOptions = "-platform:x64";
 

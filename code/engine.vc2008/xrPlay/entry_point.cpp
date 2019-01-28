@@ -158,10 +158,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int)
 
 	IsRunFunc RunFunc = (IsRunFunc)GetProcAddress(hLib, "RunApplication");
 	if (RunFunc)
+	{
 		RunFunc(params);
+	}
 	else
 	{
-		MessageBoxA(nullptr, "xrEngine module doesn't seems to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, "xrEngine module doesn't seem to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 #ifdef OLD_INSTANCE_SYSTEM		
