@@ -160,6 +160,8 @@ void xrLogger::InternalOpenLogFile()
 
 void xrLogger::LogThreadEntry()
 {
+	bool isDebug = IsDebuggerPresent();
+
 	auto FlushLogIfRequestedLambda = [this]()
 	{
 		if (bFlushRequested)
@@ -205,7 +207,7 @@ void xrLogger::LogThreadEntry()
 				// line is ready, ready up everything
 
 				// Output to MSVC debug output
-				if (IsDebuggerPresent() && !bFastDebugLog)
+				if (isDebug && !bFastDebugLog)
 				{
 					OutputDebugStringA(finalLine);
 					OutputDebugStringA("\n");
