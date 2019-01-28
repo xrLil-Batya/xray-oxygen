@@ -287,10 +287,30 @@ void CRenderDevice::on_idle()
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
 	string128 buf = {0};
-	xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
+	MONITORINFO mi = { 0 };
+	mi.cbSize = sizeof(MONITORINFO);
+	int monitor_width = 0;
+	int monitor_height = 0;
+	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
 
-	Console->Execute(buf);
-	m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
+	if (GetMonitorInfo(hMonitor, &mi))
+	{
+		monitor_width = mi.rcMonitor.right - mi.rcMonitor.left;
+		monitor_height = mi.rcMonitor.bottom - mi.rcMonitor.top;
+	}
+	else
+	{
+		DWORD dwError = GetLastError();
+		R_CHK(dwError);
+	}
+
+	if (monitor_height > 0 && monitor_width > 0 && monitor_width >= width && monitor_height >= height)
+	{
+		xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
+
+		Console->Execute(buf);
+		m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2); 
+	}
 }
 
 #ifdef INGAME_EDITOR
@@ -406,7 +426,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     case WPS_Windowed:
     {
         psDeviceFlags.set(rsFullscreen, false);
-        dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX ;
+        dwWindowStyle = WS_OVERLAPPEDWINDOW;
 
         SetRect	(&WindowBounds,
 				(DesktopRect.right - dwWidthCurr) / 2,
