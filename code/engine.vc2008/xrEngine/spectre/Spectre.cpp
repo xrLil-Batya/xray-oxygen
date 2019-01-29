@@ -15,15 +15,12 @@ void SpectreEngineClient::Initialize()
 	FuncNode* pServerNode = nullptr;
 
 	// Get main manage core interface
-	if ((hManagedLib = GetModuleHandle("xrManagedCoreLib.dll")) == NULL)
+	hManagedLib = GetModuleHandle("xrManagedCoreLib.dll");
+	if (hManagedLib == NULL)
 	{
 		// If managed library module is not exist - load it from bit path
 		hManagedLib = LoadLibrary("xrManagedCoreLib.dll");
 		R_ASSERT2(hManagedLib, "No 'xrManagedCoreLib.dll' library at bit path.");
-
-		// Форсер, задрал лить коммиты, предварительно не протестив их.
-		// Ты вставил сюда return; что значит выход из функции при УСПЕШНОЙ загрузке
-		// всех библиотек.
 	}
 	else
 		return;
@@ -39,15 +36,17 @@ void SpectreEngineClient::Initialize()
 	CoreAPI->CompileScripts();
 
 	// Get interface ptr from game lib
-	if ((hGameManagedLib = GetModuleHandle("xrManagedEngineLib.dll")) == NULL)
+	hGameManagedLib = GetModuleHandle("xrManagedEngineLib.dll"); // выдает отличный от нуля значение, при этом EngineLibAPI ещё не инициализировано (NULL), то есть мы таки выходим из функции не инициализировав значение EngineLibAPI
+	if (hGameManagedLib == NULL)
 	{
 		hGameManagedLib = LoadLibrary("xrManagedEngineLib.dll");
 		R_ASSERT(hGameManagedLib);
 	}
 	else
 	{
-		return;
+	//	return; закомментировал здесь ибо читать выше комментарий 
 	}
+
 
 	pGetInterface = GetProcAddress(hGameManagedLib, "GetEngineInterface");
 	R_ASSERT2(pGetInterface, "Can't get 'GetGameInterface' function from xrManagedLib.dll. DLL corrupted?");
@@ -87,7 +86,7 @@ void SpectreEngineClient::Shutdown()
 
 DWORD SpectreEngineClient::CreateProxyObject(DLL_Pure* pObject)
 {
-	return EngineLibAPI->CreateProxyObject(pObject);
+ 	return EngineLibAPI->CreateProxyObject(pObject);
 }
 
 void SpectreEngineClient::DestroyProxyObject(DLL_Pure* pObject)
