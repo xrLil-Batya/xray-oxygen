@@ -9,6 +9,7 @@ namespace xrSpectre
         {
 			XRay.ClassRegistrator.Register(typeof(GamePersistence), (UInt64)XRay.EngineClassIDs.GamePersistence);
             XRay.Log.Info("! SpectreC#: Inited!");
+	    XRay.Log.Info("! Spectrec#: Engine veraion atring: " + XRay.System.GetVersionString);
         }
     }
 }
