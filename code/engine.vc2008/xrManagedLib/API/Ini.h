@@ -9,15 +9,15 @@ namespace XRay
 	public ref class Ini sealed
 	{
 	internal:
-		CInifile* pNativeObject;
+		CInifile* pNativeIni;
 
 	public:
 		/// <summary> Returns file name </summary>
 		property String^ FileName
 		{
-			virtual String^ get()
+			virtual String^ get() 
 			{
-				return gcnew String(pNativeObject->fname());
+				return gcnew String(pNativeIni->fname());
 			}
 		};
 
