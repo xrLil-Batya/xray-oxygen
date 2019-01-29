@@ -144,6 +144,8 @@ bool xrScriptCompiler::ErrorHadler(CompilerResults^ result)
 
 bool xrScriptCompiler::CompileScripts()
 {
+	const bool spectreDebug = strstr(Core.Params, "-spectre_debug") ? true : false;
+
 	Parameters->ReferencedAssemblies->Add(GetPathToThisAssembly());
 	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
 	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
@@ -151,10 +153,24 @@ bool xrScriptCompiler::CompileScripts()
 	Parameters->GenerateInMemory = false;
 	Parameters->GenerateExecutable = false;
 
-	Parameters->IncludeDebugInformation = strstr(Core.Params, "-spectre_debug") ? true : false;
+	Parameters->IncludeDebugInformation = spectreDebug;
 	Parameters->OutputAssembly = GetPathToBuildAssembly("xrDotScripts.dll");
+	Parameters->CompilerOptions = "-platform:x64 ";
 
-	Parameters->CompilerOptions = "-platform:x64";
+#ifdef DEBUG
+	Parameters->CompilerOptions += "-define:OXY_DEBUG ";
+#else
+	Parameters->CompilerOptions += "-define:OXY_RELEASE ";
+#endif
+
+	if (spectreDebug)
+	{
+		Parameters->CompilerOptions += "-define:SPECTRE_DEBUG";
+	}
+	else
+	{
+		Parameters->CompilerOptions += "-define:SPECTRE_RELEASE";
+	}
 
 	if (ErrorHadler(FindCSScripts()))
 	{
