@@ -43,6 +43,9 @@ void SpectreEngineClient::Initialize()
 	{
 		hGameManagedLib = LoadLibrary("xrManagedEngineLib.dll");
 		R_ASSERT(hGameManagedLib);
+	}
+	else
+	{
 		return;
 	}
 

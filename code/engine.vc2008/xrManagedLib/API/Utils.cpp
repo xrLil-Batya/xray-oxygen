@@ -21,7 +21,7 @@ System::UInt32 XRay::Utils::CRC32(System::String^ Str)
 {
 	if (Str->Length > 511)
 	{
-		XRay::Log::Error("You can't compute crc32 on long strings with that function (more then	511 symbols)");
+		XRay::Log::Error("You can't compute crc32 on long strings with that function (more than 511 symbols)");
 		return 0;
 	}
 
