@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Spectre.h"
 
 ISpectreCoreServer* SpectreEngineClient::CoreAPI;
@@ -20,8 +20,13 @@ void SpectreEngineClient::Initialize()
 		// If managed library module is not exist - load it from bit path
 		hManagedLib = LoadLibrary("xrManagedCoreLib.dll");
 		R_ASSERT2(hManagedLib, "No 'xrManagedCoreLib.dll' library at bit path.");
-		return;
+
+		// Форсер, задрал лить коммиты, предварительно не протестив их.
+		// Ты вставил сюда return; что значит выход из функции при УСПЕШНОЙ загрузке
+		// всех библиотек.
 	}
+	else
+		return;
 
  	pGetInterface = GetProcAddress(hManagedLib, "GetCoreInterface");
 	R_ASSERT2(pGetInterface, "Can't get 'GetCoreInterface' function from xrManagedLib.dll. DLL corrupted?");
