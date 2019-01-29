@@ -11,6 +11,7 @@ xr_pure_interface MANAGED_API ISpectreCoreServer
 {
 	virtual void CompileScripts() = 0;
 	virtual void LoadGameLib() = 0;
+	virtual void Shutdown() = 0;
 };
 
 extern "C"

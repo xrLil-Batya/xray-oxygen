@@ -79,6 +79,7 @@ void SpectreEngineClient::Initialize()
 void SpectreEngineClient::Shutdown()
 {
 	EngineLibAPI->OnShutdown();
+	CoreAPI->Shutdown();
 }
 
 DWORD SpectreEngineClient::CreateProxyObject(DLL_Pure* pObject)
