@@ -33,7 +33,7 @@ namespace XRay
 
 	XRay::Object^ ObjectSpace::GetHittedObject()
 	{
-		// @ How to use it??? 
+		// @ How to cast (I guess init) XRay::Object to (with) CObject and use it??? 
 		return nullptr;
 	}
 
