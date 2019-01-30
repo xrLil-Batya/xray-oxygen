@@ -100,6 +100,7 @@
     <ClInclude Include="IFunctionInvoker.h" />
     <ClInclude Include="ISpectreEngineLib.h" />
     <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="ObjectSpace.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TemplatedStrings.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="GamePersistence.cpp" />
     <ClCompile Include="ISpectreEngineLib.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
+    <ClCompile Include="ObjectSpace.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
