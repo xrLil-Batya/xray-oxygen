@@ -18,8 +18,89 @@ namespace XRay
 			Node(XML_NODE* node);
 
 		public:
+			property IntPtr NativeNode
+			{
+				IntPtr get()
+				{
+					return (IntPtr)pNativeNode;
+				}
+			}
+
+			property bool IsHasChild
+			{
+				bool get()
+				{
+					return pNativeNode->FirstChild();
+				}
+			}
+
+			property String^ Value 
+			{
+				virtual String^ get()
+				{
+					return gcnew String(pNativeNode->Value());
+				}
+
+				virtual void set(String^ value) 
+				{
+					string256 Value = {};
+
+					ConvertDotNetStringToAscii(value, Value);
+
+					pNativeNode->SetValue(Value);
+				}
+			}
+
+			property Node^ Parent
+			{
+				virtual Node^ get()
+				{
+					return gcnew Node(pNativeNode->Parent());
+				}
+			}
+
+			property Node^ First
+			{
+				virtual Node^ get()
+				{
+					return gcnew Node(pNativeNode->FirstChild());
+				}
+			}
+
+			property Node^ Last
+			{
+				virtual Node^ get()
+				{
+					return gcnew Node(pNativeNode->LastChild());
+				}
+			}
+
+			property Node^ Next
+			{
+				virtual Node^ get()
+				{
+					return gcnew Node(pNativeNode->NextSibling());
+				}
+			}
+
+			property Node^ Previous
+			{
+				virtual Node^ get()
+				{
+					return gcnew Node(pNativeNode->PreviousSibling());
+				}
+			}
+
 			virtual ~Node();
-		};
+		};;
+
+		property IntPtr NativeXml
+		{
+			IntPtr get()
+			{
+				return (IntPtr)pNativeXml;
+			}
+		}
 
 		property Node^ Root
 		{
@@ -44,7 +125,7 @@ namespace XRay
 
 		Xml(String^ path, String^ fileName);
 		Xml(String^ pathAlias, String^ path, String^ fileName);
-
+		
 		virtual ~Xml();
 
 		String^ Read(String^ node, int index, String^ defaultValue);
