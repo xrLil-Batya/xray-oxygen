@@ -30,12 +30,68 @@ namespace XRay
 
 	}
 
-	bool ObjectSpace::RayPick()
+	XRay::Object^ ObjectSpace::GetHittedObject()
 	{
-		// @ just reference to R;
+		// @ How to use it??? 
+		return nullptr;
+	}
+
+	bool ObjectSpace::RayPick(Vector3^ start, Vector3^ dir, float range, RQ_TraceType type, XRay::Object^ ignore_object)
+	{
+		Fvector s;
+		s.x = start->X;
+		s.y = start->Y;
+		s.z = start->Z;
+
+		Fvector d;
+		d.x = dir->X;
+		d.y = dir->Y;
+		d.z = dir->Z;
+
+		collide::rq_target b = (collide::rq_target)type;
+
+		collide::rq_result object_status;
+		CObject* obj = (CObject*)ignore_object->GetNativeObject().ToPointer();  
+		bool status = pNativeObject->RayPick(s, d, range, b, object_status, obj);
+		if (status)
+		{
+			if (object_status.O)
+			{
+				current_object = object_status.O;
+			}
+			else
+			{
+				current_object = nullptr;
+			}
+		}
+
+		return status;
+	}
+
+	
+	bool ObjectSpace::RayTest(Vector3^ start, Vector3^ dir, float range, RQ_TraceType type, XRay::Object^ ignore_object)
+	{
+		Fvector s; 
+		s.x = start->X;
+		s.y = start->Y;
+		s.z = start->Z;
+
+		Fvector d;
+		d.x = start->X;
+		d.y = start->Y;
+		d.z = start->Z;
+
+		collide::rq_target b = (collide::rq_target)type;
+		CObject* obj = (CObject*)ignore_object->GetNativeObject().ToPointer();
+		bool status = pNativeObject->RayTest(s, d, range, b, nullptr, obj);
+		
+		return status;
+	}
+
+	bool ObjectSpace::RayPickFromActor(RQ_TraceType type)
+	{
  
 		return false;
 	}
-
 }
 
