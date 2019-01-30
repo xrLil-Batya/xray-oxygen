@@ -16,18 +16,16 @@ void SpectreEngineClient::Initialize()
 
 	// Get main manage core interface
 	hManagedLib = GetModuleHandle("xrManagedCoreLib.dll");
-	if (hManagedLib == NULL)
-	{
-		// If managed library module is not exist - load it from bit path
+	if (!hManagedLib)
 		hManagedLib = LoadLibrary("xrManagedCoreLib.dll");
-		R_ASSERT2(hManagedLib, "No 'xrManagedCoreLib.dll' library at bit path.");
-	}
-	else
-		return;
+	
+	R_ASSERT2(hManagedLib, "No 'xrManagedCoreLib.dll' library at bit path.");
 
  	pGetInterface = GetProcAddress(hManagedLib, "GetCoreInterface");
 	R_ASSERT2(pGetInterface, "Can't get 'GetCoreInterface' function from xrManagedLib.dll. DLL corrupted?");
+
 	if (!pGetInterface) return;
+
 	pAPI = pGetInterface();
 	CoreAPI = reinterpret_cast<ISpectreCoreServer*>(pAPI);
 
@@ -37,16 +35,10 @@ void SpectreEngineClient::Initialize()
 
 	// Get interface ptr from game lib
 	hGameManagedLib = GetModuleHandle("xrManagedEngineLib.dll"); // выдает отличный от нуля значение, при этом EngineLibAPI ещё не инициализировано (NULL), то есть мы таки выходим из функции не инициализировав значение EngineLibAPI
-	if (hGameManagedLib == NULL)
-	{
+	if (!hGameManagedLib)
 		hGameManagedLib = LoadLibrary("xrManagedEngineLib.dll");
-		R_ASSERT(hGameManagedLib);
-	}
-	else
-	{
-	//	return; закомментировал здесь ибо читать выше комментарий 
-	}
-
+	
+	R_ASSERT(hGameManagedLib);
 
 	pGetInterface = GetProcAddress(hGameManagedLib, "GetEngineInterface");
 	R_ASSERT2(pGetInterface, "Can't get 'GetGameInterface' function from xrManagedLib.dll. DLL corrupted?");
