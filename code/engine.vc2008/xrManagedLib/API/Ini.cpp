@@ -18,9 +18,11 @@ Ini::Ini(String^ fileName, bool readOnly, bool load) : Ini(fileName, readOnly, l
 
 Ini::Ini(String^ fileName, bool readOnly, bool load, bool saveAtEnd)
 {
-	string1024 PathToResource;
-	ConvertDotNetStringToAscii(Filesystem::GetPathToResource(CONFIG, fileName), PathToResource);
-	pNativeIni = new CInifile(PathToResource, readOnly, load, saveAtEnd);
+	string1024 Path = {};
+
+	ConvertDotNetStringToAscii(Filesystem::GetPathToResource(CONFIG, fileName), Path);
+
+	pNativeIni = new CInifile(Path, readOnly, load, saveAtEnd);
 }
 
 Ini::~Ini()
@@ -30,16 +32,19 @@ Ini::~Ini()
 
 bool Ini::IsSectionExist(String^ section)
 {
-	string512 Section;
+	string256 Section = {};
+
 	ConvertDotNetStringToAscii(section, Section);
+
 	return pNativeIni->section_exist(Section);
 }
 
 bool Ini::IsLineExist(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->line_exist(Section, Line);
@@ -47,16 +52,19 @@ bool Ini::IsLineExist(String^ section, String^ line)
 
 UInt32 Ini::GetLineCount(String^ section)
 {
-	string512 Section;
+	string256 Section = {};
+
 	ConvertDotNetStringToAscii(section, Section);
+
 	return pNativeIni->line_count(Section);
 }
 
 bool Ini::ReadBool(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_bool(Section, Line);
@@ -69,9 +77,10 @@ UInt64 Ini::ReadClassId(String^ section)
 
 UInt64 Ini::ReadClassId(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_clsid(Section, Line);
@@ -79,9 +88,10 @@ UInt64 Ini::ReadClassId(String^ section, String^ line)
 
 SByte Ini::ReadByte(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_s8(Section, Line);
@@ -89,9 +99,10 @@ SByte Ini::ReadByte(String^ section, String^ line)
 
 Byte Ini::ReadUByte(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_u8(Section, Line);
@@ -99,9 +110,10 @@ Byte Ini::ReadUByte(String^ section, String^ line)
 
 Int16 Ini::ReadShort(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_s16(Section, Line);
@@ -109,9 +121,10 @@ Int16 Ini::ReadShort(String^ section, String^ line)
 
 UInt16 Ini::ReadUShort(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_u16(Section, Line);
@@ -119,9 +132,10 @@ UInt16 Ini::ReadUShort(String^ section, String^ line)
 
 Int32 Ini::ReadInt(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_s32(Section, Line);
@@ -129,9 +143,10 @@ Int32 Ini::ReadInt(String^ section, String^ line)
 
 UInt32 Ini::ReadUInt(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_u32(Section, Line);
@@ -139,9 +154,10 @@ UInt32 Ini::ReadUInt(String^ section, String^ line)
 
 UInt64 Ini::ReadULong(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_u64(Section, Line);
@@ -149,9 +165,10 @@ UInt64 Ini::ReadULong(String^ section, String^ line)
 
 float Ini::ReadFloat(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_float(Section, Line);
@@ -159,9 +176,10 @@ float Ini::ReadFloat(String^ section, String^ line)
 
 Int32 Ini::ReadColor(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return pNativeIni->r_color(Section, Line);
@@ -169,9 +187,10 @@ Int32 Ini::ReadColor(String^ section, String^ line)
 
 String^ Ini::ReadString(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	return gcnew String(pNativeIni->r_string(Section, Line));
@@ -179,9 +198,10 @@ String^ Ini::ReadString(String^ section, String^ line)
 
 Vector2^ Ini::ReadVector2(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	Fvector2 vector = pNativeIni->r_fvector2(Section, Line);
@@ -190,9 +210,10 @@ Vector2^ Ini::ReadVector2(String^ section, String^ line)
 
 Vector3^ Ini::ReadVector3(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	Fvector3 vector = pNativeIni->r_fvector3(Section, Line);
@@ -201,9 +222,10 @@ Vector3^ Ini::ReadVector3(String^ section, String^ line)
 
 Vector4^ Ini::ReadVector4(String^ section, String^ line)
 {
-	string512 Section;
+	string256 Section = {};
+	string256 Line = {};
+
 	ConvertDotNetStringToAscii(section, Section);
-	string512 Line;
 	ConvertDotNetStringToAscii(line, Line);
 
 	Fvector4 vector = pNativeIni->r_fvector4(Section, Line);
@@ -212,9 +234,11 @@ Vector4^ Ini::ReadVector4(String^ section, String^ line)
 
 void Ini::SaveAs(String^ fileName)
 {
-	string512 FileNameStr;
-	ConvertDotNetStringToAscii(fileName, FileNameStr);
-	pNativeIni->save_as(FileNameStr);
+	string512 FileName;
+
+	ConvertDotNetStringToAscii(fileName, FileName);
+
+	pNativeIni->save_as(FileName);
 }
 
 String^ Ini::ToString()
