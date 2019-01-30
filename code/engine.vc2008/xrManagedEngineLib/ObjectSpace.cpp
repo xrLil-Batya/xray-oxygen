@@ -18,16 +18,17 @@ namespace XRay
 
 	String^ ObjectSpace::GetHittedObjectName()
 	{
+		String^ result;
 		if (current_object)
 		{
-			String^ result = gcnew String(current_object->cName().data());
-			return result;
+			result = gcnew String(current_object->cName().data());
 		}
 		else
 		{
-			return nullptr;
-		}
+			result = gcnew String("");
 
+		}
+		return result;
 	}
 
 	XRay::Object^ ObjectSpace::GetHittedObject()
