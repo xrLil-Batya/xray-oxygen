@@ -24,26 +24,17 @@ void CIKLimbsController::Create(CGameObject* O)
 	IKinematics* K = smart_cast<IKinematics*>(O->Visual());
 	m_object = O;
 	VERIFY(K);
-
 	u16 sz = 2;
-
 	if (K->LL_UserData() && K->LL_UserData()->section_exist("ik"))
 		sz = K->LL_UserData()->r_u16("ik", "num_limbs");
-
 	VERIFY(sz <= max_size);
 
 	_bone_chains.reserve(sz);
-
 	for (u16 i = 0; sz > i; ++i)
-	{
 		LimbSetup();
-	}
-
 
 	bool already_has_callbacks = !O->visual_callbacks().empty();
-
 	O->add_visual_callback(IKVisualCallback);
-
 	if (already_has_callbacks)
 		std::swap(*(O->visual_callbacks().begin()), *(O->visual_callbacks().end() - 1));
 
@@ -88,34 +79,28 @@ void	y_shift_bones(IKinematics* K, float shift)
 {
 	u16 bc = K->LL_BoneCount();
 	for (u16 i = 0; bc > i; ++i)
-	{
 		K->LL_GetTransform(i).c.y += shift;
-	}
 }
 float	CIKLimbsController::LegLengthShiftLimit(float current_shift, const SCalculateData cd[max_size])
 {
 	float shift_down = -phInfinity;
 	const u16 sz = (u16)_bone_chains.size();
 	for (u16 j = 0; sz > j; ++j)
-	{
 		if (cd[j].state.foot_step)
 		{
 			float s_down = cd[j].m_limb->ObjShiftDown(current_shift, cd[j]);
 			if (shift_down < s_down)
 				shift_down = s_down;
 		}
-	}
-
-
 	return shift_down;
 }
+
 static const float static_shift_object_speed = .2f;
-float	CIKLimbsController::StaticObjectShift(const SCalculateData cd[max_size])
+float CIKLimbsController::StaticObjectShift(const SCalculateData cd[max_size])
 {
 	const float current_shift = _object_shift.shift();
 
-	u16 cnt = 0; 
-	float shift_up = 0;
+	u16 cnt = 0; float shift_up = 0;
 	const u16 sz = (u16)_bone_chains.size();
 	for (u16 j = 0; sz > j; ++j)
 		if (cd[j].state.foot_step)
@@ -128,21 +113,19 @@ float	CIKLimbsController::StaticObjectShift(const SCalculateData cd[max_size])
 			}
 		}
 
-	if (0 < cnt)
-		shift_up /= cnt;
-
 	float shift_down = LegLengthShiftLimit(current_shift, cd);
-	float shift = 0;
-	if (shift_down > 0.f)
+	float shift = 0.f;
+
+	if (shift_down > 0)
 		shift = -shift_down;
 	else if (-shift_down < shift_up)
 		shift = -shift_down;
 	else
 		shift = shift_up;
 
-	VERIFY(_valid(shift));
-	_object_shift.set_taget(shift, _abs(current_shift - shift) / static_shift_object_speed);
+	if(!_valid(shift)) return shift_up;
 
+	_object_shift.set_taget(shift, _abs(current_shift - shift) / static_shift_object_speed);
 	return shift;
 }
 static float doun_shift_to_correct = 0.3f;
@@ -210,7 +193,6 @@ void	CIKLimbsController::ObjectShift(float static_shift, const SCalculateData cd
 
 	u16 cnt_in_step = 0;
 	const u16 sz = (u16)_bone_chains.size();
-
 	for (u16 j = 0; sz > j; ++j)
 		if (cd[j].m_limb->foot_step())
 			++cnt_in_step;
@@ -221,7 +203,6 @@ void	CIKLimbsController::ObjectShift(float static_shift, const SCalculateData cd
 
 	if (cnt_in_step != sz && PredictObjectShift(cd))
 		return;
-
 	StaticObjectShift(cd);
 }
 
