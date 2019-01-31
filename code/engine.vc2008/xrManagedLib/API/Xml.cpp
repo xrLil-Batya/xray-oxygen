@@ -45,15 +45,15 @@ String^ XRay::Xml::Read(String^ node, int index, String^ defaultValue)
 	return gcnew String(pNativeXml->Read(NodeName, index, DefaultValue));
 }
 
-String^ XRay::Xml::Read(Node^ startNode, String^ node, int index, String^ defaultValue)
+String^ XRay::Xml::Read(Node^ node, String^ childNode, int index, String^ defaultValue)
 {
-	string256 NodeName = {};
+	string256 ChildNode = {};
 	string256 DefaultValue = {};
 
-	ConvertDotNetStringToAscii(node, NodeName);
+	ConvertDotNetStringToAscii(childNode, ChildNode);
 	ConvertDotNetStringToAscii(defaultValue, DefaultValue);
 
-	return gcnew String(pNativeXml->Read(startNode->pNativeNode, NodeName, index, DefaultValue));
+	return gcnew String(pNativeXml->Read(node->pNativeNode, ChildNode, index, DefaultValue));
 }
 
 String^ XRay::Xml::Read(Node^ node, String^ defaultValue)
@@ -74,13 +74,13 @@ int XRay::Xml::ReadInt(String^ node, int index, int defaultValue)
 	return pNativeXml->ReadInt(NodeName, index, defaultValue);
 }
 
-int XRay::Xml::ReadInt(Node^ startNode, String^ node, int index, int defaultValue)
+int XRay::Xml::ReadInt(Node^ node, String^ childNode, int index, int defaultValue)
 {
-	string256 NodeName = {};
+	string256 ChildNode = {};
 
-	ConvertDotNetStringToAscii(node, NodeName);
+	ConvertDotNetStringToAscii(childNode, ChildNode);
 
-	return pNativeXml->ReadInt(startNode->pNativeNode, NodeName, index, defaultValue);
+	return pNativeXml->ReadInt(node->pNativeNode, ChildNode, index, defaultValue);
 }
 
 int XRay::Xml::ReadInt(Node^ node, int defaultValue)
@@ -97,13 +97,13 @@ float XRay::Xml::ReadFloat(String^ node, int index, float defaultValue)
 	return pNativeXml->ReadFlt(NodeName, index, defaultValue);
 }
 
-float XRay::Xml::ReadFloat(Node^ startNode, String^ node, int index, float defaultValue)
+float XRay::Xml::ReadFloat(Node^ node, String^ childNode, int index, float defaultValue)
 {
-	string256 NodeName = {};
+	string256 ChildNode = {};
 
-	ConvertDotNetStringToAscii(node, NodeName);
+	ConvertDotNetStringToAscii(childNode, ChildNode);
 
-	return pNativeXml->ReadFlt(startNode->pNativeNode, NodeName, index, defaultValue);
+	return pNativeXml->ReadFlt(node->pNativeNode, ChildNode, index, defaultValue);
 }
 
 float XRay::Xml::ReadFloat(Node^ node, float defaultValue)
@@ -124,17 +124,17 @@ String^ XRay::Xml::ReadAttribute(String^ node, int index, String^ attribute, Str
 	return gcnew String(pNativeXml->ReadAttrib(NodeName, index, Attribute, DefaultValue));
 }
 
-String^ XRay::Xml::ReadAttribute(Node^ startNode, String^ node, int index, String^ attribute, String^ defaultValue)
+String^ XRay::Xml::ReadAttribute(Node^ node, String^ childNode , int index, String^ attribute, String^ defaultValue)
 {
-	string256 NodeName = {};
+	string256 ChildNode = {};
 	string256 Attribute = {};
 	string256 DefaultValue = {};
 
-	ConvertDotNetStringToAscii(node, NodeName);
+	ConvertDotNetStringToAscii(childNode, ChildNode);
 	ConvertDotNetStringToAscii(attribute, Attribute);
 	ConvertDotNetStringToAscii(defaultValue, DefaultValue);
 
-	return gcnew String(pNativeXml->ReadAttrib(startNode->pNativeNode, NodeName, index, Attribute, DefaultValue));
+	return gcnew String(pNativeXml->ReadAttrib(node->pNativeNode, ChildNode, index, Attribute, DefaultValue));
 }
 
 String^ XRay::Xml::ReadAttribute(Node^ node, String^ attribute, String^ defaultValue)
@@ -159,15 +159,15 @@ bool XRay::Xml::ReadAttributeBool(String^ node, int index, String^ attribute, bo
 	return pNativeXml->ReadAttribBool(NodeName, index, Attribute, defaultValue);
 }
 
-bool XRay::Xml::ReadAttributeBool(Node^ startNode, String^ node, int index, String^ attribute, bool defaultValue)
+bool XRay::Xml::ReadAttributeBool(Node^ node, String^ childNode, int index, String^ attribute, bool defaultValue)
 {
-	string256 NodeName = {};
+	string256 ChildNode = {};
 	string256 Attribute = {};
 
-	ConvertDotNetStringToAscii(node, NodeName);
+	ConvertDotNetStringToAscii(childNode, ChildNode);
 	ConvertDotNetStringToAscii(attribute, Attribute);
 
-	return pNativeXml->ReadAttribBool(startNode->pNativeNode, NodeName, index, Attribute, defaultValue);
+	return pNativeXml->ReadAttribBool(node->pNativeNode, ChildNode, index, Attribute, defaultValue);
 }
 
 bool XRay::Xml::ReadAttributeBool(Node^ node, String^ attribute, bool defaultValue)
@@ -190,15 +190,15 @@ int XRay::Xml::ReadAttributeInt(String^ node, int index, String^ attribute, int 
 	return pNativeXml->ReadAttribInt(NodeName, index, Attribute, defaultValue);
 }
 
-int XRay::Xml::ReadAttributeInt(Node^ startNode, String^ node, int index, String^ attribute, int defaultValue)
+int XRay::Xml::ReadAttributeInt(Node^ node, String^ childNode, int index, String^ attribute, int defaultValue)
 {
-	string256 NodeName = {};
+	string256 ChildNode = {};
 	string256 Attribute = {};
 
-	ConvertDotNetStringToAscii(node, NodeName);
+	ConvertDotNetStringToAscii(childNode, ChildNode);
 	ConvertDotNetStringToAscii(attribute, Attribute);
 
-	return pNativeXml->ReadAttribInt(startNode->pNativeNode, NodeName, index, Attribute, defaultValue);
+	return pNativeXml->ReadAttribInt(node->pNativeNode, ChildNode, index, Attribute, defaultValue);
 }
 
 int XRay::Xml::ReadAttributeInt(Node^ node, String^ attribute, int defaultValue)
@@ -221,15 +221,15 @@ float XRay::Xml::ReadAttributeFloat(String^ node, int index, String^ attribute, 
 	return pNativeXml->ReadAttribFlt(NodeName, index, Attribute, defaultValue);
 }
 
-float XRay::Xml::ReadAttributeFloat(Node^ startNode, String^ node, int index, String^ attribute, float defaultValue)
+float XRay::Xml::ReadAttributeFloat(Node^ node, String^ childNode, int index, String^ attribute, float defaultValue)
 {
-	string256 NodeName = {};
+	string256 ChildNode = {};
 	string256 Attribute = {};
 
-	ConvertDotNetStringToAscii(node, NodeName);
+	ConvertDotNetStringToAscii(childNode, ChildNode);
 	ConvertDotNetStringToAscii(attribute, Attribute);
 
-	return pNativeXml->ReadAttribFlt(startNode->pNativeNode, NodeName, index, Attribute, defaultValue);
+	return pNativeXml->ReadAttribFlt(node->pNativeNode, ChildNode, index, Attribute, defaultValue);
 }
 
 float XRay::Xml::ReadAttributeFloat(Node^ node, String^ attribute, float defaultValue)
@@ -241,7 +241,7 @@ float XRay::Xml::ReadAttributeFloat(Node^ node, String^ attribute, float default
 	return pNativeXml->ReadAttribFlt(node->pNativeNode, Attribute, defaultValue);
 }
 
-int XRay::Xml::GetNodesCount(String^ node, int index, String^ childNode)
+int XRay::Xml::GetNodesCount(String^ node, String^ childNode, int index)
 {
 	string256 NodeName = {};
 	string256 ChildNode = {};
@@ -270,13 +270,13 @@ XRay::Xml::Node^ XRay::Xml::NavigateToNode(String^ node, int index)
 	return gcnew Node(pNativeXml->NavigateToNode(NodeName, index));
 }
 
-XRay::Xml::Node^ XRay::Xml::NavigateToNode(Node^ startNode, String^ node, int index)
+XRay::Xml::Node^ XRay::Xml::NavigateToNode(Node^ node, String^ childNode, int index)
 {
-	string256 NodeName = {};
+	string256 ChildNode = {};
 
-	ConvertDotNetStringToAscii(node, NodeName);
+	ConvertDotNetStringToAscii(childNode, ChildNode);
 
-	return gcnew Node(pNativeXml->NavigateToNode(startNode->pNativeNode, NodeName, index));
+	return gcnew Node(pNativeXml->NavigateToNode(node->pNativeNode, ChildNode, index));
 }
 
 XRay::Xml::Node^ XRay::Xml::NavigateToNode(String^ node, String^ attribute, String^ attributeValue)
