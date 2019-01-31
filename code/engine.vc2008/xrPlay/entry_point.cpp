@@ -23,7 +23,6 @@ void CheckOpenAL();
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int)
 {
     gModulesLoaded = true;
-	LPCSTR params = lpCmdLine;
 
 	try
 	{
@@ -152,14 +151,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int)
 	HMODULE hLib = LoadLibrary("xrEngine.dll");
 	if (hLib == nullptr)
 	{
-		MessageBoxA(nullptr, "Can't load xrEngine.dll!", "Init error", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, "Cannot load xrEngine.dll!", "X-Ray Oxygen - Error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 
-	IsRunFunc RunFunc = (IsRunFunc)GetProcAddress(hLib, "RunApplication");
+	IsRunFunc RunFunc = reinterpret_cast<IsRunFunc>(GetProcAddress(hLib, "RunApplication"));
 	if (RunFunc)
 	{
-		RunFunc(params);
+		RunFunc(lpCmdLine);
 	}
 	else
 	{
