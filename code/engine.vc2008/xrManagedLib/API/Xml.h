@@ -11,7 +11,6 @@ namespace XRay
 		CXml* pNativeXml;
 
 	public:
-
 		/// <summary>X-Ray XMLNode wrapper</summary>
 		ref class Node
 		{
