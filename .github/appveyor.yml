@@ -20,7 +20,7 @@ after_build:
 - cmd: >-
     copy code\SDK\binaries\x64\amd_ags_x64.dll game\bins\
     
-    cd binaries\x64\Release
+    cd binaries\x64\%CONFIGURATION%
     
     copy *.dll ..\..\..\game\bins
     

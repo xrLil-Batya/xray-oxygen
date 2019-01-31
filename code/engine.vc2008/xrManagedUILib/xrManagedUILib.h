@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "../xrUICore/xrUIXmlParser.h"
 #include "../xrUICore/UIView.h"
 #include "../xrUICore/UIViewGroup.h"

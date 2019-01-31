@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "View.h"
+#include "../xrUICore/UIView.h"
 
 using namespace XRay;
 
 View::View()
 {
-	//pNativeView = new CUIView();
+//	pNativeView = new CUIView();
 }
 
 View::~View()

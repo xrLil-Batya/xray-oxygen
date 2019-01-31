@@ -13,7 +13,7 @@ namespace xrSpectre
 		
 		public override void shedule_update(UInt32 updateInverval) 
 		{
-			XRay.Log.Warning("ACTOR UPDATE!");
+		//	XRay.Log.Warning("ACTOR UPDATE!");
 		}
 	}
 }
