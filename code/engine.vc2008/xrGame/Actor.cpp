@@ -1196,7 +1196,7 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	v1.add(T);
 
 	Fvector v0r, v1r;
-	Fmatrix &mTransform = CastToGSCMatrix(Device.mFullTransform);
+	Fmatrix &mTransform = Device.mFullTransform;
 
 	mTransform.transform(v0r,v0);
 	mTransform.transform(v1r,v1);

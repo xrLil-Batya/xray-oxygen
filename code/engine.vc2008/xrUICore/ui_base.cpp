@@ -281,7 +281,7 @@ float ui_core::get_current_kx()
 	return res;
 }
 
-shared_str	ui_core::get_xml_name(LPCSTR fn)
+shared_str ui_core::get_xml_name(LPCSTR fn)
 {
 	string_path str;
 	if (!is_widescreen())

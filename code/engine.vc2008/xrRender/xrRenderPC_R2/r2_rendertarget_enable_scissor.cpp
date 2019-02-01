@@ -18,7 +18,7 @@ void CRenderTarget::enable_dbt_bounds		(light* L)
 	for (u32 i=0; i<8; i++)		{
 		Fvector		pt;
 		BB.getpoint	(i,pt);
-		CastToGSCMatrix(Device.mFullTransform).transform	(pt);
+		Device.mFullTransform.transform	(pt);
 		bbp.modify	(pt);
 	}
 	u_DBT_enable	(bbp.min.z,bbp.max.z);
@@ -49,17 +49,17 @@ BOOL CRenderTarget::enable_scissor		(light* L)		// true if intersects near plane
 	// Near plane intersection
 	BOOL	near_intersect				= FALSE;
 	{
-		Fmatrix& M						= CastToGSCMatrix(Device.mFullTransform);
+		Fmatrix& M = Device.mFullTransform;
 		Fvector4 plane;
-		plane.x							= -(M._14 + M._13);
-		plane.y							= -(M._24 + M._23);
-		plane.z							= -(M._34 + M._33);
-		plane.w							= -(M._44 + M._43);
-		float denom						= -1.0f / _sqrt(_sqr(plane.x)+_sqr(plane.y)+_sqr(plane.z));
-		plane.mul						(denom);
-		Fplane	P;	P.n.set(plane.x,plane.y,plane.z); P.d = plane.w;
-		float	p_dist					= P.classify	(L->spatial.sphere.P) - L->spatial.sphere.R;
-		near_intersect					= (p_dist<=0);
+		plane.x = -(M._14 + M._13);
+		plane.y = -(M._24 + M._23);
+		plane.z = -(M._34 + M._33);
+		plane.w = -(M._44 + M._43);
+		float denom = -1.0f / _sqrt(_sqr(plane.x) + _sqr(plane.y) + _sqr(plane.z));
+		plane.mul(denom);
+		Fplane	P;	P.n.set(plane.x, plane.y, plane.z); P.d = plane.w;
+		float	p_dist = P.classify(L->spatial.sphere.P) - L->spatial.sphere.R;
+		near_intersect = (p_dist <= 0);
 	}
 #ifdef DEBUG
 	

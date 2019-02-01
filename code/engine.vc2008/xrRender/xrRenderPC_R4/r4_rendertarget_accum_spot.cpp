@@ -38,8 +38,8 @@ void CRenderTarget::accum_spot(light* L)
 		// setup xform
 		L->xform_calc();
 		RCache.set_xform_world(L->m_xform);
-		RCache.set_xform_view(CastToGSCMatrix(Device.mView));
-		RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+		RCache.set_xform_view(Device.mView);
+		RCache.set_xform_project(Device.mProject);
 		bIntersect = enable_scissor(L);
 
 		// *** similar to "Carmack's reverse", but assumes convex, non intersecting objects,
@@ -74,7 +74,7 @@ void CRenderTarget::accum_spot(light* L)
 	Fmatrix	m_Texgen_J;			u_compute_texgen_jitter(m_Texgen_J);
 
 	// Shadow xform (+texture adjustment matrix)
-	Matrix4x4	m_Shadow, m_Lmap;
+	Fmatrix	m_Shadow, m_Lmap;
 	{
 		float			smapsize = float(RImplementation.o.smapsize);
 		float			fTexelOffs = (.5f / smapsize);
@@ -93,14 +93,12 @@ void CRenderTarget::accum_spot(light* L)
 		};
 
 		// compute xforms
-		Matrix4x4 xf_world;
-		xf_world.Inverse(nullptr, Device.mView);
-		Matrix4x4 xf_view = L->X.S.view;
-		Matrix4x4 xf_project;
-		xf_project.Multiply(L->X.S.project, m_TexelAdjust);
+		Fmatrix xf_world;		xf_world.invert(Device.mView);
+		Fmatrix xf_view		    = L->X.S.view;
+		Fmatrix xf_project;		xf_project.mul(m_TexelAdjust, L->X.S.project);
 
-		m_Shadow.Multiply(xf_world, xf_view);
-		m_Shadow.Multiply(m_Shadow, xf_project);
+		m_Shadow.mul(xf_view, xf_world);
+		m_Shadow.mulA_44(xf_project);
 
 		// lmap
 		view_dim = 1.f;
@@ -116,9 +114,9 @@ void CRenderTarget::accum_spot(light* L)
 		};
 
 		// compute xforms
-		xf_project.Multiply(L->X.S.project, m_TexelAdjust2);
-		m_Lmap.Multiply(xf_world, xf_view);
-		m_Lmap.Multiply(m_Lmap, xf_project);
+		xf_project.mul(m_TexelAdjust2, L->X.S.project);
+		m_Lmap.mul(xf_view, xf_world);
+		m_Lmap.mulB_44(xf_project);
 	}
 
 	// Common constants
@@ -126,8 +124,8 @@ void CRenderTarget::accum_spot(light* L)
 	L_clr.set(L->color.r, L->color.g, L->color.b);
 	L_clr.mul(L->get_LOD());
 	L_spec = Diffuse::u_diffuse2s(L_clr);
-	CastToGSCMatrix(Device.mView).transform_tiny(L_pos, L->position);
-	CastToGSCMatrix(Device.mView).transform_dir(L_dir, L->direction);
+	Device.mView.transform_tiny(L_pos, L->position);
+	Device.mView.transform_dir(L_dir, L->direction);
 	L_dir.normalize();
 
 	// Draw volume with projective texgen
@@ -159,8 +157,8 @@ void CRenderTarget::accum_spot(light* L)
 		RCache.set_c("m_texgen", m_Texgen);
 		RCache.set_c("m_texgen_J", m_Texgen_J);
 		RCache.set_c("m_shadow", m_Shadow);
-		RCache.set_ca("m_lmap", 0, m_Lmap.x[0], m_Lmap.y[0], m_Lmap.z[0], m_Lmap.w[0]);
-		RCache.set_ca("m_lmap", 1, m_Lmap.x[1], m_Lmap.y[1], m_Lmap.z[1], m_Lmap.w[1]);
+		RCache.set_ca("m_lmap", 0, m_Lmap._11, m_Lmap._21, m_Lmap._31, m_Lmap._41);
+		RCache.set_ca("m_lmap", 1, m_Lmap._12, m_Lmap._22, m_Lmap._32, m_Lmap._42);
 
 		if (!RImplementation.o.dx10_msaa)
 		{
@@ -271,8 +269,8 @@ void CRenderTarget::accum_volumetric(light* L)
 		// setup xform
 		L->xform_calc();
 		RCache.set_xform_world(L->m_xform);
-		RCache.set_xform_view(CastToGSCMatrix(Device.mView));
-		RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
+		RCache.set_xform_view(Device.mView);
+		RCache.set_xform_project(Device.mProject);
 		bIntersect = enable_scissor(L);
 	}
 
@@ -304,9 +302,9 @@ void CRenderTarget::accum_volumetric(light* L)
 
 		// compute xforms
 		Fmatrix xf_world;		
-		xf_world.invert(CastToGSCMatrix(Device.mView));
+		xf_world.invert(Device.mView);
 
-		Fmatrix xf_view = CastToGSCMatrix(L->X.S.view);
+		Fmatrix xf_view = L->X.S.view;
 		Fmatrix xf_project;		
 		xf_project.mul(m_TexelAdjust, CastToGSCMatrix(L->X.S.project));
 
@@ -351,7 +349,7 @@ void CRenderTarget::accum_volumetric(light* L)
 	pt.mul(L->m_volumetric_distance);
 	pt.add(L->position);
 	//	Don't adjust AABB
-	CastToGSCMatrix(Device.mView).transform(pt);
+	Device.mView.transform(pt);
 	aabb.setb(pt, rr);
 
 	// Common constants
@@ -368,8 +366,8 @@ void CRenderTarget::accum_volumetric(light* L)
 	L_clr.mul(1 / fQuality);
 	L_clr.mul(L->get_LOD());
 	L_spec = Diffuse::u_diffuse2s(L_clr);
-	CastToGSCMatrix(Device.mView).transform_tiny(L_pos, L->position);
-	CastToGSCMatrix(Device.mView).transform_dir(L_dir, L->direction);
+	Device.mView.transform_tiny(L_pos, L->position);
+	Device.mView.transform_dir(L_dir, L->direction);
 	L_dir.normalize();
 
 	// Draw volume with projective texgen

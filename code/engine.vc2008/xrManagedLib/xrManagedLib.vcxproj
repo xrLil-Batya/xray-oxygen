@@ -15,7 +15,7 @@
     <ProjectGuid>{C4DEFC31-A910-4339-99B3-6C410DC19AD0}</ProjectGuid>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>xrManagedLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>xrManagedCoreLib</ProjectName>
     <TargetFrameworkVersion>4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
@@ -100,6 +100,7 @@
     <ClInclude Include="API\PostProcessAnimator.h" />
     <ClInclude Include="API\System.h" />
     <ClInclude Include="API\Utils.h" />
+    <ClInclude Include="API\Xml.h" />
     <ClInclude Include="HelperFuncs.h" />
     <ClInclude Include="ISpectreEngine.h" />
     <ClInclude Include="Resource.h" />
@@ -116,6 +117,7 @@
     <ClCompile Include="API\PostProcessAnimator.cpp" />
     <ClCompile Include="API\System.cpp" />
     <ClCompile Include="API\Utils.cpp" />
+    <ClCompile Include="API\Xml.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="HelperFuncs.cpp" />
     <ClCompile Include="ScriptCompiler.cpp" />

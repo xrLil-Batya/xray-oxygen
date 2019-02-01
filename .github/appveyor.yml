@@ -3,7 +3,10 @@ pull_requests:
   do_not_increment_build_number: true
 shallow_clone: true
 image: Visual Studio 2017
-configuration: Release
+configuration: 
+ - Debug
+ - Mixed
+ - Release
 platform: x64
 build:
   project: code/xrEngine.sln
@@ -17,7 +20,7 @@ after_build:
 - cmd: >-
     copy code\SDK\binaries\x64\amd_ags_x64.dll game\bins\
     
-    cd binaries\x64\Release
+    cd binaries\x64\%CONFIGURATION%
     
     copy *.dll ..\..\..\game\bins
     

@@ -122,7 +122,7 @@ void CActor::PickupModeUpdate()
 {
 	feel_touch_update	(Position(), m_fPickupInfoRadius);
 	CFrustum frustum;
-	frustum.CreateFromMatrix(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
 	xrCriticalSectionGuard guard(MtFeelTochMutex);
     for (CObject* obj : feel_touch)
@@ -169,7 +169,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 	}
 	
 	CFrustum						frustum;
-	frustum.CreateFromMatrix		(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	frustum.CreateFromMatrix		(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
 	ISpatialResult.clear	();
 	g_SpatialSpace->q_frustum		(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
@@ -214,7 +214,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
         if (CGameObject* pNearestGameObject = InPickableItem->cast_game_object())
         {
             CFrustum					frustum;
-            frustum.CreateFromMatrix(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
+            frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
             if (!CanPickItem(frustum, act_and_cam_pos, &InPickableItem->object()))
             {
                 return nullptr;
@@ -285,7 +285,7 @@ void CActor::PickupInfoDraw(CObject* object)
 	if (!item)		return;
 
 	Fmatrix			res;
-	res.mul(CastToGSCMatrix(Device.mFullTransform), object->XFORM());
+	res.mul(Device.mFullTransform, object->XFORM());
 	Fvector4		v_res;
 	Fvector			shift;
 	

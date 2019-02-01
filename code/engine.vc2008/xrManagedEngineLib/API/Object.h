@@ -7,6 +7,7 @@ using namespace System::Numerics;
 
 namespace XRay
 {
+	// @ CObject class
 	public ref class Object : public NativeObject
 	{
 	public:

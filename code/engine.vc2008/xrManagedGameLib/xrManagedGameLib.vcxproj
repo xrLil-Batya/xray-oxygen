@@ -15,7 +15,7 @@
     <ProjectGuid>{DECF49BA-E334-47D5-8C0C-D6C3DC67A759}</ProjectGuid>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>xrManagedGameLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <TargetFrameworkVersion>4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -99,6 +99,7 @@
     <ClInclude Include="API\PDA.h" />
     <ClInclude Include="API\PhysicalGameObject.h" />
     <ClInclude Include="API\Torch.h" />
+    <ClInclude Include="ClientSpawnManager.h" />
     <ClInclude Include="GameClassRegistrator.h" />
     <ClInclude Include="ISpectreGameLib.h" />
     <ClInclude Include="Resource.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="API\PhysicalGameObject.cpp" />
     <ClCompile Include="API\Torch.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="ClientSpawnManager.cpp" />
     <ClCompile Include="GameClassRegistrator.cpp" />
     <ClCompile Include="ISpectreGameLib.cpp" />
     <ClCompile Include="stdafx.cpp">

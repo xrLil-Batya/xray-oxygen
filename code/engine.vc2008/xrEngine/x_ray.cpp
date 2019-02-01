@@ -160,12 +160,14 @@ void Startup()
 	if (Device.editor())
 		bEngineloaded = true;
 
-	splashScreen.SetProgressPosition(60, "Init sound");
-	InitSound1		();
-	splashScreen.SetProgressPosition(65, "Init user scripts");
-	execUserScript	();
-	splashScreen.SetProgressPosition(70, "Init sound (2-part)");
-	InitSound2		();
+	splashScreen.SetProgressPosition(60, "Initializing sound");
+	InitSound1();
+
+	splashScreen.SetProgressPosition(65, "Initializing user scripts");
+	execUserScript();
+
+	splashScreen.SetProgressPosition(70, "Initializing sound (second part)");
+	InitSound2();
 
 	// ...command line for auto start
 	{
@@ -189,12 +191,17 @@ void Startup()
 	splashScreen.SetProgressPosition(90, "Creating animation library");
 	LALib.OnCreate();
 	
+	/////// ENGINE INITIALIZATION COMPLETE
+	splashScreen.SetProgressPosition(100, "Engine initialization complete");
+
+	Msg("** Engine initialization complete.");
+
 	// Main cycle
-	splashScreen.SetProgressPosition(100, "Engine loaded.");
 	bEngineloaded = true;
 	Device.UpdateWindowPropStyle();
 	Device.Create(Device.editor());
 	splashScreen.HideSplash();
+
 
 	pApp = xr_new<CApplication>();
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);
@@ -367,13 +374,13 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	InitSplash(GetModuleHandle(NULL), "OXYGEN_SPLASH", logDlgProc);
 	splashScreen.SetProgressColor(RGB(0x6F, 0x3B, 0x9B));
 
-	// AVI
+	// Skip intro
 	g_bIntroFinished = true;
 
 	g_sLaunchOnExit_app[0] = 0;
 	g_sLaunchOnExit_params[0] = 0;
 
-	splashScreen.SetProgressPosition(15, "Init settings");
+	splashScreen.SetProgressPosition(15, "Initializing settings");
 	InitSettings();
 
 	if (strstr(Core.Params, "-renderdebug"))
@@ -390,14 +397,14 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 
 	splashScreen.SetProgressPosition(20, "FPU m24r");
 	FPU::m24r();
-	splashScreen.SetProgressPosition(35, "Init engine");
+	splashScreen.SetProgressPosition(35, "Initializing engine");
 	InitEngine();
-	splashScreen.SetProgressPosition(40, "Init input");
+	splashScreen.SetProgressPosition(40, "Initializing input");
 	InitInput();
-	splashScreen.SetProgressPosition(45, "Init console");
+	splashScreen.SetProgressPosition(45, "Initializing console");
 	InitConsole();
 
-	splashScreen.SetProgressPosition(50, "Init render");
+	splashScreen.SetProgressPosition(50, "Initializing render");
 	Engine.External.Initialize();
 
 	Startup();

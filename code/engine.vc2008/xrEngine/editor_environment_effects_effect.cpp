@@ -44,6 +44,11 @@ void effect::load		(CInifile& config)
 	particles			= config.r_string		(m_id, "particles");
 	m_sound				= config.r_string		(m_id, "sound");
 	wind_gust_factor	= config.r_float		(m_id, "wind_gust_factor");
+	wind_blast_in_time	= config.r_float		(m_id, "wind_blast_in_time");
+	wind_blast_out_time = config.r_float		(m_id, "wind_blast_out_time");
+	wind_blast_strength = config.r_float		(m_id, "wind_blast_strength");
+
+	wind_blast_direction.setHP(deg2rad(config.r_float(m_id, "wind_blast_longitude")), 0.f);
 }
 
 void effect::save		(CInifile& config)

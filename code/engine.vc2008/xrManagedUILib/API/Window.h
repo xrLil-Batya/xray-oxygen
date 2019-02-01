@@ -19,6 +19,9 @@ namespace XRay
 
 	public ref class Window
 	{
+	internal:
+		CUIWindow* pNativeObject;
+
 	public:
 
 		Window(IntPtr InNativeObject);
@@ -101,8 +104,9 @@ namespace XRay
 			}
 		}
 
-	private:
-
-		CUIWindow* pNativeObject;
+		IntPtr EngineWNDClass()
+		{
+			return (IntPtr)pNativeObject;
+		}
 	};
 }

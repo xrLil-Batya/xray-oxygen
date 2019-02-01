@@ -19,6 +19,8 @@
 #undef max
 #endif
 
+#include "string_concatenations.h"
+
 // token type definition
 struct XRCORE_API xr_token
 {

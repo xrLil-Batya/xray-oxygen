@@ -97,8 +97,8 @@ UpgradeStateResult Group::can_install( CInventoryItem& item, UpgradeBase& test_u
 		{
 			if ( loading )
 			{
-				FATAL( make_string( "Loading item: Upgrade <%s> of inventory item [%s] (id = %d) can`t be installed! Error = result_e_parents",
-					test_upgrade.id_str(), item.m_section_id.c_str(), item.object_id() ).c_str() );
+				R_ASSERT_FORMAT(false,  "Loading item: Upgrade <%s> of inventory item [%s] (id = %d) can`t be installed! Error = result_e_parents",
+					test_upgrade.id_str(), item.m_section_id.c_str(), item.object_id());
 			}
 			return result_e_parents;
 		}
@@ -116,8 +116,8 @@ UpgradeStateResult Group::can_install( CInventoryItem& item, UpgradeBase& test_u
 		{
 			if ( loading )
 			{
-				FATAL( make_string( "Loading item: Upgrade <%s> of inventory item [%s] (id = %d) can`t be installed! Error = result_e_group",
-					test_upgrade.id_str(), item.m_section_id.c_str(), item.object_id() ).c_str() );
+				R_ASSERT_FORMAT(false, "Loading item: Upgrade <%s> of inventory item [%s] (id = %d) can`t be installed! Error = result_e_group",
+					test_upgrade.id_str(), item.m_section_id.c_str(), item.object_id() );
 			}
 			return result_e_group;
 		}

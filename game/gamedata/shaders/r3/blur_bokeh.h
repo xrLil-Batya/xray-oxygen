@@ -12,11 +12,7 @@ https://github.com/orthecreedence/ghostie/blob/master/opengl/glsl/dof.bokeh.2.4.
 #include "common.h"
 #include "oxy_config.h"
 
-#if !defined(BOKEH_QUALITY)
-	#define	BOKEH_RINGS int(1)
-	#define	BOKEH_SAMPLES int(1)
-	#define BOKEH_QUALITY 1
-#elif BOKEH_QUALITY==1
+#if BOKEH_QUALITY==1
     #define BOKEH_RINGS int(3)
     #define BOKEH_SAMPLES int(3)
 #elif BOKEH_QUALITY==2
@@ -89,8 +85,9 @@ float2 rand(float2 coord)  {	 			//generating noise/pattern texture for ditherin
 	return Noise;
 }
 
-float3 bokeh_dof(float2 center, float blur) {
-	
+float3 bokeh_dof(float2 center, float blur) 
+{
+#if BOKEH_QUALITY != 0
 	// calculation of pattern for ditering	
 	float2 noise_ = rand(center)*0.0001;
 	
@@ -122,6 +119,9 @@ float3 bokeh_dof(float2 center, float blur) {
 	}
 
 	return col;
+#else
+	return s_image.Sample(smp_rtlinear, center).rgb;
+#endif
 }
 
 #endif //BLUR_BOKEH_H

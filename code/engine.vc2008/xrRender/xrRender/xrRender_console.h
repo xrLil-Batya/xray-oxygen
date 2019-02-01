@@ -109,8 +109,6 @@ extern ECORE_API float			ps_r_sun_lumscale;			// 0.5f
 extern ECORE_API float			ps_r_sun_lumscale_hemi;		// 1.0f
 extern ECORE_API float			ps_r_sun_lumscale_amb;		// 1.0f
 
-extern ECORE_API float			ps_r_zfill;					// 0.1f
-
 extern ECORE_API u32			ps_GlowsPerFrame;
 extern ECORE_API float			ps_r_dhemi_sky_scale;		// 1.5f
 extern ECORE_API float			ps_r_dhemi_light_scale;		// 1.0f

@@ -40,6 +40,7 @@ IC	void	CBackend::set_xform_project	(const Fmatrix& fM)
 { 
 	xforms.set_P(fM);	
 }
+
 IC	const Fmatrix&	CBackend::get_xform_world	()	{ return xforms.get_W();	}
 IC	const Fmatrix&	CBackend::get_xform_view	()	{ return xforms.get_V();	}
 IC	const Fmatrix&	CBackend::get_xform_project	()	{ return xforms.get_P();	}

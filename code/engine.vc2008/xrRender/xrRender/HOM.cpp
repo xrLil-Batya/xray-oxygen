@@ -19,7 +19,7 @@ void __stdcall	CHOM::MT_RENDER()
 	if (MT_frame_rendered!=Device.dwFrame && !b_main_menu_is_active)
 	{
 		CFrustum					ViewBase;
-		ViewBase.CreateFromMatrix	(CastToGSCMatrix(Device.mFullTransform), FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+		ViewBase.CreateFromMatrix	(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 		Enable						();
 		Render						(ViewBase);
 	}
@@ -165,8 +165,8 @@ void CHOM::Render_DB			(CFrustum& base)
 		0.0f,				0.0f,				1.0f,		0.0f,
 		1.f/2.f + 0 + 0,	1.f/2.f + 0 + 0,	0.0f,		1.0f
 	};
-	m_xform.mul					(m_viewport,	CastToGSCMatrix(Device.mFullTransform));
-	m_xform_01.mul				(m_viewport_01,	CastToGSCMatrix(Device.mFullTransform));
+	m_xform.mul					(m_viewport, Device.mFullTransform);
+	m_xform_01.mul				(m_viewport_01, Device.mFullTransform);
 
 	// Query DB
 	xrc.frustum_options			(0);
@@ -183,7 +183,7 @@ void CHOM::Render_DB			(CFrustum& base)
 
 	// Build frustum with near plane only
 	CFrustum					clip;
-	clip.CreateFromMatrix		(CastToGSCMatrix(Device.mFullTransform),FRUSTUM_P_NEAR);
+	clip.CreateFromMatrix		(Device.mFullTransform,FRUSTUM_P_NEAR);
 	sPoly						src,dst;
 	u32		_frame = Device.dwFrame;
 #ifdef DEBUG
@@ -210,7 +210,7 @@ void CHOM::Render_DB			(CFrustum& base)
 		src.push_back	(v[t.verts[1]]);
 		src.push_back	(v[t.verts[2]]);
 		sPoly* P =		clip.ClipPoly	(src,dst);
-		if (0==P)		{ T.skip=next; continue; }
+		if (nullptr==P)		{ T.skip=next; continue; }
 
 		// XForm and Rasterize
 #ifdef DEBUG

@@ -20,10 +20,9 @@ using IsRunFunc = void(__cdecl*)(const char*);
 void CheckOpenAL();
 
 /// <summary> Main method for initialize xrEngine </summary>
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int)
 {
     gModulesLoaded = true;
-	LPCSTR params = lpCmdLine;
 
 	try
 	{
@@ -47,7 +46,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Checking for SSE3
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
 		{
-			MessageBox(nullptr, "It's can affect on the stability of the game.", "SSE3 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
+			MessageBox(nullptr, "It can affect on the stability of the game.", "SSE3 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 	}
@@ -72,11 +71,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT,
 			false, nullptr, ""
 		};
+
 		SHFileOperation(&file_op);
 		free(tempdir); // Since we malloc-ed
 	}
-
-	params = lpCmdLine;
 
 	if (!IsDebuggerPresent())
 	{
@@ -153,18 +151,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	HMODULE hLib = LoadLibrary("xrEngine.dll");
 	if (hLib == nullptr)
 	{
-		MessageBoxA(nullptr, "Can't load xrEngine.dll!", "Init error", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, "Cannot load xrEngine.dll!", "X-Ray Oxygen - Error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 
-	IsRunFunc RunFunc = (IsRunFunc)GetProcAddress(hLib, "RunApplication");
+	IsRunFunc RunFunc = reinterpret_cast<IsRunFunc>(GetProcAddress(hLib, "RunApplication"));
 	if (RunFunc)
 	{
-		RunFunc(params);
+		RunFunc(lpCmdLine);
 	}
 	else
 	{
-		MessageBoxA(nullptr, "xrEngine module doesn't seems to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, "xrEngine module doesn't seem to have RunApplication entry point. Different DLL?", "Init error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 #ifdef OLD_INSTANCE_SYSTEM		

@@ -2,8 +2,9 @@
 #pragma hdrstop
 #include "ParticleEffect.h"
 #include <xmmintrin.h>
-#include "../../xrCore/threadpool/ttapi.h"
 #include "../../xrEngine/DirectXMathExternal.h"
+#include "tbb/task.h"
+#include "tbb/task_group.h"
 
 using namespace PAPI;
 using namespace PS;
@@ -61,12 +62,12 @@ CParticleEffect::CParticleEffect()
 	m_HandleEffect = ParticleManager()->CreateEffect(1);		VERIFY(m_HandleEffect >= 0);
 	m_HandleActionList = ParticleManager()->CreateActionList();	VERIFY(m_HandleActionList >= 0);
 	m_RT_Flags.zero();
-	m_Def = 0;
+	m_Def = nullptr;
 	m_fElapsedLimit = 0.f;
 	m_MemDT = 0;
 	m_InitialPosition.set(0, 0, 0);
-	m_DestroyCallback = 0;
-	m_CollisionCallback = 0;
+	m_DestroyCallback = nullptr;
+	m_CollisionCallback = nullptr;
 	m_XFORM.identity();
 }
 CParticleEffect::~CParticleEffect()
@@ -135,7 +136,7 @@ void CParticleEffect::OnFrame(u32 frame_dt)
 			}
 			ParticleManager()->Update(m_HandleEffect, m_HandleActionList, fDT_STEP);
 
-			PAPI::Particle* particles;
+			xr_vector<PAPI::Particle> particles;
 			u32 p_cnt;
 			ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
 
@@ -369,12 +370,17 @@ IC void FillSprite(FVF::LIT*& pv, const Fvector& pos, const Fvector& dir, const 
 
 extern ENGINE_API float		psHUD_FOV;
 
-struct PRS_PARAMS {
+struct PRS_PARAMS 
+{
 	FVF::LIT* pv;
 	u32 p_from;
 	u32 p_to;
-	PAPI::Particle* particles;
+	xr_vector<PAPI::Particle> particles;
 	CParticleEffect* pPE;
+
+	~PRS_PARAMS()
+	{
+	}
 };
 
 __forceinline void fsincos(const float angle, float &sine, float &cosine)
@@ -398,19 +404,17 @@ __forceinline void magnitude_sse(Fvector &vec, float &res)
 	_mm_store_ss((float*)&res, tv);
 }
 
-void ParticleRenderStream(LPVOID lpvParams)
+void ParticleRenderStream(PRS_PARAMS* pParams)
 {
 	float sina = 0.0f, cosa = 0.0f;
 	// Xottab_DUTY: changed angle to be float instead of DWORD
 	// But it must be 0xFFFFFFFF or otherwise some particles won't play
 	float angle = 0xFFFFFFFF;
 
-	PRS_PARAMS* pParams = (PRS_PARAMS *)lpvParams;
-
 	FVF::LIT* pv = pParams->pv;
 	u32 p_from = pParams->p_from;
 	u32 p_to = pParams->p_to;
-	PAPI::Particle* particles = pParams->particles;
+	xr_vector<PAPI::Particle>& particles = (pParams->particles);
 	CParticleEffect &pPE = *pParams->pPE;
 
 	for (u32 i = p_from; i < p_to; i++) {
@@ -505,11 +509,12 @@ void ParticleRenderStream(LPVOID lpvParams)
 
 void CParticleEffect::Render(float)
 {
-	u32 dwOffset, dwCount;
-	// Get a pointer to the particles in gp memory
-	PAPI::Particle* particles;
-	u32 p_cnt;
+	if (Device.dwPrecacheFrame) return;
 
+	// Get a pointer to the particles in gp memory
+	u32 dwOffset, dwCount;
+	xr_vector<PAPI::Particle> particles;
+	u32 p_cnt;
 	ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
 
 	if (p_cnt > 0)
@@ -519,41 +524,56 @@ void CParticleEffect::Render(float)
 			FVF::LIT* pv_start = (FVF::LIT*)RCache.Vertex.Lock(p_cnt * 4 * 4, geom->vb_stride, dwOffset);
 			FVF::LIT* pv = pv_start;
 
-			u32 nWorkers = (p_cnt < 16) ? (u32)ttapi_GetWorkersCount() - 1 : 1u;
-
-			PRS_PARAMS* prsParams = new PRS_PARAMS[nWorkers];
-
-			// Give ~1% more for the last worker
-			// to minimize wait in final spin
-			u32 nSlice = p_cnt / 32;
-
-			u32 nStep = ((p_cnt - nSlice) / nWorkers);
-
-			for (u32 i = 0; i < nWorkers; ++i)
+			if (p_cnt < 16)
 			{
-				prsParams[i].pv = pv + i * nStep * 4;
-				prsParams[i].p_from = i * nStep;
-				prsParams[i].p_to = (i == (nWorkers - 1)) ? p_cnt : (prsParams[i].p_from + nStep);
-				prsParams[i].particles = particles;
-				prsParams[i].pPE = this;
-				ttapi_AddTask(ParticleRenderStream, (LPVOID)&prsParams[i]);
+				PRS_PARAMS singleParam;
+				singleParam.pv = pv;
+				singleParam.p_from = 0;
+				singleParam.p_to = p_cnt;
+				singleParam.particles = particles;
+				singleParam.pPE = this;
+				ParticleRenderStream(&singleParam);
 			}
+			else
+			{
+				tbb::task_group ParticleEffectTasks;
+				size_t nWorkers = CPU::Info.n_threads;
+				constexpr size_t SkinParamSize = 64;
+				PRS_PARAMS prsParams[SkinParamSize];
+				R_ASSERT(SkinParamSize > nWorkers);
 
-			ttapi_RunAllWorkers();
-			delete prsParams;
+				u32 nSlice = p_cnt / 32;
+				u32 nStep = ((p_cnt - nSlice) / nWorkers);
+
+				for (u32 i = 0; i < nWorkers; ++i)
+				{
+					prsParams[i].pv = pv + i * nStep * 4;
+					prsParams[i].p_from = i * nStep;
+					prsParams[i].p_to = (i == (nWorkers - 1)) ? p_cnt : (prsParams[i].p_from + nStep);
+					prsParams[i].particles = particles;
+					prsParams[i].pPE = this;
+
+					ParticleEffectTasks.run([&prsParams, i]()
+					{
+						ParticleRenderStream(&prsParams[i]);
+					});
+				}
+
+				ParticleEffectTasks.wait();
+			}
 
 			dwCount = p_cnt << 2;
 
 			RCache.Vertex.Unlock(dwCount, geom->vb_stride);
 			if (dwCount)
 			{
-				Matrix4x4 Pold = Device.mProject;
-				Matrix4x4 FTold = Device.mFullTransform;
+				Fmatrix Pold = Device.mProject;
+				Fmatrix FTold = Device.mFullTransform;
 				if (GetHudMode())
 				{
-					RDEVICE.mProject.BuildProj(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
+					RDEVICE.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
 					
-					Device.mFullTransform.Multiply(Device.mView, Device.mProject);
+					Device.mFullTransform.mul(Device.mProject, Device.mView);
 					RCache.set_xform_project(Device.mProject);
 					RImplementation.rmNear();
 					ApplyTexgen(Device.mFullTransform);
@@ -571,8 +591,8 @@ void CParticleEffect::Render(float)
 					RImplementation.rmNormal();
 					Device.mProject = Pold;
 					Device.mFullTransform = FTold;
-					RCache.set_xform_project(CastToGSCMatrix(Device.mProject));
-					ApplyTexgen(CastToGSCMatrix(Device.mFullTransform));
+					RCache.set_xform_project(Device.mProject);
+					ApplyTexgen(Device.mFullTransform);
 				}
 			}
 		}

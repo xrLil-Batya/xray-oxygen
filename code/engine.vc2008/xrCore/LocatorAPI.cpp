@@ -31,7 +31,7 @@ CLocatorAPI*		xr_FS = nullptr;
 //#TODO: Make a part of CLocatorAPI class later
 std::experimental::filesystem::path fsRoot;
 
-bool file_handle_internal(const char* file_name, size_t& size, int& file_handle);
+bool file_handle_internal(const char* file_name, size_t& size, HANDLE& file_handle);
 void* FileDownload(const char* file_name, size_t* buffer_size);
 
 
@@ -559,9 +559,6 @@ bool CLocatorAPI::Recurse(const char* path)
 	return true;
 }
 
-bool file_handle_internal(const char* file_name, size_t& size, int& file_handle);
-void* FileDownload(const char* file_name, const int& file_handle, size_t& file_size);
-
 static void searchForFsltx(const char* fs_name, string_path& fsltxPath)
 {
 	//#TODO: Update code, when std::filesystem is out (not much work, standards don't changing dramatically)
@@ -641,7 +638,7 @@ IReader *CLocatorAPI::setup_fs_ltx(const char* fs_name)
 
 	Msg("using fs-ltx %s", fs_path);
 
-	int	file_handle;
+	HANDLE file_handle;
 	size_t file_size;
 	IReader *result = nullptr;
 	CHECK_OR_EXIT(file_handle_internal(fs_path, file_size, file_handle), make_string("Cannot open file \"%s\".\nCheck your working folder.", fs_name));
@@ -780,7 +777,7 @@ void CLocatorAPI::_initialize(u32 flags, const char* target_folder, const char* 
 	rec_files.clear();
 	//-----------------------------------------------------------
 
-	if (strstr(Core.Params, "-nolog") != nullptr)
+	if (strstr(Core.Params, "-nolog") == nullptr)
 	{
 		xrLogger::OpenLogFile();
 	}
@@ -1458,7 +1455,7 @@ FS_Path* CLocatorAPI::append_path(const char* path_alias, const char* root, cons
 {
 	VERIFY(root);
 	VERIFY(!path_exist(path_alias));
-	auto* P = new FS_Path(root, add, nullptr, nullptr, 0);
+	FS_Path* P = new FS_Path(root, add, nullptr, nullptr, 0);
 	bNoRecurse = !recursive;
 	Recurse(P->m_Path);
 	pathes.insert(std::make_pair(xr_strdup(path_alias), P));

@@ -219,13 +219,13 @@ void CRenderDevice::on_idle()
 		vCameraDirection.set(_sin(angle), 0, _cos(angle));	vCameraDirection.normalize();
 		vCameraTop.set(0, 1, 0);
 		vCameraRight.crossproduct(vCameraTop, vCameraDirection);
-		mView.BuildCamDir(vCameraPosition, vCameraDirection, vCameraTop);
+		mView.build_camera_dir(vCameraPosition, vCameraDirection, vCameraTop);
 	}
 
 	// Matrices
-	mFullTransform.Multiply(mView, mProject);
+	mFullTransform.mul(mProject, mView);
 	m_pRender->SetCacheXform(mView, mProject);
-	mInvFullTransform = XRay::Math::CastToGSCMatrix(DirectX::XMMatrixInverse(0, mFullTransform));
+	D3DXMatrixInverse((D3DXMATRIX*)&mInvFullTransform, nullptr, (D3DXMATRIX*)&mFullTransform);
 
 	vCameraPosition_saved = vCameraPosition;
 	mFullTransform_saved = mFullTransform;
@@ -287,10 +287,30 @@ void CRenderDevice::on_idle()
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
 	string128 buf = {0};
-	xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
+	MONITORINFO mi = { 0 };
+	mi.cbSize = sizeof(MONITORINFO);
+	long monitor_width = 0;
+	long monitor_height = 0;
+	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
 
-	Console->Execute(buf);
-	m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
+	if (GetMonitorInfo(hMonitor, &mi))
+	{
+		monitor_width = mi.rcMonitor.right - mi.rcMonitor.left;
+		monitor_height = mi.rcMonitor.bottom - mi.rcMonitor.top;
+
+		if ((DWORD)monitor_width >= width && (DWORD)monitor_height >= height)
+		{
+			xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
+
+			Console->Execute(buf);
+			m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
+		}
+	}
+	else
+	{
+		DWORD dwError = GetLastError();
+		R_CHK(dwError);
+	}
 }
 
 #ifdef INGAME_EDITOR
@@ -406,7 +426,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     case WPS_Windowed:
     {
         psDeviceFlags.set(rsFullscreen, false);
-        dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX ;
+        dwWindowStyle = WS_OVERLAPPEDWINDOW;
 
         SetRect	(&WindowBounds,
 				(DesktopRect.right - dwWidthCurr) / 2,
@@ -489,6 +509,7 @@ void CRenderDevice::FrameMove()
 	if (psDeviceFlags.test(rsConstantFPS))	{
 		// 20ms = 50fps
 		// 33ms = 30fps
+
 		fTimeDelta		=	0.033f;
         Statistic->fRawFrameDeltaTime = fTimeDelta;
 		fTimeGlobal		+=	0.033f;

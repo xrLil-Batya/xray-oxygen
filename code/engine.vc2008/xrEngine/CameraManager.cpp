@@ -299,7 +299,7 @@ extern float view_port_near_koef;
 void CCameraManager::ApplyDevice(float _viewport_near)
 {
     // Device params
-	Device.mView.BuildCamDir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
+	Device.mView.build_camera_dir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
 
     Device.vCameraPosition.set(m_cam_info.p);
     Device.vCameraDirection.set(m_cam_info.d);
@@ -324,7 +324,7 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 	{
 		Device.m_SecondViewport.m_bCamReady = false;
 	}
-	Device.mProject.BuildProj(deg2rad(Device.fFOV), m_cam_info.fAspect, _viewport_near * view_port_near_koef, m_cam_info.fFar);
+	Device.mProject.build_projection(deg2rad(Device.fFOV), m_cam_info.fAspect, _viewport_near * view_port_near_koef, m_cam_info.fFar);
 
     if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu->IsActive())
         ResetPP();

@@ -21,6 +21,8 @@ must not be misrepresented as being the original software.
 distribution.
 */
 #pragma once
+#pragma warning(push)
+#pragma warning(disable: 4635)
 #include "..\xrCore.h"
 
 #if defined(ANDROID_NDK) || defined(__BORLANDC__) || defined(__QNXNTO__)
@@ -52,19 +54,15 @@ distribution.
         AStyle.exe --style=1tbs --indent-switches --break-closing-brackets --indent-preprocessor tinyxml2.cpp tinyxml2.h
 */
 
-#if defined( _DEBUG ) || defined( DEBUG ) || defined (__DEBUG__)
+#if defined( _DEBUG ) || defined (__DEBUG__)
 #   ifndef DEBUG
 #       define DEBUG
 #   endif
 #endif
 
-#ifdef _MSC_VER
-#   pragma warning(push)
-#   pragma warning(disable: 4251)
-#endif
+#pragma warning(disable: 4251)
 
 #define TINYXML2_LIB XRCORE_API
-
 
 #if defined(DEBUG)
 #   if defined(_MSC_VER)
@@ -2151,6 +2149,4 @@ private:
 
 }	// tinyxml2
 
-#if defined(_MSC_VER)
-#   pragma warning(pop)
-#endif
+#pragma warning(pop)

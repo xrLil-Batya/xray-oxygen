@@ -218,13 +218,14 @@ float CParticlesObject::shedule_Scale()
 void CParticlesObject::renderable_Render()
 {
 	VERIFY(renderable.visual);
-	u32 dt = Device.dwTimeGlobal - dwLastTime;
-	if (dt)
+
+	if (m_lastUpdatedFrame == Device.dwFrame)
 	{
 		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-		V->OnFrame(dt);
+		V->OnFrame(Device.dwTimeGlobal - dwLastTime);
 		dwLastTime = Device.dwTimeGlobal;
 	}
+	m_lastUpdatedFrame = Device.dwFrame;
 
 	::Render->set_Transform(&renderable.xform);
 	::Render->add_Visual(renderable.visual);

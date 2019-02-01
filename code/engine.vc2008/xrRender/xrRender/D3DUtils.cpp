@@ -80,14 +80,14 @@ u32 m_ColorSafeRect = 0xffB040B0;
 void SPrimitiveBuffer::CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF, LPVOID vertices, u32 _v_cnt, u16* indices, u32 _i_cnt)
 {
 #ifndef USE_DX11
-	ID3DVertexBuffer*	pVB=0;
-	ID3DIndexBuffer*	pIB=0;
+	ID3DVertexBuffer*	pVB=nullptr;
+	ID3DIndexBuffer*	pIB=nullptr;
 	p_cnt				= _p_cnt;
 	p_type				= _pt;
 	v_cnt				= _v_cnt;
 	i_cnt				= _i_cnt;
 	u32 stride			= D3DXGetFVFVertexSize(FVF);
-	R_CHK(HW.pDevice->CreateVertexBuffer(v_cnt*stride, D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVB, 0));
+	R_CHK(HW.pDevice->CreateVertexBuffer(v_cnt*stride, D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVB, nullptr));
 	HW.stats_manager.increment_stats_vb	(pVB);
 	u8* 				bytes;
 	R_CHK				(pVB->Lock(0,0,(LPVOID*)&bytes,0));
@@ -97,7 +97,7 @@ void SPrimitiveBuffer::CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF,
     std::memcpy(bytes,&*verts.begin(),v_cnt*stride);
 	R_CHK				(pVB->Unlock());
 	if (i_cnt){ 
-		R_CHK(HW.pDevice->CreateIndexBuffer	(i_cnt*sizeof(u16),D3DUSAGE_WRITEONLY,D3DFMT_INDEX16,D3DPOOL_MANAGED,&pIB,NULL));
+		R_CHK(HW.pDevice->CreateIndexBuffer	(i_cnt*sizeof(u16),D3DUSAGE_WRITEONLY,D3DFMT_INDEX16,D3DPOOL_MANAGED,&pIB,nullptr));
 		HW.stats_manager.increment_stats_ib	(pIB);
 		R_CHK			(pIB->Lock(0,0,(LPVOID*)&bytes,0));
         std::memcpy(bytes,indices,i_cnt*sizeof(u16));
@@ -552,7 +552,7 @@ void CDrawUtilities::dbgDrawPlacement(const Fvector& p, int sz, u32 clr, LPCSTR 
 {
 	VERIFY( Device.b_is_Ready );
     Fvector c;
-	Fmatrix &mFullTransform = CastToGSCMatrix(Device.mFullTransform);
+	Fmatrix &mFullTransform = Device.mFullTransform;
 
 	float w	= p.x* mFullTransform._14 + p.y* mFullTransform._24 + p.z* mFullTransform._34 + mFullTransform._44;
     if (w<0) return; // culling
@@ -772,7 +772,7 @@ void CDrawUtilities::DD_DrawFace_push(const Fvector& p0, const Fvector& p1, cons
 void CDrawUtilities::DD_DrawFace_end()
 {
     DD_DrawFace_flush	(FALSE); 	
-    m_DD_pv_start 		= 0;
+    m_DD_pv_start 		= nullptr;
 }
 //----------------------------------------------------
 
@@ -999,7 +999,7 @@ void CDrawUtilities::DrawAxis(const Fmatrix& T)
     // transform to screen
     float dx=-float(Device.dwWidth)/2.2f;
     float dy=float(Device.dwHeight)/2.25f;
-	Fmatrix &mFullTransform = CastToGSCMatrix(Device.mFullTransform);
+	Fmatrix &mFullTransform = Device.mFullTransform;
 
     for (int i=0; i<6; i++,pv++)
 	{
@@ -1029,7 +1029,7 @@ void CDrawUtilities::DrawObjectAxis(const Fmatrix& T, float sz, BOOL sel)
 {
 	VERIFY( Device.b_is_Ready );
 	_VertexStream*	Stream	= &RCache.Vertex;
-	Fmatrix &mFullTransform = CastToGSCMatrix(Device.mFullTransform);
+	Fmatrix &mFullTransform = Device.mFullTransform;
 
     Fvector c,r,n,d;
 	float w	= T.c.x* mFullTransform._14 + T.c.y* mFullTransform._24 + T.c.z* mFullTransform._34 +  mFullTransform._44;
@@ -1188,7 +1188,7 @@ void CDrawUtilities::OnRender()
 void CDrawUtilities::OutText(const Fvector& pos, LPCSTR text, u32 color, u32 shadow_color)
 {
 	Fvector p;
-	Fmatrix &mFullTransform = CastToGSCMatrix(Device.mFullTransform);
+	Fmatrix &mFullTransform = Device.mFullTransform;
 
 	float w	= pos.x* mFullTransform._14 + pos.y* mFullTransform._24 + pos.z* mFullTransform._34 +  mFullTransform._44;
 	if (w>=0)

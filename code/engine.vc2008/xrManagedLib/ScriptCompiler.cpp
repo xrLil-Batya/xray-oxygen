@@ -30,7 +30,7 @@ CompilerResults^ xrScriptCompiler::FindCSScripts()
 
 	if (CSScriptFiles.empty())
 	{
-		Log("Spectre compiler: nothing compile, skip");
+		Log("SpectreC#Compiler: nothing to compile, skip");
 		return nullptr;
 	}
 
@@ -41,6 +41,8 @@ CompilerResults^ xrScriptCompiler::FindCSScripts()
 
 		CSSourceCodes->Add(gcnew String(scriptPath));
 	}
+
+	Msg("SpectreC#Compiler: compiling...");
 
 	CSharp::CSharpCodeProvider^ provider = gcnew CSharp::CSharpCodeProvider();
 	return provider->CompileAssemblyFromFile(Parameters, CSSourceCodes->ToArray());
@@ -69,6 +71,8 @@ CompilerResults^ xrScriptCompiler::FindVBScripts()
 	Parameters->OutputAssembly = GetPathToBuildAssembly("xrExternalDotScripts.dll");
 	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrDotScripts.dll"));
 
+	Msg("SpectreVBCompiler: compiling...");
+
 	// Build VB.NET scripts
 	VisualBasic::VBCodeProvider^ provider = gcnew VisualBasic::VBCodeProvider();
 	return provider->CompileAssemblyFromFile(Parameters, VBSourceCodes->ToArray());
@@ -79,42 +83,22 @@ bool xrScriptCompiler::ErrorHadler(CompilerResults^ result)
 	if (!result)
 		return false;
 
+	// Print errors
 	if (result->Errors->HasErrors)
 	{
-		//print errors
-		Log("! CSharp compile failed!");
-		System::Text::StringBuilder^ sb = gcnew System::Text::StringBuilder();
+		Msg("! CSharp compilation failed:");
+
 		for (int errInd = 0; errInd < result->Errors->Count; errInd++)
 		{
 			CompilerError^ error = result->Errors[errInd];
-
-			string1024 PathToResource;
-			ConvertDotNetStringToAscii(error->ToString(), PathToResource);
-			MessageBox(0, PathToResource, "Error", 0);
-
-			sb->Append(error->ToString());
-			sb->Append(L" \n");
+			Msg("  * %s\n", error->ToString());
 		}
-		String^ ErrLog = sb->ToString();
-		XRay::Log::Error(ErrLog);
+
 		return false;
 	}
 
-	//check for warnings
-	if (result->Errors->HasWarnings)
-	{
-		Log("@ CSharp compile have warnings");
-		System::Text::StringBuilder^ sb = gcnew System::Text::StringBuilder();
-		for (int errInd = 0; errInd < result->Errors->Count; errInd++)
-		{
-			CompilerError^ error = result->Errors[errInd];
-			sb->Append('!');
-			sb->Append(error->ToString());
-			sb->Append(" \r\n");
-		}
-		String^ ErrLog = sb->ToString();
-		XRay::Log::Error(ErrLog);
-	}
+	// #TODO: Implement warnings...
+
 
 	Assembly^ ScriptModule = nullptr;
 	try
@@ -123,41 +107,45 @@ bool xrScriptCompiler::ErrorHadler(CompilerResults^ result)
 	}
 	catch (FileNotFoundException^ fileNotFound)
 	{
-		Log("! CSharp compile can't load compiled file. Can't write to disk (Not enough space?)");
+		Msg("! SpectreC#Compiler can't load compiled file. Can't write to disk (Not enough space?)");
 		XRay::Log::Error(fileNotFound->FusionLog);
 		return false;
 	}
 	catch (FileLoadException^ FileLoadExp)
 	{
-		Log("! CSharp compile can't load compiled file. Incorrect file format");
+		Msg("! SpectreC#Compiler can't load compiled file. Incorrect file format");
 		XRay::Log::Error(FileLoadExp->FusionLog);
 		return false;
 	}
 	catch (ArgumentNullException^)
 	{
-		Log("! CSharp compile can't compile source code");
+		Msg("! SpectreC#Compiler can't compile source code");
 		return false;
 	}
 	catch (BadImageFormatException^ invalidImageExp)
 	{
-		Log("! CSharp compile can't load compiled file. Incorrect file format");
+		Msg("! SpectreC#Compiler can't load compiled file. Incorrect file format");
 		XRay::Log::Error(invalidImageExp->FusionLog);
 		return false;
 	}
 
 	if (ScriptModule == nullptr)
 	{
-		Log("! CSharp compile can't compile source code");
+		Msg("! SpectreC#Compiler can't compile source code");
 		return false;
 	}
 
 	scriptAssembly = ScriptModule;
+
+	Msg("SpectreScriptCompiler: compilation succeed.");
 
 	return scriptAssembly != nullptr;
 }
 
 bool xrScriptCompiler::CompileScripts()
 {
+	const bool spectreDebug = strstr(Core.Params, "-spectre_debug") ? true : false;
+
 	Parameters->ReferencedAssemblies->Add(GetPathToThisAssembly());
 	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
 	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
@@ -165,11 +153,24 @@ bool xrScriptCompiler::CompileScripts()
 	Parameters->GenerateInMemory = false;
 	Parameters->GenerateExecutable = false;
 
-	///#TODO: Generate release version without debug info
-	Parameters->IncludeDebugInformation = true;
+	Parameters->IncludeDebugInformation = spectreDebug;
 	Parameters->OutputAssembly = GetPathToBuildAssembly("xrDotScripts.dll");
-	//list all files in directory
-	Parameters->CompilerOptions = "-platform:x64";
+	Parameters->CompilerOptions = "-platform:x64 ";
+
+#ifdef DEBUG
+	Parameters->CompilerOptions += "-define:OXY_DEBUG ";
+#else
+	Parameters->CompilerOptions += "-define:OXY_RELEASE ";
+#endif
+
+	if (spectreDebug)
+	{
+		Parameters->CompilerOptions += "-define:SPECTRE_DEBUG";
+	}
+	else
+	{
+		Parameters->CompilerOptions += "-define:SPECTRE_RELEASE";
+	}
 
 	if (ErrorHadler(FindCSScripts()))
 	{
