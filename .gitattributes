@@ -4,4 +4,4 @@
 # Custom
 *.script text linguist-language=Lua
 *.ltx    text linguist-language=INI
-*.cpp    text eol=crlf
+*.cpp    text linguist-language=cpp
