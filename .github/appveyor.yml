@@ -5,7 +5,6 @@ shallow_clone: true
 image: Visual Studio 2017
 configuration: 
  - Debug
- - Mixed
  - Release
 platform: x64
 build:
