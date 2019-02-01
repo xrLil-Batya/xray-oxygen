@@ -87,6 +87,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiscordRichPresense", "3rd-party\DiscordRPC\DiscordRichPresense.vcxproj", "{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrFontGenerator", "editors\xrFontGenerator\Oxy.FreeTypeConsole.vcxproj", "{ECC6E268-3F8D-42E6-AC20-E3171F72044E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -274,6 +276,14 @@ Global
 		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Release_IA32|x64.Build.0 = Release|x64
 		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Release|x64.ActiveCfg = Release|x64
 		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}.Release|x64.Build.0 = Release|x64
+		{ECC6E268-3F8D-42E6-AC20-E3171F72044E}.Debug|x64.ActiveCfg = Debug|x64
+		{ECC6E268-3F8D-42E6-AC20-E3171F72044E}.Debug|x64.Build.0 = Debug|x64
+		{ECC6E268-3F8D-42E6-AC20-E3171F72044E}.Mixed|x64.ActiveCfg = Release|x64
+		{ECC6E268-3F8D-42E6-AC20-E3171F72044E}.Mixed|x64.Build.0 = Release|x64
+		{ECC6E268-3F8D-42E6-AC20-E3171F72044E}.Release_IA32|x64.ActiveCfg = Release|x64
+		{ECC6E268-3F8D-42E6-AC20-E3171F72044E}.Release_IA32|x64.Build.0 = Release|x64
+		{ECC6E268-3F8D-42E6-AC20-E3171F72044E}.Release|x64.ActiveCfg = Release|x64
+		{ECC6E268-3F8D-42E6-AC20-E3171F72044E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
