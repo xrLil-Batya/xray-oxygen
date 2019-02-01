@@ -3,16 +3,24 @@
 #include "../../xrEngine/Environment.h"
 #include "../../xrEngine/Rain.h"
 
+u64 dwEntry2Game = 0ull;
+
+//#TODO: RZ to self: improve rain drops effect.
+// 1. Check if actor is _really_ under rain.
+// 2. Use wet/dry timers for proper effect accumulation.
+// 3. Add layered distortion effect to simulate water flowing, streaks, etc.
+
 void CRenderTarget::PhaseRainDrops()
 {
-	float wetness = Environment().eff_Rain->GetCurrViewEntityWetness();
-	if (wetness < EPS_L)
-		return;
+	if (Device.dwPrecacheFrame)
+		dwEntry2Game = Device.dwFrame + 400;
 
-	//#TODO: RZ to self: improve rain drops effect.
-	// 1. Check if actor is _really_ under rain.
-	// 2. Use wet/dry timers for proper effect accumulation.
-	// 3. Add layered distortion effect to simulate water flowing, streaks, etc.
+	float wetness = Environment().eff_Rain->GetCurrViewEntityWetness();
+	if (wetness < EPS_L || dwEntry2Game > Device.dwFrame)
+	{
+		// [dwEntry2Game] - For a smooth wet start in rainy weather
+		return; // Skip
+	}
 
 	// Pass 0
 #ifdef USE_DX11

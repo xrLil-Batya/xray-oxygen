@@ -22,7 +22,6 @@ using namespace ACTOR_DEFS;
 
 class CInfoPortion;
 struct GAME_NEWS_DATA;
-class CActorCondition;
 class CCustomOutfit;
 class CGameTaskRegistryWrapper;
 class CGameNewsRegistryWrapper;

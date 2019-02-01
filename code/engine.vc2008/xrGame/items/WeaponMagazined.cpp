@@ -613,7 +613,6 @@ void CWeaponMagazined::SetDefaults()
 	CWeapon::SetDefaults();
 }
 
-
 void CWeaponMagazined::OnShot()
 {
 	// Проигрываем звук

@@ -120,15 +120,13 @@ float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
 			fLeavesFactor *= smoothstep(0.1, 0.075, calc_depth);
 	final = lerp(final, leaves, leaves.a*fLeavesFactor);
 	alpha = lerp(alpha, leaves.a, leaves.a*fLeavesFactor);
-	
-	// Moon road
 #endif	//	USE_SOFT_WATER
 
 	//	Fogging
 	final = lerp(fog_color, final, I.fog);
 	alpha *= I.fog*I.fog;
 
-	final = calc_moon_road(final, vreflect, _P.z, Nw.z);
+	//final = calc_moon_road(final, vreflect, _P.z, Nw.z);
 	return  float4   (final, alpha);
 
 #else	//	NEED_SOFT_WATER

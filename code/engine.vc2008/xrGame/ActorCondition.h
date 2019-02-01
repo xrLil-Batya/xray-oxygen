@@ -11,7 +11,8 @@ class CScriptCallbackEx;
 class CActor;
 class CActorDeathEffector;
 
-class CActorCondition: public CEntityCondition {
+class GAME_API CActorCondition: public CEntityCondition
+{
 private:
 	using inherited = CEntityCondition;
 	enum {	eCriticalPowerReached			=(1<<0),
@@ -85,9 +86,10 @@ public:
 			
 			float		GetAlcohol			()	{return m_fAlcohol;}
 			float		GetPsy				()	{return 1.0f-GetPsyHealth();}
-			float				GetSatiety			()  {return m_fSatiety;}
-			float				GetThirst			()  {return m_fThirst; }
-	IC		float				GetSatietyPower		() const {return m_fV_SatietyPower*m_fSatiety;};
+			float		GetThirst			()  {return m_fThirst; }
+
+	IC		float		GetSatiety			()  const {return m_fSatiety;}
+	IC		float		GetSatietyPower		()  const {return m_fV_SatietyPower*m_fSatiety;};
 
 			void		AffectDamage_InjuriousMaterialAndMonstersInfluence();
 			float		GetInjuriousMaterialDamage	();
