@@ -221,7 +221,7 @@ void CALifeSpawnRegistry::build_story_spawns()
 {
 	mtStoryBuilder.Lock();
 
-	for (auto refVetricles: m_spawns.vertices())
+	for (auto &refVetricles: m_spawns.vertices())
 	{
 		CSE_ALifeObject *object = smart_cast<CSE_ALifeObject*>(&refVetricles.second->data()->object());
 		if (object->m_spawn_story_id == INVALID_SPAWN_STORY_ID)
