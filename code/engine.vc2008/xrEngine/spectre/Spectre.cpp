@@ -21,14 +21,17 @@ void SpectreEngineClient::Initialize()
 		R_ASSERT2(hManagedLib, "No 'xrManagedCoreLib.dll' library at bit path.");
 	}
 
- 	pGetInterface = GetProcAddress(hManagedLib, "GetCoreInterface");
+	pGetInterface = GetProcAddress(hManagedLib, "GetCoreInterface");
 	R_ASSERT2(pGetInterface, "Can't get 'GetCoreInterface' function from xrManagedLib.dll. DLL corrupted?");
 	pAPI = pGetInterface();
 	CoreAPI = reinterpret_cast<ISpectreCoreServer*>(pAPI);
 
 	// Initialize Game lib and xrScripts
 	CoreAPI->LoadGameLib();
-	CoreAPI->CompileScripts();
+	if (Core.bSpectreEnabled)
+	{
+		CoreAPI->CompileScripts();
+	}
 
 	// Get interface ptr from game lib
 	if ((hGameManagedLib = GetModuleHandleA("xrManagedEngineLib.dll")) == NULL)

@@ -267,6 +267,7 @@ public:
 
 public:
 	bool		PluginMode;
+	bool bSpectreEnabled;
 };
 
 //Borland class dll interface
