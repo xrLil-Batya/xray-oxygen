@@ -90,6 +90,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UI3dStatic.cpp" />
     <ClCompile Include="UI3tButton.cpp" />
     <ClCompile Include="UIAnimatedStatic.cpp" />
     <ClCompile Include="UIBtnHint.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MMSound.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="UI3dStatic.h" />
     <ClInclude Include="UI3tButton.h" />
     <ClInclude Include="uiabstract.h" />
     <ClInclude Include="UIAnimatedStatic.h" />

@@ -366,6 +366,9 @@
     <ClCompile Include="UILayoutInflater.cpp">
       <Filter>UIHelpers\XML</Filter>
     </ClCompile>
+    <ClCompile Include="UI3dStatic.cpp">
+      <Filter>Elements\Statics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UITabButton.h">
@@ -595,6 +598,9 @@
     </ClInclude>
     <ClInclude Include="UILayoutInflater.h">
       <Filter>UIHelpers\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="UI3dStatic.h">
+      <Filter>Elements\Statics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
