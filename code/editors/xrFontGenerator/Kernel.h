@@ -1,10 +1,10 @@
 /*
   ******************OXYGEN DEV TEAM (C) 2019**************************
-  ******************    Author: Samber13    **************************
+  ******************    Author: Phantom1020 (samber13 - это приложение вообще не делал и не помогал, может подтвердить)    **************************
 */
 
 #pragma once
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 
 #include <Windows.h>
 #include <iostream>
 #include <filesystem>
@@ -13,8 +13,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
  
-
-#define TOTAL_ANSCII 127+63+2
+// @ Да за хардкоржено, отводим место для Английского и Русского, а также для системных символов (цифры, прочее)
+constexpr int TOTAL_ANSCII = 96 + 63 + 1;
 
 namespace Oxy
 {
@@ -51,7 +51,7 @@ namespace Oxy
 		SetConsoleTextAttribute(hConsole, 27);
 		std::cout << ",";
 		SetConsoleTextAttribute(hConsole, 29);
-		std::cout << " DirectxTK";
+		std::cout << " STBI lib";
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 		std::cout << " ******" << std::endl;
 		std::cout << "************************************************" << std::endl; 
@@ -63,29 +63,27 @@ namespace Oxy
 	// @ Creates already with _size_800, _size_1024, _size_1600
 	void InitFont(void); 
 
-
-	void CreateTextureResolution(void);
-	void ChangeFaceSize(void);
-	void CreateConfigs(void);
-	void CheckLanguages(void);
+	void CreateGSCFonts(void);
+	void CheckTexConv(void);
 
 	void InitFreeType(void);
 
 	// @ FREE
-	void ReleaseDirectXData(void);
 	void ReleaseFreeType(void);
-
-
-	// @ For Console Handling 
-	void ReDrawInfo(void);
 
 	FT_Library lib;
 	FT_Face face;
 
-	int tex_width = 1;
+	
+	int tex_width = 1; // @ Не ставить это в ноль, ибо дальше умножаем на два
 	int tex_height = 0;
 	int font_height = 0;
 	std::string output = "";
 	std::string path_to_new_folder = "";
 	std::string path_to_loaded_file = "";
+	std::string filename = "";
+	int pen_x = 0;
+	int pen_y = 0;
+	unsigned char* pixels;
+	bool have_we_texconv = false; // @ Для проверки, имеет ли юзер в папке texconv или нет;
 }
