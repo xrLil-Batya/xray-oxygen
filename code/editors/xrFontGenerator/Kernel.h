@@ -27,7 +27,7 @@ namespace Oxy
 	};
 
 	data_symbol info[TOTAL_ANSCII];
-
+	data_symbol info_copy = { 0 };
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	inline void HeaderMessage(void) 

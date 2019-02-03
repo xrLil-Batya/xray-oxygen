@@ -77,6 +77,10 @@ void ParseFont(int index, int max_value)
 	{
 		std::cout << "FAILED" << std::endl;
 	}
+
+	FT_Load_Char(Oxy::face, 87, FT_LOAD_RENDER);
+	Oxy::info_copy.y_off = Oxy::face->glyph->bitmap_top;
+
 	int max_dm = ((1 + (Oxy::face->size->metrics.height >> 6)) * ceilf(sqrtf(TOTAL_ANSCII)));
 	int current_state = (1 + (Oxy::face->size->metrics.height >> 6));
 
@@ -155,10 +159,24 @@ void ParseFont(int index, int max_value)
 				pen_y += ((Oxy::face->size->metrics.height >> 6)) + 1;
 
 			}
-			
+
 			if (i == 88)
 			{
 				index_to_W = arr_iter;
+			}
+
+			// @ +-.,
+			if (i >= 42 && i <= 46)
+			{
+				current_size = (Oxy::info_copy.y_off - Oxy::face->glyph->bitmap_top);
+				pen_y += current_size;
+			}
+
+			// @ двоеточие и точка с запятой
+			if (i == 58 || i == 59)
+			{
+				current_size = (Oxy::info_copy.y_off - Oxy::face->glyph->bitmap_top);
+				pen_y += current_size;
 			}
 
 			if (i >= 97 && i < 123)
@@ -210,6 +228,32 @@ void ParseFont(int index, int max_value)
 				}
 				
 				if ((Oxy::info[index_to_W].y_off - Oxy::face->glyph->bitmap_top) < 0)
+				{
+					pen_y += abs(current_size);
+				}
+			}
+
+			if (i >= 42 && i <= 46)
+			{
+				if ((Oxy::info_copy.y_off - Oxy::face->glyph->bitmap_top) > 0)
+				{
+					pen_y -= current_size;
+				}
+
+				if ((Oxy::info_copy.y_off - Oxy::face->glyph->bitmap_top) < 0)
+				{
+					pen_y += abs(current_size);
+				}
+			}
+			
+			if (i == 58 || i == 59)
+			{
+				if ((Oxy::info_copy.y_off - Oxy::face->glyph->bitmap_top) > 0)
+				{
+					pen_y -= current_size;
+				}
+
+				if ((Oxy::info_copy.y_off - Oxy::face->glyph->bitmap_top) < 0)
 				{
 					pen_y += abs(current_size);
 				}
