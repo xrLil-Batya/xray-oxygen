@@ -6,9 +6,10 @@
 ////////////////////////////////////////////////////
 #include "stdafx.h"
 #include "ui3dstatic.h"
-/*#include "../gameobject.h"
-#include "../HUDManager.h"
-#include "../../fbasicvisual.h"
+
+#include "../xrEngine/xr_object.h"
+#include "../xrRender/xrRenderPC_R2/stdafx.h"
+#include "../xrRender/xrRender/FBasicVisual.h"
 
 //расстояние от камеры до вещи, перед глазами
 #define DIST (VIEWPORT_NEAR + 0.1f)
@@ -45,12 +46,14 @@ void CUI3dStatic::Draw()
 {
 	if (m_pCurrentItem)
 	{
-		Frect rect = GetAbsoluteRect();
+		Frect rect;
+		GetAbsoluteRect(rect);
+
 		// Apply scale
-		rect.top = static_cast<int>(rect.top * UI()->GetScaleY());
-		rect.left = static_cast<int>(rect.left * UI()->GetScaleX());
-		rect.bottom = static_cast<int>(rect.bottom * UI()->GetScaleY());
-		rect.right = static_cast<int>(rect.right * UI()->GetScaleX());
+		rect.top = static_cast<int>(rect.top * UI().ClientToScreenScaledY(1));
+		rect.left = static_cast<int>(rect.left * UI().ClientToScreenScaledX(1));
+		rect.bottom = static_cast<int>(rect.bottom * UI().ClientToScreenScaledY(1));
+		rect.right = static_cast<int>(rect.right * UI().ClientToScreenScaledX(1));
 
 		Fmatrix translate_matrix;
 		Fmatrix scale_matrix;
@@ -64,9 +67,9 @@ void CUI3dStatic::Draw()
 
 		//поместить объект в центр сферы
 		translate_matrix.identity();
-		translate_matrix.translate(-m_pCurrentItem->Visual()->vis.sphere.P.x, -m_pCurrentItem->Visual()->vis.sphere.P.y, -m_pCurrentItem->Visual()->vis.sphere.P.z);
+		translate_matrix.translate(-m_pCurrentItem->Visual()->getVisData().sphere.P.x, -m_pCurrentItem->Visual()->getVisData().sphere.P.y, -m_pCurrentItem->Visual()->getVisData().sphere.P.z);
 
-		matrix.mulA(translate_matrix);
+		matrix.mulA_44(translate_matrix);
 
 		rx_m.identity();
 		rx_m.rotateX(m_x_angle);
@@ -75,9 +78,9 @@ void CUI3dStatic::Draw()
 		rz_m.identity();
 		rz_m.rotateZ(m_z_angle);
 
-		matrix.mulA(rx_m);
-		matrix.mulA(ry_m);
-		matrix.mulA(rz_m);
+		matrix.mulA_44(rx_m);
+		matrix.mulA_44(ry_m);
+		matrix.mulA_44(rz_m);
 
 		float x1, y1, x2, y2;
 
@@ -87,30 +90,31 @@ void CUI3dStatic::Draw()
 		float normal_size;
 		normal_size = _abs(x2 - x1) < _abs(y2 - y1) ? _abs(x2 - x1) : _abs(y2 - y1);
 
-		float radius = m_pCurrentItem->Visual()->vis.sphere.R;
+		float radius = m_pCurrentItem->Visual()->getVisData().sphere.R;
 
 		float scale = normal_size / (radius * 2);
 
 		scale_matrix.identity();
 		scale_matrix.scale(scale, scale, scale);
 
-		matrix.mulA(scale_matrix);
+		matrix.mulA_44(scale_matrix);
 
 		float right_item_offset, up_item_offset;
 
-		FromScreenToItem(rect.left + iFloor(GetWidth() / 2 * UI()->GetScaleX()), rect.top + iFloor(GetHeight() / 2 * UI()->GetScaleY()), right_item_offset, up_item_offset);
+		FromScreenToItem(rect.left + iFloor(GetWidth() / 2 * UI().ClientToScreenScaledX(1)), rect.top + iFloor(GetHeight() / 2
+						* UI().ClientToScreenScaledY(1)), right_item_offset, up_item_offset);
 
 		translate_matrix.identity();
 		translate_matrix.translate(right_item_offset, up_item_offset, DIST);
 
-		matrix.mulA(translate_matrix);
+		matrix.mulA_44(translate_matrix);
 
 		Fmatrix camera_matrix;
 		camera_matrix.identity();
 		camera_matrix = Device.mView;
 		camera_matrix.invert();
 
-		matrix.mulA(camera_matrix);
+		matrix.mulA_44(camera_matrix);
 
 		::Render->set_Object(NULL);
 		::Render->set_Transform(&matrix);
@@ -120,7 +124,7 @@ void CUI3dStatic::Draw()
 	}
 }
 
-void CUI3dStatic::SetGameObject(CGameObject* pItem)
+void CUI3dStatic::SetGameObject(CObject* pItem)
 {
 	m_pCurrentItem = pItem;
-}*/
+}

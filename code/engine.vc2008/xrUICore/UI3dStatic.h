@@ -5,11 +5,11 @@
 // Specital for X-Ray Oxygen Project | 02.02.2018 //
 ////////////////////////////////////////////////////
 #pragma once
-/*#include "uiwindow.h"
+#include "uiwindow.h"
 
 class CGameObject;
 
-class CUI3dStatic : public CUIWindow
+class UI_API CUI3dStatic : public CUIWindow
 {
 public:
 	CUI3dStatic();
@@ -17,7 +17,7 @@ public:
 
 	void SetRotate(float x, float y, float z) { m_x_angle = x; m_y_angle = y; m_z_angle = z; }
 
-	void SetGameObject(CGameObject* pItem);
+	void SetGameObject(CObject* pItem);
 
 	//прорисовка окна
 	virtual void Draw();
@@ -29,5 +29,5 @@ protected:
 	//где находиться объект
 	void FromScreenToItem(int x_screen, int y_screen, float& x_item, float& y_item);
 
-	CGameObject* m_pCurrentItem;
-};*/
+	CObject* m_pCurrentItem;
+};
