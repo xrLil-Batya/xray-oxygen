@@ -14,23 +14,48 @@
 #include FT_FREETYPE_H
  
 // @ Да за хардкоржено, отводим место для Английского и Русского, а также для системных символов (цифры, прочее)
-constexpr int TOTAL_ANSCII = 96 + 63 + 1;
+constexpr unsigned int TOTAL_ANSCII = 96 + 63 + 1;
 
-namespace Oxy
+namespace XRay
 {
 	// @ Contains information about glyph or symbol in texture
 	struct data_symbol
 	{
-		int x0, y0, x1, y1;
-		int x_off, y_off;
+		size_t x[1], y[1];
+		size_t x_off, y_off;
 		int advance;
+	};
+	
+	struct PathList
+	{
+		xr_string PathName;
+		xr_string FileName;
+
+		xr_string PathOutName;
+		xr_string FileOutName;
+	};
+
+	struct ConvInfo
+	{
+		FT_Library lib;
+		FT_Face    face;
+
+		unsigned int   TexWid = 1; // @ Не ставить это в ноль, ибо дальше умножаем на два
+		unsigned int   TexHeig = 0;
+		unsigned int   FontHeig = 0;
+					   
+		unsigned int   PenX = 0;
+		unsigned int   PenY = 0;
+		unsigned char* Pixels;
+
+		bool bHaveTexconv; // @ Для проверки, имеет ли юзер в папке texconv или нет;
 	};
 
 	data_symbol info[TOTAL_ANSCII];
 	data_symbol info_copy = { 0 };
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	inline void HeaderMessage(void) 
+	inline void HeaderMessage() noexcept
 	{  
 		std::cout << "************************************************" << std::endl;
 		std::cout << "**********      ";
@@ -61,29 +86,9 @@ namespace Oxy
 	void CreateFolder(void);
 
 	// @ Creates already with _size_800, _size_1024, _size_1600
-	void InitFont(void); 
-
-	void CreateGSCFonts(void);
-	void CheckTexConv(void);
-
-	void InitFreeType(void);
-
-	// @ FREE
-	void ReleaseFreeType(void);
-
-	FT_Library lib;
-	FT_Face face;
-
-	
-	int tex_width = 1; // @ Не ставить это в ноль, ибо дальше умножаем на два
-	int tex_height = 0;
-	int font_height = 0;
-	std::string output = "";
-	std::string path_to_new_folder = "";
-	std::string path_to_loaded_file = "";
-	std::string filename = "";
-	int pen_x = 0;
-	int pen_y = 0;
-	unsigned char* pixels;
-	bool have_we_texconv = false; // @ Для проверки, имеет ли юзер в папке texconv или нет;
+	void InitFont		(); 
+	void CreateGSCFonts	();
+	void CheckTexConv	();
+	void InitFreeType	();
+	void ReleaseFreeType();
 }

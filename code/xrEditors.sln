@@ -88,6 +88,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiscordRichPresense", "3rd-party\DiscordRPC\DiscordRichPresense.vcxproj", "{A5E0EC2A-4783-4A53-AE1E-228464FC8F69}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrFontGenerator", "editors\xrFontGenerator\Oxy.FreeTypeConsole.vcxproj", "{ECC6E268-3F8D-42E6-AC20-E3171F72044E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E} = {A0F7D1FB-59A7-4717-A7E4-96F37E91998E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
