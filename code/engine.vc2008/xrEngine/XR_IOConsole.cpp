@@ -368,7 +368,7 @@ void CConsole::OnRender()
 		{
 			break;
 		}
-		
+
 		LPCSTR ls = logLine.c_str();
 
 		Console_mark cm = (Console_mark)ls[11];
