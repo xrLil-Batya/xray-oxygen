@@ -22,7 +22,6 @@ MANAGED_ENGINE_API void xrEngineInit()
 	InitSound2();
 }
 
-
 struct SpectreEngineLib : public ISpectreEngineLib
 {
 	virtual DWORD CreateProxyObject(DLL_Pure* pObject) override

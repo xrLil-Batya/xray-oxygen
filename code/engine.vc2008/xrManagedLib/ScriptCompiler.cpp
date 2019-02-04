@@ -10,8 +10,8 @@ using namespace Microsoft;
 xrScriptCompiler::xrScriptCompiler()
 {
 	PrivateInfo = new xrScriptCompiler_Private();
-	CSSourceCodes = gcnew List<String ^>();
-	VBSourceCodes = gcnew List<String ^>();
+	CSSourceCodes = gcnew List<String^>();
+	VBSourceCodes = gcnew List<String^>();
 	Parameters = gcnew CompilerParameters();
 }
 
