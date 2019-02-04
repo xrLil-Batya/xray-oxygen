@@ -11,13 +11,14 @@
 #include "../xrEngine/date_time.h"
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
+#include "../xrGame/HUDManager.h"
 
-u32 XRay::LevelGraph::LevelID::get()
+::System::UInt32 XRay::LevelGraph::LevelID::get()
 {
 	return ai().level_graph().level_id();
 }
 
-u32 XRay::LevelGraph::VertexCount::get()
+::System::UInt32 XRay::LevelGraph::VertexCount::get()
 {
 	return  ai().level_graph().header().vertex_count();
 }
@@ -105,7 +106,7 @@ float XRay::Level::RainFactor::get()
 	return (::Environment().CurrentEnv->rain_density);
 }
 
-u32	XRay::Level::VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance)
+::System::UInt32	XRay::Level::VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance)
 {
 	direction.normalize_safe();
 	direction.mul(max_distance);
@@ -113,7 +114,7 @@ u32	XRay::Level::VertexInDirection(u32 level_vertex_id, Fvector direction, float
 	Fvector			finish_position = Fvector(start_position).add(direction);
 	u32				result = u32(-1);
 	ai().level_graph().farthest_vertex_in_direction(level_vertex_id, start_position, finish_position, result, nullptr);
-	return			(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
+	return			(::System::UInt32)(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
 }
 
 System::Numerics::Vector3^ XRay::Level::VertexPosition(u32 level_vertex_id)
@@ -196,3 +197,67 @@ XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
 {
 	return gcnew ClientSpawnManager(&(::Level().client_spawn_manager()));
 }
+
+::System::UInt32 XRay::Level::GameTime::Days::get()
+{	
+	return	(::System::UInt32)return_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(),TIMETYPE_DAYS);
+}
+
+::System::UInt32 XRay::Level::GameTime::Hours::get()
+{
+	return	(::System::UInt32)return_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(), TIMETYPE_HOURS);
+}
+
+::System::UInt32 XRay::Level::GameTime::Minutes::get()
+{
+	return	(::System::UInt32)return_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(), TIMETYPE_MINUTES);
+}
+
+::System::UInt32 XRay::Level::GameTime::Seconds::get()
+{
+	return	(::System::UInt32)return_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(), TIMETYPE_MINUTES);
+}
+
+void XRay::Level::GameTime::Days::set(::System::UInt32 days)
+{
+	
+}
+
+void XRay::Level::GameTime::Hours::set(::System::UInt32 hours)
+{
+
+}
+
+void XRay::Level::GameTime::Minutes::set(::System::UInt32 minutes)
+{
+
+}
+
+void XRay::Level::GameTime::Seconds::set(::System::UInt32 seconds)
+{
+
+}
+
+void XRay::Level::GameTime::ChangeGameTime(u32 days, u32 hours, u32 mins)
+{
+	if(::Level().Server->game && ai().get_alife())
+	{
+		u32 value		= days*86400+hours*3600+mins*60;
+		float fValue	= static_cast<float> (value);
+		value			*= 1000; //msec		
+		Environment().ChangeGameTime(fValue);
+		::Level().Server->game->alife().time_manager().change_game_time(value);
+	}
+}
+
+void XRay::Level::AddDialogToRender(UIDialogWnd^ pDialog)
+{
+	GameUI()->AddDialogToRender(pDialog);
+}
+
+void XRay::Level::RemoveDialogFromRender(UIDialogWnd^ pDialog)
+{
+	GameUI()->RemoveDialogToRender(pDialog);
+}
+
+

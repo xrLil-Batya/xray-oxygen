@@ -6,7 +6,7 @@ class CDialogHolder;
 class UI_API CUIDialogWnd : public CUIWindow
 {
 private:
-	typedef CUIWindow inherited;
+	using inherited = CUIWindow;
 	CDialogHolder*					m_pParentHolder;
 protected:
 public:
@@ -16,7 +16,7 @@ public:
 
 	virtual void Show							(bool status);
 
-	virtual bool OnKeyboardAction						(int dik, EUIMessages keyboard_action);
+	virtual bool OnKeyboardAction				(int dik, EUIMessages keyboard_action);
 	virtual bool OnKeyboardHold					(int dik);
 
 	CDialogHolder* GetHolder					()								{return m_pParentHolder;};

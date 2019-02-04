@@ -3,9 +3,8 @@
 #include "../xrGame/Level.h"
 #include "../xrGame/client_spawn_manager.h"
 
-XRay::ClientSpawnManager::ClientSpawnManager()
-{
-}
+XRay::ClientSpawnManager::ClientSpawnManager() = default;
+
 
 void XRay::ClientSpawnManager::Add(::System::UInt16 RequestingId, ::System::UInt16 RequestedId, Functor ^ Funct)
 {
