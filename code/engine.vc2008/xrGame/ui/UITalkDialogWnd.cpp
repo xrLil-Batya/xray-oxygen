@@ -227,8 +227,8 @@ void CUITalkDialogWnd::SetOsoznanieMode(bool b)
 	}
 
 	UIAnswersList->Show(!b);
-
 	UIToTradeButton.Show(!b);
+
 	if (mechanic_mode)
 	{
 		UIToTradeButton.m_hint_text = "ui_st_upgrade_hint";
