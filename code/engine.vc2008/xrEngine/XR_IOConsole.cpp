@@ -370,8 +370,8 @@ void CConsole::OnRender()
 		}
 		
 		LPCSTR ls = logLine.c_str();
-		
-		Console_mark cm = (Console_mark)ls[0];
+
+		Console_mark cm = (Console_mark)ls[11];
 		pFont->SetColor( get_mark_color( cm ) );
 		//u8 b = (is_mark( cm ))? 2 : 0;
 		//OutFont( ls + b, ypos );
