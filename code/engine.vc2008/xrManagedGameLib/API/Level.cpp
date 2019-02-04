@@ -215,7 +215,7 @@ XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
 
 ::System::UInt32 XRay::Level::GameTime::Seconds::get()
 {
-	return	(::System::UInt32)return_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(), TIMETYPE_MINUTES);
+	return	(::System::UInt32)return_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(), TIMETYPE_SECONDS);
 }
 
 void XRay::Level::GameTime::Days::set(::System::UInt32 days)
