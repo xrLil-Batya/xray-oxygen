@@ -258,7 +258,7 @@ void xrCompressor::CompressOne(LPCSTR path)
 			c_size_real = (u32)src->length();
 			if (0 != c_size_real)
 			{
-				u32 c_size_max = rtc_csize(src->length());
+				u32 c_size_max = XRay::Compress::RT::RtcSize(src->length());
 				u8*	c_data = xr_alloc<u8>(c_size_max);
 
 				t_compress.Begin();
@@ -326,11 +326,13 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 	string_path		fname;
 	string128		s_num;
 
-	if (strstr(KeysList, "-xdb")) {
-		strconcat(sizeof(fname), fname, tgt_folder, ".xdb", itoa(num, s_num, 20));
+	if (strstr(KeysList, "-xdb"))
+	{
+		xr_strconcat(fname, tgt_folder, ".xdb", itoa(num, s_num, 20));
 	}
-	if (strstr(KeysList, "-db")) {
-		strconcat(sizeof(fname), fname, tgt_folder, ".db", itoa(num, s_num, 20));
+	if (strstr(KeysList, "-db")) 
+	{
+		xr_strconcat(fname, tgt_folder, ".db", itoa(num, s_num, 20));
 	}
 
 	unlink(fname);
@@ -338,7 +340,6 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 
 	if (strstr(KeysList, "-delete"))
 	{
-		MessageBox(0, fname, "", 0);
 		if (FS.exist(fname))
 		{
 			remove(fname);

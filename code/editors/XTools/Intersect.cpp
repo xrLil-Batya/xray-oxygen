@@ -2,9 +2,9 @@
 
 #include "etools.h"
 
-#include "../../include/xrrender/kinematics.h"
+#include "../../engine.vc2008/include/xrRender/kinematics.h"
 #define ECORE_API 
-#include "../../xrEngine/bone.h"
+#include "../../engine.vc2008/xrEngine/bone.h"
 
 namespace ETOOLS{
 

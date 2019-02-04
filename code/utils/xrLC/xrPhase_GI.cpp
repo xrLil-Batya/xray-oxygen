@@ -221,5 +221,5 @@ void	CBuild::xrPhase_Radiosity	()
 	// info
 	Logger.clMsg				("old setup [%d], new setup[%d]",setup_old,setup_new);
 	Logger.clMsg				("old energy [%f], new energy[%f]",_energy_before,_energy_after);
-	FlushLog			();
+	xrLogger::FlushLog			();
 }

@@ -7,7 +7,7 @@
 
 using Clock = std::chrono::high_resolution_clock;
 using DWORDVec = xr_vector<u32>;
-using Time = Clock::time_point;
+using UTime = Clock::time_point;
 using Duration = Clock::duration;
 
 namespace CDB

@@ -8,7 +8,7 @@
 #pragma comment(lib,"xrCDB.lib")
 #pragma comment(lib,"xrCore.lib")
 #pragma comment(lib,"xrLC_Light.lib")
-#pragma comment(lib, "xrLCUtil.lib")
+#pragma comment(lib,"xrLCUtil.lib")
 
 static const char* h_str = 
 	"The following keys are supported / required:\n"
@@ -115,7 +115,7 @@ void Startup(LPSTR lpCmdLine)
 
 	delete pUIParams;
 	Logger.Destroy();
-	FlushLog();
+	xrLogger::FlushLog();
 
 	if (pUIParams->isShutDown)
 		WinShutdown();

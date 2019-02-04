@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable: 4244)
 #define MESHSTRUCTURE_API XRLC_LIGHT_API
 
 class MESHSTRUCTURE_API vector_item

@@ -112,6 +112,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:LIBCMTD %(AdditionalOptions)</AdditionalOptions>
@@ -151,7 +152,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -277,7 +278,6 @@
     <ClCompile Include="..\engine.vc2008\xrPhysics\dRayMotions.cpp" />
     <ClCompile Include="..\engine.vc2008\xrPhysics\IActivationShape.cpp" />
     <ClCompile Include="..\engine.vc2008\xrPhysics\PHActivationShape.cpp" />
-    <ClCompile Include="..\engine.vc2008\xrPhysics\PhysicsExternalCommon.cpp" />
     <ClCompile Include="..\engine.vc2008\xrPhysics\phvalide.cpp" />
     <ClCompile Include="..\engine.vc2008\xrPhysics\PHInterpolation.cpp" />
     <ClCompile Include="..\engine.vc2008\xrPhysics\MathUtils.cpp" />

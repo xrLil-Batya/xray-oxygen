@@ -60,7 +60,7 @@ void Startup(void*)
 
 int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	Debug._initialize(false);
+	Debug._initialize();
 	Core._initialize("xrCompress", 0, TRUE, "fsgame.ltx");
 	// Initialize debugging
 	xrCompress::Application::EnableVisualStyles();

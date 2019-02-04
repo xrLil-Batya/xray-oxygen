@@ -58,11 +58,9 @@ struct MyTri
 #define MESHEDGE_APP_DEFINED	MyEdge	myedge;
 #define MESHPT_APP_DEFINED		MyPt	mypt;
 
-
-#include "../../xrcore/xrCore.h"
-
 #include "mesh.h"
-#include "MxQMetric.h"
+#include "../../utils/xrQSlim/src/MxQMetric.h"
+#include "../../utils/xrQSlim/src/MxQMetric3.h"
 
 struct GeneralTriInfo
 {

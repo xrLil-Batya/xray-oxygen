@@ -368,11 +368,11 @@
     <None Include="LightPoint.cu">
       <Filter>Light\Lights\HardwareCode</Filter>
     </None>
-    <None Include="LightPoint.cl">
-      <Filter>Light\Lights\HardwareCode</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrLC_Light.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="LightPoint.cl" />
   </ItemGroup>
 </Project>

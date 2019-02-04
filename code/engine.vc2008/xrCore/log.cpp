@@ -5,6 +5,7 @@
 #include "log.h"
 
 static xrLogger theLogger;
+XRCORE_API xr_queue <xrLogger::LogRecord> xrLogger::logData;
 
 void Log(const char* s)
 {

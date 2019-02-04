@@ -304,7 +304,7 @@ void ImplicitLightingExec(u32 thCount)
 			sscanf(strstr(Core.Params, "-f") + 2, "%s", name);
 			R_ASSERT(name[0] && defl.texture);
 			b_BuildTexture& TEX = *defl.texture;
-			strconcat(sizeof(out_name), out_name, name, "\\", TEX.name, ".dds");
+			xr_strconcat(out_name, name, "\\", TEX.name, ".dds");
 			FS.update_path(out_name, "$game_levels$", out_name);
 			Logger.clMsg("Saving texture '%s'...", out_name);
 			createPath(out_name);
@@ -326,7 +326,7 @@ void ImplicitLightingExec(u32 thCount)
 			string_path				name, out_name;
 			sscanf(strstr(GetCommandLine(), "-f") + 2, "%s", name);
 			b_BuildTexture& TEX = *defl.texture;
-			strconcat(sizeof(out_name), out_name, name, "\\", TEX.name, "_lm.dds");
+			xr_strconcat(out_name, name, "\\", TEX.name, "_lm.dds");
 			FS.update_path(out_name, "$game_levels$", out_name);
 			Logger.clMsg("Saving texture '%s'...", out_name);
 			createPath(out_name);

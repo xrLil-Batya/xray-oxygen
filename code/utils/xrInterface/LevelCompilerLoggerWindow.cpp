@@ -109,18 +109,18 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 
 		{
 			xrCriticalSectionGuard LogGuard(csLog);
-			if (LogSize != LogFile->size())
+			if (LogSize != xrLogger::logData.size())
 			{
 				bWasChanges = TRUE;
-				for (shared_str &LogFileStr: *LogFile)
+				for (size_t Iter = 0; Iter < xrLogger::logData.size(); Iter++)
 				{
-					const char* S = LogFileStr.c_str();
+					const char* S = xrLogger::logData.front().Message.c_str();
 					if (!S)
 						S = "";
 					SendMessage(hwLog, LB_ADDSTRING, 0, (LPARAM)S);
 				}
 				SendMessage(hwLog, LB_SETTOPINDEX, LogSize - 1, 0);
-				FlushLog();
+				xrLogger::FlushLog();
 			}
 		}
 
@@ -194,7 +194,7 @@ void LevelCompilerLoggerWindow::clMsgV(const char* format, va_list args)
 
 	xrCriticalSectionGuard LogGuard(csLog);
 	string1024 msg;
-	strconcat(sizeof(msg), msg, "    |    | ", buf);
+	xr_strconcat(msg, "    |    | ", buf);
 	Log(msg);
 }
 

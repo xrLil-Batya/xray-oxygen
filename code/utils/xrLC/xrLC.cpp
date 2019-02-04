@@ -128,9 +128,9 @@ void Startup(char* lpCmdLine)
 	Logger.Initialize(temp);
 
 	string_path prjName;
-	FS.update_path(prjName, "$game_levels$", strconcat(sizeof(prjName), prjName, name, "\\build.prj"));
+	FS.update_path(prjName, "$game_levels$", xr_strconcat(prjName, name, "\\build.prj"));
 	string256 PhaseName;
-	Logger.Phase(strconcat(sizeof(PhaseName), PhaseName, "Reading project [", name, "]..."));
+	Logger.Phase(xr_strconcat(PhaseName, "Reading project [", name, "]..."));
 
 	string256 inf;
 	IReader* F = FS.r_open(prjName);
