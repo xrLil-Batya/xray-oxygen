@@ -14,37 +14,28 @@ constexpr int DEFAULT_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLU
 constexpr int ERROR_COLOR = 28;
 constexpr int OK_COLOR = 26;
 constexpr int COLOR_DEFAULT = 27;
-constexpr int PAUSE_TIME = 1000;
 
-XRay::PathList PathSystem;
-XRay::ConvInfo ConverterInfo;
-// @ If method ManageCreationFile is successful processing
-bool suc_file = false;
-bool suc_dir = false;
+bool XRay::CFontGen::bSucFile;
+bool XRay::CFontGen::bSucDir;
+HANDLE XRay::hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-void XRay::InitFreeType()
+XRay::CFontGen::CFontGen()
 {
-	FT_Error err = FT_Init_FreeType(&ConverterInfo.lib);
-	std::cout << "Initializing FreeType: ";
-	if (err)
-	{
-		Sleep(PAUSE_TIME);
-		SetConsoleTextAttribute(hConsole, ERROR_COLOR);
-		std::cout << "Failed!" << std::endl;
-		SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
-	}
-	else
-	{
-		Sleep(PAUSE_TIME);
-		SetConsoleTextAttribute(hConsole, OK_COLOR);
-		std::cout << "Successful!" << std::endl;
-		SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
-	}
-
-	std::cout << std::endl;
+	bSucFile = false;
+	bSucDir = false;
 }
 
-void XRay::ReleaseFreeType()
+// @ If method ManageCreationFile is successful processing
+void XRay::CFontGen::InitFreeType()
+{
+	FT_Error err = FT_Init_FreeType(&ConverterInfo.lib);
+	if (err)
+	{
+		MessageBox(0, L"Error!", L"Failed init FreeType!", MB_OK);
+	}
+}
+
+void XRay::CFontGen::ReleaseFreeType()
 {
 	FT_Done_Face(ConverterInfo.face);
 	FT_Done_FreeType(ConverterInfo.lib);
@@ -52,9 +43,9 @@ void XRay::ReleaseFreeType()
 
 int g_count = 0;
 int max_height_font = 0; // @ для вывода файлов, по сути обманка,
-			// ибо в действительности мы уменьшаем размер шрифта и выводится
+// ибо в действительности мы уменьшаем размер шрифта и выводится
 //должно под каждый размер, но мы делаем как ПЫС, то есть _size_800, _size_1600, _size, где size одно и то же число
-void ParseFont(int index, int max_value)
+void XRay::CFontGen::ParseFont(int index, int max_value)
 {
 	g_count++;
 
@@ -66,7 +57,7 @@ void ParseFont(int index, int max_value)
 	}
 
 	FT_Load_Char(ConverterInfo.face, 87, FT_LOAD_RENDER);
-	XRay::info_copy.y_off = ConverterInfo.face->glyph->bitmap_top;
+	info_copy.y_off = ConverterInfo.face->glyph->bitmap_top;
 
 	float max_dm = ((1 + (ConverterInfo.face->size->metrics.height >> 6)) * ceilf(sqrtf(TOTAL_ANSCII)));
 	int current_state = (1 + (ConverterInfo.face->size->metrics.height >> 6));
@@ -84,9 +75,7 @@ void ParseFont(int index, int max_value)
 
 	if (index <= 0)
 	{
-		SetConsoleTextAttribute(XRay::hConsole, ERROR_COLOR);
-		std::cout << "Can't create file, because your size is less or equal 0" << std::endl;
-		SetConsoleTextAttribute(XRay::hConsole, DEFAULT_COLOR);
+		MessageBoxA(0, "Can't create file, because your size is less or equal is nullptr", "Error!", MB_OK);
 		return;
 	}
 
@@ -110,9 +99,8 @@ void ParseFont(int index, int max_value)
 			{
 				if (!ConverterInfo.face->glyph->bitmap.rows && !ConverterInfo.face->glyph->bitmap.width)
 				{
-					std::cout << "Your font doesn't have a 'space' symbol" << std::endl;
-					system("pause");
-					std::exit(1);
+					MessageBoxA(0, "Your font doesn't have a 'space' symbol", "Error!", MB_OK);
+					return;
 				}
 			}
 
@@ -145,76 +133,58 @@ void ParseFont(int index, int max_value)
 			// @ +-.,
 			if (i >= 42 && i <= 46)
 			{
-				current_size = int(XRay::info_copy.y_off - ConverterInfo.face->glyph->bitmap_top);
+				current_size = int(info_copy.y_off - ConverterInfo.face->glyph->bitmap_top);
 				pen_y += (u32)current_size;
 			}
 
 			// @ двоеточие и точка с запятой
 			if (i == 58 || i == 59)
 			{
-				current_size = int(XRay::info_copy.y_off - ConverterInfo.face->glyph->bitmap_top);
+				current_size = int(info_copy.y_off - ConverterInfo.face->glyph->bitmap_top);
 				pen_y += (u32)current_size;
 			}
 
 			if (i >= 97 && i < 123)
 			{
-				current_size = int(XRay::info[index_to_W].y_off - ConverterInfo.face->glyph->bitmap_top);
+				current_size = int(info[index_to_W].y_off - ConverterInfo.face->glyph->bitmap_top);
 				pen_y += (u32)current_size;
 			}
 
-			if (i == 32)
-			{
-				for (u32 row = 0; row < bmp->rows; ++row)
-					for (u32 col = 0; col < bmp->width; ++col)
-					{
-						u32 x = pen_x + col;
-						u32 y = pen_y + row;
-
-						ConverterInfo.Pixels[y * local_tex_width + x] = 0;
-					}
-			}
-			else for (u32 row = 0; row < bmp->rows; ++row)
+			for (u32 row = 0; row < bmp->rows; ++row)
 			{
 				for (u32 col = 0; col < bmp->width; ++col)
 				{
 					u32 x = pen_x + col;
 					u32 y = pen_y + row;
-					ConverterInfo.Pixels[y * local_tex_width + x] = bmp->buffer[row * bmp->pitch + col];
+
+					ConverterInfo.Pixels[y * local_tex_width + x] = (i == 32) ? 0 : bmp->buffer[row * bmp->pitch + col];
 				}
 			}
 
 			if (i >= 97 && i < 123)
 			{
-				if ((XRay::info[index_to_W].y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
+				if ((info[index_to_W].y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
 					pen_y -= current_size;
 				else
 					pen_y += abs(current_size);
 			}
 
-			if (i >= 42 && i <= 46)
+			if ((i >= 42 && i <= 46) || i == 58 || i == 59)
 			{
-				if ((XRay::info_copy.y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
-					pen_y -= current_size;
-				else
-					pen_y += abs(current_size);
-			}
-			
-			if (i == 58 || i == 59)
-			{
-				if ((XRay::info_copy.y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
+				if ((info_copy.y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
 					pen_y -= current_size;
 				else
 					pen_y += abs(current_size);
 			}
 
-			XRay::info[arr_iter].x[0] = pen_x;
-			XRay::info[arr_iter].y[0] = pen_y;
-			XRay::info[arr_iter].x[1] = pen_x + bmp->width;
-			XRay::info[arr_iter].y[1] = pen_y + bmp->rows;
+			info[arr_iter].x[0] = pen_x;
+			info[arr_iter].y[0] = pen_y;
+			info[arr_iter].x[1] = pen_x + bmp->width;
+			info[arr_iter].y[1] = pen_y + bmp->rows;
 
-			XRay::info[arr_iter].x_off = ConverterInfo.face->glyph->bitmap_left;
-			XRay::info[arr_iter].y_off = ConverterInfo.face->glyph->bitmap_top;
-			XRay::info[arr_iter].advance = ConverterInfo.face->glyph->advance.x >> 6;
+			info[arr_iter].x_off = ConverterInfo.face->glyph->bitmap_left;
+			info[arr_iter].y_off = ConverterInfo.face->glyph->bitmap_top;
+			info[arr_iter].advance = ConverterInfo.face->glyph->advance.x >> 6;
 			
 			pen_x += bmp->width + 1;
 			arr_iter++;
@@ -243,7 +213,7 @@ void ParseFont(int index, int max_value)
 
 			if (i >= 1072 || i == 1049)
 			{
-				current_size = int(XRay::info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top);
+				current_size = int(info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top);
 				pen_y += (u32)current_size;
 			}
 
@@ -259,12 +229,12 @@ void ParseFont(int index, int max_value)
 			
 			if (i >= 1072 || i == 1049)
 			{
-				if ((XRay::info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
+				if ((info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
 				{
 					pen_y -= current_size;
 				}
 
-				if ((XRay::info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top) < 0)
+				if ((info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top) < 0)
 				{
 					pen_y += abs(current_size);
 				}
@@ -272,13 +242,13 @@ void ParseFont(int index, int max_value)
 
 			for (u32 CordIter = 0; CordIter < 2; CordIter++)
 			{
-				XRay::info[arr_iter].x[CordIter] = pen_x + ((CordIter == 1) ? bmp->width : 0);
-				XRay::info[arr_iter].y[CordIter] = pen_y + ((CordIter == 1) ? bmp->rows  : 0);
+				info[arr_iter].x[CordIter] = pen_x + ((CordIter == 1) ? bmp->width : 0);
+				info[arr_iter].y[CordIter] = pen_y + ((CordIter == 1) ? bmp->rows  : 0);
 			}
 
-			XRay::info[arr_iter].x_off = ConverterInfo.face->glyph->bitmap_left;
-			XRay::info[arr_iter].y_off = ConverterInfo.face->glyph->bitmap_top;
-			XRay::info[arr_iter].advance = ConverterInfo.face->glyph->advance.x >> 6;
+			info[arr_iter].x_off = ConverterInfo.face->glyph->bitmap_left;
+			info[arr_iter].y_off = ConverterInfo.face->glyph->bitmap_top;
+			info[arr_iter].advance = ConverterInfo.face->glyph->advance.x >> 6;
 			arr_iter++;
 			pen_x += bmp->width + 1;
 		}
@@ -371,8 +341,8 @@ void ParseFont(int index, int max_value)
 		{
 			for (u32 CordIter = 0; CordIter < 2; CordIter++)
 			{
-				x += std::to_string(XRay::info[local_it].x[CordIter]) + ", ";
-				x += std::to_string(XRay::info[local_it].y[CordIter]) + ((CordIter == 0) ? ", " : "");
+				x += std::to_string(info[local_it].x[CordIter]) + ", ";
+				x += std::to_string(info[local_it].y[CordIter]) + ((CordIter == 0) ? ", " : "");
 			}
 			
 			fac = (i < 100 && i > 10) ? "0" : "";
@@ -407,8 +377,8 @@ void ParseFont(int index, int max_value)
 		{
 			for (u32 CordIter = 0; CordIter < 2; CordIter++)
 			{
-				x += std::to_string(XRay::info[local_it].x[CordIter]) + ", ";
-				x += std::to_string(XRay::info[local_it].y[CordIter]) + ((CordIter == 0) ? ", " : "");
+				x += std::to_string(info[local_it].x[CordIter]) + ", ";
+				x += std::to_string(info[local_it].y[CordIter]) + ((CordIter == 0) ? ", " : "");
 			}
 
 			WriteToINI(i);
@@ -421,45 +391,35 @@ void ParseFont(int index, int max_value)
 	if (ConverterInfo.bHaveTexconv)
 	{
 		// @ Записали уже .tga -> конвертируем в соответствующий размер под dds
-		system(("texconv.exe -f DXT5 " + output_copy + " -o " + PathSystem.PathOutName.c_str() +" -y").c_str());
+		system(("texconv.exe -f DXT5 " + output_copy + " -o " + PathSystem.PathOutName +" -y").c_str());
+		system(("texconv.exe " + output_copy + " -ft png -f R8G8B8A8_UNORM" + " -o " + PathSystem.PathOutName).c_str());
 	}
 	else
-	{
-		std::cout << "Sorry, but you don't have in your folder (where's your application)";
-		SetConsoleTextAttribute(XRay::hConsole, ERROR_COLOR);
-		std::cout << "texconv.exe";
-		SetConsoleTextAttribute(XRay::hConsole, DEFAULT_COLOR);
-		std::cout << "!" << std::endl;
-	}
+		MessageBoxA(0, "Sorry, but you don't have in your folder texconv.exe!", "Error!", MB_OK);
 }
 
-void XRay::CheckTexConv()
+void XRay::CFontGen::CheckTexConv()
 {
 	ConverterInfo.bHaveTexconv = std::experimental::filesystem::exists("texconv.exe");
 }
 
-void XRay::CreateGSCFonts()
+void XRay::CFontGen::CreateGSCFonts()
 {
-	u32 your_size;
-	std::cin >> your_size;
-
-	if (your_size)
+	if (PathSystem.FontSize)
 	{
 		for(u32 Iter = 0; Iter < 3; Iter++)
-			ParseFont(your_size - Iter * 2, your_size); // 0 - 2 - 4
+			ParseFont(PathSystem.FontSize - Iter * 2, PathSystem.FontSize); // 0 - 2 - 4
 	}
 }
 
-void XRay::InitFont()
+void XRay::CFontGen::InitFont()
 {
-	std::cout << "Set Size of your font: ";
 	SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
 	ConverterInfo.Pixels = nullptr;
 	CreateGSCFonts();
 
 	if (!g_count)
 	{
-		Sleep(PAUSE_TIME);
 		SetConsoleTextAttribute(hConsole, OK_COLOR);
 		std::cout << "Successful!" << std::endl;
 		SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
@@ -472,31 +432,18 @@ void XRay::InitFont()
 	}
 }
 
-void XRay::CreateFolder(void)
+void XRay::CFontGen::CreateFolder()
 {	
-	auto GoodPrint = []()
-	{
-		SetConsoleTextAttribute(hConsole, OK_COLOR);
-		std::cout << "Successful!" << std::endl;
-		SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
-		std::cout << "Output folder is: ";
-		SetConsoleTextAttribute(hConsole, COLOR_DEFAULT);
-		std::cout << PathSystem.PathOutName << std::endl;
-		SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
-		suc_dir = true;
-	};
-
-	std::cout << "Creating a folder: ";
 	if (std::experimental::filesystem::create_directory(PathSystem.PathOutName))
 	{
-		GoodPrint();
+		bSucDir = true;
 	}
 	else
 	{
 		// @ But we must be sure that if the folder exists
 		if (std::experimental::filesystem::exists(PathSystem.PathOutName))
 		{
-			GoodPrint();
+			bSucDir = true;
 		}
 		else
 		{
@@ -507,18 +454,12 @@ void XRay::CreateFolder(void)
 	}
 }
 
-void XRay::ManageCreationFile()
+void XRay::CFontGen::ManageCreationFile()
 {
-	xr_string a;
-	std::cout << "Write path to file (e.g. C:\\etc\\yourfile.ttf): ";
-	SetConsoleTextAttribute(hConsole, COLOR_DEFAULT);
- 
-	std::cin >> a;
-	SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
-	xr_string mask = a.substr(a.rfind(".") + 1);
-
 	// Init PathList
-	PathSystem.FileName = a.erase(a.rfind("."));
+	xr_string FileFullPath = PathSystem.PathName;
+	xr_string mask         = FileFullPath.substr(FileFullPath.rfind(".") + 1);
+	PathSystem.FileName    = FileFullPath.erase(FileFullPath.rfind("."));
 
 	xr_vector<xr_string> NewStrSpl = PathSystem.FileName.Split('\\');
 	NewStrSpl.erase(NewStrSpl.end() - 1);
@@ -529,66 +470,23 @@ void XRay::ManageCreationFile()
 		PathSystem.PathName += PicePath + '\\';
 	}
 	PathSystem.FileName = PathSystem.FileName.substr(3, PathSystem.FileName.length() - 2);
-	PathSystem.PathOutName = PathSystem.PathName + "XRayFonts\\";
 
 	// Font converting - start
-	a += ".";
-	a += mask;
-	std::cout << "Loading Font file: ";
+	FileFullPath += ".";
+	FileFullPath += mask;
 
 	if (mask == "ttf" || mask == "ttc")
 	{
 		// @ Consider it's valid file for a while. . . 
-		FT_Error err = FT_New_Face(ConverterInfo.lib, a.c_str(), 0, &ConverterInfo.face);
+		FT_Error err = FT_New_Face(ConverterInfo.lib, FileFullPath.c_str(), 0, &ConverterInfo.face);
 		if (err)
-		{
-			SetConsoleTextAttribute(hConsole, ERROR_COLOR);
-			std::cout << "Failed! Your file is invalid." << std::endl;
-			SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
-		}
+			MessageBoxA(0, "Failed! Your file is invalid.", "Error!", MB_OK);
 		else
-		{
-			SetConsoleTextAttribute(hConsole, OK_COLOR);
-			std::cout << "Successful!" << std::endl;
-			SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
-			suc_file = true;
-		}
+			bSucFile = true;
 	}
 	else
 	{
 		// @ Invalid path
-		SetConsoleTextAttribute(hConsole, ERROR_COLOR);
-		std::cout << "Failed! Your path is invalid." << std::endl;
-		SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
+		MessageBoxA(0, "Failed! Your path is invalid.", "Error!", MB_OK);
 	}
-}
-
-int main()
-{
-	setlocale(LC_ALL, ".1251");
-	XRay::HeaderMessage();
-
-	auto ConverterCallback = []()
-	{
-		XRay::InitFreeType();
-
-		XRay::ManageCreationFile();
-		if (suc_file == true)
-		{
-			XRay::CreateFolder();
-			XRay::CheckTexConv();
-
-			if (suc_dir)
-				XRay::InitFont();
-		}
-		XRay::ReleaseFreeType();
-		system("pause");
-	};
-
-	do
-	{
-		ConverterCallback();
-	} while (true);
-
-	return 0;
 }

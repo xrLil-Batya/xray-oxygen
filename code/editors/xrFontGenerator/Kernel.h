@@ -28,6 +28,8 @@ namespace XRay
 	
 	struct PathList
 	{
+		u32 FontSize;
+
 		xr_string PathName;
 		xr_string FileName;
 
@@ -50,45 +52,32 @@ namespace XRay
 
 		bool bHaveTexconv; // @ Для проверки, имеет ли юзер в папке texconv или нет;
 	};
+	
+	extern HANDLE hConsole;
 
-	data_symbol info[TOTAL_ANSCII];
-	data_symbol info_copy = { 0 };
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	class CFontGen
+	{
+		data_symbol info[TOTAL_ANSCII];
+		data_symbol info_copy = { 0 }; 
+		ConvInfo ConverterInfo;
+	public:
+		static bool bSucFile;
+		static bool bSucDir;
+		PathList PathSystem;
 
-	inline void HeaderMessage() noexcept
-	{  
-		std::cout << "************************************************" << std::endl;
-		std::cout << "**********      ";
-		SetConsoleTextAttribute(hConsole, 27);
-		std::cout << "OXYGEN DEV TEAM(C)";
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-		std::cout << " 	  ******" << std::endl;
-		std::cout << "********** ";
-		SetConsoleTextAttribute(hConsole, 27);
-		std::cout << "TEXTURE GENERATOR OF TTF FONTS";
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-		std::cout << " ******" << std::endl;
-		std::cout << "********** ";
-		SetConsoleTextAttribute(hConsole, 27);
-		std::cout << "POWERED BY ";
-		SetConsoleTextAttribute(hConsole, 18);
-		std::cout << "FREETYPE";
-		SetConsoleTextAttribute(hConsole, 27);
-		std::cout << ",";
-		SetConsoleTextAttribute(hConsole, 29);
-		std::cout << " STBI lib";
-		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-		std::cout << " ******" << std::endl;
-		std::cout << "************************************************" << std::endl; 
-	}
+	public:
+		CFontGen();
+		~CFontGen() = default;
 
-	void ManageCreationFile(void);
-	void CreateFolder(void);
+		void ParseFont(int index, int max_value);
+		void ManageCreationFile(void);
+		void CreateFolder(void);
 
-	// @ Creates already with _size_800, _size_1024, _size_1600
-	void InitFont		(); 
-	void CreateGSCFonts	();
-	void CheckTexConv	();
-	void InitFreeType	();
-	void ReleaseFreeType();
+		// @ Creates already with _size_800, _size_1024, _size_1600
+		void InitFont();
+		void CreateGSCFonts();
+		void CheckTexConv();
+		void InitFreeType();
+		void ReleaseFreeType();
+	};
 }
