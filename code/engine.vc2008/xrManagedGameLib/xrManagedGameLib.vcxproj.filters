@@ -73,10 +73,7 @@
       <Filter>Header Files\API</Filter>
     </ClInclude>
     <ClInclude Include="ClientSpawnManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UIDialogWnd.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -132,9 +129,6 @@
       <Filter>Source Files\API</Filter>
     </ClCompile>
     <ClCompile Include="ClientSpawnManager.cpp">
-      <Filter>Source Files\API</Filter>
-    </ClCompile>
-    <ClCompile Include="UIDialogWnd.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>

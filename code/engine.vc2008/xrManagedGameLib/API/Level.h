@@ -1,35 +1,93 @@
 #pragma once
-#include "ClientSpawnManager.h"
-#include "Game.h"
-#include "UIDialogWnd.h"
+//#include "ClientSpawnManager.h"
+//#include "Game.h"
 class CLevel;
 class CLevelGraph;
 
+using namespace System;
 
 namespace XRay
 {
-	ref class LevelGraph abstract
+	/*ref class LevelGraph abstract
 	{
 	public:
 		/// <summaru> Returns Level ID</summaru>
-		static property ::System::UInt32 LevelID
+		property UInt32 LevelID
 		{
-			::System::UInt32 get();
+			UInt32 get();
 		}
+
 		/// <summaru> Returns Vertex count</summaru>
-		static property ::System::UInt32 VertexCount
+		property UInt32 VertexCount
 		{
-			::System::UInt32 get();
+			UInt32 get();
 		}
-	};
+	};*/
 
-	
-
-	public ref class Level abstract
+	/*public ref class Level abstract
 	{
+	internal:
+		CLevel* pNativeLevel;
+
 	public:
 
-		
+		static property ClientSpawnManager^ ClientSpawnMngr
+		{
+			ClientSpawnManager^ get();
+		}
+
+		static property UIDialogWnd^ CUIDialgWnd
+		{
+			UIDialogWnd^ get();
+		}
+
+		/// <summary>Get Name</summary>
+		property String^ Name
+		{
+			String^ get()
+			{
+				return gcnew String(pNativeLevel->name().c_str());
+			}
+		}
+		/// <summary>Set WeatherFX</summary>
+		static property ::System::String^ WeatherFX
+		{
+			void set(::System::String^ str);
+		}
+		/// <summary>Return WfxTime</summary>
+		static property float WfxTime
+		{
+			float get();
+		}
+		/// <summary>Returns rain factor</summary>
+		static property float RainFactor
+		{
+			float get();
+		}
+		/// <summary>Returns level name from a text files</summary>
+		static property String^ LevelName
+		{
+			String^ get();
+		}
+		/// <summary>Returns or set weather name</summary>
+		static property String^ Weather
+		{
+			String^ get();
+			void set(String^ str);
+		}
+		/// <summary>Get or set time factor</summary>
+		static property float TimeFactor
+		{
+			float get();
+			void set(float fFactor);
+		}
+		/// <summary>Get or set game difficulty</summary>
+		static property ESingleGameDifficulty GameDifficulty
+		{
+			ESingleGameDifficulty get();
+			void set(ESingleGameDifficulty dif);
+		}
+
 
 		static ref struct GameTime
 		{
@@ -37,9 +95,9 @@ namespace XRay
 
 			
 			//u32 was there
-			::System::UInt32 _days : 9;
-			::System::UInt32 _hours : 5;
-			::System::UInt32 _minutes : 6;
+			::System::UInt32 _days;
+			::System::UInt32 _hours;
+			::System::UInt32 _minutes;
 			//::System::UInt32 _seconds : 6;
 
 			// 9+5+6+6
@@ -118,64 +176,5 @@ namespace XRay
 		static void RevomeCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
 		static void RevomeCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
 		static void RevomeCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-
-
-
-		static property ClientSpawnManager^ ClientSpawnMngr
-		{
-			ClientSpawnManager^ get();
-		}
-
-		static property UIDialogWnd^ CUIDialgWnd
-		{
-			UIDialogWnd^ get();
-		}
-
-		/// <summary>Get Name</summary>
-		static property  LPCSTR Name
-		{
-			LPCSTR get();
-		}
-		/// <summary>Set WeatherFX</summary>
-		static property ::System::String^ WeatherFX
-		{
-			void set(::System::String^ str);
-		}
-		/// <summary>Return WfxTime</summary>
-		static property float WfxTime
-		{
-			float get();
-		}
-		/// <summary>Returns rain factor</summary>
-		static property float RainFactor
-		{
-			float get();
-		}
-		/// <summary>Returns level name from a text files</summary>
-		static property ::System::String^ LevelName
-		{
-			::System::String^ get();
-		}
-		/// <summary>Returns or set weather name</summary>
-		static property ::System::String^ Weather
-		{
-			::System::String^ get();
-			void set(::System::String^ str);
-		}
-		/// <summary>Get or set time factor</summary>
-		static property float TimeFactor
-		{
-			float get();
-			void set(float fFactor);
-		}
-		/// <summary>Get or set game difficulty</summary>
-		static property ESingleGameDifficulty GameDifficulty
-		{
-			ESingleGameDifficulty get ();
-			void set(ESingleGameDifficulty dif);
-		}
-		
-
-
-	};
+	};*/
 }

@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "Level.h"
+/*#include "Level.h"
 #include "../xrCore/LocatorAPI.h"
 #include "../xrGame/patrol_path_storage.h"
 #include "../xrGame/ai_space.h"
@@ -11,8 +11,8 @@
 #include "../xrEngine/date_time.h"
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
-#include "../xrGame/HUDManager.h"
-
+#include "../xrGame/HUDManager.h"*/
+/*
 ::System::UInt32 XRay::LevelGraph::LevelID::get()
 {
 	return ai().level_graph().level_id();
@@ -258,6 +258,4 @@ void XRay::Level::AddDialogToRender(UIDialogWnd^ pDialog)
 void XRay::Level::RemoveDialogFromRender(UIDialogWnd^ pDialog)
 {
 	GameUI()->RemoveDialogToRender(pDialog);
-}
-
-
+}*/

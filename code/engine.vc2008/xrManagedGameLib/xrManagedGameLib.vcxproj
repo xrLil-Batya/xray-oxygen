@@ -104,7 +104,6 @@
     <ClInclude Include="ISpectreGameLib.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="UIDialogWnd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="API\Actor.cpp" />
@@ -128,7 +127,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UIDialogWnd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
