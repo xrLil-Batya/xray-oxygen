@@ -3,6 +3,8 @@
 #include "UIDialogHolder.h"
 class CDialogHolder;
 
+
+
 class UI_API CUIDialogWnd : public CUIWindow
 {
 private:

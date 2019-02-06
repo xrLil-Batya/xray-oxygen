@@ -1,6 +1,9 @@
 #pragma once
-//#include "ClientSpawnManager.h"
-//#include "Game.h"
+#include "ClientSpawnManager.h"
+#include "Game.h"
+#include "../xrManagedUILib/API/UIDialogWnd.h"
+
+
 class CLevel;
 class CLevelGraph;
 
@@ -8,7 +11,7 @@ using namespace System;
 
 namespace XRay
 {
-	/*ref class LevelGraph abstract
+	ref class LevelGraph abstract
 	{
 	public:
 		/// <summaru> Returns Level ID</summaru>
@@ -22,9 +25,9 @@ namespace XRay
 		{
 			UInt32 get();
 		}
-	};*/
+	};
 
-	/*public ref class Level abstract
+	public ref class Level abstract
 	{
 	internal:
 		CLevel* pNativeLevel;
@@ -36,18 +39,15 @@ namespace XRay
 			ClientSpawnManager^ get();
 		}
 
-		static property UIDialogWnd^ CUIDialgWnd
-		{
-			UIDialogWnd^ get();
-		}
+		//static property UIDialogWnd^ UIDialgWnd
+		//{
+		//	UIDialogWnd^ get();
+		//}
 
 		/// <summary>Get Name</summary>
 		property String^ Name
 		{
-			String^ get()
-			{
-				return gcnew String(pNativeLevel->name().c_str());
-			}
+			String^ get();
 		}
 		/// <summary>Set WeatherFX</summary>
 		static property ::System::String^ WeatherFX
@@ -89,50 +89,6 @@ namespace XRay
 		}
 
 
-		static ref struct GameTime
-		{
-		private:
-
-			
-			//u32 was there
-			::System::UInt32 _days;
-			::System::UInt32 _hours;
-			::System::UInt32 _minutes;
-			//::System::UInt32 _seconds : 6;
-
-			// 9+5+6+6
-			// 25bits in sum (with seconds and 20 without). it will be extend to 32bits (24) or 4 bytes (3). You can remap bites to get 32 bits if you need;
-			// Remap required if this field are involved in calculation; I dont now it exactly
-
-		public:
-			static property ::System::UInt32 Days
-			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
-			}
-
-			static property ::System::UInt32 Hours
-			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
-			}
-
-			static property ::System::UInt32 Minutes
-			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
-			}
-
-			static property ::System::UInt32 Seconds
-			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
-			}
-
-			static void ChangeGameTime(u32 days, u32 hours, u32 mins);
-
-		};
-
 		static void StartWeatherFXfromTime(::System::String^ str, float time);		
 		static bool iSWfxPlaying();
 		static void StopWeatherFX();
@@ -165,16 +121,16 @@ namespace XRay
 
 		static void AddDialogToRender(UIDialogWnd^ pDialog);
 		static void RemoveDialogFromRender(UIDialogWnd^ pDialog);
-		static void HideIndicators();
-		static void HideIndicatorsSafe();
-		static void ShowIndicators();
-		static void ShowWeapon();
-		static void isLevelPresent();
-		static void AddCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-		static void AddCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
-		static void AddCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-		static void RevomeCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-		static void RevomeCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
-		static void RevomeCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-	};*/
+		//static void HideIndicators();
+		//static void HideIndicatorsSafe();
+		//static void ShowIndicators();
+		//static void ShowWeapon();
+		//static void isLevelPresent();
+		//static void AddCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void AddCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
+		//static void AddCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RevomeCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RevomeCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
+		//static void RevomeCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+	};
 }
