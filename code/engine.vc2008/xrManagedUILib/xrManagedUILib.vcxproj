@@ -82,6 +82,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="API\UIDialogWnd.h" />
     <ClInclude Include="API\UILines.h" />
     <ClInclude Include="API\UIProgressBar.h" />
     <ClInclude Include="API\UIStatic.h" />
@@ -89,7 +90,6 @@
     <ClInclude Include="API\Window.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="UIDialogWnd.h" />
     <ClInclude Include="xrManagedUILib.h" />
   </ItemGroup>
   <ItemGroup>

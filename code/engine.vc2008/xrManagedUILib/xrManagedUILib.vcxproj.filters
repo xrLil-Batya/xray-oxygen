@@ -41,7 +41,7 @@
     <ClInclude Include="API\UIProgressBar.h">
       <Filter>Headers Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="UIDialogWnd.h">
+    <ClInclude Include="API\UIDialogWnd.h">
       <Filter>Headers Files\API</Filter>
     </ClInclude>
   </ItemGroup>
