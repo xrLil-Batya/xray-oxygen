@@ -1,6 +1,5 @@
 #pragma once
 #include "Filesystem.h"
-using namespace System;
 using namespace System::Numerics;
 
 namespace XRay
