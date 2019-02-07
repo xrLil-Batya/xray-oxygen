@@ -23,13 +23,10 @@
 		<texture color="black" a="255">ui_mm_loading_progress_bar</texture>
 	</loading_progress_background>
 
-	<loading_progress x="310" y="599" width="405" height="40" mode="from_center" min="0" max="100" pos="0" inertion="5.0">
+	<loading_progress x="310" y="599" width="405" height="40" horz="1" min="0" max="100" pos="0" inertion="5.0">
 		<progress>
 			<texture>ui_mm_loading_progress_bar</texture>							<!-- Прогресс бар загрузки-->
 		</progress>
-		<min_color color="white"/>
-		<middle_color color="blue"/>
-		<max_color color="white"/>
 	</loading_progress>
 
 	<loading_progress_percent x="500" y="574">										<!-- Проценты загрузки числами-->
