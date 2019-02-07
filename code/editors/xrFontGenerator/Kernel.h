@@ -21,11 +21,11 @@ namespace XRay
 	// @ Contains information about glyph or symbol in texture
 	struct data_symbol
 	{
-		size_t x[1], y[1];
-		size_t x_off, y_off;
 		int advance;
+		size_t x_off, y_off;
+		size_t x[2], y[2];
 	};
-	
+
 	struct PathList
 	{
 		u32 FontSize;
@@ -46,8 +46,8 @@ namespace XRay
 		unsigned int   TexHeig = 0;
 		unsigned int   FontHeig = 0;
 					   
-		unsigned int   PenX = 0;
-		unsigned int   PenY = 0;
+		int   PenX = 0;
+		int   PenY = 0;
 		unsigned char* Pixels;
 
 		bool bHaveTexconv; // @ Для проверки, имеет ли юзер в папке texconv или нет;

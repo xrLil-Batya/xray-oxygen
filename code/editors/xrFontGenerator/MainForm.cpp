@@ -48,6 +48,15 @@ System::Void XFontForm::MeshEdit::button3_Click(System::Object ^ sender, System:
 		).c_str());
 
 	this->Width = 618;
-	this->TexFontBox->BackgroundImage = gcnew System::Drawing::Bitmap(ImgPath);
-	this->TexFontBox->Visible = true;
+	
+	if (System::IO::File::Exists(ImgPath))
+	{
+		this->TexFontBox->BackgroundImage = gcnew System::Drawing::Bitmap(ImgPath);
+		this->TexFontBox->Visible = true;
+	}
+	else
+	{
+		this->TexFontBox->Visible = false;
+		this->Width = 357;
+	}
 }

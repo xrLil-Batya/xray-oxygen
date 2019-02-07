@@ -1,4 +1,5 @@
 // Author: phantom1020
+#pragma unmanaged // No CLR, Please!
 #include <fstream>
 #include "../../engine.vc2008/xrCore/xrCore.h"
 #include "Kernel.h"
@@ -41,6 +42,7 @@ void XRay::CFontGen::ReleaseFreeType()
 	FT_Done_FreeType(ConverterInfo.lib);
 }
 
+static bool bSkipSpaceMsg = false;
 int g_count = 0;
 int max_height_font = 0; // @ для вывода файлов, по сути обманка,
 // ибо в действительности мы уменьшаем размер шрифта и выводится
@@ -79,8 +81,8 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 		return;
 	}
 
-	u32 pen_x = 0;
-	u32 pen_y = 0;
+	int pen_x = 0;
+	int pen_y = 0;
 	
 	u32 local_tex_width = ConverterInfo.TexWid;
 	int arr_iter = 0;
@@ -99,8 +101,12 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 			{
 				if (!ConverterInfo.face->glyph->bitmap.rows && !ConverterInfo.face->glyph->bitmap.width)
 				{
-					MessageBoxA(0, "Your font doesn't have a 'space' symbol", "Error!", MB_OK);
-					return;
+					if(!bSkipSpaceMsg)
+						MessageBoxA(0, "Your font doesn't have a 'space' symbol", "Error!", MB_OK);
+
+					ConverterInfo.face->glyph->bitmap.width = 4;
+					ConverterInfo.face->glyph->bitmap.rows = 4;
+					bSkipSpaceMsg = true;
 				}
 			}
 
@@ -110,16 +116,21 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 	for (u32 i = 32; i < 128; ++i)
 	{
 		err = FT_Load_Char(ConverterInfo.face, i, FT_LOAD_RENDER);
-		FT_Bitmap* bmp = &ConverterInfo.face->glyph->bitmap;
 
-		if (err)
+		if (i == 32 && !ConverterInfo.face->glyph->bitmap.rows && !ConverterInfo.face->glyph->bitmap.width)
 		{
-			std::cout << "ERROR" << std::endl;
-			system("pause");
+			// 0 is true space
+			err = FT_Load_Char(ConverterInfo.face, 0, FT_LOAD_RENDER);
+		}
+		const FT_Bitmap &refBMP = ConverterInfo.face->glyph->bitmap;
+
+		if (err && i != 32)
+		{
+				MessageBoxA(0, "Your font doesn't have a [unknown] symbol", "Error!", MB_OK);
 		}
 		else
 		{
-			if (pen_x + bmp->width >= local_tex_width)
+			if (pen_x + refBMP.width >= local_tex_width)
 			{
 				pen_x = 0;
 				pen_y += ((ConverterInfo.face->size->metrics.height >> 6)) + 1;
@@ -134,39 +145,20 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 			if (i >= 42 && i <= 46)
 			{
 				current_size = int(info_copy.y_off - ConverterInfo.face->glyph->bitmap_top);
-				pen_y += (u32)current_size;
+				pen_y += current_size;
 			}
 
 			// @ двоеточие и точка с запятой
 			if (i == 58 || i == 59)
 			{
 				current_size = int(info_copy.y_off - ConverterInfo.face->glyph->bitmap_top);
-				pen_y += (u32)current_size;
+				pen_y += current_size;
 			}
 
 			if (i >= 97 && i < 123)
 			{
 				current_size = int(info[index_to_W].y_off - ConverterInfo.face->glyph->bitmap_top);
-				pen_y += (u32)current_size;
-			}
-
-			for (u32 row = 0; row < bmp->rows; ++row)
-			{
-				for (u32 col = 0; col < bmp->width; ++col)
-				{
-					u32 x = pen_x + col;
-					u32 y = pen_y + row;
-
-					ConverterInfo.Pixels[y * local_tex_width + x] = (i == 32) ? 0 : bmp->buffer[row * bmp->pitch + col];
-				}
-			}
-
-			if (i >= 97 && i < 123)
-			{
-				if ((info[index_to_W].y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
-					pen_y -= current_size;
-				else
-					pen_y += abs(current_size);
+				pen_y += current_size;
 			}
 
 			if ((i >= 42 && i <= 46) || i == 58 || i == 59)
@@ -177,16 +169,36 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 					pen_y += abs(current_size);
 			}
 
+			if (i >= 97 && i < 123)
+			{
+				if ((info[index_to_W].y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
+					pen_y -= current_size;
+				else
+					pen_y += abs(current_size);
+			}
+
+			for (u32 row = 0; row < refBMP.rows; ++row)
+			{
+				for (u32 col = 0; col < refBMP.width; ++col)
+				{
+					int x = pen_x + col;
+					int y = pen_y + row;
+
+					bool bSymbolIsNull = y == u32(-1) || i == 32;
+					ConverterInfo.Pixels[y * local_tex_width + x] = bSymbolIsNull ? 0 : refBMP.buffer[row * refBMP.pitch + col];
+				}
+			}
+
 			info[arr_iter].x[0] = pen_x;
 			info[arr_iter].y[0] = pen_y;
-			info[arr_iter].x[1] = pen_x + bmp->width;
-			info[arr_iter].y[1] = pen_y + bmp->rows;
+			info[arr_iter].x[1] = pen_x + refBMP.width;
+			info[arr_iter].y[1] = pen_y + refBMP.rows;
 
 			info[arr_iter].x_off = ConverterInfo.face->glyph->bitmap_left;
 			info[arr_iter].y_off = ConverterInfo.face->glyph->bitmap_top;
 			info[arr_iter].advance = ConverterInfo.face->glyph->advance.x >> 6;
 			
-			pen_x += bmp->width + 1;
+			pen_x += refBMP.width + 1;
 			arr_iter++;
 		}
 	}
