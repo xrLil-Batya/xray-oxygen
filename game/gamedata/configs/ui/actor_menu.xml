@@ -55,16 +55,6 @@
 	<inv_slot3_highlight x="583" y="17" width="82" height="305" stretch="1">
 		<texture>ui_inGame2_weapon_highlighter</texture>
 	</inv_slot3_highlight>
-	<knife_slot_highlight x="440" y="330" width="65" height="48" stretch="1">
-		<texture>ui_inGame2_detector_highlighter</texture>
-	</knife_slot_highlight>
-	<binocular_slot_highlight x="510" y="330" width="64" height="52" stretch="1">
-		<texture>ui_inGame2_detector_highlighter</texture>
-	</binocular_slot_highlight>
-	
-	<torch_slot_highlight x="575" y="330" width="70" height="52" stretch="1">
-		<texture>ui_inGame2_detector_highlighter</texture>
-	</torch_slot_highlight>	
 	<helmet_slot_highlight x="463" y="17" width="96" height="98" stretch="1">
 		<texture>ui_inGame2_helmet_highlighter</texture>
 	</helmet_slot_highlight>
@@ -74,6 +64,15 @@
 	<detector_slot_highlight x="370" y="330" width="64" height="52" stretch="1">
 		<texture>ui_inGame2_detector_highlighter</texture>
 	</detector_slot_highlight>
+		<knife_slot_highlight x="440" y="330" width="65" height="48" stretch="1">
+		<texture>ui_inGame2_detector_highlighter</texture>
+	</knife_slot_highlight>
+	<binocular_slot_highlight x="510" y="330" width="64" height="52" stretch="1">
+		<texture>ui_inGame2_detector_highlighter</texture>
+	</binocular_slot_highlight>
+	<torch_slot_highlight x="575" y="330" width="70" height="52" stretch="1">
+		<texture>ui_inGame2_detector_highlighter</texture>
+	</torch_slot_highlight>	
 	<quick_slot_highlight x="356" y="398" width="66" height="59" dx="81" stretch="1">
 		<texture>ui_inGame2_quick_item_highlighter</texture>
 	</quick_slot_highlight>
@@ -198,11 +197,6 @@
 		custom_placement="0" a="0" virtual_cells="1" vc_vert_align="c"
 		vc_horiz_align="c" />
 
-	<dragdrop_detector x="370" y="328" width="85" height="55"
-		cell_width="33" cell_height="41" rows_num="1" cols_num="2"
-		custom_placement="0" a="0" virtual_cells="1" vc_vert_align="c"
-		vc_horiz_align="c"/>
-
 	<dragdrop_pistol x="352" y="14" width="93" height="305"
 		cell_width="41" cell_height="41" rows_num="6" cols_num="2"
 		custom_placement="0" vertical_placement="1" a="0"
@@ -212,6 +206,11 @@
 		cell_width="41" cell_height="41" rows_num="6" cols_num="2"
 		custom_placement="0" vertical_placement="1" a="0"
 		virtual_cells="1" vc_vert_align="c" vc_horiz_align="c" />
+
+	<dragdrop_detector x="370" y="328" width="85" height="55"
+		cell_width="33" cell_height="41" rows_num="1" cols_num="2"
+		custom_placement="0" a="0" virtual_cells="1" vc_vert_align="c"
+		vc_horiz_align="c"/>
 
 	<dragdrop_knife x="437" y="328" width="85" height="55"
 		cell_width="33" cell_height="41" rows_num="1" cols_num="2"
