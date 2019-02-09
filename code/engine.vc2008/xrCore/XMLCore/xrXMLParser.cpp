@@ -88,7 +88,7 @@ void CXml::Load(const char* path, const char* xml_filename)
 
 	if (m_Doc.Error())
 	{
-        string4096 ErrorInfo = { 0 };
+        string4096 ErrorInfo = {};
         m_Doc.DumpError(ErrorInfo, xml_filename);
 
         Debug.fatal(DEBUG_INFO, ErrorInfo);
@@ -266,6 +266,21 @@ const char* CXml::ReadAttrib(XML_NODE* node, const char* attrib, const char* def
 		}
 	}
 	return default_str_val;
+}
+
+bool CXml::ReadAttribBool(XML_NODE* node, const char* attrib, bool default_value)
+{
+	return ReadAttribInt(node, attrib, default_value);
+}
+
+bool CXml::ReadAttribBool(const char* path, int index, const char* attrib, bool default_value)
+{
+	return ReadAttribInt(path, index, attrib, default_value);
+}
+
+bool CXml::ReadAttribBool(XML_NODE* start_node, const char* path, int index, const char* attrib, bool default_value)
+{
+	return ReadAttribInt(start_node, path, index, attrib, default_value);
 }
 
 int CXml::ReadAttribInt(XML_NODE* node, const char* attrib, int default_int_val)

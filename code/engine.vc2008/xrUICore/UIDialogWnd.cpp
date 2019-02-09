@@ -7,7 +7,7 @@ UI_API IGameUI* pUIHud = nullptr;
 
 CUIDialogWnd:: CUIDialogWnd()
 {
-	m_pParentHolder		= NULL;
+	m_pParentHolder		= nullptr;	
 	m_bWorkInPause		= false;
 	m_bShowMe			= false;
 }

@@ -15,7 +15,7 @@ private:
 			Fvector p;
 	} g_position;
 
-	Matrix4x4 m_Camera;
+	Fmatrix m_Camera;
 
 	int			iCount;
 	IWriter*	file;

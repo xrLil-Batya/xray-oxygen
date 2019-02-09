@@ -175,16 +175,16 @@ void occRasterizer::on_dbg_render()
 				quad.set( (float)j-occ_dim_0/2.f, -((float)i-occ_dim_0/2.f), (float)bufDepth_0[i][j]/occQ_s32);
 				Device.mProject;
 
-				float z = -CastToGSCMatrix(Device.mProject)._43/(float)(CastToGSCMatrix(Device.mProject)._33-quad.z);
-				left_top.set		( quad.x*z/ CastToGSCMatrix(Device.mProject)._11/(occ_dim_0/2.f),		quad.y*z/ CastToGSCMatrix(Device.mProject)._22/(occ_dim_0/2.f), z);
-				right_bottom.set	( (quad.x+1)*z/ CastToGSCMatrix(Device.mProject)._11/(occ_dim_0/2.f), (quad.y+1)*z/ CastToGSCMatrix(Device.mProject)._22/(occ_dim_0/2.f), z);
+				float z = -Device.mProject._43/(float)(Device.mProject)._33-quad.z;
+				left_top.set		( quad.x*z/ Device.mProject._11/(occ_dim_0/2.f),		quad.y*z/ Device.mProject._22/(occ_dim_0/2.f), z);
+				right_bottom.set	( (quad.x+1)*z/ Device.mProject._11/(occ_dim_0/2.f), (quad.y+1)*z/ Device.mProject._22/(occ_dim_0/2.f), z);
 
 				box_center.set		((right_bottom.x + left_top.x)/2, (right_bottom.y + left_top.y)/2, z);
 				box_r = right_bottom;
 				box_r.sub(box_center);
 
 				Fmatrix inv;
-				inv.invert(CastToGSCMatrix(Device.mView));
+				inv.invert(Device.mView);
 				inv.transform( box_center );
 				inv.transform_dir( box_r );
 

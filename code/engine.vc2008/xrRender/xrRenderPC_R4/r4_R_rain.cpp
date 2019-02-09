@@ -34,10 +34,8 @@ void CRender::render_rain()
 
 	PIX_EVENT(render_rain);
 
-	Matrix4x4		m_LightViewProj;
-
 	//	Use light as placeholder for rain data.
-	light			RainLight;
+	light RainLight;
 
 	//static const float	source_offset		= 40.f;
 
@@ -48,13 +46,13 @@ void CRender::render_rain()
 	float	fBoundingSphereRadius = 0;
 
 	// calculate view-frustum bounds in world space
-	Matrix4x4 ex_project, ex_full, ex_full_inverse;
+	Fmatrix ex_project, ex_full, ex_full_inverse;
 	{
 		//	
 		const float fRainFar = ps_r3_dyn_wet_surf_far;
-		ex_project.BuildProj(deg2rad(Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, fRainFar);
-		ex_full = DirectX::XMMatrixMultiply(Device.mView, ex_project);
-		ex_full_inverse = DirectX::XMMatrixInverse(0, ex_full);
+		ex_project.build_projection(deg2rad(Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, fRainFar);
+		ex_full.mul(ex_project, Device.mView);
+		D3DXMatrixInverse((D3DXMATRIX*)&ex_full_inverse, 0, (D3DXMATRIX*)&ex_full);
 
 		//	Calculate view frustum were we can see dynamic rain radius
 		{
@@ -74,11 +72,11 @@ void CRender::render_rain()
 	xr_vector<Fplane>	cull_planes;
 	Fvector3			cull_COP;
 	CSector*			cull_sector;
-	Matrix4x4			cull_xform;
+	Fmatrix				cull_xform;
 	{
 		FPU::m64r();
 		// Lets begin from base frustum
-		Matrix4x4 fullxform_inv = ex_full_inverse;
+		Fmatrix fullxform_inv = ex_full_inverse;
 #ifdef	_DEBUG
 		typedef		DumbConvexVolume<true>	t_volume;
 #else
@@ -95,7 +93,7 @@ void CRender::render_rain()
 
 			for (int plane = 0; plane < 6; plane++)
 			{
-				hull.polys.push_back(t_volume::_poly());
+				hull.polys.emplace_back();
 				for (int pt = 0; pt < 4; pt++)
 					hull.polys.back().points.push_back(facetable[plane][pt]);
 			}
@@ -109,7 +107,7 @@ void CRender::render_rain()
 
 		// Search for default sector - assume "default" or "outdoor" sector is the largest one
 		//. hack: need to know real outdoor sector
-		CSector*	largest_sector = 0;
+		CSector*	largest_sector = nullptr;
 		float		largest_sector_vol = 0;
 		for (u32 s = 0; s < Sectors.size(); s++)
 		{
@@ -127,16 +125,15 @@ void CRender::render_rain()
 		cull_COP.mad(Device.vCameraPosition, RainLight.direction, -tweak_rain_COP_initial_offs);
 		cull_COP.x += fBoundingSphereRadius * Device.vCameraDirection.x;
 		cull_COP.z += fBoundingSphereRadius * Device.vCameraDirection.z;
-
+		
 		// Create frustum for query
 		cull_frustum._clear();
 		for (u32 p = 0; p < cull_planes.size(); p++)
 			cull_frustum._add(cull_planes[p]);
 
-
 		// Create approximate ortho-xform
 		// view: auto find 'up' and 'right' vectors
-		Matrix4x4 mdir_View, mdir_Project;
+		Fmatrix mdir_View, mdir_Project;
 		Fvector L_dir, L_up, L_right, L_pos;
 		L_pos.set(RainLight.position);
 		L_dir.set(RainLight.direction).normalize();
@@ -147,7 +144,7 @@ void CRender::render_rain()
 
 		L_up.crossproduct(L_dir, L_right).normalize();
 		L_right.crossproduct(L_up, L_dir).normalize();
-		mdir_View.BuildCamDir(L_pos, L_dir, L_up);
+		mdir_View.build_camera_dir(L_pos, L_dir, L_up);
 
 		// projection: box
 		//	Simple
@@ -167,10 +164,9 @@ void CRender::render_rain()
 		bb.max.x = fBoundingSphereRadius + vRectOffset.x;
 		bb.min.y = -fBoundingSphereRadius + vRectOffset.z;
 		bb.max.y = fBoundingSphereRadius + vRectOffset.z;
+		D3DXMatrixOrthoOffCenterLH((D3DXMATRIX*)&mdir_Project, bb.min.x, bb.max.x, bb.min.y, bb.max.y, bb.min.z - tweak_rain_ortho_xform_initial_offs, bb.min.z + 2 * tweak_rain_ortho_xform_initial_offs);
 
-		mdir_Project = DirectX::XMMatrixOrthographicOffCenterLH(bb.min.x, bb.max.x, bb.min.y, bb.max.y, bb.min.z - tweak_rain_ortho_xform_initial_offs, bb.min.z + 2 * tweak_rain_ortho_xform_initial_offs);
-
-		cull_xform.Multiply(mdir_View, mdir_Project);
+		cull_xform.mul(mdir_Project, mdir_View);
 
 		s32 limit = std::min(RImplementation.o.smapsize, (u32)ps_r3_dyn_wet_surf_sm_res);
 
@@ -178,7 +174,7 @@ void CRender::render_rain()
 		float view_dim = float(limit);
 		float fTexelOffs = (.5f / RImplementation.o.smapsize);
 
-		Matrix4x4 mViewPort =
+		Fmatrix mViewPort =
 		{
 			view_dim / 2.f, 0.0f, 0.0f, 0.0f,
 			0.0f, -view_dim / 2.f, 0.0f, 0.0f,
@@ -186,7 +182,8 @@ void CRender::render_rain()
 			view_dim / 2.f + fTexelOffs, view_dim / 2.f + fTexelOffs, 0.0f, 1.0f
 		};
 
-		Matrix4x4 mViewPortInverse = DirectX::XMMatrixInverse(0, mViewPort);
+		Fmatrix				m_viewport_inv;
+		D3DXMatrixInverse((D3DXMATRIX*)&m_viewport_inv, 0, (D3DXMATRIX*)&mViewPort);
 
 		// snap view-position to pixel
 		//	snap zero point to pixel
@@ -194,15 +191,10 @@ void CRender::render_rain()
 		Fvector	cam_pixel = wform(mViewPort, cam_proj);
 		cam_pixel.x = floorf(cam_pixel.x);
 		cam_pixel.y = floorf(cam_pixel.y);
-		Fvector cam_snapped = wform((Matrix4x4)mViewPortInverse, cam_pixel);
-
-		Fvector diff;
-		diff.sub(cam_snapped, cam_proj);
-
-		Matrix4x4 adjust;
-		adjust = DirectX::XMMatrixTranslation(diff.x, diff.y, diff.z);
-
-		cull_xform.Multiply(adjust, cull_xform);
+		Fvector cam_snapped = wform(m_viewport_inv, cam_pixel);
+		Fvector diff;		diff.sub(cam_snapped, cam_proj);
+		Fmatrix adjust;		adjust.translate(diff);
+		cull_xform.mulA_44(adjust);
 
 		RainLight.X.D.minX = 0;
 		RainLight.X.D.maxX = limit;
@@ -223,7 +215,7 @@ void CRender::render_rain()
 	}
 
 	// Fill the database
-	r_dsgraph_render_subspace(cull_sector, &cull_frustum, XRay::Math::CastToGSCMatrix(cull_xform), cull_COP, FALSE);
+	r_dsgraph_render_subspace(cull_sector, &cull_frustum, cull_xform, cull_COP, FALSE);
 
 	// Finalize & Cleanup
 	RainLight.X.D.combine = cull_xform;

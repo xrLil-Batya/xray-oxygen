@@ -87,7 +87,7 @@ float CEffectRain::GetCurrViewEntityWetness() const
 	float rainDropTime		= timerCurrViewEntity->rainDropTime;
 
 	float res = ((rainTimer - lastRainDuration) / rainDropTime + lerp(0.0f, saturate(lastRainDuration / rainDropTime), saturate(lastRainDuration)));
-	return saturate(res);
+	return res > 0 ? saturate(res) : 0.f;
 }
 
 // Born

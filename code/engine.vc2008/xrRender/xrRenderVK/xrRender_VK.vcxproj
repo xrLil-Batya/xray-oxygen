@@ -14,7 +14,7 @@
     <ProjectGuid>{9FB10D09-B11C-4D5C-AC31-F871781EF6EB}</ProjectGuid>
     <RootNamespace>xrRender_R4</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -90,7 +90,7 @@
       </IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>copy $(xrSDKBins)AnselSDK64.dll $(xrBinOut)</Command>
+      <Command>copy "$(xrSDKBins)AnselSDK64.dll" "$(xrBinOut)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,7 +145,7 @@
       <IgnoreSpecificDefaultLibraries>luabind.beta7-devel.rc4.lib;</IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>copy $(xrSDKBins)AnselSDK64.dll $(xrBinOut)</Command>
+      <Command>copy "$(xrSDKBins)AnselSDK64.dll" "$(xrBinOut)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

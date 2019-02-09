@@ -19,7 +19,7 @@ public:
 	void 				Load					(const char* path_alias, const char* path, const char*  xml_filename);
 
 
-	//÷òåíèå ýëåìåíòîâ
+	//чтение элементов
 	const char* 		Read					(const char* path, int index,  const char*   default_str_val);
 	const char* 		Read					(XML_NODE* start_node, const char* path, int index,  const char*   default_str_val );
 	const char* 		Read					(XML_NODE* node,  const char*   default_str_val);
@@ -37,6 +37,10 @@ public:
 	const char*			ReadAttrib				(XML_NODE* start_node, const char* path,  int index, const char* attrib, const char* default_str_val = "");
 	const char*			ReadAttrib				(XML_NODE* node, const char* attrib, const char* default_str_val);
 
+	bool				ReadAttribBool			(const char* path, int index, const char* attrib, bool default_value = false);
+	bool				ReadAttribBool			(XML_NODE* start_node, const char* path, int index, const char* attrib, bool default_value = false);
+	bool				ReadAttribBool			(XML_NODE* node, const char* attrib, bool default_value = false);
+
 	int					ReadAttribInt			(const char* path, int index, const char* attrib, int default_int_val = 0);
 	int					ReadAttribInt			(XML_NODE* start_node, const char* path, int index, const char* attrib, int default_int_val = 0);
 	int					ReadAttribInt			(XML_NODE* node, const char* attrib, int default_int_val);
@@ -48,19 +52,17 @@ public:
 	XML_NODE*			SearchForAttribute		(const char* path, int index, const char* tag_name, const char* attrib, const char* attrib_value_pattern);
 	XML_NODE*			SearchForAttribute		(XML_NODE* start_node, const char* tag_name, const char* attrib, const char* attrib_value_pattern);
 
-	//âîçâðàùàåò êîëè÷åñòâî óçëîâ ñ çàäàíûì èìåíåì
+	//возвращает количество узлов с заданым именем
 	int					GetNodesNum				(const char* path, int index, const char* tag_name);
 	int					GetNodesNum				(XML_NODE* node, const char*  tag_name);
 
 
-	//ïðîâåðêà òîãî, ÷òî àòòðèáóòû ó òåãîâ óíèêàëüíû
-	//(åñëè íå NULL, òî óíèêàëüíîñòü íàðóøåíà è âîçâðàøàåòñÿ èìÿ 
-	//ïîâòîðÿþùåãîñÿ àòðèáóòà)
+	//проверка того, что аттрибуты у тегов уникальны (если не NULL, то уникальность нарушена и возвращается имя повторяющегося атрибута)
 	const char*			CheckUniqueAttrib		(XML_NODE* start_node, const char* tag_name, const char* attrib_name);
 
-	//ïåðåìåñòèòüñÿ ïî XML äåðåâó 
-	//ïóòü çàäàåòñÿ â ôîðìå PARENT:CHILD:CHIDLS_CHILD
-	//node_index - íîìåð, åñëè óçëîâ ñ îäíèì èìåíåì íåñêîëüêî
+	//переместиться по XML дереву 
+	//путь задается в форме PARENT:CHILD:CHIDLS_CHILD
+	//node_index - номер, если узлов с одним именем несколько
 	XML_NODE*			NavigateToNode			(const char*  path, int node_index = 0);
 	XML_NODE*			NavigateToNode			(XML_NODE* start_node, const char*  path, int node_index = 0);
 	XML_NODE*			NavigateToNodeWithAttribute(const char* tag_name, const char* attrib_name, const char* attrib_value);
@@ -74,7 +76,7 @@ protected:
 	XML_NODE*			m_root;
 	XML_NODE*			m_pLocalRoot;
 
-	//áóôôåðíûé âåêòîð äëÿ ïðîâåðêè óíèêàëüíîñòü àòòðèáóòîâ
+	//буфферный вектор для проверки уникальность аттрибутов
 	xr_vector<shared_str> m_AttribValues;
 public:
 	virtual shared_str correct_file_name		(const char* path, const char* fn) {return fn;}

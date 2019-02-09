@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "../../FrayBuildConfig.hpp"
 #include "ttapi.h"
-
+#if 0
 
 PTP_POOL hPool = nullptr;
 PTP_CLEANUP_GROUP hCleanupEnv = nullptr;
@@ -96,3 +96,4 @@ void TTAPI ttapi_example2_taskentry(LPVOID param)
 	InterlockedIncrement(pCounter);
 }
 
+#endif

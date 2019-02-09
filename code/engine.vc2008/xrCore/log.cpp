@@ -5,6 +5,7 @@
 #include "log.h"
 
 static xrLogger theLogger;
+XRCORE_API xr_queue <xrLogger::LogRecord> xrLogger::logData;
 
 void Log(const char* s)
 {
@@ -58,13 +59,14 @@ void xrLogger::Msg(LPCSTR Msg, va_list argList)
 
 void xrLogger::SimpleMessage(LPCSTR Message, u32 MessageSize /*= 0*/)
 {
-	u32 MsgSize = MessageSize;
-	if (MsgSize == 0)
+	switch (MessageSize)
 	{
-		MsgSize = xr_strlen(Message);
+	case (u32(-1)): return;
+	case 0:			MessageSize = xr_strlen(Message); break;
+	default:		break;
 	}
 	xrCriticalSectionGuard guard(logDataGuard);
-	logData.emplace(LogRecord(Message, MsgSize));
+	logData.emplace(LogRecord(Message, MessageSize));
 }
 
 void xrLogger::OpenLogFile()
@@ -146,7 +148,7 @@ void xrLogger::InternalOpenLogFile()
 	
 	Time time;
 	xr_strconcat(CurrentDate, time.GetDayString().c_str(), "." , time.GetMonthString().c_str(), "." , time.GetDayString().c_str());
-	xr_strconcat(CurrentTime, time.GetHoursString().c_str(), ":", time.GetMinutesString().c_str(), ":", time.GetSecondsString().c_str());
+	xr_strconcat(CurrentTime, time.GetHoursString().c_str(), ".", time.GetMinutesString().c_str(), ".", time.GetSecondsString().c_str());
 
 	xr_strconcat(logFileName, "[", CurrentDate, " " , CurrentTime, "]", ".log");
 	if (FS.path_exist("$logs$"))
@@ -159,6 +161,8 @@ void xrLogger::InternalOpenLogFile()
 
 void xrLogger::LogThreadEntry()
 {
+	bool isDebug = IsDebuggerPresent();
+
 	auto FlushLogIfRequestedLambda = [this]()
 	{
 		if (bFlushRequested)
@@ -204,7 +208,7 @@ void xrLogger::LogThreadEntry()
 				// line is ready, ready up everything
 
 				// Output to MSVC debug output
-				if (IsDebuggerPresent() && !bFastDebugLog)
+				if (isDebug && !bFastDebugLog)
 				{
 					OutputDebugStringA(finalLine);
 					OutputDebugStringA("\n");
@@ -215,6 +219,7 @@ void xrLogger::LogThreadEntry()
 					IWriter* mutableWritter = (IWriter*)logFile;
 					// write to file
 					mutableWritter->w(finalLine, FinalSize);
+					mutableWritter->w("\r\n", 2);
 				}
 
 				for (const LogCallback& FnCallback : logCallbackList)

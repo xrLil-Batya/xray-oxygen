@@ -94,8 +94,9 @@ float	CIKLimbsController::LegLengthShiftLimit(float current_shift, const SCalcul
 		}
 	return shift_down;
 }
+
 static const float static_shift_object_speed = .2f;
-float	CIKLimbsController::StaticObjectShift(const SCalculateData cd[max_size])
+float CIKLimbsController::StaticObjectShift(const SCalculateData cd[max_size])
 {
 	const float current_shift = _object_shift.shift();
 
@@ -111,17 +112,19 @@ float	CIKLimbsController::StaticObjectShift(const SCalculateData cd[max_size])
 				++cnt;
 			}
 		}
-	if (0 < cnt)
-		shift_up /= cnt;
+
 	float shift_down = LegLengthShiftLimit(current_shift, cd);
-	float shift = 0;
-	if (shift_down > 0.f)
+	float shift = 0.f;
+
+	if (shift_down > 0)
 		shift = -shift_down;
 	else if (-shift_down < shift_up)
 		shift = -shift_down;
 	else
 		shift = shift_up;
-	VERIFY(_valid(shift));
+
+	if(!_valid(shift)) return shift_up;
+
 	_object_shift.set_taget(shift, _abs(current_shift - shift) / static_shift_object_speed);
 	return shift;
 }

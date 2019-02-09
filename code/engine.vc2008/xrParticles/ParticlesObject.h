@@ -15,6 +15,7 @@ class PARTICLES_API CParticlesObject : public CPS_Instance
 protected:
 	bool m_bLooped;			//флаг, что система зациклена
 	bool m_bStopping;		//вызвана функция Stop()
+	DWORD m_lastUpdatedFrame = 0;
 
 protected:
 	u32 mt_dt;

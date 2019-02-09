@@ -99,6 +99,7 @@
     <ClInclude Include="API\PDA.h" />
     <ClInclude Include="API\PhysicalGameObject.h" />
     <ClInclude Include="API\Torch.h" />
+    <ClInclude Include="ClientSpawnManager.h" />
     <ClInclude Include="GameClassRegistrator.h" />
     <ClInclude Include="ISpectreGameLib.h" />
     <ClInclude Include="Resource.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="API\PhysicalGameObject.cpp" />
     <ClCompile Include="API\Torch.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="ClientSpawnManager.cpp" />
     <ClCompile Include="GameClassRegistrator.cpp" />
     <ClCompile Include="ISpectreGameLib.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -147,6 +149,9 @@
     </ProjectReference>
     <ProjectReference Include="..\xrManagedLib\xrManagedLib.vcxproj">
       <Project>{c4defc31-a910-4339-99b3-6c410dc19ad0}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\xrManagedUILib\xrManagedUILib.vcxproj">
+      <Project>{d5ab4347-a96f-478d-9b44-9e3cbbdfcbdb}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

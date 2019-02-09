@@ -22,7 +22,6 @@ using namespace ACTOR_DEFS;
 
 class CInfoPortion;
 struct GAME_NEWS_DATA;
-class CActorCondition;
 class CCustomOutfit;
 class CGameTaskRegistryWrapper;
 class CGameNewsRegistryWrapper;
@@ -671,5 +670,5 @@ extern bool		isActorAccelerated			(u32 mstate, bool ZoomMode);
 
 IC	CActorCondition	&CActor::conditions	() const{ VERIFY(m_entity_condition); return(*m_entity_condition);}
 
-CActor*				Actor		();
+GAME_API CActor* Actor();
 extern const float	s_fFallTime;

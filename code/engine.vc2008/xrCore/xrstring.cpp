@@ -404,3 +404,50 @@ xr_string xr_string::ToString(int Value)
 
 	return xr_string(buf);
 }
+
+xr_string xr_string::ToString(unsigned int Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "%u", Value);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::ToString(float Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "%f", Value);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::ToString(double Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "%f", Value);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::Join(xrStringVector::iterator beginIter, xrStringVector::iterator endIter, const char delimeter /*= '\0'*/)
+{
+	xr_string Result;
+	xrStringVector::iterator cursorIter = beginIter;
+
+	while (cursorIter != endIter)
+	{
+		Result.append(*cursorIter);
+		if (delimeter != '\0')
+		{
+			Result.push_back(delimeter);
+		}
+		cursorIter++;
+	}
+
+	if (delimeter != '\0')
+	{
+		Result.erase(Result.end() - 1);
+	}
+
+	return Result;
+}

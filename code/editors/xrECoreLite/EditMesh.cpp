@@ -10,7 +10,6 @@
 #include "itterate_adjacents_dynamic.h"
 
 #ifdef _EDITOR
-#	include "ETools.h"
 #	include "UI_ToolsCustom.h"
 #endif
 
@@ -72,7 +71,7 @@ void CEditableMesh::Clear()
 	m_VMRefs.clear();
 }
 
-#include <xrTools\ETools.h>
+#include "..\XTools\ETools.h"
 void CEditableMesh::UnloadCForm()
 {
 	ETOOLS::destroy_model(m_CFModel);

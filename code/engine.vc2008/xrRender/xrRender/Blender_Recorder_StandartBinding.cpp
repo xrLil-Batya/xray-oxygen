@@ -142,7 +142,7 @@ static class cl_fog_plane : public R_constant_setup
 		{
 			// Plane
 			Fvector4 plane;
-			Fmatrix& M		= CastToGSCMatrix(Device.mFullTransform);
+			Fmatrix& M		= Device.mFullTransform;
 			plane.x			= -(M._14 + M._13);
 			plane.y			= -(M._24 + M._23);
 			plane.z			= -(M._34 + M._33);
@@ -292,7 +292,7 @@ static class cl_sun0_dir_e : public R_constant_setup
 		{
 			Fvector D;
 			CEnvDescriptor&	desc = *Environment().CurrentEnv;
-			CastToGSCMatrix(Device.mView).transform_dir(D, desc.sun_dir);
+			Device.mView.transform_dir(D, desc.sun_dir);
 			D.normalize();
 			result.set(D.x, D.y, D.z, 0);
 		}

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 
 void CRenderTarget::draw_rain( light &RainSetup )
 {
@@ -16,15 +17,15 @@ void CRenderTarget::draw_rain( light &RainSetup )
 
 	// Common constants (light-related)
 	Fvector L_dir;
-	TransformDirByMatrix(Device.mView, L_dir, RainSetup.direction);
+	Device.mView.transform_dir(L_dir, RainSetup.direction);
 	L_dir.normalize();
 
 	Fvector W_dirX;
-	TransformDirByMatrix(Device.mView, W_dirX, { 1.f, 0.f, 0.f });
+	Device.mView.transform_dir(W_dirX, Fvector().set(1.0f, 0.0f, 0.0f));
 	W_dirX.normalize();
 
 	Fvector W_dirZ;
-	TransformDirByMatrix(Device.mView, W_dirZ, { 0.f, 0.f, 1.f });
+	Device.mView.transform_dir(W_dirZ, Fvector().set(0.0f, 0.0f, 1.0f));
 	W_dirZ.normalize();
 
 	// Fill vertex buffer
@@ -41,7 +42,7 @@ void CRenderTarget::draw_rain( light &RainSetup )
 
 	Fvector	center_pt;
 	center_pt.mad(Device.vCameraPosition, Device.vCameraDirection, fRainFar);
-	CastToGSCMatrix(Device.mFullTransform).transform(center_pt);
+	Device.mFullTransform.transform(center_pt);
 	d_Z = center_pt.z;
 
 	// Perform lighting
@@ -56,7 +57,7 @@ void CRenderTarget::draw_rain( light &RainSetup )
 		float			view_sx				= float(RainSetup.X.D.minX)/smapsize;
 		float			view_sy				= float(RainSetup.X.D.minY)/smapsize;
 
-		Matrix4x4 m_TexelAdjust		= 
+		Fmatrix m_TexelAdjust		= 
 		{
 			view_dimX/2.f,							0.0f,									0.0f,		0.0f,
 			0.0f,									-view_dimY/2.f,							0.0f,		0.0f,
@@ -66,38 +67,33 @@ void CRenderTarget::draw_rain( light &RainSetup )
 
 		// compute xforms
 		FPU::m64r();
-		Matrix4x4 xf_invview;	
-		xf_invview.InvertMatrixByMatrix(Device.mView);
+		Fmatrix xf_invview;	
+		xf_invview.invert(Device.mView);
 
 		// shadow xform
-		Matrix4x4 m_shadow;
+		Fmatrix m_shadow;
 		{
-			Matrix4x4 xf_project;
-			xf_project.Multiply(RainSetup.X.D.combine, m_TexelAdjust);
+			Fmatrix xf_project;
+			xf_project.mul(m_TexelAdjust, RainSetup.X.D.combine);
 
-			m_shadow.Multiply(xf_invview, xf_project);
+			m_shadow.mul(xf_project, xf_invview);
 
 			FPU::m24r();
 		}
 
 		// clouds xform
-		Matrix4x4 m_clouds_shadow;
+		Fmatrix m_clouds_shadow;
 		{
-			static	float	w_shift		= 0;
-			Matrix4x4 m_xform;
-			Fvector			normal	;	normal.setHP(1,0);
-			m_xform = DirectX::XMMatrixIdentity();
-
-			Fvector			localnormal;
-			TransformDirByMatrix(m_xform, localnormal, normal);
-			localnormal.normalize();
-
-			m_clouds_shadow.Multiply(xf_invview, m_xform);
-			m_xform = DirectX::XMMatrixScaling(1.f, 1.f, 1.f);
-			m_clouds_shadow.Multiply(m_clouds_shadow, m_xform);
-			Fvector ToTranslation = localnormal.mul(w_shift);
-			m_xform = DirectX::XMMatrixTranslation(ToTranslation.x, ToTranslation.y, ToTranslation.z);
-			m_clouds_shadow.Multiply(m_clouds_shadow, m_xform);
+			static	float	w_shift = 0;
+			Fmatrix			m_xform;
+			Fvector			normal;	normal.setHP(1, 0);
+			m_xform.identity();
+			Fvector			localnormal; m_xform.transform_dir(localnormal, normal); localnormal.normalize();
+			m_clouds_shadow.mul(m_xform, xf_invview);
+			m_xform.scale(1.f, 1.f, 1.f);
+			m_clouds_shadow.mulA_44(m_xform);
+			m_xform.translate(localnormal.mul(w_shift));
+			m_clouds_shadow.mulA_44(m_xform);
 		}
 
 		// Make jitter texture
@@ -119,9 +115,9 @@ void CRenderTarget::draw_rain( light &RainSetup )
 		//	Use for intermediate results
 		//	Patch normal
 		if( !RImplementation.o.dx10_msaa )
-			u_setrt	(rt_Accumulator,NULL,NULL,HW.pBaseZB);
+			u_setrt	(rt_Accumulator,nullptr, nullptr,HW.pBaseZB);
 		else
-			u_setrt	(rt_Accumulator,NULL,NULL,rt_MSAADepth->pZRT);
+			u_setrt	(rt_Accumulator, nullptr, nullptr,rt_MSAADepth->pZRT);
 
 		RCache.set_Element		(s_rain->E[1]);
 		RCache.set_c("Ldynamic_dir",		L_dir.x,L_dir.y,L_dir.z,0		);
@@ -184,7 +180,7 @@ void CRenderTarget::draw_rain( light &RainSetup )
 		RCache.set_c				("m_shadow",			m_shadow						);
 		RCache.set_c				("m_sunmask",			m_clouds_shadow					);
 
-		u_setrt(rt_Position, NULL, NULL, RImplementation.o.dx10_msaa ? rt_MSAADepth->pZRT : HW.pBaseZB);
+		u_setrt(rt_Position, nullptr, nullptr, RImplementation.o.dx10_msaa ? rt_MSAADepth->pZRT : HW.pBaseZB);
 
 		if( ! RImplementation.o.dx10_msaa )
 		{
@@ -228,9 +224,9 @@ void CRenderTarget::draw_rain( light &RainSetup )
 		//	It is restored automatically by a set_Element call
 		//StateManager.SetColorWriteEnable( D3Dxx_COLOR_WRITE_ENABLE_ALL );
 		if( ! RImplementation.o.dx10_msaa )
-			u_setrt	(rt_Color,NULL,NULL,HW.pBaseZB);
+			u_setrt	(rt_Color, nullptr, nullptr,HW.pBaseZB);
 		else
-			u_setrt	(rt_Color,NULL,NULL,rt_MSAADepth->pZRT);
+			u_setrt	(rt_Color, nullptr, nullptr,rt_MSAADepth->pZRT);
 
 		if( ! RImplementation.o.dx10_msaa )
 		{

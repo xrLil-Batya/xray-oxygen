@@ -124,9 +124,6 @@ template <class T> struct _quaternion;
 #include "_plane.h"
 #include "_plane2.h"
 #include "_flags.h"
-#ifdef	DEBUG
-#include "dump_string.h"
-#endif
 //////////////////////////////////////////////
 #pragma pack(pop)
 //////////////////////////////////////////////

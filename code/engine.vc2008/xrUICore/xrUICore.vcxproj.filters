@@ -354,6 +354,21 @@
     <ClCompile Include="UIStatic_script.cpp">
       <Filter>Elements\Statics</Filter>
     </ClCompile>
+    <ClCompile Include="UIView.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UIViewInflater.cpp">
+      <Filter>UIHelpers\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="UIViewGroup.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UILayoutInflater.cpp">
+      <Filter>UIHelpers\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="UI3dStatic.cpp">
+      <Filter>Elements\Statics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UITabButton.h">
@@ -571,6 +586,21 @@
     </ClInclude>
     <ClInclude Include="UIGameLog.hpp">
       <Filter>Mature\GameLog</Filter>
+    </ClInclude>
+    <ClInclude Include="UIView.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UIViewInflater.h">
+      <Filter>UIHelpers\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="UIViewGroup.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UILayoutInflater.h">
+      <Filter>UIHelpers\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="UI3dStatic.h">
+      <Filter>Elements\Statics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

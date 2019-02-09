@@ -12,17 +12,14 @@ namespace xrLayoutEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-		private XRay.xrManagedUILib.UIXMLParser UIParser;
-
 		public MainWindow()
 		{
 			InitializeComponent();
 
-			// Init Spectre System and UI Parser
-			SpectreEngine.xrCoreInit("Post Process Editor");
-			UIParser = new XRay.xrManagedUILib.UIXMLParser();
+            XRay.Xml xml = new XRay.Xml("ui", "ui_mm_loading_screen.xml");
+            XRay.Log.Info(String.Format("result {0}", xml.ReadAttributeInt("View", 0, "x", 0)));
 
-			XRay.Log.Info("LayOut Editor inited!");
+            XRay.Test test = new XRay.Test();
 		}
     }
 }

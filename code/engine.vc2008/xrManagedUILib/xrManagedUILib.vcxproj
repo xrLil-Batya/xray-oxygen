@@ -82,13 +82,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="API\UIDialogWnd.h" />
+    <ClInclude Include="API\UILines.h" />
+    <ClInclude Include="API\UIProgressBar.h" />
+    <ClInclude Include="API\UIStatic.h" />
+    <ClInclude Include="API\View.h" />
     <ClInclude Include="API\Window.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="xrManagedUILib.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="API\UIDialogWnd.cpp" />
+    <ClCompile Include="API\UILines.cpp" />
+    <ClCompile Include="API\UIProgressBar.cpp" />
+    <ClCompile Include="API\UIStatic.cpp" />
+    <ClCompile Include="API\View.cpp" />
     <ClCompile Include="API\Window.cpp" />
+    <ClCompile Include="API\WLoadScreen.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

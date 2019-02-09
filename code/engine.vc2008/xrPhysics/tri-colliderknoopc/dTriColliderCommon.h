@@ -15,9 +15,11 @@ inline dContactGeom* CONTACT(dContactGeom* ptr, const int stride)
 
 inline dSurfaceParameters* SURFACE(dContactGeom* ptr, const int stride)
 {
-	const size_t count = stride / sizeof(dContact);
+	/*const size_t count = stride / sizeof(dContact);
 	dContact* contact = (dContact*)(uintptr_t(ptr) - uintptr_t(offsetof(dContact, geom)));
-	return &(contact[count]).surface;
+	return &(contact[count]).surface;*/
+
+	return (dSurfaceParameters*)(((char*)ptr) + (stride + sizeof(dContactGeom)));
 }
 #define NUMC_MASK (0xffff)
 

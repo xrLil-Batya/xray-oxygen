@@ -301,12 +301,14 @@ void CRender::Render()
 	r_pmask(true, false, true);	// Enable priority "0",+ capture wmarks
 	set_Recorder(bSUN ? &main_coarse_structure : nullptr);
 	phase = PHASE_NORMAL;
-	render_main(CastToGSCMatrix(Device.mFullTransform));
+	render_main(Device.mFullTransform);
 	set_Recorder(nullptr);
 	r_pmask(true, false); // Disable priority "1"
 	Device.Statistic->Render_CRenderRender_render_main.End();
 
 	//******* Main render :: PART-0	-- first
+	bool split_the_scene_to_minimize_wait = !!ps_r_flags.test(R_FLAG_EXP_SPLIT_SCENE);
+	if (!split_the_scene_to_minimize_wait)
 	{
 		ScopeStatTimer deferPart0Timer(Device.Statistic->Render_CRenderRender_DeferPart0);
 		PIX_EVENT(DEFER_PART0);
@@ -319,7 +321,16 @@ void CRender::Render()
 			Details->Render();
 		Target->phase_scene_end();
 	} 
+	else
+	{
+		ScopeStatTimer deferPart0Timer(Device.Statistic->Render_CRenderRender_DeferPart0);
+		PIX_EVENT(DEFER_PART0_SPLIT);
 
+		// level, SPLIT
+		Target->phase_scene_begin();
+		r_dsgraph_render_graph(0);
+		Target->disable_aniso();
+	}
 	//******* Occlusion testing of volume-limited light-sources
 	Device.Statistic->Render_CRenderRender_LightVisibility.Begin();
 	Target->phase_occq();
@@ -383,6 +394,19 @@ void CRender::Render()
 	LP_pending.sort();
 	Device.Statistic->Render_CRenderRender_LightVisibility.End();
 
+	//******* Main render :: PART-1 (second)
+	if (split_the_scene_to_minimize_wait)
+	{
+		ScopeStatTimer deferPart0Timer(Device.Statistic->Render_CRenderRender_DeferPart0);
+		PIX_EVENT(DEFER_PART1_SPLIT);
+		// level
+		Target->phase_scene_begin();
+		r_dsgraph_render_hud();
+		r_dsgraph_render_lods(true, true);
+		if (Details)	Details->Render();
+		Target->phase_scene_end();
+	}
+
 	// Active item and wallmarks
 	{
 		ScopeStatTimer itemUIWallmarksTimer(Device.Statistic->Render_CRenderRender_ItemUIWallmarks);
@@ -410,6 +434,7 @@ void CRender::Render()
 			if (0 == Lights_LastFrame[it])
 				continue;
 
+			//#GIPERION: This makes me sad
 			try
 			{
 				Lights_LastFrame[it]->svis.flushoccq();
@@ -440,7 +465,7 @@ void CRender::Render()
 #endif
 
 	// Directional light - sun
-	if (bSUN)	
+	if (bSUN)
 	{
 		ScopeStatTimer sunTimer(Device.Statistic->Render_CRenderRender_Sun);
 		PIX_EVENT(DEFER_SUN);
@@ -451,7 +476,8 @@ void CRender::Render()
 		{
 			render_sun_near();
 			render_sun();
-			render_sun_filtered();
+			if (Device.dwFrame % 2)
+				render_sun_filtered();
 		}
 		Target->accum_direct_blend();
 	}
@@ -481,6 +507,7 @@ void CRender::Render()
 
 		// Lighting, non dependant on OCCQ
 		{
+			ScopeStatTimer lightTimer(Device.Statistic->TEST2);
 			PIX_EVENT(DEFER_LIGHT_NO_OCCQ);
 			HOM.Disable();
 			render_lights(LP_normal);
@@ -488,6 +515,7 @@ void CRender::Render()
         
 		// Lighting, dependant on OCCQ
 		{
+			ScopeStatTimer lightTimer(Device.Statistic->TEST3);
 			PIX_EVENT(DEFER_LIGHT_OCCQ);
 			render_lights(LP_pending);
 		}
@@ -513,7 +541,7 @@ void CRender::render_forward()
 		// Level
 		r_pmask(false, true); // enable priority "1"
 		phase = PHASE_NORMAL;
-		render_main(CastToGSCMatrix(Device.mFullTransform));
+		render_main(Device.mFullTransform);
 
 		//	Igor: we don't want to render old lods on next frame.
 		mapLOD.clear				();

@@ -147,8 +147,8 @@ void IGame_Persistent::Prefetch()
 void IGame_Persistent::OnGameEnd	()
 {
 #ifndef _EDITOR
-	ObjectPool.clear					();
-	Render->models_Clear				(TRUE);
+	ObjectPool.clear();
+	Render->models_Clear(TRUE);
 #endif
 }
 
@@ -157,13 +157,14 @@ void IGame_Persistent::OnFrame()
 	if (!Device.Paused() || Device.dwPrecacheFrame)
 	{
 		ScopeStatTimer envAndSpectreTimer(Device.Statistic->Engine_PersistanceFrame_EnvAndSpectre);
-		Environment().OnFrame();
+		Device.seqParallel.emplace_back(&Environment(), &CEnvironment::OnFrame);
+		//Environment().OnFrame();
 		SpectreCallback::shedule_update->Invoke(SpectreObjectId, Device.dwTimeDelta);
 	}
 
 	Device.Statistic->Particles_starting = (u32)ps_needtoplay.size();
-	Device.Statistic->Particles_active = (u32)ps_active.size();
-	Device.Statistic->Particles_destroy = (u32)ps_destroy.size();
+	Device.Statistic->Particles_active   = (u32)ps_active.size();
+	Device.Statistic->Particles_destroy  = (u32)ps_destroy.size();
 
 	// Play req particle systems
 	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.Begin();

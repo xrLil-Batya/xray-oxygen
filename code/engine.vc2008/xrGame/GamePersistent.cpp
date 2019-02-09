@@ -227,12 +227,15 @@ void CGamePersistent::WeathersUpdate()
 		}
 		else
 		{
-			CEnvAmbient * env_amb = _env->env_ambient;
+			env_amb = _env->env_ambient;
+			// Wait secondary thread
+			if (!current_env)
+				Sleep(4);
 		}
 
 		if (env_amb) 
 		{
-			CEnvAmbient::SSndChannelVec& vec	= current_env->env_ambient->get_snd_channels();
+			CEnvAmbient::SSndChannelVec& vec = current_env->env_ambient->get_snd_channels();
             auto I		= vec.begin();
             auto E		= vec.end();
 			
@@ -298,12 +301,13 @@ void CGamePersistent::WeathersUpdate()
 				}
 			}
 		}
+
 		if (Device.fTimeGlobal>=ambient_effect_wind_start && Device.fTimeGlobal<=ambient_effect_wind_in_time && ambient_effect_wind_on)
 		{
-			float delta=ambient_effect_wind_in_time-ambient_effect_wind_start;
-			float t = 0;
+			float delta = ambient_effect_wind_in_time - ambient_effect_wind_start;
+			float t = 0.f;
 
-			if (delta!=0.f)
+			if (delta != 0.f)
 			{
 				float cur_in = Device.fTimeGlobal - ambient_effect_wind_start;
 				t = cur_in / delta;

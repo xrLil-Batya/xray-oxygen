@@ -90,7 +90,7 @@ public:
 		}
 		struct _D		
 		{
-			Matrix4x4					combine	;
+			Fmatrix					combine	;
 			s32							minX,maxX	;
 			s32							minY,maxY	;
 			BOOL						transluent	;

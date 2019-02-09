@@ -1,6 +1,7 @@
 #include "common.h"
 #include "oxy_config.h"
 
+uniform float4 ssss_params;
 struct   vf
 {
 	float2	tbase	: TEXCOORD0;	// base
@@ -31,17 +32,31 @@ Texture2D	s_leaves;
 float3	water_intensity;
 #endif	//	defined(USE_SOFT_WATER) && defined(NEED_SOFT_WATER)
 
-float3 calc_moon_road(float3 color, float3 vreflect, float2 tc, float depth, float Nz)
+float3 calc_moon_road(float3 color, float3 vreflect, float depth, float Nz)
 {
-	float r = 0.0015*s_jitter.Sample(smp_base, tc).x;											// randomize borders of road
-	float f = dot(normalize(vreflect.xz), -normalize(L_sun_dir_w.xz));
-	f = step(lerp(0.998 + r, 1, depth*0.01), f);		// road appearance factor
-	f *= step(10, depth);															// cut road in near 10 m
-	f *= saturate((depth - 10)*0.5);													// fade in road in 2 m
-	f *= step(Nz, 0);																// remove road from pixels with normals with positive z for better look
-	f *= 1 - saturate(abs(L_sun_dir_w.y * 2));										// road fading out with sun height
-	//f *= ogse_c_various.x;															// weather control
-	return lerp(color, L_sun_color * MOON_ROAD_INTENSITY, f);
+    float cut = 1.5f;
+    float r = 0.0015f * 0.1;
+    float f = dot(normalize(vreflect.xz), -normalize(L_sun_dir_w.xz));
+    if (f <= 0)
+        return color;
+    f = step(lerp(0.998f+r, 1, depth*0.01f), f);
+	
+    if (f <= 0)
+        return color;
+		
+    f *= step(cut, depth);
+    f *= saturate((depth-cut)*0.5f);
+    f *= step(Nz, 0);
+    f *= 1 - saturate(abs(L_sun_dir_w.y * 2));
+    f *= 0.1f;
+    float f_sunpos = saturate(dot(-eye_direction, normalize(L_sun_dir_w)));
+    f *= f_sunpos;
+	
+    if (f <= 0)
+        return color;
+		
+    float3 final_road = lerp(color, L_sun_color * MOON_ROAD_INTENSITY, f);
+    return final_road;
 }
 
 float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
@@ -63,7 +78,7 @@ float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
 	float3	env1 = s_env1.Sample(smp_rtlinear, vreflect);
 	float3	env = lerp(env0,env1,L_ambient.w);
 			env *= env * 2;
-
+			
 	float	fresnel = saturate(dot(vreflect,v2point));
 	float	power = pow(fresnel,9);
 	float	amount = 0.15h + 0.25h*power;	// 1=full env, 0=no env
@@ -77,13 +92,13 @@ float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
 
 	float	alpha = 0.75h + 0.25h * power; // 1=full env, 0=no env
 
-#ifdef	USE_SOFT_WATER
-
 	//	ForserX: additional depth
 	float2 PosTc = I.tctexgen.xy / I.tctexgen.z;
 	gbuffer_data gbd = gbuffer_load_data(PosTc, pos2d);
-
 	float4 _P = float4(gbd.P, gbd.mtl);
+
+#ifdef	USE_SOFT_WATER
+
 	float waterDepth = _P.z - I.tctexgen.z;
 	
 	// Water fog
@@ -105,15 +120,13 @@ float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
 			fLeavesFactor *= smoothstep(0.1, 0.075, calc_depth);
 	final = lerp(final, leaves, leaves.a*fLeavesFactor);
 	alpha = lerp(alpha, leaves.a, leaves.a*fLeavesFactor);
-	
-	// Moon road
-	final = calc_moon_road(final, vreflect, I.tbase.xy, waterDepth, Nw.z);
 #endif	//	USE_SOFT_WATER
 
 	//	Fogging
 	final = lerp(fog_color, final, I.fog);
 	alpha *= I.fog*I.fog;
 
+	//final = calc_moon_road(final, vreflect, _P.z, Nw.z);
 	return  float4   (final, alpha);
 
 #else	//	NEED_SOFT_WATER

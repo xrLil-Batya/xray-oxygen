@@ -20,7 +20,7 @@ void CGammaControl::Update()
 	if (HW.pDevice) 
 	{
 		CHK_DX (HW.m_pSwapChain->GetContainingOutput(&pOutput));
-		HRESULT hr = pOutput->GetGammaControlCapabilities(&GC);
+		const HRESULT &hr = pOutput->GetGammaControlCapabilities(&GC);
 		if (SUCCEEDED(hr))
 		{
 			GenLUT();
@@ -32,10 +32,8 @@ void CGammaControl::Update()
 
 void CGammaControl::GenLUT()
 {
-	DXGI_RGB Offset = {0,0,0};
-	DXGI_RGB Scale = {1,1,1};
-	G.Offset = Offset;
-	G.Scale = Scale;
+	G.Offset = { 0,0,0 };
+	G.Scale = { 1,1,1 };
 
 	float DeltaCV = (GC.MaxConvertedValue - GC.MinConvertedValue);
 	

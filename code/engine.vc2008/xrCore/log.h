@@ -33,7 +33,6 @@ public:
 	void LogThreadEntry();
 
 private:
-
 	void InternalCloseLog();
 	volatile bool bIsAlive;
 	HANDLE hLogThread;
@@ -51,7 +50,6 @@ private:
 		Time time;
 	};
 
-	xr_queue <LogRecord> logData;
 	xrCriticalSection logDataGuard;
 	bool bFastDebugLog;
 
@@ -59,4 +57,6 @@ private:
 
 	//LogCallback onLogMsg;
 	xr_list<LogCallback> logCallbackList;
+public:
+	static xr_queue <LogRecord> logData;
 };

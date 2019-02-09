@@ -12,6 +12,7 @@ namespace XRay
 	public ref class ModInstance
 	{
 	public:
-		virtual void OnLoad();
+		virtual void OnLoad() = 0;
+		virtual void OnShutdown() = 0;
 	};
 }

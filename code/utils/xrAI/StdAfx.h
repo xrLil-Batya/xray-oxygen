@@ -15,6 +15,7 @@
 #define ECORE_API
 #define XR_EPROPS_API
 #include "../../xrcore/clsid.h"
+#include "../../xrcore/xrDelegate/xrDelegate.h"
 #include "defines.h"
 #include "../../xrcdb/xrCDB.h"
 #include "_d3d_extensions.h"
@@ -24,6 +25,7 @@
 #include <sys/stat.h>
 #include <io.h>
 #include <stdio.h>
+#define GAME_API XRCORE_API
 
 extern LevelCompilerLoggerWindow &Logger;
 extern CThread::LogFunc ProxyMsg;

@@ -48,7 +48,7 @@ public:
 //-----------------------------------------------------------------------------------------------------------------
 const int	LIGHT_Count				=	7;
 //-----------------------------------------------------------------
-thread_local		Time		t_start;
+thread_local		UTime		t_start;
 thread_local		Duration	t_time;
 thread_local		u64			t_count;
 

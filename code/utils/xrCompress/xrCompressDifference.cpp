@@ -144,7 +144,7 @@ int ProcessDifference()
 	string_path out_path;
 	for (const char* file: target_file_list)
 	{
-		strconcat(sizeof(out_path),out_path,target_folder,"\\", file);
+		xr_strconcat(out_path,target_folder,"\\", file);
 		createPath(out_path);
 
 		IReader* r = FS_new->r_open("$target_folder$", file);

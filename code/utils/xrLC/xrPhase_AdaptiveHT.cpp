@@ -490,9 +490,9 @@ void CBuild::u_Tesselate(tesscb_estimator* cb_E, tesscb_face* cb_F, tesscb_verte
 	g_bUnregister = false;
 
 	u32 counter_create = 0;
-	u32 cnt_verts = lc_global_data()->g_vertices().size();
+	u32 cnt_verts = (u32)lc_global_data()->g_vertices().size();
 
-	for (u32 I = 0; I<lc_global_data()->g_faces().size(); ++I)
+	for (u32 I = 0; I<(u32)lc_global_data()->g_faces().size(); ++I)
 	{
 		Face* F = lc_global_data()->g_faces()[I];
 		if (0 == F)
@@ -516,7 +516,7 @@ void CBuild::u_Tesselate(tesscb_estimator* cb_E, tesscb_face* cb_F, tesscb_verte
 					lc_global_data()->destroy_vertex(lc_global_data()->g_vertices()[I]);
 
 			Logger.Status("Working: %d verts created, %d(now) / %d(was) ...", counter_create, lc_global_data()->g_vertices().size(), cnt_verts);
-			FlushLog();
+			xrLogger::FlushLog();
 		}
 
 		tessalate_faces(adjacent_vec, V1, V2, cb_F, cb_V);
@@ -568,7 +568,7 @@ void CBuild::u_SmoothVertColors(int count)
 				circle_vec[cit]->C._get(tmp);
 				avg.add(tmp);
 			}
-			avg.scale(circle_vec.size());
+			avg.scale((u32)circle_vec.size());
 			colors[it]._set(avg);
 
 			float CurrentStageProgress = float(it) / float(VertexesSize);

@@ -23,8 +23,10 @@ CParticleManager::~CParticleManager()
 
 ParticleEffect*	CParticleManager::GetEffectPtr(int effect_id)
 {
-	R_ASSERT(effect_id >= 0 && effect_id < (int)effect_vec.size());
-	return effect_vec[effect_id];
+	if(effect_id >= 0 && effect_id < (int)effect_vec.size())
+		return effect_vec[effect_id];
+	else
+		return effect_vec[effect_vec.size() - 1];
 }
 
 ParticleActions* CParticleManager::GetActionListPtr(int a_list_num)
@@ -147,7 +149,7 @@ void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
 	{
 		// effect
 		ParticleEffect* pe = GetEffectPtr(effect_id);
-		pe->p_count = 0;
+		pe->particles.clear();
 	}
 
 	pa->unlock();
@@ -232,16 +234,18 @@ void CParticleManager::SetCallback(int effect_id, OnBirthParticleCB b, OnDeadPar
 	pe->owner = owner;
 	pe->param = param;
 }
-void CParticleManager::GetParticles(int effect_id, Particle*& particles, u32& cnt)
+
+void CParticleManager::GetParticles(int effect_id, xr_vector<PAPI::Particle>& particles, u32& cnt)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
 	particles = pe->particles;
-	cnt = pe->p_count;
+	cnt = (u32)pe->particles.size();
 }
+
 u32	CParticleManager::GetParticlesCount(int effect_id)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-	return 			pe->p_count;
+	return 		(u32)pe->particles.size();
 }
 
 // action

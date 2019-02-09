@@ -409,11 +409,9 @@ void OGF_LOD::Save		(IWriter &fs)
 	// Header
 	ogf_header			H;
 	string1024			sid;
-	strconcat			(sizeof(sid),sid,
-		pBuild->shader_render[pBuild->materials()[lod_Material].shader].name,
-		"/",
-		pBuild->textures()[pBuild->materials()[lod_Material].surfidx].name
-		);
+	xr_strconcat(sid, pBuild->shader_render[pBuild->materials()[lod_Material].shader].name, 
+				 "/", pBuild->textures()[pBuild->materials()[lod_Material].surfidx].name);
+
 	fs.open_chunk		(OGF_HEADER);
 	H.format_version	= xrOGF_FormatVersion;
 	H.type				= MT_LOD;

@@ -32,7 +32,7 @@ extern float g_fov;
 class CBulletManager;
 class CMapManager;
 
-class CLevel : public IGame_Level, public IPureClient
+class GAME_API CLevel : public IGame_Level, public IPureClient
 {
 	void						ClearAllObjects			();
 private:

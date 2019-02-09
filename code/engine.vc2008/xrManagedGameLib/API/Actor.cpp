@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Actor.h"
+#include "../xrGame/Actor.h"
+#include "../xrGame/ActorCondition.h"
 
 XRay::Actor::Actor(IntPtr InNativeObject)
 	:EntityAlive(InNativeObject)
@@ -74,4 +76,14 @@ void XRay::Actor::ZoneExit()
 XRay::Actor::Actor() : Actor(XRay::ClassRegistrator::GetFactoryTarget())
 {
 
+}
+
+float XRay::Actor::Satiety::get()
+{
+	return ::Actor()->conditions().GetSatiety();
+}
+
+void XRay::Actor::Satiety::set(float fNewValue)
+{
+	//::Actor()->conditions().ChangeSatiety(fNewValue);
 }

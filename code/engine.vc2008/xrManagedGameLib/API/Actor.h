@@ -5,6 +5,7 @@
 #include "API/EntityAlive.h"
 #include "API/Inventory.h"
 
+class CActor;
 using namespace System;
 
 namespace XRay
@@ -15,9 +16,20 @@ namespace XRay
 		CActor* pNativeObject;
 
 	public:
-		Actor();;
+		Actor();
 		Actor(IntPtr InNativeObject);
 
+		static property float Satiety
+		{
+			float get();
+			void set(float fNewValue);
+		}
+
+	public:
+		Inventory^ inventory;
+
+	//Callbacks
+	public:
 		//virtual void shedule_Update(u32 Interval);
 		virtual void UseObject(Object^ pObj);
 
@@ -63,7 +75,6 @@ namespace XRay
 		virtual void on_action_hold();
 		virtual void map_location_added();
 		*/
-	public:
-		Inventory^ inventory;
+
 	};
 }

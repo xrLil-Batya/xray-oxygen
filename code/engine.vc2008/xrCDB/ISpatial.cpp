@@ -194,10 +194,10 @@ ISpatial_NODE*	ISpatial_DB::_node_create		()
 }
 void			ISpatial_DB::_node_destroy(ISpatial_NODE* &P)
 {
-	VERIFY						(P->_empty());
-	stat_nodes					--;
-	allocator_pool.push_back	(P);
-	P							= nullptr;
+	VERIFY(P->_empty());
+	stat_nodes--;
+	allocator_pool.push_back(P);
+	P = nullptr;
 }
 
 void			ISpatial_DB::_insert	(ISpatial_NODE* N, Fvector& n_C, float n_R)

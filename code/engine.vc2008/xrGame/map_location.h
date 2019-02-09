@@ -11,7 +11,7 @@ class CComplexMapSpot;
 class CUICustomMap;
 class CInventoryOwner;
 
-class CMapLocation :public IPureDestroyableObject
+class GAME_API CMapLocation :public IPureDestroyableObject
 {
 public:
 enum ELocationFlags

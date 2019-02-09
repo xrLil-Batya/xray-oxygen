@@ -283,7 +283,7 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 	for (int i = 0; i < RaycastModel->get_tris_count(); i++)
 	{
 		CDB::TRI Tris = RaycastModel->get_tris()[i];
-		PolyIndexes indx{ Tris.verts[0], Tris.verts[1], Tris.verts[2] };
+		PolyIndexes indx{ (u32)Tris.verts[0], (u32)Tris.verts[1], (u32)Tris.verts[2] };
 
 		OptimizedMeshTris.push_back(indx);
 

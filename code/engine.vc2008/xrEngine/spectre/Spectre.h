@@ -19,3 +19,5 @@ private:
 	static ISpectreEngineLib* EngineLibAPI;
 
 };
+
+extern bool gSpectreIsLoaded;

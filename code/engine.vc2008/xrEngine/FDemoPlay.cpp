@@ -262,15 +262,15 @@ BOOL CDemoPlay::ProcessCam(SCamEffectorInfo& info)
 			v[1].x = m2->m[i][0]; v[1].y = m2->m[i][1];  v[1].z = m2->m[i][2];
 			v[2].x = m3->m[i][0]; v[2].y = m3->m[i][1];  v[2].z = m3->m[i][2];
 			v[3].x = m4->m[i][0]; v[3].y = m4->m[i][1];  v[3].z = m4->m[i][2];
-			spline1(t, &(v[0]), (Fvector *) &(Device.mView.Matrix.r[i].m128_f32[0]));
+			spline1(t, &(v[0]), (Fvector *) &(Device.mView.m[i][0]));
 		}
 
-		Matrix4x4 mInvCamera;
-		mInvCamera.InvertMatrixByMatrix(Device.mView);
+		Fmatrix mInvCamera;
+		mInvCamera.invert(Device.mView);
 
-		info.n.set(mInvCamera.y[0], mInvCamera.y[1], mInvCamera.y[2]);
-		info.d.set(mInvCamera.z[0], mInvCamera.z[1], mInvCamera.z[2]);
-		info.p.set(mInvCamera.w[0], mInvCamera.w[1], mInvCamera.w[2]);
+		info.n.set(mInvCamera._21, mInvCamera._22, mInvCamera._23);
+		info.d.set(mInvCamera._31, mInvCamera._32, mInvCamera._33);
+		info.p.set(mInvCamera._41, mInvCamera._42, mInvCamera._43);
 
 		fLifeTime -= Device.fTimeDelta;
 	}

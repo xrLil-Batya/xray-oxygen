@@ -362,3 +362,19 @@ float processor_info::CalcMPCPULoad(DWORD dwCPU)
 
 	return m_fltCpuUsage[dwCPU];
 }
+
+xr_string xr_string::ToString(const Fvector& Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::ToString(const Dvector& Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
+
+	return xr_string(buf);
+}

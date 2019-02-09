@@ -29,6 +29,21 @@
     <ClInclude Include="API\Window.h">
       <Filter>Headers Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="API\UILines.h">
+      <Filter>Headers Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\UIStatic.h">
+      <Filter>Headers Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\View.h">
+      <Filter>Headers Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\UIProgressBar.h">
+      <Filter>Headers Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\UIDialogWnd.h">
+      <Filter>Headers Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xrManagedUILib.cpp">
@@ -41,6 +56,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="API\Window.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\UILines.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\UIStatic.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\View.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\WLoadScreen.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\UIProgressBar.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\UIDialogWnd.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>
