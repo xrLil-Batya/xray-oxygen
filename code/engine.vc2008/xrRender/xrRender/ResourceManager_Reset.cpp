@@ -101,7 +101,13 @@ template<class C>	void mdump(C c)
 		for (C::iterator I = c.begin(); I != c.end(); I++)
 		{
 			if (I->second)
-				Msg("* DUMP: %3d: %s", I->second->dwReference, I->second->cName.c_str());
+			{
+				if (I->second->cName != nullptr)
+				{
+					Msg("* DUMP: %3d: %s", I->second->dwReference, I->second->cName.c_str());
+				}
+			}
+				
 		}
 
 	}

@@ -11,7 +11,7 @@ int main()
 
 #ifdef DEBUG
 	Core._initialize("XFont Cast", 0, 0);
-	Debug._initializeAfterFS();
+	//Debug._initializeAfterFS();
 #endif 
 
 	XFontForm::Application::EnableVisualStyles();
