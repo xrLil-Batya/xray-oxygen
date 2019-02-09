@@ -152,10 +152,14 @@ ISpatial_DB::ISpatial_DB()
 ISpatial_DB::~ISpatial_DB()
 {
 	// @ Забавно, память есть, но ВСЁ содержимое полностью в NULL
-	if ( m_root->items.size() )
+	if (m_root)
 	{
-		_node_destroy(m_root);
+		if (m_root->items.size())
+		{
+			_node_destroy(m_root);
+		}
 	}
+
 
 	while (!allocator_pool.empty()){
 		allocator.destroy		(allocator_pool.back());
