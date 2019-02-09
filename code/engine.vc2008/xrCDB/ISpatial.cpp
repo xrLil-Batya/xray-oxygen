@@ -151,7 +151,8 @@ ISpatial_DB::ISpatial_DB()
 
 ISpatial_DB::~ISpatial_DB()
 {
-	if ( m_root )
+	// @ Забавно, память есть, но ВСЁ содержимое полностью в NULL
+	if ( m_root->items.size() )
 	{
 		_node_destroy(m_root);
 	}

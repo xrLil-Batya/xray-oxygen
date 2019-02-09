@@ -99,7 +99,11 @@ template<class C>	void mdump(C c)
 	if (c.size())
 	{
 		for (C::iterator I = c.begin(); I != c.end(); I++)
-			Msg("* DUMP: %3d: %s", I->second->dwReference, I->second->cName.c_str());
+		{
+			if (I->second)
+				Msg("* DUMP: %3d: %s", I->second->dwReference, I->second->cName.c_str());
+		}
+
 	}
 }
 
