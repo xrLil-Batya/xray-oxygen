@@ -8,7 +8,6 @@
 #include "../xrGame/level_graph.h"
 #include "../xrGame/Level.h"
 #include "../xrGame/Actor.h"
-#include "../xrEngine/date_time.h"
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
 #include "../xrGame/HUDManager.h"
@@ -198,15 +197,24 @@ XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
 	return gcnew ClientSpawnManager(&(::Level().client_spawn_manager()));
 }
 
-
-
+#include "../xrManagedUILib/API/UIDialogWnd.h"
+#include "../xrGame/UIGame.h" 
 void XRay::Level::AddDialogToRender(UIDialogWnd^ pDialog)
-{
-	//хз как подлезть к GameUI(). Подскажите я тупой.
-	//pDialog->GetGameUI()->AddDialogToRender(pDialog);
+{	
+	((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->AddDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
 }
 
 void XRay::Level::RemoveDialogFromRender(UIDialogWnd^ pDialog)
 {
-	//XRay::UIDialogWnd::GetGameUI()->RemoveDialogToRender(pDialog);
+	((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->RemoveDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
 }
+
+//XRay::PhysicsWorldScripted^ XRay::Level::pPhysicsWorldScripted()
+//{
+//	return	get_script_wrapper<XRay::PhysicsWorldScripted>(*physics_world()); 
+//}
+//
+//XRay::MEnvironment^ XRay::Level::pEnvironment()
+//{
+//	return		gcnew XRay::Environment(Environment()); // return (Environment())
+//}

@@ -5,8 +5,11 @@
 class CLevel;
 class CLevelGraph;
 
+
+
 namespace XRay
 {
+	
 	ref class LevelGraph abstract
 	{
 	public:
@@ -115,6 +118,10 @@ namespace XRay
 		static bool PatrolPathExists(LPCSTR patrol_path);
 		static void PrefetchSnd(LPCSTR name);
 
+		void RemoveDialogFromRender(UIDialogWnd ^ pDialog);
+
+		//XRay::PhysicsWorldScripted ^ pPhysicsWorldScripted();
+
 		static void AddDialogToRender(UIDialogWnd^ pDialog);
 		static void RemoveDialogFromRender(UIDialogWnd^ pDialog);
 		//static void HideIndicators();
@@ -125,8 +132,19 @@ namespace XRay
 		//static void AddCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
 		//static void AddCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
 		//static void AddCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-		//static void RevomeCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-		//static void RevomeCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
-		//static void RevomeCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RemoveCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RemoveCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
+		//static void RemoveCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RemoveCallForObject(const luabind::object &lua_object);
+
+		//static PhysicsWorldScripted^ pPhysicsWorldScripted();
+		//static MEnvironment^ pEnvironment();
+
+		//static EnvDescriptor^ CurrentEnvironment(CEnvironment* self);
+		////extern bool g_bDisableAllInput;
+		//static void DisableInput();
+		//static void EnableInput();
+		//static void SpawnPhantom(const Fvector &position);
+
 	};
 }

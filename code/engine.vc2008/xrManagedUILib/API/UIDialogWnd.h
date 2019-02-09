@@ -14,10 +14,9 @@ namespace XRay
 	internal:
 		CUIDialogWnd* pNativeLevel;
 
-	public:
-	//	CUIGame* GetGameUI() { return (CUIGame*)pUIHud; }
-
-		
+	public: 
+		static ::System::IntPtr GetGameUI() { return (::System::IntPtr)pUIHud; }
+		::System::IntPtr GetNative() { return (::System::IntPtr)pNativeLevel; }
 
 	};
 }

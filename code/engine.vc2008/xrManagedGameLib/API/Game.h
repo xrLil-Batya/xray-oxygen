@@ -19,14 +19,14 @@ namespace XRay
 		{
 		private:
 
-			::System::UInt32 _years;
-			::System::UInt32 _months;
-			::System::UInt32 _weeks;
-			::System::UInt32 _days;
-			::System::UInt32 _hours;
-			::System::UInt32 _minutes;
-			::System::UInt32 _seconds;
-			::System::UInt32 _miliseconds;
+			static ::System::UInt32 _years;
+			static ::System::UInt32 _months;
+			static ::System::UInt32 _weeks;
+			static ::System::UInt32 _days;
+			static ::System::UInt32 _hours;
+			static ::System::UInt32 _minutes;
+			static ::System::UInt32 _seconds;
+			static ::System::UInt32 _miliseconds;
 
 		public:
 
@@ -79,6 +79,7 @@ namespace XRay
 			//}
 
 			static void ChangeGameTime(u32 days, u32 hours, u32 mins);
+			//static void ChangeGameTime(float fvalue);
 		};
 
 		/// <summary>Returns current game time</summary>
