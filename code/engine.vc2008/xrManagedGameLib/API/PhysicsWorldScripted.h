@@ -14,7 +14,6 @@ namespace XRay
 
 	public:
 
-		PhysicsWorldScripted();
 		~PhysicsWorldScripted();
 
 		//PhysicsWorldScripted(IPHWorld* imp);

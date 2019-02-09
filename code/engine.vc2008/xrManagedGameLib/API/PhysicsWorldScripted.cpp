@@ -2,11 +2,6 @@
 #include "PhysicsWorldScripted.h"
 #include "../xrManagedGameLib/API/Level.h"
 
-
-//XRay::PhysicsWorldScripted::PhysicsWorldScripted()
-//{
-//
-//}
 XRay::PhysicsWorldScripted::~PhysicsWorldScripted()
 {
 

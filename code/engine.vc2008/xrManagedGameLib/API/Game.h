@@ -32,51 +32,51 @@ namespace XRay
 
 			static property ::System::UInt32 Years
 			{
-			//	::System::UInt32 get();
+				::System::UInt32 get();
 				void set(::System::UInt32 value);
 			}
 
 			static property ::System::UInt32 Months
 			{
-			//	::System::UInt32 get();
+				::System::UInt32 get();
 				void set(::System::UInt32 value);
 			}
 			//////Weeks not used in Original //////
 			static property ::System::UInt32 Weeks
 			{
-			//	::System::UInt32 get();
+				::System::UInt32 get();
 				void set(::System::UInt32 value);
 			}
 			
 			static property ::System::UInt32 Days
 			{
-			//	::System::UInt32 get();
+				::System::UInt32 get();
 				void set(::System::UInt32 value);
 			}
 
 			static property ::System::UInt32 Hours
 			{
-			//	::System::UInt32 get();
+				::System::UInt32 get();
 				void set(::System::UInt32 value);
 			}
 
 			static property ::System::UInt32 Minutes
 			{
-			//	::System::UInt32 get();
+				::System::UInt32 get();
 				void set(::System::UInt32 value);
 			}
 
 			static property ::System::UInt32 Seconds
 			{
-			//	::System::UInt32 get();
+				::System::UInt32 get();
 				void set(::System::UInt32 value);
 			}
 
-			//static property ::System::UInt32 Miliseconds
-			//{
-			////	::System::UInt32 get();
-			////	void set(::System::UInt32 value);
-			//}
+			static property ::System::UInt32 Miliseconds
+			{
+				::System::UInt32 get();
+				void set(::System::UInt32 value);
+			}
 
 			static void ChangeGameTime(u32 days, u32 hours, u32 mins);
 			//static void ChangeGameTime(float fvalue);
