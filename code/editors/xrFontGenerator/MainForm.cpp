@@ -31,16 +31,18 @@ System::Void XFontForm::MeshEdit::button3_Click(System::Object ^ sender, System:
 	FrontSystem.PathSystem.FontSize = (unsigned int)this->numericUpDown1->Value;
 
 	FrontSystem.ManageCreationFile();
+
+	// @ Если успешно загружен файл
 	if (XRay::CFontGen::bSucFile)
 	{
 		FrontSystem.CreateFolder();
 		FrontSystem.CheckTexConv();
 
+		// @ Если успешно создана папка
 		if (XRay::CFontGen::bSucDir)
 			FrontSystem.InitFont();
 	}
 	FrontSystem.ReleaseFreeType();
-
 	System::String^ ImgPath = gcnew System::String((
 		FrontSystem.PathSystem.PathOutName + 
 		FrontSystem.PathSystem.FileName +  "_" +

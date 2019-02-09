@@ -32,7 +32,7 @@ void XRay::CFontGen::InitFreeType()
 	FT_Error err = FT_Init_FreeType(&ConverterInfo.lib);
 	if (err)
 	{
-		MessageBox(0, L"Error!", L"Failed init FreeType!", MB_OK);
+		MessageBox(NULL, L"Error!", L"Failed init FreeType!", MB_OK);
 	}
 }
 
@@ -90,7 +90,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 	int current_size = 0;
 
 	// @ Проверяем на пробел
-	err = FT_Load_Char(ConverterInfo.face, 0, FT_LOAD_RENDER); // Бёрем пустой символ (смотреть unicode таблицу)  (пробел почему-то не определят нормально, но он тоже выходит как пробел)
+	err = FT_Load_Char(ConverterInfo.face, 0, FT_LOAD_RENDER); // Берём пустой символ (смотреть unicode таблицу)  (пробел почему-то не определяет нормально, но он тоже выходит как пробел)
 	if (!err)
 	{
 		if (!ConverterInfo.face->glyph->bitmap.rows && !ConverterInfo.face->glyph->bitmap.width)
@@ -104,6 +104,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 					if(!bSkipSpaceMsg)
 						MessageBoxA(0, "Your font doesn't have a 'space' symbol", "Error!", MB_OK);
 
+					// @ Phantom1020 to ForserX: А ты уверен, что так лучше?
 					ConverterInfo.face->glyph->bitmap.width = 4;
 					ConverterInfo.face->glyph->bitmap.rows = 4;
 					bSkipSpaceMsg = true;
@@ -161,6 +162,18 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 				pen_y += current_size;
 			}
 
+			for (u32 row = 0; row < refBMP.rows; ++row)
+			{
+				for (u32 col = 0; col < refBMP.width; ++col)
+				{
+					int x = pen_x + col;
+					int y = pen_y + row;
+
+					bool bSymbolIsNull = y == u32(-1) || i == 32;
+					ConverterInfo.Pixels[y * local_tex_width + x] = bSymbolIsNull ? 0 : refBMP.buffer[row * refBMP.pitch + col];
+				}
+			}
+
 			if ((i >= 42 && i <= 46) || i == 58 || i == 59)
 			{
 				if ((info_copy.y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
@@ -175,18 +188,6 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 					pen_y -= current_size;
 				else
 					pen_y += abs(current_size);
-			}
-
-			for (u32 row = 0; row < refBMP.rows; ++row)
-			{
-				for (u32 col = 0; col < refBMP.width; ++col)
-				{
-					int x = pen_x + col;
-					int y = pen_y + row;
-
-					bool bSymbolIsNull = y == u32(-1) || i == 32;
-					ConverterInfo.Pixels[y * local_tex_width + x] = bSymbolIsNull ? 0 : refBMP.buffer[row * refBMP.pitch + col];
-				}
 			}
 
 			info[arr_iter].x[0] = pen_x;
@@ -420,7 +421,8 @@ void XRay::CFontGen::CreateGSCFonts()
 	if (PathSystem.FontSize)
 	{
 		for(u32 Iter = 0; Iter < 3; Iter++)
-			ParseFont(PathSystem.FontSize - Iter * 2, PathSystem.FontSize); // 0 - 2 - 4
+			// Каждый последующий размер уменьшается с шагом *2 (то есть -2, -4)
+			ParseFont(PathSystem.FontSize - (Iter * 2), PathSystem.FontSize); 
 	}
 }
 
@@ -428,6 +430,7 @@ void XRay::CFontGen::InitFont()
 {
 	SetConsoleTextAttribute(hConsole, DEFAULT_COLOR);
 	ConverterInfo.Pixels = nullptr;
+
 	CreateGSCFonts();
 
 	if (!g_count)
@@ -471,26 +474,28 @@ void XRay::CFontGen::ManageCreationFile()
 	// Init PathList
 	xr_string FileFullPath = PathSystem.PathName;
 	xr_string mask         = FileFullPath.substr(FileFullPath.rfind(".") + 1);
-	PathSystem.FileName    = FileFullPath.erase(FileFullPath.rfind("."));
 
-	xr_vector<xr_string> NewStrSpl = PathSystem.FileName.Split('\\');
-	NewStrSpl.erase(NewStrSpl.end() - 1);
+	PathSystem.FileName    = FileFullPath.substr(FileFullPath.rfind("\\")+1);
+	PathSystem.FileName = PathSystem.FileName.erase(PathSystem.FileName.rfind("."));
+//	xr_vector<xr_string> NewStrSpl = PathSystem.FileName.Split('\\');
+//	NewStrSpl.erase(NewStrSpl.end() - 1);
 
-	PathSystem.PathName = "";
-	for (xr_string &PicePath : NewStrSpl)
-	{
-		PathSystem.PathName += PicePath + '\\';
-	}
-	PathSystem.FileName = PathSystem.FileName.substr(3, PathSystem.FileName.length() - 2);
+//	PathSystem.PathName = "";
+//	for (xr_string &PicePath : NewStrSpl)
+//	{
+//		PathSystem.PathName += PicePath + '\\';
+//	}
+//	PathSystem.FileName = PathSystem.FileName.substr(3, PathSystem.FileName.length() - 2);
 
 	// Font converting - start
-	FileFullPath += ".";
-	FileFullPath += mask;
+//	FileFullPath += ".";
+//	FileFullPath += mask;
 
 	if (mask == "ttf" || mask == "ttc")
 	{
 		// @ Consider it's valid file for a while. . . 
-		FT_Error err = FT_New_Face(ConverterInfo.lib, FileFullPath.c_str(), 0, &ConverterInfo.face);
+		FT_Error err = FT_New_Face(ConverterInfo.lib, PathSystem.PathName.c_str(), 0, &ConverterInfo.face);
+
 		if (err)
 			MessageBoxA(0, "Failed! Your file is invalid.", "Error!", MB_OK);
 		else

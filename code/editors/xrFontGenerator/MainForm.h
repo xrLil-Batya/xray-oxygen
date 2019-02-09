@@ -179,7 +179,7 @@ namespace XFontForm {
 			// 
 			// openFileDialog1
 			// 
-			this->openFileDialog1->FileName = L"openFileDialog1";
+			this->openFileDialog1->FileName = L"";
 			// 
 			// label4
 			// 
