@@ -12,7 +12,6 @@
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
 #include "../xrGame/HUDManager.h"
-#include "../xrManagedUILib/API/UIDialogWnd.h"
 
 System::UInt32 XRay::LevelGraph::LevelID::get()
 {
@@ -184,9 +183,9 @@ bool XRay::Level::PatrolPathExists(LPCSTR patrol_path)
 	return		(!!ai().patrol_paths().path(patrol_path, true));
 }
 
-String^ XRay::Level::Name::get()
+System::String^ XRay::Level::Name::get()
 {
-	return gcnew String(pNativeLevel->name().c_str());
+	return gcnew ::System::String(pNativeLevel->name().c_str());
 }
 
 void XRay::Level::PrefetchSnd(LPCSTR name)
