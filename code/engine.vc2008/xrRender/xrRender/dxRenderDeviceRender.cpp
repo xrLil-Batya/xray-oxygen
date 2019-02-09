@@ -365,6 +365,7 @@ bool bNeedUpdateGammaLUT = true;
 void dxRenderDeviceRender::End()
 {
 	VERIFY	(HW.pDevice);
+	ScopeStatTimer endTimer(Device.Statistic->Render_End);
 
 	if (!psDeviceFlags.is(rsFullscreen))
 	{

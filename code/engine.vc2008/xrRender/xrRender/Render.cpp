@@ -465,7 +465,7 @@ void CRender::Render()
 #endif
 
 	// Directional light - sun
-	if (bSUN)	
+	if (bSUN)
 	{
 		ScopeStatTimer sunTimer(Device.Statistic->Render_CRenderRender_Sun);
 		PIX_EVENT(DEFER_SUN);
@@ -476,7 +476,8 @@ void CRender::Render()
 		{
 			render_sun_near();
 			render_sun();
-			render_sun_filtered();
+			if (Device.dwFrame % 2)
+				render_sun_filtered();
 		}
 		Target->accum_direct_blend();
 	}

@@ -9,6 +9,11 @@ int main()
 	HWND hwnd = GetConsoleWindow();
 	ShowWindow(hwnd, SW_HIDE);
 
+#ifdef DEBUG
+	Core._initialize("XFont Cast", 0, 0);
+	Debug._initializeAfterFS();
+#endif 
+
 	XFontForm::Application::EnableVisualStyles();
 	XFontForm::Application::SetCompatibleTextRenderingDefault(false);
 	XFontForm::Application::Run(gcnew XFontForm::MeshEdit);

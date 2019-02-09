@@ -219,10 +219,12 @@ void CParticlesObject::renderable_Render()
 {
 	VERIFY(renderable.visual);
 
-	if (m_lastUpdatedFrame == Device.dwFrame)
+	const u32 dt = Device.dwTimeGlobal - dwLastTime;
+
+	if (dt && m_lastUpdatedFrame != Device.dwFrame)
 	{
 		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-		V->OnFrame(Device.dwTimeGlobal - dwLastTime);
+		V->OnFrame(dt);
 		dwLastTime = Device.dwTimeGlobal;
 	}
 	m_lastUpdatedFrame = Device.dwFrame;

@@ -1,13 +1,9 @@
 #pragma once
 #include "ClientSpawnManager.h"
 #include "Game.h"
-#include "../xrManagedUILib/API/UIDialogWnd.h"
-
 
 class CLevel;
 class CLevelGraph;
-
-using namespace System;
 
 namespace XRay
 {
@@ -15,15 +11,15 @@ namespace XRay
 	{
 	public:
 		/// <summaru> Returns Level ID</summaru>
-		property UInt32 LevelID
+		property ::System::UInt32 LevelID
 		{
-			UInt32 get();
+			::System::UInt32 get();
 		}
 
 		/// <summaru> Returns Vertex count</summaru>
-		property UInt32 VertexCount
+		property ::System::UInt32 VertexCount
 		{
-			UInt32 get();
+			::System::UInt32 get();
 		}
 	};
 
@@ -45,9 +41,9 @@ namespace XRay
 		//}
 
 		/// <summary>Get Name</summary>
-		property String^ Name
+		property ::System::String^ Name
 		{
-			String^ get();
+			::System::String^ get();
 		}
 		/// <summary>Set WeatherFX</summary>
 		static property ::System::String^ WeatherFX
@@ -65,15 +61,15 @@ namespace XRay
 			float get();
 		}
 		/// <summary>Returns level name from a text files</summary>
-		static property String^ LevelName
+		static property ::System::String^ LevelName
 		{
-			String^ get();
+			::System::String^ get();
 		}
 		/// <summary>Returns or set weather name</summary>
-		static property String^ Weather
+		static property ::System::String^ Weather
 		{
-			String^ get();
-			void set(String^ str);
+			::System::String^ get();
+			void set(::System::String^ str);
 		}
 		/// <summary>Get or set time factor</summary>
 		static property float TimeFactor

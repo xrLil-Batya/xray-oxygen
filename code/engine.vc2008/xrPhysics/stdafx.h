@@ -6,6 +6,7 @@
 #define ECORE_API
 
 #include "../xrCore/xrCore.h"
+#include "../xrCore/xrDelegate/xrDelegate.h"
 #include "../xrServerEntities/smart_cast.h"
 #include "../xrcdb/xrcdb.h"
 #include "../xrsound/sound.h"

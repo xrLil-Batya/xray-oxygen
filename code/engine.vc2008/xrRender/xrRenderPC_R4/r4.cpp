@@ -304,13 +304,14 @@ void CRender::reset_end()
 void CRender::OnFrame()
 {
 	ScopeStatTimer frameTimer(Device.Statistic->Engine_RenderFrame);
-	Models->DeleteQueue();
 	Device.seqParallel.insert(Device.seqParallel.begin(),
 		xrDelegate(BindDelegate(Details, &CDetailManager::MT_CALC)));
 
 	// MT-HOM (@front)
 	Device.seqParallel.insert(Device.seqParallel.begin(),
 		xrDelegate(BindDelegate(&HOM, &CHOM::MT_RENDER)));
+
+	Models->DeleteQueue();
 }
 
 // Implementation

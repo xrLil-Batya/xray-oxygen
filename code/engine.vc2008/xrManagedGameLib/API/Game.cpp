@@ -20,7 +20,7 @@ XRay::Game::SGameTime^ XRay::Game::Time::get()
 	CurTime->Hours = hours;
 	CurTime->Minutes = mins;
 	CurTime->Seconds = secs;
-	CurTime->Miliseconds = milisecs;
+//	CurTime->Miliseconds = milisecs;
 
 	return CurTime;
 }
@@ -29,11 +29,11 @@ void XRay::Game::Time::set(XRay::Game::SGameTime^ NewTime)
 {
 	if (::Level().Server->game && ai().get_alife())
 	{
-		u32 value = NewTime->Days * 86400 + NewTime->Hours * 3600 + NewTime->Minutes * 60;
-		float fValue = static_cast<float> (value);
-		value *= 1000;//msec		
-		Environment().ChangeGameTime(fValue);
-		::Level().Server->game->alife().time_manager().change_game_time(value);
+	//	u32 value = NewTime->Days * 86400 + NewTime->Hours * 3600 + NewTime->Minutes * 60;
+	//	float fValue = static_cast<float> (value);
+	//	value *= 1000;//msec		
+	//	Environment().ChangeGameTime(fValue);
+	//	::Level().Server->game->alife().time_manager().change_game_time(value);
 	}
 }
 

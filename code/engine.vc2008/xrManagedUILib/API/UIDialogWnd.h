@@ -15,7 +15,7 @@ namespace XRay
 		CUIDialogWnd* pNativeLevel;
 
 	public:
-		CUIGame* GetGameUI() { return (CUIGame*)pUIHud; }
+	//	CUIGame* GetGameUI() { return (CUIGame*)pUIHud; }
 
 		
 

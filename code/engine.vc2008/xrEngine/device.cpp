@@ -76,43 +76,41 @@ void CRenderDevice::Clear()
 
 void CRenderDevice::End		()
 {
-	ScopeStatTimer endTimer(Device.Statistic->Render_End);
-#ifdef INGAME_EDITOR
 	bool load_finished = false;
-#endif // #ifdef INGAME_EDITOR
 	if (dwPrecacheFrame)
 	{
 		::Sound->set_master_volume	(0.f);
 		dwPrecacheFrame	--;
 		if (!dwPrecacheFrame)
 		{
-
-#ifdef INGAME_EDITOR
 			load_finished = true;
-#endif 
-			m_pRender->UpdateGamma();
 
-			if(precache_light) 
+			if (this->dwFrame % 2)
+				m_pRender->UpdateGamma();
+
+			if (precache_light)
+			{
 				precache_light->set_active(false);
-			if(precache_light)
 				precache_light.destroy();
-			::Sound->set_master_volume						(1.f);
+			}
+
+			::Sound->set_master_volume(1.f);
 
 			m_pRender->ResourcesDestroyNecessaryTextures();
 			Memory.mem_compact();
 
 			//#HACK:
-			if(g_pGamePersistent->GameType()==1)
+			if (g_pGamePersistent->GameType() == 1)
 			{
 				WINDOWINFO	wi;
-				GetWindowInfo(m_hWnd,&wi);
-				if(wi.dwWindowStatus!=WS_ACTIVECAPTION)
-					Pause(TRUE,TRUE,TRUE,"application start");
+				GetWindowInfo(m_hWnd, &wi);
+				if (wi.dwWindowStatus != WS_ACTIVECAPTION)
+					Pause(TRUE, TRUE, TRUE, "application start");
 			}
 		}
 	}
 
-	g_bRendering		= FALSE;
+	g_bRendering = FALSE;
 	// end scene
 	//	Present goes here, so call OA Frame end.
 	m_pRender->End();

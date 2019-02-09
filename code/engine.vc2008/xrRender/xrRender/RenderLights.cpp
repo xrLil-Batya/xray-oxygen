@@ -88,11 +88,8 @@ void CRender::render_lights(light_Package& LP)
 		light* L = source.back();
 		u16 sid = L->vis.smap_ID;
 
-		while (true)
+		while (!source.empty())
 		{
-			if (source.empty())		
-				break;
-
 			L = source.back();
 
 			if (L->vis.smap_ID != sid)	
@@ -186,18 +183,16 @@ void CRender::render_lights(light_Package& LP)
 		// if (was_spot_shadowed)		->	accum spot shadowed
 		if (!L_spot_s.empty())
 		{
+			bool bHasVolSpot = RImplementation.o.advancedpp && ps_r_flags.is(R_FLAG_VOLUMETRIC_LIGHTS);
 			PIX_EVENT(ACCUM_SPOT);
 			for (light* L_spot : L_spot_s)
 			{
 				Target->accum_spot(L_spot);
 				render_indirect(L_spot);
-			}
 
-			PIX_EVENT(ACCUM_VOLUMETRIC);
-			if (RImplementation.o.advancedpp && ps_r_flags.is(R_FLAG_VOLUMETRIC_LIGHTS))
-			{
-				for (light* L_spot : L_spot_s)
+				if (bHasVolSpot)
 				{
+//					PIX_EVENT(ACCUM_VOLUMETRIC);
 					Target->accum_volumetric(L_spot);
 				}
 			}
@@ -210,8 +205,7 @@ void CRender::render_lights(light_Package& LP)
 	// Point lighting (unshadowed, if left)
 	if (!LP.v_point.empty()) 
 	{
-		xr_vector<light*>&	Lvec = LP.v_point;
-		for (light* pid : Lvec) 
+		for (light* pid : LP.v_point)
 		{
 			pid->vis_update();
 			if (pid->vis.visible) 
@@ -220,15 +214,14 @@ void CRender::render_lights(light_Package& LP)
 				Target->accum_point(pid);
 			}
 		}
-		Lvec.clear();
+		LP.v_point.clear();
 	}
 
 	PIX_EVENT(SPOT_LIGHTS_ACCUM);
 	// Spot lighting (unshadowed, if left)
 	if (!LP.v_spot.empty()) 
 	{
-		xr_vector<light*>&	Lvec = LP.v_spot;
-		for (light* pid : Lvec)
+		for (light* pid : LP.v_spot)
 		{
 			pid->vis_update();
 			if (pid->vis.visible) 
@@ -238,7 +231,7 @@ void CRender::render_lights(light_Package& LP)
 				Target->accum_spot(pid);
 			}
 		}
-		Lvec.clear();
+		LP.v_spot.clear();
 	}
 }
 
