@@ -11,7 +11,6 @@
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
 #include "../xrGame/HUDManager.h"
-
 System::UInt32 XRay::LevelGraph::LevelID::get()
 {
 	return ai().level_graph().level_id();
@@ -197,16 +196,15 @@ XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
 	return gcnew ClientSpawnManager(&(::Level().client_spawn_manager()));
 }
 
-#include "../xrManagedUILib/API/UIDialogWnd.h"
 #include "../xrGame/UIGame.h" 
-void XRay::Level::AddDialogToRender(UIDialogWnd^ pDialog)
+void XRay::Level::AddDialogToRender(XRay::UIDialogWnd^ pDialog)
 {	
-	((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->AddDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
+	((CUIGame*)XRay::UIDialogWnd::GetGameUI().ToPointer())->AddDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
 }
 
-void XRay::Level::RemoveDialogFromRender(UIDialogWnd^ pDialog)
+void XRay::Level::RemoveDialogFromRender(XRay::UIDialogWnd^ pDialog)
 {
-	((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->RemoveDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
+	((CUIGame*)XRay::UIDialogWnd::GetGameUI().ToPointer())->RemoveDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
 }
 
 //XRay::PhysicsWorldScripted^ XRay::Level::pPhysicsWorldScripted()

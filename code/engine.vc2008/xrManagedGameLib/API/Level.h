@@ -118,12 +118,12 @@ namespace XRay
 		static bool PatrolPathExists(LPCSTR patrol_path);
 		static void PrefetchSnd(LPCSTR name);
 
-		void RemoveDialogFromRender(UIDialogWnd ^ pDialog);
+		//static void RemoveDialogFromRender(UIDialogWnd ^ pDialog);
 
 		//XRay::PhysicsWorldScripted ^ pPhysicsWorldScripted();
 
-		static void AddDialogToRender(UIDialogWnd^ pDialog);
-		static void RemoveDialogFromRender(UIDialogWnd^ pDialog);
+		static void AddDialogToRender(XRay::UIDialogWnd^ pDialog);
+		static void RemoveDialogFromRender(XRay::UIDialogWnd^ pDialog);
 		//static void HideIndicators();
 		//static void HideIndicatorsSafe();
 		//static void ShowIndicators();

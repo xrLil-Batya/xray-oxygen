@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "UIDialogWnd.h"
-
+#include "../xrManagedUILib/API/UIDialogWnd.h"
+ 
 XRay::UIDialogWnd::UIDialogWnd()
 {
 
