@@ -45,8 +45,10 @@ private:
 	U16Vec					CloudsIndices;
 
 	int						LoadCounter = 0;
-private:
+
+public:
 	float					NormalizeTime	(float tm);
+private:
 	float					TimeDiff		(float prev, float cur);
 	float					TimeWeight		(float val, float min_t, float max_t);
 	void					SelectEnvs		(EnvVec* envs, CEnvDescriptor*& e0, CEnvDescriptor*& e1, float tm);

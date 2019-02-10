@@ -97,6 +97,8 @@
     <ClInclude Include="API\Inventory.h" />
     <ClInclude Include="API\Level.h" />
     <ClInclude Include="API\PDA.h" />
+    <ClInclude Include="API\PhysicsGameScripted.h" />
+    <ClInclude Include="API\PhysicsWorldScripted.h" />
     <ClInclude Include="API\PhysicalGameObject.h" />
     <ClInclude Include="API\Torch.h" />
     <ClInclude Include="ClientSpawnManager.h" />
@@ -117,6 +119,8 @@
     <ClCompile Include="API\Inventory.cpp" />
     <ClCompile Include="API\Level.cpp" />
     <ClCompile Include="API\PDA.cpp" />
+    <ClCompile Include="API\PhysicsGameScripted.cpp" />
+    <ClCompile Include="API\PhysicsWorldScripted.cpp" />
     <ClCompile Include="API\PhysicalGameObject.cpp" />
     <ClCompile Include="API\Torch.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
