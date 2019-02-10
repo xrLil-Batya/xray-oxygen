@@ -1,5 +1,6 @@
 #pragma once
 #include "ClientSpawnManager.h"
+#include "PhysicsWorldScripted.h"
 #include "Game.h"
 
 class CLevel;

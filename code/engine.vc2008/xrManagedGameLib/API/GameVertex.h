@@ -1,10 +1,11 @@
 #pragma once
 #include "xrServerEntities/game_graph_space.h"
+
 using namespace System;
 
 namespace XRay
 {
-	public value class GameVertex
+	public value class GameVertex sealed
 	{
 	public:
 		GameVertex(IntPtr InNativeObject);

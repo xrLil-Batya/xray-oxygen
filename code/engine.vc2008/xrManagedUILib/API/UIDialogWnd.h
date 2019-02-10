@@ -13,12 +13,10 @@ namespace XRay
 		UIDialogWnd();
 		~UIDialogWnd();
 
-	public: 
 		static ::System::IntPtr GetGameUI() { return (::System::IntPtr)pUIHud; }
 		::System::IntPtr GetNative() { return (::System::IntPtr)pNativeLevel; }
 
 	internal:
-		CUIDialogWnd* pNativeLevel;
+		static CUIDialogWnd* pNativeLevel;
 	};
 }
-
