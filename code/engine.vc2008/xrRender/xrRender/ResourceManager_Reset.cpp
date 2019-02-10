@@ -102,7 +102,7 @@ template<class C>	void mdump(C c)
 		{
 			if (I->second)
 			{
-				if (I->second->cName != nullptr)
+				if (!I->second->cName)
 				{
 					Msg("* DUMP: %3d: %s", I->second->dwReference, I->second->cName.c_str());
 				}
