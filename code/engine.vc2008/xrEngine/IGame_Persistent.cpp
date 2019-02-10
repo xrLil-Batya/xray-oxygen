@@ -157,8 +157,7 @@ void IGame_Persistent::OnFrame()
 	if (!Device.Paused() || Device.dwPrecacheFrame)
 	{
 		ScopeStatTimer envAndSpectreTimer(Device.Statistic->Engine_PersistanceFrame_EnvAndSpectre);
-		Device.seqParallel.emplace_back(&Environment(), &CEnvironment::OnFrame);
-		//Environment().OnFrame();
+		Environment().OnFrame();
 		SpectreCallback::shedule_update->Invoke(SpectreObjectId, Device.dwTimeDelta);
 	}
 

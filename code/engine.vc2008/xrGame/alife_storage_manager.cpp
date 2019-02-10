@@ -81,6 +81,7 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 	writer->w_u32				(ALIFE_VERSION);
 	
 	writer->w_u32				(source_count);
+	writer->w_u32				(dest_count);
 	writer->w					(dest_data,dest_count);
 	xr_free						(dest_data);
 	FS.w_close					(writer);
@@ -173,8 +174,9 @@ bool CALifeStorageManager::load(LPCSTR save_name_no_check)
 	reload(m_section);
 
 	u32 source_count = stream->r_u32();
+	u32 dest_count = stream->r_u32();
 	void *source_data = xr_malloc(source_count);
-	XRay::Compress::RT::RtcDecompress(source_data, source_count, stream->pointer(), stream->length() - 3 * sizeof(u32));
+	XRay::Compress::RT::RtcDecompress(source_data, source_count, stream->pointer(), dest_count);
 	FS.r_close(stream);
 	load(source_data, source_count, file_name);
 	xr_free(source_data);
