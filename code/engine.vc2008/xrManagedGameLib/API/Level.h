@@ -120,7 +120,9 @@ namespace XRay
 
 		//static void RemoveDialogFromRender(UIDialogWnd ^ pDialog);
 
-		//XRay::PhysicsWorldScripted ^ pPhysicsWorldScripted();
+		static XRay::PhysicsWorldScripted^ pPhysicsWorldScripted();
+
+		//XRay::PhysicsWorldScripted^ pPhysicsWorldScripted();
 
 		static void AddDialogToRender(XRay::UIDialogWnd^ pDialog);
 		static void RemoveDialogFromRender(XRay::UIDialogWnd^ pDialog);

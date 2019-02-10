@@ -5,8 +5,8 @@
 namespace XRay
 {
 	
-	public ref class PhysicsWorldScripted:
-		public PhysicsGameScripted<IPHWorld>
+	public ref class PhysicsWorldScripted
+	//	:public PhysicsGameScripted<IPHWorld>
 	{
 
 	internal:
@@ -18,13 +18,17 @@ namespace XRay
 
 		//PhysicsWorldScripted(IPHWorld* imp);
 	
-		PhysicsWorldScripted(IPHWorld* imp):PhysicsGameScripted<IPHWorld>(imp) {};
+// 		PhysicsWorldScripted(IPHWorld* imp):PhysicsGameScripted<IPHWorld>(imp) {};
+ 		PhysicsWorldScripted(cphysics_world_scripted* imp) : pNativeLevel(imp) {};
 
 		float		Gravity() {return pNativeLevel->Gravity(); }
 		void		SetGravity(float g) { return pNativeLevel->SetGravity(g); }
 		void		AddCall(CPHCondition*c, CPHAction*a);
 
-		
+		::System::IntPtr GetNative() {
+			return ::System::IntPtr(pNativeLevel
+			);
+		}
 	};
 
 }

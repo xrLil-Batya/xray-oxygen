@@ -1,18 +1,9 @@
 #include "stdafx.h"
 #include "Environment.h"
-
-
-XRay::MEnvironment::MEnvironment()
-{
-}
-
-
-XRay::MEnvironment::~MEnvironment()
-{
-}
+#include "../xrEngine/Environment.h"
 
 void XRay::MEnvironment::ChangeGameTime(float fValue)
 {
-	pNativeLevel->SetGameTime(pNativeLevel->NormalizeTime((pNativeLevel->GetGameTime() + fValue)), pNativeLevel->fTimeFactor);
+	::Environment().SetGameTime(::Environment().NormalizeTime((::Environment().GetGameTime() + fValue)), ::Environment().fTimeFactor);
 }
 

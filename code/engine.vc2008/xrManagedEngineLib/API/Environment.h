@@ -3,17 +3,10 @@
 
 namespace XRay
 {
-	public ref class MEnvironment
+	public ref class MEnvironment abstract
 	{
-	internal:
-		static CEnvironment* pNativeLevel;
-
 	public:
-
 		static void ChangeGameTime(float fValue);
-
-		MEnvironment();
-		~MEnvironment();
 
 	};
 
