@@ -7,7 +7,7 @@
 int main()
 {
 	HWND hwnd = GetConsoleWindow();
-	ShowWindow(hwnd, SW_HIDE);
+//	ShowWindow(hwnd, SW_HIDE);
 
 #ifdef DEBUG
 	Core._initialize("XFont Cast", 0, 0);

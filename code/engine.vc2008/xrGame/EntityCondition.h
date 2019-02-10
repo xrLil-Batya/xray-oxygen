@@ -83,9 +83,9 @@ public:
 							CEntityConditionSimple	();
 	virtual					~CEntityConditionSimple	();
 
-	IC		 float				GetHealth				() const				{return m_fHealth;}
+	IC		 float				GetHealth() const { if (m_fHealth) return m_fHealth; else return 0.0f; }
 	IC		 void				SetHealth				(const float value) 	{ m_fHealth = value; }
-	IC const float 				GetMaxHealth			() const				{return m_fHealthMax;}
+	IC const float 				GetMaxHealth() const { if (m_fHealthMax) return m_fHealthMax; else return 0.0f; }
 	IC const volatile float&	health					() const				{return	m_fHealth;}
 	IC		 float&				max_health				()						{return	m_fHealthMax;}
 };
