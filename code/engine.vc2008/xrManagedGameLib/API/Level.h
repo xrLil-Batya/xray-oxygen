@@ -119,19 +119,20 @@ namespace XRay
 		static bool PatrolPathExists(LPCSTR patrol_path);
 		static void PrefetchSnd(LPCSTR name);
 
-		//static void RemoveDialogFromRender(UIDialogWnd ^ pDialog);
 
-		static XRay::PhysicsWorldScripted^ pPhysicsWorldScripted();
 
-		//XRay::PhysicsWorldScripted^ pPhysicsWorldScripted();
+		static XRay::PhysicsWorldScripted^ physicsWorldScripted();
+
+
 
 		static void AddDialogToRender(XRay::UIDialogWnd^ pDialog);
 		static void RemoveDialogFromRender(XRay::UIDialogWnd^ pDialog);
-		//static void HideIndicators();
-		//static void HideIndicatorsSafe();
-		//static void ShowIndicators();
-		//static void ShowWeapon();
-		//static void isLevelPresent();
+
+		static void HideIndicators();
+		static void HideIndicatorsSafe();
+		static void ShowIndicators();
+		static void ShowWeapon(bool b);
+		static bool isLevelPresent();
 		//static void AddCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
 		//static void AddCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
 		//static void AddCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
@@ -140,8 +141,8 @@ namespace XRay
 		//static void RemoveCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
 		//static void RemoveCallForObject(const luabind::object &lua_object);
 
-		//static PhysicsWorldScripted^ pPhysicsWorldScripted();
-		//static MEnvironment^ pEnvironment();
+		
+		static MEnvironment^ pEnvironment();
 
 		//static EnvDescriptor^ CurrentEnvironment(CEnvironment* self);
 		////extern bool g_bDisableAllInput;
