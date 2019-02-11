@@ -201,7 +201,7 @@ void CConsole::OutFont( LPCSTR text, float& pos_y )
 		float f	= 0.0f;
 		int sz	= 0;
 		int ln	= 0;
-		PSTR one_line = (PSTR)_alloca( (CONSOLE_BUF_SIZE + 1) * sizeof(char) );
+		char* one_line = new char[CONSOLE_BUF_SIZE + 1];
 		
 		while( text[sz] && (ln + sz < CONSOLE_BUF_SIZE-5) )// перенос строк
 		{
@@ -224,6 +224,7 @@ void CConsole::OutFont( LPCSTR text, float& pos_y )
 
 			++sz;
 		}
+		xr_delete(one_line);
 	}
 	else
 	{
@@ -537,9 +538,9 @@ void CConsole::DrawRect( Frect const& r, u32 color )
 void CConsole::ExecuteCommand( LPCSTR cmd_str, bool record_cmd )
 {
 	u32  str_size = xr_strlen( cmd_str );
-	PSTR edt   = (PSTR)_alloca( (str_size + 1) * sizeof(char) );
-	PSTR first = (PSTR)_alloca( (str_size + 1) * sizeof(char) );
-	PSTR last  = (PSTR)_alloca( (str_size + 1) * sizeof(char) );
+	char* edt   = new char[str_size];
+	char* first = new char[str_size];
+	char* last  = new char[str_size];
 	
 	xr_strcpy( edt, str_size+1, cmd_str );
 	edt[str_size] = 0;
@@ -608,6 +609,9 @@ void CConsole::ExecuteCommand( LPCSTR cmd_str, bool record_cmd )
 	}
 	else Msg( "! Unknown command: %s", first );
 
+	xr_delete(edt);
+	xr_delete(first);
+	xr_delete(last);
 	if ( record_cmd )
 	{
 		ec().clear_states();
@@ -675,41 +679,44 @@ void CConsole::Execute( LPCSTR cmd )
 	ExecuteCommand( cmd, false );
 }
 
-void CConsole::ExecuteScript( LPCSTR str )
+void CConsole::ExecuteScript(LPCSTR str)
 {
-	u32  str_size = xr_strlen( str );
-	PSTR buf = (PSTR)_alloca( (str_size + 10) * sizeof(char) );
-	xr_strcpy( buf, str_size + 10, "cfg_load " );
-	xr_strcat( buf, str_size + 10, str );
-	Execute( buf );
+	u32  str_size = xr_strlen(str);
+	char* buf = new char[str_size + 10];
+	xr_strcpy(buf, str_size + 10, "cfg_load ");
+	xr_strcat(buf, str_size + 10, str);
+	Execute(buf);
+	xr_delete(buf);
 }
 
 // -------------------------------------------------------------------------------------------------
 
-IConsole_Command* CConsole::find_next_cmd( LPCSTR in_str, shared_str& out_str )
+IConsole_Command* CConsole::find_next_cmd(LPCSTR in_str, shared_str& out_str)
 {
-	LPCSTR radmin_cmd_name = "ra ";
-	bool b_ra  = (in_str == strstr( in_str, radmin_cmd_name ) );
-	u32 offset = (b_ra)? xr_strlen( radmin_cmd_name ) : 0;
+	const char* radmin_cmd_name = "ra ";
+	bool b_ra = (in_str == strstr(in_str, radmin_cmd_name));
+	u32 offset = (b_ra) ? xr_strlen(radmin_cmd_name) : 0;
 
 	string256 t2;
-	xr_strconcat( t2, in_str + offset, " " );
+	xr_strconcat(t2, in_str + offset, " ");
 
-	vecCMD_IT it = Commands.lower_bound( t2 );
-	if ( it != Commands.end() )
+	vecCMD_IT it = Commands.lower_bound(t2);
+	if (it != Commands.end())
 	{
 		IConsole_Command* cc = it->second;
-		LPCSTR name_cmd      = cc->Name();
-		u32    name_cmd_size = xr_strlen( name_cmd );
-		PSTR   new_str       = (PSTR)_alloca( (offset + name_cmd_size + 2) * sizeof(char) );
+		const char* name_cmd = cc->Name();
+		u32    name_cmd_size = xr_strlen(name_cmd);
+		char*   new_str = new char[offset + name_cmd_size + 2];
 
-		xr_strcpy( new_str, offset + name_cmd_size + 2, (b_ra)? radmin_cmd_name : "" );
-		xr_strcat( new_str, offset + name_cmd_size + 2, name_cmd );
+		xr_strcpy(new_str, offset + name_cmd_size + 2, (b_ra) ? radmin_cmd_name : "");
+		xr_strcat(new_str, offset + name_cmd_size + 2, name_cmd);
 
-		out_str._set( (LPCSTR)new_str );
+		out_str._set((const char*)new_str);
+
+		xr_delete(new_str);
 		return cc;
 	}
-	return NULL;
+	return nullptr;
 }
 
 bool CConsole::add_next_cmds(LPCSTR in_str, vecTipsEx& out_v)
@@ -848,8 +855,8 @@ void CConsole::update_tips()
 	}
 	m_prev_length_str = cur_length;
 
-	PSTR first = (PSTR)_alloca( (cur_length + 1) * sizeof(char) );
-	PSTR last  = (PSTR)_alloca( (cur_length + 1) * sizeof(char) );
+	char* first = new char[cur_length + 1];
+	char* last  = new char[cur_length + 1];
 	text_editor::split_cmd( first, last, cur );
 	
 	u32 first_lenght = xr_strlen(first);
@@ -910,6 +917,8 @@ void CConsole::update_tips()
 		reset_selected_tip();
 	}
 
+	xr_delete(first);
+	xr_delete(last);
 }
 
 void CConsole::select_for_filter( LPCSTR filter_str, vecTips& in_v, vecTipsEx& out_v )

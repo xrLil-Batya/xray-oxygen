@@ -116,20 +116,20 @@ void CEnvironment::LoadWeathers()
 	{
 		u32							length = xr_strlen(fileName);
 
-		VERIFY						(length >= 4);
-		VERIFY						(fileName[length - 4] == '.');
-		VERIFY						(fileName[length - 3] == 'l');
-		VERIFY						(fileName[length - 2] == 't');
-		VERIFY						(fileName[length - 1] == 'x');
+		VERIFY(length >= 4);
+		VERIFY(fileName[length - 4] == '.');
+		VERIFY(fileName[length - 3] == 'l');
+		VERIFY(fileName[length - 2] == 't');
+		VERIFY(fileName[length - 1] == 'x');
 
-		u32 new_length				= length - 4;
-		LPSTR identifier			= (LPSTR)_alloca((new_length + 1) * sizeof(char));
-		std::memcpy(identifier, fileName, new_length * sizeof(char));
-		identifier[new_length]		= '\0';
-		EnvVec& env					= WeatherCycles[identifier];
+		const u32 new_length = length - 4;
+		char* pIdentifier			= new char[new_length + 1];
+		std::memcpy(pIdentifier, fileName, new_length * sizeof(char));
+		pIdentifier[new_length]		= '\0';
+		EnvVec& env					= WeatherCycles[pIdentifier];
 
 		string_path file_name;
-		FS.update_path				(file_name, "$game_weathers$", identifier);
+		FS.update_path				(file_name, "$game_weathers$", pIdentifier);
 		xr_strcat					(file_name, ".ltx");
 		CInifile*					config = CInifile::Create(file_name);
 
@@ -144,6 +144,8 @@ void CEnvironment::LoadWeathers()
 			env.push_back(object);
 		}
 		CInifile::Destroy(config);
+
+		xr_delete(pIdentifier);
 	}
 	FS.file_list_close(file_list);
 
@@ -176,13 +178,13 @@ void CEnvironment::LoadWeatherEffects()
 		VERIFY						((weatherEffectFileName)[length - 2] == 't');
 		VERIFY						((weatherEffectFileName)[length - 1] == 'x');
 		u32							new_length = length - 4;
-		LPSTR						identifier = (LPSTR)_alloca((new_length + 1)*sizeof(char));
-        std::memcpy(identifier, weatherEffectFileName, new_length*sizeof(char));
-		identifier[new_length]		= 0;
-		EnvVec& env					= WeatherFXs[identifier];
+		char* pIdentifier = new char[new_length + 1];
+        std::memcpy(pIdentifier, weatherEffectFileName, new_length*sizeof(char));
+		pIdentifier[new_length]		= 0;
+		EnvVec& env					= WeatherFXs[pIdentifier];
 
 		string_path					file_name;
-		FS.update_path				(file_name, "$game_weather_effects$", identifier);
+		FS.update_path				(file_name, "$game_weather_effects$", pIdentifier);
 		xr_strcat					(file_name, ".ltx");
 		CInifile*					config = CInifile::Create(file_name);
 
@@ -198,6 +200,7 @@ void CEnvironment::LoadWeatherEffects()
 			env.push_back			(object);
 		}
 
+		xr_delete(pIdentifier);
 		CInifile::Destroy			(config);
 
 		env.push_back				(CreateDescriptor("24:00:00", false));

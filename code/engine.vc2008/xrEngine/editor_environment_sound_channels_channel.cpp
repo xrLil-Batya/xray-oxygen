@@ -69,34 +69,34 @@ void channel::load			(CInifile& config)
 	}
 }
 
-void channel::save			(CInifile& config)
+void channel::save(CInifile& config)
 {
-	config.w_float		(m_load_section.c_str(), "min_distance",	m_sound_dist.x	);
-	config.w_float		(m_load_section.c_str(), "max_distance",	m_sound_dist.y	);
-	config.w_s32		(m_load_section.c_str(), "period0",			m_sound_period.x);
-	config.w_s32		(m_load_section.c_str(), "period1",			m_sound_period.y);
-	config.w_s32		(m_load_section.c_str(), "period2",			m_sound_period.z);
-	config.w_s32		(m_load_section.c_str(), "period3",			m_sound_period.w);
+	config.w_float(m_load_section.c_str(), "min_distance", m_sound_dist.x);
+	config.w_float(m_load_section.c_str(), "max_distance", m_sound_dist.y);
+	config.w_s32  (m_load_section.c_str(), "period0", m_sound_period.x);
+	config.w_s32  (m_load_section.c_str(), "period1", m_sound_period.y);
+	config.w_s32  (m_load_section.c_str(), "period2", m_sound_period.z);
+	config.w_s32  (m_load_section.c_str(), "period3", m_sound_period.w);
 
 	u32					count = 1;
 	sound_container_type::const_iterator	b = m_sounds.begin(), i = b;
 	sound_container_type::const_iterator	e = m_sounds.end();
-	for ( ; i != e; ++i)
-		count			+= xr_strlen((*i)->id()) + 2;
+	for (; i != e; ++i)
+		count += xr_strlen((*i)->id()) + 2;
 
-	LPSTR				temp = (LPSTR)_alloca(count*sizeof(char));
-	*temp				= 0;
+	char* temp = new char[count];
+	*temp = 0;
 	for (i = b; i != e; ++i) {
 		if (i == b) {
-			xr_strcpy	(temp, count, (*i)->id());
+			xr_strcpy(temp, count, (*i)->id());
 			continue;
 		}
 
-		xr_strcat		(temp, count, ", ");
-		xr_strcat		(temp, count, (*i)->id());
+		xr_strcat(temp, count, ", ");
+		xr_strcat(temp, count, (*i)->id());
 	}
-
-	config.w_string		(m_load_section.c_str(),	"sounds", temp);
+	config.w_string(m_load_section.c_str(), "sounds", temp);
+	xr_delete(temp);
 }
 
 LPCSTR channel::id_getter	() const

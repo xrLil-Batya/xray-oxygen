@@ -87,23 +87,25 @@ void CConsole::Find_cmd() // DIK_TAB
 
 void CConsole::Find_cmd_back() // DIK_TAB+shift
 {
-	LPCSTR edt      = ec().str_edit();
-	LPCSTR radmin_cmd_name = "ra ";
-	bool b_ra  = (edt == strstr( edt, radmin_cmd_name ) );
-	u32 offset = (b_ra)? xr_strlen( radmin_cmd_name ) : 0;
+	const char* edt = ec().str_edit();
+	const char* radmin_cmd_name = "ra ";
+	bool b_ra = (edt == strstr(edt, radmin_cmd_name));
+	u32 offset = (b_ra) ? xr_strlen(radmin_cmd_name) : 0;
 
-	vecCMD_IT it = Commands.lower_bound( edt + offset );
-	if ( it != Commands.begin() )
+	vecCMD_IT it = Commands.lower_bound(edt + offset);
+	if (it != Commands.begin())
 	{
 		--it;
 		IConsole_Command& cc = *(it->second);
-		LPCSTR name_cmd      = cc.Name();
-		u32    name_cmd_size = xr_strlen( name_cmd );
-		PSTR   new_str  = (PSTR)_alloca( (offset + name_cmd_size + 2) * sizeof(char) );
+		const char* name_cmd = cc.Name();
+		u32    name_cmd_size = xr_strlen(name_cmd);
+		char* new_str = new char[offset + name_cmd_size + 2];
 
-		xr_strcpy( new_str, offset + name_cmd_size + 2, (b_ra)? radmin_cmd_name : "" );
-		xr_strcat( new_str, offset + name_cmd_size + 2, name_cmd );
-		ec().set_edit( new_str );
+		xr_strcpy(new_str, offset + name_cmd_size + 2, (b_ra) ? radmin_cmd_name : "");
+		xr_strcat(new_str, offset + name_cmd_size + 2, name_cmd);
+		ec().set_edit(new_str);
+
+		xr_delete(new_str);
 	}
 }
 
