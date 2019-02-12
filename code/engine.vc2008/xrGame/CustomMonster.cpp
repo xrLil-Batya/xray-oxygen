@@ -498,9 +498,6 @@ void CCustomMonster::eye_pp_s2				( )
 
 void CCustomMonster::Exec_Visibility()
 {
-	if (!CEntityAlive::g_Alive())
-		return;
-
 	switch (eye_pp_stage%2)	
 	{
 	case 0:	
