@@ -538,9 +538,9 @@ void CConsole::DrawRect( Frect const& r, u32 color )
 void CConsole::ExecuteCommand( LPCSTR cmd_str, bool record_cmd )
 {
 	u32  str_size = xr_strlen( cmd_str );
-	char* edt   = new char[str_size];
-	char* first = new char[str_size];
-	char* last  = new char[str_size];
+	char* edt   = new char[str_size + 1];
+	char* first = new char[str_size + 1];
+	char* last  = new char[str_size + 1];
 	
 	xr_strcpy( edt, str_size+1, cmd_str );
 	edt[str_size] = 0;
@@ -550,72 +550,70 @@ void CConsole::ExecuteCommand( LPCSTR cmd_str, bool record_cmd )
 	reset_selected_tip();
 
 	text_editor::remove_spaces( edt );
-	if ( edt[0] == 0 )
+	if (edt[0] != 0)
 	{
-		return;
-	}
-	if ( record_cmd )
-	{
-		char c[2];
-		c[0] = mark2;
-		c[1] = 0;
-
-		if ( m_last_cmd.c_str() == 0 || xr_strcmp( m_last_cmd, edt ) != 0 )
+		if (record_cmd)
 		{
-			Msg( "%s %s", c, edt );
-			add_cmd_history( edt );
-			m_last_cmd = edt;
-		}
-	}
-	text_editor::split_cmd( first, last, edt );
+			char c[2];
+			c[0] = mark2;
+			c[1] = 0;
 
-	// search
-	vecCMD_IT it = Commands.find( first );
-	if ( it != Commands.end() )
-	{
-		IConsole_Command* cc = it->second;
-		if ( cc && cc->bEnabled )
-		{
-			if ( cc->bLowerCaseArgs )
+			if (m_last_cmd.c_str() == 0 || xr_strcmp(m_last_cmd, edt) != 0)
 			{
-				strlwr( last );
+				Msg("%s %s", c, edt);
+				add_cmd_history(edt);
+				m_last_cmd = edt;
 			}
-			if ( last[0] == 0 )
+		}
+		text_editor::split_cmd(first, last, edt);
+
+		// search
+		vecCMD_IT it = Commands.find(first);
+		if (it != Commands.end())
+		{
+			IConsole_Command* cc = it->second;
+			if (cc && cc->bEnabled)
 			{
-				if ( cc->bEmptyArgsHandled )
+				if (cc->bLowerCaseArgs)
 				{
-					cc->Execute( last );
+					strlwr(last);
+				}
+				if (last[0] == 0)
+				{
+					if (cc->bEmptyArgsHandled)
+					{
+						cc->Execute(last);
+					}
+					else
+					{
+						IConsole_Command::TStatus stat;
+						cc->Status(stat);
+						Msg("- %s %s", cc->Name(), stat);
+					}
 				}
 				else
 				{
-					IConsole_Command::TStatus stat;
-					cc->Status( stat );
-					Msg( "- %s %s", cc->Name(), stat );
+					cc->Execute(last);
+					if (record_cmd)
+					{
+						cc->add_to_LRU((LPCSTR)last);
+					}
 				}
 			}
 			else
 			{
-				cc->Execute( last );
-				if ( record_cmd )
-				{
-					cc->add_to_LRU( (LPCSTR)last );
-				}
+				Log("! Command disabled.");
 			}
 		}
-		else
-		{
-			Log("! Command disabled.");
-		}
+		else Msg("! Unknown command: %s", first);
+
+		if (record_cmd)
+			ec().clear_states();
 	}
-	else Msg( "! Unknown command: %s", first );
 
 	xr_delete(edt);
 	xr_delete(first);
 	xr_delete(last);
-	if ( record_cmd )
-	{
-		ec().clear_states();
-	}
 }
 
 void CConsole::Show()
