@@ -11,6 +11,7 @@ public:
 	virtual			~CWeaponBM16					();
 	virtual void	Load							(LPCSTR section);
 
+	virtual void	UpdateCL						();
 protected:
 	virtual void	PlayAnimShoot					();
 	virtual void	PlayAnimReload					();

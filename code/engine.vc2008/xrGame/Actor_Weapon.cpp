@@ -30,7 +30,7 @@ float CActor::GetWeaponAccuracy() const
 {
 	CWeapon* W = smart_cast<CWeapon*>(inventory().ActiveItem());
 
-	if (IsZoomAimingMode() && W && !GetWeaponParam(W, IsRotatingToZoom(), false))
+	if (IsZoomAimingMode() && W)
 	{
 		return m_fDispAim;
 	}

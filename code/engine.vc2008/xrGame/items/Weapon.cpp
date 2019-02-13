@@ -1347,7 +1347,7 @@ void CWeapon::OnZoomIn()
 	if (m_zoom_params.m_bZoomDofEnabled && !IsScopeAttached())
 		GamePersistent().SetEffectorDOF(m_zoom_params.m_ZoomDof);
 
-	if (GetHUDmode())
+
 		GamePersistent().SetPickableEffectorDOF(true);
 
 	if (m_zoom_params.m_sUseBinocularVision.size() && IsScopeAttached() && m_zoom_params.m_pVision == nullptr) 
@@ -1371,7 +1371,7 @@ void CWeapon::OnZoomOut()
 
  	GamePersistent().RestoreEffectorDOF();
 
-	if (GetHUDmode())
+
 		GamePersistent().SetPickableEffectorDOF(false);
 
 	ResetSubStateTime();
