@@ -222,7 +222,7 @@ void CActorCondition::UpdateCondition()
 	float base_weight = object().MaxCarryWeight();
 	float cur_weight = object().inventory().TotalWeight();
 
-	if ((object().mstate_real & mcAnyMove))
+	if ((object().mstate_real & mcAnyMove) || (object().mstate_real & mcFall))
 	{
 		ConditionWalk(cur_weight / base_weight,
 			isActorAccelerated(object().mstate_real, object().IsZoomAimingMode()),
@@ -490,7 +490,10 @@ void CActorCondition::ConditionWalk(float weight, bool accel, bool sprint)
 {	
 	float power			=	m_fWalkPower;
 	power				+=	m_fWalkWeightPower*weight*(weight>1.f?m_fOverweightWalkK:1.f);
-	power				*=	m_fDeltaTime*(accel?(sprint?m_fSprintK:m_fAccelK):1.f);
+	if ((object().mstate_real&mcFall))
+		power *= m_fDeltaTime * (accel ? (sprint ? m_fSprintK : 0) : 1.f);
+	else
+		power *= m_fDeltaTime * (accel ? (sprint ? m_fSprintK : m_fAccelK) : 1.f);
 	m_fPower			-=	HitPowerEffect(power);
 }
 
