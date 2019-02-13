@@ -103,6 +103,8 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "g_aim_assist", &psActorFlags, AF_AIM_ASSIST);
 	CMD3(CCC_Mask, "g_crouch_toggle", &psActorFlags, AF_CROUCH_TOGGLE);
 	CMD3(CCC_Mask, "g_colored_feel", &psActorFlags, AF_COLORED_FEEL);
+	CMD3(CCC_Mask, "hud_crosshair_collide", &psActorFlags, AF_CROSSHAIR_COLLIDE);
+	CMD3(CCC_Mask, "hud_crosshair_inert", &psActorFlags, AF_CROSSHAIR_INERT);
 	CMD1(CCC_GameDifficulty, "g_game_difficulty");
 	CMD1(CCC_GameLanguage, "g_game_languages");
 
