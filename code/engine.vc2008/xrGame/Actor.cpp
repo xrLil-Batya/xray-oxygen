@@ -181,6 +181,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	inventory().SetBeltUseful(true);
 
 	m_pPersonWeLookingAt	= nullptr;
+	m_pProjWeLookingAt		= nullptr;
 	m_pVehicleWeLookingAt	= nullptr;
 	m_pObjectWeLookingAt	= nullptr;
 	pStatGraph				= nullptr;
@@ -404,6 +405,7 @@ void CActor::Load	(LPCSTR section )
 	m_sDeadCharacterUseOrDragAction	= "dead_character_use_or_drag";
 	m_sDeadCharacterDontUseAction	= "dead_character_dont_use";
 	m_sCarCharacterUseAction		= "car_character_use";
+	m_sProjectorUseAction			= "projector_use";
 	m_sInventoryItemUseAction		= "inventory_item_use";
 	m_sInventoryBoxUseAction		= "inventory_box_use";
 	m_sCampfireIgniteAction			= "campfire_ignite";
@@ -949,7 +951,8 @@ void CActor::shedule_Update	(u32 DT)
 		mstate_wishful &=~mcRLookout;
 		mstate_wishful &=~mcFwd;
 		mstate_wishful &=~mcBack;
-		if( !psActorFlags.test(AF_CROUCH_TOGGLE) )
+		mstate_wishful &=~mcSprint;
+		if( !psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)))
 			mstate_wishful &=~mcCrouch;
 	}
 	NET_Jump = 0;
@@ -1032,7 +1035,9 @@ void CActor::shedule_Update	(u32 DT)
 		m_pInvBoxWeLookingAt		 = smart_cast<CInventoryBox*>(game_object);
 		m_pPersonWeLookingAt		 = smart_cast<CInventoryOwner*>(game_object);
 		m_pVehicleWeLookingAt		 = smart_cast<CHolderCustom*>(game_object);
+		m_pProjWeLookingAt			 = smart_cast<CProjector*>(game_object);
 		CEntityAlive* pEntityAlive   = smart_cast<CEntityAlive*>(game_object);
+		bool b_allow_drag = !!pSettings->line_exist("ph_capture_visuals", game_object->cNameVisual());
 
         if (g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY) && smart_cast<CBaseMonster*>(game_object) && !pEntityAlive->g_Alive())
         {
@@ -1052,7 +1057,6 @@ void CActor::shedule_Update	(u32 DT)
 					m_sDefaultObjAction = m_sDeadCharacterDontUseAction;
 				else
 				{
-					bool b_allow_drag = !!pSettings->line_exist("ph_capture_visuals", pEntityAlive->cNameVisual());
 					if (b_allow_drag)
 						m_sDefaultObjAction = m_sDeadCharacterUseOrDragAction;
 					else if (pEntityAlive->cast_inventory_owner())
@@ -1061,8 +1065,14 @@ void CActor::shedule_Update	(u32 DT)
 			}
 			else if (m_pVehicleWeLookingAt)
 				m_sDefaultObjAction = m_sCarCharacterUseAction;
+			else if (m_pProjWeLookingAt && !m_pProjWeLookingAt->actor_use)
+			{
+				m_sDefaultObjAction = m_sProjectorUseAction;
+			}
 			else if (m_pObjectWeLookingAt && m_pObjectWeLookingAt->cast_inventory_item() && m_pObjectWeLookingAt->cast_inventory_item()->CanTake())
 				m_sDefaultObjAction = m_sInventoryItemUseAction;
+			else if (b_allow_drag)
+				m_sDefaultObjAction = m_sDeadCharacterUseOrDragAction;
 			else
 				m_sDefaultObjAction = nullptr;
 		}
@@ -1074,6 +1084,7 @@ void CActor::shedule_Update	(u32 DT)
 		m_pUsableObject			= nullptr;
 		m_pObjectWeLookingAt	= nullptr;
 		m_pVehicleWeLookingAt	= nullptr;
+		m_pProjWeLookingAt		= nullptr;
 		m_pInvBoxWeLookingAt	= nullptr;
 	}
 

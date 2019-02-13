@@ -43,17 +43,18 @@ public:
 	virtual	bool	bfAssignWatch(CScriptEntityAction	*tpEntityAction);
 	virtual	bool	bfAssignObject(CScriptEntityAction *tpEntityAction);
 
-			Fvector GetCurrentDirection	();
+	virtual Fvector GetCurrentDirection	();
+	virtual bool	Get_light_active();
+	virtual void	TurnOn();
+	virtual void	TurnOff();
+			bool			actor_use;
 private:
-			void	TurnOn			();
-			void	TurnOff			();
 	
 	// Rotation routines
 	static void	_BCL	BoneCallbackX(CBoneInstance *B);
 	static void	_BCL	BoneCallbackY(CBoneInstance *B);
 
 	void			SetTarget		(const Fvector &target_pos);
-	
 };
 
 

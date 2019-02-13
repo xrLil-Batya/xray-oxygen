@@ -35,7 +35,7 @@
 #include "ZoneCampfire.h"
 #include "../xrEngine/XR_IOConsole.h"
 #include "script_callback_ex.h"
-
+#include "searchlight.h"
 extern u32 hud_adj_mode;
 
 void CActor::IR_OnKeyboardPress(int cmd)
@@ -54,7 +54,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	if (IsTalking())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	
-	if (cmd == kWPN_FIRE)
+	if (cmd == kWPN_FIRE && !pInput->iGetAsyncKeyState(DIK_LALT) && !cam_active == eacFirstEye)
 	{
 		u16 slot = inventory().GetActiveSlot();
 		if (inventory().ActiveItem() && (slot == INV_SLOT_3 || slot == INV_SLOT_2))
@@ -97,13 +97,9 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		{
 			mstate_wishful |= mcJump;
 		}break;
-	case kSPRINT_TOGGLE:	
-		{
-			mstate_wishful ^= mcSprint;
-		}break;
 	case kCROUCH:	
 		{
-		if( psActorFlags.test(AF_CROUCH_TOGGLE) )
+		if( psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)) )
 			mstate_wishful ^= mcCrouch;
 		}break;
 	case kCAM_1:	cam_Set			(eacFirstEye);				
@@ -123,6 +119,14 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		}
 	case kTORCH:
 		{
+		if (m_pProjWeLookingAt)
+		{
+			if (!m_pProjWeLookingAt->Get_light_active())
+				m_pProjWeLookingAt->TurnOn();
+			else
+				m_pProjWeLookingAt->TurnOff();
+		}
+		else
 			SwitchTorch();
 			break;
 		}
@@ -310,13 +314,17 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	case kACCEL:	mstate_wishful |= mcAccel;									break;
 	case kL_STRAFE:	mstate_wishful |= mcLStrafe;								break;
 	case kR_STRAFE:	mstate_wishful |= mcRStrafe;								break;
+	case kSPRINT_TOGGLE:
+		if (!(mstate_real&(mcJump | mcFall | mcLanding | mcLanding2)))
+			mstate_wishful |= mcSprint;
+		break;
 	case kL_LOOKOUT:mstate_wishful |= mcLLookout;								break;
 	case kR_LOOKOUT:mstate_wishful |= mcRLookout;								break;
 	case kFWD:		mstate_wishful |= mcFwd;									break;
 	case kBACK:		mstate_wishful |= mcBack;									break;
 	case kCROUCH:
 		{
-			if( !psActorFlags.test(AF_CROUCH_TOGGLE) )
+			if( !psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)) )
 					mstate_wishful |= mcCrouch;
 
 		}break;
@@ -432,6 +440,15 @@ void CActor::ActorUse()
 
 		return;
 	}
+	if (m_pProjWeLookingAt)
+	{
+		if (!m_pProjWeLookingAt->actor_use && Level().CurrentControlEntity()->Position().distance_to(m_pProjWeLookingAt->Position()) < 2.0f)
+			m_pProjWeLookingAt->actor_use = true;
+		else
+			m_pProjWeLookingAt->actor_use = false;
+
+		return;
+	}
 
 	if (!m_pUsableObject || m_pUsableObject->nonscript_usable())
 	{
@@ -476,7 +493,6 @@ void CActor::ActorUse()
 			}
 		}
 	}
-
 	// переключение костра при юзании
 	if (m_CapmfireWeLookingAt)
 		m_CapmfireWeLookingAt->is_on() ? m_CapmfireWeLookingAt->turn_off_script() : m_CapmfireWeLookingAt->turn_on_script();
@@ -708,6 +724,14 @@ void CActor::NoClipFly(int cmd)
 		SwitchNightVision();
 		break;
 	case kTORCH:
+		if (m_pProjWeLookingAt)
+		{
+			if (!m_pProjWeLookingAt->Get_light_active())
+				m_pProjWeLookingAt->TurnOn();
+			else
+				m_pProjWeLookingAt->TurnOff();
+		}
+		else
 		SwitchTorch();
 		break;
 	case kDETECTOR:
