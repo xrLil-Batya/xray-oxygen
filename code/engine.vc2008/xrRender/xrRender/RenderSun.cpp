@@ -736,10 +736,12 @@ void CRender::render_sun_near()
 
 void CRender::render_sun_filtered()
 {
+#ifndef USE_DX11
 	if (!RImplementation.o.sunfilter)	return;
 	Target->phase_accumulator();
 	PIX_EVENT(SE_SUN_LUMINANCE);
 	Target->accum_direct(SE_SUN_LUMINANCE);
+#endif
 }
 
 void CRender::init_cacades()

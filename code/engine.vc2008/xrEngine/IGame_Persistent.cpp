@@ -219,11 +219,11 @@ void IGame_Persistent::destroy_particles		(const bool &all_particles)
 		CPS_Instance** ppParticleInstances = new CPS_Instance*[active_size];
 		std::copy(ps_active.begin(), ps_active.end(), ppParticleInstances);
 
-		CPS_Instance **E = std::remove_if(ppParticleInstances, ppParticleInstances + active_size, [](CPS_Instance*const& object){ return (!object->destroy_on_game_load()); });
+		CPS_Instance **E = std::remove_if(ppParticleInstances, ppParticleInstances + active_size, [](CPS_Instance*const& object) { return (!object->destroy_on_game_load()); });
 		for (; ppParticleInstances != E; ++ppParticleInstances)
 			(*ppParticleInstances)->PSI_internal_delete();
-		
-		xr_delete(ppParticleInstances);
+
+		//delete[](ppParticleInstances);
 	}
 
 	VERIFY(ps_needtoplay.empty() && ps_destroy.empty() && (!all_particles || ps_active.empty()));
