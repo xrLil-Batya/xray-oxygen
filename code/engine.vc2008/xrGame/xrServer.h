@@ -8,7 +8,6 @@
 class CSE_Abstract;
 
 const u32 NET_Latency = 50;		// time in (ms)
-extern ClientID BroadcastCID;
 
 // t-defs
 using xrS_entities = xr_hash_map<u16, CSE_Abstract*>;
@@ -24,7 +23,6 @@ public:
 	CSE_Abstract* owner;
 	BOOL net_Accepted;
 
-    ClientID ID;
     Flags flags;
 
     CClient();
@@ -56,7 +54,7 @@ private:
 
 protected:
     shared_str connect_options;
-    CClient* SV_Client;
+    CClient* pActorClient;
 
 private:
 	id_generator_type		m_tID_Generator;
@@ -112,7 +110,7 @@ public:
 	virtual u32				OnMessage			(NET_Packet& P);	// Non-Zero means broadcasting with "flags" as returned
 	virtual void			OnCL_Connected		();
 
-	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P);
+	virtual	void			SendBroadcast		(NET_Packet& P);
 
 	// utilities
 	CSE_Abstract*			entity_Create		(LPCSTR name);
@@ -133,7 +131,7 @@ public:
 	// Create Actor
     void					createClient		();
 
-    CClient* GetServerClient() { return SV_Client; };
+    CClient* GetServerClient() { return pActorClient; };
     const shared_str& GetConnectOptions() const { return connect_options; }
 
 #ifdef DEBUG

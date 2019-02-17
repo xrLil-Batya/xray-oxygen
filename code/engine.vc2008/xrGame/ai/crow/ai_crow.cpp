@@ -365,8 +365,6 @@ void CAI_Crow::shedule_Update		(u32 DT)
 // Core events
 void CAI_Crow::net_Export	(NET_Packet& P)					// export to server
 {
-	R_ASSERT			(Local());
-
 	u8					flags = 0;
 	P.w_float			(GetfHealth());
 

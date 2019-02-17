@@ -230,8 +230,7 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	}
 
 	//force actor to be local on server client
-	CSE_Abstract			*e = (CSE_Abstract*)(DC);
-	CSE_ALifeCreatureActor	*E = smart_cast<CSE_ALifeCreatureActor*>(e);
+	CSE_ALifeCreatureActor *E = smart_cast<CSE_ALifeCreatureActor*>(DC);
 	E->s_flags.set(M_SPAWN_OBJECT_LOCAL, true);	
 
 	if (E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
@@ -254,7 +253,7 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	if (!CInventoryOwner::net_Spawn(DC)) return FALSE;
 	if (!inherited::net_Spawn(DC))	return FALSE;
 
-	CSE_ALifeTraderAbstract	 *pTA = smart_cast<CSE_ALifeTraderAbstract*>(e);
+	CSE_ALifeTraderAbstract	 *pTA = smart_cast<CSE_ALifeTraderAbstract*>(DC);
 	set_money(pTA->m_dwMoney, false);
 
 	ROS()->force_mode(IRender_ObjectSpecific::TRACE_ALL);
@@ -262,7 +261,7 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	mstate_wishful = E->mstate&(mcCrouch | mcAccel);
 	mstate_old = mstate_real = mstate_wishful;
 	set_state_box(mstate_real);
-	m_pPhysics_support->in_NetSpawn(e);
+	m_pPhysics_support->in_NetSpawn(E);
 
 	if (E->m_holderID != u16(-1))
 	{
@@ -416,11 +415,6 @@ void CActor::net_Relcase (CObject* Object)
 	HUD().net_Relcase	(Object);
 }
 
-BOOL CActor::net_Relevant()				// relevant for export to server
-{ 
-	return getSVU() | getLocal(); 
-};
-
 void	CActor::SetCallbacks()
 {
 	IKinematics* V		= smart_cast<IKinematics*>(Visual());
@@ -531,7 +525,8 @@ void CActor::load(IReader &input_packet)
 {
 	inherited::load(input_packet);
 	CInventoryOwner::load(input_packet);
-	m_bOutBorder=!!(input_packet.r_u8());
+	m_bOutBorder = !!(input_packet.r_u8());
+
 	CUITaskWnd* task_wnd = HUD().GetGameUI()->PdaMenu().pUITaskWnd;
 	task_wnd->TreasuresEnabled(!!input_packet.r_u8());
 	task_wnd->QuestNpcsEnabled(!!input_packet.r_u8());
@@ -539,10 +534,8 @@ void CActor::load(IReader &input_packet)
 	task_wnd->PrimaryObjectsEnabled(!!input_packet.r_u8());
 	//need_quick_slot_reload = true;
 
-	input_packet.r_stringZ(g_quick_use_slots[0], sizeof(g_quick_use_slots[0]));
-	input_packet.r_stringZ(g_quick_use_slots[1], sizeof(g_quick_use_slots[1]));
-	input_packet.r_stringZ(g_quick_use_slots[2], sizeof(g_quick_use_slots[2]));
-	input_packet.r_stringZ(g_quick_use_slots[3], sizeof(g_quick_use_slots[3]));
+	for (u32 IterSlot = 0; IterSlot < 4; IterSlot++)
+		input_packet.r_stringZ(g_quick_use_slots[IterSlot], sizeof(g_quick_use_slots[IterSlot]));
 }
 
 void CActor::net_Save(NET_Packet& P)

@@ -478,7 +478,6 @@ public:
 	virtual BOOL						net_Spawn			( CSE_Abstract* DC);
 	virtual void						net_Export			( NET_Packet& P);				// export to server
 	virtual void						net_Destroy			();
-	virtual BOOL						net_Relevant		(); // relevant for export to server
 	virtual	void						net_Relcase			( CObject* O );					//
 	virtual void 				on_requested_spawn  (CObject *object);
 

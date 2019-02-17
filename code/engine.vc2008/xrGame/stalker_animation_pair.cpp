@@ -50,10 +50,6 @@ void CStalkerAnimationPair::play_global_animation	(IKinematicsAnimated *skeleton
 void CStalkerAnimationPair::play_global_animation	(IKinematicsAnimated *skeleton_animated, PlayCallback callback, const u32 &bone_part, const bool &use_animation_movement_control, const bool &local_animation, bool mix_animations)
 #endif
 {
-	//DBG_OpenCashedDraw();
-	//DBG_DrawBones( *m_object );
-	//DBG_ClosedCashedDraw( 50000 );
-
 	m_blend				= 0;
 	for (u16 i=0; i<MAX_PARTS; ++i) {
 #ifdef USE_HEAD_BONE_PART_FAKE

@@ -144,10 +144,6 @@ BOOL CAI_Trader::net_Spawn			(CSE_Abstract* DC)
 
 void CAI_Trader::net_Export		(NET_Packet& P)
 {
-	R_ASSERT						(Local());
-
-	//	P.w_float						(inventory().TotalWeight());
-	//	P.w_u32							(m_dwMoney);
 }
 
 void CAI_Trader::OnEvent		(NET_Packet& P, u16 type)
@@ -192,10 +188,9 @@ void CAI_Trader::OnEvent		(NET_Packet& P, u16 type)
 	}
 }
 
-void CAI_Trader::feel_touch_new				(CObject* O)
+void CAI_Trader::feel_touch_new(CObject* O)
 {
 	if (!g_Alive())		return;
-	if (Remote())		return;
 
 	// Now, test for game specific logical objects to minimize traffic
 	CInventoryItem		*I	= smart_cast<CInventoryItem*>	(O);

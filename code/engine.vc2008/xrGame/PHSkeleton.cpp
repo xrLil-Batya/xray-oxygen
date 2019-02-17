@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Actor.h"
 #include "PHSkeleton.h"
 #include "PhysicsShellHolder.h"
 #include "xrServer_Objects_ALife.h"
@@ -154,9 +155,7 @@ void CPHSkeleton::Update(u32 dt)
 
 	if (b_removing && Device.dwTimeGlobal > m_remove_time && m_unsplited_shels.empty())
 	{
-		if (obj->Local())
-			obj->DestroyObject();
-
+		obj->DestroyObject();
 		b_removing = false;
 	}
 }
@@ -166,15 +165,18 @@ void CPHSkeleton::SaveNetState(NET_Packet& P)
 	SyncNetState();
 }
 
-void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po) 
+void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po)
 {
-	auto obj = PPhysicsShellHolder();
+	CPhysicsShellHolder* obj = PPhysicsShellHolder();
 	if (!obj) return;
-	auto se_obj = ai().get_alife()->objects().object(obj->ID(), true);
-	if (!se_obj) return;
+	if (!smart_cast<CActor*>(po))
+	{
+		CSE_ALifeDynamicObject* se_obj = ai().get_alife()->objects().object(obj->ID(), true);
+		if (!se_obj) return;
 
-	po = smart_cast<CSE_PHSkeleton*>(se_obj);
-	VERIFY(po);
+		po = smart_cast<CSE_PHSkeleton*>(se_obj);
+		VERIFY(po);
+	}
 
 	if (!po->_flags.test(CSE_PHSkeleton::flSavedData)) return;
 
@@ -195,7 +197,7 @@ void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po)
 		};
 	}
 	else Log("![ERROR] Error on bone sync!");
-	
+
 	saved_bones.clear();
 	po->_flags.set(CSE_PHSkeleton::flSavedData, FALSE);
 	m_flags.set(CSE_PHSkeleton::flSavedData, FALSE);
@@ -214,23 +216,21 @@ void CPHSkeleton::ClearUnsplited()
 
 void CPHSkeleton::SpawnCopy()
 {
-	if(PPhysicsShellHolder()->Local()) {
-		CSE_Abstract*				D	= F_entity_Create("ph_skeleton_object");//*cNameSect()
-		R_ASSERT					(D);
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		CSE_ALifePHSkeletonObject	*l_tpALifePhysicObject = smart_cast<CSE_ALifePHSkeletonObject*>(D);
-		R_ASSERT					(l_tpALifePhysicObject);
-		l_tpALifePhysicObject->_flags.set	(CSE_PHSkeleton::flSpawnCopy,true);
-		//SetNotNeedSave()
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		InitServerObject			(D);
-		// Send
-		NET_Packet			P;
-		D->Spawn_Write		(P,TRUE);
-		Level().Send		(P);
-		// Destroy
-		F_entity_Destroy	(D);
-	}
+	CSE_Abstract*				D	= F_entity_Create("ph_skeleton_object");//*cNameSect()
+	R_ASSERT					(D);
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	CSE_ALifePHSkeletonObject	*l_tpALifePhysicObject = smart_cast<CSE_ALifePHSkeletonObject*>(D);
+	R_ASSERT					(l_tpALifePhysicObject);
+	l_tpALifePhysicObject->_flags.set	(CSE_PHSkeleton::flSpawnCopy,true);
+	//SetNotNeedSave()
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	InitServerObject			(D);
+	// Send
+	NET_Packet			P;
+	D->Spawn_Write		(P,TRUE);
+	Level().Send		(P);
+	// Destroy
+	F_entity_Destroy	(D);
 }
 PHSHELL_PAIR_VECTOR new_shells;
 void CPHSkeleton::PHSplit()
@@ -391,22 +391,24 @@ void	CPHSkeleton::SetNotNeedSave		()
 
 void CPHSkeleton::SyncNetState() 
 {
-	auto obj = PPhysicsShellHolder();
-	if (!obj) return;
+	CPhysicsShellHolder* pObjectHolder = PPhysicsShellHolder();
+	if (!pObjectHolder) return;
 
-	auto se_obj = ai().get_alife()->objects().object(obj->ID(), true);
+	CSE_ALifeDynamicObject* se_obj = ai().get_alife()->objects().object(pObjectHolder->ID(), true);
 	if (!se_obj) return;
+	CSE_PHSkeleton* pSESkeleton = smart_cast<CSE_PHSkeleton*>(se_obj);
 
 	m_flags.set(CSE_PHSkeleton::flSavedData, TRUE);
-	if (obj->PPhysicsShell() && obj->PPhysicsShell()->isActive())
-		m_flags.set(CSE_PHSkeleton::flActive, obj->PPhysicsShell()->isEnabled());
+	if (pObjectHolder->PPhysicsShell() && pObjectHolder->PPhysicsShell()->isActive())
+		m_flags.set(CSE_PHSkeleton::flActive, pObjectHolder->PPhysicsShell()->isEnabled());
 
-	auto po = smart_cast<CSE_PHSkeleton*>(se_obj);
-	R_ASSERT4(po, "[%s]: %s is not CSE_PHSkeleton", __FUNCTION__, obj->Name());
-	po->_flags.assign(m_flags.get());
-	auto& saved_bones = po->saved_bones;
-	u16 bones_number = obj->PHGetSyncItemsNumber();
-	auto K = smart_cast<IKinematics*>(obj->Visual());
+	R_ASSERT4(pSESkeleton, "[%s]: %s is not CSE_PHSkeleton", __FUNCTION__, pObjectHolder->Name());
+	if (!pSESkeleton) return;
+
+	pSESkeleton->_flags.assign(m_flags.get());
+	auto& saved_bones = pSESkeleton->saved_bones;
+	u16 bones_number = pObjectHolder->PHGetSyncItemsNumber();
+	auto K = smart_cast<IKinematics*>(pObjectHolder->Visual());
 
 	if (K)
 	{
@@ -423,9 +425,10 @@ void CPHSkeleton::SyncNetState()
 	min.set(F_MAX, F_MAX, F_MAX);
 	max.set(-F_MAX, -F_MAX, -F_MAX);
 	saved_bones.bones.clear();
-	for (u16 i = 0; i < bones_number; i++) {
+	for (u16 i = 0; i < bones_number; i++)
+	{
 		SPHNetState state;
-		obj->PHGetSyncItem(i)->get_State(state);
+		pObjectHolder->PHGetSyncItem(i)->get_State(state);
 		Fvector& p = state.position;
 		if (p.x < min.x) min.x = p.x;
 		if (p.y < min.y) min.y = p.y;

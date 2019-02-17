@@ -112,7 +112,6 @@ public:
 	virtual void			save				(NET_Packet &output_packet);
 	virtual void			load				(IReader &input_packet);
 
-	virtual BOOL			net_Relevant		()	{ return getLocal();	}	// send messages only if active and local
 	virtual void			spatial_move		();
 	virtual BOOL			Ready				()	{ return getReady();	}	// update only if active and fully initialized by/for network
 //	virtual float			renderable_Ambient	();

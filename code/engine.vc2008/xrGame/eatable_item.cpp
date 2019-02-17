@@ -61,8 +61,7 @@ void CEatableItem::OnH_A_Independent()
 	inherited::OnH_A_Independent();
 	if (!Useful())
 	{
-		if (object().Local())
-			object().DestroyObject();
+		object().DestroyObject();
 	}
 }
 

@@ -78,9 +78,8 @@ void CEntity::Die(CObject* who)
 
 float CEntity::CalcCondition(float hit)
 {
-
-	// If Local() - perform some logic
-	if (Local() && g_Alive()) {
+	if (g_Alive())
+	{
 		SetfHealth			(GetfHealth()-hit);
 		SetfHealth			((GetfHealth()<-1000)?-1000:GetfHealth());
 	}
@@ -113,10 +112,9 @@ void CEntity::Hit(SHit* pHDS)
 	// Signal hit
 	if(BI_NONE!=pHDS->bone())	HitSignal(lost_health,vLocalDir,pHDS->who,pHDS->boneID);
 
-	// If Local() - perform some logic
-	if (Local() && !g_Alive() && !AlreadyDie() && (m_killer_id == ALife::_OBJECT_ID(-1))) {
+	if (!g_Alive() && !AlreadyDie() && (m_killer_id == ALife::_OBJECT_ID(-1)))
 		KillEntity	(pHDS->whoID);
-	}
+
 	//must be last!!! @slipch
 	inherited::Hit(pHDS);
 }

@@ -483,25 +483,22 @@ void CUILevelMap::Show( bool status )
 
 void CUILevelMap::Update()
 {
-	CUIGlobalMap*	w				= MapWnd()->GlobalMap();
-	Frect			rect;
-	Fvector2		tmp;
+	CUIGlobalMap* pGlobalMap = MapWnd()->GlobalMap();
+	Frect rect;
 
-	tmp								= w->ConvertRealToLocal(GlobalRect().lt, false);
-	rect.lt							= tmp;
-	tmp								= w->ConvertRealToLocal(GlobalRect().rb, false);
-	rect.rb							= tmp;
+	rect.lt = pGlobalMap->ConvertRealToLocal(GlobalRect().lt, false);
+	rect.rb = pGlobalMap->ConvertRealToLocal(GlobalRect().rb, false);
 
-	SetWndRect						(rect);
+	SetWndRect(rect);
 
-	inherited::Update				();
+	inherited::Update();
 
-	if(m_bCursorOverWindow)
+	if (m_bCursorOverWindow)
 	{
-		VERIFY(m_dwFocusReceiveTime>=0);
-		if( Device.dwTimeGlobal>(m_dwFocusReceiveTime+500) )
+		VERIFY(m_dwFocusReceiveTime >= 0);
+		if (Device.dwTimeGlobal > (m_dwFocusReceiveTime + 500))
 		{
-			if(fsimilar(MapWnd()->GlobalMap()->GetCurrentZoom().x, MapWnd()->GlobalMap()->GetMinZoom(),EPS_L ))
+			if (fsimilar(MapWnd()->GlobalMap()->GetCurrentZoom().x, MapWnd()->GlobalMap()->GetMinZoom(), EPS_L))
 				MapWnd()->ShowHintStr(this, MapName().c_str());
 			else
 				MapWnd()->HideHint(this);

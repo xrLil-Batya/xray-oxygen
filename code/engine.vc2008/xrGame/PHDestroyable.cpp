@@ -194,7 +194,7 @@ void CPHDestroyable::SheduleUpdate(u32 dt)
 
 	if( CanRemoveObject() )
 	{
-		if (obj->Local())	obj->DestroyObject();
+		obj->DestroyObject();
 	}
 
 }

@@ -49,8 +49,6 @@ void CActor::IR_OnKeyboardPress(int cmd)
 			return;
 	}
 
-	if (Remote())		return;
-
 	if (IsTalking())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	
@@ -209,7 +207,6 @@ void CActor::IR_OnMouseWheel(int direction)
 void CActor::IR_OnKeyboardRelease(int cmd)
 {
 	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
-	if (Remote())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 
 	if (g_Alive())	
@@ -262,7 +259,7 @@ void CActor::IR_OnKeyboardHold(int cmd)
 		return;
 	}
 
-	if (Remote() || !g_Alive())					return;
+	if (!g_Alive())					return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	if (IsTalking())							return;
 
@@ -343,8 +340,6 @@ void CActor::IR_OnMouseMove(int dx, int dy)
 	PIItem iitem = inventory().ActiveItem();
 	if(iitem && iitem->cast_hud_item())
 		iitem->cast_hud_item()->ResetSubStateTime();
-
-	if (Remote())		return;
 
 	if(m_holder) 
 	{

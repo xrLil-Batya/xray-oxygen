@@ -381,17 +381,20 @@ void CUILines::Draw(float x, float y)
 			m_pFont->SetAligment((CGameFont::EAligment)m_eTextAlign);
 			m_pFont->Out(text_pos.x, text_pos.y, "%s", passText);
 		}
-		else{
+		else
+		{
 			m_pFont->SetAligment((CGameFont::EAligment)m_eTextAlign);
-			if(uFlags.test(flEllipsis) )
+			if (uFlags.test(flEllipsis))
 			{
-				u32 buff_len	= sizeof(char)*xr_strlen(m_text.c_str()) + 1;
+				u32 buff_len = sizeof(char)*xr_strlen(m_text.c_str()) + 1;
 
-				char* p			= static_cast<char*>(_alloca(buff_len));
+				char* p = static_cast<char*>(_malloca(buff_len));
 				LPCSTR			str = GetElipsisText(m_pFont, m_wndSize.x, m_text.c_str(), p, buff_len);
 
-				m_pFont->Out	(text_pos.x, text_pos.y, "%s", str);
-			}else
+				m_pFont->Out(text_pos.x, text_pos.y, "%s", str);
+				_freea(p);
+			}
+			else
 				m_pFont->Out(text_pos.x, text_pos.y, "%s", m_text.c_str());
 		}
 	}

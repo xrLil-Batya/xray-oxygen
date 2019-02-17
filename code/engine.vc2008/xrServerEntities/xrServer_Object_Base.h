@@ -5,14 +5,12 @@
 //	Author		: Oles Shyshkovtsov, Alexander Maksimchuk, Victor Reutskiy and Dmitriy Iassenev
 //	Description : Server base object
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
 
 #include "xrServer_Objects_Abstract.h"
 #include "object_interfaces.h"
 #include "script_value_container.h"
 #include "alife_space.h"
-#include "../xrCore/client_id.h"
 
 class NET_Packet;
 class CClient;
@@ -105,7 +103,7 @@ public:
 	
 									CSE_Abstract			(LPCSTR caSection);
 	virtual							~CSE_Abstract			();
-	virtual void					OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender ){};
+	virtual void					OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time){};
 #ifndef XRGAME_EXPORTS
 	virtual void					FillProps				(LPCSTR pref, PropItemVec &items);
 	virtual void		__stdcall	FillProp				(LPCSTR pref, PropItemVec &items);

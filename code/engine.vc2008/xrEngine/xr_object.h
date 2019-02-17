@@ -46,7 +46,6 @@ public:
 			u32	bEnabled		:	1;
 			u32	bVisible		:	1;
 			u32	bDestroy		:	1;
-			u32	net_Local		:	1;
 			u32	net_Ready		:	1;
 			u32 net_SV_Update	:	1;
 			u32 crow			:	1;
@@ -83,8 +82,6 @@ public:
 	ICF	bool							AmICrow				() const			{ return !!Props.crow;		}
 
 	// Network
-	ICF BOOL							Local				()			const	{ return Props.net_Local;	}
-	ICF BOOL							Remote				()			const	{ return !Props.net_Local;	}
 	ICF u16								ID					()			const	{ return Props.net_ID;		}
 	ICF void							setID				(u16 _ID)			{ Props.net_ID = _ID;		}
 	virtual BOOL						Ready				()					{ return Props.net_Ready;	}
@@ -151,8 +148,6 @@ public:
 	ICF BOOL							getEnabled			()			const	{ return Props.bEnabled;			}
 		void							setDestroy			(BOOL _destroy);
 	ICF BOOL							getDestroy			()			const	{ return Props.bDestroy;			}
-	ICF void							setLocal			(BOOL _local)		{ Props.net_Local = _local?1:0;		}
-	ICF BOOL							getLocal			()			const	{ return Props.net_Local;			}
 	ICF void							setSVU				(BOOL _svu)			{ Props.net_SV_Update	= _svu?1:0;	}
 	ICF BOOL							getSVU				()			const	{ return Props.net_SV_Update;		}
 	ICF void							setReady			(BOOL _ready)		{ Props.net_Ready = _ready?1:0;		}

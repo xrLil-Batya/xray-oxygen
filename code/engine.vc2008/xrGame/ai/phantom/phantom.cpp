@@ -330,8 +330,6 @@ void CPhantom::load(IReader &input_packet)
 void CPhantom::net_Export	(NET_Packet& P)					// export to server
 {
 	// export 
-	R_ASSERT			(Local());
-
 	u8					flags = 0;
 	P.w_float			(GetfHealth());
 

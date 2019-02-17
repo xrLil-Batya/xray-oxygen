@@ -32,7 +32,8 @@ void CAI_Rat::Exec_Action(float /**dt/**/)
 				tDirection.sub(memory().enemy().selected()->Position(),this->Position());
 				vfNormalizeSafe(tDirection);
 				
-				if (this->Local() && memory().enemy().selected()) {
+				if (memory().enemy().selected()) 
+				{
 					CEntityAlive	*entity_alive = const_cast<CEntityAlive*>(memory().enemy().selected());
 					VERIFY			(entity_alive);
 

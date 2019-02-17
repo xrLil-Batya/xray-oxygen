@@ -377,8 +377,6 @@ void CExplosive::Explode()
 											cartridge, 1.f);
 	}	
 
-	if (cast_game_object()->Remote()) return;
-	
 	/////////////////////////////////
 	//взрывная волна
 	////////////////////////////////
@@ -510,13 +508,9 @@ void CExplosive::OnAfterExplosion()
 		CParticlesObject::Destroy(m_pExpParticle);
 		m_pExpParticle = nullptr;
 	}
-	//ликвидировать сам объект 
-	if (cast_game_object()->Local()) cast_game_object()->DestroyObject();
 	
-//	NET_Packet			P;
-//	cast_game_object()->u_EventGen			(P,GE_DESTROY,cast_game_object()->ID());
-//	//		Msg					("ge_destroy: [%d] - %s",ID(),*cName());
-//	if (cast_game_object()->Local()) cast_game_object()->u_EventSend			(P);
+	//ликвидировать сам объект 
+	cast_game_object()->DestroyObject();
 }
 void CExplosive::OnBeforeExplosion()
 {
@@ -524,7 +518,6 @@ void CExplosive::OnBeforeExplosion()
 	if (m_bHideInExplosion) 
 	{
 		HideExplosive();
-		//	Msg("---------CExplosive OnBeforeExplosion setVisible(false) [%d] frame[%d]",cast_game_object()->ID(), Device.dwFrame);
 	}
 }
 void CExplosive::HideExplosive()
@@ -572,10 +565,6 @@ void CExplosive::ExplodeParams(const Fvector& pos,
 
 void CExplosive::GenExplodeEvent (const Fvector& pos, const Fvector& normal)
 {
-	if (cast_game_object()->Remote()) return;
-
-//	if( m_bExplodeEventSent ) 
-//		return;
 	VERIFY(!m_explosion_flags.test(flExplodEventSent));//!m_bExplodeEventSent
 	VERIFY(0xffff != Initiator());
 
