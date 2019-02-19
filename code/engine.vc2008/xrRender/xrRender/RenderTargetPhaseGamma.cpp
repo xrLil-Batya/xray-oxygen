@@ -5,14 +5,14 @@
 void CRenderTarget::PhaseGammaGenerateLUT()
 {
 	u32 Offset = 0;
-	float _w = float(Device.dwWidth);
-	float _h = float(Device.dwHeight);
 
 	Fvector2 p0, p1;
 #ifdef USE_DX11
 	p0.set(0.0f, 0.0f);
 	p1.set(1.0f, 1.0f);
 #else
+	float _w = float(Device.dwWidth);
+	float _h = float(Device.dwHeight);
 	p0.set(0.5f/_w, 0.5f/_h);
 	p1.set((_w+0.5f)/_w, (_h+0.5f)/_h);
 #endif
