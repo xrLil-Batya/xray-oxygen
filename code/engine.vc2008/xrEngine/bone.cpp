@@ -86,6 +86,7 @@ CBone::CBone()
 	rest_length = 0;
 	SelfID = -1;
 	parent = nullptr;
+	rest_offset.set(0.f, 0.f, 0.f);
 
 	ResetData();
 }

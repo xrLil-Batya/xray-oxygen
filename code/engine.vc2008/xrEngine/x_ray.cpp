@@ -462,7 +462,7 @@ void _InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 CApplication::CApplication()
 {
 	dwLoadReference	= 0;
-
+	load_stage = 0;
 	max_load_stage = 0;
 
 	// events
@@ -781,7 +781,7 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 	if( arch_res )
 		Level_Scan							();
 	
-	string256		buffer;
+	string256		buffer = {0};
 	xr_strconcat (buffer,name,"\\");
 	for (u32 I=0; I<Levels.size(); ++I)
 	{

@@ -55,8 +55,8 @@ void CStringTable::ReInit(EGameLanguage lang)
 	if (pData != nullptr)
 	{
 		Destroy();
-		pData = xr_new<STRING_TABLE_DATA>();
 	}
+	pData = xr_new<STRING_TABLE_DATA>();
 
 	LPCSTR languageStr = nullptr;
 

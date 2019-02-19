@@ -459,6 +459,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         //special case
         psDeviceFlags.set(rsFullscreen, true);
         dwWindowStyle = WS_POPUP | WS_VISIBLE;
+		WindowBounds = DesktopRect;
     }
         break;
     default:

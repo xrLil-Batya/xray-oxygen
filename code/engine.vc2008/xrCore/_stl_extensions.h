@@ -47,7 +47,7 @@ public:
     void destroy(pointer p) { p->~T(); }
 
     size_type max_size() const {
-        const auto count = std::numeric_limits<size_type>::max() / sizeof(T);
+        constexpr size_type count = std::numeric_limits<size_type>::max() / sizeof(T);
         return 0 < count ? count : 1;
     }
 };

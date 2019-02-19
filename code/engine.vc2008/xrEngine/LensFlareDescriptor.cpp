@@ -62,7 +62,7 @@ void CLensFlareDescriptor::Load(CInifile* pIni, LPCSTR sect)
 		LPCSTR P	= pIni->r_string(sect, "flare_position");
 
 		u32 tcnt = _GetItemCount(T);
-		string256 name;
+		string256 name = {0};
 		for (u32 i = 0; i < tcnt; ++i)
 		{
 			_GetItem(R, i, name); float r = (float)atof(name);

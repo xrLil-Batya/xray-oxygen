@@ -3,6 +3,7 @@
 
 const char* ConvertToUTF8(const shared_str& pStr, string64& OutUtf8String)
 {
+	R_ASSERT(pStr.size() < 64);
 	wchar_t utfRusStr[64] = { 0 };
 	MultiByteToWideChar(CP_ACP, 0, pStr.c_str(), pStr.size(), utfRusStr, sizeof(utfRusStr));
 

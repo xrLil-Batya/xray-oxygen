@@ -284,8 +284,8 @@ class CCC_VidMode : public CCC_Token
 {
 	u32		_dummy, _w, _h;
 public :
-					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL) { bEmptyArgsHandled = FALSE; };
-	virtual void	Execute(LPCSTR args)
+					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL), _w(0), _h(0) { bEmptyArgsHandled = FALSE; };
+	void	Execute(LPCSTR args) override
 	{ 
 	
 		int cnt = sscanf		(args,"%dx%d",&_w,&_h);

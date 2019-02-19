@@ -123,9 +123,13 @@ VOID DSplashScreen::ShowSplash()
 		// create splash thread
 		UINT threadID = 0;
 		hEvent = CreateEventA(nullptr, FALSE, FALSE, FALSE);	// splash event
-		hThread = (HANDLE)_beginthreadex(nullptr, 0, SplashThreadProc, static_cast<LPVOID>(this), 0, &threadID);
-		threadId = threadID;
-		R_ASSERT(WaitForSingleObject(hEvent, 5000) != WAIT_TIMEOUT);
+		R_ASSERT(hEvent);
+		if (hEvent != NULL)
+		{
+			hThread = (HANDLE)_beginthreadex(nullptr, 0, SplashThreadProc, static_cast<LPVOID>(this), 0, &threadID);
+			threadId = threadID;
+			R_ASSERT(WaitForSingleObject(hEvent, 5000) != WAIT_TIMEOUT);
+		}
 	}
 	else
 	{

@@ -27,6 +27,7 @@ CCameraBase::CCameraBase(CObject* p, u32 flags)
 	f_aspect		= 1.f;
 	tag				= 0;
 	m_look_cam_fp_zoom = false;	
+	parent			= nullptr;
 }
 
 CCameraBase::~CCameraBase()

@@ -240,7 +240,7 @@ shared_str weather::try_all				(u32& hours_, u32& minutes_, u32& seconds_) const
 
 shared_str weather::generate_unique_id	(shared_str const& start) const
 {
-	string16			id;
+	string16			id = {0};
 	xr_strcpy			(id, start.c_str());
 
 	VERIFY				(xr_strlen(id) == 8);

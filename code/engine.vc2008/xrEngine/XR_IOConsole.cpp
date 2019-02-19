@@ -95,6 +95,7 @@ void ConsoleLogCallback(LPCSTR line)
 CConsole::CConsole()
 :m_hShader_back(NULL)
 {
+	scroll_delta = 1;
 	m_editor          = xr_new<text_editor::line_editor>( (u32)CONSOLE_BUF_SIZE );
 	m_cmd_history_max = cmd_history_max;
 	m_disable_tips    = false;
