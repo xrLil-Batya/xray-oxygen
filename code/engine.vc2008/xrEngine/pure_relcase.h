@@ -1,7 +1,9 @@
-﻿#ifndef pure_relcaseH
-#define pure_relcaseH
+﻿#pragma once
+class IGame_Level;
+IGame_Level* g_pGameLevel;
 
-class ENGINE_API pure_relcase{
+class ENGINE_API pure_relcase
+{
 private:
 	int							m_ID;
 public:
@@ -20,5 +22,3 @@ public:
 	}
 	virtual ~pure_relcase		();
 };
-
-#endif // pure_relcaseH

@@ -4,7 +4,7 @@
 extern LPCSTR	build_date;
 extern u32		build_id;
 
-static LPSTR month_id[12] = {
+static const char* month_id[12] = {
 	"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
 };
 

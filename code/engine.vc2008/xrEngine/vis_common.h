@@ -21,7 +21,7 @@ public:
 	vis_object_data * obj_data; //--#SM+#-- Объектные данные, используемые при рендере этой модели [shaders data which
 	                               //will be used at render for this model]
 		
-	vis_data::vis_data() //--#SM+#--
+	vis_data() //--#SM+#--
 	{
 	     obj_data = &obj_data_self;
 	}

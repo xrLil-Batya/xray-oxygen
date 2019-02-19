@@ -43,7 +43,8 @@ struct CCloner {
 	template <typename T1, typename T2>
 	IC	static void clone(const std::pair<T1,T2> &_1, std::pair<T1,T2> &_2)
 	{
-		clone(const_cast<object_type_traits::remove_const<T1>::type&>(_1.first),const_cast<object_type_traits::remove_const<T1>::type&>(_2.first));
+		clone(const_cast<typename object_type_traits::remove_const<T1>::type&>(_1.first),
+			  const_cast<typename object_type_traits::remove_const<T1>::type&>(_2.first));
 		clone(_1.second,_2.second);
 	}
 
@@ -51,9 +52,9 @@ struct CCloner {
 	IC	static void clone(const svector<T,size> &_1, svector<T,size> &_2)
 	{
 		_2.resize						(_1.size());
-		svector<T,size>::iterator		J = _2.begin();
-		svector<T,size>::const_iterator	I = _1.begin(); 
-		svector<T,size>::const_iterator	E = _1.end();
+		auto J = _2.begin();
+		const auto I = _1.begin(); 
+		const auto E = _1.end();
 		for ( ; I != E; ++I, ++J)
 			clone						(*I,*J);
 	}
@@ -71,7 +72,7 @@ struct CCloner {
 			__2.pop();
 
 		for ( ; !_2.empty(); _2.pop()) {
-			std::queue<T1,T2>::value_type	t;
+			typename std::queue<T1,T2>::value_type	t;
 			CCloner::clone			(_2.front(),t);
 			__2.push				(t);
 		}

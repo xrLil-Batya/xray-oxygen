@@ -134,9 +134,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvRese
     return TRUE;
 }
 
+// For Oxygen PlanetSync
 extern "C"
 {
-	__declspec(dllexport) char* GetCurrentHash()
+	__declspec(dllexport) const char* GetCurrentHash()
 	{
 		return _HASH;
 	}
