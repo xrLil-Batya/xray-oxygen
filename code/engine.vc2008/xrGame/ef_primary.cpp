@@ -351,14 +351,14 @@ float CItemDeterioration::ffGetValue()
 	}
 }
 
-#ifndef NO_HUMAN_BRAIN
 float CEquipmentPreference::ffGetValue()
 {
 	if (ef_storage().non_alife().member()) {
 #pragma todo("Dima to Dima : Append EquipmentPreference with non-ALife branch")
 		return					(0);
 	}
-	else {
+	else 
+	{
 		CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
 		R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human object in EquipmentPreference evaluation function");
 		return					(l_tpALifeHumanAbstract->brain().m_cpEquipmentPreferences[ef_storage().m_pfEquipmentType->dwfGetDiscreteValue()]);
@@ -390,46 +390,6 @@ float CMainWeaponPreference::ffGetValue()
 		return					(l_tpALifeHumanAbstract->brain().m_cpMainWeaponPreferences[ef_storage().m_pfMainWeaponType->dwfGetDiscreteValue(iFloor(ef_storage().m_pfMainWeaponType->ffGetMaxResultValue() + .5f))]);
 	}
 }
-#else
-float CEquipmentPreference::ffGetValue()
-{
-	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append EquipmentPreference with non-ALife branch")
-		return					(0);
-	}
-	else {
-		CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
-		R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human object in EquipmentPreference evaluation function");
-		return					(l_tpALifeHumanAbstract->m_cpEquipmentPreferences[ef_storage().m_pfEquipmentType->dwfGetDiscreteValue()]);
-	}
-}
-
-float CMainWeaponType::ffGetValue()
-{
-	u32			result;
-	if (ef_storage().non_alife().member_item())
-		result	= ef_storage().non_alife().member_item()->ef_main_weapon_type();
-	else {
-		VERIFY2	(ef_storage().alife().member_item(),"No object specified for evaluation function");
-		result	= ef_storage().alife().member_item()->ef_main_weapon_type();
-	}
-	VERIFY		(float(result) < m_fMaxResultValue + 1.f);
-	return		(float(result));
-}
-
-float CMainWeaponPreference::ffGetValue()
-{
-	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append MainWeaponPreference with non-ALife branch")
-		return					(0);
-	}
-	else {
-		CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
-		R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human object in EquipmentPreference evaluation function");
-		return					(l_tpALifeHumanAbstract->m_cpMainWeaponPreferences[ef_storage().m_pfMainWeaponType->dwfGetDiscreteValue(iFloor(ef_storage().m_pfMainWeaponType->ffGetMaxResultValue() + .5f))]);
-	}
-}
-#endif
 
 float CItemValue::ffGetValue()
 {

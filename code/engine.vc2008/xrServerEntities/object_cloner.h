@@ -53,8 +53,8 @@ struct CCloner {
 	{
 		_2.resize						(_1.size());
 		auto J = _2.begin();
-		const auto I = _1.begin(); 
-		const auto E = _1.end();
+		auto I = _1.cbegin(); 
+		auto E = _1.cend();
 		for ( ; I != E; ++I, ++J)
 			clone						(*I,*J);
 	}
@@ -91,7 +91,7 @@ struct CCloner {
 			__2.pop();
 
 		for ( ; !_2.empty(); _2.pop()) {
-			T1<T2,T3>::value_type	t;
+			typename T1<T2,T3>::value_type	t;
 			CCloner::clone			(_2.top(),t);
 			__2.push				(t);
 		}
@@ -110,7 +110,7 @@ struct CCloner {
 			__2.pop();
 
 		for ( ; !_2.empty(); _2.pop()) {
-			T1<T2,T3,T4>::value_type	t;
+			typename T1<T2,T3,T4>::value_type	t;
 			CCloner::clone			(_2.top(),t);
 			__2.push				(t);
 		}
@@ -145,10 +145,10 @@ struct CCloner {
 		IC	static void clone(const T &_1, T &_2)
 		{
 			_2.clear			();
-			T::const_iterator	I = _1.begin();
-			T::const_iterator	E = _1.end();
+			auto I = _1.cbegin();
+			auto E = _1.cend();
 			for ( ; I != E; ++I) {
-				T::value_type	t;
+				typename T::value_type	t;
 				CCloner::clone	(*I,t);
 				add				(_2,t);
 			}

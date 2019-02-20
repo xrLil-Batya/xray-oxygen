@@ -413,15 +413,13 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 }
 LPCSTR _GetFontTexName (LPCSTR section)
 {
-	static char* tex_names[] = { "texture800","texture","texture1600" };
+	static const char* tex_names[] = { "texture800","texture","texture1600" };
 	int def_idx		= 1;	//default 1024x768
 	int idx			= def_idx;
 
-	u32 h = Device.dwHeight;
-
-	if (h <= 600)		
+	if (Device.dwHeight <= 600)
 		idx = 0;
-	else if (h < 1024)	
+	else if (Device.dwHeight < 1024)
 		idx = 1;
 	else 			
 		idx = 2;

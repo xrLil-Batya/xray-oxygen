@@ -84,7 +84,7 @@ void CRenderTarget::accum_spot(light* L)
 		float fRange = float(1.f)*ps_r_ls_depth_scale;
 		float fBias = ps_r_ls_depth_bias;
 
-		Matrix4x4 m_TexelAdjust = 
+		Fmatrix m_TexelAdjust = 
 		{
 			view_dim / 2.f,							0.0f,									0.0f,		0.0f,
 			0.0f,									-view_dim / 2.f,						0.0f,		0.0f,
@@ -105,7 +105,7 @@ void CRenderTarget::accum_spot(light* L)
 		view_sx = 0.f;
 		view_sy = 0.f;
 
-		Matrix4x4 m_TexelAdjust2 =
+		Fmatrix m_TexelAdjust2 =
 		{
 			view_dim / 2.f,							0.0f,									0.0f,		0.0f,
 			0.0f,									-view_dim / 2.f,						0.0f,		0.0f,
@@ -306,7 +306,7 @@ void CRenderTarget::accum_volumetric(light* L)
 
 		Fmatrix xf_view = L->X.S.view;
 		Fmatrix xf_project;		
-		xf_project.mul(m_TexelAdjust, CastToGSCMatrix(L->X.S.project));
+		xf_project.mul(m_TexelAdjust, L->X.S.project);
 
 		m_Shadow.mul(xf_view, xf_world);
 		m_Shadow.mulA_44(xf_project);
@@ -323,12 +323,12 @@ void CRenderTarget::accum_volumetric(light* L)
 		};
 
 		// compute xforms
-		xf_project.mul(m_TexelAdjust2, CastToGSCMatrix(L->X.S.project));
+		xf_project.mul(m_TexelAdjust2, L->X.S.project);
 		m_Lmap.mul(xf_view, xf_world);
 		m_Lmap.mulA_44(xf_project);
 
 		// Compute light frustum in world space
-		mFrustumSrc.mul(CastToGSCMatrix(L->X.S.project), xf_view);
+		mFrustumSrc.mul(L->X.S.project, xf_view);
 		ClipFrustum.CreateFromMatrix(mFrustumSrc, FRUSTUM_P_ALL);
 		//	Adjust frustum far plane
 		//	4 - far, 5 - near
@@ -375,7 +375,7 @@ void CRenderTarget::accum_volumetric(light* L)
 		//	Set correct depth surface
 		//	It's slow. Make this when shader is created
 		{
-			char* pszSMapName = r2_RT_smap_depth;
+			const char* pszSMapName = r2_RT_smap_depth;
 
 			//s_smap
 			STextureList* _T = &*s_accum_volume->E[0]->passes[0]->T;

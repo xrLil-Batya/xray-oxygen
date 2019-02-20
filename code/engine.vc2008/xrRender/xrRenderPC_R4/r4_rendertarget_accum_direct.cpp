@@ -137,7 +137,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 
 		//	TODO: DX10: Remove this when fix inverse culling for far region
 		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r_sun_depth_near_bias):ps_r_sun_depth_far_bias;
-		Matrix4x4 m_TexelAdjust		= 
+		Fmatrix m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
 			0.0f,				-0.5f,				0.0f,			0.0f,
@@ -376,7 +376,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
 
 		//	TODO: DX10: Remove this when fix inverse culling for far region
-		Matrix4x4 m_TexelAdjust		=
+		Fmatrix m_TexelAdjust		=
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
 			0.0f,				-0.5f,				0.0f,			0.0f,
@@ -881,7 +881,7 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 	//	Set correct depth surface
 	//	It's slow. Make this when shader is created
 	{
-		char* pszSMapName = r2_RT_smap_depth;
+		const char* pszSMapName = r2_RT_smap_depth;
 
 		//s_smap
 		STextureList* _T = &*Element->passes[0]->T;

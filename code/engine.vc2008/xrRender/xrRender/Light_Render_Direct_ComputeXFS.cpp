@@ -64,7 +64,7 @@ void CLight_Compute_XFORM_and_VIS::compute_xf_spot	(light* L)
 	L->X.S.size					= (_diff>=_epsilon)?_size:_cached_size;
 
 	// make N pixel border
-	L->X.S.view.BuildCamDir(L_pos, L_dir, L_up);
+	L->X.S.view.build_camera_dir(L_pos, L_dir, L_up);
 	// _min(L->cone + deg2rad(4.5f), PI*0.98f) - Here, it is needed to enlarge the shadow map frustum to include also 
 	// displaced pixels and the pixels neighbor to the examining one.
 	/* Ray Twitty */
@@ -72,7 +72,7 @@ void CLight_Compute_XFORM_and_VIS::compute_xf_spot	(light* L)
 	if (L->flags.type == IRender_Light::POINT)	tan_shift = deg2rad(11.5f);
 	else										tan_shift = deg2rad(3.5f);
 	/*************************************************** added by Ray Twitty (aka Shadows) END ***************************************************/
-	L->X.S.project.BuildProj(L->cone + tan_shift, 1.f,L->virtual_size, L->range + EPS_S);
+	L->X.S.project.build_projection(L->cone + tan_shift, 1.f,L->virtual_size, L->range + EPS_S);
 
-	L->X.S.combine.Multiply(L->X.S.view, L->X.S.project);
+	L->X.S.combine.mul(L->X.S.project, L->X.S.view);
 }

@@ -46,7 +46,7 @@ public:
 	}
 	inline	void clear()
 	{
-		xr_vector<T*>::iterator i = blocks.begin(), e = blocks.end();
+		auto i = blocks.begin(), e = blocks.end();
 		for (; i != e; ++i) xr_free(*i);
 		blocks.clear();
 		init();
@@ -72,8 +72,8 @@ public:
 		if (!current_block)
 			return;
 
-		xr_vector<T*>::iterator	i = blocks.begin();
-		xr_vector<T*>::iterator	e = blocks.begin() + block_count;
+		auto i = blocks.begin();
+		auto e = blocks.begin() + block_count;
 		u32 j;
 		for (; i != e; ++i)
 		{
@@ -106,16 +106,6 @@ private:
 	inline T& operator[](u32 position)
 	{
 		return *pointer(position);
-	}
-
-	inline void construct(u32 position)
-	{
-		xr_allocator_t <T>().construct(pointer(position));
-	}
-
-	inline void construct_back()
-	{
-		xr_allocator_t <T>().construct(back_pointer());
 	}
 };
 

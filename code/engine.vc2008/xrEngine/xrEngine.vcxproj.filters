@@ -845,9 +845,6 @@
     <ClCompile Include="Device_Initialize.cpp">
       <Filter>Device</Filter>
     </ClCompile>
-    <ClCompile Include="Device_Misc.cpp">
-      <Filter>Device</Filter>
-    </ClCompile>
     <ClCompile Include="Device_overdraw.cpp">
       <Filter>Device</Filter>
     </ClCompile>

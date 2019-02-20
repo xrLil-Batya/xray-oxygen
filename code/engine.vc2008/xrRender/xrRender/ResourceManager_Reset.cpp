@@ -98,7 +98,7 @@ template<class C>	void mdump(C c)
 {
 	if (c.size())
 	{
-		for (C::iterator I = c.begin(); I != c.end(); I++)
+		for (auto I = c.begin(); I != c.end(); I++)
 		{
 			if (I->second)
 			{
