@@ -62,7 +62,7 @@ namespace CPU
 	XRCORE_API u32 qpc_counter = 0;
 	XRCORE_API processor_info Info;
 
-	XRCORE_API u64 QPC()
+	XRCORE_API u64 QPC() noexcept
 	{
 		u64 _dest;
 		QueryPerformanceCounter(PLARGE_INTEGER(&_dest));
@@ -296,7 +296,7 @@ float* processor_info::MTCPULoad()
 		8,
 		perfomanceInfo,
 		sizeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION) * (ULONG)m_dwNumberOfProcessors,
-		NULL
+		nullptr
 	)))
 	{
 		Msg("Can't get NtQuerySystemInformation");
@@ -336,7 +336,7 @@ float processor_info::CalcMPCPULoad(DWORD dwCPU)
 
 		SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION info[MAX_CPU];
 
-		if (SUCCEEDED(m_pNtQuerySystemInformation(SystemProcessorPerformanceInformation, &info, sizeof(info), NULL)))
+		if (SUCCEEDED(m_pNtQuerySystemInformation(SystemProcessorPerformanceInformation, &info, sizeof(info), nullptr)))
 			//query CPU usage
 		{
 			if (m_idleTime[dwCPU].QuadPart)

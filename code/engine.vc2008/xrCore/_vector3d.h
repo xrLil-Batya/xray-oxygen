@@ -29,29 +29,29 @@ public:
 	IC SelfRef	operator /= (SelfCRef v)					{ return div(v); }
 	IC SelfRef	operator /= (const T p)						{ return div(p); }
 
-	ICF	SelfRef	set		(const T _x, const T _y, const T _z){ x = _x;			y = _y;			z = _z;				return *this; }
-	ICF SelfRef	set		(SelfCRef v)						{ x = T(v.x);		y = T(v.y);		z = T(v.z);			return *this; }
-	ICF	SelfRef	set		(const T* p)						{ x = p[0];			y = p[1];		z = p[2];			return *this; }
+	ICF	SelfRef	set		(const T _x, const T _y, const T _z) noexcept { x = _x;		y = _y;			z = _z;				return *this; }
+	ICF SelfRef	set		(SelfCRef v)						 noexcept { x = T(v.x);	y = T(v.y);		z = T(v.z);			return *this; }
+	ICF	SelfRef	set		(const T* p)						 noexcept { x = p[0];	y = p[1];		z = p[2];			return *this; }
 
-	ICF	SelfRef	add		(SelfCRef v)						{ x += v.x;			y += v.y;		z += v.z;			return *this; }
-	ICF SelfRef	add		(const T s)							{ x += s;			y += s;			z += s;				return *this; }
-	ICF SelfRef	add		(SelfCRef a, SelfCRef v)			{ x  = a.x + v.x;	y  = a.y + v.y;	z  = a.z + v.z;		return *this; }
-	ICF SelfRef	add		(SelfCRef a, const T s)				{ x  = a.x + s;		y  = a.y + s;	z  = a.z + s;		return *this; }
+	ICF	SelfRef	add(SelfCRef v)							 noexcept { x += v.x;		y += v.y;		z += v.z;			return *this; }
+	ICF SelfRef	add(const T s)							 noexcept { x += s;			y += s;			z += s;				return *this; }
+	ICF SelfRef	add(SelfCRef a, SelfCRef v)				 noexcept { x = a.x + v.x;	y = a.y + v.y;	z = a.z + v.z;		return *this; }
+	ICF SelfRef	add(SelfCRef a, const T s)				 noexcept { x = a.x + s;	y = a.y + s;	z = a.z + s;		return *this; }
 
-	ICF	SelfRef	sub		(SelfCRef v)						{ x -= v.x;			y -= v.y;		z -= v.z;			return *this; }
-	ICF SelfRef	sub		(const T s)							{ x -= s;			y -= s;			z -= s;				return *this; }
-	ICF	SelfRef	sub		(SelfCRef a, SelfCRef v)			{ x  = a.x - v.x;	y  = a.y - v.y;	z  = a.z - v.z;		return *this; }
-	ICF SelfRef	sub		(SelfCRef a, const T s)				{ x  = a.x - s;		y  = a.y - s;	z  = a.z - s;		return *this; }
+	ICF	SelfRef	sub		(SelfCRef v)					noexcept { x -= v.x;		y -= v.y;		z -= v.z;			return *this; }
+	ICF SelfRef	sub		(const T s)						noexcept { x -= s;			y -= s;			z -= s;				return *this; }
+	ICF	SelfRef	sub		(SelfCRef a, SelfCRef v)		noexcept { x  = a.x - v.x;	y  = a.y - v.y;	z  = a.z - v.z;		return *this; }
+	ICF SelfRef	sub		(SelfCRef a, const T s)			noexcept { x  = a.x - s;	y  = a.y - s;	z  = a.z - s;		return *this; }
 
-	ICF	SelfRef	mul		(SelfCRef v)						{ x *= v.x;			y *= v.y;		z *= v.z;			return *this; }
-	ICF SelfRef	mul		(const T s)							{ x *= s;			y *= s;			z *= s;				return *this; }
-	ICF	SelfRef	mul		(SelfCRef a, SelfCRef v)			{ x  = a.x*v.x;		y  = a.y*v.y;	z  = a.z*v.z;		return *this; }
-	ICF SelfRef	mul		(SelfCRef a, const T s)				{ x  = a.x*s;		y  = a.y*s;		z  = a.z*s;			return *this; }
+	ICF	SelfRef	mul		(SelfCRef v)					noexcept { x *= v.x;		y *= v.y;		z *= v.z;			return *this; }
+	ICF SelfRef	mul		(const T s)						noexcept { x *= s;			y *= s;			z *= s;				return *this; }
+	ICF	SelfRef	mul		(SelfCRef a, SelfCRef v)		noexcept { x  = a.x*v.x;	y  = a.y*v.y;	z  = a.z*v.z;		return *this; }
+	ICF SelfRef	mul		(SelfCRef a, const T s)			noexcept { x  = a.x*s;		y  = a.y*s;		z  = a.z*s;			return *this; }
 
-	ICF	SelfRef	div		(SelfCRef v)						{ x /= v.x;			y /= v.y;		z /= v.z;			return *this; }
-	ICF SelfRef	div		(const T s)							{ x /= s;			y /= s;			z /= s;				return *this; }
-	ICF	SelfRef	div		(SelfCRef a, SelfCRef v)			{ x  = a.x / v.x;	y  = a.y / v.y;	z  = a.z / v.z;		return *this; }
-	ICF SelfRef	div		(SelfCRef a, const T s)				{ x  = a.x / s;		y  = a.y / s;	z  = a.z / s;		return *this; }
+	ICF	SelfRef	div(SelfCRef v)							noexcept { x /= v.x;		y /= v.y;		z /= v.z;			return *this; }
+	ICF SelfRef	div(const T s)							noexcept { x /= s;			y /= s;			z /= s;				return *this; }
+	ICF	SelfRef	div(SelfCRef a, SelfCRef v)				noexcept { x = a.x / v.x;	y = a.y / v.y;	z = a.z / v.z;		return *this; }
+	ICF SelfRef	div(SelfCRef a, const T s)				noexcept { x = a.x / s;		y = a.y / s;	z = a.z / s;		return *this; }
 
 	IC	SelfRef	invert	()									{ x = -x;			y = -y;			z = -z;				return *this; }
 	IC	SelfRef	invert	(SelfCRef a)						{ x = -a.x;			y = -a.y;		z = -a.z;			return *this; }
@@ -62,8 +62,8 @@ public:
 	IC	SelfRef	max		(SelfCRef v)						{ x = std::max(x, v.x);		y = std::max(y, v.y);		z = std::max(z, v.z);		return *this; }
 	IC	SelfRef	max		(SelfCRef v1, SelfCRef v2)			{ x = std::max(v1.x, v2.x);	y = std::max(v1.y, v2.y);	z = std::max(v1.z, v2.z);	return *this; }
 
-	IC	SelfRef	abs		()									{ x = _abs(x);				y = _abs(y);				z = _abs(z);				return *this; }
-	IC	SelfRef	abs		(SelfCRef v)						{ x = _abs(v.x);			y = _abs(v.y);				z = _abs(v.z);				return *this; }
+	IC	SelfRef	abs		()					noexcept		{ x = _abs(x);				y = _abs(y);				z = _abs(z);				return *this; }
+	IC	SelfRef	abs		(SelfCRef v)		noexcept		{ x = _abs(v.x);			y = _abs(v.y);				z = _abs(v.z);				return *this; }
 
 	IC	SelfRef ceil	()									{ x = std::ceil(x);			y = std::ceil(y);			z = std::ceil(z);			return *this; }
 	IC	SelfRef ceil	(SelfCRef v)						{ x = std::ceil(v.x);		y = std::ceil(v.y);			z = std::ceil(v.z);			return *this; }

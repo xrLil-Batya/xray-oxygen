@@ -447,7 +447,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 	pAbstractE->Spawn_Write(Packet, FALSE);
 	if (pAbstractE->s_flags.is(M_SPAWN_UPDATE))
 		pAbstractE->UPDATE_Write(Packet);
-	//SendBroadcast(Packet);
+	SendBroadcast(Packet);
 
 	return pAbstractE;
 }
@@ -685,7 +685,7 @@ void xrServer::Process_event(NET_Packet& P)
 		if (type == GE_HIT_STATISTIC)
 		{
 			P.B.count -= 4;
-			P.w_u32(1);
+			P.w_u32(0);
 		};
 		u16 id_src = P.r_u16();
 		CSE_Abstract* e_src = ID_to_entity(id_src);
@@ -905,8 +905,8 @@ void xrServer::OnCL_Connected()
 	// end
 
 	Perform_game_export();
-	game->signal_Syncronize();
 	SendConnectionData(pActorClient);
+	game->signal_Syncronize();
 }
 
 xrServer::EConnect xrServer::Connect(shared_str &session_name)

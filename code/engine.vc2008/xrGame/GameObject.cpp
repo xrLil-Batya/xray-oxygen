@@ -288,26 +288,26 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* pSEAbstract)
 
 void CGameObject::net_Save(NET_Packet &net_packet)
 {
+	u32 position = 0u;
+	net_packet.w_chunk_open16(position);
 	save(net_packet);
+	// Script Binder Save ---------------------------------------
+	CScriptBinder::save(net_packet);
+	net_packet.w_chunk_close16(position);
 }
 
 void CGameObject::net_Load(IReader &ireader)
 {
 	load(ireader);
+	CScriptBinder::load(ireader);
 }
 
 void CGameObject::save(NET_Packet &output_packet)
 {
-	u32 position = 0u;
-	output_packet.w_chunk_open16(position);
-	// Script Binder Save ---------------------------------------
-	CScriptBinder::save(output_packet);
-	output_packet.w_chunk_close16(position);
 }
 
 void CGameObject::load(IReader &input_packet)
 {
-	CScriptBinder::load(input_packet);
 }
 
 void CGameObject::spawn_supplies()

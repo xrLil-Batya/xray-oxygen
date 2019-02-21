@@ -54,7 +54,7 @@ struct XRCORE_API xr_token2
 
 // generic
 template <class T>
-IC T		_sqr	(T a)			{ return a*a;		}
+IC T		_sqr	(T a) noexcept { return a*a; }
 
 template <class T>
 IC T		saturate(T a)			{ return std::clamp(a, (T)0, (T)1); }
@@ -63,11 +63,11 @@ template <class T>
 IC T		lerp	(T v0, T v1, T t) { return fma(t, v1, fma(-t, v0, v0)); }
 
 // float
-IC float	_abs	(float x)		{ return fabsf(x); }
-IC float	_sqrt	(float x)		{ return sqrtf(x); }
-IC float	_sin	(float x)		{ return sinf(x);  }
-IC float	_cos	(float x)		{ return cosf(x);  }
-IC float    _log    (float x)		{ return logf(x);  }
+IC float	_abs	(float x) noexcept { return fabsf(x); }
+IC float	_sqrt	(float x) noexcept { return sqrtf(x); }
+IC float	_sin	(float x) noexcept { return sinf(x);  }
+IC float	_cos	(float x) noexcept { return cosf(x);  }
+IC float    _log    (float x) noexcept { return logf(x);  }
 IC BOOL		_valid	(const float x)
 {
 	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized, Positive denormalized
@@ -86,11 +86,11 @@ IC BOOL		_valid	(const float x)
 
 
 // double
-IC double	_abs	(double x)		{ return fabs(x); }
-IC double	_sqrt	(double x)		{ return sqrt(x); }
-IC double	_sin	(double x)		{ return sin(x); }
-IC double	_cos	(double x)		{ return cos(x); }
-IC double    _log	(double x)		{ return log(x); }
+IC double	_abs	(double x) noexcept { return fabs(x); }
+IC double	_sqrt	(double x) noexcept { return sqrt(x); }
+IC double	_sin	(double x) noexcept { return sin(x); }
+IC double	_cos	(double x) noexcept { return cos(x); }
+IC double    _log	(double x) noexcept { return log(x); }
 IC BOOL		_valid	(const double x)
 {
 	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized, Positive denormalized
@@ -108,22 +108,22 @@ IC BOOL		_valid	(const double x)
 }
 
 // int8
-IC s8		_abs	(s8  x)			{ return (x>=0)? x : s8(-x); }
+IC s8		_abs	(s8  x)	 noexcept { return (x>=0)? x : s8(-x); }
 
 // unsigned int8
-IC u8		_abs	(u8 x)			{ return x; }
+IC u8		_abs	(u8 x)	 noexcept { return x; }
 
 // int16
-IC s16		_abs	(s16 x)			{ return (x>=0)? x : s16(-x); }
+IC s16		_abs	(s16 x)	 noexcept { return (x>=0)? x : s16(-x); }
 
 // unsigned int16
-IC u16		_abs	(u16 x)			{ return x; }
+IC u16		_abs	(u16 x)	 noexcept { return x; }
 
 // int32
-IC s32		_abs	(s32 x)			{ return (x>=0)? x : s32(-x); }
+IC s32		_abs	(s32 x)	 noexcept { return (x>=0)? x : s32(-x); }
 
 // int64
-IC s64		_abs	(s64 x)			{ return (x>=0)? x : s64(-x); }
+IC s64		_abs	(s64 x)	 noexcept { return (x>=0)? x : s64(-x); }
 
 IC u32							xr_strlen				( const char* S );
 

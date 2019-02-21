@@ -66,25 +66,18 @@ IC BOOL  dis_zero		( double	val, double	cmp=EPS_S )					{ return _abs(val)<cmp;	
 
 // Возводим две радианы в градусы и обратно
 //////////////////////////////////////////////
-namespace implement
-{
-	template <class T>	ICF T	deg2rad		( T val )						{ return (val*T(M_PI)/T(180));	};
-	template <class T>	ICF T	rad2deg		( T val )						{ return (val*T(180)/T(M_PI));	};
-};
-//////////////////////////////////////////////
-ICF float	deg2rad 	(float val)											{return implement::deg2rad(val);}
-ICF double	deg2rad 	(double val)										{return implement::deg2rad(val);}
-ICF float	rad2deg 	(float val)											{return implement::rad2deg(val);}
-ICF double	rad2deg 	(double val)										{return implement::rad2deg(val);}
+template <class T>	ICF T	deg2rad		( T val ) 	noexcept			{ return (val*T(M_PI)/T(180));	};
+template <class T>	ICF T	rad2deg		( T val )	noexcept			{ return (val*T(180)/T(M_PI));	};
+
 //////////////////////////////////////////////
 // Клэмпим
 template <class T>
-IC void clamp	( T& val, const T& _low, const T& _high ){
+constexpr  void clamp	( T& val, const T& _low, const T& _high ){
 	if( val<_low ) val = _low; else if( val>_high ) val = _high;
 };
 //////////////////////////////////////////////
 template <class T>
-IC T	clampr	( const T& val, const T& _low, const T& _high ){
+constexpr  T	clampr	( const T& val, const T& _low, const T& _high ){
 	if		( val<_low	)	return _low; 
 	else if	( val>_high )	return _high;
 	else					return val;

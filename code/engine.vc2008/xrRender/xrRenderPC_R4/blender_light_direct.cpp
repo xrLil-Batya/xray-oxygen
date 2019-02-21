@@ -154,20 +154,20 @@ void	CBlender_accum_direct_msaa::Compile(CBlender_Compile& C)
 
 		C.r_End				();
 		break;
-	case SE_SUN_LUMINANCE:	// luminance pass
-		C.r_Pass			("stub_notransform_aa_AA","accum_sun_msaa",		false,	FALSE,	FALSE);
-		C.r_CullMode		(D3DCULL_NONE);
-
-		C.r_dx10Texture		("s_position",		r2_RT_P);
-		C.r_dx10Texture		("s_normal",		r2_RT_N);
-		C.r_dx10Texture		("s_material",		r2_material);
-		C.r_dx10Texture		("s_smap",			r2_RT_generic0);
-
-		C.r_dx10Sampler		("smp_nofilter");
-		C.r_dx10Sampler		("smp_material");
-		jitter				(C);
-		C.r_End				();
-		break;
+	//case SE_SUN_LUMINANCE:	// luminance pass
+	//	C.r_Pass			("stub_notransform_aa_AA","accum_sun_msaa",		false,	FALSE,	FALSE);
+	//	C.r_CullMode		(D3DCULL_NONE);
+	//
+	//	C.r_dx10Texture		("s_position",		r2_RT_P);
+	//	C.r_dx10Texture		("s_normal",		r2_RT_N);
+	//	C.r_dx10Texture		("s_material",		r2_material);
+	//	C.r_dx10Texture		("s_smap",			r2_RT_generic0);
+	//
+	//	C.r_dx10Sampler		("smp_nofilter");
+	//	C.r_dx10Sampler		("smp_material");
+	//	jitter				(C);
+	//	C.r_End				();
+	//	break;
 
 		
 		//	SE_SUN_NEAR for minmax

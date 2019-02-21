@@ -90,11 +90,6 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 		if (!pActor) return;
 
-		if (pActor != g_actor)
-		{
-			g_actor = pActor;
-		}
-
 		pActor->setSVU(true);
 
 		// if player flags changed
