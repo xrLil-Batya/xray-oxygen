@@ -134,7 +134,6 @@
     <ClCompile Include="SoundRender_Cache.cpp">
       <Filter>Cache</Filter>
     </ClCompile>
-    <ClCompile Include="guids.cpp" />
     <ClCompile Include="XAudioCore.cpp">
       <Filter>Core\XAudio2</Filter>
     </ClCompile>
