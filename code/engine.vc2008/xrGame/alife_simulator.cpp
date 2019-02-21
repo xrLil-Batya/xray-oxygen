@@ -391,6 +391,9 @@ CSE_Abstract *CALifeSimulator__spawn_ammo(CALifeSimulator *self, LPCSTR section,
 	self->server().FreeID(item->ID, 0);
 	F_entity_Destroy(item);
 
+	ClientID							clientID;
+	clientID.set(0xffff);
+
 	u16 dummy;
 	packet.r_begin(dummy);
 	VERIFY(dummy == M_SPAWN);

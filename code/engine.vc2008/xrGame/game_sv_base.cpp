@@ -27,7 +27,7 @@ void game_sv_GameState::signal_Syncronize()
 }
 
 // Network
-void game_sv_GameState::net_Export_State(NET_Packet& P)
+void game_sv_GameState::net_Export_State(NET_Packet& P, ClientID to)
 {
 	// Generic
 	P.w_u16			(m_phase);
@@ -36,6 +36,11 @@ void game_sv_GameState::net_Export_State(NET_Packet& P)
 	// Players
 	net_Export_GameTime(P);
 }
+
+void game_sv_GameState::net_Export_Update(NET_Packet& P, ClientID id_to, ClientID id)
+{
+	net_Export_GameTime			(P);
+};
 
 void game_sv_GameState::net_Export_GameTime(NET_Packet& P)
 {
@@ -47,6 +52,11 @@ void game_sv_GameState::net_Export_GameTime(NET_Packet& P)
 	P.w_u64(GetEnvironmentGameTime());
 	P.w_float(GetEnvironmentGameTimeFactor());
 };
+
+void game_sv_GameState::OnPlayerConnect			(ClientID /**id_who/**/)
+{
+	signal_Syncronize	();
+}
 
 void game_sv_GameState::Create(shared_str &options)
 {
@@ -114,7 +124,7 @@ bool game_sv_GameState::load_game (NET_Packet &net_packet)
 	return (alife().load_game(*game_name, true));
 }
 
-void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time)
+void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
 {
 	if (type == GAME_EVENT_ON_HIT)
 	{
@@ -123,7 +133,7 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time)
 		CSE_Abstract* e_src = Level().Server->ID_to_entity(id_src);
 
 		if (e_src)
-			Level().Server->SendBroadcast(tNetPacket);
+			Level().Server->SendBroadcast(BroadcastCID, tNetPacket);
 	}
 }
 

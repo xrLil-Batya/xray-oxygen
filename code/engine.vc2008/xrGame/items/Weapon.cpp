@@ -1394,7 +1394,7 @@ CUIWindow* CWeapon::ZoomTexture()
 void CWeapon::SwitchState(u32 S)
 {
 	SetNextState(S);
-	if (!CHudItem::object().getDestroy() && m_pInventory)
+	if (CHudItem::object().Local() && !CHudItem::object().getDestroy() && m_pInventory)
 	{
 		// !!! Just single entry for given state !!!
 		NET_Packet P;

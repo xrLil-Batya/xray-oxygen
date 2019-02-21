@@ -88,7 +88,7 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 	{
 		WaitForSingleObject(pActor->MtSecondUpdaterEventStart, INFINITE);
 
-		if (!pActor) return;
+		if (pActor != g_actor) return;
 
 		pActor->setSVU(true);
 
@@ -503,7 +503,7 @@ void CActor::Hit(SHit* pHDS)
 
 void CActor::HitMark(float P, Fvector dir, CObject* who_object, s16 element, Fvector position_in_bone_space, float impulse, ALife::EHitType hit_type_)
 {
-	if (g_Alive() && Level().CurrentEntity() == this)
+	if (g_Alive() && Local() && (Level().CurrentEntity() == this))
 	{
 		HUD().HitMarked(0, P, dir);
 
@@ -650,7 +650,7 @@ void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 		character_physics_support()->movement()->bSleep = false;
 	}
 
-	if (g_Alive())
+	if (Local() && g_Alive())
 	{
 		if (character_physics_support()->movement()->gcontact_Was)
 			Cameras().AddCamEffector(xr_new<CEffectorFall>(character_physics_support()->movement()->gcontact_Power));

@@ -124,6 +124,7 @@ void CAI_Stalker::UpdateAvailableDialogs(CPhraseDialogManager* partner)
 void CAI_Stalker::feel_touch_new(CObject* O)
 {
 	if (!g_Alive())		return;
+	if (Remote())		return;
 	if ((O->spatial.type | STYPE_VISIBLEFORAI) != O->spatial.type) return;
 
 	// Now, test for game specific logical objects to minimize traffic

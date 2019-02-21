@@ -187,7 +187,7 @@ void CEntityAlive::shedule_Update(u32 dt)
 	conditions().UpdateWounds();
 
 	// Kill entity
-	if (!g_Alive() && !AlreadyDie())
+	if (Local() && !g_Alive() && !AlreadyDie())
 	{
 		if (conditions().GetWhoHitLastTime())
 		{

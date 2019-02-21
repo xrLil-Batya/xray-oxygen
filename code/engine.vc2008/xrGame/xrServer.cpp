@@ -26,6 +26,8 @@
 #include <functional>
 #pragma warning(pop)
 
+ClientID BroadcastCID(0xffffffff);
+
 CClient::CClient()
 {
     flags.bConnected = FALSE;
@@ -38,14 +40,14 @@ void CClient::Clear()
 	net_Accepted = FALSE;
 };
 
-xrServer::xrServer() : pActorClient(nullptr)
+xrServer::xrServer() : SV_Client(nullptr)
 {
 }
 
 xrServer::~xrServer()
 {
 	entities.clear();
-    xr_delete(pActorClient);
+    xr_delete(SV_Client);
 }
 
 //--------------------------------------------------------------------
@@ -108,13 +110,13 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 	{
 		if (game->change_level(P))
 		{
-			SendBroadcast( P);
+			SendBroadcast(BroadcastCID, P);
 		}
 	}break;
 	case M_LOAD_GAME:
 	{
 		game->load_game(P);
-		SendBroadcast( P);
+		SendBroadcast(BroadcastCID, P);
 	}break;
 	case M_SAVE_PACKET:
 	{
@@ -126,14 +128,16 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 	return 0;
 }
 
-void xrServer::SendBroadcast(NET_Packet& P)
+void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P)
 {
-    if (!pActorClient)
+    if (!SV_Client)
         return;
-    if (!pActorClient->flags.bConnected)
+    if (SV_Client->ID == exclude)
+        return;
+    if (!SV_Client->flags.bConnected)
         return;
 
-	if (pActorClient->net_Accepted)
+	if (SV_Client->net_Accepted)
 	{
 		Level().OnMessage(P.B.data, (u32)P.B.count);
 	}
@@ -236,8 +240,9 @@ shared_str xrServer::level_version(const shared_str &server_options) const
 
 void xrServer::createClient()
 {
-	pActorClient = xr_new<CClient>();
-	pActorClient->flags.bConnected = TRUE;
+	SV_Client = xr_new<CClient>();
+	SV_Client->ID.set(1);
+	SV_Client->flags.bConnected = TRUE;
 }
 
 void xrServer::Disconnect()
@@ -268,7 +273,7 @@ bool is_object_valid_on_svclient(u16 id_entity)
 
 void xrServer::Process_update(NET_Packet& P)
 {
-	if (!pActorClient) return;
+	if (!SV_Client) return;
 
 	// while has information
 	while (!P.r_eof())
@@ -289,8 +294,8 @@ void xrServer::Process_update(NET_Packet& P)
 			{
 				string16 tmp;
 				CLSID2TEXT(pSEAbstract->m_tClassID, tmp);
-				Debug.fatal(DEBUG_INFO, "Beer from the creator of '%s'; r_tell() = %d, pos = %d, size = %d, objectID = %d",
-					tmp, P.r_tell(), _pos, size, pSEAbstract->ID);
+				Debug.fatal(DEBUG_INFO, "Beer from the creator of '%s'; initiator: 0x%08x, r_tell() = %d, pos = %d, size = %d, objectID = %d",
+					tmp, SV_Client->ID.value(), P.r_tell(), _pos, size, pSEAbstract->ID);
 			}
 		}
 		else P.r_advance(size);
@@ -299,7 +304,7 @@ void xrServer::Process_update(NET_Packet& P)
 
 void xrServer::Process_save(NET_Packet& P)
 {
-	R_ASSERT2(pActorClient, "Process_save client not found");
+	R_ASSERT2(SV_Client, "Process_save client not found");
 
 	// while has information
 	while (!P.r_eof())
@@ -379,16 +384,16 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 		// Spawn entity
 		pAbstractE->ID = PerformIDgen(pAbstractE->ID);
 		pAbstractE->ID_Phantom = Phantom->ID;
-		pAbstractE->owner = pActorClient;
+		pAbstractE->owner = SV_Client;
 		entities.insert(std::make_pair(pAbstractE->ID, pAbstractE));
 	}
-	else
+	else 
 	{
 		if (pAbstractE->s_flags.is(M_SPAWN_OBJECT_PHANTOM))
 		{
 			// Clone from Phantom
 			pAbstractE->ID = PerformIDgen(0xffff);
-			pAbstractE->owner = pActorClient;
+			pAbstractE->owner = SV_Client;
 			pAbstractE->s_flags.set(M_SPAWN_OBJECT_PHANTOM, false);
 			entities.insert(std::make_pair(pAbstractE->ID, pAbstractE));
 		}
@@ -397,27 +402,27 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 			// Simple spawn
 			if (bSpawnWithClientsMainEntityAsParent)
 			{
-				CSE_Abstract* P = pActorClient->owner;
+				CSE_Abstract* P = SV_Client->owner;
 				R_ASSERT(P);
 				pAbstractE->ID_Parent = P->ID;
 			}
 			pAbstractE->ID = PerformIDgen(pAbstractE->ID);
-			pAbstractE->owner = pActorClient;
+			pAbstractE->owner = SV_Client;
 			entities.insert(std::make_pair(pAbstractE->ID, pAbstractE));
 		}
 	}
 
 	// PROCESS NAME; Name this entity
-	if (pActorClient && pAbstractE->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
+	if (SV_Client && pAbstractE->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
 	{
-		pActorClient->owner = pAbstractE;
+		SV_Client->owner = pAbstractE;
 	}
 
 	// PROCESS RP;	 3D position/orientation
 	pAbstractE->s_RP = 0xFE;	// Use supplied
 
 	// Parent-Connect
-	if (!tpExistedEntity)
+	if (!tpExistedEntity) 
 	{
 		game->OnCreate(pAbstractE->ID);
 
@@ -433,21 +438,28 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 
 	// create packet and broadcast packet to everybody
 	NET_Packet Packet;
-
-	// For local ONLY
-	if (pActorClient)
+	if (SV_Client)
 	{
+		// For local ONLY
 		pAbstractE->Spawn_Write(Packet, TRUE);
 		if (pAbstractE->s_flags.is(M_SPAWN_UPDATE))
 			pAbstractE->UPDATE_Write(Packet);
 		Level().OnMessage(Packet.B.data, (u32)Packet.B.count);
-	}
 
-	// For everybody, except client, which contains authorative copy
-	pAbstractE->Spawn_Write(Packet, FALSE);
-	if (pAbstractE->s_flags.is(M_SPAWN_UPDATE))
-		pAbstractE->UPDATE_Write(Packet);
-	SendBroadcast(Packet);
+		// For everybody, except client, which contains authorative copy
+		pAbstractE->Spawn_Write(Packet, FALSE);
+		if (pAbstractE->s_flags.is(M_SPAWN_UPDATE))
+			pAbstractE->UPDATE_Write(Packet);
+		SendBroadcast(SV_Client->ID, Packet);
+	}
+	else
+	{
+		pAbstractE->Spawn_Write(Packet, FALSE);
+		if (pAbstractE->s_flags.is(M_SPAWN_UPDATE))
+			pAbstractE->UPDATE_Write(Packet);
+		ClientID clientID; clientID.set(0);
+		SendBroadcast(clientID, Packet);
+	}
 
 	return pAbstractE;
 }
@@ -497,7 +509,7 @@ bool xrServer::Process_event_reject(NET_Packet& P, const u32 &time, const u16 id
 
 	// Signal to everyone (including sender)
 	if (send_message)
-		SendBroadcast( P);
+		SendBroadcast(BroadcastCID, P);
 
 	return true;
 }
@@ -573,7 +585,7 @@ void xrServer::Perform_destroy(CSE_Abstract* object)
 	P.w_u32(Device.dwTimeGlobal - 2 * NET_Latency);
 	P.w_u16(GE_DESTROY);
 	P.w_u16(object_id);
-	SendBroadcast( P);
+	SendBroadcast(BroadcastCID, P);
 }
 
 void xrServer::SLS_Clear()
@@ -627,7 +639,7 @@ void xrServer::Process_event(NET_Packet& P)
 	if (receiver)
 	{
 		R_ASSERT(receiver->owner);
-		receiver->OnEvent(P, type, timestamp);
+		receiver->OnEvent(P, type, timestamp, SV_Client->ID);
 	}
 
 	switch (type)
@@ -648,9 +660,9 @@ void xrServer::Process_event(NET_Packet& P)
 	case GEG_PLAYER_ITEM2RUCK:
 	case GE_ADDON_ATTACH:
 	case GE_ADDON_DETACH:
-	case GE_GRENADE_EXPLODE:			SendBroadcast( P); break;
+	case GE_GRENADE_EXPLODE:			SendBroadcast(BroadcastCID, P); break;
 	case GEG_PLAYER_ACTIVATEARTEFACT: 	Process_event_activate(P, destination, P.r_u16()); break;
-	case GE_INV_ACTION: 				if (pActorClient) Level().OnMessage(P.B.data, (u32)P.B.count); break;
+	case GE_INV_ACTION: 				if (SV_Client) Level().OnMessage(P.B.data, (u32)P.B.count); break;
 	case GE_TRADE_BUY:
 	case GE_OWNERSHIP_TAKE: 			Process_event_ownership(P, destination); break;
 	case GE_TRADE_SELL:
@@ -672,7 +684,7 @@ void xrServer::Process_event(NET_Packet& P)
 		if (0xffff != e_entity->ID_Parent) break;
 
 		// Signal to everyone (including sender)
-		SendBroadcast( P);
+		SendBroadcast(BroadcastCID, P);
 
 		// Perfrom real destroy
 		entity_Destroy(e_entity);
@@ -685,13 +697,13 @@ void xrServer::Process_event(NET_Packet& P)
 		if (type == GE_HIT_STATISTIC)
 		{
 			P.B.count -= 4;
-			P.w_u32(0);
+			P.w_u32(SV_Client->ID.value());
 		};
 		u16 id_src = P.r_u16();
 		CSE_Abstract* e_src = ID_to_entity(id_src);
 
 		if (e_src)
-			SendBroadcast( P);
+			SendBroadcast(BroadcastCID, P);
 	} break;
 	case GE_ASSIGN_KILLER:
 	{
@@ -734,6 +746,22 @@ void xrServer::Process_event(NET_Packet& P)
 		}
 
 		game->on_death(e_dest, e_src);
+
+		// клиент, чей юнит убил
+		CClient* c_src = e_src->owner;
+
+		if (c_src->owner->ID == id_src)
+		{
+			// Main unit
+			P.w_begin(M_EVENT);
+			P.w_u32(timestamp);
+			P.w_u16(type);
+			P.w_u16(destination);
+			P.w_u16(id_src);
+			P.w_clientID(c_src->ID);
+		}
+
+		SendBroadcast(BroadcastCID, P);
 		//////////////////////////////////////////////////////////////////////////
 		P.w_begin(M_EVENT);
 		P.w_u32(timestamp);
@@ -770,7 +798,7 @@ void xrServer::Process_event(NET_Packet& P)
 	} break;
 	case GEG_PLAYER_USE_BOOSTER:
 	{
-		if (receiver && receiver->owner && (receiver->owner != pActorClient))
+		if (receiver && receiver->owner && (receiver->owner != SV_Client))
 		{
 			NET_Packet tmp_packet;
 			CGameObject::u_EventGen(tmp_packet, GEG_PLAYER_USE_BOOSTER, receiver->ID);
@@ -810,18 +838,18 @@ void xrServer::Process_event_activate(NET_Packet& P, const u16 id_parent, const 
 	if (0xffff != e_entity->ID_Parent)
 	{
 		// Signal to everyone (including sender)
-		SendBroadcast( P);
+		SendBroadcast(BroadcastCID, P);
 	}
 }
 
 void xrServer::Perform_game_export()
 {
-	if (!pActorClient->net_Accepted)
+	if (!SV_Client->net_Accepted)
 		return;
 
 	NET_Packet P;
 	P.w_begin(M_SV_CONFIG_GAME);
-	game->net_Export_State(P);
+	game->net_Export_State(P, SV_Client->ID);
 	Level().OnMessage(P.B.data, (u32)P.B.count);
 
 	game->sv_force_sync = FALSE;
@@ -892,21 +920,21 @@ void xrServer::SendConnectionData(CClient* _CL)
 
 void xrServer::OnCL_Connected()
 {
-	if (!pActorClient)
+	if (!SV_Client)
 	{
 		Msg("! ERROR: Player state not created - incorect message sequence!");
 		return;
 	}
 
-	pActorClient->net_Accepted = TRUE;
+	SV_Client->net_Accepted = TRUE;
 
 	// Export Game Type
 	R_ASSERT(Level().Load_GameSpecific_After());
 	// end
 
 	Perform_game_export();
-	SendConnectionData(pActorClient);
-	game->signal_Syncronize();
+	SendConnectionData(SV_Client);
+	game->OnPlayerConnect(SV_Client->ID);
 }
 
 xrServer::EConnect xrServer::Connect(shared_str &session_name)
@@ -967,7 +995,7 @@ void xrServer::Process_event_ownership(NET_Packet& P, u16 ID)
 	e_parent->children.push_back(id_entity);
 
 	// Signal to everyone (including sender)
-	SendBroadcast( P);
+	SendBroadcast(BroadcastCID, P);
 }
 
 void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET_Packet* pEPack)
@@ -998,7 +1026,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET
 
 	if (0xffff == parent_id && nullptr == pEventPack)
 	{
-		SendBroadcast( P);
+		SendBroadcast(BroadcastCID, P);
 	}
 	else
 	{
@@ -1023,7 +1051,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET
 
 	if (!pEPack && pEventPack)
 	{
-		SendBroadcast( *pEventPack);
+		SendBroadcast(BroadcastCID, *pEventPack);
 	}
 
 	if (!game)

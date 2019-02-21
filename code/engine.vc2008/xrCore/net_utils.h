@@ -1,4 +1,5 @@
 #pragma once
+#include "client_id.h"
 
 static constexpr const size_t NET_PacketSizeLimit = 16 * 1024;
 
@@ -135,24 +136,23 @@ public:
         w(S, xr_strlen(S) + 1);
     }
 
-    IC void w_stringZ(const shared_str& p) 
-	{
+    IC void w_stringZ(const shared_str& p) {
         if (*p)
             w(*p, p.size() + 1);
         else
             w_u8(0);
     }
 
-    void w_matrix(const Fmatrix& M) 
-	{
+    void w_matrix(const Fmatrix& M) {
         w_vec3(M.i);
         w_vec3(M.j);
         w_vec3(M.k);
         w_vec3(M.c);
     }
 
-    void w_chunk_open8(u32& position) 
-	{
+    void w_clientID(ClientID C) { w_u32(C.value()); }
+
+    void w_chunk_open8(u32& position) {
         position = w_tell();
         w_u8(0);
     }
@@ -286,4 +286,5 @@ public:
     }
 
     void r_matrix(Fmatrix& M);
+    void r_clientID(ClientID& C);
 };

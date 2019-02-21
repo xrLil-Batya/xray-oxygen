@@ -64,8 +64,11 @@ void CFoodItem::BreakToPieces() noexcept
 			pStaticPG->play_at_pos(Position());
 		}
 
-		//ликвидировать сам объект
-		DestroyObject();
+		//ликвидировать сам объект 
+		if (Local())
+		{
+			DestroyObject();
+		}
 	}
 }
 
@@ -76,8 +79,12 @@ void CFoodItem::Hit(SHit* pHDS)
 	if (bIsBottele && (pHDS->damage() > fBreakPower))
 	{
 		//Generate Explode event
-		NET_Packet P;
-		u_EventGen(P, GE_GRENADE_EXPLODE, ID());
-		u_EventSend(P);
+		if (Local())
+		{
+			NET_Packet P;
+			u_EventGen(P, GE_GRENADE_EXPLODE, ID());
+			u_EventSend(P);
+		}
 	}
 }
+

@@ -131,9 +131,11 @@ void CWeaponAmmo::OnH_B_Chield()
 
 void CWeaponAmmo::OnH_B_Independent(bool just_before_destroy) 
 {
-	if(!Useful())
-	{
+	if(!Useful()) {
+		
+		if (Local()){
 			DestroyObject	();
+		}
 		m_ready_to_destroy	= true;
 	}
 	inherited::OnH_B_Independent(just_before_destroy);

@@ -189,6 +189,8 @@ void CCustomMonster::mk_orientation(Fvector &dir, Fmatrix& mR)
 
 void CCustomMonster::net_Export(NET_Packet& P)					// export to server
 {
+	R_ASSERT				(Local());
+
 	// export last known packet
 	R_ASSERT				(!NET.empty());
 	net_update& N			= NET.back();
@@ -205,69 +207,80 @@ void CCustomMonster::net_Export(NET_Packet& P)					// export to server
 	P.w_u8					(u8(g_Group()));
 }
 
-void CCustomMonster::shedule_Update(u32 DT)
+void CCustomMonster::shedule_Update	( u32 DT )
 {
-	VERIFY(!g_Alive() || processing_enabled());
+	VERIFY				(!g_Alive() || processing_enabled());
 	// Queue shrink
-	VERIFY(_valid(Position()));
-	u32	dwTimeCL = Level().timeServer() - NET_Latency;
-	VERIFY(!NET.empty());
-	while ((NET.size() > 2) && (NET[1].dwTimeStamp < dwTimeCL)) NET.pop_front();
+	VERIFY				(_valid(Position()));
+	u32	dwTimeCL		= Level().timeServer()-NET_Latency;
+	VERIFY				(!NET.empty());
+	while ((NET.size()>2) && (NET[1].dwTimeStamp<dwTimeCL)) NET.pop_front();
 
-	float dt = float(DT) / 1000.f;
+	float dt			= float(DT)/1000.f;
 	// *** general stuff
 	if (g_Alive())
 	{
 		Device.seqParallel.emplace_back(this, &CCustomMonster::Exec_Visibility);
 		memory().update(dt);
 	}
-	inherited::shedule_Update(DT);
+	inherited::shedule_Update	(DT);
 
 	// Queue setup
 	if (dt > 3) return;
 
-	m_dwCurrentTime = Device.dwTimeGlobal;
+	m_dwCurrentTime	= Device.dwTimeGlobal;
 
-	VERIFY(_valid(Position()));
+	VERIFY				(_valid(Position()));
+	if (Remote())		{
+	} else {
+		// here is monster AI call
+		m_fTimeUpdateDelta				= dt;
+		Device.Statistic->AI_Think.Begin	();
+		if (GetScriptControl())
+			ProcessScripts();
+		else {
+			if (Device.dwFrame > spawn_time() + g_AI_inactive_time)
+				Think					();
+		}
+		m_dwLastUpdateTime				= Device.dwTimeGlobal;
+		Device.Statistic->AI_Think.End	();
 
-	// here is monster AI call
-	m_fTimeUpdateDelta = dt;
-	Device.Statistic->AI_Think.Begin();
-	if (GetScriptControl())
-		ProcessScripts();
-	else {
-		if (Device.dwFrame > spawn_time() + g_AI_inactive_time)
-			Think();
+		// Look and action streams
+		float							temp = conditions().health();
+		if (temp > 0) {
+			Exec_Action				(dt);
+			VERIFY					(_valid(Position()));
+			//////////////////////////////////////
+			//Fvector C; float R;
+			//////////////////////////////////////
+			// Ñ Îëåñÿ - ÏÈÂÎ!!!! (Äèìå :-))))
+			// m_PhysicMovementControl->GetBoundingSphere	(C,R);
+			//////////////////////////////////////
+			//Center(C);
+			//R = Radius();
+			//////////////////////////////////////
+			/// #pragma todo("Oles to all AI guys: perf/logical problem: Only few objects needs 'feel_touch' why to call update for everybody?")
+			///			feel_touch_update		(C,R);
+
+			net_update				uNext;
+			uNext.dwTimeStamp		= Level().timeServer();
+			uNext.o_model			= movement().m_body.current.yaw;
+			uNext.o_torso			= movement().m_body.current;
+			uNext.p_pos				= Position();
+			uNext.fHealth			= GetfHealth();
+			NET.push_back			(uNext);
+		}
+		else 
+		{
+			net_update			uNext;
+			uNext.dwTimeStamp	= Level().timeServer();
+			uNext.o_model		= movement().m_body.current.yaw;
+			uNext.o_torso		= movement().m_body.current;
+			uNext.p_pos			= Position();
+			uNext.fHealth		= GetfHealth();
+			NET.push_back		(uNext);
+		}
 	}
-	m_dwLastUpdateTime = Device.dwTimeGlobal;
-	Device.Statistic->AI_Think.End();
-
-	// Look and action streams
-	float temp = conditions().health();
-	if (temp > 0)
-	{
-		Exec_Action(dt);
-		VERIFY(_valid(Position()));
-
-		net_update				uNext;
-		uNext.dwTimeStamp = Level().timeServer();
-		uNext.o_model = movement().m_body.current.yaw;
-		uNext.o_torso = movement().m_body.current;
-		uNext.p_pos = Position();
-		uNext.fHealth = GetfHealth();
-		NET.push_back(uNext);
-	}
-	else
-	{
-		net_update			uNext;
-		uNext.dwTimeStamp = Level().timeServer();
-		uNext.o_model = movement().m_body.current.yaw;
-		uNext.o_torso = movement().m_body.current;
-		uNext.p_pos = Position();
-		uNext.fHealth = GetfHealth();
-		NET.push_back(uNext);
-	}
-
 }
 
 void CCustomMonster::net_update::lerp(CCustomMonster::net_update& A, CCustomMonster::net_update& B, float f)
@@ -342,7 +355,13 @@ void CCustomMonster::UpdateCL	()
 			float					factor = d2 ? (float(d1)/float(d2)) : 1.f;
 			Fvector					l_tOldPosition = Position();
 			NET_Last.lerp			(A,B,factor);
-			NET_Last.p_pos			= l_tOldPosition;
+			if (Local()) {
+				NET_Last.p_pos		= l_tOldPosition;
+			}
+			else {
+				if (!bfScriptAnimation())
+					SelectAnimation	(XFORM().k,movement().detail().direction(),movement().speed());
+			}
 		}
 	}
 	STOP_PROFILE
@@ -352,19 +371,20 @@ void CCustomMonster::UpdateCL	()
 				animation_movement()->DBG_verify_position_not_chaged();
 #endif
 
-	if (g_Alive()) 
-	{
+	if (Local() && g_Alive()) {
 #pragma todo("Dima to All : this is FAKE, network is not supported here!")
+
 		UpdatePositionAnimation();
+	}
 
 	// Use interpolated/last state
+	if (g_Alive()) {
 		if (!animation_movement_controlled() && m_update_rotation_on_frame)
 			XFORM().rotateY			(NET_Last.o_model);
 		if( !animation_movement_controlled() )
 			XFORM().translate_over		(NET_Last.p_pos);
 
-		if (!animation_movement_controlled() && m_update_rotation_on_frame)
-		{
+		if (!animation_movement_controlled() && m_update_rotation_on_frame) {
 			Fmatrix					M;
 			M.setHPB				(0.0f, -NET_Last.o_torso.pitch, 0.0f);
 			XFORM().mulB_43			(M);
@@ -568,19 +588,21 @@ BOOL CCustomMonster::net_Spawn	(CSE_Abstract* DC)
 	eye_bone					= smart_cast<IKinematics*>(Visual())->LL_BoneID(pSettings->r_string(cNameSect(),"bone_head"));
 
 	// weapons
-	net_update				N;
-	N.dwTimeStamp			= Level().timeServer()-NET_Latency;
-	N.o_model				= -E->o_torso.yaw;
-	N.o_torso.yaw			= -E->o_torso.yaw;
-	N.o_torso.pitch			= 0;
-	N.p_pos.set				(Position());
-	NET.push_back			(N);
+	if (Local()) {
+		net_update				N;
+		N.dwTimeStamp			= Level().timeServer()-NET_Latency;
+		N.o_model				= -E->o_torso.yaw;
+		N.o_torso.yaw			= -E->o_torso.yaw;
+		N.o_torso.pitch			= 0;
+		N.p_pos.set				(Position());
+		NET.push_back			(N);
 
-	N.dwTimeStamp			+= NET_Latency;
-	NET.push_back			(N);
+		N.dwTimeStamp			+= NET_Latency;
+		NET.push_back			(N);
 
-	setVisible				(TRUE);
-	setEnabled				(TRUE);
+		setVisible				(TRUE);
+		setEnabled				(TRUE);
+	}
 
 	// Sheduler
 	shedule.t_min				= 100;

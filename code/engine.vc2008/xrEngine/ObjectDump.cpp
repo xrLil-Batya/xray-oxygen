@@ -48,9 +48,9 @@ ENGINE_API xr_string dbg_object_props_dump_string( const CObject *obj )
 	CObject::ObjectProperties props;
 	obj->DBGGetProps( props );
 
-	xr_string FirstPart = make_string(" net_ID :%d, bActiveCounter :%d, bEnabled :%s, bVisible :%s, bDestroy :%s, \n net_Ready :%s, net_SV_Update :%s, crow :%s, bPreDestroy : %s ",
+	xr_string FirstPart = make_string(" net_ID :%d, bActiveCounter :%d, bEnabled :%s, bVisible :%s, bDestroy :%s, \n net_Local %s, net_Ready :%s, net_SV_Update :%s, crow :%s, bPreDestroy : %s ",
 		props.net_ID, props.bActiveCounter, get_string(bool(!!props.bEnabled)).c_str(), get_string(bool(!!props.bVisible)).c_str(),
-		get_string(bool(!!props.bDestroy)).c_str(), get_string(bool(!!props.net_Ready)).c_str(),
+		get_string(bool(!!props.bDestroy)).c_str(), get_string(bool(!!props.net_Local)).c_str(), get_string(bool(!!props.net_Ready)).c_str(),
 		get_string(bool(!!props.net_SV_Update)).c_str(), get_string(bool(!!props.crow)).c_str(), get_string(bool(!!props.bPreDestroy)).c_str()
 	);
 

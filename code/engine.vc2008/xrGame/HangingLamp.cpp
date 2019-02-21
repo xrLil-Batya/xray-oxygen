@@ -395,6 +395,7 @@ void CHangingLamp::CreateBody(CSE_ALifeObjectHangingLamp	*lamp)
 
 void CHangingLamp::net_Export(NET_Packet& P)
 {
+	VERIFY(Local());
 }
 
 BOOL CHangingLamp::UsedAI_Locations()

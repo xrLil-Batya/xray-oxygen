@@ -91,6 +91,7 @@ void	CBreakableObject::Hit(SHit* pHDS)
 
 void CBreakableObject::net_Export(NET_Packet& P)
 {
+	VERIFY(Local());
 }
 
 BOOL CBreakableObject::UsedAI_Locations()
@@ -178,7 +179,7 @@ void CBreakableObject::Break()
 
 void CBreakableObject::SendDestroy()
 {
-	DestroyObject();
+	if (Local())	DestroyObject();
 	bRemoved = true;
 }
 

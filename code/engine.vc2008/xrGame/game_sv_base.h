@@ -2,6 +2,7 @@
 
 #include "game_base.h"
 #include "../xrScripts/export/script_export_space.h"
+#include "../xrCore/client_id.h"
 #include "alife_simulator.h"
 
 class CSE_Abstract;
@@ -18,7 +19,9 @@ protected:
 	CALifeSimulator					*m_alife_simulator;
 
 	//Events
-	virtual		void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time);
+	virtual		void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
+public:
+	virtual		void				OnPlayerConnect			(ClientID id_who);
 
 public:
 									game_sv_GameState		();
@@ -38,7 +41,8 @@ public:
 	// Main
 	virtual		void				Create					(shared_str& options);
 	virtual		void				Update					();
-	virtual		void				net_Export_State		(NET_Packet& P);				// full state
+	virtual		void				net_Export_State		(NET_Packet& P, ClientID id_to);				// full state
+	virtual		void				net_Export_Update		(NET_Packet& P, ClientID id_to, ClientID id);		// just incremental update for specific client
 	virtual		void				net_Export_GameTime		(NET_Packet& P);						// update GameTime only for remote clients
 
 	virtual		bool				change_level			(NET_Packet &net_packet);

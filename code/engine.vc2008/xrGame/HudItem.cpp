@@ -82,7 +82,7 @@ void CHudItem::SwitchState(u32 S)
 {
 	SetNextState(S);
 
-	if (!object().getDestroy())
+	if (object().Local() && !object().getDestroy())
 	{
 		// !!! Just single entry for given state !!!
 		NET_Packet P;
@@ -103,6 +103,9 @@ void CHudItem::OnEvent(NET_Packet& P, u16 type)
 void CHudItem::OnStateSwitch(u32 uState, u32 oldState)
 {
 	SetState(uState);
+
+	if (object().Remote())
+		SetNextState(uState);
 
 	if (uState == eBore)
 	{

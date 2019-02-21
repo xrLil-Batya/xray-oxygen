@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "GameObject.h"
-#include "Actor.h"
 #include "../Include/xrRender/RenderVisual.h"
-#include "../xrPhysics/PhysicsShell.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "ai_space.h"
 #include "CustomMonster.h" 
 #include "physicobject.h"
 #include "HangingLamp.h"
+#include "../xrphysics/PhysicsShell.h"
 #include "game_sv_base.h"
 #include "level_graph.h"
 #include "../xrPhysics/ph_shell_interface.h"
@@ -17,15 +17,16 @@
 #include "../Include/xrRender/Kinematics.h"
 #include "game_graph.h"
 #include "ai_object_location.h"
+#include "ai_debug.h"
 #include "../xrEngine/igame_level.h"
 #include "level.h"
 #include "script_callback_ex.h"
-#include "../xrPhysics/MathUtils.h"
+#include "../xrphysics/MathUtils.h"
 #include "game_level_cross_table.h"
 #include "ai_obstacle.h"
-#include "../xrPhysics/animation_movement_controller.h"
-#include "../xrEngine/xr_collide_form.h"
-#include "alife_object_registry.h"
+#include "../xrphysics/animation_movement_controller.h"
+#include "../xrengine/xr_collide_form.h"
+#include "../FrayBuildConfig.hpp"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -33,7 +34,6 @@
 #pragma warning(pop)
 
 #ifdef DEBUG
-#	include "ai_debug.h"
 #	include "debug_renderer.h"
 #	include "PHDebug.h"
 #	include "../../3rd-party/min_obb/magic_box3.h"
@@ -188,15 +188,12 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* pSEAbstract)
 	}
 
 	// Naming
+	cName_set(pSEAbstract->s_name);
 	cNameSect_set(pSEAbstract->s_name);
-
 	if (pSEAbstract->name_replace()[0])
 		cName_set(pSEAbstract->name_replace());
-	else
-	{
+	else 
 		R_ASSERT(Level().Objects.net_Find(pSEAbstract->ID) == nullptr);
-		cName_set(pSEAbstract->s_name);
-	}
 
 	setID(pSEAbstract->ID);
 
@@ -218,7 +215,10 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* pSEAbstract)
 
 	m_story_id = ALife::_STORY_ID(-1);
 	if (O) m_story_id = O->m_story_id;
-	
+
+	// Net params
+	setLocal(pSEAbstract->s_flags.is(M_SPAWN_OBJECT_LOCAL));
+
 	setReady(TRUE);
 	g_pGameLevel->Objects.net_Register(this);
 
@@ -286,17 +286,21 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* pSEAbstract)
 	return (CScriptBinder::net_Spawn(pSEAbstract));
 }
 
-void CGameObject::net_Save(NET_Packet &net_packet)
+void CGameObject::net_Save		(NET_Packet &net_packet)
 {
-	u32 position = 0u;
-	net_packet.w_chunk_open16(position);
-	save(net_packet);
+
+	u32							position;
+	net_packet.w_chunk_open16	(position);
+	save						(net_packet);
+
 	// Script Binder Save ---------------------------------------
-	CScriptBinder::save(net_packet);
-	net_packet.w_chunk_close16(position);
+
+	CScriptBinder::save			(net_packet);
+	// ----------------------------------------------------------
+	net_packet.w_chunk_close16	(position);
 }
 
-void CGameObject::net_Load(IReader &ireader)
+void CGameObject::net_Load		(IReader &ireader)
 {
 	load(ireader);
 	CScriptBinder::load(ireader);
@@ -607,9 +611,12 @@ void CGameObject::DestroyObject()
 	m_bObjectRemoved		= true;
 	if (getDestroy())		return;
 
-	NET_Packet		P;
-	u_EventGen		(P,GE_DESTROY,ID());
-	u_EventSend		(P);
+	if (Local())
+	{	
+		NET_Packet		P;
+		u_EventGen		(P,GE_DESTROY,ID());
+		u_EventSend		(P);
+	}
 }
 
 void CGameObject::shedule_Update	(u32 dt)

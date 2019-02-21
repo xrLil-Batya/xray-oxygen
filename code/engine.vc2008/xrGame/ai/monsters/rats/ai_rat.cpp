@@ -326,6 +326,8 @@ void CAI_Rat::net_Destroy()
 
 void CAI_Rat::net_Export(NET_Packet& P)
 {
+	R_ASSERT				(Local());
+
 	// export last known packet
 	R_ASSERT				(!NET.empty());
 	net_update& N			= NET.back();

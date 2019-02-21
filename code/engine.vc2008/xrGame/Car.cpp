@@ -516,7 +516,7 @@ void CCar::ChangeCondition(float fDeltaCondition)
 
 	CEntity::CalcCondition(-fDeltaCondition);
 	CDamagableItem::HitEffect();
-	if (!g_Alive() && !AlreadyDie())
+	if (Local() && !g_Alive() && !AlreadyDie())
 		KillEntity(Initiator());
 }
 

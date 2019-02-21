@@ -5,6 +5,8 @@
 
 void CWeaponStatMgun::OnMouseMove			(int dx, int dy)
 {
+	if (Remote())	return;
+
 	float scale		= psMouseSens * psMouseSensScale/50.f;
 	float h,p;
 	m_destEnemyDir.getHP(h,p);
@@ -22,6 +24,8 @@ void CWeaponStatMgun::OnMouseMove			(int dx, int dy)
 
 void CWeaponStatMgun::OnKeyboardPress		(int dik)
 {
+	if (Remote())							return;
+
 	switch (dik)	
 	{
 	case kWPN_FIRE:					
@@ -32,6 +36,7 @@ void CWeaponStatMgun::OnKeyboardPress		(int dik)
 
 void CWeaponStatMgun::OnKeyboardRelease	(int dik)
 {
+	if (Remote())							return;
 	switch (dik)	
 	{
 	case kWPN_FIRE:

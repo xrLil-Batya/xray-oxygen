@@ -394,9 +394,9 @@ BOOL CSE_ALifeItem::Net_Relevant			()
 	return						(FALSE);
 }
 
-void CSE_ALifeItem::OnEvent(NET_Packet &tNetPacket, u16 type, u32 time)
+void CSE_ALifeItem::OnEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
 {
-	inherited1::OnEvent			(tNetPacket,type,time);
+	inherited1::OnEvent			(tNetPacket,type,time,sender);
 	m_physics_disabled			= true;
 }
 
@@ -652,9 +652,9 @@ void CSE_ALifeItemWeapon::STATE_Write		(NET_Packet	&tNetPacket)
 	tNetPacket.w_stringZ(m_scope_name); //7 b8 + str
 }
 
-void CSE_ALifeItemWeapon::OnEvent			(NET_Packet	&tNetPacket, u16 type, u32 time)
+void CSE_ALifeItemWeapon::OnEvent			(NET_Packet	&tNetPacket, u16 type, u32 time, ClientID sender )
 {
-	inherited::OnEvent			(tNetPacket,type,time);
+	inherited::OnEvent			(tNetPacket,type,time,sender);
 	switch (type) {
 		case GE_WPN_STATE_CHANGE:
 			{			

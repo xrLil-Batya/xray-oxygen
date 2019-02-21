@@ -100,7 +100,7 @@ SERVER_ENTITY_DECLARE_BEGIN2(CSE_ALifeItem,CSE_ALifeDynamicObjectVisual,CSE_ALif
 	virtual CSE_Abstract			*cast_abstract			() {return this;};
 	virtual CSE_ALifeInventoryItem	*cast_inventory_item	() {return this;};
 	virtual BOOL					Net_Relevant			();
-	virtual void					OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time);
+	virtual void					OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItem)
 #define script_type_list save_type_list(CSE_ALifeItem)
@@ -203,7 +203,7 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 
 									CSE_ALifeItemWeapon	(LPCSTR caSection);
 	virtual							~CSE_ALifeItemWeapon();
-	virtual void					OnEvent				(NET_Packet& P, u16 type, u32 time);
+	virtual void					OnEvent				(NET_Packet& P, u16 type, u32 time, ClientID sender );
 	virtual u32						ef_main_weapon_type	() const;
 	virtual u32						ef_weapon_type		() const;
 	u8								get_slot			();

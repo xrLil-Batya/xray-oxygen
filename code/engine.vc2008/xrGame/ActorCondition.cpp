@@ -213,7 +213,10 @@ void CActorCondition::UpdateCondition()
 		return;
 	}
 
-	if (!object().g_Alive() || m_object != Level().CurrentViewEntity())
+	if (!object().g_Alive())
+		return;
+
+	if (!object().Local() && m_object != Level().CurrentViewEntity())
 		return;
 
 	float base_weight = object().MaxCarryWeight();
@@ -909,7 +912,7 @@ bool CActorCondition::ApplyInfluence(const SMedicineInfluenceValues& V, const sh
 	if(m_curr_medicine_influence.InProcess())
 		return false;
 
-	if (m_object == Level().CurrentViewEntity())
+	if (m_object->Local() && m_object == Level().CurrentViewEntity())
 	{
 		if(pSettings->line_exist(sect, "use_sound"))
 		{
@@ -933,7 +936,7 @@ bool CActorCondition::ApplyBooster(const SBooster& B, const shared_str& sect)
 {
 	if(B.fBoostValue>0.0f)
 	{
-		if (m_object == Level().CurrentViewEntity())
+		if (m_object->Local() && m_object == Level().CurrentViewEntity())
 		{
 			if(pSettings->line_exist(sect, "use_sound"))
 			{

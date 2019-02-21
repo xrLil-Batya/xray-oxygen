@@ -169,6 +169,12 @@ void NET_Packet::r_matrix(Fmatrix& M) {
     M._44_ = 1;
 }
 
+void NET_Packet::r_clientID(ClientID& C) {
+    u32 tmp;
+    r_u32(tmp);
+    C.set(tmp);
+}
+
 void NET_Packet::r_stringZ_s(char* string, const size_t size) {
     auto data = reinterpret_cast<LPCSTR>(B.data) + r_pos;
     const size_t length = xr_strlen(data);

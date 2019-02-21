@@ -116,7 +116,13 @@ void CGrenade::State(u32 state, u32 oldState)
 				xr_delete(m_pPhysicsShell);
 				m_dwDestroyTime = 0xffffffff;
 				PutNextToSlot();
-				DestroyObject();
+				if (Local())
+				{
+#ifndef MASTER_GOLD
+					Msg("Destroying local grenade[%d][%d]", ID(), Device.dwFrame);
+#endif
+					DestroyObject();
+				}
 			}
 			break;
 		}
@@ -343,7 +349,7 @@ void CGrenade::DeactivateItem()
 {
 	//Drop grenade if primed
 	StopCurrentAnimWithoutCallback();
-	if ( !GetTmpPreDestroy() && ( GetState()==eThrowStart || GetState()==eReady || GetState()==eThrow ) )
+	if ( !GetTmpPreDestroy() && Local() && ( GetState()==eThrowStart || GetState()==eReady || GetState()==eThrow ) )
 	{
 		if (m_fake_missile)
 		{
