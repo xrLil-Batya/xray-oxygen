@@ -50,6 +50,7 @@ bool CLevel::net_start1()
 	g_pGamePersistent->LoadTitle();
 
 	IGame_Persistent::params &p = g_pGamePersistent->m_game_params;
+
 	// Connect
 	Server = xr_new<xrServer>();
 
@@ -87,6 +88,7 @@ bool CLevel::net_start2()
 		Server->game->sls_default();
 		map_data.m_name = Server->level_name(serverOption);
 		g_pGamePersistent->LoadTitle(true, map_data.m_name);
+		Server->createClient();
 	}
 	return true;
 }
@@ -98,7 +100,6 @@ bool CLevel::net_start4()
 	g_loading_events.pop_front();
 
     pApp->LoadBegin();
-	Server->createClient();
 
 	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client6));
 	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client5));
