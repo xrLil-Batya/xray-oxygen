@@ -52,7 +52,6 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 	pDI = NULL;
 	pMouse = NULL;
 	pKeyboard = NULL;
-#endif
 
 	//=====================Mouse
 	mouse_property.mouse_dt = 25;
@@ -65,10 +64,22 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 
 	//===================== Dummy pack
 	iCapture(&dummyController);
-
-#ifndef RAW_INPUT_USE
-	if (!pDI) CHK_DX(DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&pDI, NULL));
 #endif
+
+#ifdef RAW_INPUT_USE
+	Mouse.usUsagePage = 1;
+	Mouse.usUsage = 2;
+	Mouse.dwFlags = RIDEV_CAPTUREMOUSE;
+	Mouse.hwndTarget = Device.m_hWnd;
+	RegisterRawInputDevices(&Mouse, 1, sizeof(Mouse));
+
+	KeyBoard.usUsagePage = 1;
+	KeyBoard.usUsage = 6;
+	KeyBoard.dwFlags = RIDEV_APPKEYS;
+	KeyBoard.hwndTarget = Device.m_hWnd;
+	RegisterRawInputDevices(&KeyBoard, 1, sizeof(KeyBoard));
+#else
+	if (!pDI) CHK_DX(DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&pDI, NULL));
 	u32 kb_input_flags = ((bExclusive) ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND;
 	u32 mouse_input_flags = ((bExclusive) ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY;
 
@@ -78,25 +89,24 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 	// MOUSE
 	if (deviceForInit & mouse_device_key)
 		CHK_DX(CreateInputDevice(&pMouse, GUID_SysMouse, &c_dfDIMouse2, mouse_input_flags, MOUSEBUFFERSIZE));
+#endif
 
 	Debug.set_on_dialog(&on_error_dialog);
 
-#ifdef ENGINE_BUILD
 	Device.seqAppActivate.Add(this);
 	Device.seqAppDeactivate.Add(this, REG_PRIORITY_HIGH);
 	Device.seqFrame.Add(this, REG_PRIORITY_HIGH);
-#endif
 }
 
 CInput::~CInput(void)
 {
-#ifdef ENGINE_BUILD
 	Device.seqFrame.Remove(this);
 	Device.seqAppDeactivate.Remove(this);
 	Device.seqAppActivate.Remove(this);
-#endif
 	//_______________________
-
+#ifdef RAW_INPUT_USE
+	xr_delete(pDI);
+#else
 	// Unacquire and release the device's interfaces
 	if (pMouse) {
 		pMouse->Unacquire();
@@ -110,6 +120,7 @@ CInput::~CInput(void)
 
 	_SHOW_REF("Input: ", pDI);
 	_RELEASE(pDI);
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -117,7 +128,7 @@ CInput::~CInput(void)
 // Desc: Create a DirectInput device.
 //-----------------------------------------------------------------------------
 #ifdef RAW_INPUT_USE
-HRESULT CInput::CreateInputDevice(RAWINPUTDEVICE* device, GUID guidDevice, const RID_DEVICE_INFO* pdidDataFormat, u32 dwFlags, u32 buf_size)
+HRESULT CInput::CreateInputDevice(RAWINPUTDEVICE* device, GUID guidDevice, RID_DEVICE_INFO* pdidDataFormat, u32 dwFlags, u32 buf_size)
 {
 	// Obtain an interface to the input device
 	GetRegisteredRawInputDevices(device, 0, buf_size);
@@ -126,7 +137,7 @@ HRESULT CInput::CreateInputDevice(RAWINPUTDEVICE* device, GUID guidDevice, const
 	// controls on a device we are interested in, and how they should be
 	// reported.
 
-	GetRawInputDeviceInfo(pdidDataFormat, 0, 0, (u32*)buf_size);
+	GetRawInputDeviceInfo(device, RIDI_DEVICEINFO, pdidDataFormat, (u32*)buf_size);
 	return S_OK;
 }
 #else
@@ -164,7 +175,6 @@ HRESULT CInput::CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice,
 	return S_OK;
 }
 
-#endif
 //-----------------------------------------------------------------------
 
 void CInput::SetAllAcquire(BOOL bAcquire)
@@ -181,6 +191,7 @@ void CInput::SetKBDAcquire(BOOL bAcquire)
 {
 	if (pKeyboard)	bAcquire ? pKeyboard->Acquire() : pKeyboard->Unacquire();
 }
+#endif
 //-----------------------------------------------------------------------
 BOOL b_altF4 = FALSE;
 void CInput::KeyUpdate()

@@ -34,19 +34,19 @@ void FLOD::Load			(LPCSTR N, IReader *data, u32 dwFlags)
 
 	// LOD-def
 	R_ASSERT			(data->find_chunk(OGF_LODDEF2));
-	for (int f=0; f<8; f++)
+	for (u32 f=0; f<8; f++)
 	{
 		data->r					(facets[f].v,sizeof(facets[f].v));
 		_vertex* v				= facets[f].v;
 
-		Fvector					N,T;
-		N.set					(0,0,0);
-		T.mknormal				(v[0].v,v[1].v,v[2].v);	N.add	(T);
-		T.mknormal				(v[1].v,v[2].v,v[3].v);	N.add	(T);
-		T.mknormal				(v[2].v,v[3].v,v[0].v);	N.add	(T);
-		T.mknormal				(v[3].v,v[0].v,v[1].v);	N.add	(T);
-		N.div					(4.f);
-		facets[f].N.normalize	(N);
+		Fvector					FN,T;
+		FN.set					(0,0,0);
+		T.mknormal				(v[0].v,v[1].v,v[2].v);	FN.add	(T);
+		T.mknormal				(v[1].v,v[2].v,v[3].v);	FN.add	(T);
+		T.mknormal				(v[2].v,v[3].v,v[0].v);	FN.add	(T);
+		T.mknormal				(v[3].v,v[0].v,v[1].v);	FN.add	(T);
+		FN.div					(4.f);
+		facets[f].N.normalize	(FN);
 		facets[f].N.invert		();
 	}
 

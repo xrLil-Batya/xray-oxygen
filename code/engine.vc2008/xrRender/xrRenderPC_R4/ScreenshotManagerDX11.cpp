@@ -10,7 +10,7 @@ void CScreenshotManager::ProcessImage(u32* pData, u32 size, bool bGammaCorrectio
 	if (bGammaCorrection)
 	{
 		DXGI_GAMMA_CONTROL G = dxRenderDeviceRender::Instance().GetGammaLUT();
-		for (int i = 0; i < 256; ++i)
+		for (u32 i = 0; i < 256; ++i)
 		{
 			G.GammaCurve[i].Red   /= 256;
 			G.GammaCurve[i].Green /= 256;
@@ -22,9 +22,9 @@ void CScreenshotManager::ProcessImage(u32* pData, u32 size, bool bGammaCorrectio
 		{
 			u32 p = *pPixel;
 			*pPixel = color_xrgb(
-				G.GammaCurve[color_get_R(p)].Red,
-				G.GammaCurve[color_get_G(p)].Green,
-				G.GammaCurve[color_get_B(p)].Blue
+				(u32)G.GammaCurve[color_get_R(p)].Red,
+				(u32)G.GammaCurve[color_get_G(p)].Green,
+				(u32)G.GammaCurve[color_get_B(p)].Blue
 			);
 		}
 	}

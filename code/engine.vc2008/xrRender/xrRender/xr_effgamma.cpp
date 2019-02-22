@@ -6,12 +6,12 @@ CGammaControl::CGammaControl() : fGamma(1.0f), fBrightness(1.0f), fContrast(1.0f
 	SetBalance(1.0f, 1.0f, 1.0f);
 }
 
-void CGammaControl::GetIP(float& G, float &B, float& C, Fvector& Balance)
+void CGammaControl::GetIP(float& refG, float &refB, float& refC, Fvector& refBalance)
 {
-	G = fGamma;
-	B = fBrightness;
-	C = fContrast;
-	Balance.set(cBalance);
+	refG = fGamma;
+	refB = fBrightness;
+	refC = fContrast;
+	refBalance.set(cBalance);
 }
 
 #ifdef USE_DX11

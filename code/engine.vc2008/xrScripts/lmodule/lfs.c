@@ -57,8 +57,6 @@
 #define LFS_VERSION "1.6.3"
 #define LFS_LIBNAME "lfs"
 
-#define luaL_newlib(L,l) (lua_newtable(L), luaL_register(L,0,l))
-
 /* Define 'strerror' for systems that do not implement it */
 #ifdef NO_STRERROR
 #define strerror(_)     "System unable to describe the error"

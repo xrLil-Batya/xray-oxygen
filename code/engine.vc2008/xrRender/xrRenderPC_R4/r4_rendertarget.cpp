@@ -475,7 +475,7 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 		if (RImplementation.o.dx10_msaa)
 		{
 			static LPCSTR SampleDefs[] = { "0","1","2","3","4","5","6","7" };
-			CBlender_rain_msaa	TempBlender[8];
+			CBlender_rain_msaa	TempBlenderMSAA[8];
 
 			int bound = RImplementation.o.dx10_msaa_samples;
 
@@ -484,8 +484,8 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 
 			for (u32 i = 0; i < bound; ++i)
 			{
-				TempBlender[i].SetDefine	("ISAMPLE", SampleDefs[i]);
-				s_rain_msaa[i].create		(&TempBlender[i], "null");
+				TempBlenderMSAA[i].SetDefine	("ISAMPLE", SampleDefs[i]);
+				s_rain_msaa[i].create		(&TempBlenderMSAA[i], "null");
 				s_accum_spot_msaa[i].create	(b_accum_spot_msaa[i], "r2\\accum_spot_s", "lights\\lights_spot01");
 				s_accum_point_msaa[i].create(b_accum_point_msaa[i], "r2\\accum_point_s");
 				s_accum_volume_msaa[i].create(b_accum_volumetric_msaa[i], "lights\\lights_spot01");

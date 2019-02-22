@@ -102,7 +102,7 @@
             //ZeroMemory(PrependPath, sizeof(PrependPath));
             memcpy(PrependPath, shName, sizeof(PrependPath));
             char* ClearShaderName = NULL;
-            char* PathStart = strtok_s(PrependPath, "\\", &ClearShaderName);
+            //char* PathStart = strtok_s(PrependPath, "\\", &ClearShaderName);
             //memcpy(shName, PathStart, sizeof(string_path) - sizeof(PrependPath));
 
 			// Open file

@@ -60,8 +60,8 @@ void	CRenderTarget::phase_luminance()
 	u_setrt									(rt_LUM_8,NULL,NULL,NULL);
 	{
 		// Build filter-kernel
-		float		_ts				= 8;
-		float		_src			= float(64);
+		float		_ts				= 8.f;
+		float		_src			= 64.f;
 		Fvector2	a[16],b[16];
 		for (int k=0; k<16; k++)	{
 			int	_x	= (k*2+1)%8;	// 1,3,5,7

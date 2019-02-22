@@ -1,6 +1,6 @@
-﻿#ifndef __XR_INPUT__
-#define __XR_INPUT__
+﻿#pragma once
 
+//#define RAW_INPUT_USE
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
@@ -21,6 +21,7 @@ public:
 		COUNT_MOUSE_AXIS			= 3,
 		COUNT_KB_BUTTONS			= 256
 	};
+#ifndef RAW_INPUT_USE
 	struct sxr_mouse
 	{
 		DIDEVCAPS					capabilities;
@@ -34,10 +35,13 @@ public:
 		DIDEVICEINSTANCE			deviceInfo;
 		DIDEVICEOBJECTINSTANCE		objectInfo;
 	};
+#endif
 #ifdef RAW_INPUT_USE
 	static HRAWINPUT	DataInput;
 private:
 	LPRAWINPUT			pDI;			// The Input object
+	RAWINPUTDEVICE		Mouse;
+	RAWINPUTDEVICE		KeyBoard;
 #else
 private:
 	LPDIRECTINPUT8				pDI;			// The DInput object
@@ -53,7 +57,7 @@ private:
 	//----------------------
 	BOOL						KBState		[COUNT_KB_BUTTONS];
 #ifdef RAW_INPUT_USE
-	HRESULT						CreateInputDevice(RAWINPUTDEVICE* pDev, GUID gDevice, const RID_DEVICE_INFO* pDataFormat, u32 dwFlags, u32 bSize);
+	HRESULT						CreateInputDevice(RAWINPUTDEVICE* pDev, GUID gDevice, RID_DEVICE_INFO* pDataFormat, u32 dwFlags, u32 bSize);
 
 #else
 	HRESULT						CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice,
@@ -66,13 +70,15 @@ private:
 	void						KeyUpdate					( );
 
 public:
+	u32							dwCurTime;
+#ifndef RAW_INPUT_USE
 	sxr_mouse					mouse_property;
 	sxr_key						key_property;
-	u32							dwCurTime;
 	
 	void						SetAllAcquire				( BOOL bAcquire = TRUE );
 	void						SetMouseAcquire				( BOOL bAcquire );
 	void						SetKBDAcquire				( BOOL bAcquire );
+#endif
 
 	void						iCapture					( IInputReceiver *pc );
 	void						iRelease					( IInputReceiver *pc );
@@ -100,5 +106,3 @@ public:
 };
 
 extern ENGINE_API CInput *		pInput;
-
-#endif //__XR_INPUT__
