@@ -334,11 +334,10 @@ void CInput::MouseUpdate()
 			return;
 	};
 
-#ifndef _EDITOR
 	if (Device.dwPrecacheFrame)
 		return;
-#endif
-	BOOL				mouse_prev[COUNT_MOUSE_BUTTONS];
+
+	BOOL mouse_prev[COUNT_MOUSE_BUTTONS];
 	for(u16 i = 0; i < 8; i++)
 		mouse_prev[i] = mouseState[i];
 

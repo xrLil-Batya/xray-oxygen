@@ -16,8 +16,8 @@
 #	include "debug_renderer.h"
 #endif
 
-static const float down_leader_extension_tolerance = 0.2f;
-static const float up_leader_extension_tolerance = 0.0f;
+inline float down_leader_extension_tolerance = 0.2f;
+inline float up_leader_extension_tolerance   = 0.0f;
 
 CClimableObject::CClimableObject() : m_pStaticShell(nullptr), m_material(u16(-1)) //-V730
 {

@@ -95,7 +95,7 @@ void CFlare::OnAnimationEnd(u32 state)
 
 void CFlare::SwitchOn()
 {
-	static int lt				= 1; //IRender_Light::POINT
+	static int lt				= IRender_Light::POINT;
 	static bool ls				= true;
 	light_render				= ::Render->light_create();
 	light_render->set_type		( (IRender_Light::LT)lt);

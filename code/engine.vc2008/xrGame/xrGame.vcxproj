@@ -622,7 +622,6 @@
     <ClInclude Include="alife_human_brain_save.h" />
     <ClInclude Include="alife_human_object_handler.h" />
     <ClInclude Include="alife_human_object_handler_inline.h" />
-    <ClInclude Include="alife_human_object_handler_save.h" />
     <ClInclude Include="..\xrServerEntities\alife_monster_brain.h" />
     <ClInclude Include="..\xrServerEntities\alife_monster_brain_inline.h" />
     <ClInclude Include="alife_monster_movement_manager.h" />

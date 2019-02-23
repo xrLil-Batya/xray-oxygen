@@ -23,7 +23,6 @@ class CSE_ALifeTraderAbstract;
 class CSE_ALifeObject;
 class CSE_ALifeDynamicObject;
 class CSE_ALifeItemAmmo;
-class CSE_ALifeItemWeapon;
 class CSE_ALifeItemDetector;
 class CSE_ALifeMonsterAbstract;
 class CSE_ALifeHumanAbstract;
@@ -153,7 +152,6 @@ public:
 	virtual CSE_ALifeObject				*cast_alife_object			() {return nullptr;}
 	virtual CSE_ALifeDynamicObject		*cast_alife_dynamic_object	() {return nullptr;}
 	virtual CSE_ALifeItemAmmo			*cast_item_ammo				() {return nullptr;}
-	virtual CSE_ALifeItemWeapon			*cast_item_weapon			() {return nullptr;}
 	virtual CSE_ALifeItemDetector		*cast_item_detector			() {return nullptr;}
 	virtual CSE_ALifeMonsterAbstract	*cast_monster_abstract		() {return nullptr;};
 	virtual CSE_ALifeHumanAbstract		*cast_human_abstract		() {return nullptr;};

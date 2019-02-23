@@ -15,17 +15,10 @@
 #define fdRLE10	0x03ede5bdb     // 1/ln10
 
 // integer math on floats
-#ifdef	_M_AMD64
-	IC bool negative(const float f)		{ return f<0;	}
-	IC bool positive(const float f)		{ return f>=0;	}
-	IC void set_negative(float &f)		{ f = -fabsf(f); }
-	IC void set_positive(float &f)		{ f = fabsf(f);	}
-#else
-	IC BOOL negative(const float &f)	{ return (*((unsigned*)(&f))&fdSGN);	}
-	IC BOOL positive(const float &f)	{ return (*((unsigned*)(&f))&fdSGN)==0;	}
-	IC void set_negative(float &f)		{ (*(unsigned*)(&f)) |= fdSGN;			}
-	IC void set_positive(float &f)		{ (*(unsigned*)(&f)) &= ~fdSGN;			}
-#endif
+IC bool negative(const float f)		{ return f<0;	}
+IC bool positive(const float f)		{ return f>=0;	}
+IC void set_negative(float &f)		{ f = -fabsf(f); }
+IC void set_positive(float &f)		{ f = fabsf(f);	}
 
 /*
  * Here are a few nice tricks for 2's complement based machines
@@ -73,7 +66,7 @@ IC	u32	btwCount1(u32 v)
 
 IC	u64	btwCount1(u64 v)
 {
-	return btwCount1(u32(v&u32(-1)))+btwCount1(u32(v>>u64(32)));
+	return btwCount1(u32(v&u32(-1))) + btwCount1(u32(v >> 32));
 }
 
 ICF float fFloorSSE2(float x)
@@ -93,7 +86,7 @@ ICF float fFloorSSE2(float x)
 
 ICF int iFloor (float x) 
 {
-    return (int)floor(x);
+    return (int)fFloorSSE2(x);
 }
 
 ICF int iCeil (float x)

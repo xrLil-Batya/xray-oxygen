@@ -49,7 +49,6 @@ BOOL CRenderDevice::Begin	()
 		// If the device was lost, do not render until we get it back
 		Sleep(33);
 		return FALSE;
-		break;
 
 	case IRenderDeviceRender::dsNeedReset:
 		// Check if the device is ready to be reset

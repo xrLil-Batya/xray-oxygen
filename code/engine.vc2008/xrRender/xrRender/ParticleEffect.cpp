@@ -524,17 +524,7 @@ void CParticleEffect::Render(float)
 			FVF::LIT* pv_start = (FVF::LIT*)RCache.Vertex.Lock(p_cnt * 4 * 4, geom->vb_stride, dwOffset);
 			FVF::LIT* pv = pv_start;
 
-			if (p_cnt < 16)
-			{
-				PRS_PARAMS singleParam;
-				singleParam.pv = pv;
-				singleParam.p_from = 0;
-				singleParam.p_to = p_cnt;
-				singleParam.particles = particles;
-				singleParam.pPE = this;
-				ParticleRenderStream(&singleParam);
-			}
-			else
+			// Parallel task
 			{
 				tbb::task_group ParticleEffectTasks;
 				size_t nWorkers = CPU::Info.n_threads;
@@ -558,7 +548,6 @@ void CParticleEffect::Render(float)
 						ParticleRenderStream(&prsParams[i]);
 					});
 				}
-
 				ParticleEffectTasks.wait();
 			}
 

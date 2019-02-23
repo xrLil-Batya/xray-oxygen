@@ -1654,21 +1654,7 @@ void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max
 	if (!p_cnt)
 		return;
 
-	if (p_cnt < 16)
-	{
-		TES_PARAMS singleParam;
-		singleParam.p_from = 0;
-		singleParam.p_to = p_cnt;
-		singleParam.effect = effect;
-		singleParam.offset = offset;
-		singleParam.age = age;
-		singleParam.epsilon = epsilon;
-		singleParam.frequency = frequency;
-		singleParam.octaves = octaves;
-		singleParam.magnitude = magnitude;
-		PATurbulenceExecuteStream(&singleParam);
-	}
-	else
+	// Parallel task
 	{
 		tbb::task_group ParticleTurbulenceTasks;
 		size_t nWorkers = CPU::Info.n_threads;

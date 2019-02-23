@@ -1614,7 +1614,6 @@ bool CSE_ALifeObjectProjector::used_ai_locations() const
 
 CSE_ALifeSchedulable::CSE_ALifeSchedulable	(LPCSTR caSection)
 {
-	m_tpCurrentBestWeapon		= nullptr;
 	m_tpBestDetector			= nullptr;
 	m_schedule_counter			= u64(-1);
 }

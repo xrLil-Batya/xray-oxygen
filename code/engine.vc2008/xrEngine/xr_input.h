@@ -1,6 +1,5 @@
 ﻿#pragma once
-
-//#define RAW_INPUT_USE
+#include "../FrayBuildConfig.hpp"
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
@@ -8,10 +7,10 @@ class	ENGINE_API				IInputReceiver;
 
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //описание класса
-const int mouse_device_key		= 1;
-const int keyboard_device_key	= 2;
-const int all_device_key		= mouse_device_key | keyboard_device_key;
-const int default_key			= mouse_device_key | keyboard_device_key ;
+constexpr int mouse_device_key		= 1;
+constexpr int keyboard_device_key	= 2;
+constexpr int all_device_key		= mouse_device_key | keyboard_device_key;
+constexpr int default_key			= mouse_device_key | keyboard_device_key ;
 
 class ENGINE_API CInput : public pureFrame, public pureAppActivate, public pureAppDeactivate
 {

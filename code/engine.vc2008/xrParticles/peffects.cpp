@@ -11,6 +11,7 @@ ParticleEffect::ParticleEffect(int mp)
 	d_cb = 0;
 	max_particles = mp;
 	particles_allocated = mp;
+	particles.reserve(max_particles);
 }
 
 ParticleEffect::~ParticleEffect()
@@ -23,7 +24,17 @@ int ParticleEffect::Resize(u32 max_count)
 	// Allocate particles.
 	max_particles = max_count;
 	particles_allocated = max_count;
-	return (u32)particles.size();
+
+	// May have to kill particles.
+	if (particles.size() > max_particles)
+	{
+		for (decltype(particles)::iterator IterSize = particles.begin() + max_count; IterSize < particles.end(); IterSize++)
+		{
+			particles.erase(IterSize);
+		}
+	}
+
+	return max_count;
 }
 
 void ParticleEffect::Remove(int i)
