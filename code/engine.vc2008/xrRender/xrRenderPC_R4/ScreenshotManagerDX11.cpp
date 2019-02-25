@@ -73,7 +73,7 @@ ID3DBlob* CScreenshotManager::MakeScreenshotNormal(u32 fmt)
 	TexData.SysMemPitch = desc.Width * 2;
 	TexData.SysMemSlicePitch = desc.Height * TexData.SysMemPitch;
 
-	bool bGammaCorrection = psDeviceFlags.test(rsFullscreen) ? ps_r_flags.test(R_FLAG_SS_GAMMA_CORRECTION) : false;
+	bool bGammaCorrection = psDeviceFlags.test(rsFullscreen) ? ps_r_postscreen_flags.test(R_FLAG_SS_GAMMA_CORRECTION) : false;
 	ProcessImage((u32*)TexData.pSysMem, Device.dwWidth * Device.dwHeight, bGammaCorrection);
 
 	// Save resource to buffer and return it

@@ -392,14 +392,26 @@ void CRenderTarget::phase_combine()
 	}
 
 	// Rain droplets on screen
-	if (ps_r_flags.test(R_FLAG_RAIN_DROPS))
+	if (ps_r_postscreen_flags.test(R_FLAG_RAIN_DROPS))
 	{
 		PIX_EVENT(phase_rain_droplets);
 		PhaseRainDrops();
 	}
 
+	if (ps_r_postscreen_flags.test(R_FLAG_CHROMATIC))
+	{
+		PIX_EVENT(phase_chromatic);
+		PhaseChromaticAmb();
+	}
+
+	if (ps_r_postscreen_flags.test(R_FLAG_GRADING))
+	{
+		PIX_EVENT(phase_grading);
+		PhaseGrading();
+	}
+
 	// Vignette effect
-	if (ps_r_flags.test(R_FLAG_VIGNETTE))
+	if (ps_r_postscreen_flags.test(R_FLAG_VIGNETTE))
 	{
 		PIX_EVENT(phase_vignette);
 		PhaseVignette();

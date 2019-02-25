@@ -129,8 +129,8 @@ private:
 	// RAIN DROPS
 	ref_shader					s_rain_drops;
 
-	// Vignette
-	ref_shader					s_vignette;
+	// Vignette, ChromaticAbr & Grading
+	ref_shader					s_postscreen;
 
 	// SSAO
 	ref_rt						rt_ssao_temp;
@@ -294,6 +294,8 @@ public:
 	void						PhaseSSSS				();
 	void						PhaseRainDrops			();
 	void						PhaseVignette			();
+	void						PhaseGrading			();
+	void						PhaseChromaticAmb		();
 	void						PhaseAA					();
 	void						ProcessFXAA				();
 	void						ProcessSMAA				();

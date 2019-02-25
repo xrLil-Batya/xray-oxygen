@@ -659,14 +659,14 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 		s_pp_antialiasing.create("effects\\pp_antialiasing_msaa");
 		s_pp_taa.create			("effects\\taa_msaa");
 		s_rain_drops.create		("effects\\screen_rain_droplets_msaa");
-		s_vignette.create		("effects\\vignette_msaa");
+		s_postscreen.create		("effects\\postscreen_msaa");
 	}
 	else
 	{
 		s_pp_antialiasing.create("effects\\pp_antialiasing");
 		s_pp_taa.create			("effects\\taa");
 		s_rain_drops.create		("effects\\screen_rain_droplets");
-		s_vignette.create		("effects\\vignette");
+		s_postscreen.create		("effects\\postscreen");
 	}
 
 	// Build textures
