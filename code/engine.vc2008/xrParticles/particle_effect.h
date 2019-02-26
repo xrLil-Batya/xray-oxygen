@@ -43,7 +43,7 @@ namespace PAPI
 			particles.emplace_back(P);
 
 			if (b_cb)
-				b_cb(owner, param, P, (u32)particles.size() - 1);
+				b_cb(owner, param, particles[particles.size() - 1], (u32)particles.size() - 1);
 
 			return true;
 		}

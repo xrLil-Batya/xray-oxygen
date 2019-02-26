@@ -375,7 +375,7 @@ struct PRS_PARAMS
 	FVF::LIT* pv;
 	u32 p_from;
 	u32 p_to;
-	xr_vector<PAPI::Particle> particles;
+	xr_vector<PAPI::Particle> *particles;
 	CParticleEffect* pPE;
 
 	~PRS_PARAMS()
@@ -414,7 +414,7 @@ void ParticleRenderStream(PRS_PARAMS* pParams)
 	FVF::LIT* pv = pParams->pv;
 	u32 p_from = pParams->p_from;
 	u32 p_to = pParams->p_to;
-	xr_vector<PAPI::Particle>& particles = (pParams->particles);
+	xr_vector<PAPI::Particle>& particles = *(pParams->particles);
 	CParticleEffect &pPE = *pParams->pPE;
 
 	for (u32 i = p_from; i < p_to; i++) {
@@ -509,8 +509,6 @@ void ParticleRenderStream(PRS_PARAMS* pParams)
 
 void CParticleEffect::Render(float)
 {
-	if (Device.dwPrecacheFrame) return;
-
 	// Get a pointer to the particles in gp memory
 	u32 dwOffset, dwCount;
 	xr_vector<PAPI::Particle> particles;
@@ -540,7 +538,7 @@ void CParticleEffect::Render(float)
 					prsParams[i].pv = pv + i * nStep * 4;
 					prsParams[i].p_from = i * nStep;
 					prsParams[i].p_to = (i == (nWorkers - 1)) ? p_cnt : (prsParams[i].p_from + nStep);
-					prsParams[i].particles = particles;
+					prsParams[i].particles = &particles;
 					prsParams[i].pPE = this;
 
 					ParticleEffectTasks.run([&prsParams, i]()

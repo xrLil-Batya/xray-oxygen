@@ -361,11 +361,10 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
 				u32 p_cnt;
 				PAPI::ParticleManager()->GetParticles(E->GetHandleEffect(), particles, p_cnt);
 				VERIFY(p_cnt == _children_related.size());
-				const auto CopyChildren = _children_related;
 				u32 iter = 0;
 				for (PAPI::Particle &refParticle : particles)
 				{
-					CParticleEffect* C = static_cast<CParticleEffect*>(CopyChildren[iter]);
+					CParticleEffect* C = static_cast<CParticleEffect*>(_children_related[iter]);
 					Fmatrix M; 			M.translate(refParticle.pos);
 					Fvector vel; 		vel.sub(refParticle.pos, refParticle.posB); vel.div(fDT_STEP);
 					C->UpdateParent(M, vel, FALSE);

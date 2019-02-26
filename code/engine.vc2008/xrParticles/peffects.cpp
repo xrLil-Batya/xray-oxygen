@@ -28,7 +28,7 @@ int ParticleEffect::Resize(u32 max_count)
 	// May have to kill particles.
 	if (particles.size() > max_particles)
 	{
-		for (decltype(particles)::iterator IterSize = particles.begin() + max_count; IterSize < particles.end(); IterSize++)
+		for (decltype(particles)::iterator IterSize = particles.begin() + max_count; IterSize <= particles.end(); IterSize++)
 		{
 			particles.erase(IterSize);
 		}
@@ -41,9 +41,11 @@ void ParticleEffect::Remove(int i)
 {
 	if (particles.size())
 	{
+		Particle& m = particles[i];
 		if (d_cb)
-			d_cb(owner, param, particles[i], i);
+			d_cb(owner, param, m, i);
 
-		particles.erase(particles.begin() + i);
+		m = particles[particles.size() - 1]; // не менять правило удаления !!! (dependence ParticleGroup)
+		particles.pop_back();
 	}
 }

@@ -23,10 +23,8 @@ CParticleManager::~CParticleManager()
 
 ParticleEffect*	CParticleManager::GetEffectPtr(int effect_id)
 {
-	if(effect_id >= 0 && effect_id < (int)effect_vec.size())
-		return effect_vec[effect_id];
-	else
-		return effect_vec[effect_vec.size() - 1];
+	R_ASSERT(effect_id >= 0 && effect_id < (int)effect_vec.size());
+	return effect_vec[effect_id];
 }
 
 ParticleActions* CParticleManager::GetActionListPtr(int a_list_num)
@@ -238,8 +236,8 @@ void CParticleManager::SetCallback(int effect_id, OnBirthParticleCB b, OnDeadPar
 void CParticleManager::GetParticles(int effect_id, xr_vector<PAPI::Particle>& particles, u32& cnt)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-	particles = pe->particles;
-	cnt = (u32)pe->particles.size();
+	particles = std::ref(pe->particles);
+	cnt = (u32)particles.size();
 }
 
 u32	CParticleManager::GetParticlesCount(int effect_id)

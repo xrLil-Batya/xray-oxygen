@@ -762,11 +762,13 @@ void PAGravitate::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 
 	if (max_radiusSqr < P_MAXFLOAT)
 	{
-		for (Particle &m : effect->particles)
+		for (u32 i = 0; i < effect->particles.size(); ++i)
 		{
+			Particle &m = effect->particles[i];
 			// Add interactions with other particles
-			for (Particle &mj : effect->particles)
+			for (u32 j = i + 1; j < effect->particles.size(); ++j)
 			{
+				Particle &mj = effect->particles[j];
 				pVector tohim(mj.pos - m.pos); // tohim = p1 - p0
 				float tohimlenSqr = tohim.length2() + EPS_S;
 
@@ -783,11 +785,13 @@ void PAGravitate::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 	}
 	else
 	{
-		for (Particle &m : effect->particles)
+		for (u32 i = 0; i < effect->particles.size(); ++i)
 		{
+			Particle &m = effect->particles[i];
 			// Add interactions with other particles
-			for (Particle &mj : effect->particles)
+			for (u32 j = i + 1; j < effect->particles.size(); ++j)
 			{
+				Particle &mj = effect->particles[j];
 				pVector tohim(mj.pos - m.pos); // tohim = p1 - p0
 				float tohimlenSqr = tohim.length2() + EPS_S;
 
@@ -950,11 +954,14 @@ void PAMatchVelocity::Execute(ParticleEffect *effect, const float dt, float& tm_
 
 	if (max_radiusSqr < P_MAXFLOAT)
 	{
-		for (Particle &m : effect->particles)
+		for (u32 i = 0; i < effect->particles.size(); ++i)
 		{
+			Particle &m = effect->particles[i];
 			// Add interactions with other particles
-			for (Particle &mj : effect->particles)
+			for (u32 j = i + 1; j < effect->particles.size(); ++j)
 			{
+				Particle &mj = effect->particles[j];
+
 				pVector tohim(mj.pos - m.pos); // tohim = p1 - p0
 				float tohimlenSqr = tohim.length2();
 
@@ -971,11 +978,14 @@ void PAMatchVelocity::Execute(ParticleEffect *effect, const float dt, float& tm_
 	}
 	else
 	{
-		for (Particle &m : effect->particles)
+		for (u32 i = 0; i < effect->particles.size(); ++i)
 		{
+			Particle &m = effect->particles[i];
 			// Add interactions with other particles
-			for (Particle &mj : effect->particles)
+			for (u32 j = i + 1; j < effect->particles.size(); ++j)
 			{
+				Particle &mj = effect->particles[j];
+
 				pVector tohim(mj.pos - m.pos); // tohim = p1 - p0
 				float tohimlenSqr = tohim.length2();
 
