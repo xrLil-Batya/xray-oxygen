@@ -299,10 +299,8 @@ void CRender::Render()
 	//******* Main calc - DEFERRED RENDERER
 	Device.Statistic->Render_CRenderRender_render_main.Begin();
 	r_pmask(true, false, true);	// Enable priority "0",+ capture wmarks
-	set_Recorder(bSUN ? &main_coarse_structure : nullptr);
 	phase = PHASE_NORMAL;
 	render_main(Device.mFullTransform);
-	set_Recorder(nullptr);
 	r_pmask(true, false); // Disable priority "1"
 	Device.Statistic->Render_CRenderRender_render_main.End();
 

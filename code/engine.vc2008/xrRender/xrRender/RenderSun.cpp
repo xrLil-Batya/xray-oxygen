@@ -144,9 +144,7 @@ void CRender::render_sun()
 	}
 
 	// Fill the database
-	xr_vector<Fbox3, xalloc<Fbox3> >		&s_receivers = main_coarse_structure;
-	s_casters.reserve(s_receivers.size());
-	set_Recorder(&s_casters);
+	s_casters.reserve(main_coarse_structure.size());
 	r_dsgraph_render_subspace(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
 
 	// IGNORE PORTALS
@@ -161,7 +159,6 @@ void CRender::render_sun()
 			add_Geometry(root);
 		}
 	}
-	set_Recorder(nullptr);
 
 	//	Prepare to interact with D3DX code
 
@@ -429,7 +426,7 @@ void CRender::render_sun()
 
 		// receivers
 		b_receivers.invalidate();
-		b_receivers = view_clipper.clipped_AABB(s_receivers, xform);
+		b_receivers = view_clipper.clipped_AABB(main_coarse_structure, xform);
 		Fmatrix x_project, x_full, x_full_inverse;
 		{
 			x_project.build_projection(deg2rad(Device.fFOV/* *Device.fASPECT*/), Device.fASPECT, ps_r_sun_near, ps_r_sun_near + tweak_guaranteed_range);
@@ -475,7 +472,7 @@ void CRender::render_sun()
 
 	// Finalize & Cleanup
 	fuckingsun->X.D.combine = *(Fmatrix*)(&m_LightViewProj);
-	s_receivers.clear();
+	main_coarse_structure.clear();
 	s_casters.clear();
 
 	// Render shadow-map

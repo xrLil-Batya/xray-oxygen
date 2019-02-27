@@ -211,11 +211,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 			}
 		}
 	}
-
-	if (val_recorder)
-	{
-		val_recorder->push_back(pVisual->vis.box);
-	}
 }
 
 void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
@@ -251,7 +246,8 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 	if (!pmask[sh->flags.iPriority/2])		return;
 
 	// strict-sorting selection
-	if (sh->flags.bStrictB2F) {
+	if (sh->flags.bStrictB2F) 
+	{
 		_MatrixItemS temp;
 		temp.pObject = NULL;
 		temp.pVisual = pVisual;
@@ -358,11 +354,6 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 			}
 		}
 	}
-
-	if (val_recorder)
-	{
-		val_recorder->push_back(pVisual->vis.box);
-	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -374,9 +365,11 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 
 	// Visual is 100% visible - simply add it
 
-	switch (pVisual->Type) {
+	switch (pVisual->Type)
+	{
 	case MT_PARTICLE_GROUP:
 		{
+			if (phase == PHASE_SMAP) return;
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG	= (PS::CParticleGroup*)pVisual;
 			for (PS::CParticleGroup::SItem& I : pG->items)	{
@@ -424,8 +417,11 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 			} 
 			else 
 			{
-				pV->CalculateBones			(TRUE);
-				pV->CalculateWallmarks		();		//. bug?
+				if (phase != PHASE_SMAP)
+				{
+					pV->CalculateBones(TRUE);
+					pV->CalculateWallmarks();		//. bug?
+				}
 
 				for (dxRender_Visual* pChildVisual : pV->children)
 				{
@@ -457,6 +453,7 @@ void CRender::add_leafs_Static(dxRender_Visual *pVisual)
 	switch (pVisual->Type) {
 	case MT_PARTICLE_GROUP:
 		{
+		if (phase == PHASE_SMAP) return;
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
 			for (auto i_it=pG->items.begin(); i_it!=pG->items.end(); i_it++){
@@ -485,8 +482,10 @@ void CRender::add_leafs_Static(dxRender_Visual *pVisual)
 	case MT_SKELETON_RIGID:
 		{
 			// Add all children, doesn't perform any tests
-			CKinematics * pV		= (CKinematics*)pVisual;
-			pV->CalculateBones		(TRUE);
+			CKinematics * pV = (CKinematics*)pVisual;
+			if (phase != PHASE_SMAP)
+				pV->CalculateBones(TRUE);
+
 			I = pV->children.begin	();
 			E = pV->children.end	();
 
@@ -554,9 +553,11 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 	// If we get here visual is visible or partially visible
 	xr_vector<dxRender_Visual*>::iterator I,E;	// it may be usefull for 'hierrarhy' visuals
 
-	switch (pVisual->Type) {
+	switch (pVisual->Type) 
+	{
 	case MT_PARTICLE_GROUP:
 		{
+		if (phase == PHASE_SMAP) return TRUE;
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
 			for (auto i_it=pG->items.begin(); i_it!=pG->items.end(); i_it++)
@@ -608,8 +609,12 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 				add_leafs_Dynamic			(pV->m_lod)		;
 			} else 
 			{
-				pV->CalculateBones			(TRUE);
-				pV->CalculateWallmarks		();		//. bug?
+				if (phase != PHASE_SMAP)
+				{
+					pV->CalculateBones(TRUE);
+					pV->CalculateWallmarks();		//. bug?
+				}
+
 				I = pV->children.begin		();
 				E = pV->children.end		();
 				for (; I!=E; I++)	add_leafs_Dynamic	(*I);
@@ -647,6 +652,7 @@ void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
 	{
 	case MT_PARTICLE_GROUP:
 		{
+		if (phase == PHASE_SMAP) return;
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
 			for (PS::CParticleGroup::SItem& I : pG->items)
@@ -707,7 +713,10 @@ void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
 		{
 			// Add all children, doesn't perform any tests
 			CKinematics * pV		= (CKinematics*)pVisual;
-			pV->CalculateBones		(TRUE);
+
+			if (phase != PHASE_SMAP)
+				pV->CalculateBones(TRUE);
+
 			if (VIS == fcvPartial)
 			{
 				for (dxRender_Visual* childRenderable : pV->children)
