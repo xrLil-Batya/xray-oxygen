@@ -147,7 +147,7 @@ void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
 	{
 		// effect
 		ParticleEffect* pe = GetEffectPtr(effect_id);
-		pe->particles.clear();
+		pe->p_count = 0;
 	}
 
 	pa->unlock();
@@ -232,18 +232,16 @@ void CParticleManager::SetCallback(int effect_id, OnBirthParticleCB b, OnDeadPar
 	pe->owner = owner;
 	pe->param = param;
 }
-
-void CParticleManager::GetParticles(int effect_id, xr_vector<PAPI::Particle>& particles, u32& cnt)
+void CParticleManager::GetParticles(int effect_id, Particle*& particles, u32& cnt)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-	particles = std::ref(pe->particles);
-	cnt = (u32)particles.size();
+	particles = pe->particles;
+	cnt = pe->p_count;
 }
-
 u32	CParticleManager::GetParticlesCount(int effect_id)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-	return 		(u32)pe->particles.size();
+	return 			pe->p_count;
 }
 
 // action
