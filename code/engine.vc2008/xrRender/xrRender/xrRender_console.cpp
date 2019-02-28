@@ -7,6 +7,9 @@
 #include "../../xrEngine/xr_ioc_cmd.h"
 #include "../../xrEngine/xr_ioc_cmd_ex.h"
 
+// Hack for License Box
+int SkipLicenseWND = false;
+
 // Common
 u32	ps_r_smapsize = 2048;
 xr_token q_smapsize_token[] =
@@ -814,6 +817,7 @@ void xrRender_initconsole()
 	CMD2(CCC_tf_Aniso,	"r_tf_aniso",			&ps_r_tf_Anisotropic						); //	{1..16}
 	CMD2(CCC_tf_MipBias,"r_tf_mipbias",			&ps_r_tf_Mipbias							); //	{-3..3}
 	CMD4(CCC_Float,		"r_dtex_range",			&ps_r_dtex_range,			5,		175		);
+	CMD4(CCC_Integer,	"r_lic_box",			&SkipLicenseWND,			0,		1 		);
 
 	// Tonemap
 	CMD3(CCC_Mask,		"r_tonemap",			&ps_r_postscreen_flags,		R_FLAG_TONEMAP	);

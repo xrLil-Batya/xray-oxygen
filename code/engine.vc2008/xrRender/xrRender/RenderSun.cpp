@@ -523,8 +523,7 @@ void CRender::render_sun()
 
 void CRender::render_sun_near()
 {
-	light*			fuckingsun = (light*)Lights.sun._get();
-	Fmatrix		m_LightViewProj;
+	light* fuckingsun = (light*)Lights.sun._get();
 
 	// calculate view-frustum bounds in world space
 	Fmatrix	ex_project, ex_full, ex_full_inverse;
