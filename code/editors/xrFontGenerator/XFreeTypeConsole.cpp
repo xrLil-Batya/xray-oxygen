@@ -205,9 +205,16 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 	}
 
 	int index_to_cyrillic_A = arr_iter;
-	for (u32 i = 1040; i < 1104; ++i)
+	for (u32 i = 1040; i < 1106; ++i)
 	{
-		FT_Error err = FT_Load_Char(ConverterInfo.face, i, FT_LOAD_RENDER);
+		
+		FT_Error err;
+		// @ 'Ё' и 'ё'
+		if (i != 1104)
+			err = FT_Load_Char(ConverterInfo.face, i, FT_LOAD_RENDER);
+		else
+			err = FT_Load_Char(ConverterInfo.face, 1025, FT_LOAD_RENDER);
+
 		FT_Bitmap* bmp = &ConverterInfo.face->glyph->bitmap;
 
 		if (err)
@@ -381,6 +388,44 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 		// @ ПЫСовские мусорные символы, в текстурах они не содержаться (не то что в оригинале!)
 		for (size_t i = 128; i < 192; ++i)
 		{
+			// @ Записываем Ё
+			if (i == 168)
+			{
+				for (u32 CordIter = 0; CordIter < 2; CordIter++)
+				{
+					x += std::to_string(info[TOTAL_ANSCII-2].x[CordIter]) + ", ";
+					x += std::to_string(info[TOTAL_ANSCII-2].y[CordIter]) + ((CordIter == 0) ? ", " : "");
+				}
+
+				fac = "";
+				fac += std::to_string(i);
+				INIFile << fac;
+				INIFile << x;
+				INIFile << std::endl;
+
+				x = " = ";
+				continue;
+			}
+
+			// @ Записываем ё
+			if (i == 184)
+			{
+				for (u32 CordIter = 0; CordIter < 2; CordIter++)
+				{
+					x += std::to_string(info[TOTAL_ANSCII-1].x[CordIter]) + ", ";
+					x += std::to_string(info[TOTAL_ANSCII-1].y[CordIter]) + ((CordIter == 0) ? ", " : "");
+				}
+
+				fac = "";
+				fac += std::to_string(i);
+				INIFile << fac;
+				INIFile << x;
+				INIFile << std::endl;
+
+				x = " = ";
+				continue;
+			}
+
 			MakeNulls(x);
 			WriteToINI(i);
 		}

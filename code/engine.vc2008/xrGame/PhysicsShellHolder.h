@@ -130,7 +130,7 @@ private://IPhysicsShellHolder
 	virtual bool					_BCL					IsStalker							()						;
 	virtual	void					_BCL					HideAllWeapons						( bool v )				;//(SetWeaponHideState(INV_STATE_BLOCK_ALL,true))
 	virtual	void					_BCL					MovementCollisionEnable				( bool enable )			;
-	virtual CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer					()  					{return ph_sound_player();}
+	virtual CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer() { if (m_pPhysicsShell) return ph_sound_player(); else return nullptr; }
 	virtual	ICollisionDamageReceiver* _BCL				ObjectPhCollisionDamageReceiver		()						;
 	virtual	void					_BCL					BonceDamagerCallback				(float &damage_factor)	;
 	virtual	xr_string				_BCL					dump								(EDumpType type) const  ;

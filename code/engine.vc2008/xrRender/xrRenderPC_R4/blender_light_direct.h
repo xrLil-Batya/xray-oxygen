@@ -22,10 +22,10 @@ public:
   virtual		BOOL		canBeLMAPped()	{ return FALSE;	}
 
   virtual		void		Compile			(CBlender_Compile& C);
-  virtual   void    SetDefine( LPCSTR Name, LPCSTR Definition )
+  virtual   void    SetDefine( LPCSTR sName, LPCSTR sDefinition )
   {
-     this->Name = Name;
-     this->Definition = Definition;
+     this->Name = sName;
+     this->Definition = sDefinition;
   }
    LPCSTR Name;
 	LPCSTR Definition;
@@ -44,10 +44,10 @@ class CBlender_accum_direct_volumetric_msaa : public IBlender
 		virtual		BOOL		canBeLMAPped()	{ return FALSE;	}
 
 		virtual		void		Compile			(CBlender_Compile& C);
-		virtual   void    SetDefine( LPCSTR Name, LPCSTR Definition )
+		virtual   void    SetDefine( LPCSTR sName, LPCSTR sDefinition )
 		{
-			this->Name = Name;
-			this->Definition = Definition;
+			this->Name = sName;
+			this->Definition = sDefinition;
 		}
 
 		CBlender_accum_direct_volumetric_msaa();
@@ -65,10 +65,10 @@ class CBlender_accum_direct_volumetric_sun_msaa : public IBlender
 		virtual		BOOL		canBeLMAPped()	{ return FALSE;	}
 
 		virtual		void		Compile			(CBlender_Compile& C);
-		virtual   void    SetDefine( LPCSTR Name, LPCSTR Definition )
+		virtual   void    SetDefine(LPCSTR sName, LPCSTR sDefinition)
 		{
-			this->Name = Name;
-			this->Definition = Definition;
+			this->Name = sName;
+			this->Definition = sDefinition;
 		}
 
 		CBlender_accum_direct_volumetric_sun_msaa();

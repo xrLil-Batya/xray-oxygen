@@ -471,8 +471,8 @@ CRenderTarget::CRenderTarget()
 			rt_smaa_blendtex.create	(r2_RT_smaa_blendtex,	w, h, D3DFMT_A8R8G8B8);
 		}
 
-		s_rain_drops.create			("effects\\screen_rain_droplets");
-		s_vignette.create			("effects\\vignette");
+		s_rain_drops.create("effects\\screen_rain_droplets");
+		s_postscreen.create("effects\\postscreen");
 	}
 
 	// Build textures

@@ -74,18 +74,17 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 	s_targets_defer.clear();
 	++s_targets_pu;
 
-	for (u32 it = 0; it < s_targets.size(); ++it)
+	for (CSoundRender_Target* pTarget: s_targets)
 	{
-		CSoundRender_Target*	T = s_targets[it];
-		if (T->get_emitter())
+		if (pTarget->get_emitter())
 		{
 			// Has emitter, maybe just not started rendering
-			if (T->get_Rendering())
+			if (pTarget->get_Rendering())
 			{
-				T->fill_parameters();
-				T->update();
+				pTarget->fill_parameters();
+				pTarget->update();
 			}
-			else s_targets_defer.push_back(T);
+			else s_targets_defer.push_back(pTarget);
 		}
 	}
 
@@ -107,7 +106,8 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 		}
 
 		e_current.lerp(e_current, e_target, dt_sec);
-		i_efx_listener_set(&e_current); //KRodin: Сделал по аналогии с eax. Некоторые эффекты подошли. Посмотрим, что получится.
+		// KRodin: Сделал по аналогии с eax. Некоторые эффекты подошли. Посмотрим, что получится.
+		i_efx_listener_set(&e_current);
 		bEFX = i_efx_commit_setting();
 	}
 

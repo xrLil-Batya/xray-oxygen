@@ -284,8 +284,8 @@ class CCC_VidMode : public CCC_Token
 {
 	u32		_dummy, _w, _h;
 public :
-					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL) { bEmptyArgsHandled = FALSE; };
-	virtual void	Execute(LPCSTR args)
+					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL), _w(0), _h(0) { bEmptyArgsHandled = FALSE; };
+	void	Execute(LPCSTR args) override
 	{ 
 	
 		int cnt = sscanf		(args,"%dx%d",&_w,&_h);
@@ -616,8 +616,6 @@ void CCC_Register()
 
 	CMD3(CCC_Mask,		"rs_triple_buffering",	&psDeviceFlags,		rsTripleBuffering		);
 	CMD3(CCC_Mask,		"rs_v_sync",			&psDeviceFlags,		rsVSync					);
-//	CMD3(CCC_Mask,		"rs_disable_objects_as_crows",&psDeviceFlags,	rsDisableObjectsAsCrows	);
-//	CMD3(CCC_Mask,		"rs_fullscreen",		&psDeviceFlags,		rsFullscreen			);
 	CMD3(CCC_Mask,		"rs_refresh_60hz",		&psDeviceFlags,		rsRefresh60hz			);
 	CMD3(CCC_Mask,		"rs_refresh_120hz",		&psDeviceFlags,		rsRefresh120hz			);
 	CMD3(CCC_Mask,		"rs_stats",				&psDeviceFlags,		rsStatistic				);
@@ -625,7 +623,7 @@ void CCC_Register()
 	CMD3(CCC_Mask,		"rs_stats_schedule",    &psDeviceFlags,		rsScheduleProfiler		);
 	CMD3(CCC_Mask,		"rs_cam_pos",			&psDeviceFlags,		rsCameraPos				);
 
-	CMD4(CCC_Float,		"rs_vis_distance",		&psVisDistance,		0.4f,	2.0f			);
+	CMD4(CCC_Float,		"rs_vis_distance",		&psVisDistance,		0.4f,	1.0f			);
 	if (strstr(Core.Params,"-fog_mixer"))
 	{
 	CMD4(CCC_Float,		"rs_fog_distance",		&psFogDistance,		0.1f,	2.0f			);

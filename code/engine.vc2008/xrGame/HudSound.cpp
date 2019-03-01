@@ -159,8 +159,14 @@ void HUD_SOUND_COLLECTION::StopSound(LPCSTR alias)
 void HUD_SOUND_COLLECTION::SetPosition(LPCSTR alias, const Fvector& pos)
 {
 	HUD_SOUND_ITEM* snd_item		= FindSoundItem(alias, true);
-	if(snd_item->playing())
+	if(snd_item && snd_item->playing())
 		snd_item->set_position		(pos);
+}
+
+void HUD_SOUND_COLLECTION::SetFrequency(LPCSTR alias, const float& freq = 1.0f)
+{
+	HUD_SOUND_ITEM* snd_item = FindSoundItem(alias, true);
+	snd_item->set_frequency(freq);
 }
 
 void HUD_SOUND_COLLECTION::StopAllSounds()

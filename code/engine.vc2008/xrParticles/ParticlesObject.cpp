@@ -70,6 +70,9 @@ CParticlesObject::~CParticlesObject()
 void CParticlesObject::UpdateSpatial()
 {
 	// spatial	(+ workaround occasional bug inside particle-system)
+	if (m_lastUpdatedFrame == Device.dwFrame) return;
+	m_lastUpdatedFrame = Device.dwFrame;
+
 	vis_data &vis = renderable.visual->getVisData();
 	if (_valid(vis.sphere))
 	{
@@ -85,13 +88,7 @@ void CParticlesObject::UpdateSpatial()
 		}
 		else
 		{
-			BOOL	bMove = FALSE;
-
-			if (!P.similar(spatial.sphere.P, EPS_L*10.f))
-				bMove = TRUE;
-
-			if (!fsimilar(R, spatial.sphere.R, 0.15f))
-				bMove = TRUE;
+			const bool bMove = !P.similar(spatial.sphere.P, EPS_L*10.f) || !fsimilar(R, spatial.sphere.R, 0.15f);
 
 			if (bMove)
 			{
@@ -221,13 +218,12 @@ void CParticlesObject::renderable_Render()
 
 	const u32 dt = Device.dwTimeGlobal - dwLastTime;
 
-	if (dt && m_lastUpdatedFrame != Device.dwFrame)
+	if (dt)
 	{
 		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 		V->OnFrame(dt);
 		dwLastTime = Device.dwTimeGlobal;
 	}
-	m_lastUpdatedFrame = Device.dwFrame;
 
 	::Render->set_Transform(&renderable.xform);
 	::Render->add_Visual(renderable.visual);

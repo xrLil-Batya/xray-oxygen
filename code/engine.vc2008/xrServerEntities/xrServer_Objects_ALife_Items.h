@@ -215,7 +215,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 
 	virtual BOOL					Net_Relevant		();
 
-	virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeapon)
 #define script_type_list save_type_list(CSE_ALifeItemWeapon)
@@ -225,7 +224,6 @@ u8			m_u8CurFireMode;
 CSE_ALifeItemWeaponMagazined(LPCSTR caSection);
 virtual							~CSE_ALifeItemWeaponMagazined();
 
-virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponMagazined)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponMagazined)
@@ -235,7 +233,6 @@ bool			m_bGrenadeMode;
 CSE_ALifeItemWeaponMagazinedWGL(LPCSTR caSection);
 virtual							~CSE_ALifeItemWeaponMagazinedWGL();
 
-virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
 bool get_grenade_mode() { return m_bGrenadeMode; }
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponMagazinedWGL)
@@ -246,7 +243,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeaponShotGun,CSE_ALifeItemWeaponMagazi
 								CSE_ALifeItemWeaponShotGun(LPCSTR caSection);
 virtual							~CSE_ALifeItemWeaponShotGun();
 
-virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponShotGun)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponShotGun)
@@ -255,7 +251,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeaponAutoShotGun,CSE_ALifeItemWeaponSh
 								CSE_ALifeItemWeaponAutoShotGun(LPCSTR caSection);
 virtual							~CSE_ALifeItemWeaponAutoShotGun();
 
-virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponAutoShotGun)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponAutoShotGun)

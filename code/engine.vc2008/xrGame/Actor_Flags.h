@@ -26,6 +26,8 @@ enum {
 		AF_SHOW_BOSS_HEALTH		=(1<<22),
 		AF_RIGHT_SHOULDER		=(1<<23),
 		AF_FP2ZOOM_FORCED		=(1<<24),
+		AF_CROSSHAIR_COLLIDE	=(1<<25),
+		AF_CROSSHAIR_INERT		=(1<<26),
 };
 
 extern ENGINE_API Flags32	psActorFlags;

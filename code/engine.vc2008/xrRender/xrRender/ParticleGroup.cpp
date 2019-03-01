@@ -345,33 +345,28 @@ void OnGroupParticleDead(void* owner, u32 param, PAPI::Particle& m, u32 idx)
 
 void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& box, bool& bPlaying)
 {
-    CParticleEffect* E = static_cast<CParticleEffect*>(_effect);
+    CParticleEffect* E		= static_cast<CParticleEffect*>(_effect);
     if (E)
 	{
-        E->OnFrame(u_dt);
-        if (E->IsPlaying())
-		{
-            bPlaying = true;
-            if (E->vis.box.is_valid())     
-				box.merge(E->vis.box);
-
-			if (def.m_Flags.is(CPGDef::SEffect::flOnPlayChild) && def.m_OnPlayChildName.size())
-			{
-				xr_vector<PAPI::Particle> particles;
-				u32 p_cnt;
-				PAPI::ParticleManager()->GetParticles(E->GetHandleEffect(), particles, p_cnt);
-				VERIFY(p_cnt == _children_related.size());
-
-				u32 iter = 0;
-				for (PAPI::Particle &refParticle : particles)
-				{
-					CParticleEffect* C = static_cast<CParticleEffect*>(_children_related[iter]);
-					Fmatrix M; 			M.translate(refParticle.pos);
-					Fvector vel; 		vel.sub(refParticle.pos, refParticle.posB); vel.div(fDT_STEP);
-					C->UpdateParent(M, vel, FALSE);
-					iter++;
-				}
-			}
+        E->OnFrame			(u_dt);
+        if (E->IsPlaying()){
+            bPlaying		= true;
+            if (E->vis.box.is_valid())     box.merge	(E->vis.box);
+            if (def.m_Flags.is(CPGDef::SEffect::flOnPlayChild)&&def.m_OnPlayChildName.size()){
+                PAPI::Particle* particles;
+                u32 p_cnt;
+                PAPI::ParticleManager()->GetParticles(E->GetHandleEffect(),particles,p_cnt);
+                VERIFY(p_cnt==_children_related.size());
+                if (p_cnt){
+                    for(u32 i = 0; i < p_cnt; i++){
+                        PAPI::Particle &m	= particles[i]; 
+                        CParticleEffect* C 	= static_cast<CParticleEffect*>(_children_related[i]);
+                        Fmatrix M; 			M.translate(m.pos);
+                        Fvector vel; 		vel.sub(m.pos,m.posB); vel.div(fDT_STEP);
+                        C->UpdateParent		(M,vel,FALSE);
+                    }
+                }
+            }
         }
     }
     
@@ -470,59 +465,58 @@ void CParticleGroup::OnFrame(u32 u_dt)
         float currentTime	= m_CurrentTime;
         float fdeltaTime	= float(u_dt)/1000.f;
         for (CPGDef::EffectVec::const_iterator e_it=m_Def->m_Effects.begin(); e_it!=m_Def->m_Effects.end(); e_it++)
-		{
-			PS::CPGDef::SEffect* pEffect = *e_it;
-            if (pEffect->m_Flags.is(CPGDef::SEffect::flEnabled))
+		{	
+            if ((*e_it)->m_Flags.is(CPGDef::SEffect::flEnabled))
 			{
             	VERIFY				(items.size()==m_Def->m_Effects.size());
                 SItem& I			= items[e_it-m_Def->m_Effects.begin()];
-                if (I.IsPlaying())
-				{
-					// should we stop by time?
-					if ((currentTime <= pEffect->m_Time1) && (currentTime + fdeltaTime >= pEffect->m_Time1))
-					{
-                        I.Stop(pEffect->m_Flags.is(CPGDef::SEffect::flDefferedStop));
-					}
-                }
-				else
-				{
-					if (!m_RT_Flags.is(flRT_DefferedStop))
-					{
-						if ((currentTime <= pEffect->m_Time0) && (currentTime + fdeltaTime >= pEffect->m_Time0))
-						{
-							I.Play();
-						}
-					}
+                if (I.IsPlaying()){
+                    if ((currentTime<=(*e_it)->m_Time1)&&(currentTime+fdeltaTime>=(*e_it)->m_Time1))	
+                        I.Stop((*e_it)->m_Flags.is(CPGDef::SEffect::flDefferedStop));
+                }else{
+                    if (!m_RT_Flags.is(flRT_DefferedStop))
+                        if ((currentTime<=(*e_it)->m_Time0)&&(currentTime+fdeltaTime>=(*e_it)->m_Time0))	
+                            I.Play();
                 }
             }
         }
 
-		// Update playing time
-        m_CurrentTime 	+= fdeltaTime;
+		//#TODO: !!! Finish this
+// 		for (PS::CPGDef::SEffect* val : m_Def->m_Effects)
+// 		{
+// 			if (val->m_Flags.is(CPGDef::SEffect::flEnabled))
+// 			{
+// 				VERIFY(items.size() == m_Def->m_Effects.size());
+// 				SItem& I = items[e_it - m_Def->m_Effects.begin()];
+// 				if (I.IsPlaying()) {
+// 					if ((currentTime <= (*e_it)->m_Time1) && (currentTime + fdeltaTime >= (*e_it)->m_Time1))
+// 						I.Stop((*e_it)->m_Flags.is(CPGDef::SEffect::flDefferedStop));
+// 				}
+// 				else {
+// 					if (!m_RT_Flags.is(flRT_DefferedStop))
+// 						if ((currentTime <= (*e_it)->m_Time0) && (currentTime + fdeltaTime >= (*e_it)->m_Time0))
+// 							I.Play();
+// 				}
+// 			}
+// 		}
 
-        if ((m_CurrentTime > m_Def->m_fTimeLimit) && (m_Def->m_fTimeLimit > 0.0f))
+        m_CurrentTime 	+= fdeltaTime;
+        if ((m_CurrentTime>m_Def->m_fTimeLimit)&&(m_Def->m_fTimeLimit>0.f))
             if (!m_RT_Flags.is(flRT_DefferedStop)) Stop(true);
 
         bool bPlaying = false;
         Fbox box; box.invalidate();
-		for (auto particleItemIter = items.begin(); particleItemIter != items.end(); particleItemIter++)
-		{
-        	particleItemIter->OnFrame(u_dt, *m_Def->m_Effects[particleItemIter-items.begin()], box, bPlaying);
-		}
+        for (auto i_it=items.begin(); i_it!=items.end(); i_it++)
+        	i_it->OnFrame(u_dt,*m_Def->m_Effects[i_it-items.begin()],box,bPlaying);
 
-        if (m_RT_Flags.is(flRT_DefferedStop) && !bPlaying)
-		{
+        if (m_RT_Flags.is(flRT_DefferedStop)&&!bPlaying){
             m_RT_Flags.set		(flRT_Playing|flRT_DefferedStop,FALSE);
         }
-
-        if (box.is_valid())
-		{
+        if (box.is_valid()){
         	vis.box.set			(box);
 			vis.box.getsphere	(vis.sphere.P,vis.sphere.R);
 		}
-	}
-	else 
-	{
+	} else {
 		vis.box.set			(m_InitialPosition,m_InitialPosition);
 		vis.box.grow		(EPS_L);
 		vis.box.getsphere	(vis.sphere.P,vis.sphere.R);

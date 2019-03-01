@@ -1,10 +1,9 @@
-#include "../../../engine.vc2008/xrCore/xrCore.h"
-#include "../../../engine.vc2008/xrCore/PostprocessAnimator.h"
-#include "Types.hpp"
+#include "CPostprocessAnimator.h"
+#include <xrCore\SPPInfo.h>
 
 namespace XRay
 {
-	using namespace System::Runtime::InteropServices;
+	using namespace ::System::Runtime::InteropServices;
 
 	using pp_params = enum
 	{
@@ -121,7 +120,7 @@ namespace XRay
 			[FieldOffset(2 * sizeof(float))] float b;
 
 			Color(float r, float g, float b) : r(r), g(g), b(b) {}
-			operator UInt32()
+			operator ::System::UInt32()
 			{
 				int _r = clampr(iFloor(r * 255.0f + 0.5f), 0, 255);
 				int _g = clampr(iFloor(g * 255.0f + 0.5f), 0, 255);
@@ -225,16 +224,16 @@ namespace XRay
 			void set(float value);
 		}
 		// cm_tex1
-		property String ^
+		property ::System::String ^
 			ColorMappingGradient1 {
-			String ^ get();
-			void set(String ^ value);
+			::System::String ^ get();
+			void set(::System::String ^ value);
 		}
 		// cm_tex2
-		property String ^
+		property ::System::String ^
 			ColorMappingGradient2 {
-			String ^ get();
-			void set(String ^ value);
+			::System::String ^ get();
+			void set(::System::String ^ value);
 		}
 
 		PostProcessInfo(::SPPInfo* impl);
@@ -249,7 +248,7 @@ namespace XRay
 		// lerp
 		PostProcessInfo % Interpolate(const PostProcessInfo % def, const PostProcessInfo % to, float factor);
 		// validate
-		void Validate(String ^ str);
+		void Validate(::System::String ^ str);
 	};
 
 	ref class PostProcessParamProxy : PostProcessParamBase
@@ -280,8 +279,8 @@ namespace XRay
 		~BasicPostProcessAnimator();
 		void Clear();
 		// set internalFs to false to load from arbitrary directory
-		void Load(String ^ name, bool internalFs);
-		property String ^ Name { String ^ get(); } virtual void Stop(float speed);
+		void Load(::System::String ^ name, bool internalFs);
+		property ::System::String ^ Name { ::System::String ^ get(); } virtual void Stop(float speed);
 		void SetDesiredFactor(float f, float sp);
 		void SetCurrentFactor(float f);
 		void SetCyclic(bool b);
@@ -301,6 +300,6 @@ namespace XRay
 		void Create();
 		PostProcessParamBase ^ GetParam(PostProcessParamType param);
 		void ResetParam(PostProcessParamType param);
-		void Save(String ^ name);
+		void Save(::System::String ^ name);
 	};
 }

@@ -18,6 +18,8 @@
 #include "step_manager.h"
 #include "../xrScripts/export/script_export_space.h"
 
+#include "searchlight.h"
+
 using namespace ACTOR_DEFS;
 
 class CInfoPortion;
@@ -330,6 +332,7 @@ public:
 	CInventoryOwner*		PersonWeLookingAt			() {return m_pPersonWeLookingAt;}
 	LPCSTR					GetDefaultActionForObject	() {return *m_sDefaultObjAction;}
 	CZoneCampfire*			CapmfireWeLookingAt			() {return m_CapmfireWeLookingAt;}
+	CProjector*				ProjWeLookingAt				() {return m_pProjWeLookingAt;}
 
 protected:
 	CUsableScriptObject*	m_pUsableObject;
@@ -339,6 +342,7 @@ protected:
 	CGameObject*			m_pObjectWeLookingAt;
 	CInventoryBox*			m_pInvBoxWeLookingAt;
 	CZoneCampfire*			m_CapmfireWeLookingAt;
+	CProjector*				m_pProjWeLookingAt;
 
 	// Tip for action for object we're looking at
 	shared_str				m_sDefaultObjAction;
@@ -347,6 +351,7 @@ protected:
 	shared_str				m_sDeadCharacterUseOrDragAction;
 	shared_str				m_sDeadCharacterDontUseAction;
 	shared_str				m_sCarCharacterUseAction;
+	shared_str				m_sProjectorUseAction;
 	shared_str				m_sInventoryItemUseAction;
 	shared_str				m_sInventoryBoxUseAction;
 	shared_str				m_sCampfireIgniteAction;	// qweasdd

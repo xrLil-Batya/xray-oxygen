@@ -7,6 +7,9 @@
 #include "../../xrEngine/xr_ioc_cmd.h"
 #include "../../xrEngine/xr_ioc_cmd_ex.h"
 
+// Hack for License Box
+int SkipLicenseWND = false;
+
 // Common
 u32	ps_r_smapsize = 2048;
 xr_token q_smapsize_token[] =
@@ -250,7 +253,6 @@ Flags32	ps_r_flags =
 	| R_FLAG_STEEP_PARALLAX
 	| R_FLAG_SUN_FOCUS
 	| R_FLAG_SUN_TSM
-	| R_FLAG_TONEMAP
 	| R_FLAG_MBLUR
 	| R_FLAG_VOLUMETRIC_LIGHTS
 	| R_FLAG_GLOW_USE
@@ -261,6 +263,11 @@ Flags32	ps_r_ssao_flags =
 	R_FLAG_SSAO_HALF_DATA
 };
 
+ECORE_API Flags32 ps_r_postscreen_flags = 
+{
+	R_FLAG_TONEMAP
+	| R_FLAG_RAIN_DROPS
+};
 
 // R3-specific /////////////////////////////////////////////////////
 u32 ps_r3_msaa = 0;
@@ -740,7 +747,7 @@ void xrRender_initconsole()
 
 	// Common
 	CMD1(CCC_Screenshot,"screenshot"			);
-	CMD3(CCC_Mask, "screenshot_use_gamma_correction", &ps_r_flags, R_FLAG_SS_GAMMA_CORRECTION);
+	CMD3(CCC_Mask, "screenshot_use_gamma_correction", &ps_r_postscreen_flags, R_FLAG_SS_GAMMA_CORRECTION);
 
 	// Igor: just to test bug with rain/particles corruption
 	CMD1(CCC_RestoreQuadIBData,	"r_restore_quad_ib_data");
@@ -781,10 +788,12 @@ void xrRender_initconsole()
 	CMD4(CCC_Integer,	"r_aa_taa",				&ps_r_pp_aa_use_taa,		0,		1);
 
 	// Rain droplets on visor
-	CMD3(CCC_Mask,		"r_rain_droplets",		&ps_r_flags,				R_FLAG_RAIN_DROPS);
+	CMD3(CCC_Mask,		"r_rain_droplets",		&ps_r_postscreen_flags,		R_FLAG_RAIN_DROPS);
 
 	// Vignette
-	CMD3(CCC_Mask,		"r_vignette",			&ps_r_flags,				R_FLAG_VIGNETTE);
+	CMD3(CCC_Mask,		"r_vignette",			&ps_r_postscreen_flags,		R_FLAG_VIGNETTE);
+	CMD3(CCC_Mask,		"r_chromatic_aberr",	&ps_r_postscreen_flags,		R_FLAG_CHROMATIC);
+	CMD3(CCC_Mask,		"r_color_grading",		&ps_r_postscreen_flags,		R_FLAG_GRADING);
 
 	// Shadows
 	CMD3(CCC_Token,		"r_shadow_map_size",	&ps_r_smapsize,				q_smapsize_token);
@@ -808,9 +817,10 @@ void xrRender_initconsole()
 	CMD2(CCC_tf_Aniso,	"r_tf_aniso",			&ps_r_tf_Anisotropic						); //	{1..16}
 	CMD2(CCC_tf_MipBias,"r_tf_mipbias",			&ps_r_tf_Mipbias							); //	{-3..3}
 	CMD4(CCC_Float,		"r_dtex_range",			&ps_r_dtex_range,			5,		175		);
+	CMD4(CCC_Integer,	"r_lic_box",			&SkipLicenseWND,			0,		1 		);
 
 	// Tonemap
-	CMD3(CCC_Mask,		"r_tonemap",			&ps_r_flags,				R_FLAG_TONEMAP	);
+	CMD3(CCC_Mask,		"r_tonemap",			&ps_r_postscreen_flags,		R_FLAG_TONEMAP	);
 	CMD4(CCC_Float,		"r_tonemap_middlegray",	&ps_r_tonemap_middlegray,	0.0f,	2.0f	);
 	CMD4(CCC_Float,		"r_tonemap_adaptation",	&ps_r_tonemap_adaptation,	0.01f,	10.0f	);
 	CMD4(CCC_Float,		"r_tonemap_lowlum",		&ps_r_tonemap_low_lum,		0.0001f,1.0f	);

@@ -224,10 +224,10 @@ public:
 	// API
 	IC	void						set_xform			(u32 ID, const Fmatrix& M_);
 	IC	void						set_xform_world		(const Fmatrix& M);
-	IC void set_xform_world(const Matrix4x4 & fM);
+//	IC void set_xform_world(const Matrix4x4 & fM);
 	IC	void						set_xform_view		(const Fmatrix& M);
 	IC	void						set_xform_project	(const Fmatrix& M);
-	IC	void						set_xform_project	(const Matrix4x4& M) { set_xform_project(CastToGSCMatrix(M)); }
+//	IC	void						set_xform_project	(const Matrix4x4& M) { set_xform_project(CastToGSCMatrix(M)); }
 	IC	const Fmatrix&				get_xform_world		();
 	IC	const Fmatrix&				get_xform_view		();
 	IC	const Fmatrix&				get_xform_project	();
@@ -242,11 +242,6 @@ public:
 
 		void						set_Textures		(STextureList* T);
 	IC	void						set_Textures		(ref_texture_list& T_)				{ set_Textures(&*T_);			}
-
-#ifdef _EDITOR
-	IC	void						set_Matrices		(SMatrixList* M);
-	IC	void						set_Matrices		(ref_matrix_list& M)				{ set_Matrices(&*M);			}
-#endif
 
 	IC	void						set_Element			(ShaderElement* S, u32	pass=0);
 	IC	void						set_Element			(ref_selement& S, u32	pass=0)		{ set_Element(&*S,pass);		}

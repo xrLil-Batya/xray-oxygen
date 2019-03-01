@@ -10,51 +10,60 @@
 #include "../../xrEngine/GameFont.h"
 #include "SkeletonCustom.h"
 
-namespace WallmarksEngine {
+namespace WallmarksEngine
+{
 	struct wm_slot
 	{
 		using StaticWMVec = CWallmarksEngine::StaticWMVec;
+
 		ref_shader		shader;
 		StaticWMVec		static_items;
-		xr_vector< intrusive_ptr<CSkeletonWallmark> > skeleton_items;
-						wm_slot		(ref_shader sh)	{shader=sh;static_items.reserve(256);skeleton_items.reserve(256);}
+
+		xr_vector< intrusive_ptr<CSkeletonWallmark>> skeleton_items;
+
+		wm_slot(ref_shader sh) : shader(sh)
+		{
+			static_items.reserve(256); 
+			skeleton_items.reserve(256);
+		}
 	};
 }
 
 // #include "xr_effsun.h"
 
-const float W_DIST_FADE		= 15.f;
-const float	W_DIST_FADE_SQR	= W_DIST_FADE*W_DIST_FADE;
-const float I_DIST_FADE_SQR	= 1.f/W_DIST_FADE_SQR;
-const int	MAX_TRIS		= 1024;
+constexpr float W_DIST_FADE		= 15.f;
+constexpr float	W_DIST_FADE_SQR	= W_DIST_FADE*W_DIST_FADE;
+constexpr float I_DIST_FADE_SQR	= 1.f/W_DIST_FADE_SQR;
+constexpr u32	MAX_TRIS		= 1024;
 
 IC bool operator == (const CWallmarksEngine::wm_slot* slot, const ref_shader& shader){return slot->shader==shader;}
-CWallmarksEngine::wm_slot* CWallmarksEngine::FindSlot	(ref_shader shader)
+CWallmarksEngine::wm_slot* CWallmarksEngine::FindSlot(ref_shader shader)
 {
-    auto it				= std::find(marks.begin(),marks.end(),shader);
-	return						(it!=marks.end())?*it:nullptr;
+	auto it = std::find(marks.begin(), marks.end(), shader);
+	return (it != marks.end()) ? *it : nullptr;
 }
+
 CWallmarksEngine::wm_slot* CWallmarksEngine::AppendSlot	(ref_shader shader)
 {
-	marks.push_back				(xr_new<wm_slot>(shader));
-	return marks.back			();
+	marks.push_back(xr_new<wm_slot>(shader));
+	return marks.back();
 }
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CWallmarksEngine::CWallmarksEngine	()
+CWallmarksEngine::CWallmarksEngine()
 {
-	static_pool.reserve		(256);
-	marks.reserve			(256);
-	hGeom.create			(FVF::F_LIT, RCache.Vertex.Buffer(), nullptr);
+	static_pool.reserve(256);
+	marks.reserve(256);
+	hGeom.create(FVF::F_LIT, RCache.Vertex.Buffer(), nullptr);
 }
 
-CWallmarksEngine::~CWallmarksEngine	()
+CWallmarksEngine::~CWallmarksEngine()
 {
-	clear			();
-	hGeom.destroy	();
+	clear();
+	hGeom.destroy();
 }
 
 void CWallmarksEngine::clear()
@@ -62,11 +71,11 @@ void CWallmarksEngine::clear()
 	for (WallmarksEngine::wm_slot* mark : marks)
 	{
 		for (CWallmarksEngine::static_wallmark* static_item : mark->static_items)
-			static_wm_destroy	(static_item);
+			static_wm_destroy(static_item);
 
-		xr_delete		(mark);
+		xr_delete(mark);
 	}
-	marks.clear	();
+	marks.clear();
 
 	for (CWallmarksEngine::static_wallmark* pStaticWallmark : static_pool)
 		xr_delete(pStaticWallmark);
@@ -74,35 +83,43 @@ void CWallmarksEngine::clear()
 }
 
 // allocate
-CWallmarksEngine::static_wallmark*	CWallmarksEngine::static_wm_allocate		()
+CWallmarksEngine::static_wallmark*	CWallmarksEngine::static_wm_allocate()
 {
-	static_wallmark*	W = nullptr;
-	if (static_pool.empty())  W = xr_new<static_wallmark> ();
-	else					{ W = static_pool.back(); static_pool.pop_back(); }
+	static_wallmark* pWMarks = nullptr;
 
-	W->ttl				= ps_r_WallmarkTTL;
-	W->verts.clear		();
-	return W;
+	if (!static_pool.empty()) 
+	{ 
+		pWMarks = static_pool.back();
+		static_pool.pop_back();
+	}
+	else pWMarks = new static_wallmark();
+
+	pWMarks->ttl = ps_r_WallmarkTTL;
+	pWMarks->verts.clear();
+	return pWMarks;
 }
+
 // destroy
-void		CWallmarksEngine::static_wm_destroy		(CWallmarksEngine::static_wallmark*	W	)
+void CWallmarksEngine::static_wm_destroy(CWallmarksEngine::static_wallmark* W)
 {
-	static_pool.push_back	(W);
+	static_pool.push_back(W);
 }
+
 // render
-void		CWallmarksEngine::static_wm_render		(CWallmarksEngine::static_wallmark*	W, FVF::LIT* &V)
+void CWallmarksEngine::static_wm_render(CWallmarksEngine::static_wallmark*	W, FVF::LIT* &V)
 {
-	float		a		= 1-(W->ttl/ps_r_WallmarkTTL);
-	int			aC		= iFloor	( a * 255.f);	clamp	(aC,0,255);
-	u32			C		= color_rgba(128,128,128,aC);
-	FVF::LIT*	S		= &*W->verts.begin	();
-	FVF::LIT*	E		= &*W->verts.end	();
-	for (; S!=E; S++, V++){
-		V->p.set		(S->p);
-		V->color		= C;
-		V->t.set		(S->t);
+	float		a = 1 - (W->ttl / ps_r_WallmarkTTL);
+	int			aC = iFloor(a * 255.f);	clamp(aC, 0, 255);
+	u32			C = color_rgba(128, 128, 128, aC);
+	FVF::LIT*	S = &*W->verts.begin();
+	FVF::LIT*	E = &*W->verts.end();
+	for (; S != E; S++, V++) {
+		V->p.set(S->p);
+		V->color = C;
+		V->t.set(S->t);
 	}
 }
+
 //--------------------------------------------------------------------------------
 void CWallmarksEngine::RecurseTri(u32 t, Fmatrix &mView, CWallmarksEngine::static_wallmark	&W)
 {

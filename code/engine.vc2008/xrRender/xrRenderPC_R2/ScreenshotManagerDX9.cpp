@@ -56,7 +56,7 @@ ID3DBlob* CScreenshotManager::MakeScreenshotNormal(u32 fmt)
 
 	// Process image: kill alpha channel and optionally apply gamma settings
 	CHK_DX(pFB->LockRect(&R, nullptr, D3DLOCK_NOSYSLOCK));
-	bool bGammaCorrection = psDeviceFlags.test(rsFullscreen) ? ps_r_flags.test(R_FLAG_SS_GAMMA_CORRECTION) : false;
+	bool bGammaCorrection = psDeviceFlags.test(rsFullscreen) ? ps_r_postscreen_flags.test(R_FLAG_SS_GAMMA_CORRECTION) : false;
 	ProcessImage((u32*)R.pBits, Device.dwWidth*Device.dwHeight, bGammaCorrection);
 	CHK_DX(pFB->UnlockRect());
 

@@ -22,7 +22,7 @@ protected:
 		const char*			m_name;
 
 		IC				CTokenPredicateName(const char* name) { m_name = name; }
-		IC		bool	operator()(const xr_token &token) const { return (token.name && !xr_strcmp(token.name,m_name)); }
+		IC		bool		operator()(const xr_token &token) const { return (token.name && !xr_strcmp(token.name,m_name)); }
 	};
 	
 	struct CTokenPredicateID 

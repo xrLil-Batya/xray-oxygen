@@ -28,10 +28,6 @@ IC	void	CBackend::set_xform_world(const Fmatrix& fM)
 	xforms.set_W(fM);
 }
 
-IC	void	CBackend::set_xform_world(const Matrix4x4& fM)
-{
-	xforms.set_W(CastToGSCMatrix(fM));
-}
 IC	void	CBackend::set_xform_view	(const Fmatrix& fM)					
 { 
 	xforms.set_V(fM);	

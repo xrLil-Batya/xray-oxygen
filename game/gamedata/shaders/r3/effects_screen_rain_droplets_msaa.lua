@@ -1,5 +1,5 @@
 local tex_image 	= "$user$generic"
-local tex_droplets	= "fx\\fx_hud_droplets"
+local tex_droplets	= "shaders\\fx_hud_droplets"
 
 function element_0(shader, t_base, t_second, t_detail)
 	shader:begin("stub_screen_space", "rain_drops")

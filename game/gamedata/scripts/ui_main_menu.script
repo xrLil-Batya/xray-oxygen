@@ -235,9 +235,16 @@ end
 
 function main_menu:OnKeyboard(dik, keyboard_action)  --virtual function
 	CUIScriptWnd.OnKeyboard(self,dik,keyboard_action)
+	
 	local bind = dik_to_bind(dik)
 	local console = get_console()
-
+	
+	if not (console:get_bool("r_lic_box")) then
+		self.message_box:InitMessageBox("message_box_license")
+		self.message_box:ShowDialog(true)
+		console:execute("r_lic_box 1")	
+	end
+	
 	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
 		if dik == DIK_keys.DIK_ESCAPE then
 			if level.present() and (db.actor ~= nil) and db.actor:alive() then

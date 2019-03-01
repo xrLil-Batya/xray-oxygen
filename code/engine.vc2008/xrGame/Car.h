@@ -144,10 +144,9 @@ public:
 	float	m_power_neutral_factor;//multiplier for power when accelerator is not pressed (0-1,0.25)
 	bool	b_exploded;
 
-	struct SWheel: 
-	public CDamagableHealthItem
+	struct SWheel: public CDamagableItem
 	{
-		typedef		CDamagableHealthItem inherited;
+		using inherited = CDamagableItem;
 		u16									bone_id				;
 		bool								inited				;
 		float								radius				;
@@ -252,11 +251,10 @@ virtual void ApplyDamage			(u16 level);
 		~SExhaust();
 	};
 
-	struct SDoor;
-	struct SDoor :
-	public CDamagableHealthItem
+	struct SDoor : public CDamagableItem
 	{
-		typedef CDamagableHealthItem inherited;
+		using inherited = CDamagableItem;
+
 		u16 bone_id;
 		CCar* pcar;
 		bool  update;

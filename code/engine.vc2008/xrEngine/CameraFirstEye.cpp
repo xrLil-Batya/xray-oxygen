@@ -9,8 +9,9 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCameraFirstEye::CCameraFirstEye(CObject* p, u32 flags ) : CCameraBase(p, flags),lookat_active(false)
+CCameraFirstEye::CCameraFirstEye(CObject* p, u32 flags ) : CCameraBase(p, flags), lookat_active(false)
 {
+	lookat_point.set(0.f, 0.f, 0.f);
 }
 
 CCameraFirstEye::~CCameraFirstEye()

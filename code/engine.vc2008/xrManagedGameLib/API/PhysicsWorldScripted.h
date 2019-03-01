@@ -1,28 +1,34 @@
 #pragma once
 #include "../xrGame/physics_world_scripted.h"
-#include "../xrManagedGameLib/PhysicsGameScripted.h"
+#include "../xrManagedGameLib/API/PhysicsGameScripted.h"
 
 namespace XRay
 {
-	template<class T>
-	ref class PhysicsWorldScripted
+	
+	public ref class PhysicsWorldScripted
+	//	:public PhysicsGameScripted<IPHWorld>
 	{
 
 	internal:
-		cphysics_world_scripted* pObj;
+		cphysics_world_scripted* pNativeLevel;
 
 	public:
 
-		PhysicsWorldScripted();
 		~PhysicsWorldScripted();
 
-		PhysicsWorldScripted(IPHWorld* imp) : (PhysicsGameScripted->pObj)<IPHWorld>(imp) {}
+		//PhysicsWorldScripted(IPHWorld* imp);
+	
+// 		PhysicsWorldScripted(IPHWorld* imp):PhysicsGameScripted<IPHWorld>(imp) {};
+ 		PhysicsWorldScripted(cphysics_world_scripted* imp) : pNativeLevel(imp) {};
 
-		float		Gravity() {return pObj->Gravity(); }
-		void		SetGravity(float g) { return pObj->SetGravity(g); }
+		float		Gravity() {return pNativeLevel->Gravity(); }
+		void		SetGravity(float g) { return pNativeLevel->SetGravity(g); }
 		void		AddCall(CPHCondition*c, CPHAction*a);
 
-
+		::System::IntPtr GetNative() {
+			return ::System::IntPtr(pNativeLevel
+			);
+		}
 	};
 
 }

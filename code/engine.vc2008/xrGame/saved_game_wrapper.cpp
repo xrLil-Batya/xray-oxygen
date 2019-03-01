@@ -77,11 +77,12 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 	}
 
 	u32 source_count = stream->r_u32();
+	u32 dest_count   = stream->r_u32();
 	void *source_data = xr_malloc(source_count);
-	XRay::Compress::RT::RtcDecompress(source_data,source_count,stream->pointer(),stream->length() - 3 * sizeof(u32));
+	XRay::Compress::RT::RtcDecompress(source_data, source_count, stream->pointer(), dest_count);
 	FS.r_close(stream);
 
-	IReader						reader(source_data,source_count);
+	IReader reader(source_data,source_count);
 
 	{
 		CALifeTimeManager		time_manager(alife_section);

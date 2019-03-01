@@ -664,10 +664,10 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 {
 	PIX_EVENT(accum_direct_f);
 // Select target
-	if (SE_SUN_LUMINANCE==sub_phase)	{
-		accum_direct_lum	();
-		return				;
-	}
+	//if (SE_SUN_LUMINANCE==sub_phase)	{
+	//	accum_direct_lum	();
+	//	return				;
+	//}
 	phase_accumulator					();
 	if( ! RImplementation.o.dx10_msaa )
 		u_setrt								(rt_Generic_0,nullptr,nullptr,HW.pBaseZB);
@@ -861,115 +861,6 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 		   RCache.set_Stencil	(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);
       }
 	}
-}
-
-void CRenderTarget::accum_direct_lum	()
-{
-	PIX_EVENT(accum_direct_lum);
-//	TODO: DX10: Remove half pixel offset
-	// Select target
-	phase_accumulator					();
-
-	// *** assume accumulator setted up ***
-	light*			fuckingsun			= (light*)RImplementation.Lights.sun._get()	;
-
-	// Common calc for quad-rendering
-	u32		Offset;
-	// u32		C					= color_rgba	(255,255,255,255);
-	float	_w					= float			(Device.dwWidth);
-	float	_h					= float			(Device.dwHeight);
-	Fvector2					p0,p1;
-	p0.set						(.5f/_w, .5f/_h);
-	p1.set						((_w+.5f)/_w, (_h+.5f)/_h );
-	float	d_Z	= EPS_S;
-
-	// Common constants (light-related)
-	Fvector		L_dir,L_clr;	float L_spec;
-	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= Diffuse::u_diffuse2s	(L_clr);
-	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
-	L_dir.normalize				();
-
-	// recalculate d_Z, to perform depth-clipping
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
-	Device.mFullTransform.transform(center_pt)	;
-	d_Z							= center_pt.z	;
-
-
-	// Perform lighting
-		RCache.set_CullMode					(CULL_NONE	);
-		RCache.set_ColorWriteEnable			();
-
-		// Make jitter texture
-		Fvector2					j0,j1;
-		float	scale_X				= float(Device.dwWidth)	/ float(TEX_jitter);
-		float	offset				= (.5f / float(TEX_jitter));
-		j0.set						(offset,offset);
-		j1.set						(scale_X,scale_X).add(offset);
-
-		struct v_aa	{
-			Fvector4	p;
-			Fvector2	uv0;
-			Fvector2	uvJ;
-			Fvector2	uv1;
-			Fvector2	uv2;
-			Fvector2	uv3;
-			Fvector4	uv4;
-			Fvector4	uv5;
-		};
-		float	smooth				= 0.6f;
-		float	ddw					= smooth/_w;
-		float	ddh					= smooth/_h;
-
-		// Fill vertex buffer
-		VERIFY	(sizeof(v_aa)==g_aa_AA->vb_stride);
-		v_aa* pv					= (v_aa*) RCache.Vertex.Lock	(4,g_aa_AA->vb_stride,Offset);
-		pv->p.set(EPS,			float(_h+EPS),	EPS,1.f); pv->uv0.set(p0.x, p1.y);pv->uvJ.set(j0.x, j1.y);pv->uv1.set(p0.x-ddw,p1.y-ddh);pv->uv2.set(p0.x+ddw,p1.y+ddh);pv->uv3.set(p0.x+ddw,p1.y-ddh);pv->uv4.set(p0.x-ddw,p1.y+ddh,0,0);pv->uv5.set(0,0,0,0);pv++;
-		pv->p.set(EPS,			EPS,			EPS,1.f); pv->uv0.set(p0.x, p0.y);pv->uvJ.set(j0.x, j0.y);pv->uv1.set(p0.x-ddw,p0.y-ddh);pv->uv2.set(p0.x+ddw,p0.y+ddh);pv->uv3.set(p0.x+ddw,p0.y-ddh);pv->uv4.set(p0.x-ddw,p0.y+ddh,0,0);pv->uv5.set(0,0,0,0);pv++;
-		pv->p.set(float(_w+EPS),float(_h+EPS),	EPS,1.f); pv->uv0.set(p1.x, p1.y);pv->uvJ.set(j1.x, j1.y);pv->uv1.set(p1.x-ddw,p1.y-ddh);pv->uv2.set(p1.x+ddw,p1.y+ddh);pv->uv3.set(p1.x+ddw,p1.y-ddh);pv->uv4.set(p1.x-ddw,p1.y+ddh,0,0);pv->uv5.set(0,0,0,0);pv++;
-		pv->p.set(float(_w+EPS),EPS,			EPS,1.f); pv->uv0.set(p1.x, p0.y);pv->uvJ.set(j1.x, j0.y);pv->uv1.set(p1.x-ddw,p0.y-ddh);pv->uv2.set(p1.x+ddw,p0.y+ddh);pv->uv3.set(p1.x+ddw,p0.y-ddh);pv->uv4.set(p1.x-ddw,p0.y+ddh,0,0);pv->uv5.set(0,0,0,0);pv++;
-		RCache.Vertex.Unlock		(4,g_aa_AA->vb_stride);
-		RCache.set_Geometry			(g_aa_AA);
-
-		// setup
-		RCache.set_Element	(s_accum_direct->E[SE_SUN_LUMINANCE]);
-		RCache.set_c				("Ldynamic_dir",		L_dir.x,L_dir.y,L_dir.z,0		);
-		RCache.set_c				("Ldynamic_color",		L_clr.x,L_clr.y,L_clr.z,L_spec	);
-
-      if( ! RImplementation.o.dx10_msaa )
-      {
-		   // setup stencil
-		   RCache.set_Stencil	(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);
-	   	RCache.Render			(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-      }
-      else	
-      {
-		   // per pixel
-		   RCache.set_Stencil	(TRUE,D3DCMP_EQUAL,dwLightMarkerID,0xff,0x00);
-		   RCache.Render			(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-   		
-		   // per sample
-         if( RImplementation.o.dx10_msaa_opt )
-         {
-		      RCache.set_Element	(s_accum_direct_msaa[0]->E[SE_SUN_LUMINANCE]);
-            RCache.set_Stencil	(TRUE,D3DCMP_EQUAL,dwLightMarkerID|0x80,0xff,0x00);
-	         RCache.set_CullMode	(CULL_NONE	);
-            RCache.Render			(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-         }
-         else
-         {
-	         for( u32 i = 0; i < RImplementation.o.dx10_msaa_samples; ++i )
-	         {
-		         RCache.set_Element	      (s_accum_direct_msaa[i]->E[SE_SUN_LUMINANCE]);
-               StateManager.SetSampleMask ( u32(1) << i );
-               RCache.set_Stencil	      (TRUE,D3DCMP_EQUAL,dwLightMarkerID|0x80,0xff,0x00);
-	            RCache.set_CullMode	      (CULL_NONE	);
-               RCache.Render				   (D3DPT_TRIANGLELIST,Offset,0,4,0,2);	
-	         }
-	         StateManager.SetSampleMask( 0xffffffff );
-         }
-	      RCache.set_Stencil	(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);
-      }
 }
 
 void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, const Fmatrix &mShadow)

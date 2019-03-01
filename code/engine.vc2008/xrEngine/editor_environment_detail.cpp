@@ -34,27 +34,37 @@ static HRESULT AnsiToUnicode						(LPCSTR pszA, LPVOID buffer, u32 const& buffer
 bool logical_string_predicate::operator()			(LPCSTR const& first, LPCSTR const& second) const
 {
 	u32				buffer_size0 = (xr_strlen(first) + 1)*2;
-	LPCWSTR			buffer0 = (LPCWSTR)_alloca(buffer_size0);
+	wchar_t*		buffer0 = new wchar_t[xr_strlen(first) + 1];
 	AnsiToUnicode	(first, (LPVOID)buffer0, buffer_size0);
 
 	u32				buffer_size1 = (xr_strlen(second) + 1)*2;
-	LPCWSTR			buffer1 = (LPCWSTR)_alloca(buffer_size1);
+	wchar_t*		buffer1 = new wchar_t[xr_strlen(second) + 1];
 	AnsiToUnicode	(second, (LPVOID)buffer1, buffer_size1);
 
-	return			(StrCmpLogicalW(buffer0, buffer1) < 0);
+	const bool result = StrCmpLogicalW(buffer0, buffer1) < 0;
+
+	xr_delete(buffer0);
+	xr_delete(buffer1);
+
+	return result;
 }
 
 bool logical_string_predicate::operator()			(shared_str const& first, shared_str const& second) const
 {
 	u32				buffer_size0 = (first.size() + 1)*2;
-	LPCWSTR			buffer0 = (LPCWSTR)_alloca(buffer_size0);
+	wchar_t*		buffer0 = new wchar_t[first.size() + 1];
 	AnsiToUnicode	(first.c_str(), (LPVOID)buffer0, buffer_size0);
 
 	u32				buffer_size1 = (second.size() + 1)*2;
-	LPCWSTR			buffer1 = (LPCWSTR)_alloca(buffer_size1);
+	wchar_t*		buffer1 = new wchar_t[second.size() + 1];
 	AnsiToUnicode	(second.c_str(), (LPVOID)buffer1, buffer_size1);
 
-	return			(StrCmpLogicalW(buffer0, buffer1) < 0);
+	const bool result = StrCmpLogicalW(buffer0, buffer1) < 0;
+
+	xr_delete(buffer0);
+	xr_delete(buffer1);
+
+	return result;
 }
 
 shared_str editor::environment::detail::real_path	(LPCSTR folder, LPCSTR path)

@@ -21,7 +21,7 @@ public:
 	TaskbarValue(HWND hwnd)
 	{
 		// if failed - OS is lower then Windows 7, because TaskbarList3 is not exist at Vista
-		CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
+		CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 		R_CHK(CoCreateInstance(CLSID_TaskbarList, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&pTaskbar)));
 
 		currentHwnd = hwnd;

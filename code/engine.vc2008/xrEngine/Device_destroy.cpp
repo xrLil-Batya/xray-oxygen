@@ -54,7 +54,7 @@ void CRenderDevice::Reset(bool precache)
 	u32 dwWidth_before = dwWidth;
 	u32 dwHeight_before = dwHeight;
 
-	ShowCursor(TRUE);
+	//ShowCursor(TRUE);
 	u32 tm_start = TimerAsync();
 
 	m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
@@ -70,10 +70,9 @@ void CRenderDevice::Reset(bool precache)
 		PreCache(20, true, false);
 	}
 
-	u32 tm_end = TimerAsync();
-	Msg("*** RESET [%d ms]", tm_end - tm_start);
+	Msg("*** RESET [%d ms]", TimerAsync() - tm_start);
 
-	ShowCursor(FALSE);
+	//ShowCursor(FALSE);
 
 	seqDeviceReset.Process(rp_DeviceReset);
 

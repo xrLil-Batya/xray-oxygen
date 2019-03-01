@@ -716,15 +716,15 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 
 	if ( disasm )
 	{
-		ID3DBlob*		disasm	= nullptr;
-		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &disasm );
+		ID3DBlob*		pDisasm	= nullptr;
+		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &pDisasm);
 		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), FALSE, 0, &disasm );
 		string_path		dname;
 		xr_strconcat	(dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
 		IWriter*		W		= FS.w_open("$logs$",dname);
-		W->w			(disasm->GetBufferPointer(),(u32)disasm->GetBufferSize());
+		W->w			(pDisasm->GetBufferPointer(),(u32)pDisasm->GetBufferSize());
 		FS.w_close		(W);
-		_RELEASE		(disasm);
+		_RELEASE		(pDisasm);
 	}
 
 	return				_result;

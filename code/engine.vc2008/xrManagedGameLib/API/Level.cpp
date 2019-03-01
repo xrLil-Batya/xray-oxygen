@@ -8,10 +8,12 @@
 #include "../xrGame/level_graph.h"
 #include "../xrGame/Level.h"
 #include "../xrGame/Actor.h"
-#include "../xrEngine/date_time.h"
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
 #include "../xrGame/HUDManager.h"
+//#include "../xrManagedUILib/API/UIDialogWnd.h"
+#include "../xrGame/UIGame.h" 
+
 
 System::UInt32 XRay::LevelGraph::LevelID::get()
 {
@@ -198,15 +200,61 @@ XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
 	return gcnew ClientSpawnManager(&(::Level().client_spawn_manager()));
 }
 
-
-
 void XRay::Level::AddDialogToRender(UIDialogWnd^ pDialog)
-{
-	//хз как подлезть к GameUI(). Подскажите я тупой.
-	//pDialog->GetGameUI()->AddDialogToRender(pDialog);
+{	
+	((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->AddDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
 }
 
 void XRay::Level::RemoveDialogFromRender(UIDialogWnd^ pDialog)
 {
-	//XRay::UIDialogWnd::GetGameUI()->RemoveDialogToRender(pDialog);
+	((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->RemoveDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
+}
+
+XRay::PhysicsWorldScripted^ XRay::Level::physicsWorldScripted()
+{
+	return gcnew PhysicsWorldScripted(get_script_wrapper<cphysics_world_scripted>(*physics_world()));
+}
+
+void XRay::Level::HideIndicators()
+{
+	if (((CUIGame*)UIDialogWnd::GetGameUI().ToPointer()))
+	{
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->HideShownDialogs();
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowGameIndicators(false);
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(false);
+	}
+}
+
+void XRay::Level::HideIndicatorsSafe()
+{
+	if ((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())
+	{
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowGameIndicators(false);
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(false);
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->OnExternalHideIndicators();
+	}
+}
+
+void XRay::Level::ShowIndicators()
+{
+	if (((CUIGame*)UIDialogWnd::GetGameUI().ToPointer()))
+	{
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowGameIndicators(true);
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(true);
+	}
+}
+
+void XRay::Level::ShowWeapon(bool b)
+{
+	psHUD_Flags.set(HUD_WEAPON_RT2, b);
+}
+
+bool XRay::Level::isLevelPresent()
+{
+	return (!!g_pGameLevel);
+}
+
+XRay::MEnvironment^ XRay::Level::pEnvironment()
+{
+	return	(%MEnvironment());   // (&Environment())
 }

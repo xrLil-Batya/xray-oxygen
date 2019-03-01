@@ -23,12 +23,8 @@ float psCamSlideInert = 0.0f;
 
 CCameraManager::CCameraManager(bool bApplyOnUpdate)
 {
-#ifdef DEBUG
     dbg_upd_frame = 0;
-#endif
-
     m_bAutoApply = bApplyOnUpdate;
-
     pp_identity.blur = 0;
     pp_identity.gray = 0;
     pp_identity.duality.h = 0;

@@ -5,7 +5,8 @@
 #include "xrServer_Objects_ALife.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "game_object_space.h"
-
+#include "actor.h"
+#include "../xrEngine/camerabase.h"
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -20,6 +21,7 @@ CProjector::CProjector()
 	lanim = 0;
 	bone_x.id = BI_NONE;
 	bone_y.id = BI_NONE;
+	actor_use = false;
 }
 
 CProjector::~CProjector()
@@ -88,24 +90,16 @@ BOOL CProjector::net_Spawn(CSE_Abstract* DC)
 	setEnabled	(TRUE);
 
 	TurnOn		();
-	
-	//////////////////////////////////////////////////////////////////////////
-	CBoneInstance& b_x = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(bone_x.id);	
-	b_x.set_callback(bctCustom,BoneCallbackX,this);
 
-	CBoneInstance& b_y = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(bone_y.id);	
-	b_y.set_callback(bctCustom,BoneCallbackY,this);
-	
-	Direction().getHP(_current.yaw,_current.pitch);
+	Direction().getHP(_current.yaw, _current.pitch);
 	_start = _target = _current;
-
-	//////////////////////////////////////////////////////////////////////////
 
 	return TRUE;
 }
 
 void CProjector::shedule_Update	(u32 dt)
 {
+
 	inherited::shedule_Update(dt);
 
 }
@@ -165,14 +159,58 @@ void CProjector::UpdateCL	()
 
 	}
 
+
+
+	CBoneInstance& b_x = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(bone_x.id);
+	b_x.set_callback(bctCustom, BoneCallbackX, this);
+
+	CBoneInstance& b_y = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(bone_y.id);
+	b_y.set_callback(bctCustom, BoneCallbackY, this);
+
+
+
 	// Update searchlight 
 	angle_lerp(_current.yaw,	_target.yaw,	bone_x.velocity, Device.fTimeDelta);
 	angle_lerp(_current.pitch,	_target.pitch,	bone_y.velocity, Device.fTimeDelta);
 }
-
-
+#include "HudManager.h"
+#include "inventory.h"
+#include "items/weapon.h"
+#include "../xrEngine/xr_input.h"
 void CProjector::renderable_Render()
 {
+	if (renderable.visual)
+	{
+		if (actor_use && (Level().CurrentControlEntity()->Position().distance_to(Position()) > 2.0f) || pInput->iGetAsyncKeyState(DIK_ESCAPE))
+			actor_use = false;
+
+		if (Actor() && Actor()->g_Alive() && actor_use)
+		{
+			_current.pitch = _target.pitch = -Actor()->cam_Active()->pitch;
+			_start.yaw = -Actor()->cam_Active()->yaw;
+		}
+		if (pInput->iGetAsyncKeyState(DIK_SPACE))
+		{
+			CWeapon				*weapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+			collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+			float dist = RQ.range;
+
+			Fvector fppos = weapon->get_LastFP();
+			fppos.add(Fvector(weapon->get_LastFD()).mul(dist));
+			Position().set(fppos);
+		}
+		/*if (pInput->iGetAsyncKeyState(DIK_SPACE))
+		{
+			CWeapon				*weapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+			CCameraBase *pCam = Actor()->cam_Active();
+			collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+			float dist = RQ.range;
+
+			Fvector campos = pCam->vPosition;
+			campos.add(Fvector(pCam->vDirection).mul(dist));
+			Position().set(campos);
+		}*/
+	}
 	inherited::renderable_Render	();
 }
 
@@ -236,3 +274,7 @@ Fvector CProjector::GetCurrentDirection()
 	return (Fvector().setHP(_current.yaw,_current.pitch));
 }
 
+bool CProjector::Get_light_active()
+{
+	return (light_render->get_active());
+}

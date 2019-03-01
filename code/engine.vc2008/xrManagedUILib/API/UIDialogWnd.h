@@ -3,6 +3,8 @@
 #include "../xrUICore/UIDialogWnd.h"
 #include "../xrUIcore/IGameUI.h"
 
+
+
 namespace XRay
 {
 	public ref class UIDialogWnd abstract
@@ -11,14 +13,10 @@ namespace XRay
 		UIDialogWnd();
 		~UIDialogWnd();
 
+		static ::System::IntPtr GetGameUI() { return (::System::IntPtr)pUIHud; }
+		::System::IntPtr GetNative() { return (::System::IntPtr)pNativeLevel; }
+
 	internal:
-		CUIDialogWnd* pNativeLevel;
-
-	public:
-	//	CUIGame* GetGameUI() { return (CUIGame*)pUIHud; }
-
-		
-
+		static CUIDialogWnd* pNativeLevel;
 	};
 }
-

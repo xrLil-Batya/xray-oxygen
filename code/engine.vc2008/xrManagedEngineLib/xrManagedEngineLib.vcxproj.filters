@@ -72,6 +72,12 @@
     <ClInclude Include="ObjectSpace.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="API\Environment.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\EnvDescriptor.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xrManagedEngineLib.cpp">
@@ -114,6 +120,12 @@
       <Filter>Source Files\API</Filter>
     </ClCompile>
     <ClCompile Include="ObjectSpace.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\Environment.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\EnvDescriptor.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>

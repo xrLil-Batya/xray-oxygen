@@ -15,7 +15,7 @@
 #include FT_FREETYPE_H
 
 // @ Да за хардкоржено, отводим место для Английского и Русского, а также для системных символов (цифры, прочее)
-constexpr unsigned int TOTAL_ANSCII = 96 + 63 + 1;
+constexpr unsigned int TOTAL_ANSCII = 96 + 65 + 1;
 
 namespace XRay
 {

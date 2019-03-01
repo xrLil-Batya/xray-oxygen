@@ -42,6 +42,13 @@ struct HUD_SOUND_ITEM
 		}
 	}
 
+	ICF void		set_frequency(const float& freq)
+	{
+		if (m_activeSnd) {
+			m_activeSnd->snd.set_frequency(freq);
+		}
+	}
+
 	struct SSnd		{
 		ref_sound	snd;
 		float		delay;		//задержка перед проигрыванием
@@ -67,6 +74,7 @@ public:
 	void LoadSound		(LPCSTR section, LPCSTR line, LPCSTR alias, bool exclusive = false, int type = sg_SourceType);
 		 
 	void SetPosition	(LPCSTR alias, const Fvector& pos);
+	void SetFrequency(LPCSTR alias, const float& freq);
 	void StopAllSounds	();
 	bool SoundIsFound   (const char* SndName);
 };

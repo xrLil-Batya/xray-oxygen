@@ -24,7 +24,6 @@
 	class 	CALifeSimulator;
 #endif
 
-class CSE_ALifeItemWeapon;
 class CSE_ALifeDynamicObject;
 class CSE_ALifeObject;
 #ifdef XRGAME_EXPORTS
@@ -52,7 +51,6 @@ struct  SFillPropData
 };
 
 SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeSchedulable,IPureSchedulableObject)
-	CSE_ALifeItemWeapon				*m_tpCurrentBestWeapon;
 	CSE_ALifeDynamicObject			*m_tpBestDetector;
 	u64								m_schedule_counter;
 
@@ -73,7 +71,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeSchedulable,IPureSchedulableObject)
 	virtual bool					natural_weapon			() const {return true;}
 	virtual bool					natural_detector		() const {return true;}
 #ifdef XRGAME_EXPORTS
-	virtual	CSE_ALifeItemWeapon		*tpfGetBestWeapon		(ALife::EHitType		&tHitType,			float		&fHitPower) = 0;
 	virtual bool					bfPerformAttack			()											{return(true);};
 	virtual	void					vfUpdateWeaponAmmo		()											{};
 	virtual	void					vfProcessItems			()											{};
@@ -386,7 +383,6 @@ SERVER_ENTITY_DECLARE_BEGIN2(CSE_ALifeSmartZone,CSE_ALifeSpaceRestrictor,CSE_ALi
 	virtual CSE_ALifeSmartZone		*cast_smart_zone			() {return this;};
 #ifdef XRGAME_EXPORTS
 	virtual bool					bfActive					();
-	virtual	CSE_ALifeItemWeapon		*tpfGetBestWeapon			(ALife::EHitType		&tHitType,			float		&fHitPower);
 	virtual CSE_ALifeDynamicObject	*tpfGetBestDetector			();
 	virtual	ALife::EMeetActionType	tfGetActionType				(CSE_ALifeSchedulable	*tpALifeSchedulable,int			iGroupIndex, bool bMutualDetection);
 	// additional functionality

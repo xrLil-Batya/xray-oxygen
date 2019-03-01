@@ -185,9 +185,13 @@ public:
 
 static void play_object(dxGeomUserData* data, SGameMtlPair* mtl_pair, const dContactGeom* c) noexcept
 {
-	CPHSoundPlayer* sp = data->ph_ref_object->ObjectPhSoundPlayer();
-	if (sp)
-		sp->Play(mtl_pair, *(Fvector*)c->pos);
+	if (data->ph_ref_object)
+	{
+		CPHSoundPlayer* sp = data->ph_ref_object->ObjectPhSoundPlayer();
+
+		if (sp)
+			sp->Play(mtl_pair, *(Fvector*)c->pos);
+	}
 }
 
 template<class Pars>

@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include "../FrayBuildConfig.hpp"
 #ifdef RAW_INPUT_USE
 #include "xr_input.h"
 #endif
@@ -12,7 +13,7 @@ static bool bResize = false;
 bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT &result)
 {
 #ifdef RAW_INPUT_USE
-	CInput::DataInput = lParam;
+	
 #endif
 	switch (uMsg) 
 	{
@@ -25,6 +26,10 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	case WM_CLOSE:  if (editor()) break; result = 0; return (true);
 	case WM_HOTKEY: break;// prevent 'ding' sounds caused by Alt+key combinations
 	case WM_SYSCHAR: result = 0; return true;
+
+#ifdef RAW_INPUT_USE
+	case WM_INPUT: CInput::DataInput = (HRAWINPUT)lParam;
+#endif
 
 	case WM_ACTIVATE : 
 	{

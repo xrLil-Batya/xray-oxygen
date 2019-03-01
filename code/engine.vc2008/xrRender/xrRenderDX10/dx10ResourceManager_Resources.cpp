@@ -549,7 +549,9 @@ void	CResourceManager::_DeleteTexture		(const CTexture* T)
 		m_textures.erase(I);
 		return;
 	}
-	Msg	("! ERROR: Failed to find texture surface '%s'",*T->cName);
+
+	
+//	Msg	("! ERROR: Failed to find texture surface '%s'",*T->cName);
 }
 
 #ifdef DEBUG

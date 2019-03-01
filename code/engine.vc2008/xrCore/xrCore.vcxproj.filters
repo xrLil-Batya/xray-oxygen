@@ -43,9 +43,6 @@
     <Filter Include="Xml">
       <UniqueIdentifier>{f365c098-99bb-41a7-858d-12ba18a1311e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SPPInfo">
-      <UniqueIdentifier>{ceef9aed-568b-4121-9891-a1f94935ab1b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PostProcessCore">
       <UniqueIdentifier>{15552a91-ab08-4854-982a-ec34dc8e9fb8}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,9 @@
     </Filter>
     <Filter Include="Math\General elements">
       <UniqueIdentifier>{d1c840ce-89f9-435c-8e42-22ccfd648842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PostProcessCore\SPPInfo">
+      <UniqueIdentifier>{ceef9aed-568b-4121-9891-a1f94935ab1b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -181,15 +181,12 @@
       <Filter>Xml</Filter>
     </ClCompile>
     <ClCompile Include="SPPInfo.cpp">
-      <Filter>SPPInfo</Filter>
+      <Filter>PostProcessCore\SPPInfo</Filter>
     </ClCompile>
     <ClCompile Include="Envelope.cpp">
       <Filter>PostProcessCore</Filter>
     </ClCompile>
     <ClCompile Include="..\xrEngine\interp.cpp">
-      <Filter>PostProcessCore</Filter>
-    </ClCompile>
-    <ClCompile Include="PostprocessAnimator.cpp">
       <Filter>PostProcessCore</Filter>
     </ClCompile>
     <ClCompile Include="Buildcpp.cpp">
@@ -212,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="_sphere.cpp">
       <Filter>Math\General elements</Filter>
+    </ClCompile>
+    <ClCompile Include="PostprocessAnimator.cpp">
+      <Filter>PostProcessCore</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -369,15 +369,12 @@
       <Filter>Xml</Filter>
     </ClInclude>
     <ClInclude Include="SPPInfo.h">
-      <Filter>SPPInfo</Filter>
+      <Filter>PostProcessCore\SPPInfo</Filter>
     </ClInclude>
     <ClInclude Include="BaseEffector.h">
       <Filter>PostProcessCore</Filter>
     </ClInclude>
     <ClInclude Include="envelope.h">
-      <Filter>PostProcessCore</Filter>
-    </ClInclude>
-    <ClInclude Include="PostprocessAnimator.h">
       <Filter>PostProcessCore</Filter>
     </ClInclude>
     <ClInclude Include="threadpool\ttapi.h">
@@ -457,6 +454,9 @@
     </ClInclude>
     <ClInclude Include="RingBuffer.h">
       <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="PostprocessAnimator.h">
+      <Filter>PostProcessCore</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

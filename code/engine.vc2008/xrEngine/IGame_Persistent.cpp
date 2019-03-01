@@ -157,8 +157,7 @@ void IGame_Persistent::OnFrame()
 	if (!Device.Paused() || Device.dwPrecacheFrame)
 	{
 		ScopeStatTimer envAndSpectreTimer(Device.Statistic->Engine_PersistanceFrame_EnvAndSpectre);
-		Device.seqParallel.emplace_back(&Environment(), &CEnvironment::OnFrame);
-		//Environment().OnFrame();
+		Environment().OnFrame();
 		SpectreCallback::shedule_update->Invoke(SpectreObjectId, Device.dwTimeDelta);
 	}
 
@@ -216,13 +215,15 @@ void IGame_Persistent::destroy_particles		(const bool &all_particles)
 	}
 	else
 	{
-		size_t active_size = ps_active.size();
-		CPS_Instance **I = (CPS_Instance**)_alloca(active_size * sizeof(CPS_Instance*));
-		std::copy(ps_active.begin(), ps_active.end(), I);
+		const size_t active_size = ps_active.size();
+		CPS_Instance** ppParticleInstances = new CPS_Instance*[active_size];
+		std::copy(ps_active.begin(), ps_active.end(), ppParticleInstances);
 
-		CPS_Instance **E = std::remove_if(I, I + active_size, [](CPS_Instance*const& object){ return (!object->destroy_on_game_load()); });
-		for (; I != E; ++I)
-			(*I)->PSI_internal_delete();
+		CPS_Instance **E = std::remove_if(ppParticleInstances, ppParticleInstances + active_size, [](CPS_Instance*const& object) { return (!object->destroy_on_game_load()); });
+		for (; ppParticleInstances != E; ++ppParticleInstances)
+			(*ppParticleInstances)->PSI_internal_delete();
+
+		//delete[](ppParticleInstances);
 	}
 
 	VERIFY(ps_needtoplay.empty() && ps_destroy.empty() && (!all_particles || ps_active.empty()));
