@@ -771,8 +771,8 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 		float			fTexelOffs			= (.5f / float(RImplementation.o.smapsize));
 		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
 		//	TODO: DX10: Remove this when fix inverse culling for far region
-		float			fBias				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_bias:-ps_r_sun_depth_far_bias;
-		Matrix4x4			m_TexelAdjust		= 
+		float fBias = (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_bias:-ps_r_sun_depth_far_bias;
+		Fmatrix m_TexelAdjust		=
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
 			0.0f,				-0.5f,				0.0f,			0.0f,
@@ -797,7 +797,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 				Fvector bias;	
 				bias.mul(L_dir, ps_r_sun_tsm_bias);
 
-				Matrix4x4 bias_t = DirectX::XMMatrixTranslation(bias.x, bias.y, bias.z);
+				Fmatrix bias_t; bias_t.translate(bias.x, bias.y, bias.z);
 
 				m_shadow.mul(m_shadow, bias_t);
 			}

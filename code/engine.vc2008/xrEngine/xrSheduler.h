@@ -3,6 +3,7 @@
 
 class ENGINE_API CSheduler
 {
+	static void		mtShedulerThread(void*);
 private:
 	struct Item
 	{
@@ -41,7 +42,7 @@ private:
 public:
 	void			ProcessStep	();
 	void			Process		();
-	void			Update		();
+	void			Update		(bool bStart);
 
 	bool			Registered	(ISheduled *object) const;
 	void			Register	(ISheduled* A, BOOL RT=FALSE		);

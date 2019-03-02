@@ -544,27 +544,28 @@ void CGamePersistent::OnFrame	()
 		}
 #endif // MASTER_GOLD
 	}
-
-    // Update sun before updating other enviroment settings
-    if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
-    {
-		Environment().CalculateDynamicSunDir();
-    }
-
 	Device.Statistic->Engine_PersistanceFrame_Begin.End();
 
 	MySuper::OnFrame();
+
 	if (!Device.Paused())
 	{
-		Device.Statistic->Engine_PersistanceFrame_Scheduler.Begin();
-		Engine.Sheduler.Update();
-		Device.Statistic->Engine_PersistanceFrame_Scheduler.End();
+		// Start update
+		Engine.Sheduler.Update(true);
 
 		// update weathers ambient
 		Device.Statistic->Engine_PersistanceFrame_WeatherAndDOF.Begin();
+
+		// Update sun before updating other enviroment settings
+		if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
+			Environment().CalculateDynamicSunDir();
+
 		WeathersUpdate();
 		UpdateDof();
 		Device.Statistic->Engine_PersistanceFrame_WeatherAndDOF.End();
+
+		// End update
+		Engine.Sheduler.Update(false);
 	}
 }
 
