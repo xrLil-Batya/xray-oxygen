@@ -1,5 +1,15 @@
 ﻿#pragma once
 
+#ifndef MANAGED_API & #ifndef MANAGED_ENGINE_API & #ifndef MANAGED_GAME_API & #ifndef MANAGED_RENDER_API
+#define UNMANAGED
+#include <thread>
+#include "../../SDK/include/tbb/include/tbb/parallel_for.h"
+#include "../../SDK/include/tbb/include/tbb/blocked_range.h"
+#include <time.h>
+#include "../xrCore/xrCore.h"
+#include <vector>
+#endif
+
 // messages
 #define REG_PRIORITY_LOW		0x11111111ul
 #define REG_PRIORITY_NORMAL		0x22222222ul
@@ -24,12 +34,16 @@ DECLARE_MESSAGE(ScreenResolutionChanged);
 
 
 
+
+
 //-----------------------------------------------------------------------------
 struct _REG_INFO {
 	void*	Object;
 	int		Prio;
 	u32		Flags;
 };
+
+
 
 template <class T> class CRegistrator		// the registrator itself
 {
@@ -66,27 +80,65 @@ public:
 		if(in_process)		changed=true;
 		else Resort			( );
 	};
+
+
 	void Remove	(T *obj)
 	{
+#ifdef UNMANAGED
+		size_t rsize = R.size();
+		tbb::parallel_for(size_t(0), rsize, size_t(1), [&](size_t i)
+		{
+			if (R[i].Object == obj) R[i].Prio = REG_PRIORITY_INVALID;		
+		});
+
+#else
 		for (u32 i=0; i<R.size(); i++) {
 			if (R[i].Object==obj) R[i].Prio = REG_PRIORITY_INVALID;
 		}
+
+#endif
 		if(in_process)		changed=true;
 		else Resort			( );
 	};
-	void Process(RP_FUNC *f)
+	
+
+	void Process(RP_FUNC f)
 	{
+		
 		in_process = true;
     	if (R.empty()) return;
 		if (R[0].Prio==REG_PRIORITY_CAPTURE)	f(R[0].Object);
 		else {
-			for (u32 i=0; i<R.size(); i++)
-				if(R[i].Prio!=REG_PRIORITY_INVALID)
+#ifdef UNMANAGED
+
+			
+						
+			//tbb::parallel_for(size_t(0), R.size(), size_t(1),[&](size_t i)
+			//{
+			//	if (R[i].Prio != REG_PRIORITY_INVALID)
+			//		f(R[i].Object);
+			//}
+			//);
+				
+			
+
+			for (u32 i = 0; i < R.size(); i++)
+				if (R[i].Prio != REG_PRIORITY_INVALID)
 					f(R[i].Object);
+			
+			
+			
+#else
+			for (u32 i = 0; i < R.size(); i++)
+				if (R[i].Prio != REG_PRIORITY_INVALID)
+					f(R[i].Object);
+#endif //UNMANAGED
+
 
 		}
 		if(changed)	Resort();
 		in_process = false;
+
 	};
 	void Resort(void)
 	{
