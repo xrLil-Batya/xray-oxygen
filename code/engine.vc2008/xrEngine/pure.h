@@ -2,7 +2,6 @@
 
 #ifndef MANAGED_API & #ifndef MANAGED_ENGINE_API & #ifndef MANAGED_GAME_API & #ifndef MANAGED_RENDER_API
 #define UNMANAGED
-#include <thread>
 #include "../../SDK/include/tbb/include/tbb/parallel_for.h"
 #include "../../SDK/include/tbb/include/tbb/blocked_range.h"
 #include <time.h>
