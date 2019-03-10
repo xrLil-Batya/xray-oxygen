@@ -550,23 +550,17 @@ void CGamePersistent::OnFrame	()
 
 	if (!Device.Paused())
 	{
-		// Start update
-		Engine.Sheduler.Update(true);
+		Device.Statistic->Engine_PersistanceFrame_Scheduler.Begin();
+		Engine.Sheduler.Update();
+		Device.Statistic->Engine_PersistanceFrame_Scheduler.End();
 
 		// update weathers ambient
 		Device.Statistic->Engine_PersistanceFrame_WeatherAndDOF.Begin();
-
-		// Update sun before updating other enviroment settings
-		if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
-			Environment().CalculateDynamicSunDir();
-
 		WeathersUpdate();
 		UpdateDof();
 		Device.Statistic->Engine_PersistanceFrame_WeatherAndDOF.End();
-
-		// End update
-		Engine.Sheduler.Update(false);
 	}
+
 }
 
 void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)

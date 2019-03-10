@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+/*
 #ifndef MANAGED_API & #ifndef MANAGED_ENGINE_API & #ifndef MANAGED_GAME_API & #ifndef MANAGED_RENDER_API
 #define UNMANAGED
 #include "../../SDK/include/tbb/include/tbb/parallel_for.h"
@@ -8,6 +9,7 @@
 #include "../xrCore/xrCore.h"
 #include <vector>
 #endif
+*/
 
 // messages
 #define REG_PRIORITY_LOW		0x11111111ul
@@ -83,19 +85,18 @@ public:
 
 	void Remove	(T *obj)
 	{
-#ifdef UNMANAGED
-		size_t rsize = R.size();
-		tbb::parallel_for(size_t(0), rsize, size_t(1), [&](size_t i)
-		{
-			if (R[i].Object == obj) R[i].Prio = REG_PRIORITY_INVALID;		
-		});
 
-#else
-		for (u32 i=0; i<R.size(); i++) {
-			if (R[i].Object==obj) R[i].Prio = REG_PRIORITY_INVALID;
+		for (u32 i = 0; i < R.size(); i++) {
+			if (R[i].Object == obj) R[i].Prio = REG_PRIORITY_INVALID;
 		}
 
-#endif
+		//size_t rsize = R.size();
+		//tbb::parallel_for(size_t(0), rsize, size_t(1), [&](size_t i)
+		//{
+		//	if (R[i].Object == obj) R[i].Prio = REG_PRIORITY_INVALID;		
+		//});
+
+
 		if(in_process)		changed=true;
 		else Resort			( );
 	};
@@ -108,32 +109,10 @@ public:
     	if (R.empty()) return;
 		if (R[0].Prio==REG_PRIORITY_CAPTURE)	f(R[0].Object);
 		else {
-#ifdef UNMANAGED
-
-			
-						
-			//tbb::parallel_for(size_t(0), R.size(), size_t(1),[&](size_t i)
-			//{
-			//	if (R[i].Prio != REG_PRIORITY_INVALID)
-			//		f(R[i].Object);
-			//}
-			//);
-				
-			
 
 			for (u32 i = 0; i < R.size(); i++)
 				if (R[i].Prio != REG_PRIORITY_INVALID)
 					f(R[i].Object);
-			
-			
-			
-#else
-			for (u32 i = 0; i < R.size(); i++)
-				if (R[i].Prio != REG_PRIORITY_INVALID)
-					f(R[i].Object);
-#endif //UNMANAGED
-
-
 		}
 		if(changed)	Resort();
 		in_process = false;

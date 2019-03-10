@@ -42,7 +42,7 @@ private:
 public:
 	void			ProcessStep	();
 	void			Process		();
-	void			Update		(bool bStart);
+	void			Update		();
 
 	bool			Registered	(ISheduled *object) const;
 	void			Register	(ISheduled* A, BOOL RT=FALSE		);

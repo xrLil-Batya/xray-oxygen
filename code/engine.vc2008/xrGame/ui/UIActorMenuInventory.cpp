@@ -841,31 +841,31 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 	{
 		if (inv.CanPutInSlot(item, INV_SLOT_2) && iitem->BaseSlot()!=DETECTOR_SLOT)
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_2",  NULL, INVENTORY_TO_SLOT2_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_2",  nullptr, INVENTORY_TO_SLOT2_ACTION );
 			b_show = true;
 		}
 
 		if (inv.CanPutInSlot(item, INV_SLOT_3) && iitem->BaseSlot()!=DETECTOR_SLOT)
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_3",  NULL, INVENTORY_TO_SLOT3_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_3",  nullptr, INVENTORY_TO_SLOT3_ACTION );
 			b_show = true;
 		}
 
 		if  (iitem->BaseSlot()==KNIFE_SLOT && inv.CanPutInSlot(item, KNIFE_SLOT))
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_knife",  NULL, INVENTORY_TO_SLOT_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_knife",  nullptr, INVENTORY_TO_SLOT_ACTION );
 			b_show = true;
 		}
 
 		if (iitem->BaseSlot()==BINOCULAR_SLOT && inv.CanPutInSlot(item, BINOCULAR_SLOT))
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_binoc",  NULL, INVENTORY_TO_SLOT_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_binoc",  nullptr, INVENTORY_TO_SLOT_ACTION );
 			b_show = true;
 		}
 
 		if (iitem->BaseSlot()==DETECTOR_SLOT && inv.CanPutInSlot(item, DETECTOR_SLOT))
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_detect",  NULL, INVENTORY_TO_SLOT_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_detect",  nullptr, INVENTORY_TO_SLOT_ACTION );
 			b_show = true;
 		}
 	}
