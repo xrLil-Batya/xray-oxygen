@@ -703,18 +703,22 @@ bool CUIActorMenu::TryUseFoodItem(CUICellItem* cell_itm)
 	PIItem item = dynamic_cast<CFoodItem*>((PIItem)cell_itm->m_pData);
 
 	if (!item || !item->Useful())
-	{
 		return false;
-	}
 
 	u16 ActorInventoryID = m_pActorInvOwner->object_id();
 
+	// FX: Dirty hack, need fix, maybe later or never
+//	const bool bItemOnActorOwner = item->parent_id() != ActorInventoryID;
+//	if (!bItemOnActorOwner)
+//		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
+	
 	// Send event to Actor fell
-	SendEvent_Item_Eat(item, ActorInventoryID);
+	SendEvent_Item_Eat(item, item->parent_id()/* ActorInventoryID */);
 	PlaySnd(eItemUse);
 	SetCurrentItem(nullptr);
 
-    cell_itm->OwnerList()->RemoveItem(cell_itm, false);
+//	if(bItemOnActorOwner)
+		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 
 	return true;
 }

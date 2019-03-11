@@ -522,6 +522,7 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 }
 
 #include "../items/WeaponKnife.h"
+#include "../items/WeaponBinoculars.h"
 void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
 	PIItem item = (PIItem)cell_item->m_pData;
@@ -532,11 +533,9 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 
 	highlight_item_slot(cell_item);
 
-	// не подсвечивать патроны для ножа
-	if (smart_cast<CWeaponKnife*>(item))
-	{
+	// не подсвечивать патроны для ножа или бинокля
+	if (dynamic_cast<CWeaponKnife*>(item) || dynamic_cast<CWeaponBinoculars*>(item))
 		return;
-	}
 
 	switch ( m_currMenuMode )
 	{
