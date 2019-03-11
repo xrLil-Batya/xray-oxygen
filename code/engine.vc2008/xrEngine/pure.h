@@ -1,16 +1,5 @@
 ﻿#pragma once
 
-/*
-#ifndef MANAGED_API & #ifndef MANAGED_ENGINE_API & #ifndef MANAGED_GAME_API & #ifndef MANAGED_RENDER_API
-#define UNMANAGED
-#include "../../SDK/include/tbb/include/tbb/parallel_for.h"
-#include "../../SDK/include/tbb/include/tbb/blocked_range.h"
-#include <time.h>
-#include "../xrCore/xrCore.h"
-#include <vector>
-#endif
-*/
-
 // messages
 #define REG_PRIORITY_LOW		0x11111111ul
 #define REG_PRIORITY_NORMAL		0x22222222ul
@@ -89,13 +78,6 @@ public:
 		for (u32 i = 0; i < R.size(); i++) {
 			if (R[i].Object == obj) R[i].Prio = REG_PRIORITY_INVALID;
 		}
-
-		//size_t rsize = R.size();
-		//tbb::parallel_for(size_t(0), rsize, size_t(1), [&](size_t i)
-		//{
-		//	if (R[i].Object == obj) R[i].Prio = REG_PRIORITY_INVALID;		
-		//});
-
 
 		if(in_process)		changed=true;
 		else Resort			( );
