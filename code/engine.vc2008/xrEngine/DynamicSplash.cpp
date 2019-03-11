@@ -351,10 +351,8 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 		SendMessage(pInstance->hwndProgress, PBM_SETPOS, wParam, NULL);
 
 		xr_string* msgThread = reinterpret_cast<xr_string*>(lParam);
-		if (msgThread->size() > 1000000) 
-		{
+		if (!msgThread || msgThread->size() > 1000000)
 			return 0;
-		}
 
 		// if our message is not a previos 
 		if (!msgThread->empty() && pInstance->progressMsg != *msgThread)
@@ -363,9 +361,8 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 			SendMessage(pInstance->hwndSplash, WM_PAINT, 0, 0);
 		}
 
-		return 0;
-		break;
+		return NULL;
 	}
 
-	return DefWindowProcA(hwnd, uMsg, wParam, lParam);
+	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
