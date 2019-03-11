@@ -104,8 +104,6 @@ void CUIActorMenu::SendEvent_Item2Belt(PIItem pItem, u16 recipient)
 
 void CUIActorMenu::SendEvent_Item2Ruck(PIItem pItem, u16 recipient)
 {
-	if (!pItem->m_pInventory)
-		return;
 	if(pItem->parent_id()!=recipient)
 		move_item_from_to			(pItem->parent_id(), recipient, pItem->object_id());
 

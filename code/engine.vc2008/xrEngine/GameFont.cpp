@@ -398,12 +398,12 @@ float CGameFont::CurrentHeight_()
 
 void CGameFont::SetHeightI(float S)
 {
-	VERIFY(uFlags&fsDeviceIndependent);
-	fCurrentHeight = S * RDEVICE.dwHeight;
-};
+	if (uFlags & fsDeviceIndependent)
+		fCurrentHeight = S * RDEVICE.dwHeight;
+}
 
 void CGameFont::SetHeight(float S)
 {
-	VERIFY(uFlags&fsDeviceIndependent);
-	fCurrentHeight = S;
-};
+	if (uFlags & fsDeviceIndependent)
+		fCurrentHeight = S;
+}
