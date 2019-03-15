@@ -12,6 +12,7 @@
 #include "inventory.h"
 #include "../xrUICore/ui_base.h"
 #include "../xrEngine/xr_input.h"
+#include "../xrEngine/xr_level_controller.h"
 
 CAttachableItem* CAttachableItem::m_dbgItem = nullptr;
 
@@ -131,48 +132,48 @@ float ATT_ITEM_ROT_CURR = 0.1f;
 float ATT_ITEM_MOVE_STEP = 0.001f;
 float ATT_ITEM_ROT_STEP = 0.01f;
 
-void attach_adjust_mode_keyb(int dik)
+void attach_adjust_mode_keyb(u8 dik)
 {
 	if(!CAttachableItem::m_dbgItem)	return;
 
-	bool b_move		= !!(pInput->iGetAsyncKeyState(DIK_LSHIFT));
-	bool b_rot		= !!(pInput->iGetAsyncKeyState(DIK_LMENU));
+	bool b_move		= !!(pInput->iGetAsyncKeyState(VK_LSHIFT));
+	bool b_rot		= !!(pInput->iGetAsyncKeyState(VK_LMENU));
 	
 	int axis		= -1;
-	if(pInput->iGetAsyncKeyState(DIK_Z))
+	if(pInput->iGetAsyncKeyState(VK_Z))
 		axis = 0;
 	else
-	if(pInput->iGetAsyncKeyState(DIK_X))
+	if(pInput->iGetAsyncKeyState(VK_X))
 		axis = 1;
-	if(pInput->iGetAsyncKeyState(DIK_C))
+	if(pInput->iGetAsyncKeyState(VK_C))
 		axis = 2;
 
 	if(!b_move && !b_rot)	return;
 
 	switch(dik)
 	{
-	case DIK_LEFT:
+	case VK_LEFT:
 		{
 			if(b_move)
 				CAttachableItem::mov(axis, ATT_ITEM_MOVE_CURR);
 			else
 				CAttachableItem::rot(axis, ATT_ITEM_ROT_CURR);
 		}break;
-	case DIK_RIGHT:
+	case VK_RIGHT:
 		{
 			if(b_move)
 				CAttachableItem::mov(axis, -ATT_ITEM_MOVE_CURR);
 			else
 				CAttachableItem::rot(axis, -ATT_ITEM_ROT_CURR);
 		}break;
-	case DIK_PRIOR:
+	case VK_PRIOR:
 		{
 			if(b_move)
 				ATT_ITEM_MOVE_CURR +=ATT_ITEM_MOVE_STEP;
 			else
 				ATT_ITEM_ROT_CURR +=ATT_ITEM_ROT_STEP;
 		}break;
-	case DIK_NEXT:
+	case VK_NEXT:
 		{
 			if(b_move)
 				ATT_ITEM_MOVE_CURR -=ATT_ITEM_MOVE_STEP;

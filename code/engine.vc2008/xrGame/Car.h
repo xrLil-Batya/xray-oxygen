@@ -572,9 +572,9 @@ public:
 	virtual	void			net_Relcase					(CObject* O );
 	// Input
 	virtual void			OnMouseMove					(int x, int y);
-	virtual void			OnKeyboardPress				(int dik);
-	virtual void			OnKeyboardRelease			(int dik);
-	virtual void			OnKeyboardHold				(int dik);
+	virtual void			OnKeyboardPress				(u8 dik);
+	virtual void			OnKeyboardRelease			(u8 dik);
+	virtual void			OnKeyboardHold				(u8 dik);
 	virtual void			vfProcessInputKey			(int iCommand, bool bPressed);
 	virtual void			OnEvent						( NET_Packet& P, u16 type);
 	virtual void			OnAfterExplosion			();

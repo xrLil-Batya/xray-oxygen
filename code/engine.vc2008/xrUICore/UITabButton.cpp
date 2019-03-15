@@ -14,7 +14,7 @@ bool CUITabButton::OnMouseAction(float x, float y, EUIMessages mouse_action)
 
 bool CUITabButton::OnMouseDown(int mouse_btn)
 {
-	if (mouse_btn==MOUSE_1)
+	if (mouse_btn==VK_LBUTTON)
 	{
 		GetMessageTarget()->SendMessage(this, TAB_CHANGED, NULL);
 		return true;

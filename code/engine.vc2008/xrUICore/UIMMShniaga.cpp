@@ -323,27 +323,25 @@ void CUIMMShniaga::OnBtnClick()
 		GetMessageTarget()->SendMessage(m_selected, BUTTON_CLICKED);
 }
 
-#include <dinput.h>
-
-bool CUIMMShniaga::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIMMShniaga::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 
 	if (WINDOW_KEY_PRESSED == keyboard_action)
 	{
 		switch (dik)
 		{
-			case DIK_UP:
+			case VK_UP:
 				if (m_selected_btn > 0)
 					SelectBtn(m_selected_btn - 1);
 				return true;
-			case DIK_DOWN:
+			case VK_DOWN:
 				if (m_selected_btn < BtnCount() - 1)
 					SelectBtn(m_selected_btn + 1);
 				return true;
-			case DIK_RETURN:
+			case VK_RETURN:
 				OnBtnClick();
 				return true;
-			case DIK_ESCAPE:
+			case VK_ESCAPE:
 				if (m_page != epi_main)
 					ShowMain();
 				return true;

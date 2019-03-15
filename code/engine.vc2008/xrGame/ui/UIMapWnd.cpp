@@ -349,22 +349,22 @@ void CUIMapWnd::DrawHint()
 	}
 }
 
-bool CUIMapWnd::OnKeyboardHold(int dik)
+bool CUIMapWnd::OnKeyboardHold(u8 dik)
 {
 	switch(dik)
 	{
-		case DIK_UP:
-		case DIK_DOWN:
-		case DIK_LEFT:
-		case DIK_RIGHT:
+		case VK_UP:
+		case VK_DOWN:
+		case VK_LEFT:
+		case VK_RIGHT:
 			{
 				Fvector2 pos_delta;
 				pos_delta.set(0.0f, 0.0f);
 
-				if(dik==DIK_UP)					pos_delta.y	+= m_map_move_step;
-				if(dik==DIK_DOWN)				pos_delta.y	-= m_map_move_step;
-				if(dik==DIK_LEFT)				pos_delta.x	+= m_map_move_step;
-				if(dik==DIK_RIGHT)				pos_delta.x	-= m_map_move_step;
+				if(dik==VK_UP)					pos_delta.y	+= m_map_move_step;
+				if(dik==VK_DOWN)				pos_delta.y	-= m_map_move_step;
+				if(dik==VK_LEFT)				pos_delta.x	+= m_map_move_step;
+				if(dik==VK_RIGHT)				pos_delta.x	-= m_map_move_step;
 				MoveMap							(pos_delta);
 				return true;
 			}break;
@@ -372,15 +372,15 @@ bool CUIMapWnd::OnKeyboardHold(int dik)
 	return inherited::OnKeyboardHold(dik);
 }
 
-bool CUIMapWnd::OnKeyboardAction				(int dik, EUIMessages keyboard_action)
+bool CUIMapWnd::OnKeyboardAction				(u8 dik, EUIMessages keyboard_action)
 {
 	switch(dik){
-		case DIK_NUMPADMINUS:
+		case VK_OEM_MINUS:
 			{
 				UpdateZoom( false );
 				return true;
 			}break;
-		case DIK_NUMPADPLUS:
+		case VK_OEM_PLUS:
 			{
 				UpdateZoom( true );
 				return true;
@@ -405,7 +405,7 @@ bool CUIMapWnd::OnMouseAction(float x, float y, EUIMessages mouse_action)
 		switch ( mouse_action )
 		{
 		case WINDOW_MOUSE_MOVE:
-			if( pInput->iGetAsyncBtnState(0) )
+			if( pInput->iGetAsyncBtnState(VK_LBUTTON) )
 			{
 				GlobalMap()->MoveWndDelta		(GetUICursor().GetCursorPositionDelta());
 				UpdateScroll					();

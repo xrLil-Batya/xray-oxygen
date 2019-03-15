@@ -342,7 +342,7 @@ void CUITalkWnd::SwitchToUpgrade()
 	GameUI()->StartUpgrade(m_pOurInvOwner, m_pOthersInvOwner);
 }
 
-bool CUITalkWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUITalkWnd::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 
 	if (keyboard_action == WINDOW_KEY_PRESSED)

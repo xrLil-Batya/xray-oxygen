@@ -269,11 +269,11 @@ bool CUIWindow::OnMouseAction(float x, float y, EUIMessages mouse_action)
 		case WINDOW_MOUSE_WHEEL_UP:
 			OnMouseScroll(WINDOW_MOUSE_WHEEL_UP);	break;
 		case WINDOW_LBUTTON_DOWN:
-			if(OnMouseDown(MOUSE_1))				return true;	break;
+			if(OnMouseDown(VK_LBUTTON))				return true;	break;
 		case WINDOW_RBUTTON_DOWN:
-			if(OnMouseDown(MOUSE_2))				return true;	break;
+			if(OnMouseDown(VK_RBUTTON))				return true;	break;
 		case WINDOW_CBUTTON_DOWN:
-			if(OnMouseDown(MOUSE_3))				return true;	break;
+			if(OnMouseDown(VK_MBUTTON))				return true;	break;
 		case WINDOW_LBUTTON_DB_CLICK:
 			if (OnDbClick())						return true;	break;
 		default:
@@ -373,7 +373,7 @@ void CUIWindow::SetCapture(CUIWindow *pChildWindow, bool capture_status)
 
 
 //реакция на клавиатуру
-bool CUIWindow::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIWindow::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	bool result;
 
@@ -400,7 +400,7 @@ bool CUIWindow::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 	return false;
 }
 
-bool CUIWindow::OnKeyboardHold(int dik)
+bool CUIWindow::OnKeyboardHold(u8 dik)
 {
 	bool result;
 

@@ -134,9 +134,9 @@ void CUIFixedScrollBar::ClampByViewRect()
 }
 #include "UICursor.h"
 u32 last_hold_tm =0;
-bool CUIFixedScrollBar::OnKeyboardHold(int dik)
+bool CUIFixedScrollBar::OnKeyboardHold(u8 dik)
 {
-	if(dik == MOUSE_1 && (last_hold_tm + m_hold_delay) < Device.dwTimeContinual)
+	if(dik == VK_LBUTTON && (last_hold_tm + m_hold_delay) < Device.dwTimeContinual)
 	{
 		if(OnMouseDownEx())
 		{
@@ -201,7 +201,7 @@ bool CUIFixedScrollBar::OnMouseAction(float x, float y, EUIMessages mouse_action
 
 bool CUIFixedScrollBar::OnMouseDown(int mouse_btn)
 {
-	if(mouse_btn == MOUSE_1 && OnMouseDownEx())
+	if(mouse_btn == VK_LBUTTON && OnMouseDownEx())
 		return true;
 
 	return inherited::OnMouseDown(mouse_btn);

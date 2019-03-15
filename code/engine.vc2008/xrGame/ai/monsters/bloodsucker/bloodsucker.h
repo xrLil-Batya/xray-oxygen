@@ -186,7 +186,7 @@ public:
 	virtual void add_debug_info  (debug::text_tree& root_s);
 
 #ifdef DEBUG
-			void debug_on_key						(int key);
+			void debug_on_key						(u8 key);
 #endif
 
 #endif

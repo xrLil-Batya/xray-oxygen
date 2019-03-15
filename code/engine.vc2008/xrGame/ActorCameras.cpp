@@ -259,7 +259,7 @@ static const float	ik_cam_shift_speed = 0.01f;
 #include "ai/stalker/ai_stalker.h"
 #include "ai/monsters/basemonster/base_monster.h"
 #include <ai/monsters/poltergeist/poltergeist.h>
-int cam_dik = DIK_LSHIFT;
+int cam_dik = VK_LSHIFT;
 Fvector vel = { 0, 0, 0 };
 ref_light enemy_spotlight2;
 static shared_str pname = "_samples_particles_\\orbit_point_01";

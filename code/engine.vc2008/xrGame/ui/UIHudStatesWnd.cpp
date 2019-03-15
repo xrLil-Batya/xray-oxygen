@@ -55,7 +55,7 @@ void CUIHudStatesWnd::reset_ui()
 	}
 }
 
-ALife::EInfluenceType CUIHudStatesWnd::get_indik_type( ALife::EHitType hit_type )
+ALife::EInfluenceType CUIHudStatesWnd::get_inVK_type( ALife::EHitType hit_type )
 {
 	ALife::EInfluenceType iz_type = ALife::infl_max_count;
 	switch( hit_type )
@@ -318,7 +318,7 @@ void CUIHudStatesWnd::UpdateZones()
 		ITEM_TYPE*			zone_type = zone_info.curr_ref;
 		
 		ALife::EHitType			hit_type = pZone->GetHitType();
-		ALife::EInfluenceType	z_type = get_indik_type( hit_type );
+		ALife::EInfluenceType	z_type = get_inVK_type( hit_type );
 
 		Fvector P			= Level().CurrentControlEntity()->Position();
 		P.y					-= 0.5f;
@@ -456,7 +456,7 @@ void CUIHudStatesWnd::UpdateIndicatorType( CActor* actor, ALife::EInfluenceType 
 
 float CUIHudStatesWnd::get_zone_cur_power( ALife::EHitType hit_type )
 {
-	ALife::EInfluenceType iz_type = get_indik_type( hit_type );
+	ALife::EInfluenceType iz_type = get_inVK_type( hit_type );
 	if ( iz_type == ALife::infl_max_count )
 	{
 		return 0.0f;

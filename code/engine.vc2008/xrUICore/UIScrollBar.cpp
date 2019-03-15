@@ -184,9 +184,9 @@ void CUIScrollBar::UpdateScrollBar()
 #include "UICursor.h"
 u32 last_hold_time =0;
 
-bool CUIScrollBar::OnKeyboardHold(int dik)
+bool CUIScrollBar::OnKeyboardHold(u8 dik)
 {
-	if ( dik == MOUSE_1 && (last_hold_time + m_hold_delay) < Device.dwTimeContinual)//100
+	if ( dik == VK_LBUTTON && (last_hold_time + m_hold_delay) < Device.dwTimeContinual)//100
 	{
 		if ( OnMouseDownEx() )
 		{
@@ -219,7 +219,7 @@ bool CUIScrollBar::OnMouseAction(float x, float y, EUIMessages mouse_action)
 
 bool CUIScrollBar::OnMouseDown( int mouse_btn )
 {
-	if ( mouse_btn == MOUSE_1 )
+	if ( mouse_btn == VK_LBUTTON )
 	{
 		if ( OnMouseDownEx() )
 		{

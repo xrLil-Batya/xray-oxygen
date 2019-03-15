@@ -19,7 +19,7 @@ public:
 
 	virtual void	Update					();
 	virtual void	Enable					(bool status);
-	virtual bool	OnKeyboardAction				(int dik, EUIMessages keyboard_action);
+	virtual bool	OnKeyboardAction				(u8 dik, EUIMessages keyboard_action);
 	virtual void	OnFocusLost				();
 
 	//состояния в которых находится кнопка
@@ -41,7 +41,7 @@ public:
 
 	// Работа с акселератором
 	// Код акселератора берется из файла dinput.h, из DirectX SDK.
-	// Например: кнопка A - код 0x1E(DIK_A)
+	// Например: кнопка A - код 0x1E(VK_A)
 	void				SetAccelerator			(int iAccel, int idx);
 	const int			GetAccelerator			(int idx) const;
 	bool				IsAccelerator			(int iAccel) const;

@@ -6,8 +6,6 @@
 #include "../xrUICore/UICursor.h"
 #include "../Level.h"
 #include "../Inventory.h"
-#include <dinput.h>
-
 
 CUIDragItem* CUIDragDropListEx::m_drag_item = nullptr;
 
@@ -207,7 +205,7 @@ void CUIDragDropListEx::OnItemDBClick(CUIWindow* w, void* pData)
 
 	if (m_f_item_db_click)
 	{
-		if (Level().IR_GetKeyState(DIK_LCONTROL))
+		if (Level().IR_GetKeyState(VK_LCONTROL))
 		{
 			u32 size = itm->ChildsCount();
 			for (u32 j = 0; j < size; j++)

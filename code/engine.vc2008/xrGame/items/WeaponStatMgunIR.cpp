@@ -22,7 +22,7 @@ void CWeaponStatMgun::OnMouseMove			(int dx, int dy)
 	}
 }
 
-void CWeaponStatMgun::OnKeyboardPress		(int dik)
+void CWeaponStatMgun::OnKeyboardPress		(u8 dik)
 {
 	if (Remote())							return;
 
@@ -34,7 +34,7 @@ void CWeaponStatMgun::OnKeyboardPress		(int dik)
 	};
 }
 
-void CWeaponStatMgun::OnKeyboardRelease	(int dik)
+void CWeaponStatMgun::OnKeyboardRelease	(u8 dik)
 {
 	if (Remote())							return;
 	switch (dik)	
@@ -45,5 +45,5 @@ void CWeaponStatMgun::OnKeyboardRelease	(int dik)
 	};
 }
 
-void CWeaponStatMgun::OnKeyboardHold		(int dik)
+void CWeaponStatMgun::OnKeyboardHold		(u8 dik)
 {}

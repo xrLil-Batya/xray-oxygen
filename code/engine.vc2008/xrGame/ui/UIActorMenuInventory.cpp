@@ -588,7 +588,7 @@ bool CUIActorMenu::ToBag(CUICellItem* itm, bool b_use_cursor_pos)
 		{
 			ColorizeItem( itm, !CanMoveToPartner( iitem ) );
 		}
-	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToBag(itm, (old_owner == new_owner));
+	if ((i != itm) && !!pInput->iGetAsyncKeyState(VK_LCONTROL)) return ToBag(itm, (old_owner == new_owner));
 		return true;
 	}
 	return false;

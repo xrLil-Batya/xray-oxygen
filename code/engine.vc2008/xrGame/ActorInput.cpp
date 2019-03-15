@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <dinput.h>
 #include "Actor.h"
 #include "items/Torch.h"
 #include "trade.h"
@@ -38,12 +37,12 @@
 #include "searchlight.h"
 extern u32 hud_adj_mode;
 
-void CActor::IR_OnKeyboardPress(int cmd)
+void CActor::IR_OnKeyboardPress(u8 cmd)
 {
-	if (hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))
+	if (hud_adj_mode && pInput->iGetAsyncKeyState(VK_LSHIFT))
 	{
-		if (pInput->iGetAsyncKeyState(DIK_RETURN) || pInput->iGetAsyncKeyState(DIK_BACKSPACE) ||
-			pInput->iGetAsyncKeyState(DIK_DELETE))
+		if (pInput->iGetAsyncKeyState(VK_RETURN) || pInput->iGetAsyncKeyState(VK_BACK) ||
+			pInput->iGetAsyncKeyState(VK_DELETE))
 			g_player_hud->tune(Ivector().set(0, 0, 0));
 
 			return;
@@ -54,7 +53,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	if (IsTalking())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	
-	if (cmd == kWPN_FIRE && !pInput->iGetAsyncKeyState(DIK_LALT) && !cam_active == eacFirstEye)
+	if (cmd == kWPN_FIRE && !pInput->iGetAsyncKeyState(VK_LMENU) && !cam_active == eacFirstEye)
 	{
 		u16 slot = inventory().GetActiveSlot();
 		if (inventory().ActiveItem() && (slot == INV_SLOT_3 || slot == INV_SLOT_2))
@@ -206,9 +205,9 @@ void CActor::IR_OnMouseWheel(int direction)
 		OnPrevWeaponSlot				();
 }
 
-void CActor::IR_OnKeyboardRelease(int cmd)
+void CActor::IR_OnKeyboardRelease(u8 cmd)
 {
-	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
+	if(hud_adj_mode && pInput->iGetAsyncKeyState(VK_LSHIFT))	return;
 	if (Remote())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 
@@ -247,17 +246,17 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 	}
 }
 
-void CActor::IR_OnKeyboardHold(int cmd)
+void CActor::IR_OnKeyboardHold(u8 cmd)
 {
-	if (hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))
+	if (hud_adj_mode && pInput->iGetAsyncKeyState(VK_LSHIFT))
 	{
-		if (pInput->iGetAsyncKeyState(DIK_UP))
+		if (pInput->iGetAsyncKeyState(VK_UP))
 			g_player_hud->tune(Ivector().set(0, -1, 0));
-		if (pInput->iGetAsyncKeyState(DIK_DOWN))
+		if (pInput->iGetAsyncKeyState(VK_DOWN))
 			g_player_hud->tune(Ivector().set(0, 1, 0));
-		if (pInput->iGetAsyncKeyState(DIK_LEFT))
+		if (pInput->iGetAsyncKeyState(VK_LEFT))
 			g_player_hud->tune(Ivector().set(-1, 0, 0));
-		if (pInput->iGetAsyncKeyState(DIK_RIGHT))
+		if (pInput->iGetAsyncKeyState(VK_RIGHT))
 			g_player_hud->tune(Ivector().set(1, 0, 0));
 		return;
 	}
@@ -461,7 +460,7 @@ void CActor::ActorUse()
 		{
 			element = (u16)RQ.element;
 
-			if (Level().IR_GetKeyState(DIK_LSHIFT))
+			if (Level().IR_GetKeyState(VK_LSHIFT))
 			{
 				bool b_allow = !!pSettings->line_exist("ph_capture_visuals", object->cNameVisual());
 				if (b_allow && !character_physics_support()->movement()->PHCapture())
@@ -680,13 +679,13 @@ void CActor::NoClipFly(int cmd)
 	Fvector cur_pos, right, left;
 	cur_pos.set(0,0,0);
 	float scale = 0.55f;
-	if(pInput->iGetAsyncKeyState(DIK_LSHIFT))
+	if(pInput->iGetAsyncKeyState(VK_LSHIFT))
 		scale = 0.25f;
-	else if(pInput->iGetAsyncKeyState(DIK_X))
+	else if(pInput->iGetAsyncKeyState(VK_X))
 		scale = 1.0f;
-	else if(pInput->iGetAsyncKeyState(DIK_LMENU))
+	else if(pInput->iGetAsyncKeyState(VK_LMENU))
 		scale = 2.0f;//LALT
-	else if(pInput->iGetAsyncKeyState(DIK_TAB))
+	else if(pInput->iGetAsyncKeyState(VK_TAB))
 		scale = 5.0f;
 
 	switch(cmd)

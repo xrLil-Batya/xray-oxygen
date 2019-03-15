@@ -58,12 +58,12 @@ public:
 					~line_edit_control	();
 
 			void	clear_states		();
-			void	on_key_press		( int dik );
-			void	on_key_hold			( int dik );
-			void	on_key_release		( int dik );
+			void	on_key_press		( u8 dik );
+			void	on_key_hold			( u8 dik );
+			void	on_key_release		( u8 dik );
 			void	on_frame			();
 
-			void	assign_callback		( u32 const dik, key_state state, Callback const& callback );
+			void	assign_callback		( u8 const dik, key_state state, Callback const& callback );
 
 			void	insert_character	( char c );
 
@@ -112,8 +112,8 @@ private:
 			void	SwitchKL			();
 			
 			void	assign_char_pairs	( init_mode mode );
-			void	create_key_state	( u32 const dik, key_state state );
-			void	create_char_pair	( u32 const dik, char c, char c_shift, bool translate = false );
+			void	create_key_state	( u8 const dik, key_state state );
+			void	create_char_pair	( u8 const dik, char c, char c_shift, bool translate = false );
 
 			void	clear_inserted		();
 			bool	empty_inserted		();
@@ -125,8 +125,8 @@ private:
 			void	clamp_cur_pos		();
 
 private:
-	enum			{ DIK_COUNT = 256 };
-	Base*			m_actions[DIK_COUNT];
+	enum			{ VK_COUNT = 256 };
+	Base*			m_actions[VK_COUNT];
 
 	char*			m_edit_str;
 	char*			m_undo_buf;

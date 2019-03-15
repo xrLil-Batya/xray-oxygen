@@ -50,7 +50,7 @@ public:
 	virtual void 			Update				();
 	virtual void 			Show				(bool status);
 	virtual bool			OnMouseAction				(float x, float y, EUIMessages mouse_action) {CUIDialogWnd::OnMouseAction(x,y,mouse_action);return true;} //always true because StopAnyMove() == false
-	virtual bool			OnKeyboardAction			(int dik, EUIMessages keyboard_action);
+	virtual bool			OnKeyboardAction			(u8 dik, EUIMessages keyboard_action);
 		
 			UIHint*			get_hint_wnd		() const { return m_hint_wnd; }
 			void			DrawHint			();

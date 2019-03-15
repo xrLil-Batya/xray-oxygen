@@ -21,7 +21,7 @@ public:
 	virtual void		UndoOptValue				();	// backup->current
 	virtual bool		IsChangedOptValue			() const;	// backup!=current
 
-	virtual bool		OnKeyboardAction			(int dik, EUIMessages keyboard_action);
+	virtual bool		OnKeyboardAction			(u8 dik, EUIMessages keyboard_action);
 	virtual void		OnTabChange					(const shared_str& sCur, const shared_str& sPrev);
 	virtual void		OnStaticFocusReceive		(CUIWindow* pWnd);
 	virtual void		OnStaticFocusLost			(CUIWindow* pWnd);

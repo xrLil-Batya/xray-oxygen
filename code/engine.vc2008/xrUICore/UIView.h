@@ -61,8 +61,8 @@ public:
 	//virtual bool OnMouseDown(int mouse_btn);
 	//virtual void OnMouseUp(int mouse_btn);
 
-	virtual bool OnKeyboardHold(int dik);
-	virtual bool OnKeyboardAction(int dik, EUIMessages action);
+	virtual bool OnKeyboardHold(u8 dik);
+	virtual bool OnKeyboardAction(u8 dik, EUIMessages action);
 
 	virtual void Draw(IUIRender* render);
 protected:

@@ -278,22 +278,22 @@ u64 CUILogsWnd::GetShiftPeriod( ALife::_TIME_ID datetime, int shift_day )
 	return datetime;
 }
 
-bool CUILogsWnd::OnKeyboardAction( int dik, EUIMessages keyboard_action )
+bool CUILogsWnd::OnKeyboardAction( u8 dik, EUIMessages keyboard_action )
 {
 	if ( keyboard_action == WINDOW_KEY_PRESSED )
 	{
 		switch ( dik )
 		{
-		case DIK_UP:
-		case DIK_DOWN:
-		case DIK_PRIOR:
-		case DIK_NEXT:
+		case VK_UP:
+		case VK_DOWN:
+		case VK_PRIOR:
+		case VK_NEXT:
 			{
 				on_scroll_keys( dik );
 				return true;
 			}break;
-		case DIK_RCONTROL:
-		case DIK_LCONTROL:
+		case VK_RCONTROL:
+		case VK_LCONTROL:
 			{
 				m_ctrl_press = true;
 				return true;
@@ -304,14 +304,14 @@ bool CUILogsWnd::OnKeyboardAction( int dik, EUIMessages keyboard_action )
 	return inherited::OnKeyboardAction( dik, keyboard_action );
 }
 
-bool CUILogsWnd::OnKeyboardHold( int dik )
+bool CUILogsWnd::OnKeyboardHold( u8 dik )
 {
 	switch ( dik )
 	{
-	case DIK_UP:
-	case DIK_DOWN:
-	case DIK_PRIOR:
-	case DIK_NEXT:
+	case VK_UP:
+	case VK_DOWN:
+	case VK_PRIOR:
+	case VK_NEXT:
 		{
 			on_scroll_keys( dik );
 			return true;
@@ -320,13 +320,13 @@ bool CUILogsWnd::OnKeyboardHold( int dik )
 	return inherited::OnKeyboardHold( dik );
 }
 
-void CUILogsWnd::on_scroll_keys(int dik)
+void CUILogsWnd::on_scroll_keys(u8 dik)
 {
 	VERIFY(m_list && m_list->ScrollBar());
 
 	switch (dik)
 	{
-	case DIK_UP:
+	case VK_UP:
 	{
 		int orig = m_list->ScrollBar()->GetStepSize();
 		m_list->ScrollBar()->SetStepSize(1);
@@ -334,7 +334,7 @@ void CUILogsWnd::on_scroll_keys(int dik)
 		m_list->ScrollBar()->SetStepSize(orig);
 		break;
 	}
-	case DIK_DOWN:
+	case VK_DOWN:
 	{
 		int orig = m_list->ScrollBar()->GetStepSize();
 		m_list->ScrollBar()->SetStepSize(1);
@@ -342,7 +342,7 @@ void CUILogsWnd::on_scroll_keys(int dik)
 		m_list->ScrollBar()->SetStepSize(orig);
 		break;
 	}
-	case DIK_PRIOR:
+	case VK_PRIOR:
 	{
 		if (m_ctrl_press)
 		{
@@ -352,7 +352,7 @@ void CUILogsWnd::on_scroll_keys(int dik)
 		m_list->ScrollBar()->TryScrollDec();
 		break;
 	}
-	case DIK_NEXT:
+	case VK_NEXT:
 	{
 		if (m_ctrl_press)
 		{

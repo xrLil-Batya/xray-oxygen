@@ -176,14 +176,14 @@ void CUIButton::OnFocusLost()
 {
 	inherited::OnFocusLost();
 	
-	if(m_eButtonState==BUTTON_PUSHED && pInput->iGetAsyncBtnState(0) && !m_bIsSwitch)
+	if(m_eButtonState==BUTTON_PUSHED && pInput->iGetAsyncBtnState(VK_LBUTTON) && !m_bIsSwitch)
 		SetButtonState(BUTTON_NORMAL); //??? 
 
 	if(g_btnHint->Owner()==this)
 		g_btnHint->Discard	();
 }
 
-bool CUIButton::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIButton::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	if (WINDOW_KEY_PRESSED == keyboard_action)
 	{

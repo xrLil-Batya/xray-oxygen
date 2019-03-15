@@ -226,7 +226,7 @@ void CUIPropertiesBox::Draw()
 	inherited::Draw();
 }
 
-bool CUIPropertiesBox::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIPropertiesBox::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	return true;
 }

@@ -60,7 +60,7 @@ void callback_base::on_key_press( line_edit_control* const control )
 
 // -------------------------------------------------------------------------------------------------
 
-type_pair::type_pair( u32 dik, char c, char c_shift, bool b_translate )
+type_pair::type_pair( u8 dik, char c, char c_shift, bool b_translate )
 {
 	init( dik, c, c_shift, b_translate );
 }
@@ -69,7 +69,7 @@ type_pair::~type_pair()
 {
 }
 
-void type_pair::init( u32 dik, char c, char c_shift, bool b_translate )
+void type_pair::init( u8 dik, char c, char c_shift, bool b_translate )
 {
 	m_translate	= b_translate;
 	m_dik = dik;
@@ -99,7 +99,7 @@ void type_pair::on_key_press( line_edit_control* const control )
 
 		static _locale_t current_locale = _create_locale(LC_ALL, "");
 		
-		if ( pInput->get_dik_name( m_dik, buff, sizeof(buff) ) )
+		if ( pInput->get_VK_name( m_dik, buff, sizeof(buff) ) )
 		{
 			if ( _isalpha_l(buff[0], current_locale) || buff[0] == char(-1) ) // "я" = -1
 			{

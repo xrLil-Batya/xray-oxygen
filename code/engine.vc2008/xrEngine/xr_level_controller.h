@@ -76,10 +76,50 @@ enum EGameActions
 	kFORCEDWORD		= u32(-1)
 };
 
+enum eVK : u8
+{
+	VK_0 = 0x30,
+	VK_1,
+	VK_2,
+	VK_3,
+	VK_4,
+	VK_5,
+	VK_6,
+	VK_7,
+	VK_8,
+	VK_9,
+	VK_A = 0x41,
+	VK_B = 0x42,
+	VK_C = 0x43,
+	VK_D = 0x44,
+	VK_E = 0x45,
+	VK_F = 0x46,
+	VK_G = 0x47,
+	VK_H = 0x48,
+	VK_I = 0x49,
+	VK_J = 0x4A,
+	VK_K = 0x4B,
+	VK_L = 0x4C,
+	VK_M = 0x4D,
+	VK_N = 0x4E,
+	VK_O = 0x4F,
+	VK_P = 0x50,
+	VK_Q = 0x51,
+	VK_R = 0x52,
+	VK_S = 0x53,
+	VK_T = 0x54,
+	VK_U = 0x55,
+	VK_V = 0x56,
+	VK_W = 0x57,
+	VK_X = 0x58,
+	VK_Y = 0x59,
+	VK_Z = 0x5A,
+};
+
 struct _keyboard		
 {
 	LPCSTR		key_name;
-	int			dik;
+	u8			dik;
 	xr_string	key_local_name;
 };
 
@@ -89,10 +129,10 @@ struct _action
 	EGameActions	id;
 };
 
-ENGINE_API const char*	dik_to_keyname			(int _dik);
-ENGINE_API int			keyname_to_dik			(LPCSTR _name);
+ENGINE_API const char*	VK_to_keyname			(u8 _dik);
+ENGINE_API u8 keyname_to_dik (LPCSTR _name);
 ENGINE_API _keyboard*	keyname_to_ptr			(LPCSTR _name);
-ENGINE_API _keyboard*	dik_to_ptr				(int _dik, bool bSafe);
+ENGINE_API _keyboard*	VK_to_ptr				(u8 _dik, bool bSafe);
 
 ENGINE_API const char*	id_to_action_name		(EGameActions _id);
 ENGINE_API EGameActions	action_name_to_id		(LPCSTR _name);
@@ -109,10 +149,15 @@ struct _binding
 
 extern ENGINE_API _binding g_key_bindings[];
 
-ENGINE_API bool			is_binded			(EGameActions action_id, int dik);
+ENGINE_API bool			is_binded			(EGameActions action_id, u8 dik);
 ENGINE_API int			get_action_dik		(EGameActions action_id, int idx=-1);
-ENGINE_API EGameActions	get_binded_action	(int dik);
+ENGINE_API EGameActions get_binded_action (u8 dik);
 ENGINE_API void			CCC_RegisterInput();
+
+ICF		   bool			isMouseButton(u8 vKey)
+{
+	return (vKey == VK_LBUTTON || vKey == VK_RBUTTON || vKey == VK_MBUTTON);
+}
 
 struct _conCmd	
 {
@@ -122,11 +167,11 @@ struct _conCmd
 class ENGINE_API ConsoleBindCmds
 {
 public:
-	xr_map<int,_conCmd>		m_bindConsoleCmds;
+	xr_map<u8,_conCmd>		m_bindConsoleCmds;
 
-	void 	bind			(int dik, LPCSTR N);
-	void 	unbind			(int dik);
-	bool 	execute			(int dik);
+	void 	bind			(u8 dik, LPCSTR N);
+	void 	unbind			(u8 dik);
+	bool 	execute			(u8 dik);
 	void 	clear			();
 	void 	save			(IWriter* F);
 };
@@ -134,14 +179,3 @@ public:
 ENGINE_API void GetActionAllBinding	(LPCSTR action, char* dst_buff, int dst_buff_sz);
 
 extern ENGINE_API ConsoleBindCmds bindConsoleCmds;
-
-// 0xED - max vavue in DIK* enum
-#define MOUSE_1		(0xED + 100)
-#define MOUSE_2		(0xED + 101)
-#define MOUSE_3		(0xED + 102)
-
-#define MOUSE_4		(0xED + 103)
-#define MOUSE_5		(0xED + 104)
-#define MOUSE_6		(0xED + 105)
-#define MOUSE_7		(0xED + 106)
-#define MOUSE_8		(0xED + 107)

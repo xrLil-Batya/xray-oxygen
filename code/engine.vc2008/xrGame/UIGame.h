@@ -88,7 +88,7 @@ public:
 	CUIMainIngameWnd*  UIMainIngameWnd;
 	CUIMessagesWindow* m_pMessagesWnd;
 
-	virtual bool IR_UIOnKeyboardPress(int dik);
+	virtual bool IR_UIOnKeyboardPress(u8 dik);
 	virtual void OnInventoryAction(PIItem item, u16 action_type);
 
 	CUIGame();

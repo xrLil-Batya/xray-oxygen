@@ -162,7 +162,7 @@ void CUITabControl::SetActiveTab(const shared_str& sNewTab)
 	m_sPrevPushedId		= m_sPushedId;
 }
 
-bool CUITabControl::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUITabControl::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 
 	if (GetAcceleratorsMode() && WINDOW_KEY_PRESSED == keyboard_action)

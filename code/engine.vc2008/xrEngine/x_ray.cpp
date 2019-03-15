@@ -99,14 +99,7 @@ ENGINE_API void InitConsole	()
 
 ENGINE_API void InitInput()
 {
-	BOOL bCaptureInput = !strstr(Core.Params, "-i");
-
-	pInput = xr_new<CInput>(bCaptureInput);
-}
-
-ENGINE_API void InitInput(bool bExclusiveMode)
-{
-	pInput = xr_new<CInput>(bExclusiveMode);
+	pInput = xr_new<CInput>();
 }
 
 void destroyInput()

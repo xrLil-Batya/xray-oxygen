@@ -78,5 +78,5 @@ public:
 	virtual bool WorkInPause()const { return true; }
 	virtual void ShowDialog(bool bDoHideIndicators);
 	virtual void HideDialog();
-	virtual bool OnKeyboardAction(int dik, EUIMessages keyboard_action);
+	virtual bool OnKeyboardAction(u8 dik, EUIMessages keyboard_action);
 };

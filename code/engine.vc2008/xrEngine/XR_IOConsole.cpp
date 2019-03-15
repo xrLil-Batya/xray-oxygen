@@ -646,10 +646,10 @@ void CConsole::Hide()
 		return;
 	}
 
-	if ( pInput->get_exclusive_mode() )
-	{
-		SetCursorPos( m_mouse_pos.x, m_mouse_pos.y );
-	}
+// 	if ( pInput->get_exclusive_mode() )
+// 	{
+// 		SetCursorPos( m_mouse_pos.x, m_mouse_pos.y );
+// 	}
 
 	bVisible = false;
 	reset_selected_tip();

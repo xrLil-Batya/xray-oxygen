@@ -43,7 +43,6 @@ public:
 ENGINE_API void InitSettings();
 ENGINE_API void InitConsole();
 ENGINE_API void InitInput();
-ENGINE_API void InitInput(bool bExclusiveMode);
 ENGINE_API void InitSound1();
 ENGINE_API void InitSound2();
 

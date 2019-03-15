@@ -39,11 +39,10 @@ public:
 	void IR_OnMouseRelease(int btn) override;
 	void IR_OnMouseHold(int btn) override;
 	void IR_OnMouseMove(int x, int y) override;
-	void IR_OnMouseStop(int x, int y) override;
 
-	void IR_OnKeyboardPress(int dik) override;
-	void IR_OnKeyboardRelease(int dik) override;
-	void IR_OnKeyboardHold(int dik) override;
+	void IR_OnKeyboardPress(u8 dik) override;
+	void IR_OnKeyboardRelease(u8 dik) override;
+	void IR_OnKeyboardHold(u8 dik) override;
 
 	void IR_OnMouseWheel(int direction) override;
 	void IR_OnActivate() override;
@@ -98,12 +97,12 @@ public:
 
 	virtual void Update();
 	virtual void OnRender() = 0;
-	virtual void OnKeyboardPress(int dik) = 0;
+	virtual void OnKeyboardPress(u8 dik) = 0;
 	virtual void OnMousePress(int btn) = 0;
 
 	virtual bool IsPlaying() = 0;
 
-	bool AllowKey(int dik);
+	bool AllowKey(u8 dik);
 	bool GrabInput() { return !!m_flags.test(etiGrabInput); }
 
 	shared_str m_check_lua_function;
@@ -142,7 +141,7 @@ public:
 	float m_time_length;
 	string64 m_pda_section;
 	Fvector2 m_desired_cursor_pos;
-	int m_continue_dik_guard;
+	int m_continue_VK_guard;
 	xr_vector<SActionItem> m_actions;
 
 public:
@@ -155,7 +154,7 @@ public:
 
 	void Update() override;
 	void OnRender() override;
-	void OnKeyboardPress(int dik) override;
+	void OnKeyboardPress(u8 dik) override;
 	void OnMousePress(int btn) override;
 
 	bool IsPlaying() override;
@@ -193,7 +192,7 @@ public:
 
 	void Update() override;
 	void OnRender() override;
-	void OnKeyboardPress(int dik) override {}
+	void OnKeyboardPress(u8 dik) override {}
 	void OnMousePress(int btn) override {};
 
 	bool IsPlaying() override;

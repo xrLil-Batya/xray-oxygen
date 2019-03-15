@@ -23,8 +23,8 @@ public:
 
 	virtual bool OnMouseAction(float x, float y, EUIMessages action) override;
 
-	virtual bool OnKeyboardHold(int dik) override;
-	virtual bool OnKeyboardAction(int dik, EUIMessages action) override;
+	virtual bool OnKeyboardHold(u8 dik) override;
+	virtual bool OnKeyboardAction(u8 dik, EUIMessages action) override;
 
 	virtual void Draw(IUIRender* render) override;
 protected:

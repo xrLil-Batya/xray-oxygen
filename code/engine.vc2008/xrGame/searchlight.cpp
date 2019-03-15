@@ -181,7 +181,7 @@ void CProjector::renderable_Render()
 {
 	if (renderable.visual)
 	{
-		if (actor_use && (Level().CurrentControlEntity()->Position().distance_to(Position()) > 2.0f) || pInput->iGetAsyncKeyState(DIK_ESCAPE))
+		if (actor_use && (Level().CurrentControlEntity()->Position().distance_to(Position()) > 2.0f) || pInput->iGetAsyncKeyState(VK_ESCAPE))
 			actor_use = false;
 
 		if (Actor() && Actor()->g_Alive() && actor_use)
@@ -189,7 +189,7 @@ void CProjector::renderable_Render()
 			_current.pitch = _target.pitch = -Actor()->cam_Active()->pitch;
 			_start.yaw = -Actor()->cam_Active()->yaw;
 		}
-		if (pInput->iGetAsyncKeyState(DIK_SPACE))
+		if (pInput->iGetAsyncKeyState(VK_SPACE))
 		{
 			CWeapon				*weapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
 			collide::rq_result& RQ = HUD().GetCurrentRayQuery();
@@ -199,7 +199,7 @@ void CProjector::renderable_Render()
 			fppos.add(Fvector(weapon->get_LastFD()).mul(dist));
 			Position().set(fppos);
 		}
-		/*if (pInput->iGetAsyncKeyState(DIK_SPACE))
+		/*if (pInput->iGetAsyncKeyState(VK_SPACE))
 		{
 			CWeapon				*weapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
 			CCameraBase *pCam = Actor()->cam_Active();

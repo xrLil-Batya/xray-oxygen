@@ -7,7 +7,6 @@
 #include <dxerr/dxerr.h>
 //#pragma warning(pop)
 
-#pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
 // 

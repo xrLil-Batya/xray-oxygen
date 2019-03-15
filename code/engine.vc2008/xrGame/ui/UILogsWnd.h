@@ -63,8 +63,8 @@ public:
 	virtual void		Update				();
 	virtual void		SendMessage			( CUIWindow* pWnd, s16 msg, void* pData );
 
-	virtual bool		OnKeyboardAction			(int dik, EUIMessages keyboard_action);
-	virtual bool		OnKeyboardHold		(int dik);
+	virtual bool		OnKeyboardAction			(u8 dik, EUIMessages keyboard_action);
+	virtual bool		OnKeyboardHold		(u8 dik);
 
 	IC		void		UpdateNews			()	{ m_need_reload = true; }
 	void		PerformWork			();
@@ -78,5 +78,5 @@ protected:
 			void 	PrevPeriod		( CUIWindow* w, void* d);
 			void 	NextPeriod		( CUIWindow* w, void* d);
 	
-			void 		on_scroll_keys		( int dik );
+			void 		on_scroll_keys		( u8 dik );
 }; // class CUILogsWnd

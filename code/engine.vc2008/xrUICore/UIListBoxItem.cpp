@@ -50,7 +50,7 @@ CGameFont* CUIListBoxItem::GetFont()
 
 bool CUIListBoxItem::OnMouseDown(int mouse_btn)
 {
-	if (mouse_btn==MOUSE_1)
+	if (mouse_btn==VK_LBUTTON)
 	{
 		dynamic_cast<CUIScrollView*>(GetParent()->GetParent())->SetSelected(this);
 		GetMessageTarget()->SendMessage(this, LIST_ITEM_SELECT, &tag);

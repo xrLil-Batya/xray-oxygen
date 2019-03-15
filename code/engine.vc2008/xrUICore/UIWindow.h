@@ -33,8 +33,8 @@ public:
 	CUIWindow*				GetChildMouseHandler();
 
 
-	virtual bool			OnKeyboardAction			(int dik, EUIMessages keyboard_action);
-	virtual bool			OnKeyboardHold		(int dik);
+	virtual bool			OnKeyboardAction			(u8 dik, EUIMessages keyboard_action);
+	virtual bool			OnKeyboardHold		(u8 dik);
 
 	virtual bool 			OnMouseAction				(float x, float y, EUIMessages mouse_action);
 	virtual void 			OnMouseMove			();

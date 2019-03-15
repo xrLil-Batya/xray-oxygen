@@ -270,7 +270,7 @@ void CChangeLevelWnd::OnCancel()
 		Actor()->MoveActor(m_position_cancel, m_angles_cancel);
 }
 
-bool CChangeLevelWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CChangeLevelWnd::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	if (keyboard_action == WINDOW_KEY_PRESSED)
 	{

@@ -80,7 +80,7 @@ bool CUIEditKeyBind::OnMouseDown(int mouse_btn)
 	{
 		string64 message;
 
-		m_keyboard = dik_to_ptr(mouse_btn, true);
+		m_keyboard = VK_to_ptr(mouse_btn, true);
 
 		if (!m_keyboard)			
 			return true;
@@ -96,24 +96,24 @@ bool CUIEditKeyBind::OnMouseDown(int mouse_btn)
 		return true;
 	}
 
-	if (mouse_btn == MOUSE_1)
+	if (mouse_btn == VK_LBUTTON)
 		SetEditMode(m_bCursorOverWindow);
 
 	return CUIStatic::OnMouseDown(mouse_btn);
 }
 
-bool CUIEditKeyBind::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIEditKeyBind::OnKeyboardAction(u8 vKey, EUIMessages keyboard_action)
 {
-	if (dik == MOUSE_1 || dik == MOUSE_2 || dik == MOUSE_3)
+	if (isMouseButton(vKey))
 		return false;
 
-	if (CUIStatic::OnKeyboardAction(dik, keyboard_action))
+	if (CUIStatic::OnKeyboardAction(vKey, keyboard_action))
 		return true;
 
 	string64 message;
 	if (m_bIsEditMode)
 	{
-		m_keyboard = dik_to_ptr(dik, true);
+		m_keyboard = VK_to_ptr(vKey, true);
 
 		if (!m_keyboard)		
 			return true;

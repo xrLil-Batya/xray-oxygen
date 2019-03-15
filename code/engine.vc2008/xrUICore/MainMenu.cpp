@@ -8,7 +8,6 @@
 #include "../xrEngine/xr_Level_controller.h"
 #include "UITextureMaster.h"
 #include "UIXmlInit.h"
-#include <dinput.h>
 #include "UIBtnHint.h"
 #include "UICursor.h"
 #include "..\xrEngine\string_table.h"
@@ -217,23 +216,23 @@ void CMainMenu::OnDeviceReset()
 }
 
 //IInputReceiver
-static int mouse_button_2_key[] = { MOUSE_1,MOUSE_2,MOUSE_3, MOUSE_4, MOUSE_5, MOUSE_6, MOUSE_7, MOUSE_8 };
+//static int mouse_button_2_key[] = { VK_LBUTTON,VK_RBUTTON,VK_MBUTTON, VK_XBUTTON1, VK_XBUTTON2 };
 void CMainMenu::IR_OnMousePress(int btn)
 {
 	if (IsActive())
-		IR_OnKeyboardPress(mouse_button_2_key[btn]);
+		IR_OnKeyboardPress(btn);
 };
 
 void CMainMenu::IR_OnMouseRelease(int btn)
 {
 	if (IsActive())
-		IR_OnKeyboardRelease(mouse_button_2_key[btn]);
+		IR_OnKeyboardRelease(btn);
 };
 
 void CMainMenu::IR_OnMouseHold(int btn)
 {
 	if (IsActive())
-		IR_OnKeyboardHold(mouse_button_2_key[btn]);
+		IR_OnKeyboardHold(btn);
 };
 
 void CMainMenu::IR_OnMouseMove(int x, int y)
@@ -242,11 +241,7 @@ void CMainMenu::IR_OnMouseMove(int x, int y)
 		CDialogHolder::IR_UIOnMouseMove(x, y);
 };
 
-void CMainMenu::IR_OnMouseStop(int x, int y)
-{
-};
-
-void CMainMenu::IR_OnKeyboardPress(int dik)
+void CMainMenu::IR_OnKeyboardPress(u8 dik)
 {
 	if (IsActive())
 	{
@@ -265,13 +260,13 @@ void CMainMenu::IR_OnKeyboardPress(int dik)
 	}
 }
 
-void CMainMenu::IR_OnKeyboardRelease(int dik)
+void CMainMenu::IR_OnKeyboardRelease(u8 dik)
 {
 	if (IsActive())
 		CDialogHolder::IR_UIOnKeyboardRelease(dik);
 };
 
-void CMainMenu::IR_OnKeyboardHold(int dik)
+void CMainMenu::IR_OnKeyboardHold(u8 dik)
 {
 	if (IsActive())
 		CDialogHolder::IR_UIOnKeyboardHold(dik);

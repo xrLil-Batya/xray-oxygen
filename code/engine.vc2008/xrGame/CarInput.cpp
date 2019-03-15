@@ -121,7 +121,7 @@ void CCar::vfProcessInputKey	(int iCommand, bool bPressed)
 	float const base_fov	=	g_fov;
 	float const dest_fov	=	g_fov - (g_fov-30.f);
 
-void CCar::OnKeyboardPress(int cmd)
+void CCar::OnKeyboardPress(u8 cmd)
 {
 	if (Remote())								return;
 
@@ -200,7 +200,7 @@ void CCar::OnKeyboardPress(int cmd)
 	};
 }
 
-void	CCar::OnKeyboardRelease(int cmd)
+void	CCar::OnKeyboardRelease(u8 cmd)
 {
 	if (Remote())								return;
 	switch (cmd)	
@@ -234,7 +234,7 @@ void	CCar::OnKeyboardRelease(int cmd)
 	};
 }
 
-void CCar::OnKeyboardHold(int cmd)
+void CCar::OnKeyboardHold(u8 cmd)
 {
 	if (Remote())
 		return;

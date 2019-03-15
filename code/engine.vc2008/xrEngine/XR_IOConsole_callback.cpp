@@ -15,33 +15,33 @@
 
 void CConsole::Register_callbacks()
 {
-	ec().assign_callback( DIK_PRIOR, text_editor::ks_free,  Callback( this, &CConsole::Prev_log      ) );
-	ec().assign_callback( DIK_NEXT,  text_editor::ks_free,  Callback( this, &CConsole::Next_log      ) );
-	ec().assign_callback( DIK_PRIOR, text_editor::ks_Ctrl,  Callback( this, &CConsole::Begin_log     ) );
-	ec().assign_callback( DIK_NEXT,  text_editor::ks_Ctrl,  Callback( this, &CConsole::End_log       ) );
+	ec().assign_callback( VK_PRIOR, text_editor::ks_free,  Callback( this, &CConsole::Prev_log      ) );
+	ec().assign_callback( VK_NEXT,  text_editor::ks_free,  Callback( this, &CConsole::Next_log      ) );
+	ec().assign_callback( VK_PRIOR, text_editor::ks_Ctrl,  Callback( this, &CConsole::Begin_log     ) );
+	ec().assign_callback( VK_NEXT,  text_editor::ks_Ctrl,  Callback( this, &CConsole::End_log       ) );
 
-	ec().assign_callback( DIK_TAB,   text_editor::ks_free,  Callback( this, &CConsole::Find_cmd      ) );
-	ec().assign_callback( DIK_TAB,   text_editor::ks_Shift, Callback( this, &CConsole::Find_cmd_back ) );
-	ec().assign_callback( DIK_TAB,   text_editor::ks_Alt,   Callback( this, &CConsole::GamePause     ) );
+	ec().assign_callback( VK_TAB,   text_editor::ks_free,  Callback( this, &CConsole::Find_cmd      ) );
+	ec().assign_callback( VK_TAB,   text_editor::ks_Shift, Callback( this, &CConsole::Find_cmd_back ) );
+	ec().assign_callback( VK_TAB,   text_editor::ks_Alt,   Callback( this, &CConsole::GamePause     ) );
 
-	ec().assign_callback( DIK_UP,    text_editor::ks_free,  Callback( this, &CConsole::Prev_tip      ) );
-	ec().assign_callback( DIK_DOWN,  text_editor::ks_free,  Callback( this, &CConsole::Next_tip      ) );
-	ec().assign_callback( DIK_UP,    text_editor::ks_Ctrl,  Callback( this, &CConsole::Prev_cmd      ) );
-	ec().assign_callback( DIK_DOWN,  text_editor::ks_Ctrl,  Callback( this, &CConsole::Next_cmd      ) );
+	ec().assign_callback( VK_UP,    text_editor::ks_free,  Callback( this, &CConsole::Prev_tip      ) );
+	ec().assign_callback( VK_DOWN,  text_editor::ks_free,  Callback( this, &CConsole::Next_tip      ) );
+	ec().assign_callback( VK_UP,    text_editor::ks_Ctrl,  Callback( this, &CConsole::Prev_cmd      ) );
+	ec().assign_callback( VK_DOWN,  text_editor::ks_Ctrl,  Callback( this, &CConsole::Next_cmd      ) );
 
-	ec().assign_callback( DIK_HOME,  text_editor::ks_Alt,   Callback( this, &CConsole::Begin_tips    ) );
-	ec().assign_callback( DIK_END,   text_editor::ks_Alt,   Callback( this, &CConsole::End_tips      ) );
-	ec().assign_callback( DIK_PRIOR, text_editor::ks_Alt,   Callback( this, &CConsole::PageUp_tips   ) );
-	ec().assign_callback( DIK_NEXT,  text_editor::ks_Alt,   Callback( this, &CConsole::PageDown_tips ) );
+	ec().assign_callback( VK_HOME,  text_editor::ks_Alt,   Callback( this, &CConsole::Begin_tips    ) );
+	ec().assign_callback( VK_END,   text_editor::ks_Alt,   Callback( this, &CConsole::End_tips      ) );
+	ec().assign_callback( VK_PRIOR, text_editor::ks_Alt,   Callback( this, &CConsole::PageUp_tips   ) );
+	ec().assign_callback( VK_NEXT,  text_editor::ks_Alt,   Callback( this, &CConsole::PageDown_tips ) );
 	
-	ec().assign_callback( DIK_RETURN,      text_editor::ks_free, Callback( this, &CConsole::Execute_cmd ) );
-	ec().assign_callback( DIK_NUMPADENTER, text_editor::ks_free, Callback( this, &CConsole::Execute_cmd ) );
+	ec().assign_callback( VK_RETURN,      text_editor::ks_free, Callback( this, &CConsole::Execute_cmd ) );
+	ec().assign_callback( VK_RETURN, text_editor::ks_free, Callback( this, &CConsole::Execute_cmd ) );
 	
-	ec().assign_callback( DIK_ESCAPE, text_editor::ks_free, Callback( this, &CConsole::Hide_cmd_esc ) );
-	ec().assign_callback( DIK_GRAVE,  text_editor::ks_free, Callback( this, &CConsole::Hide_cmd     ) );
+	ec().assign_callback( VK_ESCAPE, text_editor::ks_free, Callback( this, &CConsole::Hide_cmd_esc ) );
+	ec().assign_callback( VK_OEM_3,  text_editor::ks_free, Callback( this, &CConsole::Hide_cmd     ) );
 }
 
-void CConsole::Prev_log() // DIK_PRIOR=PAGE_UP
+void CConsole::Prev_log() // VK_PRIOR=PAGE_UP
 {
 	scroll_delta++;
 	scroll_delta = std::min<int>(scroll_delta, (int)m_log_history.GetSize());
@@ -55,7 +55,7 @@ void CConsole::Prev_log() // DIK_PRIOR=PAGE_UP
 	}
 }
 
-void CConsole::Next_log() // DIK_NEXT=PAGE_DOWN
+void CConsole::Next_log() // VK_NEXT=PAGE_DOWN
 {
 	scroll_delta--;
 	if ( scroll_delta < 0 )
@@ -74,7 +74,7 @@ void CConsole::End_log() // PAGE_DOWN+Ctrl
 	scroll_delta = 0;
 }
 
-void CConsole::Find_cmd() // DIK_TAB
+void CConsole::Find_cmd() // VK_TAB
 {
 	shared_str out_str;
 		
@@ -85,7 +85,7 @@ void CConsole::Find_cmd() // DIK_TAB
 	}
 }
 
-void CConsole::Find_cmd_back() // DIK_TAB+shift
+void CConsole::Find_cmd_back() // VK_TAB+shift
 {
 	const char* edt = ec().str_edit();
 	const char* radmin_cmd_name = "ra ";
@@ -109,19 +109,19 @@ void CConsole::Find_cmd_back() // DIK_TAB+shift
 	}
 }
 
-void CConsole::Prev_cmd() // DIK_UP + Ctrl
+void CConsole::Prev_cmd() // VK_UP + Ctrl
 {
 	prev_cmd_history_idx();
 	SelectCommand();
 }
 
-void CConsole::Next_cmd() // DIK_DOWN + Ctrl
+void CConsole::Next_cmd() // VK_DOWN + Ctrl
 {
 	next_cmd_history_idx();
 	SelectCommand();
 }
 
-void CConsole::Prev_tip() // DIK_UP
+void CConsole::Prev_tip() // VK_UP
 {
 	if ( xr_strlen( ec().str_edit() ) == 0 )
 	{
@@ -132,7 +132,7 @@ void CConsole::Prev_tip() // DIK_UP
 	prev_selected_tip();
 }
 
-void CConsole::Next_tip() // DIK_DOWN + Ctrl
+void CConsole::Next_tip() // VK_DOWN + Ctrl
 {
 	if ( xr_strlen( ec().str_edit() ) == 0 )
 	{
@@ -168,7 +168,7 @@ void CConsole::PageDown_tips()
 	check_next_selected_tip();
 }
 
-void CConsole::Execute_cmd() // DIK_RETURN, DIK_NUMPADENTER
+void CConsole::Execute_cmd() // VK_RETURN, VK_NUMPADENTER
 {
 	if ( 0 <= m_select_tip && m_select_tip < (int)m_tips.size() )
 	{

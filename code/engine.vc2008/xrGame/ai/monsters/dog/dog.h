@@ -60,7 +60,7 @@ private:
 			LPCSTR			get_current_animation();
 	static	void			animation_end(CBlend* B);
 #ifdef DEBUG	
-	virtual void	debug_on_key		(int key);
+	virtual void	debug_on_key		(u8 key);
 #endif
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION

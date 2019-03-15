@@ -75,7 +75,7 @@ void CUICheckButton::InitTexture2(LPCSTR texture_name)
 
 void CUICheckButton::OnFocusLost()
 {
-	if (m_eButtonState == BUTTON_PUSHED && pInput->iGetAsyncBtnState(0))
+	if (m_eButtonState == BUTTON_PUSHED && pInput->iGetAsyncBtnState(VK_LBUTTON))
 		return;
 
 	inherited::OnFocusLost();
@@ -93,7 +93,7 @@ void CUICheckButton::Show(bool status)
 
 bool CUICheckButton::OnMouseDown(int mouse_btn)
 {
-	if (mouse_btn == MOUSE_1)
+	if (mouse_btn == VK_LBUTTON)
 	{
 		if (GetButtonState() == BUTTON_NORMAL)
 			SetButtonState(BUTTON_PUSHED);

@@ -9,10 +9,6 @@
 #include "../control_animation_base.h"
 #include "../control_movement_base.h"
 
-#ifdef _DEBUG
-#include <dinput.h>
-#endif
-
 
 CZombie::CZombie()
 {
@@ -209,15 +205,15 @@ void CZombie::fake_death_stand_up()
 
 
 #ifdef DEBUG
-void CZombie::debug_on_key(int key)
+void CZombie::debug_on_key(u8 key)
 {
 	switch (key){
-	case DIK_MINUS:
+	case VK_OEM_MINUS:
 		{
 			fake_death_fall_down();
 		}
 		break;
-	case DIK_EQUALS:
+	case VK_OEM_PLUS:
 		{
 			fake_death_stand_up();
 		}

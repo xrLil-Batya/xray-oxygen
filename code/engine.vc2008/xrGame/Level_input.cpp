@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <dinput.h>
 #include "../xrEngine/xr_ioconsole.h"
 #include "entity_alive.h"
 #include "alife_simulator.h"
@@ -58,13 +57,13 @@ void CLevel::IR_OnMouseWheel( int direction )
 	}
 }
 
-static int mouse_button_2_key []	=	{MOUSE_1,MOUSE_2,MOUSE_3};
+static int mouse_button_2_key []	=	{VK_LBUTTON,VK_RBUTTON,VK_MBUTTON};
 
-void CLevel::IR_OnMousePress(int btn)
+void CLevel::IR_OnMousePress(u8 btn)
 {	IR_OnKeyboardPress(mouse_button_2_key[btn]);}
-void CLevel::IR_OnMouseRelease(int btn)
+void CLevel::IR_OnMouseRelease(u8 btn)
 {	IR_OnKeyboardRelease(mouse_button_2_key[btn]);}
-void CLevel::IR_OnMouseHold(int btn)
+void CLevel::IR_OnMouseHold(u8 btn)
 {	IR_OnKeyboardHold(mouse_button_2_key[btn]);}
 
 void CLevel::IR_OnMouseMove( int dx, int dy )
@@ -94,13 +93,13 @@ extern float g_separate_radius;
 #include "script_game_object.h"
 #include "game_object_space.h"
 
-void CLevel::IR_OnKeyboardPress(int key)
+void CLevel::IR_OnKeyboardPress(u8 key)
 {
 	if (Device.dwPrecacheFrame)
 		return;
 
 #ifdef INGAME_EDITOR
-	if (Device.editor() && (pInput->iGetAsyncKeyState(DIK_LALT) || pInput->iGetAsyncKeyState(DIK_RALT)))
+	if (Device.editor() && (pInput->iGetAsyncKeyState(VK_LMENU) || pInput->iGetAsyncKeyState(VK_RMENU)))
 		return;
 #endif // #ifdef INGAME_EDITOR
 
@@ -157,7 +156,7 @@ void CLevel::IR_OnKeyboardPress(int key)
         switch (_curr)
         {
         case kDEV_NOCLIP:
-            if (!pInput->iGetAsyncKeyState(DIK_LSHIFT))
+            if (!pInput->iGetAsyncKeyState(VK_LSHIFT))
             {
                 Console->Hide();
                 Console->Execute("demo_record 1");
@@ -170,7 +169,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 
 #ifdef DEBUG
 	switch (key) {
-	case DIK_DIVIDE:
+	case VK_DIVIDE:
 	{
 		if (!Server)
 			break;
@@ -182,7 +181,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 
 		break;
 	}
-	case DIK_MULTIPLY:
+	case VK_MULTIPLY:
 	{
 		if (!Server)
 			break;
@@ -193,7 +192,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 
 		break;
 	}
-	case DIK_SUBTRACT: {
+	case VK_SUBTRACT: {
 		if (!Server)
 			break;
 		if (m_bEnvPaused)
@@ -205,19 +204,19 @@ void CLevel::IR_OnKeyboardPress(int key)
 		break;
 	}
 
-	case DIK_RETURN: {
+	case VK_RETURN: {
 		bDebug = !bDebug;
 		return;
 	}
-	case DIK_BACK:
+	case VK_BACK:
 		DRender->NextSceneMode();
 		return;
 
-	case DIK_F4: {
-		if (pInput->iGetAsyncKeyState(DIK_LALT))
+	case VK_F4: {
+		if (pInput->iGetAsyncKeyState(VK_LMENU))
 			break;
 
-		if (pInput->iGetAsyncKeyState(DIK_RALT))
+		if (pInput->iGetAsyncKeyState(VK_RMENU))
 			break;
 
 		bool bOk = false;
@@ -280,7 +279,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 		return;
 	}
 				 // Lain: added
-	case DIK_F5:
+	case VK_F5:
 	{
 		if (CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()))
 		{
@@ -289,9 +288,9 @@ void CLevel::IR_OnKeyboardPress(int key)
 		break;
 	}
 
-	case MOUSE_1:
+	case VK_LBUTTON:
 	{
-		if (pInput->iGetAsyncKeyState(DIK_LALT)) {
+		if (pInput->iGetAsyncKeyState(VK_LMENU)) {
 			if (smart_cast<CActor*>(CurrentEntity()))
 				try_change_current_entity();
 			else
@@ -326,7 +325,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 #endif
 }
 
-void CLevel::IR_OnKeyboardRelease(int key)
+void CLevel::IR_OnKeyboardRelease(u8 key)
 {
 	if (!bReady || g_bDisableAllInput)								
 		return;
@@ -345,14 +344,14 @@ void CLevel::IR_OnKeyboardRelease(int key)
 	}
 }
 
-void CLevel::IR_OnKeyboardHold(int key)
+void CLevel::IR_OnKeyboardHold(u8 key)
 {
 	if (g_bDisableAllInput) 
 		return;
 
 #ifdef DEBUG
 	// Lain: added
-	if (key == DIK_UP)
+	if (key == VK_UP)
 	{
 		static u32 time = Device.dwTimeGlobal;
 		if (Device.dwTimeGlobal - time > 20)
@@ -364,7 +363,7 @@ void CLevel::IR_OnKeyboardHold(int key)
 			}
 		}
 	}
-	else if (key == DIK_DOWN)
+	else if (key == VK_DOWN)
 	{
 		static u32 time = Device.dwTimeGlobal;
 		if (Device.dwTimeGlobal - time > 20)
@@ -393,15 +392,11 @@ void CLevel::IR_OnKeyboardHold(int key)
 	}
 }
 
-void CLevel::IR_OnMouseStop( int /**axis/**/, int /**value/**/)
-{
-}
-
 void CLevel::IR_OnActivate()
 {
 	if (pInput)
 	{
-		for (u32 i = 0; i < CInput::COUNT_KB_BUTTONS; i++)
+		for (u8 i = 0; i < 255; i++)
 		{
 			if (IR_GetKeyState(i))
 			{

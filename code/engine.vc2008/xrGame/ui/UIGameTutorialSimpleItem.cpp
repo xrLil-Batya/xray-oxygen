@@ -78,21 +78,21 @@ void CUISequenceSimpleItem::Load(CUIXml* xml, int idx)
 	m_flags.set(etiNeedPauseSound, 0 == _stricmp(str, "on"));
 
 	str = xml->Read("guard_key", 0, NULL);
-	m_continue_dik_guard = -1;
+	m_continue_VK_guard = -1;
 
 	if (str && !_stricmp(str, "any"))
 	{
-		m_continue_dik_guard = 9999;
+		m_continue_VK_guard = 9999;
 		str = nullptr;
 	}
 
 	if (str)
 	{
 		EGameActions cmd = action_name_to_id(str);
-		m_continue_dik_guard = get_action_dik(cmd);
+		m_continue_VK_guard = get_action_dik(cmd);
 	}
 
-	m_flags.set(etiCanBeStopped, (m_continue_dik_guard == -1));
+	m_flags.set(etiCanBeStopped, (m_continue_VK_guard == -1));
 
 	LPCSTR str_grab_input = xml->Read("grab_input", 0, "on");
 	m_flags.set(etiGrabInput, (0 == _stricmp(str_grab_input, "on") || 0 == _stricmp(str_grab_input, "1")));
@@ -310,14 +310,14 @@ bool CUISequenceSimpleItem::Stop(bool bForce)
 }
 
 #include <luabind/luabind.hpp>
-void CUISequenceSimpleItem::OnKeyboardPress(int dik)
+void CUISequenceSimpleItem::OnKeyboardPress(u8 dik)
 {
 	if (!m_flags.test(etiCanBeStopped))
 	{
-		VERIFY(m_continue_dik_guard != -1);
-		if (m_continue_dik_guard == -1)m_flags.set(etiCanBeStopped, TRUE); //not binded action :(
+		VERIFY(m_continue_VK_guard != -1);
+		if (m_continue_VK_guard == -1)m_flags.set(etiCanBeStopped, TRUE); //not binded action :(
 
-		if (m_continue_dik_guard == 9999 || dik == m_continue_dik_guard)
+		if (m_continue_VK_guard == 9999 || dik == m_continue_VK_guard)
 			m_flags.set(etiCanBeStopped, TRUE); //match key
 	}
 
@@ -344,20 +344,20 @@ void CUISequenceSimpleItem::OnKeyboardPress(int dik)
 
 void CUISequenceSimpleItem::OnMousePress(int btn)
 {
-	int dik = 0;
+	u8 dik = 0;
 
 	switch (btn)
 	{
 		case 0:
-			dik = MOUSE_1;
+			dik = VK_LBUTTON;
 			break;
 
 		case 1:
-			dik = MOUSE_2;
+			dik = VK_RBUTTON;
 			break;
 
 		case 2:
-			dik = MOUSE_3;
+			dik = VK_MBUTTON;
 			break;
 
 		default: 
