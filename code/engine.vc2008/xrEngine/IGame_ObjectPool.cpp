@@ -79,7 +79,7 @@ void IGame_ObjectPool::prefetch	()
 	for (CInifile::SectIt I=sect.begin(); I!=sect.end(); I++)	{
 		CInifile::Item& item= *I;
 		CLASS_ID CLS		= pSettings->r_clsid(item.first.c_str(),"class");
-		int count			= atoi(item.second.c_str());
+		int count			= atoi_17(item.second.c_str());
 		count				+= (count==0)?1:0;
 		R_ASSERT2			((count>0) && (count<=128), "Too many objects for prefetching");
 		p_count				+=	count;

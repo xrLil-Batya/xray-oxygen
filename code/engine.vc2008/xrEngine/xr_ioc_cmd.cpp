@@ -154,7 +154,7 @@ class CCC_DumpOpenFiles : public IConsole_Command
 public:
 	CCC_DumpOpenFiles(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = FALSE; };
 	virtual void Execute(LPCSTR args) {
-		int _mode			= atoi(args);
+		int _mode			= atoi_17(args);
 		_dump_open_files	(_mode);
 	}
 };
