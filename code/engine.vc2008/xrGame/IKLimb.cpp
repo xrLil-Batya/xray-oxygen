@@ -355,7 +355,7 @@ void CIKLimb::Create(u16 id, IKinematicsAnimated* K, bool collide_)
 	{
 		string32 section;
 		string32 buff;
-		strconcat(sizeof(section), section, "ik_limb", itoa(id, buff, 10));
+		xr_strconcat( section, "ik_limb", itoa(id, buff, 10));
 		parse_bones_string(CK, CK->LL_UserData()->r_string(section, "bones"), m_bones);
 		m_foot.Create(CK, section, m_bones);
 	}
@@ -884,6 +884,7 @@ void CIKLimb::Update(CGameObject *O, const CBlend *b, const extrapolation::point
 	step_predict(O, b, state_predict, object_pose_extrapolation);
 }
 
+#include "../../3rd-party/IKAN/Dof7control.h"
 float	CIKLimb::ObjShiftDown(float current_shift, const SCalculateData& cd)  const
 {
 	Fvector hip;
@@ -891,7 +892,8 @@ float	CIKLimb::ObjShiftDown(float current_shift, const SCalculateData& cd)  cons
 	hip.y -= current_shift;
 	Fmatrix m;
 	Fvector g; g.sub(m_foot.ref_bone_to_foot(m, cd.state.goal.get()).c, hip);
-	float l = m_limb.Length();
+	
+	float l = m_limb.get_Solver().Length();
 	return -g.y - _sqrt(l*l - g.x*g.x - g.z*g.z);
 }
 
@@ -929,7 +931,13 @@ struct ssaved_callback
 static void	_BCL get_matrix(CBoneInstance* P)
 {
 	VERIFY(_valid(P->mTransform));
-	*((Fmatrix*)P->callback_param()) = P->mTransform;
+
+	// Waiting mainthred
+	void* pCurrParams = P->callback_param();
+	if (!pCurrParams) 
+			return;
+
+	*(reinterpret_cast<Fmatrix*>(pCurrParams)) = P->mTransform;
 
 }
 u16	CIKLimb::foot_matrix_predict(Fmatrix& foot, Fmatrix& toe, float time, IKinematicsAnimated *K) const
@@ -1166,7 +1174,7 @@ void 	CIKLimb::BonesCallback0(CBoneInstance* B)
 #ifdef DEBUG
 	CIKLimb&	L = *D->m_limb;
 	if (ph_dbg_draw_mask1.test(phDbgDrawIKLimits))
-		DBG_DrawRotation3(Fmatrix().mul_43(*D->m_obj, start), x, L.m_limb.jt_limits, 0, 1, 2);
+		DBG_DrawRotation3(Fmatrix().mul_43(*D->m_obj, start), x, L.m_limb.get_jt_limits(), 0, 1, 2);
 	if (ph_dbg_draw_mask.test(phDbgDrawIKGoal))
 	{
 		DBG_DrawMatrix(Fmatrix().mul_43(*D->m_obj, start), 1.f);
@@ -1214,7 +1222,7 @@ void 	CIKLimb::BonesCallback2(CBoneInstance* B)
 	CIKLimb&		L = *D->m_limb;
 	if (ph_dbg_draw_mask1.test(phDbgDrawIKLimits))
 	{
-		DBG_DrawRotation3(Fmatrix().mul_43(*D->m_obj, start), x, L.m_limb.jt_limits, 4, 5, 6);
+		DBG_DrawRotation3(Fmatrix().mul_43(*D->m_obj, start), x, L.m_limb.get_jt_limits(), 4, 5, 6);
 	}
 	if (ph_dbg_draw_mask.test(phDbgDrawIKGoal))
 	{

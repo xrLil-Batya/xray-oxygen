@@ -8,7 +8,7 @@ class CActor;
 
 class CActorCameraManager : public CCameraManager
 {
-	typedef CCameraManager	inherited;
+	using inherited = CCameraManager;
 
 	SCamEffectorInfo		m_cam_info_hud;
 
@@ -23,7 +23,7 @@ public:
 	IC void					hud_camera_Matrix		(Fmatrix& M){M.set(m_cam_info_hud.r, m_cam_info_hud.n, m_cam_info_hud.d, m_cam_info_hud.p);}
 };
 
-typedef fastdelegate::FastDelegate0<float> GET_KOEFF_FUNC;
+using GET_KOEFF_FUNC = xrDelegate<float()>;
 
 void AddEffector		(CActor* A, int type, const shared_str& sect_name);
 void AddEffector		(CActor* A, int type, const shared_str& sect_name, float factor);
@@ -44,7 +44,7 @@ public:
 				void			SetPP					(CEffectorPP* p)	{m_pe = p;}
 				void			SetCam					(CEffectorCam* p)	{m_ce = p;}
 	virtual		BOOL			Valid					()					{return m_ce || m_pe;};
-	virtual	float xr_stdcall	GetFactor				()					= 0;
+	virtual		float __stdcall	GetFactor				()					= 0;
 };
 
 class CAnimatorCamEffector : public CEffectorCam
@@ -52,7 +52,7 @@ class CAnimatorCamEffector : public CEffectorCam
 	bool				m_bCyclic;
 
 protected:
-	typedef				CEffectorCam			inherited;
+	using inherited =				CEffectorCam;
 	virtual bool		Cyclic					() const		{return m_bCyclic;}
 	CObjectAnimator*							m_objectAnimator;
 
@@ -73,7 +73,7 @@ public:
 
 class CAnimatorCamEffectorScriptCB : public CAnimatorCamEffector 
 {
-	typedef 	CAnimatorCamEffector			inherited;
+	using inherited = 	CAnimatorCamEffector;
 
 	shared_str			cb_name;
 
@@ -87,7 +87,7 @@ public:
 class CAnimatorCamLerpEffector : public CAnimatorCamEffector
 {
 protected:
-	typedef				CAnimatorCamEffector		inherited;
+	using inherited =				CAnimatorCamEffector;
 	GET_KOEFF_FUNC									m_func;
 
 public:
@@ -103,7 +103,7 @@ protected:
 public:
 						CAnimatorCamLerpEffectorConst	();
 	void				SetFactor						(float v)		{m_factor = v; clamp(m_factor, 0.0f, 1.0f);}
-	float	xr_stdcall	GetFactor						()				{return m_factor;}
+	float	__stdcall	GetFactor						()				{return m_factor;}
 };
 
 class CCameraEffectorControlled : public CAnimatorCamLerpEffector
@@ -118,7 +118,7 @@ public:
 
 class SndShockEffector : public CEffectorController
 {
-	typedef CEffectorController inherited;
+	using inherited = CEffectorController;
 
 public:
 	float						m_snd_length;	//ms
@@ -136,13 +136,13 @@ public:
 
 	virtual		BOOL			Valid				();
 				BOOL			InWork				();
-	virtual	float xr_stdcall	GetFactor			();
+	virtual		float __stdcall	GetFactor			();
 };
 
 //////////////////////////////////////////////////////////////////////////
 class CControllerPsyHitCamEffector : public CEffectorCam 
 {
-	typedef CEffectorCam inherited;
+	using inherited = CEffectorCam;
 	
 	float				m_time_total;
 	float				m_time_current;

@@ -8,19 +8,18 @@
 #include "../actor.h"
 #include "../ActorCondition.h"
 #include "../EntityCondition.h"
-#include "../CustomOutfit.h"
-#include "../ActorHelmet.h"
+#include "../items/CustomOutfit.h"
+#include "../items/Helmet.h"
 #include "../PDA.h"
 #include "../xrServerEntities/character_info.h"
 #include "../inventory.h"
 #include "../UIGame.h"
-#include "../weaponmagazined.h"
+#include "../items/weaponmagazined.h"
 #include "../missile.h"
-#include "../Grenade.h"
+#include "../items/Grenade.h"
 #include "../xrServerEntities/xrServer_objects_ALife.h"
 #include "../alife_simulator.h"
 #include "../alife_object_registry.h"
-#include "../game_cl_base.h"
 #include "../level.h"
 #include "../seniority_hierarchy_holder.h"
 
@@ -29,22 +28,22 @@
 #include "../../xrEngine/LightAnimLibrary.h"
 
 #include "UIInventoryUtilities.h"
-#include "UIHelper.h"
+#include "../xrUICore/UIHelper.h"
 #include "UIMotionIcon.h"
 
-#include "UIXmlInit.h"
-#include "UIPdaMsgListItem.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIPdaMsgListItem.h"
 #include "UIPdaWnd.h"
 #include "../alife_registry_wrappers.h"
 
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 
 #ifdef DEBUG
 #	include "../attachable_item.h"
 #	include "../../xrEngine/xr_input.h"
 #endif
 
-#include "UIScrollView.h"
+#include "../xrUICore/UIScrollView.h"
 #include "map_hint.h"
 #include "../game_news.h"
 
@@ -69,13 +68,12 @@ const u32	g_clWhite					= 0xffffffff;
 
 #define				MAININGAME_XML				"ui_HUD.xml"
 
-CUIMainIngameWnd::CUIMainIngameWnd()
-:m_pPickUpItem(NULL),m_pMPChatWnd(NULL),UIArtefactIcon(NULL),m_pMPLogWnd(NULL)
+CUIMainIngameWnd::CUIMainIngameWnd() : m_pPickUpItem(nullptr), UIArtefactIcon(nullptr)
 {
 	UIZoneMap					= xr_new<CUIZoneMap>();
 }
 
-#include "UIProgressShape.h"
+#include "../xrUICore/UIProgressShape.h"
 extern CUIProgressShape* g_MissileForceShape;
 
 CUIMainIngameWnd::~CUIMainIngameWnd()
@@ -108,10 +106,10 @@ void CUIMainIngameWnd::Init()
 	m_iPickUpItemIconY			= UIPickUpItemIcon->GetWndRect().top;
 	//---------------------------------------------------------
 
-	//индикаторы 
+	//РёРЅРґРёРєР°С‚РѕСЂС‹ 
 	UIZoneMap->Init				();
 
-	// Подсказки, которые возникают при наведении прицела на объект
+	// РџРѕРґСЃРєР°Р·РєРё, РєРѕС‚РѕСЂС‹Рµ РІРѕР·РЅРёРєР°СЋС‚ РїСЂРё РЅР°РІРµРґРµРЅРёРё РїСЂРёС†РµР»Р° РЅР° РѕР±СЉРµРєС‚
 	UIStaticQuickHelp			= UIHelper::CreateTextWnd(uiXml, "quick_info", this);
 
 	uiXml.SetLocalRoot			(uiXml.GetRoot());
@@ -123,7 +121,7 @@ void CUIMainIngameWnd::Init()
 	m_ind_bleeding			= UIHelper::CreateStatic(uiXml, "indicator_bleeding", this);
 	m_ind_radiation			= UIHelper::CreateStatic(uiXml, "indicator_radiation", this);
 	m_ind_starvation		= UIHelper::CreateStatic(uiXml, "indicator_starvation", this);
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
 	    m_ind_thirst			= UIHelper::CreateStatic(uiXml, "indicator_thirst", this);
     }
@@ -180,13 +178,13 @@ void CUIMainIngameWnd::Init()
         "artefact"
     };
 
-    shared_str* pUsedWarningStrings = GamePersistent().m_useThirst ? &warningStrings[0] : &classicWarningStrings[0];
+    shared_str* pUsedWarningStrings = g_extraFeatures.is(GAME_EXTRA_THIRST) ? &warningStrings[0] : &classicWarningStrings[0];
 
-	// Загружаем пороговые значения для индикаторов
+	// Р—Р°РіСЂСѓР¶Р°РµРј РїРѕСЂРѕРіРѕРІС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ РёРЅРґРёРєР°С‚РѕСЂРѕРІ
 	EWarningIcons j = ewiWeaponJammed;
 	while (j < ewiInvincible)
 	{
-		// Читаем данные порогов для каждого индикатора
+		// Р§РёС‚Р°РµРј РґР°РЅРЅС‹Рµ РїРѕСЂРѕРіРѕРІ РґР»СЏ РєР°Р¶РґРѕРіРѕ РёРЅРґРёРєР°С‚РѕСЂР°
 		shared_str cfgRecord = pSettings->r_string("main_ingame_indicators_thresholds", *pUsedWarningStrings[static_cast<int>(j) - 1]);
 		u32 count = _GetItemCount(*cfgRecord);
 
@@ -273,28 +271,15 @@ void CUIMainIngameWnd::Draw()
 	RenderQuickInfos();		
 }
 
-
-void CUIMainIngameWnd::SetMPChatLog(CUIWindow* pChat, CUIWindow* pLog){
-	m_pMPChatWnd = pChat;
-	m_pMPLogWnd  = pLog;
-}
-
 void CUIMainIngameWnd::Update()
 {
 	CUIWindow::Update();
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentViewEntity());
 
-	if (m_pMPChatWnd)
-		m_pMPChatWnd->Update();
-
-	if (m_pMPLogWnd)
-		m_pMPLogWnd->Update();
-
 	if (!pActor)
 		return;
 
 	UIZoneMap->Update();
-
 	UpdatePickUpItem();
 
 	if (Device.dwFrame % 10)
@@ -309,8 +294,7 @@ void CUIMainIngameWnd::Update()
 	UpdateMainIndicators();
 	return;
 
-} //update
-
+}
 
 void CUIMainIngameWnd::RenderQuickInfos()
 {
@@ -322,7 +306,7 @@ void CUIMainIngameWnd::RenderQuickInfos()
 	LPCSTR actor_action					= pActor->GetDefaultActionForObject();
 	UIStaticQuickHelp->Show				(NULL!=actor_action);
 
-	// подсказка для костра
+	// РїРѕРґСЃРєР°Р·РєР° РґР»СЏ РєРѕСЃС‚СЂР°
 	static CZoneCampfire* pZone = nullptr;
 	if (pZone != pActor->CapmfireWeLookingAt())
 	{
@@ -380,7 +364,7 @@ void CUIMainIngameWnd::SetWarningIconColor(EWarningIcons icon, const u32 cl)
 {
 	bool bMagicFlag = true;
 
-	// Задаем цвет требуемой иконки
+	// Р—Р°РґР°РµРј С†РІРµС‚ С‚СЂРµР±СѓРµРјРѕР№ РёРєРѕРЅРєРё
 	switch(icon)
 	{
 	case ewiAll:
@@ -408,7 +392,7 @@ void CUIMainIngameWnd::TurnOffWarningIcon(EWarningIcons icon)
 
 void CUIMainIngameWnd::SetFlashIconState_(EFlashingIcons type, bool enable)
 {
-	// Включаем анимацию требуемой иконки
+	// Р’РєР»СЋС‡Р°РµРј Р°РЅРёРјР°С†РёСЋ С‚СЂРµР±СѓРµРјРѕР№ РёРєРѕРЅРєРё
     auto icon = m_FlashingIcons.find(type);
 	R_ASSERT2(icon != m_FlashingIcons.end(), "Flashing icon with this type not existed");
 	icon->second->Show(enable);
@@ -421,14 +405,14 @@ void CUIMainIngameWnd::InitFlashingIcons(CUIXml* node)
 
 	CUIXmlInit xml_init;
 	CUIStatic *pIcon = NULL;
-	// Пробегаемся по всем нодам и инициализируем из них статики
+	// РџСЂРѕР±РµРіР°РµРјСЃСЏ РїРѕ РІСЃРµРј РЅРѕРґР°Рј Рё РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РёР· РЅРёС… СЃС‚Р°С‚РёРєРё
 	for (int i = 0; i < staticsCount; ++i)
 	{
 		pIcon = xr_new<CUIStatic>();
 		xml_init.InitStatic(*node, flashingIconNodeName, i, pIcon);
 		shared_str iconType = node->ReadAttrib(flashingIconNodeName, i, "type", "none");
 
-		// Теперь запоминаем иконку и ее тип
+		// РўРµРїРµСЂСЊ Р·Р°РїРѕРјРёРЅР°РµРј РёРєРѕРЅРєСѓ Рё РµРµ С‚РёРї
 		EFlashingIcons type = efiPdaTask;
 
 		if		(iconType == "pda")		type = efiPdaTask;
@@ -521,8 +505,19 @@ void CUIMainIngameWnd::UpdatePickUpItem	()
 	UIPickUpItemIcon->SetWidth(m_iGridWidth*INV_GRID_WIDTH*scale*UI().get_current_kx());
 	UIPickUpItemIcon->SetHeight(m_iGridHeight*INV_GRID_HEIGHT*scale);
 
-	UIPickUpItemIcon->SetWndPos(Fvector2().set(	m_iPickUpItemIconX+(m_iPickUpItemIconWidth-UIPickUpItemIcon->GetWidth())/2.0f,
-												m_iPickUpItemIconY+(m_iPickUpItemIconHeight-UIPickUpItemIcon->GetHeight())/2.0f) );
+	Fmatrix			res;
+	res.mul(Device.mFullTransform, m_pPickUpItem->object().XFORM());
+	Fvector4		v_res;
+	Fvector			result = m_pPickUpItem->object().Position();
+	Device.mFullTransform.transform(v_res, result);
+	if (v_res.z < 0 || v_res.w < 0)	return;
+	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f) return;
+
+	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+
+	UIPickUpItemIcon->SetWndPos(Fvector2().set(	x/1.7f+m_pPickUpItem->object().Radius(),
+												y+(m_iPickUpItemIconHeight-UIPickUpItemIcon->GetHeight())/1.7f + m_pPickUpItem->object().Radius() + Actor()->Position().distance_to(m_pPickUpItem->object().Position())/-1.5) );
 
 	UIPickUpItemIcon->SetTextureColor(color_rgba(255,255,255,192));
 	UIPickUpItemIcon->Show(true);
@@ -530,8 +525,10 @@ void CUIMainIngameWnd::UpdatePickUpItem	()
 
 void CUIMainIngameWnd::OnConnected()
 {
+	// Init UIMap
 	UIZoneMap->SetupCurrentMap();
-	if ( m_ui_hud_states )
+
+	if (m_ui_hud_states)
 	{
 		m_ui_hud_states->on_connected();
 	}
@@ -655,8 +652,8 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		else
 			m_ind_starvation->InitTexture("ui_inGame2_circle_hunger_red");
 	}
-// Thrist icon
-    if (GamePersistent().m_useThirst)
+// Thirst icon
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
         float thirst = pActor->conditions().GetThirst();
         float thirst_critical = pActor->conditions().ThirstCritical();
@@ -741,8 +738,6 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		m_ind_overweight->Show(true);
 		if(cur_weight>max_weight)
 			m_ind_overweight->InitTexture("ui_inGame2_circle_Overweight_red");
-		//else if(cur_weight>max_weight-10.0f)
-		//	m_ind_overweight->InitTexture("ui_inGame2_circle_Overweight_yellow");
 		else
 			m_ind_overweight->InitTexture("ui_inGame2_circle_Overweight_yellow");
 	}
@@ -822,7 +817,6 @@ void CUIMainIngameWnd::UpdateQuickSlots()
 			{
 				wnd->Show(false);
 				m_quick_slots_icons[i]->SetTextureColor(color_rgba(255,255,255,0));
-//				m_quick_slots_icons[i]->Show(false);
 			}
 		}
 	}

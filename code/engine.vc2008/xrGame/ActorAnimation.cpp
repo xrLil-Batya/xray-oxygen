@@ -2,25 +2,24 @@
 #include "Actor.h"
 #include "ActorAnimation.h"
 #include "actor_anim_defs.h"
-#include "weapon.h"
+#include "items/weapon.h"
 #include "inventory.h"
 #include "missile.h"
 #include "level.h"
 #ifdef DEBUG
 #include "PHDebug.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 #endif
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "Car.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
-#include "game_cl_base.h"
 #include "../xrEngine/motion.h"
-#include "artefact.h"
+#include "items/artefact.h"
 #include "IKLimbsController.h"
 #include "player_hud.h"
-#include "WeaponKnife.h"
+#include "items/WeaponKnife.h"
 
 static const float y_spin0_factor		= 0.0f;
 static const float y_spin1_factor		= 0.4f;
@@ -104,32 +103,32 @@ void  CActor::VehicleHeadCallback(CBoneInstance* B)
 void STorsoWpn::Create(IKinematicsAnimated* K, LPCSTR base0, LPCSTR base1)
 {
 	char			buf[128];
-	moving[eIdle]	= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_aim_1"));
-	moving[eWalk]	= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_aim_2"));
-	moving[eRun]	= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_aim_3"));
-	moving[eSprint]	= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_escape_0"));
-	zoom			= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_aim_0"));
-	holster			= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_holster_0"));
-	draw			= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_draw_0"));
-	reload			= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_reload_0"));
-	reload_1		= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_reload_1"));
-	reload_2		= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_reload_2"));
-	drop			= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_drop_0"));
-	attack			= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_attack_1"));
-	attack_zoom		= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_attack_0"));
-	fire_idle		= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_attack_1"));
-	fire_end		= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_torso",base1,"_attack_2"));
-	all_attack_0	= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_all",base1,"_attack_0"));
-	all_attack_1	= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_all",base1,"_attack_1"));
-	all_attack_2	= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base0,"_all",base1,"_attack_2"));
+	moving[eIdle]	= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_aim_1"));
+	moving[eWalk]	= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_aim_2"));
+	moving[eRun]	= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_aim_3"));
+	moving[eSprint]	= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_escape_0"));
+	zoom			= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_aim_0"));
+	holster			= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_holster_0"));
+	draw			= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_draw_0"));
+	reload			= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_reload_0"));
+	reload_1		= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_reload_1"));
+	reload_2		= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_reload_2"));
+	drop			= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_drop_0"));
+	attack			= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_attack_1"));
+	attack_zoom		= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_attack_0"));
+	fire_idle		= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_attack_1"));
+	fire_end		= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_torso", base1, "_attack_2"));
+	all_attack_0	= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_all",   base1, "_attack_0"));
+	all_attack_1	= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_all",   base1, "_attack_1"));
+	all_attack_2	= K->ID_Cycle_Safe(xr_strconcat( buf,base0, "_all",   base1, "_attack_2"));
 }
 void SAnimState::Create(IKinematicsAnimated* K, LPCSTR base0, LPCSTR base1)
 {
 	char			buf[128];
-	legs_fwd		= K->ID_Cycle(strconcat(sizeof(buf),buf,base0,base1,"_fwd_0"));
-	legs_back		= K->ID_Cycle(strconcat(sizeof(buf),buf,base0,base1,"_back_0"));
-	legs_ls			= K->ID_Cycle(strconcat(sizeof(buf),buf,base0,base1,"_ls_0"));
-	legs_rs			= K->ID_Cycle(strconcat(sizeof(buf),buf,base0,base1,"_rs_0"));
+	legs_fwd		= K->ID_Cycle(xr_strconcat( buf, base0, base1, "_fwd_0"));
+	legs_back		= K->ID_Cycle(xr_strconcat( buf, base0, base1, "_back_0"));
+	legs_ls			= K->ID_Cycle(xr_strconcat( buf, base0, base1, "_ls_0"));
+	legs_rs			= K->ID_Cycle(xr_strconcat( buf, base0, base1, "_rs_0"));
 }
 
 
@@ -140,15 +139,15 @@ void SActorState::CreateClimb(IKinematicsAnimated* K)
 	
 	//climb anims
 	xr_strcpy(base,"cl");
-	legs_idle		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_idle_1"));
-	m_torso_idle	= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_torso_0_aim_0"));
+	legs_idle		= K->ID_Cycle(xr_strconcat( buf, base,"_idle_1"));
+	m_torso_idle	= K->ID_Cycle(xr_strconcat( buf, base,"_torso_0_aim_0"));
 	m_walk.Create	(K,base,"_run");
 	m_run.Create	(K,base,"_run");
 
 	//norm anims
 	xr_strcpy(base,"norm");
-	legs_turn		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_turn"));
-	death			= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_death_0"));
+	legs_turn		= K->ID_Cycle(xr_strconcat( buf, base, "_turn"));
+	death			= K->ID_Cycle(xr_strconcat( buf, base, "_death_0"));
 	m_torso[0].Create(K,base,"_1");
 	m_torso[1].Create(K,base,"_2");
 	m_torso[2].Create(K,base,"_3");
@@ -165,22 +164,22 @@ void SActorState::CreateClimb(IKinematicsAnimated* K)
 
 
 	m_head_idle.invalidate();///K->ID_Cycle("head_idle_0");
-	jump_begin		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_jump_begin"));
-	jump_idle		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_jump_idle"));
-	landing[0]		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_jump_end"));
-	landing[1]		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_jump_end_1"));
+	jump_begin		= K->ID_Cycle(xr_strconcat( buf, base, "_jump_begin"));
+	jump_idle		= K->ID_Cycle(xr_strconcat( buf, base, "_jump_idle"));
+	landing[0]		= K->ID_Cycle(xr_strconcat( buf, base, "_jump_end"));
+	landing[1]		= K->ID_Cycle(xr_strconcat( buf, base, "_jump_end_1"));
 
 	for (int k=0; k<12; ++k)
-		m_damage[k]	= K->ID_FX(strconcat(sizeof(buf),buf,base,"_damage_",itoa(k,buf1,10)));
+		m_damage[k]	= K->ID_FX(xr_strconcat(buf,base,"_damage_",itoa(k,buf1,10)));
 }
 
 
 void SActorState::Create(IKinematicsAnimated* K, LPCSTR base)
 {
 	string128		buf,buf1;
-	legs_turn		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_turn"));
-	legs_idle		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_idle_0"));
-	death			= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_death_0"));
+	legs_turn		= K->ID_Cycle(xr_strconcat( buf, base, "_turn"));
+	legs_idle		= K->ID_Cycle(xr_strconcat( buf, base, "_idle_0"));
+	death			= K->ID_Cycle(xr_strconcat( buf, base, "_death_0"));
 	
 	m_walk.Create	(K,base,"_walk");
 	m_run.Create	(K,base,"_run");
@@ -199,15 +198,15 @@ void SActorState::Create(IKinematicsAnimated* K, LPCSTR base)
 	m_torso[11].Create(K,base,"_12");
 	m_torso[12].Create(K,base,"_13");
 	
-	m_torso_idle	= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_torso_0_aim_0"));
+	m_torso_idle	= K->ID_Cycle(xr_strconcat( buf, base, "_torso_0_aim_0"));
 	m_head_idle		= K->ID_Cycle("head_idle_0");
-	jump_begin		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_jump_begin"));
-	jump_idle		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_jump_idle"));
-	landing[0]		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_jump_end"));
-	landing[1]		= K->ID_Cycle(strconcat(sizeof(buf),buf,base,"_jump_end_1"));
+	jump_begin		= K->ID_Cycle(xr_strconcat( buf, base, "_jump_begin"));
+	jump_idle		= K->ID_Cycle(xr_strconcat( buf, base, "_jump_idle"));
+	landing[0]		= K->ID_Cycle(xr_strconcat( buf, base, "_jump_end"));
+	landing[1]		= K->ID_Cycle(xr_strconcat( buf, base, "_jump_end_1"));
 
 	for (int k=0; k<12; ++k)
-		m_damage[k]	= K->ID_FX(strconcat(sizeof(buf),buf,base,"_damage_",itoa(k,buf1,10)));
+		m_damage[k]	= K->ID_FX(xr_strconcat(buf, base, "_damage_", itoa(k,buf1,10)));
 }
 
 void SActorSprintState::Create(IKinematicsAnimated* K)
@@ -244,7 +243,7 @@ void SActorVehicleAnims::Create(IKinematicsAnimated* V)
 
 SVehicleAnimCollection::SVehicleAnimCollection()
 {
-	for(u16 i=0;MAX_IDLES>i;++i) idles[i].invalidate();
+	for(MotionID & idle : idles) idle.invalidate();
 	idles_num = 0;
 	steer_left.invalidate();
 	steer_right.invalidate();
@@ -253,12 +252,12 @@ SVehicleAnimCollection::SVehicleAnimCollection()
 void SVehicleAnimCollection::Create(IKinematicsAnimated* V,u16 num)
 {
 	string128 buf,buff1,buff2;
-	strconcat(sizeof(buff1),buff1,itoa(num,buf,10),"_");
-	steer_left=	V->ID_Cycle(strconcat(sizeof(buf),buf,"steering_idle_",buff1,"ls"));
-	steer_right=V->ID_Cycle(strconcat(sizeof(buf),buf,"steering_idle_",buff1,"rs"));
+	xr_strconcat( buff1, itoa(num,buf,10), "_");
+	steer_left=	V->ID_Cycle(xr_strconcat( buf, "steering_idle_", buff1, "ls"));
+	steer_right=V->ID_Cycle(xr_strconcat( buf, "steering_idle_", buff1, "rs"));
 
 	for(int i=0;MAX_IDLES>i;++i){
-		idles[i]=V->ID_Cycle_Safe(strconcat(sizeof(buf),buf,"steering_idle_",buff1,itoa(i,buff2,10)));
+		idles[i] = V->ID_Cycle_Safe(xr_strconcat( buf, "steering_idle_", buff1, itoa(i,buff2,10)));
 		if(idles[i]) idles_num++;
 		else break;
 	}
@@ -309,7 +308,7 @@ void CActor::g_SetSprintAnimation( u32 mstate_rl,MotionID &head,MotionID &torso,
 CMotion*        FindMotionKeys(MotionID motion_ID,IRenderVisual* V)
 {
 	IKinematicsAnimated* VA = smart_cast<IKinematicsAnimated*>(V);
-	return (VA && motion_ID.valid())?VA->LL_GetRootMotion(motion_ID):0;
+	return (VA && motion_ID.valid())?VA->LL_GetRootMotion(motion_ID):nullptr;
 }
 
 #ifdef DEBUG
@@ -327,7 +326,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 
 	if (!g_Alive()) {
 		if (m_current_legs||m_current_torso){
-			SActorState*				ST = 0;
+			SActorState*				ST = nullptr;
 			if (mstate_rl&mcCrouch)		ST = &m_anims->m_crouch;
 			else						ST = &m_anims->m_normal;
 			mstate_real					= 0;
@@ -340,8 +339,8 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		return;
 	}
 	STorsoWpn::eMovingState	moving_idx 		= STorsoWpn::eIdle;
-	SActorState*					ST 		= 0;
-	SAnimState*						AS 		= 0;
+	SActorState*					ST 		= nullptr;
+	SAnimState*						AS 		= nullptr;
 	
 	if		(mstate_rl&mcCrouch)	
 		ST 		= &m_anims->m_crouch;
@@ -364,12 +363,12 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		else
 			moving_idx				= STorsoWpn::eWalk;
 	}
-	// àíèìàöèè
+	// Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸Ð¸
 	MotionID 						M_legs;
 	MotionID 						M_torso;
 	MotionID 						M_head;
 
-	//åñëè ìû ïðîñòî ñòîèì íà ìåñòå
+	//ÐµÑÐ»Ð¸ Ð¼Ñ‹ Ð¿Ñ€Ð¾ÑÑ‚Ð¾ ÑÑ‚Ð¾Ð¸Ð¼ Ð½Ð° Ð¼ÐµÑÑ‚Ðµ
 	bool is_standing = false;
 
 	// Legs
@@ -569,7 +568,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 			M_torso = ST->m_torso_idle;
 	}
 	
-	// åñòü àíèìàöèÿ äëÿ âñåãî - çàïóñòèì / èíà÷å çàïóñòèì àíèìàöèþ ïî ÷àñòÿì
+	// ÐµÑÑ‚ÑŒ Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸Ñ Ð´Ð»Ñ Ð²ÑÐµÐ³Ð¾ - Ð·Ð°Ð¿ÑƒÑÑ‚Ð¸Ð¼ / Ð¸Ð½Ð°Ñ‡Ðµ Ð·Ð°Ð¿ÑƒÑÑ‚Ð¸Ð¼ Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸ÑŽ Ð¿Ð¾ Ñ‡Ð°ÑÑ‚ÑÐ¼
 	if (m_current_torso!=M_torso)
 	{
 		if (m_bAnimTorsoPlayed)		
@@ -618,15 +617,15 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 #ifdef DEBUG
 	if(bDebug && g_ShowAnimationInfo)
 	{
-		UI().Font().pFontStat->OutSetI	(0,0);
-		UI().Font().pFontStat->OutNext("[%s]",mov_state[moving_idx]);
+		UI().Font().GetFont("stat_font")->OutSetI	(0,0);
+		UI().Font().GetFont("stat_font")->OutNext("[%s]",mov_state[moving_idx]);
 		IKinematicsAnimated* KA = smart_cast<IKinematicsAnimated*>(Visual());
 		if(M_torso)
-			UI().Font().pFontStat->OutNext("torso [%s]",KA->LL_MotionDefName_dbg(M_torso).first);
+			UI().Font().GetFont("stat_font")->OutNext("torso [%s]",KA->LL_MotionDefName_dbg(M_torso).first);
 		if(M_head)
-			UI().Font().pFontStat->OutNext("head [%s]",KA->LL_MotionDefName_dbg(M_head).first);
+			UI().Font().GetFont("stat_font")->OutNext("head [%s]",KA->LL_MotionDefName_dbg(M_head).first);
 		if(M_legs)
-			UI().Font().pFontStat->OutNext("legs [%s]",KA->LL_MotionDefName_dbg(M_legs).first);
+			UI().Font().GetFont("stat_font")->OutNext("legs [%s]",KA->LL_MotionDefName_dbg(M_legs).first);
 	}
 #endif
 
@@ -647,7 +646,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		if (mstate_rl&mcLLookout)	xr_strcat(buf,"LLookout ");
 		if (mstate_rl&mcRLookout)	xr_strcat(buf,"RLookout ");
 		if (m_bJumpKeyPressed)		xr_strcat(buf,"+Jumping ");
-		UI().Font().pFontStat->OutNext	("MSTATE:     [%s]",buf);
+		UI().Font().GetFont("stat_font")->OutNext	("MSTATE:     [%s]",buf);
 /*
 		switch (m_PhysicMovementControl->Environment())
 		{

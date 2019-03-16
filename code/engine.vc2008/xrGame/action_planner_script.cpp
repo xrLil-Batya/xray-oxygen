@@ -11,6 +11,9 @@
 #include "script_game_object.h"
 #include "action_base.h"
 
+#include "../../SDK/include/luabind/adopt_policy.hpp"
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 void set_goal_world_state(CScriptActionPlanner *action_planner, CScriptActionPlanner::CState *world_state)
@@ -28,7 +31,9 @@ CScriptActionPlanner *cast_planner(CScriptActionBase *action)
 	return	(smart_cast<CScriptActionPlanner*>(action));
 }
 
-#pragma optimize("s",on)
+
+
+#pragma optimize("gyts",on)
 void CScriptActionPlanner::script_register(lua_State *L)
 {
 	module(L)

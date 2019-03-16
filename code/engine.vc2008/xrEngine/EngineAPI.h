@@ -1,4 +1,4 @@
-// EngineAPI.h: interface for the CEngineAPI class.
+﻿// EngineAPI.h: interface for the CEngineAPI class.
 //
 //****************************************************************************
 // Support for extension DLLs
@@ -9,11 +9,12 @@
 class ENGINE_API DLL_Pure {
 public:
 	CLASS_ID				CLS_ID;
+	DWORD					SpectreObjectId;
 
 	DLL_Pure(void *params)	{CLS_ID=0; };
 	DLL_Pure()				{CLS_ID=0; };
 	virtual	DLL_Pure*		_construct		()	{ return this; 	}
-	virtual ~DLL_Pure()		{};
+	virtual ~DLL_Pure();
 };
 
 // Class creation/destroying interface
@@ -38,6 +39,14 @@ public:
 	CEngineAPI	();
 	~CEngineAPI	();
 };
+
+ENGINE_API void InitSettings();
+ENGINE_API void InitConsole();
+ENGINE_API void InitInput();
+ENGINE_API void InitInput(bool bExclusiveMode);
+ENGINE_API void InitSound1();
+ENGINE_API void InitSound2();
+
 
 #define NEW_INSTANCE(a)		Engine.External.pCreate(a)
 #define DEL_INSTANCE(a)		{ Engine.External.pDestroy(a); a=0; }

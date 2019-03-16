@@ -84,7 +84,7 @@ bool Opcode::SetupInOutTest(RayCollider& collider)
 
 bool Opcode::Picking(
 CollisionFace& picked_face,
-const Ray& world_ray, const Model& model, const Matrix4x4* world,
+const Ray& world_ray, const Model& model, const IceMatrix4x4* world,
 float min_dist, float max_dist, const Point& view_point, CullModeCallback callback, void* user_data)
 {
 	struct Local
@@ -164,7 +164,7 @@ float min_dist, float max_dist, const Point& view_point, CullModeCallback callba
 	if(world)
 	{
 		// Get matrices
-		Matrix4x4 InvWorld;
+		IceMatrix4x4 InvWorld;
 		InvertPRMatrix(InvWorld, *world);
 
 		// Compute camera position in mesh space

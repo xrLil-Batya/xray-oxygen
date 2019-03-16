@@ -93,12 +93,13 @@ u32 GetGpuNum()
 {
 	u32 res						= GetNVGpuNum();
 	res							= std::max(res, GetATIGpuNum());
+	res							= std::max(res, 2u);
 
-    if (!res)
-    {
-        Msg			("* Can't detect graphic card. Assuming that you have at least one (maybe from intel)");
-        res			= 1;
-    }
+	if (!res)
+	{
+		Msg("* Can't detect graphic card. Assuming that you have at least one (maybe from intel)");
+		res = 1;
+	}
 
 	Msg("* Starting rendering as %d-GPU.", res);
 	
@@ -106,7 +107,7 @@ u32 GetGpuNum()
 }
 }
 
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#ifndef USE_DX11
 void CHWCaps::Update()
 {
 	D3DCAPS9					caps;
@@ -123,7 +124,7 @@ void CHWCaps::Update()
 	geometry.dwRegisters		= cnt;
 	geometry.dwInstructions		= 256;
 	geometry.dwClipPlanes		= std::min((u32)caps.MaxUserClipPlanes,(u32)15);
-	geometry.bVTF				= (geometry_major>=3) && HW.support(D3DFMT_R32F,D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_VERTEXTEXTURE);
+	geometry.bVTF				= (geometry_major>=3) && HW.IsFormatSupported(D3DFMT_R32F,D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_VERTEXTEXTURE);
 
 	// ***************** PIXEL processing
 	raster_major				= u16 ( u32(u32(caps.PixelShaderVersion)&u32(0xf << 8ul))>>8 );
@@ -217,7 +218,7 @@ void CHWCaps::Update()
 
 	iGPUNum = GetGpuNum();
 }
-#else	//	USE_DX10
+#else
 void CHWCaps::Update()
 {
 	// ***************** GEOMETRY
@@ -231,7 +232,7 @@ void CHWCaps::Update()
 	geometry.dwRegisters		= cnt;
 	geometry.dwInstructions		= 256;
 	geometry.dwClipPlanes		= std::min(6,15);
-	geometry.bVTF				= TRUE;
+	geometry.bVTF				= HW.IsFormatSupported(DXGI_FORMAT_R32_FLOAT);
 
 	// ***************** PIXEL processing
 	raster_major				= 4;
@@ -275,4 +276,4 @@ void CHWCaps::Update()
 
 	iGPUNum = GetGpuNum();
 }
-#endif	//	USE_DX10
+#endif

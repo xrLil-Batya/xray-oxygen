@@ -13,7 +13,8 @@
 #include "tss.h"
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
-#include "../../xrCore/threadpool/ttapi.h"
+#include "tbb/task.h"
+#include "tbb/task_group.h"
 
 //	Already defined in Texture.cpp
 void fix_texture_name(LPSTR fn);
@@ -37,24 +38,24 @@ IBlender* CResourceManager::_GetBlender		(LPCSTR Name)
 	map_Blender::iterator I = m_blenders.find	(N);
 
 //	TODO: DX10: When all shaders are ready switch to common path
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	if (I==m_blenders.end())	
 	{
 		Msg("DX10: Shader '%s' not found in library.",Name); 
 		return 0;
 	}
 #endif
-	if (I==m_blenders.end())	{ Debug.fatal(DEBUG_INFO,"Shader '%s' not found in library.",Name); return 0; }
+	if (I==m_blenders.end())	{ Debug.fatal(DEBUG_INFO,"Shader '%s' not found in library.",Name); return nullptr; }
 	else					return I->second;
 }
 
 IBlender* CResourceManager::_FindBlender		(LPCSTR Name)
 {
-	if (!(Name && Name[0])) return 0;
+	if (!(Name && Name[0])) return nullptr;
 
 	LPSTR N = LPSTR(Name);
 	map_Blender::iterator I = m_blenders.find	(N);
-	if (I==m_blenders.end())	return 0;
+	if (I==m_blenders.end())	return nullptr;
 	else						return I->second;
 }
 
@@ -91,31 +92,31 @@ void	CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 			strlwr		(N.begin());
 
 			fix_texture_name( N.begin() );
-			dest.push_back(N.begin());
+			dest.emplace_back(N.begin());
 			N.clear		();
 		} else {
 			N.push_back	(*P);
 		}
 		P++;
 	}
-	if (N.size())
+	if (!N.empty())
 	{
 		// flush
 		N.push_back	(0);
 		strlwr		(N.begin());
 
 		fix_texture_name( N.begin() );
-		dest.push_back(N.begin());
+		dest.emplace_back(N.begin());
 	}
 }
 
 ShaderElement* CResourceManager::_CreateElement			(ShaderElement& S)
 {
-	if (S.passes.empty())		return	0;
+	if (S.passes.empty())		return	nullptr;
 
 	// Search equal in shaders array
-	for (u32 it=0; it<v_elements.size(); it++)
-		if (S.equal(*(v_elements[it])))	return v_elements[it];
+	for (auto & v_element : v_elements)
+		if (S.equal(*v_element))	return v_element;
 
 	// Create _new_ entry
 	ShaderElement*	N		=	xr_new<ShaderElement>(S);
@@ -219,13 +220,13 @@ Shader*	CResourceManager::_cpp_Create	(IBlender* B, LPCSTR s_shader, LPCSTR s_te
 
 Shader*	CResourceManager::_cpp_Create	(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		IBlender	*pBlender = _GetBlender(s_shader?s_shader:"null");
 		if (!pBlender) return NULL;
 		return	_cpp_Create(pBlender ,s_shader,s_textures,s_constants,s_matrices);
-#else	//	USE_DX10
+#else
 		return	_cpp_Create(_GetBlender(s_shader?s_shader:"null"),s_shader,s_textures,s_constants,s_matrices);
-#endif	//	USE_DX10
+#endif
 }
 
 Shader*		CResourceManager::Create	(IBlender*	B,		LPCSTR s_shader,	LPCSTR s_textures,	LPCSTR s_constants, LPCSTR s_matrices)
@@ -233,31 +234,33 @@ Shader*		CResourceManager::Create	(IBlender*	B,		LPCSTR s_shader,	LPCSTR s_textu
     return	_cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
 }
 
-Shader*		CResourceManager::Create	(LPCSTR s_shader,	LPCSTR s_textures,	LPCSTR s_constants,	LPCSTR s_matrices)
+Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-#if defined(USE_DX10) || defined(USE_DX11)
-	if	(_lua_HasShader(s_shader))		
-		return	_lua_Create	(s_shader,s_textures);
-	else								
+#ifdef USE_DX11
+	if (_lua_HasShader(s_shader))
+		return _lua_Create(s_shader, s_textures);
+	else
 	{
-		Shader* pShader = _cpp_Create	(s_shader,s_textures,s_constants,s_matrices);
+		Shader* pShader = _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
 		if (pShader)
 			return pShader;
 		else
 		{
 			if (_lua_HasShader("stub_default"))
-				return	_lua_Create	("stub_default",s_textures);
+				return _lua_Create("stub_default", s_textures);
 			else
 			{
-				FATAL("Can't find stub_default.s");
-				return 0;
+				FATAL("Can't find stub_default.lua");
+				return nullptr;
 			}
 		}
 	}
-#else	//	USE_DX10
-	if(_lua_HasShader(s_shader)) return	_lua_Create(s_shader,s_textures);
-	else return	_cpp_Create(s_shader,s_textures,s_constants,s_matrices);
-#endif	//	USE_DX10
+#else
+	if (_lua_HasShader(s_shader))
+		return _lua_Create(s_shader, s_textures);
+
+	return _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
+#endif
 }
 
 void CResourceManager::Delete(const Shader* S)
@@ -289,12 +292,16 @@ void CResourceManager::DeferredUpload()
 		}
 		else
 		{
+			tbb::task_group textureLoaders;
 			for (auto& tex : m_textures)
 			{
-				ttapi_AddTask(TextureLoading, tex.second);
+				CTexture* pTexture = tex.second;
+				textureLoaders.run([pTexture]()
+				{
+					pTexture->Load();
+				});
 			}
-	
-			ttapi_RunAllWorkers();
+			textureLoaders.wait();
 		}
 	
 		Msg("texture loading time: %d", timer.GetElapsed_ms());
@@ -304,7 +311,7 @@ void CResourceManager::DeferredUpload()
 void	CResourceManager::Evict()
 {
 	//	TODO: DX10: check if we really need this method
-#if !defined(USE_DX10) && !defined(USE_DX11)
+#ifndef USE_DX11
 	CHK_DX	(HW.pDevice->EvictManagedResources());
-#endif	//	USE_DX10
+#endif
 }

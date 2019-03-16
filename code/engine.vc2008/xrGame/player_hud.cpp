@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "player_hud.h"
 #include "HudItem.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 #include "physic_item.h"
 #include "actoreffector.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "inventory_item.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "actor.h"
 player_hud* g_player_hud = nullptr;
 Fvector _ancor_pos;
@@ -39,7 +39,7 @@ void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_
 	CInifile::Sect& _sect		= pSettings->r_section(sect);
 	auto _b		= _sect.Data.begin();
 	auto _e		= _sect.Data.end();
-	player_hud_motion* pm		= NULL;
+	player_hud_motion* pm		= nullptr;
 	
 	string512					buff;
 	MotionID					motion_ID;
@@ -94,7 +94,7 @@ void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_
 					pm->m_animations.back().name	= buff;
 				}
 			}
-			R_ASSERT2(pm->m_animations.size(),make_string("motion not found [%s]", pm->m_base_name.c_str()).c_str());
+			R_ASSERT_FORMAT(pm->m_animations.size(), "motion not found [%s]", pm->m_base_name.c_str());
 		}
 	}
 }
@@ -130,7 +130,7 @@ void attachable_hud_item::set_bone_visible(const shared_str& bone_name, BOOL bVi
 	if(bone_id==BI_NONE)
 	{
 		if(bSilent)	return;
-		R_ASSERT2	(0, make_string("model [%s] has no bone [%s]",pSettings->r_string(m_sect_name, "item_visual"), bone_name.c_str()).c_str());
+		R_ASSERT_FORMAT	(0, "model [%s] has no bone [%s]",pSettings->r_string(m_sect_name, "item_visual"), bone_name.c_str());
 	}
 	bVisibleNow		= m_model->LL_GetBoneVisible	(bone_id);
 	if(bVisibleNow!=bVisibility)
@@ -240,9 +240,9 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 	xr_sprintf(_prefix, "%s", is_16x9 ? "_16x9" : "");
 	string128	val_name;
 
-	strconcat(sizeof(val_name), val_name, "hands_position", _prefix);
+	xr_strconcat( val_name, "hands_position", _prefix);
 	m_hands_attach[0] = pSettings->r_fvector3(sect_name, val_name);
-	strconcat(sizeof(val_name), val_name, "hands_orientation", _prefix);
+	xr_strconcat( val_name, "hands_orientation", _prefix);
 	m_hands_attach[1] = pSettings->r_fvector3(sect_name, val_name);
 
 	m_item_attach[0] = pSettings->r_fvector3(sect_name, "item_position");
@@ -282,14 +282,14 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 	m_hands_offset[0][0].set(0, 0, 0);
 	m_hands_offset[1][0].set(0, 0, 0);
 
-	strconcat(sizeof(val_name), val_name, "aim_hud_offset_pos", _prefix);
+	xr_strconcat( val_name, "aim_hud_offset_pos", _prefix);
 	m_hands_offset[0][1] = pSettings->r_fvector3(sect_name, val_name);
-	strconcat(sizeof(val_name), val_name, "aim_hud_offset_rot", _prefix);
+	xr_strconcat( val_name, "aim_hud_offset_rot", _prefix);
 	m_hands_offset[1][1] = pSettings->r_fvector3(sect_name, val_name);
 
-	strconcat(sizeof(val_name), val_name, "gl_hud_offset_pos", _prefix);
+	xr_strconcat( val_name, "gl_hud_offset_pos", _prefix);
 	m_hands_offset[0][2] = pSettings->r_fvector3(sect_name, val_name);
-	strconcat(sizeof(val_name), val_name, "gl_hud_offset_rot", _prefix);
+	xr_strconcat( val_name, "gl_hud_offset_rot", _prefix);
 	m_hands_offset[1][2] = pSettings->r_fvector3(sect_name, val_name);
 
 
@@ -317,7 +317,7 @@ attachable_hud_item::~attachable_hud_item()
 {
 	IRenderVisual* v			= m_model->dcast_RenderVisual();
 	::Render->model_Delete		(v);
-	m_model						= NULL;
+	m_model						= nullptr;
 }
 
 void attachable_hud_item::load(const shared_str& sect_name)
@@ -340,10 +340,11 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 	xr_sprintf				(anim_name_r,"%s%s",anm_name_b.c_str(),((m_attach_place_idx==1)&&is_16x9)?"_16x9":"");
 
 	player_hud_motion* anm	= m_hand_motions.find_motion(anim_name_r);
-	R_ASSERT2				(anm, make_string("model [%s] has no motion alias defined [%s]", m_sect_name.c_str(), anim_name_r).c_str());
+	R_ASSERT_FORMAT (anm, "model [%s] has no motion alias defined [%s]", m_sect_name.c_str(), anim_name_r);
     if (anm == nullptr) return 0;
-	R_ASSERT2				(anm->m_animations.size(), make_string("model [%s] has no motion defined in motion_alias [%s]", pSettings->r_string(m_sect_name, "item_visual"), anim_name_r).c_str());
-    if (anm->m_animations.size() == 0) return 0;
+	R_ASSERT_FORMAT (anm->m_animations.size(), "model [%s] has no motion defined in motion_alias [%s]",
+		pSettings->r_string(m_sect_name, "item_visual"), anim_name_r);
+    if (anm->m_animations.empty()) return 0;
 
 	rnd_idx					= (u8)Random.randI((u32)anm->m_animations.size()) ;
 	const motion_descr& M	= anm->m_animations[ rnd_idx ];
@@ -400,7 +401,7 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 		
 		string_path			ce_path;
 		string_path			anm_name;
-		strconcat			(sizeof(anm_name),anm_name,"camera_effects\\weapon\\", M.name.c_str(),".anm");
+		xr_strconcat(anm_name,"camera_effects\\weapon\\", M.name.c_str(),".anm");
 		if (FS.exist( ce_path, "$game_anims$", anm_name))
 		{
 			CAnimatorCamEffector* e		= xr_new<CAnimatorCamEffector>();
@@ -417,9 +418,9 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 
 player_hud::player_hud()
 {
-	m_model					= NULL;
-	m_attached_items[0]		= NULL;
-	m_attached_items[1]		= NULL;
+	m_model					= nullptr;
+	m_attached_items[0]		= nullptr;
+	m_attached_items[1]		= nullptr;
 	m_transform.identity	();
 }
 
@@ -428,7 +429,7 @@ player_hud::~player_hud()
 {
 	IRenderVisual* v			= m_model->dcast_RenderVisual();
 	::Render->model_Delete		(v);
-	m_model						= NULL;
+	m_model						= nullptr;
 
 	xr_vector<attachable_hud_item*>::iterator it	= m_pool.begin();
 	xr_vector<attachable_hud_item*>::iterator it_e	= m_pool.end();
@@ -443,7 +444,7 @@ player_hud::~player_hud()
 void player_hud::load(const shared_str& player_hud_sect)
 {
 	if(player_hud_sect ==m_sect_name)	return;
-	bool b_reload = (m_model!=NULL);
+	bool b_reload = (m_model!=nullptr);
 	if(m_model)
 	{
 		IRenderVisual* v			= m_model->dcast_RenderVisual();
@@ -456,11 +457,11 @@ void player_hud::load(const shared_str& player_hud_sect)
 
 	CInifile::Sect& _sect		= pSettings->r_section(player_hud_sect);
 	
-	for(auto it = _sect.Data.begin(); it != _sect.Data.end(); ++it)
+	for(auto & it : _sect.Data)
 	{
-		if(strstr(it->first.c_str(), "ancor_")==it->first.c_str())
+		if(strstr(it.first.c_str(), "ancor_")==it.first.c_str())
 		{
-			const shared_str& _bone	= it->second;
+			const shared_str& _bone	= it.second;
 			m_ancors.push_back		(m_model->dcast_PKinematics()->LL_BoneID(_bone));
 		}
 	}
@@ -530,7 +531,7 @@ u32 player_hud::motion_length(const shared_str& anim_name, const shared_str& hud
 	
 	if(!pm) return 100; // ms TEMPORARY
 	
-	R_ASSERT2(pm, make_string("hudItem model [%s] has no motion with alias [%s]", hud_name.c_str(), anim_name.c_str() ).c_str());
+	R_ASSERT_FORMAT(pm, "hudItem model [%s] has no motion with alias [%s]", hud_name.c_str(), anim_name.c_str());
 	return motion_length			(pm->m_animations[0].mid, md, pm->m_anim_speed);
 }
 
@@ -640,7 +641,7 @@ void player_hud::update_inertion(Fmatrix& trans)
 		
         // load params
         hud_item_measures::inertion_params inertion_data;
-        if (pMainHud != NULL)
+        if (pMainHud != nullptr)
         { // Загружаем параметры инерции из основного худа
             inertion_data.m_pitch_offset_r = pMainHud->m_measures.m_inertion_params.m_pitch_offset_r;
             inertion_data.m_pitch_offset_n = pMainHud->m_measures.m_inertion_params.m_pitch_offset_n;
@@ -681,7 +682,7 @@ void player_hud::update_inertion(Fmatrix& trans)
 
         // tend to forward
         float _tendto_speed, _origin_offset;
-        if (pMainHud != NULL && pMainHud->m_parent_hud_item->GetCurrentHudOffsetIdx() > 0)
+        if (pMainHud != nullptr && pMainHud->m_parent_hud_item->GetCurrentHudOffsetIdx() > 0)
         { // Худ в режиме "Прицеливание"
             _tendto_speed = inertion_data.m_tendto_speed_aim - (inertion_data.m_tendto_speed_aim - inertion_data.m_tendto_speed) * 1;
             _origin_offset =
@@ -694,7 +695,7 @@ void player_hud::update_inertion(Fmatrix& trans)
         }
 
         // Фактор силы инерции
-        if (pMainHud != NULL)
+        if (pMainHud != nullptr)
         {
             _tendto_speed *= 1;
             _origin_offset *= 1;
@@ -706,7 +707,7 @@ void player_hud::update_inertion(Fmatrix& trans)
         // pitch compensation
         float pitch = angle_normalize_signed(xform.k.getP());
 
-        if (pMainHud != NULL)
+        if (pMainHud != nullptr)
             pitch *= 1;
 
         // Отдаление\приближение
@@ -771,12 +772,12 @@ void player_hud::attach_item(CHudItem* item)
 
 void player_hud::detach_item_idx(u16 idx)
 {
-	if( NULL==attached_item(idx) )					return;
+	if( nullptr==attached_item(idx) )					return;
 
 	m_attached_items[idx]->m_parent_hud_item->on_b_hud_detach();
 
-	m_attached_items[idx]->m_parent_hud_item		= NULL;
-	m_attached_items[idx]							= NULL;
+	m_attached_items[idx]->m_parent_hud_item		= nullptr;
+	m_attached_items[idx]							= nullptr;
 
 	if(idx==1 && attached_item(0))
 	{
@@ -814,7 +815,7 @@ void player_hud::detach_item_idx(u16 idx)
 
 void player_hud::detach_item(CHudItem* item)
 {
-	if( NULL==item->HudItemData() )		return;
+	if( nullptr==item->HudItemData() )		return;
 	u16 item_idx						= item->HudItemData()->m_attach_place_idx;
 
 	if( m_attached_items[item_idx]==item->HudItemData() )

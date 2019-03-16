@@ -3,7 +3,7 @@
 #include "UIGame.h"
 #include "PDA.h"
 #include "level.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "PhraseDialog.h"
 #include "character_info.h"
 #include "relation_registry.h"
@@ -11,7 +11,7 @@
 #include "alife_simulator.h"
 #include "alife_registry_container.h"
 #include "script_game_object.h"
-#include "game_cl_base.h"
+
 #include "xrServer.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "alife_registry_wrappers.h"
@@ -81,12 +81,12 @@ void CActor::UpdateAvailableDialogs(CPhraseDialogManager* partner)
 	m_AvailableDialogs.clear();
 	m_CheckedDialogs.clear();
 
-	//добавить актерский диалог собеседника
+	//РґРѕР±Р°РІРёС‚СЊ Р°РєС‚РµСЂСЃРєРёР№ РґРёР°Р»РѕРі СЃРѕР±РµСЃРµРґРЅРёРєР°
 	CInventoryOwner* pInvOwnerPartner = smart_cast<CInventoryOwner*>(partner); 
 	VERIFY(pInvOwnerPartner);
 
-	for (u32 i = 0; i < pInvOwnerPartner->CharacterInfo().ActorDialogs().size(); i++)
-		AddAvailableDialog(pInvOwnerPartner->CharacterInfo().ActorDialogs()[i], partner);
+	for (const auto & i : pInvOwnerPartner->CharacterInfo().ActorDialogs())
+		AddAvailableDialog(i, partner);
 
 	CPhraseDialogManager::UpdateAvailableDialogs(partner);
 }
@@ -99,7 +99,7 @@ void CActor::TryToTalk()
 
 void CActor::RunTalkDialog(CInventoryOwner* talk_partner, bool disable_break)
 {
-	//предложить поговорить с нами
+	//РїСЂРµРґР»РѕР¶РёС‚СЊ РїРѕРіРѕРІРѕСЂРёС‚СЊ СЃ РЅР°РјРё
 	if (talk_partner->OfferTalk(this))
 	{
 		StartTalk(talk_partner);
@@ -111,7 +111,7 @@ void CActor::RunTalkDialog(CInventoryOwner* talk_partner, bool disable_break)
 	}
 }
 
-void CActor::StartTalk(CInventoryOwner* talk_partner)
+void CActor::StartTalk(CInventoryOwner* talk_partner, bool bStartTrade)
 {
 	PIItem det_active = inventory().ItemFromSlot(DETECTOR_SLOT);
 	if (det_active)
@@ -123,7 +123,7 @@ void CActor::StartTalk(CInventoryOwner* talk_partner)
 	CGameObject* GO = smart_cast<CGameObject*>(talk_partner); 
 	VERIFY(GO);
 
-	CInventoryOwner::StartTalk(talk_partner);
+	CInventoryOwner::StartTalk(talk_partner, bStartTrade);
 }
 
 void CActor::NewPdaContact(CInventoryOwner* pInvOwner)
@@ -152,7 +152,7 @@ void CActor::LostPdaContact(CInventoryOwner* pInvOwner)
 void CActor::AddGameNews_deffered(GAME_NEWS_DATA& news_data, u32 delay)
 {
 	GAME_NEWS_DATA * d = xr_new<GAME_NEWS_DATA>(news_data);
-	m_defferedMessages.push_back(SDefNewsMsg());
+	m_defferedMessages.emplace_back();
 	m_defferedMessages.back().news_data = d;
 	m_defferedMessages.back().time = Device.dwTimeGlobal + delay;
 	std::sort(m_defferedMessages.begin(), m_defferedMessages.end());
@@ -160,7 +160,7 @@ void CActor::AddGameNews_deffered(GAME_NEWS_DATA& news_data, u32 delay)
 
 void CActor::UpdateDefferedMessages()
 {
-	while (m_defferedMessages.size())
+	while (!m_defferedMessages.empty())
 	{
 		SDefNewsMsg& M = m_defferedMessages.back();
 		if (M.time <= Device.dwTimeGlobal)

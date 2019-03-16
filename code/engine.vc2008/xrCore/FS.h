@@ -2,7 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 #pragma once
-#include <filesystem>
 #include <array>
 #include <string_view>
 #pragma warning(push)
@@ -10,7 +9,7 @@
 static constexpr auto CFS_CompressMark = 1ul << 31ul;
 static constexpr auto CFS_HeaderChunkID = 666;
 
-XRCORE_API void createPath(const std::string_view path);
+XRCORE_API void createPath(LPCSTR path, bool bIsFileName = false, bool bIsAbsolute = false);
 
 //#define FS_DEBUG
 
@@ -268,7 +267,7 @@ public:
         if (m_last_pos != 0) {
             impl().seek(m_last_pos);
             dwType = r_u32();
-            dwSize = r_u32();
+            dwSize = r_u32(); //-V656
 
             if ((dwType & (~CFS_CompressMark)) == ID) {
                 success = true;
@@ -279,7 +278,7 @@ public:
             rewind();
             while (!eof()) {
                 dwType = r_u32();
-                dwSize = r_u32();
+                dwSize = r_u32(); //-V656
                 if ((dwType & (~CFS_CompressMark)) == ID) {
                     success = true;
                     break;

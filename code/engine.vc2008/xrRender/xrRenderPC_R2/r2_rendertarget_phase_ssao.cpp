@@ -16,9 +16,9 @@ void CRenderTarget::phase_ssao	()
 	u32			Offset = 0;
 
 	// Targets
-	u_setrt									( rt_ssao_temp,NULL,NULL,NULL );		// No need for ZBuffer at all
+	u_setrt									( rt_ssao_temp, nullptr, nullptr, nullptr);		// No need for ZBuffer at all
 	u32		clr4clear					= color_rgba(0,0,0,0);	// 0x00
-	CHK_DX	(HW.pDevice->Clear			( 0L, NULL, D3DCLEAR_TARGET, clr4clear, 1.0f, 0L));
+	RCache.Clear						(0L, nullptr, D3DCLEAR_TARGET, clr4clear, 1.0f, 0L);
 
 	CHK_DX		(HW.pDevice->SetRenderState	( D3DRS_ZENABLE,		FALSE				));
 
@@ -81,9 +81,9 @@ void CRenderTarget::phase_downsamp	()
 	u32			Offset = 0;
 
 	// Targets
-	u_setrt								( rt_half_depth,NULL,NULL,NULL );		// No need for ZBuffer at all
+	u_setrt								( rt_half_depth,nullptr, nullptr, nullptr);		// No need for ZBuffer at all
 	u32		clr4clear					= color_rgba(0,0,0,0);	// 0x00
-	CHK_DX	(HW.pDevice->Clear			( 0L, NULL, D3DCLEAR_TARGET, clr4clear, 1.0f, 0L));
+	RCache.Clear(0L, nullptr, D3DCLEAR_TARGET, clr4clear, 1.0f, 0L);
 
 	CHK_DX		(HW.pDevice->SetRenderState	( D3DRS_ZENABLE,		FALSE				));
 

@@ -64,6 +64,7 @@ void CRender::Calculate		()
 		if	(0==sector)										continue;	// disassociated from S/P structure
 
 		VERIFY							(spatial->spatial.type & STYPE_LIGHTSOURCE);
+
 		// lightsource
 		light*			L				= (light*)	(spatial->dcast_Light());
 		VERIFY							(L);

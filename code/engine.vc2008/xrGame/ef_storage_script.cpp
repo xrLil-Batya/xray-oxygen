@@ -15,6 +15,7 @@
 #include "ef_base.h"
 #include "xrServer_Objects_ALife.h"
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 CEF_Storage *ef_storage()
@@ -77,7 +78,7 @@ float evaluate(CEF_Storage *ef_storage, LPCSTR function, CSE_ALifeObject *_0, CS
 
 	ef_storage->alife().member()	= smart_cast<CSE_ALifeSchedulable*>(_0);
 	if (_0 && !ef_storage->alife().member()) {
-		ai().script_engine().script_log(eLuaMessageTypeError,"object %s is not herited from CSE_ALifeSchedulable!",_1->name_replace());
+		ai().script_engine().script_log(eLuaMessageTypeError,"object %s is not herited from CSE_ALifeSchedulable!", _0->name_replace());
 		return		(0.f);
 	}
 
@@ -108,7 +109,7 @@ float evaluate(CEF_Storage *ef_storage, LPCSTR function, CSE_ALifeObject *_0)
 	return			(evaluate(ef_storage,function,_0,0,0,0));
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CEF_Storage::script_register(lua_State *L)
 {
 	module(L)

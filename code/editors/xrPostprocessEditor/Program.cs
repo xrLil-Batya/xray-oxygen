@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using XRay.ManagedApi.Core;
 
 namespace xrPostprocessEditor
 {
@@ -11,14 +10,15 @@ namespace xrPostprocessEditor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Core.Initialize("xrPostrprocessEditor");
+
+            SpectreEngine.xrCoreInit("Post Process Editor");
             using (var engine = new EditorEngine())
             {
                 var mainDialog = new MainDialog();
                 mainDialog.Initialize(engine);
                 Application.Run(mainDialog);
             }
-            Core.Destroy();
+            //Core.Destroy();
         }
     }
 }

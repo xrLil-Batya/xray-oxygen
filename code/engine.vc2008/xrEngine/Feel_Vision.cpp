@@ -1,10 +1,11 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "feel_vision.h"
 #include "render.h"
 #include "xr_object.h"
 #include "xr_collide_form.h"
 #include "igame_level.h"
 #include "../xrCDB/cl_intersect.h"
+#include <ppl.h>
 
 namespace Feel {
 

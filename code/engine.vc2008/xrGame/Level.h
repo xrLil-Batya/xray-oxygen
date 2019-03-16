@@ -12,7 +12,7 @@
 #include "Level_network_map_sync.h"
 
 class	CParticlesObject;
-class	game_cl_GameState;
+class	game_GameState;
 class	NET_Queue_Event;
 class	CSE_Abstract;
 class	CSpaceRestrictionManager;
@@ -32,7 +32,7 @@ extern float g_fov;
 class CBulletManager;
 class CMapManager;
 
-class CLevel : public IGame_Level, public IPureClient
+class GAME_API CLevel : public IGame_Level, public IPureClient
 {
 	void						ClearAllObjects			();
 private:
@@ -41,7 +41,7 @@ private:
 	bool						m_bEnvPaused;
 #endif
 protected:
-	typedef IGame_Level			inherited;
+	using inherited = IGame_Level;
 	
 	CLevelSoundManager			*m_level_sound_manager;
 	NET_Queue_Event*			spawn_events = nullptr;
@@ -82,7 +82,7 @@ private:
 	xrServer::EConnect			m_connect_server_err;
 public:
 
-	CObject*					CurrentControlEntity	( void ) const		{ return pCurrentControlEntity; }
+	CObject*					CurrentControlEntity	(  ) const		{ return pCurrentControlEntity; }
 	void						SetControlEntity		( CObject* O  )		{ pCurrentControlEntity=O; }
 
 public:
@@ -91,7 +91,7 @@ public:
 	using POVec = xr_vector<CParticlesObject*>;
 	POVec						m_StaticParticles;
 
-	game_cl_GameState			*game;
+	game_GameState*				game;
 	BOOL						game_configured;
 	NET_Queue_Event				*game_events;
 	xr_deque<CSE_Abstract*>		game_spawn_queue;
@@ -101,10 +101,14 @@ public:
 	CZoneList*					hud_zones_list;
 	CZoneList*					create_hud_zones_list();
 
+	HANDLE						m_mtScriptUpdaterEventStart;
+	HANDLE						m_mtScriptUpdaterEventEnd;
+
 private:
 	// preload sounds registry
     using SoundRegistryMap = xr_map<shared_str, ref_sound>;
 	SoundRegistryMap			sound_registry;
+	xrCriticalSection EventProcesserLock;
 
 public:
 	void						PrefetchSound (LPCSTR name);
@@ -113,58 +117,60 @@ protected:
 	BOOL						net_start_result_total;
 	BOOL						deny_m_spawn;		//only for debug...
 		
+	static void					mtLevelScriptUpdater	(void* pCLevel);
 	void						MakeReconnect();
 	
 	LevelMapSyncData			map_data;
 	bool						synchronize_client		();
 
-	bool	xr_stdcall			net_start1				();
-	bool	xr_stdcall			net_start2				();
-	bool	xr_stdcall			net_start4				();
-	bool	xr_stdcall			net_start6				();
+	bool				net_start1				();
+	bool				net_start2				();
+	bool				net_start4				();
+	bool				net_start6				();
 
-	bool	xr_stdcall			net_start_client1				();
-	bool	xr_stdcall			net_start_client2				();
-	bool	xr_stdcall			net_start_client3				();
-	bool	xr_stdcall			net_start_client4				();
-	bool	xr_stdcall			net_start_client5				();
-	bool	xr_stdcall			net_start_client6				();
+	bool				net_start_client1				();
+	bool				net_start_client3				();
+	bool				net_start_client4				();
+	bool				net_start_client5				();
+	bool				net_start_client6				();
 public:
 
 	// sounds
 	xr_vector<ref_sound*>		static_Sounds;
 
 	// Starting/Loading
-	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
-	virtual void				net_Stop				( );
-	virtual void				net_Update				( );
+	virtual BOOL				net_Start				(LPCSTR op_server, LPCSTR op_client);
+	virtual void				net_Stop				();
+	virtual void				net_Update				();
 
 
-	virtual BOOL				Load_GameSpecific_Before( );
-	virtual BOOL				Load_GameSpecific_After ( );
-	virtual void				Load_GameSpecific_CFORM	( CDB::TRI* T, u32 count );
+	virtual BOOL				Load_GameSpecific_Before();
+	virtual BOOL				Load_GameSpecific_After ();
+	virtual void				Load_GameSpecific_CFORM	(CDB::TRI* T, u32 count);
 
 	// Events
-	virtual void				OnEvent					( EVENT E, u64 P1, u64 P2 );
-	virtual void	_BCL		OnFrame					( void );
-	virtual void				OnRender				( );
-	
+	virtual void				OnEvent					(EVENT E, u64 P1, u64 P2);
+	virtual void				OnFrame					();
+	virtual void				OnRender				();
+
+	virtual void				RenderBullets			();
+
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
 	void						cl_Process_Spawn		(NET_Packet& P);
-	void						ProcessGameEvents		( );
-	void						ProcessGameSpawns		( );
+	void						ProcessGameEvents		();
+	void						ProcessGameSpawns		();
 	
 	// Input
-	virtual	void				IR_OnKeyboardPress		( int btn );
-	virtual void				IR_OnKeyboardRelease	( int btn );
-	virtual void				IR_OnKeyboardHold		( int btn );
-	virtual void				IR_OnMousePress			( int btn );
-	virtual void				IR_OnMouseRelease		( int btn );
-	virtual void				IR_OnMouseHold			( int btn );
-	virtual void				IR_OnMouseMove			( int, int);
-	virtual void				IR_OnMouseStop			( int, int);
-	virtual void				IR_OnMouseWheel			( int direction);
-	virtual void				IR_OnActivate			(void);
+	virtual	void				IR_OnKeyboardPress		(int btn);
+	virtual void				IR_OnKeyboardRelease	(int btn);
+	virtual void				IR_OnKeyboardHold		(int btn);
+	virtual void				IR_OnMousePress			(int btn);
+	virtual void				IR_OnMouseRelease		(int btn);
+	virtual void				IR_OnMouseHold			(int btn);
+	virtual void				IR_OnMouseMove			(int, int);
+	virtual void				IR_OnMouseStop			(int, int);
+	virtual void				IR_OnMouseWheel			(int direction);
+	virtual void				IR_OnActivate			();
 
 	// Game
 	void						InitializeClientGame	(NET_Packet& P);
@@ -192,16 +198,17 @@ public:
 	CLevel();
 	virtual ~CLevel();
 
-	//названияе текущего уровня
+	//РЅР°Р·РІР°РЅРёРµ С‚РµРєСѓС‰РµРіРѕ СѓСЂРѕРІРЅСЏ
 	virtual shared_str			name					() const;
+	virtual shared_str			name_translated			() const;
 			shared_str			version					() const { return map_data.m_map_version; } //this method can be used ONLY from CCC_ChangeGameType
 	
-	//возвращает время в милисекундах относительно начала игры
-	ALife::_TIME_ID		GetStartGameTime		();
-	ALife::_TIME_ID		GetGameTime				();
-	//возвращает время для энвайронмента в милисекундах относительно начала игры
+	//РІРѕР·РІСЂР°С‰Р°РµС‚ РІСЂРµРјСЏ РІ РјРёР»РёСЃРµРєСѓРЅРґР°С… РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РЅР°С‡Р°Р»Р° РёРіСЂС‹
+	virtual u64			GetStartGameTime		();
+	virtual u64			GetGameTime				();
+	//РІРѕР·РІСЂР°С‰Р°РµС‚ РІСЂРµРјСЏ РґР»СЏ СЌРЅРІР°Р№СЂРѕРЅРјРµРЅС‚Р° РІ РјРёР»РёСЃРµРєСѓРЅРґР°С… РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РЅР°С‡Р°Р»Р° РёРіСЂС‹
 	ALife::_TIME_ID		GetEnvironmentGameTime	();
-	//игровое время в отформатированном виде
+	//РёРіСЂРѕРІРѕРµ РІСЂРµРјСЏ РІ РѕС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅРѕРј РІРёРґРµ
 	void				GetGameDateTime			(u32& year, u32& month, u32& day, u32& hours, u32& mins, u32& secs, u32& milisecs);
 
 	float				GetGameTimeFactor		();
@@ -222,10 +229,10 @@ protected:
 public:
 	CMapManager&			MapManager					() const 	{return *m_map_manager;}
 	CGameTaskManager&		GameTaskManager				() const	{return *m_game_task_manager;}
-	void					OnAlifeSimulatorLoaded		();
-	void					OnAlifeSimulatorUnLoaded	();
-	//работа с пулями
+	void					ResetLevel					();
+	
 protected:	
+	//СЂР°Р±РѕС‚Р° СЃ РїСѓР»СЏРјРё
 	CBulletManager*		m_pBulletManager;
 public:
 	IC CBulletManager&	BulletManager() {return	*m_pBulletManager;}
@@ -243,7 +250,7 @@ add_to_type_list(CLevel)
 #define script_type_list save_type_list(CLevel)
 
 IC CLevel&				Level()		{ return *((CLevel*) g_pGameLevel);			}
-IC game_cl_GameState&	Game()		{ return *Level().game;					}
+IC game_GameState&		Game()		{ return *Level().game;					}
 	u32					GameID();
 
 

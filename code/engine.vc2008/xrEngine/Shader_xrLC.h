@@ -1,4 +1,4 @@
-// Shader_xrLC.h - Header for xrLC Shader
+﻿// Shader_xrLC.h - Header for xrLC Shader
 //#VERTVER: IntelliSense at this header was broken :(
 #ifndef SHADER_XRLC_H
 #define SHADER_XRLC_H

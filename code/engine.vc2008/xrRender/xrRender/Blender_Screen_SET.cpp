@@ -93,7 +93,7 @@ void	CBlender_Screen_SET::Load	( IReader& fs, u16 version)
 	}
 }
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 
 void	CBlender_Screen_SET::Compile	(CBlender_Compile& C)
 {
@@ -179,7 +179,7 @@ void	CBlender_Screen_SET::Compile	(CBlender_Compile& C)
 	C.r_End				();
 }
 
-#else	//	USE_DX10
+#else
 
 void	CBlender_Screen_SET::Compile	(CBlender_Compile& C)
 {
@@ -270,4 +270,4 @@ void	CBlender_Screen_SET::Compile	(CBlender_Compile& C)
 	}
 	C.PassEnd			();
 }
-#endif	//	USE_DX10
+#endif

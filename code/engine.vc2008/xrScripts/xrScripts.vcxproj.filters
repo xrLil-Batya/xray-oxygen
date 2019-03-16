@@ -354,8 +354,23 @@
     <ClCompile Include="lua_traceback.cpp">
       <Filter>Lua\LuaEtc\Traceback</Filter>
     </ClCompile>
-    <ClCompile Include="VMLua.cpp" />
     <ClCompile Include="luajit\xr_pool.c">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClCompile>
+    <ClCompile Include="export\script_abstract_action.cpp" />
+    <ClCompile Include="VMLua.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="luajit\lj_strfmt.c">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClCompile>
+    <ClCompile Include="luajit\lj_strfmt_num.c">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClCompile>
+    <ClCompile Include="luajit\lj_buf.c">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClCompile>
+    <ClCompile Include="luajit\lj_profile.c">
       <Filter>Lua\LuaJIT</Filter>
     </ClCompile>
   </ItemGroup>
@@ -888,7 +903,10 @@
     <ClInclude Include="..\..\SDK\include\luabind\iterator_pair_policy.hpp">
       <Filter>Lua\LuaBind\include</Filter>
     </ClInclude>
-    <ClInclude Include="VMLua.h" />
+    <ClInclude Include="export\script_abstract_action.h" />
+    <ClInclude Include="VMLua.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Export\luabind.inl">

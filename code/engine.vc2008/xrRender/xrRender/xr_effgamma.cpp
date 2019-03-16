@@ -1,33 +1,39 @@
 #include "stdafx.h"
 #include "xr_effgamma.h"
 
-#if defined(USE_DX10) || defined(USE_DX11)
+CGammaControl::CGammaControl() : fGamma(1.0f), fBrightness(1.0f), fContrast(1.0f)
+{
+	SetBalance(1.0f, 1.0f, 1.0f);
+}
 
+void CGammaControl::GetIP(float& refG, float &refB, float& refC, Fvector& refBalance)
+{
+	refG = fGamma;
+	refB = fBrightness;
+	refC = fContrast;
+	refBalance.set(cBalance);
+}
+
+#ifdef USE_DX11
 void CGammaControl::Update() 
 {
 	if (HW.pDevice) 
 	{
-		DXGI_GAMMA_CONTROL_CAPABILITIES GC;
-		DXGI_GAMMA_CONTROL				G;
-		IDXGIOutput *pOutput;
-
 		CHK_DX (HW.m_pSwapChain->GetContainingOutput(&pOutput));
-		HRESULT hr = pOutput->GetGammaControlCapabilities(&GC);
+		const HRESULT &hr = pOutput->GetGammaControlCapabilities(&GC);
 		if (SUCCEEDED(hr))
 		{
-			GenLUT( GC, G );
+			GenLUT();
 			pOutput->SetGammaControl(&G);
 		}
 		_RELEASE(pOutput);
 	}
 }
 
-void CGammaControl::GenLUT( const DXGI_GAMMA_CONTROL_CAPABILITIES &GC, DXGI_GAMMA_CONTROL &G)
+void CGammaControl::GenLUT()
 {
-	DXGI_RGB Offset = {0,0,0};
-	DXGI_RGB Scale = {1,1,1};
-	G.Offset = Offset;
-	G.Scale = Scale;
+	G.Offset = { 0,0,0 };
+	G.Scale = { 1,1,1 };
 
 	float DeltaCV = (GC.MaxConvertedValue - GC.MinConvertedValue);
 	
@@ -44,9 +50,9 @@ void CGammaControl::GenLUT( const DXGI_GAMMA_CONTROL_CAPABILITIES &GC, DXGI_GAMM
 
 		c = GC.MinConvertedValue + c*DeltaCV;
 
-		G.GammaCurve[i].Red = c*cBalance.r;
-		G.GammaCurve[i].Green = c*cBalance.g;
-		G.GammaCurve[i].Blue = c*cBalance.b;
+		G.GammaCurve[i].Red = c*cBalance.x;
+		G.GammaCurve[i].Green = c*cBalance.y;
+		G.GammaCurve[i].Blue = c*cBalance.z;
 
 		clamp(G.GammaCurve[i].Red, GC.MinConvertedValue, GC.MaxConvertedValue);
 		clamp(G.GammaCurve[i].Green, GC.MinConvertedValue, GC.MaxConvertedValue);
@@ -54,7 +60,7 @@ void CGammaControl::GenLUT( const DXGI_GAMMA_CONTROL_CAPABILITIES &GC, DXGI_GAMM
 	}
 }
 
-#else	//	USE_DX10
+#else
 
 IC u16 clr2gamma(float c)
 {
@@ -67,12 +73,11 @@ void CGammaControl::Update()
 {
 	if (HW.pDevice) 
 	{
-		D3DGAMMARAMP G;
-		GenLUT(G);
-		HW.pDevice->SetGammaRamp(0,D3DSGR_NO_CALIBRATION,&G);
+		GenLUT();
+		HW.pDevice->SetGammaRamp(0, D3DSGR_CALIBRATE, &G);
 	}
 }
-void CGammaControl::GenLUT(D3DGAMMARAMP &G)
+void CGammaControl::GenLUT()
 {
 	float og = 1.f / (fGamma + EPS);
 	float B = fBrightness / 2.f;
@@ -81,10 +86,9 @@ void CGammaControl::GenLUT(D3DGAMMARAMP &G)
 	for (u32 i = 0; i < 256; i++)
 	{
 		float c = (C + .5f)*powf(i / 255.f, og)*65535.f + (B - 0.5f)*32768.f - C * 32768.f + 16384.f;
-		G.red[i] = clr2gamma(c*cBalance.r);
-		G.green[i] = clr2gamma(c*cBalance.g);
-		G.blue[i] = clr2gamma(c*cBalance.b);
+		G.red[i] = clr2gamma(c*cBalance.x);
+		G.green[i] = clr2gamma(c*cBalance.y);
+		G.blue[i] = clr2gamma(c*cBalance.z);
 	}
 }
-
-#endif	//	USE_DX10
+#endif

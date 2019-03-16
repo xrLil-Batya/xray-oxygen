@@ -41,10 +41,11 @@ public:
 
 	CInifile*					pLevel;
 public:	// deferred sound events
-	struct	_esound_delegate	{
-		Feel::Sound*			dest	;
-		ref_sound_data_ptr		source	;
-		float					power	;
+	struct	_esound_delegate
+	{
+		Feel::Sound*			dest;
+		ref_sound_data_ptr		source;
+		float					power;
 	};
 	xr_vector<_esound_delegate>	snd_Events;
 public:
@@ -53,28 +54,37 @@ public:
 	virtual ~IGame_Level		();
 
 	virtual shared_str			name					() const = 0;
+	virtual shared_str			name_translated			() const = 0;
 
-	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client)	= 0;
-	virtual void				net_Stop				( );
-	virtual void				net_Update				( )										= 0;
+	virtual BOOL				net_Start				(LPCSTR op_server, LPCSTR op_client)	= 0;
+	virtual void				net_Stop				();
+	virtual void				net_Update				()										= 0;
 
-	virtual BOOL				Load					( u32 dwNum );
-	virtual BOOL				Load_GameSpecific_Before( )										{ return TRUE; };		// before object loading
-	virtual BOOL				Load_GameSpecific_After	( )										{ return TRUE; };		// after object loading
-	virtual void				Load_GameSpecific_CFORM	( CDB::TRI* T, u32 count )				= 0;
+	virtual BOOL				Load					(u32 dwNum);
+	virtual BOOL				Load_GameSpecific_Before()										{ return TRUE; };		// before object loading
+	virtual BOOL				Load_GameSpecific_After	()										{ return TRUE; };		// after object loading
+	virtual void				Load_GameSpecific_CFORM	(CDB::TRI* T, u32 count)				= 0;
 
-	virtual void	_BCL		OnFrame					( void );
-	virtual void				OnRender				( void );
+	virtual void				OnFrame					();
+	virtual void				OnRender				();
+
+	virtual void				RenderBullets			() = 0;
+
+	//возвращает время в милисекундах относительно начала игры
+	virtual u64					GetStartGameTime		() { return 0; }
+	virtual u64					GetGameTime				() { return 0; }
 
 	// Main interface
-	CObject*					CurrentEntity			( void ) const							{ return pCurrentEntity;				}
-	CObject*					CurrentViewEntity		( void ) const							{ return pCurrentViewEntity;			}
-	void						SetEntity				( CObject* O  );
-	void						SetViewEntity			( CObject* O  );
+	CObject*					CurrentEntity			() const							{ return pCurrentEntity; }
+	CObject*					CurrentViewEntity		() const							{ return pCurrentViewEntity; }
+	CObject*					CurrentControlEntity	() const							{ return nullptr; }
+
+	void						SetEntity				(CObject* O);
+	void						SetViewEntity			(CObject* O);
 	
-	void						SoundEvent_Register		( ref_sound_data_ptr S, float range );
-	void						SoundEvent_Dispatch		( );
-	void                        SoundEvent_OnDestDestroy (Feel::Sound*);
+	void						SoundEvent_Register		(ref_sound_data_ptr S, float range);
+	void						SoundEvent_Dispatch		();
+	void                        SoundEvent_OnDestDestroy(Feel::Sound*);
 
 	// Loader interface
 	void						LL_CheckTextures		();

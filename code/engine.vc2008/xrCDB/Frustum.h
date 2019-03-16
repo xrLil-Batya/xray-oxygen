@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 #pragma once
 #include "xrCDB.h"
+#include "../xrEngine/DirectXMathExternal.h"
 #include "../xrcore/fixedvector.h"
 
 #pragma pack(push,4)
@@ -67,7 +68,10 @@ public:
 	void			CreateOccluder		(Fvector* p,	int count,		Fvector& vBase, CFrustum& clip);
 	bool			CreateFromClipPoly	(Fvector* p,	int count,		Fvector& vBase, CFrustum& clip);	// returns 'false' if creation failed
 	void			CreateFromPoints	(Fvector* p,	int count,		Fvector& vBase );
-	void			CreateFromMatrix	(Fmatrix &M,	u32 mask);
+
+	void			CreateFromMatrix	(const Fmatrix &M, u32 mask) noexcept;
+	void			CreateFromMatrix	(const Matrix4x4 &M, u32 mask) noexcept;
+
 	void			CreateFromPortal	(sPoly* P,		Fvector& vPN,	Fvector& vBase, Fmatrix& mFullXFORM);
 	void			CreateFromPlanes	(Fplane* p,		int count);
 

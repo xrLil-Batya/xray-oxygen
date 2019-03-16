@@ -1,4 +1,4 @@
-
+﻿
 //! This macro quickly finds the min & max values among 3 variables
 #define FINDMINMAX(x0, x1, x2, min, max)	\
 	min = max = x0;							\
@@ -104,7 +104,7 @@ inline_ BOOL planeBoxOverlap(const Point& normal, const float d, const Point& ma
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Triangle-Box overlap test using the separating axis theorem.
- *	This is the code from Tomas M�ller, a bit optimized:
+ *	This is the code from Tomas Mцller, a bit optimized:
  *	- with some more lazy evaluation (faster path on PC)
  *	- with a tiny bit of assembly
  *	- with "SAT-lite" applied if needed

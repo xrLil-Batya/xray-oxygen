@@ -1,4 +1,4 @@
-// CameraManager.cpp: implementation of the CCameraManager class.
+﻿// CameraManager.cpp: implementation of the CCameraManager class.
 //
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
@@ -15,18 +15,16 @@
 #include "gamefont.h"
 #include "render.h"
 #include "x_ray.h"
+#include "DirectXMathExternal.h"
+#include "IGame_AnselSDK.h"
 
 float psCamInert = 0.f;
 float psCamSlideInert = 0.0f;
 
 CCameraManager::CCameraManager(bool bApplyOnUpdate)
 {
-#ifdef DEBUG
     dbg_upd_frame = 0;
-#endif
-
     m_bAutoApply = bApplyOnUpdate;
-
     pp_identity.blur = 0;
     pp_identity.gray = 0;
     pp_identity.duality.h = 0;
@@ -159,7 +157,7 @@ void CCameraManager::OnEffectorReleased(SBaseEffector* e)
 
 void CCameraManager::UpdateFromCamera(const CCameraBase* C)
 {
-    Update(C->vPosition, C->vDirection, C->vNormal, C->f_fov, C->f_aspect, g_pGamePersistent->Environment().CurrentEnv->far_plane, C->m_Flags.flags, C->style, C->GetParent());
+    Update(C->vPosition, C->vDirection, C->vNormal, C->f_fov, C->f_aspect, Environment().CurrentEnv->far_plane, C->m_Flags.flags, C->style, C->GetParent());
 }
 
 void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N, float fFOV_Dest, float fASPECT_Dest, float fFAR_Dest, u32 flags, ECameraStyle style, CObject* parent)
@@ -292,12 +290,13 @@ void CCameraManager::UpdatePPEffectors()
 
     pp_affected.validate("after applying pp");
 }
+
 extern float view_port_near_koef;
 void CCameraManager::ApplyDevice(float _viewport_near)
 {
     VERIFY(IsRenderThread());
     // Device params
-    Device.mView.build_camera_dir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
+	Device.mView.build_camera_dir(m_cam_info.p, m_cam_info.d, m_cam_info.n);
 
     Device.vCameraPosition.set(m_cam_info.p);
     Device.vCameraDirection.set(m_cam_info.d);
@@ -310,7 +309,7 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 
 	//+SecondVP+
 	// Пересчитываем FOV для второго вьюпорта [Recalculate scene FOV for SecondVP frame]
-	if (Device.m_SecondViewport.IsSVPFrame())
+	if (Device.m_SecondViewport.IsSVPFrame() && !pGameAnsel->isActive)
 	{
 		// Для второго вьюпорта FOV выставляем здесь
 		Device.fFOV *= g_pGamePersistent->m_pGShaderConstants.hud_params.y;
@@ -326,7 +325,8 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 
     if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu->IsActive())
         ResetPP();
-    else {
+    else 
+	{
         pp_affected.validate("apply device");
         // postprocess
         IRender_Target* T = ::Render->getTarget();
@@ -371,16 +371,5 @@ void CCameraManager::ResetPP()
 
 void CCameraManager::Dump()
 {
-    Fmatrix mInvCamera;
-    Fvector _R, _U, _T, _P;
-
-    mInvCamera.invert(Device.mView);
-    _R.set(mInvCamera._11, mInvCamera._12, mInvCamera._13);
-    _U.set(mInvCamera._21, mInvCamera._22, mInvCamera._23);
-    _T.set(mInvCamera._31, mInvCamera._32, mInvCamera._33);
-    _P.set(mInvCamera._41, mInvCamera._42, mInvCamera._43);
-    Log("CCameraManager::Dump::vPosition  = ", _P);
-    Log("CCameraManager::Dump::vDirection = ", _T);
-    Log("CCameraManager::Dump::vNormal    = ", _U);
-    Log("CCameraManager::Dump::vRight     = ", _R);
+	// Retard
 }

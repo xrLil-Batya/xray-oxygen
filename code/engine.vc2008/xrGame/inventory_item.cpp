@@ -14,9 +14,9 @@
 #include "physicsshellholder.h"
 #include "entity_alive.h"
 #include "Level.h"
-#include "game_cl_base.h"
+
 #include "Actor.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
 #include "object_broker.h"
@@ -31,21 +31,20 @@
 
 CInventoryItem::CInventoryItem() 
 {
-	m_flags.set			(Fbelt,FALSE);
-	m_flags.set			(Fruck,TRUE);
-	m_flags.set			(FRuckDefault,TRUE);
-	m_pInventory		= NULL;
-    m_UpdateXFormsSheduled = true;
+	m_flags.set			(Fbelt,false);
+	m_flags.set			(Fruck,true);
+	m_flags.set			(FRuckDefault,true);
+	m_pInventory		= nullptr;
 
 	SetDropManual		(FALSE);
 
-	m_flags.set			(FCanTake,TRUE);
+	m_flags.set			(FCanTake,true);
 	m_can_trade			= TRUE;
 	m_flags.set			(FCanTrade, m_can_trade);
-	m_flags.set			(FUsingCondition,FALSE);
+	m_flags.set			(FUsingCondition,false);
 	m_fCondition		= 1.0f;
 
-	m_name = m_nameShort = NULL;
+	m_name = m_nameShort = nullptr;
 
 	m_ItemCurrPlace.value			= 0;
 	m_ItemCurrPlace.type			= eItemPlaceUndefined;
@@ -53,8 +52,8 @@ CInventoryItem::CInventoryItem()
 	m_ItemCurrPlace.slot_id			= NO_ACTIVE_SLOT;
 
 	m_Description					= "";
-	m_section_id					= 0;
-	m_flags.set						(FIsHelperItem,FALSE);
+	m_section_id					= nullptr;
+	m_flags.set						(FIsHelperItem,false);
 }
 
 CInventoryItem::~CInventoryItem() 
@@ -219,7 +218,7 @@ void CInventoryItem::OnEvent (NET_Packet& P, u16 type)
 		{
 			Fvector p; 
 			P.r_vec3(p);
-			CPHSynchronize* pSyncObj = NULL;
+			CPHSynchronize* pSyncObj = nullptr;
 			pSyncObj = object().PHGetSyncItem(0);
 			if (!pSyncObj) return;
 			SPHNetState state;
@@ -232,9 +231,9 @@ void CInventoryItem::OnEvent (NET_Packet& P, u16 type)
 	}
 }
 
-//процесс отсоединения вещи заключается в спауне новой вещи 
-//в инвентаре и установке соответствующих флагов в родительском
-//объекте, поэтому функция должна быть переопределена
+//РїСЂРѕС†РµСЃСЃ РѕС‚СЃРѕРµРґРёРЅРµРЅРёСЏ РІРµС‰Рё Р·Р°РєР»СЋС‡Р°РµС‚СЃСЏ РІ СЃРїР°СѓРЅРµ РЅРѕРІРѕР№ РІРµС‰Рё 
+//РІ РёРЅРІРµРЅС‚Р°СЂРµ Рё СѓСЃС‚Р°РЅРѕРІРєРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… С„Р»Р°РіРѕРІ РІ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРј
+//РѕР±СЉРµРєС‚Рµ, РїРѕСЌС‚РѕРјСѓ С„СѓРЅРєС†РёСЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅР°
 bool CInventoryItem::Detach(const char* item_section_name, bool b_spawn_item) 
 {
 	if(b_spawn_item)
@@ -274,10 +273,10 @@ BOOL CInventoryItem::net_Spawn			(CSE_Abstract* DC)
 {
 	VERIFY							(!m_pInventory);
 
-	m_flags.set						(FInInterpolation, FALSE);
-	m_flags.set						(FInInterpolate,	FALSE);
+	m_flags.set						(FInInterpolation, false);
+	m_flags.set						(FInInterpolate,	false);
 
-	m_flags.set						(Fuseful_for_NPC, TRUE);
+	m_flags.set						(Fuseful_for_NPC, true);
 	CSE_Abstract					*e	= (CSE_Abstract*)(DC);
 	CSE_ALifeObject					*alife_object = smart_cast<CSE_ALifeObject*>(e);
 	if (alife_object)
@@ -323,7 +322,6 @@ void CInventoryItem::net_Export(NET_Packet& P)
 {
 	//copy from CPhysicObject
 	P.w_u8(0);
-	return;
 };
 
 void CInventoryItem::load(IReader &packet)
@@ -335,7 +333,8 @@ void CInventoryItem::load(IReader &packet)
 	if (!tmp)
 		return;
 	
-	if (!object().PPhysicsShell()) {
+	if (!object().PPhysicsShell()) 
+	{
 		object().setup_physic_shell	();
 		object().PPhysicsShell()->Disable();
 	}
@@ -343,35 +342,6 @@ void CInventoryItem::load(IReader &packet)
 	object().PHLoadState(packet);
 	object().PPhysicsShell()->Disable();
 }
-
-void CInventoryItem::Interpolate()
-{
-}
-
-float CInventoryItem::interpolate_states(net_update_IItem const & first, net_update_IItem const & last, SPHNetState & current)
-{
-	float ret_val = 0.f;
-	u32 CurTime = Device.dwTimeGlobal;
-	
-	if (CurTime == last.dwTimeStamp)
-		return 0.f;
-
-	float factor = float(CurTime - last.dwTimeStamp) / float(last.dwTimeStamp - first.dwTimeStamp);
-	
-	ret_val = factor;
-	if 		(factor > 1.f)	factor = 1.f;
-	else if (factor < 0.f) 	factor = 0.f;
-	
-	current.position.x = first.State.position.x + (factor * (last.State.position.x - first.State.position.x));
-	current.position.y = first.State.position.y + (factor * (last.State.position.y - first.State.position.y));
-	current.position.z = first.State.position.z + (factor * (last.State.position.z - first.State.position.z));
-	current.previous_position = current.position;
-
-	current.quaternion.slerp(first.State.quaternion, last.State.quaternion, factor);
-	current.previous_quaternion = current.quaternion;
-	return ret_val;
-}
-
 
 void CInventoryItem::reload		(LPCSTR section)
 {
@@ -382,7 +352,7 @@ void CInventoryItem::reload		(LPCSTR section)
 
 void CInventoryItem::reinit		()
 {
-	m_pInventory	= NULL;
+	m_pInventory	= nullptr;
 	m_ItemCurrPlace.type = eItemPlaceUndefined;
 }
 
@@ -393,17 +363,17 @@ bool CInventoryItem::can_kill			() const
 
 CInventoryItem *CInventoryItem::can_kill	(CInventory *inventory) const
 {
-	return				(0);
+	return				(nullptr);
 }
 
 const CInventoryItem *CInventoryItem::can_kill			(const xr_vector<const CGameObject*> &items) const
 {
-	return				(0);
+	return				(nullptr);
 }
 
 CInventoryItem *CInventoryItem::can_make_killing	(const CInventory *inventory) const
 {
-	return				(0);
+	return				(nullptr);
 }
 
 bool CInventoryItem::ready_to_kill		() const

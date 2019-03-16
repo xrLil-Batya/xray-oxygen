@@ -110,70 +110,72 @@ u32 CBlender_Compile::r_dx10Sampler(LPCSTR ResourceName)
 {
 	VERIFY(ResourceName);
 	string256				name;
-	xr_strcpy				(name,ResourceName);
+	xr_strcpy				(name, ResourceName);
 	fix_texture_name		(name);
 
 	// Find index
 	ref_constant C			= ctable.get(name);
 
-	if (!C)					return	u32(-1);
+	if (!C)
+		return u32(-1);
 
 	R_ASSERT				(C->type == RC_sampler);
 	u32 stage				= C->samp.index;
 
-	//	init defaults here
-
-	//	Use D3DTADDRESS_CLAMP,	D3DTEXF_POINT,			D3DTEXF_NONE,	D3DTEXF_POINT 
-	if (0==xr_strcmp(ResourceName,"smp_nofilter"))
+	if (0 == xr_strcmp(ResourceName, "smp_nofilter"))
 	{
-		i_dx10Address( stage, D3DTADDRESS_CLAMP);
-		i_dx10Filter(stage, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
+		i_dx10Address	(stage, D3DTADDRESS_CLAMP);
+		i_dx10Filter	(stage, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
 	}
-
-	//	Use D3DTADDRESS_CLAMP,	D3DTEXF_LINEAR,			D3DTEXF_NONE,	D3DTEXF_LINEAR 
-	if (0==xr_strcmp(ResourceName,"smp_rtlinear"))
+	else if (0 == xr_strcmp(ResourceName, "smp_point"))
 	{
-		i_dx10Address( stage, D3DTADDRESS_CLAMP);
-		i_dx10Filter(stage, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
+		i_dx10Address(stage, D3DTADDRESS_CLAMP);
+		i_dx10Filter(stage, D3DTEXF_POINT, D3DTEXF_POINT, D3DTEXF_POINT);
 	}
-
-	//	Use	D3DTADDRESS_WRAP,	D3DTEXF_LINEAR,			D3DTEXF_LINEAR,	D3DTEXF_LINEAR
-	if (0==xr_strcmp(ResourceName,"smp_linear"))
+	else if (0 == xr_strcmp(ResourceName, "smp_rtlinear"))
 	{
-		i_dx10Address( stage, D3DTADDRESS_WRAP);
-		i_dx10Filter(stage, D3DTEXF_LINEAR, D3DTEXF_LINEAR, D3DTEXF_LINEAR);
+		i_dx10Address	(stage, D3DTADDRESS_CLAMP);
+		i_dx10Filter	(stage, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
 	}
-
-	//	Use D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, 	D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC
-	if (0==xr_strcmp(ResourceName,"smp_base"))
+	else if (0 == xr_strcmp(ResourceName, "smp_linear"))
 	{
-		i_dx10Address( stage, D3DTADDRESS_WRAP);
-		i_dx10FilterAnizo( stage, TRUE);
+		i_dx10Address	(stage, D3DTADDRESS_WRAP);
+		i_dx10Filter	(stage, D3DTEXF_LINEAR, D3DTEXF_LINEAR, D3DTEXF_LINEAR);
 	}
-
-	//	Use D3DTADDRESS_CLAMP,	D3DTEXF_LINEAR,			D3DTEXF_NONE,	D3DTEXF_LINEAR
-	if (0==xr_strcmp(ResourceName,"smp_material"))
+	else if (0 == xr_strcmp(ResourceName, "smp_gaussian"))
 	{
-		i_dx10Address( stage, D3DTADDRESS_CLAMP);
-		i_dx10Filter(stage, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
-		RS.SetSAMP(stage,D3DSAMP_ADDRESSW,	D3DTADDRESS_WRAP);
+		i_dx10Address	(stage, D3DTADDRESS_WRAP);
+		i_dx10Filter	(stage, D3DTEXF_GAUSSIANQUAD, D3DTEXF_LINEAR, D3DTEXF_GAUSSIANQUAD);
 	}
-
-	if (0==xr_strcmp(ResourceName,"smp_smap"))
+	else if (0 == xr_strcmp(ResourceName, "smp_pyramidal"))
 	{
-		i_dx10Address( stage, D3DTADDRESS_CLAMP);
-		i_dx10Filter(stage, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
-		RS.SetSAMP(stage, XRDX10SAMP_COMPARISONFILTER, TRUE);
-		RS.SetSAMP(stage, XRDX10SAMP_COMPARISONFUNC, D3D_COMPARISON_LESS_EQUAL);
+		i_dx10Address	(stage, D3DTADDRESS_WRAP);
+		i_dx10Filter	(stage, D3DTEXF_PYRAMIDALQUAD, D3DTEXF_LINEAR, D3DTEXF_PYRAMIDALQUAD);
 	}
-
-	if (0==xr_strcmp(ResourceName,"smp_jitter"))
+	else if (0 == xr_strcmp(ResourceName, "smp_base"))
 	{
-		i_dx10Address( stage, D3DTADDRESS_WRAP);
-		i_dx10Filter(stage, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
+		i_dx10Address	(stage, D3DTADDRESS_WRAP);
+		i_dx10FilterAnizo(stage, TRUE);
 	}
-
-	return					stage;
+	else if (0 == xr_strcmp(ResourceName, "smp_material"))
+	{
+		i_dx10Address	(stage, D3DTADDRESS_CLAMP);
+		i_dx10Filter	(stage, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
+		RS.SetSAMP		(stage, D3DSAMP_ADDRESSW, D3DTADDRESS_WRAP);
+	}
+	else if (0 == xr_strcmp(ResourceName, "smp_smap"))
+	{
+		i_dx10Address	(stage, D3DTADDRESS_CLAMP);
+		i_dx10Filter	(stage, D3DTEXF_LINEAR, D3DTEXF_NONE, D3DTEXF_LINEAR);
+		RS.SetSAMP		(stage, XRDX10SAMP_COMPARISONFILTER, TRUE);
+		RS.SetSAMP		(stage, XRDX10SAMP_COMPARISONFUNC, D3D_COMPARISON_LESS_EQUAL);
+	}
+	else if (0 == xr_strcmp(ResourceName, "smp_jitter"))
+	{
+		i_dx10Address	(stage, D3DTADDRESS_WRAP);
+		i_dx10Filter	(stage, D3DTEXF_POINT, D3DTEXF_NONE, D3DTEXF_POINT);
+	}
+	return stage;
 }
 
 void	CBlender_Compile::r_Pass		(LPCSTR _vs, LPCSTR _gs, LPCSTR _ps, bool bFog, BOOL bZtest, BOOL bZwrite,	BOOL bABlend, D3DBLEND abSRC, D3DBLEND abDST, BOOL aTest, u32 aRef)
@@ -200,15 +202,17 @@ void	CBlender_Compile::r_Pass		(LPCSTR _vs, LPCSTR _gs, LPCSTR _ps, bool bFog, B
 #ifdef USE_DX11
 	dest.hs = DEV->_CreateHS("null");
 	dest.ds = DEV->_CreateDS("null");
+	dest.cs = DEV->_CreateCS("null");
 #endif
-	ctable.merge			(&ps->constants);
-	ctable.merge			(&vs->constants);
-	ctable.merge			(&gs->constants);
+	ctable.merge(&ps->constants);
+	ctable.merge(&vs->constants);
+	ctable.merge(&gs->constants);
 
 	// Last Stage - disable
-	if (0==stricmp(_ps,"null"))	{
-		RS.SetTSS				(0,D3DTSS_COLOROP,D3DTOP_DISABLE);
-		RS.SetTSS				(0,D3DTSS_ALPHAOP,D3DTOP_DISABLE);
+	if (0 == stricmp(_ps, "null"))
+	{
+		RS.SetTSS(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+		RS.SetTSS(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 	}
 }
 

@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: date_time.h
 //	Created 	: 25.08.2017
 //	Author		: ForserX
@@ -6,6 +6,8 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 #include "date_time.h"
+
+
 
 u32 GameTime::extra_day_count(u32 years)
 { 
@@ -79,4 +81,66 @@ void GameTime::split_time(u64 time, u32 &years, u32 &months, u32 &days, u32 &hou
 		}
 	}
 	days = u32(time);
+}
+
+u32 GameTime::return_time(u64 time, u8 timeType)
+{
+	u32 milliseconds, seconds, minutes, hours /* weeks, months, years */  ;
+
+
+	milliseconds = u32(time % 1000u);
+	time /= 1000;
+	seconds = u32(time % 60u);
+	time /= 60;
+	minutes = u32(time % 60u);
+	time /= 60;
+	hours = u32(time % 24u);
+	time /= 24;
+
+	/*
+		u64 const p0 = time / (400 * 365 + 100 - 4 + 1);
+	time -= p0*(400 * 365 + 100 - 4 + 1);
+	u64 const p1 = time / (100 * 365 + 25 - 1);
+	time -= p1*(100 * 365 + 25 - 1);
+	u64 const p2 = time / (4 * 365 + 1);
+	time -= p2*(4 * 365 + 1);
+	u64 const p3 = std::min(time / 365u, 3ui64);
+	time -= p3 * 365;
+	years = u32(400 * p0 + 100 * p1 + 4 * p2 + p3 + 1);
+	++time;
+
+	months = 1;
+	for (u32 it = 0; it < months; it++)
+	{
+		if ((it == 1) && days_in_month[it] + extra_day_count(years) < time)
+		{
+			++months;
+			time -= days_in_month[it] + extra_day_count(years);
+		}
+		else if (days_in_month[it] < time)
+		{
+			++months;
+			time -= days_in_month[it];
+		}
+	}
+	days = u32(time);
+	*/
+
+	switch (timeType)
+	{
+		case TIMETYPE_MILISECONDS:	return milliseconds; break;
+		case TIMETYPE_SECONDS:		return seconds; break;
+		case TIMETYPE_MINUTES:		return minutes; break;
+		case TIMETYPE_HOURS:		return hours; break;
+
+		//case TIMETYPE_DAYS:			return days; break;
+		//case TIMETYPE_WEEKS:			return weeks; break;
+		//case TIMETYPE_MONTHS:			return months; break;
+		//case TIMETYPE_YEARS:			retirn years; break;
+
+	default:
+		return 0;
+		break;
+	}
+
 }

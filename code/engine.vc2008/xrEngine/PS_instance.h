@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "../xrcdb/ispatial.h"
 #include "isheduled.h"
 #include "irenderable.h"
@@ -38,6 +38,7 @@ public:
 	virtual BOOL			Locked				()				{ return FALSE; }
 
 	virtual	shared_str		shedule_Name		() const		{ return shared_str("particle_instance"); };
+	virtual	shared_str		shedule_Class_Name	() const		{ return shared_str("particle_instance"); };
 
 	virtual void			shedule_Update		(u32 dt);
 	virtual	IRenderable*	dcast_Renderable	()				{ return this;	}

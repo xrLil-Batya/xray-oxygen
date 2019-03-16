@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "igame_level.h"
 
 #include "xr_object.h"
@@ -15,6 +15,7 @@
 
 #include "mp_logging.h"
 #include "xr_collide_form.h"
+#include "spectre/Spectre.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -32,40 +33,41 @@ inline void CObjectList::o_crow		(CObject*	O)
 	O->dwFrame_AsCrow			= Device.dwFrame;
 }
 
-void CObject::MakeMeCrow			()
+void CObject::MakeMeCrow()
 {
-	if ( Props.crow )
+	if (Props.crow)
 		return;
 
-	if ( !processing_enabled() )
+	if (!processing_enabled())
 		return;
 
-	u32 const device_frame_id		= Device.dwFrame;
-	u32 const object_frame_id		= dwFrame_AsCrow;
+	u32 const device_frame_id = Device.dwFrame;
+	u32 const object_frame_id = dwFrame_AsCrow;
 	if (
-			(u32)_InterlockedCompareExchange(
-				(long*)&dwFrame_AsCrow,
-				device_frame_id,
-				object_frame_id
-			) == device_frame_id
+		(u32)_InterlockedCompareExchange(
+		(long*)&dwFrame_AsCrow,
+			device_frame_id,
+			object_frame_id
+		) == device_frame_id
 		)
 		return;
 
-	VERIFY							( dwFrame_AsCrow == device_frame_id );
+	VERIFY(dwFrame_AsCrow == device_frame_id);
 
-	Props.crow						= 1;
-	g_pGameLevel->Objects.o_crow	(this);
+	Props.crow = 1;
+	g_pGameLevel->Objects.o_crow(this);
 }
 
-void CObject::cName_set			(shared_str N)
-{ 
-	NameObject	=	N; 
+void CObject::cName_set(shared_str N)
+{
+	NameObject = std::move(N);
 }
-void CObject::cNameSect_set		(shared_str N)
-{ 
-	NameSection	=	N; 
+
+void CObject::cNameSect_set(shared_str N)
+{
+	NameSection = std::move(N);
 }
-//#include "SkeletonCustom.h"
+
 void CObject::cNameVisual_set	(shared_str N)
 { 
 	// check if equal
@@ -83,12 +85,6 @@ void CObject::cNameVisual_set	(shared_str N)
 		IKinematics* old_k	= old_v?old_v->dcast_PKinematics():NULL;
 		IKinematics* new_k	= renderable.visual->dcast_PKinematics();
 
-		/*
-		if(old_k && new_k){
-			new_k->Update_Callback			= old_k->Update_Callback;
-			new_k->Update_Callback_Param	= old_k->Update_Callback_Param;
-		}
-		*/
 		if(old_k && new_k)
 		{
 			new_k->SetUpdateCallback(old_k->GetUpdateCallback());
@@ -105,6 +101,16 @@ void CObject::cNameVisual_set	(shared_str N)
 	OnChangeVisual				();
 }
 
+shared_str CObject::shedule_Class_Name() const
+{
+	if (ClassName.size() == 0)
+	{
+		LPCSTR pClassName = typeid(*this).name();
+		ClassName = pClassName;
+	}
+	return ClassName;
+}
+
 // flagging
 void CObject::processing_activate	()
 {
@@ -112,6 +118,7 @@ void CObject::processing_activate	()
 	Props.bActiveCounter			++;
 	if (0==(Props.bActiveCounter-1))	g_pGameLevel->Objects.o_activate	(this);
 }
+
 void CObject::processing_deactivate	()
 {
 	VERIFY3	(0	!= Props.bActiveCounter, "Invalid sequence of processing enable/disable calls: underflow",*cName());
@@ -160,18 +167,6 @@ CObject::CObject		( )		:
 	NameObject					= NULL;
 	NameSection					= NULL;
 	NameVisual					= NULL;
-#ifdef LUACP_API
-	static bool _saved 			= false;
-	
-	if (!_saved)
-	{
-		_saved = true;
-		LogXrayOffset("GameObject.id",		this, &this->Props);
-		LogXrayOffset("GameObject.name",	this, &this->NameObject);
-		LogXrayOffset("GameObject.section", this, &this->NameSection);
-		LogXrayOffset("GameObject.visual",  this, &this->NameVisual);
-	}
-#endif
 #ifdef DEBUG
 	dbg_update_shedule			= u32(-1)/2;
 	dbg_update_cl				= u32(-1)/2;
@@ -345,7 +340,10 @@ void CObject::shedule_Update	( u32 T )
 
 	// Always make me crow on shedule-update 
 	// Makes sure that update-cl called at least with freq of shedule-update
-	MakeMeCrow					();	
+	MakeMeCrow					();
+
+	//Call indexed spectre method
+	SpectreCallback::shedule_update->Invoke(DLL_Pure::SpectreObjectId, T);
 }
 
 void	CObject::spatial_register	()

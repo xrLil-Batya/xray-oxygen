@@ -1,4 +1,4 @@
-// Explosive.cpp: интерфейс для взврывающихся объектов
+// Explosive.cpp: РёРЅС‚РµСЂС„РµР№СЃ РґР»СЏ РІР·РІСЂС‹РІР°СЋС‰РёС…СЃСЏ РѕР±СЉРµРєС‚РѕРІ
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -9,8 +9,8 @@
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
 
-//для вызова статических функций поражения осколками
-#include "Weapon.h"
+//РґР»СЏ РІС‹Р·РѕРІР° СЃС‚Р°С‚РёС‡РµСЃРєРёС… С„СѓРЅРєС†РёР№ РїРѕСЂР°Р¶РµРЅРёСЏ РѕСЃРєРѕР»РєР°РјРё
+#include "items/Weapon.h"
 
 #include "actor.h"
 #include "actoreffector.h"
@@ -29,8 +29,8 @@
 //#include "../xrphysics/phvalidevalues.h"
 #include "../xrphysics/iActivationShape.h"
 #include "../xrphysics/iphworld.h"
-#include "game_base_space.h"
-#include "profiler.h"
+#include "game_base.h"
+#include "../xrEngine/profiler.h"
 
 #include "../Include/xrRender/Kinematics.h"
 #define EFFECTOR_RADIUS 30.f
@@ -38,7 +38,7 @@ const u16	TEST_RAYS_PER_OBJECT=5;
 const u16	BLASTED_OBJ_PROCESSED_PER_FRAME=3;
 const float	exp_dist_extinction_factor=3.f;//(>1.f, 1.f -means no dist change of exp effect)	on the dist of m_fBlastRadius exp. wave effect in exp_dist_extinction_factor times less than maximum
 
-CExplosive::CExplosive(void) 
+CExplosive::CExplosive() 
 {
 	m_fBlastHit				= 50.0f;
 	m_fBlastRadius			= 10.0f;
@@ -66,7 +66,7 @@ CExplosive::CExplosive(void)
 	m_bHideInExplosion	= TRUE;
 	m_fExplodeHideDurationMax = 0;
 	m_bDynamicParticles		= FALSE;
-	m_pExpParticle			= NULL;
+	m_pExpParticle			= nullptr;
 }
 
 void CExplosive::LightCreate()
@@ -80,7 +80,7 @@ void CExplosive::LightDestroy()
 	m_pLight.destroy		();
 }
 
-CExplosive::~CExplosive(void) 
+CExplosive::~CExplosive() 
 {
 	sndExplode.destroy		();
 }
@@ -116,7 +116,7 @@ void CExplosive::Load(CInifile *ini,LPCSTR section)
 	m_fLightRange		= ini->r_float(section,"light_range");
 	m_fLightTime		= ini->r_float(section,"light_time");
 
-	//трассы для разлета осколков
+	//С‚СЂР°СЃСЃС‹ РґР»СЏ СЂР°Р·Р»РµС‚Р° РѕСЃРєРѕР»РєРѕРІ
 	m_fFragmentSpeed			= ini->r_float	(section,"fragment_speed"				);
 
 	LPCSTR	snd_name		= ini->r_string(section,"snd_explode");
@@ -172,19 +172,19 @@ struct SExpQParams
 
 	float		shoot_factor		;
 };
-//проверка на попадание "осколком" по объекту
+//РїСЂРѕРІРµСЂРєР° РЅР° РїРѕРїР°РґР°РЅРёРµ "РѕСЃРєРѕР»РєРѕРј" РїРѕ РѕР±СЉРµРєС‚Сѓ
 ICF static BOOL grenade_hit_callback(collide::rq_result& result, LPVOID params)
 {
 	SExpQParams& ep	= *(SExpQParams*)params;
 	u16 mtl_idx			= GAMEMTL_NONE_IDX;
 	if(result.O){
-		IKinematics* V  = 0;
-		if (0!=(V=smart_cast<IKinematics*>(result.O->Visual()))){
+		IKinematics* V  = nullptr;
+		if (nullptr!=(V=smart_cast<IKinematics*>(result.O->Visual()))){
 			CBoneData& B= V->LL_GetData((u16)result.element);
 			mtl_idx		= B.game_mtl_idx;
 		}
 	}else{
-		//получить треугольник и узнать его материал
+		//РїРѕР»СѓС‡РёС‚СЊ С‚СЂРµСѓРіРѕР»СЊРЅРёРє Рё СѓР·РЅР°С‚СЊ РµРіРѕ РјР°С‚РµСЂРёР°Р»
 		CDB::TRI* T		= Level().ObjectSpace.GetStaticTris()+result.element;
 		mtl_idx			= T->material;
 	}	
@@ -299,7 +299,7 @@ float CExplosive::TestPassEffect(const	Fvector	&source_p,	const	Fvector	&dir,flo
 #else
 		SExpQParams			ep;
 #endif
-		g_pGameLevel->ObjectSpace.RayQuery(storage,RD, (collide::rq_callback*)grenade_hit_callback,&ep,NULL,blasted_obj);
+		g_pGameLevel->ObjectSpace.RayQuery(storage,RD, (collide::rq_callback*)grenade_hit_callback,&ep,nullptr,blasted_obj);
 		shoot_factor=ep.shoot_factor;
 	}
 	else return dist_factor;
@@ -311,7 +311,7 @@ void CExplosive::Explode()
 	VERIFY(m_explosion_flags.test(flReadyToExplode));//m_bReadyToExplode
 	VERIFY(!physics_world()->Processing());
 	//m_bExploding = true;
-	m_explosion_flags.set(flExploding,TRUE);
+	m_explosion_flags.set(flExploding,true);
 	cast_game_object()->processing_activate();
 
 	Fvector& pos = m_vExplodePos;
@@ -325,10 +325,10 @@ void CExplosive::Explode()
 #endif
 //	Msg("---------CExplosive Explode [%d] frame[%d]",cast_game_object()->ID(), Device.dwFrame);
 	OnBeforeExplosion();
-	//играем звук взрыва
-	Sound->play_at_pos(sndExplode, 0, pos, false);
+	//РёРіСЂР°РµРј Р·РІСѓРє РІР·СЂС‹РІР°
+	Sound->play_at_pos(sndExplode, nullptr, pos, false);
 	
-	//показываем эффекты
+	//РїРѕРєР°Р·С‹РІР°РµРј СЌС„С„РµРєС‚С‹
 
 	m_wallmark_manager.PlaceWallmarks		(pos);
 
@@ -347,17 +347,16 @@ void CExplosive::Explode()
 	pStaticPG->UpdateParent(explode_matrix,vel);
 	pStaticPG->Play(false);
 
-	//включаем подсветку от взрыва
+	//РІРєР»СЋС‡Р°РµРј РїРѕРґСЃРІРµС‚РєСѓ РѕС‚ РІР·СЂС‹РІР°
 	StartLight();
 
 	//trace frags
 	Fvector frag_dir; 
 	
 	//////////////////////////////
-	//осколки
+	//РѕСЃРєРѕР»РєРё
 	//////////////////////////////
 	//-------------------------------------
-	bool SendHits = true;
 
 	for(int i = 0; i < m_iFragsNum; ++i){
 		frag_dir.random_dir	();
@@ -370,27 +369,26 @@ void CExplosive::Explode()
 		cartridge.param_s.kAP				= 1.f;
 		cartridge.param_s.fWallmarkSize		= fWallmarkSize;
 		cartridge.bullet_material_idx		= GMLib.GetMaterialIdx(WEAPON_MATERIAL_NAME);
-		cartridge.m_flags.set				(CCartridge::cfTracer,FALSE);
+		cartridge.m_flags.set				(CCartridge::cfTracer,false);
 
 		Level().BulletManager().AddBullet(	pos, frag_dir, m_fFragmentSpeed,
 											m_fFragHit, m_fFragHitImpulse, Initiator(),
 											cast_game_object()->ID(), m_eHitTypeFrag, m_fFragsRadius, 
-											cartridge, 1.f, SendHits );
+											cartridge, 1.f);
 	}	
 
 	if (cast_game_object()->Remote()) return;
 	
 	/////////////////////////////////
-	//взрывная волна
+	//РІР·СЂС‹РІРЅР°СЏ РІРѕР»РЅР°
 	////////////////////////////////
 	//---------------------------------------------------------------------
 	xr_vector<ISpatial*>	ISpatialResult;
 	g_SpatialSpace->q_sphere(ISpatialResult,0,STYPE_COLLIDEABLE,pos,m_fBlastRadius);
 
 	m_blasted_objects.clear	();
-	for (u32 o_it=0; o_it<ISpatialResult.size(); o_it++)
+	for (ISpatial*		spatial : ISpatialResult)
 	{
-		ISpatial*		spatial	= ISpatialResult[o_it];
 		//		feel_touch_new(spatial->dcast_CObject());
 
 		CPhysicsShellHolder	*pGameObject = smart_cast<CPhysicsShellHolder*>(spatial->dcast_CObject());
@@ -461,14 +459,14 @@ void CExplosive::UpdateCL()
 	{
 		CGameObject* go=cast_game_object();
 		go->processing_deactivate();
-		m_explosion_flags.set(flExploding,FALSE);//m_bExploding = false;
+		m_explosion_flags.set(flExploding,false);//m_bExploding = false;
 		OnAfterExplosion();
 		return;
 	}
-	//время вышло, убираем объект взрывчатки
+	//РІСЂРµРјСЏ РІС‹С€Р»Рѕ, СѓР±РёСЂР°РµРј РѕР±СЉРµРєС‚ РІР·СЂС‹РІС‡Р°С‚РєРё
 	if(m_fExplodeDuration < 0.f&&m_blasted_objects.empty()) 
 	{
-		m_explosion_flags.set(flExploded,TRUE);
+		m_explosion_flags.set(flExploded,true);
 		
 		
 		StopLight();
@@ -490,7 +488,7 @@ void CExplosive::UpdateCL()
 		UpdateExplosionPos();
 		UpdateExplosionParticles();
 		ExplodeWaveProcess();
-		//обновить подсветку взрыва
+		//РѕР±РЅРѕРІРёС‚СЊ РїРѕРґСЃРІРµС‚РєСѓ РІР·СЂС‹РІР°
 		if(m_pLight && m_pLight->get_active() && m_fLightTime>0)
 		{
 			if(m_fExplodeDuration > (m_fExplodeDurationMax - m_fLightTime))
@@ -510,9 +508,9 @@ void CExplosive::OnAfterExplosion()
 	if(m_pExpParticle){
 		m_pExpParticle->Stop();
 		CParticlesObject::Destroy(m_pExpParticle);
-		m_pExpParticle = NULL;
+		m_pExpParticle = nullptr;
 	}
-	//ликвидировать сам объект 
+	//Р»РёРєРІРёРґРёСЂРѕРІР°С‚СЊ СЃР°Рј РѕР±СЉРµРєС‚ 
 	if (cast_game_object()->Local()) cast_game_object()->DestroyObject();
 	
 //	NET_Packet			P;
@@ -566,7 +564,7 @@ void CExplosive::ExplodeParams(const Fvector& pos,
 								const Fvector& dir)
 {
 	//m_bReadyToExplode = true;
-	m_explosion_flags.set	(flReadyToExplode,TRUE);
+	m_explosion_flags.set	(flReadyToExplode,true);
 	m_vExplodePos			= pos;
 	m_vExplodePos.y			+= 0.1f;// fake
 	m_vExplodeDir			= dir;
@@ -589,7 +587,7 @@ void CExplosive::GenExplodeEvent (const Fvector& pos, const Fvector& normal)
 	cast_game_object()->u_EventSend		(P);
 
 	//m_bExplodeEventSent = true;
-	m_explosion_flags.set(flExplodEventSent,TRUE);
+	m_explosion_flags.set(flExplodEventSent,true);
 }
 
 void CExplosive::FindNormal(Fvector& normal)
@@ -601,11 +599,11 @@ void CExplosive::FindNormal(Fvector& normal)
 	cast_game_object()->Center(pos);
 
 	BOOL result = Level().ObjectSpace.RayPick(pos, dir, cast_game_object()->Radius(), 
-											 collide::rqtBoth, RQ, NULL);
+											 collide::rqtBoth, RQ, nullptr);
 	if(!result || RQ.O){
 		normal.set(0,1,0);
-	//если лежим на статике
-	//найти треугольник и вычислить нормаль по нему
+	//РµСЃР»Рё Р»РµР¶РёРј РЅР° СЃС‚Р°С‚РёРєРµ
+	//РЅР°Р№С‚Рё С‚СЂРµСѓРіРѕР»СЊРЅРёРє Рё РІС‹С‡РёСЃР»РёС‚СЊ РЅРѕСЂРјР°Р»СЊ РїРѕ РЅРµРјСѓ
 	}else
 	{
 		Fvector*	pVerts	= Level().ObjectSpace.GetStaticVerts();
@@ -656,7 +654,7 @@ void CExplosive::ExplodeWaveProcessObject(collide::rq_results& storage, CPhysics
 {
 	Fvector	l_goPos;
 	if(l_pGO->Visual())		l_pGO->Center	(l_goPos); 
-	else					return; //мне непонятно зачем наносить хит от взрыва по объектам не имеющим вижуал - поэтому игнорируем
+	else					return; //РјРЅРµ РЅРµРїРѕРЅСЏС‚РЅРѕ Р·Р°С‡РµРј РЅР°РЅРѕСЃРёС‚СЊ С…РёС‚ РѕС‚ РІР·СЂС‹РІР° РїРѕ РѕР±СЉРµРєС‚Р°Рј РЅРµ РёРјРµСЋС‰РёРј РІРёР¶СѓР°Р» - РїРѕСЌС‚РѕРјСѓ РёРіРЅРѕСЂРёСЂСѓРµРј
 
 #ifdef DEBUG
 	if(ph_dbg_draw_mask.test(phDbgDrawExplosions))
@@ -677,8 +675,8 @@ void CExplosive::ExplodeWaveProcessObject(collide::rq_results& storage, CPhysics
 		
 		float rmag=_sqrt(m_fUpThrowFactor*m_fUpThrowFactor+1.f+2.f*m_fUpThrowFactor*l_dir.y);
 		l_dir.y += m_fUpThrowFactor;
-		//rmag -модуль l_dir после l_dir.y += m_fUpThrowFactor, модуль=_sqrt(l_dir^2+y^2+2.*(l_dir,y)),y=(0,m_fUpThrowFactor,0) (до этого модуль l_dir =1)
-		l_dir.mul(1.f/rmag);//перенормировка
+		//rmag -РјРѕРґСѓР»СЊ l_dir РїРѕСЃР»Рµ l_dir.y += m_fUpThrowFactor, РјРѕРґСѓР»СЊ=_sqrt(l_dir^2+y^2+2.*(l_dir,y)),y=(0,m_fUpThrowFactor,0) (РґРѕ СЌС‚РѕРіРѕ РјРѕРґСѓР»СЊ l_dir =1)
+		l_dir.mul(1.f/rmag);//РїРµСЂРµРЅРѕСЂРјРёСЂРѕРІРєР°
  		NET_Packet		P;
 		SHit	HS;
 		HS.GenHeader(GE_HIT, l_pGO->ID());			//		cast_game_object()->u_EventGen		(P,GE_HIT,l_pGO->ID());
@@ -715,7 +713,7 @@ void CExplosive::ExplodeWaveProcess()
 	m_blasted_objects.erase	(I,m_blasted_objects.end());
 	rq_storage.r_clear		();
 	u16						i = BLASTED_OBJ_PROCESSED_PER_FRAME	;
-	while (m_blasted_objects.size()&&0!=i) {
+	while (!m_blasted_objects.empty() && 0!=i) {
 		ExplodeWaveProcessObject	(rq_storage,m_blasted_objects.back());
 		m_blasted_objects.pop_back	();
 		--i;
@@ -761,7 +759,7 @@ u16	CExplosive::Initiator()
 
 void CExplosive::UpdateExplosionParticles ()
 {
-	if (!m_bDynamicParticles || m_pExpParticle == NULL || !m_pExpParticle->IsPlaying()) return;
+	if (!m_bDynamicParticles || m_pExpParticle == nullptr || !m_pExpParticle->IsPlaying()) return;
 	CGameObject	*GO=cast_game_object();
 	if (!GO) return;
 

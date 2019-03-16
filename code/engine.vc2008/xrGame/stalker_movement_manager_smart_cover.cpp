@@ -24,7 +24,7 @@
 #include "smart_cover_transition_animation.hpp"
 #include "CharacterPhysicsSupport.h"
 #include "inventory.h"
-#include "weapon.h"
+#include "items/weapon.h"
 
 namespace smart_cover {
 	shared_str	transform_vertex(shared_str const &vertex_id, bool const &in);
@@ -347,20 +347,17 @@ void stalker_movement_manager_smart_cover::loophole_path					(smart_cover::cover
 	typedef GraphEngineSpace::CBaseParameters	CBaseParameters;
 	CBaseParameters			parameters(u32(-1),u32(-1),u32(-1));
 	path.clear		();
-	R_ASSERT2				(
+	R_ASSERT_FORMAT (
 		ai().graph_engine().search(
 			cover.description()->transitions(),
 			source,
 			target,
 			&path,
-			parameters
-		),
-		make_string(
+			parameters),
 			"cannot build path via loopholes [%s] -> [%s] (cover %s)",
 			source_raw.c_str(),
 			target_raw.c_str(),
 			cover.description()->table_id().c_str()
-		)
 	);
 }
 
@@ -429,17 +426,13 @@ stalker_movement_manager_smart_cover::transition_action const &stalker_movement_
 
 	try_actualize_path		();
 
-	VERIFY2					(
-		m_current_transition,
-		make_string(
+	VERIFY_FORMAT(m_current_transition,
 			"[%s][%s] -> [%s][%s], [%d]",
 			m_current.cover() ? m_current.cover()->id().c_str() :			"<world>",
 			m_current.cover() ? m_current.cover_loophole()->id().c_str() :	"<no loophole>",
 			m_target.cover()  ? m_target.cover()->id().c_str() :			"<world>",
 			m_target.cover()  ? m_target.cover_loophole()->id().c_str() :	"<no loophole>",
-			m_path.size()
-		)
-	);
+			m_path.size());
 	return					(*m_current_transition);
 }
 
@@ -523,19 +516,10 @@ void stalker_movement_manager_smart_cover::target_fire_no_lookout			()
 
 void stalker_movement_manager_smart_cover::target_default					(bool const& value)
 {
-//	if (!current_params().cover()) {
-//		Msg								("! Cannot set target fire_no_lookout. Bad or absent smart_cover.");
-//		return;
-//	}
-
-//	if (!current_params().cover_loophole()->is_action_available("fire_no_lookout")) {
-//		Msg								("! Cannot set target fire_no_lookout. Loophole has no such action.");
-//		return;
-//	}
-
 	m_default_behaviour					= value;
 }
 
+#include "script_callback_ex.h"
 bool stalker_movement_manager_smart_cover::default_behaviour	() const
 {
 	VERIFY							(m_current.cover());

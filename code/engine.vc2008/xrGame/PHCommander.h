@@ -61,7 +61,7 @@ using PHCALL_STORAGE = xr_vector<CPHCall*>;
 using PHCALL_I = PHCALL_STORAGE::iterator;
 class CPHCommander: public IPHWorldUpdateCallbck
 {
-	std::recursive_mutex lock;
+	xrCriticalSection lock;
 	PHCALL_STORAGE	m_calls;
 public:
 						~CPHCommander				()																;

@@ -1,0 +1,21 @@
+﻿<Window x:Class="xrEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:c="clr-namespace:XRay;assembly=xrManagedRenderLib"
+        xmlns:local="clr-namespace:xrEditor"
+        mc:Ignorable="d"
+        Title="XRay Oxygen Editor" Height="720" Width="1320">
+    <StackPanel>
+        <DockPanel Height="42">
+            <Label Content="Engine Viewport" FontSize="24" FontWeight="Bold" Width="1220"/>
+            <CheckBox x:Name="EngineMode" Content="Engine mode" Height="42" VerticalAlignment="Top" Width="100" IsChecked="True"
+                      Checked="checkBox_Checked" 
+                      Unchecked="checkBox_Unchecked"/>
+        </DockPanel>
+        <c:XRayRenderHost x:Name="AWDA" Width="1300" Height="620" Margin="0,1,0,0" />
+        <Button Content="Test Action" HorizontalAlignment="Left" Margin="20,5,0,0" Click="Button_Click"/>
+    </StackPanel>
+
+</Window>

@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#pragma hdrstop
 #pragma warning(disable: 4005)
 
 #include <process.h>
@@ -24,7 +23,7 @@ typedef struct _PROCESSOR_POWER_INFORMATION
 
 namespace FPU
 {
-	// Êîãäà-íèáóäü ìîæíî áóäåò çàäàâàòü òî÷íîñòü äëÿ float â õ64...
+	// ÐšÐ¾Ð³Ð´Ð°-Ð½Ð¸Ð±ÑƒÐ´ÑŒ Ð¼Ð¾Ð¶Ð½Ð¾ Ð±ÑƒÐ´ÐµÑ‚ Ð·Ð°Ð´Ð°Ð²Ð°Ñ‚ÑŒ Ñ‚Ð¾Ñ‡Ð½Ð¾ÑÑ‚ÑŒ Ð´Ð»Ñ float Ð² Ñ…64...
 	XRCORE_API void m24(void)
 	{
 		_controlfp(_RC_CHOP, MCW_RC);
@@ -63,7 +62,7 @@ namespace CPU
 	XRCORE_API u32 qpc_counter = 0;
 	XRCORE_API processor_info Info;
 
-	XRCORE_API u64 QPC()
+	XRCORE_API u64 QPC() noexcept
 	{
 		u64 _dest;
 		QueryPerformanceCounter(PLARGE_INTEGER(&_dest));
@@ -260,12 +259,12 @@ unsigned long long SubtractTimes(const FILETIME one, const FILETIME two)
 	return a.QuadPart - b.QuadPart;
 }
 
-int processor_info::getCPULoad(double &val)
+bool processor_info::getCPULoad(double &val)
 {
 	FILETIME sysIdle, sysKernel, sysUser;
 	// sysKernel include IdleTime
 	if (GetSystemTimes(&sysIdle, &sysKernel, &sysUser) == 0) // GetSystemTimes func FAILED return value is zero;
-		return 0;
+		return false;
 
 	if (prevSysIdle.dwLowDateTime != 0 && prevSysIdle.dwHighDateTime != 0)
 	{
@@ -285,125 +284,97 @@ int processor_info::getCPULoad(double &val)
 	prevSysKernel = sysKernel;
 	prevSysUser = sysUser;
 
-	return 1;
+	return true;
 }
 
+#define NT_SUCCESS(Status) (((LONG)(Status)) >= 0)
 
-// threading API
-#pragma pack(push,8)
-struct THREAD_NAME
+float* processor_info::MTCPULoad()
 {
-	DWORD dwType;
-	const char* szName;
-	DWORD dwThreadID;
-	DWORD dwFlags;
-};
-
-void thread_name(const char* name)
-{
-	THREAD_NAME tn;
-	tn.dwType = 0x1000;
-	tn.szName = name;
-	tn.dwThreadID = DWORD(-1);
-	tn.dwFlags = 0;
-	__try
+	// get perfomance info by NtQuerySystemInformation()
+	if (!NT_SUCCESS(m_pNtQuerySystemInformation(
+		8,
+		perfomanceInfo,
+		sizeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION) * (ULONG)m_dwNumberOfProcessors,
+		nullptr
+	)))
 	{
-		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(size_t), (size_t*)&tn);
+		Msg("Can't get NtQuerySystemInformation");
 	}
-	__except (EXCEPTION_CONTINUE_EXECUTION)
+
+	DWORD dwTickCount = GetTickCount();
+	if (!m_dwCount) m_dwCount = dwTickCount;
+
+	for (DWORD i = 0; i < m_dwNumberOfProcessors; i++)
 	{
+		SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION* cpuPerfInfo = &perfomanceInfo[i];
+		cpuPerfInfo->KernelTime.QuadPart -= cpuPerfInfo->IdleTime.QuadPart;
+
+		fUsage[i] = 100.0f - 0.01f * (cpuPerfInfo->IdleTime.QuadPart - m_idleTime[i].QuadPart) / ((dwTickCount - m_dwCount));
+		if (fUsage[i] < 0.0f) { fUsage[i] = 0.0f; }
+		if (fUsage[i] > 100.0f) { fUsage[i] = 100.0f; }
+
+		m_idleTime[i] = cpuPerfInfo->IdleTime;
 	}
-}
-#pragma pack(pop)
 
-struct	THREAD_STARTUP
-{
-	thread_t* entry;
-	char* name;
-	void* args;
-};
-
-void __cdecl thread_entry(void*	_params)
-{
-	// initialize
-	THREAD_STARTUP* startup = (THREAD_STARTUP*)_params;
-	thread_name(startup->name);
-	thread_t* entry = startup->entry;
-	void* arglist = startup->args;
-	xr_delete(startup);
-	_initialize_cpu_thread();
-
-	// call
-	entry(arglist);
+	m_dwCount = dwTickCount;
+	return fUsage;
 }
 
-HANDLE thread_spawn(thread_t* entry, const char* name, unsigned stack, void* arglist)
+//#TODO: Return max value of float
+float processor_info::CalcMPCPULoad(DWORD dwCPU)
 {
-    THREAD_STARTUP* startup = new THREAD_STARTUP();
-	startup->entry = entry;
-	startup->name = (char*)name;
-	startup->args = arglist;
-    uintptr_t hThread = _beginthread(thread_entry, stack, startup);
-	return reinterpret_cast<HANDLE> (hThread);
+	if (!m_pNtQuerySystemInformation)
+		return FLT_MAX;
+
+	if (dwCPU >= m_dwNumberOfProcessors)
+		return FLT_MAX;
+
+
+	DWORD dwTickCount = GetTickCount();
+	//get standard timer tick count
+
+		SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION info[MAX_CPU];
+
+		if (SUCCEEDED(m_pNtQuerySystemInformation(SystemProcessorPerformanceInformation, &info, sizeof(info), nullptr)))
+			//query CPU usage
+		{
+			if (m_idleTime[dwCPU].QuadPart)
+				//ensure that this function was already called at least once
+				//and we have the previous idle time value
+			{
+				m_fltCpuUsage[dwCPU] = 100.0f - 0.01f * (info[dwCPU].IdleTime.QuadPart - m_idleTime[dwCPU].QuadPart) / (dwTickCount - m_dwTickCount[dwCPU]);
+				//calculate new CPU usage value by estimating amount of time
+				//CPU was in idle during the last second
+
+				//clip calculated CPU usage to [0-100] range to filter calculation non-ideality
+
+				if (m_fltCpuUsage[dwCPU] < 0.0f)
+					m_fltCpuUsage[dwCPU] = 0.0f;
+
+				if (m_fltCpuUsage[dwCPU] > 100.0f)
+					m_fltCpuUsage[dwCPU] = 100.0f;
+			}
+
+			m_idleTime[dwCPU] = info[dwCPU].IdleTime;
+			//save new idle time for specified CPU
+		}
+
+	return m_fltCpuUsage[dwCPU];
 }
 
-void spline1(float t, Fvector *p, Fvector *ret)
+xr_string xr_string::ToString(const Fvector& Value)
 {
-	const float t2 = t * t;
-	const float t3 = t2 * t;
-	float m[4];
+	string64 buf = { 0 };
+	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
 
-	ret->x = 0.0f;
-	ret->y = 0.0f;
-	ret->z = 0.0f;
-	m[0] = (0.5f * ((-1.0f * t3) + (2.0f * t2) + (-1.0f * t)));
-	m[1] = (0.5f * ((3.0f * t3) + (-5.0f * t2) + (0.0f * t) + 2.0f));
-	m[2] = (0.5f * ((-3.0f * t3) + (4.0f * t2) + (1.0f * t)));
-	m[3] = (0.5f * ((1.0f * t3) + (-1.0f * t2) + (0.0f * t)));
-
-	for (u32 i = 0; i < 4; i++)
-	{
-		ret->x += p[i].x * m[i];
-		ret->y += p[i].y * m[i];
-		ret->z += p[i].z * m[i];
-	}
+	return xr_string(buf);
 }
 
-void spline2(float t, Fvector *p, Fvector *ret)
+xr_string xr_string::ToString(const Dvector& Value)
 {
-	const float s = 1.0f - t;
-	const float t2 = t * t;
-	const float t3 = t2 * t;
-	float m[4];
+	string64 buf = { 0 };
+	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
 
-	m[0] = s * s*s;
-	m[1] = 3.0f*t3 - 6.0f*t2 + 4.0f;
-	m[2] = -3.0f*t3 + 3.0f*t2 + 3.0f*t + 1;
-	m[3] = t3;
-
-	ret->x = (p[0].x*m[0] + p[1].x*m[1] + p[2].x*m[2] + p[3].x*m[3]) / 6.0f;
-	ret->y = (p[0].y*m[0] + p[1].y*m[1] + p[2].y*m[2] + p[3].y*m[3]) / 6.0f;
-	ret->z = (p[0].z*m[0] + p[1].z*m[1] + p[2].z*m[2] + p[3].z*m[3]) / 6.0f;
-}
-
-const float beta1 = 1.0f;
-const float beta2 = 0.8f;
-
-void spline3(float t, Fvector *p, Fvector *ret)
-{
-	float s = 1.0f - t;
-	float t2 = t * t;
-	float t3 = t2 * t;
-	float b12 = beta1 * beta2;
-	float b13 = b12 * beta1;
-	float delta = 2.0f - b13 + 4.0f*b12 + 4.0f*beta1 + beta2 + 2.0f;
-	float d = 1.0f / delta;
-	float b0 = 2.0f*b13*d*s*s*s;
-	float b3 = 2.0f*t3*d;
-	float b1 = d * (2 * b13*t*(t2 - 3 * t + 3) + 2 * b12*(t3 - 3 * t2 + 2) + 2 * beta1*(t3 - 3 * t + 2) + beta2 * (2 * t3 - 3 * t2 + 1));
-	float b2 = d * (2 * b12*t2*(-t + 3) + 2 * beta1*t*(-t2 + 3) + beta2 * t2*(-2 * t + 3) + 2 * (-t3 + 1));
-
-	ret->x = p[0].x*b0 + p[1].x*b1 + p[2].x*b2 + p[3].x*b3;
-	ret->y = p[0].y*b0 + p[1].y*b1 + p[2].y*b2 + p[3].y*b3;
-	ret->z = p[0].z*b0 + p[1].z*b1 + p[2].z*b2 + p[3].z*b3;
+	return xr_string(buf);
 }

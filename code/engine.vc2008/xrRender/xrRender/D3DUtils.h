@@ -19,13 +19,13 @@ struct SPrimitiveBuffer{
     u32						i_cnt;
     D3DPRIMITIVETYPE 		p_type;
     u32						p_cnt;
-	typedef fastdelegate::FastDelegate0<> TOnRender;
+	using TOnRender = xrDelegate<void()>;
     TOnRender				OnRender;
-    void xr_stdcall			RenderDIP()	{DU_DRAW_DIP(p_type,pGeom,0,0,v_cnt,0,p_cnt);}
-    void xr_stdcall			RenderDP()	{DU_DRAW_DP	(p_type,pGeom,0,p_cnt);}
+    void 			RenderDIP()	{DU_DRAW_DIP(p_type,pGeom,0,0,v_cnt,0,p_cnt);}
+    void 			RenderDP()	{DU_DRAW_DP	(p_type,pGeom,0,p_cnt);}
 public:
-                            SPrimitiveBuffer():OnRender(0),pGeom(0){;}
-    void					CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF, LPVOID vertices, u32 _v_cnt, u16* indices=0, u32 _i_cnt=0);
+                            SPrimitiveBuffer():OnRender(nullptr),pGeom(nullptr){;}
+    void					CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF, LPVOID vertices, u32 _v_cnt, u16* indices=nullptr, u32 _i_cnt=0);
     void					Destroy();
     void					Render(){OnRender();}
 };
@@ -62,13 +62,13 @@ public:
 public:
 	CDrawUtilities()
     {
-        vs_L	= 0;
-        vs_TL	= 0;
-        vs_LIT	= 0;
-        m_DD_pv			= 0;
-        m_DD_pv_start	= 0;
+        vs_L	= nullptr;
+        vs_TL	= nullptr;
+        vs_LIT	= nullptr;
+        m_DD_pv			= nullptr;
+        m_DD_pv_start	= nullptr;
         m_DD_base		= 0;
-		m_Font	= 0;
+		m_Font	= nullptr;
     }
     
     void OnDeviceCreate	();
@@ -91,10 +91,10 @@ public:
     virtual void __stdcall DrawSound(const Fvector& p, float radius, u32 clr);
     virtual void __stdcall DrawLineSphere(const Fvector& p, float radius, u32 clr, BOOL bCross);
 
-	virtual void __stdcall dbgDrawPlacement(const Fvector& p, int sz, u32 clr, LPCSTR caption=0, u32 clr_font=0xffffffff);
-    virtual void __stdcall dbgDrawVert(const Fvector& p0, u32 clr, LPCSTR caption=0);
-    virtual void __stdcall dbgDrawEdge(const Fvector& p0,	const Fvector& p1, u32 clr, LPCSTR caption=0);
-    virtual void __stdcall dbgDrawFace(const Fvector& p0,	const Fvector& p1, const Fvector& p2, u32 clr, LPCSTR caption=0);
+	virtual void __stdcall dbgDrawPlacement(const Fvector& p, int sz, u32 clr, LPCSTR caption=nullptr, u32 clr_font=0xffffffff);
+    virtual void __stdcall dbgDrawVert(const Fvector& p0, u32 clr, LPCSTR caption=nullptr);
+    virtual void __stdcall dbgDrawEdge(const Fvector& p0,	const Fvector& p1, u32 clr, LPCSTR caption=nullptr);
+    virtual void __stdcall dbgDrawFace(const Fvector& p0,	const Fvector& p1, const Fvector& p2, u32 clr, LPCSTR caption=nullptr);
 
     virtual void __stdcall DrawFace(const Fvector& p0,	const Fvector& p1, const Fvector& p2, u32 clr_s, u32 clr_w, BOOL bSolid, BOOL bWire);
     virtual void __stdcall DrawLine(const Fvector& p0,	const Fvector& p1, u32 clr);
@@ -106,8 +106,8 @@ public:
     IC virtual void __stdcall DrawFaceNormal(const Fvector* p, float size, u32 clr){DrawFaceNormal(p[0],p[1],p[2],size,clr);}
     IC virtual void __stdcall DrawFaceNormal(const Fvector& C, const Fvector& N, float size, u32 clr){
         Fvector P; P.mad(C,N,size);DrawLine(C,P,clr);}
-    virtual void __stdcall DrawSelectionBox(const Fvector& center, const Fvector& size, u32* c=0);
-    IC virtual void __stdcall DrawSelectionBoxB(const Fbox& box, u32* c=0){
+    virtual void __stdcall DrawSelectionBox(const Fvector& center, const Fvector& size, u32* c=nullptr);
+    IC virtual void __stdcall DrawSelectionBoxB(const Fbox& box, u32* c=nullptr){
         Fvector S,C;
         box.getsize(S);
         box.getcenter(C);

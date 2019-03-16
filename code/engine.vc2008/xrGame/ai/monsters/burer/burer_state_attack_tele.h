@@ -1,10 +1,10 @@
 #pragma once
 #include "../state.h"
-#include "../../../grenade.h"
-
+#include "../../../items/Grenade.h"
 
 template<typename Object>
-class CStateBurerAttackTele : public CState<Object> {
+class CStateBurerAttackTele : public CState<Object> 
+{
 	typedef CState<Object> inherited;	
 
 	xr_vector<CPhysicsShellHolder *>	tele_objects;
@@ -35,26 +35,26 @@ public:
 
 
 private:
-			// Поиск объектов для телекинеза	
+			// РџРѕРёСЃРє РѕР±СЉРµРєС‚РѕРІ РґР»СЏ С‚РµР»РµРєРёРЅРµР·Р°	
 			void		FindObjects				();
 
 			void		HandleGrenades			();
 
-			// выполнять состояние
+			// РІС‹РїРѕР»РЅСЏС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ
 			void		ExecuteTeleContinue		();
 			void		ExecuteTeleFire			();
 
-			// Проверка, есть ли хоть один объект под контролем
+			// РџСЂРѕРІРµСЂРєР°, РµСЃС‚СЊ Р»Рё С…РѕС‚СЊ РѕРґРёРЅ РѕР±СЉРµРєС‚ РїРѕРґ РєРѕРЅС‚СЂРѕР»РµРј
 			bool		IsActiveObjects			();
 
-			// Проверить, может ли стартовать телекинез
+			// РџСЂРѕРІРµСЂРёС‚СЊ, РјРѕР¶РµС‚ Р»Рё СЃС‚Р°СЂС‚РѕРІР°С‚СЊ С‚РµР»РµРєРёРЅРµР·
 			bool		CheckTeleStart			();
-			// Выбор подходящих объектов для телекинеза
+			// Р’С‹Р±РѕСЂ РїРѕРґС…РѕРґСЏС‰РёС… РѕР±СЉРµРєС‚РѕРІ РґР»СЏ С‚РµР»РµРєРёРЅРµР·Р°
 			void		SelectObjects			();
 
 			// internal for FindObjects
 			void		FindFreeObjects			(xr_vector<CObject*> &tpObjects, const Fvector &pos);
-			void xr_stdcall OnGrenadeDestroyed	(CGrenade* const grenade);
+			void  OnGrenadeDestroyed	(CGrenade* const grenade);
 
 			void		FireAllToEnemy			();
 			void		deactivate				();

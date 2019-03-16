@@ -1,21 +1,21 @@
 #include "stdafx.h"
 #include "map_hint.h"
-#include "UIStatic.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "../map_location.h"
 #include "../map_spot.h"
 #include "../actor.h"
 #include "../gametaskmanager.h"
 #include "../gametask.h"
 #include "UIInventoryUtilities.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 
 CUIStatic* init_static_field(CUIXml& uiXml, LPCSTR path, LPCSTR path2)
 {
 	CUIStatic* S					= xr_new<CUIStatic>();
 	string512						buff;
 	S->SetAutoDelete				(true);
-	strconcat						(sizeof(buff),buff,path,":",path2);
+	xr_strconcat					(buff,path,":",path2);
 	CUIXmlInit::InitStatic			(uiXml,buff,0,S);
 
 	return							S;
@@ -122,7 +122,7 @@ void CUIMapLocationHint::SetInfoTask(CGameTask* task)
 		string512		buff, buff2;
 		InventoryUtilities::GetTimePeriodAsString(buff, sizeof(buff), Level().GetGameTime(), task->m_TimeToComplete);
 		
-		strconcat		(sizeof(buff2),buff2, CStringTable().translate("ui_st_time_remains").c_str(), " ", buff);
+		xr_strconcat (buff2, CStringTable().translate("ui_st_time_remains").c_str(), " ", buff);
 		S->TextItemControl()->SetText		(buff2);
 	}
 	pos				= S->GetWndPos();

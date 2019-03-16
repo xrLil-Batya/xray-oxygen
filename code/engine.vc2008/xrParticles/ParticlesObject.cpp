@@ -70,6 +70,9 @@ CParticlesObject::~CParticlesObject()
 void CParticlesObject::UpdateSpatial()
 {
 	// spatial	(+ workaround occasional bug inside particle-system)
+	if (m_lastUpdatedFrame == Device.dwFrame) return;
+	m_lastUpdatedFrame = Device.dwFrame;
+
 	vis_data &vis = renderable.visual->getVisData();
 	if (_valid(vis.sphere))
 	{
@@ -85,13 +88,7 @@ void CParticlesObject::UpdateSpatial()
 		}
 		else
 		{
-			BOOL	bMove = FALSE;
-
-			if (!P.similar(spatial.sphere.P, EPS_L*10.f))
-				bMove = TRUE;
-
-			if (!fsimilar(R, spatial.sphere.R, 0.15f))
-				bMove = TRUE;
+			const bool bMove = !P.similar(spatial.sphere.P, EPS_L*10.f) || !fsimilar(R, spatial.sphere.R, 0.15f);
 
 			if (bMove)
 			{
@@ -148,9 +145,18 @@ void CParticlesObject::shedule_Update(u32 _dt)
 	inherited::shedule_Update(_dt);
 
 	// Update
-	if (m_bDead) 
-		return; // Don't update for dead object
-	
+	if (m_bDead)
+		return;
+
+	u32 dt = Device.dwTimeGlobal - dwLastTime;
+	if (dt)
+	{
+		mt_dt = 0;
+		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+		V->OnFrame(dt);
+
+		dwLastTime = Device.dwTimeGlobal;
+	}
 	UpdateSpatial();
 }
 
@@ -216,7 +222,9 @@ float CParticlesObject::shedule_Scale()
 void CParticlesObject::renderable_Render()
 {
 	VERIFY(renderable.visual);
-	u32 dt = Device.dwTimeGlobal - dwLastTime;
+
+	const u32 dt = Device.dwTimeGlobal - dwLastTime;
+
 	if (dt)
 	{
 		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
@@ -241,8 +249,8 @@ void CParticlesObject::SetAutoRemove(bool auto_remove)
 	m_bAutoRemove = auto_remove;
 }
 
-//играются ли партиклы, отличается от PSI_Alive, тем что после
-//остановки Stop партиклы могут еще доигрывать анимацию IsPlaying = true
+//РёРіСЂР°СЋС‚СЃСЏ Р»Рё РїР°СЂС‚РёРєР»С‹, РѕС‚Р»РёС‡Р°РµС‚СЃСЏ РѕС‚ PSI_Alive, С‚РµРј С‡С‚Рѕ РїРѕСЃР»Рµ
+//РѕСЃС‚Р°РЅРѕРІРєРё Stop РїР°СЂС‚РёРєР»С‹ РјРѕРіСѓС‚ РµС‰Рµ РґРѕРёРіСЂС‹РІР°С‚СЊ Р°РЅРёРјР°С†РёСЋ IsPlaying = true
 bool CParticlesObject::IsPlaying()
 {
 	IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual);

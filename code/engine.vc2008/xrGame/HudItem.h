@@ -40,8 +40,8 @@ public:
 	IC		void			SetNextState		(u32 v)				{m_nextState = v;}
 	IC		u32				CurrStateTime		() const			{return Device.dwTimeGlobal-m_dw_curr_state_time;}
 	IC		void			ResetSubStateTime	()					{m_dw_curr_substate_time=Device.dwTimeGlobal;}
-	virtual void			SwitchState			(u32 S)				= 0;
-	virtual void			OnStateSwitch		(u32 S)				= 0;
+	virtual void			SwitchState			(u32 S)				  = 0;
+	virtual void			OnStateSwitch		(u32 S, u32 oldState) = 0;
 };
 
 class CHudItem :public CHUDState
@@ -52,23 +52,22 @@ protected:
 	virtual DLL_Pure*		_construct			();
 	
 	Flags16					m_huditem_flags;
-	enum{
+	enum
+	{
 		fl_pending			= (1<<0),
 		fl_renderhud		= (1<<1),
 		fl_inertion_enable	= (1<<2),
 		fl_inertion_allow	= (1<<3),
 	};
 
-	struct{
-		const CMotionDef*		m_current_motion_def;
-		shared_str				m_current_motion;
-		u32						m_dwMotionCurrTm;
-		u32						m_dwMotionStartTm;
-		u32						m_dwMotionEndTm;
-		u32						m_startedMotionState;
-		u8						m_started_rnd_anim_idx;
-		bool					m_bStopAtEndAnimIsRunning;
-	};
+	const CMotionDef*		m_current_motion_def;
+	shared_str				m_current_motion;
+	u32						m_dwMotionCurrTm;
+	u32						m_dwMotionStartTm;
+	u32						m_dwMotionEndTm;
+	u32						m_startedMotionState;
+	u8						m_started_rnd_anim_idx;
+	bool					m_bStopAtEndAnimIsRunning;
 public:
 	virtual void				Load				(LPCSTR section);
 	virtual	BOOL				net_Spawn			(CSE_Abstract* DC)				{return TRUE;};
@@ -87,8 +86,8 @@ public:
 	
 	virtual	u8					GetCurrentHudOffsetIdx ()							{return 0;}
 
-	BOOL						GetHUDmode			();
-	IC BOOL						IsPending			()		const					{ return !!m_huditem_flags.test(fl_pending);}
+	bool						GetHUDmode			();
+	IC bool						IsPending			()		const					{ return !!m_huditem_flags.test(fl_pending);}
 
 	virtual bool				ActivateItem		();
 	virtual void				DeactivateItem		();
@@ -103,7 +102,7 @@ public:
 	bool						IsShowing			()	const		{	return GetState() == eShowing;}
 
 	virtual void				SwitchState			(u32 S);
-	virtual void				OnStateSwitch		(u32 S);
+	virtual void				OnStateSwitch		(u32 S, u32 oldState);
 
 	virtual void				OnAnimationEnd		(u32 state);
 	virtual void				OnMotionMark		(u32 state, const motion_marks&){};
@@ -115,7 +114,8 @@ public:
 
 	virtual void				PlayAnimIdleMoving	();
 	virtual void				PlayAnimIdleSprint	();
-
+	/// <summary>Check if animation exists by name</summary>
+			bool				AnimIsFound			(const char* AnimName) noexcept;
 	virtual void				UpdateCL			();
 	virtual void				renderable_Render	();
 
@@ -144,7 +144,7 @@ protected:
 	IC		void				SetPending			(BOOL H)			{ m_huditem_flags.set(fl_pending, H);}
 	shared_str					hud_sect;
 
-	//кадры момента пересчета XFORM и FirePos
+	//РєР°РґСЂС‹ РјРѕРјРµРЅС‚Р° РїРµСЂРµСЃС‡РµС‚Р° XFORM Рё FirePos
 	u32							dwFP_Frame;
 	u32							dwXF_Frame;
 

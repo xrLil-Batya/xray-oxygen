@@ -6,7 +6,6 @@
 //	Description : IDE interface class
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
-
 namespace editor 
 {
 
@@ -23,16 +22,16 @@ public:
 	virtual	void				pause					() = 0;
 
 public:
-	virtual	property_holder*	create_property_holder	(LPCSTR display_name, property_holder_collection* collection = 0, property_holder_holder* holder = 0) = 0;
+	virtual	property_holder*	create_property_holder	(LPCSTR display_name, property_holder_collection* collection = nullptr, property_holder_holder* holder = nullptr) = 0;
 	virtual	void				destroy					(property_holder *&property_holder) = 0;
 	virtual	void				environment_levels		(property_holder *property_holder) = 0;
 	virtual	void				environment_weathers	(property_holder *property_holder) = 0;
 
 public:
-	using weathers_getter_type = fastdelegate::FastDelegate0<LPCSTR const*>;
-	using weathers_size_getter_type = fastdelegate::FastDelegate0<u32>;
-	using frames_getter_type = fastdelegate::FastDelegate1<LPCSTR, LPCSTR const*>;
-	using frames_size_getter_type = fastdelegate::FastDelegate1<LPCSTR, u32>;
+	using weathers_getter_type		= xrDelegate<LPCSTR const*()>;
+	using weathers_size_getter_type = xrDelegate<u32()>;
+	using frames_getter_type		= xrDelegate<LPCSTR const*(const char*)>;
+	using frames_size_getter_type	= xrDelegate<u32(const char*)>;
 	virtual	void weather_editor_setup(weathers_getter_type const& weathers_getter, weathers_size_getter_type const& weathers_size_getter, frames_getter_type const& frames_getter, frames_size_getter_type const& frames_size_getter) = 0;
 }; // class ide
 

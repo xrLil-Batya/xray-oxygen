@@ -21,7 +21,7 @@ manager::manager					( Fbox const& bounding_box ) :
 
 manager::~manager					( )
 {
-	VERIFY2					( m_doors.empty(), make_string("there are %d still registered doors", m_doors.size()) );
+	VERIFY_FORMAT ( m_doors.empty(), "there are %d still registered doors", m_doors.size());
 }
 
 //#include "level.h"

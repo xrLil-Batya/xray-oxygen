@@ -33,10 +33,8 @@ public:
 	using map_RT = xr_map<const char*, CRT*, str_pred>;
 	using map_VS = xr_map<const char*, SVS*, str_pred>;
 
-#if defined(USE_DX10) || defined(USE_DX11)
-    using map_GS = xr_map<const char*, SGS*, str_pred>;
-#endif	//	USE_DX10
 #ifdef USE_DX11
+    using map_GS = xr_map<const char*, SGS*, str_pred>;
     using map_HS = xr_map<const char*, SHS*, str_pred>;
     using map_DS = xr_map<const char*, SDS*, str_pred>;
     using map_CS = xr_map<const char*, SCS*, str_pred>;
@@ -51,12 +49,11 @@ private:
 	map_Matrix											m_matrices;
 	map_Constant										m_constants;
 	map_RT												m_rtargets;
-	//	DX10 cut map_RTC												m_rtargets_c;
 	map_VS												m_vs;
 	map_PS												m_ps;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	map_GS												m_gs;
-#endif	//	USE_DX10
+#endif
 	map_TD												m_td;
 
 	xr_vector<SState*>									v_states;
@@ -64,10 +61,10 @@ private:
 	xr_vector<SGeometry*>								v_geoms;
 	xr_vector<R_constant_table*>						v_constant_tables;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	xr_vector<dx10ConstantBuffer*>						v_constant_buffer;
 	xr_vector<SInputSignature*>							v_input_signature;
-#endif	//	USE_DX10
+#endif
 
 	// lists
 	xr_vector<STextureList*>							lst_textures;
@@ -122,25 +119,25 @@ public:
 	R_constant_table*				_CreateConstantTable(R_constant_table& C);
 	void							_DeleteConstantTable(const R_constant_table* C);
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	dx10ConstantBuffer*				_CreateConstantBuffer(ID3DShaderReflectionConstantBuffer* pTable);
 	void							_DeleteConstantBuffer(const dx10ConstantBuffer* pBuffer);
 
 	SInputSignature*				_CreateInputSignature(ID3DBlob* pBlob);
 	void							_DeleteInputSignature(const SInputSignature* pSignature);
-#endif	//	USE_DX10
+#endif
 
 #ifdef USE_DX11
-	CRT*							_CreateRT			(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount = 1, bool useUAV=false );
+	CRT*							_CreateRT			(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 SampleCount = 1, bool useUAV=false );
 #else
 	CRT*							_CreateRT			(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount = 1 );
 #endif
 	void							_DeleteRT			(const CRT*	RT	);
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	SGS*							_CreateGS			(LPCSTR Name);
 	void							_DeleteGS			(const SGS*	GS	);
-#endif	//	USE_DX10
+#endif
 
 #ifdef USE_DX11
 	SHS*							_CreateHS			(LPCSTR Name);
@@ -151,7 +148,7 @@ public:
 
     SCS*							_CreateCS			(LPCSTR Name);
 	void							_DeleteCS			(const SCS*	CS	);
-#endif	//	USE_DX10
+#endif
 
 	SPS*							_CreatePS			(LPCSTR Name);
 	void							_DeletePS			(const SPS*	PS	);
@@ -227,5 +224,5 @@ private:
 	template<typename T>
 	void DestroyShader(const T* sh);
 
-#endif	//	USE_DX10
+#endif
 };

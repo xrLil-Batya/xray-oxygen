@@ -15,7 +15,7 @@ class CIKLimbsController;
 
 
 
-class CPhysicsShellHolder:  public CGameObject,
+class GAME_API CPhysicsShellHolder:  public CGameObject,
 							public CParticlesPlayer,
 							public IObjectPhysicsCollision,
 							public IPhysicsShellHolder
@@ -28,7 +28,7 @@ public:
 IC	bool	IsSheduled			(){return b_sheduled;}	
 public:
 
-	typedef CGameObject inherited;
+	using inherited = CGameObject;
 	
 
 	IPhysicsShellEx			*m_pPhysicsShell;
@@ -36,6 +36,7 @@ public:
 
 			CPhysicsShellHolder							();
 	virtual	~CPhysicsShellHolder						();
+	CPhysicsShellHolder& operator = (const CPhysicsShellHolder& other) = delete;
 
 	virtual bool		ActivationSpeedOverriden (Fvector& dest, bool clear_override) { return false; }
 
@@ -52,17 +53,17 @@ public:
 	virtual	const IPhysicsShell			*physics_shell				()const						;
 	virtual		  IPhysicsShell			*physics_shell				()							;
 	virtual const IPhysicsElement		*physics_character			()const						;
-	virtual CPHDestroyable				*ph_destroyable				()							{return NULL;}
-	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()							{return NULL;}
-	virtual CPHSkeleton					*PHSkeleton					()							{return NULL;}
+	virtual CPHDestroyable				*ph_destroyable				()							{return nullptr;}
+	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()							{return nullptr;}
+	virtual CPHSkeleton					*PHSkeleton					()							{return nullptr;}
 	virtual CPhysicsShellHolder			*cast_physics_shell_holder	()							{return this;}
 	virtual CParticlesPlayer			*cast_particles_player		()							{return this;}
-	virtual IDamageSource				*cast_IDamageSource			()							{return NULL;}
-	virtual CPHSoundPlayer				*ph_sound_player			()  						{return NULL;}
-	virtual	CCharacterPhysicsSupport	*character_physics_support	()							{return NULL;}
-	virtual	const CCharacterPhysicsSupport	*character_physics_support	() const					{return NULL;}
-	virtual	CIKLimbsController			*character_ik_controller	()							{return NULL;}
-	virtual ICollisionHitCallback		*get_collision_hit_callback ()							{return NULL;}
+	virtual IDamageSource				*cast_IDamageSource			()							{return nullptr;}
+	virtual CPHSoundPlayer				*ph_sound_player			()  						{return nullptr;}
+	virtual	CCharacterPhysicsSupport	*character_physics_support	()							{return nullptr;}
+	virtual	const CCharacterPhysicsSupport	*character_physics_support	() const				{return nullptr;}
+	virtual	CIKLimbsController			*character_ik_controller	()							{return nullptr;}
+	virtual ICollisionHitCallback		*get_collision_hit_callback ()							{return nullptr;}
 	virtual void						set_collision_hit_callback	(ICollisionHitCallback *cc)	{;}
 	virtual void			_BCL			enable_notificate			()							{;}
 public:
@@ -95,7 +96,7 @@ public:
 			void			init				();
 
 	virtual void			OnChangeVisual		();
-	//для наследования CParticlesPlayer
+	//РґР»СЏ РЅР°СЃР»РµРґРѕРІР°РЅРёСЏ CParticlesPlayer
 	virtual void			UpdateCL			();
     virtual void			UpdateCLRender		();
 			void			correct_spawn_pos	();
@@ -122,7 +123,7 @@ private://IPhysicsShellHolder
 	virtual	void					_BCL					ObjectProcessingDeactivate			()						;
 	virtual	void					_BCL					ObjectProcessingActivate			()						;				
 	virtual	void					_BCL					ObjectSpatialMove					()						;
-	virtual	IPhysicsShellEx*&			_BCL					ObjectPPhysicsShell					()						;
+	virtual	IPhysicsShellEx*&		_BCL					ObjectPPhysicsShell					()						;
 	virtual bool					_BCL					has_parent_object					()						;
 	virtual	IPHCapture*				_BCL					PHCapture							()						;
 	virtual	bool					_BCL					IsInventoryItem						()						;
@@ -130,8 +131,8 @@ private://IPhysicsShellHolder
 	virtual bool					_BCL					IsStalker							()						;
 	virtual	void					_BCL					HideAllWeapons						( bool v )				;//(SetWeaponHideState(INV_STATE_BLOCK_ALL,true))
 	virtual	void					_BCL					MovementCollisionEnable				( bool enable )			;
-	virtual CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer					()  					{return ph_sound_player();}
-	virtual	ICollisionDamageReceiver* _BCL				ObjectPhCollisionDamageReceiver		()						;
+	virtual CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer() { if (m_pPhysicsShell) return ph_sound_player(); else return nullptr; }
+	virtual	ICollisionDamageReceiver* _BCL					ObjectPhCollisionDamageReceiver		()						;
 	virtual	void					_BCL					BonceDamagerCallback				(float &damage_factor)	;
-	virtual	std::string				_BCL					dump								(EDumpType type) const  ;
+	virtual	xr_string				_BCL					dump								(EDumpType type) const  ;
 };

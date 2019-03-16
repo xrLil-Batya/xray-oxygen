@@ -10,6 +10,7 @@
 #include "xrServer_Objects_ALife_Items.h"
 #include "xrServer_script_macroses.h"
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 #pragma optimize("s",on)

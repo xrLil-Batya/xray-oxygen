@@ -21,6 +21,7 @@
 */
 
 #define lj_alloc_c
+#define LUA_CORE
 
 /* To get the mremap prototype. Must be defined before any system includes. */
 #if defined(__linux__) && !defined(_GNU_SOURCE)
@@ -30,10 +31,6 @@
 #include "lj_def.h"
 #include "lj_arch.h"
 #include "lj_alloc.h"
-
-#ifdef _M_X64
-#include "xr_pool.h"
-#endif
 
 #ifndef LUAJIT_USE_SYSMALLOC
 
@@ -75,129 +72,140 @@
 
 #define IS_DIRECT_BIT		(SIZE_T_ONE)
 
+
+/* Determine system-specific block allocation method. */
 #if LJ_TARGET_WINDOWS
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#define LJ_ALLOC_VIRTUALALLOC	1
+
+#if LJ_64 && !LJ_GC64
+#define LJ_ALLOC_NTAVM		1
+#endif
+
+#else
+
+#include <errno.h>
+/* If this include fails, then rebuild with: -DLUAJIT_USE_SYSMALLOC */
+#include <sys/mman.h>
+
+#define LJ_ALLOC_MMAP		1
+
 #if LJ_64
 
+#define LJ_ALLOC_MMAP_PROBE	1
+
+#if LJ_GC64
+#define LJ_ALLOC_MBITS		47	/* 128 TB in LJ_GC64 mode. */
+#elif LJ_TARGET_X64 && LJ_HASJIT
+/* Due to limitations in the x64 compiler backend. */
+#define LJ_ALLOC_MBITS		31	/* 2 GB on x64 with !LJ_GC64. */
+#else
+#define LJ_ALLOC_MBITS		32	/* 4 GB on other archs with !LJ_GC64. */
+#endif
+
+#endif
+
+#if LJ_64 && !LJ_GC64 && defined(MAP_32BIT)
+#define LJ_ALLOC_MMAP32		1
+#endif
+
+#if LJ_TARGET_LINUX
+#define LJ_ALLOC_MREMAP		1
+#endif
+
+#endif
+
+
+#if LJ_ALLOC_VIRTUALALLOC
+
+#if LJ_ALLOC_NTAVM
 /* Undocumented, but hey, that's what we all love so much about Windows. */
-typedef long(*PNTAVM)(HANDLE handle, void **addr, ULONG zbits,
-	size_t *size, ULONG alloctype, ULONG prot);
-PNTAVM ntavm;
+typedef long (*PNTAVM)(HANDLE handle, void **addr, ULONG zbits,
+		       size_t *size, ULONG alloctype, ULONG prot);
+static PNTAVM ntavm;
 
 /* Number of top bits of the lower 32 bits of an address that must be zero.
 ** Apparently 0 gives us full 64 bit addresses and 1 gives us the lower 2GB.
 */
 #define NTAVM_ZEROBITS		1
 
-static void INIT_MMAP(void)
+static void init_mmap(void)
 {
-	ntavm = (PNTAVM)GetProcAddress(GetModuleHandleA("ntdll.dll"),
-		"NtAllocateVirtualMemory");
-
-#ifdef _M_X64
-	XR_INIT();
-#endif
+  ntavm = (PNTAVM)GetProcAddress(GetModuleHandleA("ntdll.dll"),
+				 "NtAllocateVirtualMemory");
 }
+#define INIT_MMAP()	init_mmap()
 
 /* Win64 32 bit MMAP via NtAllocateVirtualMemory. */
-static LJ_AINLINE void *CALL_MMAP(size_t size)
+static void *CALL_MMAP(size_t size)
 {
-	DWORD olderr = GetLastError();
-#ifdef _M_X64
-	void* ptr = XR_MMAP(size);
-	return ptr;
-#else
-	void *ptr = nullptr;
-	long st = ntavm(INVALID_HANDLE_VALUE, &ptr, NTAVM_ZEROBITS, &size,
-		MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-	return st == 0 ? ptr : MFAIL;
-#endif
-	SetLastError(olderr);
-
-#ifdef _M_X64
-	return ptr;
-#else
-	return st == 0 ? ptr : MFAIL;
-#endif
+  DWORD olderr = GetLastError();
+  void *ptr = NULL;
+  long st = ntavm(INVALID_HANDLE_VALUE, &ptr, NTAVM_ZEROBITS, &size,
+		  MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+  SetLastError(olderr);
+  return st == 0 ? ptr : MFAIL;
 }
 
 /* For direct MMAP, use MEM_TOP_DOWN to minimize interference */
-static LJ_AINLINE void *DIRECT_MMAP(size_t size)
+static void *DIRECT_MMAP(size_t size)
 {
-	DWORD olderr = GetLastError();
-#ifndef _M_X64
-	void *ptr = NULL;
-	long st = ntavm(INVALID_HANDLE_VALUE, &ptr, NTAVM_ZEROBITS, &size, MEM_RESERVE | MEM_COMMIT | MEM_TOP_DOWN, PAGE_READWRITE);
-	SetLastError(olderr);
-	return st == 0 ? ptr : MFAIL;
-}
-#else
-	void* ptr = XR_MMAP(size);
-	SetLastError(olderr);
-	return ptr;
+  DWORD olderr = GetLastError();
+  void *ptr = NULL;
+  long st = ntavm(INVALID_HANDLE_VALUE, &ptr, NTAVM_ZEROBITS, &size,
+		  MEM_RESERVE|MEM_COMMIT|MEM_TOP_DOWN, PAGE_READWRITE);
+  SetLastError(olderr);
+  return st == 0 ? ptr : MFAIL;
 }
 
-/* This function supports releasing coalesed segments */
-static LJ_AINLINE int CALL_MUNMAP(void *_ptr, size_t size)
-{
-	DWORD olderr = GetLastError();
-	XR_DESTROY(_ptr, size);
-	SetLastError(olderr);
-	return 0;
-}
-#endif
 #else
-
-#define INIT_MMAP()		((void)0)
 
 /* Win32 MMAP via VirtualAlloc */
-static LJ_AINLINE void *CALL_MMAP(size_t size)
+static void *CALL_MMAP(size_t size)
 {
-	DWORD olderr = GetLastError();
-	void *ptr = VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-	SetLastError(olderr);
-	return ptr ? ptr : MFAIL;
+  DWORD olderr = GetLastError();
+  void *ptr = VirtualAlloc(0, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+  SetLastError(olderr);
+  return ptr ? ptr : MFAIL;
 }
 
 /* For direct MMAP, use MEM_TOP_DOWN to minimize interference */
-static LJ_AINLINE void *DIRECT_MMAP(size_t size)
+static void *DIRECT_MMAP(size_t size)
 {
-	DWORD olderr = GetLastError();
-	void *ptr = VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT | MEM_TOP_DOWN,
-		PAGE_READWRITE);
-	SetLastError(olderr);
-	return ptr ? ptr : MFAIL;
+  DWORD olderr = GetLastError();
+  void *ptr = VirtualAlloc(0, size, MEM_RESERVE|MEM_COMMIT|MEM_TOP_DOWN,
+			   PAGE_READWRITE);
+  SetLastError(olderr);
+  return ptr ? ptr : MFAIL;
 }
-#endif
-#ifndef _M_X64
-/* This function supports releasing coalesed segments */
-static LJ_AINLINE int CALL_MUNMAP(void *ptr, size_t size)
-{
-	DWORD olderr = GetLastError();
-	MEMORY_BASIC_INFORMATION minfo;
-	char *cptr = (char *)ptr;
-	while (size) {
-		if (VirtualQuery(cptr, &minfo, sizeof(minfo)) == 0)
-			return -1;
-		if (minfo.BaseAddress != cptr || minfo.AllocationBase != cptr ||
-			minfo.State != MEM_COMMIT || minfo.RegionSize > size)
-			return -1;
-		if (VirtualFree(cptr, 0, MEM_RELEASE) == 0)
-			return -1;
-		cptr += minfo.RegionSize;
-		size -= minfo.RegionSize;
-	}
-	SetLastError(olderr);
-	return 0;
-}
-#endif
-#else
 
-#include <errno.h>
-#include <sys/mman.h>
+#endif
+
+/* This function supports releasing coalesed segments */
+static int CALL_MUNMAP(void *ptr, size_t size)
+{
+  DWORD olderr = GetLastError();
+  MEMORY_BASIC_INFORMATION minfo;
+  char *cptr = (char *)ptr;
+  while (size) {
+    if (VirtualQuery(cptr, &minfo, sizeof(minfo)) == 0)
+      return -1;
+    if (minfo.BaseAddress != cptr || minfo.AllocationBase != cptr ||
+	minfo.State != MEM_COMMIT || minfo.RegionSize > size)
+      return -1;
+    if (VirtualFree(cptr, 0, MEM_RELEASE) == 0)
+      return -1;
+    cptr += minfo.RegionSize;
+    size -= minfo.RegionSize;
+  }
+  SetLastError(olderr);
+  return 0;
+}
+
+#elif LJ_ALLOC_MMAP
 
 #define MMAP_PROT		(PROT_READ|PROT_WRITE)
 #if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
@@ -205,133 +213,187 @@ static LJ_AINLINE int CALL_MUNMAP(void *ptr, size_t size)
 #endif
 #define MMAP_FLAGS		(MAP_PRIVATE|MAP_ANONYMOUS)
 
-#if LJ_64
-/* 64 bit mode needs special support for allocating memory in the lower 2GB. */
+#if LJ_ALLOC_MMAP_PROBE
 
-#if defined(MAP_32BIT)
+#ifdef MAP_TRYFIXED
+#define MMAP_FLAGS_PROBE	(MMAP_FLAGS|MAP_TRYFIXED)
+#else
+#define MMAP_FLAGS_PROBE	MMAP_FLAGS
+#endif
+
+#define LJ_ALLOC_MMAP_PROBE_MAX		30
+#define LJ_ALLOC_MMAP_PROBE_LINEAR	5
+
+#define LJ_ALLOC_MMAP_PROBE_LOWER	((uintptr_t)0x4000)
+
+/* No point in a giant ifdef mess. Just try to open /dev/urandom.
+** It doesn't really matter if this fails, since we get some ASLR bits from
+** every unsuitable allocation, too. And we prefer linear allocation, anyway.
+*/
+#include <fcntl.h>
+#include <unistd.h>
+
+static uintptr_t mmap_probe_seed(void)
+{
+  uintptr_t val;
+  int fd = open("/dev/urandom", O_RDONLY);
+  if (fd != -1) {
+    int ok = ((size_t)read(fd, &val, sizeof(val)) == sizeof(val));
+    (void)close(fd);
+    if (ok) return val;
+  }
+  return 1;  /* Punt. */
+}
+
+static void *mmap_probe(size_t size)
+{
+  /* Hint for next allocation. Doesn't need to be thread-safe. */
+  static uintptr_t hint_addr = 0;
+  static uintptr_t hint_prng = 0;
+  int olderr = errno;
+  int retry;
+  for (retry = 0; retry < LJ_ALLOC_MMAP_PROBE_MAX; retry++) {
+    void *p = mmap((void *)hint_addr, size, MMAP_PROT, MMAP_FLAGS_PROBE, -1, 0);
+    uintptr_t addr = (uintptr_t)p;
+    if ((addr >> LJ_ALLOC_MBITS) == 0 && addr >= LJ_ALLOC_MMAP_PROBE_LOWER) {
+      /* We got a suitable address. Bump the hint address. */
+      hint_addr = addr + size;
+      errno = olderr;
+      return p;
+    }
+    if (p != MFAIL) {
+      munmap(p, size);
+    } else if (errno == ENOMEM) {
+      return MFAIL;
+    }
+    if (hint_addr) {
+      /* First, try linear probing. */
+      if (retry < LJ_ALLOC_MMAP_PROBE_LINEAR) {
+	hint_addr += 0x1000000;
+	if (((hint_addr + size) >> LJ_ALLOC_MBITS) != 0)
+	  hint_addr = 0;
+	continue;
+      } else if (retry == LJ_ALLOC_MMAP_PROBE_LINEAR) {
+	/* Next, try a no-hint probe to get back an ASLR address. */
+	hint_addr = 0;
+	continue;
+      }
+    }
+    /* Finally, try pseudo-random probing. */
+    if (LJ_UNLIKELY(hint_prng == 0)) {
+      hint_prng = mmap_probe_seed();
+    }
+    /* The unsuitable address we got has some ASLR PRNG bits. */
+    hint_addr ^= addr & ~((uintptr_t)(LJ_PAGESIZE-1));
+    do {  /* The PRNG itself is very weak, but see above. */
+      hint_prng = hint_prng * 1103515245 + 12345;
+      hint_addr ^= hint_prng * (uintptr_t)LJ_PAGESIZE;
+      hint_addr &= (((uintptr_t)1 << LJ_ALLOC_MBITS)-1);
+    } while (hint_addr < LJ_ALLOC_MMAP_PROBE_LOWER);
+  }
+  errno = olderr;
+  return MFAIL;
+}
+
+#endif
+
+#if LJ_ALLOC_MMAP32
 
 #if defined(__sun__)
-#define MMAP_REGION_START	((uintptr_t)0x1000)
+#define LJ_ALLOC_MMAP32_START	((uintptr_t)0x1000)
 #else
-/* Actually this only gives us max. 1GB in current Linux kernels. */
-#define MMAP_REGION_START	((uintptr_t)0)
+#define LJ_ALLOC_MMAP32_START	((uintptr_t)0)
 #endif
 
-static LJ_AINLINE void *CALL_MMAP(size_t size)
+static void *mmap_map32(size_t size)
 {
-	int olderr = errno;
-	void *ptr = mmap((void *)MMAP_REGION_START, size, MMAP_PROT, MAP_32BIT | MMAP_FLAGS, -1, 0);
-	errno = olderr;
-	return ptr;
+#if LJ_ALLOC_MMAP_PROBE
+  static int fallback = 0;
+  if (fallback)
+    return mmap_probe(size);
+#endif
+  {
+    int olderr = errno;
+    void *ptr = mmap((void *)LJ_ALLOC_MMAP32_START, size, MMAP_PROT, MAP_32BIT|MMAP_FLAGS, -1, 0);
+    errno = olderr;
+    /* This only allows 1GB on Linux. So fallback to probing to get 2GB. */
+#if LJ_ALLOC_MMAP_PROBE
+    if (ptr == MFAIL) {
+      fallback = 1;
+      return mmap_probe(size);
+    }
+#endif
+    return ptr;
+  }
 }
 
-#elif LJ_TARGET_OSX || LJ_TARGET_PS4 || defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__sun__)
-
-/* OSX and FreeBSD mmap() use a naive first-fit linear search.
-** That's perfect for us. Except that -pagezero_size must be set for OSX,
-** otherwise the lower 4GB are blocked. And the 32GB RLIMIT_DATA needs
-** to be reduced to 250MB on FreeBSD.
-*/
-#if LJ_TARGET_OSX || defined(__DragonFly__)
-#define MMAP_REGION_START	((uintptr_t)0x10000)
-#elif LJ_TARGET_PS4
-#define MMAP_REGION_START	((uintptr_t)0x4000)
-#else
-#define MMAP_REGION_START	((uintptr_t)0x10000000)
 #endif
-#define MMAP_REGION_END		((uintptr_t)0x80000000)
+
+#if LJ_ALLOC_MMAP32
+#define CALL_MMAP(size)		mmap_map32(size)
+#elif LJ_ALLOC_MMAP_PROBE
+#define CALL_MMAP(size)		mmap_probe(size)
+#else
+static void *CALL_MMAP(size_t size)
+{
+  int olderr = errno;
+  void *ptr = mmap(NULL, size, MMAP_PROT, MMAP_FLAGS, -1, 0);
+  errno = olderr;
+  return ptr;
+}
+#endif
 
 #if (defined(__FreeBSD__) || defined(__FreeBSD_kernel__)) && !LJ_TARGET_PS4
+
 #include <sys/resource.h>
+
+static void init_mmap(void)
+{
+  struct rlimit rlim;
+  rlim.rlim_cur = rlim.rlim_max = 0x10000;
+  setrlimit(RLIMIT_DATA, &rlim);  /* Ignore result. May fail later. */
+}
+#define INIT_MMAP()	init_mmap()
+
 #endif
 
-static LJ_AINLINE void *CALL_MMAP(size_t size)
+static int CALL_MUNMAP(void *ptr, size_t size)
 {
-	int olderr = errno;
-	/* Hint for next allocation. Doesn't need to be thread-safe. */
-	static uintptr_t alloc_hint = MMAP_REGION_START;
-	int retry = 0;
-#if (defined(__FreeBSD__) || defined(__FreeBSD_kernel__)) && !LJ_TARGET_PS4
-	static int rlimit_modified = 0;
-	if (LJ_UNLIKELY(rlimit_modified == 0)) {
-		struct rlimit rlim;
-		rlim.rlim_cur = rlim.rlim_max = MMAP_REGION_START;
-		setrlimit(RLIMIT_DATA, &rlim);  /* Ignore result. May fail below. */
-		rlimit_modified = 1;
-	}
-#endif
-	for (;;) {
-		void *p = mmap((void *)alloc_hint, size, MMAP_PROT, MMAP_FLAGS, -1, 0);
-		if ((uintptr_t)p >= MMAP_REGION_START &&
-			(uintptr_t)p + size < MMAP_REGION_END) {
-			alloc_hint = (uintptr_t)p + size;
-			errno = olderr;
-			return p;
-		}
-		if (p != CMFAIL) munmap(p, size);
-#if defined(__sun__) || defined(__DragonFly__)
-		alloc_hint += 0x1000000;  /* Need near-exhaustive linear scan. */
-		if (alloc_hint + size < MMAP_REGION_END) continue;
-#endif
-		if (retry) break;
-		retry = 1;
-		alloc_hint = MMAP_REGION_START;
-	}
-	errno = olderr;
-	return CMFAIL;
+  int olderr = errno;
+  int ret = munmap(ptr, size);
+  errno = olderr;
+  return ret;
 }
 
-#else
-
-#error "NYI: need an equivalent of MAP_32BIT for this 64 bit OS"
-
-#endif
-
-#else
-
-/* 32 bit mode is easy. */
-static LJ_AINLINE void *CALL_MMAP(size_t size)
-{
-	int olderr = errno;
-	void *ptr = mmap(NULL, size, MMAP_PROT, MMAP_FLAGS, -1, 0);
-	errno = olderr;
-	return ptr;
-}
-
-#endif
-
-#define INIT_MMAP()		((void)0)
-#define DIRECT_MMAP(s)		CALL_MMAP(s)
-
-static LJ_AINLINE int CALL_MUNMAP(void *ptr, size_t size)
-{
-	int olderr = errno;
-	int ret = munmap(ptr, size);
-	errno = olderr;
-	return ret;
-}
-
-#if LJ_TARGET_LINUX
+#if LJ_ALLOC_MREMAP
 /* Need to define _GNU_SOURCE to get the mremap prototype. */
-static LJ_AINLINE void *CALL_MREMAP_(void *ptr, size_t osz, size_t nsz,
-	int flags)
+static void *CALL_MREMAP_(void *ptr, size_t osz, size_t nsz, int flags)
 {
-	int olderr = errno;
-	ptr = mremap(ptr, osz, nsz, flags);
-	errno = olderr;
-	return ptr;
+  int olderr = errno;
+  ptr = mremap(ptr, osz, nsz, flags);
+  errno = olderr;
+  return ptr;
 }
 
 #define CALL_MREMAP(addr, osz, nsz, mv) CALL_MREMAP_((addr), (osz), (nsz), (mv))
 #define CALL_MREMAP_NOMOVE	0
 #define CALL_MREMAP_MAYMOVE	1
-#if LJ_64
+#if LJ_64 && !LJ_GC64
 #define CALL_MREMAP_MV		CALL_MREMAP_NOMOVE
 #else
 #define CALL_MREMAP_MV		CALL_MREMAP_MAYMOVE
 #endif
 #endif
 
+#endif
+
+
+#ifndef INIT_MMAP
+#define INIT_MMAP()		((void)0)
+#endif
+
+#ifndef DIRECT_MMAP
+#define DIRECT_MMAP(s)		CALL_MMAP(s)
 #endif
 
 #ifndef CALL_MREMAP
@@ -341,10 +403,10 @@ static LJ_AINLINE void *CALL_MREMAP_(void *ptr, size_t osz, size_t nsz,
 /* -----------------------  Chunk representations ------------------------ */
 
 struct malloc_chunk {
-	size_t               prev_foot;  /* Size of previous chunk (if free).  */
-	size_t               head;       /* Size and inuse bits. */
-	struct malloc_chunk *fd;         /* double links -- used only if free. */
-	struct malloc_chunk *bk;
+  size_t               prev_foot;  /* Size of previous chunk (if free).  */
+  size_t               head;       /* Size and inuse bits. */
+  struct malloc_chunk *fd;         /* double links -- used only if free. */
+  struct malloc_chunk *bk;
 };
 
 typedef struct malloc_chunk  mchunk;
@@ -354,49 +416,49 @@ typedef size_t bindex_t;               /* Described below */
 typedef unsigned int binmap_t;         /* Described below */
 typedef unsigned int flag_t;           /* The type of various bit flag sets */
 
-									   /* ------------------- Chunks sizes and alignments ----------------------- */
+/* ------------------- Chunks sizes and alignments ----------------------- */
 
 #define MCHUNK_SIZE		(sizeof(mchunk))
 
 #define CHUNK_OVERHEAD		(SIZE_T_SIZE)
 
-									   /* Direct chunks need a second word of overhead ... */
+/* Direct chunks need a second word of overhead ... */
 #define DIRECT_CHUNK_OVERHEAD	(TWO_SIZE_T_SIZES)
-									   /* ... and additional padding for fake next-chunk at foot */
+/* ... and additional padding for fake next-chunk at foot */
 #define DIRECT_FOOT_PAD		(FOUR_SIZE_T_SIZES)
 
-									   /* The smallest size we can malloc is an aligned minimal chunk */
+/* The smallest size we can malloc is an aligned minimal chunk */
 #define MIN_CHUNK_SIZE\
   ((MCHUNK_SIZE + CHUNK_ALIGN_MASK) & ~CHUNK_ALIGN_MASK)
 
-									   /* conversion from malloc headers to user pointers, and back */
+/* conversion from malloc headers to user pointers, and back */
 #define chunk2mem(p)		((void *)((char *)(p) + TWO_SIZE_T_SIZES))
 #define mem2chunk(mem)		((mchunkptr)((char *)(mem) - TWO_SIZE_T_SIZES))
-									   /* chunk associated with aligned address A */
+/* chunk associated with aligned address A */
 #define align_as_chunk(A)	(mchunkptr)((A) + align_offset(chunk2mem(A)))
 
-									   /* Bounds on request (not chunk) sizes. */
+/* Bounds on request (not chunk) sizes. */
 #define MAX_REQUEST		((~MIN_CHUNK_SIZE+1) << 2)
 #define MIN_REQUEST		(MIN_CHUNK_SIZE - CHUNK_OVERHEAD - SIZE_T_ONE)
 
-									   /* pad request bytes into a usable size */
+/* pad request bytes into a usable size */
 #define pad_request(req) \
    (((req) + CHUNK_OVERHEAD + CHUNK_ALIGN_MASK) & ~CHUNK_ALIGN_MASK)
 
-									   /* pad request, checking for minimum (but not maximum) */
+/* pad request, checking for minimum (but not maximum) */
 #define request2size(req) \
   (((req) < MIN_REQUEST)? MIN_CHUNK_SIZE : pad_request(req))
 
-									   /* ------------------ Operations on head and foot fields ----------------- */
+/* ------------------ Operations on head and foot fields ----------------- */
 
 #define PINUSE_BIT		(SIZE_T_ONE)
 #define CINUSE_BIT		(SIZE_T_TWO)
 #define INUSE_BITS		(PINUSE_BIT|CINUSE_BIT)
 
-									   /* Head value for fenceposts */
+/* Head value for fenceposts */
 #define FENCEPOST_HEAD		(INUSE_BITS|SIZE_T_SIZE)
 
-									   /* extraction of fields from head words */
+/* extraction of fields from head words */
 #define cinuse(p)		((p)->head & CINUSE_BIT)
 #define pinuse(p)		((p)->head & PINUSE_BIT)
 #define chunksize(p)		((p)->head & ~(INUSE_BITS))
@@ -404,63 +466,63 @@ typedef unsigned int flag_t;           /* The type of various bit flag sets */
 #define clear_pinuse(p)		((p)->head &= ~PINUSE_BIT)
 #define clear_cinuse(p)		((p)->head &= ~CINUSE_BIT)
 
-									   /* Treat space at ptr +/- offset as a chunk */
+/* Treat space at ptr +/- offset as a chunk */
 #define chunk_plus_offset(p, s)		((mchunkptr)(((char *)(p)) + (s)))
 #define chunk_minus_offset(p, s)	((mchunkptr)(((char *)(p)) - (s)))
 
-									   /* Ptr to next or previous physical malloc_chunk. */
+/* Ptr to next or previous physical malloc_chunk. */
 #define next_chunk(p)	((mchunkptr)(((char *)(p)) + ((p)->head & ~INUSE_BITS)))
 #define prev_chunk(p)	((mchunkptr)(((char *)(p)) - ((p)->prev_foot) ))
 
-									   /* extract next chunk's pinuse bit */
+/* extract next chunk's pinuse bit */
 #define next_pinuse(p)	((next_chunk(p)->head) & PINUSE_BIT)
 
-									   /* Get/set size at footer */
+/* Get/set size at footer */
 #define get_foot(p, s)	(((mchunkptr)((char *)(p) + (s)))->prev_foot)
 #define set_foot(p, s)	(((mchunkptr)((char *)(p) + (s)))->prev_foot = (s))
 
-									   /* Set size, pinuse bit, and foot */
+/* Set size, pinuse bit, and foot */
 #define set_size_and_pinuse_of_free_chunk(p, s)\
   ((p)->head = (s|PINUSE_BIT), set_foot(p, s))
 
-									   /* Set size, pinuse bit, foot, and clear next pinuse */
+/* Set size, pinuse bit, foot, and clear next pinuse */
 #define set_free_with_pinuse(p, s, n)\
   (clear_pinuse(n), set_size_and_pinuse_of_free_chunk(p, s))
 
 #define is_direct(p)\
   (!((p)->head & PINUSE_BIT) && ((p)->prev_foot & IS_DIRECT_BIT))
 
-									   /* Get the internal overhead associated with chunk p */
+/* Get the internal overhead associated with chunk p */
 #define overhead_for(p)\
  (is_direct(p)? DIRECT_CHUNK_OVERHEAD : CHUNK_OVERHEAD)
 
-									   /* ---------------------- Overlaid data structures ----------------------- */
+/* ---------------------- Overlaid data structures ----------------------- */
 
 struct malloc_tree_chunk {
-	/* The first four fields must be compatible with malloc_chunk */
-	size_t                    prev_foot;
-	size_t                    head;
-	struct malloc_tree_chunk *fd;
-	struct malloc_tree_chunk *bk;
+  /* The first four fields must be compatible with malloc_chunk */
+  size_t                    prev_foot;
+  size_t                    head;
+  struct malloc_tree_chunk *fd;
+  struct malloc_tree_chunk *bk;
 
-	struct malloc_tree_chunk *child[2];
-	struct malloc_tree_chunk *parent;
-	bindex_t                  index;
+  struct malloc_tree_chunk *child[2];
+  struct malloc_tree_chunk *parent;
+  bindex_t                  index;
 };
 
 typedef struct malloc_tree_chunk  tchunk;
 typedef struct malloc_tree_chunk *tchunkptr;
 typedef struct malloc_tree_chunk *tbinptr; /* The type of bins of trees */
 
-										   /* A little helper macro for trees */
+/* A little helper macro for trees */
 #define leftmost_child(t) ((t)->child[0] != 0? (t)->child[0] : (t)->child[1])
 
-										   /* ----------------------------- Segments -------------------------------- */
+/* ----------------------------- Segments -------------------------------- */
 
 struct malloc_segment {
-	char        *base;             /* base address */
-	size_t       size;             /* allocated size */
-	struct malloc_segment *next;   /* ptr to next segment */
+  char        *base;             /* base address */
+  size_t       size;             /* allocated size */
+  struct malloc_segment *next;   /* ptr to next segment */
 };
 
 typedef struct malloc_segment  msegment;
@@ -479,17 +541,17 @@ typedef struct malloc_segment *msegmentptr;
 #define MAX_SMALL_REQUEST  (MAX_SMALL_SIZE - CHUNK_ALIGN_MASK - CHUNK_OVERHEAD)
 
 struct malloc_state {
-	binmap_t   smallmap;
-	binmap_t   treemap;
-	size_t     dvsize;
-	size_t     topsize;
-	mchunkptr  dv;
-	mchunkptr  top;
-	size_t     trim_check;
-	size_t     release_checks;
-	mchunkptr  smallbins[(NSMALLBINS + 1) * 2];
-	tbinptr    treebins[NTREEBINS];
-	msegment   seg;
+  binmap_t   smallmap;
+  binmap_t   treemap;
+  size_t     dvsize;
+  size_t     topsize;
+  mchunkptr  dv;
+  mchunkptr  top;
+  size_t     trim_check;
+  size_t     release_checks;
+  mchunkptr  smallbins[(NSMALLBINS+1)*2];
+  tbinptr    treebins[NTREEBINS];
+  msegment   seg;
 };
 
 typedef struct malloc_state *mstate;
@@ -520,31 +582,31 @@ typedef struct malloc_state *mstate;
 /* Return segment holding given address */
 static msegmentptr segment_holding(mstate m, char *addr)
 {
-	msegmentptr sp = &m->seg;
-	for (;;) {
-		if (addr >= sp->base && addr < sp->base + sp->size)
-			return sp;
-		if ((sp = sp->next) == 0)
-			return 0;
-	}
+  msegmentptr sp = &m->seg;
+  for (;;) {
+    if (addr >= sp->base && addr < sp->base + sp->size)
+      return sp;
+    if ((sp = sp->next) == 0)
+      return 0;
+  }
 }
 
 /* Return true if segment contains a segment link */
 static int has_segment_link(mstate m, msegmentptr ss)
 {
-	msegmentptr sp = &m->seg;
-	for (;;) {
-		if ((char *)sp >= ss->base && (char *)sp < ss->base + ss->size)
-			return 1;
-		if ((sp = sp->next) == 0)
-			return 0;
-	}
+  msegmentptr sp = &m->seg;
+  for (;;) {
+    if ((char *)sp >= ss->base && (char *)sp < ss->base + ss->size)
+      return 1;
+    if ((sp = sp->next) == 0)
+      return 0;
+  }
 }
 
 /*
-TOP_FOOT_SIZE is padding at the end of a segment, including space
-that may be needed to place segment records and fenceposts when new
-noncontiguous segments are added.
+  TOP_FOOT_SIZE is padding at the end of a segment, including space
+  that may be needed to place segment records and fenceposts when new
+  noncontiguous segments are added.
 */
 #define TOP_FOOT_SIZE\
   (align_offset(chunk2mem(0))+pad_request(sizeof(struct malloc_segment))+MIN_CHUNK_SIZE)
@@ -774,49 +836,48 @@ noncontiguous segments are added.
 
 static void *direct_alloc(size_t nb)
 {
-	size_t mmsize = mmap_align(nb + SIX_SIZE_T_SIZES + CHUNK_ALIGN_MASK);
-	if (LJ_LIKELY(mmsize > nb)) {     /* Check for wrap around 0 */
-		char *mm = (char *)(DIRECT_MMAP(mmsize));
-		if (mm != CMFAIL) {
-			size_t offset = align_offset(chunk2mem(mm));
-			size_t psize = mmsize - offset - DIRECT_FOOT_PAD;
-			mchunkptr p = (mchunkptr)(mm + offset);
-			p->prev_foot = offset | IS_DIRECT_BIT;
-			p->head = psize | CINUSE_BIT;
-			chunk_plus_offset(p, psize)->head = FENCEPOST_HEAD;
-			chunk_plus_offset(p, psize + SIZE_T_SIZE)->head = 0;
-			return chunk2mem(p);
-		}
-	}
-	return NULL;
+  size_t mmsize = mmap_align(nb + SIX_SIZE_T_SIZES + CHUNK_ALIGN_MASK);
+  if (LJ_LIKELY(mmsize > nb)) {     /* Check for wrap around 0 */
+    char *mm = (char *)(DIRECT_MMAP(mmsize));
+    if (mm != CMFAIL) {
+      size_t offset = align_offset(chunk2mem(mm));
+      size_t psize = mmsize - offset - DIRECT_FOOT_PAD;
+      mchunkptr p = (mchunkptr)(mm + offset);
+      p->prev_foot = offset | IS_DIRECT_BIT;
+      p->head = psize|CINUSE_BIT;
+      chunk_plus_offset(p, psize)->head = FENCEPOST_HEAD;
+      chunk_plus_offset(p, psize+SIZE_T_SIZE)->head = 0;
+      return chunk2mem(p);
+    }
+  }
+  return NULL;
 }
 
 static mchunkptr direct_resize(mchunkptr oldp, size_t nb)
 {
-	size_t oldsize = chunksize(oldp);
-	if (is_small(nb)) /* Can't shrink direct regions below small size */
-		return NULL;
-	/* Keep old chunk if big enough but not too big */
-	if (oldsize >= nb + SIZE_T_SIZE &&
-		(oldsize - nb) <= (DEFAULT_GRANULARITY >> 1)) {
-		return oldp;
-	}
-	else {
-		size_t offset = oldp->prev_foot & ~IS_DIRECT_BIT;
-		size_t oldmmsize = oldsize + offset + DIRECT_FOOT_PAD;
-		size_t newmmsize = mmap_align(nb + SIX_SIZE_T_SIZES + CHUNK_ALIGN_MASK);
-		char *cp = (char *)CALL_MREMAP((char *)oldp - offset,
-			oldmmsize, newmmsize, CALL_MREMAP_MV);
-		if (cp != CMFAIL) {
-			mchunkptr newp = (mchunkptr)(cp + offset);
-			size_t psize = newmmsize - offset - DIRECT_FOOT_PAD;
-			newp->head = psize | CINUSE_BIT;
-			chunk_plus_offset(newp, psize)->head = FENCEPOST_HEAD;
-			chunk_plus_offset(newp, psize + SIZE_T_SIZE)->head = 0;
-			return newp;
-		}
-	}
-	return NULL;
+  size_t oldsize = chunksize(oldp);
+  if (is_small(nb)) /* Can't shrink direct regions below small size */
+    return NULL;
+  /* Keep old chunk if big enough but not too big */
+  if (oldsize >= nb + SIZE_T_SIZE &&
+      (oldsize - nb) <= (DEFAULT_GRANULARITY >> 1)) {
+    return oldp;
+  } else {
+    size_t offset = oldp->prev_foot & ~IS_DIRECT_BIT;
+    size_t oldmmsize = oldsize + offset + DIRECT_FOOT_PAD;
+    size_t newmmsize = mmap_align(nb + SIX_SIZE_T_SIZES + CHUNK_ALIGN_MASK);
+    char *cp = (char *)CALL_MREMAP((char *)oldp - offset,
+				   oldmmsize, newmmsize, CALL_MREMAP_MV);
+    if (cp != CMFAIL) {
+      mchunkptr newp = (mchunkptr)(cp + offset);
+      size_t psize = newmmsize - offset - DIRECT_FOOT_PAD;
+      newp->head = psize|CINUSE_BIT;
+      chunk_plus_offset(newp, psize)->head = FENCEPOST_HEAD;
+      chunk_plus_offset(newp, psize+SIZE_T_SIZE)->head = 0;
+      return newp;
+    }
+  }
+  return NULL;
 }
 
 /* -------------------------- mspace management -------------------------- */
@@ -824,173 +885,169 @@ static mchunkptr direct_resize(mchunkptr oldp, size_t nb)
 /* Initialize top chunk and its size */
 static void init_top(mstate m, mchunkptr p, size_t psize)
 {
-	/* Ensure alignment */
-	size_t offset = align_offset(chunk2mem(p));
-	p = (mchunkptr)((char *)p + offset);
-	psize -= offset;
+  /* Ensure alignment */
+  size_t offset = align_offset(chunk2mem(p));
+  p = (mchunkptr)((char *)p + offset);
+  psize -= offset;
 
-	m->top = p;
-	m->topsize = psize;
-	p->head = psize | PINUSE_BIT;
-	/* set size of fake trailing chunk holding overhead space only once */
-	chunk_plus_offset(p, psize)->head = TOP_FOOT_SIZE;
-	m->trim_check = DEFAULT_TRIM_THRESHOLD; /* reset on each update */
+  m->top = p;
+  m->topsize = psize;
+  p->head = psize | PINUSE_BIT;
+  /* set size of fake trailing chunk holding overhead space only once */
+  chunk_plus_offset(p, psize)->head = TOP_FOOT_SIZE;
+  m->trim_check = DEFAULT_TRIM_THRESHOLD; /* reset on each update */
 }
 
 /* Initialize bins for a new mstate that is otherwise zeroed out */
 static void init_bins(mstate m)
 {
-	/* Establish circular links for smallbins */
-	bindex_t i;
-	for (i = 0; i < NSMALLBINS; i++) {
-		sbinptr bin = smallbin_at(m, i);
-		bin->fd = bin->bk = bin;
-	}
+  /* Establish circular links for smallbins */
+  bindex_t i;
+  for (i = 0; i < NSMALLBINS; i++) {
+    sbinptr bin = smallbin_at(m,i);
+    bin->fd = bin->bk = bin;
+  }
 }
 
 /* Allocate chunk and prepend remainder with chunk in successor base. */
 static void *prepend_alloc(mstate m, char *newbase, char *oldbase, size_t nb)
 {
-	mchunkptr p = align_as_chunk(newbase);
-	mchunkptr oldfirst = align_as_chunk(oldbase);
-	size_t psize = (size_t)((char *)oldfirst - (char *)p);
-	mchunkptr q = chunk_plus_offset(p, nb);
-	size_t qsize = psize - nb;
-	set_size_and_pinuse_of_inuse_chunk(m, p, nb);
+  mchunkptr p = align_as_chunk(newbase);
+  mchunkptr oldfirst = align_as_chunk(oldbase);
+  size_t psize = (size_t)((char *)oldfirst - (char *)p);
+  mchunkptr q = chunk_plus_offset(p, nb);
+  size_t qsize = psize - nb;
+  set_size_and_pinuse_of_inuse_chunk(m, p, nb);
 
-	/* consolidate remainder with first chunk of old base */
-	if (oldfirst == m->top) {
-		size_t tsize = m->topsize += qsize;
-		m->top = q;
-		q->head = tsize | PINUSE_BIT;
-	}
-	else if (oldfirst == m->dv) {
-		size_t dsize = m->dvsize += qsize;
-		m->dv = q;
-		set_size_and_pinuse_of_free_chunk(q, dsize);
-	}
-	else {
-		if (!cinuse(oldfirst)) {
-			size_t nsize = chunksize(oldfirst);
-			unlink_chunk(m, oldfirst, nsize);
-			oldfirst = chunk_plus_offset(oldfirst, nsize);
-			qsize += nsize;
-		}
-		set_free_with_pinuse(q, qsize, oldfirst);
-		insert_chunk(m, q, qsize);
-	}
+  /* consolidate remainder with first chunk of old base */
+  if (oldfirst == m->top) {
+    size_t tsize = m->topsize += qsize;
+    m->top = q;
+    q->head = tsize | PINUSE_BIT;
+  } else if (oldfirst == m->dv) {
+    size_t dsize = m->dvsize += qsize;
+    m->dv = q;
+    set_size_and_pinuse_of_free_chunk(q, dsize);
+  } else {
+    if (!cinuse(oldfirst)) {
+      size_t nsize = chunksize(oldfirst);
+      unlink_chunk(m, oldfirst, nsize);
+      oldfirst = chunk_plus_offset(oldfirst, nsize);
+      qsize += nsize;
+    }
+    set_free_with_pinuse(q, qsize, oldfirst);
+    insert_chunk(m, q, qsize);
+  }
 
-	return chunk2mem(p);
+  return chunk2mem(p);
 }
 
 /* Add a segment to hold a new noncontiguous region */
 static void add_segment(mstate m, char *tbase, size_t tsize)
 {
-	/* Determine locations and sizes of segment, fenceposts, old top */
-	char *old_top = (char *)m->top;
-	msegmentptr oldsp = segment_holding(m, old_top);
-	char *old_end = oldsp->base + oldsp->size;
-	size_t ssize = pad_request(sizeof(struct malloc_segment));
-	char *rawsp = old_end - (ssize + FOUR_SIZE_T_SIZES + CHUNK_ALIGN_MASK);
-	size_t offset = align_offset(chunk2mem(rawsp));
-	char *asp = rawsp + offset;
-	char *csp = (asp < (old_top + MIN_CHUNK_SIZE)) ? old_top : asp;
-	mchunkptr sp = (mchunkptr)csp;
-	msegmentptr ss = (msegmentptr)(chunk2mem(sp));
-	mchunkptr tnext = chunk_plus_offset(sp, ssize);
-	mchunkptr p = tnext;
+  /* Determine locations and sizes of segment, fenceposts, old top */
+  char *old_top = (char *)m->top;
+  msegmentptr oldsp = segment_holding(m, old_top);
+  char *old_end = oldsp->base + oldsp->size;
+  size_t ssize = pad_request(sizeof(struct malloc_segment));
+  char *rawsp = old_end - (ssize + FOUR_SIZE_T_SIZES + CHUNK_ALIGN_MASK);
+  size_t offset = align_offset(chunk2mem(rawsp));
+  char *asp = rawsp + offset;
+  char *csp = (asp < (old_top + MIN_CHUNK_SIZE))? old_top : asp;
+  mchunkptr sp = (mchunkptr)csp;
+  msegmentptr ss = (msegmentptr)(chunk2mem(sp));
+  mchunkptr tnext = chunk_plus_offset(sp, ssize);
+  mchunkptr p = tnext;
 
-	/* reset top to new space */
-	init_top(m, (mchunkptr)tbase, tsize - TOP_FOOT_SIZE);
+  /* reset top to new space */
+  init_top(m, (mchunkptr)tbase, tsize - TOP_FOOT_SIZE);
 
-	/* Set up segment record */
-	set_size_and_pinuse_of_inuse_chunk(m, sp, ssize);
-	*ss = m->seg; /* Push current record */
-	m->seg.base = tbase;
-	m->seg.size = tsize;
-	m->seg.next = ss;
+  /* Set up segment record */
+  set_size_and_pinuse_of_inuse_chunk(m, sp, ssize);
+  *ss = m->seg; /* Push current record */
+  m->seg.base = tbase;
+  m->seg.size = tsize;
+  m->seg.next = ss;
 
-	/* Insert trailing fenceposts */
-	for (;;) {
-		mchunkptr nextp = chunk_plus_offset(p, SIZE_T_SIZE);
-		p->head = FENCEPOST_HEAD;
-		if ((char *)(&(nextp->head)) < old_end)
-			p = nextp;
-		else
-			break;
-	}
+  /* Insert trailing fenceposts */
+  for (;;) {
+    mchunkptr nextp = chunk_plus_offset(p, SIZE_T_SIZE);
+    p->head = FENCEPOST_HEAD;
+    if ((char *)(&(nextp->head)) < old_end)
+      p = nextp;
+    else
+      break;
+  }
 
-	/* Insert the rest of old top into a bin as an ordinary free chunk */
-	if (csp != old_top) {
-		mchunkptr q = (mchunkptr)old_top;
-		size_t psize = (size_t)(csp - old_top);
-		mchunkptr tn = chunk_plus_offset(q, psize);
-		set_free_with_pinuse(q, psize, tn);
-		insert_chunk(m, q, psize);
-	}
+  /* Insert the rest of old top into a bin as an ordinary free chunk */
+  if (csp != old_top) {
+    mchunkptr q = (mchunkptr)old_top;
+    size_t psize = (size_t)(csp - old_top);
+    mchunkptr tn = chunk_plus_offset(q, psize);
+    set_free_with_pinuse(q, psize, tn);
+    insert_chunk(m, q, psize);
+  }
 }
 
 /* -------------------------- System allocation -------------------------- */
 
 static void *alloc_sys(mstate m, size_t nb)
 {
-	char *tbase = CMFAIL;
-	size_t tsize = 0;
+  char *tbase = CMFAIL;
+  size_t tsize = 0;
 
-	/* Directly map large chunks */
-	if (LJ_UNLIKELY(nb >= DEFAULT_MMAP_THRESHOLD)) {
-		void *mem = direct_alloc(nb);
-		if (mem != 0)
-			return mem;
-	}
+  /* Directly map large chunks */
+  if (LJ_UNLIKELY(nb >= DEFAULT_MMAP_THRESHOLD)) {
+    void *mem = direct_alloc(nb);
+    if (mem != 0)
+      return mem;
+  }
 
-	{
-		size_t req = nb + TOP_FOOT_SIZE + SIZE_T_ONE;
-		size_t rsize = granularity_align(req);
-		if (LJ_LIKELY(rsize > nb)) { /* Fail if wraps around zero */
-			char *mp = (char *)(CALL_MMAP(rsize));
-			if (mp != CMFAIL) {
-				tbase = mp;
-				tsize = rsize;
-			}
-		}
-	}
+  {
+    size_t req = nb + TOP_FOOT_SIZE + SIZE_T_ONE;
+    size_t rsize = granularity_align(req);
+    if (LJ_LIKELY(rsize > nb)) { /* Fail if wraps around zero */
+      char *mp = (char *)(CALL_MMAP(rsize));
+      if (mp != CMFAIL) {
+	tbase = mp;
+	tsize = rsize;
+      }
+    }
+  }
 
-	if (tbase != CMFAIL) {
-		msegmentptr sp = &m->seg;
-		/* Try to merge with an existing segment */
-		while (sp != 0 && tbase != sp->base + sp->size)
-			sp = sp->next;
-		if (sp != 0 && segment_holds(sp, m->top)) { /* append */
-			sp->size += tsize;
-			init_top(m, m->top, m->topsize + tsize);
-		}
-		else {
-			sp = &m->seg;
-			while (sp != 0 && sp->base != tbase + tsize)
-				sp = sp->next;
-			if (sp != 0) {
-				char *oldbase = sp->base;
-				sp->base = tbase;
-				sp->size += tsize;
-				return prepend_alloc(m, tbase, oldbase, nb);
-			}
-			else {
-				add_segment(m, tbase, tsize);
-			}
-		}
+  if (tbase != CMFAIL) {
+    msegmentptr sp = &m->seg;
+    /* Try to merge with an existing segment */
+    while (sp != 0 && tbase != sp->base + sp->size)
+      sp = sp->next;
+    if (sp != 0 && segment_holds(sp, m->top)) { /* append */
+      sp->size += tsize;
+      init_top(m, m->top, m->topsize + tsize);
+    } else {
+      sp = &m->seg;
+      while (sp != 0 && sp->base != tbase + tsize)
+	sp = sp->next;
+      if (sp != 0) {
+	char *oldbase = sp->base;
+	sp->base = tbase;
+	sp->size += tsize;
+	return prepend_alloc(m, tbase, oldbase, nb);
+      } else {
+	add_segment(m, tbase, tsize);
+      }
+    }
 
-		if (nb < m->topsize) { /* Allocate from new or extended top space */
-			size_t rsize = m->topsize -= nb;
-			mchunkptr p = m->top;
-			mchunkptr r = m->top = chunk_plus_offset(p, nb);
-			r->head = rsize | PINUSE_BIT;
-			set_size_and_pinuse_of_inuse_chunk(m, p, nb);
-			return chunk2mem(p);
-		}
-	}
+    if (nb < m->topsize) { /* Allocate from new or extended top space */
+      size_t rsize = m->topsize -= nb;
+      mchunkptr p = m->top;
+      mchunkptr r = m->top = chunk_plus_offset(p, nb);
+      r->head = rsize | PINUSE_BIT;
+      set_size_and_pinuse_of_inuse_chunk(m, p, nb);
+      return chunk2mem(p);
+    }
+  }
 
-	return NULL;
+  return NULL;
 }
 
 /* -----------------------  system deallocation -------------------------- */
@@ -998,86 +1055,84 @@ static void *alloc_sys(mstate m, size_t nb)
 /* Unmap and unlink any mmapped segments that don't contain used chunks */
 static size_t release_unused_segments(mstate m)
 {
-	size_t released = 0;
-	size_t nsegs = 0;
-	msegmentptr pred = &m->seg;
-	msegmentptr sp = pred->next;
-	while (sp != 0) {
-		char *base = sp->base;
-		size_t size = sp->size;
-		msegmentptr next = sp->next;
-		nsegs++;
-		{
-			mchunkptr p = align_as_chunk(base);
-			size_t psize = chunksize(p);
-			/* Can unmap if first chunk holds entire segment and not pinned */
-			if (!cinuse(p) && (char *)p + psize >= base + size - TOP_FOOT_SIZE) {
-				tchunkptr tp = (tchunkptr)p;
-				if (p == m->dv) {
-					m->dv = 0;
-					m->dvsize = 0;
-				}
-				else {
-					unlink_large_chunk(m, tp);
-				}
-				if (CALL_MUNMAP(base, size) == 0) {
-					released += size;
-					/* unlink obsoleted record */
-					sp = pred;
-					sp->next = next;
-				}
-				else { /* back out if cannot unmap */
-					insert_large_chunk(m, tp, psize);
-				}
-			}
-		}
-		pred = sp;
-		sp = next;
+  size_t released = 0;
+  size_t nsegs = 0;
+  msegmentptr pred = &m->seg;
+  msegmentptr sp = pred->next;
+  while (sp != 0) {
+    char *base = sp->base;
+    size_t size = sp->size;
+    msegmentptr next = sp->next;
+    nsegs++;
+    {
+      mchunkptr p = align_as_chunk(base);
+      size_t psize = chunksize(p);
+      /* Can unmap if first chunk holds entire segment and not pinned */
+      if (!cinuse(p) && (char *)p + psize >= base + size - TOP_FOOT_SIZE) {
+	tchunkptr tp = (tchunkptr)p;
+	if (p == m->dv) {
+	  m->dv = 0;
+	  m->dvsize = 0;
+	} else {
+	  unlink_large_chunk(m, tp);
 	}
-	/* Reset check counter */
-	m->release_checks = nsegs > MAX_RELEASE_CHECK_RATE ?
-		nsegs : MAX_RELEASE_CHECK_RATE;
-	return released;
+	if (CALL_MUNMAP(base, size) == 0) {
+	  released += size;
+	  /* unlink obsoleted record */
+	  sp = pred;
+	  sp->next = next;
+	} else { /* back out if cannot unmap */
+	  insert_large_chunk(m, tp, psize);
+	}
+      }
+    }
+    pred = sp;
+    sp = next;
+  }
+  /* Reset check counter */
+  m->release_checks = nsegs > MAX_RELEASE_CHECK_RATE ?
+		      nsegs : MAX_RELEASE_CHECK_RATE;
+  return released;
 }
 
 static int alloc_trim(mstate m, size_t pad)
 {
-	size_t released = 0;
-	if (pad < MAX_REQUEST && is_initialized(m)) {
-		pad += TOP_FOOT_SIZE; /* ensure enough room for segment overhead */
+  size_t released = 0;
+  if (pad < MAX_REQUEST && is_initialized(m)) {
+    pad += TOP_FOOT_SIZE; /* ensure enough room for segment overhead */
 
-		if (m->topsize > pad) {
-			/* Shrink top space in granularity-size units, keeping at least one */
-			size_t unit = DEFAULT_GRANULARITY;
-			size_t extra = ((m->topsize - pad + (unit - SIZE_T_ONE)) / unit -
-				SIZE_T_ONE) * unit;
-			msegmentptr sp = segment_holding(m, (char *)m->top);
+    if (m->topsize > pad) {
+      /* Shrink top space in granularity-size units, keeping at least one */
+      size_t unit = DEFAULT_GRANULARITY;
+      size_t extra = ((m->topsize - pad + (unit - SIZE_T_ONE)) / unit -
+		      SIZE_T_ONE) * unit;
+      msegmentptr sp = segment_holding(m, (char *)m->top);
 
-			if (sp->size >= extra &&
-				!has_segment_link(m, sp)) { /* can't shrink if pinned */
-				size_t newsize = sp->size - extra;
-				/* Prefer mremap, fall back to munmap */
-				if ((CALL_MREMAP(sp->base, sp->size, newsize, CALL_MREMAP_NOMOVE) != MFAIL) ||
-					(CALL_MUNMAP(sp->base + newsize, extra) == 0)) {
-					released = extra;
-				}
-			}
-
-			if (released != 0) {
-				sp->size -= released;
-				init_top(m, m->top, m->topsize - released);
-			}
-		}
-
-		/* Unmap any unused mmapped segments */
-		released += release_unused_segments(m);
-
-		/* On failure, disable autotrim to avoid repeated failed future calls */
-		if (released == 0 && m->topsize > m->trim_check)
-			m->trim_check = MAX_SIZE_T;
+      if (sp->size >= extra &&
+	  !has_segment_link(m, sp)) { /* can't shrink if pinned */
+	size_t newsize = sp->size - extra;
+	/* Prefer mremap, fall back to munmap */
+	if ((CALL_MREMAP(sp->base, sp->size, newsize, CALL_MREMAP_NOMOVE) != MFAIL) ||
+	    (CALL_MUNMAP(sp->base + newsize, extra) == 0)) {
+	  released = extra;
 	}
+      }
 
-	return (released != 0) ? 1 : 0;
+      if (released != 0) {
+	sp->size -= released;
+	init_top(m, m->top, m->topsize - released);
+      }
+    }
+
+    /* Unmap any unused mmapped segments */
+    released += release_unused_segments(m);
+
+    /* On failure, disable autotrim to avoid repeated failed future calls */
+    if (released == 0 && m->topsize > m->trim_check)
+      m->trim_check = MAX_SIZE_T;
+  }
+
+  return (released != 0)? 1 : 0;
 }
 
 /* ---------------------------- malloc support --------------------------- */
@@ -1085,371 +1140,350 @@ static int alloc_trim(mstate m, size_t pad)
 /* allocate a large request from the best fitting chunk in a treebin */
 static void *tmalloc_large(mstate m, size_t nb)
 {
-	tchunkptr v = 0;
-	size_t rsize = ~nb + 1; /* Unsigned negation */
-	tchunkptr t;
-	bindex_t idx;
-	compute_tree_index(nb, idx);
+  tchunkptr v = 0;
+  size_t rsize = ~nb+1; /* Unsigned negation */
+  tchunkptr t;
+  bindex_t idx;
+  compute_tree_index(nb, idx);
 
-	if ((t = *treebin_at(m, idx)) != 0) {
-		/* Traverse tree for this bin looking for node with size == nb */
-		size_t sizebits = nb << leftshift_for_tree_index(idx);
-		tchunkptr rst = 0;  /* The deepest untaken right subtree */
-		for (;;) {
-			tchunkptr rt;
-			size_t trem = chunksize(t) - nb;
-			if (trem < rsize) {
-				v = t;
-				if ((rsize = trem) == 0)
-					break;
-			}
-			rt = t->child[1];
-			t = t->child[(sizebits >> (SIZE_T_BITSIZE - SIZE_T_ONE)) & 1];
-			if (rt != 0 && rt != t)
-				rst = rt;
-			if (t == 0) {
-				t = rst; /* set t to least subtree holding sizes > nb */
-				break;
-			}
-			sizebits <<= 1;
-		}
-	}
+  if ((t = *treebin_at(m, idx)) != 0) {
+    /* Traverse tree for this bin looking for node with size == nb */
+    size_t sizebits = nb << leftshift_for_tree_index(idx);
+    tchunkptr rst = 0;  /* The deepest untaken right subtree */
+    for (;;) {
+      tchunkptr rt;
+      size_t trem = chunksize(t) - nb;
+      if (trem < rsize) {
+	v = t;
+	if ((rsize = trem) == 0)
+	  break;
+      }
+      rt = t->child[1];
+      t = t->child[(sizebits >> (SIZE_T_BITSIZE-SIZE_T_ONE)) & 1];
+      if (rt != 0 && rt != t)
+	rst = rt;
+      if (t == 0) {
+	t = rst; /* set t to least subtree holding sizes > nb */
+	break;
+      }
+      sizebits <<= 1;
+    }
+  }
 
-	if (t == 0 && v == 0) { /* set t to root of next non-empty treebin */
-		binmap_t leftbits = left_bits(idx2bit(idx)) & m->treemap;
-		if (leftbits != 0)
-			t = *treebin_at(m, lj_ffs(leftbits));
-	}
+  if (t == 0 && v == 0) { /* set t to root of next non-empty treebin */
+    binmap_t leftbits = left_bits(idx2bit(idx)) & m->treemap;
+    if (leftbits != 0)
+      t = *treebin_at(m, lj_ffs(leftbits));
+  }
 
-	while (t != 0) { /* find smallest of tree or subtree */
-		size_t trem = chunksize(t) - nb;
-		if (trem < rsize) {
-			rsize = trem;
-			v = t;
-		}
-		t = leftmost_child(t);
-	}
+  while (t != 0) { /* find smallest of tree or subtree */
+    size_t trem = chunksize(t) - nb;
+    if (trem < rsize) {
+      rsize = trem;
+      v = t;
+    }
+    t = leftmost_child(t);
+  }
 
-	/*  If dv is a better fit, return NULL so malloc will use it */
-	if (v != 0 && rsize < (size_t)(m->dvsize - nb)) {
-		mchunkptr r = chunk_plus_offset(v, nb);
-		unlink_large_chunk(m, v);
-		if (rsize < MIN_CHUNK_SIZE) {
-			set_inuse_and_pinuse(m, v, (rsize + nb));
-		}
-		else {
-			set_size_and_pinuse_of_inuse_chunk(m, v, nb);
-			set_size_and_pinuse_of_free_chunk(r, rsize);
-			insert_chunk(m, r, rsize);
-		}
-		return chunk2mem(v);
-	}
-	return NULL;
+  /*  If dv is a better fit, return NULL so malloc will use it */
+  if (v != 0 && rsize < (size_t)(m->dvsize - nb)) {
+    mchunkptr r = chunk_plus_offset(v, nb);
+    unlink_large_chunk(m, v);
+    if (rsize < MIN_CHUNK_SIZE) {
+      set_inuse_and_pinuse(m, v, (rsize + nb));
+    } else {
+      set_size_and_pinuse_of_inuse_chunk(m, v, nb);
+      set_size_and_pinuse_of_free_chunk(r, rsize);
+      insert_chunk(m, r, rsize);
+    }
+    return chunk2mem(v);
+  }
+  return NULL;
 }
 
 /* allocate a small request from the best fitting chunk in a treebin */
 static void *tmalloc_small(mstate m, size_t nb)
 {
-	tchunkptr t, v;
-	mchunkptr r;
-	size_t rsize;
-	bindex_t i = lj_ffs(m->treemap);
+  tchunkptr t, v;
+  mchunkptr r;
+  size_t rsize;
+  bindex_t i = lj_ffs(m->treemap);
 
-	v = t = *treebin_at(m, i);
-	rsize = chunksize(t) - nb;
+  v = t = *treebin_at(m, i);
+  rsize = chunksize(t) - nb;
 
-	while ((t = leftmost_child(t)) != 0) {
-		size_t trem = chunksize(t) - nb;
-		if (trem < rsize) {
-			rsize = trem;
-			v = t;
-		}
-	}
+  while ((t = leftmost_child(t)) != 0) {
+    size_t trem = chunksize(t) - nb;
+    if (trem < rsize) {
+      rsize = trem;
+      v = t;
+    }
+  }
 
-	r = chunk_plus_offset(v, nb);
-	unlink_large_chunk(m, v);
-	if (rsize < MIN_CHUNK_SIZE) {
-		set_inuse_and_pinuse(m, v, (rsize + nb));
-	}
-	else {
-		set_size_and_pinuse_of_inuse_chunk(m, v, nb);
-		set_size_and_pinuse_of_free_chunk(r, rsize);
-		replace_dv(m, r, rsize);
-	}
-	return chunk2mem(v);
+  r = chunk_plus_offset(v, nb);
+  unlink_large_chunk(m, v);
+  if (rsize < MIN_CHUNK_SIZE) {
+    set_inuse_and_pinuse(m, v, (rsize + nb));
+  } else {
+    set_size_and_pinuse_of_inuse_chunk(m, v, nb);
+    set_size_and_pinuse_of_free_chunk(r, rsize);
+    replace_dv(m, r, rsize);
+  }
+  return chunk2mem(v);
 }
 
 /* ----------------------------------------------------------------------- */
 
 void *lj_alloc_create(void)
 {
-	size_t tsize = DEFAULT_GRANULARITY;
-	char *tbase;
-	INIT_MMAP();
-	tbase = (char *)(CALL_MMAP(tsize));
-	if (tbase != CMFAIL) {
-		size_t msize = pad_request(sizeof(struct malloc_state));
-		mchunkptr mn;
-		mchunkptr msp = align_as_chunk(tbase);
-		mstate m = (mstate)(chunk2mem(msp));
-		memset(m, 0, msize);
-		msp->head = (msize | PINUSE_BIT | CINUSE_BIT);
-		m->seg.base = tbase;
-		m->seg.size = tsize;
-		m->release_checks = MAX_RELEASE_CHECK_RATE;
-		init_bins(m);
-		mn = next_chunk(mem2chunk(m));
-		init_top(m, mn, (size_t)((tbase + tsize) - (char *)mn) - TOP_FOOT_SIZE);
-		return m;
-	}
-	return NULL;
+  size_t tsize = DEFAULT_GRANULARITY;
+  char *tbase;
+  INIT_MMAP();
+  tbase = (char *)(CALL_MMAP(tsize));
+  if (tbase != CMFAIL) {
+    size_t msize = pad_request(sizeof(struct malloc_state));
+    mchunkptr mn;
+    mchunkptr msp = align_as_chunk(tbase);
+    mstate m = (mstate)(chunk2mem(msp));
+    memset(m, 0, msize);
+    msp->head = (msize|PINUSE_BIT|CINUSE_BIT);
+    m->seg.base = tbase;
+    m->seg.size = tsize;
+    m->release_checks = MAX_RELEASE_CHECK_RATE;
+    init_bins(m);
+    mn = next_chunk(mem2chunk(m));
+    init_top(m, mn, (size_t)((tbase + tsize) - (char *)mn) - TOP_FOOT_SIZE);
+    return m;
+  }
+  return NULL;
 }
 
 void lj_alloc_destroy(void *msp)
 {
-	mstate ms = (mstate)msp;
-	msegmentptr sp = &ms->seg;
-	while (sp != 0) {
-		char *base = sp->base;
-		size_t size = sp->size;
-		sp = sp->next;
-		CALL_MUNMAP(base, size);
-	}
+  mstate ms = (mstate)msp;
+  msegmentptr sp = &ms->seg;
+  while (sp != 0) {
+    char *base = sp->base;
+    size_t size = sp->size;
+    sp = sp->next;
+    CALL_MUNMAP(base, size);
+  }
 }
 
 static LJ_NOINLINE void *lj_alloc_malloc(void *msp, size_t nsize)
 {
-	mstate ms = (mstate)msp;
-	void *mem;
-	size_t nb;
-	if (nsize <= MAX_SMALL_REQUEST) {
-		bindex_t idx;
-		binmap_t smallbits;
-		nb = (nsize < MIN_REQUEST) ? MIN_CHUNK_SIZE : pad_request(nsize);
-		idx = small_index(nb);
-		smallbits = ms->smallmap >> idx;
+  mstate ms = (mstate)msp;
+  void *mem;
+  size_t nb;
+  if (nsize <= MAX_SMALL_REQUEST) {
+    bindex_t idx;
+    binmap_t smallbits;
+    nb = (nsize < MIN_REQUEST)? MIN_CHUNK_SIZE : pad_request(nsize);
+    idx = small_index(nb);
+    smallbits = ms->smallmap >> idx;
 
-		if ((smallbits & 0x3U) != 0) { /* Remainderless fit to a smallbin. */
-			mchunkptr b, p;
-			idx += ~smallbits & 1;       /* Uses next bin if idx empty */
-			b = smallbin_at(ms, idx);
-			p = b->fd;
-			unlink_first_small_chunk(ms, b, p, idx);
-			set_inuse_and_pinuse(ms, p, small_index2size(idx));
-			mem = chunk2mem(p);
-			return mem;
-		}
-		else if (nb > ms->dvsize) {
-			if (smallbits != 0) { /* Use chunk in next nonempty smallbin */
-				mchunkptr b, p, r;
-				size_t rsize;
-				binmap_t leftbits = (smallbits << idx) & left_bits(idx2bit(idx));
-				bindex_t i = lj_ffs(leftbits);
-				b = smallbin_at(ms, i);
-				p = b->fd;
-				unlink_first_small_chunk(ms, b, p, i);
-				rsize = small_index2size(i) - nb;
-				/* Fit here cannot be remainderless if 4byte sizes */
-				if (SIZE_T_SIZE != 4 && rsize < MIN_CHUNK_SIZE) {
-					set_inuse_and_pinuse(ms, p, small_index2size(i));
-				}
-				else {
-					set_size_and_pinuse_of_inuse_chunk(ms, p, nb);
-					r = chunk_plus_offset(p, nb);
-					set_size_and_pinuse_of_free_chunk(r, rsize);
-					replace_dv(ms, r, rsize);
-				}
-				mem = chunk2mem(p);
-				return mem;
-			}
-			else if (ms->treemap != 0 && (mem = tmalloc_small(ms, nb)) != 0) {
-				return mem;
-			}
-		}
+    if ((smallbits & 0x3U) != 0) { /* Remainderless fit to a smallbin. */
+      mchunkptr b, p;
+      idx += ~smallbits & 1;       /* Uses next bin if idx empty */
+      b = smallbin_at(ms, idx);
+      p = b->fd;
+      unlink_first_small_chunk(ms, b, p, idx);
+      set_inuse_and_pinuse(ms, p, small_index2size(idx));
+      mem = chunk2mem(p);
+      return mem;
+    } else if (nb > ms->dvsize) {
+      if (smallbits != 0) { /* Use chunk in next nonempty smallbin */
+	mchunkptr b, p, r;
+	size_t rsize;
+	binmap_t leftbits = (smallbits << idx) & left_bits(idx2bit(idx));
+	bindex_t i = lj_ffs(leftbits);
+	b = smallbin_at(ms, i);
+	p = b->fd;
+	unlink_first_small_chunk(ms, b, p, i);
+	rsize = small_index2size(i) - nb;
+	/* Fit here cannot be remainderless if 4byte sizes */
+	if (SIZE_T_SIZE != 4 && rsize < MIN_CHUNK_SIZE) {
+	  set_inuse_and_pinuse(ms, p, small_index2size(i));
+	} else {
+	  set_size_and_pinuse_of_inuse_chunk(ms, p, nb);
+	  r = chunk_plus_offset(p, nb);
+	  set_size_and_pinuse_of_free_chunk(r, rsize);
+	  replace_dv(ms, r, rsize);
 	}
-	else if (nsize >= MAX_REQUEST) {
-		nb = MAX_SIZE_T; /* Too big to allocate. Force failure (in sys alloc) */
-	}
-	else {
-		nb = pad_request(nsize);
-		if (ms->treemap != 0 && (mem = tmalloc_large(ms, nb)) != 0) {
-			return mem;
-		}
-	}
+	mem = chunk2mem(p);
+	return mem;
+      } else if (ms->treemap != 0 && (mem = tmalloc_small(ms, nb)) != 0) {
+	return mem;
+      }
+    }
+  } else if (nsize >= MAX_REQUEST) {
+    nb = MAX_SIZE_T; /* Too big to allocate. Force failure (in sys alloc) */
+  } else {
+    nb = pad_request(nsize);
+    if (ms->treemap != 0 && (mem = tmalloc_large(ms, nb)) != 0) {
+      return mem;
+    }
+  }
 
-	if (nb <= ms->dvsize) {
-		size_t rsize = ms->dvsize - nb;
-		mchunkptr p = ms->dv;
-		if (rsize >= MIN_CHUNK_SIZE) { /* split dv */
-			mchunkptr r = ms->dv = chunk_plus_offset(p, nb);
-			ms->dvsize = rsize;
-			set_size_and_pinuse_of_free_chunk(r, rsize);
-			set_size_and_pinuse_of_inuse_chunk(ms, p, nb);
-		}
-		else { /* exhaust dv */
-			size_t dvs = ms->dvsize;
-			ms->dvsize = 0;
-			ms->dv = 0;
-			set_inuse_and_pinuse(ms, p, dvs);
-		}
-		mem = chunk2mem(p);
-		return mem;
-	}
-	else if (nb < ms->topsize) { /* Split top */
-		size_t rsize = ms->topsize -= nb;
-		mchunkptr p = ms->top;
-		mchunkptr r = ms->top = chunk_plus_offset(p, nb);
-		r->head = rsize | PINUSE_BIT;
-		set_size_and_pinuse_of_inuse_chunk(ms, p, nb);
-		mem = chunk2mem(p);
-		return mem;
-	}
-	return alloc_sys(ms, nb);
+  if (nb <= ms->dvsize) {
+    size_t rsize = ms->dvsize - nb;
+    mchunkptr p = ms->dv;
+    if (rsize >= MIN_CHUNK_SIZE) { /* split dv */
+      mchunkptr r = ms->dv = chunk_plus_offset(p, nb);
+      ms->dvsize = rsize;
+      set_size_and_pinuse_of_free_chunk(r, rsize);
+      set_size_and_pinuse_of_inuse_chunk(ms, p, nb);
+    } else { /* exhaust dv */
+      size_t dvs = ms->dvsize;
+      ms->dvsize = 0;
+      ms->dv = 0;
+      set_inuse_and_pinuse(ms, p, dvs);
+    }
+    mem = chunk2mem(p);
+    return mem;
+  } else if (nb < ms->topsize) { /* Split top */
+    size_t rsize = ms->topsize -= nb;
+    mchunkptr p = ms->top;
+    mchunkptr r = ms->top = chunk_plus_offset(p, nb);
+    r->head = rsize | PINUSE_BIT;
+    set_size_and_pinuse_of_inuse_chunk(ms, p, nb);
+    mem = chunk2mem(p);
+    return mem;
+  }
+  return alloc_sys(ms, nb);
 }
 
 static LJ_NOINLINE void *lj_alloc_free(void *msp, void *ptr)
 {
-	if (ptr != 0) {
-		mchunkptr p = mem2chunk(ptr);
-		mstate fm = (mstate)msp;
-		size_t psize = chunksize(p);
-		mchunkptr next = chunk_plus_offset(p, psize);
-		if (!pinuse(p)) {
-			size_t prevsize = p->prev_foot;
-			if ((prevsize & IS_DIRECT_BIT) != 0) {
-				prevsize &= ~IS_DIRECT_BIT;
-				psize += prevsize + DIRECT_FOOT_PAD;
-				CALL_MUNMAP((char *)p - prevsize, psize);
-				return NULL;
-			}
-			else {
-				mchunkptr prev = chunk_minus_offset(p, prevsize);
-				psize += prevsize;
-				p = prev;
-				/* consolidate backward */
-				if (p != fm->dv) {
-					unlink_chunk(fm, p, prevsize);
-				}
-				else if ((next->head & INUSE_BITS) == INUSE_BITS) {
-					fm->dvsize = psize;
-					set_free_with_pinuse(p, psize, next);
-					return NULL;
-				}
-			}
-		}
-		if (!cinuse(next)) {  /* consolidate forward */
-			if (next == fm->top) {
-				size_t tsize = fm->topsize += psize;
-				fm->top = p;
-				p->head = tsize | PINUSE_BIT;
-				if (p == fm->dv) {
-					fm->dv = 0;
-					fm->dvsize = 0;
-				}
-				if (tsize > fm->trim_check)
-					alloc_trim(fm, 0);
-				return NULL;
-			}
-			else if (next == fm->dv) {
-				size_t dsize = fm->dvsize += psize;
-				fm->dv = p;
-				set_size_and_pinuse_of_free_chunk(p, dsize);
-				return NULL;
-			}
-			else {
-				size_t nsize = chunksize(next);
-				psize += nsize;
-				unlink_chunk(fm, next, nsize);
-				set_size_and_pinuse_of_free_chunk(p, psize);
-				if (p == fm->dv) {
-					fm->dvsize = psize;
-					return NULL;
-				}
-			}
-		}
-		else {
-			set_free_with_pinuse(p, psize, next);
-		}
-
-		if (is_small(psize)) {
-			insert_small_chunk(fm, p, psize);
-		}
-		else {
-			tchunkptr tp = (tchunkptr)p;
-			insert_large_chunk(fm, tp, psize);
-			if (--fm->release_checks == 0)
-				release_unused_segments(fm);
-		}
-	}
+  if (ptr != 0) {
+    mchunkptr p = mem2chunk(ptr);
+    mstate fm = (mstate)msp;
+    size_t psize = chunksize(p);
+    mchunkptr next = chunk_plus_offset(p, psize);
+    if (!pinuse(p)) {
+      size_t prevsize = p->prev_foot;
+      if ((prevsize & IS_DIRECT_BIT) != 0) {
+	prevsize &= ~IS_DIRECT_BIT;
+	psize += prevsize + DIRECT_FOOT_PAD;
+	CALL_MUNMAP((char *)p - prevsize, psize);
 	return NULL;
+      } else {
+	mchunkptr prev = chunk_minus_offset(p, prevsize);
+	psize += prevsize;
+	p = prev;
+	/* consolidate backward */
+	if (p != fm->dv) {
+	  unlink_chunk(fm, p, prevsize);
+	} else if ((next->head & INUSE_BITS) == INUSE_BITS) {
+	  fm->dvsize = psize;
+	  set_free_with_pinuse(p, psize, next);
+	  return NULL;
+	}
+      }
+    }
+    if (!cinuse(next)) {  /* consolidate forward */
+      if (next == fm->top) {
+	size_t tsize = fm->topsize += psize;
+	fm->top = p;
+	p->head = tsize | PINUSE_BIT;
+	if (p == fm->dv) {
+	  fm->dv = 0;
+	  fm->dvsize = 0;
+	}
+	if (tsize > fm->trim_check)
+	  alloc_trim(fm, 0);
+	return NULL;
+      } else if (next == fm->dv) {
+	size_t dsize = fm->dvsize += psize;
+	fm->dv = p;
+	set_size_and_pinuse_of_free_chunk(p, dsize);
+	return NULL;
+      } else {
+	size_t nsize = chunksize(next);
+	psize += nsize;
+	unlink_chunk(fm, next, nsize);
+	set_size_and_pinuse_of_free_chunk(p, psize);
+	if (p == fm->dv) {
+	  fm->dvsize = psize;
+	  return NULL;
+	}
+      }
+    } else {
+      set_free_with_pinuse(p, psize, next);
+    }
+
+    if (is_small(psize)) {
+      insert_small_chunk(fm, p, psize);
+    } else {
+      tchunkptr tp = (tchunkptr)p;
+      insert_large_chunk(fm, tp, psize);
+      if (--fm->release_checks == 0)
+	release_unused_segments(fm);
+    }
+  }
+  return NULL;
 }
 
 static LJ_NOINLINE void *lj_alloc_realloc(void *msp, void *ptr, size_t nsize)
 {
-	if (nsize >= MAX_REQUEST) {
-		return NULL;
-	}
-	else {
-		mstate m = (mstate)msp;
-		mchunkptr oldp = mem2chunk(ptr);
-		size_t oldsize = chunksize(oldp);
-		mchunkptr next = chunk_plus_offset(oldp, oldsize);
-		mchunkptr newp = 0;
-		size_t nb = request2size(nsize);
+  if (nsize >= MAX_REQUEST) {
+    return NULL;
+  } else {
+    mstate m = (mstate)msp;
+    mchunkptr oldp = mem2chunk(ptr);
+    size_t oldsize = chunksize(oldp);
+    mchunkptr next = chunk_plus_offset(oldp, oldsize);
+    mchunkptr newp = 0;
+    size_t nb = request2size(nsize);
 
-		/* Try to either shrink or extend into top. Else malloc-copy-free */
-		if (is_direct(oldp)) {
-			newp = direct_resize(oldp, nb);  /* this may return NULL. */
-		}
-		else if (oldsize >= nb) { /* already big enough */
-			size_t rsize = oldsize - nb;
-			newp = oldp;
-			if (rsize >= MIN_CHUNK_SIZE) {
-				mchunkptr rem = chunk_plus_offset(newp, nb);
-				set_inuse(m, newp, nb);
-				set_inuse(m, rem, rsize);
-				lj_alloc_free(m, chunk2mem(rem));
-			}
-		}
-		else if (next == m->top && oldsize + m->topsize > nb) {
-			/* Expand into top */
-			size_t newsize = oldsize + m->topsize;
-			size_t newtopsize = newsize - nb;
-			mchunkptr newtop = chunk_plus_offset(oldp, nb);
-			set_inuse(m, oldp, nb);
-			newtop->head = newtopsize | PINUSE_BIT;
-			m->top = newtop;
-			m->topsize = newtopsize;
-			newp = oldp;
-		}
+    /* Try to either shrink or extend into top. Else malloc-copy-free */
+    if (is_direct(oldp)) {
+      newp = direct_resize(oldp, nb);  /* this may return NULL. */
+    } else if (oldsize >= nb) { /* already big enough */
+      size_t rsize = oldsize - nb;
+      newp = oldp;
+      if (rsize >= MIN_CHUNK_SIZE) {
+	mchunkptr rem = chunk_plus_offset(newp, nb);
+	set_inuse(m, newp, nb);
+	set_inuse(m, rem, rsize);
+	lj_alloc_free(m, chunk2mem(rem));
+      }
+    } else if (next == m->top && oldsize + m->topsize > nb) {
+      /* Expand into top */
+      size_t newsize = oldsize + m->topsize;
+      size_t newtopsize = newsize - nb;
+      mchunkptr newtop = chunk_plus_offset(oldp, nb);
+      set_inuse(m, oldp, nb);
+      newtop->head = newtopsize |PINUSE_BIT;
+      m->top = newtop;
+      m->topsize = newtopsize;
+      newp = oldp;
+    }
 
-		if (newp != 0) {
-			return chunk2mem(newp);
-		}
-		else {
-			void *newmem = lj_alloc_malloc(m, nsize);
-			if (newmem != 0) {
-				size_t oc = oldsize - overhead_for(oldp);
-				memcpy(newmem, ptr, oc < nsize ? oc : nsize);
-				lj_alloc_free(m, ptr);
-			}
-			return newmem;
-		}
-	}
+    if (newp != 0) {
+      return chunk2mem(newp);
+    } else {
+      void *newmem = lj_alloc_malloc(m, nsize);
+      if (newmem != 0) {
+	size_t oc = oldsize - overhead_for(oldp);
+	memcpy(newmem, ptr, oc < nsize ? oc : nsize);
+	lj_alloc_free(m, ptr);
+      }
+      return newmem;
+    }
+  }
 }
 
 void *lj_alloc_f(void *msp, void *ptr, size_t osize, size_t nsize)
 {
-	(void)osize;
-	if (nsize == 0) {
-		return lj_alloc_free(msp, ptr);
-	}
-	else if (ptr == NULL) {
-		return lj_alloc_malloc(msp, nsize);
-	}
-	else {
-		return lj_alloc_realloc(msp, ptr, nsize);
-	}
+  (void)osize;
+  if (nsize == 0) {
+    return lj_alloc_free(msp, ptr);
+  } else if (ptr == NULL) {
+    return lj_alloc_malloc(msp, nsize);
+  } else {
+    return lj_alloc_realloc(msp, ptr, nsize);
+  }
 }
 
 #endif

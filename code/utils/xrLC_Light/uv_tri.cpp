@@ -5,7 +5,7 @@
 
 
 
-void UVtri ::read( INetReader	&r )
+void UVtri ::read( IReader	&r )
 {
 	_TCF::read( r );
 	VERIFY( read_faces );

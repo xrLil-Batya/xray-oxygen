@@ -10,7 +10,7 @@
 
 class CInventoryOwner;
 
-class CPda : public CInventoryItemObject, public Feel::Touch
+class GAME_API CPda : public CInventoryItemObject, public Feel::Touch
 {
 	typedef	CInventoryItemObject inherited;
 public:
@@ -53,6 +53,8 @@ public:
 	virtual void							save					(NET_Packet &output_packet);
 	virtual void							load					(IReader &input_packet);
 
+	float									GetRadius() const			{ return m_fRadius; }
+	void									SetRadius(float val)		{ m_fRadius = val; }
 protected:
 	void									UpdateActiveContacts	();
 

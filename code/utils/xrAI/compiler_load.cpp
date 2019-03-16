@@ -43,7 +43,7 @@ void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
 {
 	IReader*	O	= F.open_chunk(chunk);
 	u32		count	= O?(O->length()/sizeof(T)):0;
-	clMsg			("* %16s: %d",name,count);
+	Logger.clMsg			("* %16s: %d",name,count);
 	if (count)  
 	{
 		dest.reserve(count);
@@ -70,7 +70,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 		// Load CFORM
 		{
 			string_path cform_path, rc_face_path;
-			strconcat(sizeof(cform_path), cform_path, name, "level.cform");
+			xr_strconcat(cform_path, name, "level.cform");
 			IReader* fs = FS.r_open(cform_path);
 			R_ASSERT2(fs, "can`t load level.cform");
 
@@ -90,7 +90,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			g_rc_faces.resize	(H.facecount);
 			/////////////////////////////////////////////////////////////////////
 			// New rc_face reader
-			strconcat(sizeof(rc_face_path), rc_face_path, name, "build.rc_faces");
+			xr_strconcat(rc_face_path, name, "build.rc_faces");
 			IReader* Face_fs = FS.r_open(rc_face_path);
 			R_ASSERT2(Face_fs, "can`t load build.rc_faces");
 
@@ -112,9 +112,9 @@ void xrLoad(LPCSTR name, bool draft_mode)
 
 		// Load level data
 		{
-			strconcat(sizeof(N),N,name,"build.prj");
+			xr_strconcat(N,name,"build.prj");
 			IReader* fs = FS.r_open (N);
-			R_ASSERT2(fs, "There is no file 'build.prj'!"); // Âîò ýòîò âûëåò íèêîãäà ðàíüøå íå ìîã ïîÿâèòñÿ, õîòü è áûë âñ¸ âðåìÿ
+			R_ASSERT2(fs, "There is no file 'build.prj'!"); // Ð’Ð¾Ñ‚ ÑÑ‚Ð¾Ñ‚ Ð²Ñ‹Ð»ÐµÑ‚ Ð½Ð¸ÐºÐ¾Ð³Ð´Ð° Ñ€Ð°Ð½ÑŒÑˆÐµ Ð½Ðµ Ð¼Ð¾Ð³ Ð¿Ð¾ÑÐ²Ð¸Ñ‚ÑÑ, Ñ…Ð¾Ñ‚ÑŒ Ð¸ Ð±Ñ‹Ð» Ð²ÑÑ‘ Ð²Ñ€ÐµÐ¼Ñ
 
 			// Version
 			u32 version;
@@ -128,7 +128,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			transfer("shaders_xrlc",g_shader_compile,		*fs,		EB_Shaders_Compile);
 
 			// process textures
-			Status			("Processing textures...");
+			Logger.Status			("Processing textures...");
 			{
 				Surface_Init		();
 				IReader* F = fs->open_chunk	(EB_Textures);
@@ -136,7 +136,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 
 				for (u32 t=0; t<tex_count; t++)
 				{
-					Progress(float(t)/float(tex_count));
+					Logger.Progress(float(t)/float(tex_count));
 
 					// workaround for ptr size mismatching
 					help_b_texture	TEX;
@@ -162,12 +162,12 @@ void xrLoad(LPCSTR name, bool draft_mode)
 					} 
 					else 
 					{
-						xr_strcat		(N,".thm");
-						IReader* THM	= FS.r_open("$game_textures$",N);
+						xr_strcat(N,".thm");
+						IReader* THM = FS.r_open("$game_textures$",N);
 						
 						if (!THM)
 						{
-							clMsg("can't find thm: %s", N);
+							Logger.clMsg("can't find thm: %s", N);
 							is_thm_missing = true;
 							continue;
 						}
@@ -176,7 +176,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 
 						if (!THM->r_chunk(THM_CHUNK_VERSION, &version))
 						{
-							clMsg("xrAI don't support a current version %s.thm.", N);
+							Logger.clMsg("xrAI don't support a current version %s.thm.", N);
 							is_thm_deprecated = true;
 						}
 						//R_ASSERT3(THM->r_chunk(THM_CHUNK_VERSION,&version), "xrAI don't support a current version %s.thm", N);
@@ -202,13 +202,13 @@ void xrLoad(LPCSTR name, bool draft_mode)
 						{
 							if (BT.bHasAlpha || BT.THM.flags.test(STextureParams::flImplicitLighted))
 							{
-								clMsg		("- loading: %s",N);
+								Logger.clMsg		("- loading: %s",N);
 								u32			w=0, h=0;
 								BT.pSurface = Surface_Load(N,w,h); 
 								//R_ASSERT2	(BT.pSurface,"Can't load surface");
 								if (!BT.pSurface)
 								{
-									clMsg("can't find tga texture: %s", N);
+									Logger.clMsg("can't find tga texture: %s", N);
 									is_tga_missing = true;
 									continue;
 								}
@@ -231,7 +231,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 	
 	// Load lights
 	{
-		strconcat(sizeof(N),N,name,"build.prj");
+		xr_strconcat(N,name,"build.prj");
 		IReader& fs = *FS.r_open(N);
 
 		// Lights (Static)
@@ -277,7 +277,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 	// Load initial map from the Level Editor
 	{
 		string_path			file_name;
-		strconcat			(sizeof(file_name),file_name,name,"build.aimap");
+		xr_strconcat(file_name,name,"build.aimap");
 		IReader				*F = FS.r_open(file_name);
 		R_ASSERT2			(F, file_name);
 

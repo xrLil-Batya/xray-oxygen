@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 
 void CRenderTarget::accum_point		(light* L)
 {
@@ -18,7 +19,7 @@ void CRenderTarget::accum_point		(light* L)
 	float		L_spec;
 	float		L_R					= L->range*.95f;
 	Fvector		L_clr;				L_clr.set		(L->color.r,L->color.g,L->color.b);
-	L_spec							= u_diffuse2s	(L_clr);
+	L_spec							= Diffuse::u_diffuse2s	(L_clr);
 	Device.mView.transform_tiny		(L_pos,L->position);
 
 	// Xforms
@@ -118,9 +119,9 @@ void CRenderTarget::accum_point		(light* L)
 	// blend-copy
 	if (!RImplementation.o.fp16_blend)	{
       if( ! RImplementation.o.dx10_msaa )
-	   	u_setrt						(rt_Accumulator,NULL,NULL,HW.pBaseZB);
+	   	u_setrt						(rt_Accumulator,nullptr,nullptr,HW.pBaseZB);
       else
-		   u_setrt						(rt_Accumulator,NULL,NULL,rt_MSAADepth->pZRT);
+		   u_setrt						(rt_Accumulator,nullptr,nullptr,rt_MSAADepth->pZRT);
 		RCache.set_Element	(s_accum_mask->E[SE_MASK_ACCUM_VOL]	);
 		RCache.set_c				("m_texgen",		m_Texgen);
       if( ! RImplementation.o.dx10_msaa )
@@ -158,7 +159,7 @@ void CRenderTarget::accum_point		(light* L)
       }
 	}
 
-	RCache.set_Scissor(0);
+	RCache.set_Scissor(nullptr);
 
 	increment_light_marker();
 }

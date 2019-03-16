@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "inventory.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "actor.h"
 #include "../xrCore/xr_ini.h"
 
@@ -8,7 +8,7 @@ static u32 const ammo_to_cost_map_koef = 3;
 class next_weapon_searcher
 {
 public:
-	typedef xr_set<PIItem> exception_items_t;
+	using exception_items_t = xr_set<PIItem>;
 	next_weapon_searcher(priority_group & pg,
 						 PIItem & best_fit,
 						 exception_items_t & except_set,
@@ -20,7 +20,7 @@ public:
 		m_except_set(except_set),
 		m_ignore_ammo(ignore_ammo)
 	{
-		m_best_fit = NULL;
+		m_best_fit = nullptr;
 	};
 
 	next_weapon_searcher(next_weapon_searcher const & copy) :
@@ -93,7 +93,7 @@ PIItem CInventory::GetNextItemInActiveSlot(u8 const priority_value, bool ignore_
 		m_next_items_exceptions.clear();
 		m_next_items_exceptions.insert(ActiveItem());
 	}
-	PIItem best_fit = NULL;
+	PIItem best_fit = nullptr;
 	priority_group & tmp_prior_group = GetPriorityGroup(priority_value, m_iActiveSlot);
 	next_weapon_searcher tmp_predicate(
 		tmp_prior_group,
@@ -117,7 +117,7 @@ PIItem CInventory::GetNextItemInActiveSlot(u8 const priority_value, bool ignore_
 		{
 			m_next_items_exceptions.clear		();
 			m_next_items_exceptions.insert		(ActiveItem());
-			return NULL;
+			return nullptr;
 		}
 		return GetNextItemInActiveSlot(0, true);
 	}
@@ -139,7 +139,7 @@ bool CInventory::ActivateNextItemInActiveSlot()
 
 	PIItem new_item = GetNextItemInActiveSlot(0, false);
 
-	if ( new_item == NULL )
+	if ( new_item == nullptr )
 	{
 		return false; //only 1 item for this slot
 	}

@@ -24,10 +24,10 @@ public:
 
 	CBlender_accum_point_msaa();
 	virtual ~CBlender_accum_point_msaa();
-	virtual   void    SetDefine( LPCSTR _Name, LPCSTR Definition )
+	virtual   void    SetDefine( LPCSTR sName, LPCSTR sDefinition )
 		{
-		this->Name = _Name;
-		this->Definition = Definition;
+		this->Name = sName;
+		this->Definition = sDefinition;
 		}
 	LPCSTR Name;
 	LPCSTR Definition;

@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include "../FrayBuildConfig.hpp"
 #include "../xrScripts/luaopen.hpp"
+#include <luabind/luabind.hpp>
 
 #ifdef XRSE_FACTORY_EXPORTS
 #include "ai_space.h"
@@ -47,6 +48,7 @@ const char*	file_header = 0;
 #	define NO_XRGAME_SCRIPT_ENGINE
 #endif
 
+CVMLua* CScriptStorage::luaVM = nullptr;
 void xrScriptCrashHandler()
 {
 	Msg("Trying dump lua state");
@@ -74,7 +76,15 @@ CScriptStorage::~CScriptStorage()
 
 void CScriptStorage::reinit()
 {
-    xr_delete(luaVM);
+	try
+	{
+		xr_delete(luaVM);
+	}
+	catch (...)
+	{
+		Msg("[ERROR] Error lua vm closed...");
+	}
+
     luaVM = xr_new<CVMLua>();
 
 	if (strstr(Core.Params, "-_g"))
@@ -85,7 +95,6 @@ void CScriptStorage::reinit()
 	//set our crash handler
 	Debug.set_crashhandler(xrScriptCrashHandler);
 }
-
 
 void CScriptStorage::dump_state()
 {
@@ -124,27 +133,27 @@ void CScriptStorage::dump_state()
 	reentrantGuard = false;
 }
 
-void CScriptStorage::LogTable(lua_State *l, LPCSTR S, int level)
+void CScriptStorage::LogTable(lua_State *l, const char* S, int level, int index /*= -1*/)
 {
-	if (!lua_istable(l, -1))
+	if (!lua_istable(l, index))
 		return;
 
 	lua_pushnil(l);  /* first key */
-	while (lua_next(l, -2) != 0) {
+	while (lua_next(l, index - 1) != 0) {
 		char sname[256];
 		char sFullName[256];
-		xr_sprintf(sname, "%s", lua_tostring(l, -2));
+		xr_sprintf(sname, "%s", lua_tostring(l, index - 1));
 		xr_sprintf(sFullName, "%s.%s", S, sname);
-		LogVariable(l, sFullName, level + 1, false);
+		LogVariable(l, sFullName, level + 1, false, index);
 
 		lua_pop(l, 1);  /* removes `value'; keeps `key' for next iteration */
 	}
 }
 
-void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, bool bOpenTable)
+void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, bool bOpenTable, int index /*= -1*/)
 {
 	const char * type;
-	int ntype = lua_type(l, -1);
+	int ntype = lua_type(l, index);
 	type = lua_typename(l, ntype);
 
 	char tabBuffer[32] = { 0 };
@@ -155,22 +164,22 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 	switch (ntype)
 	{
 	case LUA_TNUMBER:
-		xr_sprintf(value, "%f", lua_tonumber(l, -1));
+		xr_sprintf(value, "%f", lua_tonumber(l, index));
 		break;
 
 	case LUA_TBOOLEAN:
-		xr_sprintf(value, "%s", lua_toboolean(l, -1) ? "true" : "false");
+		xr_sprintf(value, "%s", lua_toboolean(l, index) ? "true" : "false");
 		break;
 
 	case LUA_TSTRING:
-		xr_sprintf(value, "%.127s", lua_tostring(l, -1));
+		xr_sprintf(value, "%.127s", lua_tostring(l, index));
 		break;
 
 	case LUA_TTABLE:
 		if (bOpenTable)
 		{
 			Msg("%s Table: %s", tabBuffer, name);
-			LogTable(l, name, level + 1);
+			LogTable(l, name, level + 1, index);
 			return;
 		}
 		else
@@ -181,7 +190,7 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 
 	case LUA_TUSERDATA: 
 	{
-		luabind::detail::object_rep* obj = static_cast<luabind::detail::object_rep*>(lua_touserdata(l, -1));
+		luabind::detail::object_rep* obj = static_cast<luabind::detail::object_rep*>(lua_touserdata(l, index));
 
         // Skip already dumped object
         if (m_dumpedObjList.find(obj) != m_dumpedObjList.end()) return;
@@ -191,13 +200,21 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 		{
 			r.get(l);
 			Msg("%s Userdata: %s", tabBuffer, name);
-			LogTable(l, name, level + 1);
+			LogTable(l, name, level + 1, index);
 			lua_pop(l, 1); //Remove userobject
 			return;
 		}
 		else
 		{
-			xr_strcpy(value, "[not available]");
+            // Dump class and element pointer if available
+            if (const luabind::detail::class_rep* objectClass = obj->crep())
+            {
+                xr_sprintf(value, "(%s): %p", objectClass->name(), obj->ptr());
+            }
+            else
+            {
+			    xr_strcpy(value, "[not available]");
+            }
 		}
 	}
 		break;
@@ -210,13 +227,21 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 	Msg("%s %s %s : %s", tabBuffer, type, name, value);
 }
 
+void CScriptStorage::ClearDumpedObjects()
+{
+    m_dumpedObjList.clear();
+}
+
 int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, ...)
 {
 	va_list marker;
+	string2048 buf;
+	ZeroMemory(&buf, sizeof(buf));
 	va_start(marker, caFormat);
-	Msg(caFormat, marker);
+	int sz = vsnprintf(buf, sizeof(buf) - 1, caFormat, marker);
+	if (sz != -1)
+		luaVM->ScriptLog(tLuaMessageType, "%s", buf);
 	va_end(marker);
-
 	return 0;
 }
 
@@ -225,8 +250,8 @@ bool CScriptStorage::parse_namespace(const char* caNamespaceName, char* b, u32 c
 	*b = 0;
 	*c = 0;
 	
-	char*			S2;
- 	STRCONCAT		(S2,caNamespaceName);
+	string256			S2;
+ 	xr_strconcat		(S2,caNamespaceName);
  	char*			S	= S2;
 	
 	for (int i = 0;; ++i)
@@ -315,7 +340,7 @@ bool CScriptStorage::do_file(const char* caScriptName, const char* caNameSpaceNa
 		script_log(eLuaMessageTypeError, "Cannot open file \"%s\"", caScriptName);
 		return		(false);
 	}
-	strconcat(sizeof(l_caLuaFileName), l_caLuaFileName, "@", caScriptName);
+	xr_strconcat( l_caLuaFileName, "@", caScriptName);
 
 	if (!load_buffer(lua(), static_cast<const char*>(l_tpFileReader->pointer()), (size_t)l_tpFileReader->length(), l_caLuaFileName, caNameSpaceName))
 	{
@@ -354,13 +379,13 @@ bool CScriptStorage::load_file_into_namespace(const char* caScriptName, const ch
 
 bool CScriptStorage::namespace_loaded(const char* N, bool remove_from_stack)
 {
-	int						start = lua_gettop(lua());
+	int start = lua_gettop(lua());
 	lua_pushstring(lua(), "_G");
 	lua_rawget(lua(), LUA_GLOBALSINDEX);
 
-	string256				S2;
- 	xr_strcpy				(S2,N);
- 	char*					S = S2;
+	string256 S2;
+ 	xr_strcpy (S2,N);
+ 	char* S = S2;
 	for (;;) {
 		if (!xr_strlen(S))
 		{
@@ -455,78 +480,15 @@ luabind::object CScriptStorage::name_space(const char* namespace_name)
 	}
 }
 
-struct raii_guard {
-	int m_error_code;
-	const char* const& m_error_description;
-	raii_guard(int error_code, const char* const& m_description) : m_error_code(error_code), m_error_description(m_description) {}
-	raii_guard(const raii_guard& other) = delete;
-	raii_guard& operator=(const raii_guard& other) = delete;
-	~raii_guard()
-	{
-		static bool const break_on_assert = true;
-		if (!m_error_code)
-			return;
-
-		if (break_on_assert)
-			R_ASSERT2(!m_error_code, m_error_description);
-		else
-			Msg("! SCRIPT ERROR: %s", m_error_description);
-	}
-}; // struct raii_guard
-
-   // FX: Added Error text to raii_guard
-bool CScriptStorage::print_output(lua_State *L, const char* caScriptFileName, int iErorCode, const char* caErrorText)
+// FX: Added Error text to raii_guard
+bool CScriptStorage::print_output(lua_State *L, const char* caScriptFileName, int iErrorCode, const char* caErrorText)
 {
-	if (iErorCode)
-		print_error(L, iErorCode);
-
-	raii_guard guard(iErorCode, caErrorText);
-
-	if (!lua_isstring(L, -1))
-		return				(false);
-
-	caErrorText = lua_tostring(L, -1);
-	if (!xr_strcmp(caErrorText, "cannot resume dead coroutine"))
-	{
-		VERIFY2("Please do not return any values from main!!!", caScriptFileName);
-	}
-	else {
-		if (!iErorCode)
-			script_log(ScriptStorage::eLuaMessageTypeInfo, "Output from %s", caScriptFileName);
-		script_log(iErorCode ? ScriptStorage::eLuaMessageTypeError : ScriptStorage::eLuaMessageTypeMessage, "%s", caErrorText);
-	}
-	return (true);
+	return CVMLua::PrintOut(L, caScriptFileName, iErrorCode, caErrorText);
 }
 
 void CScriptStorage::print_error(lua_State *L, int iErrorCode)
 {
-	switch (iErrorCode) {
-	case LUA_ERRRUN: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT RUNTIME ERROR");
-		break;
-	}
-	case LUA_ERRMEM: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT ERROR (memory allocation)");
-		break;
-	}
-	case LUA_ERRERR: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT ERROR (while running the error handler function)");
-		break;
-	}
-	case LUA_ERRFILE: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT ERROR (while running file)");
-		break;
-	}
-	case LUA_ERRSYNTAX: {
-		script_log(ScriptStorage::eLuaMessageTypeError, "SCRIPT SYNTAX ERROR");
-		break;
-	}
-	case LUA_YIELD: {
-		script_log(ScriptStorage::eLuaMessageTypeInfo, "Thread is yielded");
-		break;
-	}
-	default: NODEFAULT;
-	}
+	CVMLua::PrintError(L, iErrorCode);
 }
 
 #ifdef DEBUG

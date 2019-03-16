@@ -40,10 +40,10 @@ struct SChooseItem{
 using ChooseItemVec = xr_vector<SChooseItem>;
 
 // typedef
-typedef fastdelegate::FastDelegate2<ChooseItemVec&,void*>	   	TOnChooseFillItems;
-typedef fastdelegate::FastDelegate2<SChooseItem*, PropItemVec&>	TOnChooseSelectItem;
-typedef fastdelegate::FastDelegate3<LPCSTR, HDC, const Irect&> 	TOnDrawThumbnail;
-typedef fastdelegate::FastDelegate0<>						   	TOnChooseClose;
+typedef xrDelegate<void(ChooseItemVec&,void*)>		   	TOnChooseFillItems;
+typedef xrDelegate<void(SChooseItem*, PropItemVec&)>	TOnChooseSelectItem;
+typedef xrDelegate<void(LPCSTR, HDC, const Irect&)> 	TOnDrawThumbnail;
+typedef xrDelegate<void()>						   		TOnChooseClose;
 
 typedef void (*TOnChooseFillEvents)();
 

@@ -3,6 +3,7 @@
 #pragma hdrstop
 #pragma warning(disable: 4267)
 #include "xrCDB.h"
+#include <ppl.h>
 
 namespace CDB
 {
@@ -10,7 +11,7 @@ namespace CDB
 	{
 		xr_vector<Fvector>::iterator I, E;
 		I = verts.begin();	E = verts.end();
-		for (; I != E; I++)		if (I->similar(V, eps)) return u32(I - verts.begin());
+		for (; I != E; ++I)		if (I->similar(V, eps)) return u32(I - verts.begin());
 		verts.push_back(V);
 		return verts.size() - 1;
 	}
@@ -147,7 +148,7 @@ namespace CDB
 
 		{
 			
-			edge *E_ = edges + edge_count, *J; // Вот это я вроде не правил
+			edge *E_ = edges + edge_count, *J; // Р’РѕС‚ СЌС‚Рѕ СЏ РІСЂРѕРґРµ РЅРµ РїСЂР°РІРёР»
 			for (edge *edge_iterator = edges; edge_iterator != E_; ++edge_iterator) {
 				if (edge_iterator + 1 == E_)
 					continue;
@@ -262,7 +263,7 @@ namespace CDB
 		{
 			DWORDList* vl;
 			vl = &(VM[ix][iy][iz]);
-			for (DWORDIt it = vl->begin(); it != vl->end(); it++)
+			for (DWORDIt it = vl->begin(); it != vl->end(); ++it)
 				if (verts[*it].similar(V)) {
 					P = *it;
 					break;

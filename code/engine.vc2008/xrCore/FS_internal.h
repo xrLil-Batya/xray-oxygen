@@ -6,73 +6,83 @@
 #include <sys\stat.h>
 #include <share.h>
 
+#ifndef SPECTRE
+#include <filesystem>
+#endif
+
+
 void* FileDownload(const char* fn, size_t* pdwSize = nullptr);
+void* FileDownload(const char* file_name, HANDLE file_handle, size_t file_size);
 void FileCompress(const char* fn, const char* sign, void* data, const size_t size);
 void* FileDecompress(const char* fn, const char* sign, size_t* size = nullptr);
 
 class CFileWriter : public IWriter 
 {
-    FILE* hf;
+    HANDLE hf = INVALID_HANDLE_VALUE;
+	u64 pos = 0;
 public:
     CFileWriter(const char* name, const bool exclusive) 
 	{
         R_ASSERT(name && name[0]);
         fName = name;
-        createPath(*fName);
-        if (exclusive) {
-            int handle = _sopen(*fName, _O_WRONLY | _O_TRUNC | _O_CREAT | _O_BINARY, SH_DENYWR);
-            hf = _fdopen(handle, "wb");
-        } else {
-            hf = fopen(*fName, "wb");
-            if (!hf)
-                Msg("!Can't write file: '%s'. Error: '%s'.", *fName, _sys_errlist[errno]);
-        }
+
+		DWORD shareMode = exclusive ? 0 : FILE_SHARE_READ;
+		hf = CreateFileA(*fName, GENERIC_ALL, shareMode, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (!valid())
+		{
+			// try create path
+			createPath(*fName, true, true);
+			hf = CreateFileA(*fName, GENERIC_ALL, shareMode, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+			if (!valid())
+			{
+				Msg("!Can't write file: '%s'. Error: '%s'.", *fName, Debug.error2string(GetLastError()));
+			}
+		}
     }
 
     virtual ~CFileWriter() 
 	{
-        if (hf) 
-		{
-            fclose(hf);
-            // release RO attrib
-            auto dwAttr = GetFileAttributes(*fName);
-            if ((dwAttr != DWORD(-1)) && (dwAttr & FILE_ATTRIBUTE_READONLY)) {
-                dwAttr &= ~FILE_ATTRIBUTE_READONLY;
-                SetFileAttributes(*fName, dwAttr);
-            }
-        }
+		CloseHandle(hf);
     }
     // kernel
     void w(const void* _ptr, const size_t count) override 
 	{
-        if (hf && (0 != count)) 
+        if (valid() && (0 != count)) 
 		{
-            const size_t mb_sz = 0x1000000;
-            const auto* ptr = static_cast<const u8*>(_ptr);
-            size_t req_size = 0;
-            for (req_size = count; req_size > mb_sz; req_size -= mb_sz, ptr += mb_sz)
-                R_ASSERT3(fwrite(ptr, mb_sz, 1, hf) == 1, "Can't write mem block to file. Disk maybe full.", _sys_errlist[errno]);
+			u8* cursor = (u8*)_ptr;
 
-            if (req_size > 0)
-                R_ASSERT3(fwrite(ptr, req_size, 1, hf) == 1, "Can't write mem block to file. Disk maybe full.",  _sys_errlist[errno]);
+			DWORD safeCount = DWORD(count);
+			DWORD totalBytesWritten = 0;
+
+			while (totalBytesWritten < count)
+			{
+				DWORD bytesWritten = 0;
+				WriteFile(hf, cursor + totalBytesWritten, safeCount - totalBytesWritten, &bytesWritten, NULL);
+				totalBytesWritten += bytesWritten;
+			}
+
+			pos += totalBytesWritten;
         }
     }
 
-    void seek(const size_t pos) override 
+    void seek(const size_t InPos) override 
 	{
-		if (hf)
+		if (valid())
 		{
-			_fseeki64(hf, pos, SEEK_SET);
+			LARGE_INTEGER newPos; newPos.QuadPart = InPos;
+			SetFilePointerEx(hf, newPos, (PLARGE_INTEGER)&pos, FILE_BEGIN);
 		}
     }
 
-    IC size_t tell() override { return hf ? ftell(hf) : 0; }
-    IC bool valid() override { return hf; }
+    IC size_t tell() override { return size_t(pos); }
+    IC bool valid() override { return hf != INVALID_HANDLE_VALUE; }
 
     IC void flush() override 
 	{
-        if (hf)
-            fflush(hf);
+		if (valid())
+		{
+			FlushFileBuffers(hf);
+		}
     }
 };
 

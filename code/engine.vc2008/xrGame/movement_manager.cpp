@@ -21,7 +21,7 @@
 #include "location_manager.h"
 #include "level_path_builder.h"
 #include "detail_path_builder.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 
 // Lain: added 
 #include "steering_behaviour.h"
@@ -84,7 +84,6 @@ void CMovementManager::reinit		()
 	m_path_type						= ePathTypeNoPath;
 	m_path_state					= ePathStateDummy;
 	m_path_actuality				= true;
-	m_speed							= 0.f;
 	m_old_desirable_speed			= 0.f;
 	m_build_at_once					= false;
 

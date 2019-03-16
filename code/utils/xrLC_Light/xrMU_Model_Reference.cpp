@@ -50,18 +50,17 @@ void xrMU_Reference::export_cform_game(CDB::CollectorPacked& CL)
 
 		// faces and mark vertices
 		cfFaces->reserve	(model->m_faces.size());
-		for (xrMU_Model::v_faces_it I=model->m_faces.begin(); I!=model->m_faces.end(); I++)
+		for (_face* F : model->m_faces)
 		{
-			_face* F = *I;
 			if (F->Shader().flags.bCollision) 
 			{
 				cfFaces->push_back	(F);
 
-				for (u32 vit=0; vit<3; vit++)
+				for (_vertex* vit : F->v)
 				{
 					u32 g_id		=  u32(std::lower_bound
 						(
-							model->m_vertices.begin(),model->m_vertices.end(),F->v[vit]
+							model->m_vertices.begin(),model->m_vertices.end(),vit
 						) 
 						- model->m_vertices.begin	());
 					cfVertexMarks	[g_id] = true;
@@ -78,10 +77,8 @@ void xrMU_Reference::export_cform_game(CDB::CollectorPacked& CL)
 
 	// Collect faces
 	u32	Offset			= (u32)CL.getTS();
-	for (xrMU_Model::v_faces_it F = cfFaces->begin(); F!=cfFaces->end(); F++)
+	for (_face*	T : *cfFaces)
 	{
-		_face*	T = *F;
-		
 		// xform
 		Fvector					P[3];
 		xform.transform_tiny	(P[0],T->v[0]->P);
@@ -109,7 +106,7 @@ void xrMU_Reference::export_cform_rcast(CDB::CollectorPacked& CL)
 
 	//base_color_c			c_scale;
 	//base_color_c			c_bias;
-void		xrMU_Reference::			read				( INetReader	&r )
+void		xrMU_Reference::			read				( IReader	&r )
 {
 	
 	R_ASSERT( read_models );
@@ -136,7 +133,7 @@ void		xrMU_Reference::		write				( IWriter	&w ) const
 
 }
 
-void xrMU_Reference::receive_result( INetReader	&r )
+void xrMU_Reference::receive_result( IReader	&r )
 {
 	r_pod_vector( r, color );
 	r_pod( r, c_scale );

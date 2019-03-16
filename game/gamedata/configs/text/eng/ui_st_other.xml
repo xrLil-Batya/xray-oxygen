@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="windows-1251" ?>
 <string_table>
+	<string id="ui_st_license">
+		<text>The X-Ray Oxygen Project is an open source project to improve The commercial X-Ray Engine. \n Commercial use is prohibited, in whole or in part. \n \n All rights reserved.</text>
+	</string>
 	<string id="Btn_Cancel">
 		<text>Cancel</text>
 	</string>

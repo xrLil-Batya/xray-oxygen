@@ -1,5 +1,5 @@
 #pragma once
-
+#include "..\xrUICore\IGameUI.h"
 #include "../xrEngine/CustomHUD.h"
 #include "HitMarker.h"
 
@@ -11,7 +11,6 @@ class CHUDManager : public CCustomHUD
 	friend class CUI;
 
 private:
-	CUIGame* pUIGame;
 	CHitMarker HitMarker;
 	CHUDTarget* m_pHUDTarget;
 	bool b_online;
@@ -28,17 +27,17 @@ public:
 
 	virtual void RenderUI();
 
-	CUIGame* GetGameUI() { return pUIGame; }
+	CUIGame* GetGameUI() { return (CUIGame*)pUIHud; }
 
 	void HitMarked(int idx, float power, const Fvector& dir);
 	bool AddGrenade_ForMark(CGrenade* grn);
 	void Update_GrenadeView(Fvector& pos_actor);
 	void net_Relcase(CObject* obj);
 
-	//текущий предмет на который смотрит HUD
-	collide::rq_result&		GetCurrentRayQuery();
+	//С‚РµРєСѓС‰РёР№ РїСЂРµРґРјРµС‚ РЅР° РєРѕС‚РѕСЂС‹Р№ СЃРјРѕС‚СЂРёС‚ HUD
+	collide::rq_result& GetCurrentRayQuery();
 
-	//устанвка внешнего вида прицела в зависимости от текущей дисперсии
+	//СѓСЃС‚Р°РЅРІРєР° РІРЅРµС€РЅРµРіРѕ РІРёРґР° РїСЂРёС†РµР»Р° РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ С‚РµРєСѓС‰РµР№ РґРёСЃРїРµСЂСЃРёРё
 	void SetCrosshairDisp(float dispf, float disps = 0.f);
 #ifdef DEBUG
 	void SetFirstBulletCrosshairDisp(float fbdispf);

@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "alife_space.h"
-#include "UIHint.h"
+#include "../xrUICore/UIHint.h"
 
 class CUIProgressBar;
 class CUIProgressShape;

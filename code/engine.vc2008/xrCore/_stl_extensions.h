@@ -47,10 +47,100 @@ public:
     void destroy(pointer p) { p->~T(); }
 
     size_type max_size() const {
-        const auto count = std::numeric_limits<size_type>::max() / sizeof(T);
+        constexpr size_type count = std::numeric_limits<size_type>::max() / sizeof(T);
         return 0 < count ? count : 1;
     }
 };
+
+#if 0
+// for list container ONLY!!
+// do NOT use in std::vector or any container that allowing sequence access to elements
+template <typename T>
+class xrLazyAllocator
+{
+	using size_type = size_t;
+	using difference_type = ptrdiff_t;
+	using pointer = T * ;
+	using const_pointer = const T*;
+	using reference = T & ;
+	using const_reference = const T&;
+	using value_type = T;
+
+	template<typename Elem = T>
+	struct AllocatorNode
+	{
+		bool isDeleted;
+		Elem theElement;
+	};
+
+	pointer address(reference ref) const { return &ref; }
+	const_pointer address(const_reference ref) const { return &ref; }
+
+	template <class Other>
+	xrLazyAllocator(const xrLazyAllocator<Other>&) {}
+
+	template <class Other>
+	xrLazyAllocator& operator=(const xrLazyAllocator<Other>&) {
+		return *this;
+	}
+#pragma warning(push)
+#pragma warning(disable: 4267)
+	pointer allocate(const size_type n, const void* p = nullptr) const 
+	{ 
+		// we should allocate very rare. Most of the time - use existent allocated space
+
+		if (pBuffer == nullptr)
+		{
+			AllocatedNum = n * 5;
+			Size = n;
+			pBuffer = xr_alloc<AllocatorNode<T>>(n * 5);
+		}
+		else
+		{
+			// check if we don't have enough space
+			if (Size + n > AllocatedNum)
+			{
+				AllocatedNum = AllocatedNum + n + 5;
+				pBuffer = xr_realloc(pBuffer, AllocatedNum * sizeof(AllocatorNode<T>));
+			}
+			Size += n;
+		}
+
+		return (pointer)pBuffer[Size - n];
+	}
+#pragma warning(pop)
+
+	void internalDeallocate(void* p)
+	{
+		size_t InternalIndex = (p - pBuffer) / sizeof(T);
+		
+	}
+
+	void deallocate(pointer p, const size_type) const 
+	{ 
+		xr_free(p); 
+	}
+
+	void deallocate(void* p, const size_type) const 
+	{ 
+		xr_free(p); 
+	}
+
+	void construct(pointer p, const T& _Val) { new (p) T(_Val); }
+
+	void destroy(pointer p) { p->~T(); }
+
+	size_type max_size() const {
+		const unsigned long long count = std::numeric_limits<size_type>::max() / sizeof(T);
+		return 0 < count ? count : 1;
+	}
+
+	size_t AllocatedNum;
+	size_t Size;
+	void* pBuffer;
+};
+
+#endif
 
 struct xr_allocator {
     template <typename T>
@@ -107,9 +197,14 @@ void clearAndReserve(xr_vector<T, Alloc>& vec) {
     }
 }
 
+
 // deque
 template <typename T, typename allocator = xalloc<T>>
 using xr_deque = std::deque<T, allocator>;
+
+// queue
+template <typename T, typename container = xr_deque<T>>
+using xr_queue = std::queue<T, container>;
 
 // stack
 template <typename T, class C = xr_deque<T>>
@@ -134,51 +229,6 @@ template <typename K, class V, class Traits = std::equal_to<K>,
     typename allocator = xalloc<std::pair<const K, V>>>
     using xr_hash_map = std::unordered_map<K, V, std::hash<K>, Traits, allocator>;
 
-class XRCORE_API xr_string : public std::basic_string<char, std::char_traits<char>, xalloc<char>>
-{
-public:
-    typedef std::basic_string<char, std::char_traits<char>, xalloc<char>> Super;
-
-    xr_string(LPCSTR Str);
-    xr_string(LPCSTR Str, int Size);
-    xr_string(const xr_string& other);
-    xr_string(const xr_string&& other);
-    xr_string(const Super&& other);
-    xr_string();
-
-    xr_string& operator=(LPCSTR Str);
-    xr_string& operator=(const xr_string& other);
-    xr_string& operator=(const Super& other);
-
-    template <size_t ArrayLenght>
-    xr_string(char* (&InArray)[ArrayLenght])
-    {
-        assign(InArray, ArrayLenght);
-    }
-
-    static xr_vector<xr_string> Split(LPCSTR Str, size_t StrSize, char splitCh);
-
-    xr_vector<xr_string> Split(char splitCh);
-    xr_vector<xr_string> Split(u32 NumberOfSplits, ...);
-
-    bool StartWith(const xr_string& Other) const;
-    bool StartWith(LPCSTR Str) const;
-    bool StartWith(LPCSTR Str, size_t Size) const;
-    xr_string RemoveWhitespaces() const;
-};
-
-namespace std {
-    template<>
-    class hash<xr_string> {
-    public:
-        size_t operator()(const xr_string &s) const
-        {
-            std::hash<xr_string::Super> hashFn;
-            return hashFn(s);
-        }
-    };
-}
-
 struct pred_str {
     bool operator()(const char* x, const char* y) const { return std::strcmp(x, y) < 0; }
 };
@@ -190,17 +240,17 @@ struct pred_stri {
 #include "buffer_vector.h"
 
 // auxilary definition
-using FvectorVec = xr_vector<Fvector>;
 using LPSTRVec = xr_vector<LPSTR>;
-using SStringVec = xr_vector<xr_string>;
 using U8Vec = xr_vector<u8>;
 using U16Vec = xr_vector<u16>;
 using U32Vec = xr_vector<u32>;
 using FloatVec = xr_vector<float>;
 using IntVec = xr_vector<int>;
 using boolVec = xr_vector<bool>;
-using Fvector2Vec = xr_vector<Fvector2>;
 
 template <typename K, class V, class Hasher = std::hash<K>, class Traits = std::equal_to<K>,
     typename allocator = xalloc<std::pair<const K, V>>>
     using xr_unordered_map = std::unordered_map<K, V, Hasher, Traits, allocator>;
+
+
+

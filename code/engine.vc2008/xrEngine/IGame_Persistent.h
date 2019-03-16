@@ -1,4 +1,4 @@
-#ifndef IGame_PersistentH
+п»ї#ifndef IGame_PersistentH
 #define IGame_PersistentH
 #pragma once
 
@@ -67,8 +67,6 @@ public:
 	virtual void					Disconnect			();
 #ifndef _EDITOR
 	IGame_ObjectPool				ObjectPool;
-	CEnvironment*					pEnvironment;
-	CEnvironment&					Environment()	{return *pEnvironment;};
 	void							Prefetch			( );
 #endif
 	IMainMenu*						m_pMainMenu;	
@@ -85,7 +83,7 @@ public:
 	virtual void					OnAppDeactivate		();
 	virtual void		_BCL		OnFrame				();
 
-	// вызывается только когда изменяется тип игры
+	// РІС‹Р·С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РєРѕРіРґР° РёР·РјРµРЅСЏРµС‚СЃСЏ С‚РёРї РёРіСЂС‹
 	virtual	void					OnGameStart			(); 
 	virtual void					OnGameEnd			();
 
@@ -123,7 +121,7 @@ public:
 	virtual bool					CanBePaused			()		{ return true;}
 };
 
-class IMainMenu
+class ENGINE_API IMainMenu
 {
 public:
 	virtual			~IMainMenu						()													{};

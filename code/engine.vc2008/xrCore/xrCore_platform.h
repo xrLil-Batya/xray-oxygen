@@ -1,12 +1,7 @@
-#ifndef XRCORE_PLATFORM_H
-#define XRCORE_PLATFORM_H
 #pragma once
 
 #define VC_EXTRALEAN				// Exclude rarely-used stuff from Windows headers
-#define WIN32_LEAN_AND_MEAN			// Exclude rarely-used stuff from Windows headers
-#ifndef STRICT
-#	define STRICT					// Enable strict syntax
-#endif // STRICT
+//#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #define IDIRECTPLAY2_OR_GREATER		// ?
 #define DIRECTINPUT_VERSION	0x0800	//
 #ifndef _CRT_SECURE_NO_DEPRECATE
@@ -18,12 +13,6 @@
 #	define _WIN32_WINNT 0x0600
 #endif
 
-#ifdef __BORLANDC__
-	#include <vcl.h>
-	#include <mmsystem.h>
-	#include <stdint.h>
-#endif
-
 #define NOGDICAPMASKS
 //#define NOSYSMETRICS
 #define NOMENUS
@@ -31,22 +20,18 @@
 #define NOKEYSTATES
 #define NODRAWTEXT
 #define NOMEMMGR
-#define NOMETAFILE
+//#define NOMETAFILE
 #define NOSERVICE
 #define NOCOMM
 #define NOHELP
 #define NOPROFILER
 #define NOMCX
-#define NOMINMAX
 #define DOSWIN32
 #define _WIN32_DCOM
+#define NOMINMAX
 
 #pragma warning(push)
 #pragma warning(disable:4005)
 #include <windows.h>
-#ifndef __BORLANDC__
-	#include <windowsx.h>
-#endif
+#include <windowsx.h>
 #pragma warning(pop)
-
-#endif

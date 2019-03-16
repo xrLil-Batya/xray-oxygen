@@ -1,9 +1,9 @@
-// UICharacterInfo.h:  окошко, с информацией о персонаже
+// UICharacterInfo.h:  РѕРєРѕС€РєРѕ, СЃ РёРЅС„РѕСЂРјР°С†РёРµР№ Рѕ РїРµСЂСЃРѕРЅР°Р¶Рµ
 // 
 //////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "uiwindow.h"
+#include "../xrUICore/UIWindow.h"
 #include "../../xrServerEntities/alife_space.h"
 #include "character_info_defs.h"
 

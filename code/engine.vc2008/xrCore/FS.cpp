@@ -8,92 +8,87 @@
 #include <direct.h>
 #include <fcntl.h>
 #include <sys\stat.h>
+#include <Shlobj.h>
 #pragma warning(default:4995)
 
-#ifdef FS_DEBUG
-	XRCORE_API	u32					g_file_mapped_memory = 0;
-	u32								g_file_mapped_count	= 0;
-	typedef xr_map<u32,std::pair<u32,shared_str> >	FILE_MAPPINGS;
-	FILE_MAPPINGS					g_file_mappings;
-
-void register_file_mapping			(void *address, const u32 &size, const char* file_name)
-{
-	FILE_MAPPINGS::const_iterator	I = g_file_mappings.find(*(u32*)&address);
-	VERIFY							(I == g_file_mappings.end());
-	g_file_mappings.insert			(std::make_pair(*(u32*)&address,std::make_pair(size,shared_str(file_name))));
-
-	g_file_mapped_memory			+= size;
-	++g_file_mapped_count;
-}
-
-void unregister_file_mapping		(void *address, const u32 &size)
-{
-	FILE_MAPPINGS::iterator			I = g_file_mappings.find(*(u32*)&address);
-	VERIFY							(I != g_file_mappings.end());
-	g_file_mapped_memory			-= (*I).second.first;
-	--g_file_mapped_count;
-
-	g_file_mappings.erase			(I);
-}
-
-XRCORE_API void dump_file_mappings	()
-{
-	Msg								("* active file mappings (%d):",g_file_mappings.size());
-
-	FILE_MAPPINGS::const_iterator	I = g_file_mappings.begin();
-	FILE_MAPPINGS::const_iterator	E = g_file_mappings.end();
-	for ( ; I != E; ++I)
-		Msg							(
-			"* [0x%08x][%d][%s]",
-			(*I).first,
-			(*I).second.first,
-			(*I).second.second.c_str()
-		);
-}
-#endif // DEBUG
 //////////////////////////////////////////////////////////////////////
 // Tools
 //////////////////////////////////////////////////////////////////////
 //---------------------------------------------------
-void createPath(const std::string_view path)
+XRCORE_API void createPath(LPCSTR path, bool bIsFileName /*= false*/, bool bIsAbsolute /*= false*/)
 {
-	const size_t lastSepPos = path.find_last_of('\\');
-    // TODO [imdex]: remove in 15.3
-    const std::string_view foldersPath = (lastSepPos != std::string_view::npos) ? path.substr(0, lastSepPos) : path;
-    std::error_code e;
-	std::experimental::filesystem::create_directories(std::experimental::filesystem::path(foldersPath.begin(), foldersPath.end()), e);
-    (void)e;
-}
+	xr_string targetPath = path;
+	xr_string::FixSlashes(targetPath);
+	xr_vector<xr_string> pathTokens = targetPath.Split('\\');
+	if (pathTokens.size() < 2) return;
 
-static errno_t open_internal(const char* fn, int& handle) 
-{
-    return _sopen_s(&handle, fn, _O_RDONLY | _O_BINARY, _SH_DENYNO, _S_IREAD);
-}
+	// if we have filename, we should omit it
+	int pathTokensSize = bIsFileName ? pathTokens.size() : pathTokens.size() + 1;
 
-bool file_handle_internal(const char* file_name, size_t& size, int& file_handle) 
-{
-    if (open_internal(file_name, file_handle)) 
+	int i = 1;
+	if (bIsAbsolute) i++;
+	for (; i < pathTokensSize; i++)
 	{
-            return false;
+		xr_string targetDir = xr_string::Join(pathTokens.begin(), pathTokens.begin() + i, '\\');
+
+		WIN32_FIND_DATAA findData = { 0 };
+		HANDLE hFind = FindFirstFileA(targetDir.c_str(), &findData);
+
+		if (!hFind || hFind == INVALID_HANDLE_VALUE)
+		{
+			// if this path don't include any path - create new directory
+			BOOL bCreateDir = CreateDirectoryA(targetDir.c_str(), nullptr);
+			VERIFY(bCreateDir);
+		}
+		else
+		{
+			// get type of path
+			bool bDir = ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) > 0);
+			FindClose(hFind);
+
+			// the path can't be be file, so we delete it
+			if (!bDir)
+			{
+				DeleteFileA(targetDir.c_str());
+			}
+		}
+	}
+}
+
+static bool open_internal(const char* fn, HANDLE& handle) 
+{
+	handle = CreateFileA(fn, GENERIC_READ, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	return handle != INVALID_HANDLE_VALUE;
+}
+
+bool file_handle_internal(const char* file_name, size_t& size, HANDLE& file_handle) 
+{
+    if (!open_internal(file_name, file_handle)) 
+	{
+		return false;
     }
 
-    size = _filelength(file_handle);
+	LARGE_INTEGER largeInt = {};
+	GetFileSizeEx(file_handle, &largeInt);	
+	size = largeInt.QuadPart;
     return true;
 }
 
-void* FileDownload(const char* file_name, const int& file_handle, size_t& file_size) 
+void* FileDownload(const char* file_name, HANDLE file_handle, size_t file_size) 
 {
     void* buffer = Memory.mem_alloc(file_size);
 
-    const int r_bytes = _read(file_handle, buffer, file_size);
+	DWORD r_bytes = 0;		//_read(file_handle, buffer, file_size);
+	ReadFile(file_handle, buffer, file_size, &r_bytes, nullptr);
+
     R_ASSERT3(file_size == static_cast<size_t>(r_bytes), "can't read from file : ", file_name);
 
-    R_ASSERT3(!_close(file_handle), "can't close file : ", file_name);
+	if (file_handle) { CloseHandle(file_handle); }
     return buffer;
 }
 
 void* FileDownload(const char* file_name, size_t* buffer_size) {
-    int file_handle;
+    HANDLE file_handle = INVALID_HANDLE_VALUE;
     R_ASSERT3(file_handle_internal(file_name, *buffer_size, file_handle),
               "can't open file : ", file_name);
 
@@ -107,23 +102,29 @@ inline void mk_mark(MARK& M, const char* S) {
 }
 
 void FileCompress(const char* fn, const char* sign, void* data, const size_t size) {
-    MARK M;
+	MARK M = {};
     mk_mark(M, sign);
+	DWORD SizeOut = 0;
 
-    const auto H = _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
-    R_ASSERT2(H > 0, fn);
-    _write(H, &M, 8);
-    _writeLZ(H, data, (u32)size);
-    _close(H);
+    HANDLE hFile = CreateFileA(fn, GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+    R_ASSERT2(hFile, fn);
+
+	WriteFile(hFile, &M, sizeof(size_t), &SizeOut, nullptr);
+
+	XRay::Compress::LZ::WriteLZ(hFile, data, (u32)size);
+	CloseHandle(hFile);
 }
 
 void* FileDecompress(const char* fn, const char* sign, size_t* size) {
     MARK M, F;
     mk_mark(M, sign);
+	DWORD SizeOut = 0;
 
-    const auto H = _open(fn, O_BINARY | O_RDONLY);
-    R_ASSERT2(H > 0, fn);
-    _read(H, &F, 8);
+    HANDLE hFile = CreateFileA(fn, GENERIC_READ, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    R_ASSERT2(hFile, fn);
+
+	ReadFile(hFile, &F, sizeof(size_t), &SizeOut, nullptr);
+
     if (strncmp(M.data(), F.data(), 8) != 0) {
         F[8] = 0;
         Msg("FATAL: signatures doesn't match, file(%s) / requested(%s)", F, sign);
@@ -131,8 +132,12 @@ void* FileDecompress(const char* fn, const char* sign, size_t* size) {
     R_ASSERT(strncmp(M.data(), F.data(), 8) == 0);
 
     void* ptr = nullptr;
-    const size_t SZ = _readLZ(H, ptr, _filelength(H) - 8);
-    _close(H);
+	LARGE_INTEGER largeInt = {};
+	GetFileSizeEx(hFile, &largeInt);	// don't use here GetFileSize, it can't open file < Page size (default - 64KB)
+
+    const size_t SZ = XRay::Compress::LZ::ReadLZ(hFile, ptr, largeInt.LowPart - 8);
+
+	CloseHandle(hFile);
     if (size)
         *size = SZ;
     return ptr;
@@ -200,7 +205,7 @@ size_t IWriter::chunk_size() {
 void IWriter::w_compressed(void* ptr, const size_t count) {
     u8* dest = nullptr;
     unsigned dest_sz = 0;
-    _compressLZ(&dest, &dest_sz, ptr, count);
+	XRay::Compress::LZ::CompressLZ(&dest, &dest_sz, ptr, count);
 
     if (dest && dest_sz)
         w(dest, dest_sz);
@@ -231,7 +236,8 @@ void IWriter::w_sdir(const Fvector& D) {
 
 //---------------------------------------------------
 // base stream
-IReader* IReader::open_chunk(const u32 ID) {
+IReader* IReader::open_chunk(const u32 ID) 
+{
     bool bCompressed;
 
     const size_t dwSize = find_chunk(ID, &bCompressed);
@@ -239,7 +245,7 @@ IReader* IReader::open_chunk(const u32 ID) {
         if (bCompressed) {
             u8* dest;
             unsigned dest_sz;
-            _decompressLZ(&dest, &dest_sz, pointer(), dwSize);
+			XRay::Compress::LZ::DecompressLZ(&dest, &dest_sz, pointer(), dwSize);
             return new CTempReader(dest, dest_sz, tell() + dwSize);
         } else {
             return new IReader(pointer(), dwSize, tell() + dwSize);
@@ -271,7 +277,7 @@ IReader* IReader::open_chunk_iterator(u32& ID, IReader* _prev) {
         // compressed
         u8* dest;
         unsigned dest_sz;
-        _decompressLZ(&dest, &dest_sz, pointer(), _size);
+		XRay::Compress::LZ::DecompressLZ(&dest, &dest_sz, pointer(), _size);
         return new CTempReader(dest, dest_sz, tell() + _size);
     } else {
         // normal
@@ -310,7 +316,7 @@ size_t IReader::advance_term_string() {
 
 void IReader::r_string(char* dest, const size_t tgt_sz) {
     char* src = data + Pos;
-    const auto sz = advance_term_string();
+    const size_t sz = advance_term_string();
     R_ASSERT2(sz < (tgt_sz - 1), "Dest string less than needed.");
     R_ASSERT(!IsBadReadPtr(src, sz));
 
@@ -353,26 +359,31 @@ void IReader::skip_stringZ() {
 
 //---------------------------------------------------
 // temp stream
-CTempReader::~CTempReader() { xr_free(data); };
+CTempReader::~CTempReader()
+{ 
+	xr_free(data); 
+};
 //---------------------------------------------------
 // pack stream
-CPackReader::~CPackReader() {
-#ifdef FS_DEBUG
-    unregister_file_mapping(base_address, Size);
-#endif // DEBUG
-
+CPackReader::~CPackReader() 
+{
     UnmapViewOfFile(base_address);
 };
 //---------------------------------------------------
 // file stream
-CFileReader::CFileReader(const char* name) {
+CFileReader::CFileReader(const char* name) 
+{
     // TODO: pay attention!
     size_t sz = Size;
     data = static_cast<char*>(FileDownload(name, &sz));
     Size = sz;
     Pos = 0;
 };
-CFileReader::~CFileReader() { xr_free(data); };
+
+CFileReader::~CFileReader() 
+{ 
+	xr_free(data); 
+};
 //---------------------------------------------------
 // compressed stream
 CCompressedReader::CCompressedReader(const char* name, const char* sign) {
@@ -381,14 +392,22 @@ CCompressedReader::CCompressedReader(const char* name, const char* sign) {
     Size = sz;
     Pos = 0;
 }
-CCompressedReader::~CCompressedReader() { xr_free(data); };
 
-CVirtualFileRW::CVirtualFileRW(const char* cFileName) {
+CCompressedReader::~CCompressedReader() 
+{ 
+	xr_free(data);
+};
+
+CVirtualFileRW::CVirtualFileRW(const char* cFileName) 
+{
     // Open the file
     hSrcFile = CreateFile(cFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, nullptr,
                           OPEN_EXISTING, 0, nullptr);
     R_ASSERT3(hSrcFile != INVALID_HANDLE_VALUE, cFileName, Debug.error2string(GetLastError()));
-    Size = static_cast<int>(GetFileSize(hSrcFile, nullptr));
+
+	LARGE_INTEGER li = {};
+	GetFileSizeEx(hSrcFile, &li);
+    Size = static_cast<int>(li.QuadPart);
     R_ASSERT3(Size, cFileName, Debug.error2string(GetLastError()));
 
     hSrcMap = CreateFileMapping(hSrcFile, nullptr, PAGE_READWRITE, 0, 0, nullptr);
@@ -396,47 +415,91 @@ CVirtualFileRW::CVirtualFileRW(const char* cFileName) {
 
     data = static_cast<char*>(MapViewOfFile(hSrcMap, FILE_MAP_ALL_ACCESS, 0, 0, 0));
     R_ASSERT3(data, cFileName, Debug.error2string(GetLastError()));
-
-#ifdef FS_DEBUG
-    register_file_mapping(data, Size, cFileName);
-#endif // DEBUG
 }
 
-CVirtualFileRW::~CVirtualFileRW() {
-#ifdef FS_DEBUG
-    unregister_file_mapping(data, Size);
-#endif // DEBUG
-
+CVirtualFileRW::~CVirtualFileRW() 
+{
     UnmapViewOfFile(data);
     CloseHandle(hSrcMap);
     CloseHandle(hSrcFile);
 }
 
-CVirtualFileReader::CVirtualFileReader(const char* cFileName) {
+CVirtualFileReader::CVirtualFileReader(const char* cFileName)
+{
     // Open the file
     hSrcFile = CreateFile(cFileName, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
                           OPEN_EXISTING, 0, nullptr);
     R_ASSERT3(hSrcFile != INVALID_HANDLE_VALUE, cFileName, Debug.error2string(GetLastError()));
-    Size = static_cast<int>(GetFileSize(hSrcFile, nullptr));
-    R_ASSERT3(Size, cFileName, Debug.error2string(GetLastError()));
+
+	LARGE_INTEGER li = {};
+	GetFileSizeEx(hSrcFile, &li);
+	Size = static_cast<int>(li.QuadPart);
+	R_ASSERT3(Size, cFileName, Debug.error2string(GetLastError()));
 
     hSrcMap = CreateFileMapping(hSrcFile, nullptr, PAGE_READONLY, 0, 0, nullptr);
     R_ASSERT3(hSrcMap != INVALID_HANDLE_VALUE, cFileName, Debug.error2string(GetLastError()));
 
     data = static_cast<char*>(MapViewOfFile(hSrcMap, FILE_MAP_READ, 0, 0, 0));
     R_ASSERT3(data, cFileName, Debug.error2string(GetLastError()));
-
-#ifdef FS_DEBUG
-    register_file_mapping(data, Size, cFileName);
-#endif // DEBUG
 }
 
-CVirtualFileReader::~CVirtualFileReader() {
-#ifdef FS_DEBUG
-    unregister_file_mapping(data, Size);
-#endif // DEBUG
-
+CVirtualFileReader::~CVirtualFileReader() 
+{
     UnmapViewOfFile(data);
     CloseHandle(hSrcMap);
     CloseHandle(hSrcFile);
+}
+
+int CALLBACK BrowseCallbackProc(HWND hWnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
+{
+	if (uMsg == BFFM_INITIALIZED)
+		SendMessage(hWnd, BFFM_SETSELECTION, TRUE, lpData);
+
+	return 0;
+}
+
+bool EFS_Utils::GetOpenName(const char* initial, xr_string& buffer, bool bMulti, const char* offset, int start_flt_ext)
+{
+	char buf[255 * 255]; //max files to select
+	xr_strcpy(buf, buffer.c_str());
+
+	const bool bRes = GetOpenNameInternal(initial, buf, sizeof(buf), bMulti, offset, start_flt_ext);
+
+	if (bRes)
+		buffer = (char*)buf;
+
+	return bRes;
+}
+
+
+bool EFS_Utils::GetSaveName(const char* initial, xr_string& buffer, const char* offset, int start_flt_ext)
+{
+	string_path buf;
+	xr_strcpy(buf, sizeof(buf), buffer.c_str());
+	const bool bRes = GetSaveName(initial, buf, offset, start_flt_ext);
+	if (bRes)
+		buffer = buf;
+
+	return bRes;
+}
+//----------------------------------------------------
+
+void EFS_Utils::MarkFile(const char* fn, bool bDeleteSource)
+{
+	xr_string ext = strext(fn);
+	ext.insert(1, "~");
+	xr_string backup_fn = EFS.ChangeFileExt(fn, ext.c_str());
+
+	if (bDeleteSource)
+		FS.file_rename(fn, backup_fn.c_str(), true);
+	else
+		FS.file_copy(fn, backup_fn.c_str());
+}
+
+xr_string EFS_Utils::AppendFolderToName(xr_string& tex_name, int depth, BOOL full_name)
+{
+	string1024 nm;
+	xr_strcpy(nm, tex_name.c_str());
+	tex_name = AppendFolderToName(nm, sizeof(nm), depth, full_name);
+	return tex_name;
 }

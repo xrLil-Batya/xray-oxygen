@@ -31,8 +31,8 @@ public:
 			void	fill		(manager const& manager, editor::property_holder* holder, editor::property_holder_collection* collection);
 
 private:
-	bool xr_stdcall	use_getter	();
-	void xr_stdcall use_setter	(bool value);
+	bool 			use_getter	();
+	void			use_setter	(bool value);
 
 private:
 	bool			m_use;

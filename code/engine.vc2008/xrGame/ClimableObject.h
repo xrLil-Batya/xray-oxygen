@@ -13,7 +13,7 @@ public IClimableObject
 ,public pureRender
 #endif
 {
-	typedef	CPhysicsShellHolder		inherited;
+	using inherited =	CPhysicsShellHolder;
 	IPHStaticGeomShell* m_pStaticShell;
 	Fobb				m_box;
 	Fvector				m_axis;

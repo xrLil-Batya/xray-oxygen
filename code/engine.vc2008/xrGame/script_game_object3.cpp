@@ -17,7 +17,7 @@
 #include "ai/stalker/ai_stalker.h"
 #include "stalker_animation_manager.h"
 #include "stalker_planner.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "inventory.h"
 #include "customzone.h"
 #include "patrol_path_manager.h"
@@ -224,7 +224,7 @@ bool CScriptGameObject::deadbody_can_take_status()
 	}
 	return  inventoryOwner->deadbody_can_take_status();
 }
-#include "CustomOutfit.h"
+#include "items/CustomOutfit.h"
 
 CScriptGameObject *CScriptGameObject::GetCurrentOutfit() const
 {
@@ -657,7 +657,7 @@ void CScriptGameObject::set_sight		(SightManager::ESightType sight_type, Fvector
 		ai().script_engine().script_log					(ScriptStorage::eLuaMessageTypeError,"CSightManager : cannot access class member set_sight!");
 	else {
 		if ( (sight_type == SightManager::eSightTypeDirection) && vector3d && (_abs(vector3d->magnitude() - 1.f) > .01f) ) {
-			VERIFY2				( false, make_string("non-normalized direction passed [%f][%f][%f]", VPUSH(*vector3d)) );
+			VERIFY_FORMAT( false, "non-normalized direction passed [%f][%f][%f]", VPUSH(*vector3d));
 			vector3d->normalize	( );
 		}
 
@@ -681,7 +681,7 @@ void CScriptGameObject::set_sight		(SightManager::ESightType sight_type, Fvector
 		ai().script_engine().script_log					(ScriptStorage::eLuaMessageTypeError,"CSightManager : cannot access class member set_sight!");
 	else {
 		if ( (sight_type == SightManager::eSightTypeDirection) && (_abs(vector3d.magnitude() - 1.f) > .01f) ) {
-			VERIFY2				( false, make_string("non-normalized direction passed [%f][%f][%f]", VPUSH(vector3d)) );
+			VERIFY_FORMAT( false, "non-normalized direction passed [%f][%f][%f]", VPUSH(vector3d));
 			vector3d.normalize	( );
 		}
 
@@ -696,7 +696,7 @@ void CScriptGameObject::set_sight		(SightManager::ESightType sight_type, Fvector
 		ai().script_engine().script_log					(ScriptStorage::eLuaMessageTypeError,"CSightManager : cannot access class member set_sight!");
 	else {
 		if ( (sight_type == SightManager::eSightTypeDirection) && vector3d && (_abs(vector3d->magnitude() - 1.f) > .01f) ) {
-			VERIFY2				( false, make_string("non-normalized direction passed [%f][%f][%f]", VPUSH(*vector3d)) );
+			VERIFY_FORMAT( false, "non-normalized direction passed [%f][%f][%f]", VPUSH(*vector3d));
 			vector3d->normalize	( );
 		}
 

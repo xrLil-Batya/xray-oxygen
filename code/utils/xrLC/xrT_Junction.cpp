@@ -6,7 +6,7 @@
 
 IC float	SqrDistance2Segment(const Fvector& P, const Fvector& A, const Fvector& B)
 {
-	// Determine t (the length of the vector from ‘a’ to ‘p’)
+	// Determine t (the length of the vector from â€˜aâ€™ to â€˜pâ€™)
 	Fvector c; c.sub(P,A);
 	Fvector V; V.sub(B,A); 
 	
@@ -15,11 +15,11 @@ IC float	SqrDistance2Segment(const Fvector& P, const Fvector& A, const Fvector& 
 	V.div	(d); 
 	float t = V.dotproduct	(c);
 	
-	// Check to see if ‘t’ is beyond the extents of the line segment
+	// Check to see if â€˜tâ€™ is beyond the extents of the line segment
 	if (t <= 0.0f)	return P.distance_to_sqr(A);
 	if (t >= d)		return P.distance_to_sqr(B);
 	
-	// Return the point between ‘a’ and ‘b’
+	// Return the point between â€˜aâ€™ and â€˜bâ€™
 	// set length of V to t. V is normalized so this is easy
 	Fvector	R;	R.mad		(A,V,t);
 	return P.distance_to_sqr(R);
@@ -57,8 +57,8 @@ static void check(Vertex* vE1, Vertex* vE2, Vertex* vTEST)
 		vecJunctions->push_back	(rec);
 		
 		// display
-		// if (bWeld)	clMsg	("ERROR. unwelded vertex      [%3.1f,%3.1f,%3.1f]",	VPUSH(vTEST->P));
-		// else			clMsg	("ERROR. T-junction at vertex [%3.1f,%3.1f,%3.1f]",	VPUSH(vTEST->P));
+		// if (bWeld)	Logger.clMsg	("ERROR. unwelded vertex      [%3.1f,%3.1f,%3.1f]",	VPUSH(vTEST->P));
+		// else			Logger.clMsg	("ERROR. T-junction at vertex [%3.1f,%3.1f,%3.1f]",	VPUSH(vTEST->P));
 		//pBuild->err_tjunction.w_fvector3	(vTEST->P);
 	}
 }
@@ -83,12 +83,12 @@ static void edge(Vertex* vE1, Vertex* vE2)
 	rec.T	= 0;
 	vecEdges->push_back	(rec);
 	
-	// clMsg	("ERROR: too long edge        %3.1fm [%3.1f,%3.1f,%3.1f] - [%3.1f,%3.1f,%3.1f]",len,VPUSH(vE1->P),VPUSH(vE2->P));
+	// Logger.clMsg	("ERROR: too long edge        %3.1fm [%3.1f,%3.1f,%3.1f] - [%3.1f,%3.1f,%3.1f]",len,VPUSH(vE1->P),VPUSH(vE2->P));
 }
 
 void CBuild::CorrectTJunctions()
 {
-	Status					("Processing...");
+	Logger.Status					("Processing...");
 	vecJunctions			= xr_new<xr_vector<record> > (); vecJunctions->reserve	(1024);
 	vecEdges				= xr_new<xr_vector<record> > (); vecEdges->reserve		(1024);
 
@@ -140,9 +140,9 @@ void CBuild::CorrectTJunctions()
 				}
 			}
 		}
-		Progress(float(I)/float(lc_global_data()->g_faces().size()));
+		Logger.Progress(float(I)/float(lc_global_data()->g_faces().size()));
 	}
-	clMsg("*** %d junctions and %d long edges found.",vecJunctions->size(),vecEdges->size());
+	Logger.clMsg("*** %d junctions and %d long edges found.",vecJunctions->size(),vecEdges->size());
 
 	xr_delete(vecJunctions);
 	xr_delete(vecEdges);

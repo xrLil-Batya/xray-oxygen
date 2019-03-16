@@ -8,7 +8,7 @@
 
 #include "stdafx.h"
 #include "level_graph.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 
 LPCSTR LEVEL_GRAPH_NAME = "level.ai";
 
@@ -26,7 +26,7 @@ CLevelGraph::CLevelGraph		()
 	FS.update_path				(file_name,"$level$",LEVEL_GRAPH_NAME);
 #else
 	string256					file_name;
-	strconcat					(sizeof(file_name), file_name, filename, LEVEL_GRAPH_NAME);
+	xr_strconcat (file_name, filename, LEVEL_GRAPH_NAME);
 #endif
 	m_reader					= FS.r_open	(file_name);
 
@@ -207,7 +207,7 @@ u32 CLevelGraph::vertex		(u32 current_node_id, const Fvector& position) const
 
 u32	CLevelGraph::vertex_id				(const Fvector &position) const
 {
-	VERIFY2(valid_vertex_position(position), make_string("invalid position for CLevelGraph::vertex_id specified: [%f][%f][%f]", VPUSH(position)));
+	VERIFY_FORMAT(valid_vertex_position(position), "invalid position for CLevelGraph::vertex_id specified: [%f][%f][%f]", VPUSH(position));
 	CPosition			_vertex_position = vertex_position(position);
 	CVertex				*B = m_nodes;
 	CVertex				*E = m_nodes + header().vertex_count();

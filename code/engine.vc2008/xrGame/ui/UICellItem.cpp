@@ -1,18 +1,18 @@
 #include "stdafx.h"
 #include "UICellItem.h"
-#include "uicursor.h"
+#include "../xrUICore/UICursor.h"
 #include "../inventory_item.h"
 #include "UIDragDropListEx.h"
-#include "../xr_level_controller.h"
+#include "../xrEngine/xr_level_controller.h"
 #include "../../xrEngine/xr_input.h"
 #include "../level.h"
 #include "object_broker.h"
-#include "UIXmlInit.h"
-#include "UIProgressBar.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIProgressBar.h"
 
-#include "Weapon.h"
-#include "CustomOutfit.h"
-#include "ActorHelmet.h"
+#include "items/Weapon.h"
+#include "items/CustomOutfit.h"
+#include "items/Helmet.h"
 
 CUICellItem* CUICellItem::m_mouse_selected_item = NULL;
 
@@ -46,9 +46,16 @@ CUICellItem::~CUICellItem()
 
 void CUICellItem::init()
 {
-	CUIXml	uiXml;
-	uiXml.Load( CONFIG_PATH, UI_PATH, "actor_menu_item.xml" );
-	
+	static CUIXml uiXml;
+	static bool is_xml_ready = false;
+
+	// dsh2dsh: XML will parse only once
+	if (!is_xml_ready)
+	{
+		uiXml.Load(CONFIG_PATH, UI_PATH, "actor_menu_item.xml");
+		is_xml_ready = true;
+	}
+
 	m_text					= xr_new<CUIStatic>();
 	m_text->SetAutoDelete	( true );
 	AttachChild				( m_text );
@@ -192,6 +199,7 @@ void CUICellItem::SetOwnerList(CUIDragDropListEx* p)
 
 void CUICellItem::UpdateConditionProgressBar()
 {
+	if (!m_pConditionState) return;
 
 	if(m_pParentList && m_pParentList->GetConditionProgBarVisibility())
 	{
@@ -287,6 +295,7 @@ void CUICellItem::SetCustomDraw(ICustomDrawCellItem* c)
 	if (m_custom_draw)
 		xr_delete(m_custom_draw);
 	m_custom_draw = c;
+
 }
 
 // -------------------------------------------------------------------------------------------------

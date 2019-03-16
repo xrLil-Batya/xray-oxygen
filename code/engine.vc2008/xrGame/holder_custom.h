@@ -20,11 +20,11 @@ protected:
 	bool					m_bEnterLocked;
 	bool					m_bExitLocked;	
 public:
-							CHolderCustom		()				{m_owner=NULL;m_ownerActor=NULL;m_bEnterLocked = false;m_bExitLocked = false;}
+							CHolderCustom		()				{m_owner=nullptr;m_ownerActor=nullptr;m_bEnterLocked = false;m_bExitLocked = false;}
 	virtual					~CHolderCustom		()				{;}
 	virtual	void			UpdateEx			(float fov){}; //called by owner
 	virtual CHolderCustom	*cast_holder_custom	()				{return this;}
-			bool			Engaged				()				{return m_owner!=NULL;}
+			bool			Engaged				()				{return m_owner!=nullptr;}
 	virtual void			OnMouseMove			(int x, int y)	= 0;
 	virtual void			OnKeyboardPress		(int dik)		= 0;
 	virtual void			OnKeyboardRelease	(int dik)		= 0;

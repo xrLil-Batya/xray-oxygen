@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #pragma once
 
 const u32 LIGHT_CUBOIDSIDEPOLYS_COUNT	= 4;
@@ -435,3 +436,6 @@ public:
 		}
 	}
 };
+=======
+#pragma once
+>>>>>>> origin/ox_dev

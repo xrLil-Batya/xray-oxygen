@@ -22,7 +22,7 @@ extern LPCSTR alife_section;
 LPCSTR CSavedGameWrapper::saved_game_full_name	(LPCSTR saved_game_name, string_path& result)
 {
 	string_path					temp;
-	strconcat					(sizeof(temp),temp,saved_game_name,SAVE_EXTENSION);
+	xr_strconcat				(temp,saved_game_name,SAVE_EXTENSION);
 	FS.update_path				(result,"$game_saves$",temp);
 	return						(result);
 }
@@ -76,12 +76,13 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 		return;
 	}
 
-	u32							source_count = stream->r_u32();
-	void						*source_data = xr_malloc(source_count);
-	rtc_decompress				(source_data,source_count,stream->pointer(),stream->length() - 3*sizeof(u32));
-	FS.r_close					(stream);
+	u32 source_count = stream->r_u32();
+	u32 dest_count   = stream->r_u32();
+	void *source_data = xr_malloc(source_count);
+	XRay::Compress::RT::RtcDecompress(source_data, source_count, stream->pointer(), dest_count);
+	FS.r_close(stream);
 
-	IReader						reader(source_data,source_count);
+	IReader reader(source_data,source_count);
 
 	{
 		CALifeTimeManager		time_manager(alife_section);
@@ -168,6 +169,7 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 }
 
 #include "xr_time.h"
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 xrTime CSavedGameWrapper__game_time(const CSavedGameWrapper *self)
@@ -175,7 +177,7 @@ xrTime CSavedGameWrapper__game_time(const CSavedGameWrapper *self)
 	return			(xrTime(self->game_time()));
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CSavedGameWrapper::script_register(lua_State *L)
 {
 	module(L)

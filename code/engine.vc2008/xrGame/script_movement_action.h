@@ -5,10 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script movement action class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-#include "script_abstract_action.h"
+#include "../xrScripts/export/script_abstract_action.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "patrol_path_manager_space.h"
 #include "detail_path_manager_space.h"

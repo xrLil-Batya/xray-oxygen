@@ -86,10 +86,12 @@ void CBaseMonster::Load(LPCSTR section)
 
 	m_rank							= (pSettings->line_exist(section,"rank")) ? int(pSettings->r_u32(section,"rank")) : 0;
 
-//	if (pSettings->line_exist(section,"Spawn_Inventory_Item_Section")) {
-//		m_item_section					= pSettings->r_string(section,"Spawn_Inventory_Item_Section");
-//		m_spawn_probability				= pSettings->r_float(section,"Spawn_Inventory_Item_Probability");
-//	} else m_spawn_probability			= 0.f;
+	if (pSettings->line_exist(section,"Spawn_Inventory_Item_Section")) 
+	{
+		m_item_section					= pSettings->r_string(section,"Spawn_Inventory_Item_Section");
+		m_spawn_probability				= pSettings->r_float(section,"Spawn_Inventory_Item_Probability");
+	} 
+	else m_spawn_probability			= 0.f;
 
 	m_melee_rotation_factor			= READ_IF_EXISTS(pSettings,r_float,section,"Melee_Rotation_Factor", 1.5f);
 	berserk_always					= !!READ_IF_EXISTS(pSettings,r_bool,section,"berserk_always", false);
@@ -347,12 +349,34 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 	control().update_frame();
 	control().update_schedule();
 
+	// spawn inventory item
+	if (ai().get_alife() && m_spawn_probability != 0.f)
+	{
+		float prob = Random.randF();
+		if ((prob < m_spawn_probability) || fsimilar(m_spawn_probability, 1.f))
+		{
+			CSE_Abstract *object = Level().spawn_item(m_item_section, Position(), ai_location().level_vertex_id(), ID(), true);
+			CSE_ALifeObject	*alife_object = smart_cast<CSE_ALifeObject*>(object);
+			if (alife_object)
+				alife_object->m_flags.set(CSE_ALifeObject::flCanSave, FALSE);
+
+			{
+				NET_Packet P;
+				object->Spawn_Write(P, TRUE);
+				Level().Send(P);
+				F_entity_Destroy(object);
+			}
+
+		}
+	}
+
 	return(TRUE);
 }
 
 void CBaseMonster::net_Destroy()
 {
-	// ôóíêöèÿ äîëæåíà áûòü âûçâàíà ïåðåä inherited
+	// Ñ„ÑƒÐ½ÐºÑ†Ð¸Ñ Ð´Ð¾Ð»Ð¶ÐµÐ½Ð° Ð±Ñ‹Ñ‚ÑŒ Ð²Ñ‹Ð·Ð²Ð°Ð½Ð° Ð¿ÐµÑ€ÐµÐ´ inherited
+	m_pPhysics_support->SyncNetState();
 	if (m_controlled) m_controlled->on_destroy	();
 	if (StateMan) StateMan->critical_finalize	();
 
@@ -440,56 +464,60 @@ void CBaseMonster::settings_read(CInifile* ini, LPCSTR section, SMonsterSettings
 
 void CBaseMonster::settings_load(LPCSTR section)
 {
-	SMonsterSettings		data;
+	SMonsterSettings data;
 
-	settings_read			(pSettings, section, data);
+	settings_read(pSettings, section, data);
 
-	u32 crc					= crc32(&data,sizeof(SMonsterSettings));
-	m_base_settings.create	(crc,1,&data);
+	u32 crc = crc32(&data, sizeof(SMonsterSettings));
+	m_base_settings.create(crc, 1, &data);
 }
-
 
 void CBaseMonster::settings_overrides()
 {
-	SMonsterSettings			*data;
-	data						= *m_base_settings;
+	SMonsterSettings *data;
+	data = *m_base_settings;
 
-	if (spawn_ini() && spawn_ini()->section_exist("settings_overrides")) {
-		settings_read			(spawn_ini(),"settings_overrides", (*data));
+	if (spawn_ini() && spawn_ini()->section_exist("settings_overrides"))
+	{
+		settings_read(spawn_ini(), "settings_overrides", (*data));
 	}
 
-	u32 crc						= crc32(data,sizeof(SMonsterSettings));
-	m_current_settings.create	(crc,1,data);
+	u32 crc = crc32(data, sizeof(SMonsterSettings));
+	m_current_settings.create(crc, 1, data);
 }
 
-void CBaseMonster::on_before_sell	(CInventoryItem *item)
+void CBaseMonster::on_before_sell(CInventoryItem *item)
 {
 	// since there can be only single item in the monster inventory
-	CSE_Abstract					*object	= Level().Server->game->get_entity_from_eid(item->object().ID()); 
-	VERIFY							(object);
-	CSE_ALifeObject					*alife_object = smart_cast<CSE_ALifeObject*>(object);
+	CSE_Abstract *object = Level().Server->ID_to_entity(item->object().ID());
+	VERIFY(object);
+
+	CSE_ALifeObject *alife_object = smart_cast<CSE_ALifeObject*>(object);
 	if (alife_object)
-		alife_object->m_flags.set	(CSE_ALifeObject::flCanSave,TRUE);
+		alife_object->m_flags.set(CSE_ALifeObject::flCanSave, TRUE);
 }
 
 void CBaseMonster::load_critical_wound_bones()
 {
 	// animation does not exist - no bones loaded
-	if (pSettings->line_exist(cNameSect(),"critical_wound_anim_head")) {
-		fill_bones_body_parts			("critical_wound_bones_head",	critical_wound_type_head);
-		m_critical_wound_anim_head		= pSettings->r_string(cNameSect(),"critical_wound_anim_head");
-	} 
+	if (pSettings->line_exist(cNameSect(), "critical_wound_anim_head"))
+	{
+		fill_bones_body_parts("critical_wound_bones_head", critical_wound_type_head);
+		m_critical_wound_anim_head = pSettings->r_string(cNameSect(), "critical_wound_anim_head");
+	}
 
-	if (pSettings->line_exist(cNameSect(),"critical_wound_anim_torso")) {
-		fill_bones_body_parts			("critical_wound_bones_torso",	critical_wound_type_torso);
-		m_critical_wound_anim_torso		= pSettings->r_string(cNameSect(),"critical_wound_anim_torso");
+	if (pSettings->line_exist(cNameSect(), "critical_wound_anim_torso"))
+	{
+		fill_bones_body_parts("critical_wound_bones_torso", critical_wound_type_torso);
+		m_critical_wound_anim_torso = pSettings->r_string(cNameSect(), "critical_wound_anim_torso");
 
-	} 
-	
-	if (pSettings->line_exist(cNameSect(),"critical_wound_anim_legs")) {
-		fill_bones_body_parts			("critical_wound_bones_legs",	critical_wound_type_legs);
-		m_critical_wound_anim_legs		= pSettings->r_string(cNameSect(),"critical_wound_anim_legs");
-	} 
+	}
+
+	if (pSettings->line_exist(cNameSect(), "critical_wound_anim_legs"))
+	{
+		fill_bones_body_parts("critical_wound_bones_legs", critical_wound_type_legs);
+		m_critical_wound_anim_legs = pSettings->r_string(cNameSect(), "critical_wound_anim_legs");
+	}
 }
 
 void CBaseMonster::fill_bones_body_parts	(LPCSTR body_part, CriticalWoundType wound_type)

@@ -48,7 +48,7 @@ public:
 //-----------------------------------------------------------------------------------------------------------------
 const int	LIGHT_Count				=	7;
 //-----------------------------------------------------------------
-thread_local		Time		t_start;
+thread_local		UTime		t_start;
 thread_local		Duration	t_time;
 thread_local		u64			t_count;
 
@@ -85,7 +85,7 @@ IC bool RayPick(CDB::COLLIDER& DB, Fvector& P, Fvector& D, float r, R_Light& L)
 
 float getLastRP_Scale(CDB::COLLIDER* DB, R_Light& L)//, Face* skip)
 {
-	u32	tris_count		= DB->r_count();
+	u32	tris_count		= (u32)DB->r_count();
 	float	scale		= 1.f;
 	Fvector B;
 

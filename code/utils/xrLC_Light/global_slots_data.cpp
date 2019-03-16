@@ -45,7 +45,7 @@ void global_slots_data::write(IWriter	&w) const
 	recalculation_data.write(w);
 }
 
-void global_slots_data::read(INetReader &r)
+void global_slots_data::read(IReader &r)
 {
 	r_pod(r, dtH);
 	R_ASSERT(!dtS);

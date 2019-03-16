@@ -1,13 +1,5 @@
-prefetch("_G")
-
-function cs_register(factory,client_object_class,server_object_class,clsid,script_clsid)
-	factory:register	(client_object_class,server_object_class,clsid,script_clsid)
-end
-
-function c_register(factory,client_object_class,clsid,script_clsid)
-	if (editor() == false) then
-		factory:register(client_object_class,clsid,script_clsid)
-	end
+local function cs_register(factory, ...)
+	factory:register(...)
 end
 
 function s_register(factory,server_object_class,clsid,script_clsid)
@@ -17,7 +9,7 @@ end
 function register(object_factory)
 
 	-- GENERAL ---------------------------------------------------------------------------------------------------------------------------
-	c_register	(object_factory, "ui_main_menu.main_menu",												"MAIN_MNU", 		"main_menu")
+	cs_register	(object_factory, "ui_main_menu.main_menu",												"MAIN_MNU", 		"main_menu")
 	cs_register	(object_factory, "ce_smart_zone", 				"smart_terrain.se_smart_terrain",		"SMRTTRRN",			"smart_terrain")
 	cs_register	(object_factory, "CLevelChanger",				"se_level_changer.se_level_changer",	"LVL_CHNG", 		"level_changer_s")
 	cs_register	(object_factory, "CActor", 						"se_actor.se_actor",					"S_ACTOR",			"script_actor")
@@ -80,7 +72,6 @@ function register(object_factory)
 	cs_register	(object_factory, "CWeaponShotgun",				"se_item.se_weapon_shotgun",			"WP_SHOTG",			"wpn_shotgun_s")
 	cs_register	(object_factory, "CWeaponAutomaticShotgun",		"se_item.se_weapon_automatic_shotgun",	"WP_ASHTG",			"wpn_auto_shotgun_s")
 	cs_register	(object_factory, "CWeaponVintorez",				"se_item.se_weapon_magazined",			"WP_VINT",			"wpn_vintorez_s")
-	cs_register	(object_factory, "CWeaponWalther",				"se_item.se_weapon_magazined",			"WP_WALTH",			"wpn_walther_s")
 	--cs_register	(object_factory, "CWeaponStatMgun",			"se_item.se_mgun",						"W_STMGUN",			"wpn_stat_mgun")
 
 	-- ANOMALY ZONES ---------------------------------------------------------------------------------------------------------------------

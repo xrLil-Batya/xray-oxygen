@@ -37,20 +37,19 @@ void CPHShell::ExplosionHit(const Fvector& pos, const Fvector& dir, float val, c
 		return;
 
 	EnableObject(0);
-	//Fvector local_pos;local_pos.set(0.f,0.f,0.f);
-	auto i = elements.begin(), e = elements.end();
+
 	float impulse = val / _sqrt(_sqrt((float)elements.size()));
 
-	for (; i != e; ++i)
+	for (CPHElement* pElement : elements)
 	{
 		//Fvector max_area_dir;
-		CPHElement* element = (*i);
-		u16 gn = element->CPHGeometryOwner::numberOfGeoms();
+		u16 gn = pElement->CPHGeometryOwner::numberOfGeoms();
 		float g_impulse = impulse / gn;
 		for (u16 j = 0; j < gn; ++j)
 		{
 			Fvector r_dir, r_pos, r_box;
-			float rad = element->getRadius();
+			const float rad = pElement->getRadius();
+
 			r_box.set(rad, rad, rad);
 			r_pos.random_point(r_box);
 			r_dir.random_dir();
@@ -62,7 +61,7 @@ void CPHShell::ExplosionHit(const Fvector& pos, const Fvector& dir, float val, c
 			}
 
 			r_dir.normalize_safe();//safe???
-			element->applyImpulseTrace(r_pos, r_dir, g_impulse, element->CPHGeometryOwner::Geom(j)->bone_id());
+			pElement->applyImpulseTrace(r_pos, r_dir, g_impulse, pElement->CPHGeometryOwner::Geom(j)->bone_id());
 		}
 	}
 }

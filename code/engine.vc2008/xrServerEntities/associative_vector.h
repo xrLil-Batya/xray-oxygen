@@ -38,41 +38,41 @@ private:
 			_compare_predicate_type
 		>													self_type;
 
-	typedef 
+	using inherited = 
 		xr_vector<
 			std::pair<
 				_key_type,
 				_data_type
 			>
-		>													inherited;
+		>;
 
 public:
-	typedef 
+	using value_compare = 
 		associative_vector_compare_predicate<
 			_key_type,
 			_data_type,
 			_compare_predicate_type
-		>													value_compare;
+		>;
 
 public:
-	typedef typename inherited::allocator_type				allocator_type;
-	typedef typename inherited::const_pointer				const_pointer;
-	typedef typename inherited::const_reference				const_reference;
-	typedef typename inherited::const_iterator				const_iterator;
-	typedef typename inherited::const_reverse_iterator		const_reverse_iterator;
-	typedef typename inherited::pointer						pointer;
-	typedef typename inherited::reference					reference;
-	typedef typename inherited::iterator					iterator;
-	typedef typename inherited::reverse_iterator			reverse_iterator;
-	typedef typename allocator_type::difference_type		difference_type;
-	typedef _compare_predicate_type							key_compare;
-	typedef _key_type										key_type;
-	typedef _data_type										mapped_type;
-	typedef typename inherited::size_type					size_type;
-	typedef typename inherited::value_type					value_type;
-	typedef std::pair<iterator,bool>						insert_result;
-	typedef std::pair<iterator,iterator>					equal_range_result;
-	typedef std::pair<const_iterator,const_iterator>		const_equal_range_result;
+	using allocator_type = typename inherited::allocator_type;
+	using const_pointer = typename inherited::const_pointer;
+	using const_reference = typename inherited::const_reference;
+	using const_iterator = typename inherited::const_iterator;
+	using const_reverse_iterator = typename inherited::const_reverse_iterator;
+	using pointer = typename inherited::pointer;
+	using reference = typename inherited::reference;
+	using iterator = typename inherited::iterator;
+	using reverse_iterator = typename inherited::reverse_iterator;
+	using difference_type = typename allocator_type::difference_type;
+	using key_compare = _compare_predicate_type;
+	using key_type = _key_type;
+	using mapped_type = _data_type;
+	using size_type = typename inherited::size_type;
+	using value_type = typename inherited::value_type;
+	using insert_result = std::pair<iterator,bool>;
+	using equal_range_result = std::pair<iterator,iterator>;
+	using const_equal_range_result = std::pair<const_iterator,const_iterator>;
 
 private:
 	IC		void						actualize			() const;

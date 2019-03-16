@@ -14,72 +14,49 @@
 #include "ParticleGroup.h"
 #include "ParticleEffect.h"
 
-dxRender_Visual*	CModelPool::Instance_Create(u32 type)
+dxRender_Visual* CModelPool::Instance_Create(u32 type)
 {
-	dxRender_Visual *V = NULL;
+	dxRender_Visual *pVisualDX = nullptr;
 
 	// Check types
-	switch (type) {
-	case MT_NORMAL:				// our base visual
-		V	= xr_new<Fvisual>				();
-		break;
-	case MT_HIERRARHY:
-		V	= xr_new<FHierrarhyVisual>		();
-		break;
-	case MT_PROGRESSIVE:		// dynamic-resolution visual
-		V	= xr_new<FProgressive>			();
-		break;
-	case MT_SKELETON_ANIM:
-		V	= xr_new<CKinematicsAnimated>	();
-		break;
-	case MT_SKELETON_RIGID:
-		V	= xr_new<CKinematics>			();
-		break;
-	case MT_SKELETON_GEOMDEF_PM:
-		V	= xr_new<CSkeletonX_PM>			();
-		break;
-	case MT_SKELETON_GEOMDEF_ST:
-		V	= xr_new<CSkeletonX_ST>			();
-		break;
-	case MT_PARTICLE_EFFECT:
-		V	= xr_new<PS::CParticleEffect>	();
-		break;
-	case MT_PARTICLE_GROUP:
-		V	= xr_new<PS::CParticleGroup>	();
-		break;
-#ifndef _EDITOR
-	case MT_LOD:
-		V	= xr_new<FLOD>					();
-		break;
-	case MT_TREE_ST:
-		V	= xr_new<FTreeVisual_ST>		();
-		break;
-	case MT_TREE_PM:
-		V	= xr_new<FTreeVisual_PM>		();
-		break;
-#endif
-	default:
-		FATAL	("Unknown visual type");
-		break;
+	switch (type)
+	{
+	case MT_NORMAL:					pVisualDX = new Fvisual(); break; // our base visual
+	case MT_HIERRARHY:				pVisualDX = new FHierrarhyVisual(); break;
+	case MT_PROGRESSIVE:			pVisualDX = new FProgressive(); break;  // dynamic-resolution visual
+	case MT_SKELETON_ANIM:			pVisualDX = new CKinematicsAnimated(); break;
+	case MT_SKELETON_RIGID:			pVisualDX = new CKinematics(); break;
+	case MT_SKELETON_GEOMDEF_PM:	pVisualDX = new CSkeletonX_PM(); break;
+	case MT_SKELETON_GEOMDEF_ST:	pVisualDX = new CSkeletonX_ST(); break;
+	case MT_PARTICLE_EFFECT:		pVisualDX = new PS::CParticleEffect(); break;
+	case MT_PARTICLE_GROUP:			pVisualDX = new PS::CParticleGroup(); break;
+	case MT_LOD:					pVisualDX = new FLOD(); break;
+	case MT_TREE_ST:				pVisualDX = new FTreeVisual_ST(); break;
+	case MT_TREE_PM:				pVisualDX = new FTreeVisual_PM(); break;
+	default:						FATAL("Unknown visual type"); break;
 	}
-	R_ASSERT	(V);
-	V->Type		= type;
-	return		V;
+
+	pVisualDX->Type = type;
+	return pVisualDX;
 }
 
-dxRender_Visual*	CModelPool::Instance_Duplicate	(dxRender_Visual* V)
+dxRender_Visual* CModelPool::Instance_Duplicate(dxRender_Visual* pVisualDX)
 {
-	R_ASSERT(V);
-	dxRender_Visual* N		= Instance_Create(V->Type);
-	N->Copy			(V);
-	N->Spawn		();
-    // inc ref counter
-	for (xr_vector<ModelDef>::iterator I=Models.begin(); I!=Models.end(); I++) 
-		if (I->model==V)
-		{ 
-			I->refs++; 
+	R_ASSERT(pVisualDX);
+	dxRender_Visual* N = Instance_Create(pVisualDX->Type);
+	N->Copy(pVisualDX);
+	N->Spawn();
+
+	// inc ref counter
+	for (auto &refModel : Models)
+	{
+		if (refModel.model == pVisualDX)
+		{
+			refModel.refs++;
 			break;
 		}
+	}
+
 	return N;
 }
 
@@ -89,74 +66,73 @@ dxRender_Visual* CModelPool::TryLoadObject(const char* N)
 }
 dxRender_Visual* CModelPool::TryLoadOgf(const char* N)
 {
-	string_path		fn;
-	string_path		name;
+	string_path fn;
+	string_path name;
 
 	// Add default ext if no ext at all
-	if (!strext(N))	
-		strconcat(sizeof(name), name, N, ".ogf");
-	else				
+	if (!strext(N))
+		xr_strconcat(name, N, ".ogf");
+	else
 		strcpy_s(name, sizeof(name), N);
 
-
 	// Load data from MESHES or LEVEL
-	if (!FS.exist(N)) {
+	if (!FS.exist(N)) 
+	{
 		if (!FS.exist(fn, "$level$", name) && !FS.exist(fn, "$game_meshes$", name))
-				return nullptr;
+			return nullptr;
 	}
-	else 
-		strcpy_s(fn, N);
+	else strcpy_s(fn, N);
 
 	// Actual loading
-#ifdef DEBUG
-	if (bLogging)		Msg("- Uncached model loading: %s", fn);
-#endif // DEBUG
-
-	IReader*			data = FS.r_open(fn);
-	ogf_header			H;
+	IReader* data = FS.r_open(fn);
+	ogf_header H;
 	data->r_chunk_safe(OGF_HEADER, &H, sizeof(H));
-	dxRender_Visual* V = Instance_Create(H.type);
-	V->Load(N, data, 0);
+
+	dxRender_Visual* pVisualDX = Instance_Create(H.type);
+	pVisualDX->Load(N, data, 0);
 	FS.r_close(data);
-	return V;
+
+	return pVisualDX;
 }
 
-dxRender_Visual*	CModelPool::Instance_Load		(const char* N, BOOL allow_register)
+dxRender_Visual* CModelPool::Instance_Load(const char* N, BOOL allow_register)
 {
-	dxRender_Visual* V = TryLoadOgf(N);
+	dxRender_Visual* pVisualDX = TryLoadOgf(N);
 
-	if (!V) 
+	if (!pVisualDX)
 		Debug.fatal(DEBUG_INFO, "Can't find model file '%s'.", N);
 
-	g_pGamePersistent->RegisterModel(V);
+	g_pGamePersistent->RegisterModel(pVisualDX);
+
 	// Registration
-	if (allow_register) Instance_Register(N, V);
-	return V;
+	if (allow_register) 
+		Instance_Register(N, pVisualDX);
+
+	return pVisualDX;
 }
 
-dxRender_Visual*	CModelPool::Instance_Load(LPCSTR name, IReader* data, BOOL allow_register)
+dxRender_Visual* CModelPool::Instance_Load(LPCSTR name, IReader* data, BOOL allow_register)
 {
-	dxRender_Visual	*V;
-	
-	ogf_header			H;
-	data->r_chunk_safe	(OGF_HEADER,&H,sizeof(H));
-	V = Instance_Create (H.type);
-	V->Load				(name,data,0);
+	ogf_header H;
+	data->r_chunk_safe(OGF_HEADER, &H, sizeof(H));
+	dxRender_Visual	*pVisualDX = Instance_Create(H.type);
+	pVisualDX->Load(name, data, 0);
 
 	// Registration
-	if (allow_register) Instance_Register(name,V);
-	return V;
+	if (allow_register) 
+		Instance_Register(name, pVisualDX);
+
+	return pVisualDX;
 }
 
-void		CModelPool::Instance_Register(LPCSTR N, dxRender_Visual* V)
+void CModelPool::Instance_Register(LPCSTR N, dxRender_Visual* V)
 {
 	// Registration
-	ModelDef			M;
-	M.name				= N;
-	M.model				= V;
-	Models.push_back	(M);
+	ModelDef M;
+	M.name = N;
+	M.model = V;
+	Models.push_back(M);
 }
-
 
 void CModelPool::Destroy()
 {
@@ -164,22 +140,18 @@ void CModelPool::Destroy()
 	Pool.clear			();
 
 	// Registry
-	while(!Registry.empty()){
-		REGISTRY_IT it	= Registry.begin();
-		dxRender_Visual* V=(dxRender_Visual*)it->first;
-#ifdef _DEBUG
-		Msg				("ModelPool: Destroy object: '%s'",*V->dbg_name);
-#endif
-		DeleteInternal	(V,TRUE);
+	while (!Registry.empty()) 
+	{
+		REGISTRY_IT it = Registry.begin();
+		dxRender_Visual* V = (dxRender_Visual*)it->first;
+		DeleteInternal(V, TRUE);
 	}
 
 	// Base/Reference
-	xr_vector<ModelDef>::iterator	I = Models.begin();
-	xr_vector<ModelDef>::iterator	E = Models.end();
-	for (; I!=E; I++)
+	for (auto &refModel: Models)
 	{
-		I->model->Release();
-		xr_delete(I->model);
+		refModel.model->Release();
+		xr_delete(refModel.model);
 	}
 	
 	Models.clear();
@@ -193,7 +165,7 @@ CModelPool::CModelPool()
 	bLogging				= TRUE;
     bForceDiscard 			= FALSE;
     bAllowChildrenDuplicate	= TRUE; 
-	g_pMotionsContainer		= xr_new<motions_container>();
+	g_pMotionsContainer		= new motions_container();
 }
 
 CModelPool::~CModelPool()
@@ -204,7 +176,7 @@ CModelPool::~CModelPool()
 
 dxRender_Visual* CModelPool::Instance_Find(LPCSTR N)
 {
-	dxRender_Visual*				Model=0;
+	dxRender_Visual*				Model=nullptr;
 	xr_vector<ModelDef>::iterator	I;
 
 	for (I=Models.begin(); I!=Models.end(); I++)
@@ -231,9 +203,9 @@ dxRender_Visual* CModelPool::Create(const char* name, IReader* data)
 		dxRender_Visual* Model = it->second;
 		Model->Spawn();
 
-		mtPeref.lock();
+		mtPeref.Enter();
 		Pool.erase(it);
-		mtPeref.unlock();
+		mtPeref.Leave();
 
 		return Model;
 	}
@@ -242,7 +214,7 @@ dxRender_Visual* CModelPool::Create(const char* name, IReader* data)
 		// 1. Search for already loaded model (reference, base model)
 		dxRender_Visual* Base = Instance_Find(low_name);
 
-		mtPeref.lock();
+		mtPeref.Enter();
 		if (!Base) 
 		{
 			// 2. If not found
@@ -255,7 +227,7 @@ dxRender_Visual* CModelPool::Create(const char* name, IReader* data)
 		dxRender_Visual* Model = Instance_Duplicate(Base);
 
 		Registry.insert(std::make_pair(Model, low_name));
-		mtPeref.unlock();
+		mtPeref.Leave();
 
 		return Model;
 	}
@@ -302,58 +274,65 @@ void	CModelPool::DeleteInternal	(dxRender_Visual* &V, BOOL bDiscard)
 	V	=	NULL;
 }
 
-void	CModelPool::Delete		(dxRender_Visual* &V, BOOL bDiscard)
+void CModelPool::Delete(dxRender_Visual* &V, BOOL bDiscard)
 {
-	if (NULL==V)				return;
-    VERIFY(!bDiscard);
-    ModelsToDelete.push_back(V);
-	V							=	NULL;
+	if (!V) return;
+
+	if (g_bRendering) 
+	{
+		VERIFY(!bDiscard);
+		ModelsToDelete.push_back(V);
+	}
+	else 
+	{
+		DeleteInternal(V, bDiscard);
+	}
+
+	V = nullptr;
 }
 
-void	CModelPool::DeleteQueue		()
+void CModelPool::DeleteQueue()
 {
-	for (u32 it=0; it<ModelsToDelete.size(); it++)
-		DeleteInternal(ModelsToDelete[it]);
-	ModelsToDelete.clear			();
+	for (dxRender_Visual* pVisualDX: ModelsToDelete)
+		DeleteInternal(pVisualDX);
+	ModelsToDelete.clear();
 }
 
-void	CModelPool::Discard	(dxRender_Visual* &V, BOOL b_complete)
+void CModelPool::Discard(dxRender_Visual* &V, BOOL b_complete)
 {
-	//
-	REGISTRY_IT	it		= Registry.find	(V);
+	REGISTRY_IT	it = Registry.find	(V);
+	// Pool - OK
 	if (it!=Registry.end())
 	{
-		// Pool - OK
-
-			// Base
-			const shared_str&	name	= it->second;
-			xr_vector<ModelDef>::iterator I = Models.begin();
-			xr_vector<ModelDef>::iterator I_e = Models.end();
-			
-			for (; I!=I_e; ++I)
+		// Base
+		const shared_str& name = it->second;
+		u32 IterCont = 0;
+		for (auto &refModel : Models)
+		{
+			if (refModel.name == name)
 			{
-				if (I->name==name)
+				if (b_complete || strchr(name.c_str(), '#'))
 				{
-					if(b_complete || strchr(*name,'#'))
+					VERIFY(refModel.refs > 0);
+					refModel.refs--;
+					if (!refModel.refs)
 					{
-						VERIFY(I->refs>0);
-            			I->refs--; 
-						if (0==I->refs)
-						{
-                			bForceDiscard		= TRUE;
-	            			I->model->Release	();
-							xr_delete			(I->model);	
-							Models.erase		(I);
-							bForceDiscard		= FALSE;
-						}
-						break;
-					}else{
-					if(I->refs>0)
-						I->refs--;
-					break;
+						bForceDiscard = TRUE;
+						refModel.model->Release();
+						xr_delete(refModel.model);
+						Models.erase(Models.begin() + IterCont);
+						bForceDiscard = FALSE;
 					}
 				}
+				else if (refModel.refs > 0)
+				{
+					refModel.refs--;
+				}
+				break;
 			}
+			IterCont++;
+		}
+
 		// Registry
 		xr_delete		(V);	
 		Registry.erase	(it);
@@ -364,22 +343,18 @@ void	CModelPool::Discard	(dxRender_Visual* &V, BOOL b_complete)
 	V	=	nullptr;
 }
 
-#include <ppl.h>
 void CModelPool::Prefetch()
 {
 	Logging(FALSE);
 	// prefetch visuals
 	string256 section;
-	strconcat(sizeof(section), section, "prefetch_visuals_", g_pGamePersistent->m_game_params.m_game_type);
+	xr_strconcat( section, "prefetch_visuals_", g_pGamePersistent->m_game_params.m_game_type);
 	CInifile::Sect& sect = pSettings->r_section(section);
 
-	// Test parallel for
-	concurrency::parallel_for_each(sect.Data.begin(), sect.Data.end(), [this](const CInifile::Item &it)
-	{
-		dxRender_Visual* V = Create(it.first.c_str());
-		Delete(V);
-	});
-	// End
+    for (const CInifile::Item &it : sect.Data)
+    {
+        dxRender_Visual* V = Create(it.first.c_str());
+    }
 
 	Logging(TRUE);
 }
@@ -456,31 +431,38 @@ void CModelPool::memory_stats		( u32& vb_mem_video, u32& vb_mem_system, u32& ib_
 		dxRender_Visual* ptr = it->model;
 		Fvisual* vis_ptr = dynamic_cast<Fvisual*> (ptr);
 
-		if( vis_ptr == NULL )
+		if( vis_ptr == nullptr)
 			continue;
-#if !defined(USE_DX10) && !defined(USE_DX11)
+
+#ifndef USE_DX11
 		D3DINDEXBUFFER_DESC IB_desc;
 		D3DVERTEXBUFFER_DESC VB_desc;
 
 		vis_ptr->m_fast->p_rm_Indices->GetDesc( &IB_desc );
 
-		if( IB_desc.Pool == D3DPOOL_DEFAULT ||
-			IB_desc.Pool == D3DPOOL_MANAGED )
-			ib_mem_video += IB_desc.Size;
+		D3DPOOL         IB_Pool = IB_desc.Pool;
+		unsigned int    IB_Size = IB_desc.Size;
 
-		if( IB_desc.Pool == D3DPOOL_MANAGED ||
-			IB_desc.Pool == D3DPOOL_SCRATCH )
-			ib_mem_system += IB_desc.Size;
+		if( IB_Pool == D3DPOOL_DEFAULT ||
+			IB_Pool == D3DPOOL_MANAGED )
+			ib_mem_video += IB_Size;
+
+		if( IB_Pool == D3DPOOL_MANAGED ||
+			IB_Pool == D3DPOOL_SCRATCH )
+			ib_mem_system += IB_Size;
 
 		vis_ptr->m_fast->p_rm_Vertices->GetDesc( &VB_desc );
 
-		if( VB_desc.Pool == D3DPOOL_DEFAULT ||
-			VB_desc.Pool == D3DPOOL_MANAGED )
-			vb_mem_video += IB_desc.Size;
+		D3DPOOL         VB_Pool = VB_desc.Pool;
+		unsigned int    VB_Size = VB_desc.Size;
+
+		if( VB_Pool == D3DPOOL_DEFAULT ||
+			VB_Pool == D3DPOOL_MANAGED)
+			vb_mem_video += VB_Size;
 
 		if( VB_desc.Pool == D3DPOOL_MANAGED ||
 			VB_desc.Pool == D3DPOOL_SCRATCH )
-			vb_mem_system += IB_desc.Size;
+			vb_mem_system += VB_Size;
 
 #else
 		D3D_BUFFER_DESC IB_desc;

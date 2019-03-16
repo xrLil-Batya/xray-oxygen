@@ -3,7 +3,7 @@
 #include "../xrEngine/effectorPP.h"
 #include "../xrEngine/ObjectAnimator.h"
 #include "object_broker.h"
-#include "actor.h"
+#include "Actor.h"
 
 void AddEffector(CActor* A, int type, const shared_str& sect_name)
 {
@@ -412,7 +412,7 @@ BOOL CControllerPsyHitCamEffector::ProcessCam(SCamEffectorInfo& info)
 
 	//////////////////////////////////////////////////////////////////////////
 
-	// Óñòàíîâèòü óãëû ñìåùåíèÿ
+	// Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ ÑƒÐ³Ð»Ñ‹ ÑÐ¼ÐµÑ‰ÐµÐ½Ð¸Ñ
 	Fmatrix	R;
 	if (m_time_current > m_time_total)
 		R.identity();
@@ -481,5 +481,36 @@ bool CActorCameraManager::ProcessCameraEffector(CEffectorCam* eff)
 		m_cam_info_hud.fFar = m_cam_info.fFar;
 		m_cam_info_hud.fAspect = m_cam_info.fAspect;
 	}
+	return res;
+}
+
+void CAnimatorCamEffectorScriptCB::ProcessIfInvalid(SCamEffectorInfo& info)
+{
+	if (m_bAbsolutePositioning)
+	{
+		const Fmatrix& m = m_objectAnimator->XFORM();
+		info.d = m.k;
+		info.n = m.j;
+		info.p = m.c;
+
+		if (m_fov > 0.0f)
+			info.fFov = m_fov;
+	}
+}
+#include "ai_space.h"
+#include "script_engine.h"
+#include <luabind/luabind.hpp>
+
+BOOL CAnimatorCamEffectorScriptCB::Valid()
+{
+	BOOL res = inherited::Valid();
+	if (!res && cb_name.size())
+	{
+		luabind::functor<LPCSTR> fl;
+		R_ASSERT(ai().script_engine().functor<LPCSTR>(*cb_name, fl));
+		fl();
+		cb_name = "";
+	}
+
 	return res;
 }

@@ -5,10 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script object action class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-#include "script_abstract_action.h"
+#include "../xrScripts/export/script_abstract_action.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "ai_monster_space.h"
 

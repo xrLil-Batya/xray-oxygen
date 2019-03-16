@@ -1,4 +1,4 @@
-/*
+﻿/*
  *		Filtered Image Rescaling
  *
  *		  by Dale Schumacher

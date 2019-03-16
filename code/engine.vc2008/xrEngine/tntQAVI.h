@@ -1,4 +1,4 @@
-// tntQAVI.h - хедер для декодера AVI
+п»ї// tntQAVI.h - С…РµРґРµСЂ РґР»СЏ РґРµРєРѕРґРµСЂР° AVI
 // Oles (C), 2002-2007
 #pragma once
 #include <math.h>
@@ -27,7 +27,7 @@ typedef struct
 		WORD	right;
 		WORD	bottom;
 	};
-//	RECT   rcFrame;		- лажа в MSDN
+//	RECT   rcFrame;		- Р»Р°Р¶Р° РІ MSDN
 } AVIStreamHeaderCustom;
 
 class ENGINE_API CAviPlayerCustom
@@ -43,8 +43,8 @@ protected:
 	BITMAPINFOHEADER	m_biOutFormat;
 	BITMAPINFOHEADER	m_biInFormat;
 
-	float				m_fRate;		// стандартнаЯ скорость, fps
-	float				m_fCurrentRate;	// текущаЯ скорость, fps
+	float				m_fRate;		// РЎРѓРЎвЂљР В°Р Р…Р Т‘Р В°РЎР‚РЎвЂљР Р…Р В°Р Р‡ РЎРѓР С”Р С•РЎР‚Р С•РЎРѓРЎвЂљРЎРЉ, fps
+	float				m_fCurrentRate;	// РЎвЂљР ВµР С”РЎС“РЎвЂ°Р В°Р Р‡ РЎРѓР С”Р С•РЎР‚Р С•РЎРѓРЎвЂљРЎРЉ, fps
 
 	DWORD				m_dwFrameTotal;
 	DWORD				m_dwFrameCurrent;

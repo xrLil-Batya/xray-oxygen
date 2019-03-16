@@ -1,4 +1,4 @@
-/// ExportOGF for X-Ray Engine
+﻿/// ExportOGF for X-Ray Engine
 /// v1.1
 
 #include "stdafx.h"
@@ -13,6 +13,7 @@ bool CBone::ExportOGF(IWriter& F)
 
     const SGameMtl* M = GMLib.GetMaterial(game_mtl.c_str());
 	R_ASSERT3(!M, "! Bone '%s' has invalid game material.", *Name());
+	if (M == nullptr) return false;
 	R_ASSERT3(!M->Flags.is(SGameMtl::flDynamic), "! Bone '%s' has non-dynamic game material.",*Name());
 
     F.w_u32		(OGF_IKDATA_VERSION);

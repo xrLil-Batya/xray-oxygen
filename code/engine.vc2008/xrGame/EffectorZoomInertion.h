@@ -6,7 +6,7 @@
 
 #include "CameraEffector.h"
 #include "../xrEngine/cameramanager.h"
-#include "WeaponMagazined.h"
+#include "items/WeaponMagazined.h"
 
 class CEffectorZoomInertion : public CEffectorCam
 {
@@ -24,13 +24,13 @@ class CEffectorZoomInertion : public CEffectorCam
 	float	m_fTimeCameraMove;
 	bool	m_bCameraMoving;
 
-	//ïàðàìåòðû íàñòðîéêè ýôôåêòîðà
+	//параметры настройки эффектора
 	float	m_fCameraSpeedThreshold;
 	float	m_fDispEpsilon;
 	float	m_fDispMin;
 	float	m_fDispHorzCoef;
 	float	m_fZoomAimingDispK;
-	//âðåìÿ ÷åðåç êîòîðîå ýôôåêòîð ìåíÿåò íàïðàâëåíèå äâèæåíèÿ
+	//время через эффектор меняет направление движения
 	u32		m_dwDeltaTime;
 	u32		m_dwCenterDeltaTime;
 
@@ -58,7 +58,7 @@ public:
 			void	Load				();
 			void	SetParams			(float disp);
 
-	virtual BOOL	ProcessCam			(SCamEffectorInfo& info);
+			BOOL	ProcessCam			(SCamEffectorInfo& info) override;
 	virtual	void	SetRndSeed			(s32 Seed) { m_Random.seed(Seed); };
 	virtual	void	Init				(CWeaponMagazined*	pWeapon);
 	virtual	void	Enable				(bool flag, float rotateTime = 0.f);

@@ -9,7 +9,7 @@ CRayPick::CRayPick()
 	direction.set(0,0,0); 
 	range = 0; 
 	flags = collide::rq_target::rqtNone; 
-	ignore = NULL;
+	ignore = nullptr;
 };
 
 CRayPick::CRayPick(Fvector& P, Fvector& D, float R, collide::rq_target F, CScriptGameObject* I)
@@ -18,7 +18,7 @@ CRayPick::CRayPick(Fvector& P, Fvector& D, float R, collide::rq_target F, CScrip
 	direction.set(D);
 	range = R; 
 	flags = F; 
-	ignore = NULL;
+	ignore = nullptr;
 	if (I)
 		ignore = smart_cast<CObject*>(&(I->object()));
 };

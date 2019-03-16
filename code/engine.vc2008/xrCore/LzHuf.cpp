@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #pragma hdrstop
+#include "lzhuf.h"
 
 #include <io.h>
 #include <fcntl.h>
@@ -10,10 +11,7 @@
 
 #define MODULE
 
-//typedef unsigned char BYTE;
-
 unsigned	textsize = 0, codesize = 0;
-
 char		wterr[] = "Can't write.";
 
 /********** LZSS compression **********/
@@ -44,8 +42,8 @@ int prnt[T + N_CHAR+1];	/* pointers to parent nodes, except for the				*/
 int son[T];				/* pointers to child nodes (son[], son[] + 1)			*/
 
 //************************** Internal FS
-//typedef xr_vector<BYTE>	vecB;
-class LZfs {
+class LZfs 
+{
 private:
 	unsigned	getbuf;
 	unsigned	getlen;
@@ -76,8 +74,8 @@ public:
 	}
 	
 	LZfs() {
-		in_start	= in_end	= in_iterator = 0;
-		out_start	= out_end	= out_iterator = 0;
+		in_start	= in_end	= in_iterator = nullptr;
+		out_start	= out_end	= out_iterator = nullptr;
 	}
 	
 	IC void		Init_Input(u8* _start, u8* _end) {
@@ -106,11 +104,11 @@ public:
 	}
 	IC void		OutRelease	() {
 		xr_free		(out_start);
-		out_start	= 0; 
-		out_end		= 0; 
-		out_iterator= 0;
+		out_start	= nullptr; 
+		out_end		= nullptr; 
+		out_iterator= nullptr;
 	}
-	IC int		GetBit(void)    /* get one bit */
+	IC int		GetBit()    /* get one bit */
 	{
 		unsigned i;
 		
@@ -125,7 +123,7 @@ public:
 		return (int)((i & 0x8000) >> 15);
 	}
 	
-	IC int		GetByte(void)   /* get one byte */
+	IC int		GetByte()   /* get one byte */
 	{
 		unsigned i;
 		
@@ -166,7 +164,7 @@ public:
 };
 static LZfs fs;
 //************************** Internal FS
-IC void InitTree(void)  /* initialize trees */
+IC void InitTree()  /* initialize trees */
 {
     int  i;
 	
@@ -369,7 +367,7 @@ u8 d_len[256] = {
 
 /* initialization of tree */
 
-void StartHuff(void)
+void StartHuff()
 {
     int i, j;
 	
@@ -391,7 +389,7 @@ void StartHuff(void)
 
 
 /* reconstruction of tree */
-void reconst(void)
+void reconst()
 {
     int			i, j, k;
     unsigned	f, l;
@@ -501,7 +499,7 @@ void EncodePosition(unsigned c)
     fs.PutCode(6, (c & 0x3f) << 10);
 }
 
-int DecodeChar(void)
+int DecodeChar()
 {
     unsigned c;
 	
@@ -519,7 +517,7 @@ int DecodeChar(void)
     return (int)c;
 }
 
-int DecodePosition(void)
+int DecodePosition()
 {
     unsigned i, j, c;
 	
@@ -537,7 +535,7 @@ int DecodePosition(void)
 }
 
 /* compression */
-void Encode(void)  /* compression */
+void Encode()  /* compression */
 {
     int  i, c, length, r, s, last_match_length;
 	
@@ -596,7 +594,7 @@ void Encode(void)  /* compression */
 	tim_size = textsize;
 }
 
-void Decode(void)  /* recover */
+void Decode()  /* recover */
 {
     int  i, j, k, r, c;
     unsigned int  count;
@@ -635,21 +633,26 @@ void Decode(void)  /* recover */
 	tim_size = count;
 }
 
-unsigned _writeLZ	(int hf, void* d, unsigned size)
+XRCORE_API unsigned XRay::Compress::LZ::WriteLZ(HANDLE hf, void* d, unsigned size)
 {
 	u8*	start = (u8*) d;
 	fs.Init_Input(start,start+size);
+	DWORD SizeOut = 0;
 	
 	// Actual compression
     Encode			();
 	// Flush cache
 	int size_out = fs.OutSize();
-	if (size_out) _write(hf,fs.OutPointer(),size_out);
+	if (size_out)
+	{
+		WriteFile(hf, fs.OutPointer(), size_out, &SizeOut, nullptr);			//_write(hf, fs.OutPointer(), size_out);
+	}
+
 	fs.OutRelease	();
 	return size_out;
 }
 
-void _compressLZ	(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
+void XRay::Compress::LZ::CompressLZ(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
 {
 	u8*	start = (u8*) src;
 	fs.Init_Input(start,start+src_sz);
@@ -658,7 +661,7 @@ void _compressLZ	(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
 	*dest_sz	= fs.OutSize();
 }
 
-void _decompressLZ	(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
+void XRay::Compress::LZ::DecompressLZ(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
 {
 	u8*	start = (u8*) src;
 	fs.Init_Input(start,start+src_sz);
@@ -667,11 +670,12 @@ void _decompressLZ	(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
 	*dest_sz	= fs.OutSize();
 }
 
-unsigned _readLZ	(int hf, void* &d, unsigned size)
+XRCORE_API unsigned XRay::Compress::LZ::ReadLZ(HANDLE hf, void* &d, unsigned size)
 {
 	// Read file in memory
 	u8*	data	= (u8*)xr_malloc(size);
-	_read	(hf,data,size);
+	DWORD SizeOut = 0;
+	ReadFile(hf, data, size, &SizeOut, nullptr);	//_read	(hf,data,size);
 	
 	fs.Init_Input(data,data+size);
 	

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "../xrCore/BaseEffector.h"
 
 enum ECameraStyle 
@@ -14,6 +14,7 @@ enum ECameraStyle
 enum ECamEffectorType 
 {
 	cefDemo = 0,
+	cefAnsel,
 	cefNext
 };
 

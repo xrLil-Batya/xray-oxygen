@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "r4.h"
+#include "../../xrCore/xrDelegate/xrDelegate.h"
 #include "../xrRender/fbasicvisual.h"
 #include "../../xrEngine/xr_object.h"
 #include "../../xrEngine/CustomHUD.h"
@@ -13,12 +14,13 @@
 
 #include "../xrRenderDX10/3DFluid/dx103DFluidManager.h"
 #include "../xrRender/ShaderResourceTraits.h"
+#include "../xrRender/dxGlowManager.h"
 
 #include "D3DX10Core.h"
 
 ENGINE_API BOOL isGraphicDebugging;
 
-CRender										RImplementation;
+CRender RImplementation;
 
 template<UINT TNameLength>
 IC void SetDebugObjectName(ID3D11DeviceChild* resource, const char(&name)[TNameLength])
@@ -27,23 +29,7 @@ IC void SetDebugObjectName(ID3D11DeviceChild* resource, const char(&name)[TNameL
 }
 
 //////////////////////////////////////////////////////////////////////////
-class CGlow				: public IRender_Glow
-{
-public:
-	bool				bActive;
-public:
-	CGlow() : bActive(false)								{ }
-	virtual void set_active		(bool b)					{ bActive = b; }
-	virtual bool get_active		()							{ return bActive; }
-	virtual void set_position	(const Fvector& P)			{ }
-	virtual void set_direction	(const Fvector& D)			{ }
-	virtual void set_radius		(float R)					{ }
-	virtual void set_texture	(LPCSTR name)				{ }
-	virtual void set_color		(const Fcolor& C)			{ }
-	virtual void set_color		(float r, float g, float b) { }
-};
-
-float		r_dtex_range		= 50.f;
+float r_dtex_range = 50.0f;
 //////////////////////////////////////////////////////////////////////////
 ShaderElement* CRender::rimp_select_sh_dynamic	(dxRender_Visual *pVisual,
 												float cdist_sq)
@@ -73,81 +59,6 @@ ShaderElement* CRender::rimp_select_sh_static	(dxRender_Visual *pVisual,
 	return pVisual->shader->E[id]._get();
 }
 
-static class cl_parallax : public R_constant_setup
-{
-	virtual void setup(R_constant* C)
-	{
-		float h = ps_r_df_parallax_h;
-		RCache.set_c(C, h, -h / 2.f, 1.f / r_dtex_range, 1.f / r_dtex_range);
-	}
-}	binder_parallax;
-
-static class cl_tree_amplitude_intensity : public R_constant_setup
-{
-	virtual void setup(R_constant* C)
-	{
-		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E.m_fTreeAmplitudeIntensity;
-		RCache.set_c(C, fValue, fValue, fValue, 0);
-	}
-} binder_tree_amplitude_intensity;
-
-static class cl_LOD : public R_constant_setup
-{
-	virtual void setup(R_constant* C)
-	{
-		RCache.LOD.set_LOD(C);
-	}
-} binder_LOD;
-
-static class cl_pos_decompress_params : public R_constant_setup {
-	virtual void setup(R_constant* C)
-	{
-		float VertTan = -1.0f * tanf(deg2rad(Device.fFOV / 2.0f));
-		float HorzTan = -VertTan / Device.fASPECT;
-
-		RCache.set_c(C, HorzTan, VertTan, (2.0f * HorzTan) / (float)Device.dwWidth, (2.0f * VertTan) / (float)Device.dwHeight);
-
-	}
-}	binder_pos_decompress_params;
-
-static class cl_pos_decompress_params2 : public R_constant_setup {
-	virtual void setup(R_constant* C)
-	{
-		RCache.set_c(C, (float)Device.dwWidth, (float)Device.dwHeight, 1.0f / (float)Device.dwWidth, 1.0f / (float)Device.dwHeight);
-
-	}
-}	binder_pos_decompress_params2;
-
-static class cl_water_intensity : public R_constant_setup		
-{	
-	virtual void setup	(R_constant* C)
-	{
-		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E.m_fWaterIntensity;
-		RCache.set_c	(C, fValue, fValue, fValue, 0);
-	}
-}	binder_water_intensity;
-
-static class cl_sun_shafts_intensity : public R_constant_setup		
-{	
-	virtual void setup	(R_constant* C)
-	{
-		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E.m_fSunShaftsIntensity;
-		RCache.set_c	(C, fValue, fValue, fValue, 0);
-	}
-}	binder_sun_shafts_intensity;
-
-static class cl_alpha_ref : public R_constant_setup
-{
-	virtual void setup(R_constant* C)
-	{
-		StateManager.BindAlphaRef(C);
-	}
-} binder_alpha_ref;
-
-extern ENGINE_API BOOL r2_sun_static;
 extern ENGINE_API BOOL r2_advanced_pp;	//	advanced post process and effects
 //////////////////////////////////////////////////////////////////////////
 // Just two static storage
@@ -164,26 +75,20 @@ void					CRender::create()
 	o.mrt = (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth = (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Òîëüêî true!
-	o.HW_smap		= true;
-	o.HW_smap_PCF	= true;
-
-	//	For ATI it's much faster on DX10 to use D32F format
-	o.HW_smap_FORMAT = (HW.Caps.id_vendor == 0x1002) ? D3DFMT_D32F_LOCKABLE : D3DFMT_D24X8;
+	//	For AMD it's much faster on DX10 to use R32 format
+	DXGI_FORMAT CurrentFormat = (HW.Caps.id_vendor == 0x1002) ? DXGI_FORMAT_R32_TYPELESS : DXGI_FORMAT_R24G8_TYPELESS;
+	o.HW_smap		= HW.IsFormatSupported(CurrentFormat);
+	o.HW_smap_PCF	= o.HW_smap;
+	o.HW_smap_FORMAT = o.HW_smap ? CurrentFormat : DXGI_FORMAT_UNKNOWN;
 
 	Msg("* HWDST/PCF supported and used");
 
-	o.fp16_filter	= true;
-	o.fp16_blend	= true;
+	o.fp16_filter = HW.IsFormatSupported(DXGI_FORMAT_R16G16B16A16_FLOAT);
+	o.fp16_blend  = HW.IsFormatSupported(DXGI_FORMAT_R16G16B16A16_FLOAT);
 
 	VERIFY2(o.mrt && (HW.Caps.raster.dwInstructions >= 256), "Hardware doesn't meet minimum feature-level");
 	/////////////////////////////////////////////
-	if (o.mrtmixdepth)		
-		o.albedo_wo = FALSE;
-	else if (o.fp16_blend)	
-		o.albedo_wo = FALSE;
-	else					
-		o.albedo_wo = TRUE;
+	o.albedo_wo = FALSE;
 	/////////////////////////////////////////////
 	// gloss
 	char* g					= strstr(Core.Params, "-gloss ");
@@ -191,13 +96,11 @@ void					CRender::create()
 	o.forcegloss			= g ? TRUE : FALSE;
 	/////////////////////////////////////////////
 	if (g)
-		o.forcegloss_v		= float(atoi(g + xr_strlen("-gloss "))) / 255.f;
+		o.forcegloss_v		= float(atoi_17(g + xr_strlen("-gloss "))) / 255.f;
 	/////////////////////////////////////////////
 	// options
-	o.bug					= (strstr(Core.Params, "-bug")) ? TRUE : FALSE;
 	o.sunfilter				= (strstr(Core.Params, "-sunfilter")) ? TRUE : FALSE;
 	/////////////////////////////////////////////
-	o.sunstatic				= r2_sun_static;
 	o.advancedpp			= r2_advanced_pp;
 	o.volumetricfog			= ps_r3_flags.test(R3_FLAG_VOLUMETRIC_SMOKE);
 	/////////////////////////////////////////////
@@ -215,10 +118,10 @@ void					CRender::create()
 	o.disasm				= (strstr(Core.Params, "-disasm")) ? TRUE : FALSE;
 	o.forceskinw			= (strstr(Core.Params, "-skinw")) ? TRUE : FALSE;
 	/////////////////////////////////////////////
-	o.ssao_blur_on			= ps_r_ssao_flags.test(R_FLAG_SSAO_BLUR) && (ps_r_ssao != 0);
-	o.ssao_opt_data			= ps_r_ssao_flags.test(R_FLAG_SSAO_OPT_DATA) && (ps_r_ssao != 0);
-	o.ssao_half_data		= ps_r_ssao_flags.test(R_FLAG_SSAO_HALF_DATA) && o.ssao_opt_data && (ps_r_ssao != 0);
-	o.ssao_hbao				= ps_r_ssao_flags.test(R_FLAG_SSAO_HBAO) && (ps_r_ssao != 0);
+	o.ssao_blur_on			= ps_r_ssao_flags.test(R_FLAG_SSAO_BLUR);
+	o.ssao_opt_data			= ps_r_ssao_flags.test(R_FLAG_SSAO_OPT_DATA);
+	o.ssao_half_data		= ps_r_ssao_flags.test(R_FLAG_SSAO_HALF_DATA) && o.ssao_opt_data;
+	o.ssao_hbao				= ps_r_ssao_flags.test(R_FLAG_SSAO_HBAO);
 	/////////////////////////////////////////////
 	//	TODO: fix hbao shader to allow to perform per-subsample effect!
 	o.hbao_vectorized = false;
@@ -238,7 +141,7 @@ void					CRender::create()
 	o.dx10_msaa_samples		= (1 << ps_r3_msaa);
 	/////////////////////////////////////////////
 	// sunshafts options
-	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
+//	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 	/////////////////////////////////////////////
 	o.dx10_msaa_opt			= ps_r3_flags.test(R3_FLAG_MSAA_OPT);
 	o.dx10_msaa_opt			= o.dx10_msaa_opt && o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1)
@@ -264,19 +167,15 @@ void					CRender::create()
 		}
 	}
 	/////////////////////////////////////////////
-	o.dx10_gbuffer_opt		= ps_r3_flags.test(R3_FLAG_GBUFFER_OPT);
-
 	o.dx10_minmax_sm		= ps_r3_minmax_sm;
-	/////////////////////////////////////////////
 	o.dx10_minmax_sm_screenarea_threshold = 1600 * 1200;
-	/////////////////////////////////////////////
 	o.dx11_enable_tessellation = HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0 && ps_r4_flags.test(R4_FLAG_ENABLE_TESSELLATION);
-	/////////////////////////////////////////////
+
 	if (o.dx10_minmax_sm == MMSM_AUTODETECT)
 	{
 		o.dx10_minmax_sm = MMSM_OFF;
 
-		//	AMD device
+		// AMD device
 		if (HW.Caps.id_vendor == 0x1002)
 		{
 			if (ps_r_sun_quality >= 3)
@@ -284,35 +183,25 @@ void					CRender::create()
 			else if (ps_r_sun_shafts >= 2)
 			{
 				o.dx10_minmax_sm = MMSM_AUTODETECT;
-				//	Check resolution in runtime in use_minmax_sm_this_frame
+				// Check resolution in runtime in use_minmax_sm_this_frame
 				o.dx10_minmax_sm_screenarea_threshold = 1600 * 1200;
 			}
 		}
-		/////////////////////////////////////////////
-		//	NVidia boards
+
+		// NVidia boards
 		if (HW.Caps.id_vendor == 0x10DE)
 		{
 			if ((ps_r_sun_shafts >= 2))
 			{
 				o.dx10_minmax_sm = MMSM_AUTODETECT;
-				//	Check resolution in runtime in use_minmax_sm_this_frame
+				// Check resolution in runtime in use_minmax_sm_this_frame
 				o.dx10_minmax_sm_screenarea_threshold = 1280 * 1024;
 			}
 		}
 	}
 	/////////////////////////////////////////////
-	// constants
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("parallax", &binder_parallax);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("water_intensity", &binder_water_intensity);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("sun_shafts_intensity", &binder_sun_shafts_intensity);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("m_AlphaRef", &binder_alpha_ref);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("pos_decompression_params", &binder_pos_decompress_params);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("pos_decompression_params2", &binder_pos_decompress_params2);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("triLOD", &binder_LOD);
-	/////////////////////////////////////////////
 	c_lmaterial			= "L_material";
 	c_sbase				= "s_base";
-	m_bMakeAsyncSS		= false;
 	/////////////////////////////////////////////
 	Target				= xr_new<CRenderTarget>();	// Main target
 	Models				= xr_new<CModelPool>();
@@ -337,7 +226,6 @@ void					CRender::create()
 
 void CRender::destroy()
 {
-	m_bMakeAsyncSS				= false;
 	FluidManager.Destroy		();
 	::PortalTraverser.destroy	();
 	/////////////////////////////////////////////
@@ -419,17 +307,17 @@ void CRender::reset_end()
 	m_bFirstFrameAfterReset		= true;
 }
 
-#pragma todo("VERTVER to every1: that's function so strange for me")
 void CRender::OnFrame()
 {
-
-	Models->DeleteQueue();
+	ScopeStatTimer frameTimer(Device.Statistic->Engine_RenderFrame);
 	Device.seqParallel.insert(Device.seqParallel.begin(),
-		fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
+		xrDelegate(BindDelegate(Details, &CDetailManager::MT_CALC)));
 
 	// MT-HOM (@front)
 	Device.seqParallel.insert(Device.seqParallel.begin(),
-		fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
+		xrDelegate(BindDelegate(&HOM, &CHOM::MT_RENDER)));
+
+	Models->DeleteQueue();
 }
 
 // Implementation
@@ -463,7 +351,7 @@ void CRender::model_Delete(IRenderVisual* &V, BOOL bDiscard)
 { 
 	dxRender_Visual* pVisual = (dxRender_Visual*)V;
 	Models->Delete(pVisual, bDiscard);
-	V = 0;
+	V = nullptr;
 }
 
 IRender_DetailModel* CRender::model_CreateDM(IReader*	F)
@@ -480,7 +368,7 @@ void CRender::model_Delete(IRender_DetailModel* & F)
 		CDetail*	D	= (CDetail*)F;
 		D->Unload		();
 		xr_delete		(D);
-		F				= NULL;
+		F				= nullptr;
 	}
 }
 IRenderVisual*			CRender::model_CreatePE			(LPCSTR name)	
@@ -600,7 +488,6 @@ void					CRender::rmNormal			()
 	D3D_VIEWPORT VP		= {0,0,(float)T->get_width(),(float)T->get_height(),0,1.f };
 
 	HW.pContext->RSSetViewports(1, &VP);
-	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 
 void					CRender::ResizeWindowProc(WORD h, WORD w)
@@ -612,14 +499,20 @@ void					CRender::ResizeWindowProc(WORD h, WORD w)
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CRender::CRender()
-:m_bFirstFrameAfterReset(false)
+CRender::CRender() :m_bFirstFrameAfterReset(false)
 {
 	init_cacades();
 }
 
 CRender::~CRender()
 {
+	for (FSlideWindowItem it : SWIs)
+	{
+		xr_free(it.sw);
+		it.sw = nullptr;
+		it.count = 0;
+	}
+	SWIs.clear();
 }
 
 #include "../../xrEngine/GameFont.h"
@@ -665,7 +558,7 @@ static HRESULT create_shader	(LPCSTR name,
 {
 	result->sh			= ShaderTypeTraits<T>::CreateHWShader(buffer, buffer_size);
 
-	ID3DShaderReflection *pReflection = 0;
+	ID3DShaderReflection *pReflection = nullptr;
 
 	HRESULT const _hr	= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
 	if (SUCCEEDED(_hr) && pReflection)
@@ -687,12 +580,12 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 	if (pTarget[0] == 'p') {
 		SPS* sps_result = (SPS*)result;
 #ifdef USE_DX11
-		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, 0, &sps_result->ps);
+		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, nullptr, &sps_result->ps);
 #else // #ifdef USE_DX11
 		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, &sps_result->ps);
 #endif // #ifdef USE_DX11
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! PS: ", file_name);
+			Msg			("! PS: %s", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -702,7 +595,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
         xr_sprintf(PsDebugName, "%s", name);
         SetDebugObjectName(sps_result->ps, PsDebugName);
 
-		ID3DShaderReflection *pReflection = 0;
+		ID3DShaderReflection *pReflection = nullptr;
 
 #ifdef USE_DX11
 		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
@@ -721,19 +614,19 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		}
 		else
 		{
-			Log	("! PS: ", file_name);
+			Msg	("! PS: %s", file_name);
 			Msg	("! D3DReflectShader hr == 0x%08x", _result);
 		}
 	}
 	else if (pTarget[0] == 'v') {
 		SVS* svs_result = (SVS*)result;
 #ifdef USE_DX11
-		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, 0, &svs_result->vs);
+		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, nullptr, &svs_result->vs);
 #else // #ifdef USE_DX11
 		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, &svs_result->vs);
 #endif // #ifdef USE_DX11
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! VS: ", file_name);
+			Msg			("! VS: %s", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -743,7 +636,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
         xr_sprintf(VsDebugName, "%s", name);
         SetDebugObjectName(svs_result->vs, VsDebugName);
 
-		ID3DShaderReflection *pReflection = 0;
+		ID3DShaderReflection *pReflection = nullptr;
 #ifdef USE_DX11
 		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
 #else
@@ -772,20 +665,20 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		}
 		else
 		{
-			Log			("! VS: ", file_name);
+			Msg			("! VS: %s", file_name);
 			Msg			("! D3DXFindShaderComment hr == 0x%08x", _result);
 		}
 	}
 	else if (pTarget[0] == 'g') {
 		SGS* sgs_result = (SGS*)result;
 #ifdef USE_DX11
-		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, 0, &sgs_result->gs);
-#else // USE_DX10
+		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, nullptr, &sgs_result->gs);
+#else
 		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, &sgs_result->gs);
 #endif
 
 		if ( !SUCCEEDED(_result) ) {
-			Log			("! GS: ", file_name);
+			Msg			("! GS: %s", file_name);
 			Msg			("! CreateGeometryShaderhr == 0x%08x", _result);
 			return		E_FAIL;
 		}
@@ -795,7 +688,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
         xr_sprintf(GsDebugName, "%s", name);
         SetDebugObjectName(sgs_result->gs, GsDebugName);
 
-		ID3DShaderReflection *pReflection = 0;
+		ID3DShaderReflection *pReflection = nullptr;
 
 #ifdef USE_DX11
 		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
@@ -814,7 +707,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 		}
 		else
 		{
-			Log	("! PS: ", file_name);
+			Msg	("! PS: %s", file_name);
 			Msg	("! D3DReflectShader hr == 0x%08x", _result);
 		}
 	}
@@ -829,15 +722,15 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 
 	if ( disasm )
 	{
-		ID3DBlob*		disasm	= 0;
-		D3DDisassemble	(buffer, buffer_size, FALSE, 0, &disasm );
+		ID3DBlob*		pDisasm	= nullptr;
+		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &pDisasm);
 		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), FALSE, 0, &disasm );
 		string_path		dname;
-		strconcat		(sizeof(dname),dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
+		xr_strconcat	(dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
 		IWriter*		W		= FS.w_open("$logs$",dname);
-		W->w			(disasm->GetBufferPointer(),(u32)disasm->GetBufferSize());
+		W->w			(pDisasm->GetBufferPointer(),(u32)pDisasm->GetBufferSize());
 		FS.w_close		(W);
-		_RELEASE		(disasm);
+		_RELEASE		(pDisasm);
 	}
 
 	return				_result;
@@ -850,12 +743,12 @@ public:
 	HRESULT __stdcall	Open	(D3D10_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
 	{
 		string_path				pname;
-		strconcat				(sizeof(pname),pname,::Render->getShaderPath(),pFileName);
+		xr_strconcat			(pname,::Render->getShaderPath(),pFileName);
 		IReader*		R		= FS.r_open	("$game_shaders$",pname);
-		if (0==R)				{
+		if (nullptr==R)				{
 			// possibly in shared directory or somewhere else - open directly
 			R					= FS.r_open	("$game_shaders$",pFileName);
-			if (0==R)			return			E_FAIL;
+			if (nullptr==R)			return			E_FAIL;
 		}
 
 		// duplicate and zero-terminate
@@ -880,18 +773,19 @@ static inline bool match_shader_id		( LPCSTR const debug_shader_id, LPCSTR const
 
 HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 SrcDataLen, const char* pFunctionName, const char* pTarget, DWORD Flags, void*& result)
 {
-	D3D_SHADER_MACRO				defines			[128];
-	int								def_it			= 0;
-	char							c_smapsize		[32];
-	char							c_sun_shafts	[32];
-	char							c_ssao			[32];
-	char							c_sun_quality	[32];
+	D3D_SHADER_MACRO defines[128];
+	int def_it = 0;
+	char c_smapsize		[32];
+	char c_sun_shafts	[32];
+	char c_ssao			[32];
+	char c_sun_quality	[32];
     char c_bokeh_quality[32];
+	char c_pp_aa_quality[32];
 
 	char	sh_name[MAX_PATH] = "";
 
-	for (u32 i = 0; i<m_ShaderOptions.size(); ++i)
-		defines[def_it++] = m_ShaderOptions[i];
+	for (auto ShaderOption : m_ShaderOptions)
+		defines[def_it++] = ShaderOption;
 
 	u32		len = xr_strlen(sh_name);
 	// options
@@ -902,6 +796,34 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		def_it						++	;
 		VERIFY							( xr_strlen(c_smapsize) == 4 );
 		xr_strcat(sh_name, c_smapsize); len+=4;
+	}
+
+	if (HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0)
+	{
+		defines[def_it].Name = "SM_5_0"; // :P
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	else if (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_0)
+	{
+		defines[def_it].Name = "SM_4_0";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	else if (HW.FeatureLevel == D3D_FEATURE_LEVEL_9_3)
+	{
+		defines[def_it].Name = "SM_2_0";
+		defines[def_it].Definition = "1";
+		def_it++;
+	}
+	else R_ASSERT2(false, "Your PC unsupport DirectX version!");
+
+	// [FX] #TODO: Key for tests 
+	if (strstr(Core.Params, "-ssr_use"))
+	{
+		defines[def_it].Name = "USE_SSR";
+		defines[def_it].Definition = "1";
+		def_it++;
 	}
 
 	if (o.fp16_filter)		{
@@ -973,13 +895,6 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		def_it						++	;
 	}
 	sh_name[len]='0'+char(o.sunfilter); ++len;
-
-	if (o.sunstatic)		{
-		defines[def_it].Name		=	"USE_R2_STATIC_SUN";
-		defines[def_it].Definition	=	"1";
-		def_it						++	;
-	}
-	sh_name[len]='0'+char(o.sunstatic); ++len;
 
 	if (o.forceskinw)		{
 		defines[def_it].Name		=	"SKIN_COLOR";
@@ -1157,14 +1072,6 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	else
 		sh_name[len]='0'; ++len;
 
-   if( o.dx10_gbuffer_opt )
-	{
-		defines[def_it].Name		=	"GBUFFER_OPTIMIZATION";
-		defines[def_it].Definition	=	"1";
-		def_it						++;
-	}
-	sh_name[len]='0'+char(o.dx10_gbuffer_opt); ++len;
-
    if( o.dx10_sm4_1 )
    {
 	   defines[def_it].Name		=	"SM_4_1";
@@ -1173,13 +1080,6 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
    }
    sh_name[len]='0'+char(o.dx10_sm4_1); ++len;
 
-   R_ASSERT						( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 );
-   //if( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 )
-   {
-	   defines[def_it].Name		=	"SM_5";
-	   defines[def_it].Definition	=	"1";
-	   def_it++;
-   }
 	sh_name[len]='0'; ++len;
 
    if (o.dx10_minmax_sm)
@@ -1271,11 +1171,22 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
         sh_name[len] = '0'; ++len;
     }
 
+	if (ps_r_pp_aa_quality > 0)
+	{
+		xr_sprintf(c_pp_aa_quality, "%d", ps_r_pp_aa_quality);
+		defines[def_it].Name = "PP_AA_QUALITY";
+		defines[def_it].Definition = c_pp_aa_quality;
+		def_it++;
+		sh_name[len] = '0' + char(ps_r_pp_aa_quality); ++len;
+	}
+	else
+		sh_name[len] = '0'; ++len;
+
     sh_name[len] = 0;
 
 	// finish
-	defines[def_it].Name			=	0;
-	defines[def_it].Definition		=	0;
+	defines[def_it].Name			=	nullptr;
+	defines[def_it].Definition		=	nullptr;
 	def_it							++; 
 
 	// 
@@ -1346,8 +1257,8 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	if (FAILED(_result))
 	{
 		includer					Includer;
-		LPD3DBLOB					pShaderBuf	= NULL;
-		LPD3DBLOB					pErrorBuf	= NULL;
+		LPD3DBLOB					pShaderBuf	= nullptr;
+		LPD3DBLOB					pErrorBuf	= nullptr;
 		_result						= 
 			D3DCompile( 
 				pSrcData, 
@@ -1377,9 +1288,9 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		}
 		else {
 //			Msg						( "! shader compilation failed" );
-			Log						("! ", sh_filePath);
+			Msg						("! %s", sh_filePath);
 			if ( pErrorBuf )
-				Log					("! error: ",(LPCSTR)pErrorBuf->GetBufferPointer());
+				Msg					("! error: %s",(LPCSTR)pErrorBuf->GetBufferPointer());
 			else
 				Msg					("Can't compile shader hr=0x%08x", _result);
 		}
@@ -1391,15 +1302,9 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 static inline bool match_shader		( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, LPCSTR const mask, size_t const mask_length )
 {
 	u32 const full_shader_id_length	= xr_strlen( full_shader_id );
-	R_ASSERT2				(
-		full_shader_id_length == mask_length,
-		make_string(
+	R_ASSERT_FORMAT (full_shader_id_length == mask_length,
 			"bad cache for shader %s, [%s], [%s]",
-			debug_shader_id,
-			mask,
-			full_shader_id
-		)
-	);
+			debug_shader_id, mask, full_shader_id);
 	char const* i			= full_shader_id;
 	char const* const e		= full_shader_id + full_shader_id_length;
 	char const* j			= mask;
@@ -1445,4 +1350,9 @@ static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const 
 
 	return						false;
 #endif // #ifdef DEBUG
+}
+
+void CRender::Screenshot(ScreenshotMode mode, LPCSTR name)
+{
+	ScreenshotManager.MakeScreenshot(mode, name);
 }

@@ -3,12 +3,13 @@
 #include "script_game_object.h"
 #include "ai_monster_space.h"
 #include "AI/Monsters/monster_sound_defs.h"
+#include <luabind/luabind.hpp>
 
 using namespace luabind;
 
 struct CMonsterSpace {};
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptMonsterHitInfo::script_register(lua_State *L)
 {
 	module(L)

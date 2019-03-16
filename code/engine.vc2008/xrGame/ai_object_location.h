@@ -17,7 +17,7 @@ namespace LevelGraph {
 	class CVertex;
 };
 
-class CAI_ObjectLocation {
+class GAME_API CAI_ObjectLocation {
 public:
 	typedef GameGraph::_GRAPH_ID				_GRAPH_ID;
 	typedef GameGraph::CVertex					CVertex;
@@ -37,7 +37,7 @@ public:
         else
             m_level_vertex_id = u32(-1);
 
-        if (ai().get_game_graph())
+        if (ai().is_game_graph_presented())
             ai().game_graph().set_invalid_vertex(m_game_vertex_id);
         else
             m_game_vertex_id = GameGraph::_GRAPH_ID(-1);

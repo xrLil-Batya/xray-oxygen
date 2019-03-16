@@ -5,10 +5,8 @@
 //	Author		: Sergey Zhemeitsev and Dmitriy Iassenev
 //	Description : Script callbacks with return value
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-#include "ai_space.h"
+#include "luabind/luabind.hpp"
 #include "../xrServerEntities/script_engine.h"
 
 IC bool compare_safe(const luabind::object& o1, const luabind::object& o2) {
@@ -19,14 +17,15 @@ IC bool compare_safe(const luabind::object& o1, const luabind::object& o2) {
 }
 
 template <typename _return_type>
-class CScriptCallbackEx_ {
+class CScriptCallbackEx_
+{
 public:
     using return_type = _return_type;
 
 private:
-    typedef luabind::functor<_return_type> functor_type;
-    typedef luabind::object object_type;
-    typedef bool (CScriptCallbackEx_::*unspecified_bool_type)() const;
+    using functor_type = luabind::functor<_return_type>;
+    using object_type = luabind::object;
+    using unspecified_bool_type = bool (CScriptCallbackEx_::*)() const;
 
 protected:
     functor_type m_functor;
@@ -102,25 +101,32 @@ class CScriptCallbackEx : public CScriptCallbackEx_<_return_type> {
     }
 public:
     template <typename... Args>
-    return_type operator()(Args&&... args) const {
-        try {
-            try {
-                if (m_functor) {
+    return_type operator()(Args&&... args) const 
+	{
+        try 
+		{
+            try 
+			{
+                if (m_functor) 
+				{
                     VERIFY(m_functor.is_valid());
-                    if (m_object.is_valid()) {
+                    if (m_object.is_valid()) 
+					{
                         VERIFY(m_object.is_valid());
                         return do_return(m_functor(m_object, std::forward<Args>(args)...));
                     } else
                         return do_return(m_functor(std::forward<Args>(args)...));
                 }
-            } catch (std::exception&) {
-                ai().script_engine().print_output(ai().script_engine().lua(), "", 2);
+            } 
+			catch (std::exception&) 
+			{
+            //    CVMLua::PrintOut(ai().script_engine().lua(), "", 2);
             }
         }
 // #if XRAY_EXCEPTIONS
 //         catch (luabind::error& e) 
 // 		{
-//                 ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
+//                 CVMLua::PrintOut((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
 //         }
 // #endif
         catch (...) {
@@ -130,10 +136,14 @@ public:
     }
 
     template <typename... Args>
-    return_type operator()(Args&&... args) {
-        try {
-            try {
-                if (m_functor) {
+    return_type operator()(Args&&... args)
+	{
+        try 
+		{
+            try 
+			{
+                if (m_functor) 
+				{
                     VERIFY(m_functor.is_valid());
                     if (m_object.is_valid()) {
                         VERIFY(m_object.is_valid());
@@ -141,14 +151,15 @@ public:
                     } else
                         return do_return(m_functor(std::forward<Args>(args)...));
                 }
-            } catch (std::exception&) {
-                ai().script_engine().print_output(ai().script_engine().lua(), "", 2);
+            } catch (std::exception&) 
+			{
+			//	CVMLua::PrintOut(ai().script_engine().lua(), "", 2);
             }
         }
 // #if XRAY_EXCEPTIONS
 //         catch (luabind::error& e) 
 // 		{
-//                 ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
+//                 CVMLua::PrintOut((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
 //         }
 // #endif
         catch (...) {

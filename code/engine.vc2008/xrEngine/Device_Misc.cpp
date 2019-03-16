@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 //#include "dxerr8.h"
 
 // *****************************************************************************************
@@ -12,7 +12,6 @@ static struct _DF {
 	{"rsFullscreen",	rsFullscreen	},
 	{"rsClearBB",		rsClearBB 		},
 	{"rsVSync",			rsVSync 		},
-	{"rsWireframe",		rsWireframe		},
     {NULL,0}
 };
 

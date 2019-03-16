@@ -36,7 +36,7 @@ base::base						(
 	VERIFY					( _valid(m_start_transform) );
 }
 
-void base::callback				(CBoneInstance* bone)
+void base::callback (CBoneInstance* bone)
 {
 	VERIFY					(bone);
 
@@ -50,7 +50,7 @@ void base::callback				(CBoneInstance* bone)
 	VERIFY2					( _valid( bone->mTransform ), "base::callback " );
 }
 
-void base::aim_at_position		(
+void base::aim_at_position (
 		Fvector const& bone_position,
 		Fvector const& object_position,
 		Fvector object_direction,
@@ -68,38 +68,20 @@ void base::aim_at_position		(
 	);
 #endif // #if 0
 
-	VERIFY2							(
-		_valid(bone_position),
-		make_string(
-			"[%f][%f][%f]",
-			VPUSH(bone_position)
-		)
-	);
-	VERIFY2							(
-		_valid(object_position),
-		make_string(
-			"[%f][%f][%f]",
-			VPUSH(object_position)
-		)
-	);
-	VERIFY2							(
-		_valid(object_direction),
-		make_string(
-			"[%f][%f][%f]",
-			VPUSH(object_direction)
-		)
-	);
-	VERIFY2							(
-		_valid(m_target),
-		make_string(
-			"[%f][%f][%f]",
-			VPUSH(m_target)
-		)
-	);
-	VERIFY2							(
-		object_direction.square_magnitude() > EPS_L,
-		make_string("[%f]", object_direction.square_magnitude())
-	);
+	VERIFY_FORMAT(_valid(bone_position),
+			"[%f][%f][%f]", VPUSH(bone_position));
+
+	VERIFY_FORMAT(_valid(object_position),
+			"[%f][%f][%f]",VPUSH(object_position));
+
+	VERIFY_FORMAT(_valid(object_direction),
+			"[%f][%f][%f]", VPUSH(object_direction));
+
+	VERIFY_FORMAT(_valid(m_target),
+			"[%f][%f][%f]", VPUSH(m_target));
+
+	VERIFY_FORMAT(object_direction.square_magnitude() > EPS_L,
+		"[%f]", object_direction.square_magnitude());
 
 	object_direction.normalize			();
 
@@ -127,15 +109,11 @@ void base::aim_at_position		(
 
 	float const invert_magnitude		= 1.f/direction_target.magnitude();
 	direction_target.mul				(invert_magnitude);
-	VERIFY2							(
-		fsimilar(direction_target.magnitude(), 1.f),
-		make_string(
+
+	VERIFY_FORMAT(fsimilar(direction_target.magnitude(), 1.f),
 			"[%f][%f] [%f][%f][%f] [%f][%f][%f]",
-			direction_target.magnitude(),
-			invert_magnitude,
-			VPUSH(m_target),
-			VPUSH(bone_position)
-		)
+			direction_target.magnitude(), invert_magnitude,
+			VPUSH(m_target), VPUSH(bone_position)
 	);
 
 	float const to_circle_center		= sphere_radius_sqr*invert_magnitude;
@@ -144,7 +122,10 @@ void base::aim_at_position		(
 	VERIFY								( _valid(circle_center) );
 
 	Fplane const plane					= Fplane().build(circle_center, direction_target);
-	VERIFY2								( _valid(plane), make_string("[%f][%f][%f] [%f][%f][%f] [%f][%f][%f] %f", VPUSH(circle_center), VPUSH(direction_target), VPUSH(plane.n), plane.d) );
+
+	VERIFY_FORMAT( _valid(plane), "[%f][%f][%f] [%f][%f][%f] [%f][%f][%f] %f", 
+		VPUSH(circle_center), VPUSH(direction_target), VPUSH(plane.n), plane.d);
+
 	Fvector								projection;
 	plane.project						(projection, current_point);
 	VERIFY								( _valid(projection) );

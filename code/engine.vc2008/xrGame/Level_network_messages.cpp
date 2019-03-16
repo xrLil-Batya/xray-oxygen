@@ -3,11 +3,11 @@
 #include "xrserver_objects.h"
 #include "level.h"
 #include "xrmessages.h"
-#include "game_cl_base.h"
+
 #include "net_queue.h"
 #include "xrServer.h"
 #include "Actor.h"
-#include "Artefact.h"
+#include "items/Artefact.h"
 #include "ai_space.h"
 #include "saved_game_wrapper.h"
 #include "level_graph.h"
@@ -59,9 +59,8 @@ void CLevel::ClientReceive()
 			}break;
 		case M_UPDATE:
 			{
-				game->net_import_update	(*P);
+				game->net_import_GameTime(*P);
 			}break;
-		case M_SV_CONFIG_NEW_CLIENT: InitializeClientGame	(*P); break;
 		case M_SV_CONFIG_GAME: game->net_import_state(*P); break;
 		case M_LOAD_GAME:
 		case M_CHANGE_LEVEL:

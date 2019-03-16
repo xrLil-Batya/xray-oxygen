@@ -36,8 +36,8 @@ monster_aura::~monster_aura ()
 float   monster_aura::override_if_debug (pcstr var_name, float const value) const
 {
 #ifdef DEBUG
-	char*								full_var_name;
-	STRCONCAT							(full_var_name, m_name, var_name);
+	string256							full_var_name;
+	xr_strconcat						(full_var_name, m_name, var_name);
 
 	return								m_object->override_if_debug(full_var_name, value);
 #else // DEBUG
@@ -78,42 +78,34 @@ float   monster_aura::calculate () const
 void   monster_aura::load_from_ini (CInifile* ini, pcstr const section, bool enable_for_dead_default)
 {
 	using namespace						detail;
-	char* pp_effector_name_string	=	NULL;
-	STRCONCAT							(pp_effector_name_string, m_name, s_pp_effector_name_string);
+	string512			tempBuffer;
+	xr_strconcat		(tempBuffer, m_name, s_pp_effector_name_string);
+	m_pp_effector_name = READ_IF_EXISTS(ini, r_string, section, tempBuffer, NULL);
 	
-	char* pp_highest_at_string		=	NULL;
-	STRCONCAT							(pp_highest_at_string, m_name, s_pp_highest_at_string);
+	xr_strconcat		(tempBuffer, m_name, s_pp_highest_at_string);
+	m_pp_highest_at = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 1.f);
 
-	char* linear_factor_string		=	NULL;
-	STRCONCAT							(linear_factor_string, m_name, s_linear_factor_string);
+	xr_strconcat		(tempBuffer, m_name, s_linear_factor_string);
+	m_linear_factor = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 0.f);
 
-	char* quadratic_factor_string	=	NULL;
-	STRCONCAT							(quadratic_factor_string, m_name, s_quadratic_factor_string);
+	xr_strconcat		(tempBuffer, m_name, s_quadratic_factor_string);
+	m_quadratic_factor = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 0.f);
 
-	char* max_power_string			=	NULL;
-	STRCONCAT							(max_power_string, m_name, s_max_power_string);
+	xr_strconcat		(tempBuffer, m_name, s_max_power_string);
+	m_max_power = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 0.f);
 
-	char* max_distance_string		=	NULL;
-	STRCONCAT							(max_distance_string, m_name, s_max_distance_string);
+	xr_strconcat		(tempBuffer, m_name, s_max_distance_string);
+	m_max_distance = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 0.f);
 
-	char* sound_string				=	NULL;
-	STRCONCAT							(sound_string, m_name, s_sound_string);
+	xr_strconcat		(tempBuffer, m_name, s_sound_string);
+	LPCSTR sound_name = READ_IF_EXISTS(ini, r_string, section, tempBuffer, NULL);
 	
-	char* detect_sound_string		=	NULL;
-	STRCONCAT							(detect_sound_string, m_name, s_detect_sound_string);
+	xr_strconcat		(tempBuffer, m_name, s_detect_sound_string);
+	LPCSTR detect_sound_name = READ_IF_EXISTS(ini, r_string, section, tempBuffer, NULL);
 
-	char* enable_for_dead_string	=	NULL;
-	STRCONCAT							(enable_for_dead_string, m_name, s_enable_for_dead_string);
+	xr_strconcat		(tempBuffer, m_name, s_enable_for_dead_string);
 
-	m_pp_effector_name				=	READ_IF_EXISTS(ini, r_string, section, pp_effector_name_string, NULL);
-	m_pp_highest_at					=	READ_IF_EXISTS(ini, r_float, section, pp_highest_at_string, 1.f);
-	m_linear_factor					=	READ_IF_EXISTS(ini, r_float, section, linear_factor_string, 0.f);
-	m_quadratic_factor				=	READ_IF_EXISTS(ini, r_float, section, quadratic_factor_string, 0.f);
-	m_max_power						=	READ_IF_EXISTS(ini, r_float, section, max_power_string, 0.f);
-	m_max_distance					=	READ_IF_EXISTS(ini, r_float, section, max_distance_string, 0.f);
-	m_enable_for_dead				=	!!READ_IF_EXISTS(ini, r_bool, section, enable_for_dead_string, enable_for_dead_default);
-	pcstr const sound_name			=	READ_IF_EXISTS(ini, r_string, section, sound_string, NULL);
-	pcstr const detect_sound_name	=	READ_IF_EXISTS(ini, r_string, section, detect_sound_string, NULL);
+	m_enable_for_dead	= !!READ_IF_EXISTS(ini, r_bool, section, tempBuffer, enable_for_dead_default);
 
 	if(sound_name)
 		m_sound.create					(sound_name, st_Effect, sg_SourceType);

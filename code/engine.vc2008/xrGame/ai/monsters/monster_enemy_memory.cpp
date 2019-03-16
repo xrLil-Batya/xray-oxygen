@@ -28,8 +28,6 @@ void CMonsterEnemyMemory::init_external(CBaseMonster *M, TTime mem_time)
 	time_memory = mem_time;
 }
 
-extern CActor*	g_actor;
-
 void CMonsterEnemyMemory::update() 
 {
 	VERIFY		(monster->g_Alive());
@@ -40,24 +38,22 @@ void CMonsterEnemyMemory::update()
 
 	objects_list const& objects	=	monster->memory().enemy().objects();
 
-	if ( monster_hit_memory.is_hit() && time() < monster_hit_memory.get_last_hit_time() + 1000 )
+	if (monster_hit_memory.is_hit() && time() < monster_hit_memory.get_last_hit_time() + 1000)
 	{
-		if ( CEntityAlive* enemy = smart_cast<CEntityAlive*>(monster->HitMemory.get_last_hit_object()) )
+		if (CEntityAlive* enemy = smart_cast<CEntityAlive*>(monster->HitMemory.get_last_hit_object()))
 		{
-			if ( monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) && 
-				 monster->Position().distance_to(enemy->Position()) 
-				                        < 
-				 monster->get_feel_enemy_who_just_hit_max_distance() )
+			if (monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) &&
+				monster->Position().distance_to(enemy->Position()) < monster->get_feel_enemy_who_just_hit_max_distance())
 			{
-				add_enemy					(enemy);
+				add_enemy(enemy);
 
-				bool const self_is_dog	=	!!smart_cast<const CAI_Dog*>(monster);
-				if ( self_is_dog )
+				bool const self_is_dog = !!smart_cast<const CAI_Dog*>(monster);
+				if (self_is_dog)
 				{
-					CMonsterSquad* const squad	=	monster_squad().get_squad(monster);
-					squad->set_home_in_danger	();
+					CMonsterSquad* const squad = monster_squad().get_squad(monster);
+					squad->set_home_in_danger();
 				}
-			}			
+			}
 		}
 	}
 
@@ -66,25 +62,24 @@ void CMonsterEnemyMemory::update()
 		SoundElem sound;
 		bool dangerous;
 		monster->SoundMemory.GetSound(sound, dangerous);
-		if (dangerous && Device.dwTimeGlobal < sound.time + 2000 && g_actor)
+		if (dangerous && Device.dwTimeGlobal < sound.time + 2000 && Actor())
 		{
 			if (CEntityAlive const* enemy = smart_cast<CEntityAlive const*>(sound.who))
 			{
-				float const xz_dist	= monster->Position().distance_to_xz(g_actor->Position());
-				float const y_dist = _abs(monster->Position().y - g_actor->Position().y);
+				float const xz_dist = monster->Position().distance_to_xz(Actor()->Position());
+				float const y_dist = _abs(monster->Position().y - Actor()->Position().y);
 
-				if (monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) && 
-					 y_dist < 10 &&
-					 xz_dist < monster->get_feel_enemy_who_made_sound_max_distance() &&
-					 g_actor->memory().visual().visible_now(monster))
+				if (monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) && y_dist < 10 &&
+					xz_dist < monster->get_feel_enemy_who_made_sound_max_distance() &&
+					Actor()->memory().visual().visible_now(monster))
 				{
-					add_enemy					(enemy);
+					add_enemy(enemy);
 
-					bool const self_is_dog	=	!!smart_cast<const CAI_Dog*>(monster);
-					if ( self_is_dog )
+					bool const self_is_dog = !!smart_cast<const CAI_Dog*>(monster);
+					if (self_is_dog)
 					{
-						CMonsterSquad* const squad	=	monster_squad().get_squad(monster);
-						squad->set_home_in_danger	();
+						CMonsterSquad* const squad = monster_squad().get_squad(monster);
+						squad->set_home_in_danger();
 					}
 				}
 			}
@@ -102,19 +97,19 @@ void CMonsterEnemyMemory::update()
 
 	float const feel_enemy_max_distance	= monster->get_feel_enemy_max_distance();
 
-	if (g_actor)
+	if (Actor())
 	{
-		float const xz_dist	= monster->Position().distance_to_xz(g_actor->Position());
-		float const y_dist = _abs(monster->Position().y - g_actor->Position().y);
+		float const xz_dist	= monster->Position().distance_to_xz(Actor()->Position());
+		float const y_dist = _abs(monster->Position().y - Actor()->Position().y);
 
-		if (xz_dist < feel_enemy_max_distance && y_dist < 10 && monster->memory().enemy().is_useful(g_actor) && g_actor->memory().visual().visible_now(monster))
-			add_enemy(g_actor);
+		if (xz_dist < feel_enemy_max_distance && y_dist < 10 && monster->memory().enemy().is_useful(Actor()) && Actor()->memory().visual().visible_now(monster))
+			add_enemy(Actor());
 	}
 	
-	// óäàëèòü óñòàðåâøèõ âðàãîâ
+	// ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ ÑƒÑÑ‚Ð°Ñ€ÐµÐ²ÑˆÐ¸Ñ… Ð²Ñ€Ð°Ð³Ð¾Ð²
 	remove_non_actual();
 
-	// îáíîâèòü îïàñíîñòü 
+	// Ð¾Ð±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ Ð¾Ð¿Ð°ÑÐ½Ð¾ÑÑ‚ÑŒ 
 	for (ENEMIES_MAP_IT it = m_objects.begin(); it != m_objects.end(); it++) {
 		u8		relation_value = u8(monster->tfGetRelationType(it->first));
 		float	dist = monster->Position().distance_to(it->second.position);
@@ -132,10 +127,10 @@ void CMonsterEnemyMemory::add_enemy(const CEntityAlive *enemy)
 
 	ENEMIES_MAP_IT it = m_objects.find(enemy);
 	if (it != m_objects.end()) {
-		// îáíîâèòü äàííûå î âðàãå
+		// Ð¾Ð±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð¾ Ð²Ñ€Ð°Ð³Ðµ
 		it->second = enemy_info;
 	} else {
-		// äîáàâèòü âðàãà â ñïèñîê îáúåêòîâ
+		// Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð²Ñ€Ð°Ð³Ð° Ð² ÑÐ¿Ð¸ÑÐ¾Ðº Ð¾Ð±ÑŠÐµÐºÑ‚Ð¾Ð²
 		m_objects.insert(std::make_pair(enemy, enemy_info));
 	}
 }
@@ -150,10 +145,10 @@ void CMonsterEnemyMemory::add_enemy(const CEntityAlive *enemy, const Fvector &po
 
 	ENEMIES_MAP_IT it = m_objects.find(enemy);
 	if (it != m_objects.end()) {
-		// îáíîâèòü äàííûå î âðàãå
+		// Ð¾Ð±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð¾ Ð²Ñ€Ð°Ð³Ðµ
 		if (it->second.time < enemy_info.time) it->second = enemy_info;
 	} else {
-		// äîáàâèòü âðàãà â ñïèñîê îáúåêòîâ
+		// Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð²Ñ€Ð°Ð³Ð° Ð² ÑÐ¿Ð¸ÑÐ¾Ðº Ð¾Ð±ÑŠÐµÐºÑ‚Ð¾Ð²
 		m_objects.insert(std::make_pair(enemy, enemy_info));
 	}
 }
@@ -162,13 +157,13 @@ void CMonsterEnemyMemory::remove_non_actual()
 {
 	TTime cur_time = Device.dwTimeGlobal;
 
-	// óäàëèòü 'ñòàðûõ' âðàãîâ è òåõ, ðàññòîÿíèå äî êîòîðûõ > 30ì è äð.
+	// ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ 'ÑÑ‚Ð°Ñ€Ñ‹Ñ…' Ð²Ñ€Ð°Ð³Ð¾Ð² Ð¸ Ñ‚ÐµÑ…, Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ðµ Ð´Ð¾ ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ñ… > 30Ð¼ Ð¸ Ð´Ñ€.
 	for ( ENEMIES_MAP_IT	it	=	m_objects.begin(), nit; 
 							it	!=	m_objects.end(); 
 							it	=	nit	)
 	{
 		nit = it; ++nit;
-		// ïðîâåðèòü óñëîâèÿ óäàëåíèÿ
+		// Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ ÑƒÑÐ»Ð¾Ð²Ð¸Ñ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ
 		if ( !it->first									|| 
 			 !it->first->g_Alive()						|| 
 			 it->first->getDestroy()					||

@@ -1,15 +1,14 @@
-/*
-	* Authors:
-	* Date of creation:
-	* Description:
-	* Copyright:
-*/
 #pragma once
 #pragma warning (disable : 4530 )		// C++ vector(985)
+
+#define ENGINE_VERSION "1.7f"
+
+/*
 #ifndef _CLR_MANAGER
-#	include <thread>
-#	include <mutex>
+
 #endif
+*/
+
 #ifndef DEBUG
 #	define MASTER_GOLD
 #endif // DEBUG
@@ -73,9 +72,6 @@
 #else
 #define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
 #endif
-
-// #include <exception>
-// using std::exception;
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -143,6 +139,7 @@
 #include <algorithm>
 #include <limits>
 #include <vector>
+#include <queue>
 #include <stack>
 #include <list>
 #include <set>
@@ -162,9 +159,13 @@
 #	define XRCORE_API __declspec(dllimport)
 #endif
 
+#include "_types.h"
+#include "RingBuffer.h"
+#include "xrMemory.h"
+#include "_stl_extensions.h"
+#include "thread_utils.h"
 #include "xrDebug.h"
 #include "vector.h"
-
 #include "clsid.h"
 #include "xrMemory.h"
 #include "xrDebug.h"
@@ -176,7 +177,6 @@
 #include "rt_compressor.h"
 #include "xr_shared.h"
 #include "string_concatenations.h"
-#include "xrThreadUtils.h"
 
 // stl ext
 struct XRCORE_API xr_rtoken {
@@ -225,11 +225,20 @@ using RTokenVec = xr_vector<xr_rtoken>;
 #endif
 #include "FileSystem.h"
 #include "FTimer.h"
-#include "fastdelegate.h"
 #include "intrusive_ptr.h"
 #ifndef XRCORE_STATIC
 #include "net_utils.h"
 #endif
+
+// Check if user included some files, that a prohibited
+#ifdef _MUTEX_
+#error <mutex> file is prohibited, please use xrCriticalSection and xrCriticalSectionGuard instead
+#endif
+// Ban std::thread also
+#ifdef _THREAD_
+#error <thread> is prohibited, please use ttapi, or _beginthreadex
+#endif
+
 // destructor
 template <class T>
 class destructor
@@ -259,7 +268,7 @@ public:
 	DWORD		dwFrame;
 
 public:
-	void		_initialize(const char* ApplicationName, LogCallback cb = 0, BOOL init_fs = TRUE, const char* fs_fname = 0);
+	void		_initialize(const char* ApplicationName, xrLogger::LogCallback cb = 0, BOOL init_fs = TRUE, const char* fs_fname = 0);
 	void		_destroy();
 	IC	void		SetPluginMode() { PluginMode = true; }
 

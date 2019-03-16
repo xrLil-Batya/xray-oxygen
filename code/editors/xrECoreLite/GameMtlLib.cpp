@@ -3,7 +3,7 @@
 #pragma hdrstop
 #include "GameMtlLib.h"
 
-CEGameMtlLibrary GEMLib;
+ECORE_API CEGameMtlLibrary GEMLib;
 
 void SEGameMtl::Load(IReader& fs)
 {
@@ -44,7 +44,7 @@ void CEGameMtlLibrary::Load()
 	string_path	name;
 	if (!FS.exist(name, "$game_data$", GAMEMTL_FILENAME))
 	{
-		Log("! Can't find game material file: ", name);
+		Msg("! Can't find game material file: ", name);
 		return;
 	}
 

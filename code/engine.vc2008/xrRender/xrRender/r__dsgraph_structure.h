@@ -27,7 +27,6 @@ public:
 	BOOL														val_bRecordMP;		// record nearest for multi-pass
 	R_feedback*													val_feedback;		// feedback for geometry being rendered
 	u32															val_feedback_breakp;// breakpoint
-	xr_vector<Fbox3, xalloc<Fbox3>>*							val_recorder;		// coarse structure recorder
 	u32															phase;
 	u32															marker;
 	bool														pmask		[2]		;
@@ -47,28 +46,32 @@ public:
 	R_dsgraph::mapSorted_T										mapHUDEmissive;
 
 	// Runtime structures 
-	xr_vector<R_dsgraph::mapNormalVS::value_type*,xalloc<R_dsgraph::mapNormalVS::value_type*> >				nrmVS;
-#if defined(USE_DX10) || defined(USE_DX11)
-	xr_vector<R_dsgraph::mapNormalGS::value_type*,xalloc<R_dsgraph::mapNormalGS::value_type*> >				nrmGS;
-#endif	//	USE_DX10
-	xr_vector<R_dsgraph::mapNormalPS::value_type*,xalloc<R_dsgraph::mapNormalPS::value_type*> >				nrmPS;
-	xr_vector<R_dsgraph::mapNormalCS::value_type*,xalloc<R_dsgraph::mapNormalCS::value_type*> >				nrmCS;
-	xr_vector<R_dsgraph::mapNormalStates::value_type*,xalloc<R_dsgraph::mapNormalStates::value_type*> >		nrmStates;
-	xr_vector<R_dsgraph::mapNormalTextures::value_type*,xalloc<R_dsgraph::mapNormalTextures::value_type*> >	nrmTextures;
-	xr_vector<R_dsgraph::mapNormalTextures::value_type*,xalloc<R_dsgraph::mapNormalTextures::value_type*> >	nrmTexturesTemp;
+	xr_vector<R_dsgraph::mapNormalVS::value_type*>				nrmVS;
 
-	xr_vector<R_dsgraph::mapMatrixVS::value_type*,xalloc<R_dsgraph::mapMatrixVS::value_type*> >				matVS;
-#if defined(USE_DX10) || defined(USE_DX11)
-	xr_vector<R_dsgraph::mapMatrixGS::value_type*,xalloc<R_dsgraph::mapMatrixGS::value_type*> >				matGS;
-#endif	//	USE_DX10
-	xr_vector<R_dsgraph::mapMatrixPS::value_type*,xalloc<R_dsgraph::mapMatrixPS::value_type*> >				matPS;
-	xr_vector<R_dsgraph::mapMatrixCS::value_type*,xalloc<R_dsgraph::mapMatrixCS::value_type*> >				matCS;
-	xr_vector<R_dsgraph::mapMatrixStates::value_type*,xalloc<R_dsgraph::mapMatrixStates::value_type*> >		matStates;
-	xr_vector<R_dsgraph::mapMatrixTextures::value_type*,xalloc<R_dsgraph::mapMatrixTextures::value_type*> >	matTextures;
-	xr_vector<R_dsgraph::mapMatrixTextures::value_type*,xalloc<R_dsgraph::mapMatrixTextures::value_type*> >	matTexturesTemp;
+#ifdef USE_DX11
+	xr_vector<R_dsgraph::mapNormalGS::value_type*>				nrmGS;
+#endif
 
-	xr_vector<R_dsgraph::_LodItem,xalloc<R_dsgraph::_LodItem> >	lstLODs		;
-	xr_vector<int,xalloc<int> >									lstLODgroups;
+	xr_vector<R_dsgraph::mapNormalPS::value_type*>				nrmPS;
+	xr_vector<R_dsgraph::mapNormalCS::value_type*>				nrmCS;
+	xr_vector<R_dsgraph::mapNormalStates::value_type*>			nrmStates;
+	xr_vector<R_dsgraph::mapNormalTextures::value_type*>		nrmTextures;
+	xr_vector<R_dsgraph::mapNormalTextures::value_type*>		nrmTexturesTemp;
+
+	xr_vector<R_dsgraph::mapMatrixVS::value_type*>				matVS;
+
+#ifdef USE_DX11
+	xr_vector<R_dsgraph::mapMatrixGS::value_type*>				matGS;
+#endif
+
+	xr_vector<R_dsgraph::mapMatrixPS::value_type*>				matPS;
+	xr_vector<R_dsgraph::mapMatrixCS::value_type*>				matCS;
+	xr_vector<R_dsgraph::mapMatrixStates::value_type*>			matStates;
+	xr_vector<R_dsgraph::mapMatrixTextures::value_type*>		matTextures;
+	xr_vector<R_dsgraph::mapMatrixTextures::value_type*>		matTexturesTemp;
+
+	xr_vector<R_dsgraph::_LodItem>								lstLODs;
+	xr_vector<int>												lstLODgroups;
 	xr_vector<ISpatial*>				                        lstRenderables;
 	xr_vector<ISpatial*>				                        lstSpatial	;
 
@@ -81,7 +84,6 @@ public:
 	virtual		BOOL					get_HUD					()								{ return		val_bHUD;			}
 	virtual		void					set_Invisible			(BOOL 		V	)				{ val_bInvisible= V;				}
 				void					set_Feedback			(R_feedback*V, u32	id)			{ val_feedback_breakp = id; val_feedback = V;		}
-				void					set_Recorder			(xr_vector<Fbox3,xalloc<Fbox3> >* dest)		{ val_recorder	= dest;	if (dest) dest->clear();	}
 				void					get_Counters			(u32&	s,	u32& d)				{ s=counter_S; d=counter_D;			}
 				void					clear_Counters			()								{ counter_S=counter_D=0; 			}
 public:
@@ -94,7 +96,6 @@ public:
 		val_bRecordMP		= FALSE	;
 		val_feedback		= 0;
 		val_feedback_breakp	= 0;
-		val_recorder		= 0;
 		marker				= 0;
 		r_pmask				(true,true);
 		b_loaded			= FALSE	;

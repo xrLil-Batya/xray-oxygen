@@ -6,8 +6,21 @@
 //////////////////////////////////////////
 using ulong_t = unsigned long long;
 using long_t = long long;
+typedef HRESULT(WINAPI *NTQUERYSYSTEMINFORMATION)(UINT, PVOID, ULONG, PULONG);
+#define SystemProcessorPerformanceInformation 8
+#define MAX_CPU 8
+#define MAX_HISTORY 512
 //////////////////////////////////////////
 #pragma once
+
+typedef struct SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION
+{
+	LARGE_INTEGER	IdleTime;
+	LARGE_INTEGER	KernelTime;
+	LARGE_INTEGER	UserTime;
+	LARGE_INTEGER	Reserved1[2];
+	ULONG			Reserved2;
+} SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION;
 
 enum class CPUFeature: unsigned
 {
@@ -45,7 +58,18 @@ enum class CPUFeature: unsigned
 struct XRCORE_API processor_info 
 {
 	processor_info();
+	DWORD m_dwNumberOfProcessors;
+	SYSTEM_INFO sysInfo;
+	NTQUERYSYSTEMINFORMATION m_pNtQuerySystemInformation;
+	SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION* perfomanceInfo;
 	FILETIME prevSysIdle, prevSysKernel, prevSysUser;
+	DWORD m_dwTickCount[MAX_CPU];
+	DWORD m_dwCount;
+	LARGE_INTEGER m_idleTime[MAX_CPU];
+	FLOAT m_fltCpuUsage[MAX_CPU];
+	FLOAT m_fltCpuUsageHistory[MAX_CPU][512];
+	UINT m_nTimerID;
+	PFLOAT fUsage;
 
 	unsigned char family;	// family of the processor, eg. Intel_Pentium_Pro is family 6 processor
 	unsigned char model;	// model of processor, eg. Intel_Pentium_Pro is model 1 of family 6 processor
@@ -72,6 +96,8 @@ struct XRCORE_API processor_info
 		return (features & static_cast<unsigned>(feature));
 	}
 
-	int getCPULoad(double &val);
+	bool getCPULoad(double &val);
+	float* MTCPULoad();
+	float CalcMPCPULoad(DWORD dwCPU);
 
 };

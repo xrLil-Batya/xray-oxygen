@@ -53,7 +53,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
@@ -137,7 +137,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 			static	float	w_shift		= 0;
 			Fmatrix			m_xform;
 			Fvector			direction	= fuckingsun->direction	;
-			float	w_dir				= g_pGamePersistent->Environment().CurrentEnv->wind_direction	;
+			float	w_dir				= Environment().CurrentEnv->wind_direction	;
 			Fvector			normal	;	normal.setHP(w_dir,0);
 							w_shift		+=	0.003f*Device.fTimeDelta;
 			Fvector			position;	position.set(0,0,0);
@@ -232,6 +232,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		accum_direct_f	(sub_phase);
 		return			;
 	}
+	Fmatrix mView = Device.mView;
 
 	// *** assume accumulator setted up ***
 	light*			fuckingsun			= (light*)RImplementation.Lights.sun._get()	;
@@ -249,8 +250,8 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
-	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
+	mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
 	// Perform masking (only once - on the first/near phase)
@@ -308,7 +309,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 		// compute xforms
 		FPU::m64r			();
-		Fmatrix				xf_invview;		xf_invview.invert	(Device.mView)	;
+		Fmatrix				xf_invview;		xf_invview.invert	(mView)	;
 
 		// shadow xform
 		Fmatrix				m_shadow;
@@ -332,7 +333,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			static	float	w_shift		= 0;
 			Fmatrix			m_xform;
 			Fvector			direction	= fuckingsun->direction	;
-			float	w_dir				= g_pGamePersistent->Environment().CurrentEnv->wind_direction	;
+			float	w_dir				= Environment().CurrentEnv->wind_direction	;
 			Fvector			normal	;	normal.setHP(w_dir,0);
 							w_shift		+=	0.003f*Device.fTimeDelta;
 			Fvector			position;	position.set(0,0,0);
@@ -413,7 +414,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 			RCache.set_c				("view_shadow_proj",	view_projlightspace);
 		}
-
+		Fmatrix &mTransform = Device.mFullTransform;
 		// nv-DBT
 		float zMin,zMax;
 		if (SE_SUN_NEAR==sub_phase)
@@ -426,10 +427,10 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			zMin = ps_r_sun_near;
 			zMax = ps_r_sun_far;
 		}
-		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	Device.mFullTransform.transform	(center_pt);
+		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	mTransform.transform	(center_pt);
 		zMin = center_pt.z	;
 
-		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMax);	Device.mFullTransform.transform	(center_pt);
+		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMax);	mTransform.transform	(center_pt);
 		zMax = center_pt.z	;
 
 		if (u_DBT_enable(zMin,zMax))	{
@@ -484,7 +485,7 @@ void CRenderTarget::accum_direct_blend	()
 {
 	// blend-copy
 	if (!RImplementation.o.fp16_blend)	{
-		u_setrt						(rt_Accumulator,NULL,NULL,HW.pBaseZB);
+		u_setrt						(rt_Accumulator,nullptr,nullptr,HW.pBaseZB);
 
 		// Common calc for quad-rendering
 		u32		Offset;
@@ -520,7 +521,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 		return				;
 	}
 	phase_accumulator					();
-	u_setrt								(rt_Generic_0,NULL,NULL,HW.pBaseZB);
+	u_setrt								(rt_Generic_0,nullptr,nullptr,HW.pBaseZB);
 
 	// *** assume accumulator setted up ***
 	light*			fuckingsun			= (light*)RImplementation.Lights.sun._get()	;
@@ -535,11 +536,14 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	p1.set						((_w+.5f)/_w, (_h+.5f)/_h );
 	float	d_Z	= EPS_S, d_W = 1.f;
 
+	Fmatrix mView = Device.mView;
+	Fmatrix mFullTransform = Device.mFullTransform;
+
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
-	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
+	mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
 	// Perform masking (only once - on the first/near phase)
@@ -547,7 +551,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	if (SE_SUN_NEAR==sub_phase)	//.
 	{
 		// For sun-filter - clear to zero
-		CHK_DX	(HW.pDevice->Clear	( 0L, NULL, D3DCLEAR_TARGET, 0, 1.0f, 0L));
+		RCache.Clear(0L, nullptr, D3DCLEAR_TARGET, 0, 1.0f, 0L);
 
 		// Fill vertex buffer
 		FVF::TL* pv					= (FVF::TL*)	RCache.Vertex.Lock	(4,g_combine->vb_stride,Offset);
@@ -573,7 +577,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 
 	// recalculate d_Z, to perform depth-clipping
 	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
-	Device.mFullTransform.transform(center_pt)	;
+	mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
 	// nv-stencil recompression
@@ -581,7 +585,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 
 	// Perform lighting
 	{
-		u_setrt								(rt_Generic_0,NULL,NULL,HW.pBaseZB);  // enshure RT setup
+		u_setrt								(rt_Generic_0,nullptr,nullptr,HW.pBaseZB);  // enshure RT setup
 		RCache.set_CullMode					(CULL_NONE	);
 		RCache.set_ColorWriteEnable			();
 
@@ -601,7 +605,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 		Fmatrix				m_shadow;
 		{
 			FPU::m64r		();
-			Fmatrix			xf_invview;		xf_invview.invert	(Device.mView)	;
+			Fmatrix			xf_invview;		xf_invview.invert	(mView)	;
 			Fmatrix			xf_project;		xf_project.mul		(m_TexelAdjust,fuckingsun->X.D.combine);
 			m_shadow.mul	(xf_project,	xf_invview);
 
@@ -666,7 +670,7 @@ void CRenderTarget::accum_direct_lum	()
 	// Common constants (light-related)
 	Fvector		L_dir,L_clr;	float L_spec;
 	L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
-	L_spec						= u_diffuse2s	(L_clr);
+	L_spec						= Diffuse::u_diffuse2s	(L_clr);
 	Device.mView.transform_dir	(L_dir,fuckingsun->direction);
 	L_dir.normalize				();
 
@@ -722,17 +726,10 @@ void CRenderTarget::accum_direct_lum	()
 
 void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, const Fmatrix &mShadow)
 {
-	if ( (sub_phase!=SE_SUN_NEAR) && (sub_phase!=SE_SUN_MIDDLE) && (sub_phase!=SE_SUN_FAR) ) return;
+	if ((sub_phase != SE_SUN_NEAR) && (sub_phase != SE_SUN_MIDDLE) && (sub_phase != SE_SUN_FAR)) return;
 
-	if (!(RImplementation.o.advancedpp && ps_r_sun_shafts && ps_r_sunshafts_mode == SS_VOLUMETRIC))
+	if (!need_to_render_sunshafts() || ps_r_sunshafts_mode != SS_VOLUMETRIC)
 		return;
-
-	{
-		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E.m_fSunShaftsIntensity;
-		//	TODO: add multiplication by sun color here
-		if (fValue<0.0001) return;
-	}
 
 	phase_vol_accumulator();
 

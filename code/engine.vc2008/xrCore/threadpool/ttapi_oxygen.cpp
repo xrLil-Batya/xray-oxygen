@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "../../FrayBuildConfig.hpp"
 #include "ttapi.h"
-
+#if 0
 
 PTP_POOL hPool = nullptr;
 PTP_CLEANUP_GROUP hCleanupEnv = nullptr;
@@ -35,7 +35,7 @@ size_t TTAPI ttapi_Init(processor_info* ID)
 	R_ASSERT(hCleanupEnv != nullptr);
 	SetThreadpoolCallbackCleanupGroup(&CallbackEnv, hCleanupEnv, NULL);
 
-	WorkerCount = ID->n_threads * 2;
+	WorkerCount = ID->n_threads;
 
 	SetThreadpoolThreadMinimum(hPool, ID->n_threads);
 	SetThreadpoolThreadMaximum(hPool, WorkerCount);
@@ -77,6 +77,7 @@ void TTAPI ttapi_RunAllWorkers()
 
 void NTAPI ttapi_worker_threadentry(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_WORK Work)
 {
+    //thread_name("XRay_TTAPI_Child");
 	ttapi_ThreadParams* pParams = (ttapi_ThreadParams*)Context;
 	pParams->Func(pParams->FuncParams);
 	delete pParams;
@@ -95,3 +96,4 @@ void TTAPI ttapi_example2_taskentry(LPVOID param)
 	InterlockedIncrement(pCounter);
 }
 
+#endif

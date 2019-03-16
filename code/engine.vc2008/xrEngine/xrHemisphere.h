@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 typedef void __stdcall		xrHemisphereIterator(float x, float y, float z, float energy, LPVOID param);
 

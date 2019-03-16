@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "UIActorMenu.h"
 #include "UIActorStateInfo.h"
-#include "../actor.h"
+#include "../Actor.h"
 #include "../UiGame.h"
 #include "../inventory.h"
 #include "../inventory_item.h"
@@ -9,32 +9,32 @@
 #include "object_broker.h"
 #include "../ai/monsters/BaseMonster/base_monster.h"
 #include "UIInventoryUtilities.h"
-#include "game_cl_base.h"
 
-#include "../Weapon.h"
-#include "../WeaponMagazinedWGrenade.h"
-#include "../WeaponAmmo.h"
-#include "../Silencer.h"
-#include "../Scope.h"
-#include "../GrenadeLauncher.h"
+
+#include "../items/Weapon.h"
+#include "../items/WeaponMagazinedWGrenade.h"
+#include "../items/WeaponAmmo.h"
+#include "../items/Silencer.h"
+#include "../items/Scope.h"
+#include "../items/GrenadeLauncher.h"
 #include "../trade_parameters.h"
-#include "../ActorHelmet.h"
-#include "../CustomOutfit.h"
+#include "../items/Helmet.h"
+#include "../items/CustomOutfit.h"
 #include "../CustomDetector.h"
 #include "../eatable_item.h"
 
-#include "UIProgressBar.h"
-#include "UICursor.h"
+#include "../xrUICore/UIProgressBar.h"
+#include "../xrUICore/UICursor.h"
 #include "UICellItem.h"
 #include "UICharacterInfo.h"
 #include "UIItemInfo.h"
 #include "UIDragDropListEx.h"
 #include "UIDragDropReferenceList.h"
 #include "UIInventoryUpgradeWnd.h"
-#include "UI3tButton.h"
-#include "UIBtnHint.h"
-#include "UIMessageBoxEx.h"
-#include "UIPropertiesBox.h"
+#include "../xrUICore/UI3tButton.h"
+#include "../xrUICore/UIBtnHint.h"
+#include "../xrUICore/UIMessageBoxEx.h"
+#include "../../xrUICore/UIPropertiesBox.h"
 #include "UIMainIngameWnd.h"
 #include "../Trade.h"
 #include "../ActorRuck.h"
@@ -83,7 +83,7 @@ void CUIActorMenu::SetInvBox(CInventoryBox* box)
 	if ( box )
 	{
 		m_pInvBox->set_in_use( true );
-		SetPartner( NULL );
+		SetPartner( nullptr );
 	}
 }
 
@@ -102,7 +102,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		case mmInventory: DeInitInventoryMode(); break;
 		case mmTrade: DeInitTradeMode(); break;
 		case mmUpgrade: DeInitUpgradeMode(); break;
-		case mmDeadBodySearch: DeInitDeadBodySearchMode(); break;
+		case mmDeadBodyOrContainerSearch: DeInitDeadBodySearchMode(); break;
 		default: R_ASSERT(0); break;
 		}
 
@@ -116,7 +116,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		case mmInventory: InitInventoryMode(); break;
 		case mmTrade: InitTradeMode(); break;
 		case mmUpgrade: InitUpgradeMode(); break;
-		case mmDeadBodySearch: InitDeadBodySearchMode(); break;
+		case mmDeadBodyOrContainerSearch: InitDeadBodySearchMode(); break;
 		default: R_ASSERT(0); break;
 		}
 		UpdateConditionProgressBars();
@@ -134,7 +134,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 void CUIActorMenu::PlaySnd(eActorMenuSndAction a)
 {
 	if (sounds[a]._handle())
-        sounds[a].play					(NULL, sm_2D);
+        sounds[a].play					(nullptr, sm_2D);
 }
 
 void CUIActorMenu::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
@@ -170,6 +170,7 @@ void CUIActorMenu::Draw()
 	}
 
 	inherited::Draw();
+
 	m_ItemInfo->Draw();
 }
 
@@ -182,7 +183,7 @@ void CUIActorMenu::Update()
 	{
 		case mmUndefined: break;
 		case mmInventory: GameUI()->UIMainIngameWnd->UpdateZoneMap(); break;
-		case mmDeadBodySearch: CheckDistance(); break;
+		case mmDeadBodyOrContainerSearch: CheckDistance(); break;
 
 		case mmTrade:
 		{
@@ -207,7 +208,7 @@ void CUIActorMenu::Update()
 	m_hint_wnd->Update();
 }
 
-bool CUIActorMenu::StopAnyMove()  // true = актёр не идёт при открытом меню
+bool CUIActorMenu::StopAnyMove()  // true = Р°РєС‚С‘СЂ РЅРµ РёРґС‘С‚ РїСЂРё РѕС‚РєСЂС‹С‚РѕРј РјРµРЅСЋ
 {
 	return (m_currMenuMode != mmInventory);
 }
@@ -252,6 +253,7 @@ EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 
     if (l == m_pInventoryKnifeList)         return iActorSlot;
     if (l == m_pInventoryBinocularList)     return iActorSlot;
+    if (l == m_pInventoryTorchList)         return iActorSlot;
 	
 	if (l == m_pTradeActorBagList)			return iActorBag;
 	if (l == m_pTradeActorList)			    return iActorTrade;
@@ -285,7 +287,7 @@ CUICellItem* CUIActorMenu::CurrentItem()
 
 PIItem CUIActorMenu::CurrentIItem()
 {
-	return	(m_pCurrentCellItem)? (PIItem)m_pCurrentCellItem->m_pData : NULL;
+	return	(m_pCurrentCellItem)? (PIItem)m_pCurrentCellItem->m_pData : nullptr;
 }
 
 void CUIActorMenu::SetCurrentItem(CUICellItem* itm)
@@ -294,7 +296,7 @@ void CUIActorMenu::SetCurrentItem(CUICellItem* itm)
 	m_pCurrentCellItem = itm;
 	if ( !itm )
 	{
-		InfoCurItem( NULL );
+		InfoCurItem( nullptr );
 	}
 	TryHidePropertiesBox();
 
@@ -308,12 +310,12 @@ void CUIActorMenu::InfoCurItem(CUICellItem* cell_item)
 {
 	if (!cell_item)
 	{
-		m_ItemInfo->InitItem(NULL);
+		m_ItemInfo->InitItem(nullptr);
 		return;
 	}
 	PIItem current_item = (PIItem)cell_item->m_pData;
 
-	PIItem compare_item = NULL;
+	PIItem compare_item = nullptr;
 	u16    compare_slot = current_item->BaseSlot();
 	if (compare_slot != NO_ACTIVE_SLOT)
 	{
@@ -347,7 +349,7 @@ void CUIActorMenu::InfoCurItem(CUICellItem* cell_item)
 		}
 
 		if (!current_item->CanTrade() ||
-			(!m_pPartnerInvOwner->trade_parameters().enabled(CTradeParameters::action_buy(0),
+			(!m_pPartnerInvOwner->trade_parameters().enabled(CTradeParameters::action_buy(nullptr),
 				current_item->object().cNameSect()) &&
 				item_owner && item_owner == m_pActorInvOwner)
 			)
@@ -372,7 +374,7 @@ void CUIActorMenu::UpdateItemsPlace()
 	case mmInventory: break;
 	case mmTrade: UpdatePrices(); break;
 	case mmUpgrade: SetupUpgradeItem(); break;
-	case mmDeadBodySearch: UpdateDeadBodyBag(); break;
+	case mmDeadBodyOrContainerSearch: UpdateDeadBodyBag(); break;
 	default: R_ASSERT(0); break;
 	}
 
@@ -399,7 +401,7 @@ void CUIActorMenu::clear_highlight_lists()
 
     m_KnifeSlotHighlight->Show(false);
     m_BinocularSlotHighlight->Show(false);
-
+    m_TorchSlotHighlight->Show(false);
 	
 	for(u8 i=0; i<4; i++)
 		m_QuickSlotsHighlight[i]->Show(false);
@@ -422,7 +424,7 @@ void CUIActorMenu::clear_highlight_lists()
 		break;
 	case mmUpgrade:
 		break;
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		m_pDeadBodyBagList->clear_select_armament();
 		break;
 	}
@@ -432,18 +434,13 @@ void CUIActorMenu::clear_highlight_lists()
 void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 {
 	PIItem item = (PIItem)cell_item->m_pData;
-	if(!item)
+
+    if (!item)
 		return;
 
 	if(CUIDragDropListEx::m_drag_item)
 		return;
 
-	CWeapon* weapon = smart_cast<CWeapon*>(item);
-	CHelmet* helmet = smart_cast<CHelmet*>(item);
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(item);
-	CCustomDetector* detector = smart_cast<CCustomDetector*>(item);
-	CEatableItem* eatable = smart_cast<CEatableItem*>(item);
-	CArtefact* artefact = smart_cast<CArtefact*>(item);
     u32 item_slot = item->BaseSlot();
 	
     if (item_slot == BINOCULAR_SLOT)
@@ -454,6 +451,12 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
     if (item_slot == KNIFE_SLOT)
     {
         m_KnifeSlotHighlight->Show(true);
+        return;
+    }
+	
+	if (item_slot == TORCH_SLOT)
+    {
+        m_TorchSlotHighlight->Show(true);
         return;
     }
 	
@@ -478,29 +481,36 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 		m_DetectorSlotHighlight->Show(true);
 		return;
 	}
-	CObject*	pObj = smart_cast<CObject*>		(item);
-	shared_str	section_name = pObj->cNameSect();
-	if(eatable)
+
+	if (!item->m_pInventory)
+		return;
+
+	CObject* pObj = item->cast_game_object();
+	shared_str section_name = pObj->cNameSect();
+
+	if (smart_cast<CEatableItem*>(item))
 	{
-	bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
-	    if (!CanSwitchToFastSlot)
-		    return;
-		
-		if(cell_item->OwnerList() && GetListType(cell_item->OwnerList())==iQuickSlot)
+		bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
+		if (!CanSwitchToFastSlot)
 			return;
 
-		for(u8 i=0; i<4; i++)
+		if (cell_item->OwnerList() && GetListType(cell_item->OwnerList()) == iQuickSlot)
+			return;
+
+		for (u8 i = 0; i < 4; i++)
 			m_QuickSlotsHighlight[i]->Show(true);
 		return;
 	}
 
-	if(artefact)
+	if(smart_cast<CArtefact*>(item->cast_game_object()))
 	{
 		if(cell_item->OwnerList() && GetListType(cell_item->OwnerList())==iActorBelt)
 			return;
 
 		Ivector2 cap = m_pInventoryBeltList->CellsCapacity();
-        for (u8 i = 0; i < cap.y; i++)
+
+		int CallPos = g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS) ? cap.y : cap.x;
+        for (u8 i = 0; i < CallPos; i++)
         {
             for (u8 i = 0; i < cap.x; i++)
             {
@@ -511,21 +521,21 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 	}
 }
 
-#include "../WeaponKnife.h"
+#include "../items/WeaponKnife.h"
+#include "../items/WeaponBinoculars.h"
 void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
 	PIItem item = (PIItem)cell_item->m_pData;
-	if ( !item )
-	{
+
+    // Check if object is active, name and section is valid. Inventory can be nullptr, because this can be container (not dead body, or trader)
+	if (!item || item->m_name.equal(""))
 		return;
-	}
+
 	highlight_item_slot(cell_item);
 
-	// не подсвечивать потроны для ножа
-	if (smart_cast<CWeaponKnife*>(item))
-	{
+	// РЅРµ РїРѕРґСЃРІРµС‡РёРІР°С‚СЊ РїР°С‚СЂРѕРЅС‹ РґР»СЏ РЅРѕР¶Р° РёР»Рё Р±РёРЅРѕРєР»СЏ
+	if (dynamic_cast<CWeaponKnife*>(item) || dynamic_cast<CWeaponBinoculars*>(item))
 		return;
-	}
 
 	switch ( m_currMenuMode )
 	{
@@ -544,7 +554,7 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 			highlight_armament( item, m_pTradePartnerList );
 			break;
 		}
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		{
 			highlight_armament( item, m_pInventoryBagList );
 			highlight_armament( item, m_pDeadBodyBagList );
@@ -579,13 +589,13 @@ void CUIActorMenu::highlight_ammo_for_weapon(PIItem weapon_item, CUIDragDropList
 	CWeaponMagazinedWGrenade* wg = smart_cast<CWeaponMagazinedWGrenade*>(weapon_item);
 	if (wg)
 	{
-		if (wg->IsGrenadeLauncherAttached() && wg->m_ammoTypes2.size())
+		if (wg->IsGrenadeLauncherAttached() && !wg->m_ammoTypes2.empty())
 		{
 			ammo_types.insert(ammo_types.end(), wg->m_ammoTypes2.begin(), wg->m_ammoTypes2.end());
 		}
 	}
 
-	if (ammo_types.size() == 0)
+	if (ammo_types.empty())
 	{
 		return;
 	}
@@ -624,6 +634,9 @@ void CUIActorMenu::highlight_weapons_for_ammo(PIItem ammo_item, CUIDragDropListE
 {
 	VERIFY(ammo_item);
 	VERIFY(ddlist);
+
+
+
 	CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(ammo_item);
 	if (!ammo)
 	{
@@ -637,7 +650,7 @@ void CUIActorMenu::highlight_weapons_for_ammo(PIItem ammo_item, CUIDragDropListE
 	{
 		CUICellItem* ci = ddlist->GetItemIdx(i);
 		PIItem item = (PIItem)ci->m_pData;
-		if (!item)
+		if (!item || !item->m_name || !item->ItemDescription())
 		{
 			continue;
 		}
@@ -658,7 +671,7 @@ void CUIActorMenu::highlight_weapons_for_ammo(PIItem ammo_item, CUIDragDropListE
 
 
 		CWeaponMagazinedWGrenade* wg = smart_cast<CWeaponMagazinedWGrenade*>(item);
-		if (!wg || !wg->IsGrenadeLauncherAttached() || !wg->m_ammoTypes2.size())
+		if (!wg || !wg->IsGrenadeLauncherAttached() || wg->m_ammoTypes2.empty())
 		{
 			continue; // for i
 		}
@@ -774,6 +787,7 @@ void CUIActorMenu::ClearAllLists()
 
     m_pInventoryKnifeList->ClearAll             (true);
     m_pInventoryBinocularList->ClearAll         (true);
+    m_pInventoryTorchList->ClearAll             (true);
 	
 	m_pQuickSlot->ClearAll						(true);
 
@@ -801,17 +815,10 @@ void CUIActorMenu::CallMessageBoxOK( LPCSTR text )
 void CUIActorMenu::ResetMode()
 {
 	ClearAllLists				();
-	m_pMouseCapturer			= NULL;
+	m_pMouseCapturer			= nullptr;
 	m_UIPropertiesBox->Hide		();
-	SetCurrentItem				(NULL);
+	SetCurrentItem				(nullptr);
     GameUI()->UIMainIngameWnd->ShowZoneMap(true);
-}
-
-void CUIActorMenu::UpdateActorMP()
-{
-	m_ActorCharacterInfo->ClearInfo();
-	m_ActorMoney->SetText("");
-	return;
 }
 
 bool CUIActorMenu::CanSetItemToList(PIItem item, CUIDragDropListEx* l, u16& ret_slot)
@@ -883,6 +890,7 @@ void CUIActorMenu::UpdateConditionProgressBars()
 }
 #include "../ai_space.h"
 #include "../../xrServerEntities/script_engine.h"
+#include <luabind/luabind.hpp>
 
 using namespace luabind;
 
@@ -901,17 +909,13 @@ void CUIActorMenu::TryRepairItem(CUIWindow* w, void* d)
 	LPCSTR partner = m_pPartnerInvOwner->CharacterInfo().Profile().c_str();
 
 	luabind::functor<bool> funct;
-	R_ASSERT2(
-		ai().script_engine().functor("inventory_upgrades.can_repair_item", funct),
-		make_string("Failed to get functor <inventory_upgrades.can_repair_item>, item = %s", item_name)
-	);
+	R_ASSERT_FORMAT(ai().script_engine().functor("inventory_upgrades.can_repair_item", funct),
+		"Failed to get functor <inventory_upgrades.can_repair_item>, item = %s", item_name);
 	bool can_repair = funct(item_name, item->GetCondition(), partner);
 
 	luabind::functor<LPCSTR> funct2;
-	R_ASSERT2(
-		ai().script_engine().functor("inventory_upgrades.question_repair_item", funct2),
-		make_string("Failed to get functor <inventory_upgrades.question_repair_item>, item = %s", item_name)
-	);
+	R_ASSERT_FORMAT(ai().script_engine().functor("inventory_upgrades.question_repair_item", funct2),
+		"Failed to get functor <inventory_upgrades.question_repair_item>, item = %s", item_name);
 	LPCSTR question = funct2(item_name, item->GetCondition(), can_repair, partner);
 
 	if (can_repair)
@@ -952,10 +956,8 @@ bool CUIActorMenu::CanUpgradeItem(PIItem item)
 	LPCSTR partner = m_pPartnerInvOwner->CharacterInfo().Profile().c_str();
 
 	luabind::functor<bool> funct;
-	R_ASSERT2(
-		ai().script_engine().functor("inventory_upgrades.can_upgrade_item", funct),
-		make_string("Failed to get functor <inventory_upgrades.can_upgrade_item>, item = %s, mechanic = %s", item_name, partner)
-	);
+	R_ASSERT_FORMAT(ai().script_engine().functor("inventory_upgrades.can_upgrade_item", funct),
+		"Failed to get functor <inventory_upgrades.can_upgrade_item>, item = %s, mechanic = %s", item_name, partner);
 
 	return funct(item_name, partner);
 }

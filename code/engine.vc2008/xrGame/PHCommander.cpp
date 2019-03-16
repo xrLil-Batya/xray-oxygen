@@ -56,7 +56,7 @@ CPHCommander::~CPHCommander()
 }
 void CPHCommander::clear	()
 {
-	while (m_calls.size())	{
+	while (!m_calls.empty())	{
 		remove_call(m_calls.end()-1);
 	}
 }
@@ -86,13 +86,13 @@ void CPHCommander::update	()
 }
 void CPHCommander::update_threadsafety()
 {
-	std::lock_guard<decltype(lock)> locker(lock);
+	xrCriticalSectionGuard guard(lock);
 	update();
 }
 
 void CPHCommander::	add_call_threadsafety(CPHCondition* condition,CPHAction* action)
 {
-	std::lock_guard<decltype(lock)> locker(lock);
+	xrCriticalSectionGuard guard(lock);
 	add_call(condition, action);
 }
 
@@ -195,7 +195,7 @@ struct SRemoveRped
 
 void CPHCommander::remove_calls_threadsafety(CPHReqComparerV* cmp_object)
 {
-	std::lock_guard<decltype(lock)> locker(lock);
+	xrCriticalSectionGuard guard(lock);
 	remove_calls(cmp_object);
 }
 void CPHCommander::remove_calls(CPHReqComparerV* cmp_object)

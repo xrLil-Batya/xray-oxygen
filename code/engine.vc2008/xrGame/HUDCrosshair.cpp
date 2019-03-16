@@ -1,12 +1,10 @@
-// HUDCrosshair.cpp:  êðåñòèê ïðèöåëà, îòîáðàæàþùèé òåêóùóþ äèñïåðñèþ
+ï»¿// HUDCrosshair.cpp:  ÐºÑ€ÐµÑÑ‚Ð¸Ðº Ð¿Ñ€Ð¸Ñ†ÐµÐ»Ð°, Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶Ð°ÑŽÑ‰Ð¸Ð¹ Ñ‚ÐµÐºÑƒÑ‰ÑƒÑŽ Ð´Ð¸ÑÐ¿ÐµÑ€ÑÐ¸ÑŽ
 // 
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "actor.h"
 #include "HUDCrosshair.h"
-//.#include "UIStaticItem.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 
 CHUDCrosshair::CHUDCrosshair	()
 {
@@ -21,8 +19,8 @@ CHUDCrosshair::~CHUDCrosshair	()
 
 void CHUDCrosshair::Load		()
 {
-	//âñå ðàçìåðû â ïðîöåíòàõ îò äëèíû ýêðàíà
-	//äëèíà êðåñòèêà 
+	//Ð²ÑÐµ Ñ€Ð°Ð·Ð¼ÐµÑ€Ñ‹ Ð² Ð¿Ñ€Ð¾Ñ†ÐµÐ½Ñ‚Ð°Ñ… Ð¾Ñ‚ Ð´Ð»Ð¸Ð½Ñ‹ ÑÐºÑ€Ð°Ð½Ð°
+	//Ð´Ð»Ð¸Ð½Ð° ÐºÑ€ÐµÑÑ‚Ð¸ÐºÐ° 
 	cross_length_perc = pSettings->r_float (HUD_CURSOR_SECTION, "cross_length");
 	min_radius_perc = pSettings->r_float (HUD_CURSOR_SECTION, "min_radius");
 	max_radius_perc = pSettings->r_float (HUD_CURSOR_SECTION, "max_radius");
@@ -30,7 +28,7 @@ void CHUDCrosshair::Load		()
 	is_enabled = READ_IF_EXISTS(pSettings, r_bool, HUD_CURSOR_SECTION, "cross_enabled", true);
 }
 
-//âûñòàâëÿåò radius îò min_radius äî max_radius
+//Ð²Ñ‹ÑÑ‚Ð°Ð²Ð»ÑÐµÑ‚ radius Ð¾Ñ‚ min_radius Ð´Ð¾ max_radius
 void CHUDCrosshair::SetDispersion	(float disp)
 { 
 	Fvector4 r;
@@ -104,17 +102,46 @@ void CHUDCrosshair::OnRenderFirstBulletDispertion()
 	UIRender->FlushPrimitive				();
 }
 #endif
-
+#include "HudManager.h"
+#include "inventory.h"
+#include "items/weapon.h"
 extern ENGINE_API BOOL g_bRendering; 
 void CHUDCrosshair::OnRender ()
 {
-if(!psActorFlags.test(AF_HARDCORE))
-{
+	if (psActorFlags.test(AF_HARDCORE)) return;
+
 	VERIFY			(g_bRendering);
-	Fvector2		center;
-	Fvector2		scr_size;
+	Fvector2		center, scr_size;
+	Fvector			result;
+	Fvector4		v_res;
+	float			x, y;
 	scr_size.set	(float(::Render->getTarget()->get_width()), float(::Render->getTarget()->get_height()));
-	center.set		(scr_size.x/2.0f, scr_size.y/2.0f);
+
+	CWeapon				*weapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+	CCameraBase			*pCam = Actor()->cam_Active();
+	float dist			= HUD().GetCurrentRayQuery().range*1.2f;
+
+	if (weapon && psActorFlags.test(AF_CROSSHAIR_COLLIDE) && !psActorFlags.test(AF_CROSSHAIR_INERT))
+	{
+		result = weapon->get_LastFP();
+		result.add(Fvector(Device.vCameraDirection).mul(dist));
+	}
+
+	if (psActorFlags.test(AF_CROSSHAIR_INERT) && !psActorFlags.test(AF_CROSSHAIR_COLLIDE))
+	{
+		result = pCam->vPosition;
+		result.add(Fvector(pCam->vDirection).mul(dist));
+	}
+
+	Device.mFullTransform.transform(v_res, result);
+
+	x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
+	y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+
+	if ((psActorFlags.test(AF_CROSSHAIR_INERT) || psActorFlags.test(AF_CROSSHAIR_COLLIDE)) && !(psActorFlags.test(AF_CROSSHAIR_INERT) && psActorFlags.test(AF_CROSSHAIR_COLLIDE)))
+		center.set		(x, y);
+	else
+		center.set(scr_size.x / 2.0f, scr_size.y / 2.0f);
 
 	UIRender->StartPrimitive		(10, IUIRender::ptLineList, UI().m_currentPointType);
 	
@@ -159,5 +186,4 @@ if(!psActorFlags.test(AF_HARDCORE))
 	if (g_bDrawFirstBulletCrosshair)
 		OnRenderFirstBulletDispertion();
 #endif
-}
 }

@@ -18,13 +18,13 @@ void CObjectFactory::register_script_class(LPCSTR client_class, LPCSTR server_cl
 #ifndef NO_XR_GAME
 	luabind::object				client;
 	if (!ai().script_engine().function_object(client_class, client, LUA_TUSERDATA)) {
-		ai().script_engine().script_log(eLuaMessageTypeError, "Cannot register class %s", client_class);
+		ai().script_engine().script_log(eLuaMessageTypeError, "Cannot register client class \"%s\"", client_class);
 		return;
 	}
 #endif
 	luabind::object				server;
 	if (!ai().script_engine().function_object(server_class, server, LUA_TUSERDATA)) {
-		ai().script_engine().script_log(eLuaMessageTypeError, "Cannot register class %s", server_class);
+		ai().script_engine().script_log(eLuaMessageTypeError, "Cannot register server class \"%s\"", server_class);
 		return;
 	}
 

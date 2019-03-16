@@ -19,15 +19,6 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-CSE_ALifeItemWeapon	*CSE_ALifeAnomalousZone::tpfGetBestWeapon(ALife::EHitType &tHitType, float &fHitPower)
-{
-	m_tpCurrentBestWeapon		= 0;
-	m_tTimeID					= ai().alife().time_manager().game_time();
-	fHitPower					= 1.0f;//m_maxPower;
-	tHitType					= m_tHitType;
-	return						(m_tpCurrentBestWeapon);
-}
-
 ALife::EMeetActionType CSE_ALifeAnomalousZone::tfGetActionType(CSE_ALifeSchedulable *tpALifeSchedulable, int iGroupIndex, bool bMutualDetection)
 {
 	return (ALife::eMeetActionTypeAttack);

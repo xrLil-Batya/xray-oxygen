@@ -8,14 +8,14 @@
 #include "ShootingObject.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
-#include "WeaponAmmo.h"
+#include "items/WeaponAmmo.h"
 
 #include "actor.h"
-#include "game_cl_base.h"
+
 #include "level.h"
 #include "level_bullet_manager.h"
 
-CShootingObject::CShootingObject(void)
+CShootingObject::CShootingObject()
 {
 	fShotTimeCounter							= 0;
  	fOneShotTime						= 0;
@@ -39,18 +39,18 @@ CShootingObject::CShootingObject(void)
 	
 	bWorking						= false;
 
-	light_render					= 0;
+	light_render					= nullptr;
 
 	reinit();
 
 }
-CShootingObject::~CShootingObject(void)
+CShootingObject::~CShootingObject()
 {
 }
 
 void CShootingObject::reinit()
 {
-	m_pFlameParticles	= NULL;
+	m_pFlameParticles	= nullptr;
 }
 
 void CShootingObject::Load	(LPCSTR section)
@@ -150,12 +150,12 @@ void CShootingObject::LoadLights		(LPCSTR section, LPCSTR prefix)
 	// light
 	if(m_bLightShotEnabled) 
 	{
-		Fvector clr			= pSettings->r_fvector3		(section, strconcat(sizeof(full_name),full_name, prefix, "light_color"));
+		Fvector clr			= pSettings->r_fvector3		(section, xr_strconcat(full_name, prefix, "light_color"));
 		light_base_color.set(clr.x,clr.y,clr.z,1);
-		light_base_range	= pSettings->r_float		(section, strconcat(sizeof(full_name),full_name, prefix, "light_range")		);
-		light_var_color		= pSettings->r_float		(section, strconcat(sizeof(full_name),full_name, prefix, "light_var_color")	);
-		light_var_range		= pSettings->r_float		(section, strconcat(sizeof(full_name),full_name, prefix, "light_var_range")	);
-		light_lifetime		= pSettings->r_float		(section, strconcat(sizeof(full_name),full_name, prefix, "light_time")		);
+		light_base_range	= pSettings->r_float		(section, xr_strconcat(full_name, prefix, "light_range")		);
+		light_var_color		= pSettings->r_float		(section, xr_strconcat(full_name, prefix, "light_var_color")	);
+		light_var_range		= pSettings->r_float		(section, xr_strconcat(full_name, prefix, "light_var_range")	);
+		light_lifetime		= pSettings->r_float		(section, xr_strconcat(full_name, prefix, "light_time")		);
 		light_time			= -1.f;
 	}
 }
@@ -199,7 +199,7 @@ void CShootingObject::StartParticles (CParticlesObject*& pParticles, LPCSTR part
 {
 	if(!particles_name) return;
 
-	if(pParticles != NULL) 
+	if(pParticles != nullptr) 
 	{
 		UpdateParticles(pParticles, pos, vel);
 		return;
@@ -242,12 +242,12 @@ void CShootingObject::UpdateParticles (CParticlesObject*& pParticles,
 void CShootingObject::LoadShellParticles (LPCSTR section, LPCSTR prefix)
 {
 	string256 full_name;
-	strconcat(sizeof(full_name),full_name, prefix, "shell_particles");
+	xr_strconcat(full_name, prefix, "shell_particles");
 
 	if(pSettings->line_exist(section,full_name)) 
 	{
 		m_sShellParticles	= pSettings->r_string	(section,full_name);
-		vLoadedShellPoint	= pSettings->r_fvector3	(section,strconcat(sizeof(full_name),full_name, prefix, "shell_point"));
+		vLoadedShellPoint	= pSettings->r_fvector3	(section, xr_strconcat(full_name, prefix, "shell_point"));
 	}
 }
 
@@ -256,15 +256,15 @@ void CShootingObject::LoadFlameParticles (LPCSTR section, LPCSTR prefix)
 	string256 full_name;
 
 	// flames
-	strconcat(sizeof(full_name),full_name, prefix, "flame_particles");
+	xr_strconcat(full_name, prefix, "flame_particles");
 	if(pSettings->line_exist(section, full_name))
 		m_sFlameParticles	= pSettings->r_string (section, full_name);
 
-	strconcat(sizeof(full_name),full_name, prefix, "smoke_particles");
+	xr_strconcat(full_name, prefix, "smoke_particles");
 	if(pSettings->line_exist(section, full_name))
 		m_sSmokeParticles = pSettings->r_string (section, full_name);
 
-	strconcat(sizeof(full_name),full_name, prefix, "shot_particles");
+	xr_strconcat(full_name, prefix, "shot_particles");
 	if(pSettings->line_exist(section, full_name))
 		m_sShotParticles = pSettings->r_string (section, full_name);
 
@@ -279,7 +279,7 @@ void CShootingObject::OnShellDrop	(const Fvector& play_pos,
 									 const Fvector& parent_vel)
 {
 	if(!m_sShellParticles) return;
-	if( Device.vCameraPosition.distance_to_sqr(play_pos)>7*7 ) return;
+	if( Device.vCameraPosition.distance_to_sqr(play_pos)>10*4 ) return;
 
 	CParticlesObject* pShellParticles	= CParticlesObject::Create(*m_sShellParticles,TRUE);
 
@@ -297,7 +297,7 @@ void CShootingObject::OnShellDrop	(const Fvector& play_pos,
 void CShootingObject::StartSmokeParticles	(const Fvector& play_pos,
 											const Fvector& parent_vel)
 {
-	CParticlesObject* pSmokeParticles = NULL;
+	CParticlesObject* pSmokeParticles = nullptr;
 	StartParticles(pSmokeParticles, *m_sSmokeParticlesCurrent, play_pos, parent_vel, true);
 }
 
@@ -376,11 +376,6 @@ void CShootingObject::RenderLight()
 	}
 }
 
-bool CShootingObject::SendHitAllowed(CObject* pUser)
-{
-	return true;
-}
-
 extern void random_dir(Fvector& tgt_dir, const Fvector& src_dir, float dispersion);
 
 void CShootingObject::FireBullet(const Fvector& pos, const Fvector& shot_dir, float fire_disp, const CCartridge& cartridge, u16 parent_id, u16 weapon_id, bool send_hit)
@@ -392,17 +387,21 @@ void CShootingObject::FireBullet(const Fvector& pos, const Fvector& shot_dir, fl
 	m_vCurrentShootPos = pos;
 	m_iCurrentParentID = parent_id;
 	
-	bool aim_bullet;
+	bool aim_bullet = false;
 	if (m_bUseAimBullet)
 	{
 		if (ParentMayHaveAimBullet())
 		{
-			if (m_fPredBulletTime == 0.0) aim_bullet=true;
-			else aim_bullet = ((Device.fTimeGlobal-m_fPredBulletTime)>=m_fTimeToAim) ? true : false;
+			if (m_fPredBulletTime == 0.0)
+			{
+				aim_bullet = true;
+			}
+			else
+			{
+				aim_bullet = ((Device.fTimeGlobal - m_fPredBulletTime) >= m_fTimeToAim) ? true : false;
+			}
 		}
-		else aim_bullet=false;
 	}
-	else aim_bullet = false;
 	
 	m_fPredBulletTime = Device.fTimeGlobal;
 
@@ -423,7 +422,7 @@ void CShootingObject::FireEnd	()
 
 void CShootingObject::StartShotParticles	()
 {
-	CParticlesObject* pSmokeParticles = NULL;
+	CParticlesObject* pSmokeParticles = nullptr;
 	StartParticles(pSmokeParticles, *m_sShotParticles, 
 					m_vCurrentShootPos, m_vCurrentShootDir, true);
 }

@@ -80,7 +80,7 @@ void	ISpatial::spatial_register	()
 
 void	ISpatial::spatial_unregister()
 {
-	if (spatial.node_ptr)
+	if (g_SpatialSpace && spatial.node_ptr)
 	{
 		// remove
 		spatial.space->remove	(this);
@@ -151,10 +151,15 @@ ISpatial_DB::ISpatial_DB()
 
 ISpatial_DB::~ISpatial_DB()
 {
-	if ( m_root )
+	// @ Забавно, память есть, но ВСЁ содержимое полностью в NULL
+	if (m_root)
 	{
-		_node_destroy(m_root);
+		if (m_root->items.size())
+		{
+			_node_destroy(m_root);
+		}
 	}
+
 
 	while (!allocator_pool.empty()){
 		allocator.destroy		(allocator_pool.back());
@@ -194,10 +199,10 @@ ISpatial_NODE*	ISpatial_DB::_node_create		()
 }
 void			ISpatial_DB::_node_destroy(ISpatial_NODE* &P)
 {
-	VERIFY						(P->_empty());
-	stat_nodes					--;
-	allocator_pool.push_back	(P);
-	P							= nullptr;
+	VERIFY(P->_empty());
+	stat_nodes--;
+	allocator_pool.push_back(P);
+	P = nullptr;
 }
 
 void			ISpatial_DB::_insert	(ISpatial_NODE* N, Fvector& n_C, float n_R)
@@ -250,7 +255,7 @@ void			ISpatial_DB::_insert	(ISpatial_NODE* N, Fvector& n_C, float n_R)
 
 void ISpatial_DB::insert(ISpatial* S)
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 #ifdef DEBUG
 	stat_insert.Begin	();
 #endif
@@ -298,7 +303,7 @@ void ISpatial_DB::_remove(ISpatial_NODE* N, ISpatial_NODE* N_sub)
 
 void ISpatial_DB::remove(ISpatial* S)
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 #ifdef DEBUG
 	stat_remove.Begin	();
 #endif
@@ -317,7 +322,7 @@ void ISpatial_DB::update(u32 nodes/* =8 */)
 {
 #ifdef DEBUG
 	if (!m_root)	return;
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 	VERIFY			(verify());
 #endif
 }

@@ -7,6 +7,8 @@ namespace xrPostprocessEditor
 {
     public partial class KeyFrameBox
     {
+		private decimal NumStep;
+
         public delegate void KeyFrameEventHandler(object sender, decimal keyTime);
         public delegate void KeyFrameErrorHandler(string message);
 
@@ -31,8 +33,14 @@ namespace xrPostprocessEditor
         {
             InitializeComponent();
 
-            ClearButtonClick += OnClearButtonClick;
+			NumStep = 1;
+			ClearButtonClick += OnClearButtonClick;
         }
+
+		public decimal AddNumStep
+		{
+			set => NumStep = value;
+		}
 
         public void OnClearButtonClick(object sender, EventArgs e)
         {
@@ -48,8 +56,9 @@ namespace xrPostprocessEditor
             {
                 lbKeyFrames.Items.Add(keyTimeString);
                 AddTimeKeyEvent?.Invoke(this, keyTime);
+				numKeyFrameTime.Value += NumStep;
 
-                return;
+				return;
             }
 
             ErrorOccuredEvent?.Invoke("This time is already exists in the frame list.");
@@ -81,14 +90,30 @@ namespace xrPostprocessEditor
             if (lbKeyFrames.SelectedItem != null)
             {
                 SelectedIndexChanged?.Invoke(sender, e);
-            }
+
+				string CurrentFrameTimeString = lbKeyFrames.SelectedItem.ToString();
+				string CurrentFrameTimeStringToDecimal = "";
+				
+				for (Int16 Iter = 0; Iter < CurrentFrameTimeString.Length; ++Iter)
+				{
+					if(CurrentFrameTimeString[Iter] == '.')
+					{
+						CurrentFrameTimeStringToDecimal += ',';
+					}
+					else
+					{
+						CurrentFrameTimeStringToDecimal += CurrentFrameTimeString[Iter];
+					}
+				}
+				numKeyFrameTime.Value = decimal.Parse(CurrentFrameTimeStringToDecimal);
+			}
         }
 
         private bool VerifyKeyTime(decimal newKeyTime)
         {
             var items = lbKeyFrames.Items.Cast<string>();
 
-            return items.Contains(newKeyTime.ToString(CultureInfo.InvariantCulture));
+			return false; //items.Contains(Convert.ToString(newKeyTime));
         }
     }
 }

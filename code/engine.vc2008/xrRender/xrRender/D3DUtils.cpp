@@ -4,6 +4,7 @@
 #pragma hdrstop
 
 #include "../../xrEngine/gamefont.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 #include "d3dutils.h"
 #include "du_box.h"
 #include "du_sphere.h"
@@ -20,7 +21,7 @@
 
 CDrawUtilities DUImpl;
 
-#define LINE_DIVISION  32  // не меньше 6!!!!!
+#define LINE_DIVISION  32  // РЅРµ РјРµРЅСЊС€Рµ 6!!!!!
 // for drawing sphere
 static Fvector circledef1[LINE_DIVISION];
 static Fvector circledef2[LINE_DIVISION];
@@ -78,15 +79,15 @@ u32 m_ColorSafeRect = 0xffB040B0;
 
 void SPrimitiveBuffer::CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF, LPVOID vertices, u32 _v_cnt, u16* indices, u32 _i_cnt)
 {
-#if !defined(USE_DX10) && !defined(USE_DX11)
-	ID3DVertexBuffer*	pVB=0;
-	ID3DIndexBuffer*	pIB=0;
+#ifndef USE_DX11
+	ID3DVertexBuffer*	pVB=nullptr;
+	ID3DIndexBuffer*	pIB=nullptr;
 	p_cnt				= _p_cnt;
 	p_type				= _pt;
 	v_cnt				= _v_cnt;
 	i_cnt				= _i_cnt;
 	u32 stride			= D3DXGetFVFVertexSize(FVF);
-	R_CHK(HW.pDevice->CreateVertexBuffer(v_cnt*stride, D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVB, 0));
+	R_CHK(HW.pDevice->CreateVertexBuffer(v_cnt*stride, D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &pVB, nullptr));
 	HW.stats_manager.increment_stats_vb	(pVB);
 	u8* 				bytes;
 	R_CHK				(pVB->Lock(0,0,(LPVOID*)&bytes,0));
@@ -96,7 +97,7 @@ void SPrimitiveBuffer::CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF,
     std::memcpy(bytes,&*verts.begin(),v_cnt*stride);
 	R_CHK				(pVB->Unlock());
 	if (i_cnt){ 
-		R_CHK(HW.pDevice->CreateIndexBuffer	(i_cnt*sizeof(u16),D3DUSAGE_WRITEONLY,D3DFMT_INDEX16,D3DPOOL_MANAGED,&pIB,NULL));
+		R_CHK(HW.pDevice->CreateIndexBuffer	(i_cnt*sizeof(u16),D3DUSAGE_WRITEONLY,D3DFMT_INDEX16,D3DPOOL_MANAGED,&pIB,nullptr));
 		HW.stats_manager.increment_stats_ib	(pIB);
 		R_CHK			(pIB->Lock(0,0,(LPVOID*)&bytes,0));
         std::memcpy(bytes,indices,i_cnt*sizeof(u16));
@@ -551,11 +552,14 @@ void CDrawUtilities::dbgDrawPlacement(const Fvector& p, int sz, u32 clr, LPCSTR 
 {
 	VERIFY( Device.b_is_Ready );
     Fvector c;
-	float w	= p.x*Device.mFullTransform._14 + p.y*Device.mFullTransform._24 + p.z*Device.mFullTransform._34 + Device.mFullTransform._44;
+	Fmatrix &mFullTransform = Device.mFullTransform;
+
+	float w	= p.x* mFullTransform._14 + p.y* mFullTransform._24 + p.z* mFullTransform._34 + mFullTransform._44;
     if (w<0) return; // culling
 
 	float s = (float)sz;
-	Device.mFullTransform.transform(c,p);
+	mFullTransform.transform(c,p);
+
 	c.x = (float)iFloor(_x2real(c.x)); c.y = (float)iFloor(_y2real(-c.y));
 
 	_VertexStream*	Stream	= &RCache.Vertex;
@@ -768,7 +772,7 @@ void CDrawUtilities::DD_DrawFace_push(const Fvector& p0, const Fvector& p1, cons
 void CDrawUtilities::DD_DrawFace_end()
 {
     DD_DrawFace_flush	(FALSE); 	
-    m_DD_pv_start 		= 0;
+    m_DD_pv_start 		= nullptr;
 }
 //----------------------------------------------------
 
@@ -995,9 +999,11 @@ void CDrawUtilities::DrawAxis(const Fmatrix& T)
     // transform to screen
     float dx=-float(Device.dwWidth)/2.2f;
     float dy=float(Device.dwHeight)/2.25f;
+	Fmatrix &mFullTransform = Device.mFullTransform;
 
-    for (int i=0; i<6; i++,pv++){
-	    pv->color = c[i]; pv->transform(p[i],Device.mFullTransform);
+    for (int i=0; i<6; i++,pv++)
+	{
+	    pv->color = c[i]; pv->transform(p[i], mFullTransform);
 	    pv->p.set((float)iFloor(_x2real(pv->p.x)+dx),(float)iFloor(_y2real(pv->p.y)+dy),0,1);
         p[i].set(pv->p.x,pv->p.y,0);
     }
@@ -1023,15 +1029,18 @@ void CDrawUtilities::DrawObjectAxis(const Fmatrix& T, float sz, BOOL sel)
 {
 	VERIFY( Device.b_is_Ready );
 	_VertexStream*	Stream	= &RCache.Vertex;
+	Fmatrix &mFullTransform = Device.mFullTransform;
+
     Fvector c,r,n,d;
-	float w	= T.c.x*Device.mFullTransform._14 + T.c.y*Device.mFullTransform._24 + T.c.z*Device.mFullTransform._34 + Device.mFullTransform._44;
+	float w	= T.c.x* mFullTransform._14 + T.c.y* mFullTransform._24 + T.c.z* mFullTransform._34 +  mFullTransform._44;
     if (w<0) return; // culling
 
 	float s = w*sz;
-								Device.mFullTransform.transform(c,T.c);
-    r.mul(T.i,s); r.add(T.c); 	Device.mFullTransform.transform(r);
-    n.mul(T.j,s); n.add(T.c); 	Device.mFullTransform.transform(n);
-    d.mul(T.k,s); d.add(T.c); 	Device.mFullTransform.transform(d);
+
+								mFullTransform.transform(c,T.c);
+    r.mul(T.i,s); r.add(T.c); 	mFullTransform.transform(r);
+    n.mul(T.j,s); n.add(T.c); 	mFullTransform.transform(n);
+    d.mul(T.k,s); d.add(T.c); 	mFullTransform.transform(d);
 	c.x = (float)iFloor(_x2real(c.x)); c.y = (float)iFloor(_y2real(-c.y));
     r.x = (float)iFloor(_x2real(r.x)); r.y = (float)iFloor(_y2real(-r.y));
     n.x = (float)iFloor(_x2real(n.x)); n.y = (float)iFloor(_y2real(-n.y));
@@ -1069,15 +1078,15 @@ void CDrawUtilities::DrawGrid()
 	_VertexStream*	Stream	= &RCache.Vertex;
     u32 vBase;
 	// fill VB
-	FVF::L*	pv	= (FVF::L*)Stream->Lock(m_GridPoints.size(),vs_L->vb_stride,vBase);
+	FVF::L*	pv	= (FVF::L*)Stream->Lock((u32)m_GridPoints.size(),vs_L->vb_stride,vBase);
     for (auto v_it=m_GridPoints.begin(); v_it!=m_GridPoints.end(); v_it++,pv++) pv->set(*v_it);
-	Stream->Unlock(m_GridPoints.size(),vs_L->vb_stride);
+	Stream->Unlock((u32)m_GridPoints.size(),vs_L->vb_stride);
 	// Render it as triangle list
     Fmatrix ddd;
     ddd.identity();
     RCache.set_xform_world(ddd);
 	DU_DRAW_SH(dxRenderDeviceRender::Instance().m_WireShader);
-    DU_DRAW_DP(D3DPT_LINELIST,vs_L,vBase,m_GridPoints.size()/2);
+    DU_DRAW_DP(D3DPT_LINELIST,vs_L,vBase, (u32)m_GridPoints.size()/2);
 }
 
 void CDrawUtilities::DrawSelectionRect(const Ivector2& m_SelStart, const Ivector2& m_SelEnd){
@@ -1179,9 +1188,12 @@ void CDrawUtilities::OnRender()
 void CDrawUtilities::OutText(const Fvector& pos, LPCSTR text, u32 color, u32 shadow_color)
 {
 	Fvector p;
-	float w	= pos.x*Device.mFullTransform._14 + pos.y*Device.mFullTransform._24 + pos.z*Device.mFullTransform._34 + Device.mFullTransform._44;
-	if (w>=0){
-		Device.mFullTransform.transform(p,pos);
+	Fmatrix &mFullTransform = Device.mFullTransform;
+
+	float w	= pos.x* mFullTransform._14 + pos.y* mFullTransform._24 + pos.z* mFullTransform._34 +  mFullTransform._44;
+	if (w>=0)
+	{
+		mFullTransform.transform(p,pos);
 		p.x = (float)iFloor(_x2real(p.x)); p.y = (float)iFloor(_y2real(-p.y));
 
 		m_Font->SetColor(shadow_color);

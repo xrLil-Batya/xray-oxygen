@@ -1,10 +1,10 @@
 #pragma once
-#include "../../xrcdb/ispatial.h"
+#include "../../xrCDB/ISpatial.h"
 
 #ifndef ENGINE_BUILD
 #	include "light_package.h"
 #	include "light_smapvis.h"
-#	include "light_GI.h"
+#	include "RenderLightGI.h"
 #endif
 
 class light: public IRender_Light, public ISpatial
@@ -56,7 +56,7 @@ public:
 #endif	//	(RENDER==R_R3) || (RENDER==R_R4)
 
 	u32				m_xform_frame;
-	Fmatrix			m_xform;
+	Fmatrix		m_xform;
 
 	struct _vis		{
 		u32			frame2test;		// frame the test is sheduled to
@@ -67,23 +67,29 @@ public:
 		u16			smap_ID;
 	}				vis;
 
-	union			_xform	{
-		struct		_D		{
-			Fmatrix						combine	;
+	union _xform	
+	{
+		struct _D		
+		{
+			Fmatrix					combine	;
 			s32							minX,maxX	;
 			s32							minY,maxY	;
 			BOOL						transluent	;
 		}	D;
-		struct		_P		{
-			Fmatrix						world		;
-			Fmatrix						view		;
-			Fmatrix						project		;
-			Fmatrix						combine		;
+
+		struct _P		
+		{
+			Fmatrix					world		;
+			Fmatrix					view		;
+			Fmatrix					project		;
+			Fmatrix					combine		;
 		}	P;
-		struct		_S		{
-			Fmatrix						view		;
-			Fmatrix						project		;
-			Fmatrix						combine		;
+
+		struct _S		
+		{
+			Fmatrix					view		;
+			Fmatrix					project		;
+			Fmatrix					combine		;
 			u32							size		;
 			u32							posX		;
 			u32							posY		;
@@ -113,7 +119,7 @@ public:
 	virtual void	set_rotation			(const Fvector& D, const Fvector& R);
 	virtual void	set_cone				(float angle);
 	virtual void	set_range				(float R);
-	virtual void	set_virtual_size		(float R)						{ virtual_size = R; };
+	virtual void	set_virtual_size		(float R)						{ virtual_size = R; }
 	virtual void	set_color				(const Fcolor& C)				{ color.set(C);				}
 	virtual void	set_color				(float r, float g, float b)		{ color.set(r,g,b,1);		}
 	virtual void	set_texture				(LPCSTR name);

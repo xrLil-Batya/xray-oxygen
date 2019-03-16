@@ -150,15 +150,12 @@ int dcTriListCollider::dSortedTriCyl(const dReal* triSideAx0, const dReal* triSi
 	pos[1] += A2 > 0 ? hlz * R[5] : -hlz * R[5];
 	pos[2] += A2 > 0 ? hlz * R[9] : -hlz * R[9];
 
-	ret = 0;
 	contact->pos[0] = pos[0] + A1 * R[0] + A3 * R[2];
 	contact->pos[1] = pos[1] + A1 * R[4] + A3 * R[6];
 	contact->pos[2] = pos[2] + A1 * R[8] + A3 * R[10];
 
-	{
-		contact->depth = outDepth;
-		ret = 1;
-	}
+	contact->depth = outDepth;
+	ret = 1;
 
 	if (dFabs(Q2) > M_SQRT1_2)
 	{
@@ -205,7 +202,10 @@ int dcTriListCollider::dSortedTriCyl(const dReal* triSideAx0, const dReal* triSi
 		CONTACT(contact, i*skip)->normal[2] = norm[2];
 		SURFACE(contact, i*skip)->mode = T->material;
 	}
-	if (ret&&dGeomGetUserData(o1)->callback)dGeomGetUserData(o1)->callback(T, contact);
+
+	if (dGeomGetUserData(o1)->callback)
+		dGeomGetUserData(o1)->callback(T, contact);
+
 	return ret;
 }
 

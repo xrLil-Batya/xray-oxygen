@@ -194,10 +194,10 @@ public:
 
 	virtual void			SetTurnAnimation				(bool turn_left);
 	
-	// установка специфических анимаций 
+	// СѓСЃС‚Р°РЅРѕРІРєР° СЃРїРµС†РёС„РёС‡РµСЃРєРёС… Р°РЅРёРјР°С†РёР№ 
 	virtual	void			CheckSpecParams					(u32 /**spec_params/**/) {}
 	virtual void			ForceFinalAnimation				() {}
-	virtual void			LookPosition					(Fvector to_point, float angular_speed = PI_DIV_3);		// каждый монстр может по-разному реализвать эту функ (e.g. кровосос с поворотом головы и т.п.)
+	virtual void			LookPosition					(Fvector to_point, float angular_speed = PI_DIV_3);		// РєР°Р¶РґС‹Р№ РјРѕРЅСЃС‚СЂ РјРѕР¶РµС‚ РїРѕ-СЂР°Р·РЅРѕРјСѓ СЂРµР°Р»РёР·РІР°С‚СЊ СЌС‚Сѓ С„СѓРЅРє (e.g. РєСЂРѕРІРѕСЃРѕСЃ СЃ РїРѕРІРѕСЂРѕС‚РѕРј РіРѕР»РѕРІС‹ Рё С‚.Рї.)
 
 	// Team	
 	virtual void			ChangeTeam						(int team, int squad, int group);
@@ -228,12 +228,6 @@ public:
 			bool			GetCoverFromEnemy				(const Fvector &enemy_pos, Fvector &position, u32 &vertex_id);
 			bool			GetCoverFromPoint				(const Fvector &pos, Fvector &position, u32 &vertex_id, float min_dist, float max_dist, float radius);
 			bool			GetCoverCloseToPoint			(const Fvector &dest_pos, float min_dist, float max_dist, float deviation, float radius ,Fvector &position, u32 &vertex_id);
-
-
-
-
-
-	// Movement Manager
 protected:
 	CControlPathBuilder			*m_movement_manager;
 protected:
@@ -288,18 +282,12 @@ public:
 	// -----------------------------------------------------------------------------
 	CMonsterEventManager	EventMan;
 	// -----------------------------------------------------------------------------
-
 	CMeleeChecker			MeleeChecker;
 	CMonsterMorale			Morale;
-
 	// -----------------------------------------------------------------------------
-
 	CMonsterCoverManager	*CoverMan;
-
 	// -----------------------------------------------------------------------------
-
 	CControlledEntityBase	*m_controlled;	
-
 	// -----------------------------------------------------------------------------
 	enum EMonsterType {
 		eMonsterTypeUniversal	= u32(0),
@@ -326,9 +314,9 @@ public:
 //	//-----------------------------------------------------------------
 //	// Spawn Inventory Item
 //	//-----------------------------------------------------------------
-//private:
-//	LPCSTR					m_item_section;
-//	float					m_spawn_probability;
+private:
+	LPCSTR					m_item_section;
+	float					m_spawn_probability;
 
 	//--------------------------------------------------------------------
 	// Berserk
@@ -629,8 +617,8 @@ public:
 template <class Type>
 bool   CBaseMonster::get_debug_var (pcstr var_name, OUT Type& result)
 {
-	char*					full_var_name;
-	STRCONCAT				(full_var_name, get_monster_class_name(), "_", var_name);
+	string256					full_var_name;
+	xr_strconcat				(full_var_name, get_monster_class_name(), "_", var_name);
 	return ai_dbg::get_var	(full_var_name, result);
 }
 #endif // DEBUG

@@ -8,18 +8,17 @@
 #include "xrLC_GlobalData.h"
 #include "xrface.h"
 #include "xrlight_implicitcalcglobs.h"
-#include "net_task_callback.h"
 #include "../../xrcdb/xrcdb.h"
+#include "xrHardwareLight.h"
 
 extern "C" bool __declspec(dllimport) __stdcall DXTCompress(LPCSTR out_name, u8* raw_data, u8* normal_map, u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth);
 using Implicit = xr_map<u32, ImplicitDeflector>;
 
-void ImplicitExecute::read(INetReader &r)
+void ImplicitExecute::read(IReader &r)
 {
 	y_start = r.r_u32();
 	y_end = r.r_u32();
 }
-
 void ImplicitExecute::write(IWriter	&w) const
 {
 	R_ASSERT(y_start != (u32(-1)));
@@ -30,13 +29,13 @@ void ImplicitExecute::write(IWriter	&w) const
 
 ImplicitCalcGlobs cl_globs;
 
-void ImplicitExecute::receive_result(INetReader	&r)
+
+void	ImplicitExecute::receive_result(IReader	&r)
 {
 	R_ASSERT(y_start != (u32(-1)));
 	R_ASSERT(y_end != (u32(-1)));
-	ImplicitDeflector& defl = cl_globs.DATA();
+	ImplicitDeflector&		defl = cl_globs.DATA();
 	for (u32 V = y_start; V < y_end; V++)
-	{
 		for (u32 U = 0; U < defl.Width(); U++)
 		{
 
@@ -44,26 +43,22 @@ void ImplicitExecute::receive_result(INetReader	&r)
 			r_pod<u8>(r, defl.Marker(U, V));
 
 		}
-	}
 }
-
-void ImplicitExecute::send_result(IWriter &w) const
+void	ImplicitExecute::send_result(IWriter	&w) const
 {
 	R_ASSERT(y_start != (u32(-1)));
 	R_ASSERT(y_end != (u32(-1)));
-	ImplicitDeflector& defl = cl_globs.DATA();
+	ImplicitDeflector&		defl = cl_globs.DATA();
 	for (u32 V = y_start; V < y_end; V++)
-	{
 		for (u32 U = 0; U < defl.Width(); U++)
 		{
 			w_pod<base_color>(w, defl.Lumel(U, V));
 			w_pod<u8>(w, defl.Marker(U, V));
 		}
-	}
 }
 
 
-void ImplicitExecute::Execute(net_task_callback *net_callback)
+void ImplicitExecute::Execute()
 {
 	R_ASSERT(y_start != (u32(-1)));
 	R_ASSERT(y_end != (u32(-1)));
@@ -85,18 +80,16 @@ void ImplicitExecute::Execute(net_task_callback *net_callback)
 
 	// Lighting itself
 	DB.ray_options(0);
-	for (u32 V = y_start; V<y_end; V++)
+	for (u32 V = y_start; V < y_end; V++)
 	{
-		for (u32 U = 0; U<defl.Width(); U++)
+		for (u32 U = 0; U < defl.Width(); U++)
 		{
-			if (net_callback && !net_callback->test_connection())
-				return;
 			base_color_c	C;
 			u32				Fcount = 0;
+			defl.Marker(U, V) = 0;
 
-			try 
-			{
-				for (u32 J = 0; J<Jcount; J++)
+			try {
+				for (u32 J = 0; J < Jcount; J++)
 				{
 					// LUMEL space
 					Fvector2				P;
@@ -106,9 +99,8 @@ void ImplicitExecute::Execute(net_task_callback *net_callback)
 
 					// World space
 					Fvector wP, wN, B;
-					for (vecFaceIt it = space.begin(); it != space.end(); it++)
+					for (Face* F : space)
 					{
-						Face	*F = *it;
 						_TCF&	tc = F->tc[0];
 						if (tc.isInside(P, B))
 						{
@@ -119,7 +111,15 @@ void ImplicitExecute::Execute(net_task_callback *net_callback)
 							wP.from_bary(V1->P, V2->P, V3->P, B);
 							wN.from_bary(V1->N, V2->N, V3->N, B);
 							wN.normalize();
-							LightPoint(&DB, inlc_global_data()->RCAST_Model(), C, wP, wN, inlc_global_data()->L_static(), (inlc_global_data()->b_skiplmap() ? LP_dont_rgb : 0) | (inlc_global_data()->b_nosun() ? LP_dont_sun : 0), F);
+							if (xrHardwareLight::IsEnabled())
+							{
+								defl.lmap.SurfaceLightRequests.emplace_back(U, V, wP, wN, F);
+								defl.Marker(U, V) = 255;
+							}
+							else
+							{
+								LightPoint(&DB, inlc_global_data()->RCAST_Model(), C, wP, wN, inlc_global_data()->L_static(), (inlc_global_data()->b_nosun() ? LP_dont_sun : 0), F);
+							}
 							Fcount++;
 						}
 					}
@@ -127,47 +127,117 @@ void ImplicitExecute::Execute(net_task_callback *net_callback)
 			}
 			catch (...)
 			{
-				clMsg("* THREAD #%d: Access violation. Possibly recovered.");//,thID
+				Logger.clMsg("* THREAD #%d: Access violation. Possibly recovered.");//,thID
 			}
-			if (Fcount) {
-				// Calculate lighting amount
-				C.scale(Fcount);
-				C.mul(.5f);
-				defl.Lumel(U, V)._set(C);
-				defl.Marker(U, V) = 255;
-			}
-			else 
+
+			if (!xrHardwareLight::IsEnabled())
 			{
-				defl.Marker(U, V) = 0;
+				if (Fcount) {
+					// Calculate lighting amount
+					C.scale(Fcount);
+					C.mul(.5f);
+					defl.Lumel(U, V)._set(C);
+					defl.Marker(U, V) = 255;
+				}
+				else {
+					defl.Marker(U, V) = 0;
+				}
 			}
 		}
-		Progress(float(V - y_start) / float(y_end - y_start));
+		//		thProgress	= float(V - y_start) / float(y_end-y_start);
 	}
+
+	if (xrHardwareLight::IsEnabled())
+	{
+		//cast and finalize
+		if (defl.lmap.SurfaceLightRequests.empty())
+		{
+			return;
+		}
+		xrHardwareLight& HardwareCalculator = xrHardwareLight::Get();
+
+		//pack that shit in to task, but remember order
+		xr_vector <RayRequest> RayRequests;
+		u32 SurfaceCount = defl.lmap.SurfaceLightRequests.size();
+		RayRequests.reserve(SurfaceCount);
+		for (int SurfaceID = 0; SurfaceID < SurfaceCount; ++SurfaceID)
+		{
+			LightpointRequest& LRequest = defl.lmap.SurfaceLightRequests[SurfaceID];
+			RayRequests.push_back(RayRequest{ LRequest.Position, LRequest.Normal, LRequest.FaceToSkip });
+		}
+
+		xr_vector<base_color_c> FinalColors;
+		HardwareCalculator.PerformRaycast(RayRequests, (inlc_global_data()->b_nosun() ? LP_dont_sun : 0) | LP_UseFaceDisable, FinalColors);
+		//HardwareCalculator.PerformRaycast(RayRequests, LP_dont_sun + LP_dont_hemi + LP_UseFaceDisable, FinalColors);
+
+		//finalize rays
+
+		//all that we must remember - we have fucking jitter. And that we don't have much time, because we have tons of that shit
+		u32 SurfaceRequestCursor = 0;
+		u32 AlmostMaxSurfaceLightRequest = defl.lmap.SurfaceLightRequests.size() - 1;
+		for (u32 V = 0; V < defl.lmap.height; V++)
+		{
+			for (u32 U = 0; U < defl.lmap.width; U++)
+			{
+				LightpointRequest& LRequest = defl.lmap.SurfaceLightRequests[SurfaceRequestCursor];
+
+				if (LRequest.X == U && LRequest.Y == V)
+				{
+					//accumulate all color and draw to the lmap
+					base_color_c ReallyFinalColor;
+					int ColorCount = 0;
+					for (;;)
+					{
+						LRequest = defl.lmap.SurfaceLightRequests[SurfaceRequestCursor];
+
+						if (LRequest.X != U || LRequest.Y != V || SurfaceRequestCursor == AlmostMaxSurfaceLightRequest)
+						{
+							ReallyFinalColor.scale(ColorCount);
+							ReallyFinalColor.mul(0.5f);
+							defl.Lumel(U, V)._set(ReallyFinalColor);
+							break;
+						}
+
+						base_color_c& CurrentColor = FinalColors[SurfaceRequestCursor];
+						ReallyFinalColor.add(CurrentColor);
+
+						++SurfaceRequestCursor;
+						++ColorCount;
+					}
+				}
+			}
+		}
+
+		defl.lmap.SurfaceLightRequests.clear();
+	}
+
 }
 
-std::recursive_mutex implicit_net_lock;
+xrCriticalSection implicit_net_lock;
+void ImplicitLightingTreadNetExec(void *p);
 void XRLC_LIGHT_API ImplicitNetWait()
 {
-	implicit_net_lock.lock();
-	implicit_net_lock.unlock();
+	implicit_net_lock.Enter();
+	implicit_net_lock.Leave();
 }
 
 static xr_vector<u32> not_clear;
-void ImplicitLightingExec(BOOL b_net, u32 thCount)
+void ImplicitLightingExec(u32 thCount)
 {
+
 	Implicit		calculator;
 
 	cl_globs.Allocate();
 	not_clear.clear();
 	// Sorting
-	Status("Sorting faces...");
+	Logger.Status("Sorting faces...");
 	for (vecFaceIt I = inlc_global_data()->g_faces().begin(); I != inlc_global_data()->g_faces().end(); I++)
 	{
 		Face* F = *I;
 		if (F->pDeflector)				continue;
 		if (!F->hasImplicitLighting())	continue;
 
-		Progress(float(I - inlc_global_data()->g_faces().begin()) / float(inlc_global_data()->g_faces().size()));
+		Logger.Progress(float(I - inlc_global_data()->g_faces().begin()) / float(inlc_global_data()->g_faces().size()));
 		b_material&		M = inlc_global_data()->materials()[F->dwMaterial];
 		u32				Tid = M.surfidx;
 		b_BuildTexture*	T = &(inlc_global_data()->textures()[Tid]);
@@ -181,53 +251,39 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
 			calculator.insert(std::make_pair(Tid, ImpD));
 			not_clear.push_back(Tid);
 		}
-		else 
-		{
+		else {
 			ImplicitDeflector&	ImpD = it->second;
 			ImpD.faces.push_back(F);
 		}
 	}
 
+
 	// Lighing
-	for (auto& imp: calculator)
+	for (auto& imp : calculator)
 	{
 		ImplicitDeflector& defl = imp.second;
-		Status("Lighting implicit map '%s'...", defl.texture->name);
-		Progress(0);
+		Logger.Status("Lighting implicit map '%s'...", defl.texture->name);
+		Logger.Progress(0);
 		defl.Allocate();
 
 		// Setup cache
-		Progress(0);
+		Logger.Progress(0);
 		cl_globs.Initialize(defl);
-		if (b_net)
-		{
-			lc_net::RunImplicitnet(defl, not_clear);
-		}
-		else
-		{
-			RunImplicitMultithread(defl, thCount);
-		}
+		RunImplicitMultithread(defl, thCount);
+
 		defl.faces.clear();
 
 		// Expand
-		Status("Processing lightmap...");
-		for (u32 ref = 254; ref > 0; ref--)
-		{
-			if (!ApplyBorders(defl.lmap, ref))
-			{
-				break;
-			}
-		}
+		Logger.Status("Processing lightmap...");
+		for (u32 ref = 254; ref > 0; ref--)	if (!ApplyBorders(defl.lmap, ref)) break;
 
-		Status("Mixing lighting with texture...");
+		Logger.Status("Mixing lighting with texture...");
 		{
 			b_BuildTexture& TEX = *defl.texture;
 			VERIFY(TEX.pSurface);
 			u32*			color = TEX.pSurface;
-			for (u32 V = 0; V<defl.Height(); V++) 
-			{
-				for (u32 U = 0; U<defl.Width(); U++) 
-				{
+			for (u32 V = 0; V < defl.Height(); V++) {
+				for (u32 U = 0; U < defl.Width(); U++) {
 					// Retreive Texel
 					float	h = defl.Lumel(U, V).h._r();
 					u32 &C = color[V*defl.Width() + U];
@@ -236,20 +292,21 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
 			}
 		}
 
-		xr_vector<u32> packed;
+		xr_vector<u32>				packed;
 		defl.lmap.Pack(packed);
 		defl.Deallocate();
 
+
 		// base
-		Status("Saving base...");
+		Logger.Status("Saving base...");
 		{
 			string_path				name, out_name;
 			sscanf(strstr(Core.Params, "-f") + 2, "%s", name);
 			R_ASSERT(name[0] && defl.texture);
 			b_BuildTexture& TEX = *defl.texture;
-			strconcat(sizeof(out_name), out_name, name, "\\", TEX.name, ".dds");
+			xr_strconcat(out_name, name, "\\", TEX.name, ".dds");
 			FS.update_path(out_name, "$game_levels$", out_name);
-			clMsg("Saving texture '%s'...", out_name);
+			Logger.clMsg("Saving texture '%s'...", out_name);
 			createPath(out_name);
 			BYTE* raw_data = LPBYTE(TEX.pSurface);
 			u32	w = TEX.dwWidth;
@@ -260,18 +317,18 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
 			fmt.flags.set(STextureParams::flDitherColor, FALSE);
 			fmt.flags.set(STextureParams::flGenerateMipMaps, FALSE);
 			fmt.flags.set(STextureParams::flBinaryAlpha, FALSE);
-			DXTCompress(out_name, raw_data, 0, w, h, pitch, &fmt, 4);
+			DXTCompress(out_name, raw_data, nullptr, w, h, pitch, &fmt, 4);
 		}
 
 		// lmap
-		Status("Saving lmap...");
+		Logger.Status("Saving lmap...");
 		{
 			string_path				name, out_name;
 			sscanf(strstr(GetCommandLine(), "-f") + 2, "%s", name);
 			b_BuildTexture& TEX = *defl.texture;
-			strconcat(sizeof(out_name), out_name, name, "\\", TEX.name, "_lm.dds");
+			xr_strconcat(out_name, name, "\\", TEX.name, "_lm.dds");
 			FS.update_path(out_name, "$game_levels$", out_name);
-			clMsg("Saving texture '%s'...", out_name);
+			Logger.clMsg("Saving texture '%s'...", out_name);
 			createPath(out_name);
 			BYTE* raw_data = LPBYTE(&*packed.begin());
 			u32	w = TEX.dwWidth;
@@ -282,31 +339,25 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
 			fmt.flags.set(STextureParams::flDitherColor, FALSE);
 			fmt.flags.set(STextureParams::flGenerateMipMaps, FALSE);
 			fmt.flags.set(STextureParams::flBinaryAlpha, FALSE);
-			DXTCompress(out_name, raw_data, 0, w, h, pitch, &fmt, 4);
+			DXTCompress(out_name, raw_data, nullptr, w, h, pitch, &fmt, 4);
 		}
 	}
 	not_clear.clear();
 	cl_globs.Deallocate();
 	calculator.clear();
-	if (b_net)
-		inlc_global_data()->clear_build_textures_surface();
 }
 
 void ImplicitLightingTreadNetExec(void *p)
 {
-	std::lock_guard<std::recursive_mutex> lock(implicit_net_lock);
-	ImplicitLightingExec(TRUE, 2);
+	xrCriticalSectionGuard guard(implicit_net_lock);
+	ImplicitLightingExec(2);
 }
 
-void ImplicitLighting(BOOL b_net, u32 thCount)
+void ImplicitLighting(u32 thCount)
 {
 	if (g_params().m_quality != ebqDraft)
 	{
-		if (!b_net)
-		{
-			ImplicitLightingExec(FALSE, thCount);
-			return;
-		}
-		thread_spawn(ImplicitLightingTreadNetExec, "worker-thread", 1024 * 1024, 0);
+		ImplicitLightingExec(thCount);
+		return;
 	}
 }

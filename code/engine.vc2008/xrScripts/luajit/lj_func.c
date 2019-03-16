@@ -1,13 +1,13 @@
 /*
 ** Function handling (prototypes, functions and upvalues).
-** Copyright (C) 2005-2015 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2017 Mike Pall. See Copyright Notice in luajit.h
 **
 ** Portions taken verbatim or adapted from the Lua interpreter.
 ** Copyright (C) 1994-2008 Lua.org, PUC-Rio. See Copyright Notice in lua.h
 */
 
 #define lj_func_c
-
+#define LUA_CORE
 
 #include "lj_obj.h"
 #include "lj_gc.h"
@@ -141,8 +141,8 @@ GCfunc *lj_func_newL_empty(lua_State *L, GCproto *pt, GCtab *env)
   for (i = 0; i < nuv; i++) {
     GCupval *uv = func_emptyuv(L);
     int32_t v = proto_uv(pt)[i];
-	uv->immutable = ((v / PROTO_UV_IMMUTABLE) & 1);
-	uv->dhash = (uint32_t)(uintptr_t)pt ^ (v << 24);
+    uv->immutable = ((v / PROTO_UV_IMMUTABLE) & 1);
+    uv->dhash = (uint32_t)(uintptr_t)pt ^ (v << 24);
     setgcref(fn->l.uvptr[i], obj2gco(uv));
   }
   fn->l.nupvalues = (uint8_t)nuv;

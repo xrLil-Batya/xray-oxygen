@@ -99,7 +99,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalOptions>/ignore:4248 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/ignore:4248 /LTCG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>
       </AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\sdk\libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -108,7 +108,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>..\..\..\libraries\$(ProjectName).lib</ImportLibrary>
+      <ImportLibrary>$(xrLib)$(ProjectName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -138,6 +138,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(ProjectName).lib</ImportLibrary>
       <AssemblyDebug>true</AssemblyDebug>
+      <AdditionalOptions>/ignore:4248 /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
@@ -167,6 +168,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(ProjectName).lib</ImportLibrary>
       <AssemblyDebug>true</AssemblyDebug>
+      <AdditionalOptions>/ignore:4248 /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -301,6 +303,10 @@
     <ClCompile Include="ide_impl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\engine.vc2008\Include\editor\engine.hpp" />
+    <ClInclude Include="..\..\engine.vc2008\Include\editor\ide.hpp" />
+    <ClInclude Include="..\..\engine.vc2008\Include\editor\interfaces.hpp" />
+    <ClInclude Include="..\..\engine.vc2008\Include\editor\property_holder.hpp" />
     <ClInclude Include="window_ide.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -321,10 +327,6 @@
     </ClInclude>
     <ClInclude Include="engine_include.hpp" />
     <ClInclude Include="pch.hpp" />
-    <ClInclude Include="..\Include\editor\engine.hpp" />
-    <ClInclude Include="..\Include\editor\ide.hpp" />
-    <ClInclude Include="..\Include\editor\interfaces.hpp" />
-    <ClInclude Include="..\Include\editor\property_holder.hpp" />
     <ClInclude Include="property_holder_include.hpp" />
     <ClInclude Include="property_boolean_values_value.hpp" />
     <ClInclude Include="property_converter_boolean_values.hpp" />
@@ -420,15 +422,6 @@
       <DependentUpon>window_tree_values.h</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\xrCore\xrCore.vcxproj">
-      <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\xrSdkControls\xrSdkControls.csproj">
-      <Project>{e9dc16a3-d0fa-4924-af6e-f6fdf3ea0661}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

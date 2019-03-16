@@ -12,18 +12,17 @@ public:
 
 	virtual		void		Compile			(CBlender_Compile& C)
 	{
-		C.r_Pass			("sky2",		"sky2",			FALSE,	TRUE, FALSE);
-#if defined(USE_DX10) || defined(USE_DX11)
+		C.r_Pass			("sky2",		"sky2",			FALSE, FALSE, FALSE);
+#ifdef USE_DX11
 		C.r_dx10Texture		("s_sky0",		"$null"			);
 		C.r_dx10Texture		("s_sky1",		"$null"			);
 		C.r_dx10Sampler		("smp_rtlinear");
 		C.r_dx10Texture		("s_tonemap",	"$user$tonemap"	);	//. hack
-		C.PassSET_ZB(FALSE, FALSE);
-#else	//	USE_DX10
+#else
 		C.r_Sampler_clf		("s_sky0",		"$null"			);
 		C.r_Sampler_clf		("s_sky1",		"$null"			);
 		C.r_Sampler_rtf		("s_tonemap",	"$user$tonemap"	);	//. hack
-#endif	//	USE_DX10
+#endif
 		C.r_End				();
 	}
 };
@@ -49,7 +48,7 @@ public:
 
 	virtual void Destroy();
 	virtual void Clear();
-	virtual void lerp(IEnvDescriptorRender *inA, IEnvDescriptorRender *inB);
+	virtual void Lerp(IEnvDescriptorRender *inA, IEnvDescriptorRender *inB);
 //private:
 public:
 	STextureList		sky_r_textures;		

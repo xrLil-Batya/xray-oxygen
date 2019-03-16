@@ -26,11 +26,6 @@
 
 extern void	setup_location_types_line	(GameGraph::TERRAIN_VECTOR &m_vertex_types, LPCSTR string);
 
-CSE_ALifeItemWeapon *CSE_ALifeOnlineOfflineGroup::tpfGetBestWeapon		(ALife::EHitType &tHitType, float &fHitPower)
-{
-	return						(0);
-}
-
 ALife::EMeetActionType CSE_ALifeOnlineOfflineGroup::tfGetActionType		(CSE_ALifeSchedulable *tpALifeSchedulable, int iGroupIndex, bool bMutualDetection)
 {
 	return						(ALife::eMeetActionTypeIgnore);

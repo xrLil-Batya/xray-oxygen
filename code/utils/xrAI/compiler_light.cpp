@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "compiler.h"
 #include "cl_intersect.h"
-#include "xrThread.h"
 #include <mmsystem.h>
 
 const int	LIGHT_Count			=2;
@@ -25,7 +24,6 @@ IC bool RayPick(CDB::COLLIDER& DB, Fvector& P, Fvector& D, float r, R_Light& L)
 	} else {
 		// cache polygon
 		CDB::RESULT&	rpinf	= *DB.r_begin();
-//		CDB::TRI&		T		= Level.get_tris()[rpinf.id];
 		L.tri[0].set	(rpinf.verts[0]);
 		L.tri[1].set	(rpinf.verts[1]);
 		L.tri[2].set	(rpinf.verts[2]);
@@ -77,103 +75,69 @@ class	LightThread : public CThread
 {
 	u32	Nstart, Nend;
 public:
-	LightThread			(u32 ID, u32 _start, u32 _end) : CThread(ID)
+	LightThread(u32 ID, u32 _start, u32 _end) : CThread(ID, ProxyMsg)
 	{
-		Nstart	= _start;
-		Nend	= _end;
+		Nstart = _start;
+		Nend = _end;
 	}
-	virtual void		Execute()
+
+	virtual void Execute()
 	{
 		CDB::COLLIDER DB;
-		DB.ray_options	(CDB::OPT_ONLYFIRST);
+		DB.ray_options(CDB::OPT_ONLYFIRST);
 
 		xr_vector<R_Light>	Lights = g_lights;
 
-		Fvector			P,D,PLP;
-		D.set			(0,1,0);
-		float coeff		= 0.5f*g_params.fPatchSize/float(LIGHT_Count);
-		
-		LSelection		Selected;
-		float			LperN	= float(g_lights.size());
-		for (u32 i=Nstart; i<Nend; i++)
+		Fvector P, D, PLP;
+		D.set(0, 1, 0);
+		float coeff = 0.5f*g_params.fPatchSize / float(LIGHT_Count);
+
+		LSelection Selected;
+		float LperN = float(g_lights.size());
+		for (u32 i = Nstart; i < Nend; i++)
 		{
 			vertex& N = g_nodes[i];
-			
+
 			// select lights
 			Selected.clear();
-			for (u32 L=0; L<Lights.size(); L++)
+			for (u32 L = 0; L < Lights.size(); L++)
 			{
-				R_Light&	R = g_lights[L];
-				if (R.type==LT_DIRECT)	Selected.push_back(&R);
-				else {
+				R_Light& R = g_lights[L];
+				if (R.type == LT_DIRECT)
+				{
+					Selected.push_back(&R);
+				}
+				else 
+				{
 					float dist = N.Pos.distance_to(R.position);
-					if (dist-g_params.fPatchSize < R.range)
+					if (dist - g_params.fPatchSize < R.range)
 						Selected.push_back(&R);
 				}
 			}
 			LperN = 0.9f*LperN + 0.1f*float(Selected.size());
-			
+
 			// lighting itself
-			float amount=0;
-			for (int x=-LIGHT_Count; x<=LIGHT_Count; x++) 
+			float amount = 0;
+			for (int x = -LIGHT_Count; x <= LIGHT_Count; x++)
 			{
-				P.x = N.Pos.x + coeff*float(x);
-				for (int z=-LIGHT_Count; z<=LIGHT_Count; z++) 
+				P.x = N.Pos.x + coeff * float(x);
+				for (int z = -LIGHT_Count; z <= LIGHT_Count; z++)
 				{
 					// compute position
-					P.z = N.Pos.z + coeff*float(z);
+					P.z = N.Pos.z + coeff * float(z);
 					P.y = N.Pos.y;
-					N.Plane.intersectRayPoint(P,D,PLP);	// "project" position
+					N.Plane.intersectRayPoint(P, D, PLP);	// "project" position
 					P.y = PLP.y;
-					
+
 					// light point
-					amount += LightPoint(DB,P,N.Plane.n,Selected);
+					amount += LightPoint(DB, P, N.Plane.n, Selected);
 				}
 			}
-			
+
 			// calculation of luminocity
-			N.LightLevel	= amount/float(LIGHT_Total);
-			
-			thProgress		= float(i-Nstart)/float(Nend-Nstart);
+			N.LightLevel = amount / float(LIGHT_Total);
+
+			thProgress = float(i - Nstart) / float(Nend - Nstart);
 		}
 	}
 };
-
-#define NUM_THREADS	8
-void	xrLight			()
-{
-	// Start threads, wait, continue --- perform all the work
-	/*
-	u32	start_time		= timeGetTime();
-	CThreadManager			Threads;
-	u32	stride			= g_nodes.size()/NUM_THREADS;
-	u32	last			= g_nodes.size()-stride*(NUM_THREADS-1);
-	for (u32 thID=0; thID<NUM_THREADS; thID++)
-		Threads.start(xr_new<LightThread>(thID,thID*stride,thID*stride+((thID==(NUM_THREADS-1))?last:stride)));
-	Threads.wait			();
-	Msg("%d seconds elapsed.",(timeGetTime()-start_time)/1000);
-
-	// Smooth
-	Status("Smoothing lighting...");
-	for (int pass=0; pass<3; pass++) {
-		Nodes	Old = g_nodes;
-		for (u32 N=0; N<g_nodes.size(); N++)
-		{
-			vertex&	Base		= Old[N];
-			vertex&	Dest		= g_nodes[N];
-			
-			float	val			= 2*Base.LightLevel;
-			float	cnt			= 2;
-			
-			for (int nid=0; nid<4; nid++) {
-				if (Base.n[nid]!=InvalidNode) {
-					val		+=  Old[Base.n[nid]].LightLevel;
-					cnt		+=	1.f;
-				}
-			}
-			Dest.LightLevel		= 0;	// val/cnt;		//.disable lighting
-			clamp(Dest.LightLevel,0.f,1.f);
-		}
-	}
-	*/
-}

@@ -72,10 +72,11 @@ void CScriptBinderObject::net_Relcase		(CScriptGameObject *object)
 #include "../xrScripts/export/script_export_space.h"
 #include "script_binder_object_wrapper.h"
 #include "xrServer_Objects_ALife.h"
+#include <luabind/luabind.hpp>
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CScriptBinderObject::script_register(lua_State *L)
 {
 	module(L)

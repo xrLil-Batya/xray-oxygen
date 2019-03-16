@@ -16,11 +16,11 @@
 #include "detail_path_manager_space.h"
 #include "stalker_movement_manager_smart_cover.h"
 #include "inventory.h"
-#include "weapon.h"
-#include "xr_level_controller.h"
+#include "items/weapon.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "clsid_game.h"
 #include "characterphysicssupport.h"
-#include "weaponmagazined.h"
+#include "items/WeaponMagazined.h"
 #include "../FrayBuildConfig.hpp"
 
 using namespace StalkerDecisionSpace;

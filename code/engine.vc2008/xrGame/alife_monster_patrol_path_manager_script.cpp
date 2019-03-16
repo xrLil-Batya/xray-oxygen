@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "alife_monster_patrol_path_manager.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 Fvector CALifeMonsterPatrolPathManager__target_position	(CALifeMonsterPatrolPathManager *self)
@@ -17,7 +18,7 @@ Fvector CALifeMonsterPatrolPathManager__target_position	(CALifeMonsterPatrolPath
 	return	(self->target_position());
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CALifeMonsterPatrolPathManager::script_register	(lua_State *L)
 {
 	module(L)

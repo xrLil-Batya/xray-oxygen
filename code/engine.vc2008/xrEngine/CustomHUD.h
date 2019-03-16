@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 ENGINE_API extern Flags32		psHUD_Flags;
 #define HUD_CROSSHAIR			(1<<0)

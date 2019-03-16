@@ -221,7 +221,7 @@ void	CKinematicsAnimated::LL_FadeCycle(u16 part, float falloff, u8 mask_channel 
 		B.set_falloff_state();
 		B.blendFalloff		= falloff;
 		//B.blendAccrue		= B.timeCurrent;
-		if (B.stop_at_end)  B.stop_at_end_callback = FALSE;		// callback не должен приходить!
+		if (B.stop_at_end)  B.stop_at_end_callback = FALSE;		// callback РЅРµ РґРѕР»Р¶РµРЅ РїСЂРёС…РѕРґРёС‚СЊ!
 	}
 }
 void	CKinematicsAnimated::LL_CloseCycle(u16 part, u8 mask_channel /*= (1<<0)*/)
@@ -782,9 +782,8 @@ void CKinematicsAnimated::Load(const char* N, IReader *data, u32 dwFlags)
     }else    
 	{
 		string_path	nm;
-		strconcat			(sizeof(nm),nm,N,".ogf");
-		m_Motions.push_back(SMotionsSlot());
-		m_Motions.back().motions.create(nm,data,bones);
+		xr_strconcat		(nm,N,".ogf");
+		m_Motions.emplace_back().motions.create(nm, data, bones);
     }
 
     R_ASSERT				(m_Motions.size());
@@ -880,7 +879,7 @@ void	CKinematicsAnimated::LL_BoneMatrixBuild	( CBoneInstance &bi, const Fmatrix 
 		float box_size = 100000.f;
 		dbg_box.set( -box_size, -box_size, -box_size, box_size, box_size, box_size );
 		//VERIFY(dbg_box.contains(bi.mTransform.c));
-		VERIFY2( dbg_box.contains(bi.mTransform.c), ( make_string( "model: %s has strange bone position, matrix : ", getDebugName().c_str() ) + get_string( bi.mTransform ) ).c_str() );
+		VERIFY_FORMAT( dbg_box.contains(bi.mTransform.c), "model: %s has strange bone position, matrix : %s", getDebugName().c_str(), get_string(bi.mTransform).c_str());
 
 		//if(!is_similar(PrevTransform,RES,0.3f))
 		//{

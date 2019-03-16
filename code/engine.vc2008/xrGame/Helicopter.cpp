@@ -10,16 +10,16 @@
 #include "game_object_space.h"
 #include "script_game_object.h"
 #include "../xrEngine/LightAnimLibrary.h"
-//#include "physicscommon.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
+
 //50fps fixed
 float STEP=0.02f;
 
 CHelicopter::CHelicopter()
 {
-	m_pParticle		= NULL;
-	m_light_render	= NULL;
-	m_lanim			= NULL;
+	m_pParticle		= nullptr;
+	m_light_render	= nullptr;
+	m_lanim			= nullptr;
 
 	ISpatial*		self				=	smart_cast<ISpatial*> (this);
 	if (self)		self->spatial.type  |=  STYPE_VISIBLEFORAI;
@@ -47,10 +47,10 @@ void CHelicopter::init()
 	m_tgt_rot.set				(0.0f,0.0f);
 	m_bind_rot.set				(0.0f,0.0f);
 
-	m_allow_fire				= FALSE;
-	m_use_rocket_on_attack		= TRUE;
-	m_use_mgun_on_attack		= TRUE;	
-	m_syncronize_rocket			= TRUE;
+	m_allow_fire				= false;
+	m_use_rocket_on_attack		= true;
+	m_use_mgun_on_attack		= true;	
+	m_syncronize_rocket			= true;
 	m_min_rocket_dist			= 20.0f;
 	m_max_rocket_dist			= 200.0f;
 	m_time_between_rocket_attack = 0;
@@ -322,10 +322,10 @@ void CHelicopter::MoveStep()
 		m_movement.curLinearSpeed += m_movement.curLinearAcc*STEP;
 		static bool aaa = false;
 		if(aaa)
-			Log("1-m_movement.curLinearSpeed=",m_movement.curLinearSpeed);
+			Msg("1-m_movement.curLinearSpeed=%f",m_movement.curLinearSpeed);
 		clamp(m_movement.curLinearSpeed,0.0f,1000.0f);
 		if(aaa)
-			Log("2-m_movement.curLinearSpeed=",m_movement.curLinearSpeed);
+			Msg("2-m_movement.curLinearSpeed=%f",m_movement.curLinearSpeed);
 	}else{ //go stopping
 		if( !fis_zero(m_movement.curLinearSpeed) ){
 			m_movement.curLinearAcc = -m_movement.LinearAcc_bk;

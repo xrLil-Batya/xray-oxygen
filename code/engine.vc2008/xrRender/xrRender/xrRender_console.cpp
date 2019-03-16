@@ -1,8 +1,14 @@
 #include	"stdafx.h"
 #pragma		hdrstop
 
-#include	"xrRender_console.h"
-#include	"dxRenderDeviceRender.h"
+#include "xrRender_console.h"
+#include "dxRenderDeviceRender.h"
+#include "../../xrEngine/XR_IOConsole.h"
+#include "../../xrEngine/xr_ioc_cmd.h"
+#include "../../xrEngine/xr_ioc_cmd_ex.h"
+
+// Hack for License Box
+int SkipLicenseWND = false;
 
 // Common
 u32	ps_r_smapsize = 2048;
@@ -22,16 +28,12 @@ u32 ps_r_sunshafts_mode = 0;
 xr_token sunshafts_mode_token[] = 
 {
     { "volumetric",		SS_VOLUMETRIC	},
-	{ "screen_space",	SS_SCREEN_SPACE },
-#if defined(USE_DX10) || defined(USE_DX11)
-	//#TODO: Refactor all render and make mrmnwar rays
-#else
-	{ "manowar_ssss",	SS_MANOWAR_SS },
-#endif
+	{ "ss_ogse",		SS_SS_OGSE		},
+	{ "ss_manowar",		SS_SS_MANOWAR	},
     { 0,				0 }
 };
 
-
+u32 ps_GlowsPerFrame = 16;
 
 u32 ps_Preset =	2;
 xr_token qpreset_token[] =
@@ -70,7 +72,7 @@ xr_token qssao_token[] =
 	{ "st_opt_low",		1	},
 	{ "st_opt_medium",	2	},
 	{ "st_opt_high",	3	},
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	{ "st_opt_ultra",	4	},
 #endif
 	{ 0,				0	}
@@ -82,10 +84,10 @@ xr_token qsun_quality_token[] =
 	{ "st_opt_low",		0	},
 	{ "st_opt_medium",	1	},
 	{ "st_opt_high",	2	},
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	{ "st_opt_ultra",	3	},
 	{ "st_opt_extreme",	4	},
-#endif	//	USE_DX10
+#endif
 	{ 0,				0	}
 };
 
@@ -100,20 +102,44 @@ xr_token qbokeh_quality_token[] =
     { 0,				0	}
 };
 
+u32 ps_r_pp_aa_mode = 0;
+xr_token pp_aa_mode_token[] =
+{
+	{ "st_opt_fxaa",	FXAA	},
+	{ "st_opt_dlaa",	DLAA	},
+	{ "st_opt_smaa",	SMAA	},
+	{ 0,				0		},
+};
+
+u32 ps_r_pp_aa_quality = 0;
+xr_token pp_aa_quality_token[] =
+{
+	{ "st_opt_off",		0	},
+    { "st_opt_low",		1	},
+    { "st_opt_medium",	2	},
+    { "st_opt_high",	3	},
+    { "st_opt_ultra",	4	},
+    { 0,				0	}
+};
+
+BOOL SkyGodEdition						= false;
+
+namespace Diffuse
+{
+	float ps_r_gloss_factor = 3.f;
+}
 
 int			ps_rs_loading_stages		= 0;
-float		droplets_power_debug		= 0.f;
+extern ENGINE_API float ps_r_sunshafts_intensity;
 
+int			ps_r_pp_aa_use_taa			= 0;
 int			ps_r_Supersample			= 1;
 int			ps_r_LightSleepFrames		= 10;
 int			ps_r_SkeletonUpdate			= 32;
 float		ps_r_pps_u					= 0.0f;
 float		ps_r_pps_v					= 0.0f;
-int			ps_r_fxaa					= 0;
 float		ps_r_mblur					= 0.0f;
-float		ps_r_gloss_factor			= 0.03f;
 float		ps_r_gmaterial				= 2.2f;
-float		ps_r_zfill					= 0.25f;			// .1f
 int			ps_r_wait_sleep				= 0;
 
 // Textures
@@ -227,9 +253,9 @@ Flags32	ps_r_flags =
 	| R_FLAG_STEEP_PARALLAX
 	| R_FLAG_SUN_FOCUS
 	| R_FLAG_SUN_TSM
-	| R_FLAG_TONEMAP
 	| R_FLAG_MBLUR
 	| R_FLAG_VOLUMETRIC_LIGHTS
+	| R_FLAG_GLOW_USE
 };	// r2-only
 
 Flags32	ps_r_ssao_flags = 
@@ -237,6 +263,11 @@ Flags32	ps_r_ssao_flags =
 	R_FLAG_SSAO_HALF_DATA
 };
 
+ECORE_API Flags32 ps_r_postscreen_flags = 
+{
+	R_FLAG_TONEMAP
+	| R_FLAG_RAIN_DROPS
+};
 
 // R3-specific /////////////////////////////////////////////////////
 u32 ps_r3_msaa = 0;
@@ -279,7 +310,6 @@ Flags32	ps_r3_flags =
 	| R3_FLAG_VOLUMETRIC_SMOKE
 	//| R3_FLAG_MSAA 
 	//| R3_FLAG_MSAA_OPT
-	| R3_FLAG_GBUFFER_OPT
 };
 
 // R4-specific /////////////////////////////////////////////////////
@@ -295,9 +325,9 @@ Flags32	ps_r4_flags =
 #include	"../../xrEngine/xr_ioconsole.h"
 #include	"../../xrEngine/xr_ioc_cmd.h"
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 #include "../xrRenderDX10/StateManager/dx10SamplerStateCache.h"
-#endif	//	USE_DX10
+#endif
 
 //-----------------------------------------------------------------------
 // KD
@@ -335,12 +365,12 @@ public:
 
 		int	val = *value;
 		clamp(val, 1, 16);
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		SSManager.SetMaxAnisotropy(val);
-#else	//	USE_DX10
+#else
 		for (u32 i=0; i<HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState( i, D3DSAMP_MAXANISOTROPY, val));
-#endif	//	USE_DX10
+#endif
 	}
 	CCC_tf_Aniso(LPCSTR N, int*	v) : CCC_Integer(N, v, 1, 16) {};
 	virtual void Execute	(LPCSTR args)
@@ -362,12 +392,12 @@ public:
 		if (0==HW.pDevice)
 			return;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		SSManager.SetMipLODBias(*value);
-#else	//	USE_DX10
+#else
 		for (u32 i=0; i<HW.Caps.raster.dwStages; i++)
 			CHK_DX(HW.pDevice->SetSamplerState( i, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD) value)));
-#endif	//	USE_DX10
+#endif
 	}
 
 	CCC_tf_MipBias(LPCSTR N, float*	v) : CCC_Float(N, v, -3.0f, 3.0f) {};
@@ -410,13 +440,12 @@ public:
 class CCC_Screenshot : public IConsole_Command
 {
 public:
-	CCC_Screenshot(LPCSTR N) : IConsole_Command(N) {};
+	CCC_Screenshot(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; }
 	virtual void Execute(LPCSTR args)
 	{
 		string_path	name; name[0] = 0;
-		sscanf		(args,"%s",	name);
-		LPCSTR		image = xr_strlen(name)?name:0;
-		::Render->Screenshot(IRender_interface::SM_NORMAL,image);
+		sscanf(args,"%s", name);
+		::Render->Screenshot(IRender_interface::SM_NORMAL, xr_strlen(name) ? name : nullptr);
 	}
 };
 
@@ -509,7 +538,7 @@ public:
 			case 4:		xr_strcpy(_cfg, "rspec_extreme.ltx");	break;
 		}
 		FS.update_path(_cfg,"$game_config$",_cfg);
-		strconcat(sizeof(cmd), cmd, "cfg_load", " ", _cfg);
+		xr_strconcat( cmd, "cfg_load", " ", _cfg);
 		Console->Execute(cmd);
 	}
 };
@@ -521,11 +550,11 @@ public:
 	CCC_BuildSSA(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
 	virtual void Execute(LPCSTR args) 
 	{
-#if !defined(USE_DX10) && !defined(USE_DX11)
-		//	TODO: DX10: Implement pixel calculator
+#ifndef USE_DX11
+		//	TODO: DX11: Implement pixel calculator
 		r_pixel_calculator c;
 		c.run();
-#endif	//	USE_DX10
+#endif
 	}
 };
 
@@ -627,7 +656,7 @@ public:
 class CCC_Dof : public CCC_Vector3
 {
 public:
-	CCC_Dof(LPCSTR N, Fvector* V, const Fvector _min, const Fvector _max) : CCC_Vector3(N, V, _min, _max) {};
+	CCC_Dof(LPCSTR N, Fvector* V, const Fvector &_min, const Fvector &_max) : CCC_Vector3(N, V, _min, _max) {};
 
 	virtual void Execute(LPCSTR args)
 	{
@@ -693,6 +722,18 @@ public:
 #endif	//	DEBUG
 #endif	//	(RENDER == R_R3) || (RENDER == R_R4)
 
+#ifdef DEBUG
+class CCC_SaveGammaLUT : public IConsole_Command
+{
+public:
+	CCC_SaveGammaLUT(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; }
+	virtual void Execute(LPCSTR args)
+	{
+		RImplementation.Target->SaveGammaLUT();
+	}
+};
+#endif
+
 //-----------------------------------------------------------------------
 void xrRender_initconsole()
 {
@@ -701,10 +742,12 @@ void xrRender_initconsole()
 	CMD4(CCC_Integer,	"rs_skeleton_update",	&ps_r_SkeletonUpdate,		2,		128		);
 #ifdef DEBUG
 	CMD1(CCC_DumpResources,	"dump_resources");
+	CMD1(CCC_SaveGammaLUT,	"r_dbg_save_gamma_lut");
 #endif
 
 	// Common
 	CMD1(CCC_Screenshot,"screenshot"			);
+	CMD3(CCC_Mask, "screenshot_use_gamma_correction", &ps_r_postscreen_flags, R_FLAG_SS_GAMMA_CORRECTION);
 
 	// Igor: just to test bug with rain/particles corruption
 	CMD1(CCC_RestoreQuadIBData,	"r_restore_quad_ib_data");
@@ -733,13 +776,24 @@ void xrRender_initconsole()
 
 	CMD4(CCC_Float,		"r_wallmark_ttl",		&ps_r_WallmarkTTL,			1.0f,	5.f*60.f);
 	CMD3(CCC_Mask,		"r_allow_r1_lights",	&ps_r_flags,				R_FLAG_R1LIGHTS	);
-	CMD4(CCC_Integer,	"r_supersample",		&ps_r_Supersample,			1,		8		);
-	CMD4(CCC_Integer,	"r_fxaa",				&ps_r_fxaa,					0,		1		);
 	CMD2(CCC_R2GM,		"r_em",					&ps_r_gmaterial								);
-	CMD4(CCC_Float,		"r_gloss_factor",		&ps_r_gloss_factor,			0.0f,	10.0f	);
+	CMD4(CCC_Float,		"r_gloss_factor",		&Diffuse::ps_r_gloss_factor,1.0f,	12.0f	);
 	CMD4(CCC_Integer,	"r_wait_sleep",			&ps_r_wait_sleep,			0,		1		);
 	CMD3(CCC_Mask,		"r_volumetric_lights",	&ps_r_flags,				R_FLAG_VOLUMETRIC_LIGHTS);
-	CMD4(CCC_Float,     "r_rain_drops_power_debug",&droplets_power_debug,	0.0f, 3.0f		);
+
+	// Anti-aliasing
+	CMD4(CCC_Integer,	"r_supersample",		&ps_r_Supersample,			1,		8		); // doesn't work
+	CMD3(CCC_Token,		"r_aa_mode",			&ps_r_pp_aa_mode,			pp_aa_mode_token);
+	CMD3(CCC_Token,		"r_aa_quality",			&ps_r_pp_aa_quality,		pp_aa_quality_token);
+	CMD4(CCC_Integer,	"r_aa_taa",				&ps_r_pp_aa_use_taa,		0,		1);
+
+	// Rain droplets on visor
+	CMD3(CCC_Mask,		"r_rain_droplets",		&ps_r_postscreen_flags,		R_FLAG_RAIN_DROPS);
+
+	// Vignette
+	CMD3(CCC_Mask,		"r_vignette",			&ps_r_postscreen_flags,		R_FLAG_VIGNETTE);
+	CMD3(CCC_Mask,		"r_chromatic_aberr",	&ps_r_postscreen_flags,		R_FLAG_CHROMATIC);
+	CMD3(CCC_Mask,		"r_color_grading",		&ps_r_postscreen_flags,		R_FLAG_GRADING);
 
 	// Shadows
 	CMD3(CCC_Token,		"r_shadow_map_size",	&ps_r_smapsize,				q_smapsize_token);
@@ -763,9 +817,10 @@ void xrRender_initconsole()
 	CMD2(CCC_tf_Aniso,	"r_tf_aniso",			&ps_r_tf_Anisotropic						); //	{1..16}
 	CMD2(CCC_tf_MipBias,"r_tf_mipbias",			&ps_r_tf_Mipbias							); //	{-3..3}
 	CMD4(CCC_Float,		"r_dtex_range",			&ps_r_dtex_range,			5,		175		);
+	CMD4(CCC_Integer,	"r_lic_box",			&SkipLicenseWND,			0,		1 		);
 
 	// Tonemap
-	CMD3(CCC_Mask,		"r_tonemap",			&ps_r_flags,				R_FLAG_TONEMAP	);
+	CMD3(CCC_Mask,		"r_tonemap",			&ps_r_postscreen_flags,		R_FLAG_TONEMAP	);
 	CMD4(CCC_Float,		"r_tonemap_middlegray",	&ps_r_tonemap_middlegray,	0.0f,	2.0f	);
 	CMD4(CCC_Float,		"r_tonemap_adaptation",	&ps_r_tonemap_adaptation,	0.01f,	10.0f	);
 	CMD4(CCC_Float,		"r_tonemap_lowlum",		&ps_r_tonemap_low_lum,		0.0001f,1.0f	);
@@ -787,14 +842,14 @@ void xrRender_initconsole()
 	CMD4(CCC_Float,		"r_ls_fade",			&ps_r_ls_fade,				0.2f,	1.0f	);
 
 	// Z-Fill
-	CMD3(CCC_Mask,		"r_zfill",				&ps_r_flags,				R_FLAG_ZFILL	);
-	CMD4(CCC_Float,		"r_zfill_depth",		&ps_r_zfill,				0.001f,	0.5f	);
+	CMD3(CCC_Mask,		"r_exp_splitscene",	&ps_r_flags,				R_FLAG_EXP_SPLIT_SCENE);
 
 	// Sun
 	CMD3(CCC_Mask,		"r_sun",				&ps_r_flags,				R_FLAG_SUN		);
 	CMD3(CCC_Token,		"r_sun_quality",		&ps_r_sun_quality,			qsun_quality_token);
 	CMD3(CCC_Mask,		"r_sun_focus",			&ps_r_flags,				R_FLAG_SUN_FOCUS);
 	CMD3(CCC_Mask,		"r_sun_shadow_cascede_old", &ps_r_flags,			R_FLAG_SUN_OLD);
+	CMD3(CCC_Mask,		"r_glows_use",			&ps_r_flags,				R_FLAG_GLOW_USE);
 	CMD3(CCC_Mask,		"r_sun_tsm",			&ps_r_flags,				R_FLAG_SUN_TSM	);
 	CMD4(CCC_Float,		"r_sun_tsm_proj",		&ps_r_sun_tsm_projection,	0.001f,	0.8f	);
 	CMD4(CCC_Float,		"r_sun_tsm_bias",		&ps_r_sun_tsm_bias,			-0.5f,	0.5f	);
@@ -874,7 +929,6 @@ void xrRender_initconsole()
 
 	// MSAA
 	CMD3(CCC_Token,		"r3_msaa",						&ps_r3_msaa,				qmsaa_token);
-	CMD3(CCC_Mask,		"r3_gbuffer_opt",				&ps_r3_flags,				R3_FLAG_GBUFFER_OPT);
 	CMD3(CCC_Mask,		"r3_use_dx10_1",				&ps_r3_flags,				R3_FLAG_USE_DX10_1);
 	CMD3(CCC_Token,		"r3_msaa_alphatest",			&ps_r3_msaa_atest,			qmsaa_atest_token);
 	CMD3(CCC_Token,		"r3_minmax_sm",					&ps_r3_minmax_sm,			qminmax_sm_token);
@@ -889,10 +943,9 @@ void xrRender_initconsole()
 	// R4-specific /////////////////////////////////////////////////////
 	CMD3(CCC_Mask,		"r4_enable_tessellation",		&ps_r4_flags,		R4_FLAG_ENABLE_TESSELLATION); // Need restart
 	CMD3(CCC_Mask,		"r4_wireframe",					&ps_r4_flags,		R4_FLAG_WIREFRAME); // Need restart
+	CMD4(CCC_U32,		"r__glows_per_frame",			&ps_GlowsPerFrame,	2, 32);
 
-
-
-
+	CMD4(CCC_Integer,	"game_extra_skygod_edition",	&SkyGodEdition,		0, 1);
 	// Allow real-time fog config reload
 #if	(RENDER == R_R3) || (RENDER == R_R4)
 #ifdef	DEBUG

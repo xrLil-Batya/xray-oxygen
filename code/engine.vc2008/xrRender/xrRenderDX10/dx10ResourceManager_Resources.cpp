@@ -53,7 +53,7 @@ ENGINE_API BOOL isGraphicDebugging;
 	{
 		DestroyShader(CS);
 	}
-#endif	//	USE_DX10
+#endif
 
 void fix_texture_name(LPSTR fn);
 
@@ -81,11 +81,11 @@ SState*		CResourceManager::_CreateState		(SimulatorStates& state_code)
 	// Create New
 	v_states.push_back				(xr_new<SState>());
 	v_states.back()->dwFlags		|= xr_resource_flagged::RF_REGISTERED;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	v_states.back()->state			= ID3DState::Create(state_code);
-#else	//	USE_DX10
+#else
 	v_states.back()->state			= state_code.record();
-#endif	//	USE_DX10
+#endif
 	v_states.back()->state_code		= state_code;
 	return v_states.back();
 }
@@ -165,24 +165,15 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		}
 
 		string_path					cname;
-		strconcat					(sizeof(cname),cname,::Render->getShaderPath(), "vs_",/*_name*/shName,".hlsl");
+		xr_strconcat				(cname,::Render->getShaderPath(), "vs_",/*_name*/shName,".hlsl");
         string512                   shaderName;
-        strconcat                   (sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
+        xr_strconcat                ( shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 		//		LPCSTR						target		= NULL;
 
 		// duplicate and zero-terminate
 		IReader* file			= FS.r_open(cname);
-		//	TODO: DX10: HACK: Implement all shaders. Remove this for PS
-		if (!file)
-		{
-			string1024			tmp;
-			xr_sprintf			(tmp, "DX10: %s is missing. Replace with stub_default.vs", cname);
-			Msg					(tmp);
-			strconcat			(sizeof(cname), cname, ::Render->getShaderPath(),"vs_","stub_default",".hlsl");
-			FS.update_path		(cname,	"$game_shaders$", cname);
-			file				= FS.r_open(cname);
-		}
+		R_ASSERT2				(file, cname);
 		u32	const size			= file->length();
 		char* const data		= (LPSTR)_alloca(size + 1);
         std::memcpy( data, file->pointer(), size );
@@ -198,11 +189,11 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		if (strstr(data, "main_vs_1_1"))	{ c_target = "vs_1_1"; c_entry = "main_vs_1_1";	}
 		if (strstr(data, "main_vs_2_0"))	{ c_target = "vs_2_0"; c_entry = "main_vs_2_0";	}
 
-        DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
-        if (isGraphicDebugging)
-        {
-            shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
-        }
+		DWORD shaderCompileFlags;
+		if (isGraphicDebugging)
+			shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR | D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
+		else
+			shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR | D3D10_SHADER_OPTIMIZATION_LEVEL3;
 
 		HRESULT	const _hr		= ::Render->shader_compile(shaderName,(DWORD const*)data,size, c_entry, c_target, shaderCompileFlags, (void*&)_vs );
 
@@ -276,25 +267,12 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR _name)
 
 		// Open file
 		string_path					cname;
-		strconcat					(sizeof(cname), cname,::Render->getShaderPath(), "ps_",/*_name*/shName,".hlsl");
+		xr_strconcat				( cname,::Render->getShaderPath(), "ps_",/*_name*/shName,".hlsl");
         string512                   shaderName;
-        strconcat(sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
+        xr_strconcat				( shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
-		IReader*		R		= FS.r_open(cname);
-		//	TODO: DX10: HACK: Implement all shaders. Remove this for PS
-		if (!R)
-		{
-			string1024			tmp;
-			//	TODO: HACK: Test failure
-			xr_sprintf				(tmp, "DX10: %s is missing. Replace with stub_default.ps", cname);
-			Msg					(tmp);
-			strconcat					(sizeof(cname), cname, ::Render->getShaderPath(),"ps_", "stub_default",".hlsl");
-			FS.update_path				(cname,	"$game_shaders$", cname);
-			R		= FS.r_open(cname);
-		}
-
 		IReader* file			= FS.r_open(cname);
 		R_ASSERT2				( file, cname );
 		u32	const size			= file->length();
@@ -312,11 +290,12 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR _name)
 		if (strstr(data,"main_ps_1_4"))			{ c_target = "ps_1_4"; c_entry = "main_ps_1_4";	}
 		if (strstr(data,"main_ps_2_0"))			{ c_target = "ps_2_0"; c_entry = "main_ps_2_0";	}
 
-        DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
+        DWORD shaderCompileFlags;
         if (isGraphicDebugging)
-        {
-            shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
-        }
+			shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR | D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
+		else
+			shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR | D3D10_SHADER_OPTIMIZATION_LEVEL3;
+
 		HRESULT	const _hr		= ::Render->shader_compile(shaderName,(DWORD const*)data,size, c_entry, c_target, shaderCompileFlags, (void*&)_ps );
 		
 		VERIFY(SUCCEEDED(_hr));
@@ -360,24 +339,12 @@ SGS*	CResourceManager::_CreateGS			(LPCSTR name)
 
 		// Open file
 		string_path					cname;
-		strconcat					(sizeof(cname), cname, ::Render->getShaderPath(), "gs_", name,".hlsl");
+		xr_strconcat				( cname, ::Render->getShaderPath(), "gs_", name,".hlsl");
         string512                   shaderName;
-        strconcat(sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
+		xr_strconcat				( shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
-		IReader*		R		= FS.r_open(cname);
-		//	TODO: DX10: HACK: Implement all shaders. Remove this for PS
-		if (!R)
-		{
-			string1024			tmp;
-			//	TODO: HACK: Test failure
-			xr_sprintf				(tmp, "DX10: %s is missing. Replace with stub_default.gs", cname);
-			Msg					(tmp);
-			strconcat					(sizeof(cname), cname, ::Render->getShaderPath(),"gs_", "stub_default",".hlsl");
-			FS.update_path				(cname,	"$game_shaders$", cname);
-			R		= FS.r_open(cname);
-		}
 		IReader* file			= FS.r_open(cname);
 		R_ASSERT2				( file, cname );
 
@@ -472,7 +439,7 @@ void				CResourceManager::_DeleteConstantTable	(const R_constant_table* C)
 
 //--------------------------------------------------------------------------------------------------------------
 #ifdef USE_DX11
-CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount, bool useUAV )
+CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	DXGI_FORMAT f, u32 SampleCount, bool useUAV )
 #else
 CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 #endif
@@ -582,7 +549,9 @@ void	CResourceManager::_DeleteTexture		(const CTexture* T)
 		m_textures.erase(I);
 		return;
 	}
-	Msg	("! ERROR: Failed to find texture surface '%s'",*T->cName);
+
+	
+//	Msg	("! ERROR: Failed to find texture surface '%s'",*T->cName);
 }
 
 #ifdef DEBUG

@@ -51,7 +51,7 @@ bool CEditableObject::LoadObject(const char* fname)
 	{
 		DWORD FileAttrib;
 		FileAttrib = GetFileAttributes(fname);
-		if (FileAttrib != DWORD(-1))//если найден
+		if (FileAttrib != DWORD(-1))//РµСЃР»Рё РЅР°Р№РґРµРЅ
 		{
 			IReader* F = new CFileReader(fname);
 			//int age = fl->get_file_age(fname);		VERIFY3(age>0, "Invalid file age:", fname);
@@ -430,7 +430,7 @@ bool CEditableObject::Load(IReader& F)
 				}
 				else
 				{
-					Log("!Invalid bone parts.", GetName());
+					Msg("!Invalid bone parts.", GetName());
 					bBPok = false;
 					break;
 				}
@@ -444,7 +444,7 @@ bool CEditableObject::Load(IReader& F)
 			m_BoneParts.clear();
 
 		if (!m_BoneParts.empty() && !VerifyBoneParts())
-			Log("!Invalid bone parts. Found duplicate bones in object '%s'.", GetName());
+			Msg("!Invalid bone parts. Found duplicate bones in object '%s'.", GetName());
 	}
 	else if (F.find_chunk(EOBJ_CHUNK_BONEPARTS2))
 	{
@@ -457,7 +457,7 @@ bool CEditableObject::Load(IReader& F)
 				F.r_stringZ(*s_it);
 		}
 		if (!m_BoneParts.empty() && !VerifyBoneParts())
-			Log("!Invalid bone parts. Found duplicate bones in object '%s'.", GetName());
+			Msg("!Invalid bone parts. Found duplicate bones in object '%s'.", GetName());
 	}
 
 	if (F.find_chunk(EOBJ_CHUNK_ACTORTRANSFORM))

@@ -2,27 +2,27 @@
 #include "UIPdaWnd.h"
 #include "../Pda.h"
 
-#include "xrUIXmlParser.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "UIInventoryUtilities.h"
 
 #include "../level.h"
 #include "UIGame.h"
 
-#include "UIStatic.h"
-#include "UIFrameWindow.h"
-#include "UITabControl.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIFrameWindow.h"
+#include "../xrUICore/UITabControl.h"
 #include "UIMapWnd.h"
-#include "UIFrameLineWnd.h"
+#include "../xrUICore/UIFrameLineWnd.h"
 #include "object_broker.h"
 #include "UIMessagesWindow.h"
 #include "UIMainIngameWnd.h"
-#include "UITabButton.h"
-#include "UIAnimatedStatic.h"
+#include "../xrUICore/UITabButton.h"
+#include "../xrUICore/UIAnimatedStatic.h"
 
-#include "UIHelper.h"
-#include "UIHint.h"
-#include "UIBtnHint.h"
+#include "../xrUICore/UIHelper.h"
+#include "../xrUICore/UIHint.h"
+#include "../xrUICore/UIBtnHint.h"
 #include "UITaskWnd.h"
 #include "UIRankingWnd.h"
 #include "UILogsWnd.h"
@@ -148,9 +148,10 @@ void CUIPdaWnd::Update()
 	m_pActiveDialog->Update();
 	m_clock->TextItemControl().SetText(InventoryUtilities::GetGameTimeAsString(InventoryUtilities::etpTimeToMinutes).c_str());
 
-	Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(pUILogsWnd,&CUILogsWnd::PerformWork));
+	Device.seqParallel.emplace_back(pUILogsWnd, &CUILogsWnd::PerformWork);
 }
 
+#include <luabind/luabind.hpp>
 void CUIPdaWnd::SetActiveSubdialog(const shared_str& section)
 {
 	if ( m_sActiveSection == section ) return;
@@ -201,7 +202,7 @@ void CUIPdaWnd::SetActiveCaption()
 		{
 			LPCSTR cur = (*it_b)->TextItemControl()->GetText();
 			string256 buf;
-			strconcat( sizeof(buf), buf, m_caption_const.c_str(), cur );
+			xr_strconcat(  buf, m_caption_const.c_str(), cur );
 			SetCaption( buf );
 			return;
 		}

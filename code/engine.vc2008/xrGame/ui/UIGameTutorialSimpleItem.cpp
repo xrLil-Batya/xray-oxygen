@@ -1,18 +1,18 @@
 #include "stdafx.h"
 #include "UIGameTutorial.h"
-#include "UIStatic.h"
-#include "uicursor.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UICursor.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "object_broker.h"
 #include "../../xrEngine/xr_input.h"
-#include "../xr_level_controller.h"
+#include "../xrEngine/xr_level_controller.h"
 #include "../UIGame.h"
 #include "../level.h"
 #include "UIPdaWnd.h"
 #include "UIActorMenu.h"
 #include "UITalkWnd.h"
 #include "level_changer.h"
-#include "../MainMenu.h"
+#include "../../xrUICore/MainMenu.h"
 #include "../../xrServerEntities/script_engine.h"
 #include "../ai_space.h"
 
@@ -309,6 +309,7 @@ bool CUISequenceSimpleItem::Stop(bool bForce)
 	return true;
 }
 
+#include <luabind/luabind.hpp>
 void CUISequenceSimpleItem::OnKeyboardPress(int dik)
 {
 	if (!m_flags.test(etiCanBeStopped))

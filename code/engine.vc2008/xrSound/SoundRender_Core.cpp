@@ -61,14 +61,14 @@ CSoundRender_Core::CSoundRender_Core()
 
 void CSoundRender_Core::InitAlEFXAPI()
 {
-	LOAD_PROC(alDeleteAuxiliaryEffectSlots, LPALDELETEAUXILIARYEFFECTSLOTS);
-	LOAD_PROC(alGenEffects, LPALGENEFFECTS);
-	LOAD_PROC(alDeleteEffects, LPALDELETEEFFECTS);
-	LOAD_PROC(alIsEffect, LPALISEFFECT);
-	LOAD_PROC(alEffecti, LPALEFFECTI);
-	LOAD_PROC(alAuxiliaryEffectSloti, LPALAUXILIARYEFFECTSLOTI);
-	LOAD_PROC(alGenAuxiliaryEffectSlots, LPALGENAUXILIARYEFFECTSLOTS);
-	LOAD_PROC(alEffectf, LPALEFFECTF);
+	LOAD_PROC(alDeleteAuxiliaryEffectSlots, LPALDELETEAUXILIARYEFFECTSLOTS); //-V206
+	LOAD_PROC(alGenEffects, LPALGENEFFECTS); //-V206
+	LOAD_PROC(alDeleteEffects, LPALDELETEEFFECTS); //-V206
+	LOAD_PROC(alIsEffect, LPALISEFFECT); //-V206
+	LOAD_PROC(alEffecti, LPALEFFECTI); //-V206
+	LOAD_PROC(alAuxiliaryEffectSloti, LPALAUXILIARYEFFECTSLOTI); //-V206
+	LOAD_PROC(alGenAuxiliaryEffectSlots, LPALGENAUXILIARYEFFECTSLOTS); //-V206
+	LOAD_PROC(alEffectf, LPALEFFECTF); //-V206
 }
 
 CSoundRender_Core::~CSoundRender_Core()
@@ -249,7 +249,7 @@ void CSoundRender_Core::set_geometry_som(IReader* I)
 			CL.add_face_packed_D(P.v3, P.v2, P.v1, *(size_t*)&P.occ, 0.01f);
 	}
 	geom_SOM = new CDB::MODEL();
-	geom_SOM->build(CL.getV(), int(CL.getVS()), CL.getT(), int(CL.getTS()), nullptr, nullptr, false);
+	geom_SOM->build(CL.getV(), int(CL.getVS()), CL.getT(), int(CL.getTS()), nullptr, false, nullptr, nullptr, false);
 	geom->close();
 }
 
@@ -479,21 +479,13 @@ CSoundRender_Environment*	CSoundRender_Core::get_environment(const Fvector& P)
 				tri_norm.mknormal(V[T->verts[0]], V[T->verts[1]], V[T->verts[2]]);
 				float	dot = dir.dotproduct(tri_norm);
 
-				if (dot < 0)
-				{
-					u16 id_front = (u16)((T->dummy & 0x0000ffff) >> 0);		//	front face
-					return s_environment->Get(id_front);
-				}
-				else
-				{
-					u16	id_back = (u16)((T->dummy & 0xffff0000) >> 16);	//	back face
-					return s_environment->Get(id_back);
-				}
+				// Front or Back face
+				u16 uID = u16((dot < 0) ? (T->dummy & 0x0000ffff) >> 0 : (T->dummy & 0xffff0000) >> 16);
+				return s_environment->Get(uID);
 			}
 		}
 	}
-	else
-		return &s_user_environment;
+	else return &s_user_environment;
 
 	identity.set_identity();
 	return &identity;

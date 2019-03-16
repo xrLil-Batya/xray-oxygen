@@ -15,10 +15,17 @@ public:
 	virtual void	Copy(IRenderDeviceRender &_in) = 0;
 
 	//	Gamma correction functions
-	virtual void	setGamma(float fGamma) = 0;
-	virtual void	setBrightness(float fGamma) = 0;
-	virtual void	setContrast(float fGamma) = 0;
-	virtual void	updateGamma() = 0;
+	virtual float	GetGamma		() const		= 0;
+	virtual float	GetBrightness	() const		= 0;
+	virtual float	GetContrast		() const		= 0;
+	virtual Fvector	GetBalance		() const		= 0;
+
+	virtual void	SetGamma		(float fGamma)	= 0;
+	virtual void	SetBrightness	(float fGamma)	= 0;
+	virtual void	SetContrast		(float fGamma)	= 0;
+	virtual void	SetBalance		(float r, float g, float b) = 0;
+	virtual void	SetBalance		(Fvector &C)	= 0;
+	virtual void	UpdateGamma		()				= 0;
 
 	//	Destroy
 	virtual void	OnDeviceDestroy( BOOL bKeepTextures) = 0;
@@ -51,7 +58,7 @@ public:
 	virtual void	Clear() = 0;
 	virtual void	End() = 0;
 	virtual void	ClearTarget() = 0;
-	virtual void	SetCacheXform(Fmatrix &mView, Fmatrix &mProject) = 0;
+	virtual void	SetCacheXform(const Fmatrix &mView, const Fmatrix &mProject) = 0;
 	virtual void	OnAssetsChanged() = 0;
 	virtual void	ResizeWindowProc(WORD h, WORD w) = 0;
 };

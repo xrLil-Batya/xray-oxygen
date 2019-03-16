@@ -11,9 +11,10 @@
 #include "script_game_object.h"
 #include "property_evaluator_const.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CPropertyEvaluator<CScriptGameObject>::script_register(lua_State *L)
 {
 	module(L)

@@ -1,14 +1,15 @@
 #include "stdafx.h"
 #include "UIAchievements.h"
-#include "UIScrollView.h"
-#include "UIXmlInit.h"
-#include "UIHelper.h"
-#include "UIHint.h"
-#include "UIStatic.h"
-#include "UICursor.h"
+#include "../xrUICore/UIScrollView.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIHelper.h"
+#include "../xrUICore/UIHint.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UICursor.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "../ai_space.h"
 #include "../../xrServerEntities/script_engine.h"
-#include "../string_table.h"
+#include "../../xrEngine/string_table.h"
 
 CUIAchievements::CUIAchievements(CUIScrollView* parent):m_parent(parent)
 {
@@ -19,6 +20,7 @@ CUIAchievements::~CUIAchievements()
 	xr_delete(m_hint);
 }
 
+#include <luabind/luabind.hpp>
 void CUIAchievements::init_from_xml(CUIXml& xml)
 {
 	CUIXmlInit::InitWindow(xml, "achievements_itm", 0, this);

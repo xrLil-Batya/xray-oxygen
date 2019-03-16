@@ -35,7 +35,7 @@ void CDamageManager::reload(LPCSTR section, CInifile* ini)
 
 	bool section_exist		= ini && ini->section_exist(section);
 	
-	// ïðî÷èòàòü äåôîëòíûå ïàðàìåòðû
+	// Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ Ð´ÐµÑ„Ð¾Ð»Ñ‚Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹
 	if (section_exist) {
 		string32 buffer;
 		if (ini->line_exist(section,"default")) {
@@ -45,10 +45,10 @@ void CDamageManager::reload(LPCSTR section, CInifile* ini)
 		}
 	}
 
-	//èíèöèàëèçèðîâàòü default ïàðàìåòðàìè
+	//Ð¸Ð½Ð¸Ñ†Ð¸Ð°Ð»Ð¸Ð·Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ default Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð°Ð¼Ð¸
 	init_bones		(section,ini);
 
-	// çàïèñàòü ïîâåðõó ïðîïèñàííûå ïàðàìåòðû
+	// Ð·Ð°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ Ð¿Ð¾Ð²ÐµÑ€Ñ…Ñƒ Ð¿Ñ€Ð¾Ð¿Ð¸ÑÐ°Ð½Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹
 	if (section_exist) {
 		load_section	(section,ini);
 	}
@@ -89,7 +89,7 @@ void CDamageManager::load_section(LPCSTR section, CInifile const * ini)
 			R_ASSERT2(BI_NONE != bone, it.first.c_str());
 			CBoneInstance &bone_instance = kinematics->LL_GetBoneInstance(u16(bone));
 			bone_instance.set_param	(0,(float)atof(_GetItem(it.second.c_str(),0,buffer)));
-			bone_instance.set_param	(1,(float)atoi(_GetItem(it.second.c_str(),1,buffer)));
+			bone_instance.set_param	(1,(float)atof(_GetItem(it.second.c_str(),1,buffer)));
 			bone_instance.set_param	(2,(float)atof(_GetItem(it.second.c_str(),2,buffer)));
 			bone_instance.set_param(3, (float)atof(_GetItem(it.second.c_str(), (_GetItemCount(it.second.c_str()) < 4) ? 0 : 3, buffer)));
 
@@ -107,7 +107,7 @@ void  CDamageManager::HitScale			(const int element, float& hit_scale, float& wo
 {
 	if(BI_NONE == u16(element))
 	{
-		//ñ÷èòàåì ÷òî ïàðàìåòðû äëÿ BI_NONE çàäàíû êàê 1.f 
+		//ÑÑ‡Ð¸Ñ‚Ð°ÐµÐ¼ Ñ‡Ñ‚Ð¾ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ Ð´Ð»Ñ BI_NONE Ð·Ð°Ð´Ð°Ð½Ñ‹ ÐºÐ°Ðº 1.f 
 		hit_scale = 1.f * m_default_hit_factor;
 		wound_scale = 1.f * m_default_wound_factor;
 		return;

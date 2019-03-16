@@ -1,4 +1,4 @@
-// Wound.h: класс описания раны
+// Wound.h: РєР»Р°СЃСЃ РѕРїРёСЃР°РЅРёСЏ СЂР°РЅС‹
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -13,7 +13,7 @@ class CWound
 {
 public:
 	CWound				(u16 bone_num);
-	virtual ~CWound		(void);
+	virtual ~CWound		();
 
 	//serialization
 	virtual void save	(NET_Packet &output_packet);
@@ -25,7 +25,7 @@ public:
 
 	void	AddHit		(float hit_power, ALife::EHitType hit_type);
 	
-	//заживление раны
+	//Р·Р°Р¶РёРІР»РµРЅРёРµ СЂР°РЅС‹
 	void	Incarnation	(float percent, float min_wound_size);
 	u16		GetBoneNum	() {return m_iBoneNum;}
 	void 	SetBoneNum	(u16 bone_num) {m_iBoneNum = bone_num;}
@@ -39,19 +39,19 @@ public:
 	void  SetDestroy(bool destroy) {m_bToBeDestroy = destroy;}
 	bool  GetDestroy()			   {return m_bToBeDestroy;}
 
-	//время обновления (для капель крови)
+	//РІСЂРµРјСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ (РґР»СЏ РєР°РїРµР»СЊ РєСЂРѕРІРё)
 	float m_fDropTime;
 
 protected:
-	//косточка на которой появилась рана
+	//РєРѕСЃС‚РѕС‡РєР° РЅР° РєРѕС‚РѕСЂРѕР№ РїРѕСЏРІРёР»Р°СЃСЊ СЂР°РЅР°
 	u16 m_iBoneNum;
 
-	//косточка, если на ране отыгрывается партикл
+	//РєРѕСЃС‚РѕС‡РєР°, РµСЃР»Рё РЅР° СЂР°РЅРµ РѕС‚С‹РіСЂС‹РІР°РµС‚СЃСЏ РїР°СЂС‚РёРєР»
 	u16 m_iParticleBoneNum;
-	//имя этого партикла
+	//РёРјСЏ СЌС‚РѕРіРѕ РїР°СЂС‚РёРєР»Р°
 	shared_str m_sParticleName;
 
-	//список составляющих раны 
+	//СЃРїРёСЃРѕРє СЃРѕСЃС‚Р°РІР»СЏСЋС‰РёС… СЂР°РЅС‹ 
 	HitImmunity::HitTypeSVec	m_Wounds;
 
 	bool						m_bToBeDestroy;

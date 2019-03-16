@@ -10,9 +10,9 @@
 #include "object_broker.h"
 #include "UIInventoryUpgradeWnd.h"
 
-#include "xrUIXmlParser.h"
-#include "UIXmlInit.h"
-#include "../string_table.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrEngine/string_table.h"
 
 #include "../actor.h"
 #include "../../xrServerEntities/script_process.h"
@@ -27,14 +27,14 @@
 #include "UIInventoryUtilities.h"
 #include "UIActorMenu.h"
 #include "UIItemInfo.h"
-#include "UIFrameLineWnd.h"
-#include "UI3tButton.h"
-#include "UIHelper.h"
-#include "../ui_defs.h"
-#include "../Weapon.h"
-#include "../WeaponRPG7.h"
-#include "../CustomOutfit.h"
-#include "../ActorHelmet.h"
+#include "../xrUICore/UIFrameLineWnd.h"
+#include "../xrUICore/UI3tButton.h"
+#include "../xrUICore/UIHelper.h"
+#include "../../xrUICore/ui_defs.h"
+#include "../items/Weapon.h"
+#include "../items/WeaponRPG7.h"
+#include "../items/CustomOutfit.h"
+#include "../items/Helmet.h"
 
 // -----
 const char* const g_inventory_upgrade_xml = "inventory_upgrade.xml";
@@ -96,45 +96,47 @@ void CUIInventoryUpgradeWnd::InitInventory( CInventoryItem* item, bool can_upgra
 {
 	m_inv_item = item;
 	bool is_shader = false;
-	// Загружаем картинку
-	if(smart_cast<CWeapon*>(item))
-	{
-		is_shader = true;
-		m_item->SetShader(InventoryUtilities::GetWeaponUpgradeIconsShader());
 
-		if (smart_cast<CWeaponRPG7*>(item))
+	// Р—Р°РіСЂСѓР¶Р°РµРј РєР°СЂС‚РёРЅРєСѓ
+
+	if (m_item)
+	{
+		if (smart_cast<CWeapon*>(item))
+		{
+			is_shader = true;
+			m_item->SetShader(InventoryUtilities::GetWeaponUpgradeIconsShader());
+		}
+		else if (smart_cast<CCustomOutfit*>(item) || smart_cast<CHelmet*>(item))
+		{
+			is_shader = true;
 			m_item->SetShader(InventoryUtilities::GetOutfitUpgradeIconsShader());
+		}
+
+		if (is_shader)
+		{
+
+			Irect item_upgrade_grid_rect = item->GetUpgrIconRect();
+			Frect texture_rect;
+
+			texture_rect.lt.set(item_upgrade_grid_rect.x1, item_upgrade_grid_rect.y1);
+			texture_rect.rb.set(item_upgrade_grid_rect.x2, item_upgrade_grid_rect.y2);
+			texture_rect.rb.add(texture_rect.lt);
+
+			m_item->GetUIStaticItem().SetTextureRect(texture_rect);
+			m_item->TextureOn();
+			m_item->SetStretchTexture(true);
+
+			Fvector2 v_r = Fvector2().set(item_upgrade_grid_rect.x2, item_upgrade_grid_rect.y2);
+			if (UI().is_widescreen())
+				v_r.x *= 0.8f;
+
+			m_item->GetUIStaticItem().SetSize(v_r);
+			m_item->SetWidth(v_r.x);
+			m_item->SetHeight(v_r.y);
+			m_item->Show(true);
+		}
 	}
-	else if (smart_cast<CCustomOutfit*>(item) || smart_cast<CHelmet*>(item))
-	{
-		is_shader = true;
-
-		if (m_item)
-			m_item->SetShader(InventoryUtilities::GetOutfitUpgradeIconsShader());
-	}
-
-	if (m_item && is_shader)
-	{
-
-		Irect item_upgrade_grid_rect = item->GetUpgrIconRect();
-		Frect texture_rect;
-		texture_rect.lt.set			(item_upgrade_grid_rect.x1,	item_upgrade_grid_rect.y1);
-		texture_rect.rb.set			(item_upgrade_grid_rect.x2,	item_upgrade_grid_rect.y2);
-		texture_rect.rb.add			(texture_rect.lt);
-		m_item->GetUIStaticItem().SetTextureRect(texture_rect);
-		m_item->TextureOn			();
-		m_item->SetStretchTexture	(true);
-		Fvector2 v_r				= Fvector2().set(item_upgrade_grid_rect.x2,	item_upgrade_grid_rect.y2);
-		if(UI().is_widescreen())
-			v_r.x					*= 0.8f;
-
-		m_item->GetUIStaticItem().SetSize	(v_r);
-		m_item->SetWidth					(v_r.x);
-		m_item->SetHeight					(v_r.y);
-		m_item->Show						(true);
-	}
-	else
-		m_item->Show						(false);
+	else m_item->Show(false);
 
 	m_scheme_wnd->DetachAll();
 	m_scheme_wnd->Show( false );
@@ -209,7 +211,7 @@ void CUIInventoryUpgradeWnd::SetCurScheme( const shared_str& id )
 			return;
 		}
 	}
-	VERIFY2( 0, make_string( "Scheme <%s> does not loaded !", id.c_str() ) );
+	VERIFY_FORMAT(0, "Scheme <%s> does not loaded !", id.c_str());
 }
 
 bool CUIInventoryUpgradeWnd::install_item( CInventoryItem& inv_item, bool can_upgrade )
@@ -434,7 +436,7 @@ UIUpgrade::ViewState CUIInventoryUpgradeWnd::SelectCellState(LPCSTR state_str)
 
 	if (!xr_strcmp(state_str, "disabled_highlight")) { return UIUpgrade::STATE_DISABLED_FOCUSED; }
 
-	VERIFY2(0, make_string("Such UI upgrade state (%s) does not exist !", state_str));
+	VERIFY_FORMAT(0, "Such UI upgrade state (%s) does not exist !", state_str);
 	return UIUpgrade::STATE_UNKNOWN;
 }
 

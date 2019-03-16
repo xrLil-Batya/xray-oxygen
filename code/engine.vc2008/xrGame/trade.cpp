@@ -3,7 +3,7 @@
 #include "actor.h"
 #include "ai/stalker/ai_stalker.h"
 #include "ai/trader/ai_trader.h"
-#include "artefact.h"
+#include "items/Artefact.h"
 #include "inventory.h"
 #include "xrmessages.h"
 #include "character_info.h"
@@ -21,16 +21,16 @@ CTrade::CTrade(CInventoryOwner *p_io)
 {
 	TradeState = false;
 	m_dwLastTradeTime	= 0;
-	pPartner.Set(TT_NONE,0,0);
+	pPartner.Set(TT_NONE,nullptr,nullptr);
 
 	m_bNeedToUpdateArtefactTasks = false;
 
-	// Заполнить pThis
+	// Р—Р°РїРѕР»РЅРёС‚СЊ pThis
 	CAI_Trader *pTrader;
 	CActor *pActor;
 	CAI_Stalker *pStalker;
 
-	// Определяем потомка этого экземпляра класса
+	// РћРїСЂРµРґРµР»СЏРµРј РїРѕС‚РѕРјРєР° СЌС‚РѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° РєР»Р°СЃСЃР°
 	pTrader = smart_cast<CAI_Trader *>(p_io);
 	if (pTrader) 
 		pThis.Set(TT_TRADER, pTrader, p_io);
@@ -49,7 +49,7 @@ CTrade::CTrade(CInventoryOwner *p_io)
 
 void CTrade::RemovePartner()
 {
-	pPartner.Set(TT_NONE,0,0);
+	pPartner.Set(TT_NONE,nullptr,nullptr);
 }
 
 bool CTrade::SetPartner(CEntity *p)
@@ -110,7 +110,7 @@ void CTrade::StopTrade()
 	TradeState = false;
 	m_dwLastTradeTime = 0;
 
-	CAI_Trader* pTrader = NULL;
+	CAI_Trader* pTrader = nullptr;
 	if (pPartner.type == TT_TRADER)
 	{
 		pTrader = smart_cast<CAI_Trader*>(pPartner.base);
@@ -130,13 +130,13 @@ bool CTrade::CanTrade()
 	CEntity *pEntity;
 
 	m_nearest.clear();
-	Level().ObjectSpace.GetNearest(m_nearest, pThis.base->Position(), 2.f, NULL);
+	Level().ObjectSpace.GetNearest(m_nearest, pThis.base->Position(), 2.f, nullptr);
 	if (!m_nearest.empty())
 	{
-		for (u32 i = 0, n = (u32)m_nearest.size(); i<n; ++i)
+		for (auto & i : m_nearest)
 		{
-			// Может ли объект торговать
-			pEntity = smart_cast<CEntity *>(m_nearest[i]);
+			// РњРѕР¶РµС‚ Р»Рё РѕР±СЉРµРєС‚ С‚РѕСЂРіРѕРІР°С‚СЊ
+			pEntity = smart_cast<CEntity *>(i);
 			if (pEntity && !pEntity->g_Alive()) return false;
 			if (SetPartner(pEntity)) break;
 		}
@@ -144,7 +144,7 @@ bool CTrade::CanTrade()
 
 	if (!pPartner.base) return false;
 
-	// Объект рядом
+	// РћР±СЉРµРєС‚ СЂСЏРґРѕРј
 	float dist = pPartner.base->Position().distance_to(pThis.base->Position());
 	if (dist < 0.5f || dist > 4.5f)
 	{
@@ -152,7 +152,7 @@ bool CTrade::CanTrade()
 		return false;
 	}
 
-	// Объект смотрит на меня
+	// РћР±СЉРµРєС‚ СЃРјРѕС‚СЂРёС‚ РЅР° РјРµРЅСЏ
 	float yaw, pitch;
 	float yaw2, pitch2;
 
@@ -174,8 +174,8 @@ bool CTrade::CanTrade()
 
 void CTrade::TransferItem(CInventoryItem* pItem, bool bBuying)
 {
-	// сумма сделки учитывая ценовой коэффициент
-	// актер цену не говорит никогда, все делают за него
+	// СЃСѓРјРјР° СЃРґРµР»РєРё СѓС‡РёС‚С‹РІР°СЏ С†РµРЅРѕРІРѕР№ РєРѕСЌС„С„РёС†РёРµРЅС‚
+	// Р°РєС‚РµСЂ С†РµРЅСѓ РЅРµ РіРѕРІРѕСЂРёС‚ РЅРёРєРѕРіРґР°, РІСЃРµ РґРµР»Р°СЋС‚ Р·Р° РЅРµРіРѕ
 	u32 dwTransferMoney = GetItemPrice(pItem, bBuying);
 
 	if (bBuying)
@@ -205,7 +205,7 @@ void CTrade::TransferItem(CInventoryItem* pItem, bool bBuying)
 	else
 		pThis.inv_owner->set_money(pThis.inv_owner->get_money() + dwTransferMoney, false);
 
-	// взять у партнера
+	// РІР·СЏС‚СЊ Сѓ РїР°СЂС‚РЅРµСЂР°
 	O2->u_EventGen(P, GE_TRADE_BUY, O2->ID());
 	P.w_u16(pItem->object().ID());
 	O2->u_EventSend(P);
@@ -286,7 +286,7 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 
 	clamp(relation_factor, 0.f, 1.f);
 
-	const SInventoryOwner	*_partner = 0;
+	const SInventoryOwner	*_partner = nullptr;
 	bool					buying = true;
 	bool					is_actor = (pThis.type == TT_ACTOR) || (pPartner.type == TT_ACTOR);
 	if (is_actor) 
@@ -302,12 +302,12 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 
 
 	if (buying) {
-		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_buy(0), pItem->object().cNameSect())) return 0;
-		p_trade_factors = &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_buy(0), pItem->object().cNameSect());
+		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_buy(nullptr), pItem->object().cNameSect())) return 0;
+		p_trade_factors = &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_buy(nullptr), pItem->object().cNameSect());
 	}
 	else {
-		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_sell(0), pItem->object().cNameSect())) return 0;
-		p_trade_factors = &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_sell(0), pItem->object().cNameSect());
+		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_sell(nullptr), pItem->object().cNameSect())) return 0;
+		p_trade_factors = &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_sell(nullptr), pItem->object().cNameSect());
 	}
 	const CTradeFactors		&trade_factors = *p_trade_factors;
 

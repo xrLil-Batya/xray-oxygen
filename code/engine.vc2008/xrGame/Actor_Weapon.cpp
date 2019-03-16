@@ -7,15 +7,18 @@
 #include "actoreffector.h"
 #include "Missile.h"
 #include "inventory.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "map_manager.h"
 #include "level.h"
 #include "CharacterPhysicsSupport.h"
 #include "EffectorShot.h"
-#include "WeaponMagazined.h"
-#include "Grenade.h"
-#include "game_base_space.h"
-#include "Artefact.h"
+#include "items/WeaponMagazined.h"
+#include "items/Grenade.h"
+#include "game_base.h"
+#include "items/Artefact.h"
+#include "items/WeaponRPG7.h"
+#include "items/WeaponRG6.h"
+#include "items/WeaponMagazinedWGrenade.h"
 
 static const float VEL_MAX = 10.f;
 static const float VEL_A_MAX = 10.f;
@@ -27,7 +30,7 @@ float CActor::GetWeaponAccuracy() const
 {
 	CWeapon* W = smart_cast<CWeapon*>(inventory().ActiveItem());
 
-	if (IsZoomAimingMode() && W && !GetWeaponParam(W, IsRotatingToZoom(), false))
+	if (IsZoomAimingMode() && W)
 	{
 		return m_fDispAim;
 	}
@@ -62,33 +65,37 @@ float CActor::GetWeaponAccuracy() const
 
 void CActor::g_fireParams(const CHudItem* pHudItem, Fvector &fire_pos, Fvector &fire_dir)
 {
+	fire_dir = Cameras().Direction();
+	fire_pos = Cameras().Position();
 	CWeapon				*weapon = smart_cast<CWeapon*>(inventory().ActiveItem());
+	const CMissile	*pMissile = smart_cast <const CMissile*> (pHudItem);
+	const CMissile	*pMissileA = smart_cast <const CMissile*> (weapon);
+	const CWeaponMagazinedWGrenade	*WGren = smart_cast <const CWeaponMagazinedWGrenade*> (weapon);
+	const CWeaponRG6	*RG6 = smart_cast <const CWeaponRG6*> (weapon);
+	const CWeaponRPG7	*RPG7 = smart_cast <const CWeaponRPG7*> (weapon);
 	if (weapon)
 	{
 		if (eacFirstEye == cam_active && !psActorFlags.test(AF_HARDCORE) && !psActorFlags.test(AF_ZOOM_NEW_FD) || (weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom()))
 			fire_pos = Cameras().Position();
-		if ((psActorFlags.test(AF_ZOOM_NEW_FD) && !(weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom())) || (psActorFlags.test(AF_HARDCORE) && !(weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom())))
+		if (!psActorFlags.test(AF_FP2ZOOM_FORCED) && (psActorFlags.test(AF_ZOOM_NEW_FD) && !(weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom())) || (psActorFlags.test(AF_HARDCORE) && !(weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom())))
 		{
 			fire_dir = weapon->get_LastFD();
 			fire_pos = weapon->get_LastFP();
-		}
-		else
-		{
-			fire_dir = Cameras().Direction();
 		}
 		if (eacFirstEye == !cam_active && !psActorFlags.test(AF_HARDCORE) && !psActorFlags.test(AF_ZOOM_NEW_FD) || (weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom()))
 			fire_pos = weapon->get_LastFP();
 	}
 	else
 	{
-		const CMissile	*pMissile = smart_cast <const CMissile*> (pHudItem);
-		if (pMissile)
+		if (HUDview() && pMissile)
 		{
-			Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
-			act_and_cam_pos.y += CameraHeight();
-			fire_pos = act_and_cam_pos;
-			fire_pos.y += 0.14f;
-			fire_dir = Cameras().Direction();
+			Fvector offset;
+			XFORM().transform_dir(offset, pMissile->throw_point_offset());
+			fire_pos.add(offset);
+		}
+		if (!HUDview() && pMissileA && !RPG7 && !RG6 && !WGren && !pMissile)
+		{
+			fire_pos = pMissileA->XFORM().c;
 		}
 	}
 
@@ -220,7 +227,7 @@ void CActor::SpawnAmmoForWeapon(CInventoryItem *pIItem)
 	CWeaponMagazined* pWM = smart_cast<CWeaponMagazined*> (pIItem);
 	if (!pWM || !pWM->AutoSpawnAmmo()) return;
 
-	pWM->SpawnAmmo(0xffffffff, NULL, ID());
+	pWM->SpawnAmmo(0xffffffff, nullptr, ID());
 }
 
 void CActor::RemoveAmmoForWeapon(CInventoryItem *pIItem)

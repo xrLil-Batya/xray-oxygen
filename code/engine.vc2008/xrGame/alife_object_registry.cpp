@@ -12,9 +12,6 @@
 #include "../FrayBuildConfig.hpp"
 CALifeObjectRegistry::CALifeObjectRegistry	(LPCSTR section)
 {
-#ifdef LUACP_API
-	LogXrayOffset("CALifeObjectRegistry.list", this, &this->m_objects);
-#endif
 }
 
 CALifeObjectRegistry::~CALifeObjectRegistry	()
@@ -65,7 +62,7 @@ void CALifeObjectRegistry::save				(IWriter &memory_stream)
 	Msg							("* Saving objects...");
 	memory_stream.open_chunk	(OBJECT_CHUNK_DATA);
 
-	u32							position = memory_stream.tell();
+	u32							position = (u32)memory_stream.tell();
 	memory_stream.w_u32			(u32(-1));
 
 	u32							object_count = 0;
@@ -84,7 +81,7 @@ void CALifeObjectRegistry::save				(IWriter &memory_stream)
 		save					(memory_stream,(*I).second, object_count);
 	}
 	
-	u32							last_position = memory_stream.tell();
+	u32							last_position = (u32)memory_stream.tell();
 	memory_stream.seek			(position);
 	memory_stream.w_u32			(object_count);
 	memory_stream.seek			(last_position);

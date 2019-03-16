@@ -15,7 +15,7 @@
 #include "explosive.h"
 #include "sound_player.h"
 #include "cover_point.h"
-#include "grenade.h"
+#include "items/Grenade.h"
 
 class CMemberPredicate2 {
 protected:
@@ -44,15 +44,11 @@ void CAgentMemberManager::add					(CEntity *member)
 	if (!stalker || !stalker->g_Alive())
 		return;
 
-	VERIFY2						(
-		sizeof(squad_mask_type)*8 > members().size(),
-		make_string(
+	VERIFY_FORMAT (sizeof(squad_mask_type)*8 > members().size(),
 			"too many stalkers in group ([team:%d][squad:%d][group:%d]!",
 			m_members.front()->object().g_Team(),
 			m_members.front()->object().g_Squad(),
-			m_members.front()->object().g_Group()
-		)
-	);
+			m_members.front()->object().g_Group());
 
 	iterator					I = std::find_if(m_members.begin(),m_members.end(), CMemberPredicate(stalker));
 	VERIFY						(I == m_members.end());
@@ -109,19 +105,6 @@ void CAgentMemberManager::remove_links			(CObject *object)
 
 void CAgentMemberManager::register_in_combat	(const CAI_Stalker *object)
 {
-//	if (!object->group_behaviour())
-//		return;
-
-#if 0//def DEBUG
-	Msg							(
-		"%6d registering stalker %s in combat: 0x%08x -> 0x%08x",
-		Device.dwTimeGlobal,
-		*object->cName(),
-		m_combat_mask,
-		m_combat_mask | mask(object)
-	);
-#endif // DEBUG
-
 	squad_mask_type				m = mask(object);
 	m_actuality					= m_actuality && ((m_combat_mask | m) == m_combat_mask);
 	m_combat_mask				|= m;
@@ -129,21 +112,6 @@ void CAgentMemberManager::register_in_combat	(const CAI_Stalker *object)
 
 void CAgentMemberManager::unregister_in_combat	(const CAI_Stalker *object)
 {
-//	if (!object->group_behaviour()) {
-//		VERIFY					(!registered_in_combat(object));
-//		return;
-//	}
-
-#if 0//def DEBUG
-	Msg							(
-		"%6d UNregistering stalker %s in combat: 0x%08x -> 0x%08x",
-		Device.dwTimeGlobal,
-		*object->cName(),
-		m_combat_mask,
-		(m_combat_mask & (squad_mask_type(-1) ^ mask(object)))
-	);
-#endif // DEBUG
-
 	squad_mask_type				m = mask(object);
 	m_actuality					= m_actuality && ((m_combat_mask & (squad_mask_type(-1) ^ m)) == m_combat_mask);
 	m_combat_mask				&= squad_mask_type(-1) ^ m;

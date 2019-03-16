@@ -11,6 +11,7 @@
 #include "ai_space.h"
 #include "level_graph.h"
 #include "../xrServerEntities/object_broker.h"
+#include <luabind/luabind.hpp>
 
 using smart_cover::detail::parse_string;
 using smart_cover::detail::parse_int;
@@ -21,7 +22,8 @@ using smart_cover::detail::parse_fvector;
 smart_cover::action::action(luabind::object const &description)
 {
 	luabind::object movement = description["movement"];
-	if (movement.type() != LUA_TNIL && movement.type() == LUA_TBOOLEAN) {
+	if (movement.type() == LUA_TBOOLEAN) 
+	{
 		m_movement				= luabind::object_cast<bool>(movement);
 
 		luabind::object position = description["position"];
@@ -67,17 +69,15 @@ void smart_cover::action::add_animation(LPCSTR type, luabind::object const &tabl
 		}
 
 		shared_str animation	= luabind::object_cast<LPCSTR>(string);
-		VERIFY2					(
+		VERIFY_FORMAT(
 			std::find(
 				animations->begin(),
 				animations->end(),
 				animation
 			) == 
 			animations->end(),
-			make_string(
 				"duplicated_animation found: %s",
 				animation.c_str()
-			)
 		);
 		animations->push_back	( animation );
 	}

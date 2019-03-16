@@ -1,8 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////
-// script_game_object_inventory_owner.ñpp :	ôóíêöèè äëÿ inventory owner
+// script_game_object_inventory_owner.Ñpp :	Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ð´Ð»Ñ inventory owner
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "luabind/luabind.hpp"
 #include "script_game_object.h"
 
 #include "InventoryOwner.h"
@@ -18,7 +19,7 @@
 #include "script_engine.h"
 #include "attachable_item.h"
 #include "script_entity.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "alife_registry_wrappers.h"
 #include "relation_registry.h"
 #include "custommonster.h"
@@ -29,12 +30,12 @@
 #include "inventory.h"
 #include "infoportion.h"
 #include "AI/Monsters/BaseMonster/base_monster.h"
-#include "weaponmagazined.h"
+#include "items/WeaponMagazined.h"
 #include "ai/stalker/ai_stalker.h"
 #include "agent_manager.h"
 #include "agent_member_manager.h"
 #include "stalker_animation_manager.h"
-#include "CameraFirstEye.h"
+#include "../xrEngine/CameraFirstEye.h"
 #include "stalker_movement_manager_smart_cover.h"
 #include "script_callback_ex.h"
 #include "memory_manager.h"
@@ -45,7 +46,7 @@
 #include "customdetector.h"
 #include "doors_manager.h"
 #include "doors_door.h"
-#include "Torch.h"
+#include "items/Torch.h"
 #include "physicobject.h"
 
 bool CScriptGameObject::GiveInfoPortion(LPCSTR info_id)
@@ -342,7 +343,7 @@ void CScriptGameObject::MakeItemActive(CScriptGameObject* pItem)
 
 }
 
-//ïåðåäà÷å âåùè èç ñâîåãî èíâåíòàðÿ â èíâåíòàðü ïàðòíåðà
+//Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‡Ðµ Ð²ÐµÑ‰Ð¸ Ð¸Ð· ÑÐ²Ð¾ÐµÐ³Ð¾ Ð¸Ð½Ð²ÐµÐ½Ñ‚Ð°Ñ€Ñ Ð² Ð¸Ð½Ð²ÐµÐ½Ñ‚Ð°Ñ€ÑŒ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð°
 void CScriptGameObject::TransferItem(CScriptGameObject* pItem, CScriptGameObject* pForWho)
 {
 	if (!pItem || !pForWho) {
@@ -357,13 +358,13 @@ void CScriptGameObject::TransferItem(CScriptGameObject* pItem, CScriptGameObject
 		return ;
 	}
 
-	// âûáðîñèòü ó ñåáÿ 
+	// Ð²Ñ‹Ð±Ñ€Ð¾ÑÐ¸Ñ‚ÑŒ Ñƒ ÑÐµÐ±Ñ 
 	NET_Packet						P;
 	CGameObject::u_EventGen			(P,GE_TRADE_SELL, object().ID());
 	P.w_u16							(pIItem->object().ID());
 	CGameObject::u_EventSend		(P);
 
-	// îòäàòü ïàðòíåðó
+	// Ð¾Ñ‚Ð´Ð°Ñ‚ÑŒ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ñƒ
 	CGameObject::u_EventGen			(P,GE_TRADE_BUY, pForWho->object().ID());
 	P.w_u16							(pIItem->object().ID());
 	CGameObject::u_EventSend		(P);
@@ -1455,14 +1456,14 @@ bool CScriptGameObject::death_sound_enabled						() const
 
 void CScriptGameObject::register_door							()
 {
-	VERIFY2								( !m_door, make_string("object %s has been registered as a door already", m_game_object->cName().c_str()) );
+	VERIFY_FORMAT( !m_door, "object %s has been registered as a door already", m_game_object->cName().c_str());
 	m_door								= ai().doors().register_door( *smart_cast<CPhysicObject*>(m_game_object) );
 //	Msg									( "registering door 0x%-08x", m_door );
 }
 
 void CScriptGameObject::unregister_door							()
 {
-	VERIFY2								( m_door, make_string("object %s is not a door", m_game_object->cName().c_str()) );
+	VERIFY_FORMAT( m_door, "object %s is not a door", m_game_object->cName().c_str());
 //	Msg									( "UNregistering door 0x%-08x", m_door );
 	ai().doors().unregister_door		( m_door );
 	m_door								= 0;
@@ -1470,36 +1471,36 @@ void CScriptGameObject::unregister_door							()
 
 void CScriptGameObject::on_door_is_open							()
 {
-	VERIFY2								( m_door, make_string("object %s hasn't been registered as a door already", m_game_object->cName().c_str()) );
+	VERIFY_FORMAT( m_door, "object %s hasn't been registered as a door already", m_game_object->cName().c_str());
 	ai().doors().on_door_is_open		( m_door );
 }
 
 void CScriptGameObject::on_door_is_closed						()
 {
-	VERIFY2								( m_door, make_string("object %s hasn't been registered as a door already", m_game_object->cName().c_str()) );
+	VERIFY_FORMAT( m_door, "object %s hasn't been registered as a door already", m_game_object->cName().c_str());
 	ai().doors().on_door_is_closed		( m_door );
 }
 
 bool CScriptGameObject::is_door_locked_for_npc					() const
 {
-	VERIFY2								( m_door, make_string("object %s hasn't been registered as a door already", m_game_object->cName().c_str()) );
+	VERIFY_FORMAT( m_door, "object %s hasn't been registered as a door already", m_game_object->cName().c_str());
 	return								ai().doors().is_door_locked( m_door );
 }
 
 void CScriptGameObject::lock_door_for_npc						()
 {
-	VERIFY2								( m_door, make_string("object %s hasn't been registered as a door already", m_game_object->cName().c_str()) );
+	VERIFY_FORMAT( m_door, "object %s hasn't been registered as a door already", m_game_object->cName().c_str());
 	ai().doors().lock_door				( m_door );
 }
 
 void CScriptGameObject::unlock_door_for_npc						()
 {
-	VERIFY2								( m_door, make_string("object %s hasn't been registered as a door already", m_game_object->cName().c_str()) );
+	VERIFY_FORMAT( m_door, "object %s hasn't been registered as a door already", m_game_object->cName().c_str());
 	ai().doors().unlock_door			( m_door );
 }
 
 bool CScriptGameObject::is_door_blocked_by_npc					() const
 {
-	VERIFY2								( m_door, make_string("object %s hasn't been registered as a door already", m_game_object->cName().c_str()) );
+	VERIFY_FORMAT( m_door, "object %s hasn't been registered as a door already", m_game_object->cName().c_str());
 	return								ai().doors().is_door_blocked( m_door );
 }

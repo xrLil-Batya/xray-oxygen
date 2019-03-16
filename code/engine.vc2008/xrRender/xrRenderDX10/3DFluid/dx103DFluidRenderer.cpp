@@ -62,10 +62,10 @@ LPCSTR			dx103DFluidRenderer::m_pResourceRTNames[ RRT_NumRT ] =
 dx103DFluidRenderer::dx103DFluidRenderer():
 	m_bInited(false)
 {
-	RTFormats[RRT_RayDataTex] = D3DFMT_A32B32G32R32F;
-	RTFormats[RRT_RayDataTexSmall] = D3DFMT_A32B32G32R32F;
-	RTFormats[RRT_RayCastTex] = D3DFMT_A32B32G32R32F;
-	RTFormats[RRT_EdgeTex] = D3DFMT_R32F;
+	RTFormats[RRT_RayDataTex] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTFormats[RRT_RayDataTexSmall] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTFormats[RRT_RayCastTex] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	RTFormats[RRT_EdgeTex] = DXGI_FORMAT_R32_FLOAT;
 }
 
 dx103DFluidRenderer::~dx103DFluidRenderer()
@@ -236,13 +236,9 @@ void dx103DFluidRenderer::CreateJitterTexture()
 	desc.Format = DXGI_FORMAT_R8_UNORM;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
-#ifdef USE_DX11
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-#else
-	desc.Usage = D3D_USAGE_DEFAULT;
-	desc.BindFlags = D3D_BIND_SHADER_RESOURCE;
-#endif
+	
+	desc.Usage = CurrUsageVer;
+	desc.BindFlags = CurrBindFlag;
 
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
@@ -331,13 +327,8 @@ void dx103DFluidRenderer::CreateHHGGTexture()
 	desc.MipLevels = 1;
 	desc.ArraySize = 1;
 	desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-#ifdef USE_DX11
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-#else
-	desc.Usage = D3D_USAGE_DEFAULT;
-	desc.BindFlags = D3D_BIND_SHADER_RESOURCE;
-#endif
+	desc.Usage = CurrUsageVer;
+	desc.BindFlags = CurrBindFlag;
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 
@@ -428,7 +419,7 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 
 	// The near and far planes are used to unproject the scene's z-buffer values
 	RCache.set_c(strZNear, VIEWPORT_NEAR);
-	RCache.set_c(strZFar, g_pGamePersistent->Environment().CurrentEnv->far_plane);
+	RCache.set_c(strZFar, Environment().CurrentEnv->far_plane);
 
 	D3DXMATRIX gridWorld;
 	gridWorld = *(D3DXMATRIX*)&transform;
@@ -457,12 +448,12 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 
 	// invWorldViewProjection is used to transform positions in the "near" plane into grid space
 	D3DXMATRIX InvWorldViewProjection;
-	D3DXMatrixInverse((D3DXMATRIX*)&InvWorldViewProjection, NULL, (D3DXMATRIX*)&WorldViewProjection);
+	D3DXMatrixInverse((D3DXMATRIX*)&InvWorldViewProjection, nullptr, (D3DXMATRIX*)&WorldViewProjection);
 	RCache.set_c(strInvWorldViewProjection, *(Fmatrix*)&InvWorldViewProjection);
 
 	// Compute the inverse of the worldView matrix ;
 	D3DXMATRIX WorldViewInv;
-	D3DXMatrixInverse((D3DXMATRIX*)&WorldViewInv, NULL, (D3DXMATRIX*)&WorldView);
+	D3DXMatrixInverse((D3DXMATRIX*)&WorldViewInv, nullptr, (D3DXMATRIX*)&WorldView);
 
 	// Compute the eye's position in "grid space" (the 0-1 texture coordinate cube)
 	D3DXVECTOR4 EyeInGridSpace;
@@ -631,10 +622,10 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 
 	const dx103DFluidData::Settings &VolumeSettings = FluidData.GetSettings();
 
-	Fvector4 hemi_color = g_pGamePersistent->Environment().CurrentEnv->hemi_color;
+	Fvector4 hemi_color = Environment().CurrentEnv->hemi_color;
 	hemi_color.mul(VolumeSettings.m_fHemi);
 	LightData.m_vLightIntencity.set(hemi_color.x, hemi_color.y, hemi_color.z);
-	LightData.m_vLightIntencity.add(g_pGamePersistent->Environment().CurrentEnv->ambient);
+	LightData.m_vLightIntencity.add(Environment().CurrentEnv->ambient);
 
 	const Fmatrix &Transform = FluidData.GetTransform();
 
@@ -658,9 +649,9 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 		size
 		);
 
-	u32 iNumRenderables = m_lstRenderables.size();
+	size_t iNumRenderables = m_lstRenderables.size();
 	// Determine visibility for dynamic part of scene
-	for (u32 i=0; i<iNumRenderables; ++i)
+	for (size_t i=0; i<iNumRenderables; ++i)
 	{
 		ISpatial*	spatial		= m_lstRenderables[i];
 

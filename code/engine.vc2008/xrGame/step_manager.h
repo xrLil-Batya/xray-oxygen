@@ -4,7 +4,7 @@
 class CEntityAlive;
 class CBlend;
 struct SGameMtlPair;
-class CStepManager {
+class GAME_API CStepManager {
 	u8					m_legs_count;
 
 	STEPS_MAP			m_steps_map;
@@ -35,7 +35,7 @@ public:
 	// call on set animation
 			void		on_animation_start		(MotionID motion_id, CBlend *blend);
 	// call on updateCL
-			void		update					(bool b_hud_view);
+			void		update					(bool b_hud_view = false);
 	
 	// process event
 	virtual	void		event_on_step			() {}	

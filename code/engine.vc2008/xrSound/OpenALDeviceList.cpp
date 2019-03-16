@@ -41,7 +41,7 @@ ALDeviceList::ALDeviceList()
  */
 ALDeviceList::~ALDeviceList()
 {
-	for (int i = 0; snd_devices_token[i].name; ++i)
+	for (u32 i = 0; snd_devices_token[i].name; ++i)
 	{
 		xr_free(snd_devices_token[i].name);
 	}
@@ -60,7 +60,6 @@ void ALDeviceList::Enumerate()
 	// -- empty all the lists and reserve space for 10 devices
 	m_devices.clear();
 
-	CoUninitialize();
 	// grab function pointers for 1.0-API functions, and if successful proceed to enumerate all devices
 	if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT"))
 	{
@@ -91,8 +90,8 @@ void ALDeviceList::Enumerate()
 						alcGetIntegerv(device, ALC_MINOR_VERSION, sizeof(int), &minor);
 						m_devices.push_back(ALDeviceDesc(actualDeviceName, minor, major));
 
-						m_devices.back().props.efx = alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX");
-						m_devices.back().props.xram = alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "EAX_RAM");
+						m_devices.back().props.efx = alcIsExtensionPresent(device, "ALC_EXT_EFX");
+						m_devices.back().props.xram = alcIsExtensionPresent(device, "EAX_RAM");
 
 						Msg("[OpenAL] device: %s, EFX Support: %s", actualDeviceName, m_devices.back().props.efx ? "yes" : "no");
 
@@ -138,8 +137,8 @@ void ALDeviceList::Enumerate()
 	{
 		GetDeviceVersion(j, &majorVersion, &minorVersion);
 	}
-	if (!strstr(Core.Params, "-editor"))
-		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+// 	if (!strstr(Core.Params, "-editor"))
+// 		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 }
 
 const char* ALDeviceList::GetDeviceName(u32 index)

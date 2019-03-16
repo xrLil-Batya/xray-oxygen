@@ -9,7 +9,7 @@
 #include "commdlg.h"
 #include "vfw.h"
 
-EFS_Utils*	xr_EFS	= NULL;
+EFS_Utils*	xr_EFS	= nullptr;
 //----------------------------------------------------
 EFS_Utils::EFS_Utils( )
 {
@@ -22,28 +22,28 @@ EFS_Utils::~EFS_Utils()
 xr_string	EFS_Utils::ExtractFileName(const char* src)
 {
 	string_path name;
-	_splitpath	(src,0,0,name,0);
+	_splitpath	(src,nullptr,nullptr,name,nullptr);
     return xr_string(name);
 }
 
 xr_string	EFS_Utils::ExtractFileExt(const char* src)
 {
 	string_path ext;
-	_splitpath	(src,0,0,0,ext);
+	_splitpath	(src,nullptr,nullptr,nullptr,ext);
     return xr_string(ext);
 }
 
 xr_string	EFS_Utils::ExtractFilePath(const char* src)
 {
 	string_path drive,dir;
-	_splitpath	(src,drive,dir,0,0);
+	_splitpath	(src,drive,dir,nullptr,nullptr);
     return xr_string(drive)+dir;
 }
 
 xr_string	EFS_Utils::ExcludeBasePath(const char* full_path, const char* excl_path)
 {
     const char* sub		= strstr(full_path,excl_path);
-	if (0!=sub) 	return xr_string(sub+xr_strlen(excl_path));
+	if (nullptr!=sub) 	return xr_string(sub+xr_strlen(excl_path));
 	else	   		return xr_string(full_path);
 }
 
@@ -69,7 +69,7 @@ xr_string	EFS_Utils::ChangeFileExt(const xr_string& src, const char* ext)
 //----------------------------------------------------
 void MakeFilter(string1024& dest, const char* info, const char* ext)
 {
-    std::string res;
+    xr_string res;
 
     if (ext)
     {
@@ -136,7 +136,7 @@ bool EFS_Utils::GetOpenNameInternal( const char* initial,  char* buffer, int sz_
     {
         string_path		dr;
         if (!(buffer[0]=='\\' && buffer[1]=='\\')){ // if !network
-            _splitpath		(buffer,dr,0,0,0);
+            _splitpath		(buffer,dr,nullptr,nullptr,nullptr);
 
             if (0==dr[0])
             {
@@ -189,7 +189,7 @@ bool EFS_Utils::GetOpenNameInternal( const char* initial,  char* buffer, int sz_
 	}
     if (bRes && bMulti)
     {
-    	Log				("buff=",buffer);
+    	Msg				("buff=%s",buffer);
 		int cnt			= _GetItemCount(buffer,0x0);
         if (cnt>1)
         {
@@ -225,20 +225,14 @@ bool EFS_Utils::GetSaveName(const char* initial, string_path& buffer, const char
 	string1024 			flt;
 
 	const char* def_ext = P.m_DefExt;
-	if (false)//&& dwWindowsMajorVersion == 6 )
-	{
-		if (strstr(P.m_DefExt, "*."))
-			def_ext = strstr(P.m_DefExt, "*.") + 2;
-	}
-
-
+	
 	MakeFilter(flt, P.m_FilterCaption ? P.m_FilterCaption : "", def_ext);
 	OPENFILENAME ofn;
 	std::memset(&ofn, 0, sizeof(ofn));
 	if (xr_strlen(buffer)) {
 		string_path		dr;
 		if (!(buffer[0] == '\\' && buffer[1] == '\\')) { // if !network
-			_splitpath(buffer, dr, 0, 0, 0);
+			_splitpath(buffer, dr, nullptr, nullptr, nullptr);
 			if (0 == dr[0])	P._update(buffer, buffer);
 		}
 	}
@@ -296,7 +290,7 @@ const char* EFS_Utils::GenerateName(const char* base_path, const char* base_name
     int cnt = 0;
 	string_path fn;
     if (base_name)	
-		strconcat		(sizeof(fn), fn, base_path,base_name,def_ext);
+		xr_strconcat(fn, base_path, base_name, def_ext);
 	else 			
 		xr_sprintf		(fn, sizeof(fn), "%s%02d%s",base_path,cnt++,def_ext);
 

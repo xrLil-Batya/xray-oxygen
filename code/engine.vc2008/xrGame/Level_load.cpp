@@ -7,7 +7,7 @@
 #include "script_engine.h"
 #include "script_engine_space.h"
 #include "level.h"
-#include "game_cl_base.h"
+
 #include "../xrEngine/x_ray.h"
 #include "../xrEngine/gamemtllib.h"
 #include "../xrphysics/PhysicsCommon.h"
@@ -21,7 +21,7 @@ BOOL CLevel::Load_GameSpecific_Before()
 	g_pGamePersistent->LoadTitle();
 	string_path fn_game;
 
-	if (!ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game"))
+	if (!ai().get_alife() && ai().is_game_graph_presented() && FS.exist(fn_game, "$level$", "level.game"))
 	{
 		IReader *stream = FS.r_open(fn_game);
 		ai().patrol_path_storage_raw(*stream);
@@ -101,43 +101,16 @@ BOOL CLevel::Load_GameSpecific_After()
 		Sounds_Random.reserve(S.Data.size());
 		for (CInifile::Item I : S.Data)
 		{
-			Sounds_Random.push_back(ref_sound());
+			Sounds_Random.emplace_back();
 			Sound->create(Sounds_Random.back(), I.first.c_str(), st_Effect, sg_SourceType);
 		}
 		Sounds_Random_dwNextTime = Device.TimerAsync() + 50000;
 		Sounds_Random_Enabled = FALSE;
 	}
 
-	if (g_pGamePersistent->pEnvironment)
-	{
-		if (CEffect_Rain* rain = g_pGamePersistent->pEnvironment->eff_Rain)
-		{
-			rain->InvalidateState();
-		}
-	}
-
-	if (FS.exist(fn_game, "$level$", "level.fog_vol"))
-	{
-		IReader *F = FS.r_open(fn_game);
-		u16 version = F->r_u16();
-		if (version == 2)
-		{
-			u32 cnt = F->r_u32();
-
-			Fmatrix					volume_matrix;
-			for (u32 i = 0; i < cnt; ++i)
-			{
-				F->r(&volume_matrix, sizeof(volume_matrix));
-				u32 sub_cnt = F->r_u32();
-				for (u32 is = 0; is < sub_cnt; ++is)
-				{
-					F->r(&volume_matrix, sizeof(volume_matrix));
-				}
-
-			}
-		}
-		FS.r_close(F);
-	}
+	CEffectRain* pRain = Environment().eff_Rain;
+	if (pRain)
+		pRain->InvalidateState();
 
 	// loading scripts
 	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
@@ -147,7 +120,8 @@ BOOL CLevel::Load_GameSpecific_After()
 	else
 		ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel, xr_new<CScriptProcess>("level", ""));
 
-	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
+	if (game)
+		Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
 	return TRUE;
 }
@@ -181,11 +155,11 @@ struct translation_pair
 
 void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 {
-	typedef xr_vector<translation_pair>	ID_INDEX_PAIRS;
+	using ID_INDEX_PAIRS = xr_vector<translation_pair>;
 	ID_INDEX_PAIRS						translator;
 	translator.reserve					(GMLib.CountMaterial());
 	u16									default_id = (u16)GMLib.GetMaterialIdx("default");
-	translator.push_back				(translation_pair(u32(-1),default_id));
+	translator.emplace_back				(u32(-1),default_id);
 
 	u16									index = 0, static_mtl_count = 1;
 	int max_ID							= 0;
@@ -193,7 +167,7 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 	for (GameMtlIt I=GMLib.FirstMaterial(); GMLib.LastMaterial()!=I; ++I, ++index) {
 		if (!(*I)->Flags.test(SGameMtl::flDynamic)) {
 			++static_mtl_count;
-			translator.push_back		(translation_pair((*I)->GetID(),index));
+			translator.emplace_back		((*I)->GetID(),index);
 			if ((*I)->GetID()>max_static_ID)	max_static_ID	= (*I)->GetID(); 
 		}
 		if ((*I)->GetID()>max_ID)				max_ID			= (*I)->GetID(); 

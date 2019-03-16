@@ -2,7 +2,7 @@
 
 #pragma pack(push,4)
 //////////////////////////////////////////////////////////////////////////
-typedef const char*		str_c;
+using str_c = const char*;
 
 //////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
@@ -31,9 +31,7 @@ class IWriter;
 class XRCORE_API str_container
 {
 private:
-#ifndef _CLR_MANAGER
-    std::recursive_mutex				cs;
-#endif
+    xrCriticalSection					cs;
 	str_container_impl*                 impl;
 public:
 						str_container	();
@@ -55,18 +53,18 @@ private:
 	str_value*			p_;
 protected:
 	// ref-counting
-	void				_dec		()								{	if (0==p_) return;	p_->dwReference--; 	if (0==p_->dwReference)	p_=0;						}
+	void				_dec		()								{	if (p_== nullptr) return;	p_->dwReference--; 	if (0==p_->dwReference)	p_ = nullptr;		}
 public:
-	void				_set		(str_c rhs) 					{	str_value* v = g_pStringContainer.dock(rhs); if (0!=v) v->dwReference++; _dec(); p_ = v;	}
-	void				_set		(shared_str const &rhs)			{	str_value* v = rhs.p_; if (0!=v) v->dwReference++; _dec(); p_ = v;							}
+	void				_set		(str_c rhs) 					{	str_value* v = g_pStringContainer.dock(rhs); if (nullptr!=v) v->dwReference++; _dec(); p_ = v;	}
+	void				_set		(shared_str const &rhs)			{	str_value* v = rhs.p_; if (nullptr!=v) v->dwReference++; _dec(); p_ = v;							}
 
 	const str_value*	_get		()	const						{	return p_;	}
 public:
 	// construction
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						shared_str	() : p_(0)						{ }
-						shared_str	(str_c rhs) : p_(0)				{	_set(rhs);						    }
-						shared_str	(shared_str const &rhs) : p_(0)	{	_set(rhs);  						}
+						shared_str	() : p_(nullptr)						{ }
+						shared_str	(str_c rhs) : p_(nullptr)				{	_set(rhs);						    }
+						shared_str	(shared_str const &rhs) : p_(nullptr)	{	_set(rhs);  						}
 						~shared_str	()								{	_dec();								}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +72,7 @@ public:
 	shared_str&			operator=	(str_c rhs)						{	_set(rhs);	return (shared_str&)*this;		}
 	shared_str&			operator=	(shared_str const &rhs)			{	_set(rhs);	return (shared_str&)*this;		}
 	str_c				operator*	() const						{	return p_ ? p_->value : nullptr;			}
-	bool				operator!	() const						{	return p_ == 0;								}
+	bool				operator!	() const						{	return p_ == nullptr;								}
 	char				operator[]	(size_t id)						{	return p_->value[id];						}
 	bool				operator==	(shared_str const &rhs)			{	return _get() == rhs._get();				}
 
@@ -82,7 +80,7 @@ public:
 	char*				data		() const						{	return p_ ? p_->value : nullptr;			}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// misc func
-	u32					size		()						const	{	if (0==p_) return 0; else return p_->dwLength;	}
+	u32					size		()						const	{	if (nullptr==p_) return 0; else return p_->dwLength;	}
 	void				swap		(shared_str & rhs)				{	str_value* tmp = p_; p_ = rhs.p_; rhs.p_ = tmp;	}
 	bool				equal		(const shared_str & rhs) const	{	return (p_ == rhs.p_);							}
 
@@ -98,6 +96,101 @@ public:
 	}
 };
 
+class XRCORE_API xr_string : public std::basic_string<char, std::char_traits<char>, xalloc<char>>
+{
+public:
+	typedef std::basic_string<char, std::char_traits<char>, xalloc<char>> Super;
+
+	xr_string(LPCSTR Str);
+	xr_string(LPCSTR Str, u32 Size);
+	xr_string(const xr_string& other);
+	xr_string(const xr_string&& other);
+	xr_string(const Super&& other);
+	xr_string();
+
+	xr_string& operator=(LPCSTR Str);
+	xr_string& operator=(const xr_string& other);
+	xr_string& operator=(const Super& other);
+
+	template <size_t ArrayLenght>
+	xr_string(char* (&InArray)[ArrayLenght])
+	{
+		assign(InArray, ArrayLenght);
+	}
+
+	xr_vector<xr_string> Split(char splitCh);
+	xr_vector<xr_string> Split(u32 NumberOfSplits, ...);
+
+	bool StartWith(const xr_string& Other) const;
+	bool StartWith(LPCSTR Str) const;
+	bool StartWith(LPCSTR Str, size_t Size) const;
+	xr_string RemoveWhitespaces() const;
+
+	static xr_string ToString(int Value);
+	static xr_string ToString(unsigned int Value);
+	static xr_string ToString(float Value);
+	static xr_string ToString(double Value);
+	static xr_string ToString(const Fvector& Value);
+	static xr_string ToString(const Dvector& Value);
+
+	using xrStringVector = xr_vector<xr_string>;
+	static xr_string Join(xrStringVector::iterator beginIter, xrStringVector::iterator endIter, const char delimeter = '\0');
+
+	template<typename StringType>
+	static void FixSlashes(StringType& str)
+	{
+		// Should be array of chars
+		static_assert(std::is_same<std::remove_extent<StringType>::type, char>::value);
+
+		constexpr size_t sizeArray = sizeof(str);
+
+		for (int i = 0; i < sizeArray; ++i)
+		{
+			if (str[i] == '/')
+			{
+				str[i] = '\\';
+			}
+		}
+	}
+
+	template<>
+	static void FixSlashes<xr_string>(xr_string& InStr)
+	{
+		for (int i = 0; i < InStr.size(); ++i)
+		{
+			if (InStr[i] == '/')
+			{
+				InStr[i] = '\\';
+			}
+		}
+	}
+};
+
+using SStringVec = xr_vector<xr_string>;
+
+// warning
+// this function can be used for debug purposes only
+template <typename... Args>
+const char* make_string(const char* format, const Args&... args)
+{
+	static constexpr size_t bufferSize = 4096;
+	static char temp[bufferSize];
+	snprintf(temp, bufferSize, format, args...);
+	return temp;
+}
+
+namespace std {
+	template<>
+	class hash<xr_string> {
+	public:
+		size_t operator()(const xr_string &s) const
+		{
+			std::hash<xr_string::Super> hashFn;
+			return hashFn(s);
+		}
+	};
+}
+
 IC bool operator	==	(shared_str const & a, shared_str const & b)		{ return a._get() == b._get();					}
 IC bool operator	!=	(shared_str const & a, shared_str const & b)		{ return a._get() != b._get();					}
 IC bool operator	<	(shared_str const & a, shared_str const & b)		{ return a._get() <  b._get();					}
@@ -112,7 +205,7 @@ IC int	xr_strcmp		(const shared_str & a, const shared_str & b) throw()    {
 	if (a.equal(b))		return 0;
 	else				return xr_strcmp(*a,*b);
 }
-IC void	xr_strlwr		(xr_string& src)									{ for(xr_string::iterator it=src.begin(); it!=src.end(); it++) *it=xr_string::value_type(tolower(*it));}
+IC void	xr_strlwr		(xr_string& src)									{ for(char & it : src) it=xr_string::value_type(tolower(it));}
 IC void	xr_strlwr		(shared_str& src)									{ if (*src){char* lp=xr_strdup(*src); xr_strlwr(lp); src=lp; xr_free(lp);} }
 
 namespace std
@@ -121,7 +214,7 @@ namespace std
   {
     std::size_t operator() ( const shared_str &s ) const 
 	{
-      return std::hash<std::string>{}( s.c_str() );
+      return std::hash<xr_string>{}( s.c_str() );
     }
   };
 }

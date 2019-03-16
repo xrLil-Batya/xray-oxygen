@@ -9,9 +9,10 @@
 #include "stdafx.h"
 #include "property_storage.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CPropertyStorage::script_register(lua_State *L)
 {
 	module(L)

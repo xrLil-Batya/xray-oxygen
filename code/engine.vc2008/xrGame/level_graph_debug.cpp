@@ -11,7 +11,7 @@
 #ifndef AI_COMPILER
 #include "level_graph.h"
 #include "level.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "xrserver_objects_alife_monsters.h"
 #include "alife_simulator.h"
 #include "alife_graph_registry.h"
@@ -19,7 +19,7 @@
 #include "alife_human_brain.h"
 #include "alife_monster_movement_manager.h"
 #include "alife_monster_detail_path_manager.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 
 #include "debug_renderer.h"
 
@@ -184,7 +184,7 @@ void CLevelGraph::draw_stalkers		(const int &vertex_id)
 	bool						show_text = true;
 	for (;;) {
 		Fvector4				temp;
-		Device.mFullTransform.transform (temp,position);
+		(Device.mFullTransform).transform (temp,position);
 		font.OutSetI			(temp.x,-temp.y);
 		font.SetHeightI			(.05f/_sqrt(temp.w));
 		
@@ -304,7 +304,7 @@ void CLevelGraph::draw_stalkers		(const int &vertex_id)
 		render.draw_aabb		(direction,radius,radius,radius,color);
 
 		Fvector4				temp;
-		Device.mFullTransform.transform (temp,direction);
+		(Device.mFullTransform).transform (temp,direction);
 		
 		if (temp.z < 0.f)
 			continue;
@@ -350,7 +350,7 @@ void CLevelGraph::draw_objects		(const int &vertex_id)
 	bool						show_text = true;
 	for (;;) {
 		Fvector4				temp;
-		Device.mFullTransform.transform (temp,position);
+		(Device.mFullTransform).transform (temp,position);
 		font.OutSetI			(temp.x,-temp.y);
 		font.SetHeightI			(.05f/_sqrt(temp.w));
 		
@@ -468,7 +468,7 @@ void CLevelGraph::draw_objects		(const int &vertex_id)
 		render.draw_aabb		(direction,radius,radius,radius,color);
 
 		Fvector4				temp;
-		Device.mFullTransform.transform (temp,direction);
+		(Device.mFullTransform).transform (temp,direction);
 		
 		if (temp.z < 0.f)
 			continue;
@@ -556,7 +556,7 @@ void CLevelGraph::draw_game_graph	()
 		T.set			(t1);
 		//T.y+= 1.5f;
 		T.y+= 1.5f/10.f;
-		Device.mFullTransform.transform (S,T);
+		(Device.mFullTransform).transform (S,T);
 		//out of screen
 		if (S.z < 0 || S.w < 0)												continue;
 		if (S.x < -1.f || S.x > 1.f || S.y<-1.f || S.x>1.f)					continue;

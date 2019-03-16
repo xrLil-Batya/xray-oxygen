@@ -298,28 +298,16 @@ struct	v_static_color
 
 ////////////////////////////////////////////////////////////////
 //	defer
-#ifndef GBUFFER_OPTIMIZATION
-struct                  f_deffer        		
+struct f_deffer        		
 {
-	float4	position: SV_Target0;        // px,py,pz, m-id
-	float4	Ne		  : SV_Target1;        // nx,ny,nz, hemi
-	float4	C		  : SV_Target2;        // r, g, b,  gloss
+	float4	position	: SV_Target0;        // xy=encoded normal, z = pz, w = encoded(m-id,hemi)
+	float4	C		  	: SV_Target1;        // r, g, b,  gloss
 #ifdef EXTEND_F_DEFFER
-   uint     mask    : SV_COVERAGE;
+	uint	mask    	: SV_COVERAGE;
 #endif
 };
-#else
-struct                  f_deffer        		
-{
-	float4	position: SV_Target0;        // xy=encoded normal, z = pz, w = encoded(m-id,hemi)
-	float4	C		  : SV_Target1;        // r, g, b,  gloss
-#ifdef EXTEND_F_DEFFER
-   uint     mask    : SV_COVERAGE;
-#endif
-};
-#endif
 
-struct					gbuffer_data
+struct gbuffer_data
 {
 	float3  P; // position.( mtl or sun )
 	float   mtl; // material id
@@ -475,6 +463,10 @@ struct p_screen
 struct	v2p_screen
 {
 	float2 tc0 : TEXCOORD0;
-	float4 HPos : POSITIONT;	// Clip-space position 	(for rasterization)
+#ifdef SM_2_0
+	float4 HPos : POSITION;	// Clip-space position 	(for rasterization)
+#else
+	float4 HPos : POSITIONT;  	// Clip-space position 	(for rasterization)
+#endif
 };
 #endif	//	common_iostructs_h_included

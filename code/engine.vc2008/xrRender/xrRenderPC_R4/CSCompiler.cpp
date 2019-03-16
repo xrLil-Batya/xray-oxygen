@@ -27,57 +27,46 @@ CSCompiler& CSCompiler::defSampler(LPCSTR ResourceName)
 	D3D11_SAMPLER_DESC	desc;
     std::memset(&desc,0,sizeof(desc));
 
-	//	Use D3DTADDRESS_CLAMP,	D3DTEXF_POINT,			D3DTEXF_NONE,	D3DTEXF_POINT 
-	if (0==xr_strcmp(ResourceName,"smp_nofilter"))
+	if (0 == xr_strcmp(ResourceName, "smp_nofilter"))
 	{
 		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 		return defSampler(ResourceName, desc);
 	}
-
-	//	Use D3DTADDRESS_CLAMP,	D3DTEXF_LINEAR,			D3DTEXF_NONE,	D3DTEXF_LINEAR 
-	if (0==xr_strcmp(ResourceName,"smp_rtlinear"))
+	else if (0 == xr_strcmp(ResourceName, "smp_rtlinear"))
 	{
 		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		desc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
 		return defSampler(ResourceName, desc);
 	}
-
-	//	Use	D3DTADDRESS_WRAP,	D3DTEXF_LINEAR,			D3DTEXF_LINEAR,	D3DTEXF_LINEAR
-	if (0==xr_strcmp(ResourceName,"smp_linear"))
+	else if (0 == xr_strcmp(ResourceName, "smp_linear"))
 	{
 		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		return defSampler(ResourceName, desc);
 	}
-
-	//	Use D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC, 	D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC
-	if (0==xr_strcmp(ResourceName,"smp_base"))
+	else if (0 == xr_strcmp(ResourceName, "smp_base"))
 	{
 		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		desc.Filter = D3D11_FILTER_ANISOTROPIC;
 		desc.MaxAnisotropy = 8;
 		return defSampler(ResourceName, desc);
 	}
-
-	//	Use D3DTADDRESS_CLAMP,	D3DTEXF_LINEAR,			D3DTEXF_NONE,	D3DTEXF_LINEAR
-	if (0==xr_strcmp(ResourceName,"smp_material"))
+	else if (0 == xr_strcmp(ResourceName, "smp_material"))
 	{
 		desc.AddressU = desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		desc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
 		return defSampler(ResourceName, desc);
 	}
-
-	if (0==xr_strcmp(ResourceName,"smp_smap"))
+	else if (0 == xr_strcmp(ResourceName, "smp_smap"))
 	{
 		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
 		desc.ComparisonFunc = D3D_COMPARISON_LESS_EQUAL;
 		return defSampler(ResourceName, desc);
 	}
-
-	if (0==xr_strcmp(ResourceName,"smp_jitter"))
+	else if (0 == xr_strcmp(ResourceName, "smp_jitter"))
 	{
 		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -170,7 +159,7 @@ void CSCompiler::compile(const char* name)
 	}
 
 	string_path					cname;
-	strconcat					(sizeof(cname),cname, ::Render->getShaderPath(), "cs_", name,".hlsl");
+	xr_strconcat				(cname, ::Render->getShaderPath(), "cs_", name,".hlsl");
 	FS.update_path				(cname,	"$game_shaders$", cname);
 
 	IReader* file				= FS.r_open(cname);

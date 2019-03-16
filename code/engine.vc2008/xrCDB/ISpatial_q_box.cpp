@@ -29,7 +29,7 @@ public:
 		if (!BB.intersect(box))			return;
 
 		// test items
-		for (auto _it = N->items.begin(); _it != N->items.end(); _it++)
+		for (auto _it = N->items.begin(); _it != N->items.end(); ++_it)
 		{
 			ISpatial*		S = *_it;
 			if (0 == (S->spatial.type&mask))	continue;
@@ -58,7 +58,7 @@ public:
 
 void	ISpatial_DB::q_box			(xr_vector<ISpatial*>& R, u32 _o, u32 _mask, const Fvector& _center, const Fvector& _size)
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 	q_result			= &R;
 	q_result->clear		();
 	if (_o & O_ONLYFIRST)			{ walker<true>	W(this,_mask,_center,_size);	W.walk(m_root,m_center,m_bounds); } 

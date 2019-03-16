@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "AnselWrapper.h"
 #include "r2_puddles.h"
 #include "r4.h"
 #include "../xrRender/ResourceManager.h"
@@ -49,8 +50,13 @@ void CRender::level_Load(IReader* fs)
 	}
 
 	// Components
-	Wallmarks					= xr_new<CWallmarksEngine>	();
-	Details						= xr_new<CDetailManager>	();
+	Glows		= new CGlowManager();
+	Wallmarks	= new CWallmarksEngine();
+	Details		= new CDetailManager();
+	pGameAnsel  = new AnselManager();
+
+	// Init Ansel Wrapper
+	pGameAnsel->Load();
 
 	// VB,IB,SWI
 	g_pGamePersistent->SetLoadStageTitle("st_loading_geometry");
@@ -140,8 +146,8 @@ void CRender::level_Unload()
 	Portals.clear			();
 
 	//*** Lights
-	// Glows.Unload			();
-	Lights.Unload			();
+	Glows->Unload();
+	Lights.Unload();
 
 	//*** Visuals
 	for (I=0; I<Visuals.size(); I++)
@@ -165,12 +171,21 @@ void CRender::level_Unload()
 	nDC.clear(); xDC.clear();
 
 	//*** Components
-	xr_delete					(Details);
-	xr_delete					(Wallmarks);
+	xr_delete(Details);
+	xr_delete(Wallmarks);
+	xr_delete(Glows);
 
 	//*** Shaders
-	Shaders.clear		();
-	b_loaded					= FALSE;
+	try
+	{
+		Shaders.clear();
+	}
+	catch (...)
+	{
+		Msg("# [ERROR]: Shaders vector is broken! Skip...");
+	}
+
+	b_loaded = FALSE;
 }
 
 void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
@@ -264,6 +279,12 @@ void CRender::LoadLights(IReader *fs)
 	// lights
 	Lights.Load	(fs);
 	Lights.LoadHemi();
+
+	// glows
+	IReader *chunk = fs->open_chunk(fsL_GLOWS);
+	R_ASSERT(chunk && "Can't find glows");
+	Glows->Load(chunk);
+	chunk->close();
 }
 
 struct b_portal
@@ -328,7 +349,7 @@ void CRender::LoadSectors(IReader* fs)
 
 		// build portal model
 		rmPortals = xr_new<CDB::MODEL> ();
-		rmPortals->build	(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()), nullptr, nullptr, false);
+		rmPortals->build	(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()), nullptr, false, nullptr, nullptr, false);
 	} else {
 		rmPortals = 0;
 	}

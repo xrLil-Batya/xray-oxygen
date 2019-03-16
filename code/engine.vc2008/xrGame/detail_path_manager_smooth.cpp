@@ -9,7 +9,7 @@
 #include "stdafx.h"
 #include "detail_path_manager.h"
 #include "ai_space.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "level_graph.h"
 
 #ifdef DEBUG
@@ -305,9 +305,9 @@ bool CDetailPathManager::build_trajectory(
 }
 
 bool CDetailPathManager::build_trajectory(
-	STrajectoryPoint			&start, 
-	STrajectoryPoint			&dest, 
-	const SCirclePoint			tangents[4][2], 
+	STrajectoryPoint			&start,
+	STrajectoryPoint			&dest,
+	const SCirclePoint			tangents[4][2],
 	const u32					tangent_count,
 	xr_vector<STravelPathPoint>	*path,
 	float						&time,
@@ -316,37 +316,33 @@ bool CDetailPathManager::build_trajectory(
 	const u32					velocity3
 )
 {
-	time			= flt_max;
-	SDist			dist[4];
-	float			straight_velocity = _abs(velocity(velocity2).linear_velocity);
-	{
-		for (u32 i=0; i<tangent_count; ++i) {
-			dist[i].index = i;
-			dist[i].time = 
-				_abs(tangents[i][0].angle)/start.angular_velocity +
-				_abs(tangents[i][1].angle)/dest.angular_velocity +
-				tangents[i][0].point.distance_to(tangents[i][1].point)*
-				(fis_zero(straight_velocity) ? 0 : 1.f/straight_velocity); 
-		}
-	}
-	
-	std::sort		(dist,dist + tangent_count);
+	time = flt_max;
+	SDist dist[4];
+	float straight_velocity = _abs(velocity(velocity2).linear_velocity);
 
+	for (u32 i = 0; i < tangent_count; ++i)
 	{
-		for (u32 i=0, j = path ? path->size() : 0; i<tangent_count; ++i) {
-			(SCirclePoint&)(start) = tangents[dist[i].index][0];
-			(SCirclePoint&)(dest)	= tangents[dist[i].index][1];
-			if (build_trajectory(start,dest,path,velocity1,velocity2,velocity3)) {
-				time	= dist[i].time;
-				return	(true);
-			}
-			else
-				if (path)
-					path->resize(j);
-		}
+		dist[i].index = i;
+		dist[i].time = _abs(tangents[i][0].angle) / start.angular_velocity + _abs(tangents[i][1].angle) / dest.angular_velocity +
+			tangents[i][0].point.distance_to(tangents[i][1].point) * (fis_zero(straight_velocity) ? 0 : 1.f / straight_velocity);
 	}
 
-	return		(false);
+	std::sort(dist, dist + tangent_count);
+
+	for (u32 i = 0, j = path ? (u32)path->size() : 0; i < tangent_count; ++i)
+	{
+		(SCirclePoint&)(start) = tangents[dist[i].index][0];
+		(SCirclePoint&)(dest) = tangents[dist[i].index][1];
+		if (build_trajectory(start, dest, path, velocity1, velocity2, velocity3))
+		{
+			time = dist[i].time;
+			return	(true);
+		}
+		else if (path)
+			path->resize(j);
+	}
+
+	return (false);
 }
 
 bool CDetailPathManager::compute_trajectory(
@@ -405,7 +401,7 @@ bool CDetailPathManager::compute_path(
 	STrajectoryPoint			start = _start;
 	STrajectoryPoint			dest = _dest;
 	float						min_time = flt_max, time;
-	u32							size = m_tpTravelLine ? m_tpTravelLine->size() : 0;
+	u32							size = m_tpTravelLine ? (u32)m_tpTravelLine->size() : 0;
 	u32							real_straight_line_index;
 	xr_vector<STravelParamsIndex>::const_iterator I = start_params.begin();
 	xr_vector<STravelParamsIndex>::const_iterator E = start_params.end();
@@ -784,7 +780,7 @@ void CDetailPathManager::postprocess_key_points(
 
 void CDetailPathManager::add_patrol_point()
 {
-	m_last_patrol_point					= m_path.size() - 1;
+	m_last_patrol_point					= (u32)m_path.size() - 1;
 	if ((m_path.size() > 1) && m_state_patrol_path && !fis_zero(extrapolate_length())) {
 		STravelPathPoint				t;
 		Fvector							v;

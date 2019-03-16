@@ -10,7 +10,6 @@
 #define PROPERTY_HOLDER_INCLUDE_HPP_INCLUDED
 
 #pragma unmanaged
-#include "../xrcore/fastdelegate.h"
 #include <utility>
 #include "../include/editor/property_holder.hpp"
 #pragma managed
@@ -33,12 +32,12 @@ public:
 	{
 	}
 
-	inline T const&	xr_stdcall	get	()
+	inline T const&		get	()
 	{
 		return	(m_value);
 	}
 
-	inline void	xr_stdcall	set	(T const &value)
+	inline void		set	(T const &value)
 	{
 		m_value	= value;
 	}

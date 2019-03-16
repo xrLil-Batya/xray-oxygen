@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // refs
 class ENGINE_API CGameFont;
@@ -10,6 +10,7 @@ class ENGINE_API CApplication	:
 	public IEventReceiver
 {
 
+public:
 	// levels
 	struct					sLevelInfo
 	{

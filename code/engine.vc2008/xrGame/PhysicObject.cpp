@@ -17,12 +17,12 @@
 #endif
 BOOL dbg_draw_doors = false;
 
-CPhysicObject::CPhysicObject(void) :
-	m_anim_blend(0), m_type(epotBox), m_mass(10.f), m_collision_hit_callback(0), bones_snd_player(0), m_net_updateData(0)
+CPhysicObject::CPhysicObject() :
+	m_anim_blend(nullptr), m_type(epotBox), m_mass(10.f), m_collision_hit_callback(nullptr), bones_snd_player(nullptr), m_net_updateData(nullptr)
 {
 }
 
-CPhysicObject::~CPhysicObject(void)
+CPhysicObject::~CPhysicObject()
 {
 	xr_delete(m_net_updateData);
 }
@@ -34,8 +34,8 @@ BOOL CPhysicObject::net_Spawn(CSE_Abstract* DC)
 	R_ASSERT(po);
 	m_type = EPOType(po->type);
 	m_mass = po->mass;
-	m_collision_hit_callback = NULL;
-	m_anim_blend = 0;
+	m_collision_hit_callback = nullptr;
+	m_anim_blend = nullptr;
 	inherited::net_Spawn(DC);
 
 	create_collision_model();
@@ -115,8 +115,8 @@ void CPhysicObject::stop_bones_sound()
 
 static CPhysicsShellHolder* retrive_collide_object(bool bo1, dContact& c)
 {
-	CPhysicsShellHolder* collide_obj = 0;
-	dxGeomUserData* ud = 0;
+	CPhysicsShellHolder* collide_obj = nullptr;
+	dxGeomUserData* ud = nullptr;
 
 	if (bo1)
 		ud = PHRetrieveGeomUserData(c.geom.g2);
@@ -126,7 +126,7 @@ static CPhysicsShellHolder* retrive_collide_object(bool bo1, dContact& c)
 	if (ud)
 		collide_obj = static_cast<CPhysicsShellHolder*>(ud->ph_ref_object);
 	else
-		collide_obj = 0;
+		collide_obj = nullptr;
 	return collide_obj;
 }
 
@@ -173,7 +173,7 @@ void CPhysicObject::RunStartupAnim(CSE_Abstract *D)
 {
 	if (Visual() && smart_cast<IKinematics*>(Visual()))
 	{
-		IKinematicsAnimated*	PKinematicsAnimated = NULL;
+		IKinematicsAnimated*	PKinematicsAnimated = nullptr;
 		R_ASSERT(Visual() && smart_cast<IKinematics*>(Visual()));
 		PKinematicsAnimated = smart_cast<IKinematicsAnimated*>(Visual());
 		if (PKinematicsAnimated)
@@ -182,7 +182,9 @@ void CPhysicObject::RunStartupAnim(CSE_Abstract *D)
 			R_ASSERT(visual);
 			R_ASSERT2(*visual->startup_animation, "no startup animation");
 
-			VERIFY2((!!PKinematicsAnimated->LL_MotionID(visual->startup_animation.c_str()).valid()), (make_string(" animation %s not faund ", visual->startup_animation.c_str()) + dbg_object_base_dump_string(this)).c_str());
+			VERIFY_FORMAT(!!PKinematicsAnimated->LL_MotionID(visual->startup_animation.c_str()).valid(), 
+				"animation %s not faund %s", 
+				visual->startup_animation.c_str(), dbg_object_base_dump_string(this).c_str());
 			m_anim_blend = m_anim_script_callback.play_cycle(PKinematicsAnimated, visual->startup_animation);
 		}
 		smart_cast<IKinematics*>(Visual())->CalculateBones_Invalidate();
@@ -296,8 +298,8 @@ void CPhysicObject::UpdateCL()
 {
 	inherited::UpdateCL();
 
-	//Åñëè íàø ôèçè÷åñêèé îáúåêò àíèìèðîâàííûé, òî 
-	//äâèãàåì îáúåêò çà àíèìàöèåé
+	//Ð•ÑÐ»Ð¸ Ð½Ð°Ñˆ Ñ„Ð¸Ð·Ð¸Ñ‡ÐµÑÐºÐ¸Ð¹ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð°Ð½Ð¸Ð¼Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ð¹, Ñ‚Ð¾ 
+	//Ð´Ð²Ð¸Ð³Ð°ÐµÐ¼ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð·Ð° Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸ÐµÐ¹
 	if (m_pPhysicsShell->PPhysicsShellAnimator())
 		m_pPhysicsShell->AnimatorOnFrame();
 
@@ -317,9 +319,9 @@ void CPhysicObject::UpdateCL()
 	bones_snd_player->update(Device.fTimeDelta, *this);
 
 }
+
 void CPhysicObject::PHObjectPositionUpdate()
 {
-
 	if (m_pPhysicsShell)
 	{
 		if (m_type == epotBox)
@@ -327,15 +329,14 @@ void CPhysicObject::PHObjectPositionUpdate()
 			m_pPhysicsShell->Update();
 			XFORM().set(m_pPhysicsShell->mXFORM);
 		}
+		else if (m_pPhysicsShell->PPhysicsShellAnimator())
+		{
+			Fmatrix m;
+			m_pPhysicsShell->InterpolateGlobalTransform(&m);
+			XFORM().set(m);
+		}
 		else
-			if (m_pPhysicsShell->PPhysicsShellAnimator())
-			{
-				Fmatrix m;
-				m_pPhysicsShell->InterpolateGlobalTransform(&m);
-				XFORM().set(m);
-			}
-			else
-				m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
+			m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
 	}
 }
 
@@ -348,7 +349,6 @@ void CPhysicObject::AddElement(IPhysicsElementEx* root_e, int id)
 	E->mXFORM.set(K->LL_GetTransform(u16(id)));
 	Fobb bb = K->LL_GetBox(u16(id));
 
-
 	if (bb.m_halfsize.magnitude()<0.05f)
 	{
 		bb.m_halfsize.add(0.05f);
@@ -359,7 +359,7 @@ void CPhysicObject::AddElement(IPhysicsElementEx* root_e, int id)
 	E->set_ParentElement(root_e);
 	B.set_callback(bctPhysics, m_pPhysicsShell->GetBonesCallback(), E);
 	m_pPhysicsShell->add_Element(E);
-	if (!(m_type == epotFreeChain && root_e == 0))
+	if (!(m_type == epotFreeChain && root_e == nullptr))
 	{
 		IPhysicsJoint* J = P_create_Joint(IPhysicsJoint::full_control, root_e, E);
 		J->SetAnchorVsSecondElement(0, 0, 0);
@@ -390,7 +390,7 @@ void CPhysicObject::CreateBody(CSE_ALifeObjectPhysic* po) {
 	{
 		m_pPhysicsShell = P_create_Shell();
 		m_pPhysicsShell->set_Kinematics(pKinematics);
-		AddElement(0, pKinematics->LL_GetBoneRoot());
+		AddElement(nullptr, pKinematics->LL_GetBoneRoot());
 		m_pPhysicsShell->setMass1(m_mass);
 	} break;
 	case epotSkeleton: CreateSkeleton(po); break;
@@ -445,67 +445,26 @@ bool CPhysicObject::is_ai_obstacle() const
 }
 
 // network synchronization ----------------------------
-#pragma todo("Remove me!")
-net_updatePhData* CPhysicObject::NetSync()
-{
-	if (!m_net_updateData)
-		m_net_updateData = xr_new<net_updatePhData>();
-	return m_net_updateData;
-}
-
 void CPhysicObject::net_Export(NET_Packet& P)
 {
 	P.w_u8(0);
-	return;
-};
+}
 
 void CPhysicObject::net_Import(NET_Packet& P)
 {
-	u8							NumItems = 0;
-	NumItems = P.r_u8();
-	if (!NumItems)
-		return;
-
-	CSE_ALifeObjectPhysic::mask_num_items				num_items;
-	num_items.common = NumItems;
-	NumItems = num_items.num_items;
-
-	net_update_PItem			N;
-	N.dwTimeStamp = Device.dwTimeGlobal;
-
-	////////////////////////////////////////////
-	P.r_u8();	// freezed or not..
-
-
-	if (this->cast_game_object()->Local())
+	u8 NumItems = P.r_u8();
+	if (NumItems)
 	{
-		return;
+		CSE_ALifeObjectPhysic::mask_num_items num_items;
+		num_items.common = NumItems;
+		NumItems = num_items.num_items;
+
+		////////////////////////////////////////////
+		P.r_u8();	// freezed or not..
 	}
-
-    //std::string dbgStr = make_string("CPhysicObject::net_Import, wtf?, %u, %u", P.r_tell(), P.w_tell());
-    //VERIFY2(false, dbgStr.c_str());
-
-	net_updatePhData				*p = NetSync();
-
-	p->NET_IItem.push_back(N);
-
-	while (p->NET_IItem.size() > 2)
-	{
-		p->NET_IItem.pop_front();
-	}
-	if (!m_activated)
-	{
-		processing_activate();
-		m_activated = true;
-	}
-};
-
-//-----------
-
-void CPhysicObject::Interpolate()
-{
 }
 
+//-----------
 float CPhysicObject::interpolate_states(net_update_PItem const & first, net_update_PItem const & last, SPHNetState & current)
 {
 	float ret_val = 0.f;
@@ -619,9 +578,10 @@ bool	CPhysicObject::get_door_vectors(Fvector& closed, Fvector& open) const
 #include "PHCollisionDamageReceiver.h"
 #include "DestroyablePhysicsObject.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CPhysicObject::script_register(lua_State *L)
 {
 	module(L)

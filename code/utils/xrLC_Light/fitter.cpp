@@ -5,10 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Weight Fitting Algorithm
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "fitter.h"
 #include <functional>
+#pragma warning(disable: 4244)
 
 IC REAL dfEvaluation(REAL &A, REAL &C, REAL &D)
 {
@@ -59,8 +59,8 @@ void vfOptimizeParameters(xr_vector<xr_vector<REAL> > &A, xr_vector<xr_vector<RE
 	xr_vector<REAL>			daDelta;
 	xr_vector<xr_vector<REAL> >	daEvalResults; daEvalResults.resize(dwTestCount);
 	
-	if (!B.size()) {
-		clMsg				("ERROR : there are no parameters to fit!");
+	if (B.empty()) {
+		Logger.clMsg				("ERROR : there are no parameters to fit!");
 		return;
 	}
 	

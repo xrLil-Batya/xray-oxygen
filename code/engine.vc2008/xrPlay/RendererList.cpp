@@ -17,12 +17,10 @@
 DLL_API xr_vector<xr_token> vid_quality_token;
 
 constexpr const char* r2_name = "xrRender_R2";
-constexpr const char* r3_name = "xrRender_R3";
 constexpr const char* r4_name = "xrRender_R4";
 /////////////////////////////////////////////////////
 bool SupportsAdvancedRendering()
 {
-
 	D3DCAPS9 caps;
 
 	IDirect3D9* pD3D = Direct3DCreate9(D3D_SDK_VERSION);
@@ -33,22 +31,6 @@ bool SupportsAdvancedRendering()
 
 	return !(ps_ver_major < 3);
 }
-
-bool SupportsDX10Rendering()
-{
-	IDXGIAdapter* m_pAdapter;	//	pD3D equivalent
-	IDXGIFactory * pFactory;
-	CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
-	pFactory->EnumAdapters(0, &m_pAdapter);
-
-	HRESULT hr = m_pAdapter->CheckInterfaceSupport(__uuidof(ID3D10Device), 0);
-
-	_RELEASE(pFactory);			
-	_RELEASE(m_pAdapter);
-
-	return SUCCEEDED(hr);
-}
-
 
 bool SupportsDX11Rendering()
 {
@@ -122,18 +104,13 @@ void CreateRendererList()
 
 	// try to initialize R2
 	{
-		modes.push_back(xr_token("renderer_r2a", 1));
-		modes.emplace_back(xr_token("renderer_r2", 2));
-		if (SupportsAdvancedRendering())
-			modes.emplace_back(xr_token("renderer_r2.5", 3));
-	}
+		modes.push_back(xr_token("renderer_r2a", 0));
+		modes.emplace_back(xr_token("renderer_r2", 1));
 
-	// try to initialize R3
-	//	Restore error handling
-	SetErrorMode(0);
-	{
-		if (SupportsDX10Rendering())
-			modes.emplace_back(xr_token("renderer_r3", 4));
+		if (SupportsAdvancedRendering())
+		{
+			modes.emplace_back(xr_token("renderer_r2.5", 2));
+		}
 	}
 
 	// try to initialize R4
@@ -141,15 +118,22 @@ void CreateRendererList()
 	SetErrorMode(0);
 	{
 		if (SupportsDX11Rendering())
-			modes.emplace_back(xr_token("renderer_r4", 5));
+		{
+			modes.emplace_back(xr_token("renderer_r4", 3));
+		}
 	}
 
 	modes.emplace_back(xr_token(nullptr, -1));
 
 	Msg("Available render modes[%d]:", modes.size());
+
 	for (xr_token& mode : modes)
+	{
 		if (mode.name)
+		{
 			Log(mode.name);
+		}
+	}
 
 	vid_quality_token = std::move(modes);
 }

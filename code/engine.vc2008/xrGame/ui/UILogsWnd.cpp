@@ -8,15 +8,15 @@
 #include "stdafx.h"
 #include "UILogsWnd.h"
 
-#include "UIXmlInit.h"
-#include "UIProgressBar.h"
-#include "UIFrameLineWnd.h"
-#include "UIFrameWindow.h"
-#include "UIScrollBar.h"
-#include "UIFixedScrollBar.h"
-#include "UIScrollView.h"
-#include "UICheckButton.h"
-#include "UIHelper.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIProgressBar.h"
+#include "../xrUICore/UIFrameLineWnd.h"
+#include "../xrUICore/UIFrameWindow.h"
+#include "../xrUICore/UIScrollBar.h"
+#include "../xrUICore/UIFixedScrollBar.h"
+#include "../xrUICore/UIScrollView.h"
+#include "../xrUICore/UICheckButton.h"
+#include "../xrUICore/UIHelper.h"
 #include "UICharacterInfo.h"
 #include "UIInventoryUtilities.h"
 
@@ -24,7 +24,7 @@
 #include "../game_news.h"
 #include "../alife_time_manager.h"
 #include "../alife_registry_wrappers.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 #include "UINewsItemWnd.h"
 #include "../../xrEngine/xr_input.h"
 
@@ -133,8 +133,6 @@ void itemToCache(CUIWindow* w)
 	w->SetAutoDelete	(false);
 	w->SetParent		(NULL);
 }
-
-extern CActor* g_actor;
 
 void CUILogsWnd::ReLoadNews()
 {

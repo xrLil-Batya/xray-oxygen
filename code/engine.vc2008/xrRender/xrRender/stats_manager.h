@@ -45,6 +45,6 @@ private:
 
 u32 get_format_pixel_size ( D3DFORMAT format );
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 u32 get_format_pixel_size ( DXGI_FORMAT format );
 #endif

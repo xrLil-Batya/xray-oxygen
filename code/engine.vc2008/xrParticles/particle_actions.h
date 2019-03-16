@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------
-#pragma once
+#ifndef particle_actionsH
+#define particle_actionsH
 
-namespace PAPI 
-{
+namespace PAPI {
 	// refs
 	struct ParticleEffect;
 	struct PARTICLES_API			ParticleAction

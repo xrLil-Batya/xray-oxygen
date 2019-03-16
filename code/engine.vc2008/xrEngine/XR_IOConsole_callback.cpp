@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: XR_IOConsole_callback.cpp
 //	Created 	: 17.05.2008
 //	Author		: Evgeniy Sokolov
@@ -44,9 +44,14 @@ void CConsole::Register_callbacks()
 void CConsole::Prev_log() // DIK_PRIOR=PAGE_UP
 {
 	scroll_delta++;
-	if ( scroll_delta > int(LogFile->size())-1 )
+	scroll_delta = std::min<int>(scroll_delta, (int)m_log_history.GetSize());
+
+	// check for empty line
+	xrCriticalSectionGuard guard(m_log_history_guard);
+	const shared_str& line = m_log_history.GetLooped(m_log_history.GetHead() - u32(scroll_delta) - 5u);
+	if (line.size() == 0)
 	{
-		scroll_delta = (int)LogFile->size()-1;
+		scroll_delta--;
 	}
 }
 
@@ -61,7 +66,7 @@ void CConsole::Next_log() // DIK_NEXT=PAGE_DOWN
 
 void CConsole::Begin_log() // PAGE_UP+Ctrl
 {
-	scroll_delta = (int)LogFile->size()-1;
+	scroll_delta = 0;
 }
 
 void CConsole::End_log() // PAGE_DOWN+Ctrl
@@ -82,23 +87,25 @@ void CConsole::Find_cmd() // DIK_TAB
 
 void CConsole::Find_cmd_back() // DIK_TAB+shift
 {
-	LPCSTR edt      = ec().str_edit();
-	LPCSTR radmin_cmd_name = "ra ";
-	bool b_ra  = (edt == strstr( edt, radmin_cmd_name ) );
-	u32 offset = (b_ra)? xr_strlen( radmin_cmd_name ) : 0;
+	const char* edt = ec().str_edit();
+	const char* radmin_cmd_name = "ra ";
+	bool b_ra = (edt == strstr(edt, radmin_cmd_name));
+	u32 offset = (b_ra) ? xr_strlen(radmin_cmd_name) : 0;
 
-	vecCMD_IT it = Commands.lower_bound( edt + offset );
-	if ( it != Commands.begin() )
+	vecCMD_IT it = Commands.lower_bound(edt + offset);
+	if (it != Commands.begin())
 	{
 		--it;
 		IConsole_Command& cc = *(it->second);
-		LPCSTR name_cmd      = cc.Name();
-		u32    name_cmd_size = xr_strlen( name_cmd );
-		PSTR   new_str  = (PSTR)_alloca( (offset + name_cmd_size + 2) * sizeof(char) );
+		const char* name_cmd = cc.Name();
+		u32    name_cmd_size = xr_strlen(name_cmd);
+		char* new_str = new char[offset + name_cmd_size + 2];
 
-		xr_strcpy( new_str, offset + name_cmd_size + 2, (b_ra)? radmin_cmd_name : "" );
-		xr_strcat( new_str, offset + name_cmd_size + 2, name_cmd );
-		ec().set_edit( new_str );
+		xr_strcpy(new_str, offset + name_cmd_size + 2, (b_ra) ? radmin_cmd_name : "");
+		xr_strcat(new_str, offset + name_cmd_size + 2, name_cmd);
+		ec().set_edit(new_str);
+
+		xr_delete(new_str);
 	}
 }
 
@@ -168,14 +175,14 @@ void CConsole::Execute_cmd() // DIK_RETURN, DIK_NUMPADENTER
 		shared_str const& str = m_tips[m_select_tip].text;
 		if ( m_tips_mode == 1 )
 		{
-			LPSTR buf;
-			STRCONCAT( buf, str.c_str(), " " );
+			string256 buf;
+			xr_strconcat( buf, str.c_str(), " " );
 			ec().set_edit( buf );
 		}
 		else if ( m_tips_mode == 2 )
 		{
-			LPSTR buf;
-			STRCONCAT( buf, m_cur_cmd.c_str(), " ", str.c_str() );
+			string256 buf;
+			xr_strconcat( buf, m_cur_cmd.c_str(), " ", str.c_str() );
 			ec().set_edit( buf );
 		}
 		reset_selected_tip();

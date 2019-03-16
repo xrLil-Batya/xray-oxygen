@@ -75,14 +75,14 @@ CBaseMonster::CBaseMonster() :	m_psy_aura(this, "psy"),
 	EnemyMan.init_external			(this);
 	CorpseMan.init_external			(this);
 
-	// Инициализация параметров анимации	
+	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ Р°РЅРёРјР°С†РёРё	
 
-	StateMan						= 0;
+	StateMan						= nullptr;
 
 	MeleeChecker.init_external		(this);
 	Morale.init_external			(this);
 
-	m_controlled					= 0;
+	m_controlled					= nullptr;
 	
 	control().add					(&m_com_manager,  ControlCom::eControlCustom);
 	
@@ -97,16 +97,16 @@ CBaseMonster::CBaseMonster() :	m_psy_aura(this, "psy"),
 
 	com_man().add_ability				(ControlCom::eComCriticalWound);
 
-	EatedCorpse								=	NULL;
+	EatedCorpse								=	nullptr;
 
-	m_steer_manager							=	NULL;
-	m_grouping_behaviour					=	NULL;
+	m_steer_manager							=	nullptr;
+	m_grouping_behaviour					=	nullptr;
 
 	m_last_grouping_behaviour_update_tick	=	0;
 	m_feel_enemy_who_just_hit_max_distance	=	0;
 	m_feel_enemy_max_distance				=	0;
 
-	m_anti_aim								=	NULL;
+	m_anti_aim								=	nullptr;
 	m_head_bone_name						=	"bip01_head";
 
 	m_first_tick_enemy_inaccessible			=	0;
@@ -334,7 +334,7 @@ void CBaseMonster::UpdateCL()
 
 	if ( EatedCorpse && !CorpseMemory.is_valid_corpse(EatedCorpse) )
 	{
-		EatedCorpse = NULL;
+		EatedCorpse = nullptr;
 	}
 
 	inherited::UpdateCL();
@@ -423,7 +423,7 @@ void CBaseMonster::Die(CObject* who)
 
 	if ( m_grouping_behaviour )
 	{
-		m_grouping_behaviour->set_squad(NULL);
+		m_grouping_behaviour->set_squad(nullptr);
 	}
 	
 	
@@ -447,7 +447,7 @@ void CBaseMonster::Hit(SHit* pHDS)
 	{
 		float &hit_power = pHDS->power;
 		float ap = pHDS->armor_piercing;
-		// пуля пробила шкуру
+		// РїСѓР»СЏ РїСЂРѕР±РёР»Р° С€РєСѓСЂСѓ
 		if(!fis_zero(m_fSkinArmor, EPS) && ap > m_fSkinArmor)
 		{
 			float d_hit_power = (ap - m_fSkinArmor) / ap;
@@ -457,11 +457,11 @@ void CBaseMonster::Hit(SHit* pHDS)
 			hit_power *= d_hit_power;
 			VERIFY(hit_power>=0.0f);
 		}
-		// пуля НЕ пробила шкуру
+		// РїСѓР»СЏ РќР• РїСЂРѕР±РёР»Р° С€РєСѓСЂСѓ
 		else
 		{
 			hit_power *= m_fHitFracMonster;
-			pHDS->add_wound = false; 	//раны нет
+			pHDS->add_wound = false; 	//СЂР°РЅС‹ РЅРµС‚
 		}
 	}
 	inherited::Hit(pHDS);
@@ -719,13 +719,13 @@ void CBaseMonster::on_kill_enemy(const CEntity *obj)
 {
 	const CEntityAlive *entity	= smart_cast<const CEntityAlive *>(obj);
 	
-	// добавить в список трупов	
+	// РґРѕР±Р°РІРёС‚СЊ РІ СЃРїРёСЃРѕРє С‚СЂСѓРїРѕРІ	
 	CorpseMemory.add_corpse		(entity);
 	
-	// удалить всю информацию о хитах
+	// СѓРґР°Р»РёС‚СЊ РІСЃСЋ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С…РёС‚Р°С…
 	HitMemory.remove_hit_info	(entity);
 
-	// удалить всю информацию о звуках
+	// СѓРґР°Р»РёС‚СЊ РІСЃСЋ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ Р·РІСѓРєР°С…
 	SoundMemory.clear			();
 }
 
@@ -801,7 +801,7 @@ CParticlesObject* CBaseMonster::PlayParticles(const shared_str& name, const Fvec
 {
 	CParticlesObject* ps = CParticlesObject::Create(name.c_str(),auto_remove);
 	
-	// вычислить позицию и направленность партикла
+	// РІС‹С‡РёСЃР»РёС‚СЊ РїРѕР·РёС†РёСЋ Рё РЅР°РїСЂР°РІР»РµРЅРЅРѕСЃС‚СЊ РїР°СЂС‚РёРєР»Р°
 	Fmatrix	matrix; 
 
 	matrix.identity			();

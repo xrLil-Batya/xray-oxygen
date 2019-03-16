@@ -1,7 +1,34 @@
 #include "stdafx.h"
-#include "mathutils.h"
-#include "../../3rd-party/ode/include/ode/common.h"
-XRPHYSICS_API const float	phInfinity = dInfinity;
+#include "MathUtils.h"
+#include "Extendedgeom.h"
+#include "../../3rd-party/ode/include/ode/ode.h"
+XRPHYSICS_API const float phInfinity = std::numeric_limits<float>::max();
+
+bool XRPHYSICS_API ContactShotMarkGetEffectPars(dContactGeom* c, dxGeomUserData* &data, float &vel_cret, bool &b_invert_normal)
+{
+	dBodyID b = dGeomGetBody(c->g1);
+
+	b_invert_normal = false;
+	if (!b)
+	{
+		b = dGeomGetBody(c->g2);
+		data = dGeomGetUserData(c->g2);
+		b_invert_normal = true;
+	}
+	else
+	{
+		data = dGeomGetUserData(c->g1);
+	}
+	if (!b)
+		return false;
+
+	dVector3 vel;
+	dMass m;
+	dBodyGetMass(b, &m);
+	dBodyGetPointVel(b, c->pos[0], c->pos[1], c->pos[2], vel);
+	vel_cret = _abs(dDOT(vel, c->normal))* _sqrt(m.mass);
+	return true;
+}
 
 inline bool RAYvsCYLINDER(const Fcylinder& c_cylinder, const Fvector &S, const Fvector &D, float &R, BOOL bCull)
 {

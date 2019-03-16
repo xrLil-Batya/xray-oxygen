@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #pragma hdrstop
 
 #include "bone.h"
@@ -33,11 +33,11 @@ float	ENGINE_API	CBoneInstance::get_param	(u32 idx)
 
 void ENGINE_API	CBoneData::DebugQuery		(BoneDebug& L)
 {
-	for (u32 i=0; i<children.size(); i++)
+	for (CBoneData* i : children)
 	{
 		L.push_back(SelfID);
-		L.push_back(children[i]->SelfID);
-		children[i]->DebugQuery(L);
+		L.push_back(i->SelfID);
+		i->DebugQuery(L);
 	}
 }
 
@@ -47,8 +47,8 @@ void ENGINE_API	CBoneData::CalculateM2B(const Fmatrix& parent)
 	m2b_transform.mul_43	(parent,bind_transform);
 
 	// Calculate children
-	for (xr_vector<CBoneData*>::iterator C=children.begin(); C!=children.end(); C++)
-		(*C)->CalculateM2B	(m2b_transform);
+	for (CBoneData* C : children)
+		C->CalculateM2B	(m2b_transform);
 
 	m2b_transform.invert	();            
 }
@@ -85,7 +85,8 @@ CBone::CBone()
 	flags.zero();
 	rest_length = 0;
 	SelfID = -1;
-	parent = 0;
+	parent = nullptr;
+	rest_offset.set(0.f, 0.f, 0.f);
 
 	ResetData();
 }

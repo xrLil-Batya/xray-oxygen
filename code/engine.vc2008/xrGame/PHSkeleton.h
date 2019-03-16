@@ -33,10 +33,7 @@ private:
 	void	RecursiveBonesCheck	(u16 id)																		;
 
 protected:
-	void			LoadNetState		(NET_Packet& P)															;
 	void			UnsplitSingle		(CPHSkeleton* SO)														;
-
-protected:
 	virtual CPhysicsShellHolder*		PPhysicsShellHolder	()													=0;
 	virtual CPHSkeleton	*PHSkeleton		()																		{return this;}
 	virtual void	SpawnInitPhysics	(CSE_Abstract	*D)														=0;
@@ -50,6 +47,7 @@ protected:
 			void	Update				(u32 dt)																;//shedule update
 			void	Load				(LPCSTR section)														;//client load
 public:
+			void	SyncNetState		();
 			void	SetAutoRemove		(u32 time=existence_time)												;
 			void	SetNotNeedSave		()																		;
 IC			bool	IsRemoving			(){return b_removing;}

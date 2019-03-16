@@ -2,6 +2,7 @@
 #include "console_registrator.h"
 #include "../xrEngine/xr_ioconsole.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 CConsole*	console()
@@ -33,7 +34,7 @@ void execute_console_command_deferred	(CConsole* c, LPCSTR string_to_execute)
 	Engine.Event.Defer	("KERNEL:console", size_t(xr_strdup(string_to_execute)) );
 }
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void console_registrator::script_register(lua_State *L)
 {
 	module(L)

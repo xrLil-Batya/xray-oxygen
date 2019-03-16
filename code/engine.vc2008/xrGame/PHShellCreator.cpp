@@ -21,7 +21,7 @@ void CPHShellSimpleCreator::CreatePhysicsShell()
 #ifdef DEBUG
 	owner->PPhysicsShell()->dbg_obj=owner;
 #endif
-	owner->m_pPhysicsShell->build_FromKinematics	(pKinematics,0);
+	owner->m_pPhysicsShell->build_FromKinematics	(pKinematics,nullptr);
 
 	owner->PPhysicsShell()->set_PhysicsRefObject	(owner);
 	//m_pPhysicsShell->SmoothElementsInertia(0.3f);

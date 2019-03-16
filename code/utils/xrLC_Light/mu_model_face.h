@@ -3,7 +3,7 @@
 
 
 
-class  INetReader;
+class  IReader;
 
 #include "base_face.h"
 #include "meshstructure.h"

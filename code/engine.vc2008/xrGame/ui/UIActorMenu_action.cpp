@@ -15,18 +15,18 @@
 #include "../InventoryBox.h"
 #include "object_broker.h"
 #include "UIInventoryUtilities.h"
-#include "game_cl_base.h"
 
-#include "UICursor.h"
+
+#include "../xrUICore/UICursor.h"
 #include "UICellItem.h"
 #include "UICharacterInfo.h"
 #include "UIItemInfo.h"
 #include "UIDragDropListEx.h"
 #include "UIInventoryUpgradeWnd.h"
-#include "UI3tButton.h"
-#include "UIBtnHint.h"
-#include "UIMessageBoxEx.h"
-#include "UIPropertiesBox.h"
+#include "../xrUICore/UI3tButton.h"
+#include "../xrUICore/UIBtnHint.h"
+#include "../xrUICore/UIMessageBoxEx.h"
+#include "../xrUICore/UIPropertiesBox.h"
 #include "UIMainIngameWnd.h"
 
 
@@ -99,6 +99,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 				return true;
 			}
 			SendEvent_Item_Drop		(CurrentIItem(), m_pActorInvOwner->object_id());
+			itm->OwnerList()->RemoveItem(itm, false);
 			SetCurrentItem			(NULL);
 		}break;
 	case iActorSlot:
@@ -151,7 +152,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 
 bool CUIActorMenu::OnItemStartDrag(CUICellItem* itm)
 {
-	InfoCurItem( NULL );
+	InfoCurItem(NULL);
 	return false; //default behaviour
 }
 
@@ -165,7 +166,7 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 	{
 	case iActorSlot:
 		{
-			if ( m_currMenuMode == mmDeadBodySearch )
+			if ( m_currMenuMode == mmDeadBodyOrContainerSearch )
 				ToDeadBodyBag	( itm, false );
 			else
 				ToBag			( itm, false );
@@ -177,29 +178,27 @@ bool CUIActorMenu::OnItemDbClick(CUICellItem* itm)
 			{
 				ToActorTrade( itm, false );
 				break;
-			}else
-				if ( m_currMenuMode == mmDeadBodySearch )
-				{
-					ToDeadBodyBag( itm, false );
-					break;
-				}
-				if(m_currMenuMode!=mmUpgrade && TryUseItem( itm ))
-				{
-					break;
-				}
-				if ( TryActiveSlot( itm ) )
-				{
-					break;
-				}
-				PIItem iitem_to_place = (PIItem)itm->m_pData;
-				if ( !ToSlot( itm, false, iitem_to_place->BaseSlot() ) )
-				{
-					if ( !ToBelt( itm, false ) )
-					{
-						ToSlot( itm, true, iitem_to_place->BaseSlot() );
-					}
-				}
+			}
+			else if (m_currMenuMode == mmDeadBodyOrContainerSearch)
+			{
+				ToDeadBodyBag(itm, false);
 				break;
+			}
+
+			if(TryActiveSlot(itm) || m_currMenuMode!=mmUpgrade && TryUseFoodItem( itm ))
+			{
+				break;
+			}
+
+			PIItem iitem_to_place = (PIItem)itm->m_pData;
+			if (!ToSlot(itm, false, iitem_to_place->BaseSlot()))
+			{
+				if (!ToBelt(itm, false))
+				{
+					ToSlot(itm, true, iitem_to_place->BaseSlot());
+				}
+			}
+			break;
 		}
 	case iActorBelt:
 		{
@@ -368,7 +367,7 @@ void CUIActorMenu::OnPressUserKey()
 	case mmUpgrade:			
 		TrySetCurUpgrade();
 		break;
-	case mmDeadBodySearch:	
+	case mmDeadBodyOrContainerSearch:	
 		TakeAllFromPartner( this, 0 );
 		break;
 	default:
@@ -404,7 +403,7 @@ void CUIActorMenu::OnMesBoxYes( CUIWindow*, void* )
 			m_pUpgradeWnd->OnMesBoxYes();
 		}
 		break;
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		break;
 	default:
 		R_ASSERT(0);
@@ -426,7 +425,7 @@ void CUIActorMenu::OnMesBoxNo(CUIWindow*, void*)
 	case mmUpgrade:
 		m_repair_mode = false;
 		break;
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		break;
 	default:
 		R_ASSERT(0);

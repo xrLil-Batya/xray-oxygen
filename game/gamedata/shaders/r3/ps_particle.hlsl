@@ -13,6 +13,17 @@ struct v2p
 	float4 hpos	: SV_Position;
 };
 
+//	contrast function
+float Contrast(float Input, float ContrastPower)
+{
+     //piecewise contrast function
+     bool IsAboveHalf = Input > 0.5 ;
+     float ToRaise = saturate(2*(IsAboveHalf ? 1-Input : Input));
+     float Output = 0.5*pow(ToRaise, ContrastPower); 
+     Output = IsAboveHalf ? 1-Output : Output;
+     return Output;
+}
+
 //	Must be less than view near
 #define	DEPTH_EPSILON	0.1h
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -24,11 +35,8 @@ float4 main( v2p I ) : SV_Target
 	//	Igor: additional depth test
 #ifdef	USE_SOFT_PARTICLES
 	float2 tcProj = I.tctexgen.xy / I.tctexgen.w;
-#ifdef GBUFFER_OPTIMIZATION
 	gbuffer_data gbd = gbuffer_load_data(tcProj, I.hpos);
-#else
-	gbuffer_data gbd = gbuffer_load_data(tcProj);
-#endif
+
 	float4 _P = float4(gbd.P, gbd.mtl);
 	float spaceDepth = _P.z - I.tctexgen.z - DEPTH_EPSILON;
 	if (spaceDepth < -2 * DEPTH_EPSILON) spaceDepth = 100000.0h; //  Skybox doesn't draw into position buffer

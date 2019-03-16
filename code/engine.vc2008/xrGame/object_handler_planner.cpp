@@ -15,7 +15,7 @@
 #include "ai/stalker/ai_stalker.h"
 #include "inventory.h"
 #include "object_handler_planner_impl.h"
-#include "weaponmagazined.h"
+#include "items/WeaponMagazined.h"
 #include "missile.h"
 #include "ai_monster_space.h"
 
@@ -72,7 +72,7 @@ void CObjectHandlerPlanner::set_goal	(MonsterSpace::EObjectAction object_action,
 	condition.add_condition	(CWorldProperty(condition_id,true));
 	set_target_state		(condition);
 
-	if (!game_object || (min_queue_size < 0))
+	if (!game_object)
 		return;
 
 	CWeaponMagazined		*weapon = smart_cast<CWeaponMagazined*>(game_object);

@@ -1,13 +1,12 @@
 #include "stdafx.h"
 #include "missile.h"
-//.#include "WeaponHUD.h"
 #include "../xrphysics/PhysicsShell.h"
 #include "actor.h"
 #include "../xrEngine/CameraBase.h"
 #include "xrserver_objects_alife.h"
 #include "ActorEffector.h"
 #include "level.h"
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "ai_object_location.h"
 #include "../xrphysics/ExtendedGeom.h"
@@ -15,37 +14,36 @@
 #include "characterphysicssupport.h"
 #include "inventory.h"
 #include "../xrEngine/IGame_Persistent.h"
+
 #ifdef DEBUG
 #	include "phdebug.h"
 #endif
 
+static const int PLAYING_ANIM_TIME = 10000;
 
-#define PLAYING_ANIM_TIME 10000
-
-#include "ui/UIProgressShape.h"
-#include "ui/UIXmlInit.h"
+#include "../xrUICore/UIProgressShape.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "physicsshellholder.h"
 
-CUIProgressShape* g_MissileForceShape = NULL;
+CUIProgressShape* g_MissileForceShape = nullptr;
 
 void create_force_progress()
 {
-	VERIFY							(!g_MissileForceShape);
-	CUIXml uiXml;
-	uiXml.Load						(CONFIG_PATH, UI_PATH, "ui_HUD.xml");
+	VERIFY(!g_MissileForceShape);
+	CXml uiXml;
+	uiXml.Load(CONFIG_PATH, UI_PATH, "ui_HUD.xml");
 
-
-	CUIXmlInit						xml_init;
-	g_MissileForceShape				= xr_new<CUIProgressShape>();
-	xml_init.InitProgressShape		(uiXml, "progress", 0, g_MissileForceShape);
+	CUIXmlInit xml_init;
+	g_MissileForceShape = xr_new<CUIProgressShape>();
+	xml_init.InitProgressShape(uiXml, "progress", 0, g_MissileForceShape);
 }
 
-CMissile::CMissile(void) 
+CMissile::CMissile() 
 {
 	m_dwStateTime		= 0;
 }
 
-CMissile::~CMissile(void) 
+CMissile::~CMissile() 
 {
 }
 
@@ -57,7 +55,7 @@ void CMissile::reinit		()
 	m_fThrowForce		= 0;
 	m_dwDestroyTime		= 0xffffffff;
 	SetPending			(FALSE);
-	m_fake_missile		= NULL;
+	m_fake_missile		= nullptr;
 	SetState			( eHidden );
 }
 
@@ -93,7 +91,7 @@ BOOL CMissile::net_Spawn(CSE_Abstract* DC)
 void CMissile::net_Destroy() 
 {
 	inherited::net_Destroy();
-	m_fake_missile = 0;
+	m_fake_missile = nullptr;
 	m_dwStateTime		= 0;
 }
 
@@ -132,7 +130,7 @@ void CMissile::spawn_fake_missile()
 
 		CSE_ALifeObject				*alife_object = smart_cast<CSE_ALifeObject*>(object);
 		VERIFY						(alife_object);
-		alife_object->m_flags.set	(CSE_ALifeObject::flCanSave,FALSE);
+		alife_object->m_flags.set	(CSE_ALifeObject::flCanSave,false);
 
 		NET_Packet			P;
 		object->Spawn_Write	(P,TRUE);
@@ -226,71 +224,82 @@ void CMissile::shedule_Update(u32 dt)
 	} 
 }
 
-void CMissile::State(u32 state) 
+void CMissile::State(u32 state, u32 oldState)
 {
-	switch(GetState()) 
+	switch (GetState())
 	{
-	case eShowing:
-        {
-			SetPending			(TRUE);
+		case eShowing:
+		{
+			SetPending(TRUE);
 			PlayHUDMotion("anm_show", FALSE, this, GetState());
-		} break;
-	case eIdle:
+			break;
+		}
+
+		case eIdle:
 		{
-			SetPending			(FALSE);
-			PlayAnimIdle		();
-		} break;
-	case eHiding:
+			SetPending(FALSE);
+			PlayAnimIdle();
+			break;
+		}
+
+		case eHiding:
 		{
-			if(H_Parent())
+			if (H_Parent() && oldState != eHiding)
 			{
-				SetPending			(TRUE);
-				PlayHUDMotion		("anm_hide", TRUE, this, GetState());
+				SetPending(TRUE);
+				PlayHUDMotion("anm_hide", TRUE, this, GetState());
 			}
-		} break;
-	case eHidden:
+			break;
+		}
+
+		case eHidden:
 		{
-			
-			if (1 /*GetHUD()*/) 
-			{
-				StopCurrentAnimWithoutCallback	();
-			};
-			
+			StopCurrentAnimWithoutCallback();
+
 			if (H_Parent())
-			{				
+			{
 				setVisible(FALSE);
-				setEnabled(FALSE);				
-			};
-			SetPending			(FALSE);
-		} break;
-	case eThrowStart:
+				setEnabled(FALSE);
+			}
+			SetPending(FALSE);
+			break;
+		}
+
+		case eThrowStart:
 		{
-			SetPending			(TRUE);
-			m_fThrowForce		= m_fMinForce;
-			PlayHUDMotion		("anm_throw_begin", TRUE, this, GetState());
-		} break;
-	case eReady:
+			SetPending(TRUE);
+			m_fThrowForce = m_fMinForce;
+			PlayHUDMotion("anm_throw_begin", TRUE, this, GetState());
+			break;
+		}
+
+		case eReady:
 		{
-			PlayHUDMotion		("anm_throw_idle", TRUE, this, GetState());
-		} break;
-	case eThrow:
+			PlayHUDMotion("anm_throw_idle", TRUE, this, GetState());
+			break;
+		}
+
+		case eThrow:
 		{
-			SetPending			(TRUE);
-			m_throw				= false;
-			PlayHUDMotion		("anm_throw", TRUE, this, GetState());
-		} break;
-	case eThrowEnd:
+			SetPending(TRUE);
+			m_throw = false;
+			PlayHUDMotion("anm_throw", TRUE, this, GetState());
+			break;
+		}
+
+		case eThrowEnd:
 		{
-			SwitchState			(eShowing); 
-		} break;
+			SwitchState(eShowing);
+			break;
+		}
 	}
 }
 
-void CMissile::OnStateSwitch	(u32 S)
+void CMissile::OnStateSwitch(u32 S, u32 oldState)
 {
-	m_dwStateTime				= 0;
-	inherited::OnStateSwitch	(S);
-	State						(S);
+	m_dwStateTime = 0;
+	inherited::OnStateSwitch(S, oldState);
+	State(S, oldState);
 }
 
 void CMissile::OnAnimationEnd(u32 state) 
@@ -343,7 +352,7 @@ void CMissile::UpdateXForm	()
         VERIFY(IsRenderThread());
 		dwXF_Frame			= Device.dwFrame;
 
-		if (0==H_Parent())	return;
+		if (nullptr==H_Parent())	return;
 
 		// Get access to entity and its visual
 		CEntityAlive*		E		= smart_cast<CEntityAlive*>(H_Parent());
@@ -466,7 +475,7 @@ void CMissile::OnEvent(NET_Packet& P, u16 type)
 			bool IsFakeMissile = false;
 			if (m_fake_missile && (id == m_fake_missile->ID()))
 			{
-				m_fake_missile	= NULL;
+				m_fake_missile	= nullptr;
 				IsFakeMissile = true;
 			}
 
@@ -475,7 +484,7 @@ void CMissile::OnEvent(NET_Packet& P, u16 type)
 			{
 				break;
 			}
-			missile->H_SetParent(0,!P.r_eof() && P.r_u8());
+			missile->H_SetParent(nullptr,!P.r_eof() && P.r_u8());
 			break;
 		}
 	}
@@ -609,7 +618,7 @@ void	CMissile::net_Relcase(CObject* O)
 		if(O==smart_cast<CObject*>((CPhysicsShellHolder*)PPhysicsShell()->get_CallbackData()))
 		{
 			PPhysicsShell()->remove_ObjectContactCallback(ExitContactCallback);
-			PPhysicsShell()->set_CallbackData(NULL);
+			PPhysicsShell()->set_CallbackData(nullptr);
 		}
 	}
 

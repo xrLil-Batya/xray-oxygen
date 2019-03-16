@@ -56,7 +56,7 @@ public:
 	virtual CSE_Abstract			*base					() = 0;
 	virtual const CSE_Abstract		*base					() const = 0;
 	virtual CSE_Abstract			*init					();
-	virtual CSE_Abstract			*cast_abstract			() {return 0;};
+	virtual CSE_Abstract			*cast_abstract			() {return nullptr;};
 	virtual CSE_ALifeInventoryItem	*cast_inventory_item	() {return this;};
 	virtual	u32						update_rate				() const;
 	virtual BOOL					Net_Relevant			();
@@ -106,7 +106,7 @@ add_to_type_list(CSE_ALifeItem)
 #define script_type_list save_type_list(CSE_ALifeItem)
 
 SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemTorch,CSE_ALifeItem)
-//ÙÎ‡„Ë
+//—Ñ–ª–∞–≥–∏
 	enum EStats{
 		eTorchActive				= (1<<0),
 		eNightVisionActive			= (1<<1),
@@ -138,9 +138,9 @@ add_to_type_list(CSE_ALifeItemAmmo)
 
 SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 
-	typedef	ALife::EWeaponAddonStatus	EWeaponAddonStatus;
+	using EWeaponAddonStatus =	ALife::EWeaponAddonStatus;
 	
-	//ÚÂÍÛ˘ÂÂ ÒÓÒÚÓˇÌËÂ ‡‰‰ÓÌÓ‚
+	//—Ç–µ–∫—É—â–µ–µ —Å–æ—Å—Ç–æ—è–Ω–∏–µ –∞–¥–¥–æ–Ω–æ–≤
 	enum EWeaponAddonState 
 	{
 		eWeaponAddonScope = 0x01,
@@ -215,7 +215,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 
 	virtual BOOL					Net_Relevant		();
 
-	virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeapon)
 #define script_type_list save_type_list(CSE_ALifeItemWeapon)
@@ -225,7 +224,6 @@ u8			m_u8CurFireMode;
 CSE_ALifeItemWeaponMagazined(LPCSTR caSection);
 virtual							~CSE_ALifeItemWeaponMagazined();
 
-virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponMagazined)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponMagazined)
@@ -235,7 +233,7 @@ bool			m_bGrenadeMode;
 CSE_ALifeItemWeaponMagazinedWGL(LPCSTR caSection);
 virtual							~CSE_ALifeItemWeaponMagazinedWGL();
 
-virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
+bool get_grenade_mode() { return m_bGrenadeMode; }
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponMagazinedWGL)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponMagazinedWGL)
@@ -245,7 +243,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeaponShotGun,CSE_ALifeItemWeaponMagazi
 								CSE_ALifeItemWeaponShotGun(LPCSTR caSection);
 virtual							~CSE_ALifeItemWeaponShotGun();
 
-virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponShotGun)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponShotGun)
@@ -254,7 +251,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeaponAutoShotGun,CSE_ALifeItemWeaponSh
 								CSE_ALifeItemWeaponAutoShotGun(LPCSTR caSection);
 virtual							~CSE_ALifeItemWeaponAutoShotGun();
 
-virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponAutoShotGun)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponAutoShotGun)

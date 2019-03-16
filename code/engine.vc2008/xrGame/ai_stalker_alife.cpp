@@ -14,8 +14,8 @@
 #include "inventory.h"
 #include "pda.h"
 #include "eatable_item.h"
-#include "weapon.h"
-#include "Grenade.h"
+#include "items/weapon.h"
+#include "items/Grenade.h"
 #include "customdetector.h"
 #include "ef_storage.h"
 #include "ef_primary.h"
@@ -50,7 +50,7 @@ bool CAI_Stalker::tradable_item					(CInventoryItem *inventory_item, const u16 &
 
 	return				(
 		trade_parameters().enabled(
-			CTradeParameters::action_sell(0),
+			CTradeParameters::action_sell(nullptr),
 			inventory_item->object().cNameSect()
 		)
 	);
@@ -65,7 +65,7 @@ u32 CAI_Stalker::fill_items						(CInventory &inventory, CGameObject *old_owner,
 		if (!tradable_item(*I,old_owner->ID()))
 			continue;
 		
-		m_temp_items.push_back	(CTradeItem(*I,old_owner->ID(),new_owner_id));
+		m_temp_items.emplace_back	(*I,old_owner->ID(),new_owner_id);
 		result					+= (*I)->Cost();
 	}
 
@@ -97,7 +97,6 @@ IC	void CAI_Stalker::buy_item_virtual			(CTradeItem &item)
 void CAI_Stalker::choose_food					()
 {
 	// stalker cannot change food due to the game design :-(((
-	return;
 }
 
 void CAI_Stalker::attach_available_ammo			(CWeapon *weapon)
@@ -132,7 +131,7 @@ void CAI_Stalker::attach_available_ammo			(CWeapon *weapon)
 
 void CAI_Stalker::choose_weapon					(ALife::EWeaponPriorityType weapon_priority_type)
 {
-	CTradeItem						*best_weapon	= 0;
+	CTradeItem						*best_weapon	= nullptr;
 	float							best_value		= -1.f;
 	ai().ef_storage().non_alife().member()	= this;
 
@@ -197,12 +196,11 @@ void CAI_Stalker::choose_weapon					(ALife::EWeaponPriorityType weapon_priority_
 void CAI_Stalker::choose_medikit				()
 {
 	// stalker cannot change medikit due to the game design :-(((
-	return;
 }
 
 void CAI_Stalker::choose_detector				()
 {
-	CTradeItem					*best_detector	= 0;
+	CTradeItem					*best_detector	= nullptr;
 	float						best_value		= -1.f;
 	ai().ef_storage().non_alife().member()	= this;
 	xr_vector<CTradeItem>::iterator	I = m_temp_items.begin();
@@ -231,7 +229,6 @@ void CAI_Stalker::choose_detector				()
 void CAI_Stalker::choose_equipment				()
 {
 	// stalker cannot change their equipment due to the game design :-(((
-	return;
 }
 
 void CAI_Stalker::select_items						()
@@ -251,21 +248,18 @@ void CAI_Stalker::select_items						()
 
 void CAI_Stalker::update_sell_info()
 {
-	//	if (m_sell_info_actuality)
-	//		return;
-
 	m_sell_info_actuality = true;
 	m_temp_items.clear();
-	m_current_trader = 0;
+	m_current_trader = nullptr;
 	m_total_money = get_money();
 	m_total_money += fill_items(inventory(), this, ALife::_OBJECT_ID(-1));;
 	std::sort(m_temp_items.begin(), m_temp_items.end());
 	select_items();
 
-	for (auto it : inventory().m_all)
+	for (PIItem it : inventory().m_all)
 	{
 		if (!tradable_item(it, ID()))
-			m_temp_items.push_back(CTradeItem(it, ID(), ID()));
+			m_temp_items.emplace_back(it, ID(), ID());
 	}
 }
 
@@ -283,7 +277,7 @@ bool CAI_Stalker::can_sell							(CInventoryItem* item)
 bool CAI_Stalker::AllowItemToTrade 					(CInventoryItem const * item, const SInvItemPlace& place) const
 {
 	if (!g_Alive())
-		return				(trade_parameters().enabled(CTradeParameters::action_show(0),item->object().cNameSect()));
+		return				(trade_parameters().enabled(CTradeParameters::action_show(nullptr),item->object().cNameSect()));
 
 	return					(const_cast<CAI_Stalker*>(this)->can_sell(const_cast<CInventoryItem*>(item)));
 }
@@ -323,7 +317,7 @@ void CAI_Stalker::remove_personal_only_ammo(const CInventoryItem *item)
 	const CWeapon			*weapon = smart_cast<const CWeapon*>(item);
 	VERIFY					(weapon);
 
-	for (shared_str it: weapon->m_ammoTypes)
+	for (const shared_str& it: weapon->m_ammoTypes)
 	{
 		bool found = false;
 

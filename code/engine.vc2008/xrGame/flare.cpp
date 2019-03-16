@@ -13,7 +13,7 @@ BOOL CFlare::net_Spawn(CSE_Abstract* DC)
 {
 	inherited::net_Spawn	(DC);
 	SwitchState				(eFlareHidden);
-	m_pFlareParticles		= NULL;
+	m_pFlareParticles		= nullptr;
 	return					TRUE;
 }
 
@@ -34,16 +34,16 @@ void CFlare::ActivateFlare()
 
 bool CFlare::IsFlareActive()
 {
-	if ( NULL==HudItemData() )	return false;
+	if ( nullptr==HudItemData() )	return false;
 
 	VERIFY( g_player_hud->attached_item(HudItemData()->m_attach_place_idx)==HudItemData() );
 
 	return ( GetState()==eFlareIdle );
 }
 
-void CFlare::OnStateSwitch(u32 S)
+void CFlare::OnStateSwitch(u32 S, u32 oldState)
 {
-	inherited::OnStateSwitch(S);
+	inherited::OnStateSwitch(S, oldState);
 
 	switch(S)
 	{
@@ -95,7 +95,7 @@ void CFlare::OnAnimationEnd(u32 state)
 
 void CFlare::SwitchOn()
 {
-	static int lt				= 1; //IRender_Light::POINT
+	static int lt				= IRender_Light::POINT;
 	static bool ls				= true;
 	light_render				= ::Render->light_create();
 	light_render->set_type		( (IRender_Light::LT)lt);

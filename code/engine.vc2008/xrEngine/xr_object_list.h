@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 // refs
 class	ENGINE_API	CObject;
 class	NET_Packet	;
@@ -22,7 +22,7 @@ private:
 	u32							m_owner_thread_id;
 
 public:
-	typedef fastdelegate::FastDelegate1<CObject*>	RELCASE_CALLBACK;
+	typedef xrDelegate<void(CObject*)>	RELCASE_CALLBACK;
 	struct SRelcasePair{
 		int*					m_ID;
 		RELCASE_CALLBACK		m_Callback;

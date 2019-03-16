@@ -57,11 +57,6 @@ CSE_ALifeDynamicObject *CSE_ALifeHumanAbstract::tpfGetBestDetector	()
 	return									(brain().objects().best_detector());
 }
 
-CSE_ALifeItemWeapon *CSE_ALifeHumanAbstract::tpfGetBestWeapon		(ALife::EHitType &tHitType, float &fHitPower)
-{
-	return									(brain().objects().best_weapon());
-}
-
 void CSE_ALifeHumanAbstract::on_register							()
 {
 	inherited2::on_register					();
@@ -94,10 +89,10 @@ void CSE_ALifeHumanAbstract::add_offline							(const xr_vector<ALife::_OBJECT_I
 }
 
 #include "alife_human_brain.h"
-
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CALifeHumanBrain::script_register(lua_State *L)
 {
 	module(L)

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "game_base.h"
-#include "alife_space.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrCore/client_id.h"
 #include "alife_simulator.h"
@@ -11,12 +10,12 @@ class xrServer;
 
 class	game_sv_GameState	: public game_GameState
 {
-	typedef game_GameState inherited;
+	using inherited = game_GameState;
 
 public:
 	BOOL							sv_force_sync;
+
 protected:
-	xrServer*						m_server;
 	CALifeSimulator					*m_alife_simulator;
 
 	//Events
@@ -27,9 +26,6 @@ public:
 public:
 									game_sv_GameState		();
 	virtual							~game_sv_GameState		();
-	// Main accessors
-	virtual		void*				get_client				(u16 id);
-				CSE_Abstract*		get_entity_from_eid		(u16 id);
 	// Signals
 	virtual		void				signal_Syncronize		();
 
@@ -49,10 +45,8 @@ public:
 	virtual		void				net_Export_Update		(NET_Packet& P, ClientID id_to, ClientID id);		// just incremental update for specific client
 	virtual		void				net_Export_GameTime		(NET_Packet& P);						// update GameTime only for remote clients
 
-	virtual		bool				change_level			(NET_Packet &net_packet, ClientID sender);
-	virtual		void				save_game				(NET_Packet &net_packet, ClientID sender);
-	virtual		bool				load_game				(NET_Packet &net_packet, ClientID sender);
-	virtual		void				switch_distance			(NET_Packet &net_packet);
+	virtual		bool				change_level			(NET_Packet &net_packet);
+	virtual		bool				load_game				(NET_Packet &net_packet);
 
 	virtual		void				teleport_object			(NET_Packet &packet, u16 id);
 	virtual		void				add_restriction			(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id);
@@ -67,7 +61,6 @@ public:
 	virtual		void				on_death				(CSE_Abstract *e_dest, CSE_Abstract *e_src);
 	
 	// Single State
-	IC			xrServer			&server() const 		{ return (*m_server); }
 	IC			CALifeSimulator		&alife() const			{ return (*m_alife_simulator); }
 	void		restart_simulator							(LPCSTR saved_game_name);
 	
@@ -80,5 +73,4 @@ public:
 	virtual		ALife::_TIME_ID		GetEnvironmentGameTime();
 	virtual		float				GetEnvironmentGameTimeFactor();
 	virtual		void				SetEnvironmentGameTimeFactor(const float fTimeFactor);
-
 };

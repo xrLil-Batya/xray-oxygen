@@ -516,4 +516,8 @@
 	<string id="st_quicksave">
 	    <text>Быстрое сохранение</text>
 	</string>
+	
+	<string id="ui_st_license">
+		<text>X-Ray Oxygen Project является открытым проектом по улучшением коммерческого игрового движка X-Ray Engine. \n Использование в коммерческих целях запрещено, как целиком, так и по частям. \n \n Все права сохранены.</text>
+	</string>
 </string_table>

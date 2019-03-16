@@ -24,10 +24,10 @@ public:
 
 	CBlender_SSAO_MSAA();
 	virtual ~CBlender_SSAO_MSAA();
-	virtual   void    SetDefine( LPCSTR Name, LPCSTR Definition )
+	virtual   void    SetDefine( LPCSTR sName, LPCSTR sDefinition )
 	{
-		this->Name = Name;
-		this->Definition = Definition;
+		this->Name = sName;
+		this->Definition = sDefinition;
 	}
 	LPCSTR Name;
 	LPCSTR Definition;

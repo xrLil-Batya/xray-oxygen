@@ -1,14 +1,15 @@
-
 #pragma once
-#include "alife_space.h"
+#include "../xrServerEntities/alife_space.h"
 #include "Entity_Alive.h"
 #include "PHSoundPlayer.h"
 #include "Phdestroyable.h"
 #include "../xrPhysics/death_anims.h"
 #include "../xrPhysics/animation_utils.h"
+#include "PHMovementControl.h"
 #include "PHSkeleton.h"
 #include "character_hit_animations.h"
 #include "character_shell_control.h"
+
 class IPhysicsShellEx;
 class CPHMovementControl;
 class CIKLimbsController;
@@ -19,29 +20,27 @@ class CODEGeom;
 class IPhysicsElementEx;
 class activating_character_delay;
 
-class CCharacterPhysicsSupport :
-	public CPHSkeleton,
-	public CPHDestroyable
+class CCharacterPhysicsSupport : /* public ICharacterPhysicsSupport ,*/ public CPHSkeleton, public CPHDestroyable
 {
 public:
-enum EType
-{
-	etActor,
-	etStalker,
-	etBitting
-};
+	enum EType
+	{
+		etActor,
+		etStalker,
+		etBitting,
+		etEmpty
+	};
 
-enum EState
-{
-	esDead,
-	esAlive,
-	esRemoved
-};
-
+	enum EState
+	{
+		esDead,
+		esAlive,
+		esRemoved
+	};
 private:
-	EType								m_eType;
-	EState								m_eState;
-	Flags8								m_flags;
+	EType							m_eType;
+	EState							m_eState;
+	Flags8							m_flags;
 	enum Fags 
 	{
 		fl_death_anim_on			=1<<0,
@@ -82,52 +81,39 @@ private:
 	u32									m_hit_valide_time;
 	u32									m_physics_shell_animated_time_destroy;
 public:
-EType Type( )
-	{
-		return m_eType;
-	}
+	IC EType Type( ) { return m_eType; }
 private:
-EState STate( )
-	{
-		return m_eState;
-	}
-void	SetState( EState astate )
-	{
-		m_eState = astate;
-	}
-IC	bool isDead( )
-	{
-		return m_eState==esDead;
-	}
-IC	bool isAlive( )
-	{
-		return !m_pPhysicsShell;
-	}
+	EState STate() { return m_eState; }
+	void	SetState(EState astate) { m_eState = astate; }
+	IC	bool isDead() { return m_eState == esDead; }
+	IC	bool isAlive() { return !m_pPhysicsShell; }
 protected:
 virtual void							SpawnInitPhysics				( CSE_Abstract	*D )																									;
 virtual CPhysicsShellHolder*			PPhysicsShellHolder				( )	{ return m_EntityAlife.PhysicsShellHolder( ); }	
 
 virtual bool							CanRemoveObject					( );
+
 public:
-IC		CPHMovementControl				*movement						( )	{ return m_PhysicMovementControl; }
-IC	const	CPHMovementControl			*movement						( ) const{ return m_PhysicMovementControl; }
-IC		CPHSoundPlayer					*ph_sound_player				( )	{ return &m_ph_sound_player; }
-IC		CIKLimbsController				*ik_controller					( )	{ return m_ik_controller; }
-		bool							interactive_motion				( ) ;
-		bool							can_drop_active_weapon			( ) ;
-		void							SetRemoved						( );
-		bool							IsRemoved						( ){ return m_eState == esRemoved; }
-		bool							IsSpecificDamager				( )																{return !!m_flags.test(fl_specific_bonce_demager)	; }
-		float							BonceDamageFactor				( ){ return m_BonceDamageFactor; }
-		void							set_movement_position			( const Fvector &pos);
-		void							ForceTransform					( const Fmatrix &m);
-		void							set_use_hit_anims				( bool v ){ m_flags.set( fl_use_hit_anims, (BOOL)v );}
+virtual		const Fvector				MovementVelocity		()					{ return m_PhysicMovementControl->GetVelocity(); }
+IC		CPHMovementControl				*movement				()					{ return m_PhysicMovementControl; }
+IC		const CPHMovementControl		*movement				() const			{ return m_PhysicMovementControl; }
+IC		CPHSoundPlayer					*ph_sound_player		()					{ return &m_ph_sound_player; }
+IC		CIKLimbsController				*ik_controller			()					{ return m_ik_controller; }
+		bool							IsRemoved				()					{ return m_eState == esRemoved; }
+		bool							IsSpecificDamager		() noexcept			{ return !!m_flags.test(fl_specific_bonce_demager); }
+		float							BonceDamageFactor		()					{ return m_BonceDamageFactor; }
+		void							set_use_hit_anims		(bool v) noexcept	{ m_flags.set( fl_use_hit_anims, (BOOL)v );}
+		bool							interactive_motion		();
+		bool							can_drop_active_weapon	();
+		void							SetRemoved				();
+		void							set_movement_position	(const Fvector &pos);
+		void							ForceTransform			(const Fmatrix &m);
 //////////////////base hierarchi methods///////////////////////////////////////////////////
-		void							CreateCharacterSafe				( );
-		void							CreateCharacter					( );
-		bool							CollisionCorrectObjPos			( );
+		void							CreateCharacterSafe				();
+		void							CreateCharacter					();
+		bool							CollisionCorrectObjPos			();
 	
-		void 							in_UpdateCL()																																		;
+		void 							in_UpdateCL						( )																																		;
 		void 							in_shedule_Update				( u32 DT )																											;
 		void 							in_NetSpawn						( CSE_Abstract* e )																									;
 		void 							in_NetDestroy					( )																													;
@@ -155,11 +141,11 @@ IC		const physics_shell_animated	*animation_collision			( )const{ return m_physi
 private:
 		void							update_animation_collision		( );
 public:
-//		void							on_active_weapon_shell_activate();
 		bool							has_shell_collision_place		( const CPhysicsShellHolder* obj ) const;
 		virtual void					on_child_shell_activate			( CPhysicsShellHolder* obj );
 /////////////////////////////////////////////////////////////////
-		CCharacterPhysicsSupport& operator = ( CCharacterPhysicsSupport& /**asup/**/ ){ R_ASSERT2( false, "Can not assign it" ); }
+		void							SyncNetState					();
+CCharacterPhysicsSupport&				operator=						(CCharacterPhysicsSupport&){ R_ASSERT2( false, "Can not assign it" ); }
 										CCharacterPhysicsSupport		( EType atype, CEntityAlive* aentity )																				;
 virtual									~CCharacterPhysicsSupport		( )																													;
 private:
@@ -168,7 +154,6 @@ private:
 		void 							ActivateShell					( CObject* who )																									;
 		void							CreateShell						( CObject* who, Fvector& dp, Fvector & velocity  )																	;
 		void							AddActiveWeaponCollision		();
-		void							RemoveActiveWeaponCollision		();
 		void							bone_chain_disable				(u16 bone, u16 r_bone, IKinematics &K);
 		void							bone_fix_clear					();
 		void							EndActivateFreeShell			( CObject* who, const Fvector& inital_entity_position, const Fvector& dp, const Fvector & velocity )				;

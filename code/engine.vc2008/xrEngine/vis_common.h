@@ -1,4 +1,4 @@
-#ifndef vis_commonH
+п»ї#ifndef vis_commonH
 #define vis_commonH
 #pragma once
 
@@ -8,7 +8,7 @@
 struct	vis_data
 {
 private:
-	vis_object_data obj_data_self; //--#SM+#-- Свои собственные объектные данные [personal shaders data of this model]
+	vis_object_data obj_data_self; //--#SM+#-- РЎРІРѕРё СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ РѕР±СЉРµРєС‚РЅС‹Рµ РґР°РЅРЅС‹Рµ [personal shaders data of this model]
 
 public:
 	Fsphere		sphere;				//
@@ -18,7 +18,7 @@ public:
 	u32			hom_frame;			// when to perform test - shedule
 	u32			hom_tested;			// when it was last time tested
 
-	vis_object_data * obj_data; //--#SM+#-- Объектные данные, используемые при рендере этой модели [shaders data which
+	vis_object_data * obj_data; //--#SM+#-- РћР±СЉРµРєС‚РЅС‹Рµ РґР°РЅРЅС‹Рµ, РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ РїСЂРё СЂРµРЅРґРµСЂРµ СЌС‚РѕР№ РјРѕРґРµР»Рё [shaders data which
 	                               //will be used at render for this model]
 		
 	vis_data::vis_data() //--#SM+#--

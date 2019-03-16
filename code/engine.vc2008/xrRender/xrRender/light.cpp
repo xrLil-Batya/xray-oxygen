@@ -25,11 +25,11 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	m_volumetric_distance	= 1;
 
 	frame_render	= 0;
-	virtual_size	= .1f;
+	virtual_size	= 0.1f;
 
     std::memset(omnipart,0,sizeof(omnipart));
-	s_spot			= NULL;
-	s_point			= NULL;
+	s_spot			= nullptr;
+	s_point			= nullptr;
 	vis.frame2test	= 0;	// xffffffff;
 	vis.query_id	= 0;
 	vis.query_order	= 0;
@@ -50,7 +50,7 @@ light::~light()
 
 void light::set_texture		(LPCSTR name)
 {
-	if ((0==name) || (0==name[0]))
+	if ((nullptr==name) || (0==name[0]))
 	{
 		// default shaders
 		s_spot.destroy		();
@@ -61,7 +61,7 @@ void light::set_texture		(LPCSTR name)
 
 	string256				temp;
 	
-	strconcat(sizeof(temp),temp,"r2\\accum_spot_",name);
+	xr_strconcat(temp,"r2\\accum_spot_",name);
 	s_spot.create			(RImplementation.Target->b_accum_spot,temp,name);
 
 #if	(RENDER==R_R2)
@@ -77,9 +77,9 @@ void light::set_texture		(LPCSTR name)
 
 		for( int i = 0; i < bound; ++i )
 		{
-			s_spot_msaa[i].create(RImplementation.Target->b_accum_spot_msaa[i], strconcat(sizeof(temp), temp, "r2\\accum_spot_", name), name);
-			s_point_msaa[i].create(RImplementation.Target->b_accum_point_msaa[i], strconcat(sizeof(temp), temp, "r2\\accum_point_", name), name);
-			s_volumetric_msaa[i].create	(RImplementation.Target->b_accum_volumetric_msaa[i],strconcat(sizeof(temp),temp,"r2\\accum_volumetric_",name),name);
+			s_spot_msaa[i].create(RImplementation.Target->b_accum_spot_msaa[i], xr_strconcat( temp, "r2\\accum_spot_", name), name);
+			s_point_msaa[i].create(RImplementation.Target->b_accum_point_msaa[i], xr_strconcat( temp, "r2\\accum_point_", name), name);
+			s_volumetric_msaa[i].create	(RImplementation.Target->b_accum_volumetric_msaa[i], xr_strconcat(temp,"r2\\accum_volumetric_",name),name);
 		}
 	}
 #endif
@@ -226,40 +226,44 @@ void	light::xform_calc			()
 	}
 
 	// matrix
-	Fmatrix					mR;
-	mR.i					= L_right;	mR._14	= 0;
-	mR.j					= L_up;		mR._24	= 0;
-	mR.k					= L_dir;	mR._34	= 0;
-	mR.c					= position;	mR._44	= 1;
+	Matrix4x4 mR;
+	mR.x	= { L_right.x, L_right.y, L_right.z, 0};
+	mR.y	= { L_up.x, L_up.y, L_up.z, 0 };
+	mR.z	= { L_dir.x, L_dir.y, L_dir.z, 0 };
+	mR.w	= { position.x, position.y, position.z, 1 };
 
 	// switch
-	switch(flags.type)	{
+	switch(flags.type)	
+	{
 	case IRender_Light::REFLECTED	:
 	case IRender_Light::POINT		:
 		{
 			// scale of identity sphere
 			float		L_R			= range;
-			Fmatrix		mScale;		mScale.scale	(L_R,L_R,L_R);
-			m_xform.mul_43			(mR,mScale);
+			Fmatrix		mScale;
+			mScale.scale(L_R, L_R, L_R);
+			m_xform.mul_43(mR, mScale);
 		}
 		break;
 	case IRender_Light::SPOT		:
 		{
 			// scale to account range and angle
 			float		s			= 2.f*range*tanf(cone/2.f);	
-			Fmatrix		mScale;		mScale.scale(s,s,range);	// make range and radius
-			m_xform.mul_43			(mR,mScale);
+			Fmatrix		mScale;
+			mScale.scale(s, s, range);
+			m_xform.mul_43(mR, mScale);
 		}
 		break;
 	case IRender_Light::OMNIPART	:
 		{
 			float		L_R			= 2*range;		// volume is half-radius
-			Fmatrix		mScale;		mScale.scale	(L_R,L_R,L_R);
-			m_xform.mul_43			(mR,mScale);
+			Fmatrix		mScale;
+			mScale.scale(L_R, L_R, L_R);
+			m_xform.mul_43(mR, mScale);
 		}
 		break;
 	default:
-		m_xform.identity	();
+		m_xform.identity();
 		break;
 	}
 }
@@ -277,7 +281,7 @@ void	light::export_		(light_Package& package)
 			case IRender_Light::POINT:
 				{
 					// tough: create/update 6 shadowed lights
-					if (0==omnipart[0])	for (int f=0; f<6; f++)	omnipart[f] = xr_new<light> ();
+					if (nullptr==omnipart[0])	for (int f=0; f<6; f++)	omnipart[f] = xr_new<light> ();
 					for (int f=0; f<6; f++)	
 					{
 						light*	L			= omnipart[f];

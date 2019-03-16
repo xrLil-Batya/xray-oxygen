@@ -1,4 +1,4 @@
-#ifndef ObjectAnimatorH
+﻿#ifndef ObjectAnimatorH
 #define ObjectAnimatorH
 #pragma once
 

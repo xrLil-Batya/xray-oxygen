@@ -1,11 +1,11 @@
-#pragma once
-
+﻿#pragma once
 #include "../xrCDB/ispatial.h"
 #include "isheduled.h"
 #include "irenderable.h"
 #include "icollidable.h"
 #include "engineapi.h"
 #include "device.h"
+#include "../xrPhysics/ICharacterPhysicsSupport.h"
 
 // refs
 class	ENGINE_API	IRender_Sector;
@@ -13,6 +13,7 @@ class	ENGINE_API	IRender_ObjectSpecific;
 class	ENGINE_API	CCustomHUD;
 class	NET_Packet	;
 class	CSE_Abstract;
+class   CCharacterPhysicsSupport;
 
 //-----------------------------------------------------------------------------------------------------------
 #define CROW_RADIUS		(30.f)
@@ -67,6 +68,7 @@ protected:
 
 	// Geometric (transformation)
 	svector<SavedPosition,4>			PositionStack;
+	mutable shared_str					ClassName;
 public:
 	u32									dbg_update_cl;
 	u32									dwFrame_UpdateCL;
@@ -89,8 +91,8 @@ public:
 	virtual BOOL						Ready				()					{ return Props.net_Ready;	}
 	BOOL								GetTmpPreDestroy		()		const	{ return Props.bPreDestroy;	}
 	void								SetTmpPreDestroy	(BOOL b)			{ Props.bPreDestroy = b;}
-	virtual float						shedule_Scale		()					{ return Device.vCameraPosition.distance_to(Position())/200.f; }
-	virtual bool						shedule_Needed		()					{return processing_enabled();};
+	float								shedule_Scale		() override					{ return Device.vCameraPosition.distance_to(Position())/200.f; }
+	bool								shedule_Needed		() override					{ return processing_enabled(); };
 
 	// Parentness
 	IC CObject*							H_Parent			()					{ return Parent;						}
@@ -103,9 +105,9 @@ public:
 	virtual void						Center				(Fvector& C) const;
 	IC const Fmatrix&					XFORM				()			 const	{ VERIFY(_valid(renderable.xform));	return renderable.xform;	}
 	ICF Fmatrix&						XFORM				()					{ return renderable.xform;			}
-	virtual void						spatial_register	();
-	virtual void						spatial_unregister	();
-	virtual void						spatial_move		();
+	void								spatial_register	() override;
+	void								spatial_unregister	() override;
+	void								spatial_move		() override;
 	void								spatial_update		(float eps_P, float eps_R);
 
 	ICF Fvector&						Direction			() 					{ return renderable.xform.k;		}
@@ -114,21 +116,20 @@ public:
 	ICF const Fvector&					Position			() 			const	{ return renderable.xform.c;		}
 	virtual float						Radius				()			const;
 	virtual const Fbox&					BoundingBox			()			const;
-	
 	IC IRender_Sector*					Sector				()					{ return H_Root()->spatial.sector;	}
 	IC IRender_ObjectSpecific*			ROS					()					{ return renderable_ROS();			}
-	virtual BOOL						renderable_ShadowGenerate	()			{ return TRUE;						}
-	virtual BOOL						renderable_ShadowReceive	()			{ return TRUE;						}
+	BOOL								renderable_ShadowGenerate	() override			{ return TRUE;						}
+	BOOL								renderable_ShadowReceive	() override			{ return TRUE;						}
 
 	// Accessors and converters
 	ICF IRenderVisual*					Visual				() const			{ return renderable.visual;			}
 	ICF ICollisionForm*					CFORM				() const			{ return collidable.model;			}
-	virtual		CObject*				dcast_CObject		()					{ return this;						}
-	virtual		IRenderable*			dcast_Renderable	()					{ return this;						}
+	CObject*							dcast_CObject		() override			{ return this;						}
+	IRenderable*						dcast_Renderable	() override			{ return this;						}
 	virtual void						OnChangeVisual		()					{ }
 	virtual		IPhysicsShell			*physics_shell		()					{ return  0; }
-
-virtual	const IObjectPhysicsCollision	*physics_collision	()					{ return  0; }
+	virtual	CCharacterPhysicsSupport*	character_physics_support()				{ return nullptr; }
+	virtual	const IObjectPhysicsCollision	*physics_collision	()				{ return  0; }
 	// Name management
 	ICF shared_str						cName				()			const	{ return NameObject;				}
 	void								cName_set			(shared_str N);
@@ -137,7 +138,8 @@ virtual	const IObjectPhysicsCollision	*physics_collision	()					{ return  0; }
 	void								cNameSect_set		(shared_str N);
 	ICF shared_str						cNameVisual			()			const	{ return NameVisual;				}
 	void								cNameVisual_set		(shared_str N);
-	virtual	shared_str					shedule_Name		() const			{ return cName(); };
+	shared_str							shedule_Name		() const override			{ return cName(); };
+	virtual shared_str					shedule_Class_Name  () const override;
 	
 	// Properties
 	void								processing_activate		();				// request	to enable	UpdateCL
@@ -164,8 +166,8 @@ virtual	const IObjectPhysicsCollision	*physics_collision	()					{ return  0; }
 	virtual void						Load				(LPCSTR section);
 	
 	// Update
-	virtual void						shedule_Update		(u32 dt);							// Called by sheduler
-	virtual void						renderable_Render	();
+	void								shedule_Update		(u32 dt) override;							// Called by sheduler
+	void								renderable_Render	() override;
 
 	virtual void						UpdateCL			();									// Called each frame, so no need for dt
 	virtual void						UpdateCLRender		();									// Called each frame, so no need for dt
@@ -196,8 +198,8 @@ public:
 	virtual bool						register_schedule	() const {return true;}
 
 public:
-	virtual	Fvector				get_new_local_point_on_mesh	( u16& bone_id ) const;
-	virtual	Fvector				get_last_local_point_on_mesh( Fvector const& last_point, u16 bone_id ) const;
+	virtual	Fvector						get_new_local_point_on_mesh	( u16& bone_id ) const;
+	virtual	Fvector						get_last_local_point_on_mesh( Fvector const& last_point, u16 bone_id ) const;
 };
 
 #pragma pack(pop)

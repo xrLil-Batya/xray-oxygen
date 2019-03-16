@@ -100,7 +100,7 @@ const char* PlanesCollider::ValidateSettings()
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, uqword nb_planes, const Model& model, const Matrix4x4* worldm)
+bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, uqword nb_planes, const Model& model, const IceMatrix4x4* worldm)
 {
 	// Checkings
 	if(!Setup(&model))	return false;
@@ -174,7 +174,7 @@ bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, uqword nb_
  *	\warning	SCALE NOT SUPPORTED. The matrix must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, uqword nb_planes, const Matrix4x4* worldm)
+BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, uqword nb_planes, const IceMatrix4x4* worldm)
 {
 	// 1) Call the base method
 	VolumeCollider::InitQuery();
@@ -189,7 +189,7 @@ BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, uqword n
 
 	if(worldm)
 	{
-		Matrix4x4 InvWorldM;
+		IceMatrix4x4 InvWorldM;
 		InvertPRMatrix(InvWorldM, *worldm);
 
 //		for(uqword i=0;i<nb_planes;i++)	mPlanes[i] = planes[i] * InvWorldM;
@@ -523,7 +523,7 @@ HybridPlanesCollider::~HybridPlanesCollider()
 {
 }
 
-bool HybridPlanesCollider::Collide(PlanesCache& cache, const Plane* planes, uqword nb_planes, const HybridModel& model, const Matrix4x4* worldm)
+bool HybridPlanesCollider::Collide(PlanesCache& cache, const Plane* planes, uqword nb_planes, const HybridModel& model, const IceMatrix4x4* worldm)
 {
 	// We don't want primitive tests here!
 	mFlags |= OPC_NO_PRIMITIVE_TESTS;

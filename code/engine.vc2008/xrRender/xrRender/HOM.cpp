@@ -6,6 +6,7 @@
 #include "HOM.h"
 #include "occRasterizer.h"
 #include "../../xrEngine/GameFont.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 
 #include "dxRenderDeviceRender.h"
  
@@ -13,8 +14,8 @@ float	psOSSR		= .001f;
 
 void __stdcall	CHOM::MT_RENDER()
 {
-    std::lock_guard<decltype(MT)> lock(MT);
-	bool b_main_menu_is_active = (g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive() );
+	xrCriticalSectionGuard guard(MTLock);
+	bool b_main_menu_is_active = (g_pGamePersistent != nullptr && g_pGamePersistent->m_pMainMenu && g_pGamePersistent->m_pMainMenu->IsActive() );
 	if (MT_frame_rendered!=Device.dwFrame && !b_main_menu_is_active)
 	{
 		CFrustum					ViewBase;
@@ -117,7 +118,7 @@ void CHOM::Load			()
 
 	// Create AABB-tree
 	m_pModel			= xr_new<CDB::MODEL> ();
-	m_pModel->build		(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()), nullptr, nullptr, false);
+	m_pModel->build		(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()),nullptr, false, nullptr, nullptr, false);
 	bEnabled			= TRUE;
 	S->close			();
 	FS.r_close			(fs);
@@ -164,8 +165,8 @@ void CHOM::Render_DB			(CFrustum& base)
 		0.0f,				0.0f,				1.0f,		0.0f,
 		1.f/2.f + 0 + 0,	1.f/2.f + 0 + 0,	0.0f,		1.0f
 	};
-	m_xform.mul					(m_viewport,	Device.mFullTransform);
-	m_xform_01.mul				(m_viewport_01,	Device.mFullTransform);
+	m_xform.mul					(m_viewport, Device.mFullTransform);
+	m_xform_01.mul				(m_viewport_01, Device.mFullTransform);
 
 	// Query DB
 	xrc.frustum_options			(0);
@@ -209,7 +210,7 @@ void CHOM::Render_DB			(CFrustum& base)
 		src.push_back	(v[t.verts[1]]);
 		src.push_back	(v[t.verts[2]]);
 		sPoly* P =		clip.ClipPoly	(src,dst);
-		if (0==P)		{ T.skip=next; continue; }
+		if (nullptr==P)		{ T.skip=next; continue; }
 
 		// XForm and Rasterize
 #ifdef DEBUG

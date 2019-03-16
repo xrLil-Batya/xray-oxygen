@@ -58,14 +58,14 @@
 		inline_			operator HPoint()					const						{ return HPoint(n, d);							}
 
 		// Arithmetic operators
-		inline_	Plane	operator*(const Matrix4x4& m)		const
+		inline_	Plane	operator*(const IceMatrix4x4& m)		const
 						{
 							// Old code from Irion. Kept for reference.
 							Plane Ret(*this);
 							return Ret *= m;
 						}
 
-		inline_	Plane&	operator*=(const Matrix4x4& m)
+		inline_	Plane&	operator*=(const IceMatrix4x4& m)
 						{
 							// Old code from Irion. Kept for reference.
 							Point n2 = HPoint(n, 0.0f) * m;
@@ -77,14 +77,14 @@
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/**
-	 *	Transforms a plane by a 4x4 matrix. Same as Plane * Matrix4x4 operator, but faster.
+	 *	Transforms a plane by a 4x4 matrix. Same as Plane * IceMatrix4x4 operator, but faster.
 	 *	\param		transformed	[out] transformed plane
 	 *	\param		plane		[in] source plane
 	 *	\param		transform	[in] transform matrix
 	 *	\warning	the plane normal must be unit-length
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline_	void TransformPlane(Plane& transformed, const Plane& plane, const Matrix4x4& transform)
+	inline_	void TransformPlane(Plane& transformed, const Plane& plane, const IceMatrix4x4& transform)
 	{
 		// Rotate the normal using the rotation part of the 4x4 matrix
 		transformed.n = plane.n * Matrix3x3(transform);
@@ -95,13 +95,13 @@
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/**
-	 *	Transforms a plane by a 4x4 matrix. Same as Plane * Matrix4x4 operator, but faster.
+	 *	Transforms a plane by a 4x4 matrix. Same as Plane * IceMatrix4x4 operator, but faster.
 	 *	\param		plane		[in/out] source plane (transformed on return)
 	 *	\param		transform	[in] transform matrix
 	 *	\warning	the plane normal must be unit-length
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline_	void TransformPlane(Plane& plane, const Matrix4x4& transform)
+	inline_	void TransformPlane(Plane& plane, const IceMatrix4x4& transform)
 	{
 		// Rotate the normal using the rotation part of the 4x4 matrix
 		plane.n *= Matrix3x3(transform);

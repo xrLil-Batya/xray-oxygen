@@ -6,20 +6,23 @@
 #include "../xrEngine/CustomHUD.h"
 #include "Entity.h"
 #include "level.h"
-#include "game_cl_base.h"
+
 #include "../xrEngine/igame_persistent.h"
 
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 #include "InventoryOwner.h"
 #include "relation_registry.h"
 #include "character_info.h"
 
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "entity_alive.h"
 
 #include "inventory_item.h"
 #include "inventory.h"
 #include "Actor_Flags.h"
+#include "Actor.h"
+#include "items/Weapon.h"
+#include "items/weaponknife.h"
 #include <ai/monsters/poltergeist/poltergeist.h>
 
 
@@ -28,7 +31,8 @@ u32 C_ON_NEUTRAL	D3DCOLOR_RGBA(0xff,0xff,0x80,0x80);
 u32 C_ON_FRIEND		D3DCOLOR_RGBA(0,0xff,0,0x80);
 
 
-#define C_DEFAULT	D3DCOLOR_RGBA(0xff,0xff,0xff,0x80)
+#define C_DEFAULT	D3DCOLOR_RGBA(250,250,250,255)
+#define C_NO_ALLOW	D3DCOLOR_RGBA(160,160,160,200)
 #define C_SIZE		0.025f
 #define NEAR_LIM	0.5f
 
@@ -88,7 +92,7 @@ ICF static BOOL pick_trace_callback(collide::rq_result& result, LPVOID params)
 		return FALSE;
 	}else
 	{
-		//получить треугольник и узнать его материал
+		//РїРѕР»СѓС‡РёС‚СЊ С‚СЂРµСѓРіРѕР»СЊРЅРёРє Рё СѓР·РЅР°С‚СЊ РµРіРѕ РјР°С‚РµСЂРёР°Р»
 		CDB::TRI* T		= Level().ObjectSpace.GetStaticTris()+result.element;
 		
 		SGameMtl* mtl = GMLib.GetMaterialByIdx(T->material);
@@ -111,7 +115,7 @@ void CHUDTarget::CursorOnFrame ()
 	if(Level().CurrentEntity())
 	{
 		PP.RQ.O			= 0; 
-		PP.RQ.range		= g_pGamePersistent->Environment().CurrentEnv->far_plane*0.99f;
+		PP.RQ.range		= Environment().CurrentEnv->far_plane*0.99f;
 		PP.RQ.element		= -1;
 		
 		collide::ray_defs	RD(p1, dir, PP.RQ.range, CDB::OPT_CULL, collide::rqtBoth);
@@ -153,7 +157,7 @@ void CHUDTarget::Render()
 	pt.y = -pt.y;
 	float				di_size = C_SIZE/powf(pt.w,.2f);
 
-	CGameFont* F		= UI().Font().pFontGraffiti19Russian;
+	CGameFont* F		= UI().Font().GetFont("ui_font_graffiti19_russian");
 	F->SetAligment		(CGameFont::alCenter);
 	F->OutSetI			(0.f,0.05f);
 
@@ -163,6 +167,11 @@ void CHUDTarget::Render()
 	if (psHUD_Flags.test(HUD_INFO))
 	{ 
 		bool const is_poltergeist	= PP.RQ.O && !!smart_cast<CPoltergeist*> (PP.RQ.O);
+
+		CWeapon* pWeapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
+		CWeaponKnife* pKnife = smart_cast<CWeaponKnife*>(pWeapon);
+		if (pWeapon && PP.RQ.range > pWeapon->fireDistance && !pKnife)
+			C = C_NO_ALLOW;
 
 		if( (PP.RQ.O && PP.RQ.O->getVisible()) || is_poltergeist )
 		{
@@ -204,16 +213,16 @@ void CHUDTarget::Render()
 
 					fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
 				}
-				else 
-					if (l_pI && our_inv_owner && PP.RQ.range < 2.0f*2.0f)
-					{
-						if (fuzzyShowInfo>0.5f && l_pI->NameItem())
-						{
-							F->SetColor	(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));
-							F->OutNext	("%s",l_pI->NameItem());
-						}
-						fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
-					}
+				//else 
+				//	if (l_pI && our_inv_owner && PP.RQ.range < 2.0f*2.0f)
+				//	{
+				//		if (fuzzyShowInfo>0.5f && l_pI->NameItem())
+				//		{
+				//			F->SetColor	(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));
+				//			F->OutNext	("%s",l_pI->NameItem());
+				//		}
+				//		fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
+				//	}
 			}
 
 		}
@@ -234,7 +243,7 @@ void CHUDTarget::Render()
 #endif
 	}
 
-	//отрендерить кружочек или крестик
+	//РѕС‚СЂРµРЅРґРµСЂРёС‚СЊ РєСЂСѓР¶РѕС‡РµРє РёР»Рё РєСЂРµСЃС‚РёРє
 	if (psActorFlags.test(AF_CUR_INS_CROS) || !m_bShowCrosshair || !HUDCrosshair.isEnabled())
 	{
 		UIRender->StartPrimitive	(6, IUIRender::ptTriList, UI().m_currentPointType);
@@ -270,7 +279,7 @@ void CHUDTarget::Render()
 	}
 	else
 	{
-		//отрендерить прицел
+		//РѕС‚СЂРµРЅРґРµСЂРёС‚СЊ РїСЂРёС†РµР»
 		HUDCrosshair.cross_color	= C;
 		HUDCrosshair.OnRender		();
 	}

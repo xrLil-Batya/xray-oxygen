@@ -34,7 +34,7 @@ void interactive_motion::init( )
 {
 	flags.assign( 0 );
 
-	shell = 0;
+	shell = nullptr;
 	angle = 0;
 }
 void	interactive_motion::destroy	( )
@@ -61,10 +61,9 @@ void interactive_motion::setup( const MotionID &m, IPhysicsShellEx *s, float _an
 #ifdef	DEBUG
 	IKinematicsAnimated *KA = smart_cast<IKinematicsAnimated*>( s->PKinematics() );
 	CMotionDef* MD = KA->LL_GetMotionDef(m);
-	VERIFY2( MD->StopAtEnd(), 
-		make_string( "can not use cyclic anim in death animth motion: %s", 
-		KA->LL_MotionDefName_dbg( m ).first ) 
-	);
+	VERIFY_FORMAT( MD->StopAtEnd(), 
+		"can not use cyclic anim in death animth motion: %s", 
+		KA->LL_MotionDefName_dbg( m ).first);
 
 #endif
 	motion = m;
@@ -72,7 +71,7 @@ void interactive_motion::setup( const MotionID &m, IPhysicsShellEx *s, float _an
 	interactive_motion_diagnostic( "started", m, s );
 
 	shell = s;
-	flags.set( fl_use_death_motion, TRUE );
+	flags.set( fl_use_death_motion, true );
 
 }
 
@@ -89,7 +88,7 @@ void	interactive_motion::shell_setup				( )
 void interactive_motion::anim_callback( CBlend *B )
 {
 	VERIFY( B->CallbackParam );
-	( (interactive_motion*) ( B->CallbackParam ) )->flags.set( fl_switch_dm_toragdoll, TRUE );
+	( (interactive_motion*) ( B->CallbackParam ) )->flags.set( fl_switch_dm_toragdoll, true );
 }
 
 void interactive_motion::play( )
@@ -106,16 +105,16 @@ void interactive_motion::state_start( )
 {
 	VERIFY( shell );
 	shell_setup( );
-	flags.set( fl_started, TRUE );
+	flags.set( fl_started, true );
 }
 
 void	interactive_motion::state_end( )
 {
 	VERIFY( shell );
-	flags.set( fl_switch_dm_toragdoll, FALSE );
-	flags.set( fl_use_death_motion, FALSE );
+	flags.set( fl_switch_dm_toragdoll, false );
+	flags.set( fl_use_death_motion, false );
 
-	flags.set( fl_started, FALSE );
+	flags.set( fl_started, false );
 
 }
 

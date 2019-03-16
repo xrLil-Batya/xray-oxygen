@@ -5,7 +5,6 @@
 #include "../../../material_manager.h"
 #include "../../../level_debug.h"
 
-
 CPolterSpecialAbility::CPolterSpecialAbility(CPoltergeist *polter)
 {
 	m_object					= polter;
@@ -79,7 +78,7 @@ void CPolterSpecialAbility::on_hit(SHit* pHDS)
 	if (m_object->g_Alive() && (pHDS->hit_type == ALife::eHitTypeFireWound) && (Device.dwFrame != m_last_hit_frame)) {
 		if(BI_NONE != pHDS->bone()) {
 
-			//вычислить координаты попадания
+			//РІС‹С‡РёСЃР»РёС‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ РїРѕРїР°РґР°РЅРёСЏ
 			IKinematics* V = smart_cast<IKinematics*>(m_object->Visual());
 
 			Fvector start_pos = pHDS->bone_space_position();
@@ -98,8 +97,6 @@ void CPolterSpecialAbility::on_hit(SHit* pHDS)
 //////////////////////////////////////////////////////////////////////////
 // Other
 //////////////////////////////////////////////////////////////////////////
-
-
 #define IMPULSE					10.f
 #define IMPULSE_RADIUS			5.f
 #define TRACE_DISTANCE			10.f
@@ -109,7 +106,6 @@ void CPoltergeist::PhysicalImpulse	(const Fvector &position)
 {
 	m_nearest.clear		();
 	Level().ObjectSpace.GetNearest	(m_nearest,position, IMPULSE_RADIUS, NULL); 
-	//xr_vector<CObject*> &m_nearest = Level().ObjectSpace.q_nearest;
 	if (m_nearest.empty())			return;
 	
 	u32 index = Random.randI		((u32)m_nearest.size());
@@ -122,29 +118,34 @@ void CPoltergeist::PhysicalImpulse	(const Fvector &position)
 	dir.normalize();
 	
 	IPhysicsElementEx* E=obj->m_pPhysicsShell->get_ElementByStoreOrder(u16(Random.randI(obj->m_pPhysicsShell->get_ElementsNumber())));
-	//E->applyImpulse(dir,IMPULSE * obj->m_pPhysicsShell->getMass());
 	E->applyImpulse(dir,IMPULSE * E->getMass());
 }
 
+#pragma warning(push)
+#pragma warning(disable: 4267)
 void CPoltergeist::StrangeSounds(const Fvector &position)
 {
 	if (m_strange_sound._feedback()) return;
 	
-	for (u32 i = 0; i < TRACE_ATTEMPT_COUNT; i++) {
+	for (u32 i = 0; i < TRACE_ATTEMPT_COUNT; i++) 
+	{
 		Fvector dir;
 		dir.random_dir();
 
 		collide::rq_result	l_rq;
-		if (Level().ObjectSpace.RayPick(position, dir, TRACE_DISTANCE, collide::rqtStatic, l_rq, NULL)) {
-			if (l_rq.range < TRACE_DISTANCE) {
+		if (Level().ObjectSpace.RayPick(position, dir, TRACE_DISTANCE, collide::rqtStatic, l_rq, nullptr)) 
+		{
+			if (l_rq.range < TRACE_DISTANCE) 
+			{
 
-				// Получить пару материалов
+				// РџРѕР»СѓС‡РёС‚СЊ РїР°СЂСѓ РјР°С‚РµСЂРёР°Р»РѕРІ
 				CDB::TRI*	pTri	= Level().ObjectSpace.GetStaticTris() + l_rq.element;
 				SGameMtlPair* mtl_pair = GMLib.GetMaterialPair(material().self_material_idx(),pTri->material);
 				if (!mtl_pair) continue;
 
-				// Играть звук
-				if (!mtl_pair->CollideSounds.empty()) {
+				// РРіСЂР°С‚СЊ Р·РІСѓРє
+				if (!mtl_pair->CollideSounds.empty()) 
+				{
 					CLONE_MTL_SOUND(m_strange_sound, mtl_pair, CollideSounds);
 					Fvector pos;
 					pos.mad(position, dir, ((l_rq.range - 0.1f > 0) ? l_rq.range - 0.1f  : l_rq.range));
@@ -155,4 +156,4 @@ void CPoltergeist::StrangeSounds(const Fvector &position)
 		}
 	}
 }
-
+#pragma warning(pop)

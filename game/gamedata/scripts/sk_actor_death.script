@@ -1,7 +1,7 @@
 --[[ ---------------------------------------------
  File       : sk_actor_dead.script
- Description: Смерть ГГ от первого лица
- Copyright  : 2011 © Cut X-Ray mod
+ Description: РЎРјРµСЂС‚СЊ Р“Р“ РѕС‚ РїРµСЂРІРѕРіРѕ Р»РёС†Р°
+ Copyright  : 2011 В© Cut X-Ray mod
  Author     : SkyLoader
 -------------------------------------------------]]
 
@@ -14,7 +14,7 @@ function is_killed()
 	if not db.actor:alive() then
 		if not flag_dead and not flad_circle then
 		local dir=device().cam_dir
-		db.actor:set_actor_direction(dir.x) --'выравниваем направление взгляда, чтобы было падение более реалистичным
+		db.actor:set_actor_direction(dir.x) --'РІС‹СЂР°РІРЅРёРІР°РµРј РЅР°РїСЂР°РІР»РµРЅРёРµ РІР·РіР»СЏРґР°, С‡С‚РѕР±С‹ Р±С‹Р»Рѕ РїР°РґРµРЅРёРµ Р±РѕР»РµРµ СЂРµР°Р»РёСЃС‚РёС‡РЅС‹Рј
  		level.add_cam_effector("camera_effects\\surge_02.anm", 2532, false, "")
 		level.add_pp_effector("surge_fade.ppe", 2011, false)
 		level.disable_input()

@@ -113,25 +113,18 @@ void change_loophole::select_animation	(shared_str &result)
 	smart_cover::cover const&		cover = *object().movement().current_params().cover();
 	shared_str const&				cover_loophole_id = object().movement().current_params().cover_loophole_id();
 
-	VERIFY2							(
-		cover.description()->transitions().edge(cover_loophole_id, smart_cover::transform_vertex("", false)),
-		make_string(
+	VERIFY_FORMAT(cover.description()->transitions().edge(cover_loophole_id, smart_cover::transform_vertex("", false)),
 			"current loophole_id[%s], next_loophole_id[%s]",
 			cover_loophole_id.c_str(),
-			smart_cover::transform_vertex("", false).c_str()
-		)
-	);
-	VERIFY2							(
-		animation.has_animation(),
-		make_string(
+			smart_cover::transform_vertex("", false).c_str());
+
+	VERIFY_FORMAT(animation.has_animation(),
 			"cover[%s], transition[%s][%s] has no animation",
 			cover.id().c_str(),
 			cover_loophole_id.c_str(),
-			smart_cover::transform_vertex("", false).c_str()
-		)
-	);
+			smart_cover::transform_vertex("", false).c_str());
 
-	result							= animation.animation_id();
+	result = animation.animation_id();
 }
 
 void change_loophole::on_animation_end	()

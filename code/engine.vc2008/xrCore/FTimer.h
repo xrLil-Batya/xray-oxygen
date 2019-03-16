@@ -8,7 +8,7 @@ protected:
     u64 qwPauseAccum;
     BOOL bPause;
 public:
-    CTimerBase() : qwStartTime(0), qwPausedTime(0), qwPauseAccum(0), bPause(FALSE) { }
+	constexpr  CTimerBase() noexcept  : qwStartTime(0), qwPausedTime(0), qwPauseAccum(0), bPause(FALSE) { }
 
     ICF void Start() 
     { 
@@ -49,7 +49,7 @@ public:
 class CTimer : public CTimerBase
 {
 private:
-    typedef CTimerBase inherited;
+    using inherited = CTimerBase;
 
 private:
     float m_time_factor;
@@ -68,9 +68,9 @@ private:
     }
 
 public:
-    ICF CTimer() : m_time_factor(1.f), m_real_ticks(0), m_ticks(0) {}
+    constexpr CTimer() noexcept : m_time_factor(1.f), m_real_ticks(0), m_ticks(0) {}
 
-    ICF void Start()
+    ICF void Start() noexcept
     {
         if (bPause)
             return;
@@ -81,12 +81,12 @@ public:
         m_ticks = 0;
     }
 
-    IC const float& time_factor() const
+    IC const float& time_factor() const noexcept
     {
         return (m_time_factor);
     }
 
-    ICF void time_factor(const float& time_factor)
+    ICF void time_factor(const float& time_factor) noexcept
     {
         u64 current = inherited::GetElapsed_ticks();
         m_ticks = GetElapsed_ticks(current);
@@ -122,7 +122,7 @@ class CTimer_paused_ex : public CTimer
 {
     u64 save_clock;
 public:
-    CTimer_paused_ex() { }
+    CTimer_paused_ex() noexcept { }
     virtual ~CTimer_paused_ex() { }
     ICF BOOL Paused()const { return bPause; }
     ICF void Pause(BOOL b)
@@ -153,8 +153,8 @@ public:
     {
         m_timers.reserve(3);
     }
-    ICF bool Paused() const { return paused; }
-    ICF void Pause(const bool b)
+    ICF bool Paused() const noexcept{ return paused; }
+    ICF void Pause (const bool b) noexcept
     {
         if (paused == b)return;
 
@@ -213,4 +213,14 @@ public:
         float _result = float(double(GetElapsed_ticks()) / double(CPU::qpc_freq));
         return _result;
     }
+};
+
+struct XRCORE_API ScopeStatTimer
+{
+	ScopeStatTimer(CStatTimer& destTimer);
+	~ScopeStatTimer();
+
+private:
+
+	CStatTimer& _timer;
 };

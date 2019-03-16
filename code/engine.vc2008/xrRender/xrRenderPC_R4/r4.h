@@ -2,11 +2,8 @@
 
 #include "../xrRender/r__dsgraph_structure.h"
 #include "../xrRender/r__occlusion.h"
-
 #include "../xrRender/PSLibrary.h"
-
-#include "r2_types.h"
-#include "r4_rendertarget.h"
+#include "../xrRender/xrRenderTarget.h"
 
 #include "../xrRender/hom.h"
 #include "../xrRender/detailmanager.h"
@@ -21,6 +18,8 @@
 
 #include "../../xrEngine/irenderable.h"
 #include "../../xrEngine/fmesh.h"
+#include "../xrRender/dxGlowManager.h"
+#include "../xrRender/ScreenshotManager.h"
 
 class dxRender_Visual;
 
@@ -55,8 +54,6 @@ public:
 
 public:
 	struct		_options	{
-		u32		bug					: 1;
-
 		u32		ssao_blur_on		: 1;
 		u32		ssao_opt_data		: 1;
 		u32		ssao_half_data		: 1;
@@ -86,7 +83,6 @@ public:
 		u32		distortion_enabled	: 1;
 
 		u32		sunfilter			: 1;
-		u32		sunstatic			: 1;
 		u32		sjitter				: 1;
 		u32		noshadows			: 1;
 		u32		Tshadows			: 1;						// transluent shadows
@@ -97,7 +93,6 @@ public:
       u32		dx10_msaa			: 1;	//	DX10.0 path
 	  u32		dx10_msaa_hybrid	: 1;	//	DX10.0 main path with DX10.1 A-test msaa allowed
       u32		dx10_msaa_opt	    : 1;	//	DX10.1 path
-      u32		dx10_gbuffer_opt	: 1;	//	
 	  u32		dx10_sm4_1			: 1;	//	DX10.1 path
       u32		dx10_msaa_alphatest	: 2;	//	A-test mode
 	  u32		dx10_msaa_samples	: 4;
@@ -135,14 +130,15 @@ public:
 	xr_vector<ref_shader>										Shaders;
 	typedef svector<D3DVERTEXELEMENT9,MAXD3DDECLLENGTH+1>		VertexDeclarator;
 	xr_vector<VertexDeclarator>									nDC,xDC;
-	xr_vector<ID3DVertexBuffer*>							nVB,xVB;
-	xr_vector<ID3DIndexBuffer*>							nIB,xIB;
+	xr_vector<ID3DVertexBuffer*>								nVB,xVB;
+	xr_vector<ID3DIndexBuffer*>									nIB,xIB;
 	xr_vector<dxRender_Visual*>									Visuals;
 	CPSLibrary													PSLibrary;
 
 	CDetailManager*												Details;
 	CModelPool*													Models;
 	CWallmarksEngine*											Wallmarks;
+	CGlowManager*												Glows;
 
 	CRenderTarget*												Target;			// Render-target
 
@@ -153,7 +149,7 @@ public:
 	light_Package												LP_normal;
 	light_Package												LP_pending;
 
-	xr_vector<Fbox3,xalloc<Fbox3> >						main_coarse_structure;
+	xr_vector<Fbox3,xalloc<Fbox3> >								main_coarse_structure;
 
 	shared_str													c_sbase			;
 	shared_str													c_lmaterial		;
@@ -166,6 +162,7 @@ public:
 	bool														m_bMakeAsyncSS;
 	bool														m_bFirstFrameAfterReset;	// Determines weather the frame is the first after resetting device.
 	xr_vector<sun::cascade>										m_sun_cascades;
+	CScreenshotManager											ScreenshotManager;
 
 private:
 	// Loading / Unloading
@@ -184,7 +181,7 @@ private:
 
 public:
 	IRender_Sector*					rimp_detectSector			(Fvector& P, Fvector& D);
-	void							render_main					(Fmatrix& mCombined, bool _fportals);
+	void							render_main					(Fmatrix& mCombined);
 	void							render_forward				();
 	void							render_smap_direct			(Fmatrix& mCombined);
 	void							render_indirect				(light*			L	);
@@ -250,13 +247,12 @@ public:
 
 	inline bool is_sun()
 	{
-		if (o.sunstatic) return false;
 		Fcolor sun_color = ((light*)Lights.sun._get())->color;
-		return (ps_r_flags.test(R_FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b)>EPS));
+		return (ps_r_flags.test(R_FLAG_SUN) && (Diffuse::u_diffuse2s(sun_color.r, sun_color.g, sun_color.b)>EPS));
 	}
+
 public:
 	// feature level
-	virtual bool					is_sun_static			()	{ return o.sunstatic;}
 	virtual DWORD					get_dx_level			()	{ return HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1?0x000A0001:0x000A0000; }
 
 	// Loading / Unloading
@@ -335,13 +331,10 @@ public:
 	// Main
 	virtual void					Calculate					();
 	virtual void					Render						();
-	virtual void					Screenshot					(ScreenshotMode mode=SM_NORMAL, LPCSTR name = 0);
-	virtual void					Screenshot					(ScreenshotMode mode, CMemoryWriter& memory_writer);
-	virtual void					ScreenshotAsyncBegin		();
-	virtual void					ScreenshotAsyncEnd			(CMemoryWriter& memory_writer);
+	virtual void					Screenshot					(ScreenshotMode mode = SM_NORMAL, LPCSTR name = nullptr);
 	virtual void		_BCL		OnFrame						();
-	virtual void                    BeforeWorldRender           (); // +SecondVP+ Вызывается перед началом рендера мира и пост-эффектов
-	virtual void                    AfterWorldRender            ();  // +SecondVP+ Вызывается после рендера мира и перед UI
+	virtual void                    BeforeWorldRender           (); // +SecondVP+ Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј СЂРµРЅРґРµСЂР° РјРёСЂР° Рё РїРѕСЃС‚-СЌС„С„РµРєС‚РѕРІ
+	virtual void                    AfterWorldRender            ();  // +SecondVP+ Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЂРµРЅРґРµСЂР° РјРёСЂР° Рё РїРµСЂРµРґ UI
 
 	// Render mode
 	virtual void					rmNear						();
@@ -358,12 +351,7 @@ public:
 	void clearAllShaderOptions() {m_ShaderOptions.clear();}
 
 private:
-	xr_vector<D3D_SHADER_MACRO>									m_ShaderOptions;
-
-protected:
-	virtual	void					ScreenshotImpl				(ScreenshotMode mode, LPCSTR name, CMemoryWriter* memory_writer);
-
-private:
+	xr_vector<D3D_SHADER_MACRO>		m_ShaderOptions;
 	FS_FileSet						m_file_set;
 };
 

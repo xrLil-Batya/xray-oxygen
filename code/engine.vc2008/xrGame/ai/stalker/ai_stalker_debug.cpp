@@ -21,7 +21,7 @@
 #include "../../stalker_planner.h"
 #include "../../script_game_object.h"
 #include "../../stalker_animation_manager.h"
-#include "../../weapon.h"
+#include "../../items/weapon.h"
 #include "../../sound_player.h"
 #include "../../inventory.h"
 #include "../../object_handler_planner.h"
@@ -42,7 +42,7 @@
 #include "../../agent_location_manager.h"
 #include "../../cover_point.h"
 #include "../../../xrEngine/camerabase.h"
-#include "../../weaponmagazined.h"
+#include "../../items/weaponmagazined.h"
 #include "../../object_handler_space.h"
 #include "../../debug_renderer.h"
 #include "../../CharacterPhysicsSupport.h"
@@ -53,7 +53,7 @@
 #include "../../aimers_weapon.h"
 #include "../../aimers_bone.h"
 #include "../../smart_cover_planner_target_selector.h"
-#include "../../ui_base.h"
+#include "../../../xrUICore/ui_base.h"
 #include "../../doors_actor.h"
 
 CActor *g_debug_actor = 0;
@@ -133,7 +133,7 @@ void restore_actor()
 	CHudItem* pHudItem = smart_cast<CHudItem*>(g_debug_actor->inventory().ActiveItem());
 	if (pHudItem) 
 	{
-		pHudItem->OnStateSwitch(pHudItem->GetState());
+		pHudItem->OnStateSwitch(pHudItem->GetState(), pHudItem->GetState());
 	}
 }
 
@@ -501,7 +501,7 @@ void CAI_Stalker::debug_text			()
 	string256							temp;
 
 	const CObjectHandlerPlanner			&objects = planner();
-	strconcat							(sizeof(temp),temp,indent,indent);
+	xr_strconcat						(temp, indent, indent);
 	draw_planner						(objects,temp,indent,"root");
 
 	DBG_TextOutSet		(330,up_indent);
@@ -766,7 +766,7 @@ void CAI_Stalker::debug_text			()
 		DBG_OutText	("%s%s%sfire object target    : %s",indent,indent,indent,movement().target_params().cover_fire_object()->cName().c_str());
 
 	DBG_OutText	("%s%s%sdefault behaviour   : %c",indent,indent,indent, movement().current_params().cover() && movement().default_behaviour() ? '+' : '-');
-	strconcat								(sizeof(temp),temp,indent,indent,indent);
+	xr_strconcat (temp, indent, indent, indent);
 	draw_planner							(movement().target_selector(),temp,indent,"target selector");
 
 	if	(
@@ -776,7 +776,7 @@ void CAI_Stalker::debug_text			()
 			movement().restrictions().base_in_restrictions().size()
 		) {
 		DBG_OutText	("%s%srestrictions",indent,indent);
-		strconcat							(sizeof(temp),temp,indent,indent,indent);
+		xr_strconcat(temp, indent, indent, indent);
 		draw_restrictions					(movement().restrictions().out_restrictions(),temp,indent,"out");
 		draw_restrictions					(movement().restrictions().in_restrictions(),temp,indent,"in");
 		draw_restrictions					(movement().restrictions().base_out_restrictions(),temp,indent,"base out");
@@ -1240,21 +1240,17 @@ static void fill_bones				(CAI_Stalker& self, Fmatrix const& transform, IKinemat
 	void* callback_params				= root_bone.callback_param();
 	root_bone.set_callback				( bctCustom, 0, 0 );
 
-	for (u16 i=0; i<MAX_PARTS; ++i) {
-#if 0
-		CBlend* const blend				= kinematics_animated->LL_PlayCycle(i, animation, 0, 0, 0, 1);
-		if (blend)
-			blend->timeCurrent			= 0.f;//blend->timeTotal - (SAMPLE_SPF + EPS);
-#else // #if 0
+	for (u16 i=0; i<MAX_PARTS; ++i)
+	{
 		u32 const blend_count			= kinematics_animated->LL_PartBlendsCount(i);
-		for (u32 j=0; j<blend_count; ++j) {
+		for (u32 j=0; j<blend_count; ++j) 
+		{
 			CBlend* const blend			= kinematics_animated->LL_PartBlend(i, j);
 			CBlend* const new_blend		= kinematics_animated->LL_PlayCycle( i, blend->motionID, TRUE, 0, 0, 1 );
 			VERIFY						(new_blend);
 			*new_blend					= *blend;
 			new_blend->channel			= 1;
 		}
-#endif // #if 0
 	}
 
 	animation_movement_controller const*controller = self.animation_movement();

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "xr_collide_form.h"
 
 class ENGINE_API	CCF_DynamicMesh:

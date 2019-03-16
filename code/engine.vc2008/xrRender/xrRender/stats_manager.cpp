@@ -11,7 +11,7 @@
 void stats_manager::increment_stats( u32 size, enum_stats_buffer_type type, _D3DPOOL location )
 {
 	R_ASSERT( type >= 0 && type < enum_stats_buffer_type_COUNT );
-	R_ASSERT( location >= 0 && location <= D3DPOOL_SCRATCH );
+	R_ASSERT( location >= D3DPOOL_DEFAULT && location <= D3DPOOL_SCRATCH );
 	memory_usage_summary [type][location]		+= size;
 }
  
@@ -19,7 +19,7 @@ void stats_manager::increment_stats( u32 size, enum_stats_buffer_type type, _D3D
 {
 	R_ASSERT( buff_ptr != NULL );
 	R_ASSERT( type >= 0 && type < enum_stats_buffer_type_COUNT );
-	R_ASSERT( location >= 0 && location <= D3DPOOL_SCRATCH );
+	R_ASSERT( location >= D3DPOOL_DEFAULT && location <= D3DPOOL_SCRATCH );
 	memory_usage_summary [type][location]		+= size;
 
 #ifdef DEBUG
@@ -36,7 +36,7 @@ void stats_manager::increment_stats( u32 size, enum_stats_buffer_type type, _D3D
 void stats_manager::increment_stats_rtarget( ID3DTexture2D*		buff )
 {
 	_D3DPOOL pool = D3DPOOL_MANAGED;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	D3D_TEXTURE2D_DESC desc;
 	buff->GetDesc( &desc );
 #else	
@@ -51,7 +51,7 @@ void stats_manager::increment_stats_rtarget( ID3DTexture2D*		buff )
 
 void stats_manager::increment_stats_vb( ID3DVertexBuffer* buff )
 {
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	D3D_BUFFER_DESC desc;
 	buff->GetDesc( &desc );
 	increment_stats( desc.ByteWidth, enum_stats_buffer_type_vertex, D3DPOOL_MANAGED, buff );
@@ -64,7 +64,7 @@ void stats_manager::increment_stats_vb( ID3DVertexBuffer* buff )
 
 void stats_manager::increment_stats_ib( ID3DIndexBuffer*	buff )
 {
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	D3D_BUFFER_DESC desc;
 	buff->GetDesc( &desc );
 	increment_stats( desc.ByteWidth, enum_stats_buffer_type_index, D3DPOOL_MANAGED, buff );
@@ -86,7 +86,7 @@ void stats_manager::decrement_stats_rtarget( ID3DTexture2D*		buff )
 		return;
 
 	_D3DPOOL pool = D3DPOOL_MANAGED;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	D3D_TEXTURE2D_DESC desc;
 	buff->GetDesc( &desc );
 #else
@@ -110,7 +110,7 @@ void stats_manager::decrement_stats_vb( ID3DVertexBuffer* buff )
 	if( (refcnt = buff->Release()) > 1 )
 		return;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	D3D_BUFFER_DESC desc;
 	buff->GetDesc( &desc );
 	decrement_stats( desc.ByteWidth, enum_stats_buffer_type_vertex, D3DPOOL_MANAGED, buff );
@@ -131,7 +131,7 @@ void stats_manager::decrement_stats_ib( ID3DIndexBuffer*	buff )
 	if( (refcnt = buff->Release()) > 1 )
 		return;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	D3D_BUFFER_DESC desc;
 	buff->GetDesc( &desc );
 	decrement_stats( desc.ByteWidth, enum_stats_buffer_type_index, D3DPOOL_MANAGED, buff );
@@ -232,7 +232,7 @@ u32 get_format_pixel_size( D3DFORMAT format )
 	}
 }
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 u32 get_format_pixel_size ( DXGI_FORMAT format )
 {
 	if( format >= DXGI_FORMAT_R32G32B32A32_TYPELESS && format <= DXGI_FORMAT_R32G32B32A32_SINT)

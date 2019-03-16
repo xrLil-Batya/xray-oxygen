@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 //***** Standart extension classes
 #define CLSID_HUDMANAGER		MK_CLSID('H','U','D','_','M','N','G','R')

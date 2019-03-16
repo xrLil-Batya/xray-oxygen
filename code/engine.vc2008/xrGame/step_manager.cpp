@@ -5,7 +5,7 @@
 #include "level.h"
 #include "gamepersistent.h"
 #include "material_manager.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "IKLimbsController.h"
 
 #ifdef	DEBUG
@@ -61,7 +61,7 @@ void CStepManager::reload(LPCSTR section)
 	for (u32 i=0; pSettings->r_line(anim_section,i,&anim_name,&val); ++i) {
 		_GetItem (val,0,cur_elem);
 
-		param.cycles = u8(atoi(cur_elem));
+		param.cycles = u8(atoi_17(cur_elem));
 		R_ASSERT(param.cycles >= 1);
 
 		for (u32 j=0;j<m_legs_count;j++) {
@@ -250,7 +250,7 @@ void CStepManager::update(bool b_hud_view)
 //////////////////////////////////////////////////////////////////////////
 Fvector	CStepManager::get_foot_position(ELegType leg_type)
 {
-	R_ASSERT2(m_foot_bones[leg_type] != BI_NONE, make_string("[%s] foot bone had not been set", m_object->Name()));
+	R_ASSERT_FORMAT(m_foot_bones[leg_type] != BI_NONE, "[%s] foot bone had not been set", m_object->Name());
 
 	IKinematics *pK					= smart_cast<IKinematics*>(m_object->Visual());
 	const Fmatrix& bone_transform = pK->LL_GetBoneInstance(m_foot_bones[leg_type]).mTransform;	

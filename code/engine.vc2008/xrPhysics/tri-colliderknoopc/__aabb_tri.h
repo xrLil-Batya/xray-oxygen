@@ -100,8 +100,6 @@ public:
 	float y; //!< y coordinate
 	float z; //!< z coordinate
 };
-//using namespace CDB;
-using namespace Opcode;
 
 //! This macro quickly finds the min & max values among 3 variables
 #define FINDMINMAX(x0, x1, x2, min, max)	\

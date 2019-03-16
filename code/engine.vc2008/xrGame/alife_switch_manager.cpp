@@ -16,25 +16,15 @@
 #include "xrserver.h"
 #include "ai_space.h"
 #include "level_graph.h"
-
-#ifdef DEBUG
-#	include "level.h"
-#endif // DEBUG
+#include "level.h"
 
 using namespace ALife;
 
-struct remove_non_savable_predicate {
-	xrServer			*m_server;
-
-	IC		 remove_non_savable_predicate(xrServer *server)
-	{
-		VERIFY			(server);
-		m_server		= server;
-	}
-
+struct remove_non_savable_predicate 
+{
 	IC	bool operator()	(const ALife::_OBJECT_ID &id) const
 	{
-		CSE_Abstract	*object = m_server->game->get_entity_from_eid(id);
+		CSE_Abstract	*object = Level().Server->ID_to_entity(id);
 		VERIFY			(object);
 		CSE_ALifeObject	*alife_object = smart_cast<CSE_ALifeObject*>(object);
 		VERIFY			(alife_object);
@@ -49,26 +39,25 @@ CALifeSwitchManager::~CALifeSwitchManager	()
 void CALifeSwitchManager::add_online(CSE_ALifeDynamicObject *object, bool update_registries)
 {
 	START_PROFILE("ALife/switch/add_online")
-	VERIFY							((ai().game_graph().vertex(object->m_tGraphID)->level_id() == graph().level().level_id()));
+	VERIFY((ai().game_graph().vertex(object->m_tGraphID)->level_id() == graph().level().level_id()));
 
-	object->m_bOnline				= true;
+	object->m_bOnline = true;
 
-	NET_Packet						tNetPacket;
-	CSE_Abstract					*l_tpAbstract = smart_cast<CSE_Abstract*>(object);
-	server().entity_Destroy			(l_tpAbstract);
-	object->s_flags.or				(M_SPAWN_UPDATE);
-	ClientID						clientID;
-	clientID.set					(server().GetServerClient() ? server().GetServerClient()->ID.value() : 0);
-	server().Process_spawn			(tNetPacket,clientID,FALSE,l_tpAbstract);
-	object->s_flags.and				(u16(-1) ^ M_SPAWN_UPDATE);
-	R_ASSERT3						(!object->used_ai_locations() || ai().level_graph().valid_vertex_id(object->m_tNodeID),"Invalid vertex for object ",object->name_replace());
+	NET_Packet tNetPacket;
+	CSE_Abstract *l_tpAbstract = smart_cast<CSE_Abstract*>(object);
+	server().entity_Destroy(l_tpAbstract);
+	object->s_flags.or(M_SPAWN_UPDATE);
+
+	server().Process_spawn(tNetPacket, FALSE, l_tpAbstract);
+	object->s_flags.and(u16(-1) ^ M_SPAWN_UPDATE);
+	R_ASSERT3(!object->used_ai_locations() || ai().level_graph().valid_vertex_id(object->m_tNodeID), "Invalid vertex for object ", object->name_replace());
 
 #ifdef DEBUG
 	if (psAI_Flags.test(aiALife))
-		Msg							("[LSS] Spawning object [%s][%s][%d]",object->name_replace(),*object->s_name,object->ID);
+		Msg("[LSS] Spawning object [%s][%s][%d]", object->name_replace(), *object->s_name, object->ID);
 #endif
 
-	object->add_online				(update_registries);
+	object->add_online(update_registries);
 	STOP_PROFILE
 }
 
@@ -79,15 +68,10 @@ void CALifeSwitchManager::remove_online(CSE_ALifeDynamicObject *object, bool upd
 	
 	m_saved_chidren				= object->children;
 	CSE_ALifeTraderAbstract		*inventory_owner = smart_cast<CSE_ALifeTraderAbstract*>(object);
-	if (inventory_owner) {
-		m_saved_chidren.erase	(
-			std::remove_if(
-				m_saved_chidren.begin(),
-				m_saved_chidren.end(),
-				remove_non_savable_predicate(&server())
-			),
-			m_saved_chidren.end()
-		);
+	if (inventory_owner) 
+	{
+		m_saved_chidren.erase(std::remove_if(m_saved_chidren.begin(), m_saved_chidren.end(), 
+			remove_non_savable_predicate()), m_saved_chidren.end());
 	}
 
 	server().Perform_destroy	(object);
@@ -183,10 +167,11 @@ void CALifeSwitchManager::try_switch_online	(CSE_ALifeDynamicObject	*I)
 #ifdef DEBUG
 	Level().Objects.dump_all_objects();
 #endif
-	VERIFY2((ai().game_graph().vertex(I->m_tGraphID)->level_id() != ai().level_graph().level_id()) || !Level().Objects.net_Find(I->ID),
-		make_string("frame [%d] time [%d] object [%s] with id [%d] is offline, but is on the level",Device.dwFrame,Device.dwTimeGlobal,I->name_replace(),I->ID));
+	VERIFY_FORMAT((ai().game_graph().vertex(I->m_tGraphID)->level_id() != ai().level_graph().level_id()) || !Level().Objects.net_Find(I->ID),
+		"frame [%d] time [%d] object [%s] with id [%d] is offline, but is on the level",
+		Device.dwFrame, Device.dwTimeGlobal, I->name_replace(), I->ID);
 
-	I->try_switch_online		();
+	I->try_switch_online ();
 
 	if (!I->m_bOnline && !I->keep_saved_data_anyway())
 		I->clear_client_data();

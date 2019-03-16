@@ -1,21 +1,19 @@
 #include "stdafx.h"
 #include "build.h"
 #include "ogf_face.h"
-//#include "std_classes.h"
 #include "../../xrcore/fs.h"
 #include "../../xrEngine/fmesh.h"
 #include "xrOcclusion.h"
 
-
 using namespace std;
 
-void set_status(char* N, int id, int f, int v)
+void set_Status(char* N, int id, int f, int v)
 {
-	string1024 status_str;
+	string1024 Status_str;
 
-	xr_sprintf	(status_str,"Model #%4d [F:%5d, V:%5d]: %s...",id,f,v,N);
-	Status	(status_str);
-	clMsg	(status_str);
+	xr_sprintf	(Status_str,"Model #%4d [F:%5d, V:%5d]: %s...",id,f,v,N);
+	Logger.Status	(Status_str);
+	Logger.clMsg	(Status_str);
 }
 
 BOOL OGF_Vertex::similar(OGF* ogf, OGF_Vertex& V)
@@ -58,7 +56,7 @@ u16 OGF::_BuildVertex	(OGF_Vertex& V1)
 		{
 			if (it->similar(this,V1)) return u16(it-data.vertices.begin());
 		}
-	} catch (...) { clMsg("* ERROR: OGF::_BuildVertex");	}
+	} catch (...) { Logger.clMsg("* ERROR: OGF::_BuildVertex");	}
 
 	data.vertices.push_back	(V1);
 	return (u32)data.vertices.size()-1;
@@ -149,42 +147,17 @@ void OGF::Optimize	()
 		if (fast_path_data.vertices.size() && fast_path_data.faces.size())
 		{
 			try {
-				VERIFY	(fast_path_data.vertices.size()	<= data.vertices.size()	);
-				VERIFY	(fast_path_data.faces.size()		== data.faces.size()		);
-			} catch(...) {
-				Msg	("* ERROR: optimize: x-geom : verify: failed");
+				VERIFY(fast_path_data.vertices.size() <= data.vertices.size());
+				VERIFY(fast_path_data.faces.size() == data.faces.size());
 			}
-
-			// Optimize texture coordinates
-			/*
-			Fvector2 Tdelta;
-			try {
-				// 1. Calc bounds
-				Fvector2 Tmin,Tmax;
-				Tmin.set(flt_max,flt_max);
-				Tmax.set(flt_min,flt_min);
-				for (u32 j=0; j<x_vertices.size(); j++)			{
-					x_vertex& V = x_vertices[j];
-					//Tmin.min	(V.UV);
-					//Tmax.max	(V.UV);
-				}
-				Tdelta.x = floorf((Tmax.x-Tmin.x)/2+Tmin.x);
-				Tdelta.y = floorf((Tmax.y-Tmin.y)/2+Tmin.y);
-			} catch(...) {
-				Msg	("* ERROR: optimize: x-geom : bounds: failed");
+			catch (...) {
+				Msg("* ERROR: optimize: x-geom : verify: failed");
 			}
-
-			// 2. Recalc UV mapping
-			try {
-				for (u32 i=0; i<x_vertices.size(); i++)
-					x_vertices[i].UV.sub	(Tdelta);
-			} catch(...) {
-				Msg	("* ERROR: optimize: x-geom : recalc : failed");
-			}
-			*/
 		}
-	} catch(...) {
-		Msg	("* ERROR: optimize: x-geom : failed");
+	}
+	catch (...) 
+	{
+		Msg("* ERROR: optimize: x-geom : failed");
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -198,18 +171,6 @@ void OGF::Optimize	()
 		Msg	("* ERROR: optimize: std-geom : find relevant UV");
 	}
 
-	// Build p-rep
-	/*
-	typedef xr_vector<u32>	flist	;
-	xr_vector<flist>		prep	;	prep.resize(vertices.size());
-	for (u32 fit=0; fit<faces.size(); fit++)	{
-		OGF_Face&	F		= faces	[fit];
-		prep[F.v[0]].push_back		(fit);
-		prep[F.v[1]].push_back		(fit);
-		prep[F.v[2]].push_back		(fit);
-	}
-	*/
-
 	// Optimize texture coordinates
 	xr_vector<bool>	vmarker;	vmarker.assign	(data.vertices.size(),false);
 	xr_vector<bool>	fmarker;	fmarker.assign	(data.faces.size(),false);
@@ -218,9 +179,9 @@ void OGF::Optimize	()
 		// 0. Search for the group
 		xr_vector<u32>	selection		;
 		for (;;)	{
-			u32		_old	= selection.size();
+			u32		_old	= (u32)selection.size();
 			adjacent_select	(selection,vmarker,fmarker);
-			u32		_new	= selection.size();
+			u32		_new	= (u32)selection.size();
 			if (_old==_new)	break;		// group selected !
 		}
 		if (selection.empty())		break;
@@ -254,162 +215,159 @@ void OGF::Optimize	()
 	}
 }
 
-
-
 // Make Progressive
-std::recursive_mutex			progressive_cs;
+xrCriticalSection			progressive_cs;
 void OGF::MakeProgressive	(float metric_limit)
 {
 	// test
 	// there is no-sense to simplify small models
 	// for batch size 50,100,200 - we are CPU-limited anyway even on nv30
 	// for nv40 and up the better guess will probably be around 500
-	if (data.faces.size()<c_PM_FaceLimit)		return		;	
+	if (data.faces.size() < c_PM_FaceLimit)		return;
 
-//. AlexMX added for draft build mode
-	if (g_params().m_quality==ebqDraft)		return		;
+	//. AlexMX added for draft build mode
+	if (g_params().m_quality == ebqDraft)		return;
 
-    std::lock_guard<decltype(progressive_cs)> lock(progressive_cs);
+	xrCriticalSectionGuard guard(progressive_cs);
 
 	//////////////////////////////////////////////////////////////////////////
 	// NORMAL
-	vecOGF_V	_saved_vertices		=	data.vertices	;
-	vecOGF_F	_saved_faces		=	data.faces		;
+	vecOGF_V	_saved_vertices = data.vertices;
+	vecOGF_F	_saved_faces = data.faces;
 
 	{
-		// prepare progressive geom
-		VIPM_Init				();
-		//clMsg("--- append v start .");
-		for (u32 v_idx=0;  v_idx<data.vertices.size(); v_idx++)	
-			VIPM_AppendVertex	(data.vertices[v_idx].P,	data.vertices[v_idx].UV[0]					);
-		//clMsg("--- append f start .");
-		for (u32 f_idx=0;  f_idx<data.faces.size();    f_idx++)	
-			VIPM_AppendFace		(data.faces[f_idx].v[0],	data.faces[f_idx].v[1],	data.faces[f_idx].v[2]	);
-		//clMsg("--- append end.");
+		// prepare Logger.Progressive geom
+		VIPM_Init();
+		//Logger.clMsg("--- append v start .");
+		for (u32 v_idx = 0; v_idx < data.vertices.size(); v_idx++)
+			VIPM_AppendVertex(data.vertices[v_idx].P, data.vertices[v_idx].UV[0]);
+		//Logger.clMsg("--- append f start .");
+		for (u32 f_idx = 0; f_idx < data.faces.size(); f_idx++)
+			VIPM_AppendFace(data.faces[f_idx].v[0], data.faces[f_idx].v[1], data.faces[f_idx].v[2]);
+		//Logger.clMsg("--- append end.");
 
 		// Convert
-		VIPM_Result*	VR		= 0;
-		try						{
-						VR		= VIPM_Convert			(u32(25),1.f,1);
-		} catch (...)			{
-			progressive_clear	()		;
-			clMsg				("* mesh simplification failed: access violation");
+		VIPM_Result*	VR = 0;
+		try {
+			VR = VIPM_Convert(u32(25), 1.f, 1);
 		}
-		if (0==VR)				{
-			progressive_clear	()		;
-			clMsg				("* mesh simplification failed");
+		catch (...) {
+			Progressive_clear();
+			Logger.clMsg("* mesh simplification failed: access violation");
 		}
-		while (VR && VR->swr_records.size()>0)	{
+		if (0 == VR) {
+			Progressive_clear();
+			Logger.clMsg("* mesh simplification failed");
+		}
+		while (VR && VR->swr_records.size() > 0) {
 			// test metric
-			u32		_full	=	data.vertices.size	()		;
-			u32		_remove	=	VR->swr_records.size()	;
-			u32		_simple	=	_full - _remove			;
-			float	_metric	=	float(_remove)/float(_full);
-			if		(_metric<metric_limit)		{
-				progressive_clear				()		;
-				clMsg	("* mesh simplified from [%4dv] to [%4dv], nf[%4d] ==> em[%0.2f]-discarded",_full,_simple,VR->indices.size()/3,metric_limit);
-				break									;
-			} else {
-				clMsg	("* mesh simplified from [%4dv] to [%4dv], nf[%4d] ==> em[%0.2f]-accepted", _full,_simple,VR->indices.size()/3,metric_limit);
+			u32		_full = (u32)data.vertices.size();
+			u32		_remove = VR->swr_records.size();
+			u32		_simple = _full - _remove;
+			float	_metric = float(_remove) / float(_full);
+			if (_metric < metric_limit) {
+				Progressive_clear();
+				Logger.clMsg("* mesh simplified from [%4dv] to [%4dv], nf[%4d] ==> em[%0.2f]-discarded", _full, _simple, VR->indices.size() / 3, metric_limit);
+				break;
+			}
+			else {
+				Logger.clMsg("* mesh simplified from [%4dv] to [%4dv], nf[%4d] ==> em[%0.2f]-accepted", _full, _simple, VR->indices.size() / 3, metric_limit);
 			}
 
 			// OK
 			// Permute vertices
-			for(u32 i=0; i<data.vertices.size(); i++)
-				data.vertices[VR->permute_verts[i]]=_saved_vertices[i];
+			for (u32 i = 0; i < data.vertices.size(); i++)
+				data.vertices[VR->permute_verts[i]] = _saved_vertices[i];
 
 			// Fill indices
-			data.faces.resize			(VR->indices.size()/3);
-			for (u32 f_idx=0; f_idx<data.faces.size(); f_idx++){
-				data.faces[f_idx].v[0]	= VR->indices[f_idx*3+0];
-				data.faces[f_idx].v[1]	= VR->indices[f_idx*3+1];
-				data.faces[f_idx].v[2]	= VR->indices[f_idx*3+2];
+			data.faces.resize(VR->indices.size() / 3);
+			for (u32 f_idx = 0; f_idx < data.faces.size(); f_idx++) {
+				data.faces[f_idx].v[0] = VR->indices[f_idx * 3 + 0];
+				data.faces[f_idx].v[1] = VR->indices[f_idx * 3 + 1];
+				data.faces[f_idx].v[2] = VR->indices[f_idx * 3 + 2];
 			}
 			// Fill SWR
-			data.m_SWI.count				= VR->swr_records.size();
-			data.m_SWI.sw				= xr_alloc<FSlideWindow>(data.m_SWI.count);
-			for (u32 swr_idx=0; swr_idx!=data.m_SWI.count; swr_idx++){
-				FSlideWindow& dst	= data.m_SWI.sw[swr_idx];
-				VIPM_SWR& src		= VR->swr_records[swr_idx];
-				dst.num_tris		= src.num_tris;
-				dst.num_verts		= src.num_verts;
-				dst.offset			= src.offset;
+			data.m_SWI.count = VR->swr_records.size();
+			data.m_SWI.sw = xr_alloc<FSlideWindow>(data.m_SWI.count);
+			for (u32 swr_idx = 0; swr_idx != data.m_SWI.count; swr_idx++) {
+				FSlideWindow& dst = data.m_SWI.sw[swr_idx];
+				VIPM_SWR& src = VR->swr_records[swr_idx];
+				dst.num_tris = src.num_tris;
+				dst.num_verts = src.num_verts;
+				dst.offset = src.offset;
 			}
 
-			break	;
+			break;
 		}
 		// cleanup
-		VIPM_Destroy			();
+		VIPM_Destroy();
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	// FAST-PATH
-	if (progressive_test() && fast_path_data.vertices.size() && fast_path_data.faces.size())
+	if (Progressive_test() && fast_path_data.vertices.size() && fast_path_data.faces.size())
 	{
-		// prepare progressive geom
-		VIPM_Init				();
-		Fvector2				zero; zero.set		(0,0);
-		for (u32 v_idx=0;  v_idx<fast_path_data.vertices.size(); v_idx++)	VIPM_AppendVertex	(fast_path_data.vertices[v_idx].P,	zero						);
-		for (u32 f_idx=0;  f_idx<fast_path_data.faces.size();    f_idx++)	VIPM_AppendFace		(fast_path_data.faces[f_idx].v[0],	fast_path_data.faces[f_idx].v[1],	fast_path_data.faces[f_idx].v[2]	);
+		// prepare Logger.Progressive geom
+		VIPM_Init();
+		Fvector2				zero; zero.set(0, 0);
+		for (u32 v_idx = 0; v_idx < fast_path_data.vertices.size(); v_idx++)	VIPM_AppendVertex(fast_path_data.vertices[v_idx].P, zero);
+		for (u32 f_idx = 0; f_idx < fast_path_data.faces.size(); f_idx++)	VIPM_AppendFace(fast_path_data.faces[f_idx].v[0], fast_path_data.faces[f_idx].v[1], fast_path_data.faces[f_idx].v[2]);
 
-		VIPM_Result*	VR		= 0;
-		try						{
-			VR		= VIPM_Convert			(u32(25),1.f,1);
-		} catch (...)			{
-			data.faces				= _saved_faces		;
-			data.vertices			= _saved_vertices	;
-			progressive_clear	()		;
-			clMsg				("* X-mesh simplification failed: access violation");
+		VIPM_Result*	VR = 0;
+		try {
+			VR = VIPM_Convert(u32(25), 1.f, 1);
 		}
-		if (0==VR)				{
-			data.faces				= _saved_faces		;
-			data.vertices			= _saved_vertices	;
-			progressive_clear	()		;
-			clMsg				("* X-mesh simplification failed");
-		} else {
-			// Convert
-			/*
-			VIPM_Result*	VR		= VIPM_Convert		(u32(25),1.f,1);
-			VERIFY			(VR->swr_records.size()>0)	;
-			*/
-
+		catch (...) {
+			data.faces = _saved_faces;
+			data.vertices = _saved_vertices;
+			Progressive_clear();
+			Logger.clMsg("* X-mesh simplification failed: access violation");
+		}
+		if (0 == VR) {
+			data.faces = _saved_faces;
+			data.vertices = _saved_vertices;
+			Progressive_clear();
+			Logger.clMsg("* X-mesh simplification failed");
+		}
+		else
+		{
 			// test metric
-			u32		_full	=	data.vertices.size	()		;
-			u32		_remove	=	VR->swr_records.size()	;
-			u32		_simple	=	_full - _remove			;
-			float	_metric	=	float(_remove)/float(_full);
-			clMsg	("X mesh simplified from [%4dv] to [%4dv], nf[%4d]",_full,_simple,VR ? VR->indices.size()/3 : 0);
+			u32		_full = (u32)data.vertices.size();
+			u32		_remove = (u32)VR->swr_records.size();
+			u32		_simple = _full - _remove;
+			float	_metric = float(_remove) / float(_full);
+			Logger.clMsg("X mesh simplified from [%4dv] to [%4dv], nf[%4d]", _full, _simple, VR ? VR->indices.size() / 3 : 0);
 
 			// OK
 			vec_XV					vertices_saved;
 
 			// Permute vertices
-			vertices_saved			= fast_path_data.vertices;
-			for(u32 i=0; i<fast_path_data.vertices.size(); i++)
-				fast_path_data.vertices[VR->permute_verts[i]]=vertices_saved[i];
+			vertices_saved = fast_path_data.vertices;
+			for (u32 i = 0; i < fast_path_data.vertices.size(); i++)
+				fast_path_data.vertices[VR->permute_verts[i]] = vertices_saved[i];
 
 			// Fill indices
-			fast_path_data.faces.resize			(VR->indices.size()/3);
-			for (u32 f_idx=0; f_idx<fast_path_data.faces.size(); f_idx++){
-				fast_path_data.faces[f_idx].v[0]	= VR->indices[f_idx*3+0];
-				fast_path_data.faces[f_idx].v[1]	= VR->indices[f_idx*3+1];
-				fast_path_data.faces[f_idx].v[2]	= VR->indices[f_idx*3+2];
+			fast_path_data.faces.resize(VR->indices.size() / 3);
+			for (u32 f_idx = 0; f_idx < fast_path_data.faces.size(); f_idx++) {
+				fast_path_data.faces[f_idx].v[0] = VR->indices[f_idx * 3 + 0];
+				fast_path_data.faces[f_idx].v[1] = VR->indices[f_idx * 3 + 1];
+				fast_path_data.faces[f_idx].v[2] = VR->indices[f_idx * 3 + 2];
 			}
 
 			// Fill SWR
-			fast_path_data.m_SWI.count				= VR->swr_records.size();
-			fast_path_data.m_SWI.sw					= xr_alloc<FSlideWindow>(fast_path_data.m_SWI.count);
-			for (u32 swr_idx=0; swr_idx!=fast_path_data.m_SWI.count; swr_idx++){
-				FSlideWindow& dst	= fast_path_data.m_SWI.sw[swr_idx];
-				VIPM_SWR& src		= VR->swr_records[swr_idx];
-				dst.num_tris		= src.num_tris;
-				dst.num_verts		= src.num_verts;
-				dst.offset			= src.offset;
+			fast_path_data.m_SWI.count = VR->swr_records.size();
+			fast_path_data.m_SWI.sw = xr_alloc<FSlideWindow>(fast_path_data.m_SWI.count);
+			for (u32 swr_idx = 0; swr_idx != fast_path_data.m_SWI.count; swr_idx++) {
+				FSlideWindow& dst = fast_path_data.m_SWI.sw[swr_idx];
+				VIPM_SWR& src = VR->swr_records[swr_idx];
+				dst.num_tris = src.num_tris;
+				dst.num_verts = src.num_verts;
+				dst.offset = src.offset;
 			}
 		}
 
 		// cleanup
-		VIPM_Destroy			();
+		VIPM_Destroy();
 	}
 }
 
@@ -451,11 +409,9 @@ void OGF_LOD::Save		(IWriter &fs)
 	// Header
 	ogf_header			H;
 	string1024			sid;
-	strconcat			(sizeof(sid),sid,
-		pBuild->shader_render[pBuild->materials()[lod_Material].shader].name,
-		"/",
-		pBuild->textures()[pBuild->materials()[lod_Material].surfidx].name
-		);
+	xr_strconcat(sid, pBuild->shader_render[pBuild->materials()[lod_Material].shader].name, 
+				 "/", pBuild->textures()[pBuild->materials()[lod_Material].surfidx].name);
+
 	fs.open_chunk		(OGF_HEADER);
 	H.format_version	= xrOGF_FormatVersion;
 	H.type				= MT_LOD;

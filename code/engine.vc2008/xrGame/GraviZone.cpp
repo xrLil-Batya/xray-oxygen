@@ -10,12 +10,12 @@
 #include "Level.h"
 #include "CharacterPhysicsSupport.h"
 
-CBaseGraviZone ::CBaseGraviZone (void)
+CBaseGraviZone ::CBaseGraviZone ()
 {
 	m_dwTeleTime = 0;
 }
 
-CBaseGraviZone ::~CBaseGraviZone (void)
+CBaseGraviZone ::~CBaseGraviZone ()
 {
 }
 
@@ -35,12 +35,12 @@ void CBaseGraviZone ::Load(LPCSTR section)
 	if(pSettings->line_exist(section,	"tele_particles_big"))
 		m_sTeleParticlesBig = pSettings->r_string(section,	"tele_particles_big");
 	else
-		m_sTeleParticlesBig = NULL;
+		m_sTeleParticlesBig = nullptr;
 	
 	if(pSettings->line_exist(section, "tele_particles_small"))
 		m_sTeleParticlesSmall = pSettings->r_string(section, "tele_particles_small");
 	else
-		m_sTeleParticlesSmall = NULL;
+		m_sTeleParticlesSmall = nullptr;
 }
 
 BOOL CBaseGraviZone ::net_Spawn(CSE_Abstract* DC)
@@ -127,7 +127,7 @@ void CBaseGraviZone ::Affect(SZoneObjectInfo* O)
 
 
 	//////////////////////////////////////////////////////////////////////////
-	//	затягиваем объет по направлению к центру зоны
+	//	Р·Р°С‚СЏРіРёРІР°РµРј РѕР±СЉРµС‚ РїРѕ РЅР°РїСЂР°РІР»РµРЅРёСЋ Рє С†РµРЅС‚СЂСѓ Р·РѕРЅС‹
 
 	Fvector					throw_in_dir;
 	Fvector					zone_center;
@@ -153,9 +153,9 @@ void CBaseGraviZone ::Affect(SZoneObjectInfo* O)
 	else
 	{
 		//////////////////////////////////////////////////////////////////////////
-		// выброс аномалии
+		// РІС‹Р±СЂРѕСЃ Р°РЅРѕРјР°Р»РёРё
 		
-		//если время выброса еще не пришло
+		//РµСЃР»Рё РІСЂРµРјСЏ РІС‹Р±СЂРѕСЃР° РµС‰Рµ РЅРµ РїСЂРёС€Р»Рѕ
 		if(m_dwBlowoutExplosionTime<(u32)m_iPreviousStateTime ||
 			m_dwBlowoutExplosionTime>=(u32)m_iStateTime)
 		{
@@ -223,9 +223,9 @@ void CBaseGraviZone::PlayTeleParticles(CGameObject* pObject)
 	CParticlesPlayer* PP = smart_cast<CParticlesPlayer*>(pObject);
 	if(!PP) return;
 
-	shared_str particle_str = NULL;
+	shared_str particle_str = nullptr;
 
-	//разные партиклы для объектов разного размера
+	//СЂР°Р·РЅС‹Рµ РїР°СЂС‚РёРєР»С‹ РґР»СЏ РѕР±СЉРµРєС‚РѕРІ СЂР°Р·РЅРѕРіРѕ СЂР°Р·РјРµСЂР°
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sTeleParticlesSmall) return;
@@ -244,9 +244,9 @@ void CBaseGraviZone::StopTeleParticles(CGameObject* pObject)
 {
 	CParticlesPlayer* PP = smart_cast<CParticlesPlayer*>(pObject);
 	if(!PP) return;
-	shared_str particle_str = NULL;
+	shared_str particle_str = nullptr;
 
-	//разные партиклы для объектов разного размера
+	//СЂР°Р·РЅС‹Рµ РїР°СЂС‚РёРєР»С‹ РґР»СЏ РѕР±СЉРµРєС‚РѕРІ СЂР°Р·РЅРѕРіРѕ СЂР°Р·РјРµСЂР°
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sTeleParticlesSmall) return;
@@ -258,7 +258,7 @@ void CBaseGraviZone::StopTeleParticles(CGameObject* pObject)
 		particle_str = m_sTeleParticlesBig;
 	}
 
-	//остановить партиклы
+	//РѕСЃС‚Р°РЅРѕРІРёС‚СЊ РїР°СЂС‚РёРєР»С‹
 	PP->StopParticles	(particle_str, BI_NONE, true);
 }
 

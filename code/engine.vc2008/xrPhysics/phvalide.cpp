@@ -23,15 +23,15 @@ const Fbox	&ph_boundaries()
 	return phBoundaries;
 }
 
-std::string dbg_valide_pos_string(const Fvector &pos, const Fbox &bounds, const IPhysicsShellHolder *obj, LPCSTR msg)
+xr_string dbg_valide_pos_string(const Fvector &pos, const Fbox &bounds, const IPhysicsShellHolder *obj, LPCSTR msg)
 {
-	return	std::string(msg) + make_string("\n pos: %s , seems to be invalid ", get_string(pos).c_str()) +
-		make_string("\n Level box: %s ", get_string(bounds).c_str()) +
-		std::string("\n object dump: \n") +
-		(obj ? obj->dump(full) : std::string(""));
+	return	xr_string(msg) + xr_string(make_string("\n pos: %s , seems to be invalid ", get_string(pos).c_str())) +
+		xr_string (make_string("\n Level box: %s ", get_string(bounds).c_str())) +
+		xr_string("\n object dump: \n") +
+		(obj ? obj->dump(full) : xr_string(""));
 }
 
-std::string dbg_valide_pos_string(const Fvector &pos, const IPhysicsShellHolder *obj, LPCSTR msg)
+xr_string dbg_valide_pos_string(const Fvector &pos, const IPhysicsShellHolder *obj, LPCSTR msg)
 {
 	return dbg_valide_pos_string(pos, phBoundaries, obj, msg);
 }

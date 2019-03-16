@@ -5,18 +5,19 @@
 //	Author		: Dmitriy Iassenev
 //	Description : ALife object class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "xrServer_Objects_ALife.h"
 #include "alife_simulator.h"
 #include "xrServer_Objects_ALife_Items.h"
 
+#pragma warning(push)
+#pragma warning(disable:4238)
 void CSE_ALifeObject::spawn_supplies		()
 {
 	spawn_supplies(*m_ini_string);
 }
 
-void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
+void CSE_ALifeObject::spawn_supplies(LPCSTR ini_string)
 {
 	if (!ini_string)
 		return;
@@ -24,39 +25,33 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 	if (!xr_strlen(ini_string))
 		return;
 
-#pragma warning(push)
-#pragma warning(disable:4238)
-	CInifile					ini(
-		&IReader				(
-			(void*)(ini_string),
-			xr_strlen(ini_string)
-		),
-		FS.get_path("$game_config$")->m_Path
-	);
-#pragma warning(pop)
+	CInifile ini(&IReader((void*)(ini_string), xr_strlen(ini_string)), FS.get_path("$game_config$")->m_Path);
 
-	if (ini.section_exist("spawn")) {
-		LPCSTR					N,V;
-		float					p;
-		for (u32 k = 0, j; ini.r_line("spawn",k,&N,&V); k++) {
-			VERIFY				(xr_strlen(N));
-	
+	if (ini.section_exist("spawn"))
+	{
+		LPCSTR N, V;
+		float p;
+		for (u32 k = 0, j; ini.r_line("spawn", k, &N, &V); k++)
+		{
+			VERIFY(xr_strlen(N));
+
 			float f_cond = 1.0f;
-			bool bScope	= false;
+			bool bScope = false;
 			bool bSilencer = false;
 			bool bLauncher = false;
 			bool alt_scope = false;
-			std::string st;
-			
+			xr_string st;
+
 			j = 1;
 			p = 1.f;
-			
-			if (V && xr_strlen(V)) {
+
+			if (V && xr_strlen(V)) 
+			{
 				string64 buf;
-				j = atoi(_GetItem(V, 0, buf));
+				j = atoi_17(_GetItem(V, 0, buf));
 				if (!j)	j = 1;
 
-				if (NULL != strstr(V, "scope="))
+				if (strstr(V, "scope="))
 				{
 					st = strstr(V, "scope=");
 					st.erase(0, 6);
@@ -64,42 +59,49 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 				}
 				else
 				{
-					bScope = (NULL != strstr(V, "scope"));
+					bScope = (nullptr != strstr(V, "scope"));
 				}
 
-				//bScope				= (NULL!=strstr(V,"scope"));
-				bSilencer			= (NULL!=strstr(V,"silencer"));
-				bLauncher			= (NULL!=strstr(V,"launcher"));
+				bSilencer = (nullptr != strstr(V, "silencer"));
+				bLauncher = (nullptr != strstr(V, "launcher"));
+
 				//probability
-				if(NULL!=strstr(V,"prob="))
-					p				= (float)atof(strstr(V,"prob=")+5);
-				if (fis_zero(p)) p	= 1.0f;
-				if(NULL!=strstr(V,"cond="))
-					f_cond			= (float)atof(strstr(V,"cond=")+5);
+				if (strstr(V, "prob="))
+					p = (float)atof(strstr(V, "prob=") + 5);
+
+				if (fis_zero(p)) 
+					p = 1.0f;
+
+				if (strstr(V, "cond="))
+					f_cond = (float)atof(strstr(V, "cond=") + 5);
 			}
-			for (u32 i=0; i<j; ++i) {
-				if (randF(1.f) < p) {
-					CSE_Abstract* E = alife().spawn_item	(N,o_Position,m_tNodeID,m_tGraphID,ID);
-					//ïîäñîåäèíèòü àääîíû ê îðóæèþ, åñëè âêëþ÷åíû ñîîòâåòñòâóþùèå ôëàæêè
-					CSE_ALifeItemWeapon* W =  smart_cast<CSE_ALifeItemWeapon*>(E);
-					if (W) {
+
+			for (u32 i = 0; i < j; ++i)
+			{
+				if (randF(1.f) < p) 
+				{
+					CSE_Abstract* E = alife().spawn_item(N, o_Position, m_tNodeID, m_tGraphID, ID);
+					//Ð¿Ð¾Ð´ÑÐ¾ÐµÐ´Ð¸Ð½Ð¸Ñ‚ÑŒ Ð°Ð´Ð´Ð¾Ð½Ñ‹ Ðº Ð¾Ñ€ÑƒÐ¶Ð¸ÑŽ, ÐµÑÐ»Ð¸ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ñ‹ ÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÑƒÑŽÑ‰Ð¸Ðµ Ñ„Ð»Ð°Ð¶ÐºÐ¸
+					CSE_ALifeItemWeapon* pWeapon = smart_cast<CSE_ALifeItemWeapon*>(E);
+					if (pWeapon)
+					{
 						if (alt_scope)
-						{							
-							u8 idx = W->GetScopeIdx(st.c_str());
-							bScope = (idx != (u8)-1) ? true : false;
-							W->m_scope_idx = idx;
+						{
+							u8 idx = pWeapon->GetScopeIdx(st.c_str());
+							bScope = (idx != (u8)-1);
+							pWeapon->m_scope_idx = idx;
 						}
-							
-						if (W->m_scope_status == ALife::eAddonAttachable)
-							W->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonScope, bScope);
-						if (W->m_silencer_status == ALife::eAddonAttachable)
-							W->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonSilencer, bSilencer);
-						if (W->m_grenade_launcher_status == ALife::eAddonAttachable)
-							W->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher, bLauncher);
+
+						if (pWeapon->m_scope_status == ALife::eAddonAttachable)
+							pWeapon->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonScope, bScope);
+						if (pWeapon->m_silencer_status == ALife::eAddonAttachable)
+							pWeapon->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonSilencer, bSilencer);
+						if (pWeapon->m_grenade_launcher_status == ALife::eAddonAttachable)
+							pWeapon->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher, bLauncher);
 					}
 					CSE_ALifeInventoryItem* IItem = smart_cast<CSE_ALifeInventoryItem*>(E);
-					if(IItem)
-						IItem->m_fCondition				= f_cond;
+					if (IItem)
+						IItem->m_fCondition = f_cond;
 				}
 			}
 		}
@@ -108,5 +110,6 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 
 bool CSE_ALifeObject::keep_saved_data_anyway() const
 {
-	return			(false);
+	return (false);
 }
+#pragma warning(pop)

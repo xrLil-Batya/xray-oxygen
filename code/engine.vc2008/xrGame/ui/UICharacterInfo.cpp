@@ -6,37 +6,36 @@
 #include "../actor.h"
 #include "../level.h"
 #include "../../xrServerEntities/character_info.h"
-#include "../string_table.h"
+#include "../../xrEngine/string_table.h"
 #include "../relation_registry.h"
 
-#include "xrUIXmlParser.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
 
-#include "uistatic.h"
-#include "UIScrollView.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIScrollView.h"
 
 #include "../alife_simulator.h"
 #include "../ai_space.h"
 #include "../alife_object_registry.h"
 #include "../xrServer.h"
 #include "../../xrServerEntities/xrServer_Objects_ALife_Monsters.h"
-#include "../../FrayBuildConfig.hpp"
 
 using namespace InventoryUtilities;
 
-CSE_ALifeTraderAbstract* ch_info_get_from_id (u16 id)
+CSE_ALifeTraderAbstract* ch_info_get_from_id(u16 id)
 {
-	if( ai().get_alife() && ai().get_game_graph() )
+	if (ai().get_alife() && ai().is_game_graph_presented())
 	{
 		return	smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(id));
-	}else{
-		return	smart_cast<CSE_ALifeTraderAbstract*>(Level().Server->game->get_entity_from_eid(id));
+	}
+	else 
+	{
+		return	smart_cast<CSE_ALifeTraderAbstract*>(Level().Server->ID_to_entity(id));
 	}
 }
 
-CUICharacterInfo::CUICharacterInfo()
-	: m_ownerID(u16(-1)),
-	pUIBio(NULL)
+CUICharacterInfo::CUICharacterInfo() : m_ownerID(u16(-1)), pUIBio(NULL)
 {
     std::memset(m_icons,0,sizeof(m_icons));
 	m_bForceUpdate		= false;
@@ -325,7 +324,7 @@ bool CUICharacterInfo::get_actor_community( shared_str* our, shared_str* enemy )
 bool CUICharacterInfo::ignore_community(shared_str const& check_community)
 {
 	LPCSTR comm_section_str = "ignore_icons_communities";
-	VERIFY2(pSettings->section_exist(comm_section_str), make_string("Section [%s] does not exist !", comm_section_str));
+	VERIFY_FORMAT(pSettings->section_exist(comm_section_str), "Section [%s] does not exist !", comm_section_str);
 
 	CInifile::Sect& faction_section = pSettings->r_section(comm_section_str);
 
@@ -338,6 +337,7 @@ bool CUICharacterInfo::ignore_community(shared_str const& check_community)
 	}
 	return false;
 }
+#include <luabind/luabind.hpp>
 
 #include "ai_space.h"
 #include "script_engine.h"

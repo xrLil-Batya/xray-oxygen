@@ -10,6 +10,7 @@
 #include "game_graph.h"
 #include "ai_space.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 const CGameGraph *get_game_graph		()
@@ -50,7 +51,9 @@ GameGraph::LEVEL_MAP const& get_levels	( CGameGraph const* graph )
 	return				graph->header().levels();
 }
 
-#pragma optimize("s",on)
+#include "../../SDK/include/luabind/iterator_policy.hpp"
+
+#pragma optimize("gyts",on)
 void CGameGraph::script_register		(lua_State *L)
 {
 	module(L)
@@ -58,7 +61,7 @@ void CGameGraph::script_register		(lua_State *L)
 		class_< GameGraph::LEVEL_MAP::value_type >( "GameGraph__LEVEL_MAP__value_type" )
 		.def_readonly("id", 	&GameGraph::LEVEL_MAP::value_type::first )
 		.def_readonly("level",	&GameGraph::LEVEL_MAP::value_type::second ),
-
+		
 		def("game_graph",	&get_game_graph),
 
 		class_<CGameGraph>("CGameGraph")

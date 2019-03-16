@@ -3,6 +3,7 @@
 
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
+#include "../../xrEngine/DirectXMathExternal.h"
 
 #include "../xrRenderDX10/dx10BufferUtils.h"
 
@@ -99,7 +100,7 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 
 	vis_list& list	=	m_visibles	[var_id];
 
-	CEnvDescriptor&	desc	= *g_pGamePersistent->Environment().CurrentEnv;
+	CEnvDescriptor&	desc	= *Environment().CurrentEnv;
 	Fvector					c_sun,c_ambient,c_hemi;
 	c_sun.set				(desc.sun_color.x,	desc.sun_color.y,	desc.sun_color.z);	c_sun.mul(.5f);
 	c_ambient.set			(desc.ambient.x,	desc.ambient.y,		desc.ambient.z);
@@ -126,13 +127,13 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 				RCache.set_c(strDir2D, wind);
 				RCache.set_c(strXForm, Device.mFullTransform);
 
-				Fvector4*	c_storage=0;
+				Fvector4*	c_storage = nullptr;
 				//	Map constants to memory directly
 				{
 					void*	pVData;
 					RCache.get_ConstantDirect( strArray, 
 						hw_BatchSize*sizeof(Fvector4)*4,
-						&pVData, 0, 0);
+						&pVData, nullptr, nullptr);
 					c_storage = (Fvector4*) pVData;
 				}
 				VERIFY(c_storage);
@@ -178,7 +179,7 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 								void*	pVData;
 								RCache.get_ConstantDirect( strArray, 
 									hw_BatchSize*sizeof(Fvector4)*4,
-									&pVData, 0, 0);
+									&pVData, nullptr, nullptr);
 								c_storage = (Fvector4*) pVData;
 							}
 							VERIFY(c_storage);

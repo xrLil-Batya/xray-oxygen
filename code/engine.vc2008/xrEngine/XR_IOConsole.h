@@ -1,4 +1,4 @@
-// XR_IOConsole.h: interface for the CConsole class.
+﻿// XR_IOConsole.h: interface for the CConsole class.
 //
 //////////////////////////////////////////////////////////////////////
 #ifndef XR_IOCONSOLE_H_INCLUDED
@@ -66,13 +66,13 @@ public:
 			return (xr_strcmp( x, y ) < 0);
 		}
 	};
-	typedef  xr_map<LPCSTR,IConsole_Command*,str_pred>	vecCMD;
-	typedef  vecCMD::iterator							vecCMD_IT;
-	typedef  vecCMD::const_iterator						vecCMD_CIT;
-	typedef  fastdelegate::FastDelegate0<void>			Callback;
-	typedef  xr_vector<shared_str>						vecHistory;
-	typedef  xr_vector<shared_str>						vecTips;
-	typedef  xr_vector<TipString>						vecTipsEx;
+	using vecCMD     = xr_map<LPCSTR,IConsole_Command*,str_pred>;
+	using vecCMD_IT  = vecCMD::iterator;
+	using vecCMD_CIT = vecCMD::const_iterator;
+	using Callback   = xrDelegate<void()>;
+	using vecHistory = xr_vector<shared_str>;
+	using vecTips    = xr_vector<shared_str>;
+	using vecTipsEx  = xr_vector<TipString>;
 
 	enum			{ CONSOLE_BUF_SIZE = 1024 };
 	enum			{ VIEW_TIPS_COUNT = 14, MAX_TIPS_COUNT = 220 };
@@ -89,6 +89,9 @@ protected:
 	bool			m_disable_tips;
 
 private:
+	RingBuffer<shared_str, 512> m_log_history;
+	xrCriticalSection m_log_history_guard;
+
 	vecHistory		m_cmd_history;
 	u32				m_cmd_history_max;
 	int				m_cmd_history_idx;
@@ -108,6 +111,9 @@ public:
 	virtual			~CConsole			();
 	virtual	void	Initialize			();
 	virtual void	Destroy				();
+
+	void			AddLogEntry(LPCSTR line);
+	void			ClearLog();
 
 	virtual void		OnRender			();
 	virtual void _BCL	OnFrame				();
@@ -169,29 +175,29 @@ protected:
 	void	Register_callbacks	();
 	
 protected:
-	void xr_stdcall Prev_log	();
-	void xr_stdcall Next_log	();
-	void xr_stdcall Begin_log	();
-	void xr_stdcall End_log		();
+	void	Prev_log	();
+	void	Next_log	();
+	void	Begin_log	();
+	void	End_log		();
 	
-	void xr_stdcall Find_cmd	();
-	void xr_stdcall Find_cmd_back();
-	void xr_stdcall Prev_cmd	();
-	void xr_stdcall Next_cmd	();
-	void xr_stdcall Prev_tip	();
-	void xr_stdcall Next_tip	();
+	void	Find_cmd	();
+	void	Find_cmd_back();
+	void	Prev_cmd	();
+	void	Next_cmd	();
+	void	Prev_tip	();
+	void	Next_tip	();
 	
-	void xr_stdcall Begin_tips	();
-	void xr_stdcall End_tips	();
-	void xr_stdcall PageUp_tips	();
-	void xr_stdcall PageDown_tips();
+	void	Begin_tips	();
+	void	End_tips	();
+	void	PageUp_tips	();
+	void	PageDown_tips();
 
-	void xr_stdcall Execute_cmd	();
-	void xr_stdcall Show_cmd	();
-	void xr_stdcall Hide_cmd	();
-	void xr_stdcall Hide_cmd_esc();
+	void	Execute_cmd	();
+	void	Show_cmd	();
+	void	Hide_cmd	();
+	void	Hide_cmd_esc();
 
-	void xr_stdcall GamePause	();
+	void	GamePause	();
 
 protected:
 	void	add_cmd_history		( shared_str const& str );

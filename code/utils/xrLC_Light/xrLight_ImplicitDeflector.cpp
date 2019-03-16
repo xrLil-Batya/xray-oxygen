@@ -40,7 +40,7 @@ void ImplicitDeflector::Bounds_Summary(Fbox2& bounds)
 	}
 }
 
-void ImplicitDeflector::read(INetReader &r)
+void ImplicitDeflector::read(IReader &r)
 {
 	r_pointer(r, texture, inlc_global_data()->textures());
 	lmap.read(r);

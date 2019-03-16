@@ -12,6 +12,13 @@
 #include "game_object_space.h"
 #include "script_callback_ex.h"
 
+extern "C" {
+#include <lua/lua.h>
+#include <lua/lualib.h>
+#include <lua/lauxlib.h>
+};
+//#include "../../SDK/include/luabind/adopt_policy.hpp"
+
 struct FindLocationBySpotID{
 	shared_str	spot_id;
 	u16			object_id;
@@ -103,7 +110,7 @@ CMapManager::CMapManager()
 {
 	m_locations_wrapper = xr_new<CMapLocationWrapper>();
 	m_locations_wrapper->registry().init(1);
-	m_locations = NULL;
+	m_locations = nullptr;
 }
 
 CMapManager::~CMapManager()
@@ -115,7 +122,7 @@ CMapManager::~CMapManager()
 CMapLocation* CMapManager::AddMapLocation(const shared_str& spot_type, u16 id)
 {
 	CMapLocation* l = xr_new<CMapLocation>(spot_type.c_str(), id);
-	Locations().push_back( SLocationKey(spot_type, id) );
+	Locations().emplace_back( spot_type, id );
 	Locations().back().location = l;
 	if (g_actor)
 		Actor()->callback(GameObject::eMapLocationAdded)(spot_type.c_str(), id);
@@ -128,14 +135,14 @@ CMapLocation* CMapManager::AddUserLocation(const shared_str& spot_type, const sh
 	u16 _id = Level().Server->PerformIDgen(0xffff);
 	CMapLocation * l = xr_new<CMapLocation>(spot_type.c_str(), _id, true);
 	l->InitUserSpot(level_name, position);
-	Locations().push_back(SLocationKey(spot_type, _id));
+	Locations().emplace_back(spot_type, _id);
 	Locations().back().location = l;
 	return l;
 }
 
 CMapLocation* CMapManager::AddRelationLocation(CInventoryOwner* pInvOwner)
 {
-	if(!Level().CurrentViewEntity())return NULL;
+	if(!Level().CurrentViewEntity())return nullptr;
 
 	ALife::ERelationType relation = ALife::eRelationTypeFriend;
 	CInventoryOwner* pActor = smart_cast<CInventoryOwner*>(Level().CurrentViewEntity());
@@ -145,10 +152,10 @@ CMapLocation* CMapManager::AddRelationLocation(CInventoryOwner* pInvOwner)
 	CEntityAlive* pEntAlive = smart_cast<CEntityAlive*>(pInvOwner);
 	if( !pEntAlive->g_Alive() ) sname = "deadbody_location";
 
+	if (HasMapLocation(sname, pInvOwner->object_id())) return nullptr;
 
-	R_ASSERT(!HasMapLocation(sname, pInvOwner->object_id()));
 	CMapLocation* l = xr_new<CRelationMapLocation>(sname, pInvOwner->object_id(), pActor->object_id());
-	Locations().push_back( SLocationKey(sname, pInvOwner->object_id()) );
+	Locations().emplace_back( sname, pInvOwner->object_id() );
 	Locations().back().location = l;
 	return l;
 }
@@ -210,14 +217,14 @@ bool CMapManager::GetMapLocationsForObject(u16 id, xr_vector<CMapLocation*>& res
 		if((*it).actual && (*it).object_id==id)
 			res.push_back((*it).location);
 	}
-	return (res.size()!=0);
+	return (!res.empty());
 }
 
 bool CMapManager::HasMapLocation(const shared_str& spot_type, u16 id)
 {
 	CMapLocation* l = GetMapLocation(spot_type, id);
 	
-	return (l!=NULL);
+	return (l!=nullptr);
 }
 
 CMapLocation* CMapManager::GetMapLocation(const shared_str& spot_type, u16 id)
@@ -227,7 +234,7 @@ CMapLocation* CMapManager::GetMapLocation(const shared_str& spot_type, u16 id)
 	if( it!=Locations().end() )
 		return (*it).location;
 	
-	return 0;
+	return nullptr;
 }
 
 void CMapManager::GetMapLocations(const shared_str& spot_type, u16 id, xr_vector<CMapLocation*>& res)
@@ -244,19 +251,21 @@ void CMapManager::GetMapLocations(const shared_str& spot_type, u16 id, xr_vector
 
 void CMapManager::Update()
 {
-	delete_data(m_deffered_destroy_queue); //from prev frame
+	//from prev frame
+	if(!m_deffered_destroy_queue.empty())
+		delete_data(m_deffered_destroy_queue);
 
-    auto it			= Locations().begin();
-    auto it_e		= Locations().end();
-
-	for(u32 idx=0; it!=it_e;++it,++idx)
+	u32 idx = 0;
+	for (SLocationKey &refLockKey : Locations())
 	{
-		bool bForce		= Device.dwFrame%3 == idx%3;
-		(*it).actual	= (*it).location->Update();
+		bool bForce = Device.dwFrame % 3 == idx % 3;
+		refLockKey.actual = refLockKey.location->Update();
 
-		if((*it).actual && bForce)
-			(*it).location->CalcPosition();
+		if (refLockKey.actual && bForce)
+			refLockKey.location->CalcPosition();
+		idx++;
 	}
+
 	std::sort( Locations().begin(),Locations().end() );
 
 	while ((!Locations().empty()) && (!Locations().back().actual))

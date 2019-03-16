@@ -1,4 +1,4 @@
-#ifndef xrTheora_StreamH
+﻿#ifndef xrTheora_StreamH
 #define xrTheora_StreamH
 #pragma once
 

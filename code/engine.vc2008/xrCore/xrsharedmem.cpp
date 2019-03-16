@@ -3,13 +3,14 @@
 
 using namespace std;
 
-XRCORE_API	smem_container*	g_pSharedMemoryContainer = new smem_container();
+XRCORE_API	smem_container*	g_pSharedMemoryContainer = nullptr;
+XRCORE_API	bool	g_pSharedMemoryContainer_isDestroyed = false;
 
 smem_value* smem_container::dock(u32 dwCRC, u32 dwLength, void* ptr)
 {
 	VERIFY(dwCRC && dwLength && ptr);
 
-	std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 	smem_value* result = 0;
 
 	// search a place to insert
@@ -58,7 +59,7 @@ smem_value* smem_container::dock(u32 dwCRC, u32 dwLength, void* ptr)
 
 void smem_container::clean()
 {
-	std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 
 	for (auto &it : container)
 		if (!it->dwReference)
@@ -70,10 +71,10 @@ void smem_container::clean()
 
 void smem_container::dump()
 {
-	std::lock_guard<decltype(cs)> lock(cs);
-	FILE* F = fopen("x:\\$smem_dump$.txt", "w");
+	xrCriticalSectionGuard guard(cs);
+	FILE* F = fopen("$smem_dump$.txt", "w");
 
-	for (auto &it : container)
+	for (smem_value* it : container)
 		fprintf(F, "%4u : crc[%6x], %d bytes\n", it->dwReference, it->dwCRC, it->dwLength);
 
 	fclose(F);
@@ -81,7 +82,7 @@ void smem_container::dump()
 
 u32 smem_container::stat_economy()
 {
-	std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 	s64 counter = 0;
 	counter -= sizeof(*this);
 	counter -= sizeof(cdb::allocator_type);

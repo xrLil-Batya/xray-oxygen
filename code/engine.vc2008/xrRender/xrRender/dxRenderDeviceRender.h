@@ -23,10 +23,22 @@ public:
 	virtual void	Copy(IRenderDeviceRender &_in);
 
 	//	Gamma correction functions
-	virtual void	setGamma(float fGamma);
-	virtual void	setBrightness(float fGamma);
-	virtual void	setContrast(float fGamma);
-	virtual void	updateGamma();
+#ifdef USE_DX11
+	virtual DXGI_GAMMA_CONTROL	GetGammaLUT() const;
+#else
+	virtual D3DGAMMARAMP		GetGammaLUT() const;
+#endif
+	virtual float	GetGamma		() const;
+	virtual float	GetBrightness	() const;
+	virtual float	GetContrast		() const;
+	virtual Fvector	GetBalance		() const;
+
+	virtual void	SetGamma		(float val);
+	virtual void	SetBrightness	(float val);
+	virtual void	SetContrast		(float val);
+	virtual void	SetBalance		(float r, float g, float b);
+	virtual void	SetBalance		(Fvector &C);
+	virtual void	UpdateGamma		();
 
 	//	Destroy
 	virtual void	OnDeviceDestroy( BOOL bKeepTextures);
@@ -61,7 +73,7 @@ public:
 	virtual void	Clear();
 	virtual void	End();
 	virtual void	ClearTarget();
-	virtual void	SetCacheXform(Fmatrix &mView, Fmatrix &mProject);
+	virtual void	SetCacheXform(const Fmatrix &mView, const Fmatrix &mProject);
 	virtual void	OnAssetsChanged();
 	virtual void	ResizeWindowProc(WORD h, WORD w);
 

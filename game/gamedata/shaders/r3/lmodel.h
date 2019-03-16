@@ -2,7 +2,7 @@
 #define LMODEL_H
 
 #include "common.h"
-//Swartz27 to self: Change this, not necessary anymore.
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // Lighting formulas			// 
 float4 plight_infinity( float m, float3 pnt, float3 normal, float3 light_direction )
@@ -11,8 +11,12 @@ float4 plight_infinity( float m, float3 pnt, float3 normal, float3 light_directi
   	float3 V 		= -normalize	(pnt);					// vector2eye
   	float3 L 		= -light_direction;						// vector2light
   	float3 H			= normalize	(L+V);						// float-angle-vector 
-//	return tex3D 		(s_material,	float3( dot(L,N), dot(H,N), m ) );		// sample material
-	return s_material.Sample( smp_material, float3( dot(L,N), dot(H,N), m ) ).xxxy;		// sample material
+	float NdotL = dot(N,L);
+	float specular = dot(H,N);
+	specular = pow(specular,64);	
+	return float4(NdotL.xxx,specular); //this seemns faster but I need feedback
+	
+	//s_material.Sample( smp_material, float3( dot(L,N), dot(H,N), m ) ).xxxy;		// sample material
 }
 /*
 float plight_infinity2( float m, float3 pnt, float3 normal, float3 light_direction )
@@ -41,7 +45,6 @@ float4 plight_local( float m, float3 pnt, float3 normal, float3 light_position, 
   	float3 H		= normalize	(L+V);						// float-angle-vector
 		rsqr	= dot		(L2P,L2P);					// distance 2 light (squared)
   	float  att 	= saturate	(1 - rsqr*light_range_rsq);			// q-linear attenuate
-//	float4 light	= tex3D		(s_material, float3( dot(L,N), dot(H,N), m ) ); 	// sample material
 	float4 light	= s_material.Sample( smp_material, float3( dot(L,N), dot(H,N), m ) ).xxxy;		// sample material
   	return att*light;
 }
@@ -49,17 +52,11 @@ float4 plight_local( float m, float3 pnt, float3 normal, float3 light_position, 
 //	TODO: DX10: Remove path without blending
 float4 blendp( float4 value, float4 tcp)
 {
-//	#ifndef FP16_BLEND  
-//		value 	+= (float4)tex2Dproj 	(s_accumulator, tcp); 	// emulate blend
-//	#endif
 	return 	value;
 }
 
 float4 blend( float4 value, float2 tc)
 {
-//	#ifndef FP16_BLEND  
-//		value 	+= (float4)tex2D 	(s_accumulator, tc); 	// emulate blend
-//	#endif
 	return 	value;
 }
 

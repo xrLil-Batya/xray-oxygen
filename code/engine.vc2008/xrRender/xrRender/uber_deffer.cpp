@@ -25,8 +25,8 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 
 
 	string256		ps,vs,dt;
-	strconcat		(sizeof(vs),vs,"deffer_", _vspec, lmap?"_lmh":""	);
-	strconcat		(sizeof(ps),ps,"deffer_", _pspec, lmap?"_lmh":""	);
+	xr_strconcat	(vs,"deffer_", _vspec, lmap?"_lmh":""	);
+	xr_strconcat	(ps,"deffer_", _pspec, lmap?"_lmh":""	);
 	xr_strcpy		(dt,sizeof(dt),_detail_replace?_detail_replace:( C.detail_texture?C.detail_texture:"" ) );
 
 	// detect detail bump
@@ -65,7 +65,7 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 	else 
 	{
 		xr_strcpy			(fnameA,_t.bump_get().c_str());
-		strconcat		(sizeof(fnameB),fnameB,fnameA,"#");
+		xr_strconcat		(fnameB,fnameA,"#");
 		xr_strcat			(vs,"_bump");
 		if (hq && C.bUseSteepParallax)
 		{
@@ -93,8 +93,7 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 	}
 
 	// Uber-construct
-#if defined(USE_DX10) || defined(USE_DX11)
-#	ifdef USE_DX11
+#ifdef USE_DX11
 	if (bump && hq && RImplementation.o.dx11_enable_tessellation && C.TessMethod!=0)
 	{
 		char hs[256], ds[256];// = "DX11\\tess", ds[256] = "DX11\\tess";
@@ -132,10 +131,10 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 		
 		xr_strcat(params, ")");
 
-		strconcat(sizeof(vs),vs,"deffer_", _vspec, "_bump", params);
-		strconcat(sizeof(ps),ps,"deffer_", _pspec, _aref?"_aref":"", "_bump", params);
-		strconcat(sizeof(hs),hs,"DX11\\tess", params);
-		strconcat(sizeof(ds),ds,"DX11\\tess", params);
+		xr_strconcat(vs, "deffer_", _vspec, "_bump", params);
+		xr_strconcat(ps, "deffer_", _pspec, _aref ? "_aref" : "", "_bump", params);
+		xr_strconcat(hs, "DX11\\tess", params);
+		xr_strconcat(ds, "DX11\\tess", params);
 	
 		VERIFY(strstr(vs, "bump")!=0);
 		VERIFY(strstr(ps, "bump")!=0);
@@ -158,8 +157,8 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 		}
 	}
 	else
-#	endif
 		C.r_Pass		(vs,ps,	FALSE);
+
 	C.r_dx10Texture		("s_base",		C.L_textures[0]);
 	C.r_dx10Texture		("s_bumpX",		fnameB);	// should be before base bump
 	C.r_dx10Texture		("s_bump",		fnameA);
@@ -176,8 +175,8 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 		C.r_dx10Texture	("s_hemi",	C.L_textures[2]);
 		C.r_dx10Sampler	("smp_rtlinear");
 	}
-#else	//	USE_DX10
-	C.r_Pass		(vs,ps,	FALSE);
+#else
+	C.r_Pass		(vs,ps,	false);
 	VERIFY(C.L_textures[0].size());
 	if(bump)
 	{
@@ -200,7 +199,7 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 		C.r_Sampler		("s_detailBumpX",texDetailBumpX,false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
 	}
 	if (lmap)C.r_Sampler("s_hemi",	C.L_textures[2],	false,	D3DTADDRESS_CLAMP,	D3DTEXF_LINEAR,		D3DTEXF_NONE,	D3DTEXF_LINEAR);
-#endif	//	USE_DX10
+#endif
 
 	if (!DO_NOT_FINISH)		C.r_End	();
 }
@@ -254,7 +253,7 @@ void uber_shadow(CBlender_Compile& C, LPCSTR _vspec)
 	else 
 	{
 		xr_strcpy			(fnameA,_t.bump_get().c_str());
-		strconcat		(sizeof(fnameB),fnameB,fnameA,"#");
+		xr_strconcat		(fnameB,fnameA,"#");
 	}
 
 	if (bump && RImplementation.o.dx11_enable_tessellation && C.TessMethod!=0)
@@ -294,9 +293,9 @@ void uber_shadow(CBlender_Compile& C, LPCSTR _vspec)
 		
 		xr_strcat(params, ")");
 
-		strconcat(sizeof(vs),vs,"deffer_", _vspec, "_bump", params);
-		strconcat(sizeof(hs),hs,"DX11\\tess", params);
-		strconcat(sizeof(ds),ds,"DX11\\tess_shadow", params);
+		xr_strconcat(vs, "deffer_", _vspec, "_bump", params);
+		xr_strconcat(hs, "DX11\\tess", params);
+		xr_strconcat(ds, "DX11\\tess_shadow", params);
 	
 		C.r_TessPass	(vs, hs, ds, "null", "dumb", FALSE,TRUE,TRUE,FALSE);
 		RImplementation.clearAllShaderOptions();

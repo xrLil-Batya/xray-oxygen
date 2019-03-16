@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "controller.h"
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

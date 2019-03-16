@@ -15,13 +15,12 @@
 
 void check_path	(const CBaseMonster *monster, const CPatrolPath *path)
 {
-	VERIFY2			(
+	VERIFY_FORMAT(
 		ai().game_graph().vertex(
 			path->vertices().begin()->second->data().game_vertex_id()
 		)->level_id()
 		==
 		ai().level_graph().level_id(),
-		make_string(
 			"invalid patrol path [%s] as home specified for monster [%s]\nmonster is on level %s\npatrol path is on level %s",
 			*path->m_name,
 			*monster->cName(),
@@ -34,9 +33,7 @@ void check_path	(const CBaseMonster *monster, const CPatrolPath *path)
 				ai().game_graph().vertex(
 					path->vertices().begin()->second->data().game_vertex_id()
 				)->level_id()
-			).name()
-		)
-	);
+			).name());
 }
 #else // DEBUG
 #	define check_path(a,b)

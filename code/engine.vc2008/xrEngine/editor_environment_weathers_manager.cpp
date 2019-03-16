@@ -1,12 +1,12 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: editor_environment_manager.cpp
 //	Created 	: 04.01.2008
 //  Modified 	: 04.01.2008
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment manager class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_weathers_manager.hpp"
@@ -62,7 +62,8 @@ void manager::load			()
 	
 	file_list_type::const_iterator	i = file_list->begin();
 	file_list_type::const_iterator	e = file_list->end();
-	for ( ; i != e; ++i) {
+	for (; i != e; ++i) 
+	{
 		u32							length = xr_strlen(*i);
 		if (length <= 4)
 			continue;
@@ -79,17 +80,19 @@ void manager::load			()
 		if ((*i)[length - 1] != 'x')
 			continue;
 
-		u32							new_length = length - 4;
-		LPSTR						identifier = (LPSTR)_alloca((new_length + 1)*sizeof(char));
-		std::memcpy				(identifier, *i, new_length*sizeof(char));
-		identifier[new_length]		= 0;
-		weather*					object = xr_new<weather>(&m_manager, identifier);
-		object->load				();
-		object->fill				(m_collection);
-		m_weathers.push_back		(object);
+		u32 new_length = length - 4;
+		char* pIdentifier = new char[new_length + 1];
+		std::memcpy(pIdentifier, *i, new_length * sizeof(char));
+		pIdentifier[new_length] = 0;
+		weather* object = xr_new<weather>(&m_manager, pIdentifier);
+		object->load();
+		object->fill(m_collection);
+		m_weathers.push_back(object);
+
+		xr_delete(pIdentifier);
 	}
 
-	FS.file_list_close				(file_list);
+	FS.file_list_close(file_list);
 }
 
 void manager::save()

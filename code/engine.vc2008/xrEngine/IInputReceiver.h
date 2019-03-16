@@ -1,4 +1,4 @@
-// IInputReceiver.h: interface for the IInputReceiver class.
+﻿// IInputReceiver.h: interface for the IInputReceiver class.
 //
 //////////////////////////////////////////////////////////////////////
 

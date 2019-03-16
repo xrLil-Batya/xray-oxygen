@@ -8,12 +8,12 @@
 
 #include "StdAfx.h"
 #include "UIMessagesWindow.h"
-#include "xrUIXmlParser.h"
-#include "UIXmlInit.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
 #include "UIInventoryUtilities.h"
 #include "../game_news.h"
-#include "UIPdaMsgListItem.h"
-#include "UIGameLog.hpp"
+#include "../xrUICore/UIPdaMsgListItem.h"
+#include "../xrUICore/UIGameLog.hpp"
 
 CUIMessagesWindow::CUIMessagesWindow() :m_pGameLog(nullptr)
 {

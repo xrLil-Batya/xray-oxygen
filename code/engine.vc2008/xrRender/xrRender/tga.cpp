@@ -4,7 +4,7 @@
 
 #include "tga.h"
 
-void BMPdesc::makebmp( IWriter& fs )
+void BMPdesc::makebmp(IWriter& fs)
 {
 	R_ASSERT(data);
 	R_ASSERT(width);
@@ -16,23 +16,23 @@ void BMPdesc::makebmp( IWriter& fs )
 	hdr.bmpImgSpec.bmpXSize = u16(width);
 	hdr.bmpImgSpec.bmpYSize = u16(height);
 
-	if(format == IMG_24B)
+	switch(format)
 	{
-		hdr.bmpImgSpec.bmpDepth		= 24;
-		hdr.bmpImgSpec.bmpImgDesc	= 0x20;			// flip
-	}
-	else if(format == IMG_32B)
-	{
-		hdr.bmpImgSpec.bmpDepth		= 32;
-		hdr.bmpImgSpec.bmpImgDesc	= 0xF | 0x20;
-	}
-	else // IMG_16B
-	{
-		hdr.bmpImgSpec.bmpDepth		= 16;
-		hdr.bmpImgSpec.bmpImgDesc	= 0x10;
+	case IMG_16B:
+		hdr.bmpImgSpec.bmpDepth = 16;
+		hdr.bmpImgSpec.bmpImgDesc = 0x10;
+		break;
+	case IMG_24B:
+		hdr.bmpImgSpec.bmpDepth = 24;
+		hdr.bmpImgSpec.bmpImgDesc = 0x20; // flip
+		break;
+	case IMG_32B:
+		hdr.bmpImgSpec.bmpDepth = 32;
+		hdr.bmpImgSpec.bmpImgDesc = 0xF | 0x20;
+		break;
 	}
 
-	fs.w(&hdr, sizeof(hdr) );
+	fs.w(&hdr, sizeof(hdr));
 
 	if(format == IMG_24B)
 	{

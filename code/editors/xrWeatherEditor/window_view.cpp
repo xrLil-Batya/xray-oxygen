@@ -262,7 +262,7 @@ Void window_view::ViewPanel_MouseClick			(Object^ sender, MouseEventArgs^ e)
 	if (!color)
 		return;
 
-	HDC							dc = GetWindowDC((HWND)ViewPanel->Handle.ToInt32());
+	HDC							dc = GetWindowDC((HWND)ViewPanel->Handle.ToInt64());
 	u32							pixel_color = GetPixel(dc, e->Location.X, e->Location.Y);
 	editor::color				value;
 	value.r						= float((pixel_color & 0x000000ff) >>  0)/255.f;
@@ -280,21 +280,15 @@ Void window_view::window_view_KeyDown		(Object^ sender, KeyEventArgs^ e)
 
 void window_view::pick_color_cursor	(bool value)
 {
-	if (!value) {
-		ViewPanel->Cursor		= System::Windows::Forms::Cursors::Default;
+	if (!value) 
+	{
+		ViewPanel->Cursor = System::Windows::Forms::Cursors::Default;
 		return;
 	}
 
-	ViewPanel->Cursor			= 
-		gcnew System::Windows::Forms::Cursor(
-			(IntPtr)
-			LoadCursor(
-				(HINSTANCE)System::Runtime::InteropServices::Marshal::GetHINSTANCE(
-					System::Reflection::Assembly::GetExecutingAssembly()->GetModules()[0]
-				).ToInt32(),
-				MAKEINTRESOURCE(IDC_CURSOR1)
-			)
-		);
+	ViewPanel->Cursor = gcnew System::Windows::Forms::Cursor(
+		(IntPtr)LoadCursor((HINSTANCE)System::Runtime::InteropServices::Marshal::GetHINSTANCE(
+					System::Reflection::Assembly::GetExecutingAssembly()->GetModules()[0]).ToInt64(), MAKEINTRESOURCE(IDC_CURSOR1)));
 }
 
 bool window_view::pick_color_cursor	()

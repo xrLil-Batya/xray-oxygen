@@ -1,10 +1,10 @@
 /*
 ** Machine code management.
-** Copyright (C) 2005-2015 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2017 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #define lj_mcode_c
-
+#define LUA_CORE
 
 #include "lj_obj.h"
 #if LJ_HASJIT
@@ -221,8 +221,8 @@ static void *mcode_alloc(jit_State *J, size_t sz)
   */
 #if LJ_TARGET_MIPS
   /* Use the middle of the 256MB-aligned region. */
-  uintptr_t target = ((uintptr_t)(void *)lj_vm_exit_handler & 0xf0000000u) +
-		     0x08000000u;
+  uintptr_t target = ((uintptr_t)(void *)lj_vm_exit_handler &
+		      ~(uintptr_t)0x0fffffffu) + 0x08000000u;
 #else
   uintptr_t target = (uintptr_t)(void *)lj_vm_exit_handler & ~(uintptr_t)0xffff;
 #endif
@@ -230,7 +230,8 @@ static void *mcode_alloc(jit_State *J, size_t sz)
   /* First try a contiguous area below the last one. */
   uintptr_t hint = J->mcarea ? (uintptr_t)J->mcarea - sz : 0;
   int i;
-  for (i = 0; i < LJ_TARGET_JUMPRANGE; i++) {  /* 32 attempts ought to be enough ... */
+  /* Limit probing iterations, depending on the available pool size. */
+  for (i = 0; i < LJ_TARGET_JUMPRANGE; i++) {
     if (mcode_validptr(hint)) {
       void *p = mcode_alloc_at(J, hint, sz, MCPROT_GEN);
 
@@ -240,11 +241,10 @@ static void *mcode_alloc(jit_State *J, size_t sz)
       if (p) mcode_free(J, p, sz);  /* Free badly placed area. */
     }
     /* Next try probing 64K-aligned pseudo-random addresses. */
-    do 
-	{
+    do {
       hint = LJ_PRNG_BITS(J, LJ_TARGET_JUMPRANGE-16) << 16;
-	} while (!(hint + sz < range+range));
-	hint = target + hint - range;
+    } while (!(hint + sz < range+range));
+    hint = target + hint - range;
   }
   lj_trace_err(J, LJ_TRERR_MCODEAL);  /* Give up. OS probably ignores hints? */
   return NULL;

@@ -207,10 +207,12 @@ inline void axis_angleB(const Fmatrix& m, const Fvector& axis, float& angle)
 	ort2.normalize();
 	Fvector ort1_t;
 	m.transform_dir(ort1_t, ort1);
+
 	Fvector ort_r;
 	float pr1, pr2;
 	pr1 = ort1.dotproduct(ort1_t);
 	pr2 = ort2.dotproduct(ort1_t);
+
 	if (pr1 == 0.f&&pr2 == 0.f)
 	{
 		angle = 0.f;

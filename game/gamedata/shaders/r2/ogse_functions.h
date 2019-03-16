@@ -1,9 +1,6 @@
 #ifndef OGSE_FUNCTIONS_H
 #define OGSE_FUNCTIONS_H
 
-#define SKY_WITH_DEPTH				// sky renders with depth to avoid some problems with reflections
-#define SKY_DEPTH float(10000.f)
-#define SKY_EPS float(0.001)
 #define FARPLANE float(180.0)
 
 float normalize_depth(float depth)
@@ -29,14 +26,6 @@ static const float2 poisson_disk[12] = {				// äèñê Ïóàññîíà
 // new uniform variables - OGSE Team
 // global constants
 uniform float4 ogse_c_screen;		// x - fFOV, y - fAspect, z - Zf/(Zf-Zn), w - Zn*tan(fFov/2)
-
-#ifndef SKY_WITH_DEPTH
-half is_sky(float depth)		{return step(depth, SKY_EPS);}
-half is_not_sky(float depth)	{return step(SKY_EPS, depth);}
-#else
-half is_sky(float depth)		{return step(abs(depth - SKY_DEPTH), SKY_EPS);}
-half is_not_sky(float depth)	{return step(SKY_EPS, abs(depth - SKY_DEPTH));}
-#endif
 
 float4 proj_to_screen(float4 proj)
 {

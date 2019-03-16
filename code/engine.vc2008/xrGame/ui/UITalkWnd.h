@@ -1,88 +1,86 @@
 #pragma once
 
-#include "UIDialogWnd.h"
-#include "UIStatic.h"
-#include "UIButton.h"
-#include "UIEditBox.h"
-#include "UIFrameWindow.h"
-
-
+#include "../xrUICore/UIDialogWnd.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIButton.h"
+#include "../xrUICore/UIEditBox.h"
+#include "../xrUICore/UIFrameWindow.h"
 #include "../PhraseDialogDefs.h"
 
 class CActor;
 class CInventoryOwner;
 class CPhraseDialogManager;
 class CUITalkDialogWnd;
+
 ///////////////////////////////////////
 //
 ///////////////////////////////////////
-
-class CUITalkWnd: public CUIDialogWnd
+class CUITalkWnd : public CUIDialogWnd
 {
 private:
 	typedef CUIDialogWnd inherited;
-	ref_sound			m_sound;
-	void				PlaySnd					(LPCSTR text);
-	void				StopSnd					();
+	ref_sound m_sound;
+	void PlaySnd(LPCSTR text);
+	void StopSnd();
 
 public:
-						CUITalkWnd();
-	virtual				~CUITalkWnd();
+	CUITalkWnd();
+	virtual ~CUITalkWnd();
 
-	IC		bool		playing_sound			()		 { return !!m_sound._feedback(); }
-			bool		GetInitState			() const { return m_bInitState; }
-	IC	CInventoryOwner*OthersInvOwner			() const { return m_pOthersInvOwner;	 };
+	IC bool playing_sound() { return !!m_sound._feedback(); }
+	bool GetInitState() const { return m_bInitState; }
+	IC CInventoryOwner* OthersInvOwner() const { return m_pOthersInvOwner; }
 
-			void		InitTalkWnd				();
+	void InitTalkWnd();
 
-	virtual bool		StopAnyMove				(){return true;}
-	virtual void		SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual bool StopAnyMove() { return true; }
+	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = nullptr);
 
-	virtual void		Draw					();
-	virtual void		Update					();
-		
-	virtual void		Show					(bool status);
-	
-	void				Stop					();					//deffered
-	void				StopTalk				();
+	virtual void Draw();
+	virtual void Update();
 
-	void				UpdateQuestions			();
-	void				NeedUpdateQuestions		();
+	virtual void Show(bool status);
 
-	//инициализации начального диалога собеседника
-	void				InitOthersStartDialog	();
-	virtual bool		OnKeyboardAction				(int dik, EUIMessages keyboard_action);
-	void				SwitchToTrade			();
-	void				SwitchToUpgrade			();
-	void				AddIconedMessage		(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name);
+	void Stop();					//deffered
+	void StopTalk();
+
+	void UpdateQuestions();
+	void NeedUpdateQuestions();
+
+	//РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РґРёР°Р»РѕРіР° СЃРѕР±РµСЃРµРґРЅРёРєР°
+	void InitOthersStartDialog();
+	virtual bool OnKeyboardAction(int dik, EUIMessages keyboard_action);
+	void SwitchToTrade();
+	void SwitchToUpgrade();
+	void AddIconedMessage(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name);
 
 protected:
-	//диалог
-	void				InitTalkDialog			();
-	void				AskQuestion				();
+	//РґРёР°Р»РѕРі
+	void InitTalkDialog();
+	void AskQuestion();
 
-	void				SayPhrase				(const shared_str& phrase_id);
+	void SayPhrase(const shared_str& phrase_id);
 
-	// Функции добавления строк в листы вопросов и ответов
+	// Р¤СѓРЅРєС†РёРё РґРѕР±Р°РІР»РµРЅРёСЏ СЃС‚СЂРѕРє РІ Р»РёСЃС‚С‹ РІРѕРїСЂРѕСЃРѕРІ Рё РѕС‚РІРµС‚РѕРІ
 public:
-	void				AddQuestion				(const shared_str& text, const shared_str& id, int number, bool b_finalizer);
-	void				AddAnswer				(const shared_str& text, LPCSTR SpeakerName);
-	bool				b_disable_break;
+	void AddQuestion(const shared_str& text, const shared_str& id, int number, bool b_finalizer);
+	void AddAnswer(const shared_str& text, LPCSTR SpeakerName);
+	bool b_disable_break;
 protected:
-	CUITalkDialogWnd*	UITalkDialogWnd;
+	CUITalkDialogWnd* UITalkDialogWnd;
 
-	CActor*				m_pActor;
-	CInventoryOwner*	m_pOurInvOwner;
-	CInventoryOwner*	m_pOthersInvOwner;
-	
+	CActor*	m_pActor;
+	CInventoryOwner* m_pOurInvOwner;
+	CInventoryOwner* m_pOthersInvOwner;
+
 	CPhraseDialogManager* m_pOurDialogManager;
 	CPhraseDialogManager* m_pOthersDialogManager;
 
-	bool				m_bNeedToUpdateQuestions;
-	bool                m_bInitState;
+	bool m_bNeedToUpdateQuestions;
+	bool m_bInitState;
 
-	//текущий диалог, если NULL, то переходим в режим выбора темы
-	DIALOG_SHARED_PTR	m_pCurrentDialog;
-	bool				TopicMode				();
-	void				ToTopicMode				();
+	//С‚РµРєСѓС‰РёР№ РґРёР°Р»РѕРі, РµСЃР»Рё NULL, С‚Рѕ РїРµСЂРµС…РѕРґРёРј РІ СЂРµР¶РёРј РІС‹Р±РѕСЂР° С‚РµРјС‹
+	DIALOG_SHARED_PTR m_pCurrentDialog;
+	bool TopicMode();
+	void ToTopicMode();
 };

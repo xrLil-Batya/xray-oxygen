@@ -7,8 +7,8 @@
 #include "level_graph.h"
 #include "../xrEngine/fdemorecord.h"
 #include "level.h"
-#include "xr_level_controller.h"
-#include "game_cl_base.h"
+#include "..\xrEngine\xr_level_controller.h"
+
 #include "stalker_movement_manager_smart_cover.h"
 #include "Inventory.h"
 #include "xrServer.h"
@@ -17,7 +17,6 @@
 #include "actor.h"
 #include "huditem.h"
 #include "UIGame.h"
-#include "UI/UIDialogWnd.h"
 #include "../xrEngine/xr_input.h"
 #include "saved_game_wrapper.h"
 
@@ -25,7 +24,6 @@
 
 #ifdef DEBUG
 #	include "ai/monsters/BaseMonster/base_monster.h"
-
 // Lain: add
 #   include "level_debug.h"
 #endif
@@ -38,7 +36,7 @@
 bool g_bDisableAllInput = false;
 extern	float	g_fTimeFactor;
 
-#define CURRENT_ENTITY()	(game ? CurrentEntity() : 0)
+#define CURRENT_ENTITY()	(CurrentEntity() ? CurrentEntity() : nullptr)
 
 void CLevel::IR_OnMouseWheel( int direction )
 {
@@ -82,7 +80,7 @@ void CLevel::IR_OnMouseMove( int dx, int dy )
 	}
 }
 
-// Îáðàáîòêà íàæàòèÿ êëàâèø
+// ÐžÐ±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ° Ð½Ð°Ð¶Ð°Ñ‚Ð¸Ñ ÐºÐ»Ð°Ð²Ð¸Ñˆ
 extern bool g_block_pause;
 
 // Lain: added TEMP!!!
@@ -116,20 +114,15 @@ void CLevel::IR_OnKeyboardPress(int key)
 	if (g_bDisableAllInput)
 		return;
 
-	if (g_actor) 
-		Actor()->callback(GameObject::eOnKeyPress)(key, _curr);
-
 	switch (_curr)
 	{
 		case kSCREENSHOT:
 			Render->Screenshot();
 			return;
-			break;
 
 		case kCONSOLE:
 			Console->Show();
 			return;
-			break;
 
 		case kQUIT:
 		{
@@ -158,10 +151,24 @@ void CLevel::IR_OnKeyboardPress(int key)
 	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	
 		return;
 
-	if (game && game->OnKeyboardPress(key))	
-		return;
+    // developer actions
+    if (GamePersistent().IsDeveloperMode())
+    {
+        switch (_curr)
+        {
+        case kDEV_NOCLIP:
+            if (!pInput->iGetAsyncKeyState(DIK_LSHIFT))
+            {
+                Console->Hide();
+                Console->Execute("demo_record 1");
+            }
+            break;
+        default:
+            break;
+        }
+    }
 
-#ifndef MASTER_GOLD
+#ifdef DEBUG
 	switch (key) {
 	case DIK_DIVIDE:
 	{
@@ -170,12 +177,8 @@ void CLevel::IR_OnKeyboardPress(int key)
 
 		SetGameTimeFactor(g_fTimeFactor);
 
-#ifdef DEBUG
 		if (!m_bEnvPaused)
 			SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), g_fTimeFactor);
-#else //DEBUG
-		SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), g_fTimeFactor);
-#endif //DEBUG
 
 		break;
 	}
@@ -185,16 +188,11 @@ void CLevel::IR_OnKeyboardPress(int key)
 			break;
 
 		SetGameTimeFactor(1000.f);
-#ifdef DEBUG
 		if (!m_bEnvPaused)
 			SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), 1000.f);
-#else //DEBUG
-		SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), 1000.f);
-#endif //DEBUG
 
 		break;
 	}
-#ifdef DEBUG
 	case DIK_SUBTRACT: {
 		if (!Server)
 			break;
@@ -206,18 +204,6 @@ void CLevel::IR_OnKeyboardPress(int key)
 		m_bEnvPaused = !m_bEnvPaused;
 		break;
 	}
-#endif //DEBUG
-	case DIK_NUMPAD5:
-	{
-		if (!pInput->iGetAsyncKeyState(DIK_LSHIFT))
-		{
-			Console->Hide();
-			Console->Execute("demo_record 1");
-		}
-	}
-	break;
-
-#ifdef DEBUG
 
 	case DIK_RETURN: {
 		bDebug = !bDebug;
@@ -286,7 +272,7 @@ void CLevel::IR_OnKeyboardPress(int key)
 					CHudItem* pHudItem = smart_cast<CHudItem*>(pActor->inventory().ActiveItem());
 					if (pHudItem)
 					{
-						pHudItem->OnStateSwitch(pHudItem->GetState());
+						pHudItem->OnStateSwitch(pHudItem->GetState(), pHudItem->GetState());
 					}
 				}
 			}
@@ -315,15 +301,8 @@ void CLevel::IR_OnKeyboardPress(int key)
 		break;
 	}
 	/**/
-#endif
-#ifdef DEBUG
-	case DIK_F9: {
-		break;
 	}
-				 return;
 #endif // DEBUG
-	}
-#endif // MASTER_GOLD
 
 	if (bindConsoleCmds.execute(key))
 		return;
@@ -355,14 +334,8 @@ void CLevel::IR_OnKeyboardRelease(int key)
 	if (GameUI() && GameUI()->IR_UIOnKeyboardRelease(key)) 
 		return;
 
-	if (game && game->OnKeyboardRelease(get_binded_action(key)))		
-		return;
-
 	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
-
-	if (g_actor) 
-		Actor()->callback(GameObject::eOnKeyRelease)(key, get_binded_action(key));
 
 	if (CURRENT_ENTITY())
 	{
@@ -405,9 +378,6 @@ void CLevel::IR_OnKeyboardHold(int key)
 	}
 
 #endif // DEBUG
-
-	if (g_actor) 
-		Actor()->callback(GameObject::eOnKeyHold)(key, get_binded_action(key));
 
 	if (GameUI() && GameUI()->IR_UIOnKeyboardHold(key)) 
 		return;

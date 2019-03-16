@@ -3,9 +3,9 @@
 #include "HitMarker.h"
 #include "../xrEngine/render.h"
 #include "../xrEngine/LightAnimLibrary.h"
-#include "UIStaticItem.h"
+#include "../xrUICore/UIStaticItem.h"
 
-#include "grenade.h"
+#include "items/Grenade.h"
 
 #include "../Include/xrRender/UIRender.h"
 #include "../Include/xrRender/UIShader.h"
@@ -30,13 +30,13 @@ void CHitMarker::InitShader_Grenade(LPCSTR tex_name)
 //--------------------------------------------------------------------
 CHitMarker::~CHitMarker()
 {
-	while (m_HitMarks.size())
+	while (!m_HitMarks.empty())
 	{
 		xr_delete(m_HitMarks.front());
 		m_HitMarks.pop_front();
 	}
 
-	while (m_GrenadeMarks.size())
+	while (!m_GrenadeMarks.empty())
 	{
 		xr_delete(m_GrenadeMarks.front());
 		m_GrenadeMarks.pop_front();
@@ -49,13 +49,13 @@ void CHitMarker::Render()
 	float h1, p1;
 	Device.vCameraDirection.getHP(h1, p1);
 
-	while (m_HitMarks.size() && !m_HitMarks.front()->IsActive())
+	while (!m_HitMarks.empty() && !m_HitMarks.front()->IsActive())
 	{
 		xr_delete(m_HitMarks.front());
 		m_HitMarks.pop_front();
 	}
 
-	while (m_GrenadeMarks.size() && !m_GrenadeMarks.front()->IsActive())
+	while (!m_GrenadeMarks.empty() && !m_GrenadeMarks.front()->IsActive())
 	{
 		xr_delete(m_GrenadeMarks.front());
 		m_GrenadeMarks.pop_front();

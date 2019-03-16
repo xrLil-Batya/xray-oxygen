@@ -5,7 +5,7 @@
 #include "debug_renderer.h"
 #include "debug_text_tree.h"
 #include "ai/monsters/basemonster/base_monster.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 
 // Lain: added text_tree
 CLevelDebug::CLevelDebug() : m_p_texttree( xr_new<debug::text_tree>() ), m_texttree_offs(0)
@@ -147,20 +147,20 @@ CLevelDebug::CLevelInfo &CLevelDebug::level_info(void *class_ptr, LPCSTR class_n
 void CLevelDebug::free_mem()
 {
 	//free object info
-	for (auto it_obj = m_objects_info.begin(); it_obj != m_objects_info.end(); ++it_obj) {
-		for (auto it_class = it_obj->second.begin(); it_class != it_obj->second.end(); ++it_class){
+	for (auto & it_obj : m_objects_info) {
+		for (auto it_class = it_obj.second.begin(); it_class != it_obj.second.end(); ++it_class){
 			xr_delete(it_class->second);
 		}
 	}
 
 	// free text info 
-	for (auto it = m_text_info.begin(); it != m_text_info.end(); ++it){
-		xr_delete(it->second);
+	for (auto & it : m_text_info){
+		xr_delete(it.second);
 	}
 
 	// free text info 
-	for (auto it = m_level_info.begin(); it != m_level_info.end(); ++it){
-		xr_delete(it->second);
+	for (auto & it : m_level_info){
+		xr_delete(it.second);
 	}
 }
 
@@ -170,10 +170,10 @@ void CLevelDebug::draw_object_info()
 	// handle all of the objects
 	for (auto it = m_objects_info.begin(); it != m_objects_info.end(); ++it) {
 
-		// åñëè îáúåêò íåâàëèäíûé - óäàëèòü èíôîðìàöèþ
+		// ÐµÑÐ»Ð¸ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð½ÐµÐ²Ð°Ð»Ð¸Ð´Ð½Ñ‹Ð¹ - ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸ÑŽ
 		if (!it->first || it->first->getDestroy()) {
-			for (auto it_class = it->second.begin(); it_class != it->second.end(); ++it_class){
-				xr_delete(it_class->second);
+			for (auto & it_class : it->second){
+				xr_delete(it_class.second);
 			}
 			m_objects_info.erase(it);
 			break;
@@ -187,10 +187,10 @@ void CLevelDebug::draw_object_info()
 		float		delta_height = 0.f;
 
 		// handle all of the classes
-		for (auto class_it = it->second.begin(); class_it != it->second.end(); ++class_it) {
+		for (auto & class_it : it->second) {
 
 			// get up on 2 meters
-			res.transform(v_res, class_it->second->get_shift_pos());
+			res.transform(v_res, class_it.second->get_shift_pos());
 
 			// check if the object in sight
 			if (v_res.z < 0 || v_res.w < 0)										continue;
@@ -202,7 +202,7 @@ void CLevelDebug::draw_object_info()
 			float start_y = y;
 
 			// handle all of the text inside class
-			class_it->second->draw_info(x,y);
+			class_it.second->draw_info(x,y);
 
 			delta_height = start_y - y;
 		}
@@ -214,16 +214,16 @@ void CLevelDebug::draw_object_info()
 void CLevelDebug::draw_text()
 {
 	// handle all of the classes
-	for (auto it = m_text_info.begin(); it != m_text_info.end(); ++it) {
-		it->second->draw_text();
+	for (auto & it : m_text_info) {
+		it.second->draw_text();
 	}
 }
 
 void CLevelDebug::draw_level_info()
 {
 	// handle all of the classes
-	for (auto it = m_level_info.begin(); it != m_level_info.end(); ++it) {
-		it->second->draw_info();
+	for (auto & it : m_level_info) {
+		it.second->draw_info();
 	}
 }
 
@@ -337,10 +337,10 @@ void CLevelDebug::on_destroy_object(CObject *obj)
 {
 	// handle all of the objects
 	for (auto it = m_objects_info.begin(); it != m_objects_info.end(); ++it) {
-		// åñëè îáúåêò íåâàëèäíûé - óäàëèòü èíôîðìàöèþ
+		// ÐµÑÐ»Ð¸ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð½ÐµÐ²Ð°Ð»Ð¸Ð´Ð½Ñ‹Ð¹ - ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸ÑŽ
 		if (it->first == obj) {
-			for (auto it_class = it->second.begin(); it_class != it->second.end(); ++it_class){
-				xr_delete(it_class->second);
+			for (auto & it_class : it->second){
+				xr_delete(it_class.second);
 			}
 			m_objects_info.erase(it);
 			break;

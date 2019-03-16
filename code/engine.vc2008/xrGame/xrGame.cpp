@@ -8,9 +8,10 @@
 
 #include "stdafx.h"
 #include "object_factory.h"
-#include "ui/xrUIXmlParser.h"
-#include "xr_level_controller.h"
-#include "profiler.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "..\xrEngine\xr_level_controller.h"
+#include "../xrEngine/profiler.h"
+#include "../xrEngine/spectre/Spectre.h"
 #pragma comment (lib, "xrCore.lib")
 #pragma comment (lib,"xrEngine.lib")
 
@@ -20,9 +21,12 @@ extern "C" {
 		DLL_Pure			*object = object_factory().client_object(clsid);
 #ifdef DEBUG
 		if (!object)
-			return			(0);
+			return			(nullptr);
 #endif
 		object->CLS_ID		= clsid;
+
+		//Invoke Spectre proxy constructor
+		object->SpectreObjectId = SpectreEngineClient::CreateProxyObject(object);
 		return				(object);
 	}
 
@@ -50,13 +54,9 @@ BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 			// keyboard binding
 			CCC_RegisterInput	();
 
-            setup_luabind_allocator();
-
             // register expression delegates
             RegisterExpressionDelegates();
-#ifdef DEBUG
 			g_profiler			= xr_new<CProfiler>();
-#endif
 
 			break;
 		}

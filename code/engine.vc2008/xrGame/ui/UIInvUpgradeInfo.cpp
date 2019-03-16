@@ -9,12 +9,12 @@
 #include "stdafx.h"
 #include "script_engine.h"
 #include "UIInvUpgradeInfo.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 #include "../Actor.h"
 
-#include "UIStatic.h"
-#include "UIXmlInit.h"
-#include "UIFrameWindow.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIFrameWindow.h"
 
 #include "UIInvUpgradeProperty.h"
 

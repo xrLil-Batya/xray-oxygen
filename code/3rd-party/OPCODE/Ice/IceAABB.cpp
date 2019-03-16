@@ -377,9 +377,9 @@ const sbyte* AABB::ComputeOutline(const Point& local_eye, sdword& num)	const
 
 //const Point&		eye,		//eye point (in bbox object coordinates)
 //const AABB&			box,		//3d bbox
-//const Matrix4x4&	mat,		//free transformation for bbox
+//const IceMatrix4x4&	mat,		//free transformation for bbox
 //float width, float height, int& num)
-float AABB::ComputeBoxArea(const Point& eye, const Matrix4x4& mat, float width, float height, sdword& num)	const
+float AABB::ComputeBoxArea(const Point& eye, const IceMatrix4x4& mat, float width, float height, sdword& num)	const
 {
 	const sbyte* Outline = ComputeOutline(eye, num);
 	if(!Outline)	return -1.0f;

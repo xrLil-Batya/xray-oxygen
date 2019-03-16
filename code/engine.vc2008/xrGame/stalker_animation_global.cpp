@@ -10,12 +10,12 @@
 #include "stalker_animation_manager.h"
 #include "ai/stalker/ai_stalker.h"
 #include "inventory.h"
-#include "fooditem.h"
+#include "items/FoodItem.h"
 #include "property_storage.h"
 #include "stalker_movement_manager_smart_cover.h"
 #include "ai/stalker/ai_stalker_space.h"
 #include "stalker_animation_data.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "missile.h"
 #include "stalker_animation_manager_impl.h"
 
@@ -29,9 +29,6 @@ void CStalkerAnimationManager::global_play_callback			(CBlend *blend)
 	CStalkerAnimationManager	&manager = object->animation();
 	CStalkerAnimationPair		&pair = manager.global();
 	pair.on_animation_end		();
-
-//	std::pair<LPCSTR,LPCSTR>	pair_id = smart_cast<IKinematicsAnimated*>(object->Visual())->LL_MotionDefName_dbg(blend->motionID);
-//	Msg							("[%6d] global callback [%s][%s]", Device.dwTimeGlobal, pair_id.first, pair_id.second);
 
 	if (!manager.m_global_callback)
 		return;
@@ -48,15 +45,11 @@ MotionID CStalkerAnimationManager::global_critical_hit		()
 		return					(global().animation());
 
 	CWeapon						*weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
-	VERIFY2						(
-		weapon,
-		make_string(
+	VERIFY_FORMAT(weapon,
 			"current active item: %s",
 			object().inventory().ActiveItem() ? 
 			*object().inventory().ActiveItem()->object().cName() : 
-			"no active item"
-		)
-	);
+			"no active item");
 
 	u32							animation_slot = weapon->animation_slot();
 	VERIFY						(animation_slot >= 1);

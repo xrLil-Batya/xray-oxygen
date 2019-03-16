@@ -13,7 +13,7 @@
 #include "../xrEngine/motion.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "script_entity_action.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
 #include "script_game_object.h"
@@ -30,6 +30,7 @@
 #include "movement_manager.h"
 #include "script_callback_ex.h"
 #include "game_object_space.h"
+#include "ai_debug.h"
 
 void __stdcall ActionCallback(IKinematics *tpKinematics);
 
@@ -97,19 +98,9 @@ void CScriptEntity::reinit()
 
 void CScriptEntity::SetScriptControl(const bool bScriptControl, shared_str caSciptName)
 {
-	if (!(
-		(
-			(m_bScriptControl && !bScriptControl) || 
-			(!m_bScriptControl && bScriptControl)
-		) &&
-			(
-				bScriptControl || 
-				(
-					xr_strlen(*m_caScriptName) && 
-					!xr_strcmp(caSciptName,m_caScriptName)
-				)
-			)
-		)) {
+	if (!((bool(m_bScriptControl) != bool(bScriptControl)) &&
+			(bScriptControl || (xr_strlen(*m_caScriptName) && !xr_strcmp(caSciptName,m_caScriptName))))) 
+	{
 		ai().script_engine().script_log(eLuaMessageTypeError,"Invalid sequence of taking an entity under script control");
 		return;
 	}
@@ -124,14 +115,7 @@ void CScriptEntity::SetScriptControl(const bool bScriptControl, shared_str caSci
 
 	m_bScriptControl	= bScriptControl;
 	m_caScriptName		= caSciptName;
-/* 
-#ifdef DEBUG
-	if (bScriptControl)
-		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeInfo,"Script %s set object %s under its control",*caSciptName,*object().cName());
-	else
-		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeInfo,"Script %s freed object %s from its control",*caSciptName,*object().cName());
-#endif
-*/
+
 	if (!bScriptControl)
 		ResetScriptData(this);
 }
@@ -154,8 +138,8 @@ bool CScriptEntity::CheckObjectVisibility(const CGameObject *tpObject)
 	return				(m_monster->memory().visual().visible_now(tpObject));
 }
 
-//îïðåäåëÿåò âèäèìîñòü îïðåäåëåííîãî òèïà îáúåêòîâ, 
-//çàäàííîãî ÷åðåç section_name
+//Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ Ð²Ð¸Ð´Ð¸Ð¼Ð¾ÑÑ‚ÑŒ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð½Ð¾Ð³Ð¾ Ñ‚Ð¸Ð¿Ð° Ð¾Ð±ÑŠÐµÐºÑ‚Ð¾Ð², 
+//Ð·Ð°Ð´Ð°Ð½Ð½Ð¾Ð³Ð¾ Ñ‡ÐµÑ€ÐµÐ· section_name
 bool CScriptEntity::CheckTypeVisibility(const char* section_name)
 {
 	if (!m_monster)
@@ -315,7 +299,7 @@ void CScriptEntity::ProcessScripts()
 		if (l_tpEntityAction->m_tMovementAction.m_bCompleted && !l_bCompleted)
 			object().callback(GameObject::eActionTypeMovement)(object().lua_game_object(),u32(eActionTypeMovement), -1);
 
-		// Óñòàíîâèòü âûáðàííóþ àíèìàöèþ
+		// Ð£ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ð½ÑƒÑŽ Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸ÑŽ
 		if (!l_tpEntityAction->m_tAnimationAction.m_bCompleted)
 			bfScriptAnimation	();
 

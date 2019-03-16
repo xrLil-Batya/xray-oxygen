@@ -48,7 +48,7 @@ float ssao_blur_ps(int2 centerTC, int iSample)
   for(int i=0; i<4; i++)
   {
 #ifndef USE_MSAA
-     float2 sampleTC   = centerTC + pos_decompression_params2.zw * arrOffsets[i];
+     float2 sampleTC   = centerTC + screen_res.zw * arrOffsets[i];
      float2 sampleData = s_occ.Sample( smp_nofilter, sampleTC);
 #else
      int2	sampleTC   = centerTC + arrOffsets[i];

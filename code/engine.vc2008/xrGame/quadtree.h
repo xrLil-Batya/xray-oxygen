@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 
 template <typename _object_type>
 class CQuadTree {
@@ -82,8 +82,8 @@ public:
 		}
 	};
 
-	typedef CFixedStorage<CQuadNode> CQuadNodeStorage;
-	typedef CFixedStorage<CListItem> CListItemStorage;
+	using CQuadNodeStorage = CFixedStorage<CQuadNode>;
+	using CListItemStorage = CFixedStorage<CListItem>;
 
 protected:
 	Fvector						m_center;

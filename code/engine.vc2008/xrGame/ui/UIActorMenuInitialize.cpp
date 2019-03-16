@@ -1,16 +1,16 @@
 #include "stdafx.h"
 #include "UIActorMenu.h"
-#include "UIXmlInit.h"
-#include "xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "UICharacterInfo.h"
 #include "UIDragDropListEx.h"
 #include "UIDragDropReferenceList.h"
 #include "UIActorStateInfo.h"
 #include "UIItemInfo.h"
-#include "UIFrameLineWnd.h"
-#include "UIMessageBoxEx.h"
-#include "UIPropertiesBox.h"
-#include "UI3tButton.h"
+#include "../xrUICore/UIFrameLineWnd.h"
+#include "../xrUICore/UIMessageBoxEx.h"
+#include "../xrUICore/UIPropertiesBox.h"
+#include "../xrUICore/UI3tButton.h"
 
 #include "UIInventoryUpgradeWnd.h"
 #include "UIInvUpgradeInfo.h"
@@ -18,11 +18,90 @@
 #include "ai_space.h"
 #include "alife_simulator.h"
 #include "object_broker.h"
-#include "UIWndCallback.h"
-#include "UIHelper.h"
-#include "UIProgressBar.h"
-#include "ui_base.h"
-#include "../string_table.h"
+#include "../xrUICore/UIWndCallback.h"
+#include "../xrUICore/UIHelper.h"
+#include "../xrUICore/UIProgressBar.h"
+#include "../xrUICore/ui_base.h"
+#include "../../xrEngine/string_table.h"
+
+bool InitDragDropListEx(CXml& xml_doc, LPCSTR path, int index, CUIDragDropListEx* pWnd)
+{
+	R_ASSERT4(xml_doc.NavigateToNode(path, index), "XML node not found", path, xml_doc.m_xml_file_name);
+
+	Fvector2 pos, size;
+	pos.x = xml_doc.ReadAttribFlt(path, index, "x");
+	pos.y = xml_doc.ReadAttribFlt(path, index, "y");
+	size.x = xml_doc.ReadAttribFlt(path, index, "width");
+	size.y = xml_doc.ReadAttribFlt(path, index, "height");
+
+	CUIXmlInit::InitAlignment(xml_doc, path, index, pos.x, pos.y, pWnd);
+
+	pWnd->InitDragDropList(pos, size);
+
+	Ivector2 w_cell_sz, w_cells, w_cell_sp;
+
+	w_cell_sz.x = xml_doc.ReadAttribInt(path, index, "cell_width");
+	w_cell_sz.y = xml_doc.ReadAttribInt(path, index, "cell_height");
+	w_cells.y = xml_doc.ReadAttribInt(path, index, "rows_num");
+	w_cells.x = xml_doc.ReadAttribInt(path, index, "cols_num");
+
+	w_cell_sp.x = xml_doc.ReadAttribInt(path, index, "cell_sp_x");
+	w_cell_sp.y = xml_doc.ReadAttribInt(path, index, "cell_sp_y");
+
+	pWnd->SetCellSize(w_cell_sz);
+	pWnd->SetCellsSpacing(w_cell_sp);
+	pWnd->SetStartCellsCapacity(w_cells);
+
+	int tmp = xml_doc.ReadAttribInt(path, index, "unlimited", 0);
+	pWnd->SetAutoGrow(tmp != 0);
+	tmp = xml_doc.ReadAttribInt(path, index, "group_similar", 0);
+	pWnd->SetGrouping(tmp != 0);
+	tmp = xml_doc.ReadAttribInt(path, index, "custom_placement", 1);
+	pWnd->SetCustomPlacement(tmp != 0);
+
+	tmp = xml_doc.ReadAttribInt(path, index, "vertical_placement", 0);
+	pWnd->SetVerticalPlacement(tmp != 0);
+
+	tmp = xml_doc.ReadAttribInt(path, index, "always_show_scroll", 0);
+	pWnd->SetAlwaysShowScroll(tmp != 0);
+
+	tmp = xml_doc.ReadAttribInt(path, index, "condition_progress_bar", 0);
+	pWnd->SetConditionProgBarVisibility(tmp != 0);
+
+	tmp = xml_doc.ReadAttribInt(path, index, "virtual_cells", 0);
+	pWnd->SetVirtualCells(tmp != 0);
+
+	if (tmp != 0)
+	{
+		xr_string vc_vert_align = xml_doc.ReadAttrib(path, index, "vc_vert_align", "");
+		pWnd->SetCellsVertAlignment(vc_vert_align);
+		xr_string vc_horiz_align = xml_doc.ReadAttrib(path, index, "vc_horiz_align", "");
+		pWnd->SetCellsHorizAlignment(vc_horiz_align);
+	}
+
+	pWnd->back_color = CUIXmlInit::GetColor(xml_doc, path, index, 0xFFFFFFFF);
+
+	return true;
+}
+
+CUIDragDropReferenceList* CreateDragDropReferenceList(CXml& xml, LPCSTR ui_path, CUIWindow* parent)
+{
+	CUIDragDropReferenceList* pDragDrop = new CUIDragDropReferenceList();
+	parent->AttachChild(pDragDrop);
+	pDragDrop->SetAutoDelete(true);
+	InitDragDropListEx(xml, ui_path, 0, pDragDrop);
+	return pDragDrop;
+}
+
+CUIDragDropListEx* CreateDragDropListEx(CXml& xml, LPCSTR ui_path, CUIWindow* parent)
+{
+	CUIDragDropListEx* pDragDrop = new CUIDragDropListEx();
+
+	parent->AttachChild(pDragDrop);
+	pDragDrop->SetAutoDelete(true);
+	InitDragDropListEx(xml, ui_path, 0, pDragDrop);
+	return pDragDrop;
+}
 
 CUIActorMenu::CUIActorMenu()
 {
@@ -103,6 +182,8 @@ void CUIActorMenu::Construct()
     m_KnifeSlotHighlight        ->Show(false);
     m_BinocularSlotHighlight    = UIHelper::CreateStatic(uiXml, "binocular_slot_highlight", this);
     m_BinocularSlotHighlight    ->Show(false);
+    m_TorchSlotHighlight        = UIHelper::CreateStatic(uiXml, "torch_slot_highlight", this);
+    m_TorchSlotHighlight        ->Show(false);
 
     if (g_extraFeatures.is(GAME_EXTRA_RUCK))
     {
@@ -165,31 +246,35 @@ void CUIActorMenu::Construct()
 		m_ArtefactSlotsHighlight[i]	->Show(false);
 	}
 
-	m_pInventoryBagList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_bag", this);
-	m_pInventoryBeltList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_belt", this);
-	m_pInventoryOutfitList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_outfit", this);
-	m_pInventoryHelmetList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_helmet", this);
-	m_pInventoryDetectorList	= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_detector", this);
-	m_pInventoryPistolList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_pistol", this);
-	m_pInventoryAutomaticList	= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_automatic", this);
+	m_pInventoryBagList			= CreateDragDropListEx(uiXml, "dragdrop_bag", this);
+	m_pInventoryBeltList		= CreateDragDropListEx(uiXml, "dragdrop_belt", this);
+	m_pInventoryOutfitList		= CreateDragDropListEx(uiXml, "dragdrop_outfit", this);
+	m_pInventoryHelmetList		= CreateDragDropListEx(uiXml, "dragdrop_helmet", this);
+	m_pInventoryDetectorList	= CreateDragDropListEx(uiXml, "dragdrop_detector", this);
+	m_pInventoryPistolList		= CreateDragDropListEx(uiXml, "dragdrop_pistol", this);
+	m_pInventoryAutomaticList	= CreateDragDropListEx(uiXml, "dragdrop_automatic", this);
 
     if (g_extraFeatures.is(GAME_EXTRA_RUCK))
     {
-        m_pInventoryRuckList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_ruck", this);
+        m_pInventoryRuckList = CreateDragDropListEx(uiXml, "dragdrop_ruck", this);
     }
+	else
+	{
+		m_pInventoryRuckList = nullptr;
+	}
 
-    m_pInventoryKnifeList       = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_knife", this);
-    m_pInventoryBinocularList   = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_binocular", this);
-
-	m_pTradeActorBagList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade_bag", this);
-	m_pTradeActorList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade", this);
-	m_pTradePartnerBagList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_partner_bag", this);
-	m_pTradePartnerList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_partner_trade", this);
-	m_pDeadBodyBagList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_deadbody_bag", this);
-	m_pQuickSlot				= UIHelper::CreateDragDropReferenceList(uiXml, "dragdrop_quick_slots", this);
+    m_pInventoryKnifeList       = CreateDragDropListEx(uiXml, "dragdrop_knife", this);
+    m_pInventoryBinocularList   = CreateDragDropListEx(uiXml, "dragdrop_binocular", this);
+    m_pInventoryTorchList       = CreateDragDropListEx(uiXml, "dragdrop_torch", this);
+	m_pTradeActorBagList		= CreateDragDropListEx(uiXml, "dragdrop_actor_trade_bag", this);
+	m_pTradeActorList			= CreateDragDropListEx(uiXml, "dragdrop_actor_trade", this);
+	m_pTradePartnerBagList		= CreateDragDropListEx(uiXml, "dragdrop_partner_bag", this);
+	m_pTradePartnerList			= CreateDragDropListEx(uiXml, "dragdrop_partner_trade", this);
+	m_pDeadBodyBagList			= CreateDragDropListEx(uiXml, "dragdrop_deadbody_bag", this);
+	m_pQuickSlot				= CreateDragDropReferenceList(uiXml, "dragdrop_quick_slots", this);
 	m_pQuickSlot->Initialize	();
 
-	m_pTrashList				= UIHelper::CreateDragDropListEx		(uiXml, "dragdrop_trash", this);
+	m_pTrashList				= CreateDragDropListEx		(uiXml, "dragdrop_trash", this);
 	m_pTrashList->m_f_item_drop	= CUIDragDropListEx::DRAG_CELL_EVENT	(this,&CUIActorMenu::OnItemDrop);
 	m_pTrashList->m_f_drag_event= CUIDragDropListEx::DRAG_ITEM_EVENT	(this,&CUIActorMenu::OnDragItemOnTrash);
 
@@ -286,6 +371,7 @@ void CUIActorMenu::Construct()
 	
     BindDragDropListEvents              (m_pInventoryKnifeList);
     BindDragDropListEvents              (m_pInventoryBinocularList);
+    BindDragDropListEvents              (m_pInventoryTorchList);
 
     if (g_extraFeatures.is(GAME_EXTRA_RUCK))
     {

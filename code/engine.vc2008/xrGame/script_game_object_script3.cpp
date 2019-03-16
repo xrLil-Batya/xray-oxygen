@@ -8,6 +8,7 @@
 #include "stdafx.h"
 #pragma warning(push)
 #pragma warning(disable: 4275)
+#include "luabind/luabind.hpp"
 #include "script_game_object.h"
 #include "alife_space.h"
 #include "script_entity_space.h"
@@ -32,9 +33,14 @@
 #include "car.h"
 #include "ZoneCampfire.h"
 #include "physicobject.h"
-#include "artefact.h"
+#include "items/Artefact.h"
 #pragma warning(pop)
 
+#include "../../SDK/include/luabind/iterator_policy.hpp"
+#include "../../SDK/include/luabind/adopt_policy.hpp"
+#include "../../SDK/include/luabind/out_value_policy.hpp"
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 class_<CScriptGameObject> script_register_game_object2(class_<CScriptGameObject> &&instance)

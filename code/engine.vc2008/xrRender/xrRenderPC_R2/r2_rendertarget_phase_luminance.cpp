@@ -113,7 +113,7 @@ void	CRenderTarget::phase_luminance()
 		RCache.Vertex.Unlock		(4,g_bloom_filter->vb_stride);
 
 		f_luminance_adapt			= .9f*f_luminance_adapt + .1f*Device.fTimeDelta*ps_r_tonemap_adaptation;
-		float		amount			= ps_r_flags.test(R_FLAG_TONEMAP)?ps_r_tonemap_amount:0;
+		float		amount			= ps_r_postscreen_flags.test(R_FLAG_TONEMAP)?ps_r_tonemap_amount:0;
 		Fvector3	_none, _full, _result;
 				_none.set			(1,							0,		1						);
 				_full.set			(ps_r_tonemap_middlegray,	1.f,	ps_r_tonemap_low_lum	);

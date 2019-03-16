@@ -5,11 +5,8 @@
 //	Author		: Evgeniy Sokolov, Prishchepa Sergey
 //	Description : inventory upgrade UI window class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef UI_INVENTORY_UPGRADE_WND_H_INCLUDED
-#define UI_INVENTORY_UPGRADE_WND_H_INCLUDED
-
-#include "UIStatic.h"
+#pragma once
+#include "../xrUICore/UIStatic.h"
 #include "UIInvUpgrade.h"
 
 extern const LPCSTR g_inventory_upgrade_xml;
@@ -107,5 +104,3 @@ public:
 	ui_shader*				m_OutfitIconsShader;
 
 }; // class CUIInventoryUpgradeWnd
-
-#endif // UI_INVENTORY_UPGRADE_WND_H_INCLUDED

@@ -2,10 +2,7 @@
 #pragma hdrstop
 
 #include "../xrRender/ResourceManager.h"
-
 #include "../xrRender/dxRenderDeviceRender.h"
-
-#include "dx10TextureUtils.h"
 
 CRT::CRT			()
 {
@@ -17,7 +14,7 @@ CRT::CRT			()
 #endif
 	dwWidth			= 0;
 	dwHeight		= 0;
-	fmt				= D3DFMT_UNKNOWN;
+	fmt				= DXGI_FORMAT_UNKNOWN;
 }
 CRT::~CRT			()
 {
@@ -28,7 +25,7 @@ CRT::~CRT			()
 }
 
 #ifdef USE_DX11
-void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount, bool useUAV )
+void CRT::create	(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 SampleCount, bool useUAV )
 #else
 void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 #endif
@@ -48,25 +45,20 @@ void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 
 	// Select usage
 	u32 usage	= 0;
-	if (D3DFMT_D24X8==fmt)									usage = D3DUSAGE_DEPTHSTENCIL;
-	else if (D3DFMT_D24S8		==fmt)						usage = D3DUSAGE_DEPTHSTENCIL;
-	else if (D3DFMT_D15S1		==fmt)						usage = D3DUSAGE_DEPTHSTENCIL;
-	else if (D3DFMT_D16			==fmt)						usage = D3DUSAGE_DEPTHSTENCIL;
-	else if (D3DFMT_D16_LOCKABLE==fmt)						usage = D3DUSAGE_DEPTHSTENCIL;
-	else if (D3DFMT_D32F_LOCKABLE==fmt)						usage = D3DUSAGE_DEPTHSTENCIL;
+	if (DXGI_FORMAT_R24G8_TYPELESS ==fmt)					usage = D3DUSAGE_DEPTHSTENCIL;
+	else if (DXGI_FORMAT_D24_UNORM_S8_UINT ==fmt)			usage = D3DUSAGE_DEPTHSTENCIL;
+	else if (DXGI_FORMAT_D16_UNORM ==fmt)					usage = D3DUSAGE_DEPTHSTENCIL;
+	else if (DXGI_FORMAT_D32_FLOAT_S8X24_UINT ==fmt)		usage = D3DUSAGE_DEPTHSTENCIL;
+	else if (DXGI_FORMAT_R16_TYPELESS ==fmt)				usage = D3DUSAGE_DEPTHSTENCIL;
+	else if (DXGI_FORMAT_R32_TYPELESS ==fmt)				usage = D3DUSAGE_DEPTHSTENCIL;
 	else if ((D3DFORMAT)MAKEFOURCC('D','F','2','4') == fmt)	usage = D3DUSAGE_DEPTHSTENCIL;
 	else													usage = D3DUSAGE_RENDERTARGET;
 
-
-	DXGI_FORMAT dx10FMT;
-   
-   if( fmt != D3DFMT_D24S8 )
-      dx10FMT = dx10TextureUtils::ConvertTextureFormat(fmt);
-   else
-      {
-      dx10FMT = DXGI_FORMAT_R24G8_TYPELESS;
-      usage = D3DUSAGE_DEPTHSTENCIL;
-      }
+	if (fmt == DXGI_FORMAT_D24_UNORM_S8_UINT)
+	{
+		fmt = DXGI_FORMAT_R24G8_TYPELESS;
+		usage = D3DUSAGE_DEPTHSTENCIL;
+	}
 
 	bool	bUseAsDepth = (usage == D3DUSAGE_RENDERTARGET)?false:true;
 
@@ -79,7 +71,7 @@ void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 	desc.Height = dwHeight;
 	desc.MipLevels = 1;
 	desc.ArraySize = 1;
-	desc.Format = dx10FMT;
+	desc.Format = fmt;
 	desc.SampleDesc.Count = SampleCount;
 	desc.Usage = D3D_USAGE_DEFAULT;
    if( SampleCount <= 1 )
@@ -102,7 +94,7 @@ void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 	HW.stats_manager.increment_stats_rtarget( pSurface );
 	// OK
 #ifdef DEBUG
-	Msg			("* created RT(%s), %dx%d, format = %d samples = %d",Name,w,h, dx10FMT, SampleCount );
+	Msg			("* created RT(%s), %dx%d, format = %x samples = %d",Name,w,h, f, SampleCount );
 #endif // DEBUG
 
 	if (bUseAsDepth)
@@ -142,7 +134,7 @@ void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
     {
 	    D3D11_UNORDERED_ACCESS_VIEW_DESC UAVDesc;
         std::memset( &UAVDesc, 0, sizeof( D3D11_UNORDERED_ACCESS_VIEW_DESC ) );
-		UAVDesc.Format = dx10FMT;
+		UAVDesc.Format = fmt;
 		UAVDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
 		UAVDesc.Buffer.FirstElement = 0;
 		UAVDesc.Buffer.NumElements = dwWidth * dwHeight;
@@ -179,7 +171,7 @@ void CRT::reset_end		()
 }
 
 #ifdef USE_DX11
-void resptrcode_crt::create(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount, bool useUAV )
+void resptrcode_crt::create(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 SampleCount, bool useUAV )
 {
 	_set			(DEV->_CreateRT(Name,w,h,f, SampleCount, useUAV ));
 }

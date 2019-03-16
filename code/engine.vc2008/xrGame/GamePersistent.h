@@ -20,10 +20,14 @@ enum OxygenExtraFeatures : size_t
     GAME_EXTRA_POLTER_SHOW_PARTICLES_ON_DEAD    = (1 << 6),
     GAME_EXTRA_SOC_WND                          = (1 << 7),
     GAME_EXTRA_VERTICAL_BELTS                   = (1 << 8),
+	GAME_EXTRA_THIRST							= (1 << 9),
+	GAME_EXTRA_NPC_GRENADE_ATTAK_ALL			= (1 << 10),
+	GAME_EXTRA_OLD_SCHOOL_MINIMAP				= (1 << 11),
+	GAME_EXTRA_LAMP_IMMUNITY_SUPPORT			= (1 << 12),
 };
 extern Flags32 g_extraFeatures;
 
-class CGamePersistent: public IGame_Persistent, public IEventReceiver
+class GAME_API CGamePersistent: public IGame_Persistent, public IEventReceiver
 {
 	// ambient particles
 	CParticlesObject*	ambient_particles; 
@@ -38,6 +42,7 @@ class CGamePersistent: public IGame_Persistent, public IEventReceiver
 	bool				ambient_effect_wind_on;
 
 	bool				m_bPickableDOF;
+    bool                m_developerMode;
 
 	CUISequencer*		m_intro;
 	EVENT				eQuickLoad;
@@ -47,21 +52,19 @@ class CGamePersistent: public IGame_Persistent, public IEventReceiver
     shared_str					m_ServerOptions;
     shared_str					m_ClientOptions;
 
-	fastdelegate::FastDelegate0<> m_intro_event;
+	xrDelegate<void()>			m_intro_event;
 
-	void xr_stdcall		start_logo_intro		();
-	void xr_stdcall		update_logo_intro		();
+	void 		start_logo_intro		();
+	void 		update_logo_intro		();
 
-	void xr_stdcall		game_loaded				();
-	void xr_stdcall		update_game_loaded		();
+	void 		game_loaded				();
+	void 		update_game_loaded		();
 
-	void xr_stdcall		start_game_intro		();
-	void xr_stdcall		update_game_intro		();
+	void 		start_game_intro		();
+	void 		update_game_intro		();
 
-#ifdef DEBUG
 	u32					m_frame_counter;
 	u32					m_last_stats_frame;
-#endif
 
 	void				WeathersUpdate			();
 	void				UpdateDof				();
@@ -69,10 +72,6 @@ class CGamePersistent: public IGame_Persistent, public IEventReceiver
 public:
 	ui_core*			m_pUI_core;
 	u32					uTime2Change;
-
-    //#REFACTOR: [Giperion] enable thirst only if we want to
-    bool                m_useThirst;
-
 
 						CGamePersistent			();
 	virtual				~CGamePersistent		();
@@ -117,6 +116,8 @@ public:
     shared_str          GetClientOption() const;
     void                SetServerOption(const char* str);
     void                SetClientOption(const char* str);
+
+    bool                IsDeveloperMode() const;
 };
 
 IC CGamePersistent&		GamePersistent()		{ return *((CGamePersistent*) g_pGamePersistent); }

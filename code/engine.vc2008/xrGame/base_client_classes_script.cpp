@@ -10,120 +10,73 @@
 #include "base_client_classes.h"
 #include "base_client_classes_wrappers.h"
 #include "../xrEngine/feel_sound.h"
-//#include "../Include/xrRender/RenderVisual.h"
 #include "../Include/xrRender/RenderVisual.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "ai/stalker/ai_stalker.h"
+#include "patrol_path.h"
+#include "patrol_point.h"
+#include <luabind/luabind.hpp>
 
 using namespace luabind;
 
-#pragma optimize("s",on)
-void DLL_PureScript::script_register	(lua_State *L)
+#pragma optimize("gyts",on)
+void DLL_PureScript::script_register(lua_State *L)
 {
-	module(L)
-	[
-		class_<DLL_Pure,CDLL_PureWrapper>("DLL_Pure")
+	module(L)[
+		class_<DLL_Pure, CDLL_PureWrapper>("DLL_Pure")
 			.def(constructor<>())
-			.def("_construct",&DLL_Pure::_construct,&CDLL_PureWrapper::_construct_static)
+			.def("_construct", &DLL_Pure::_construct, &CDLL_PureWrapper::_construct_static)
 	];
 }
 
-/*
-void ISpatialScript::script_register	(lua_State *L)
+void ISheduledScript::script_register(lua_State *L)
 {
-	module(L)
-	[
-		class_<ISpatial,CISpatialWrapper>("ISpatial")
-			.def(constructor<>())
-			.def("spatial_register",	&ISpatial::spatial_register,	&CISpatialWrapper::spatial_register_static)
-			.def("spatial_unregister",	&ISpatial::spatial_unregister,	&CISpatialWrapper::spatial_unregister_static)
-			.def("spatial_move",		&ISpatial::spatial_move,		&CISpatialWrapper::spatial_move_static)
-			.def("spatial_sector_point",&ISpatial::spatial_sector_point,&CISpatialWrapper::spatial_sector_point_static)
-			.def("dcast_CObject",		&ISpatial::dcast_CObject,		&CISpatialWrapper::dcast_CObject_static)
-			.def("dcast_FeelSound",		&ISpatial::dcast_FeelSound,		&CISpatialWrapper::dcast_FeelSound_static)
-			.def("dcast_Renderable",	&ISpatial::dcast_Renderable,	&CISpatialWrapper::dcast_Renderable_static)
-			.def("dcast_Light",			&ISpatial::dcast_Light,			&CISpatialWrapper::dcast_Light_static)
-	];
-}
-*/
-
-void ISheduledScript::script_register	(lua_State *L)
-{
-	module(L)
-	[
-		class_<ISheduled,CISheduledWrapper>("ISheduled")
-//			.def(constructor<>())
-//			.def("shedule_Scale",		&ISheduled::shedule_Scale,		&CISheduledWrapper::shedule_Scale_static)
-//			.def("shedule_Update",		&ISheduled::shedule_Update,		&CISheduledWrapper::shedule_Update_static)
+	module(L)[
+		class_<ISheduled, CISheduledWrapper>("ISheduled")
 	];
 }
 
-void IRenderableScript::script_register	(lua_State *L)
+void IRenderableScript::script_register(lua_State *L)
 {
-	module(L)
-	[
-		class_<IRenderable,CIRenderableWrapper>("IRenderable")
-//			.def(constructor<>())
-//			.def("renderable_Render",&IRenderable::renderable_Render,&CIRenderableWrapper::renderable_Render_static)
-//			.def("renderable_ShadowGenerate",&IRenderable::renderable_ShadowGenerate,&CIRenderableWrapper::renderable_ShadowGenerate_static)
-//			.def("renderable_ShadowReceive",&IRenderable::renderable_ShadowReceive,&CIRenderableWrapper::renderable_ShadowReceive_static)
+	module(L)[
+		class_<IRenderable, CIRenderableWrapper>("IRenderable")
 	];
 }
 
-void ICollidableScript::script_register	(lua_State *L)
+void ICollidableScript::script_register(lua_State *L)
 {
-	module(L)
-	[
+	module(L)[
 		class_<ICollidable>("ICollidable")
 			.def(constructor<>())
 	];
 }
 
-void CObjectScript::script_register		(lua_State *L)
+void CObjectScript::script_register(lua_State *L)
 {
-	module(L)
-	[
-//		class_<CObject,bases<DLL_Pure,ISheduled,ICollidable,IRenderable>,CObjectWrapper>("CObject")
-//			.def(constructor<>())
-//			.def("_construct",			&CObject::_construct,&CObjectWrapper::_construct_static)
-/*			
-			.def("spatial_register",	&CObject::spatial_register,	&CObjectWrapper::spatial_register_static)
-			.def("spatial_unregister",	&CObject::spatial_unregister,	&CObjectWrapper::spatial_unregister_static)
-			.def("spatial_move",		&CObject::spatial_move,		&CObjectWrapper::spatial_move_static)
-			.def("spatial_sector_point",&CObject::spatial_sector_point,&CObjectWrapper::spatial_sector_point_static)
-			.def("dcast_FeelSound",		&CObject::dcast_FeelSound,		&CObjectWrapper::dcast_FeelSound_static)
-			.def("dcast_Light",			&CObject::dcast_Light,			&CObjectWrapper::dcast_Light_static)
-*/			
-//			.def("shedule_Scale",		&CObject::shedule_Scale,		&CObjectWrapper::shedule_Scale_static)
-//			.def("shedule_Update",		&CObject::shedule_Update,		&CObjectWrapper::shedule_Update_static)
-
-//			.def("renderable_Render"		,&CObject::renderable_Render,&CObjectWrapper::renderable_Render_static)
-//			.def("renderable_ShadowGenerate",&CObject::renderable_ShadowGenerate,&CObjectWrapper::renderable_ShadowGenerate_static)
-//			.def("renderable_ShadowReceive",&CObject::renderable_ShadowReceive,&CObjectWrapper::renderable_ShadowReceive_static)
-//			.def("Visual",					&CObject::Visual)
-
-		class_<CGameObject,bases<DLL_Pure,ISheduled,ICollidable,IRenderable>,CGameObjectWrapper>("CGameObject")
+	module(L)[
+		class_<CGameObject, bases<DLL_Pure, ISheduled, ICollidable, IRenderable>, CGameObjectWrapper>("CGameObject")
 			.def(constructor<>())
-			.def("_construct",			&CGameObject::_construct,&CGameObjectWrapper::_construct_static)
-			.def("Visual",				&CGameObject::Visual)
+			.def("_construct", &CGameObject::_construct, &CGameObjectWrapper::_construct_static)
+			.def("Visual", &CGameObject::Visual)
 
-			.def("net_Export",			&CGameObject::net_Export,		&CGameObjectWrapper::net_Export_static)
-			.def("net_Spawn",			&CGameObject::net_Spawn,	&CGameObjectWrapper::net_Spawn_static)
+			.def("net_Export", &CGameObject::net_Export, &CGameObjectWrapper::net_Export_static)
+			.def("net_Spawn", &CGameObject::net_Spawn, &CGameObjectWrapper::net_Spawn_static)
 
-			.def("use",					&CGameObject::use,	&CGameObjectWrapper::use_static)
+			.def("use", &CGameObject::use, &CGameObjectWrapper::use_static)
 
-			.def("getVisible",			&CGameObject::getVisible)
-			.def("getEnabled",			&CGameObject::getEnabled)
+			.def("getVisible", &CGameObject::getVisible)
+			.def("setVisible", &CGameObject::setVisible)
+			.def("getEnabled", &CGameObject::getEnabled)
+			.def("setEnabled", &CGameObject::setEnabled)
 	];
 }
 
-void IRender_VisualScript::script_register		(lua_State *L)
+void IRender_VisualScript::script_register(lua_State *L)
 {
-	module(L)
-	[
+	module(L)[
 		class_<IRenderVisual>("IRender_Visual")
-//			.def(constructor<>())
-			.def("dcast_PKinematicsAnimated",&IRenderVisual::dcast_PKinematicsAnimated)
+			//.def(constructor<>())
+			.def("dcast_PKinematicsAnimated", &IRenderVisual::dcast_PKinematicsAnimated)
 	];
 }
 
@@ -132,20 +85,50 @@ void IKinematicsAnimated_PlayCycle(IKinematicsAnimated* sa, LPCSTR anim)
 	sa->PlayCycle(anim);
 }
 
-void IKinematicsAnimatedScript::script_register		(lua_State *L)
+void IKinematicsAnimatedScript::script_register(lua_State *L)
 {
-	module(L)
-	[
+	module(L)[
 		class_<IKinematicsAnimated>("IKinematicsAnimated")
-			.def("PlayCycle",		&IKinematicsAnimated_PlayCycle)
+			.def("PlayCycle", &IKinematicsAnimated_PlayCycle)
 	];
 }
 
-void CBlendScript::script_register		(lua_State *L)
+void CBlendScript::script_register(lua_State *L)
 {
-	module(L)
-		[
-			class_<CBlend>("CBlend")
-			//			.def(constructor<>())
-		];
+	module(L)[
+		class_<CBlend>("CBlend")
+			//.def(constructor<>())
+	];
+}
+
+LPCSTR CPatrolPointScript::getName(CPatrolPoint *pp) {
+	return pp->m_name.c_str();
+}
+void CPatrolPointScript::setName(CPatrolPoint *pp, LPCSTR str) {
+	pp->m_name = shared_str(str);
+}
+
+void CPatrolPointScript::script_register(lua_State *L)
+{
+	module(L)[
+		class_<CPatrolPoint>("CPatrolPoint")
+			.def(constructor<>())
+			.def_readwrite("m_position", &CPatrolPoint::m_position)
+			.def_readwrite("m_flags", &CPatrolPoint::m_flags)
+			.def_readwrite("m_level_vertex_id", &CPatrolPoint::m_level_vertex_id)
+			.def_readwrite("m_game_vertex_id", &CPatrolPoint::m_game_vertex_id)
+			.property("m_name", &CPatrolPointScript::getName, &CPatrolPointScript::setName)
+			.def("position", (CPatrolPoint& (CPatrolPoint::*) (Fvector)) (&CPatrolPoint::position))
+	];
+}
+
+void CPatrolPathScript::script_register(lua_State *L)
+{
+	module(L)[
+		class_<CPatrolPath>("CPatrolPath")
+			.def(constructor<>())
+			.def("add_point", &CPatrolPath::add_point)
+			.def("point", (CPatrolPoint(CPatrolPath::*) (u32)) (&CPatrolPath::point))
+			.def("add_vertex", &CPatrolPath::add_vertex)
+	];
 }

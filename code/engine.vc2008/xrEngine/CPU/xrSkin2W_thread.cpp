@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "xrCPU_Pipe.h"
-#include "../xrCore/threadpool/ttapi.h"
-#pragma hdrstop
+#include "tbb/task.h"
+#include "tbb/task_group.h"
 
 extern xrSkin4W xrSkin4W_x86;
 
@@ -13,10 +13,8 @@ struct SKIN_PARAMS
 	LPVOID Data;
 };
 
-void Skin4W_Stream(LPVOID lpvParams)
+void Skin4W_Stream(SKIN_PARAMS* sp)
 {
-	SKIN_PARAMS* sp = (SKIN_PARAMS*)lpvParams;
-
 	vertRender*		D = (vertRender*)sp->Dest;
 	vertBoned4W*	S = (vertBoned4W*)sp->Src;
 	u32				vCount = sp->Count;
@@ -27,33 +25,38 @@ void Skin4W_Stream(LPVOID lpvParams)
 
 void ENGINE_API xrSkin4W_thread(vertRender* D, vertBoned4W* S, u32 vCount, CBoneInstance* Bones)
 {
-	u32 nWorkers = (u32)ttapi_GetWorkersCount();
-
-	if (vCount < (nWorkers * 64)) 
+	if (vCount < 16) 
 	{
 		xrSkin4W_x86(D, S, vCount, Bones);
 		return;
 	}
 
-	SKIN_PARAMS* sknParams = (SKIN_PARAMS*)_alloca(sizeof(SKIN_PARAMS) * nWorkers);
+	tbb::task_group SkinningTasks;
+
+	constexpr size_t SkinParamSize = 64;
+	SKIN_PARAMS sknParams[SkinParamSize];
+	u32 WorkerCounts = CPU::Info.n_threads;
+	R_ASSERT(SkinParamSize > WorkerCounts);
 
 	// Give ~1% more for the last worker
 	// to minimize wait in final spin
-	u32 nSlice = vCount / 128;
+	u32 nSlice = vCount / 32;
 
-	u32 nStep = ((vCount - nSlice) / nWorkers);
-	u32 nLast = vCount - nStep * (nWorkers - 1);
-
-	for (u32 i = 0; i < nWorkers; ++i) 
+	u32 nStep = ((vCount - nSlice) / WorkerCounts);
+	u32 nLast = vCount - nStep * (WorkerCounts - 1);
+	for (u32 i = 0; i < WorkerCounts; ++i)
 	{
 		sknParams[i].Dest = (void*)(D + i * nStep);
 		sknParams[i].Src = (void*)(S + i * nStep);
-		sknParams[i].Count = (i == (nWorkers - 1)) ? nLast : nStep;
+		sknParams[i].Count = (i == (WorkerCounts - 1)) ? nLast : nStep;
 		sknParams[i].Data = (void*)Bones;
 
-		ttapi_AddTask(Skin4W_Stream, (void*)&sknParams[i]);
+		SkinningTasks.run([&sknParams, i]()
+		{
+			Skin4W_Stream(&sknParams[i]);
+		});
 	}
 
-	ttapi_RunAllWorkers();
+	SkinningTasks.wait();
 }
 

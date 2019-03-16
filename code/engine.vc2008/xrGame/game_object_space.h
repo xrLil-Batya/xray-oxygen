@@ -1,5 +1,7 @@
 #pragma once
 
+//xrManagedGameLib/API/GameObjectCallback.h
+
 namespace GameObject {
 	enum ECallbackType {
 		eTradeStart = u32(0),
@@ -15,7 +17,6 @@ namespace GameObject {
 
 		ePatrolPathInPoint,
 
-		eInventoryPda,
 		eInventoryInfo,
 		eArticleInfo,
 		eTaskStateChange,
@@ -52,9 +53,9 @@ namespace GameObject {
 		eInvBoxItemTake,
 		eWeaponNoAmmoAvailable,
 
-		eOnKeyPress, 
-		eOnKeyRelease,
-		eOnKeyHold,
+		eOnActionPress,
+		eOnActionRelease,
+		eOnActionHold,
 
 		eDummy = u32(-1),
 	};

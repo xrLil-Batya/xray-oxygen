@@ -6,6 +6,7 @@
 #define ECORE_API
 
 #include "../xrCore/xrCore.h"
+#include "../xrCore/xrDelegate/xrDelegate.h"
 #include "../xrServerEntities/smart_cast.h"
 #include "../xrcdb/xrcdb.h"
 #include "../xrsound/sound.h"
@@ -14,6 +15,7 @@
 #endif
 #include "xrPhysics.h"
 #include "../xrCore/xrapi.h"
+#include "../xrGame/xrGame.h"
 
 #include "d3d9types.h"
 

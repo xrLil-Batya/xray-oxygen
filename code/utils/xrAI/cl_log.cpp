@@ -5,7 +5,7 @@
 #include <mmsystem.h>
 
 //************************* Log-thread data
-static std::recursive_mutex	csLog;
+static xrCriticalSection	csLog;
 
 volatile BOOL				bClose				= FALSE;
 
@@ -68,7 +68,7 @@ std::string make_time	(u32 sec)
 
 void __cdecl Status	(const char *format, ...)
 {
-    std::lock_guard<decltype(csLog)> lock(csLog);
+	xrCriticalSectionGuard guard(csLog);
 	va_list				mark;
 	va_start			( mark, format );
 	vsprintf			( status, format, mark );
@@ -91,7 +91,8 @@ void Phase			(const char *phase_name)
 {
 	while (!(hwPhaseTime && hwStage)) Sleep(1);
 
-    std::lock_guard<decltype(csLog)> lock(csLog);
+	xrCriticalSectionGuard guard(csLog);
+
 	// Replace phase name with TIME:Name 
 	char	tbuf		[512];
 	bPhaseChange		= TRUE;
@@ -169,7 +170,7 @@ void logThread(void *dummy)
 		char tbuf		[256];
 
 		{
-            std::lock_guard<decltype(csLog)> lock(csLog);
+			xrCriticalSectionGuard guard(csLog);
             if (LogSize != LogFile->size())
             {
                 bWasChanges = TRUE;
@@ -238,7 +239,8 @@ void __cdecl clMsg( const char *format, ...)
 	va_start	( mark, format );
 	vsprintf	( buf, format, mark );
 
-    std::lock_guard<decltype(csLog)> lock(csLog);
+	xrCriticalSectionGuard guard(csLog);
+
 	string1024		_out_;
 	strconcat		(sizeof(_out_),_out_,"    |    | ", buf );   
 	Log				(_out_);

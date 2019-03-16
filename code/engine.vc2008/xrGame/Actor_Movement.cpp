@@ -1,17 +1,16 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 
-#include "actor.h"
+#include "Actor.h"
 #include "inventory.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "../xrEngine/CameraBase.h"
 #include "xrMessages.h"
 
 #include "level.h"
 #include "UIGame.h"
-#include "string_table.h"
-#include "actorcondition.h"
-#include "game_cl_base.h"
-#include "WeaponMagazined.h"
+#include "..\xrEngine\string_table.h"
+#include "ActorCondition.h"
+#include "items/WeaponMagazined.h"
 #include "CharacterPhysicsSupport.h"
 #include "actoreffector.h"
 #include "player_hud.h"
@@ -19,10 +18,10 @@
 #ifdef DEBUG
 #include "phdebug.h"
 #endif
-static const float	s_fLandingTime1		= 0.1f;// через сколько снять флаг Landing1 (т.е. включить следующую анимацию)
-static const float	s_fLandingTime2		= 0.3f;// через сколько снять флаг Landing2 (т.е. включить следующую анимацию)
+static const float	s_fLandingTime1		= 0.1f;// С‡РµСЂРµР· СЃРєРѕР»СЊРєРѕ СЃРЅСЏС‚СЊ С„Р»Р°Рі Landing1 (С‚.Рµ. РІРєР»СЋС‡РёС‚СЊ СЃР»РµРґСѓСЋС‰СѓСЋ Р°РЅРёРјР°С†РёСЋ)
+static const float	s_fLandingTime2		= 0.3f;// С‡РµСЂРµР· СЃРєРѕР»СЊРєРѕ СЃРЅСЏС‚СЊ С„Р»Р°Рі Landing2 (С‚.Рµ. РІРєР»СЋС‡РёС‚СЊ СЃР»РµРґСѓСЋС‰СѓСЋ Р°РЅРёРјР°С†РёСЋ)
 static const float	s_fJumpTime			= 0.3f;
-static const float	s_fJumpGroundTime	= 0.1f;	// для снятия флажка Jump если на земле
+static const float	s_fJumpGroundTime	= 0.1f;	// РґР»СЏ СЃРЅСЏС‚РёСЏ С„Р»Р°Р¶РєР° Jump РµСЃР»Рё РЅР° Р·РµРјР»Рµ
 	   const float	s_fFallTime			= 0.2f;
 
 IC static void generate_orthonormal_basis1(const Fvector& dir,Fvector& updir, Fvector& right)
@@ -55,7 +54,7 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 	if (mstate_real&(mcJump|mcFall|mcLanding|mcLanding2))
 		mstate_real		&= ~mcLookout;
 
-	// закончить приземление
+	// Р·Р°РєРѕРЅС‡РёС‚СЊ РїСЂРёР·РµРјР»РµРЅРёРµ
 	if (mstate_real&(mcLanding|mcLanding2)){
 		m_fLandingTime		-= dt;
 		if (m_fLandingTime<=0.f){
@@ -63,7 +62,7 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 			mstate_real		&=~	(mcFall|mcJump);
 		}
 	}
-	// закончить падение
+	// Р·Р°РєРѕРЅС‡РёС‚СЊ РїР°РґРµРЅРёРµ
 	if (character_physics_support()->movement()->gcontact_Was){
 		if (mstate_real&mcFall){
 			if (character_physics_support()->movement()->GetContactSpeed()>4.f){
@@ -83,14 +82,14 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 	if ((mstate_wf&mcJump)==0)	
 		m_bJumpKeyPressed	=	FALSE;
 
-	// Зажало-ли меня/уперся - не двигаюсь
+	// Р—Р°Р¶Р°Р»Рѕ-Р»Рё РјРµРЅСЏ/СѓРїРµСЂСЃСЏ - РЅРµ РґРІРёРіР°СЋСЃСЊ
 	if (((character_physics_support()->movement()->GetVelocityActual()<0.2f)&&(!(mstate_real&(mcFall|mcJump)))) || character_physics_support()->movement()->bSleep) 
 	{
 		mstate_real				&=~ mcAnyMove;
 	}
 	if (character_physics_support()->movement()->Environment()==CPHMovementControl::peOnGround || character_physics_support()->movement()->Environment()==CPHMovementControl::peAtWall)
 	{
-		// если на земле гарантированно снимать флажок Jump
+		// РµСЃР»Рё РЅР° Р·РµРјР»Рµ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕ СЃРЅРёРјР°С‚СЊ С„Р»Р°Р¶РѕРє Jump
 		if (((s_fJumpTime-m_fJumpTime)>s_fJumpGroundTime)&&(mstate_real&mcJump))
 		{
 			mstate_real			&=~	mcJump;
@@ -197,6 +196,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 		}
 		// jump
 		m_fJumpTime				-=	dt;
+		CWeapon* W = smart_cast<CWeapon*>(inventory().ActiveItem());
 
 		if( CanJump() && (mstate_wf&mcJump) )
 		{
@@ -206,7 +206,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			m_fJumpTime			= s_fJumpTime;
 
 
-			//уменьшить силу игрока из-за выполненого прыжка
+			//СѓРјРµРЅСЊС€РёС‚СЊ СЃРёР»Сѓ РёРіСЂРѕРєР° РёР·-Р·Р° РІС‹РїРѕР»РЅРµРЅРѕРіРѕ РїСЂС‹Р¶РєР°
 			if (!GodMode())
 				conditions().ConditionJump(inventory().TotalWeight() / MaxCarryWeight());
 		}
@@ -239,12 +239,18 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			mstate_real|=mcSprint;
 		else
 			mstate_real&=~mcSprint;
-		if(!(mstate_real&(mcFwd|mcLStrafe|mcRStrafe))||mstate_real&(mcCrouch|mcClimb)|| !isActorAccelerated(mstate_wf, IsZoomAimingMode()))
+		if (!(mstate_real&(mcFwd | mcLStrafe | mcRStrafe)) || mstate_real & (mcCrouch | mcClimb) || mstate_real & mcJump || !isActorAccelerated(mstate_wf, IsZoomAimingMode()) || W && W->GetState() == W->eFire)
 		{
 			mstate_real&=~mcSprint;
 			mstate_wishful&=~mcSprint;
 		}
 				
+		if (mstate_real & mcJump)
+		{
+			mstate_real &= ~mcFwd;
+			mstate_wishful &= ~mcFwd;
+		}
+
 		// check player move state
 		if(mstate_real&mcAnyMove)
 		{
@@ -290,7 +296,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 
 	if (cam_eff_factor > EPS)
 	{
-		LPCSTR state_anm = NULL;
+		LPCSTR state_anm = nullptr;
 
 		if (mstate_real&mcSprint && !(mstate_old&mcSprint))
 			state_anm = "sprint";
@@ -318,7 +324,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 				xr_sprintf(eff_name, sizeof(eff_name), "%s.anm", state_anm);
 				string_path			ce_path;
 				string_path			anm_name;
-				strconcat(sizeof(anm_name), anm_name, "camera_effects\\actor_move\\", eff_name);
+				xr_strconcat( anm_name, "camera_effects\\actor_move\\", eff_name);
 				if (FS.exist(ce_path, "$game_anims$", anm_name))
 				{
 					CAnimatorCamLerpEffectorConst* e = xr_new<CAnimatorCamLerpEffectorConst>();
@@ -342,8 +348,8 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 
 #define ACTOR_ANIM_SECT "actor_animation"
 
-#define ACTOR_LLOOKOUT_ANGLE	PI_DIV_4
-#define ACTOR_RLOOKOUT_ANGLE	PI_DIV_4
+#define ACTOR_LLOOKOUT_ANGLE	PI_DIV_4*1.2f
+#define ACTOR_RLOOKOUT_ANGLE	PI_DIV_4*1.2f
 
 void CActor::g_Orientate	(u32 mstate_rl, float dt)
 {
@@ -384,7 +390,7 @@ void CActor::g_Orientate	(u32 mstate_rl, float dt)
 	}
 
 	// lerp angle for "effect" and capture torso data from camera
-	angle_lerp		(r_model_yaw_delta,calc_yaw,PI_MUL_4,dt);
+	angle_lerp		(r_model_yaw_delta,calc_yaw,2,dt);
 
 	// build matrix
 	Fmatrix mXFORM;
@@ -404,7 +410,7 @@ void CActor::g_Orientate	(u32 mstate_rl, float dt)
 			tgt_roll	= 0.0f;
 	}
 	if (!fsimilar(tgt_roll,r_torso_tgt_roll,EPS)){
-		r_torso_tgt_roll = angle_inertion_var(r_torso_tgt_roll, tgt_roll, 0.f, CurrentHeight * PI_MUL_2, PI_DIV_2, dt);
+		r_torso_tgt_roll = angle_inertion_var(r_torso_tgt_roll, tgt_roll, 0.f, CurrentHeight * 9, PI_DIV_2, dt);
 		r_torso_tgt_roll = angle_normalize_signed(r_torso_tgt_roll);
 	}
 }
@@ -461,18 +467,13 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 		r_torso.yaw		=	cam_Active()->GetWorldYaw	();
 		r_torso.pitch	=	cam_Active()->GetWorldPitch	();
 	}
-	else
-	{
-		r_torso.yaw		=	cam_FirstEye()->GetWorldYaw	();
-		r_torso.pitch	=	cam_FirstEye()->GetWorldPitch	();
-	}
 
 	unaffected_r_torso.yaw		= r_torso.yaw;
 	unaffected_r_torso.pitch	= r_torso.pitch;
 	unaffected_r_torso.roll		= r_torso.roll;
 
 	CWeaponMagazined *pWM = smart_cast<CWeaponMagazined*>(inventory().GetActiveSlot() != NO_ACTIVE_SLOT ? 
-		inventory().ItemFromSlot(inventory().GetActiveSlot()) : NULL);
+		inventory().ItemFromSlot(inventory().GetActiveSlot()) : nullptr);
 	if (pWM && pWM->GetCurrentFireMode() == 1 && eacFirstEye != cam_active)
 	{
 		Fvector dangle = weapon_recoil_last_delta();
@@ -480,14 +481,14 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 		r_torso.pitch	=	unaffected_r_torso.pitch + dangle.x;
 	}
 	
-	// если есть движение - выровнять модель по камере
+	// РµСЃР»Рё РµСЃС‚СЊ РґРІРёР¶РµРЅРёРµ - РІС‹СЂРѕРІРЅСЏС‚СЊ РјРѕРґРµР»СЊ РїРѕ РєР°РјРµСЂРµ
 	if (mstate_rl&mcAnyMove)	{
 		r_model_yaw		= angle_normalize(r_torso.yaw);
 		mstate_real		&=~mcTurn;
 	} else {
 		// if camera rotated more than 45 degrees - align model with it
 		float ty = angle_normalize(r_torso.yaw);
-		if (_abs(r_model_yaw-ty)>PI_DIV_4-30)	{
+		if (_abs(r_model_yaw-ty)>PI_DIV_4-5)	{
 			r_model_yaw_dest = ty;
 			// 
 			mstate_real	|= mcTurn;
@@ -496,7 +497,7 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 			mstate_real	&=~mcTurn;
 		}
 		if (mstate_rl&mcTurn){
-			angle_lerp	(r_model_yaw,r_model_yaw_dest,PI_MUL_2,dt);
+			angle_lerp	(r_model_yaw,r_model_yaw_dest,15,dt);
 		}
 	}
 }
@@ -528,14 +529,14 @@ bool CActor::CanAccelerate()
 
 bool CActor::CanRun()
 {
-	bool can_run = !IsZoomAimingMode() && !(mstate_real&mcLookout);
+	bool can_run = !IsZoomAimingMode() && !(mstate_real & mcJump);
 	return can_run;
 }
 
 bool CActor::CanSprint()
 {
 	bool can_Sprint = CanAccelerate() && !conditions().IsCantSprint() && CanRun()
-						&& !(mstate_real&mcLStrafe || mstate_real&mcRStrafe) 
+						&& !(mstate_real&mcLStrafe || mstate_real&mcRStrafe || mstate_real & mcJump)
 		&& InventoryAllowSprint();
 
 	return can_Sprint && (m_block_sprint_counter<=0);
@@ -592,8 +593,8 @@ bool CActor::is_jump()
 	return ((mstate_real & (mcJump|mcFall|mcLanding|mcLanding2)) != 0);
 }
 
-//максимальный переносимы вес
-#include "CustomOutfit.h"
+//РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ РїРµСЂРµРЅРѕСЃРёРјС‹ РІРµСЃ
+#include "items/CustomOutfit.h"
 float CActor::MaxCarryWeight () const
 {
 	float res = inventory().GetMaxWeight();
@@ -608,7 +609,7 @@ float CActor::MaxWalkWeight() const
 	return max_w;
 }
 
-#include "artefact.h"
+#include "items/Artefact.h"
 #include "ActorRuck.h"
 
 float CActor::get_additional_weight() const

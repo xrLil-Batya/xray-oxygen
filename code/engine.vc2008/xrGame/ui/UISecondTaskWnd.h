@@ -5,8 +5,8 @@
 //	Description : UI Secondary Task Wnd class
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "UIWindow.h"
-#include "UIWndCallback.h"
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/UIWndCallback.h"
 
 #define PDA_TASK_XML	"pda_tasks.xml"
 
@@ -42,8 +42,8 @@ public:
 			void	UpdateList			();
 
 protected:
-	void xr_stdcall	OnBtnClose			( CUIWindow* w, void* d);
-	bool xr_stdcall	SortingLessFunction	( CUIWindow* left, CUIWindow* right );
+	void 	OnBtnClose			( CUIWindow* w, void* d);
+	bool 	SortingLessFunction	( CUIWindow* left, CUIWindow* right );
 
 public:
 	UIHint*				hint_wnd;

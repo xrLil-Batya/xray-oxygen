@@ -99,7 +99,7 @@ public:
 			ref_sound m_strange_sound;
 	
 	// Movement
-			Fvector m_current_position;		// Позиция на ноде
+			Fvector m_current_position;		// РџРѕР·РёС†РёСЏ РЅР° РЅРѕРґРµ
 
 	// Dynamic Height
 			u32		time_height_updated;
@@ -140,7 +140,7 @@ private:
 			float	get_detection_far_range				();
 			float	get_detection_speed_factor			();
 			float	get_detection_success_level			();
-			float   xr_stdcall get_post_process_factor	() const;
+			float    get_post_process_factor	() const;
 
 public:
 #ifdef DEBUG

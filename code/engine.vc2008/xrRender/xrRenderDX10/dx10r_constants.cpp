@@ -3,6 +3,7 @@
 
 #pragma warning(disable:4995)
 #include <d3dx9.h>
+#include <ppl.h>
 #pragma warning(default:4995)
 
 #include "../xrRender/ResourceManager.h"
@@ -249,7 +250,7 @@ IC u32 dest_to_shift_value(u32 destination)
 		return RC_dest_vertex_cb_index_shift;
 	case RC_dest_pixel:
 		return RC_dest_pixel_cb_index_shift;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	case RC_dest_geometry:
 		return RC_dest_geometry_cb_index_shift;
 #	ifdef USE_DX11
@@ -275,7 +276,7 @@ IC u32 dest_to_cbuf_type(u32 destination)
 		return CB_BufferVertexShader;
 	case RC_dest_pixel:
 		return CB_BufferPixelShader;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	case RC_dest_geometry:
 		return CB_BufferGeometryShader;
 #	ifdef USE_DX11
@@ -331,6 +332,6 @@ BOOL	R_constant_table::parse	(void* _desc, u32 destination)
 		parseResources(pReflection, ShaderDesc.BoundResources, destination);
 	}
 
-	std::sort	(table.begin(),table.end(),p_sort);
+	std::sort(table.begin(),table.end(),p_sort);
 	return		TRUE;
 }

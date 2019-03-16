@@ -8,7 +8,7 @@
 #include "../xrEngine/Effector.h"
 #include "../xrEngine/CameraManager.h"
 #include "../xrEngine/FDemoRecord.h"
-#include "ui_base.h"
+#include "../xrUICore/ui_base.h"
 #include "debug_renderer.h"
 
 u32 hud_adj_mode		= 0;
@@ -285,7 +285,7 @@ void hud_draw_adjust_mode()
 	if(!hud_adj_mode)
 		return;
 
-	LPCSTR _text = NULL;
+	LPCSTR _text = nullptr;
 	if(pInput->iGetAsyncKeyState(DIK_LSHIFT) && hud_adj_mode)
 		_text = "press SHIFT+NUM 0-return 1-hud_pos 2-hud_rot 3-itm_pos 4-itm_rot 5-fire_point 6-fire_2_point 7-shell_point 8-pos_step 9-rot_step";
 

@@ -33,19 +33,16 @@ FS_Path::FS_Path	(const char* _Root, const char* _Add, const char* _DefExt, cons
 	string_path		temp;
     xr_strcpy		(temp,sizeof(temp),_Root);
     //Giperion: fs_root can goes without trailing slash, add one, if we miss that on root
-    if (temp[0])
-    {
-        char lastCharOfTemp = temp[xr_strlen(temp) - 1];
-        if (lastCharOfTemp != '\\' && lastCharOfTemp != '/') xr_strcat(temp, "\\");
-    }
+	xr_string::FixSlashes(temp);
     //Giperion end
+
     if (_Add) 		xr_strcat(temp,_Add);
 	if (temp[0] && temp[xr_strlen(temp)-1]!='\\') xr_strcat(temp,"\\");
 	m_Path			= xr_strlwr(xr_strdup(temp));
-	m_DefExt		= _DefExt?xr_strlwr(xr_strdup(_DefExt)):0;
-	m_FilterCaption	= _FilterCaption?xr_strlwr(xr_strdup(_FilterCaption)):0;
-	m_Add			= _Add?xr_strlwr(xr_strdup(_Add)):0;
-	m_Root			= _Root?xr_strlwr(xr_strdup(_Root)):0;
+	m_DefExt		= _DefExt?xr_strlwr(xr_strdup(_DefExt)):nullptr;
+	m_FilterCaption	= _FilterCaption?xr_strlwr(xr_strdup(_FilterCaption)):nullptr;
+	m_Add			= _Add?xr_strlwr(xr_strdup(_Add)):nullptr;
+	m_Root			= _Root?xr_strlwr(xr_strdup(_Root)):nullptr;
     m_Flags.assign	(flags);
 }
 
@@ -67,7 +64,7 @@ void	FS_Path::_set	(const char* add)
 
 	// m_Path
 	string_path		temp;
-	strconcat		(sizeof(temp),temp,m_Root,m_Add);
+	xr_strconcat	(temp,m_Root,m_Add);
 	if (temp[xr_strlen(temp)-1]!='\\') xr_strcat(temp,"\\");
 	xr_free			(m_Path);
 	m_Path			= xr_strlwr(xr_strdup(temp));
@@ -82,7 +79,7 @@ void	FS_Path::_set_root	(const char* root)
 	m_Root			= xr_strlwr(xr_strdup(temp));
 
 	// m_Path
-	strconcat		(sizeof(temp),temp,m_Root,m_Add ? m_Add : "");
+	xr_strconcat (temp,m_Root,m_Add ? m_Add : "");
 	if (*temp && temp[xr_strlen(temp)-1]!='\\') xr_strcat(temp,"\\");
 	xr_free			(m_Path);
 	m_Path			= xr_strlwr(xr_strdup(temp));
@@ -94,20 +91,20 @@ const char* FS_Path::_update(string_path& dest, const char* src)const
     R_ASSERT			(src);
 	string_path			temp;
 	xr_strcpy			(temp, sizeof(temp), src);
-	strconcat			(sizeof(dest), dest, m_Path, temp);
+	xr_strconcat		(dest, m_Path, temp);
 	return xr_strlwr	(dest);
 }
 
 void FS_Path::rescan_path_cb	()
 {
-	m_Flags.set(flNeedRescan,TRUE);
-    FS.m_Flags.set(CLocatorAPI::flNeedRescan,TRUE);
+	m_Flags.set(flNeedRescan,true);
+    FS.m_Flags.set(CLocatorAPI::flNeedRescan,true);
 }
 
 bool XRCORE_API PatternMatch(const char* s, const char* mask)
 {
-	const char* cp=0;
-	const char* mp=0;
+	const char* cp=nullptr;
+	const char* mp=nullptr;
 	for (; *s&&*mask!='*'; mask++,s++) if (*mask!=*s&&*mask!='?') return false;
 	for (;;) {
 		if (!*s) { while (*mask=='*') mask++; return !*mask; }

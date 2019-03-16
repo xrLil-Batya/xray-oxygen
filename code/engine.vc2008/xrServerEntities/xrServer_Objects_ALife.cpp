@@ -7,9 +7,10 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "../../xrEngine/stdafx.h"
 #include "xrServer_Objects_ALife.h"
 #include "xrServer_Objects_ALife_Monsters.h"
-#include "game_base_space.h"
+#include "../xrGame/game_base.h"
 #include "object_broker.h"
 #include "restriction_space.h"
 
@@ -22,7 +23,6 @@ LPCSTR GAME_CONFIG = "game.ltx";
 
 #if !defined(XRGAME_EXPORTS) && !defined(AI_COMPILER)
 #	include "bone.h"
-#	include "defines.h"
 	LPCSTR GAME_CONFIG = "game.ltx";
 #else // XRGAME_EXPORTS
 #	include "../xrEngine/bone.h"
@@ -133,10 +133,10 @@ void	SFillPropData::load			()
 	for (int i=0; i<GameGraph::LOCATION_TYPE_COUNT; ++i){
         VERIFY				(locations[i].empty());
         string256			caSection, T;
-        strconcat			(sizeof(caSection),caSection,SECTION_HEADER,itoa(i,T,10));
+        xr_strconcat		(caSection, SECTION_HEADER, itoa(i,T,10));
         R_ASSERT			(Ini->section_exist(caSection));
         for (k = 0; Ini->r_line(caSection,k,&N,&V); ++k)
-            locations[i].push_back	(xr_rtoken(V,atoi(N)));
+            locations[i].push_back	(xr_rtoken(V,atoi_17(N)));
     }
     for (k = 0; Ini->r_line("graph_points_draw_color_palette",k,&N,&V); ++k)
 	{
@@ -159,7 +159,7 @@ void	SFillPropData::load			()
 		LPCSTR section 			= "story_ids";
 		R_ASSERT				(Ini->section_exist(section));
 		for (k = 0; Ini->r_line(section,k,&N,&V); ++k)
-			story_names.push_back	(xr_rtoken(V,atoi(N)));
+			story_names.push_back	(xr_rtoken(V,atoi_17(N)));
 
 		std::sort				(story_names.begin(),story_names.end(),story_name_predicate());
 		story_names.insert		(story_names.begin(),xr_rtoken("NO STORY ID",ALife::_STORY_ID(-1)));
@@ -171,7 +171,7 @@ void	SFillPropData::load			()
 		LPCSTR section 			= "spawn_story_ids";
 		R_ASSERT				(Ini->section_exist(section));
 		for (k = 0; Ini->r_line(section,k,&N,&V); ++k)
-			spawn_story_names.push_back	(xr_rtoken(V,atoi(N)));
+			spawn_story_names.push_back	(xr_rtoken(V,atoi_17(N)));
 
 		std::sort				(spawn_story_names.begin(),spawn_story_names.end(),story_name_predicate());
 		spawn_story_names.insert(spawn_story_names.begin(),xr_rtoken("NO SPAWN STORY ID",ALife::_SPAWN_STORY_ID(-1)));
@@ -375,21 +375,12 @@ CSE_ALifeObject::CSE_ALifeObject			(LPCSTR caSection) : CSE_Abstract(caSection)
 	m_story_id					= INVALID_STORY_ID;
 	m_spawn_story_id			= INVALID_SPAWN_STORY_ID;
 #ifdef XRGAME_EXPORTS
-	m_alife_simulator			= 0;
-#	ifdef LUACP_API
-		static bool _saved = false;
-		if (!_saved)
-		{
-			_saved = true;
-			LogXrayOffset("CSE_AlifeObject.story_id",	this, &this->m_story_id);
-			LogXrayOffset("CSE_AlifeObject.spawn_sid",  this, &this->m_spawn_story_id);
-		}
-#	endif
+	m_alife_simulator			= nullptr;
 #endif
 #ifdef XRSE_FACTORY_EXPORTS
     fp_data.inc					();
 #endif // XRSE_FACTORY_EXPORTS
-	m_flags.set					(flOfflineNoMove,FALSE);
+	m_flags.set					(flOfflineNoMove,false);
 	seed						(u32(CPU::QPC() & 0xffffffff));
 }
 
@@ -420,7 +411,7 @@ bool CSE_ALifeObject::move_offline			() const
 
 void CSE_ALifeObject::move_offline			(bool value)
 {
-	m_flags.set					(flOfflineNoMove,!value ? TRUE : FALSE);
+	m_flags.set					(flOfflineNoMove,!value ? true : false);
 }
 
 bool CSE_ALifeObject::visible_for_map		() const
@@ -430,7 +421,7 @@ bool CSE_ALifeObject::visible_for_map		() const
 
 void CSE_ALifeObject::visible_for_map		(bool value)
 {
-	m_flags.set					(flVisibleForMap,value ? TRUE : FALSE);
+	m_flags.set					(flVisibleForMap,value ? true : false);
 }
 
 void CSE_ALifeObject::STATE_Write			(NET_Packet &tNetPacket)
@@ -763,8 +754,8 @@ void CSE_ALifeDynamicObjectVisual::FillProps	(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifePHSkeletonObject::CSE_ALifePHSkeletonObject(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection),CSE_PHSkeleton(caSection)
 {
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifePHSkeletonObject::~CSE_ALifePHSkeletonObject()
@@ -828,11 +819,11 @@ void CSE_ALifePHSkeletonObject::FillProps(LPCSTR pref, PropItemVec& items)
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeSpaceRestrictor::CSE_ALifeSpaceRestrictor	(LPCSTR caSection) : CSE_ALifeDynamicObject(caSection)
 {
-	m_flags.set					(flUseSwitches,FALSE);
+	m_flags.set					(flUseSwitches,false);
 	m_space_restrictor_type		= RestrictionSpace::eDefaultRestrictorTypeNone;
-	m_flags.set					(flUsedAI_Locations,FALSE);
-	m_spawn_flags.set			(flSpawnDestroyOnSpawn,FALSE);
-	m_flags.set					(flCheckForSeparator,TRUE);
+	m_flags.set					(flUsedAI_Locations,false);
+	m_spawn_flags.set			(flSpawnDestroyOnSpawn,false);
+	m_flags.set					(flCheckForSeparator,true);
 }
 
 CSE_ALifeSpaceRestrictor::~CSE_ALifeSpaceRestrictor	()
@@ -884,7 +875,7 @@ xr_token defaul_retrictor_types[]={
 	{ "NONE default restrictor",	RestrictionSpace::eDefaultRestrictorTypeNone},
 	{ "OUT default restrictor",		RestrictionSpace::eDefaultRestrictorTypeOut	},
 	{ "IN default restrictor",		RestrictionSpace::eDefaultRestrictorTypeIn	},
-	{ 0,							0}
+	{ nullptr,							0}
 };
 
 #ifndef XRGAME_EXPORTS
@@ -1001,9 +992,9 @@ CSE_ALifeObjectPhysic::CSE_ALifeObjectPhysic(LPCSTR caSection) : CSE_ALifeDynami
 	if(pSettings->line_exist(caSection,"fixed_bones"))
 		fixed_bones		= pSettings->r_string(caSection,"fixed_bones");
 
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
-	m_flags.set					(flUsedAI_Locations,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
+	m_flags.set					(flUsedAI_Locations,false);
 	
 #ifdef XRGAME_EXPORTS
 	m_freeze_time				= Device.dwTimeGlobal;
@@ -1129,10 +1120,7 @@ void CSE_ALifeObjectPhysic::UPDATE_Read		(NET_Packet	&tNetPacket)
 	num_items.common				= m_u8NumItems;
 	m_u8NumItems					= num_items.num_items;
 
-	R_ASSERT2						(
-		m_u8NumItems < (u8(1) << 5),
-		make_string("%d",m_u8NumItems)
-		);
+	R_ASSERT_FORMAT(m_u8NumItems < (u8(1) << 5), "%d", m_u8NumItems);
 	
 	/*if (check(num_items.mask,animated))
 	{
@@ -1213,10 +1201,7 @@ void CSE_ALifeObjectPhysic::UPDATE_Write	(NET_Packet	&tNetPacket)
 	num_items.mask					= 0;
 	num_items.num_items				= m_u8NumItems;
 
-	R_ASSERT2						(
-		num_items.num_items < (u8(1) << 5),
-		make_string("%d",num_items.num_items)
-		);
+	R_ASSERT_FORMAT(num_items.num_items < (u8(1) << 5), "%d", num_items.num_items);
 
 	if (State.enabled)									num_items.mask |= inventory_item_state_enabled;
 	if (fis_zero(State.angular_vel.square_magnitude()))	num_items.mask |= inventory_item_angular_null;
@@ -1279,7 +1264,7 @@ xr_token po_types[]={
 	{ "Fixed chain",	epotFixedChain	},
 	{ "Free chain",		epotFreeChain	},
 	{ "Skeleton",		epotSkeleton	},
-	{ 0,				0				}
+	{ nullptr,				0				}
 };
 
 #ifndef XRGAME_EXPORTS
@@ -1318,8 +1303,8 @@ CSE_ALifeObjectHangingLamp::CSE_ALifeObjectHangingLamp(LPCSTR caSection) : CSE_A
 	color						= 0xffffffff;
     brightness					= 1.f;
 	m_health					= 100.f;
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 
 	m_virtual_size				= 0.1f;
 	m_ambient_radius			= 10.f;
@@ -1583,8 +1568,8 @@ bool CSE_ALifeObjectHangingLamp::match_configuration() const
 
 CSE_ALifeObjectProjector::CSE_ALifeObjectProjector(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection)
 {
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifeObjectProjector::~CSE_ALifeObjectProjector()
@@ -1629,8 +1614,7 @@ bool CSE_ALifeObjectProjector::used_ai_locations() const
 
 CSE_ALifeSchedulable::CSE_ALifeSchedulable	(LPCSTR caSection)
 {
-	m_tpCurrentBestWeapon		= 0;
-	m_tpBestDetector			= 0;
+	m_tpBestDetector			= nullptr;
 	m_schedule_counter			= u64(-1);
 }
 
@@ -1682,9 +1666,9 @@ u32	 CSE_ALifeSchedulable::ef_detector_type	() const
 
 CSE_ALifeHelicopter::CSE_ALifeHelicopter	(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection), CSE_Motion(),CSE_PHSkeleton(caSection)
 {
-	m_flags.set					(flUseSwitches,		FALSE);
-	m_flags.set					(flSwitchOffline,	FALSE);
-	m_flags.set					(flInteractive,		FALSE);
+	m_flags.set					(flUseSwitches,		false);
+	m_flags.set					(flSwitchOffline,	false);
+	m_flags.set					(flInteractive,		false);
 }
 
 CSE_ALifeHelicopter::~CSE_ALifeHelicopter	()
@@ -1763,8 +1747,8 @@ CSE_ALifeCar::CSE_ALifeCar				(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(
 
 	if (pSettings->section_exist(caSection) && pSettings->line_exist(caSection,"visual"))
     	set_visual				(pSettings->r_string(caSection,"visual"));
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 	health						=1.0f;
 }
 
@@ -1905,8 +1889,8 @@ void CSE_ALifeCar::FillProps				(LPCSTR pref, PropItemVec& values)
 CSE_ALifeObjectBreakable::CSE_ALifeObjectBreakable	(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection)
 {
 	m_health					= 1.f;
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifeObjectBreakable::~CSE_ALifeObjectBreakable	()

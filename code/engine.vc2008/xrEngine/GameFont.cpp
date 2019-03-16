@@ -1,4 +1,4 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #pragma hdrstop
 
 #include "GameFont.h"
@@ -64,12 +64,12 @@ void CGameFont::Initialize(LPCSTR cShader, LPCSTR cTextureName)
 		strstr(cTextureName, "ui_font_hud_02") ||
 		strstr(cTextureName, "ui_font_console_02");
 	if (_lang && !is_di)
-		strconcat(sizeof(cTexture), cTexture, cTextureName, _lang);
+		xr_strconcat(cTexture, cTextureName, _lang);
 	else
 		xr_strcpy(cTexture, sizeof(cTexture), cTextureName);
 
 	uFlags &= ~fsValid;
-	vTS.set(1.f, 1.f); // обязательно !!!
+	vTS.set(1, 1); // РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ !!!
 
 	eCurrentAlignment = alLeft;
 	vInterval.set(1.f, 1.f);
@@ -89,7 +89,8 @@ void CGameFont::Initialize(LPCSTR cShader, LPCSTR cTextureName)
 	nNumChars = 0x100;
 	TCMap = (Fvector*)xr_realloc((void*)TCMap, nNumChars * sizeof(Fvector));
 
-	if (ini->section_exist("mb_symbol_coords")) {
+	if (ini->section_exist("mb_symbol_coords")) 
+	{
 		nNumChars = 0x10000;
 		TCMap = (Fvector*)xr_realloc((void*)TCMap, nNumChars * sizeof(Fvector));
 		uFlags |= fsMultibyte;
@@ -136,28 +137,29 @@ void CGameFont::Initialize(LPCSTR cShader, LPCSTR cTextureName)
 	else
 		if (ini->section_exist("symbol_coords"))
 		{
-			float d = 0.0f;
-			//.		if(ini->section_exist("width_correction"))
-			//.			d						= ini->r_float("width_correction", "value");
-
 			fHeight = ini->r_float("symbol_coords", "height");
-			for (u32 i = 0; i < nNumChars; i++) {
+			for (u32 i = 0; i < nNumChars; i++) 
+			{
 				xr_sprintf(buf, sizeof(buf), "%03d", i);
 				Fvector v = ini->r_fvector3("symbol_coords", buf);
-				TCMap[i].set(v.x, v.y, v[2] - v[0] + d);
+				TCMap[i].set(v.x, v.y, v[2] - v[0]);
 			}
 		}
-		else {
-			if (ini->section_exist("char widths")) {
+		else 
+		{
+			if (ini->section_exist("char widths")) 
+			{
 				fHeight = ini->r_float("char widths", "height");
 				int cpl = 16;
-				for (u32 i = 0; i < nNumChars; i++) {
+				for (u32 i = 0; i < nNumChars; i++) 
+				{
 					xr_sprintf(buf, sizeof(buf), "%d", i);
 					float w = ini->r_float("char widths", buf);
 					TCMap[i].set((i%cpl)*fHeight, (i / cpl)*fHeight, w);
 				}
 			}
-			else {
+			else 
+			{
 				R_ASSERT(ini->section_exist("font_size"));
 				fHeight = ini->r_float("font_size", "height");
 				float width = ini->r_float("font_size", "width");
@@ -214,7 +216,12 @@ u16 CGameFont::GetCutLengthPos(float fTargetWidth, const char * pszText)
 {
 	VERIFY(pszText);
 
-	wide_char wsStr[MAX_MB_CHARS], wsPos[MAX_MB_CHARS];
+	// Giperion: Do not use more variables in stack like that
+	// According static analyzer we exceed stack space at this function
+	//wide_char wsStr[MAX_MB_CHARS];
+
+	wide_char* wsStr = new wide_char[MAX_MB_CHARS];
+	wide_char wsPos[MAX_MB_CHARS];
 	float fCurWidth = 0.0f, fDelta = 0.0f;
 
 	u16	len = mbhMulti2Wide(wsStr, wsPos, MAX_MB_CHARS, pszText);
@@ -232,6 +239,8 @@ u16 CGameFont::GetCutLengthPos(float fTargetWidth, const char * pszText)
 			fCurWidth += fDelta;
 	}
 
+	delete[] wsStr;
+
 	return wsPos[i - 1];
 }
 
@@ -239,7 +248,13 @@ u16 CGameFont::SplitByWidth(u16 * puBuffer, u16 uBufferSize, float fTargetWidth,
 {
 	VERIFY(puBuffer && uBufferSize && pszText);
 
-	wide_char wsStr[MAX_MB_CHARS], wsPos[MAX_MB_CHARS];
+	// Giperion: Do not use more variables in stack like that
+	// According static analyzer we exceed stack space at this function
+	//wide_char wsStr[MAX_MB_CHARS];
+
+	wide_char* wsStr = new wide_char[MAX_MB_CHARS];
+	wide_char wsPos[MAX_MB_CHARS];
+
 	float fCurWidth = 0.0f, fDelta = 0.0f;
 	u16 nLines = 0;
 
@@ -265,6 +280,8 @@ u16 CGameFont::SplitByWidth(u16 * puBuffer, u16 uBufferSize, float fTargetWidth,
 		else
 			fCurWidth += fDelta;
 	}
+
+	delete[] wsStr;
 
 	return nLines;
 }
@@ -381,12 +398,12 @@ float CGameFont::CurrentHeight_()
 
 void CGameFont::SetHeightI(float S)
 {
-	VERIFY(uFlags&fsDeviceIndependent);
-	fCurrentHeight = S * RDEVICE.dwHeight;
-};
+	if (uFlags & fsDeviceIndependent)
+		fCurrentHeight = S * RDEVICE.dwHeight;
+}
 
 void CGameFont::SetHeight(float S)
 {
-	VERIFY(uFlags&fsDeviceIndependent);
-	fCurrentHeight = S;
-};
+	if (uFlags & fsDeviceIndependent)
+		fCurrentHeight = S;
+}

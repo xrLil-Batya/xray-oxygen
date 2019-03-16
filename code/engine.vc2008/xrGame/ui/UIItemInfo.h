@@ -1,6 +1,5 @@
 #pragma once
-#include "uiwindow.h"
-
+#include "../xrUICore/UIWindow.h"
 
 class CInventoryItem;
 class CUIStatic;

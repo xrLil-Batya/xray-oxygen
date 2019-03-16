@@ -99,15 +99,15 @@
 			shName[strSize] = 0;
 
             string64 PrependPath;
-            //ZeroMemory(PrependPath, sizeof(PrependPath));
+            ZeroMemory(PrependPath, sizeof(PrependPath));
             memcpy(PrependPath, shName, sizeof(PrependPath));
             char* ClearShaderName = NULL;
             char* PathStart = strtok_s(PrependPath, "\\", &ClearShaderName);
-            //memcpy(shName, PathStart, sizeof(string_path) - sizeof(PrependPath));
+            memcpy(shName, PathStart, sizeof(string_path) - sizeof(PrependPath));
 
 			// Open file
 			string_path					cname;
-			strconcat					(sizeof(cname), cname, ::Render->getShaderPath(), PrependPath, "\\", ShaderTypeTraits<T>::GetShaderExt(),/*name*/ClearShaderName, ".hlsl");
+			xr_strconcat				( cname, ::Render->getShaderPath(), PrependPath, "\\", ShaderTypeTraits<T>::GetShaderExt(),/*name*/ClearShaderName, ".hlsl");
 			FS.update_path				(cname,	"$game_shaders$", cname);
 
 			// duplicate and zero-terminate

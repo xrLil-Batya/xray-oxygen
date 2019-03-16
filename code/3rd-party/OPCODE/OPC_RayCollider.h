@@ -81,7 +81,7 @@
 		 *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-							bool			Collide(const Ray& world_ray, const Model& model, const Matrix4x4* world=null, uqword* cache=null);
+							bool			Collide(const Ray& world_ray, const Model& model, const IceMatrix4x4* world=null, uqword* cache=null);
 		//
 							bool			Collide(const Ray& world_ray, const AABBTree* tree, Container& box_indices);
 		// Settings
@@ -219,7 +219,7 @@
 		inline_				BOOL			SegmentAABBOverlap(const Point& center, const Point& extents);
 		inline_				BOOL			RayTriOverlap(const Point& vert0, const Point& vert1, const Point& vert2);
 			// Init methods
-							BOOL			InitQuery(const Ray& world_ray, const Matrix4x4* world=null, uqword* face_id=null);
+							BOOL			InitQuery(const Ray& world_ray, const IceMatrix4x4* world=null, uqword* face_id=null);
 	};
 
 #endif // __OPC_RAYCOLLIDER_H__

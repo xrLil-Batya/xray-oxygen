@@ -6,7 +6,7 @@
 
 class CPPEffectorCustom : public CEffectorPP 
 {
-	typedef CEffectorPP inherited;
+	using inherited = CEffectorPP;
 
 public:
 					CPPEffectorCustom	(const SPPInfo &ppi, bool one_instance = false, bool destroy_from_engine = true);
@@ -70,7 +70,7 @@ void CPPEffectorCustomController<_Effector>::load(LPCSTR section)
 class CPPEffectorController;
 
 class CPPEffectorControlled : public CPPEffectorCustom {
-	typedef CPPEffectorCustom inherited;
+	using inherited = CPPEffectorCustom;
 
 	CPPEffectorController	*m_controller;
 public:

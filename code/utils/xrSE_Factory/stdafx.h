@@ -5,10 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Precompiled header creator
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
+#include "../xrEngine/stdafx.h"
 #include "../../xrPhysics/xrPhysics.h"
-#include "../xrCore.h"
 
 #define STRINGIZE(a)			#a
 #define UP(a)					STRINGIZE(../../##a)
@@ -18,8 +17,9 @@
 
 #define ENGINE_API
 #define ECORE_API
-#define DLL_API					__declspec(dllexport)
-#define TIXML_USE_STL
+#define GAME_API
+#define DLL_API __declspec(dllexport)
+#define GAME_API DLL_API
 
 #include "clsid_game.h"
 
@@ -41,19 +41,3 @@ IC	xr_string string2xr_string(LPCSTR s) {return s ? s : "";}
 #	define	THROW2					VERIFY2
 #	define	THROW3					VERIFY3
 #endif
-extern "C" {
-#include <lua/lua.h>
-#include <lua/lualib.h>
-#include <lua/lauxlib.h>
-};
-#pragma warning(push)
-#pragma warning(disable:4995)
-#include <luabind/luabind.hpp>
-#pragma warning(pop)
-#include <luabind/object.hpp>
-#include <luabind/functor.hpp>
-#include <luabind/operator.hpp>
-#include <luabind/adopt_policy.hpp>
-#include <luabind/return_reference_to_policy.hpp>
-#include <luabind/out_value_policy.hpp>
-#include <luabind/iterator_policy.hpp>

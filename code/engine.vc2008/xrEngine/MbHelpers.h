@@ -1,4 +1,4 @@
-#ifndef _MB_HELPERS_H_INCLUDED
+﻿#ifndef _MB_HELPERS_H_INCLUDED
 #define _MB_HELPERS_H_INCLUDED
 
 #define MAX_MB_CHARS 4096

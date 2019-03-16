@@ -18,7 +18,7 @@
 #include "agent_manager.h"
 #include "agent_member_manager.h"
 #include "ai_space.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "actor.h"
 #include "../xrEngine/camerabase.h"
 #include "gamepersistent.h"
@@ -80,8 +80,8 @@ struct CNotYetVisibleObjectPredicate{
 CVisualMemoryManager::CVisualMemoryManager		(CCustomMonster *object)
 {
 	m_object			= object;
-	m_stalker			= 0;
-	m_client			= 0;
+	m_stalker			= nullptr;
+	m_client			= nullptr;
 	initialize			();
 }
 
@@ -89,14 +89,14 @@ CVisualMemoryManager::CVisualMemoryManager		(CAI_Stalker *stalker)
 {
 	m_object			= stalker;
 	m_stalker			= stalker;
-	m_client			= 0;
+	m_client			= nullptr;
 	initialize			();
 }
 
 CVisualMemoryManager::CVisualMemoryManager		(vision_client *client)
 {
-	m_object			= 0;
-	m_stalker			= 0;
+	m_object			= nullptr;
+	m_stalker			= nullptr;
 	m_client			= client;
 	initialize			();
 	
@@ -107,7 +107,7 @@ void CVisualMemoryManager::initialize			()
 {
 	m_max_object_count	= 128;
 	m_enabled			= true;
-	m_objects			= 0;
+	m_objects			= nullptr;
 }
 
 CVisualMemoryManager::~CVisualMemoryManager		()
@@ -123,7 +123,7 @@ CVisualMemoryManager::~CVisualMemoryManager		()
 void CVisualMemoryManager::reinit					()
 {
 	if (!m_client)
-		m_objects						= 0;
+		m_objects						= nullptr;
 	else {
 		VERIFY							(m_objects);
 		m_objects->clear				();
@@ -339,7 +339,7 @@ CNotYetVisibleObject *CVisualMemoryManager::not_yet_visible_object(const CGameOb
 		CNotYetVisibleObjectPredicate(game_object)
 		);
 	if (I == m_not_yet_visible_objects.end())
-		return							(0);
+		return							(nullptr);
 	return								(&*I);
 	STOP_PROFILE
 }
@@ -491,7 +491,7 @@ void CVisualMemoryManager::add_visible_object	(const CObject *object, float time
 //	STOP_PROFILE
 }
 
-void CVisualMemoryManager::add_visible_object	(const CVisibleObject visible_object)
+void CVisualMemoryManager::add_visible_object	(const CVisibleObject &visible_object)
 {
 	if ( should_ignore_object(visible_object.m_object) )
 	{
@@ -551,7 +551,7 @@ float CVisualMemoryManager::feel_vision_mtl_transp(CObject* O, u32 element)
 	float vis				= 1.f;
 	if (O){
 		IKinematics* V		= smart_cast<IKinematics*>(O->Visual());
-		if (0!=V){
+		if (nullptr!=V){
 			CBoneData& B	= V->LL_GetData((u16)element);
 			vis				= GMLib.GetMaterialByIdx(B.game_mtl_idx)->fVisTransparencyFactor;
 		}
@@ -608,7 +608,7 @@ CVisibleObject *CVisualMemoryManager::visible_object	(const CGameObject *game_ob
 {
 	VISIBLES::iterator			I = std::find_if(m_objects->begin(),m_objects->end(),CVisibleObjectPredicateEx(game_object));
 	if (I == m_objects->end())
-		return					(0);
+		return					(nullptr);
 	return						(&*I);
 }
 
@@ -810,7 +810,7 @@ void CVisualMemoryManager::load	(IReader &packet)
 	if (!m_object->g_Alive())
 		return;
 
-	typedef CClientSpawnManager::CALLBACK_TYPE	CALLBACK_TYPE;
+	using CALLBACK_TYPE = CClientSpawnManager::CALLBACK_TYPE;
 	CALLBACK_TYPE					callback;
 	callback.bind					(&m_object->memory(),&CMemoryManager::on_requested_spawn);
 

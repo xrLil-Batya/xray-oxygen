@@ -1,12 +1,12 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: editor_environment_manager.cpp
 //	Created 	: 12.12.2007
 //  Modified 	: 04.01.2008
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment manager class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_manager.hpp"
@@ -25,7 +25,7 @@
 #include "../include/xrrender/particles_systems_library_interface.hpp"
 #include "../Include/xrRender/RenderDeviceRender.h"
 #include "editor_environment_ambients_ambient.hpp"
-#include "xr_efflensflare.h"
+#include "LensFlare.h"
 
 using editor::environment::manager;
 using editor::environment::detail::logical_string_predicate;
@@ -74,7 +74,7 @@ manager::~manager												()
 	::ide().destroy				(m_property_holder);
 }
 
-void manager::load												()
+void manager::Load												()
 {
 }
 
@@ -87,10 +87,10 @@ void manager::load_internal										()
 	m_sound_channels->load		();
 	m_ambients->load			();
 
-	inherited::load				();
+	inherited::Load				();
 }
 
-void manager::save			()
+void manager::Save			()
 {
 	m_weathers->save			();
 //	m_suns->save				();
@@ -116,7 +116,7 @@ void manager::fill												()
 	::ide().environment_weathers(m_property_holder);
 }
 
-void manager::load_weathers										()
+void manager::LoadWeathers()
 {
 	m_weathers->load			();
 
@@ -194,7 +194,7 @@ manager::light_animator_ids_type const& manager::light_animator_ids	() const
 	return									(m_light_animator_ids);
 }
 
-void manager::create_mixer	()
+void manager::CreateMixer()
 {
 	VERIFY								(!CurrentEnv);
 	editor::environment::weathers::time	*object = xr_new<editor::environment::weathers::time>(this, (editor::environment::weathers::weather const*)0, "");
@@ -202,7 +202,7 @@ void manager::create_mixer	()
 	object->fill						(0);
 }
 
-void manager::unload		()
+void manager::Unload()
 {
 	WeatherCycles.clear			();
 	WeatherFXs.clear			();
@@ -215,22 +215,22 @@ CEnvAmbient* manager::AppendEnvAmb		(const shared_str& sect)
 	return						(m_ambients->get_ambient(sect));
 }
 
-SThunderboltDesc* manager::thunderbolt_description		(CInifile& config, shared_str const& section)
+CThunderboltDesc* manager::ThunderboltDescription(CInifile& config, shared_str const& section)
 {
 	return						(m_thunderbolts->description(config, section));
 }
 
-SThunderboltCollection* manager::thunderbolt_collection	(CInifile* pIni, CInifile* thunderbolts, LPCSTR section)
+CThunderboltCollection* manager::ThunderboltCollection(CInifile* pIni, CInifile* thunderbolts, LPCSTR section)
 {
 	return						(m_thunderbolts->get_collection(section));
 }
 
-SThunderboltCollection* manager::thunderbolt_collection	(xr_vector<SThunderboltCollection*>& collection,  shared_str const& id)
+CThunderboltCollection* manager::ThunderboltCollection(xr_vector<CThunderboltCollection*>& collection,  shared_str const& id)
 {
 	return						(m_thunderbolts->get_collection(id));
 }
 
-CLensFlareDescriptor*   manager::add_flare				(xr_vector<CLensFlareDescriptor*>& collection, shared_str const& id)
+CLensFlareDescriptor* manager::AddFlare(xr_vector<CLensFlareDescriptor*>& collection, shared_str const& id)
 {
 #if 0
 //	return						(m_suns->get_flare(id));
@@ -246,7 +246,7 @@ CLensFlareDescriptor*   manager::add_flare				(xr_vector<CLensFlareDescriptor*>&
 	return						(0);
 #endif // #ifdef DEBUG
 #endif // #if 0
-	return						(inherited::add_flare(collection, id));
+	return						(inherited::AddFlare(collection, id));
 }
 
 #endif // #ifdef INGAME_EDITOR

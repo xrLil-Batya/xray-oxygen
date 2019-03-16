@@ -1,7 +1,6 @@
 #pragma once
 #include "xrScripts.h"
-#include "../xrServerEntities/opt.lua.h"
-#include "../xrServerEntities/opt_inline.lua.h"
+#include "../xrScripts/luajit/lua.hpp"
 
 /* JIT engine control command: try jit library first or load add-on module */
 SCRIPT_API int dojitcmd(lua_State *L, const char *cmd);
@@ -35,11 +34,6 @@ struct SCRIPT_API lopen
 		if (!strstr(Core.Params, "-nojit"))
 		{
 			open_lib(L, LUA_JITLIBNAME, luaopen_jit);
-#ifndef DEBUG
-			put_function(L, opt_lua_binary, sizeof(opt_lua_binary), "jit.opt");
-			put_function(L, opt_inline_lua_binary, sizeof(opt_lua_binary), "jit.opt_inline");
-			dojitopt(L, "2");
-#endif // #ifndef DEBUG
 		}
 
 #ifdef LUACP_API

@@ -1,8 +1,9 @@
-#pragma once
+﻿#pragma once
 #include "ISheduled.h"
 
 class ENGINE_API CSheduler
 {
+	static void		mtShedulerThread(void*);
 private:
 	struct Item
 	{
@@ -38,9 +39,6 @@ private:
 	void			internal_Register		(ISheduled* A, BOOL RT=FALSE		);
 	bool			internal_Unregister		(ISheduled* A, BOOL RT, bool warn_on_not_found = true);
 	void			internal_Registration	();
-public:
-	u64				cycles_start;
-	u64				cycles_limit;
 public:
 	void			ProcessStep	();
 	void			Process		();

@@ -43,9 +43,6 @@
     <Filter Include="Scripts\ScriptThread">
       <UniqueIdentifier>{13fa94f9-3356-405f-8299-932596476f32}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripts\ScriptDebugger">
-      <UniqueIdentifier>{7c1d7a44-4fc5-498f-926d-73514fbe46b7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ServerStuff">
       <UniqueIdentifier>{287e5eef-dcf7-4b05-a8bb-2e6bac5aad86}</UniqueIdentifier>
     </Filter>
@@ -111,9 +108,6 @@
     <ClInclude Include="xrSE_Factory_import_export.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="defines.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="ai_space.h">
       <Filter>Common\ASpace</Filter>
     </ClInclude>
@@ -122,9 +116,6 @@
     </ClInclude>
     <ClInclude Include="script_space.h">
       <Filter>Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="script_debugger_utils.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
     </ClInclude>
     <ClInclude Include="bone.h">
       <Filter>ServerStuff\Common\GameStuff</Filter>
@@ -285,18 +276,6 @@
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PHSynchronize.h">
       <Filter>ServerStuff\Common\GameStuff</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_callStack.h">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_debugger.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_debugger_messages.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_debugger_threads.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClInclude>
     <ClInclude Include="script_file.h">
       <Filter>Scripts\ScriptIniFile</Filter>
     </ClInclude>
@@ -334,9 +313,6 @@
       <Filter>Scripts\ScriptEngine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_space_forward.h">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_lua_helper.h">
       <Filter>Scripts\ScriptEngine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_storage.h">
@@ -422,9 +398,6 @@
     <ClCompile Include="ai_space.cpp">
       <Filter>Common\ASpace</Filter>
     </ClCompile>
-    <ClCompile Include="script_debugger_utils.cpp">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClCompile>
     <ClCompile Include="xrUIXmlParser.cpp">
       <Filter>ServerStuff\Common\ServerStuff</Filter>
     </ClCompile>
@@ -461,15 +434,6 @@
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\object_item_script.cpp">
       <Filter>ServerStuff\ServerEntities\objects_alife_items</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_callStack.cpp">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_debugger.cpp">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_debugger_threads.cpp">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClCompile>
     <ClCompile Include="script_file.cpp">
       <Filter>Scripts\ScriptIniFile</Filter>
     </ClCompile>
@@ -492,9 +456,6 @@
       <Filter>Scripts\ScriptProcess</Filter>
     </ClCompile>
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_stack_tracker.cpp">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_lua_helper.cpp">
       <Filter>Scripts\ScriptEngine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_storage.cpp">
@@ -525,9 +486,6 @@
       <Filter>ServerStuff\ServerFactory</Filter>
     </ClCompile>
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp">
-      <Filter>ServerStuff\ServerFactory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp">
       <Filter>ServerStuff\ServerFactory</Filter>
     </ClCompile>
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp">

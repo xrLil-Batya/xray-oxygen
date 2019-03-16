@@ -1,83 +1,108 @@
-#include "stdafx.h"
-
+﻿#include "stdafx.h"
+#include "../FrayBuildConfig.hpp"
+#ifdef RAW_INPUT_USE
+#include "xr_input.h"
+#endif
+#ifdef XINPUT_USE
+#include <XInput.h>
+#pragma comment(lib, "xinput.lib")
+#endif
 extern ENGINE_API BOOL g_bRendering;
-bool windowActive = true;
+static bool bResize = false;
 
 bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT &result)
 {
-	switch (uMsg) {
-		case WM_SYSKEYDOWN : {
-			return true;
-						   }
-		case WM_ACTIVATE : {
-#ifdef INGAME_EDITOR
-			if (editor()) {
-				Device.b_is_Active	= TRUE;
-				break;
+#ifdef RAW_INPUT_USE
+	
+#endif
+	switch (uMsg) 
+	{
+#ifdef XINPUT_USE
+	case WM_ACTIVATEAPP: XInputEnable((BOOL)wParam); break; // Controller Input Wrapper
+#endif
+	case WM_SYSKEYDOWN : return true;
+	case WM_ENTERSIZEMOVE: bResize = true; break;
+	case WM_TIMER: break;
+	case WM_CLOSE:  if (editor()) break; result = 0; return (true);
+	case WM_HOTKEY: break;// prevent 'ding' sounds caused by Alt+key combinations
+	case WM_SYSCHAR: result = 0; return true;
+
+#ifdef RAW_INPUT_USE
+	case WM_INPUT: CInput::DataInput = (HRAWINPUT)lParam;
+#endif
+
+	case WM_ACTIVATE : 
+	{
+		if (editor())
+		{
+			Device.b_is_Active = TRUE;
+			break;
+		}	
+		
+		ShowCursor(wParam == WA_INACTIVE);
+		
+		OnWM_Activate(wParam, lParam);
+		return (false);
+	}
+	case WM_SETCURSOR : 
+	{
+		if (editor())
+			break;
+
+		result			= 1;
+		return			(true);
+	}
+	case WM_SIZE:
+	{
+		break;
+	}
+	case WM_EXITSIZEMOVE:
+	{
+		if (wParam != SIZE_MINIMIZED)
+		{
+			bResize = false;
+			RECT ClientRect;
+
+			GetClientRect(hWnd, &ClientRect);
+			LONG width = ClientRect.right - ClientRect.left;
+			LONG height = ClientRect.bottom - ClientRect.top;
+
+			if (Device.dwWidth != u32(width) || Device.dwHeight != u32(height))
+			{
+				if (height >= NULL && width >= NULL)
+				{
+					Device.ResizeProc(height, width);
+				}
 			}
-#endif // #ifdef INGAME_EDITOR
-			OnWM_Activate	(wParam, lParam);
-			return			(false);
 		}
-		case WM_SETCURSOR : {
-#ifdef INGAME_EDITOR
-			if (editor())
-				break;
-#endif // #ifdef INGAME_EDITOR
+		break;
+	}
+	case WM_SYSCOMMAND : 
+	{
+		if (editor())
+			break;
 
-			result			= 1;
-			return			(true);
+		bool bRet = false;
+
+		// Prevent moving/sizing and power loss in fullscreen mode
+		switch (wParam)
+		{
+		case SC_MOVE:
+		case SC_SIZE:
+		case SC_MAXIMIZE:
+			break;
+		case SC_MONITORPOWER:
+			result = 1;
+			bRet = true;
+			break;
+		default:
+			bRet = false;
 		}
-							/*case WM_SIZING:
-							{
-								if (result = TRUE)
-									bool windowActive = false;
-								else
-									bool windowActive = true;
-							}*/
-		//case WM_SIZE : 
-		//{
-		//	if (windowActive)
-		//	{
-		//		WORD height = HIWORD(lParam);
-		//		WORD width = LOWORD(lParam);
-
-		//		//Device.ResizeProc(height, width);
-		//	}
-		//}
-		case WM_SYSCOMMAND : {
-#ifdef INGAME_EDITOR
-			if (editor())
-				break;
-#endif // #ifdef INGAME_EDITOR
-
-			// Prevent moving/sizing and power loss in fullscreen mode
-			switch (wParam) {
-				case SC_MOVE:
-				case SC_SIZE:
-				case SC_MAXIMIZE:
-				case SC_MONITORPOWER:
-					result	= 1;
-					return	(true);
-			}
-			return			(false);
-		}
-		case WM_CLOSE : {
-#ifdef INGAME_EDITOR
-			if (editor())
-				break;
-#endif // #ifdef INGAME_EDITOR
-
-			result			= 0;
-			return			(true);
-		}
-		case WM_HOTKEY: // prevent 'ding' sounds caused by Alt+key combinations
-		case WM_SYSCHAR:
-			result = 0;
-			return true;
+		return bRet;
+	}
 	}
 
-	return					(false);
+	return (false);
 }
 //-----------------------------------------------------------------------------
 // Name: WndProc()
@@ -85,9 +110,8 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 //-----------------------------------------------------------------------------
 LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	LRESULT		result;
-	if (Device.on_message(hWnd, uMsg, wParam, lParam, result))
-		return	(result);
+	LRESULT	result = 0;
+	if (Device.on_message(hWnd, uMsg, wParam, lParam, result)) { return	(result); }
 
-	return		(DefWindowProc(hWnd, uMsg, wParam, lParam));
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

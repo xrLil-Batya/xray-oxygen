@@ -9,13 +9,18 @@ class light;
 // D: AGP,			32b aligned
 // S: SysMem		non-aligned
 // Bones: SysMem	64b aligned
+namespace tbb
+{
+	class task_scheduler_init;
+}
+extern tbb::task_scheduler_init* pTaskSheduler;
 
-typedef void	__stdcall	xrSkin1W		(vertRender* D, vertBoned1W* S, u32 vCount, CBoneInstance* Bones);
-typedef void	__stdcall	xrSkin2W		(vertRender* D, vertBoned2W* S, u32 vCount, CBoneInstance* Bones);
-typedef void	__stdcall	xrSkin3W		(vertRender* D, vertBoned3W* S, u32 vCount, CBoneInstance* Bones);
-typedef void	__stdcall	xrSkin4W		(vertRender* D, vertBoned4W* S, u32 vCount, CBoneInstance* Bones);
+using xrSkin1W = void	__stdcall		(vertRender* D, vertBoned1W* S, u32 vCount, CBoneInstance* Bones);
+using xrSkin2W = void	__stdcall		(vertRender* D, vertBoned2W* S, u32 vCount, CBoneInstance* Bones);
+using xrSkin3W = void	__stdcall		(vertRender* D, vertBoned3W* S, u32 vCount, CBoneInstance* Bones);
+using xrSkin4W = void	__stdcall		(vertRender* D, vertBoned4W* S, u32 vCount, CBoneInstance* Bones);
 
-typedef void	__stdcall	xrPLC_calc3		(int& c0, int& c1, int& c2, CRenderDevice& Device, Fvector* P, Fvector& N, light* L, float energy, Fvector& O);
+using xrPLC_calc3 = void	__stdcall		(int& c0, int& c1, int& c2, CRenderDevice& Device, Fvector* P, Fvector& N, light* L, float energy, Fvector& O);
 
 #pragma pack(push,8)
 struct xrDispatchTable
@@ -31,3 +36,4 @@ struct xrDispatchTable
 // Binder
 // NOTE: Engine calls function named "_xrBindPSGP"
 void xrBind_PSGP(xrDispatchTable* T, processor_info* ID);
+

@@ -1,4 +1,4 @@
-//----------------------------------------------------
+п»ї//----------------------------------------------------
 #pragma once
 #ifndef _MAYA_PLUGIN
 #ifdef _LW_EXPORT
@@ -36,7 +36,7 @@ struct st_BoneMotion
     			st_BoneMotion()	{name=0; m_Flags.zero(); std::memset(envs, 0, sizeof(CEnvelope*)*ctMaxChannel);}
     void        SetName(LPCSTR nm)	{	name=nm;	}
 };
-// vector по костям
+// vector РїРѕ РєРѕСЃС‚СЏРј
 using BoneMotionVec = xr_vector<st_BoneMotion>;
 
 //--------------------------------------------------------------------------

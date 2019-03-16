@@ -1,6 +1,6 @@
 #pragma once
 
-#include "UIDialogWnd.h"
+#include "../xrUICore/UIDialogWnd.h"
 
 class CUI3tButton;
 class CUITabControl;
@@ -25,7 +25,7 @@ protected:
 	shared_str				m_caption_const;
 	CUITextWnd*				m_clock;
 
-	// Текущий активный диалог
+	// РўРµРєСѓС‰РёР№ Р°РєС‚РёРІРЅС‹Р№ РґРёР°Р»РѕРі
 	CUIWindow*				m_pActiveDialog;
 	shared_str				m_sActiveSection;
 

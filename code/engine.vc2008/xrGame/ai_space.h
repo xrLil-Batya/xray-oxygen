@@ -23,7 +23,7 @@ namespace doors {
 	class manager;
 } // namespace doors
 
-class CAI_Space {
+class GAME_API CAI_Space {
 private:
 	friend class CALifeSimulator;
 	friend class CALifeGraphRegistry;
@@ -32,31 +32,34 @@ private:
 	friend class CLevel;
 
 private:
-	CGameGraph							*m_game_graph;
-	CLevelGraph							*m_level_graph;
-	CGraphEngine						*m_graph_engine;
-	CEF_Storage							*m_ef_storage;
-	CALifeSimulator						*m_alife_simulator;
-	CCoverManager						*m_cover_manager;
-	CScriptEngine						*m_script_engine;
-	CPatrolPathStorage					*m_patrol_path_storage;
-	moving_objects						*m_moving_objects;
-	doors::manager						*m_doors_manager;
 
+	std::unique_ptr<CGameGraph			>			m_game_graph;
+	std::unique_ptr<CLevelGraph			>			m_level_graph;
+	std::unique_ptr<CGraphEngine		>			m_graph_engine;
+	std::unique_ptr<CEF_Storage			>			m_ef_storage;
+	std::unique_ptr<CCoverManager		>			m_cover_manager;
+	std::unique_ptr<CPatrolPathStorage	>			m_patrol_path_storage;
+	std::unique_ptr<moving_objects		>			m_moving_objects;
+	std::unique_ptr<doors::manager		>			m_doors_manager;
+
+	CALifeSimulator* m_alife_simulator = nullptr;
+	CScriptEngine*   m_script_engine   = nullptr;
 private:
 			void						load					(LPCSTR level_name);
 			void						unload					(bool reload = false);
 			void						patrol_path_storage_raw	(IReader &stream);
 			void						patrol_path_storage		(IReader &stream);
 			void						set_alife				(CALifeSimulator *alife_simulator);
-			void						game_graph				(CGameGraph *game_graph);
+			void create_game_graph (IReader& chunk);
 
 public:
-										CAI_Space				();
+	CAI_Space				();
+
+	static CAI_Space&					GetInstance				();
 	virtual								~CAI_Space				();
 			void						init					();
 	IC		CGameGraph					&game_graph				() const;
-	IC		CGameGraph					*get_game_graph			() const;
+	IC		bool						is_game_graph_presented () const;
 	IC		CLevelGraph					&level_graph			() const;
 	IC		const CLevelGraph			*get_level_graph		() const;
 			const CGameLevelCrossTable	&cross_table			() const;
@@ -70,14 +73,16 @@ public:
 	IC		CScriptEngine				&script_engine			() const;
 	IC		moving_objects				&moving_objects			() const;
 	IC		doors::manager&				doors					() const;
+	IC		CPatrolPathStorage			&patrol_paths_raw		();
 
 #ifdef DEBUG
 			void						validate				(const u32			level_id) const;
 #endif
 };
 
-IC	CAI_Space	&ai	();
-
-extern CAI_Space *g_ai_space;
+IC CAI_Space &ai()
+{
+	return CAI_Space::GetInstance();
+}
 
 #include "ai_space_inline.h"

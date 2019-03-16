@@ -3,51 +3,66 @@
 
 Time::Time()
 {
-	t = time(NULL);
-	aTm = localtime(&t);
+	t = time(nullptr);
+	aTm = *localtime(&t);
 }
 
-int Time::GetSecond()
+int Time::GetSeconds() const
 {
-	return aTm->tm_sec;
+	return aTm.tm_sec;
 }
 
-int Time::GetMin()
+int Time::GetMinutes() const
 {
-	return aTm->tm_min;
+	return aTm.tm_min;
 }
 
-int Time::GetHour()
+int Time::GetHours() const
 {
-	return aTm->tm_hour < 10;
+	return aTm.tm_hour;
 }
 
-std::string Time::GetSeconds()
+int Time::GetDay() const
 {
-	return (aTm->tm_sec < 10) ? "0" + std::to_string(aTm->tm_sec) : std::to_string(aTm->tm_sec);
+	return aTm.tm_mday;
 }
 
-std::string Time::GetMinutes()
+int Time::GetMonth() const
 {
-	return (aTm->tm_min < 10) ? "0" + std::to_string(aTm->tm_min) : std::to_string(aTm->tm_min);
+	return aTm.tm_mon + 1;
 }
 
-std::string Time::GetHours()
+int Time::GetYear() const
 {
-	return (aTm->tm_hour < 10) ? "0" + std::to_string(aTm->tm_hour) : std::to_string(aTm->tm_hour);
+	return aTm.tm_year + 1900;
 }
 
-std::string Time::GetDay()
+Time::string Time::GetSecondsString() const
 {
-	return (aTm->tm_mday < 10) ? "0" + std::to_string(aTm->tm_mday) : std::to_string(aTm->tm_mday);
+	return (GetSeconds() < 10) ? "0" + xr_string::ToString(GetSeconds()) : xr_string::ToString(GetSeconds());
 }
 
-std::string Time::GetMonth()
+Time::string Time::GetMinutesString() const
 {
-	return (aTm->tm_mon + 1 < 10) ? "0" + std::to_string(aTm->tm_mon + 1) : std::to_string(aTm->tm_mon + 1);
+	return (GetMinutes() < 10) ? "0" + xr_string::ToString(GetMinutes()) : xr_string::ToString(GetMinutes());
 }
 
-std::string Time::GetYear()
+Time::string Time::GetHoursString() const
 {
-	return std::to_string(aTm->tm_year + 1900);
+	return (GetHours() < 10) ? "0" + xr_string::ToString(GetHours()) : xr_string::ToString(GetHours());
+}
+
+Time::string Time::GetDayString() const
+{
+	return (GetDay() < 10) ? "0" + xr_string::ToString(GetDay()) : xr_string::ToString(GetDay());
+}
+
+Time::string Time::GetMonthString() const
+{
+	return (GetMonth() < 10) ? "0" + xr_string::ToString(GetMonth()) : xr_string::ToString(GetMonth());
+}
+
+Time::string Time::GetYearString() const
+{
+	return xr_string::ToString(GetYear());
 }

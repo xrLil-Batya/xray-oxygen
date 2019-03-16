@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "UIGame.h"
 #include "level.h"
-#include "ui/UIXmlInit.h"
-#include "ui/UIStatic.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIStatic.h"
 #include "object_broker.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 
 #include "InventoryOwner.h"
 #include "ui/UIActorMenu.h"
@@ -16,18 +16,19 @@
 #include "actor.h"
 #include "actorcondition.h"
 #include "inventory.h"
-#include "game_cl_base.h"
+
 
 #include "GameTaskManager.h"
 #include "GameTask.h"
 
 #include "level_changer.h"
 
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "../xrEngine/xr_input.h"
 #include "../xrEngine/xr_ioconsole.h"
 #include "../xrEngine/x_ray.h"
 #include "../../xrServerEntities/script_engine.h"
+#include "ai\monsters\basemonster\base_monster.h"
 
 #include "attachable_item.h"
 
@@ -49,7 +50,6 @@ CUIGame::CUIGame() : m_msgs_xml(nullptr), m_ActorMenu(nullptr), m_PdaMenu(nullpt
 	ShowCrosshair(true);
 
 	TalkMenu = xr_new<CUITalkWnd>();
-	m_game = xr_new<game_cl_GameState>();
 	UIChangeLevelWnd = xr_new<CChangeLevelWnd>();
 }
 
@@ -141,7 +141,7 @@ void CUIGame::Render()
 	if (pEntity)
 	{
 		CActor* pActor = smart_cast<CActor*>(pEntity);
-		if (pActor && pActor->HUDview() && pActor->g_Alive() && psHUD_Flags.is(HUD_WEAPON | HUD_WEAPON_RT | HUD_WEAPON_RT2))
+		if (pActor && pActor->g_Alive())
 		{
 			u16 ISlot = pActor->inventory().FirstSlot();
 			u16 ESlot = pActor->inventory().LastSlot();
@@ -266,13 +266,6 @@ void CUIGame::HidePdaMenu()
 {
 	if (m_PdaMenu->IsShown())
 		m_PdaMenu->HideDialog();
-}
-
-void CUIGame::SetClGame(game_cl_GameState* g)
-{
-	g->SetGameUI(this);
-	m_game = smart_cast<game_cl_GameState*>(g);
-	R_ASSERT(m_game);
 }
 
 void CUIGame::UnLoad()
@@ -457,14 +450,15 @@ void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryOwner* pOthe
 	if (TopInputReceiver())
 		return;
 
-    // Don't allow search monster's if that feature disabled
-    if (!g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY)) return;
+	// Don't allow search monster's if that feature disabled
+	if (g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY) || !smart_cast<CBaseMonster*>(pOtherOwner))
+	{
+		m_ActorMenu->SetActor(pActorInv);
+		m_ActorMenu->SetPartner(pOtherOwner);
 
-	m_ActorMenu->SetActor(pActorInv);
-	m_ActorMenu->SetPartner(pOtherOwner);
-
-	m_ActorMenu->SetMenuMode(mmDeadBodySearch);
-	m_ActorMenu->ShowDialog(true);
+		m_ActorMenu->SetMenuMode(mmDeadBodyOrContainerSearch);
+		m_ActorMenu->ShowDialog(true);
+	}
 }
 
 void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //Deadbody search
@@ -476,7 +470,7 @@ void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) /
 	m_ActorMenu->SetInvBox(pBox);
 	VERIFY(pBox);
 
-	m_ActorMenu->SetMenuMode(mmDeadBodySearch);
+	m_ActorMenu->SetMenuMode(mmDeadBodyOrContainerSearch);
 	m_ActorMenu->ShowDialog(true);
 }
 
@@ -544,9 +538,11 @@ void SDrawStaticStruct::Update()
 		m_static->Update();
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CUIGame::script_register(lua_State *L)
 {
 	module(L)

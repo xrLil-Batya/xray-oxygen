@@ -28,6 +28,8 @@ SHit::SHit(float powerA, Fvector &dirA, CObject *whoA, u16 elementA, Fvector p_i
 	SenderID = 0;
 	aim_bullet = AimBullet;
 	add_wound = true;
+	BulletFlightSpeed = 0.0f;
+	BulletFlightDist = 0.0f;
 }
 
 SHit::SHit()
@@ -41,28 +43,25 @@ void SHit::invalidate()
 	PACKET_TYPE				= 0;
 	DestID					= 0;
 
-	power					=-phInfinity								;
-	dir						.set(-phInfinity,-phInfinity,-phInfinity)	;
-	who						=NULL									;
+	power					=-phInfinity;
+	dir						.set(-phInfinity,-phInfinity,-phInfinity);
+	who						=nullptr;
 	whoID					= 0;
 	weaponID				= 0;
 
-	boneID					=BI_NONE								;
-	p_in_bone_space		.set(-phInfinity,-phInfinity,-phInfinity)	;
+	boneID					=BI_NONE;
+	p_in_bone_space		.set(-phInfinity,-phInfinity,-phInfinity);
 
-	impulse					=-phInfinity								;
-	hit_type				=ALife::eHitTypeMax						;
+	impulse					=-phInfinity;
+	hit_type				=ALife::eHitTypeMax;
 
 	armor_piercing			= 0.0f;	
 	BulletID				= 0;
 	SenderID				= 0;
-	aim_bullet				= false									;
-	add_wound				= false									;
-}
-
-bool SHit::is_valide() const
-{
-	return hit_type!=ALife::eHitTypeMax;
+	aim_bullet				= false;
+	add_wound				= false;
+	BulletFlightSpeed = 0.0f;
+	BulletFlightDist = 0.0f;
 }
 
 void	SHit::GenHeader				(u16 PacketType, u16 ID)
@@ -98,12 +97,9 @@ void SHit::Read_Packet_Cont		(NET_Packet	Packet)
 
 	if (hit_type == ALife::eHitTypeFireWound)
 	{
-		Packet.r_float	(armor_piercing);
-	}
-	if (PACKET_TYPE == GE_HIT_STATISTIC)
-	{
-		Packet.r_u32(BulletID);
-		Packet.r_u32(SenderID);
+		Packet.r_float(armor_piercing);
+		Packet.r_float(BulletFlightSpeed);
+		Packet.r_float(BulletFlightDist);
 	}
 }
 
@@ -120,12 +116,9 @@ void SHit::Write_Packet_Cont		(NET_Packet	&Packet)
 	Packet.w_u16		(u16(hit_type&0xffff));	
 	if (hit_type == ALife::eHitTypeFireWound)
 	{
-		Packet.w_float	(armor_piercing);
-	}
-	if (PACKET_TYPE == GE_HIT_STATISTIC)
-	{
-		Packet.w_u32(BulletID);
-		Packet.w_u32(SenderID);
+		Packet.w_float(armor_piercing);
+		Packet.w_float(BulletFlightSpeed);
+		Packet.w_float(BulletFlightDist);
 	}
 }
 void SHit::Write_Packet			(NET_Packet	&Packet)
@@ -142,15 +135,15 @@ void SHit::Write_Packet			(NET_Packet	&Packet)
 void SHit::_dump()
 {
 	Msg("SHit::_dump()---begin");
-	Log("power=",power);
-	Log("impulse=",impulse);
+	Msg("power=%f", power);
+	Msg("impulse=%f", impulse);
 	Log("dir=",dir);
-	Log("whoID=",whoID);
-	Log("weaponID=",weaponID);
-	Log("element=",boneID);
+	Msg("whoID=%hu",whoID);
+	Msg("weaponID==%hu",weaponID);
+	Msg("element==%hu",boneID);
 	Log("p_in_bone_space=",p_in_bone_space);
-	Log("hit_type=",(int)hit_type);
-	Log("armor_piercing=",armor_piercing);
+	Msg("hit_type=%d",(int)hit_type);
+	Msg("armor_piercing=%f",armor_piercing);
 	Msg("SHit::_dump()---end");
 }
 #endif

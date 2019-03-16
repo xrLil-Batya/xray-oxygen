@@ -1,8 +1,0 @@
-#pragma once
-
-enum EGamePhases
-{
-	GAME_PHASE_NONE = 0,
-	GAME_PHASE_INPROGRESS,
-	GAME_PHASE_FORCEDWORD = u32(-1)
-};

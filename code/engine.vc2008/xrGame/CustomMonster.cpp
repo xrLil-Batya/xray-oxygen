@@ -25,7 +25,7 @@
 #include "material_manager.h"
 #include "sound_user_data_visitor.h"
 #include "PHMovementControl.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "characterphysicssupport.h"
 #include "ai/monsters/snork/snork.h"
 #include "ai/monsters/burer/burer.h"
@@ -36,13 +36,13 @@
 #include "moving_object.h"
 #include "level_path_manager.h"
 #include "ai_object_location.h"
+#include "ai_debug.h"
 
 // Lain: added
 #include "../xrEngine/IGame_Level.h"
 #include "../xrPhysics/IPHWorld.h"
 
 #ifdef DEBUG
-#	include "ai_debug.h"
 #	include "debug_text_tree.h"
 #	include "debug_renderer.h"
 #   include "../xrPhysics/animation_movement_controller.h"
@@ -51,17 +51,15 @@
 void SetActorVisibility(u16 who, float value);
 extern int g_AI_inactive_time;
 
-#ifndef MASTER_GOLD
-	Flags32		psAI_Flags	= {aiObstaclesAvoiding | aiUseSmartCovers};
-#endif // MASTER_GOLD
+Flags32		psAI_Flags	= {aiObstaclesAvoiding | aiUseSmartCovers};
 
 void CCustomMonster::SAnimState::Create(IKinematicsAnimated* K, LPCSTR base)
 {
 	char	buf[128];
-	fwd		= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base,"_fwd"));
-	back	= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base,"_back"));
-	ls		= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base,"_ls"));
-	rs		= K->ID_Cycle_Safe(strconcat(sizeof(buf),buf,base,"_rs"));
+	fwd		= K->ID_Cycle_Safe(xr_strconcat(buf, base, "_fwd"));
+	back	= K->ID_Cycle_Safe(xr_strconcat(buf, base, "_back"));
+	ls		= K->ID_Cycle_Safe(xr_strconcat(buf, base, "_ls"));
+	rs		= K->ID_Cycle_Safe(xr_strconcat(buf, base, "_rs"));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -222,7 +220,7 @@ void CCustomMonster::shedule_Update	( u32 DT )
 	// *** general stuff
 	if (g_Alive())
 	{
-		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CCustomMonster::Exec_Visibility));
+		Device.seqParallel.emplace_back(this, &CCustomMonster::Exec_Visibility);
 		memory().update(dt);
 	}
 	inherited::shedule_Update	(DT);
@@ -238,7 +236,6 @@ void CCustomMonster::shedule_Update	( u32 DT )
 		// here is monster AI call
 		m_fTimeUpdateDelta				= dt;
 		Device.Statistic->AI_Think.Begin	();
-		Device.Statistic->TEST1.Begin();
 		if (GetScriptControl())
 			ProcessScripts();
 		else {
@@ -246,7 +243,6 @@ void CCustomMonster::shedule_Update	( u32 DT )
 				Think					();
 		}
 		m_dwLastUpdateTime				= Device.dwTimeGlobal;
-		Device.Statistic->TEST1.End();
 		Device.Statistic->AI_Think.End	();
 
 		// Look and action streams
@@ -319,21 +315,11 @@ void CCustomMonster::UpdateCL	()
 
 #ifdef DEBUG
 	if( animation_movement() )
-				animation_movement()->DBG_verify_position_not_chaged();
+		animation_movement()->DBG_verify_position_not_chaged();
 #endif
 
 	CScriptEntity::process_sound_callbacks();
-
-	/*	//. hack just to skip 'CalculateBones'
-	if (sound().need_bone_data()) {
-		// we do this because we know here would be virtual function call
-		IKinematics					*kinematics = smart_cast<IKinematics*>(Visual());
-		VERIFY						(kinematics);
-		kinematics->CalculateBones	();
-	}
-	*/
-
-	Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(this,&CCustomMonster::update_sound_player));
+	Device.seqParallel.emplace_back	(this,&CCustomMonster::update_sound_player);
 
 
 	START_PROFILE("CustomMonster/client_update/network extrapolation")
@@ -466,73 +452,53 @@ void CCustomMonster::eye_pp_s0			( )
 	VERIFY									(_valid(eye_matrix));
 }
 
-void CCustomMonster::update_range_fov	(float &new_range, float &new_fov, float start_range, float start_fov)
+void CCustomMonster::update_range_fov(float &new_range, float &new_fov, float start_range, float start_fov)
 {
-	const float	standard_far_plane			= eye_range;
+	const float	standard_far_plane = eye_range;
 
-	float	current_fog_density				= GamePersistent().Environment().CurrentEnv->fog_density	;	
+	float	current_fog_density = Environment().CurrentEnv->fog_density;
 	// 0=no_fog, 1=full_fog, >1 = super-fog
-	float	current_far_plane				= GamePersistent().Environment().CurrentEnv->far_plane	;	
+	float	current_far_plane = Environment().CurrentEnv->far_plane;
 	// 300=standart, 50=super-fog
 
-	new_fov									= start_fov;
-	new_range								= 
-		start_range
-		*
-		(
-            std::min(m_far_plane_factor*current_far_plane,standard_far_plane)
-			/
-			standard_far_plane
-		)
-		*
-		(
-			1.f
-			/
-			(
-				1.f + m_fog_density_factor*current_fog_density
-			)
-		)
-	;
+	new_fov = start_fov;
+	new_range = start_range * (std::min(m_far_plane_factor*current_far_plane, standard_far_plane) / standard_far_plane) *
+		(1.f / (1.f + m_fog_density_factor * current_fog_density));
 }
 
 void CCustomMonster::eye_pp_s1			()
 {
 	float									new_range = eye_range, new_fov = eye_fov;
-	if (g_Alive()) {
+	if (g_Alive()) 
+	{
 #ifndef USE_STALKER_VISION_FOR_MONSTERS
 		update_range_fov					(new_range, new_fov, human_being() ? memory().visual().current_state().m_max_view_distance*eye_range : eye_range, eye_fov);
 #else 
 		update_range_fov					(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
 #endif
 	}
+
 	// Standart visibility
-	Device.Statistic->AI_Vis_Query.Begin		();
 	Fmatrix									mProject,mFull,mView;
 	mView.build_camera_dir					(eye_matrix.c,eye_matrix.k,eye_matrix.j);
 	VERIFY									(_valid(eye_matrix));
 	mProject.build_projection				(deg2rad(new_fov),1,0.1f,new_range);
 	mFull.mul								(mProject,mView);
 	feel_vision_query						(mFull,eye_matrix.c);
-	Device.Statistic->AI_Vis_Query.End		();
 }
 
 void CCustomMonster::eye_pp_s2				( )
 {
 	// Tracing
-	Device.Statistic->AI_Vis_RayTests.Begin	();
 	u32 dwTime			= Level().timeServer();
 	u32 dwDT			= dwTime-eye_pp_timestamp;
 	eye_pp_timestamp	= dwTime;
-	feel_vision_update						(this,eye_matrix.c,float(dwDT)/1000.f,memory().visual().transparency_threshold());
-	Device.Statistic->AI_Vis_RayTests.End	();
+	feel_vision_update(this,eye_matrix.c,float(dwDT)/1000.f,memory().visual().transparency_threshold());
 }
 
-void CCustomMonster::Exec_Visibility	( )
+void CCustomMonster::Exec_Visibility()
 {
-	//if (0==Sector())				return;
-	if (!g_Alive())					return;
-
-	Device.Statistic->AI_Vis.Begin	();
+		if (!m_memory_manager) return;
 	switch (eye_pp_stage%2)	
 	{
 	case 0:	
@@ -541,7 +507,6 @@ void CCustomMonster::Exec_Visibility	( )
 	case 1:	eye_pp_s2();			break;
 	}
 	++eye_pp_stage					;
-	Device.Statistic->AI_Vis.End		();
 }
 
 void CCustomMonster::UpdateCamera()
@@ -658,8 +623,7 @@ void CCustomMonster::Exec_Action(float /**dt/**/)
 {
 }
 
-//void CCustomMonster::Hit(float P, Fvector &dir,CObject* who, s16 element,Fvector position_in_object_space, float impulse, ALife::EHitType hit_type)
-void			CCustomMonster::Hit					(SHit* pHDS)
+void CCustomMonster::Hit(SHit* pHDS)
 {
 	if (!invulnerable())
 		inherited::Hit		(pHDS);
@@ -677,18 +641,8 @@ void CCustomMonster::net_Destroy()
 	sound().unload				();
 	movement().net_Destroy		();
 	
-	Device.remove_from_seq_parallel	(
-		fastdelegate::FastDelegate0<>(
-			this,
-			&CCustomMonster::update_sound_player
-		)
-	);
-	Device.remove_from_seq_parallel	(
-		fastdelegate::FastDelegate0<>(
-			this,
-			&CCustomMonster::Exec_Visibility
-		)
-	);
+	Device.remove_from_seq_parallel	(xrDelegate<void()>(BindDelegate(this, &CCustomMonster::update_sound_player)));
+	Device.remove_from_seq_parallel	(xrDelegate<void()>(BindDelegate(this, &CCustomMonster::Exec_Visibility)));
 	
 #ifdef DEBUG
 	DBG().on_destroy_object(this);

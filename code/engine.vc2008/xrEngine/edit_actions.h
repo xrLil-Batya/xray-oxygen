@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: edit_actions.h
 //	Created 	: 04.03.2008
 //	Author		: Evgeniy Sokolov
@@ -34,7 +34,7 @@ protected:
 class callback_base : public base
 {
 private:
-	typedef		fastdelegate::FastDelegate0<void>		Callback;
+	typedef		xrDelegate<void()>		Callback;
 
 public:
 					callback_base	( Callback const& callback, key_state state );

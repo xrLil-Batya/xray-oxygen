@@ -4,16 +4,13 @@
 //	Author		: Evgeniy Sokolov
 //	Description : UI Logs (PDA) window class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef UI_PDA_LOGS_WND_H_INCLUDED
-#define UI_PDA_LOGS_WND_H_INCLUDED
-
-#include "UIWindow.h"
-#include "UIWndCallback.h"
+#pragma once
+#include "../xrUICore/UIWindow.h"
+#include "../xrUICore/UIWndCallback.h"
 
 #include "../ai_space.h"
 #include "../../xrServerEntities/alife_space.h"
-#include "xrUIXmlParser.h"
+#include "../xrUICore/xrUIXmlParser.h"
 
 class CUITextWnd;
 class CUIFrameWindow;
@@ -70,18 +67,16 @@ public:
 	virtual bool		OnKeyboardHold		(int dik);
 
 	IC		void		UpdateNews			()	{ m_need_reload = true; }
-	void	xr_stdcall	PerformWork			();
+	void		PerformWork			();
 
 protected:
 			void		ReLoadNews			();
 			void		AddNewsItem			( GAME_NEWS_DATA& news_data );
 	ALife::_TIME_ID		GetShiftPeriod		( ALife::_TIME_ID datetime, int shift_day );
 
-			void xr_stdcall	UpdateChecks	( CUIWindow* w, void* d);
-			void xr_stdcall	PrevPeriod		( CUIWindow* w, void* d);
-			void xr_stdcall	NextPeriod		( CUIWindow* w, void* d);
+			void 	UpdateChecks	( CUIWindow* w, void* d);
+			void 	PrevPeriod		( CUIWindow* w, void* d);
+			void 	NextPeriod		( CUIWindow* w, void* d);
 	
 			void 		on_scroll_keys		( int dik );
 }; // class CUILogsWnd
-
-#endif // UI_PDA_LOGS_WND_H_INCLUDED

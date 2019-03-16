@@ -20,7 +20,7 @@ private:
 	u32						tris_in_frame_visible	;
 	u32						tris_in_frame			;
 
-	std::recursive_mutex		MT;
+	xrCriticalSection		MTLock;
 	volatile u32			MT_frame_rendered;
 
 	void					Render_DB	(CFrustum&	base);

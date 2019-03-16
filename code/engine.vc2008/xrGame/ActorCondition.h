@@ -1,4 +1,4 @@
-// ActorCondition.h: класс состояния игрока
+// ActorCondition.h: РєР»Р°СЃСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ РёРіСЂРѕРєР°
 //
 
 #pragma once
@@ -11,9 +11,10 @@ class CScriptCallbackEx;
 class CActor;
 class CActorDeathEffector;
 
-class CActorCondition: public CEntityCondition {
+class GAME_API CActorCondition: public CEntityCondition
+{
 private:
-	typedef CEntityCondition inherited;
+	using inherited = CEntityCondition;
 	enum {	eCriticalPowerReached			=(1<<0),
 			eCriticalMaxPowerReached		=(1<<1),
 			eCriticalBleedingSpeed			=(1<<2),
@@ -69,7 +70,7 @@ public:
 	IC void				BoostChemicalBurnProtection	(const float value);
 	BOOSTER_MAP&		GetCurBoosterInfluences		() {return m_booster_influences;};
 
-	// хромание при потере сил и здоровья
+	// С…СЂРѕРјР°РЅРёРµ РїСЂРё РїРѕС‚РµСЂРµ СЃРёР» Рё Р·РґРѕСЂРѕРІСЊСЏ
 	virtual	bool		IsLimping					() const;
 	virtual bool		IsCantWalk					() const;
 	virtual bool		IsCantWalkWeight			();
@@ -83,11 +84,12 @@ public:
 			void		ConditionStand				(float weight);
 	IC		float		MaxWalkWeight				() const	{ return m_MaxWalkWeight; }
 			
-			float	xr_stdcall	GetAlcohol			()	{return m_fAlcohol;}
-			float	xr_stdcall	GetPsy				()	{return 1.0f-GetPsyHealth();}
-			float				GetSatiety			()  {return m_fSatiety;}
-			float				GetThirst			()  {return m_fThirst; }
-	IC		float				GetSatietyPower		() const {return m_fV_SatietyPower*m_fSatiety;};
+			float		GetAlcohol			()	{return m_fAlcohol;}
+			float		GetPsy				()	{return 1.0f-GetPsyHealth();}
+			float		GetThirst			()  {return m_fThirst; }
+
+	IC		float		GetSatiety			()  const {return m_fSatiety;}
+	IC		float		GetSatietyPower		()  const {return m_fV_SatietyPower*m_fSatiety;};
 
 			void		AffectDamage_InjuriousMaterialAndMonstersInfluence();
 			float		GetInjuriousMaterialDamage	();
@@ -105,13 +107,13 @@ public:
 	virtual void			load					(IReader &input_packet);
 //	IC		float const&	Satiety					()	{ return m_fSatiety; }
 	IC		float const&	V_Satiety				()	{ return m_fV_Satiety; }
-	IC		float const&    V_Thrist				()	{ return m_fV_Thirst; }
+	IC		float const&    V_Thirst				()	{ return m_fV_Thirst; }
 	IC		float const&	V_SatietyPower			()	{ return m_fV_SatietyPower; }
 	IC		float const&	V_SatietyHealth			()	{ return m_fV_SatietyHealth; }
 	IC		float const&	SatietyCritical			()	{ return m_fSatietyCritical; }
 	IC		float const&	ThirstCritical			()	{ return m_fThirstCritical; }
-	IC		float const&	V_ThristPower			()  { return m_fV_ThirstPower; }
-	IC		float const&	V_ThristHealth			()  { return m_fV_ThirstHealth; }
+	IC		float const&	V_ThirstPower			()  { return m_fV_ThirstPower; }
+	IC		float const&	V_ThirstHealth			()  { return m_fV_ThirstHealth; }
 	
 	float	GetZoneMaxPower							(ALife::EInfluenceType type) const;
 	float	GetZoneMaxPower							(ALife::EHitType hit_type) const;
@@ -143,7 +145,6 @@ protected:
 	float m_fV_ThirstHealth;
 	float m_fThirstCritical;
 	
-	bool bUseThirst;
 //--
 	float m_fPowerLeakSpeed;
 
@@ -169,7 +170,7 @@ protected:
 	mutable bool m_bCantWalk;
 	mutable bool m_bCantSprint;
 
-	//порог силы и здоровья меньше которого актер начинает хромать
+	//РїРѕСЂРѕРі СЃРёР»С‹ Рё Р·РґРѕСЂРѕРІСЊСЏ РјРµРЅСЊС€Рµ РєРѕС‚РѕСЂРѕРіРѕ Р°РєС‚РµСЂ РЅР°С‡РёРЅР°РµС‚ С…СЂРѕРјР°С‚СЊ
 	float m_fLimpingPowerBegin;
 	float m_fLimpingPowerEnd;
 	float m_fCantWalkPowerBegin;
@@ -193,7 +194,7 @@ class CActorDeathEffector
 	ref_sound				m_death_sound;
 	bool					m_b_actual;
 	float					m_start_health;
-	void xr_stdcall			OnPPEffectorReleased		();
+	void 			OnPPEffectorReleased		();
 public:
 			CActorDeathEffector	(CActorCondition* parent, LPCSTR sect);	// -((
 			~CActorDeathEffector();

@@ -28,7 +28,7 @@ char* timestamp(string64& dest)
 		if ('/' == temp[it])
 			temp[it] = '-';
 
-	strconcat(sizeof(dest), dest, temp, "_");
+	xr_strconcat(dest, temp, "_");
 
 	// time
 	_strtime(temp);

@@ -14,10 +14,10 @@
 #include "ai/monsters/basemonster/base_monster.h"
 
 
-CPda::CPda(void)						
+CPda::CPda()						
 {										
 	m_idOriginalOwner		= u16(-1);
-	m_SpecificChracterOwner = NULL;
+	m_SpecificChracterOwner = nullptr;
 	TurnOff					();
 }
 
@@ -48,7 +48,7 @@ void CPda::Load(LPCSTR section)
 {
 	inherited::Load(section);
 
-	m_fRadius = pSettings->r_float(section,"radius");
+	SetRadius(pSettings->r_float(section,"radius"));
 	m_functor_str = READ_IF_EXISTS(pSettings,r_string,section,"play_function",""); 
 }
 
@@ -68,7 +68,7 @@ void CPda::shedule_Update(u32 dt)
 			return;
 		}
 
-		feel_touch_update(Position(),m_fRadius);
+		feel_touch_update(Position(),GetRadius());
 		UpdateActiveContacts	();
 	}
 }
@@ -134,7 +134,7 @@ void CPda::OnH_A_Chield()
 {
 	VERIFY(IsOff());
 
-	//включить PDA только если оно находится у первого владельца
+	//РІРєР»СЋС‡РёС‚СЊ PDA С‚РѕР»СЊРєРѕ РµСЃР»Рё РѕРЅРѕ РЅР°С…РѕРґРёС‚СЃСЏ Сѓ РїРµСЂРІРѕРіРѕ РІР»Р°РґРµР»СЊС†Р°
 	if(H_Parent()->ID() == m_idOriginalOwner){
 		TurnOn					();
 		if(m_sFullName.empty()){
@@ -150,7 +150,7 @@ void CPda::OnH_B_Independent(bool just_before_destroy)
 {
 	inherited::OnH_B_Independent(just_before_destroy);
 	
-	//выключить
+	//РІС‹РєР»СЋС‡РёС‚СЊ
 	TurnOff();
 }
 

@@ -11,7 +11,7 @@ CZoneCampfire::~CZoneCampfire()
 {
 	CParticlesObject::Destroy(m_pDisabledParticles);
 	CParticlesObject::Destroy(m_pEnablingParticles);
-	m_disabled_sound.destroy();
+	m_sound.destroy();
 }
 
 void CZoneCampfire::Load(LPCSTR section)
@@ -29,13 +29,17 @@ void CZoneCampfire::GoEnabledState()
 		CParticlesObject::Destroy(m_pDisabledParticles);
 	}
 
-	m_disabled_sound.stop();
-	m_disabled_sound.destroy();
+	m_sound.stop();
+	m_sound.destroy();
 
 	LPCSTR str = pSettings->r_string(cNameSect(), "enabling_particles");
 	m_pEnablingParticles = CParticlesObject::Create(str, false);
 	m_pEnablingParticles->UpdateParent(XFORM(), zero_vel);
 	m_pEnablingParticles->Play(false);
+
+	str = pSettings->r_string(cNameSect(), "enabling_sound");
+	m_sound.create(str, st_Effect, sg_SourceType);
+	m_sound.play_at_pos(this, Position(), true);
 }
 
 void CZoneCampfire::GoDisabledState()
@@ -48,31 +52,28 @@ void CZoneCampfire::GoDisabledState()
 	m_pDisabledParticles->UpdateParent(XFORM(), zero_vel);
 	m_pDisabledParticles->Play(false);
 
+	m_sound.stop();
+	m_sound.destroy();
+
 	str = pSettings->r_string(cNameSect(), "disabled_sound");
-	m_disabled_sound.create(str, st_Effect, sg_SourceType);
-	m_disabled_sound.play_at_pos(0, Position(), true);
+	m_sound.create(str, st_Effect, sg_SourceType);
+	m_sound.play_at_pos(this, Position(), true);
 }
 
 static const int OVL_TIME = 3000;
 
 void CZoneCampfire::turn_on_script()
 {
-	if (psDeviceFlags.test(rsR2 | rsR3 | rsR4))
-	{
-		m_turn_time = Device.dwTimeGlobal + OVL_TIME;
-		m_turned_on = true;
-		GoEnabledState();
-	}
+	m_turn_time = Device.dwTimeGlobal + OVL_TIME;
+	m_turned_on = true;
+	GoEnabledState();
 }
 
 void CZoneCampfire::turn_off_script()
 {
-	if (psDeviceFlags.test(rsR2 | rsR3 | rsR4))
-	{
-		m_turn_time = Device.dwTimeGlobal + OVL_TIME;
-		m_turned_on = false;
-		GoDisabledState();
-	}
+	m_turn_time = Device.dwTimeGlobal + OVL_TIME;
+	m_turned_on = false;
+	GoDisabledState();
 }
 
 void CZoneCampfire::shedule_Update(u32	dt)
@@ -83,7 +84,7 @@ void CZoneCampfire::shedule_Update(u32	dt)
 	if (m_pIdleParticles)
 	{
 		Fvector vel;
-		vel.mul(GamePersistent().Environment().wind_blast_direction, GamePersistent().Environment().wind_strength_factor);
+		vel.mul(Environment().wind_blast_direction, Environment().wind_strength_factor);
 		m_pIdleParticles->UpdateParent(XFORM(), vel);
 	}
 

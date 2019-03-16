@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GameTask.h"
-#include "ui/xrUIXmlParser.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "map_location.h"
 #include "map_spot.h"
 #include "map_manager.h"
@@ -16,7 +16,7 @@
 #include "alife_story_registry.h"
 #include "game_object_space.h"
 #include "object_broker.h"
-#include "ui/uitexturemaster.h"
+#include "../xrUICore/UITextureMaster.h"
 
 CGameTask::CGameTask()
 {
@@ -112,7 +112,7 @@ void CGameTask::RemoveMapLocations(bool notify)
 	if (m_linked_map_location && !notify)
 		Level().MapManager().RemoveMapLocation(m_linked_map_location);
 
-	m_map_location = 0;
+	m_map_location = nullptr;
 	m_linked_map_location = nullptr;
 	m_map_object_id = u16(-1);
 }
@@ -253,39 +253,39 @@ void CGameTask::CommitScriptHelperContents()
 
 void CGameTask::AddCompleteInfo_script(LPCSTR _str)
 {
-	m_completeInfos.push_back(_str);
+	m_completeInfos.emplace_back(_str);
 }
 
 void CGameTask::AddFailInfo_script(LPCSTR _str)
 {
-	m_failInfos.push_back(_str);
+	m_failInfos.emplace_back(_str);
 }
 
 void CGameTask::AddOnCompleteInfo_script(LPCSTR _str)
 {
-	m_infos_on_complete.push_back(_str);
+	m_infos_on_complete.emplace_back(_str);
 }
 
 void CGameTask::AddOnFailInfo_script(LPCSTR _str)
 {
-	m_infos_on_fail.push_back(_str);
+	m_infos_on_fail.emplace_back(_str);
 }
 
 void CGameTask::AddCompleteFunc_script(LPCSTR _str)
 {
-	m_pScriptHelper.m_s_complete_lua_functions.push_back(_str);
+	m_pScriptHelper.m_s_complete_lua_functions.emplace_back(_str);
 }
 void CGameTask::AddFailFunc_script(LPCSTR _str)
 {
-	m_pScriptHelper.m_s_fail_lua_functions.push_back(_str);
+	m_pScriptHelper.m_s_fail_lua_functions.emplace_back(_str);
 }
 void CGameTask::AddOnCompleteFunc_script(LPCSTR _str)
 {
-	m_pScriptHelper.m_s_lua_functions_on_complete.push_back(_str);
+	m_pScriptHelper.m_s_lua_functions_on_complete.emplace_back(_str);
 }
 void CGameTask::AddOnFailFunc_script(LPCSTR _str)
 {
-	m_pScriptHelper.m_s_lua_functions_on_fail.push_back(_str);
+	m_pScriptHelper.m_s_lua_functions_on_fail.emplace_back(_str);
 }
 
 void SScriptTaskHelper::init_functors(xr_vector<shared_str>& v_src, task_state_functors& v_dest)
@@ -296,7 +296,7 @@ void SScriptTaskHelper::init_functors(xr_vector<shared_str>& v_src, task_state_f
 	{
 		bool functor_exists = ai().script_engine().functor(v_src[idx].c_str(), v_dest[idx]);
 		if (!functor_exists)	
-			Log("Cannot find script function described in task objective  ", v_src[idx].c_str());
+			Msg("Cannot find script function described in task objective  %s", v_src[idx].c_str());
 	}
 }
 
@@ -338,7 +338,7 @@ void SGameTaskKey::destroy()
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CGameTask::script_register(lua_State *L)
 {
 	module(L)

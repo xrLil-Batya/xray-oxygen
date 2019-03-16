@@ -1,4 +1,4 @@
-// Engine.h: interface for the CEngine class.
+﻿// Engine.h: interface for the CEngine class.
 //////////////////////////////////////////////////////////////////////
 #pragma once
 struct xrDispatchTable;

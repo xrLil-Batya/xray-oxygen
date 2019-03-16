@@ -1,8 +1,8 @@
-#pragma once
+п»ї#pragma once
 #include "../xrCore/BaseEffector.h"
 #include "../xrCore/SPPInfo.h"
 
-// постпроцесс
+// РїРѕСЃС‚РїСЂРѕС†РµСЃСЃ
 class ENGINE_API CEffectorPP: public SBaseEffector
 {
 	EEffectorPPType		eType;

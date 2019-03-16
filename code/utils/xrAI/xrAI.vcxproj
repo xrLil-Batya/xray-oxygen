@@ -75,7 +75,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;..\..\engine.vc2008\xrServerEntities\;../../sdk/include/;../../sdk/include/dx/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;..\..\engine.vc2008\xrServerEntities\;../../sdk/include/;../../sdk/include/dx/;..\..\engine.vc2008\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>XRPHYSICS_STATIC;WIN32;_WINDOWS;DEBUG;AI_COMPILER;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -97,6 +97,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ShowIncludes>false</ShowIncludes>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -118,7 +119,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrScripts.lib;xrSE_Factory.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrScripts.lib;xrSE_Factory.lib;xrLCUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,7 +137,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;..\..\engine.vc2008\xrServerEntities\;../../sdk/include/;../../sdk/include/dx/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;..\..\engine.vc2008\xrServerEntities\;../../sdk/include/;../../sdk/include/dx/;..\..\engine.vc2008\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>XRPHYSICS_STATIC;_COMPILERS_;WIN32;NDEBUG;_WINDOWS;AI_COMPILER;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -144,7 +145,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -184,7 +185,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrScripts.lib;xrSE_Factory.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrScripts.lib;xrSE_Factory.lib;xrLCUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">
@@ -202,7 +203,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;..\..\engine.vc2008\xrServerEntities\;../../sdk/include/;../../sdk/include/dx/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;..\..\engine.vc2008\xrServerEntities\;../../sdk/include/;../../sdk/include/dx/;..\..\engine.vc2008\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>XRPHYSICS_STATIC;_COMPILERS_;WIN32;NDEBUG;_WINDOWS;AI_COMPILER;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -250,16 +251,11 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrScripts.lib;xrSE_Factory.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrScripts.lib;xrSE_Factory.lib;xrLCUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\engine.vc2008\xrEngine\xrLoadSurface.cpp" />
-    <ClCompile Include="_buildnodes_view.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="compiler.cpp">
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">AssemblyAndSourceCode</AssemblerOutput>
@@ -270,11 +266,6 @@
     <ClCompile Include="compiler_cover.cpp" />
     <ClCompile Include="compiler_display.cpp" />
     <ClCompile Include="compiler_light.cpp" />
-    <ClCompile Include="compiler_link.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="compiler_load.cpp" />
     <ClCompile Include="compiler_save.cpp">
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
@@ -289,8 +280,6 @@
     </ClCompile>
     <ClCompile Include="tga.cpp" />
     <ClCompile Include="xrAI.cpp" />
-    <ClCompile Include="xrThread.cpp" />
-    <ClCompile Include="cl_log.cpp" />
     <ClCompile Include="cl_collector.cpp" />
     <ClCompile Include="random32.cpp" />
     <ClCompile Include="level_graph.cpp" />
@@ -343,9 +332,7 @@
     <ClInclude Include="tga.h" />
     <ClInclude Include="xrAI.h" />
     <ClInclude Include="xrShaderTypes.h" />
-    <ClInclude Include="xrThread.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="cl_log.h" />
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="FTimer.h" />
     <ClInclude Include="light.h" />

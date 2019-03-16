@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: editor_environment_weathers_time.cpp
 //	Created 	: 12.01.2008
 //  Modified 	: 12.01.2008
@@ -17,8 +17,8 @@
 #include "editor_environment_ambients_manager.hpp"
 #include "editor_environment_suns_manager.hpp"
 #include "editor_environment_thunderbolts_manager.hpp"
-#include "xr_efflensflare.h"
-#include "thunderbolt.h"
+#include "LensFlare.h"
+#include "Thunderbolt.h"
 
 using editor::environment::weathers::time;
 using editor::environment::weathers::weather;
@@ -110,7 +110,7 @@ void time::load				(CInifile& config)
 //	((Fvector&)clouds_color).mul(.5f*(float)atof(_GetItem(clouds,4,temp)));
 
 //	on_device_create			();
-	inherited::load				(m_manager, config);
+	inherited::Load				(m_manager, config);
 }
 
 void time::save				(CInifile& config)
@@ -147,16 +147,16 @@ LPCSTR time::id_getter		() const
 	return						(m_identifier.c_str());
 }
 
-void time::id_setter		(LPCSTR value_)
+void time::id_setter(LPCSTR value_)
 {
-	shared_str					value = value_;
+	shared_str value = value_;
 	if (m_identifier._get() == value._get())
 		return;
 
 	if (m_weather)
-		m_identifier			= m_weather->unique_id(m_identifier, value);
+		m_identifier = m_weather->unique_id(m_identifier, value);
 	else
-		m_identifier			= value;
+		m_identifier = std::move(value);
 }
 
 LPCSTR const* time::ambients_collection		()
@@ -272,7 +272,7 @@ void time::sky_texture_setter				(LPCSTR value)
 	sky_texture_name	= value;
 
 	string_path			st_env;
-	strconcat			(sizeof(st_env), st_env, value, "#small");
+	xr_strconcat (st_env, value, "#small");
 	sky_texture_env_name= st_env;
 	m_pDescriptor->OnDeviceCreate(*this);
 }
@@ -673,7 +673,7 @@ void time::lerp	(CEnvironment* parent, CEnvDescriptor& A, CEnvDescriptor& B, flo
 	m_sun					= a.m_sun;
 	m_thunderbolt_collection= a.m_thunderbolt_collection;
 
-	inherited::lerp			(parent, A, B, f, M, m_power);
+	inherited::Lerp			(parent, A, B, f, M, m_power);
 }
 
 #endif // #ifdef INGAME_EDITOR

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{295BF6D3-FE39-41FC-82B3-E94F97E24845}</ProjectGuid>
+    <RootNamespace>xrUICore</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\F-Ray.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\F-Ray.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <ExceptionHandling>false</ExceptionHandling>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>../../sdk/include/;../../sdk/include/dx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UICORE_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnablePREfast>true</EnablePREfast>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>xrCore.lib;xrEngine.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>../../sdk/include/;../../sdk/include/dx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;UICORE_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <EnablePREfast>true</EnablePREfast>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xrCore.lib;xrEngine.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="MMSound.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UI3dStatic.cpp" />
+    <ClCompile Include="UI3tButton.cpp" />
+    <ClCompile Include="UIAnimatedStatic.cpp" />
+    <ClCompile Include="UIBtnHint.cpp" />
+    <ClCompile Include="UIButton.cpp" />
+    <ClCompile Include="UICarPanel.cpp" />
+    <ClCompile Include="UICheckButton.cpp" />
+    <ClCompile Include="UIComboBox.cpp" />
+    <ClCompile Include="UICursor.cpp" />
+    <ClCompile Include="UICustomEdit.cpp" />
+    <ClCompile Include="UICustomSpin.cpp" />
+    <ClCompile Include="UIDebugFonts.cpp" />
+    <ClCompile Include="UIDialogHolder.cpp" />
+    <ClCompile Include="UIDialogWnd.cpp" />
+    <ClCompile Include="UIDoubleProgressBar.cpp" />
+    <ClCompile Include="UIEditBox.cpp" />
+    <ClCompile Include="UIEditBoxEx.cpp" />
+    <ClCompile Include="UIEditKeyBind.cpp" />
+    <ClCompile Include="UIFixedScrollBar.cpp" />
+    <ClCompile Include="UIFrameLineWnd.cpp" />
+    <ClCompile Include="UIFrameWindow.cpp" />
+    <ClCompile Include="UIGameLog.cpp" />
+    <ClCompile Include="UIHelper.cpp" />
+    <ClCompile Include="UIHint.cpp" />
+    <ClCompile Include="UIInteractiveBackground.cpp" />
+    <ClCompile Include="UIKeyBinding.cpp" />
+    <ClCompile Include="UILanimController.cpp" />
+    <ClCompile Include="UILayoutInflater.cpp" />
+    <ClCompile Include="UILine.cpp" />
+    <ClCompile Include="UILines.cpp" />
+    <ClCompile Include="UIListBox.cpp" />
+    <ClCompile Include="UIListBoxItem.cpp" />
+    <ClCompile Include="UIListBoxItemMsgChain.cpp" />
+    <ClCompile Include="UILoadingScreen.cpp" />
+    <ClCompile Include="UIMessageBox.cpp" />
+    <ClCompile Include="UIMessageBoxEx.cpp" />
+    <ClCompile Include="UIMMShniaga.cpp" />
+    <ClCompile Include="UIMoneyIndicator.cpp" />
+    <ClCompile Include="UIOptionsItem.cpp" />
+    <ClCompile Include="UIOptionsManager.cpp" />
+    <ClCompile Include="UIOptionsManagerScript.cpp" />
+    <ClCompile Include="UIPdaMsgListItem.cpp" />
+    <ClCompile Include="UIProgressBar.cpp" />
+    <ClCompile Include="UIProgressShape.cpp" />
+    <ClCompile Include="UIPropertiesBox.cpp" />
+    <ClCompile Include="UIRadioButton.cpp" />
+    <ClCompile Include="UIScrollBar.cpp" />
+    <ClCompile Include="UIScrollBox.cpp" />
+    <ClCompile Include="UIScrollView.cpp" />
+    <ClCompile Include="UISpinNum.cpp" />
+    <ClCompile Include="UISpinText.cpp" />
+    <ClCompile Include="UIStatic.cpp" />
+    <ClCompile Include="UIStaticItem.cpp" />
+    <ClCompile Include="UIStatic_script.cpp" />
+    <ClCompile Include="UISubLine.cpp" />
+    <ClCompile Include="UITabButton.cpp" />
+    <ClCompile Include="UITabControl.cpp" />
+    <ClCompile Include="UITextureMaster.cpp" />
+    <ClCompile Include="UITrackBar.cpp" />
+    <ClCompile Include="UITreeViewItem.cpp" />
+    <ClCompile Include="UIView.cpp" />
+    <ClCompile Include="UIViewGroup.cpp" />
+    <ClCompile Include="UIViewInflater.cpp" />
+    <ClCompile Include="UIWindow.cpp" />
+    <ClCompile Include="UIWndCallback.cpp" />
+    <ClCompile Include="UIXmlInit.cpp" />
+    <ClCompile Include="ui_arrow.cpp" />
+    <ClCompile Include="ui_base.cpp" />
+    <ClCompile Include="UI_IB_Static.cpp" />
+    <ClCompile Include="xrUIXmlParser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IGameUI.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MMSound.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="UI3dStatic.h" />
+    <ClInclude Include="UI3tButton.h" />
+    <ClInclude Include="uiabstract.h" />
+    <ClInclude Include="UIAnimatedStatic.h" />
+    <ClInclude Include="UIBtnHint.h" />
+    <ClInclude Include="UIButton.h" />
+    <ClInclude Include="UICarPanel.h" />
+    <ClInclude Include="UICheckButton.h" />
+    <ClInclude Include="UIComboBox.h" />
+    <ClInclude Include="UICursor.h" />
+    <ClInclude Include="UICustomEdit.h" />
+    <ClInclude Include="UICustomSpin.h" />
+    <ClInclude Include="UIDebugFonts.h" />
+    <ClInclude Include="UIDialogHolder.h" />
+    <ClInclude Include="UIDialogWnd.h" />
+    <ClInclude Include="UIDoubleProgressBar.h" />
+    <ClInclude Include="UIEditBox.h" />
+    <ClInclude Include="UIEditBoxEx.h" />
+    <ClInclude Include="UIEditKeyBind.h" />
+    <ClInclude Include="UIFixedScrollBar.h" />
+    <ClInclude Include="UIFrameLineWnd.h" />
+    <ClInclude Include="UIFrameWindow.h" />
+    <ClInclude Include="UIGameLog.hpp" />
+    <ClInclude Include="UIHelper.h" />
+    <ClInclude Include="UIHint.h" />
+    <ClInclude Include="UIInteractiveBackground.h" />
+    <ClInclude Include="UIKeyBinding.h" />
+    <ClInclude Include="UILanimController.h" />
+    <ClInclude Include="UILayoutInflater.h" />
+    <ClInclude Include="UILine.h" />
+    <ClInclude Include="UILines.h" />
+    <ClInclude Include="uilinestd.h" />
+    <ClInclude Include="UIListBox.h" />
+    <ClInclude Include="UIListBoxItem.h" />
+    <ClInclude Include="UIListBoxItemMsgChain.h" />
+    <ClInclude Include="UILoadingScreen.h" />
+    <ClInclude Include="UIMessageBox.h" />
+    <ClInclude Include="UIMessageBoxEx.h" />
+    <ClInclude Include="UIMessages.h" />
+    <ClInclude Include="UIMMShniaga.h" />
+    <ClInclude Include="UIMoneyIndicator.h" />
+    <ClInclude Include="UIOptionsItem.h" />
+    <ClInclude Include="UIOptionsManager.h" />
+    <ClInclude Include="UIOptionsManagerScript.h" />
+    <ClInclude Include="UIPdaMsgListItem.h" />
+    <ClInclude Include="UIProgressBar.h" />
+    <ClInclude Include="UIProgressShape.h" />
+    <ClInclude Include="UIPropertiesBox.h" />
+    <ClInclude Include="UIRadioButton.h" />
+    <ClInclude Include="UIScrollBar.h" />
+    <ClInclude Include="UIScrollBox.h" />
+    <ClInclude Include="UIScrollView.h" />
+    <ClInclude Include="UISpinNum.h" />
+    <ClInclude Include="UISpinText.h" />
+    <ClInclude Include="UIStatic.h" />
+    <ClInclude Include="UIStaticItem.h" />
+    <ClInclude Include="UISubLine.h" />
+    <ClInclude Include="UITabButton.h" />
+    <ClInclude Include="UITabControl.h" />
+    <ClInclude Include="UITextureMaster.h" />
+    <ClInclude Include="UITrackBar.h" />
+    <ClInclude Include="UITreeViewItem.h" />
+    <ClInclude Include="UIView.h" />
+    <ClInclude Include="UIViewGroup.h" />
+    <ClInclude Include="UIViewInflater.h" />
+    <ClInclude Include="UIWindow.h" />
+    <ClInclude Include="UIWndCallback.h" />
+    <ClInclude Include="UIXmlInit.h" />
+    <ClInclude Include="ui_arrow.h" />
+    <ClInclude Include="ui_base.h" />
+    <ClInclude Include="ui_defs.h" />
+    <ClInclude Include="UI_IB_Static.h" />
+    <ClInclude Include="xrUIXmlParser.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

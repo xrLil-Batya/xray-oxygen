@@ -9,10 +9,6 @@
       <Configuration>Mixed</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_IA32|x64">
-      <Configuration>Release_IA32</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -28,13 +24,6 @@
     <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
@@ -61,11 +50,6 @@
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
     <Import Project="..\..\F-Ray.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
-    <Import Project="..\..\F-Ray.props" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
@@ -79,20 +63,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
-    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</IgnoreImportLibrary>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
-    <OutDir>$(xrBinOut)..\Release\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
+    <OutDir>$(SolutionDir)..\binaries\$(Platform)\Release\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -107,7 +87,7 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;LUABIND_NO_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;LUABIND_NO_EXCEPTIONS;GAME_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -130,8 +110,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/bigobj</AdditionalOptions>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
@@ -151,7 +130,9 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrUICore.lib;IKAN.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
@@ -167,14 +148,13 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;DEBUG;MIXED;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DEBUG;MIXED;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;GAME_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -188,10 +168,10 @@
       </BrowseInformation>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/bigobj</AdditionalOptions>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
@@ -199,7 +179,6 @@
       <Culture>0x0419</Culture>
     </ResourceCompile>
     <Link>
-      <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);$(xrLib)../Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -210,8 +189,9 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(xrLib)..\Release\xrGame.lib</ImportLibrary>
+      <AdditionalDependencies>xrUICore.lib;IKAN.lib;min_obb.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions> /EDITANDCONTINUE /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -230,7 +210,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;LUABIND_NO_EXCEPTIONS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;LUABIND_NO_EXCEPTIONS;_SECURE_SCL=0;GAME_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -254,79 +234,8 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/bigobj</AdditionalOptions>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-    </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0419</Culture>
-    </ResourceCompile>
-    <Link>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
-      <GenerateMapFile>false</GenerateMapFile>
-      <MapFileName>
-      </MapFileName>
-      <SubSystem>NotSet</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <LinkTimeCodeGeneration>
-      </LinkTimeCodeGeneration>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
-      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ShowProgress>NotSet</ShowProgress>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TypeLibraryName>x:\xrGame.tlb</TypeLibraryName>
-    </Midl>
-    <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
-      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <ExceptionHandling>
-      </ExceptionHandling>
-      <SmallerTypeCheck>false</SmallerTypeCheck>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
-      <AssemblerOutput>
-      </AssemblerOutput>
-      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
-      <BrowseInformation>
-      </BrowseInformation>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/bigobj</AdditionalOptions>
+      <DisableSpecificWarnings>4237;4275;4717;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
@@ -351,12 +260,46 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrUICore.lib;IKAN.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ui\UILoadingScreen.h" />
+    <ClInclude Include="items\AdvancedDetector.h" />
+    <ClInclude Include="items\Artefact.h" />
+    <ClInclude Include="items\artefact_activation.h" />
+    <ClInclude Include="Items\Bolt.h" />
+    <ClInclude Include="items\CMagazine.h" />
+    <ClInclude Include="items\CustomOutfit.h" />
+    <ClInclude Include="items\c_artefact.h" />
+    <ClInclude Include="items\Dosimeter.h" />
+    <ClInclude Include="items\EliteDetector.h" />
+    <ClInclude Include="items\FoodItem.h" />
+    <ClInclude Include="items\Grenade.h" />
+    <ClInclude Include="items\GrenadeLauncher.h" />
+    <ClInclude Include="items\Helmet.h" />
+    <ClInclude Include="items\InfoDocument.h" />
+    <ClInclude Include="items\Scope.h" />
+    <ClInclude Include="items\Silencer.h" />
+    <ClInclude Include="items\SimpleDetector.h" />
+    <ClInclude Include="items\Torch.h" />
+    <ClInclude Include="Items\Weapon.h" />
+    <ClInclude Include="Items\WeaponAmmo.h" />
+    <ClInclude Include="Items\WeaponAutomaticShotgun.h" />
+    <ClInclude Include="Items\WeaponBinoculars.h" />
+    <ClInclude Include="Items\WeaponBinocularsVision.h" />
+    <ClInclude Include="Items\weaponBM16.h" />
+    <ClInclude Include="Items\WeaponKnife.h" />
+    <ClInclude Include="Items\WeaponMagazined.h" />
+    <ClInclude Include="Items\WeaponMagazinedWGrenade.h" />
+    <ClInclude Include="Items\WeaponRG6.h" />
+    <ClInclude Include="Items\WeaponRPG7.h" />
+    <ClInclude Include="Items\WeaponShotgun.h" />
+    <ClInclude Include="Items\WeaponStatMgun.h" />
+    <ClInclude Include="Items\WeaponSVD.h" />
+    <ClInclude Include="Items\WeaponVintorez.h" />
+    <ClInclude Include="ui\UIDosimeter.h" />
     <ClInclude Include="ui\UIPdaSpot.h" />
     <ClInclude Include="ActivatingCharCollisionDelay.h" />
     <ClInclude Include="ActorRuck.h" />
@@ -367,11 +310,7 @@
     <ClInclude Include="character_hit_animations_params.h" />
     <ClInclude Include="character_shell_control.h" />
     <ClInclude Include="ClimableObject.h" />
-    <ClInclude Include="c_artefact.h" />
     <ClInclude Include="DestroyablePhysicsObject.h" />
-    <ClInclude Include="Dosimeter.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="Hit.h" />
     <ClInclude Include="IKFoot.h" />
     <ClInclude Include="IKFoot_inl.h" />
@@ -383,7 +322,6 @@
     <ClInclude Include="ik_limb_state.h" />
     <ClInclude Include="ik_limb_state_predict.h" />
     <ClInclude Include="imotion_position.h" />
-    <ClInclude Include="imotion_velocity.h" />
     <ClInclude Include="interactive_motion.h" />
     <ClInclude Include="MercuryBall.h" />
     <ClInclude Include="moving_bones_snd_player.h" />
@@ -406,9 +344,6 @@
     <ClInclude Include="PhysicsSkeletonObject.h" />
     <ClInclude Include="physics_game.h" />
     <ClInclude Include="physics_world_scripted.h" />
-    <ClInclude Include="UIDosimeter.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="wrapper_abstract.h" />
     <ClInclude Include="wrapper_abstract_inline.h" />
     <ClInclude Include="action_management_config.h" />
@@ -421,7 +356,6 @@
     <ClInclude Include="action_planner.h" />
     <ClInclude Include="action_planner_inline.h" />
     <ClInclude Include="script_action_planner_wrapper.h" />
-    <ClInclude Include="script_action_planner_wrapper_inline.h" />
     <ClInclude Include="action_planner_script.h" />
     <ClInclude Include="action_planner_script_inline.h" />
     <ClInclude Include="action_planner_action.h" />
@@ -688,7 +622,6 @@
     <ClInclude Include="alife_human_brain_save.h" />
     <ClInclude Include="alife_human_object_handler.h" />
     <ClInclude Include="alife_human_object_handler_inline.h" />
-    <ClInclude Include="alife_human_object_handler_save.h" />
     <ClInclude Include="..\xrServerEntities\alife_monster_brain.h" />
     <ClInclude Include="..\xrServerEntities\alife_monster_brain_inline.h" />
     <ClInclude Include="alife_monster_movement_manager.h" />
@@ -1123,7 +1056,6 @@
     <ClInclude Include="smart_cover_planner_actions_inline.h" />
     <ClInclude Include="smart_cover_loophole_planner_actions.h" />
     <ClInclude Include="smart_cover_planner_target_selector.h" />
-    <ClInclude Include="smart_cover_planner_target_selector_inline.h" />
     <ClInclude Include="smart_cover_planner_target_provider.h" />
     <ClInclude Include="smart_cover_default_behaviour_planner.hpp" />
     <ClInclude Include="smart_cover_default_behaviour_planner_inline.hpp" />
@@ -1220,11 +1152,8 @@
     <ClInclude Include="patrol_point.h" />
     <ClInclude Include="patrol_point_inline.h" />
     <ClInclude Include="..\xrServerEntities\script_export_macroses.h" />
-    <ClInclude Include="..\xrServerEntities\script_export_space.h" />
     <ClInclude Include="..\xrServerEntities\script_space_forward.h" />
     <ClInclude Include="script_bind_macroses.h" />
-    <ClInclude Include="script_abstract_action.h" />
-    <ClInclude Include="script_abstract_action_inline.h" />
     <ClInclude Include="script_movement_action.h" />
     <ClInclude Include="script_movement_action_inline.h" />
     <ClInclude Include="patrol_path_params.h" />
@@ -1234,8 +1163,6 @@
     <ClInclude Include="script_animation_action_inline.h" />
     <ClInclude Include="script_sound_action.h" />
     <ClInclude Include="script_sound_action_inline.h" />
-    <ClInclude Include="script_particle_action.h" />
-    <ClInclude Include="script_particle_action_inline.h" />
     <ClInclude Include="script_object_action.h" />
     <ClInclude Include="script_object_action_inline.h" />
     <ClInclude Include="script_action_condition.h" />
@@ -1272,8 +1199,6 @@
     <ClInclude Include="script_callback_ex_nonvoid.h" />
     <ClInclude Include="script_callback_ex_void.h" />
     <ClInclude Include="script_lanim.h" />
-    <ClInclude Include="..\xrServerEntities\script_fcolor.h" />
-    <ClInclude Include="script_particles.h" />
     <ClInclude Include="script_sound.h" />
     <ClInclude Include="script_sound_inline.h" />
     <ClInclude Include="..\xrServerEntities\script_engine.h" />
@@ -1291,7 +1216,6 @@
     <ClInclude Include="ai_space.h" />
     <ClInclude Include="ai_space_inline.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="CameraFirstEye.h" />
     <ClInclude Include="cameralook.h" />
     <ClInclude Include="ActorEffector.h" />
     <ClInclude Include="CameraEffector.h" />
@@ -1301,6 +1225,7 @@
     <ClInclude Include="pp_effector_custom.h" />
     <ClInclude Include="pp_effector_distance.h" />
     <ClInclude Include="PostprocessAnimator.h" />
+    <ClInclude Include="xrGame.h" />
     <ClInclude Include="zone_effector.h" />
     <ClInclude Include="EffectorShot.h" />
     <ClInclude Include="EffectorZoomInertion.h" />
@@ -1325,7 +1250,6 @@
     <ClInclude Include="debug_renderer_inline.h" />
     <ClInclude Include="GlobalFeelTouch.hpp" />
     <ClInclude Include="Level_network_map_sync.h" />
-    <ClInclude Include="xr_level_controller.h" />
     <ClInclude Include="level_debug.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="actor_anim_defs.h" />
@@ -1341,7 +1265,6 @@
     <ClInclude Include="entity_alive_inline.h" />
     <ClInclude Include="EntityCondition.h" />
     <ClInclude Include="hit_immunity.h" />
-    <ClInclude Include="hit_immunity_space.h" />
     <ClInclude Include="Wound.h" />
     <ClInclude Include="game_object_space.h" />
     <ClInclude Include="GameObject.h" />
@@ -1364,8 +1287,6 @@
     <ClInclude Include="PhraseDialogManager.h" />
     <ClInclude Include="PhraseScript.h" />
     <ClInclude Include="game_news.h" />
-    <ClInclude Include="actor_statistic_defs.h" />
-    <ClInclude Include="actor_statistic_mgr.h" />
     <ClInclude Include="map_location.h" />
     <ClInclude Include="map_location_defs.h" />
     <ClInclude Include="map_manager.h" />
@@ -1413,54 +1334,23 @@
     <ClInclude Include="CameraRecoil.h" />
     <ClInclude Include="first_bullet_controller.h" />
     <ClInclude Include="ShootingObject.h" />
-    <ClInclude Include="Weapon.h" />
-    <ClInclude Include="WeaponAmmo.h" />
-    <ClInclude Include="Grenade.h" />
     <ClInclude Include="Missile.h" />
-    <ClInclude Include="Scope.h" />
-    <ClInclude Include="Silencer.h" />
-    <ClInclude Include="GrenadeLauncher.h" />
     <ClInclude Include="CustomRocket.h" />
     <ClInclude Include="ExplosiveRocket.h" />
     <ClInclude Include="RocketLauncher.h" />
-    <ClInclude Include="WeaponMagazined.h" />
-    <ClInclude Include="WeaponMagazinedWGrenade.h" />
-    <ClInclude Include="WeaponVintorez.h" />
-    <ClInclude Include="WeaponKnife.h" />
-    <ClInclude Include="Bolt.h" />
-    <ClInclude Include="WeaponRPG7.h" />
-    <ClInclude Include="WeaponSVD.h" />
-    <ClInclude Include="WeaponBinoculars.h" />
-    <ClInclude Include="WeaponBinocularsVision.h" />
-    <ClInclude Include="WeaponShotgun.h" />
-    <ClInclude Include="WeaponRG6.h" />
-    <ClInclude Include="weaponBM16.h" />
-    <ClInclude Include="WeaponAutomaticShotgun.h" />
-    <ClInclude Include="WeaponStatMgun.h" />
-    <ClInclude Include="Artefact.h" />
-    <ClInclude Include="artefact_activation.h" />
     <ClInclude Include="ui\ArtefactDetectorUI.h" />
     <ClInclude Include="CustomDetector.h" />
-    <ClInclude Include="SimpleDetector.h" />
-    <ClInclude Include="AdvancedDetector.h" />
-    <ClInclude Include="EliteDetector.h" />
-    <ClInclude Include="Torch.h" />
     <ClInclude Include="flare.h" />
     <ClInclude Include="PDA.h" />
     <ClInclude Include="pda_space.h" />
     <ClInclude Include="PdaMsg.h" />
-    <ClInclude Include="FoodItem.h" />
-    <ClInclude Include="ActorHelmet.h" />
     <ClInclude Include="BoneProtections.h" />
-    <ClInclude Include="CustomOutfit.h" />
-    <ClInclude Include="InfoDocument.h" />
     <ClInclude Include="hud_item_object.h" />
     <ClInclude Include="HudItem.h" />
     <ClInclude Include="HudSound.h" />
     <ClInclude Include="player_hud.h" />
     <CustomBuildStep Include="Explosive.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </CustomBuildStep>
     <ClInclude Include="ExplosiveItem.h" />
     <ClInclude Include="wallmark_manager.h" />
@@ -1511,15 +1401,12 @@
     <ClInclude Include="..\xrServerEntities\object_item_script.h" />
     <ClInclude Include="..\xrServerEntities\object_item_single.h" />
     <ClInclude Include="..\xrServerEntities\object_item_single_inline.h" />
-    <ClInclude Include="profiler.h" />
-    <ClInclude Include="profiler_inline.h" />
     <ClInclude Include="quadtree.h" />
     <ClInclude Include="quadtree_inline.h" />
     <ClInclude Include="ai\weighted_random.h" />
     <ClInclude Include="random32.h" />
     <ClInclude Include="..\xrServerEntities\shared_data.h" />
     <ClInclude Include="..\xrServerEntities\smart_cast.h" />
-    <ClInclude Include="string_table.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_inline.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate.h" />
@@ -1527,8 +1414,6 @@
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
     <ClInclude Include="game_base.h" />
-    <ClInclude Include="..\xrServerEntities\game_base_space.h" />
-    <ClInclude Include="game_cl_base.h" />
     <ClInclude Include="game_sv_base.h" />
     <ClInclude Include="xr_time.h" />
     <ClInclude Include="id_generator.h" />
@@ -1546,9 +1431,6 @@
     <ClInclude Include="..\xrServerEntities\script_value_container.h" />
     <ClInclude Include="..\xrServerEntities\script_value_container_impl.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h" />
-    <ClInclude Include="ui_base.h" />
-    <ClInclude Include="ui_defs.h" />
-    <ClInclude Include="UIDialogHolder.h" />
     <ClInclude Include="ui\UIInventoryUpgradeWnd.h" />
     <ClInclude Include="ui\UIInvUpgrade.h" />
     <ClInclude Include="ui\UIInvUpgradeInfo.h" />
@@ -1578,91 +1460,66 @@
     <ClInclude Include="ui\UIHudStatesWnd.h" />
     <ClInclude Include="ui\UIMainIngameWnd.h" />
     <ClInclude Include="ui\UIMessagesWindow.h" />
-    <ClInclude Include="ui\UIMoneyIndicator.h" />
     <ClInclude Include="ui\UIMotionIcon.h" />
-    <ClInclude Include="ui\UIPdaMsgListItem.h" />
     <ClInclude Include="UIZoneMap.h" />
-    <ClInclude Include="ui\UIOptionsItem.h" />
-    <ClInclude Include="ui\UIOptionsManager.h" />
-    <ClInclude Include="ui\UIOptionsManagerScript.h" />
-    <ClInclude Include="MainMenu.h" />
-    <ClInclude Include="ui\MMSound.h" />
-    <ClInclude Include="ui\UIMMShniaga.h" />
-    <ClInclude Include="ui\UIEditKeyBind.h" />
-    <ClInclude Include="ui\UIKeyBinding.h" />
-    <ClInclude Include="ui\UIHelper.h" />
     <ClInclude Include="ui\UIInventoryUtilities.h" />
     <ClInclude Include="ui\UIActorMenu.h" />
     <ClInclude Include="ui\UIActorStateInfo.h" />
-    <ClInclude Include="ui\UIDebugFonts.h" />
     <ClInclude Include="callback_info.h" />
-    <ClInclude Include="ui\uiabstract.h" />
-    <ClInclude Include="ui\UIMessages.h" />
-    <ClInclude Include="ui\UIWndCallback.h" />
-    <ClInclude Include="ui\UITextureMaster.h" />
-    <ClInclude Include="ui\UIXmlInit.h" />
-    <ClInclude Include="ui\xrUIXmlParser.h" />
-    <ClInclude Include="ui\UIMessageBox.h" />
-    <ClInclude Include="ui\UIMessageBoxEx.h" />
-    <ClInclude Include="ui\UIPropertiesBox.h" />
-    <ClInclude Include="ui\UIAnimatedStatic.h" />
-    <ClInclude Include="ui\UILanimController.h" />
-    <ClInclude Include="ui\UIStatic.h" />
-    <ClInclude Include="UIStaticItem.h" />
-    <ClInclude Include="ui\UIEditBox.h" />
-    <ClInclude Include="ui\UIEditBoxEx.h" />
-    <ClInclude Include="ui\UICustomEdit.h" />
-    <ClInclude Include="ui\UIDialogWnd.h" />
-    <ClInclude Include="ui\UIFrameLineWnd.h" />
-    <ClInclude Include="ui\UIFrameWindow.h" />
-    <ClInclude Include="ui\UIWindow.h" />
-    <ClInclude Include="ui\UIDoubleProgressBar.h" />
-    <ClInclude Include="ui\UIProgressBar.h" />
-    <ClInclude Include="ui\UIProgressShape.h" />
-    <ClInclude Include="ui\UITabButton.h" />
-    <ClInclude Include="ui\UITabControl.h" />
     <ClInclude Include="ui\UIScriptWnd.h" />
     <ClInclude Include="ui\uiscriptwnd_script.h" />
-    <ClInclude Include="ui\UI3tButton.h" />
-    <ClInclude Include="ui\UIBtnHint.h" />
-    <ClInclude Include="ui\UIButton.h" />
-    <ClInclude Include="ui\UICheckButton.h" />
-    <ClInclude Include="ui\UIRadioButton.h" />
-    <ClInclude Include="ui\UIComboBox.h" />
-    <ClInclude Include="ui\UI_IB_Static.h" />
-    <ClInclude Include="ui\UIInteractiveBackground.h" />
-    <ClInclude Include="ui\UITrackBar.h" />
-    <ClInclude Include="ui\UIScrollView.h" />
-    <ClInclude Include="ui\UILine.h" />
-    <ClInclude Include="ui\UILines.h" />
-    <ClInclude Include="ui\uilinestd.h" />
-    <ClInclude Include="ui\UISubLine.h" />
     <ClInclude Include="ui\UICellCustomItems.h" />
     <ClInclude Include="ui\UICellItem.h" />
     <ClInclude Include="ui\UICellItemFactory.h" />
     <ClInclude Include="ui\UIDragDropListEx.h" />
     <ClInclude Include="ui\UIDragDropReferenceList.h" />
-    <ClInclude Include="ui\UIFixedScrollBar.h" />
-    <ClInclude Include="ui\UIScrollBar.h" />
-    <ClInclude Include="ui\UIScrollBox.h" />
-    <ClInclude Include="ui\UICustomSpin.h" />
-    <ClInclude Include="ui\UISpinNum.h" />
-    <ClInclude Include="ui\UISpinText.h" />
-    <ClInclude Include="ui\ui_arrow.h" />
-    <ClInclude Include="ui\UIHint.h" />
-    <ClInclude Include="ui\UIListBox.h" />
-    <ClInclude Include="ui\UIListBoxItem.h" />
-    <ClInclude Include="ui\UIListBoxItemMsgChain.h" />
     <ClInclude Include="HitMarker.h" />
     <ClInclude Include="HUDManager.h" />
     <ClInclude Include="UIGame.h" />
     <ClInclude Include="HUDCrosshair.h" />
     <ClInclude Include="HUDTarget.h" />
-    <ClInclude Include="UICursor.h" />
     <ClInclude Include="ui\UIGameTutorial.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ui\UILoadingScreen.cpp" />
+    <ClCompile Include="items\AdvancedDetector.cpp" />
+    <ClCompile Include="items\Artefact.cpp" />
+    <ClCompile Include="items\artefact_activation.cpp" />
+    <ClCompile Include="Items\Bolt.cpp" />
+    <ClCompile Include="items\CMagazine.cpp" />
+    <ClCompile Include="items\CustomOutfit.cpp" />
+    <ClCompile Include="items\c_artefact.cpp" />
+    <ClCompile Include="items\Dosimeter.cpp" />
+    <ClCompile Include="items\EliteDetector.cpp" />
+    <ClCompile Include="items\FoodItem.cpp" />
+    <ClCompile Include="items\Grenade.cpp" />
+    <ClCompile Include="items\GrenadeLauncher.cpp" />
+    <ClCompile Include="items\Helmet.cpp" />
+    <ClCompile Include="items\InfoDocument.cpp" />
+    <ClCompile Include="items\Scope.cpp" />
+    <ClCompile Include="items\Silencer.cpp" />
+    <ClCompile Include="items\SimpleDetector.cpp" />
+    <ClCompile Include="items\Torch.cpp" />
+    <ClCompile Include="Items\Weapon.cpp" />
+    <ClCompile Include="Items\WeaponAmmo.cpp" />
+    <ClCompile Include="Items\WeaponAutomaticShotgun.cpp" />
+    <ClCompile Include="Items\WeaponBinoculars.cpp" />
+    <ClCompile Include="Items\WeaponBinocularsVision.cpp" />
+    <ClCompile Include="Items\weaponBM16.cpp" />
+    <ClCompile Include="Items\WeaponDispersion.cpp" />
+    <ClCompile Include="Items\WeaponFire.cpp" />
+    <ClCompile Include="Items\WeaponKnife.cpp" />
+    <ClCompile Include="Items\WeaponMagazined.cpp" />
+    <ClCompile Include="Items\WeaponMagazinedWGrenade.cpp" />
+    <ClCompile Include="Items\WeaponRG6.cpp" />
+    <ClCompile Include="Items\WeaponRPG7.cpp" />
+    <ClCompile Include="Items\WeaponShotgun.cpp" />
+    <ClCompile Include="Items\WeaponStatMgun.cpp" />
+    <ClCompile Include="Items\WeaponStatMgunFire.cpp" />
+    <ClCompile Include="Items\WeaponStatMgunIR.cpp" />
+    <ClCompile Include="Items\WeaponSVD.cpp" />
+    <ClCompile Include="Items\WeaponUpgrade.cpp" />
+    <ClCompile Include="Items\WeaponVintorez.cpp" />
+    <ClCompile Include="ui\UIDosimeter.cpp" />
     <ClCompile Include="ui\UIPdaSpot.cpp" />
     <ClCompile Include="ActivatingCharCollisionDelay.cpp" />
     <ClCompile Include="ActorRuck.cpp" />
@@ -1672,13 +1529,8 @@
     <ClCompile Include="character_hit_animations.cpp" />
     <ClCompile Include="character_shell_control.cpp" />
     <ClCompile Include="ClimableObject.cpp" />
-    <ClCompile Include="c_artefact.cpp" />
     <ClCompile Include="damage_manager.cpp" />
-    <ClCompile Include="death_anims_predicates.cpp" />
     <ClCompile Include="DestroyablePhysicsObject.cpp" />
-    <ClCompile Include="Dosimeter.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="game_expression_delegates.cpp" />
     <ClCompile Include="Hit.cpp" />
     <ClCompile Include="IKFoot.cpp" />
@@ -1689,7 +1541,6 @@
     <ClCompile Include="ik_foot_collider.cpp" />
     <ClCompile Include="ik_limb_state.cpp" />
     <ClCompile Include="imotion_position.cpp" />
-    <ClCompile Include="imotion_velocity.cpp" />
     <ClCompile Include="interactive_motion.cpp" />
     <ClCompile Include="MercuryBall.cpp" />
     <ClCompile Include="moving_bones_snd_player.cpp" />
@@ -1697,12 +1548,10 @@
     <ClCompile Include="PHCommander.cpp" />
     <ClCompile Include="PHDebug.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="PHDestroyable.cpp" />
-    <ClCompile Include="PHDestroyableNotificate.cpp" />
     <ClCompile Include="PHMovementControl.cpp" />
     <ClCompile Include="PHMovementDynamicActivate.cpp" />
     <ClCompile Include="PHScriptCall.cpp" />
@@ -1738,12 +1587,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UIDosimeter.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="ui\UIGameLog.cpp" />
     <ClCompile Include="visual_memory_manager.cpp" />
     <ClCompile Include="visual_memory_params.cpp" />
     <ClCompile Include="vision_client.cpp" />
@@ -1801,15 +1645,12 @@
     <ClCompile Include="smart_cover_object.cpp" />
     <ClCompile Include="ai_debug_variables.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="dbg_draw_frustum.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="debug_text_tree.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="ef_primary.cpp" />
     <ClCompile Include="ef_pattern.cpp" />
@@ -1829,7 +1670,6 @@
     <ClCompile Include="agent_manager_planner.cpp" />
     <ClCompile Include="agent_manager_actions.cpp" />
     <ClCompile Include="agent_manager_properties.cpp" />
-    <ClCompile Include="alife_simulator.cpp" />
     <ClCompile Include="..\xrServerEntities\alife_space.cpp" />
     <ClCompile Include="alife_simulator_base.cpp" />
     <ClCompile Include="alife_simulator_base2.cpp" />
@@ -1849,7 +1689,6 @@
     <ClCompile Include="alife_time_manager.cpp" />
     <ClCompile Include="alife_update_manager.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4121;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">4121;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="alife_storage_manager.cpp" />
     <ClCompile Include="alife_surge_manager.cpp" />
@@ -1865,6 +1704,7 @@
     <ClCompile Include="alife_creature_abstract.cpp" />
     <ClCompile Include="alife_dynamic_object.cpp" />
     <ClCompile Include="alife_human_abstract.cpp" />
+    <ClCompile Include="alife_simulator.cpp" />
     <ClCompile Include="..\xrServerEntities\alife_human_brain.cpp" />
     <ClCompile Include="alife_human_object_handler.cpp" />
     <ClCompile Include="alife_group_abstract.cpp" />
@@ -1891,11 +1731,9 @@
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_anim.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_debug.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_feel.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ShowIncludes>
-      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</ShowIncludes>
     </ClCompile>
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_misc.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_net.cpp" />
@@ -1926,7 +1764,9 @@
     <ClCompile Include="ai\Monsters\psy_aura.cpp" />
     <ClCompile Include="ai\Monsters\energy_holder.cpp" />
     <ClCompile Include="ai\Monsters\monster_event_manager.cpp" />
-    <ClCompile Include="ai\Monsters\melee_checker.cpp" />
+    <ClCompile Include="ai\Monsters\melee_checker.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="ai\Monsters\monster_morale.cpp" />
     <ClCompile Include="ai\Monsters\controlled_actor.cpp" />
     <ClCompile Include="ai\Monsters\control_manager.cpp" />
@@ -1967,7 +1807,6 @@
     <ClCompile Include="ai\Monsters\Boar\boar_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\Boar\boar_script.cpp" />
     <ClCompile Include="AI\Crow\ai_crow.cpp" />
-    <ClCompile Include="ai_crow_script.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer_script.cpp" />
@@ -2022,7 +1861,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="ai\monsters\rats\ai_rat_templates.cpp" />
     <ClCompile Include="rat_state_manager.cpp" />
@@ -2042,7 +1880,6 @@
     <ClCompile Include="ai\Monsters\Pseudodog\psy_dog_aura.cpp" />
     <ClCompile Include="ai\Monsters\Pseudodog\psy_dog_state_manager.cpp" />
     <ClCompile Include="Ai\Trader\ai_trader.cpp" />
-    <ClCompile Include="ai\trader\ai_trader_script.cpp" />
     <ClCompile Include="ai\trader\trader_animation.cpp" />
     <ClCompile Include="Ai\Stalker\ai_stalker.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ShowIncludes>
@@ -2054,9 +1891,10 @@
     <ClCompile Include="stalker_animation_head.cpp" />
     <ClCompile Include="stalker_animation_legs.cpp" />
     <ClCompile Include="stalker_animation_manager.cpp" />
-    <ClCompile Include="stalker_animation_manager_debug.cpp" />
+    <ClCompile Include="stalker_animation_manager_debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="stalker_animation_manager_update.cpp" />
-    <ClCompile Include="stalker_animation_script.cpp" />
     <ClCompile Include="stalker_animation_torso.cpp" />
     <ClCompile Include="stalker_animation_data_storage.cpp" />
     <ClCompile Include="stalker_animation_data.cpp" />
@@ -2129,24 +1967,20 @@
     <ClCompile Include="level_graph.cpp" />
     <ClCompile Include="level_graph_debug.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="level_graph_debug2.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="level_graph_vertex.cpp" />
     <ClCompile Include="patrol_path.cpp" />
     <ClCompile Include="patrol_path_storage.cpp" />
     <ClCompile Include="patrol_point.cpp" />
-    <ClCompile Include="script_abstract_action.cpp" />
     <ClCompile Include="script_movement_action.cpp" />
     <ClCompile Include="patrol_path_params.cpp" />
     <ClCompile Include="script_watch_action.cpp" />
     <ClCompile Include="script_animation_action.cpp" />
     <ClCompile Include="script_animation_action_script.cpp" />
     <ClCompile Include="script_sound_action.cpp" />
-    <ClCompile Include="script_particle_action.cpp" />
     <ClCompile Include="script_object_action.cpp" />
     <ClCompile Include="script_object_action_script.cpp" />
     <ClCompile Include="script_action_condition.cpp" />
@@ -2182,9 +2016,7 @@
     <ClCompile Include="console_registrator_script.cpp" />
     <ClCompile Include="base_client_classes_script.cpp" />
     <ClCompile Include="script_lanim.cpp" />
-    <ClCompile Include="script_particles.cpp" />
     <ClCompile Include="script_sound.cpp" />
-    <ClCompile Include="script_sound_script.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine_export.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine_script.cpp" />
@@ -2193,21 +2025,17 @@
     <ClCompile Include="..\xrServerEntities\script_thread.cpp" />
     <ClCompile Include="..\xrServerEntities\script_stack_tracker.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="ai_sounds.cpp" />
     <ClCompile Include="ai_space.cpp" />
-    <ClCompile Include="CameraFirstEye.cpp" />
     <ClCompile Include="cameralook.cpp" />
     <ClCompile Include="ActorEffector.cpp" />
-    <ClCompile Include="ActorEffector_script.cpp" />
     <ClCompile Include="EffectorBobbing.cpp" />
     <ClCompile Include="EffectorFall.cpp" />
     <ClCompile Include="ai\Monsters\ai_monster_effector.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="pp_effector_custom.cpp" />
     <ClCompile Include="pp_effector_distance.cpp" />
@@ -2227,11 +2055,9 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="Level_start.cpp" />
     <ClCompile Include="Level_Bullet_Manager.cpp" />
-    <ClCompile Include="Level_bullet_manager_firetrace.cpp" />
     <ClCompile Include="Tracer.cpp" />
     <ClCompile Include="seniority_hierarchy_holder.cpp" />
     <ClCompile Include="team_hierarchy_holder.cpp" />
@@ -2243,10 +2069,8 @@
     <ClCompile Include="debug_renderer.cpp" />
     <ClCompile Include="GlobalFeelTouch.cpp" />
     <ClCompile Include="Level_network_map_sync.cpp" />
-    <ClCompile Include="xr_level_controller.cpp" />
     <ClCompile Include="level_debug.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -2284,7 +2108,6 @@
     <ClCompile Include="PhraseDialogManager.cpp" />
     <ClCompile Include="PhraseScript.cpp" />
     <ClCompile Include="game_news.cpp" />
-    <ClCompile Include="actor_statistic_mgr.cpp" />
     <ClCompile Include="map_location.cpp" />
     <ClCompile Include="map_manager.cpp" />
     <ClCompile Include="Inventory.cpp" />
@@ -2312,50 +2135,15 @@
     <ClCompile Include="physic_item.cpp" />
     <ClCompile Include="first_bullet_controller.cpp" />
     <ClCompile Include="ShootingObject.cpp" />
-    <ClCompile Include="Weapon.cpp" />
-    <ClCompile Include="WeaponDispersion.cpp" />
-    <ClCompile Include="WeaponFire.cpp" />
-    <ClCompile Include="WeaponUpgrade.cpp" />
-    <ClCompile Include="WeaponAmmo.cpp" />
-    <ClCompile Include="Grenade.cpp" />
     <ClCompile Include="Missile.cpp" />
-    <ClCompile Include="Scope.cpp" />
-    <ClCompile Include="Silencer.cpp" />
-    <ClCompile Include="GrenadeLauncher.cpp" />
     <ClCompile Include="CustomRocket.cpp" />
     <ClCompile Include="ExplosiveRocket.cpp" />
     <ClCompile Include="RocketLauncher.cpp" />
-    <ClCompile Include="WeaponMagazined.cpp" />
-    <ClCompile Include="WeaponMagazinedWGrenade.cpp" />
-    <ClCompile Include="WeaponVintorez.cpp" />
-    <ClCompile Include="WeaponKnife.cpp" />
-    <ClCompile Include="Bolt.cpp" />
-    <ClCompile Include="WeaponRPG7.cpp" />
-    <ClCompile Include="WeaponSVD.cpp" />
-    <ClCompile Include="WeaponBinoculars.cpp" />
-    <ClCompile Include="WeaponBinocularsVision.cpp" />
-    <ClCompile Include="WeaponShotgun.cpp" />
-    <ClCompile Include="WeaponRG6.cpp" />
-    <ClCompile Include="weaponBM16.cpp" />
-    <ClCompile Include="WeaponAutomaticShotgun.cpp" />
-    <ClCompile Include="WeaponStatMgun.cpp" />
-    <ClCompile Include="WeaponStatMgunFire.cpp" />
-    <ClCompile Include="WeaponStatMgunIR.cpp" />
-    <ClCompile Include="Artefact.cpp" />
-    <ClCompile Include="artefact_activation.cpp" />
     <ClCompile Include="ui\ArtefactDetectorUI.cpp" />
     <ClCompile Include="CustomDetector.cpp" />
-    <ClCompile Include="SimpleDetector.cpp" />
-    <ClCompile Include="AdvancedDetector.cpp" />
-    <ClCompile Include="EliteDetector.cpp" />
-    <ClCompile Include="Torch.cpp" />
     <ClCompile Include="flare.cpp" />
     <ClCompile Include="PDA.cpp" />
-    <ClCompile Include="FoodItem.cpp" />
-    <ClCompile Include="ActorHelmet.cpp" />
     <ClCompile Include="BoneProtections.cpp" />
-    <ClCompile Include="CustomOutfit.cpp" />
-    <ClCompile Include="InfoDocument.cpp" />
     <ClCompile Include="hud_item_object.cpp" />
     <ClCompile Include="HudItem.cpp" />
     <ClCompile Include="HudSound.cpp" />
@@ -2381,9 +2169,7 @@
     <ClCompile Include="ZoneVisual.cpp" />
     <ClCompile Include="ZoneCampfire.cpp" />
     <ClCompile Include="Car.cpp" />
-    <ClCompile Include="CarCameras.cpp" />
     <ClCompile Include="CarDamageParticles.cpp" />
-    <ClCompile Include="CarDoors.cpp" />
     <ClCompile Include="CarInput.cpp" />
     <ClCompile Include="CarLights.cpp" />
     <ClCompile Include="CarScript.cpp" />
@@ -2391,7 +2177,6 @@
     <ClCompile Include="CarWheels.cpp" />
     <ClCompile Include="DBG_Car.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="CarWeapon.cpp" />
     <ClCompile Include="car_memory.cpp" />
@@ -2408,17 +2193,11 @@
     <ClCompile Include="..\xrServerEntities\object_factory_register.cpp" />
     <ClCompile Include="..\xrServerEntities\object_factory_script.cpp" />
     <ClCompile Include="..\xrServerEntities\object_item_script.cpp" />
-    <ClCompile Include="profiler.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="ai\weighted_random.cpp" />
     <ClCompile Include="random32.cpp" />
-    <ClCompile Include="string_table.cpp" />
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp" />
     <ClCompile Include="game_base.cpp" />
-    <ClCompile Include="game_cl_base.cpp" />
     <ClCompile Include="game_sv_base.cpp" />
     <ClCompile Include="xr_time.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp" />
@@ -2426,7 +2205,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Object_Base.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_script.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_script2.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script2.cpp" />
@@ -2434,7 +2212,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script2.cpp" />
@@ -2442,20 +2219,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script4.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp" />
-    <ClCompile Include="xrServer_perform_GameExport.cpp" />
-    <ClCompile Include="xrServer_perform_transfer.cpp" />
-    <ClCompile Include="xrServer_sls_clear.cpp" />
-    <ClCompile Include="xrServer_process_event.cpp" />
-    <ClCompile Include="xrServer_process_event_activate.cpp" />
-    <ClCompile Include="xrServer_process_event_destroy.cpp" />
-    <ClCompile Include="xrServer_process_event_ownership.cpp" />
-    <ClCompile Include="xrServer_process_event_reject.cpp" />
-    <ClCompile Include="xrServer_process_spawn.cpp" />
-    <ClCompile Include="xrServer_process_update.cpp" />
-    <ClCompile Include="xrServer_CL_connect.cpp" />
-    <ClCompile Include="xrServer_Connect.cpp" />
-    <ClCompile Include="ui_base.cpp" />
-    <ClCompile Include="UIDialogHolder.cpp" />
     <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp" />
     <ClCompile Include="ui\UIInvUpgrade.cpp" />
     <ClCompile Include="ui\UIInvUpgradeInfo.cpp" />
@@ -2485,19 +2248,8 @@
     <ClCompile Include="ui\UIHudStatesWnd.cpp" />
     <ClCompile Include="ui\UIMainIngameWnd.cpp" />
     <ClCompile Include="ui\UIMessagesWindow.cpp" />
-    <ClCompile Include="ui\UIMoneyIndicator.cpp" />
     <ClCompile Include="ui\UIMotionIcon.cpp" />
-    <ClCompile Include="ui\UIPdaMsgListItem.cpp" />
     <ClCompile Include="UIZoneMap.cpp" />
-    <ClCompile Include="ui\UIOptionsItem.cpp" />
-    <ClCompile Include="ui\UIOptionsManager.cpp" />
-    <ClCompile Include="ui\UIOptionsManagerScript.cpp" />
-    <ClCompile Include="MainMenu.cpp" />
-    <ClCompile Include="ui\MMSound.cpp" />
-    <ClCompile Include="ui\UIMMShniaga.cpp" />
-    <ClCompile Include="ui\UIEditKeyBind.cpp" />
-    <ClCompile Include="ui\UIKeyBinding.cpp" />
-    <ClCompile Include="ui\UIHelper.cpp" />
     <ClCompile Include="ui\UIInventoryUtilities.cpp" />
     <ClCompile Include="ui\UIActorMenu.cpp" />
     <ClCompile Include="ui\UIActorMenu_action.cpp" />
@@ -2507,69 +2259,17 @@
     <ClCompile Include="ui\UIActorMenuTrade.cpp" />
     <ClCompile Include="ui\UIActorMenuUpgrade.cpp" />
     <ClCompile Include="ui\UIActorStateInfo.cpp" />
-    <ClCompile Include="ui\UIDebugFonts.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="ui\UIWndCallback.cpp" />
-    <ClCompile Include="ui\UITextureMaster.cpp" />
-    <ClCompile Include="ui\UIXmlInit.cpp" />
-    <ClCompile Include="ui\xrUIXmlParser.cpp" />
-    <ClCompile Include="ui\UIMessageBox.cpp" />
-    <ClCompile Include="ui\UIMessageBoxEx.cpp" />
-    <ClCompile Include="ui\UIPropertiesBox.cpp" />
-    <ClCompile Include="ui\UIAnimatedStatic.cpp" />
-    <ClCompile Include="ui\UILanimController.cpp" />
-    <ClCompile Include="ui\UIStatic.cpp" />
-    <ClCompile Include="ui\UIStatic_script.cpp" />
-    <ClCompile Include="UIStaticItem.cpp" />
-    <ClCompile Include="ui\UIEditBox.cpp" />
-    <ClCompile Include="ui\UIEditBoxEx.cpp" />
-    <ClCompile Include="ui\UICustomEdit.cpp" />
-    <ClCompile Include="ui\UIDialogWnd.cpp" />
-    <ClCompile Include="ui\UIFrameLineWnd.cpp" />
-    <ClCompile Include="ui\UIFrameWindow.cpp" />
-    <ClCompile Include="ui\UIWindow.cpp" />
-    <ClCompile Include="ui\UIDoubleProgressBar.cpp" />
-    <ClCompile Include="ui\UIProgressBar.cpp" />
-    <ClCompile Include="ui\UIProgressShape.cpp" />
-    <ClCompile Include="ui\UITabButton.cpp" />
-    <ClCompile Include="ui\UITabControl.cpp" />
     <ClCompile Include="ui\UIScriptWnd.cpp" />
-    <ClCompile Include="ui\UI3tButton.cpp" />
-    <ClCompile Include="ui\UIBtnHint.cpp" />
-    <ClCompile Include="ui\UIButton.cpp" />
-    <ClCompile Include="ui\UICheckButton.cpp" />
-    <ClCompile Include="ui\UIRadioButton.cpp" />
-    <ClCompile Include="ui\UIComboBox.cpp" />
-    <ClCompile Include="ui\UI_IB_Static.cpp" />
-    <ClCompile Include="ui\UITrackBar.cpp" />
-    <ClCompile Include="ui\UIScrollView.cpp" />
-    <ClCompile Include="ui\UILine.cpp" />
-    <ClCompile Include="ui\UILines.cpp" />
-    <ClCompile Include="ui\UISubLine.cpp" />
     <ClCompile Include="ui\UICellCustomItems.cpp" />
     <ClCompile Include="ui\UICellItem.cpp" />
     <ClCompile Include="ui\UICellItemFactory.cpp" />
     <ClCompile Include="ui\UIDragDropListEx.cpp" />
     <ClCompile Include="ui\UIDragDropReferenceList.cpp" />
-    <ClCompile Include="ui\UIFixedScrollBar.cpp" />
-    <ClCompile Include="ui\UIScrollBar.cpp" />
-    <ClCompile Include="ui\UIScrollBox.cpp" />
-    <ClCompile Include="ui\UICustomSpin.cpp" />
-    <ClCompile Include="ui\UISpinNum.cpp" />
-    <ClCompile Include="ui\UISpinText.cpp" />
-    <ClCompile Include="ui\ui_arrow.cpp" />
-    <ClCompile Include="ui\UIHint.cpp" />
-    <ClCompile Include="ui\UIListBox.cpp" />
-    <ClCompile Include="ui\UIListBoxItem.cpp" />
-    <ClCompile Include="ui\UIListBoxItemMsgChain.cpp" />
     <ClCompile Include="HitMarker.cpp" />
     <ClCompile Include="HUDManager.cpp" />
     <ClCompile Include="UIGame.cpp" />
     <ClCompile Include="HUDCrosshair.cpp" />
     <ClCompile Include="HUDTarget.cpp" />
-    <ClCompile Include="UICursor.cpp" />
     <ClCompile Include="ui\UIGameTutorial.cpp" />
     <ClCompile Include="ui\UIGameTutorialSimpleItem.cpp" />
     <ClCompile Include="ui\UIGameTutorialVideoItem.cpp" />

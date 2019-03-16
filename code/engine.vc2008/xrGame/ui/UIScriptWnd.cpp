@@ -39,7 +39,7 @@ bool CUIDialogWndEx::Load(LPCSTR xml_name)
 	return true;
 }
 
-SCallbackInfo*	CUIDialogWndEx::NewCallback ()
+SCallbackInfo* CUIDialogWndEx::NewCallback ()
 {
 	m_callbacks.push_back( xr_new<SCallbackInfo>() );
 	return m_callbacks.back();
@@ -47,6 +47,11 @@ SCallbackInfo*	CUIDialogWndEx::NewCallback ()
 
 void CUIDialogWndEx::AddCallback (LPCSTR control_id, s16 evt, const luabind::functor<void> &functor, const luabind::object &object)
 {
+	//for (SCallbackInfo* pCallback : m_callbacks)
+	//{
+	//	pCallback->m_callback.clear();
+	//}
+
 	SCallbackInfo* c	= NewCallback ();
 	c->m_callback.set	(functor,object);
 	c->m_control_name	= control_id;
@@ -65,17 +70,17 @@ void CUIDialogWndEx::Update()
 
 
 //UI-controls
-#include "UIButton.h"
-#include "UIMessageBox.h"
-#include "UIPropertiesBox.h"
-#include "UICheckButton.h"
-#include "UIRadioButton.h"
-#include "UIStatic.h"
-#include "UIEditBox.h"
-#include "UIFrameWindow.h"
-#include "UIFrameLineWnd.h"
-#include "UIProgressBar.h"
-#include "UITabControl.h"
+#include "../xrUICore/UIButton.h"
+#include "../xrUICore/UIMessageBox.h"
+#include "../xrUICore/UIPropertiesBox.h"
+#include "../xrUICore/UICheckButton.h"
+#include "../xrUICore/UIRadioButton.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIEditBox.h"
+#include "../xrUICore/UIFrameWindow.h"
+#include "../xrUICore/UIFrameLineWnd.h"
+#include "../xrUICore/UIProgressBar.h"
+#include "../xrUICore/UITabControl.h"
 #include "uiscriptwnd_script.h"
 
 using namespace luabind;

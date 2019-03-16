@@ -10,12 +10,13 @@
 
 #include "action_planner_action.h"
 
+#include "luabind/luabind.hpp"
 class CScriptGameObject;
 
 class CScriptActionPlannerActionWrapper : public CScriptActionPlannerAction, public luabind::wrap_base {
-	typedef CScriptActionPlannerAction inherited;
+	using inherited = CScriptActionPlannerAction;
 public:
-	IC			 CScriptActionPlannerActionWrapper	(CScriptGameObject *object = 0, LPCSTR action_name = "");
+	IC			 CScriptActionPlannerActionWrapper	(CScriptGameObject *object = nullptr, LPCSTR action_name = "");
 	virtual void				setup				(CScriptGameObject *object, CPropertyStorage *storage);
 	static	void				setup_static		(CScriptActionPlannerAction *action, CScriptGameObject *object, CPropertyStorage *storage);
 	virtual void				initialize			();

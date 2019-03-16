@@ -1,7 +1,7 @@
 #pragma once
-#include "game_base_space.h"
-#include "alife_space.h"
-#include "gametype_chooser.h"
+#include "../xrScripts/export/script_export_space.h"
+#include "../xrServerEntities/alife_space.h"
+#include "../xrServerEntities/gametype_chooser.h"
 #pragma pack(push,1)
 class NET_Packet;
 
@@ -22,11 +22,15 @@ protected:
 public:
 									game_GameState			();
 	virtual							~game_GameState			()								{}
+
+	virtual		void				net_import_state(NET_Packet& P);
+	// update GameTime only for remote clients
+	virtual		void				net_import_GameTime(NET_Packet& P); 
+
 	IC			EGameIDs const&		Type					() const						{return m_type;};
 				u16					Phase					() const						{return m_phase;};
 				u32					StartTime				() const						{return m_start_time;};
 	virtual		void				Create					(shared_str& options)			{};
-	virtual		LPCSTR				type_name				() const						{return "base game";};
 //for scripting enhancement
 	static		CLASS_ID			getCLASS_ID				(LPCSTR game_type_name, bool bServer);
 
@@ -54,4 +58,35 @@ public:
 	virtual		float				GetEnvironmentGameTimeFactor		();
 	virtual		void				SetEnvironmentGameTimeFactor		(u64 GameTime, const float fTimeFactor);
 	virtual		void				SetEnvironmentGameTimeFactor		(const float fTimeFactor);
+
+	virtual		void				SendPickUpEvent						(u16 ID_who, u16 ID_what);
 };
+
+enum EGamePhases
+{
+	GAME_PHASE_NONE = 0,
+	GAME_PHASE_INPROGRESS,
+	GAME_PHASE_FORCEDWORD = u32(-1)
+};
+
+// game difficulty
+enum ESingleGameDifficulty
+{
+	egdNovice = 0,
+	egdStalker = 1,
+	egdVeteran = 2,
+	egdMaster = 3,
+	egdCount,
+	egd_force_u32 = u32(-1)
+};
+enum EGameLanguage;
+extern GAME_API ESingleGameDifficulty g_SingleGameDifficulty;
+extern EGameLanguage g_Language;
+
+xr_token		difficulty_type_token[];
+xr_token		language_type_token[];
+
+using CScriptGameDifficulty = enum_exporter<ESingleGameDifficulty>;
+add_to_type_list(CScriptGameDifficulty)
+#undef script_type_list
+#define script_type_list save_type_list(CScriptGameDifficulty)

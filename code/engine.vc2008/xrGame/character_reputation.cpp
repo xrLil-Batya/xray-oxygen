@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////
-// character_reputation.cpp:	структура представления репутаций и 
-//								отношений между ними		
+// character_reputation.cpp:	СЃС‚СЂСѓРєС‚СѓСЂР° РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ СЂРµРїСѓС‚Р°С†РёР№ Рё 
+//								РѕС‚РЅРѕС€РµРЅРёР№ РјРµР¶РґСѓ РЅРёРјРё		
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -16,7 +16,7 @@ REPUTATION_DATA::REPUTATION_DATA (int idx, shared_str idn, LPCSTR threshold_str)
 {
 	index = idx;
 	id = idn;
-	threshold = (CHARACTER_REPUTATION_VALUE)atoi(threshold_str);
+	threshold = (CHARACTER_REPUTATION_VALUE)atoi_17(threshold_str);
 }
 //////////////////////////////////////////////////////////////////////////
 CHARACTER_REPUTATION::GOODWILL_TABLE CHARACTER_REPUTATION::m_relation_table;

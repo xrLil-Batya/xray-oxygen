@@ -1,8 +1,6 @@
+#pragma once
 #include "PHSynchronize.h"
 #include "xrserver_space.h"
-
-#pragma once
-
 
 #define ACTOR_HEIGHT			1.75f
 #define ACTOR_LOOKOUT_SPEED		2.f
@@ -15,12 +13,6 @@ enum ESoundCcount {
 	SND_DIE_COUNT=4
 };
 
-enum EActorCameras {
-	eacFirstEye		= 0,
-	eacLookAt,
-	eacFreeLook,
-	eacMaxCam
-};
 enum EDamages {DAMAGE_FX_COUNT = 12};
 
 
@@ -47,8 +39,8 @@ enum EMoveCommand
 	mcLookout	= (mcLLookout|mcRLookout),
 };
 
-// enum для определения действия над вещью на которую наведен в текущее время прицел.
-// Используется для показа всплывающих динамических подсказок
+// enum РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РґРµР№СЃС‚РІРёСЏ РЅР°Рґ РІРµС‰СЊСЋ РЅР° РєРѕС‚РѕСЂСѓСЋ РЅР°РІРµРґРµРЅ РІ С‚РµРєСѓС‰РµРµ РІСЂРµРјСЏ РїСЂРёС†РµР».
+// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РїРѕРєР°Р·Р° РІСЃРїР»С‹РІР°СЋС‰РёС… РґРёРЅР°РјРёС‡РµСЃРєРёС… РїРѕРґСЃРєР°Р·РѕРє
 enum EActorAction
 {
 	eaaNoAction			= 0,
@@ -58,19 +50,8 @@ enum EActorAction
 	eaaSearchCorpse,
 };
 
-typedef const char*		EActorSleep;
+using EActorSleep = const char*;
 extern EActorSleep		easCanSleepResult;
 extern 	string32		g_quick_use_slots[4];
-
-///////////////////////////////////////////////////////
-// данные для интерполяции
-struct					InterpData
-{
-	Fvector				Pos;
-	Fvector				Vel;
-	float				o_model;				// model yaw
-	SRotation			o_torso;				// torso in world coords
-};
-
 }; // namespace ACTOR_DEFS 
 

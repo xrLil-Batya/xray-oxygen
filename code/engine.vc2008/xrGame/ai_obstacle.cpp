@@ -37,7 +37,7 @@ extern MagicBox3 MagicMinBox (int iQuantity, const Fvector* akPoint);
 
 struct merge_predicate {
 public:
-	typedef moving_objects::AREA	AREA;
+	using AREA = moving_objects::AREA;
 
 public:
 	ai_obstacle					*m_object;
@@ -48,7 +48,7 @@ public:
 	{
 		m_object				= object;
 		m_area					= &area;
-		m_level_graph			= &ai().level_graph();
+		m_level_graph			= ai().get_level_graph();
 	}
 
 	IC	void	operator()		(const CLevelGraph::CVertex &vertex) const
@@ -68,8 +68,8 @@ IC	Fvector construct_position	(u32 level_vertex_id, float x, float z)
 
 IC	bool ai_obstacle::inside	(const Fvector &position, const float &radius) const
 {
-	for (u32 i=0; i<PLANE_COUNT; ++i) {
-		if (m_box.m_planes[i].classify(position) > radius)
+	for (Fplane plane : m_box.m_planes) {
+		if (plane.classify(position) > radius)
 			return				(false);
 	}
 	return						(true);
@@ -263,7 +263,7 @@ void ai_obstacle::compute_impl() noexcept
 	}
 	else
 	{
-		m_crc = crc32(m_area.data(), m_area.size());
+		m_crc = crc32(m_area.data(), (u32)m_area.size());
 	}
 }
 

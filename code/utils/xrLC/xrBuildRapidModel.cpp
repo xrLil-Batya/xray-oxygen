@@ -43,13 +43,13 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 
 	
 	lc_global_data()->destroy_rcmodel();
-	Status			("Converting faces...");
+	Logger.Status			("Converting faces...");
 	for				(u32 fit=0; fit<lc_global_data()->g_faces().size(); fit++)	lc_global_data()->g_faces()[fit]->flags.bProcessed = false;
 
 	xr_vector<Face*>			adjacent_vec;
 	adjacent_vec.reserve		(6*2*3);
 
-	CDB::CollectorPacked	CL	(scene_bb,lc_global_data()->g_vertices().size(),lc_global_data()->g_faces().size());
+	CDB::CollectorPacked	CL	(scene_bb, (u32)lc_global_data()->g_vertices().size(), (u32)lc_global_data()->g_faces().size());
 
 	for (vecFaceIt it=lc_global_data()->g_faces().begin(); it!=lc_global_data()->g_faces().end(); it++)
 	{
@@ -57,7 +57,7 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		const Shader_xrLC&	SH		= F->Shader();
 		if (!SH.flags.bLIGHT_CastShadow)					continue;
 
-		Progress	(float(it-lc_global_data()->g_faces().begin())/float(lc_global_data()->g_faces().size()));
+		Logger.Progress	(float(it-lc_global_data()->g_faces().begin())/float(lc_global_data()->g_faces().size()));
 
 		// Collect
 		adjacent_vec.clear	();
@@ -95,13 +95,13 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 	}
 
 	// Export references
-	if (bSaveForOtherCompilers)		Phase	("Building rcast-CFORM-mu model...");
-	Status					("Models...");
+	if (bSaveForOtherCompilers)		Logger.Phase	("Building rcast-CFORM-mu model...");
+	Logger.Status					("Models...");
 	for (u32 ref=0; ref<mu_refs().size(); ref++)
 		mu_refs()[ref]->export_cform_rcast	(CL);
 
 	// "Building tree..
-	Status					("Building search tree...");
+	Logger.Status					("Building search tree...");
 	lc_global_data()->create_rcmodel( CL );
 
 	extern void SaveAsSMF			(LPCSTR fname, CDB::CollectorPacked& CL);
@@ -112,13 +112,13 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 	bool					keep_temp_files = !!strstr(Core.Params,"-keep_temp_files");
 	if (g_params().m_quality!=ebqDraft) {
 		if (keep_temp_files)
-			SaveAsSMF		(strconcat(sizeof(fn),fn,pBuild->path,"build_cform_source.smf"),CL);
+			SaveAsSMF		(xr_strconcat(fn,pBuild->path,"build_cform_source.smf"),CL);
 	}
 
 	// Saving for AI/DO usage
 	if (bSaveForOtherCompilers)
 	{
-		Status					("Saving...");
+		Logger.Status					("Saving...");
 		string_path				fn;
 
 		xr_vector<b_rc_face>	rc_faces;
@@ -137,28 +137,23 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		}
 		if (g_params().m_quality!=ebqDraft) {
 			if (keep_temp_files)
-				SaveUVM			(strconcat(sizeof(fn),fn,pBuild->path,"build_cform_source.uvm"),rc_faces);
+				SaveUVM			(xr_strconcat(fn,pBuild->path,"build_cform_source.uvm"),rc_faces);
 		}
 
-//#pragma error("Need fix: Faces_FS->w")
-		strconcat(sizeof(fn), fn, pBuild->path, "build.rc_faces");
+		xr_strconcat(fn, pBuild->path, "build.rc_faces");
 		IWriter* Faces_FS = FS.w_open(fn);
 		Faces_FS->open_chunk(0);
-#ifdef _M_X64
 		for (auto &it : rc_faces)
 		{
 			Faces_FS->w_u16(it.reserved);
 			Faces_FS->w_u16(it.dwMaterial);
 			Faces_FS->w_u32(it.dwMaterialGame);
-			//Faces_FS->w_float(it.t[0].x);
-			//Faces_FS->w_float(it.t[0].y);
+			
 			Faces_FS->w_fvector2(it.t[0]);
 			Faces_FS->w_fvector2(it.t[1]);
 			Faces_FS->w_fvector2(it.t[2]);
 		}
-#else
-		Faces_FS->w(&*rc_faces.begin(), rc_faces.size() * sizeof(b_rc_face));
-#endif
+		
 		Faces_FS->close_chunk();
 		FS.w_close(Faces_FS);
 	}

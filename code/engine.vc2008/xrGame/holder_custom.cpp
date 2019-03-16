@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "holder_custom.h"
 #include "actor.h"
+#include <luabind/luabind.hpp>
 
 bool CHolderCustom::attach_Actor(CGameObject* actor)
 {
@@ -18,7 +19,7 @@ void CHolderCustom::detach_Actor()
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CHolderCustom::script_register(lua_State *L)
 {
 	module(L)

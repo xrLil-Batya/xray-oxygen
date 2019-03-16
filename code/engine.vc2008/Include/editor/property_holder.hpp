@@ -8,7 +8,6 @@
 
 #ifndef EDITOR_PROPERTY_HOLDER_HPP_INCLUDED
 #define EDITOR_PROPERTY_HOLDER_HPP_INCLUDED
-
 class shared_str;
 
 namespace editor {
@@ -48,30 +47,28 @@ class property_value;
 
 class property_holder {
 public:
-	typedef fastdelegate::FastDelegate0<bool>			boolean_getter_type;
-	typedef fastdelegate::FastDelegate1<bool>			boolean_setter_type;
+	typedef xrDelegate<bool()>			boolean_getter_type;
+	typedef xrDelegate<void(bool)>		boolean_setter_type;
 
-	typedef fastdelegate::FastDelegate0<int>			integer_getter_type;
-	typedef fastdelegate::FastDelegate1<int>			integer_setter_type;
+	typedef xrDelegate<int()>			integer_getter_type;
+	typedef xrDelegate<void(int)>		integer_setter_type;
 
-	typedef fastdelegate::FastDelegate0<float>			float_getter_type;
-	typedef fastdelegate::FastDelegate1<float>			float_setter_type;
+	typedef xrDelegate<float()>			float_getter_type;
+	typedef xrDelegate<void(float)>		float_setter_type;
 
-	typedef fastdelegate::FastDelegate0<LPCSTR>			string_getter_type;
-	typedef fastdelegate::FastDelegate1<LPCSTR>			string_setter_type;
+	typedef xrDelegate<LPCSTR()>		string_getter_type;
+	typedef xrDelegate<void(LPCSTR)>	string_setter_type;
 
-	typedef fastdelegate::FastDelegate0<color>			color_getter_type;
-	typedef fastdelegate::FastDelegate1<color>			color_setter_type;
+	typedef xrDelegate<color()>			color_getter_type;
+	typedef xrDelegate<void(color)>		color_setter_type;
 
-	typedef fastdelegate::FastDelegate0<vec3f>			vec3f_getter_type;
-	typedef fastdelegate::FastDelegate1<vec3f>			vec3f_setter_type;
+	typedef xrDelegate<vec3f()>			vec3f_getter_type;
+	typedef xrDelegate<void(vec3f)>		vec3f_setter_type;
 
-	typedef fastdelegate::FastDelegate0<
-				property_holder_collection*
-			>											collection_getter_type;
+	typedef xrDelegate<property_holder_collection*()> collection_getter_type;
 
-	typedef fastdelegate::FastDelegate0<LPCSTR const*>	string_collection_getter_type;
-	typedef fastdelegate::FastDelegate0<u32>			string_collection_size_getter_type;
+	typedef xrDelegate<LPCSTR const*()>	string_collection_getter_type;
+	typedef xrDelegate<u32()>			string_collection_size_getter_type;
 
 public:
 	enum enter_text_enum {

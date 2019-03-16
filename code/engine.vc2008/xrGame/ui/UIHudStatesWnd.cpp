@@ -4,33 +4,25 @@
 #include "../Actor.h"
 #include "../ActorCondition.h"
 #include "../EntityCondition.h"
-#include "../CustomOutfit.h"
-#include "../ActorHelmet.h"
+#include "../items/CustomOutfit.h"
+#include "../items/Helmet.h"
 #include "../inventory.h"
 #include "../RadioactiveZone.h"
 
-#include "UIStatic.h"
-#include "UIProgressBar.h"
-#include "UIProgressShape.h"
-#include "UIXmlInit.h"
-#include "UIHelper.h"
-#include "ui_arrow.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIProgressBar.h"
+#include "../xrUICore/UIProgressShape.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIHelper.h"
+#include "../xrUICore/ui_arrow.h"
 #include "UIInventoryUtilities.h"
 #include "CustomDetector.h"
 #include "../ai/monsters/basemonster/base_monster.h"
 #include "../PDA.h"
-#include "WeaponMagazinedWGrenade.h"
+#include "items/WeaponMagazinedWGrenade.h"
 
-CUIHudStatesWnd::CUIHudStatesWnd()
-:m_b_force_update(true),
-	m_timer_1sec(0),
-	m_last_health(0.0f),
-	m_radia_self(0.0f),
-//	m_health_self(0.0f),
-//	m_stamina_self(0.0f),
-	m_radia_hit(0.0f)
+CUIHudStatesWnd::CUIHudStatesWnd() : m_b_force_update(true), m_timer_1sec(0), m_last_health(0.0f), m_radia_self(0.0f), m_radia_hit(0.0f)
 {
-
 	for ( int i = 0; i < ALife::infl_max_count; ++i )
 	{
 		m_zone_cur_power[i] = 0.0f;

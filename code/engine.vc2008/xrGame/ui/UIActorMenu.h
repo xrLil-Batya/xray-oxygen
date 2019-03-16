@@ -1,9 +1,8 @@
 #pragma once
-
-#include "UIDialogWnd.h"
-#include "UIWndCallback.h"
+#include "../xrUICore/UIDialogWnd.h"
+#include "../xrUICore/UIWndCallback.h"
 #include "../../xrServerEntities/inventory_space.h"
-#include "UIHint.h"
+#include "../xrUICore/UIHint.h"
 
 #include "../../FrayBuildConfig.hpp"
 
@@ -51,7 +50,7 @@ enum EMenuMode{
 		mmInventory,
 		mmTrade,
 		mmUpgrade,
-		mmDeadBodySearch,
+		mmDeadBodyOrContainerSearch,
 };
 
 class CUIActorMenu: public CUIDialogWnd, public CUIWndCallback
@@ -96,6 +95,7 @@ protected:
 	
     CUIDragDropListEx*          m_pInventoryKnifeList;
     CUIDragDropListEx*          m_pInventoryBinocularList;
+    CUIDragDropListEx*          m_pInventoryTorchList;
 	
 	CUIDragDropListEx*			m_pInventoryDetectorList;
 	CUIDragDropListEx*			m_pInventoryBagList;
@@ -119,6 +119,7 @@ protected:
 
     CUIStatic*                  m_KnifeSlotHighlight;
     CUIStatic*                  m_BinocularSlotHighlight;
+    CUIStatic*                  m_TorchSlotHighlight;
 	
 	CUIStatic*					m_DetectorSlotHighlight;
 	CUIStatic*					m_QuickSlotsHighlight[4];
@@ -226,15 +227,15 @@ protected:
 	xr_vector<EDDListType>		m_allowed_drops				[iListTypeMax];
 	bool						AllowItemDrops				(EDDListType from, EDDListType to);
 
-	bool		xr_stdcall		OnItemDrop					(CUICellItem* itm);
-	bool		xr_stdcall		OnItemStartDrag				(CUICellItem* itm);
-	bool		xr_stdcall		OnItemDbClick				(CUICellItem* itm);
-	bool		xr_stdcall		OnItemSelected				(CUICellItem* itm);
-	bool		xr_stdcall		OnItemRButtonClick			(CUICellItem* itm);
-	bool		xr_stdcall		OnItemFocusReceive			(CUICellItem* itm);
-	bool		xr_stdcall		OnItemFocusLost				(CUICellItem* itm);
-	bool		xr_stdcall		OnItemFocusedUpdate			(CUICellItem* itm);
-	void		xr_stdcall		OnDragItemOnTrash			(CUIDragItem* item, bool b_receive);
+	bool				OnItemDrop					(CUICellItem* itm);
+	bool				OnItemStartDrag				(CUICellItem* itm);
+	bool				OnItemDbClick				(CUICellItem* itm);
+	bool				OnItemSelected				(CUICellItem* itm);
+	bool				OnItemRButtonClick			(CUICellItem* itm);
+	bool				OnItemFocusReceive			(CUICellItem* itm);
+	bool				OnItemFocusLost				(CUICellItem* itm);
+	bool				OnItemFocusedUpdate			(CUICellItem* itm);
+	void				OnDragItemOnTrash			(CUIDragItem* item, bool b_receive);
 	bool						OnItemDropped				(PIItem itm, CUIDragDropListEx* new_owner, CUIDragDropListEx* old_owner);
 
 	void						ResetMode					();
@@ -258,7 +259,7 @@ protected:
 
 	void						ActivatePropertiesBox		();
 	void						TryHidePropertiesBox		();
-	void		xr_stdcall		ProcessPropertiesBoxClicked	(CUIWindow* w, void* d);
+	void				ProcessPropertiesBoxClicked	(CUIWindow* w, void* d);
 	
 	void						CheckDistance				();
 	void						UpdateItemsPlace			();
@@ -272,14 +273,13 @@ protected:
 	bool						ToSlot						(CUICellItem* itm, bool force_place, u16 slot_id);
 	bool						ToBag						(CUICellItem* itm, bool b_use_cursor_pos);
 	bool						ToBelt						(CUICellItem* itm, bool b_use_cursor_pos);
-	bool						TryUseItem					(CUICellItem* cell_itm);
+	bool						TryUseFoodItem				(CUICellItem* cell_itm);
 	bool						ToQuickSlot					(CUICellItem* itm);
 
-	void						UpdateActorMP				();
 	void						UpdateOutfit				();
 	void						MoveArtefactsToBag			();
 	bool						TryActiveSlot				(CUICellItem* itm);
-	void		xr_stdcall		TryRepairItem				(CUIWindow* w, void* d);
+	void				TryRepairItem				(CUIWindow* w, void* d);
 	bool						CanUpgradeItem				(PIItem item);
 
 	bool						ToActorTrade				(CUICellItem* itm, bool b_use_cursor_pos);
@@ -323,8 +323,8 @@ public:
 
 	void						CallMessageBoxYesNo			(LPCSTR text);
 	void						CallMessageBoxOK			(LPCSTR text);
-	void		xr_stdcall		OnMesBoxYes					(CUIWindow*, void*);
-	void		xr_stdcall		OnMesBoxNo					(CUIWindow*, void*);
+	void				OnMesBoxYes					(CUIWindow*, void*);
+	void				OnMesBoxNo					(CUIWindow*, void*);
 
 	void						OnInventoryAction			(PIItem pItem, u16 action_type);
 	bool						SetInfoCurUpgrade			(Upgrade_type* upgrade_type, CInventoryItem* inv_item );
@@ -336,10 +336,10 @@ public:
 	void						UpdatePartnerBag			();
 	void						UpdateDeadBodyBag			();
 
-	void		xr_stdcall		OnBtnPerformTradeBuy		(CUIWindow* w, void* d);
-	void		xr_stdcall		OnBtnPerformTradeSell		(CUIWindow* w, void* d);
-	void		xr_stdcall		OnBtnExitClicked			(CUIWindow* w, void* d);
-	void		xr_stdcall		TakeAllFromPartner			(CUIWindow* w, void* d);
+	void				OnBtnPerformTradeBuy		(CUIWindow* w, void* d);
+	void				OnBtnPerformTradeSell		(CUIWindow* w, void* d);
+	void				OnBtnExitClicked			(CUIWindow* w, void* d);
+	void				TakeAllFromPartner			(CUIWindow* w, void* d);
 	void						TakeAllFromInventoryBox		();
 	void						UpdateConditionProgressBars	();
 

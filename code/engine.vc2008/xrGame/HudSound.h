@@ -42,10 +42,17 @@ struct HUD_SOUND_ITEM
 		}
 	}
 
+	ICF void		set_frequency(const float& freq)
+	{
+		if (m_activeSnd) {
+			m_activeSnd->snd.set_frequency(freq);
+		}
+	}
+
 	struct SSnd		{
 		ref_sound	snd;
-		float		delay;		//задержка перед проигрыванием
-		float		volume;		//громкость
+		float		delay;		//Р·Р°РґРµСЂР¶РєР° РїРµСЂРµРґ РїСЂРѕРёРіСЂС‹РІР°РЅРёРµРј
+		float		volume;		//РіСЂРѕРјРєРѕСЃС‚СЊ
 	};
 	shared_str		m_alias;
 	SSnd*			m_activeSnd;
@@ -60,22 +67,14 @@ class HUD_SOUND_COLLECTION
 	xr_vector<HUD_SOUND_ITEM>	m_sound_items;
 	HUD_SOUND_ITEM*				FindSoundItem	(	LPCSTR alias, bool b_assert);
 public:
-								~HUD_SOUND_COLLECTION();
-	void						PlaySound		(	LPCSTR alias, 
-													const Fvector& position,
-													const CObject* parent,
-													bool hud_mode,
-													bool looped = false,
-													u8 index=u8(-1));
-
-	void						StopSound		(	LPCSTR alias);
-
-	void						LoadSound		(	LPCSTR section, 
-													LPCSTR line,
-													LPCSTR alias,
-													bool exclusive = false,
-													int type = sg_SourceType);
-
-	void						SetPosition		(	LPCSTR alias, 	const Fvector& pos);
-	void						StopAllSounds	();
+		 ~HUD_SOUND_COLLECTION();
+	void PlaySound		(LPCSTR alias, const Fvector& position, const CObject* parent, bool hud_mode, bool looped = 0, u8 index = u8(-1));
+		 
+	void StopSound		(LPCSTR alias);
+	void LoadSound		(LPCSTR section, LPCSTR line, LPCSTR alias, bool exclusive = false, int type = sg_SourceType);
+		 
+	void SetPosition	(LPCSTR alias, const Fvector& pos);
+	void SetFrequency(LPCSTR alias, const float& freq);
+	void StopAllSounds	();
+	bool SoundIsFound   (const char* SndName);
 };

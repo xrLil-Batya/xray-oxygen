@@ -204,11 +204,14 @@ void CFrustum::CreateFromPortal(sPoly* poly, Fvector& vPN, Fvector& vBase, Fmatr
 	_add		(P);
 
 	// Far clipping plane
-	Fmatrix &M	= mFullXFORM;
-	P.n.x		= -(M._14 - M._13);
-	P.n.y		= -(M._24 - M._23);
-	P.n.z		= -(M._34 - M._33);
-	P.d			= -(M._44 - M._43);
+
+	Fmatrix &M = mFullXFORM;
+
+	P.n.x = -(M._14 - M._13);
+	P.n.y = -(M._24 - M._23);
+	P.n.z = -(M._34 - M._33);
+	P.d   = -(M._44 - M._43);
+
 	float denom = 1.0f / P.n.magnitude();
 	P.n.x		*= denom;
 	P.n.y		*= denom;
@@ -348,7 +351,7 @@ sPoly*	CFrustum::ClipPoly(sPoly& S, sPoly& D) const
 		}
 
 		// here we end up with complete polygon in 'dest' which is inside plane #i
-		if (dest->size()<3) return 0;
+		if (dest->size()<3) return nullptr;
 	}
 	return dest;
 }
@@ -363,16 +366,15 @@ bool CFrustum::CreateFromClipPoly(Fvector* p, int count, Fvector& vBase, CFrustu
 	sPoly*	dest	= clip.ClipPoly(poly1,poly2);
 
 	// here we end up with complete frustum-polygon in 'dest'
-	if (0==dest)	return false;
+	if (!dest)	return false;
 
 	CreateFromPoints(dest->begin(),dest->size(),vBase);
 	return	true;
 }
 
-void CFrustum::CreateFromMatrix(Fmatrix &M, u32 mask)
+void CFrustum::CreateFromMatrix(const Fmatrix &M, u32 mask) noexcept
 {
-	VERIFY			(_valid(M));
-	p_count			= 0;
+	p_count = 0;
 
 	// Left clipping plane
 	if (mask&FRUSTUM_P_LEFT)

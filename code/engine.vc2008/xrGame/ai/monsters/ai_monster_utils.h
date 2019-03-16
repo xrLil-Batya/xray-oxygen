@@ -1,11 +1,11 @@
 #pragma once
 
-// проверить, находится ли объект entity на ноде
-// возвращает позицию объекта, если он находится на ноде, или центр его ноды
+// РїСЂРѕРІРµСЂРёС‚СЊ, РЅР°С…РѕРґРёС‚СЃСЏ Р»Рё РѕР±СЉРµРєС‚ entity РЅР° РЅРѕРґРµ
+// РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕР·РёС†РёСЋ РѕР±СЉРµРєС‚Р°, РµСЃР»Рё РѕРЅ РЅР°С…РѕРґРёС‚СЃСЏ РЅР° РЅРѕРґРµ, РёР»Рё С†РµРЅС‚СЂ РµРіРѕ РЅРѕРґС‹
 class CEntity;
 extern Fvector get_valid_position(const CEntity *entity, const Fvector &actual_position);
 
-// возвращает true, если объект entity находится на ноде
+// РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РѕР±СЉРµРєС‚ entity РЅР°С…РѕРґРёС‚СЃСЏ РЅР° РЅРѕРґРµ
 extern bool object_position_valid(const CEntity *entity);
 
 IC Fvector random_position(const Fvector &center, float R) 
@@ -80,11 +80,11 @@ IC void read_delay(LPCSTR section, LPCSTR name, u32 &delay_min, u32 &delay_max)
 	string128 tempst;	
 
 	if (_GetItemCount(delay) == 2) {
-		delay_min = u32(atoi(_GetItem(delay,0,tempst)));
-		delay_max = u32(atoi(_GetItem(delay,1,tempst)));
+		delay_min = u32(atoi_17(_GetItem(delay,0,tempst)));
+		delay_max = u32(atoi_17(_GetItem(delay,1,tempst)));
 	} else {
 		delay_min	= 0;
-		delay_max	= u32(atoi(delay));
+		delay_max	= u32(atoi_17(delay));
 	}
 }
 

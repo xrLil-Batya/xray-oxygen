@@ -3,10 +3,9 @@
 #include "Level_Bullet_Manager.h"
 #include "xrserver.h"
 #include "xrmessages.h"
-#include "game_cl_base.h"
+
 #include "PHCommander.h"
 #include "net_queue.h"
-#include "MainMenu.h"
 #include "space_restriction_manager.h"
 #include "ai_space.h"
 #include "script_engine.h"
@@ -14,7 +13,7 @@
 #include "client_spawn_manager.h"
 #include "seniority_hierarchy_holder.h"
 #include "UIGame.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "UI/UIGameTutorial.h"
 #include "ui/UIPdaWnd.h"
 #include "GamePersistent.h"
@@ -41,7 +40,7 @@ void CLevel::remove_objects()
 			// ugly hack for checks that update is twice on frame
 			// we need it since we do updates for checking network messages
 			++(Device.dwFrame);
-			psDeviceFlags.set(rsDisableObjectsAsCrows, TRUE);
+			psDeviceFlags.set(rsDisableObjectsAsCrows, true);
 			ClientReceive();
 			ProcessGameEvents();
 			Objects.Update(false);
@@ -131,41 +130,24 @@ void CLevel::net_Stop		()
 	show_animation_stats		();
 #endif // DEBUG
 }
-
+ 
 void CLevel::ClientSend(bool bForce)
 {
-	static u32 cur_index = 0;
+    NET_Packet P;
+    u32 start = 0;
+    while (true)
+    {
+        P.w_begin(M_UPDATE);
+        start = Objects.net_Export(&P, start, max_objects_size);
 
-	if (bForce)
-		cur_index = 0;
-
-	u32 object_count = Objects.o_count();
-	u32 position;
-	for (u32 start = cur_index; start < (bForce ? object_count : cur_index + 20); start++)
-	{
-		CObject	*pO = Objects.o_get_by_iterator(cur_index);
-
-		cur_index++;
-		if (cur_index >= object_count)
-			cur_index = 0;
-
-		if (pO && !pO->getDestroy() && pO->net_Relevant())
-		{
-			NET_Packet P;
-			P.w_begin(M_UPDATE);
-
-			P.w_u16(u16(pO->ID()));
-			P.w_chunk_open8(position);
-
-			pO->net_Export(P);
-
-			P.w_chunk_close8(position);
-			if (max_objects_size >= (NET_PacketSizeLimit - P.w_tell()))
-				continue;
-			Send(P);
-		}
-	}
+        if (P.B.count > 2)
+        {
+            Send(P);
+        }
+        else break;
+    }
 }
+
 
 u32	CLevel::Objects_net_Save	(NET_Packet* _Packet, u32 start, u32 max_object_size)
 {
@@ -228,16 +210,12 @@ void CLevel::net_Update()
 	if(game_configured)
 	{
 		// If we have enought bandwidth - replicate client data on to server
-		Device.Statistic->netClient2.Begin	();
 		ClientSend					();
-		Device.Statistic->netClient2.End		();
 	}
 	// If server - perform server-update
 	if (Server)	
 	{
-		Device.Statistic->netServer.Begin();
 		Server->Update					();
-		Device.Statistic->netServer.End	();
 	}
 }
 

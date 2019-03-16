@@ -10,7 +10,6 @@
 
 #include "alife_space.h"
 #include "xr_graph_merge.h"
-#include "xrthread.h"
 #include "graph_abstract.h"
 #include "xrServer_Object_Base.h"
 #include "spawn_constructor_space.h"
@@ -41,7 +40,7 @@ public:
 	};
 
 private:
-	std::recursive_mutex				m_critical_section;
+	xrCriticalSection				m_critical_section;
 	ALife::_SPAWN_ID				m_spawn_id;
 	CThreadManager					m_thread_manager;
 	CSpawnHeader					m_spawn_header;

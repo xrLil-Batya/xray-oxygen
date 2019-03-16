@@ -12,7 +12,7 @@
 #	include "ps_instance.h"
 #	include "CustomHUD.h"
 #endif
-
+#include "Spectre\Spectre.h"
 #ifdef INGAME_EDITOR
 #	include "editor_environment_manager.hpp"
 #endif // INGAME_EDITOR
@@ -68,16 +68,13 @@ void IGame_Persistent::OnAppDeactivate		()
 
 void IGame_Persistent::OnAppStart	()
 {
-#ifndef _EDITOR
-	Environment().load				();
-#endif    
 }
 
 void IGame_Persistent::OnAppEnd		()
 {
 #ifndef _EDITOR
-	Environment().unload			 ();
-#endif    
+	Environment().Unload			 ();
+#endif
 	OnGameEnd						();
 
 #ifndef _EDITOR
@@ -167,40 +164,48 @@ void IGame_Persistent::Prefetch()
 void IGame_Persistent::OnGameEnd	()
 {
 #ifndef _EDITOR
-	ObjectPool.clear					();
-	Render->models_Clear				(TRUE);
+	ObjectPool.clear();
+	Render->models_Clear(TRUE);
 #endif
 }
 
-void IGame_Persistent::OnFrame		()
+void IGame_Persistent::OnFrame()
 {
-#ifndef _EDITOR
+	if (!Device.Paused() || Device.dwPrecacheFrame)
+	{
+		ScopeStatTimer envAndSpectreTimer(Device.Statistic->Engine_PersistanceFrame_EnvAndSpectre);
+		Environment().OnFrame();
+		SpectreCallback::shedule_update->Invoke(SpectreObjectId, Device.dwTimeDelta);
+	}
 
-	Device.Statistic->Particles_starting= (u32)ps_needtoplay.size	();
-	Device.Statistic->Particles_active	= (u32)ps_active.size		();
-	Device.Statistic->Particles_destroy	= (u32)ps_destroy.size		();
+	Device.Statistic->Particles_starting = (u32)ps_needtoplay.size();
+	Device.Statistic->Particles_active   = (u32)ps_active.size();
+	Device.Statistic->Particles_destroy  = (u32)ps_destroy.size();
 
 	// Play req particle systems
-	while (ps_needtoplay.size())
+	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.Begin();
+	while (!ps_needtoplay.empty())
 	{
-		CPS_Instance*	psi		= ps_needtoplay.back	();
-		ps_needtoplay.pop_back	();
-		psi->Play				(false);
+		CPS_Instance* pInstance = ps_needtoplay.back();
+		ps_needtoplay.pop_back();
+		pInstance->Play(false);
 	}
+	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.End();
+
 	// Destroy inactive particle systems
     EnterCriticalSection(&ps_destroyGuard);
 	while (ps_destroy.size())
 	{
 //		u32 cnt					= ps_destroy.size();
-		CPS_Instance*	psi		= ps_destroy.back();
-		VERIFY					(psi);
-		if (psi->Locked())
+	{
+		CPS_Instance* pInstance = ps_destroy.back();
+		if (pInstance->Locked())
 		{
 			Log("--locked");
 			break;
 		}
-		ps_destroy.pop_back		();
-		psi->PSI_internal_delete();
+		ps_destroy.pop_back();
+		pInstance->PSI_internal_delete();
 	}
     LeaveCriticalSection(&ps_destroyGuard);
 #endif
@@ -233,13 +238,15 @@ void IGame_Persistent::destroy_particles		(const bool &all_particles)
 	}
 	else
 	{
-		size_t active_size = ps_active.size();
-		CPS_Instance **I = (CPS_Instance**)_alloca(active_size * sizeof(CPS_Instance*));
-		std::copy(ps_active.begin(), ps_active.end(), I);
+		const size_t active_size = ps_active.size();
+		CPS_Instance** ppParticleInstances = new CPS_Instance*[active_size];
+		std::copy(ps_active.begin(), ps_active.end(), ppParticleInstances);
 
-		CPS_Instance **E = std::remove_if(I, I + active_size, [](CPS_Instance*const& object){ return (!object->destroy_on_game_load()); });
-		for (; I != E; ++I)
-			(*I)->PSI_internal_delete();
+		CPS_Instance **E = std::remove_if(ppParticleInstances, ppParticleInstances + active_size, [](CPS_Instance*const& object) { return (!object->destroy_on_game_load()); });
+		for (; ppParticleInstances != E; ++ppParticleInstances)
+			(*ppParticleInstances)->PSI_internal_delete();
+
+		//delete[](ppParticleInstances);
 	}
 
 	//VERIFY(ps_needtoplay.empty() && ps_destroy.empty() && (!all_particles || ps_active.empty()));

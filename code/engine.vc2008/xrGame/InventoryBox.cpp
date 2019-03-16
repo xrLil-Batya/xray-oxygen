@@ -9,6 +9,9 @@
 #include "ui/UIActorMenu.h"
 #include "UIGame.h"
 #include "inventory_item.h"
+#include "Level.h"
+#include "xrServer.h"
+#include "game_base.h"
 
 CInventoryBox::CInventoryBox()
 {
@@ -42,7 +45,7 @@ void CInventoryBox::OnEvent(NET_Packet& P, u16 type)
 			VERIFY					(pIItem);
 			if (GameUI())
 			{
-				if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodySearch)
+				if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodyOrContainerSearch)
 				{
 					if (this == GameUI()->ActorMenu().GetInvBox())
 						GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
@@ -63,7 +66,7 @@ void CInventoryBox::OnEvent(NET_Packet& P, u16 type)
 			bool just_before_destroy		= !P.r_eof() && P.r_u8();
 			bool dont_create_shell			= (type==GE_TRADE_SELL) || just_before_destroy;
 
-			itm->H_SetParent	(NULL, dont_create_shell);
+			itm->H_SetParent	(nullptr, dont_create_shell);
 
 			if( m_in_use )
 			{
@@ -106,6 +109,7 @@ void CInventoryBox::net_Relcase(CObject* O)
 {
 	inherited::net_Relcase(O);
 }
+
 #include "inventory_item.h"
 void CInventoryBox::AddAvailableItems(TIItemContainer& items_container) const
 {
@@ -125,27 +129,32 @@ void CInventoryBox::set_can_take( bool status )
 	SE_update_status();
 }
 
-void CInventoryBox::set_closed( bool status, LPCSTR reason )
+void CInventoryBox::set_closed(bool status, LPCSTR reason)
 {
 	m_closed = status;
 
-	if ( reason && xr_strlen( reason ) )
+	if (reason && xr_strlen(reason))
 	{
-		set_tip_text( reason );
+		set_tip_text(reason);
 	}
 	else
 	{
-		set_tip_text( "inventory_box_use" );
+		set_tip_text("inventory_box_use");
 	}
+
 	SE_update_status();
 }
 
 void CInventoryBox::SE_update_status()
 {
-	NET_Packet P;
-	CGameObject::u_EventGen( P, GE_INV_BOX_STATUS, ID() );
-	P.w_u8( (m_can_take)? 1 : 0 );
-	P.w_u8( (m_closed)? 1 : 0 );
-	P.w_stringZ( tip_text() );
-	CGameObject::u_EventSend( P );
+	CSE_Abstract* receiver = Level().Server->ID_to_entity(ID());
+	{
+		CSE_ALifeInventoryBox* box = smart_cast<CSE_ALifeInventoryBox*>(receiver);
+		if (box)
+		{
+			box->m_can_take = m_can_take;
+			box->m_closed = m_closed;
+			box->m_tip_text._set(tip_text());
+		}
+	}
 }

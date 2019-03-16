@@ -14,9 +14,8 @@
 #include "xrServer.h"
 #include "client_spawn_manager.h"
 #include "../xrEngine/igame_persistent.h"
-#include "game_cl_base.h"
 #include "UIGame.h"
-#include "UI/UIDialogWnd.h"
+#include "../xrUICore/UIDialogWnd.h"
 #include "../xrEngine/date_time.h"
 #include "ai_space.h"
 #include "level_graph.h"
@@ -30,7 +29,7 @@
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
 #include "UI/UIGameTutorial.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "ui/UIInventoryUtilities.h"
 #include "alife_object_registry.h"
 #include "xrServer_Objects_ALife_Monsters.h"
@@ -41,7 +40,7 @@
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIMap.h"
 #include "ui/UIMotionIcon.h"
-
+#include "patrol_path.h"
 
 using namespace luabind;
  bool single_game()
@@ -94,36 +93,31 @@ CScriptGameObject *tpfGetActor()
 	if (l_tpActor)
 		return	(smart_cast<CGameObject*>(l_tpActor)->lua_game_object());
 	else
-		return	(0);
+		return	(nullptr);
 }
+#endif
 
 CScriptGameObject *get_object_by_name(LPCSTR caObjectName)
 {
-	static bool first_time = true;
-	if (first_time)
-		ai().script_engine().script_log(eLuaMessageTypeError,"Do not use level.object function!");
-	first_time = false;
-	
-	CGameObject		*l_tpGameObject	= smart_cast<CGameObject*>(Level().Objects.FindObjectByName(caObjectName));
+	CGameObject		*l_tpGameObject = smart_cast<CGameObject*>(Level().Objects.FindObjectByName(caObjectName));
 	if (l_tpGameObject)
 		return		(l_tpGameObject->lua_game_object());
 	else
-		return		(0);
+		return		(nullptr);
 }
-#endif
 
 CScriptGameObject *get_object_by_id(u16 id)
 {
 	CGameObject* pGameObject = smart_cast<CGameObject*>(Level().Objects.net_Find(id));
 	if(!pGameObject)
-		return NULL;
+		return nullptr;
 
 	return pGameObject->lua_game_object();
 }
 
 LPCSTR get_weather	()
 {
-	return			(*g_pGamePersistent->Environment().GetWeather());
+	return			(*Environment().GetWeather());
 }
 
 void set_weather	(LPCSTR weather_name, bool forced)
@@ -131,7 +125,7 @@ void set_weather	(LPCSTR weather_name, bool forced)
 #ifdef INGAME_EDITOR
 	if (!Device.editor())
 #endif // #ifdef INGAME_EDITOR
-		g_pGamePersistent->Environment().SetWeather(weather_name,forced);
+		Environment().SetWeather(weather_name,forced);
 }
 
 bool set_weather_fx	(LPCSTR weather_name)
@@ -139,7 +133,7 @@ bool set_weather_fx	(LPCSTR weather_name)
 #ifdef INGAME_EDITOR
 	if (!Device.editor())
 #endif // #ifdef INGAME_EDITOR
-		return		(g_pGamePersistent->Environment().SetWeatherFX(weather_name));
+		return		(Environment().SetWeatherFX(weather_name));
 	
 #ifdef INGAME_EDITOR
 	return			(false);
@@ -151,7 +145,7 @@ bool start_weather_fx_from_time	(LPCSTR weather_name, float time)
 #ifdef INGAME_EDITOR
 	if (!Device.editor())
 #endif // #ifdef INGAME_EDITOR
-		return		(g_pGamePersistent->Environment().StartWeatherFXFromTime(weather_name, time));
+		return		(Environment().StartWeatherFXFromTime(weather_name, time));
 	
 #ifdef INGAME_EDITOR
 	return			(false);
@@ -160,17 +154,17 @@ bool start_weather_fx_from_time	(LPCSTR weather_name, float time)
 
 bool is_wfx_playing	()
 {
-	return			(g_pGamePersistent->Environment().IsWFXPlaying());
+	return			(Environment().IsWeatherFXPlaying());
 }
 
 float get_wfx_time	()
 {
-	return			(g_pGamePersistent->Environment().wfx_time);
+	return			(Environment().wfx_time);
 }
 
 void stop_weather_fx()
 {
-	g_pGamePersistent->Environment().StopWFX();
+	Environment().StopWeatherFX();
 }
 
 void set_time_factor(float time_factor)
@@ -191,8 +185,9 @@ float get_time_factor()
 void set_game_difficulty(ESingleGameDifficulty dif)
 {
 	g_SingleGameDifficulty = dif;
-	Level().game->OnDifficultyChanged();
+	Actor()->OnDifficultyChanged();
 }
+
 ESingleGameDifficulty get_game_difficulty()
 {
 	return g_SingleGameDifficulty;
@@ -226,7 +221,7 @@ void change_game_time(u32 days, u32 hours, u32 mins)
 		u32 value		= days*86400+hours*3600+mins*60;
 		float fValue	= static_cast<float> (value);
 		value			*= 1000;//msec		
-		g_pGamePersistent->Environment().ChangeGameTime(fValue);
+		Environment().ChangeGameTime(fValue);
 		Level().Server->game->alife().time_manager().change_game_time(value);
 	}
 }
@@ -247,7 +242,7 @@ float low_cover_in_direction(u32 level_vertex_id, const Fvector &direction)
 
 float rain_factor()
 {
-	return			(g_pGamePersistent->Environment().CurrentEnv->rain_density);
+	return			(Environment().CurrentEnv->rain_density);
 }
 
 u32	vertex_in_direction(u32 level_vertex_id, Fvector direction, float max_distance)
@@ -257,7 +252,7 @@ u32	vertex_in_direction(u32 level_vertex_id, Fvector direction, float max_distan
 	Fvector			start_position = ai().level_graph().vertex_position(level_vertex_id);
 	Fvector			finish_position = Fvector(start_position).add(direction);
 	u32				result = u32(-1);
-	ai().level_graph().farthest_vertex_in_direction(level_vertex_id,start_position,finish_position,result,0);
+	ai().level_graph().farthest_vertex_in_direction(level_vertex_id,start_position,finish_position,result,nullptr);
 	return			(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
 }
 
@@ -435,7 +430,7 @@ cphysics_world_scripted* physics_world_scripted()
 }
 CEnvironment *environment()
 {
-	return		(g_pGamePersistent->pEnvironment);
+	return		(&Environment());
 }
 
 CEnvDescriptor *current_environment(CEnvironment *self)
@@ -538,21 +533,6 @@ void set_snd_volume(float v)
 {
 	psSoundVFactor = v;
 	clamp(psSoundVFactor,0.0f,1.0f);
-}
-#include "actor_statistic_mgr.h"
-void add_actor_points(LPCSTR sect, LPCSTR detail_key, int cnt, int pts)
-{
-	return Actor()->StatisticMgr().AddPoints(sect, detail_key, cnt, pts);
-}
-
-void add_actor_points_str(LPCSTR sect, LPCSTR detail_key, LPCSTR str_value)
-{
-	return Actor()->StatisticMgr().AddPoints(sect, detail_key, str_value);
-}
-
-int get_actor_points(LPCSTR sect)
-{
-	return Actor()->StatisticMgr().GetSectionPoints(sect);
 }
 
 #include "ActorEffector.h"
@@ -692,7 +672,7 @@ LPCSTR translate_string(LPCSTR str)
 
 bool has_active_tutotial()
 {
-	return (g_tutorial!=NULL);
+	return (g_tutorial!=nullptr);
 }
 
 void g_send(NET_Packet& P)
@@ -736,7 +716,7 @@ CScriptGameObject* g_get_target_obj()
 		if (game_object)
 			return game_object->lua_game_object();
 	}
-	return (0);
+	return (nullptr);
 }
 
 float g_get_target_dist()
@@ -769,15 +749,15 @@ u8 get_active_cam()
 void set_active_cam(u8 mode)
 {
 	CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
-	if (actor && mode <= ACTOR_DEFS::EActorCameras::eacMaxCam)
-		actor->cam_Set((ACTOR_DEFS::EActorCameras)mode);
+	if (actor && mode <= EActorCameras::eacMaxCam)
+		actor->cam_Set((EActorCameras)mode);
 }
 
 CScriptGameObject* get_view_entity_script()
 {
 	CGameObject* pGameObject = smart_cast<CGameObject*>(Level().CurrentViewEntity());
 	if (!pGameObject)
-		return (0);
+		return (nullptr);
 
 	return pGameObject->lua_game_object();
 }
@@ -803,17 +783,28 @@ xrTime get_start_time()
 	return (xrTime(Level().GetStartGameTime()));
 }
 
-void supertest(LPCSTR sname)
-{
-	FS.curr_season = (char*) sname;
+u8 get_level_id(CLevelGraph *graph) 
+{ 
+	return graph->level_id(); 
 }
 
-char* get_season()
-{
-	return (FS.curr_season);
+u32 get_vertex_count(CLevelGraph *graph)
+{ 
+	return graph->header().vertex_count(); 
 }
 
-#pragma optimize("s",on)
+void patrol_path_add(LPCSTR patrol_path, CPatrolPath* path) {
+	ai().patrol_paths_raw().add_path(shared_str(patrol_path), path);
+}
+
+void patrol_path_remove(LPCSTR patrol_path) {
+	ai().patrol_paths_raw().remove_path(shared_str(patrol_path));
+}
+
+#include "../../SDK/include/luabind/operator.hpp"
+#include "../../SDK/include/luabind/out_value_policy.hpp"
+
+#pragma optimize("gyts",on)
 void CLevel::script_register(lua_State *L)
 {
 	class_<CEnvDescriptor>("CEnvDescriptor")
@@ -825,13 +816,20 @@ void CLevel::script_register(lua_State *L)
 
 	module(L,"level")
 	[
+		class_<CLevelGraph>("CLevelGraph")
+			.def(constructor<>())
+			.property("level_id", &get_level_id)
+			.property("vertices_count", &get_vertex_count),
+
+		def("patrol_path_add", &patrol_path_add),
+		def("patrol_path_remove", &patrol_path_remove),
 		def("u_event_gen", &u_event_gen), //Send events via packet
 		def("u_event_send", &u_event_send),
 	    def("send", &g_send),
 	    def("get_target_obj", &g_get_target_obj),
 		def("get_target_dist", &g_get_target_dist),
 		def("get_target_element", &g_get_target_element),
-		def("get_view_entity", &get_view_entity_script),
+		def("get_view_entity", &get_view_entity_script), // 
 		def("set_view_entity", &set_view_entity_script),
 		def("spawn_item", &spawn_section),
 		def("get_active_cam", &get_active_cam),
@@ -841,8 +839,8 @@ void CLevel::script_register(lua_State *L)
 		
 		// obsolete\deprecated
 		def("object_by_id",						get_object_by_id),
-#ifdef DEBUG
 		def("debug_object",						get_object_by_name),
+#ifdef DEBUG
 		def("debug_actor",						tpfGetActor),
 		def("check_object",						check_object),
 #endif
@@ -927,13 +925,6 @@ void CLevel::script_register(lua_State *L)
 		def("vertex_id",						&vertex_id),
 		def("game_id",							&GameID)
 	],
-	
-	module(L,"actor_stats")
-	[
-		def("add_points",						&add_actor_points),
-		def("add_points_str",					&add_actor_points_str),
-		def("get_points",						&get_actor_points)
-	];
 	
 	module(L)
 	[
@@ -1032,8 +1023,6 @@ void CLevel::script_register(lua_State *L)
 	    def("stop_tutorial",		&stop_tutorial),
 	    def("has_active_tutorial",	&has_active_tutotial),
 	    def("translate_string",		&translate_string),
-	    def("set_season",			&supertest),
-	    def("get_season",			&get_season),
         def("show_minimap",         &show_minimap)
 	];
 }

@@ -5,7 +5,7 @@
 #include "../../ActorEffector.h"
 #include "control_animation_base.h"
 #include "../../Inventory.h"
-#include "../../Weapon.h"
+#include "../../items/Weapon.h"
 
 namespace detail
 {
@@ -25,7 +25,7 @@ anti_aim_ability::anti_aim_ability (CBaseMonster* const object) : m_object(objec
 	m_last_activated_tick			=	0;
 	m_last_detection_tick			=	0;
 	m_last_angle					=	M_PI;
-	m_callback.clear					();
+	m_callback.reset					();
 }
 
 anti_aim_ability::~anti_aim_ability ()
@@ -258,7 +258,6 @@ float   anti_aim_ability::calculate_angle () const
 #include "../../level_debug.h"
 #include "../../debug_text_tree.h"
 #endif
-extern CActor* g_actor;
 
 bool   anti_aim_ability::check_update_condition () const
 {

@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////
-// script_game_object_trader.сpp :	функции для торговли и торговцев
+// script_game_object_trader.СЃpp :	С„СѓРЅРєС†РёРё РґР»СЏ С‚РѕСЂРіРѕРІР»Рё Рё С‚РѕСЂРіРѕРІС†РµРІ
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "luabind/luabind.hpp"
 #include "script_game_object.h"
-
 
 #include "script_zone.h"
 #include "ai/trader/ai_trader.h"
@@ -22,7 +22,7 @@
 #include "inventoryBox.h"
 #include "ZoneCampfire.h"
 #include "physicobject.h"
-#include "artefact.h"
+#include "items/Artefact.h"
 #include "stalker_sound_data.h"
 
 class CWeapon;

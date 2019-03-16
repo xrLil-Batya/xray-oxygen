@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define CMD0(cls)					{ static cls x##cls();				Console->AddCommand(&x##cls);}
 #define CMD1(cls,p1)				{ static cls x##cls(p1);			Console->AddCommand(&x##cls);}
@@ -137,7 +137,7 @@ public		:
 	{
 		value->set(mask,!GetValue());
 		TStatus S;
-		strconcat(sizeof(S),S,cName," is ", value->test(mask)?"on":"off");
+		xr_strconcat(S, cName," is ", value->test(mask)?"on":"off");
 		Log(S);
 	}
 	virtual void	Status	(TStatus& S)
@@ -279,7 +279,7 @@ protected	:
 	Fvector			min,max;
 public		
 :
-	CCC_Vector3(LPCSTR N, Fvector* V, const Fvector _min, const Fvector _max) :
+	CCC_Vector3(LPCSTR N, Fvector* V, const Fvector &_min, const Fvector &_max) :
 	  IConsole_Command(N),
 	  value(V)
 	{
@@ -338,7 +338,7 @@ public		:
 
 	virtual void	Execute	(LPCSTR args)
 	{
-		int v = atoi(args);
+		int v = atoi_17(args);
 		if (v<min || v>max) InvalidSyntax();
 		else	*value = v;
 	}

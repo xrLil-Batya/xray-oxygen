@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Text_Console.h"
 #include "line_editor.h"
 
@@ -184,7 +184,7 @@ void CTextConsole::Destroy()
 	DestroyWindow( m_hConsoleWnd );
 }
 
-void CTextConsole::OnRender() {} //disable СConsole::OnRender()
+void CTextConsole::OnRender() {} //disable РЎConsole::OnRender()
 
 void CTextConsole::OnPaint()
 {

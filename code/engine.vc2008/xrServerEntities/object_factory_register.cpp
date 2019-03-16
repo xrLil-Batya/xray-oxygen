@@ -61,31 +61,31 @@
 #	include "helicopter.h"
 
 #	include "MercuryBall.h"
-#	include "WeaponMagazinedWGrenade.h"
-#	include "weaponAMMO.h"
-#	include "weaponBINOCULARS.h"
-#	include "weaponShotgun.h"
-#	include "weaponsvd.h"
-#	include "weaponrpg7.h"
-#	include "weaponvintorez.h"
-#	include "weaponknife.h"
-#	include "weaponBM16.h"
-#	include "weaponRG6.h"
-#	include "WeaponStatMgun.h"
+#	include "items/WeaponMagazinedWGrenade.h"
+#	include "items/weaponAMMO.h"
+#	include "items/weaponBINOCULARS.h"
+#	include "items/weaponShotgun.h"
+#	include "items/weaponsvd.h"
+#	include "items/weaponrpg7.h"
+#	include "items/weaponvintorez.h"
+#	include "items/weaponknife.h"
+#	include "items/weaponBM16.h"
+#	include "items/weaponRG6.h"
+#	include "items/WeaponStatMgun.h"
 
-#	include "scope.h"
-#	include "silencer.h"
-#	include "grenadelauncher.h"
+#	include "items/Scope.h"
+#	include "items/Silencer.h"
+#	include "items/GrenadeLauncher.h"
 
-#	include "bolt.h"
-#	include "fooditem.h"
+#	include "items/bolt.h"
+#	include "items/FoodItem.h"
 #	include "explosiveitem.h"
-#	include "Grenade.h"
-#	include "infodocument.h"
+#	include "items/Grenade.h"
+#	include "items/InfoDocument.h"
 #	include "attachable_item.h"
 
-#	include "CustomOutfit.h"
-#	include "ActorHelmet.h"
+#	include "items/CustomOutfit.h"
+#	include "items/Helmet.h"
 
 #	include "explosiverocket.h"
 
@@ -100,13 +100,13 @@
 #	include "ZoneVisual.h"
 #	include "hairszone.h"
 #	include "nogravityzone.h"
-#	include "simpledetector.h"
-#	include "elitedetector.h"
-#	include "advanceddetector.h"
-#	include "Dosimeter.h"
+#	include "items/Simpledetector.h"
+#	include "items/Elitedetector.h"
+#	include "items/Advanceddetector.h"
+#	include "items/Dosimeter.h"
 #	include "zonecampfire.h"
 
-#	include "torch.h"
+#	include "items/Torch.h"
 #	include "pda.h"
 #	include "flare.h"
 
@@ -120,7 +120,6 @@
 #	include "DestroyablePhysicsObject.h"
 
 #	include "game_sv_base.h"
-#	include "game_cl_base.h"
 
 #	include "UIGame.h"
 #	include	"climableobject.h"
@@ -139,7 +138,7 @@
 #	define ADD(a,b,c,d)			add<b>(c,d)
 #endif
 
-void CObjectFactory::register_classes	()
+void CObjectFactory::register_classes	() noexcept
 {
 #ifndef NO_XR_GAME
 	// client entities
@@ -149,8 +148,6 @@ void CObjectFactory::register_classes	()
 	//Server Game type
 	
 	add<game_sv_GameState>										(CLSID_SV_GAME_SINGLE			,"game_sv_single");
-	//Client Game type
-	add<game_cl_GameState>										(CLSID_CL_GAME_SINGLE			,"game_cl_single");
 	add<CUIGame>												(CLSID_GAME_UI_SINGLE			,"game_ui_single");
 #else // NO_XR_GAME
 	ADD(CActor					,CSE_ALifeCreatureActor			,CLSID_OBJECT_ACTOR				,"actor");

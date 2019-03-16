@@ -2,12 +2,12 @@
 #include "ai_space.h"
 #include "object_factory.h"
 #include "ai/monsters/ai_monster_squad_manager.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 
 #include "entity_alive.h"
 #include "ui/UIInventoryUtilities.h"
-#include "UI/UIXmlInit.h"
-#include "UI/UItextureMaster.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UItextureMaster.h"
 
 #include "InfoPortion.h"
 #include "PhraseDialog.h"
@@ -20,22 +20,18 @@
 #include "character_rank.h"
 #include "character_reputation.h"
 
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 
 #include "sound_collection_storage.h"
 #include "relation_registry.h"
 
-typedef xr_vector<std::pair<shared_str,int> >	STORY_PAIRS;
+using STORY_PAIRS = xr_vector<std::pair<shared_str,int> >;
 extern STORY_PAIRS								story_ids;
 extern STORY_PAIRS								spawn_story_ids;
 
-extern void dump_list_wnd							();
-extern void dump_list_lines							();
-extern void dump_list_sublines						();
-extern void clean_wnd_rects							();
-extern void dump_list_xmls							();
-extern void CreateUIGeom							();
-extern void DestroyUIGeom							();
+extern void ENGINE_API clean_wnd_rects				();
+extern void UI_API CreateUIGeom						();
+extern void UI_API DestroyUIGeom					();
 extern void InitHudSoundSettings					();
 
 #include "../xrEngine/IGame_Persistent.h"
@@ -61,8 +57,6 @@ extern void destroy_lua_wpn_params	();
 void clean_game_globals()
 {
 	destroy_lua_wpn_params							();
-	// destroy ai space
-	xr_delete										(g_ai_space);
 	// destroy object factory
 	xr_delete										(g_object_factory);
 	// destroy monster squad global var
@@ -91,11 +85,11 @@ void clean_game_globals()
 	//static shader for blood
 	CEntityAlive::UnloadBloodyWallmarks				();
 	CEntityAlive::UnloadFireParticles				();
-	//очищение памяти таблицы строк
+	//РѕС‡РёС‰РµРЅРёРµ РїР°РјСЏС‚Рё С‚Р°Р±Р»РёС†С‹ СЃС‚СЂРѕРє
 	CStringTable::Destroy							();
-	// Очищение таблицы цветов
+	// РћС‡РёС‰РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ С†РІРµС‚РѕРІ
 	CUIXmlInit::DeleteColorDefs						();
-	// Очищение таблицы идентификаторов рангов и отношений сталкеров
+	// РћС‡РёС‰РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ СЂР°РЅРіРѕРІ Рё РѕС‚РЅРѕС€РµРЅРёР№ СЃС‚Р°Р»РєРµСЂРѕРІ
 	InventoryUtilities::ClearCharacterInfoStrings	();
 
 	xr_delete										(g_sound_collection_storage);
@@ -105,13 +99,8 @@ void clean_game_globals()
 #endif
 
 	RELATION_REGISTRY::clear_relation_registry		();
-
-	dump_list_wnd									();
-	dump_list_lines									();
-	dump_list_sublines								();
 	clean_wnd_rects									();
 	xr_delete										(g_uiSpotXml);
-	dump_list_xmls									();
 	DestroyUIGeom									();
 	xr_delete										(pWpnScopeXml);
 	CUITextureMaster::FreeTexInfo					();

@@ -31,8 +31,7 @@ public:
 	void								Preload			();
 	void								Load			();
 	void								PostLoad		();
-	void								Unload			(void);
-//	void								Apply			(u32 dwStage);
+	void								Unload			();
 
 	void								surface_set		(ID3DBaseTexture* surf );
 	ID3DBaseTexture*					surface_get 	();
@@ -50,19 +49,19 @@ public:
 	CTexture							();
 	virtual ~CTexture					();
 	
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	ID3DShaderResourceView*				get_SRView() {return m_pSRView;}
-#endif	//	USE_DX10
+#endif
 
 private:
 	IC BOOL								desc_valid		()		{ return pSurface==desc_cache; }
 	IC void								desc_enshure	()		{ if (!desc_valid()) desc_update(); }
 	void								desc_update		();
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	void								Apply			(u32 dwStage);
 	void								ProcessStaging();
 	D3D_USAGE							GetUsage();
-#endif	//	USE_DX10
+#endif
 
 	//	Class data
 public:	//	Public class members (must be encapsulated furthur)
@@ -72,11 +71,11 @@ public:	//	Public class members (must be encapsulated furthur)
 		u32					bUser		: 1;
 		u32					seqCycles	: 1;
 		u32					MemoryUsage	: 28;
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 		u32					bLoadedAsStaging: 1;
-#endif	//	USE_DX10
+#endif
 	}									flags;
-	fastdelegate::FastDelegate1<u32>	bind;
+	xrDelegate<void(u32)>				bind;
 
 
 	CAviPlayerCustom*					pAVI;
@@ -98,18 +97,17 @@ private:
 	ID3DBaseTexture*					desc_cache;
 	D3D_TEXTURE2D_DESC					desc;
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	ID3DShaderResourceView*			m_pSRView;
 	// Sequence view data
 	xr_vector<ID3DShaderResourceView*>m_seqSRView;
-#endif	//	USE_DX10
+#endif
 };
 struct 		resptrcode_texture	: public resptr_base<CTexture>
 {
 	void				create			(LPCSTR	_name);
-	void				destroy			()					{ _set(NULL);					}
+	void				destroy			()					{ _set(nullptr);					}
 	shared_str			bump_get		()					{ return _get()->m_bumpmap;		}
 	bool				bump_exist		()					{ return 0!=bump_get().size();	}
 };
-typedef	resptr_core<CTexture,resptrcode_texture >	
-	ref_texture;
+using ref_texture =	resptr_core<CTexture,resptrcode_texture >;

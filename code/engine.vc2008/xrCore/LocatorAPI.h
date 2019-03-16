@@ -110,7 +110,6 @@ private:
 
 private:
 			IReader				*setup_fs_ltx		(const char* fs_name);
-			char*				fld_curr_season;
 
 public:
 								CLocatorAPI			();
@@ -172,10 +171,6 @@ public:
 	void						unlock_rescan		();
 
     bool                        getFileName         (LPCSTR path, string512& outFilename);
-	
-	char*						curr_season			= nullptr;
-	char*						get_season_folder	(char* fname);
-
 };
 
 extern XRCORE_API	CLocatorAPI*					xr_FS;

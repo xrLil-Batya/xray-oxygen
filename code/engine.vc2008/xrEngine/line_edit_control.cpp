@@ -1,11 +1,11 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: line_edit_control.cpp
 //	Created 	: 21.02.2008
 //	Author		: Evgeniy Sokolov
 //	Description : line edit control class implementation
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#include <ppl.h>
 #include "line_edit_control.h"
 
 #include "../xrCore/os_clipboard.h"
@@ -161,14 +161,14 @@ void line_edit_control::init( u32 str_buffer_size, init_mode mode )
 	m_buffer_size = str_buffer_size;
 	clamp( m_buffer_size, (int)MIN_BUF_SIZE, (int)MAX_BUF_SIZE );
 
-	xr_free( m_edit_str );	m_edit_str = (LPSTR)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_inserted );	m_inserted = (LPSTR)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_undo_buf );	m_undo_buf = (LPSTR)xr_malloc( m_buffer_size * sizeof(char) );
+	xr_free( m_edit_str );	m_edit_str = (char*)xr_malloc( m_buffer_size * sizeof(char) );
+	xr_free( m_inserted );	m_inserted = (char*)xr_malloc( m_buffer_size * sizeof(char) );
+	xr_free( m_undo_buf );	m_undo_buf = (char*)xr_malloc( m_buffer_size * sizeof(char) );
 	
-	xr_free( m_buf0 );		m_buf0 = (LPSTR)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_buf1 );		m_buf1 = (LPSTR)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_buf2 );		m_buf2 = (LPSTR)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_buf3 );		m_buf3 = (LPSTR)xr_malloc( m_buffer_size * sizeof(char) );
+	xr_free( m_buf0 );		m_buf0 = (char*)xr_malloc( m_buffer_size * sizeof(char) );
+	xr_free( m_buf1 );		m_buf1 = (char*)xr_malloc( m_buffer_size * sizeof(char) );
+	xr_free( m_buf2 );		m_buf2 = (char*)xr_malloc( m_buffer_size * sizeof(char) );
+	xr_free( m_buf3 );		m_buf3 = (char*)xr_malloc( m_buffer_size * sizeof(char) );
 
 	clear_states();
 
@@ -540,45 +540,47 @@ void line_edit_control::update_bufs()
 
 void line_edit_control::add_inserted_text()
 {
-	if ( empty_inserted() )
+	if (empty_inserted())
 	{
 		return;
 	}
-	
-	int old_edit_size = (int)xr_strlen( m_edit_str );
-	for ( int i = 0; i < old_edit_size; ++i )
+
+	int old_edit_size = (int)xr_strlen(m_edit_str);
+	for (int i = 0; i < old_edit_size; ++i)
 	{
-		if ( ( m_edit_str[i] == '\n' ) || ( m_edit_str[i] == '\t' ) )
+		if ((m_edit_str[i] == '\n') || (m_edit_str[i] == '\t'))
 		{
-			m_edit_str[i]=' ';
+			m_edit_str[i] = ' ';
 		}
 	}
 
-	PSTR buf = (PSTR)_alloca( (m_buffer_size + 1) * sizeof(char) );
+	char* buf = new char[m_buffer_size + 1];
 
-	strncpy_s( buf,        m_buffer_size, m_edit_str,        m_p1        ); // part 1
-	strncpy_s( m_undo_buf, m_buffer_size, m_edit_str + m_p1, m_p2 - m_p1 );
+	strncpy_s(buf, m_buffer_size, m_edit_str, m_p1); // part 1
+	strncpy_s(m_undo_buf, m_buffer_size, m_edit_str + m_p1, m_p2 - m_p1);
 
-	int new_size = (int)xr_strlen( m_inserted );
-	if ( m_buffer_size - 1 < m_p1 + new_size )
+	int new_size = (int)xr_strlen(m_inserted);
+	if (m_buffer_size - 1 < m_p1 + new_size)
 	{
 		m_inserted[m_buffer_size - 1 - m_p1] = 0;
-		new_size = xr_strlen( m_inserted );
+		new_size = xr_strlen(m_inserted);
 	}
-	strncpy_s( buf + m_p1, m_buffer_size, m_inserted, std::min(new_size, m_buffer_size - m_p1) ); // part 2
+	strncpy_s(buf + m_p1, m_buffer_size, m_inserted, std::min(new_size, m_buffer_size - m_p1)); // part 2
 
-	u8 ds = (m_insert_mode && m_p2 < old_edit_size)? 1 : 0;
-	strncpy_s( buf + m_p1 + new_size, m_buffer_size, m_edit_str + m_p2 + ds,
-        std::min(old_edit_size - m_p2 - ds, m_buffer_size - m_p1 - new_size) ); // part 3
+	u8 ds = (m_insert_mode && m_p2 < old_edit_size) ? 1 : 0;
+	strncpy_s(buf + m_p1 + new_size, m_buffer_size, m_edit_str + m_p2 + ds,
+		std::min(old_edit_size - m_p2 - ds, m_buffer_size - m_p1 - new_size)); // part 3
 	buf[m_buffer_size] = 0;
 
 	int szn = m_p1 + new_size + old_edit_size - m_p2 - ds;
-	if ( szn < m_buffer_size )
+	if (szn < m_buffer_size)
 	{
-		strncpy_s( m_edit_str, m_buffer_size, buf, szn ); // part 1+2+3
-		m_edit_str[m_buffer_size-1] = 0;
+		strncpy_s(m_edit_str, m_buffer_size, buf, szn); // part 1+2+3
+		m_edit_str[m_buffer_size - 1] = 0;
 		m_cur_pos = m_p1 + new_size;
 	}
+
+	xr_delete(buf);
 	clamp_cur_pos();
 }
 
@@ -586,16 +588,18 @@ void line_edit_control::add_inserted_text()
 
 void line_edit_control::copy_to_clipboard()
 {
-	if ( m_p1 >= m_p2 )
+	if (m_p1 >= m_p2)
 	{
 		return;
 	}
-	u32 edit_len = xr_strlen( m_edit_str );
-	PSTR buf = (PSTR)_alloca( (edit_len + 1) * sizeof(char) );
-	strncpy_s( buf, edit_len + 1, m_edit_str + m_p1, m_p2 - m_p1 );
+	u32 edit_len = xr_strlen(m_edit_str);
+	char* buf = new char[edit_len + 1];
+	strncpy_s(buf, edit_len + 1, m_edit_str + m_p1, m_p2 - m_p1);
 	buf[edit_len] = 0;
-	os_clipboard::copy_to_clipboard( buf );
+	os_clipboard::copy_to_clipboard(buf);
 	m_mark = false;
+
+	xr_delete(buf);
 }
 
 void line_edit_control::paste_from_clipboard()
@@ -761,7 +765,7 @@ void line_edit_control::SwitchKL()
 
 // -------------------------------------------------------------------------------------------------
 
-void remove_spaces(PSTR str) // in & out
+void remove_spaces(char* str) // in & out
 {
 	u32 str_size = xr_strlen(str);
 	if (str_size < 1)
@@ -792,10 +796,10 @@ void remove_spaces(PSTR str) // in & out
 	{
 		strncpy_s(str, str_size, new_str, i);
 	}
-	delete new_str;
+	delete[] new_str;
 }
 
-void split_cmd( PSTR first, PSTR second, LPCSTR str )
+void split_cmd( char* first, char* second, LPCSTR str )
 {
 	first[0] = 0;
 	second[0] = 0;

@@ -1,4 +1,4 @@
-class ENGINE_API CCC_U32 : public IConsole_Command
+﻿class ENGINE_API CCC_U32 : public IConsole_Command
 {
 protected:
 	unsigned*	value;
@@ -12,7 +12,7 @@ public:
 	
 	virtual void	Execute(const char* args)
 	{
-		int v = atoi(args);
+		u32 v = (u32)atoi_17(args);
 		if (v<min || v>max) InvalidSyntax();
 		else *value = v;
 	}

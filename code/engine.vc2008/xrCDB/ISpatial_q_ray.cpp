@@ -234,7 +234,7 @@ public:
 		if (d>range)							return;
 		
 		// test items
-		for (auto _it = N->items.begin(); _it != N->items.end(); _it++)
+		for (auto _it = N->items.begin(); _it != N->items.end(); ++_it)
 		{
 			ISpatial*		S = *_it;
 			if (mask != (S->spatial.type&mask))	continue;
@@ -270,7 +270,7 @@ public:
 
 void	ISpatial_DB::q_ray(xr_vector<ISpatial*>& R, u32 _o, u32 _mask_and, const Fvector&	_start, const Fvector&	_dir, float _range)
 {
-	std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 	q_result = &R;
 	q_result->clear();
 

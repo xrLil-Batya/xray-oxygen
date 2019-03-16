@@ -56,7 +56,7 @@
 	 *	\param		world		[in] world transform
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline_ void ComputeLocalDirection(Point& local_dir, const Point& world_dir, const Matrix4x4& world)
+	inline_ void ComputeLocalDirection(Point& local_dir, const Point& world_dir, const IceMatrix4x4& world)
 	{
 		// Get world direction back in local space
 //		Matrix3x3 InvWorld = world;
@@ -72,10 +72,10 @@
 	 *	\param		world		[in] world transform
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline_ void ComputeLocalPoint(Point& local_pt, const Point& world_pt, const Matrix4x4& world)
+	inline_ void ComputeLocalPoint(Point& local_pt, const Point& world_pt, const IceMatrix4x4& world)
 	{
 		// Get world vertex back in local space
-		Matrix4x4 InvWorld = world;
+		IceMatrix4x4 InvWorld = world;
 		InvWorld.Invert();
 		local_pt = world_pt * InvWorld;
 	}
@@ -88,7 +88,7 @@
 	 *	\param		world		[in] world transform
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline_ void ComputeLocalRay(Ray& local_ray, const Ray& world_ray, const Matrix4x4& world)
+	inline_ void ComputeLocalRay(Ray& local_ray, const Ray& world_ray, const IceMatrix4x4& world)
 	{
 		// Get world ray back in local space
 		ComputeLocalDirection(local_ray.mDir, world_ray.mDir, world);

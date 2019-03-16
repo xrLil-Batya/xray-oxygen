@@ -1,6 +1,5 @@
 #pragma once
-#include "fastdelegate.h"
-#include "string"
+#include <string>
 
 // refs
 struct	xr_token;
@@ -9,17 +8,18 @@ class   CInifile;
 struct  xr_token;
 
 
-class XRCORE_API CInifile {
+class XRCORE_API CInifile 
+{
 public:
 	typedef std::pair<shared_str, shared_str> Item;
 	struct XRCORE_API Sect 
 	{
 		shared_str Name;
-		std::unordered_map<shared_str, shared_str> Data;
-		std::vector<Item> Unordered;
+		xr_hash_map<shared_str, shared_str> Data;
+		xr_vector<Item> Unordered;
 		bool line_exist(const char*, const char** = 0);
 	};
-	typedef std::unordered_map<shared_str, Sect*> Root;
+	typedef xr_hash_map<shared_str, Sect*> Root;
 
 	// factorisation
 	static CInifile* Create(const char*, bool = TRUE);
@@ -46,7 +46,7 @@ public:
 
 	bool save_as(const char* = 0);
 	void save_as(IWriter& writer, bool bcheck = false) const;
-	std::string get_as_string();
+	xr_string get_as_string();
 
 	const char* fname() { return fName; };
 

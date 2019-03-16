@@ -48,6 +48,7 @@ public:
 	adopt_compiler&			_o_wmark		(bool	E)								{	C->SH->flags.bWmark=E;						return	*this;		}
 	adopt_compiler&			_pass			(LPCSTR	vs,		LPCSTR ps)				{	TryEndPass();	C->r_Pass(vs,ps,true);		return	*this;		}
 	adopt_compiler&			_passgs			(LPCSTR	vs,		LPCSTR	gs,		LPCSTR ps){	TryEndPass();	C->r_Pass(vs,gs,ps,true);	return	*this;		}
+	adopt_compiler&			_passcs(LPCSTR	vs, LPCSTR	cs) { TryEndPass();	C->r_Pass(vs, cs, true);	return	*this; }
 	adopt_compiler&			_fog			(bool	_fog)							{	C->PassSET_LightFog	(FALSE,_fog);			return	*this;		}
 	adopt_compiler&			_ZB				(bool	_test,	bool _write)			{	C->PassSET_ZB		(_test,_write);			return	*this;		}
 	adopt_compiler&			_blend			(bool	_blend, u32 abSRC, u32 abDST)	{	C->PassSET_ablend_mode(_blend,abSRC,abDST);	return 	*this;		}
@@ -88,6 +89,8 @@ void LuaLog(LPCSTR caMessage)
 
 // export
 #include "../../xrScripts/VMLua.h"
+//MatthewKush to all: I can do EVERYTHING from LUA from now on if you add the following options:
+//alpha-blending, _passCS, ability to create my own sampler's and sampler states
 void	CResourceManager::LS_Load()
 {
     luaVM = xr_new<CVMLua>();
@@ -103,6 +106,7 @@ void	CResourceManager::LS_Load()
 			.def(								constructor<const adopt_compiler&>())
 			.def("begin",						&adopt_compiler::_pass			,return_reference_to<1>())
 			.def("begin",						&adopt_compiler::_passgs		,return_reference_to<1>())
+		    .def("cs_begin", &adopt_compiler::_passcs, return_reference_to<1>())
 			.def("sorting",						&adopt_compiler::_options		,return_reference_to<1>())
 			.def("emissive",					&adopt_compiler::_o_emissive	,return_reference_to<1>())
 			.def("distort",						&adopt_compiler::_o_distort		,return_reference_to<1>())
@@ -175,7 +179,7 @@ void	CResourceManager::LS_Load()
 		string_path namesp, fn;
 		xr_strcpy(namesp, (*folder)[it]);
 
-		if (!strext(namesp) || xr_strcmp(strext(namesp), ".s"))
+		if (!strext(namesp) || xr_strcmp(strext(namesp), ".lua"))
 			continue;
 
 		*strext(namesp) = 0;
@@ -183,7 +187,7 @@ void	CResourceManager::LS_Load()
 		if (!namesp[0])
 			xr_strcpy(namesp, "_G");
 
-		strconcat(sizeof(fn), fn, ::Render->getShaderPath(), (*folder)[it]);
+		xr_strconcat( fn, ::Render->getShaderPath(), (*folder)[it]);
 		FS.update_path(fn, "$game_shaders$", fn);
 
 		try
@@ -200,28 +204,53 @@ void	CResourceManager::LS_Load()
 
 void	CResourceManager::LS_Unload			()
 {
-    xr_delete(luaVM);
+	try
+	{
+		xr_delete(luaVM);
+	}
+	catch (...)
+	{
+		Msg("[ERROR] Error lua vm closed...");
+	}
 }
 
-BOOL CResourceManager::_lua_HasShader	(LPCSTR s_shader)
+BOOL CResourceManager::_lua_HasShader(LPCSTR s_shader)
 {
-	string256	undercorated;
-	for (int i=0, l=xr_strlen(s_shader)+1; i<l; i++)
-		undercorated[i]=('\\'==s_shader[i])?'_':s_shader[i];
+	string256 undercorated;
+	for (int i = 0, l = xr_strlen(s_shader) + 1; i < l; ++i)
+		undercorated[i] = ('\\' == s_shader[i]) ? '_' : s_shader[i];
 
-	return luaVM->IsObjectPresent(undercorated,"normal",LUA_TFUNCTION) || luaVM->IsObjectPresent(undercorated,"l_special",LUA_TFUNCTION);
+	// Check default workflow functions
+	bool bHasShader = (luaVM->IsObjectPresent(undercorated, "normal", LUA_TFUNCTION) || luaVM->IsObjectPresent(undercorated, "l_special", LUA_TFUNCTION));
+
+	// If not found - try to find new ones
+	if (!bHasShader)
+	{
+		for (int i = 0; i < SHADER_ELEMENTS_MAX; ++i)
+		{
+			string16 buff;
+			xr_sprintf(buff, sizeof(buff), "element_%d", i);
+			if (luaVM->IsObjectPresent(undercorated, buff, LUA_TFUNCTION))
+			{
+				bHasShader = true;
+				break;
+			}
+		}
+	}
+	return bHasShader;
 }
 
-Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
+Shader*	CResourceManager::_lua_Create(LPCSTR d_shader, LPCSTR s_textures)
 {
-	CBlender_Compile	C;
-	Shader				S;
+	CBlender_Compile C;
+	Shader S;
 
 	// undecorate
-	string256	undercorated;
-	for (int i=0, l=xr_strlen(d_shader)+1; i<l; i++)
-		undercorated[i]=('\\'==d_shader[i])?'_':d_shader[i];
-	LPCSTR		s_shader = undercorated;
+	string256 undercorated;
+	for (int i = 0, l = xr_strlen(d_shader) + 1; i < l; ++i)
+		undercorated[i] = ('\\' == d_shader[i]) ? '_' : d_shader[i];
+
+	LPCSTR s_shader = undercorated;
 
 	// Access to template
 	C.BT				= NULL;
@@ -229,67 +258,90 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	C.bDetail			= FALSE;
 
 	// Prepare
-	_ParseList			(C.L_textures,	s_textures	);
+	_ParseList			(C.L_textures,	s_textures);
 	C.detail_texture	= NULL;
 	C.detail_scaler		= NULL;
 
-	// Compile element	(LOD0 - HQ)
-	if (luaVM->IsObjectPresent(s_shader,"normal_hq",LUA_TFUNCTION))
-	{
-		// Analyze possibility to detail this shader
-		C.iElement			= 0;
-		C.bDetail			= dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0],C.detail_texture,C.detail_scaler);
+	// Choose workflow here: old (using named stages) or new (explicitly declaring stage number)
+	bool bUseNewWorkflow = false;
 
-		if (C.bDetail)		S.E[0]	= C._lua_Compile(s_shader,"normal_hq");
-		else				S.E[0]	= C._lua_Compile(s_shader,"normal");
-	}
-	else if (luaVM->IsObjectPresent(s_shader, "normal", LUA_TFUNCTION))
+	for (int i = 0; i < SHADER_ELEMENTS_MAX; ++i)
 	{
-		C.iElement = 0;
-		C.bDetail = dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
-		S.E[0] = C._lua_Compile(s_shader, "normal");
-	}
+		string16 buff;
+		xr_sprintf(buff, sizeof(buff), "element_%d", i);
+		if (luaVM->IsObjectPresent(s_shader, buff, LUA_TFUNCTION))
+		{
+			C.iElement	= i;
+			C.bDetail	= dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
+			S.E[i]		= C._lua_Compile(s_shader, buff);
 
-	// Compile element	(LOD1)
-	if (luaVM->IsObjectPresent(s_shader,"normal",LUA_TFUNCTION))
-	{
-		C.iElement			= 1;
-		C.bDetail			= dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0],C.detail_texture,C.detail_scaler);
-		S.E[1]				= C._lua_Compile(s_shader,"normal");
+			bUseNewWorkflow = true;
+		}
 	}
 
-	// Compile element
-	if (luaVM->IsObjectPresent(s_shader,"l_point",LUA_TFUNCTION))
+	if (!bUseNewWorkflow)
 	{
-		C.iElement			= 2;
-		C.bDetail			= FALSE;
-		S.E[2]				= C._lua_Compile(s_shader,"l_point");;
-	}
+		// Compile element	(LOD0 - HQ)
+		if (luaVM->IsObjectPresent(s_shader,"normal_hq", LUA_TFUNCTION))
+		{
+			// Analyze possibility to detail this shader
+			C.iElement			= 0;
+			C.bDetail			= dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0],C.detail_texture,C.detail_scaler);
 
-	// Compile element
-	if (luaVM->IsObjectPresent(s_shader,"l_spot",LUA_TFUNCTION))
-	{
-		C.iElement			= 3;
-		C.bDetail			= FALSE;
-		S.E[3]				= C._lua_Compile(s_shader,"l_spot");;
-	}
+			if (C.bDetail)		S.E[0]	= C._lua_Compile(s_shader,"normal_hq");
+			else				S.E[0]	= C._lua_Compile(s_shader,"normal");
+		}
+		else if (luaVM->IsObjectPresent(s_shader, "normal", LUA_TFUNCTION))
+		{
+			C.iElement			= 0;
+			C.bDetail			= dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
+			S.E[0]				= C._lua_Compile(s_shader, "normal");
+		}
 
-	// Compile element
-	if (luaVM->IsObjectPresent(s_shader,"l_special",LUA_TFUNCTION))
-	{
-		C.iElement			= 4;
-		C.bDetail			= FALSE;
-		S.E[4]				= C._lua_Compile(s_shader,"l_special");
+		// Compile element	(LOD1)
+		if (luaVM->IsObjectPresent(s_shader,"normal", LUA_TFUNCTION))
+		{
+			C.iElement			= 1;
+			C.bDetail			= dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0],C.detail_texture,C.detail_scaler);
+			S.E[1]				= C._lua_Compile(s_shader,"normal");
+		}
+
+		// Compile element
+		if (luaVM->IsObjectPresent(s_shader,"l_point", LUA_TFUNCTION))
+		{
+			C.iElement			= 2;
+			C.bDetail			= FALSE;
+			S.E[2]				= C._lua_Compile(s_shader,"l_point");;
+		}
+
+		// Compile element
+		if (luaVM->IsObjectPresent(s_shader,"l_spot", LUA_TFUNCTION))
+		{
+			C.iElement			= 3;
+			C.bDetail			= FALSE;
+			S.E[3]				= C._lua_Compile(s_shader,"l_spot");;
+		}
+
+		// Compile element
+		if (luaVM->IsObjectPresent(s_shader,"l_special", LUA_TFUNCTION))
+		{
+			C.iElement			= 4;
+			C.bDetail			= FALSE;
+			S.E[4]				= C._lua_Compile(s_shader,"l_special");
+		}
 	}
 
 	// Search equal in shaders array
-	for (u32 it=0; it<v_shaders.size(); it++)
-		if (S.equal(v_shaders[it]))	return v_shaders[it];
+	for (Shader* pShader : v_shaders)
+	{
+		if (S.equal(pShader))
+			return pShader;
+	}
 
 	// Create _new_ entry
-	Shader*		N			=	xr_new<Shader>(S);
-	N->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
-	v_shaders.push_back		(N);
+	Shader* N = xr_new<Shader>(S);
+	N->dwFlags |= xr_resource_flagged::RF_REGISTERED;
+	v_shaders.push_back(N);
 	return N;
 }
 

@@ -19,46 +19,25 @@
 //////////////////////////////////////////////////////////////
 //////////////CPHMesh///////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-CPHWorld *ph_world = 0;
+CPHWorld *ph_world = nullptr;
 
 IPHWorld * __stdcall physics_world()
 {
 	return ph_world;
 }
 
-void	__stdcall create_physics_world(bool mt, CObjectSpace *os, CObjectList *lo, CRenderDeviceBase *dv)
-//IPHWorldUpdateCallbck &commander,
+void __stdcall create_physics_world(CObjectSpace *os, CObjectList *lo, CRenderDeviceBase *dv)
 {
-	ph_world = xr_new<CPHWorld>(); //&commander
+	ph_world = xr_new<CPHWorld>();
 	VERIFY(os);
 	VERIFY(dv);
-	ph_world->Create(mt, os, lo, dv);
+	ph_world->Create(os, lo, dv);
 }
 
 void	__stdcall	destroy_physics_world()
 {
 	ph_world->Destroy();
 	xr_delete(ph_world);
-}
-
-CObjectSpace* __stdcall create_object_space()
-{
-	//CFileReader* fr =	xr_new<CFileReader>("D:/STALKER/resources/gamedata/levels/stohe_selo/level.cform");
-	CFileReader* fr = xr_new<CFileReader>("ActorEditorLevel.cform");
-	CObjectSpace* os = xr_new<CObjectSpace>();
-	g_SpatialSpace = xr_new<ISpatial_DB>();
-	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
-	os->Load(fr, 0);
-	//xr_delete(fr);
-	return os;
-}
-CObjectSpace*	__stdcall	mesh_create_object_space(Fvector* verts, CDB::TRI* tris, const hdrCFORM &H, CDB::build_callback build_callback)
-{
-	CObjectSpace* os = xr_new<CObjectSpace>();
-	g_SpatialSpace = xr_new<ISpatial_DB>();
-	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
-	os->Create(verts, tris, H, build_callback);
-	return os;
 }
 
 void __stdcall	set_mtl_lib(CGameMtlLibrary * l)
@@ -72,7 +51,7 @@ void __stdcall destroy_object_space(CObjectSpace* &os)
 }
 
 void CPHMesh::Create(dSpaceID space, dWorldID world) {
-	Geom = dCreateTriList(space, 0, 0);
+	Geom = dCreateTriList(space, nullptr, nullptr);
 	CPHGeometryBits::init_geom(*this);
 }
 /////////////////////////////////////////////////////////////////////////
@@ -104,14 +83,14 @@ static struct sempty_update_callback : public IPHWorldUpdateCallbck
 	void phys_shell_relcase(IPhysicsShellEx* sh) {};
 } empty_update_callback;
 
-CPHWorld::CPHWorld() : // IPHWorldUpdateCallbck		*_update_callback
+CPHWorld::CPHWorld() : 
 	m_update_callback(&empty_update_callback),
-	m_default_contact_shotmark(0),
-	m_default_character_contact_shotmark(0),
-	physics_step_time_callback(0),
-	m_object_space(0),
-	m_level_objects(0),
-	m_device(0)
+	m_default_contact_shotmark(nullptr),
+	m_default_character_contact_shotmark(nullptr),
+	physics_step_time_callback(nullptr),
+	m_object_space(nullptr),
+	m_level_objects(nullptr),
+	m_device(nullptr)
 {
 	disable_count = 0;
 	m_frame_time = 0.f;
@@ -145,25 +124,20 @@ void CPHWorld::SetStep(float s)
 		ph_world->m_frame_time = frame_time;
 	}
 }
-void CPHWorld::Create(bool mt, CObjectSpace * os, CObjectList *lo, CRenderDeviceBase *dv)
+void CPHWorld::Create(CObjectSpace * os, CObjectList *lo, CRenderDeviceBase *dv)
 {
 	LoadParams();
-	dWorldID phWorld = 0;
+	dWorldID phWorld = nullptr;
 	m_object_space = os;
 	m_level_objects = lo;
 	m_device = dv;
 
-	Device().AddSeqFrame(this, mt);
-
-#ifdef ODE_SLOW_SOLVER
-#else
+	Device().AddSeqFrame(this, true);
 
 	dWorldSetAutoEnableDepthSF1(phWorld, 100000000);
-
-#endif
 	ContactGroup = dJointGroupCreate(0);
 	dWorldSetGravity(phWorld, 0, -Gravity(), 0);//-2.f*9.81f
-	Mesh.Create(0, phWorld);
+	Mesh.Create(nullptr, phWorld);
 #ifdef PH_PLAIN
 	plane = dCreatePlane(Space, 0, 1, 0, 0.3f);
 #endif
@@ -172,7 +146,7 @@ void CPHWorld::Create(bool mt, CObjectSpace * os, CObjectList *lo, CRenderDevice
 	dWorldSetCFM(phWorld, CFM(world_spring, world_damping));
 
 	disable_count = 0;
-	m_motion_ray = dCreateRayMotions(0);
+	m_motion_ray = dCreateRayMotions(nullptr);
 	phBoundaries.set(inl_ph_world().ObjectSpace().GetBoundingVolume());
 	phBoundaries.y1 -= 30.f;
 	CPHCollideValidator::Init();
@@ -210,7 +184,7 @@ void CPHWorld::Destroy()
 void CPHWorld::SetGravity(float g)
 {
 	m_gravity = g;
-	dWorldID phWorld = 0;
+	dWorldID phWorld = nullptr;
 	dWorldSetGravity(phWorld, 0, -m_gravity, 0);//-2.f*9.81f
 }
 
@@ -619,5 +593,5 @@ void CPHWorld::GetState(V_PH_WORLD_STATE& state)
 
 void CPHWorld::StepNumIterations(int num_it)
 {
-	dWorldSetQuickStepNumIterations(NULL, num_it);
+	dWorldSetQuickStepNumIterations(nullptr, num_it);
 }

@@ -13,7 +13,6 @@
 #include "script_game_object.h"
 #include "xrserver_objects_alife.h"
 #include "xrServer_Objects_ALife_Items.h"
-#include "game_cl_base.h"
 #include "object_factory.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "game_graph.h"
@@ -44,7 +43,7 @@ extern MagicBox3 MagicMinBox(int iQuantity, const Fvector* akPoint);
 
 CGameObject::CGameObject		()
 {
-	m_ai_obstacle				= 0;
+	m_ai_obstacle				= nullptr;
 
 	init						();
 	//-----------------------------------------
@@ -53,20 +52,7 @@ CGameObject::CGameObject		()
 	m_server_flags.one			();
 
 	m_callbacks					= xr_new<CALLBACK_MAP>();
-	m_anim_mov_ctrl				= 0;
-	
-#ifdef LUACP_API
-	static bool _saved = true;
-	if (!_saved)
-	{
-		_saved = true;
-		
-		LogXrayOffset("GameObject.b_spawned", this, &this->m_spawned);
-		LogXrayOffset("GameObject.clsid", this, &this->m_script_clsid);
-		LogXrayOffset("GameObject.story_id", this, &this->m_story_id);
-		LogXrayOffset("GameObject.ai_location", this, &this->m_ai_location);		
-	}
-#endif
+	m_anim_mov_ctrl				= nullptr;
 }
 
 CGameObject::~CGameObject		()
@@ -82,9 +68,9 @@ CGameObject::~CGameObject		()
 
 void CGameObject::init			()
 {
-	m_lua_game_object			= 0;
+	m_lua_game_object			= nullptr;
 	m_script_clsid				= -1;
-	m_ini_file					= 0;
+	m_ini_file					= nullptr;
 	m_spawned					= false;
 }
 
@@ -104,7 +90,7 @@ void CGameObject::reinit	()
     ai_location().reinit	();
 
 	// clear callbacks	
-	for (auto it = m_callbacks->begin(); it != m_callbacks->end(); ++it) it->second.clear();
+	for (auto & callback : *m_callbacks) callback.second.clear();
 }
 
 void CGameObject::reload	(LPCSTR section)
@@ -122,7 +108,7 @@ void CGameObject::net_Destroy	()
 
 	m_script_clsid			= -1;
 	if (Visual() && smart_cast<IKinematics*>(Visual()))
-		smart_cast<IKinematics*>(Visual())->Callback	(0,0);
+		smart_cast<IKinematics*>(Visual())->Callback	(nullptr,nullptr);
 
 	inherited::net_Destroy						();
 	setReady									(FALSE);
@@ -131,8 +117,8 @@ void CGameObject::net_Destroy	()
 	
 	if (this == Level().CurrentEntity())
 	{
-		Level().SetControlEntity(0);
-		Level().SetEntity(0);	// do not switch !!!
+		Level().SetControlEntity(nullptr);
+		Level().SetEntity(nullptr);	// do not switch !!!
 	}
 
 	CScriptBinder::net_Destroy				();
@@ -183,42 +169,43 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 
 void VisualCallback(IKinematics *tpKinematics);
 
-BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
+BOOL CGameObject::net_Spawn(CSE_Abstract* pSEAbstract)
 {
-	VERIFY							(!m_spawned);
-	m_spawned						= true;
-	m_spawn_time					= Device.dwFrame;
-	m_ai_obstacle					= xr_new<ai_obstacle>(this);
+	VERIFY(!m_spawned);
+	m_spawned = true;
+	m_spawn_time = Device.dwFrame;
+	m_ai_obstacle = xr_new<ai_obstacle>(this);
 
-	CSE_Abstract					*E = (CSE_Abstract*)DC;
-	VERIFY							(E);
-
-	const CSE_Visual				*visual	= smart_cast<const CSE_Visual*>(E);
-	if (visual) {
-		cNameVisual_set				(visual_name(E));
-		if (visual->flags.test(CSE_Visual::flObstacle)) {
-			ISpatial				*self = smart_cast<ISpatial*>(this);
-			self->spatial.type		|=	STYPE_OBSTACLE;
+	const CSE_Visual* visual = smart_cast<const CSE_Visual*>(pSEAbstract);
+	if (visual) 
+	{
+		cNameVisual_set(visual_name(pSEAbstract));
+		if (visual->flags.test(CSE_Visual::flObstacle)) 
+		{
+			ISpatial *self = smart_cast<ISpatial*>(this);
+			self->spatial.type |= STYPE_OBSTACLE;
 		}
 	}
 
 	// Naming
-	cName_set						(E->s_name);
-	cNameSect_set					(E->s_name);
-	if (E->name_replace()[0])
-		cName_set					(E->name_replace());
+	cName_set(pSEAbstract->s_name);
+	cNameSect_set(pSEAbstract->s_name);
+	if (pSEAbstract->name_replace()[0])
+		cName_set(pSEAbstract->name_replace());
+	else 
+		R_ASSERT(Level().Objects.net_Find(pSEAbstract->ID) == nullptr);
 
-	else R_ASSERT(Level().Objects.net_Find(E->ID) == NULL);
-	
-	setID							(E->ID);
+	setID(pSEAbstract->ID);
+
 	// XForm
-	XFORM().setXYZ					(E->o_Angle);
-	Position().set					(E->o_Position);
+	XFORM().setXYZ(pSEAbstract->o_Angle);
+	Position().set(pSEAbstract->o_Position);
 
-	VERIFY							(_valid(renderable.xform));
-	VERIFY							(!fis_zero(DET(renderable.xform)));
-	CSE_ALifeObject					*O = smart_cast<CSE_ALifeObject*>(E);
-	if (O && xr_strlen(O->m_ini_string)) 
+	VERIFY(_valid(renderable.xform));
+	VERIFY(!fis_zero(DET(renderable.xform)));
+	CSE_ALifeObject* O = smart_cast<CSE_ALifeObject*>(pSEAbstract);
+
+	if (O && xr_strlen(O->m_ini_string))
 	{
 #pragma warning(push)
 #pragma warning(disable:4238)
@@ -230,159 +217,100 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	if (O) m_story_id = O->m_story_id;
 
 	// Net params
-	setLocal(E->s_flags.is(M_SPAWN_OBJECT_LOCAL));
+	setLocal(pSEAbstract->s_flags.is(M_SPAWN_OBJECT_LOCAL));
 
 	setReady(TRUE);
 	g_pGameLevel->Objects.net_Register(this);
 
-	m_server_flags.one				();
-	if (O) {
-		m_server_flags					= O->m_flags;
+	m_server_flags.one();
+	if (O)
+	{
+		m_server_flags = O->m_flags;
 		if (O->m_flags.is(CSE_ALifeObject::flVisibleForAI))
-			spatial.type				|= STYPE_VISIBLEFORAI;
+			spatial.type |= STYPE_VISIBLEFORAI;
 		else
-			spatial.type				= (spatial.type | STYPE_VISIBLEFORAI) ^ STYPE_VISIBLEFORAI;
+			spatial.type = (spatial.type | STYPE_VISIBLEFORAI) ^ STYPE_VISIBLEFORAI;
 	}
 
-	reload						(*cNameSect());
-	CScriptBinder::reload	    (*cNameSect());
-	
-	reinit						();
-	CScriptBinder::reinit	    ();
+	reload(*cNameSect());
+	CScriptBinder::reload(*cNameSect());
+
+	reinit();
+	CScriptBinder::reinit();
 	//load custom user data from server
-	if(!E->client_data.empty())
-	{	
-		IReader			ireader = IReader(&*E->client_data.begin(), (u32)E->client_data.size());
-		net_Load		(ireader);
+	if (!pSEAbstract->client_data.empty())
+	{
+		IReader ireader = IReader(&*pSEAbstract->client_data.begin(), (u32)pSEAbstract->client_data.size());
+		net_Load(ireader);
 	}
 
 	// if we have a parent
-	if ( ai().get_level_graph() ) {
-		if ( E->ID_Parent == 0xffff ) {
-			CSE_ALifeObject* l_tpALifeObject	= smart_cast<CSE_ALifeObject*>(E);
+	if (ai().get_level_graph()) 
+	{
+		if (pSEAbstract->ID_Parent == 0xffff)
+		{
+			CSE_ALifeObject* l_tpALifeObject = smart_cast<CSE_ALifeObject*>(pSEAbstract);
 			if (l_tpALifeObject && ai().level_graph().valid_vertex_id(l_tpALifeObject->m_tNodeID))
-				ai_location().level_vertex		(l_tpALifeObject->m_tNodeID);
-			else {
-				CSE_Temporary* l_tpTemporary	= smart_cast<CSE_Temporary*>	(E);
+				ai_location().level_vertex(l_tpALifeObject->m_tNodeID);
+			else 
+			{
+				CSE_Temporary* l_tpTemporary = smart_cast<CSE_Temporary*>	(pSEAbstract);
 				if (l_tpTemporary && ai().level_graph().valid_vertex_id(l_tpTemporary->m_tNodeID))
-					ai_location().level_vertex	(l_tpTemporary->m_tNodeID);
+					ai_location().level_vertex(l_tpTemporary->m_tNodeID);
 			}
 
 			if (l_tpALifeObject && ai().game_graph().valid_vertex_id(l_tpALifeObject->m_tGraphID))
-				ai_location().game_vertex		(l_tpALifeObject->m_tGraphID);
+				ai_location().game_vertex(l_tpALifeObject->m_tGraphID);
 
-			validate_ai_locations				(false);
+			validate_ai_locations(false);
 
 			// validating position
-			if	(
-					UsedAI_Locations() && 
-					ai().level_graph().inside(
-						ai_location().level_vertex_id(),
-						Position()
-					) &&
-					can_validate_position_on_spawn()
-				)
-				Position().y					= EPS_L + ai().level_graph().vertex_plane_y(*ai_location().level_vertex(),Position().x,Position().z);
+			if (UsedAI_Locations() && ai().level_graph().inside(ai_location().level_vertex_id(), Position()) && can_validate_position_on_spawn())
+				Position().y = EPS_L + ai().level_graph().vertex_plane_y(*ai_location().level_vertex(), Position().x, Position().z);
 		}
-		else {
-			CSE_ALifeObject* const alife_object	= smart_cast<CSE_ALifeObject*>(E);
-			if ( alife_object && ai().level_graph().valid_vertex_id(alife_object->m_tNodeID) ) {
-				ai_location().level_vertex		(alife_object->m_tNodeID);
-				ai_location().game_vertex		(alife_object->m_tGraphID);
+		else 
+		{
+			CSE_ALifeObject* const alife_object = smart_cast<CSE_ALifeObject*>(pSEAbstract);
+			if (alife_object && ai().level_graph().valid_vertex_id(alife_object->m_tNodeID)) 
+			{
+				ai_location().level_vertex(alife_object->m_tNodeID);
+				ai_location().game_vertex(alife_object->m_tGraphID);
 			}
 		}
 	}
-	inherited::net_Spawn		(DC);
+	inherited::net_Spawn(pSEAbstract);
 
-	m_bObjectRemoved			= false;
+	m_bObjectRemoved = false;
 
-	spawn_supplies				();
-#ifdef DEBUG
-	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrackName(),*cName())==0)
-	{
-		Msg("CGameObject::net_Spawn obj %s Before CScriptBinder::net_Spawn %f,%f,%f",PH_DBG_ObjectTrackName(),Position().x,Position().y,Position().z);
-	}
-	BOOL ret =CScriptBinder::net_Spawn(DC);
-#else
-	return						(CScriptBinder::net_Spawn(DC));
-#endif
-
-#ifdef DEBUG
-	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrackName(),*cName())==0)
-	{
-		Msg("CGameObject::net_Spawn obj %s Before CScriptBinder::net_Spawn %f,%f,%f",PH_DBG_ObjectTrackName(),Position().x,Position().y,Position().z);
-	}
-	return ret;
-#endif
+	spawn_supplies();
+	return (CScriptBinder::net_Spawn(pSEAbstract));
 }
 
 void CGameObject::net_Save		(NET_Packet &net_packet)
 {
+
 	u32							position;
 	net_packet.w_chunk_open16	(position);
 	save						(net_packet);
 
 	// Script Binder Save ---------------------------------------
-#ifdef DEBUG	
-	if (psAI_Flags.test(aiSerialize))	{
-		Msg(">> **** Save script object [%s] *****", *cName());
-		Msg(">> Before save :: packet position = [%u]", net_packet.w_tell());
-	}
-
-#endif
 
 	CScriptBinder::save			(net_packet);
-
-#ifdef DEBUG	
-
-	if (psAI_Flags.test(aiSerialize))	{
-		Msg(">> After save :: packet position = [%u]", net_packet.w_tell());
-	}
-#endif
-
 	// ----------------------------------------------------------
-
 	net_packet.w_chunk_close16	(position);
 }
 
 void CGameObject::net_Load		(IReader &ireader)
 {
-	load					(ireader);
-
-	// Script Binder Load ---------------------------------------
-#ifdef DEBUG	
-	if (psAI_Flags.test(aiSerialize))	{
-		Msg(">> **** Load script object [%s] *****", *cName());
-		Msg(">> Before load :: reader position = [%i]", ireader.tell());
-	}
-
-#endif
-
-	CScriptBinder::load		(ireader);
-
-
-#ifdef DEBUG	
-
-	if (psAI_Flags.test(aiSerialize))	{
-		Msg(">> After load :: reader position = [%i]", ireader.tell());
-	}
-#endif
-	// ----------------------------------------------------------
-#ifdef DEBUG
-	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrackName(),*cName())==0)
-	{
-		Msg("CGameObject::net_Load obj %s (loaded) %f,%f,%f",PH_DBG_ObjectTrackName(),Position().x,Position().y,Position().z);
-	}
-
-#endif
-
+	load(ireader);
+	CScriptBinder::load(ireader);
 }
 
-void CGameObject::save			(NET_Packet &output_packet) 
+void CGameObject::save(NET_Packet &output_packet)
 {
 }
 
-void CGameObject::load			(IReader &input_packet)
+void CGameObject::load(IReader &input_packet)
 {
 }
 
@@ -410,17 +338,17 @@ void CGameObject::spawn_supplies()
 			int				n = _GetItemCount(V);
 			string16		temp;
 			if (n > 0)
-				j			= atoi(_GetItem(V,0,temp)); //count
+				j			= atoi_17(_GetItem(V,0,temp)); //count
 			
-			if(NULL!=strstr(V,"prob="))
+			if(nullptr!=strstr(V,"prob="))
 				p			=(float)atof(strstr(V,"prob=")+5);
 			if (fis_zero(p))p = 1.f;
 			if (!j)	j		= 1;
-			if(NULL!=strstr(V,"cond="))
+			if(nullptr!=strstr(V,"cond="))
 				f_cond		= (float)atof(strstr(V,"cond=")+5);
-			bScope			=	(NULL!=strstr(V,"scope"));
-			bSilencer		=	(NULL!=strstr(V,"silencer"));
-			bLauncher		=	(NULL!=strstr(V,"launcher"));
+			bScope			=	(nullptr!=strstr(V,"scope"));
+			bSilencer		=	(nullptr!=strstr(V,"silencer"));
+			bLauncher		=	(nullptr!=strstr(V,"launcher"));
 
 		}
 		for (u32 i=0; i<j; ++i)
@@ -451,21 +379,14 @@ void CGameObject::spawn_supplies()
 
 void CGameObject::setup_parent_ai_locations(bool assign_position)
 {
-//	CGameObject				*l_tpGameObject	= static_cast<CGameObject*>(H_Root());
-	VERIFY					(H_Parent());
-	CGameObject				*l_tpGameObject	= static_cast<CGameObject*>(H_Parent());
-	VERIFY					(l_tpGameObject);
+	//	CGameObject				*l_tpGameObject	= static_cast<CGameObject*>(H_Root());
+	VERIFY(H_Parent());
+	CGameObject				*l_tpGameObject = static_cast<CGameObject*>(H_Parent());
+	VERIFY(l_tpGameObject);
 
 	// get parent's position
-	if ( assign_position && use_parent_ai_locations() )
-		Position().set		(l_tpGameObject->Position());
-
-	//if ( assign_position && 
-	//		( use_parent_ai_locations() &&
-	//		!( cast_attachable_item() && cast_attachable_item()->enabled() )
-	//		 ) 
-	//	)
-	//	Position().set		(l_tpGameObject->Position());
+	if (assign_position && use_parent_ai_locations())
+		Position().set(l_tpGameObject->Position());
 
 	// setup its ai locations
 	if (!UsedAI_Locations())
@@ -475,19 +396,14 @@ void CGameObject::setup_parent_ai_locations(bool assign_position)
 		return;
 
 	if (l_tpGameObject->UsedAI_Locations() && ai().level_graph().valid_vertex_id(l_tpGameObject->ai_location().level_vertex_id()))
-		ai_location().level_vertex	(l_tpGameObject->ai_location().level_vertex_id());
+		ai_location().level_vertex(l_tpGameObject->ai_location().level_vertex_id());
 	else
-		validate_ai_locations	(false);
-//	VERIFY2						(l_tpGameObject->UsedAI_Locations(),*l_tpGameObject->cNameSect());
-//	VERIFY2						(ai().level_graph().valid_vertex_id(l_tpGameObject->ai_location().level_vertex_id()),*cNameSect());
-//	ai_location().level_vertex	(l_tpGameObject->ai_location().level_vertex_id());
+		validate_ai_locations(false);
 
 	if (ai().game_graph().valid_vertex_id(l_tpGameObject->ai_location().game_vertex_id()))
-		ai_location().game_vertex	(l_tpGameObject->ai_location().game_vertex_id());
+		ai_location().game_vertex(l_tpGameObject->ai_location().game_vertex_id());
 	else
-		ai_location().game_vertex	(ai().cross_table().vertex(ai_location().level_vertex_id()).game_vertex_id());
-//	VERIFY2						(ai().game_graph().valid_vertex_id(l_tpGameObject->ai_location().game_vertex_id()),*cNameSect());
-//	ai_location().game_vertex	(l_tpGameObject->ai_location().game_vertex_id());
+		ai_location().game_vertex(ai().cross_table().vertex(ai_location().level_vertex_id()).game_vertex_id());
 }
 
 u32 CGameObject::new_level_vertex_id			() const
@@ -508,7 +424,7 @@ void CGameObject::update_ai_locations			(bool decrement_reference)
 
 	ai_location().level_vertex		(l_dwNewLevelVertexID);
 
-	if (!ai().get_game_graph() && ai().get_cross_table())
+	if (!ai().is_game_graph_presented() && ai().get_cross_table())
 		return;
 
 	ai_location().game_vertex		(ai().cross_table().vertex(ai_location().level_vertex_id()).game_vertex_id());
@@ -545,28 +461,28 @@ void			CGameObject::dbg_DrawSkeleton	()
 	Skeleton->_dbg_refresh();
 
 	const CCF_Skeleton::ElementVec& Elements = Skeleton->_GetElements();
-	for (CCF_Skeleton::ElementVec::const_iterator I=Elements.begin(); I!=Elements.end(); I++){
-		if (!I->valid())		continue;
-		switch (I->type){
+	for (const auto & Element : Elements){
+		if (!Element.valid())		continue;
+		switch (Element.type){
 			case SBoneShape::stBox:{
 				Fmatrix M;
-				M.invert			(I->b_IM);
-				Fvector h_size		= I->b_hsize;
+				M.invert			(Element.b_IM);
+				Fvector h_size		= Element.b_hsize;
 				Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 255, 0, 255));
 								   }break;
 			case SBoneShape::stCylinder:{
 				Fmatrix M;
-				M.c.set				(I->c_cylinder.m_center);
-				M.k.set				(I->c_cylinder.m_direction);
+				M.c.set				(Element.c_cylinder.m_center);
+				M.k.set				(Element.c_cylinder.m_direction);
 				Fvector				h_size;
-				h_size.set			(I->c_cylinder.m_radius,I->c_cylinder.m_radius,I->c_cylinder.m_height*0.5f);
+				h_size.set			(Element.c_cylinder.m_radius,Element.c_cylinder.m_radius,Element.c_cylinder.m_height*0.5f);
 				Fvector::generate_orthonormal_basis(M.k,M.j,M.i);
 				Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 127, 255, 255));
 										}break;
 			case SBoneShape::stSphere:{
 				Fmatrix				l_ball;
-				l_ball.scale		(I->s_sphere.R, I->s_sphere.R, I->s_sphere.R);
-				l_ball.translate_add(I->s_sphere.P);
+				l_ball.scale		(Element.s_sphere.R, Element.s_sphere.R, Element.s_sphere.R);
+				l_ball.translate_add(Element.s_sphere.P);
 				Level().debug_renderer().draw_ellipse(l_ball, color_rgba(0, 255, 0, 255));
 									  }break;
 		};
@@ -602,7 +518,7 @@ void CGameObject::u_EventSend(NET_Packet& P)
 	Level().Send(P);
 }
 
-#include "bolt.h"
+#include "items/bolt.h"
 void CGameObject::OnH_B_Chield()
 {
 	inherited::OnH_B_Chield();
@@ -657,7 +573,7 @@ void CGameObject::SetKinematicsCallback		(bool set)
 	if (set)
 		smart_cast<IKinematics*>(Visual())->Callback(VisualCallback,this);
 	else
-		smart_cast<IKinematics*>(Visual())->Callback(0,0);
+		smart_cast<IKinematics*>(Visual())->Callback(nullptr,nullptr);
 };
 
 void VisualCallback	(IKinematics *tpKinematics)
@@ -705,18 +621,14 @@ void CGameObject::DestroyObject()
 
 void CGameObject::shedule_Update	(u32 dt)
 {
-	//����������
-	if(NeedToDestroyObject())
+	// Уничтожить
+	if (NeedToDestroyObject())
 	{
-#ifndef MASTER_GOLD
-		Msg("--NeedToDestroyObject for [%d][%d]", ID(), Device.dwFrame);
-#endif // #ifndef MASTER_GOLD
-		DestroyObject			();
+		DestroyObject();
 	}
 
-	// Msg							("-SUB-:[%x][%s] CGameObject::shedule_Update",smart_cast<void*>(this),*cName());
-	inherited::shedule_Update	(dt);
-	
+	inherited::shedule_Update(dt);
+
 	CScriptBinder::shedule_Update(dt);
 }
 
@@ -725,7 +637,7 @@ BOOL CGameObject::net_SaveRelevant	()
 	return	(CScriptBinder::net_SaveRelevant());
 }
 
-//������� ��� �������
+// Игровое имя объекта
 LPCSTR CGameObject::Name () const
 {
 	return	(*cName());
@@ -845,22 +757,16 @@ void CGameObject::create_anim_mov_ctrl	( CBlend *b, Fmatrix *start_pose, bool lo
 		if( m_anim_mov_ctrl )
 			destroy_anim_mov_ctrl();
 
-		VERIFY2			(
-			start_pose,
-			make_string(
+		VERIFY_FORMAT (start_pose,
 				"start pose hasn't been specified for animation [%s][%s]",
 				smart_cast<IKinematicsAnimated&>(*Visual()).LL_MotionDefName_dbg(b->motionID).first,
 				smart_cast<IKinematicsAnimated&>(*Visual()).LL_MotionDefName_dbg(b->motionID).second
-			)
 		);
 
-		VERIFY2			(
-			!animation_movement(),
-			make_string(
+		VERIFY_FORMAT (!animation_movement(),
 				"start pose hasn't been specified for animation [%s][%s]",
 				smart_cast<IKinematicsAnimated&>(*Visual()).LL_MotionDefName_dbg(b->motionID).first,
 				smart_cast<IKinematicsAnimated&>(*Visual()).LL_MotionDefName_dbg(b->motionID).second
-			)
 		);
 		
 		VERIFY			(Visual());
@@ -894,23 +800,23 @@ IC	bool similar						(const Fmatrix &_0, const Fmatrix &_1, const float &epsilon
 	return							(true);
 }
 
-void CGameObject::UpdateCL			()
+void CGameObject::UpdateCL()
 {
-	inherited::UpdateCL				();
-	
+	inherited::UpdateCL();
+
 	if (H_Parent())
 		return;
-
-	if (similar(XFORM(),m_previous_matrix,EPS))
+	 
+	if (similar(XFORM(), m_previous_matrix, EPS))
 		return;
 
-	on_matrix_change				(m_previous_matrix);
-	m_previous_matrix				= XFORM();
+	on_matrix_change(m_previous_matrix);
+	m_previous_matrix = XFORM();
 }
 
 void CGameObject::on_matrix_change	(const Fmatrix &previous)
 {
-	obstacle().on_move				();
+	obstacle().on_move();
 }
 
 #ifdef DEBUG
@@ -1007,18 +913,6 @@ void CGameObject::OnRender			()
 
 		render_box					(Visual(),XFORM(),Fvector().set(0.f,0.f,0.f),true,color_rgba(0,0,255,255));
 		render_box					(Visual(),XFORM(),additional,false,color_rgba(0,255,0,255));
-	}
-
-	if (0) {
-		Fvector						bc,bd; 
-		Visual()->getVisData().box.get_CD	(bc,bd);
-		Fmatrix						M = Fidentity;
-		float						half_cell_size = ai().level_graph().header().cell_size()*.5f;
-		bd.add						(Fvector().set(half_cell_size,half_cell_size,half_cell_size));
-		M.scale						(bd);
-		Fmatrix						T = XFORM();
-		T.c.add						(bc);
-		renderer.draw_obb			(T,bd,color_rgba(255,255,255,255));
-	}
+	}	
 }
 #endif // DEBUG

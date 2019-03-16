@@ -165,7 +165,7 @@ namespace luabind
 		template<typename Fn, typename Class, typename... Policies>
 		struct mem_fn_callback
 		{
-			typedef int result_type;
+			using result_type = int;
 
 			int operator()(lua_State* L) const
 			{
@@ -183,7 +183,7 @@ namespace luabind
 		template<typename Fn, typename Class, typename... Policies>
 		struct mem_fn_matcher
 		{
-			typedef int result_type;
+			using result_type = int;
 
 			int operator()(lua_State* L) const
 			{
@@ -265,7 +265,7 @@ namespace luabind
 		template<typename HeldType>
 		struct internal_holder_extractor
 		{
-			typedef void*(*extractor_fun)(void*);
+			using extractor_fun = void*(*)(void*);
 
 			template<class T>
 			static extractor_fun apply(detail::type<T>)
@@ -277,7 +277,7 @@ namespace luabind
 		template<>
 		struct internal_holder_extractor<detail::null_type>
 		{
-			typedef void*(*extractor_fun)(void*);
+			using extractor_fun = void*(*)(void*);
 
 			template<class T>
 			static extractor_fun apply(detail::type<T>)
@@ -300,7 +300,7 @@ namespace luabind
 		template<typename HeldType>
 		struct const_converter
 		{
-			typedef void(*converter_fun)(void*, void*);
+			using converter_fun = void(*)(void*, void*);
 
 			template<class ConstHolderType>
 			static converter_fun apply(ConstHolderType*)
@@ -312,7 +312,7 @@ namespace luabind
 		template<>
 		struct const_converter<detail::null_type>
 		{
-			typedef void(*converter_fun)(void*, void*);
+			using converter_fun = void(*)(void*, void*);
 
 			template<class T>
 			static converter_fun apply(T*)
@@ -327,7 +327,7 @@ namespace luabind
 		template<typename HeldType>
 		struct internal_const_holder_extractor
 		{
-			typedef const void*(*extractor_fun)(void*);
+			using extractor_fun = const void*(*)(void*);
 
 			template<class T>
 			static extractor_fun apply(detail::type<T>)
@@ -345,7 +345,7 @@ namespace luabind
 		template<>
 		struct internal_const_holder_extractor<detail::null_type>
 		{
-			typedef const void*(*extractor_fun)(void*);
+			using extractor_fun = const void*(*)(void*);
 
 			template<class T>
 			static extractor_fun apply(detail::type<T>)
@@ -404,7 +404,7 @@ namespace luabind
 		template<typename HeldType>
 		struct holder_constructor
 		{
-			typedef void(*constructor)(void*,void*);
+			using constructor = void(*)(void*,void*);
 			template<typename T>
 			static constructor apply(detail::type<T>)
 			{
@@ -415,7 +415,7 @@ namespace luabind
 		template<>
 		struct holder_constructor<detail::null_type>
 		{
-			typedef void(*constructor)(void*,void*);
+			using constructor = void(*)(void*,void*);
 			template<typename T>
 			static constructor apply(detail::type<T>)
 			{
@@ -429,7 +429,7 @@ namespace luabind
 		template<typename HolderType>
 		struct const_holder_constructor
 		{
-			typedef void(*constructor)(void*,void*);
+			using constructor = void(*)(void*,void*);
 			template<typename T>
 			static constructor apply(detail::type<T>)
 			{
@@ -448,7 +448,7 @@ namespace luabind
 		template<>
 		struct const_holder_constructor<detail::null_type>
 		{
-			typedef void(*constructor)(void*,void*);
+			using constructor = void(*)(void*,void*);
 			template<typename T>
 			static constructor apply(detail::type<T>)
 			{
@@ -463,7 +463,7 @@ namespace luabind
 		template<typename HeldType>
 		struct holder_default_constructor
 		{
-			typedef void(*constructor)(void*);
+			using constructor = void(*)(void*);
 			template<typename T>
 			static constructor apply(detail::type<T>)
 			{
@@ -474,7 +474,7 @@ namespace luabind
 		template<>
 		struct holder_default_constructor<detail::null_type>
 		{
-			typedef void(*constructor)(void*);
+			using constructor = void(*)(void*);
 			template<typename T>
 			static constructor apply(detail::type<T>)
 			{
@@ -490,7 +490,7 @@ namespace luabind
 		template<typename HolderType>
 		struct const_holder_default_constructor
 		{
-			typedef void(*constructor)(void*);
+			using constructor = void(*)(void*);
 			template<typename T>
 			static constructor apply(detail::type<T>)
 			{
@@ -509,7 +509,7 @@ namespace luabind
 		template<>
 		struct const_holder_default_constructor<detail::null_type>
 		{
-			typedef void(*constructor)(void*);
+			using constructor = void(*)(void*);
 			template<typename T>
 			static constructor apply(detail::type<T>)
 			{
@@ -547,7 +547,7 @@ namespace luabind
 		template<typename HeldType>
 		struct internal_holder_destructor
 		{
-			typedef void(*destructor_t)(void*);
+			using destructor_t = void(*)(void*);
 			template<typename T>
 			static destructor_t apply(detail::type<T>)
 			{
@@ -559,7 +559,7 @@ namespace luabind
 		template<>
 		struct internal_holder_destructor<detail::null_type>
 		{
-			typedef void(*destructor_t)(void*);
+			using destructor_t = void(*)(void*);
 			template<typename T>
 			static destructor_t apply(detail::type<T>)
 			{
@@ -572,7 +572,7 @@ namespace luabind
 		template<typename HolderType>
 		struct internal_const_holder_destructor
 		{
-			typedef void(*destructor_t)(void*);
+			using destructor_t = void(*)(void*);
 			template<typename T>
 			static destructor_t apply(detail::type<T>)
 			{
@@ -593,7 +593,7 @@ namespace luabind
 		template<>
 		struct internal_const_holder_destructor<detail::null_type>
 		{
-			typedef void(*destructor_t)(void*);
+			using destructor_t = void(*)(void*);
 			template<typename T>
 			static destructor_t apply(detail::type<T>)
 			{
@@ -1224,7 +1224,7 @@ namespace luabind
 		{
 		}
 
-		typedef void(*adopt_fun_t)(void*);
+		using adopt_fun_t = void(*)(void*);
 
 		template<typename W>
 		adopt_fun_t get_adopt_fun(W*)

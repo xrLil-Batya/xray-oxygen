@@ -2,25 +2,25 @@
 #include "UITaskWnd.h"
 #include "UIMapWnd.h"
 #include "object_broker.h"
-#include "UIXmlInit.h"
-#include "UIStatic.h"
-#include "UI3tButton.h"
-#include "UIFrameLineWnd.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UI3tButton.h"
+#include "../xrUICore/UIFrameLineWnd.h"
 #include "UISecondTaskWnd.h"
 #include "UIMapLegend.h"
-#include "UIHelper.h"
-#include "UIHint.h"
+#include "../xrUICore/UIHelper.h"
+#include "../xrUICore/UIHint.h"
 
 #include "../gametask.h"
 #include "../map_location.h"
 #include "../map_location_defs.h"
 #include "../map_manager.h"
 #include "UIInventoryUtilities.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 #include "../level.h"
 #include "../gametaskmanager.h"
-#include "../actor.h"
-#include "UICheckButton.h"
+#include "../xrUICore/UICheckButton.h"
+#include "../xrUICore/xrUIXmlParser.h"
 
 CUITaskWnd::CUITaskWnd()
 {
@@ -358,7 +358,7 @@ void CUITaskItem::Init(CUIXml& uiXml, LPCSTR path)
 	string256		buff;
 	CUIStatic* S					= nullptr;
 
-	strconcat( sizeof(buff), buff, path, ":t_icon" );
+	xr_strconcat( buff, path, ":t_icon" );
 	if ( uiXml.NavigateToNode( buff ) )
 	{
 		S = init_static_field		(uiXml, path, "t_icon");
@@ -366,7 +366,7 @@ void CUITaskItem::Init(CUIXml& uiXml, LPCSTR path)
 	}
 	m_info["t_icon"]				= S;
 	
-	strconcat( sizeof(buff), buff, path, ":t_icon_over" );
+	xr_strconcat(  buff, path, ":t_icon_over" );
 	if ( uiXml.NavigateToNode( buff ) )
 	{
 		S = init_static_field		(uiXml, path, "t_icon_over");

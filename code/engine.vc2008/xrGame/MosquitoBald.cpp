@@ -6,13 +6,13 @@
 #include "physicsshellholder.h"
 #include "../xrengine/xr_collide_form.h"
 
-CMosquitoBald::CMosquitoBald(void)
+CMosquitoBald::CMosquitoBald()
 {
 	m_fHitImpulseScale = 1.f;
 	m_bLastBlowoutUpdate = false;
 }
 
-CMosquitoBald::~CMosquitoBald(void) {}
+CMosquitoBald::~CMosquitoBald() {}
 
 void CMosquitoBald::Load(LPCSTR section) 
 {
@@ -115,9 +115,12 @@ void CMosquitoBald::UpdateSecondaryHit()
 #include "ZoneCampfire.h"
 #include "TorridZone.h"
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
-#pragma optimize("s",on)
+
+#pragma optimize("gyts",on)
 void CMosquitoBald::script_register	(lua_State *L)
 {
 	module(L)

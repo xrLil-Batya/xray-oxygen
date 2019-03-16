@@ -35,24 +35,20 @@ CALifeSimulatorBase::CALifeSimulatorBase	(xrServer *server, LPCSTR section)
 {
 	m_server					= server;
 	m_initialized				= false;
-	m_header					= 0;
-	m_time_manager				= 0;
-	m_spawns					= 0;
-	m_objects					= 0;
-	m_graph_objects				= 0;
-	m_scheduled					= 0;
-	m_story_objects				= 0;
-	m_smart_terrains			= 0;
-	m_groups					= 0;
-	m_registry_container		= 0;
-	m_upgrade_manager			= 0;
+	m_header					= nullptr;
+	m_time_manager				= nullptr;
+	m_spawns					= nullptr;
+	m_objects					= nullptr;
+	m_graph_objects				= nullptr;
+	m_scheduled					= nullptr;
+	m_story_objects				= nullptr;
+	m_smart_terrains			= nullptr;
+	m_groups					= nullptr;
+	m_registry_container		= nullptr;
+	m_upgrade_manager			= nullptr;
 
 	random().seed				(u32(CPU::QPC() & 0xffffffff));
 	m_can_register_objects		= true;
-#ifdef LUACP_API
-	LogXrayOffset("CALifeSpawnRegistry", this, &this->m_spawns);
-	LogXrayOffset("CALifeObjectRegistry", this, &this->m_objects);
-#endif
 }
 
 CALifeSimulatorBase::~CALifeSimulatorBase	()
@@ -65,23 +61,23 @@ void CALifeSimulatorBase::destroy			()
 	unload						();
 }
 
-void CALifeSimulatorBase::unload			()
+void CALifeSimulatorBase::unload()
 {
-	xr_delete					(m_objects);
-	xr_delete					(m_header);
-	xr_delete					(m_time_manager);
-	xr_delete					(m_spawns);
-	xr_delete					(m_graph_objects);
-	xr_delete					(m_scheduled);
-	xr_delete					(m_story_objects);
-	xr_delete					(m_smart_terrains);
-	xr_delete					(m_groups);
-	xr_delete					(m_registry_container);
-	xr_delete					(m_upgrade_manager);
-	m_initialized				= false;
+	xr_delete(m_objects);
+	xr_delete(m_header);
+	xr_delete(m_time_manager);
+	xr_delete(m_spawns);
+	xr_delete(m_graph_objects);
+	xr_delete(m_scheduled);
+	xr_delete(m_story_objects);
+	xr_delete(m_smart_terrains);
+	xr_delete(m_groups);
+	xr_delete(m_registry_container);
+	xr_delete(m_upgrade_manager);
+	m_initialized = false;
 
-	if(g_pGameLevel)
-		Level().OnAlifeSimulatorUnLoaded();
+	if (g_pGameLevel)
+		Level().ResetLevel();
 }
 
 void CALifeSimulatorBase::reload			(LPCSTR section)
@@ -132,7 +128,7 @@ CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &po
 	CSE_ALifeDynamicObject		*dynamic_object = smart_cast<CSE_ALifeDynamicObject*>(abstract);
 	VERIFY						(dynamic_object);
 
-	//������ ������� � ������ ���������
+	//оружие спавним с полным магазинои
 	CSE_ALifeItemWeapon* weapon = smart_cast<CSE_ALifeItemWeapon*>(dynamic_object);
 	if(weapon)
 		weapon->a_elapsed		= weapon->get_ammo_magsize();
@@ -147,7 +143,6 @@ CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &po
 	dynamic_object->spawn_supplies	();
 	dynamic_object->on_spawn		();
 
-//	Msg							("LSS : SPAWN : [%s],[%s], level %s",*dynamic_object->s_name,dynamic_object->name_replace(),*ai().game_graph().header().level(ai().game_graph().vertex(dynamic_object->m_tGraphID)->level_id()).name());
 	return						(dynamic_object);
 }
 
@@ -249,10 +244,6 @@ void CALifeSimulatorBase::create	(CSE_ALifeObject *object)
 		return;
 	}
 	VERIFY						(dynamic_object->m_bOnline);
-
-#ifdef DEBUG
-//	Msg							("Creating object from client spawn [%d][%d][%s][%s]",dynamic_object->ID,dynamic_object->ID_Parent,dynamic_object->name(),dynamic_object->name_replace());
-#endif
 
 	if (0xffff != dynamic_object->ID_Parent) {
 		u16							id = dynamic_object->ID_Parent;

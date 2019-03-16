@@ -130,7 +130,7 @@ void OGF::Save			(IWriter &fs)
 {
 	OGF_Base::Save		(fs);
 
-	// clMsg			("* %d faces",faces.size());
+	// Logger.clMsg			("* %d faces",faces.size());
 	geom_batch_average	((u32)data.vertices.size(),(u32)data.faces.size());
 
 	// Texture & shader
@@ -143,7 +143,7 @@ void OGF::Save			(IWriter &fs)
 		Tname			+= t;
 	}
 	string1024			sid;
-	strconcat			(sizeof(sid),sid,
+	xr_strconcat(sid,
 		pBuild->shader_render[pBuild->materials()[material].shader].name,
 		"/",
 		Tname.c_str()
@@ -152,7 +152,7 @@ void OGF::Save			(IWriter &fs)
 	// Create header
 	ogf_header			H;
 	H.format_version	= xrOGF_FormatVersion;
-	H.type				= data.m_SWI.count?MT_PROGRESSIVE:MT_NORMAL;
+	H.type				= data.m_SWI.count? MT_PROGRESSIVE :MT_NORMAL;
 	H.shader_id			= RegisterShader			(sid);
 	H.bb.min			= bbox.min;
 	H.bb.max			= bbox.max;
@@ -166,7 +166,7 @@ void OGF::Save			(IWriter &fs)
 	switch (H.type) 
 	{
 	case MT_NORMAL		:
-	case MT_PROGRESSIVE	:
+	case MT_PROGRESSIVE:
 		Save_Normal_PM	(fs,H,bVertexColors);		
 		break;
 	}
@@ -194,7 +194,7 @@ void OGF_Reference::Save	(IWriter &fs)
 		Tname			+= t;
 	}
 	string1024			sid	;
-	strconcat			(sizeof(sid),sid,
+	xr_strconcat(sid,
 		pBuild->shader_render[pBuild->materials()[material].shader].name,
 		"/",
 		Tname.c_str()
@@ -233,7 +233,7 @@ void OGF_Reference::Save	(IWriter &fs)
 	fs.w				(&H,sizeof(H));
 	fs.close_chunk		();
 
-	// progressive
+	// Logger.Progressive
 	if (H.type==MT_TREE_PM){
 		// SW
 		fs.open_chunk		(OGF_SWICONTAINER);
@@ -251,7 +251,7 @@ void	OGF::PreSave		(u32 tree_id)
 	// X-vertices/faces
 	if (fast_path_data.vertices.size() && fast_path_data.faces.size())
 	{
-		clMsg			("%4d: v(%3d)/f(%3d)",tree_id,fast_path_data.vertices.size(),fast_path_data.faces.size());
+		Logger.clMsg			("%4d: v(%3d)/f(%3d)",tree_id,fast_path_data.vertices.size(),fast_path_data.faces.size());
 		VDeclarator		x_D;
 		x_D.set			(x_decl_vert);
 		x_VB.Begin		(x_D);
@@ -351,39 +351,33 @@ void	read_ogf_swidata( IReader &fs_, FSlideWindowItem& swi )
 	//fs.close_chunk		();
 }
 
-void	write_ogf_fastpath( IWriter &fs, const OGF& ogf, BOOL progresive )
+void write_ogf_fastpath(IWriter &fs, const OGF& ogf, BOOL progresive)
 {
-	fs.open_chunk			( OGF_FASTPATH		);
+	fs.open_chunk(OGF_FASTPATH);
 	{
 		// Vertices
-		write_ogf_container( fs, ogf.fast_path_data );
+		write_ogf_container(fs, ogf.fast_path_data);
 
-		// progressive-data, if need it
-		if ( progresive )//H.type == MT_PROGRESSIVE
-				write_ogf_swidata( fs, ogf.fast_path_data.m_SWI );
+		// Progressive-data, if need it
+		if (progresive)
+			write_ogf_swidata(fs, ogf.fast_path_data.m_SWI);
 	}
-	fs.close_chunk			();
+	fs.close_chunk();
 }
 
-void	OGF::Save_Normal_PM		(IWriter &fs, ogf_header& H, BOOL bVertexColored)
+void OGF::Save_Normal_PM(IWriter &fs, ogf_header& H, BOOL bVertexColored)
 {
-//	clMsg			("- saving: normal or clod");
-
 	// Vertices
 	write_ogf_container( fs, data ); 
 
-	// progressive-data, if need it
+	// Progressive-data, if need it
 	if (H.type == MT_PROGRESSIVE)
 		write_ogf_swidata( fs, data.m_SWI );// SW
 
 	// if has x-vertices/x-faces
 	if (!fast_path_data.vertices.empty() && !fast_path_data.faces.empty())
-		write_ogf_fastpath( fs, *this, H.type == MT_PROGRESSIVE );
-	
+		write_ogf_fastpath( fs, *this, H.type == MT_PROGRESSIVE);
 }
-
-
-
 
 void	OGF::Load_Normal_PM		(IReader &fs, ogf_header& H, BOOL bVertexColored)
 {

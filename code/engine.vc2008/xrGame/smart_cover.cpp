@@ -14,6 +14,7 @@
 #include "ai_space.h"
 #include "level_graph.h"
 #include "graph_engine.h"
+#include <luabind/luabind.hpp>
 
 namespace hash_fixed_vertex_manager {
 	
@@ -77,7 +78,9 @@ cover::cover					(
 		Fvector					position = this->fov_position(**J);
 		position.y				+= 2.0f;
 		u32						level_vertex_id = graph.vertex_id(position);
-		VERIFY2(graph.valid_vertex_id(level_vertex_id), make_string("invalid vertex id: smart cover[%s], loophole [%s]", m_object.cName().c_str(), (*J)->id().c_str()));
+		VERIFY_FORMAT(graph.valid_vertex_id(level_vertex_id), 
+			"invalid vertex id: smart cover[%s], loophole [%s]", 
+			m_object.cName().c_str(), (*J)->id().c_str());
 		vertex					(**J, (*i).second);
 		const_cast<loophole*&>((*i).first) = *J;
 	}
@@ -99,7 +102,9 @@ void cover::vertex				(smart_cover::loophole const &loophole, smart_cover::looph
 	pos.y						+= 2.0f;
 	loophole_data.m_level_vertex_id	= graph.vertex_id(pos);
 
-	VERIFY2(graph.valid_vertex_id(loophole_data.m_level_vertex_id), make_string("invalid vertex id: smart cover[%s], loophole [%s]", m_object.cName().c_str(), loophole.id().c_str()));
+	VERIFY_FORMAT(graph.valid_vertex_id(loophole_data.m_level_vertex_id), 
+		"invalid vertex id: smart cover[%s], loophole [%s]", 
+		m_object.cName().c_str(), loophole.id().c_str());
 	typedef loophole::ActionList::const_iterator const_iterator;
 	const_iterator				I = loophole.actions().begin();
 	const_iterator				E = loophole.actions().end();
@@ -108,7 +113,9 @@ void cover::vertex				(smart_cover::loophole const &loophole, smart_cover::looph
 			Fvector				pos = position((*I).second->target_position());
 			pos.y				+= 2.0f;
 			u32					level_vertex_id = graph.vertex_id(pos);
-			VERIFY2(graph.valid_vertex_id(level_vertex_id), make_string("invalid vertex id: loophole [%s]", loophole.id().c_str()));
+			VERIFY_FORMAT(graph.valid_vertex_id(level_vertex_id), 
+				"invalid vertex id: loophole [%s]", 
+				loophole.id().c_str());
 			loophole_data.m_action_vertices.push_back(std::make_pair((*I).first, level_vertex_id));
 		}
 }
@@ -174,13 +181,13 @@ smart_cover::loophole *cover::best_loophole	(Fvector const &position, float &val
 void cover::evaluate_loophole				(Fvector const &position, smart_cover::loophole * &source, smart_cover::loophole * &result, float &value, bool const is_smart_cover_entered ) const
 {
 	VERIFY						( source );
-	VERIFY2						( _valid(position), make_string("[%f][%f][%f]", VPUSH(position)) );
+	VERIFY_FORMAT( _valid(position), "[%f][%f][%f]", VPUSH(position));
 
 	if (!source->usable())
 		return;
 
 	Fvector						fov_position = this->fov_position(*source);
-	VERIFY2						( _valid(fov_position), make_string("[%f][%f][%f]", VPUSH(fov_position)) );
+	VERIFY_FORMAT( _valid(fov_position), "[%f][%f][%f]", VPUSH(fov_position));
 	float const distance_to_target	= fov_position.distance_to(position);
 	if ( distance_to_target > source->range() )
 		return;
@@ -190,7 +197,7 @@ void cover::evaluate_loophole				(Fvector const &position, smart_cover::loophole
 		return;
 
 	Fvector						direction = Fvector().sub(position, fov_position);
-	VERIFY2						( _valid(direction), make_string("[%f][%f][%f]", VPUSH(direction)) );
+	VERIFY_FORMAT( _valid(direction), "[%f][%f][%f]", VPUSH(direction));
 	if (direction.magnitude() < 1.f)
 		return;
 
@@ -265,15 +272,10 @@ bool cover::loophole_path					(shared_str const &source_raw, shared_str const &t
 			parameters
 		);
 
-	VERIFY2						(
-		result,
-		make_string				(
-			"failde to find loophole path [%s]->[%s] in cover [%s]",
-			source.c_str(),
-			target.c_str(),
-			m_description->table_id().c_str()
-		)
-	);
+	VERIFY_FORMAT(result,
+			"failed to find loophole path [%s]->[%s] in cover [%s]",
+			source.c_str(), target.c_str(), m_description->table_id().c_str());
+
 	return						(result);
 }
 
@@ -291,44 +293,22 @@ void cover::check_loopholes_connectivity	() const
 		Loopholes::const_iterator	J = I + 1;
 		for ( ; J != E; ++J) {
 			shared_str const	&rhs = (*J)->id();
-			VERIFY2				(
-				loophole_path(lhs, rhs),
-				make_string(
+			VERIFY_FORMAT(loophole_path(lhs, rhs),
 					"failed to find path [%s -> %s] in smart_cover [%s]",
-					lhs.c_str(),
-					rhs.c_str(),
-					m_description->table_id().c_str()
-				)
-			);
-			VERIFY2				(
-				loophole_path(rhs, lhs),
-				make_string(
+					lhs.c_str(), rhs.c_str(), m_description->table_id().c_str());
+
+			VERIFY_FORMAT(loophole_path(rhs, lhs),
 					"failed to find path [%s -> %s] in smart_cover [%s]",
-					rhs.c_str(),
-					lhs.c_str(),
-					m_description->table_id().c_str()
-				)
-			);
+					rhs.c_str(), lhs.c_str(), m_description->table_id().c_str());
 		}
 
-		VERIFY2				(
-			loophole_path(lhs, exit),
-			make_string(
+		VERIFY_FORMAT(loophole_path(lhs, exit),
 				"failed to find path [%s -> %s] in smart_cover [%s]",
-				lhs.c_str(),
-				exit.c_str(),
-				m_description->table_id().c_str()
-			)
-		);
-		VERIFY2				(
-			loophole_path(enter, lhs),
-			make_string(
+				lhs.c_str(), exit.c_str(), m_description->table_id().c_str());
+
+		VERIFY_FORMAT(loophole_path(enter, lhs),
 				"failed to find path [%s -> %s] in smart_cover [%s]",
-				enter.c_str(),
-				lhs.c_str(),
-				m_description->table_id().c_str()
-			)
-		);
+				enter.c_str(), lhs.c_str(), m_description->table_id().c_str());
 	}
 }
 #endif // DEBUG

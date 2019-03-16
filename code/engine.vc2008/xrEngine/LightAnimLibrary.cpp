@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+п»ї//---------------------------------------------------------------------------
 #include "stdafx.h"
 #pragma hdrstop
 
@@ -13,7 +13,7 @@
 #define CHUNK_ITEM_KEYS		0x0002
 //---------------------------------------------------------------------------
 
-ELightAnimLibrary LALib;
+ENGINE_API ELightAnimLibrary LALib;
 
 CLAItem::CLAItem()
 {
@@ -105,20 +105,20 @@ u32 CLAItem::InterpolateRGB(int frame)
 
     auto A=Keys.find(frame);
     auto B = Keys.end();
-    if (A!=Keys.end()){  			// ключ - возвращаем цвет ключа
+    if (A!=Keys.end()){  			// РєР»СЋС‡ - РІРѕР·РІСЂР°С‰Р°РµРј С†РІРµС‚ РєР»СЋС‡Р°
     	return A->second;
-    }else{							// не ключ
-    	B=Keys.upper_bound(frame);  // ищем следующий ключ
-        if (B==Keys.end()){			// если его нет вернем цвет последнего ключа
+    }else{							// РЅРµ РєР»СЋС‡
+    	B=Keys.upper_bound(frame);  // РёС‰РµРј СЃР»РµРґСѓСЋС‰РёР№ РєР»СЋС‡
+        if (B==Keys.end()){			// РµСЃР»Рё РµРіРѕ РЅРµС‚ РІРµСЂРЅРµРј С†РІРµС‚ РїРѕСЃР»РµРґРЅРµРіРѕ РєР»СЋС‡Р°
 	    	B--;
         	return B->second;
         }
-    	A=B;        				// иначе в A занесем предыдущий ключ
+    	A=B;        				// РёРЅР°С‡Рµ РІ A Р·Р°РЅРµСЃРµРј РїСЂРµРґС‹РґСѓС‰РёР№ РєР»СЋС‡
         A--;
     }
 
     R_ASSERT(Keys.size()>1);
-    // интерполируем цвет
+    // РёРЅС‚РµСЂРїРѕР»РёСЂСѓРµРј С†РІРµС‚
     Fcolor c, c0, c1;
     float a0=static_cast<float>(A->first);
     float a1=static_cast<float>(B->first);
@@ -197,7 +197,7 @@ void ELightAnimLibrary::Unload()
     Items.clear();
 }
 
-__declspec(dllexport) void ELightAnimLibrary::Load()
+void ELightAnimLibrary::Load()
 {
 	string_path fn;
     FS.update_path(fn,_game_data_,"lanims.xr");
@@ -247,7 +247,7 @@ void ELightAnimLibrary::Save()
     FS.update_path	(fn,_game_data_,"lanims.xr");
 
     if (!F.save_to(fn))
-        Log			("!Can't save color animations:",fn);
+        Msg			("!Can't save color animations:%s",fn);
 }
 
 void ELightAnimLibrary::Reload()

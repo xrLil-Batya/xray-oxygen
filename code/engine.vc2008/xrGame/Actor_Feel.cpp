@@ -1,38 +1,35 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "actor.h"
-#include "weapon.h"
+#include "items/Weapon.h"
 #include "mercuryball.h"
 #include "inventory.h"
 #include "character_info.h"
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "UsableScriptObject.h"
 #include "customzone.h"
 #include "../xrEngine/gamemtllib.h"
 #include "ui/UIMainIngameWnd.h"
 #include "UIGame.h"
-#include "Grenade.h"
-#include "WeaponRPG7.h"
-#include "ExplosiveRocket.h"
-#include "game_cl_base.h"
+#include "items/Grenade.h"
+#include "items/WeaponRPG7.h"
 #include "Level.h"
 #include "clsid_game.h"
 #include "hudmanager.h"
 #include "ZoneCampfire.h"
-#include "../FrayBuildConfig.hpp"
+#include "ExplosiveRocket.h"
 
-#define PICKUP_INFO_COLOR 0xFFFFA916
-
-void CActor::feel_touch_new				(CObject* O)
+void CActor::feel_touch_new(CObject* O)
 {
-	CPhysicsShellHolder* sh=smart_cast<CPhysicsShellHolder*>(O);
-	if(sh&&sh->character_physics_support()) m_feel_touch_characters++;
-
+	CPhysicsShellHolder* sh = smart_cast<CPhysicsShellHolder*>(O);
+	if (sh&&sh->character_physics_support()) 
+		m_feel_touch_characters++;
 }
 
 void CActor::feel_touch_delete	(CObject* O)
 {
 	CPhysicsShellHolder* sh=smart_cast<CPhysicsShellHolder*>(O);
-	if(sh&&sh->character_physics_support()) m_feel_touch_characters--;
+	if(sh&&sh->character_physics_support()) 
+		m_feel_touch_characters--;
 }
 
 BOOL CActor::feel_touch_contact		(CObject *O)
@@ -125,6 +122,7 @@ void CActor::PickupModeUpdate()
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
+	xrCriticalSectionGuard guard(MtFeelTochMutex);
     for (CObject* obj : feel_touch)
     {
         Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
@@ -149,6 +147,7 @@ void CActor::PickupModeUpdate()
 			{
 				m_CapmfireWeLookingAt = camp;
 				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
+
 				return;
 			}
 		}
@@ -163,7 +162,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 		
 	if (!g_Alive()) 
 	{
-		GameUI()->UIMainIngameWnd->SetPickUpItem(NULL);
+		GameUI()->UIMainIngameWnd->SetPickUpItem(nullptr);
 		return;
 	}
 	
@@ -175,15 +174,14 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 	Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
 	act_and_cam_pos.y    += CameraHeight();
 	float maxlen					= 1000.0f;
-	CInventoryItem* pNearestItem	= NULL;
+	CInventoryItem* pNearestItem	= nullptr;
 
-	for (u32 o_it=0; o_it<ISpatialResult.size(); o_it++)
+	for (ISpatial*	spatial : ISpatialResult)
 	{
-		ISpatial*		spatial	= ISpatialResult[o_it];
 		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject        ());
 
-		if (0 == pIItem)											continue;
-		if (pIItem->object().H_Parent() != NULL)					continue;
+		if (nullptr == pIItem)										continue;
+		if (pIItem->object().H_Parent() != nullptr)					continue;
 		if (!pIItem->CanTake())										continue;
 		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )	continue;
 
@@ -252,89 +250,44 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 	}
 };
 
-#include "eatable_item.h"
-#include "EliteDetector.h"
-#include "AdvancedDetector.h"
-#include "SimpleDetector.h"
-#include "grenadelauncher.h"
-#include "Scope.h"
-#include "Silencer.h"
-#include "CustomOutfit.h"
-#include "ActorHelmet.h"
-#include "pda.h"
-
 void CActor::PickupInfoDraw(CObject* object)
 {
-	LPCSTR draw_str = NULL;
-	
-	CArtefact* artefact = smart_cast<CArtefact*>(object);
-	CEatableItem* boost = smart_cast<CEatableItem*>(object);
-	CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(object);
-	CWeapon* weapon = smart_cast<CWeapon*>(object);
+	if (!object)		return;
+	LPCSTR draw_str = nullptr;
 	CInventoryItem* item = smart_cast<CInventoryItem*>(object);
-	CEliteDetector* edetect = smart_cast<CEliteDetector*>(object);
-	CAdvancedDetector* adetect = smart_cast<CAdvancedDetector*>(object);
-	CSimpleDetector* sdetect = smart_cast<CSimpleDetector*>(object);
-	CGrenade* grenade = smart_cast<CGrenade*>(object);
-	CGrenadeLauncher* grenadela = smart_cast<CGrenadeLauncher*>(object);
-	CScope* scope = smart_cast<CScope*>(object);
-	CSilencer* sil = smart_cast<CSilencer*>(object);
-	CCustomOutfit* outf = smart_cast<CCustomOutfit*>(object);
-	CHelmet* helm = smart_cast<CHelmet*>(object);
-	CPda* doc = smart_cast<CPda*>(object);
-	if(!item)		return;
+
+	if (!GameUI()->GameIndicatorsShown())	return;
+	if (!item)		return;
 
 	Fmatrix			res;
-	res.mul			(Device.mFullTransform,object->XFORM());
+	res.mul(Device.mFullTransform, object->XFORM());
 	Fvector4		v_res;
-	Fvector			shift;
+	Fvector			result = object->Position();
+	result.y += 0.2;
+//	Fvector			shift;
 
+	Ivector4 rgb_g = READ_IF_EXISTS(pSettings, r_ivector4, *object->cNameSect(), "feel_color", Ivector4().set(200, 200, 200 , 255));
+	u32 C_FEEL		D3DCOLOR_RGBA(rgb_g.x, rgb_g.y, rgb_g.z, rgb_g.w);
+	
 	draw_str = item->NameItem();
-	shift.set(0,0,0);
-
-	res.transform(v_res,shift);
-
+	//pos.y += size.y / 2;
+	//shift.set(pos);
+	//
+	//res.transform(v_res, shift);
+	Device.mFullTransform.transform(v_res, result);
 	if (v_res.z < 0 || v_res.w < 0)	return;
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f) return;
 
-	float x = (1.f + v_res.x)/2.f * (Device.dwWidth);
-	float y = (1.f - v_res.y)/2.f * (Device.dwHeight);
+	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
 
-	UI().Font().pFontLetterica16Russian->SetAligment	(CGameFont::alCenter);
+	UI().Font().GetFont("ui_font_letterica18_russian")->SetAligment(CGameFont::alCenter);
 	if (!psActorFlags.test(AF_COLORED_FEEL))
-	UI().Font().pFontLetterica16Russian->SetColor		(PICKUP_INFO_COLOR);
+		UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFFA916);
 	else
-	{
-	if(doc)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFD7A096);
-	if(ammo)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFFA121);
-	if(weapon)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF6B42);
-	if(boost)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF8330);
-	if(artefact)
-	UI().Font().pFontLetterica16Russian->SetColor		(0xFF736FD5);
-	if(edetect)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEBDD0B);
-	if(adetect)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEBFFA1);
-	if(sdetect)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEBFFC8);
-	if(grenade)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF6432);
-	if(grenadela)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEB6E0A);		
-	if(scope && !grenadela)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEB8C0A);
-	if(sil && !scope && !grenadela)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEB8C64);
-	if(outf)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF6464);
-	if(helm && !outf)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF9178);
-	}
-	UI().Font().pFontLetterica18Russian->Out			(x,y,draw_str);
+		UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(C_FEEL);
+
+	UI().Font().GetFont("ui_font_letterica18_russian")->Out(x, y, draw_str);
 }
 
 void CActor::feel_sound_new(CObject* who, int type, CSound_UserDataPtr user_data, const Fvector& Position, float power)
@@ -353,7 +306,7 @@ void CActor::Feel_Grenade_Update( float rad )
 	g_pGameLevel->ObjectSpace.GetNearest( q_nearest, pos_actor, rad, nullptr);
 
 	// select only grenade
-	for (auto it: q_nearest)
+	for (CObject* it: q_nearest)
 	{
 		if (it->getDestroy())
 			continue;					// Don't touch candidates for destroy

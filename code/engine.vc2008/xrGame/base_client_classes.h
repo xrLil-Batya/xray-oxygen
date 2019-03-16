@@ -21,8 +21,10 @@ class FHierrarhyVisual;
 class CBlend;
 class IKinematics;
 class IKinematicsAnimated;
+class CPatrolPoint;
+class CPatrolPath;
 
-typedef class_exporter<DLL_Pure>	DLL_PureScript;
+using DLL_PureScript = class_exporter<DLL_Pure>;
 add_to_type_list(DLL_PureScript)
 #undef script_type_list
 #define script_type_list save_type_list(DLL_PureScript)
@@ -32,32 +34,32 @@ add_to_type_list(DLL_PureScript)
 //#undef script_type_list
 //#define script_type_list save_type_list(ISpatialScript)
 
-typedef class_exporter<ISheduled>	ISheduledScript;
+using ISheduledScript = class_exporter<ISheduled>;
 add_to_type_list(ISheduledScript)
 #undef script_type_list
 #define script_type_list save_type_list(ISheduledScript)
 
-typedef class_exporter<IRenderable>	IRenderableScript;
+using IRenderableScript = class_exporter<IRenderable>;
 add_to_type_list(IRenderableScript)
 #undef script_type_list
 #define script_type_list save_type_list(IRenderableScript)
 
-typedef class_exporter<ICollidable>	ICollidableScript;
+using ICollidableScript = class_exporter<ICollidable>;
 add_to_type_list(ICollidableScript)
 #undef script_type_list
 #define script_type_list save_type_list(ICollidableScript)
 
-typedef class_exporter<CObject>		CObjectScript;
+using CObjectScript = class_exporter<CObject>;
 add_to_type_list(CObjectScript)
 #undef script_type_list
 #define script_type_list save_type_list(CObjectScript)
 
-typedef class_exporter<CBlend>	CBlendScript;
+using CBlendScript = class_exporter<CBlend>;
 add_to_type_list(CBlendScript)
 #undef script_type_list
 #define script_type_list save_type_list(CBlendScript)
 
-typedef class_exporter<IRenderVisual>	IRender_VisualScript;
+using IRender_VisualScript = class_exporter<IRenderVisual>;
 add_to_type_list(IRender_VisualScript)
 #undef script_type_list
 #define script_type_list save_type_list(IRender_VisualScript)
@@ -73,8 +75,23 @@ add_to_type_list(IKinematicsScript)
 #define script_type_list save_type_list(IKinematicsScript)
 */
 
-typedef class_exporter<IKinematicsAnimated>	IKinematicsAnimatedScript;
+using IKinematicsAnimatedScript = class_exporter<IKinematicsAnimated>;
 add_to_type_list(IKinematicsAnimatedScript)
 #undef script_type_list
 #define script_type_list save_type_list(IKinematicsAnimatedScript)
 
+class CPatrolPointScript { // TODO mb need implement this as GSC? or relocate that class to better place?
+public:
+	static LPCSTR getName(CPatrolPoint*);
+	static void   setName(CPatrolPoint*, LPCSTR);
+	DECLARE_SCRIPT_REGISTER_FUNCTION
+};
+
+add_to_type_list(CPatrolPointScript)
+#undef script_type_list
+#define script_type_list save_type_list(CPatrolPointScript)
+
+using CPatrolPathScript = class_exporter<CPatrolPath>;
+add_to_type_list(CPatrolPathScript)
+#undef script_type_list
+#define script_type_list save_type_list(CPatrolPathScript) 

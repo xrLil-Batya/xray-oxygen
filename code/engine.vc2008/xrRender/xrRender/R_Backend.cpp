@@ -6,7 +6,7 @@
 CBackend			RCache;
 
 // Create Quad-IB
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 
 // Igor: is used to test bug with rain, particles corruption
 void CBackend::RestoreQuadIBData()
@@ -53,7 +53,7 @@ void CBackend::CreateQuadIB		()
 	HW.stats_manager.increment_stats_ib	( QuadIB);
 }
 
-#else	//	USE_DX10
+#else
 
 // Igor: is used to test bug with rain, particles corruption
 void CBackend::RestoreQuadIBData()
@@ -110,7 +110,7 @@ void CBackend::CreateQuadIB		()
 	R_CHK(QuadIB->Unlock());
 }
 
-#endif	//	USE_DX10
+#endif
 
 // Device dependance
 void CBackend::OnDeviceCreate	()

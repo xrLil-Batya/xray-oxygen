@@ -70,7 +70,8 @@ namespace PS
 		Fvector				m_InitialPosition;
 	public:
     	using VisualVec = xr_vector<dxRender_Visual*>;
-    	struct SItem		{
+    	struct SItem		
+		{
         	dxRender_Visual*	_effect;
             VisualVec		_children_related;
             VisualVec		_children_free;

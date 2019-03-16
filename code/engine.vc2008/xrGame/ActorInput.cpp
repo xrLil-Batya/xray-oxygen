@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <dinput.h>
 #include "Actor.h"
-#include "Torch.h"
+#include "items/Torch.h"
 #include "trade.h"
 #include "../xrEngine/CameraBase.h"
 
@@ -15,15 +15,14 @@
 #include "UIGame.h"
 #include "inventory.h"
 #include "level.h"
-#include "game_cl_base.h"
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "UsableScriptObject.h"
 #include "actorcondition.h"
 #include "actor_input_handler.h"
-#include "string_table.h"
-#include "UI/UIStatic.h"
-#include "UI/UIActorMenu.h"
-#include "UI/UIDragDropReferenceList.h"
+#include "../xrEngine/string_table.h"
+#include "../xrUICore/UIStatic.h"
+#include "ui/UIActorMenu.h"
+#include "ui/UIDragDropReferenceList.h"
 #include "CharacterPhysicsSupport.h"
 #include "InventoryBox.h"
 #include "player_hud.h"
@@ -32,9 +31,11 @@
 #include "CustomDetector.h"
 #include "clsid_game.h"
 #include "hudmanager.h"
-#include "Weapon.h"
+#include "items/Weapon.h"
 #include "ZoneCampfire.h"
-
+#include "../xrEngine/XR_IOConsole.h"
+#include "script_callback_ex.h"
+#include "searchlight.h"
 extern u32 hud_adj_mode;
 
 void CActor::IR_OnKeyboardPress(int cmd)
@@ -53,7 +54,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	if (IsTalking())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	
-	if (cmd == kWPN_FIRE)
+	if (cmd == kWPN_FIRE && !pInput->iGetAsyncKeyState(DIK_LALT) && !cam_active == eacFirstEye)
 	{
 		u16 slot = inventory().GetActiveSlot();
 		if (inventory().ActiveItem() && (slot == INV_SLOT_3 || slot == INV_SLOT_2))
@@ -77,19 +78,28 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		return;
 	}
 
+	// Dev actions should work only if we on developer mode (-developer)
+	if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
+	{
+		if (GamePersistent().IsDeveloperMode())
+		{
+			callback(GameObject::eOnActionPress)(cmd);
+		}
+	}
+	else
+	{
+		callback(GameObject::eOnActionPress)(cmd);
+	}
+
 	switch(cmd)
 	{
 	case kJUMP:		
 		{
 			mstate_wishful |= mcJump;
 		}break;
-	case kSPRINT_TOGGLE:	
-		{
-			mstate_wishful ^= mcSprint;
-		}break;
 	case kCROUCH:	
 		{
-		if( psActorFlags.test(AF_CROUCH_TOGGLE) )
+		if( psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)) )
 			mstate_wishful ^= mcCrouch;
 		}break;
 	case kCAM_1:	cam_Set			(eacFirstEye);				
@@ -109,28 +119,25 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		}
 	case kTORCH:
 		{
+		if (m_pProjWeLookingAt)
+		{
+			if (!m_pProjWeLookingAt->Get_light_active())
+				m_pProjWeLookingAt->TurnOn();
+			else
+				m_pProjWeLookingAt->TurnOff();
+		}
+		else
 			SwitchTorch();
 			break;
 		}
-		
-	case kTORCH_MODE:
-		{
-			SwitchTorchMode();
-			break;
-		}
 
-	case kKICK:
-	    {
-		    Actor_kick();
-		    break;
-        }
 	case kDETECTOR:
 		{
 			PIItem det_active					= inventory().ItemFromSlot(DETECTOR_SLOT);
 			if(det_active)
 			{
 				CCustomDetector* det			= smart_cast<CCustomDetector*>(det_active);
-				det->ToggleDetector				(g_player_hud->attached_item(0)!=NULL);
+				det->ToggleDetector				(g_player_hud->attached_item(0)!=nullptr);
 				return;
 			}
 		}break;
@@ -166,13 +173,20 @@ void CActor::IR_OnKeyboardPress(int cmd)
 					
 					SDrawStaticStruct* _s		= GameUI()->AddCustomStatic("item_used", true);
 					string1024					str;
-					strconcat					(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", itm->NameItem());
+					xr_strconcat				(str,*CStringTable().translate("st_item_used"),": ", itm->NameItem());
 					_s->wnd()->TextItemControl()->SetText(str);
 					
 					GameUI()->ActorMenu().m_pQuickSlot->ReloadReferences(this);
 				}
 			}
 		}break;
+
+    case kQUICK_SAVE:
+        Console->Execute("save");
+        break;
+    case kQUICK_LOAD:
+        Console->Execute("load");
+        break;
 	}
 }
 
@@ -184,8 +198,7 @@ void CActor::IR_OnMouseWheel(int direction)
 		return;
 	}
 
-	if(inventory().Action( (direction>0)? (u16)kWPN_ZOOM_DEC:(u16)kWPN_ZOOM_INC , CMD_START)) return;
-
+    if (inventory().Action(kWPN_ZOOM, (direction > 0) ? WeaponActionFlags::CMD_IN : WeaponActionFlags::CMD_OUT)) return;
 
 	if (direction>0)
 		OnNextWeaponSlot				();
@@ -201,6 +214,19 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 
 	if (g_Alive())	
 	{
+		// Dev actions should work only if we on developer mode (-developer)
+		if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
+		{
+			if (GamePersistent().IsDeveloperMode())
+			{
+				callback(GameObject::eOnActionRelease)(cmd);
+			}
+		}
+		else
+		{
+			callback(GameObject::eOnActionRelease)(cmd);
+		}
+
 		if(m_holder)
 		{
 			m_holder->OnKeyboardRelease(cmd);
@@ -240,6 +266,18 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	if (IsTalking())							return;
 
+	if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
+	{
+		if (GamePersistent().IsDeveloperMode())
+		{
+			callback(GameObject::eOnActionHold)(cmd);
+		}
+	}
+	else
+	{
+		callback(GameObject::eOnActionHold)(cmd);
+	}
+
 	if(m_holder)
 	{
 		m_holder->OnKeyboardHold(cmd);
@@ -259,10 +297,16 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	{
 	case kUP:
 	case kDOWN: 
-		cam_Active()->Move( (cmd==kUP) ? kDOWN : kUP, 0, LookFactor);									break;
-	case kCAM_ZOOM_IN: 
-	case kCAM_ZOOM_OUT: 
-		cam_Active()->Move(cmd);												break;
+		cam_Active()->Move( (cmd==kUP) ? kDOWN : kUP, 0, LookFactor);									
+		break;
+
+	case kCAM_ZOOM_IN:
+	case kCAM_ZOOM_OUT:
+	{
+		cam_Active()->Move(cmd);
+		break;
+	}
+
 	case kLEFT:
 	case kRIGHT:
 		if (eacFreeLook!=cam_active) cam_Active()->Move(cmd, 0, LookFactor);	break;
@@ -270,13 +314,17 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	case kACCEL:	mstate_wishful |= mcAccel;									break;
 	case kL_STRAFE:	mstate_wishful |= mcLStrafe;								break;
 	case kR_STRAFE:	mstate_wishful |= mcRStrafe;								break;
+	case kSPRINT_TOGGLE:
+		if (!(mstate_real&(mcJump | mcFall | mcLanding | mcLanding2)))
+			mstate_wishful |= mcSprint;
+		break;
 	case kL_LOOKOUT:mstate_wishful |= mcLLookout;								break;
 	case kR_LOOKOUT:mstate_wishful |= mcRLookout;								break;
 	case kFWD:		mstate_wishful |= mcFwd;									break;
 	case kBACK:		mstate_wishful |= mcBack;									break;
 	case kCROUCH:
 		{
-			if( !psActorFlags.test(AF_CROUCH_TOGGLE) )
+			if( !psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)) )
 					mstate_wishful |= mcCrouch;
 
 		}break;
@@ -326,10 +374,10 @@ bool CActor::use_Holder				(CHolderCustom* holder)
 		CGameObject* holderGO			= smart_cast<CGameObject*>(m_holder);
 		
 		if(smart_cast<CCar*>(holderGO))
-			b = use_Vehicle(0);
+			b = use_Vehicle(nullptr);
 		else
 			if (holderGO->CLS_ID==CLSID_OBJECT_W_STATMGUN)
-				b = use_MountedWeapon(0);
+				b = use_MountedWeapon(nullptr);
 
 		if(inventory().ActiveItem()){
 			CHudItem* hi = smart_cast<CHudItem*>(inventory().ActiveItem());
@@ -392,6 +440,15 @@ void CActor::ActorUse()
 
 		return;
 	}
+	if (m_pProjWeLookingAt)
+	{
+		if (!m_pProjWeLookingAt->actor_use && Level().CurrentControlEntity()->Position().distance_to(m_pProjWeLookingAt->Position()) < 2.0f)
+			m_pProjWeLookingAt->actor_use = true;
+		else
+			m_pProjWeLookingAt->actor_use = false;
+
+		return;
+	}
 
 	if (!m_pUsableObject || m_pUsableObject->nonscript_usable())
 	{
@@ -436,7 +493,6 @@ void CActor::ActorUse()
 			}
 		}
 	}
-
 	// переключение костра при юзании
 	if (m_CapmfireWeLookingAt)
 		m_CapmfireWeLookingAt->is_on() ? m_CapmfireWeLookingAt->turn_off_script() : m_CapmfireWeLookingAt->turn_on_script();
@@ -480,12 +536,7 @@ void	CActor::OnNextWeaponSlot()
 	{
 		if (inventory().ItemFromSlot(SlotsToCheck[i]))
 		{
-			if (SlotsToCheck[i] == ARTEFACT_SLOT) 
-			{
-				IR_OnKeyboardPress(kARTEFACT);
-			}
-			else
-				IR_OnKeyboardPress(kWPN_1 + i);
+            IR_OnKeyboardPress(kWPN_1 + i);
 			return;
 		}
 	}
@@ -515,12 +566,7 @@ void	CActor::OnPrevWeaponSlot()
 	{
 		if (inventory().ItemFromSlot(SlotsToCheck[i]))
 		{
-			if (SlotsToCheck[i] == ARTEFACT_SLOT) 
-			{
-				IR_OnKeyboardPress(kARTEFACT);
-			}
-			else
-				IR_OnKeyboardPress(kWPN_1 + i);
+            IR_OnKeyboardPress(kWPN_1 + i);
 			return;
 		}
 	}
@@ -559,13 +605,13 @@ void CActor::set_input_external_handler(CActorInputHandler *handler)
 }
 
 
-#include "WeaponBinoculars.h"
-#include "WeaponBinocularsVision.h"
-#include "ActorHelmet.h"
+#include "items/WeaponBinoculars.h"
+#include "items/WeaponBinocularsVision.h"
+#include "items/Helmet.h"
 void CActor::SwitchNightVision()
 {
-	CWeapon* wpn1 = NULL;
-	CWeapon* wpn2 = NULL;
+	CWeapon* wpn1 = nullptr;
+	CWeapon* wpn2 = nullptr;
 	if(inventory().ItemFromSlot(INV_SLOT_2))
 		wpn1 = smart_cast<CWeapon*>(inventory().ItemFromSlot(INV_SLOT_2));
 
@@ -628,98 +674,42 @@ void CActor::SwitchTorchMode()
 	}
 }
 
-void CActor::Actor_kick()
-{
-	CGameObject *O = ObjectWeLookingAt();
-	if (O)
-	{
-		CEntityAlive *EA = smart_cast<CEntityAlive*>(O);
-		if (EA && EA->g_Alive())
-			return;
-
-		static float kick_impulse = READ_IF_EXISTS(pSettings, r_float, "actor", "kick_impulse", 250.f);
-		Fvector dir = Direction();
-		dir.y = sin(15.f * PI / 180.f);
-		dir.normalize();
-		float mass_f = 1.f;
-		CPhysicsShellHolder *sh = smart_cast<CPhysicsShellHolder*>(O);
-		if (sh)
-			mass_f = sh->GetMass();
-
-		PIItem itm = smart_cast<PIItem>(O);
-		if (itm)
-			mass_f = itm->Weight();
-
-		CInventoryOwner *io = smart_cast<CInventoryOwner*> (O);
-		if (io)
-			mass_f += io->inventory().TotalWeight();
-
-		if (mass_f < 1)
-			mass_f = 1;
-
-
-		u16 bone_id = 0;
-		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
-		if (RQ.O == O && RQ.element != 0xffff)
-			bone_id = (u16)RQ.element;
-
-		clamp<float>(mass_f, 0.1f, 100.f); // ограничить параметры хита
-
-		Fvector h_pos = O->Position();
-		SHit hit = SHit(0.001f * mass_f, dir, this, bone_id, h_pos, kick_impulse, ALife::eHitTypeStrike, 0.f, false);
-		O->Hit(&hit);
-		if (EA)
-		{
-			static float alive_kick_power = 3.f;
-			float real_imp = kick_impulse / mass_f;
-			dir.mul(pow(real_imp, alive_kick_power));
-			EA->character_physics_support()->movement()->AddControlVel(dir);
-			EA->character_physics_support()->movement()->ApplyImpulse(dir.normalize(), kick_impulse * alive_kick_power);
-		}
-
-		conditions().ConditionJump(mass_f / 50);
-		if (mass_f > 5)
-		{
-			hit.boneID = 0;  // пока не ¤сно, куда лушче √√ ударить (в ногу надо?)
-			this->Hit(&hit); // сила действи¤ равна силе противодействи¤
-		}
-	}
-}
-
-
 void CActor::NoClipFly(int cmd)
 {
-	Fvector cur_pos;// = Position();
+
+	Fvector cur_pos, right, left;
 	cur_pos.set(0,0,0);
-	float scale = 1.0f;
+	float scale = 0.55f;
 	if(pInput->iGetAsyncKeyState(DIK_LSHIFT))
 		scale = 0.25f;
 	else if(pInput->iGetAsyncKeyState(DIK_X))
-		scale = 8.0f;
+		scale = 1.0f;
 	else if(pInput->iGetAsyncKeyState(DIK_LMENU))
-		scale = 12.0f;//LALT
+		scale = 2.0f;//LALT
 	else if(pInput->iGetAsyncKeyState(DIK_TAB))
-		scale = 20.0f;
+		scale = 5.0f;
 
 	switch(cmd)
 	{
 	case kJUMP:		
-		cur_pos.y += 0.1f;
+		cur_pos.y += 0.12f;
 		break;
 	case kCROUCH:	
-		cur_pos.y -= 0.1f;
+		cur_pos.y -= 0.12f;
 		break;
 	case kFWD:	
-		cur_pos.z += 0.1f;
+		cur_pos.mad(cam_Active()->vDirection, scale / 2.0f);
 		break;
 	case kBACK:
-		cur_pos.z -= 0.1f;
+		cur_pos.mad(cam_Active()->vDirection, -scale / 2.0f);
 		break;
 	case kL_STRAFE:
-		cur_pos.x -= 0.1f;
+		left.crossproduct(cam_Active()->vNormal, cam_Active()->vDirection);
+		cur_pos.mad(left, -scale / 2.0f);
 		break;
 	case kR_STRAFE:
-		cur_pos.x += 0.1f;
+		right.crossproduct(cam_Active()->vNormal, cam_Active()->vDirection);
+		cur_pos.mad(right, scale / 2.0f);
 		break;
 	case kCAM_1:	
 		cam_Set(eacFirstEye);				
@@ -734,6 +724,14 @@ void CActor::NoClipFly(int cmd)
 		SwitchNightVision();
 		break;
 	case kTORCH:
+		if (m_pProjWeLookingAt)
+		{
+			if (!m_pProjWeLookingAt->Get_light_active())
+				m_pProjWeLookingAt->TurnOn();
+			else
+				m_pProjWeLookingAt->TurnOff();
+		}
+		else
 		SwitchTorch();
 		break;
 	case kDETECTOR:
@@ -742,7 +740,7 @@ void CActor::NoClipFly(int cmd)
 			if(det_active)
 			{
 				CCustomDetector* det = smart_cast<CCustomDetector*>(det_active);
-				det->ToggleDetector(g_player_hud->attached_item(0)!=NULL);
+				det->ToggleDetector(g_player_hud->attached_item(0)!=nullptr);
 				return;
 			}
 		}
@@ -752,9 +750,7 @@ void CActor::NoClipFly(int cmd)
 		break;
 	}
 	cur_pos.mul(scale);
-	Fmatrix	mOrient;
-	mOrient.rotateY(-(cam_Active()->GetWorldYaw()));
-	mOrient.transform_dir(cur_pos);
 	Position().add(cur_pos);
+	XFORM().translate_add(cur_pos);
 	character_physics_support()->movement()->SetPosition(Position());
 }

@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------
 #include "stdafx.h"
 #pragma hdrstop
 
@@ -66,7 +66,7 @@ void CGameMtlLibrary::Load()
 {
 	string_path			name;
 	if (!FS.exist(name,	_game_data_,GAMEMTL_FILENAME)){
-    	Log				("! Can't find game material file: ",name);
+    	Msg				("! Can't find game material file: %s", name);
     	return;
     }
 

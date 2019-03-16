@@ -38,17 +38,17 @@ CROS_impl::CROS_impl	()
 	ticks_to_update		= 0;
 	sky_rays_uptodate	= 0;
 
-	MODE				= IRender_ObjectSpecific::TRACE_ALL											;
+	MODE				= IRender_ObjectSpecific::TRACE_ALL;
 }
 
-void	CROS_impl::add		(light* source)
+void CROS_impl::add (light* source)
 {
 	// Search
-	for (xr_vector<Item>::iterator I=track.begin(); I!=track.end(); I++)	
-		if (source == I->source)	{ I->frame_touched = Device.dwFrame; return; }
+	for (Item & I : track)	// I like RB Loops
+		if (source == I.source)	{ I.frame_touched = Device.dwFrame; return; }
 
 	// Register _new_
-	track.push_back		(Item());
+	track.emplace_back		();
 	Item&	L			= track.back();
 	L.frame_touched		= Device.dwFrame;
 	L.source			= source;
@@ -124,8 +124,8 @@ void	CROS_impl::update	(IRenderable* O)
 	// clip & verify
 	if					(dwFrame==Device.dwFrame)			return;
 	dwFrame				= Device.dwFrame;
-	if					(0==O)								return;
-	if					(0==O->renderable.visual)			return;
+	if					(nullptr==O)								return;
+	if					(nullptr==O->renderable.visual)			return;
 	VERIFY				(dynamic_cast<CROS_impl*>			(O->renderable_ROS()));
 
 	CObject*	_object	= dynamic_cast<CObject*>	(O);
@@ -137,9 +137,9 @@ void	CROS_impl::update	(IRenderable* O)
 	Fvector	direction;	direction.random_dir();
 
 	//function call order is important at least for r1
-	for (size_t i = 0; i < NUM_FACES; ++i)
+	for (float & i : hemi_cube)
 	{
-		hemi_cube[i] = 0;
+		i = 0;
 	}
 
 	bool	bFirstTime	=	(0==result_count);
@@ -150,7 +150,7 @@ void	CROS_impl::update	(IRenderable* O)
 
 	// Process ambient lighting and approximate average lighting
 	// Process our lights to find average luminescences
-	CEnvDescriptor&	desc	=	*g_pGamePersistent->Environment().CurrentEnv;
+	CEnvDescriptor&	desc	=	*Environment().CurrentEnv;
 	Fvector			accum	=	{ desc.ambient.x,		desc.ambient.y,		desc.ambient.z		};
 	Fvector			hemi	=	{ desc.hemi_color.x,	desc.hemi_color.y,	desc.hemi_color.z	};
 	Fvector			sun_	=	{ desc.sun_color.x,		desc.sun_color.y,	desc.sun_color.z	};
@@ -162,8 +162,8 @@ void	CROS_impl::update	(IRenderable* O)
 		Fvector		lacc	=	{ 0,0,0 };
 		float hemi_cube_light[NUM_FACES] = {0,0,0,0,0,0};
 
-		for (u32 lit=0; lit<lights.size(); lit++)	{
-			light*	L	=	lights[lit].source;
+		for (auto & lit : lights)	{
+			light*	L	=	lit.source;
 			float	d	=	L->position.distance_to(position);
 			
 			float	a	=	(1/(L->attenuation0 + L->attenuation1*d + L->attenuation2*d*d) - d*L->falloff) *(L->flags.bStatic?1.f:2.f);
@@ -174,14 +174,14 @@ void	CROS_impl::update	(IRenderable* O)
 			dir.normalize_safe();
 			
 			//multiply intensity on attenuation and accumulate result in hemi cube face
-			float koef = (lights[lit].color.r + lights[lit].color.g + lights[lit].color.b) / 3.0f * a
+			float koef = (lit.color.r + lit.color.g + lit.color.b) / 3.0f * a
 						* ps_r_dhemi_light_scale;
 			
 			accum_hemi(hemi_cube_light, dir, koef);
 
-			lacc.x		+=	lights[lit].color.r*a;
-			lacc.y		+=	lights[lit].color.g*a;
-			lacc.z		+=	lights[lit].color.b*a;
+			lacc.x		+=	lit.color.r*a;
+			lacc.y		+=	lit.color.g*a;
+			lacc.z		+=	lit.color.b*a;
 		}
 
 		const float	minHemiValue = 1/255.f;
@@ -221,7 +221,7 @@ static const s32 s_iUTIdleMax = 2000;
 void 	CROS_impl::smart_update(IRenderable* O)
 {
 	if (!O) return;
-	if (0==O->renderable.visual) return;
+	if (nullptr==O->renderable.visual) return;
 
 	--ticks_to_update;
 
@@ -346,15 +346,16 @@ void CROS_impl::prepare_lights(Fvector& position, IRenderable* O)
 	if (bTraceLights) 
 	{
 		// Select nearest lights
-		Fvector					bb_size = { radius,radius,radius };
+		Fvector bb_size = { radius,radius,radius };
 
 		g_SpatialSpace->q_box(RImplementation.lstSpatial, 0, STYPE_LIGHTSOURCEHEMI, position, bb_size);
 
-		for (u32 o_it = 0; o_it < RImplementation.lstSpatial.size(); o_it++) {
-			ISpatial*	spatial = RImplementation.lstSpatial[o_it];
-			light*		source = (light*)(spatial->dcast_Light());
+		for (ISpatial* spatial : RImplementation.lstSpatial)
+		{
+			light* source = (light*)(spatial->dcast_Light());
 			VERIFY(source);	// sanity check
-			float	R = radius + source->range;
+			float R = radius + source->range;
+
 			if (position.distance_to(source->position) < R && source->flags.bStatic)
 				add(source);
 		}
@@ -397,7 +398,7 @@ void CROS_impl::prepare_lights(Fvector& position, IRenderable* O)
 			if (E > EPS) 
 			{
 				// Select light
-				lights.push_back(CROS_impl::Light());
+				lights.emplace_back();
 				CROS_impl::Light&	L = lights.back();
 				L.source = xrL;
 				L.color.mul_rgb(xrL->color, I->energy / 2);

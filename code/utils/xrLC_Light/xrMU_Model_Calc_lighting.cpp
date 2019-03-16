@@ -214,13 +214,13 @@ void xrMU_Model::calc_lighting	()
 
 	CDB::MODEL*				M	= xr_new<CDB::MODEL>	();
 	// [FX] I h8 tris builder on x64!!!
-	M->build				(CL.getV(),(u32)CL.getVS(),CL.getT(),(u32)CL.getTS(), nullptr, nullptr, false);
+	M->build				(CL.getV(),(u32)CL.getVS(),CL.getT(),(u32)CL.getTS(), nullptr, false, nullptr, nullptr, false);
 
 	calc_lighting			(color,Fidentity,M,inlc_global_data()->L_static(),LP_dont_rgb+LP_dont_sun);
 
 	xr_delete				(M);
 
-	clMsg					("model '%s' - REF_lighted.",*m_name);
+	Logger.clMsg					("model '%s' - REF_lighted.",*m_name);
 }
 
 

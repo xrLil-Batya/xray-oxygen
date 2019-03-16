@@ -78,17 +78,9 @@ float3 fetch_eye_pos(float2 uv)
 ////#define SSAO_OPT_DATA
 #ifndef SSAO_OPT_DATA
 #ifdef USE_MSAA
-#ifdef GBUFFER_OPTIMIZATION
-		gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d, iSample ); // this is wrong - need to correct this
+	gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d, iSample ); // this is wrong - need to correct this
 #else
-		gbuffer_data gbd = gbuffer_load_data( tap, iSample );
-#endif
-#else
-#ifdef GBUFFER_OPTIMIZATION
-		gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d ); // this is wrong - need to correct this
-#else
-		gbuffer_data gbd = gbuffer_load_data( tap );
-#endif
+	gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d ); // this is wrong - need to correct this
 #endif
 
 		//float3	tap_pos	= s_position.Sample(smp_nofilter,tap);
@@ -328,9 +320,11 @@ float horizon_occlusion2_4way(float2 deltaUV0,
 
 float4 calc_hbao(float z, float3 N, float2 tc0, float4 pos2d)
 {
+	const float ssao_kernel_size = ssao_params.y;
+	
     float3 P = uv_to_eye(tc0, z);
 
-	float2 	step_size	= float2	(.5f / 1024.0f, .5f / 768.0f)*ssao_kernel_size/max(z,1.3);
+	float2 	step_size	= float2	(.5f / 1024.0f, .5f / 768.0f)*ssao_params.y/max(z,1.3);
   	float numSteps = min ( g_NumSteps, min(step_size.x * g_Resolution.x, step_size.y * g_Resolution.y));
 	float numDirs = min ( g_NumDir, min(step_size.x / 4 * g_Resolution.x, step_size.y / 4 * g_Resolution.y));
     if( numSteps < 1.0 ) return 1.0;
@@ -341,7 +335,8 @@ float4 calc_hbao(float z, float3 N, float2 tc0, float4 pos2d)
 #ifndef HBAO_WORLD_JITTER
     float3 rand_Dir = jitter4.Load(int3((int)pos2d.x&63, (int)pos2d.y&63, 0)).xyz;
 #else
-    float3 tc1	= mul( m_v2w, float4(P,1) );
+    float3 tc1	= mul(m_invV, float4(P,1));
+	const float ssao_noise_tile_factor = ssao_params.x;
     tc1 *= ssao_noise_tile_factor;
     tc1.xz += tc1.y; 
     float3 rand_Dir = jitter4.SampleLevel(smp_jitter, tc1.xz, 0).xyz; 

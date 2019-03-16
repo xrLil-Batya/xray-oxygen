@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using XRay.SdkControls.Controls.ColorPicker;
 
 namespace XRay.SdkControls
 {
@@ -8,125 +9,96 @@ namespace XRay.SdkControls
     public sealed partial class ColorPicker : UserControl
     {
         public delegate void ColorChangedEventHandler(object sender, Color color);
-
-        private bool hexadecimal;
-        private bool ignoreOnChanged = false;
-        private bool alphaEnabled = true;
-        private HorizontalAlignment textAlignment = HorizontalAlignment.Left;
-        
-        public ColorPicker()
-        {
-            InitializeComponent();
-        }
-
         public event ColorChangedEventHandler ColorChanged;
+
+        private bool _alphaEnabled = true;
+        private HorizontalAlignment _textAlignment = HorizontalAlignment.Left;
+
+        public ColorPicker() => InitializeComponent();
 
         public Color Value
         {
-            get { return pbColor.ColorSample; }
+            get => pbColor.ColorSample;
             set
             {
-                if (pbColor.ColorSample == value)
-                    return;
-                ignoreOnChanged = true;
-                if (alphaEnabled)
-                    nslAlpha.Value = value.A;
+                //if (pbColor.ColorSample == value)
+                //    return;
+
+                byte alphaValue = _alphaEnabled ? value.A : byte.MaxValue;
+
+                nslAlpha.Value = alphaValue;
                 nslRed.Value = value.R;
                 nslGreen.Value = value.G;
                 nslBlue.Value = value.B;
-                pbColor.ColorSample = value;
-                ignoreOnChanged = false;
-                UpdateColor();
+
+                // XXX collectioner: dirty hardcode. Should be changed
+                pbColor.ColorSample = Color.FromArgb(alphaValue, value.R, value.G, value.B);
+
+				isAReversed.Visible = true;
+				isRReversed.Visible = true;
+				isGReversed.Visible = true;
+				isBReversed.Visible = true;
             }
         }
-
-        public byte Red { get; private set; }
-        public byte Green { get; private set; }
-        public byte Blue { get; private set; }
-        public byte Alpha { get; private set; }
 
         public bool AlphaEnabled
         {
-            get { return alphaEnabled; }
+            get => _alphaEnabled;
             set
             {
-                if (alphaEnabled == value)
-                    return;
-                alphaEnabled = value;
-                ignoreOnChanged = true;
-                nslAlpha.Value = nslAlpha.Maximum;
-                ignoreOnChanged = false;
-                UpdateColor();
-                lAlpha.Visible = alphaEnabled;
-                nslAlpha.Visible = alphaEnabled;
-                int delta = (alphaEnabled ? 1 : -1)*27;
-                Point loc = chkHexadecimal.Location;
-                loc.Y += delta;
-                chkHexadecimal.Location = loc;
-            }
-        }
-
-        public bool Hexadecimal
-        {
-            get { return hexadecimal; }
-            set
-            {
-                if (hexadecimal == value)
-                    return;
-                hexadecimal = value;
-                chkHexadecimal.Checked = value;
-                nslRed.Hexadecimal = value;
-                nslGreen.Hexadecimal = value;
-                nslBlue.Hexadecimal = value;
-                nslAlpha.Hexadecimal = value;
+                _alphaEnabled = value;
+                nslAlpha.Visible = value;
+                lAlpha.Visible = value;
+                nslAlpha.Value = byte.MaxValue;
             }
         }
 
         public HorizontalAlignment TextAlign
         {
-            get { return textAlignment; }
+            get => _textAlignment;
             set
             {
-                if (textAlignment == value)
+                if (Equals(_textAlignment, value))
                     return;
-                textAlignment = value;
-                nslAlpha.TextAlign = value;
-                nslRed.TextAlign = value;
-                nslGreen.TextAlign = value;
-                nslBlue.TextAlign = value;
+                _textAlignment = value;
+                //nslAlpha.TextAlign = value;
+                //nslRed.TextAlign = value;
+                //nslGreen.TextAlign = value;
+                //nslBlue.TextAlign = value;
             }
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            nslRed.ValueChanged += (obj, args) => UpdateColor();
-            nslGreen.ValueChanged += (obj, args) => UpdateColor();
-            nslBlue.ValueChanged += (obj, args) => UpdateColor();
-            nslAlpha.ValueChanged += (obj, args) => UpdateColor();
-            chkHexadecimal.CheckedChanged += (obj, args) => Hexadecimal = chkHexadecimal.Checked;
-            UpdateColor();
+
+            SubscribeOnSliderEvents();
         }
 
-        private void OnColorChanged()
+        private void SubscribeOnSliderEvents()
         {
-            if (!ignoreOnChanged && ColorChanged != null)
-                ColorChanged(this, Value);
+            foreach (var control in Controls)
+            {
+                if (!(control is NumericSlider slider)) continue;
+
+                slider.TemporaryValueChanged += UpdateColorSample;
+                slider.ValueChanged += UpdateColor;
+            }
         }
 
-        private void UpdateColor()
+        private void UpdateColor(object sender, decimal value)
         {
-            if (ignoreOnChanged)
-                return;
-            var newColor = Color.FromArgb(
-                Convert.ToInt32(nslAlpha.Value),
-                Convert.ToInt32(nslRed.Value),
-                Convert.ToInt32(nslGreen.Value),
-                Convert.ToInt32(nslBlue.Value));
-            if (pbColor.ColorSample == newColor)
-                return;
-            pbColor.ColorSample = newColor;
-            OnColorChanged();
+            UpdateColorSample(sender, value);
+
+            ColorChanged?.Invoke(this, pbColor.ColorSample);
+        }
+
+        private void UpdateColorSample(object sender, decimal value)
+        {
+            if (!(sender is NumericSlider slider)) return;
+            var currentColor = pbColor.ColorSample;
+
+            pbColor.ColorSample = currentColor.SetColorChannel(slider.Tag.ToString(), Convert.ToByte(value));
         }
     }
 }

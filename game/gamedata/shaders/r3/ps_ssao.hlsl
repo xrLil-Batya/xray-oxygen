@@ -2,31 +2,13 @@
 
 #ifndef	SSAO_QUALITY
 #ifdef USE_MSAA
-#ifdef GBUFFER_OPTIMIZATION
 float	calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, float4 pos2d, uint iSample )
-{
-	return 1.0;
-}
 #else
-float	calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, uint iSample )
-{
-	return 1.0;
-}
-#endif
-#else
-#ifdef GBUFFER_OPTIMIZATION
-
 float	calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, float4 pos2d )
+#endif
 {
 	return 1.0;
 }
-#else
-float	calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ )
-{
-	return 1.0;
-}
-#endif
-#endif
 #else	//	SSAO_QUALITY
 #if SSAO_QUALITY >= 3
 #define RINGS 3
@@ -86,13 +68,11 @@ static const float angles[5] =
 	6.2832f
 };
 #endif
-float ssao_noise_tile_factor;
-float ssao_kernel_size;
 
 Texture2D	jitter0;
 sampler		smp_jitter;
 Texture2D	jitterMipped;
-
+uniform float4 ssao_params;
 
 float3 uv_to_eye(float2 uv, float eye_z)
 {
@@ -105,19 +85,14 @@ float3 uv_to_eye(float2 uv, float eye_z)
 //	N	screen space normal of the original point
 //	tc	G-buffer coordinates of the original point
 #ifndef USE_MSAA
-#	ifdef GBUFFER_OPTIMIZATION
 float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, float4 pos2d )
-#	else
-float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ )
-#	endif
 #else
-#	ifdef GBUFFER_OPTIMIZATION
 float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, float4 pos2d, uint iSample )
-#	else
-float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, uint iSample)
-#	endif
 #endif
 {
+	const float ssao_noise_tile_factor = ssao_params.x;
+	const float ssao_kernel_size = ssao_params.y;
+
 	float point_depth = P.z;
 	if (point_depth<0.01) point_depth = 100000.0h;	//	filter for the sky
 	float2 scale = float2(.5f / 1024.h, .5f / 768.h)*ssao_kernel_size/max(point_depth,1.3);
@@ -127,7 +102,7 @@ float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, uint iSample)
 	float num_dir	= 0.0h;
 
 	// jittering
-	float3 tc1	= mul( m_v2w, float4(P,1) );
+	float3 tc1	= mul(m_invV, float4(P,1));
 	tc1 *= ssao_noise_tile_factor;
 	tc1.xz += tc1.y;
 	float2	SmallTap = jitter0.Sample( smp_jitter, tc1.xz );
@@ -148,19 +123,11 @@ float calc_ssao( float3 P, float3 N, float2 tc, float2 tcJ, uint iSample)
 				tap		+= tc;
 #ifndef SSAO_OPT_DATA
 #	ifdef USE_MSAA
-#		ifdef GBUFFER_OPTIMIZATION
-			// this is wrong - need to correct this
-			gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d, iSample ); 
-#		else
-			gbuffer_data gbd = gbuffer_load_data( tap, iSample );
-#		endif
+	// this is wrong - need to correct this
+	gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d, iSample ); 
 #	else
-#		ifdef GBUFFER_OPTIMIZATION
-			// this is wrong - need to correct this
-			gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d ); 
-#		else
-			gbuffer_data gbd = gbuffer_load_data( tap );
-#		endif
+	// this is wrong - need to correct this
+	gbuffer_data gbd = gbuffer_load_data_offset( tc, tap, pos2d ); 
 #	endif
 		float3	tap_pos	= gbd.P;
 #else // SSAO_OPT_DATA

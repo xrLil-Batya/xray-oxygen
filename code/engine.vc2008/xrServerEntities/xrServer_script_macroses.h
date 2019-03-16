@@ -114,14 +114,14 @@ class CALifeSmartTerrainTask;
 
 template <typename T>
 struct CWrapperPure : public T, public luabind::wrap_base {
-	typedef T							inherited;
+	using inherited = T;
 	typedef CWrapperPure<T>				self_type;
 	CWrapperPure						(LPCSTR section) : inherited(section){}
 };
 
 template <typename T>
 struct CWrapperAbstract : public T, public luabind::wrap_base {
-	typedef T							inherited;
+	using inherited = T;
 	typedef CWrapperAbstract<T>			self_type;
 
 	CWrapperAbstract					(LPCSTR section) : inherited(section){}
@@ -130,7 +130,7 @@ struct CWrapperAbstract : public T, public luabind::wrap_base {
 
 template <typename T>
 struct CWrapperAbstractALife : public T, public luabind::wrap_base {
-	typedef T							inherited;
+	using inherited = T;
 	typedef CWrapperAbstractALife<T>	self_type;
 	CWrapperAbstractALife				(LPCSTR section) : inherited(section){}
 	INHERIT_ALIFE;
@@ -138,7 +138,7 @@ struct CWrapperAbstractALife : public T, public luabind::wrap_base {
 
 template <typename T>
 struct CWrapperAbstractDynamicALife : public T, public luabind::wrap_base {
-	typedef T								inherited;
+	using inherited = T;
 	typedef CWrapperAbstractDynamicALife<T>	self_type;
 	CWrapperAbstractDynamicALife		(LPCSTR section) : inherited(section){}
 	INHERIT_DYNAMIC_ALIFE;
@@ -146,7 +146,7 @@ struct CWrapperAbstractDynamicALife : public T, public luabind::wrap_base {
 
 template <typename T>
 struct CWrapperAbstractOnlineOfflineGroup : public T, public luabind::wrap_base {
-	typedef T								inherited;
+	using inherited = T;
 	typedef CWrapperAbstractOnlineOfflineGroup<T>	self_type;
 	CWrapperAbstractOnlineOfflineGroup	(LPCSTR section) : inherited(section){}
 	INHERIT_ONLINE_OFFLINE_GROUP;
@@ -154,7 +154,7 @@ struct CWrapperAbstractOnlineOfflineGroup : public T, public luabind::wrap_base 
 
 template <typename T>
 struct CWrapperAbstractZone : public T, public luabind::wrap_base {
-	typedef T							inherited;
+	using inherited = T;
 	typedef CWrapperAbstractZone<T>		self_type;
 	CWrapperAbstractZone				(LPCSTR section) : inherited(section){}
 	INHERIT_ZONE;
@@ -162,7 +162,7 @@ struct CWrapperAbstractZone : public T, public luabind::wrap_base {
 
 template <typename T>
 struct CWrapperAbstractCreature : public T, public luabind::wrap_base {
-	typedef T							inherited;
+	using inherited = T;
 	typedef CWrapperAbstractCreature<T>	self_type;
 	CWrapperAbstractCreature			(LPCSTR section) : inherited(section){}
 	INHERIT_CREATURE;
@@ -170,7 +170,7 @@ struct CWrapperAbstractCreature : public T, public luabind::wrap_base {
 
 template <typename T>
 struct CWrapperAbstractMonster : public T, public luabind::wrap_base {
-	typedef T							inherited;
+	using inherited = T;
 	typedef CWrapperAbstractMonster<T>	self_type;
 	CWrapperAbstractMonster				(LPCSTR section) : inherited(section){}
 	INHERIT_MONSTER;
@@ -178,7 +178,7 @@ struct CWrapperAbstractMonster : public T, public luabind::wrap_base {
 
 template <typename T>
 struct CWrapperAbstractItem : public T, public luabind::wrap_base {
-	typedef T							inherited;
+	using inherited = T;
 	typedef CWrapperAbstractItem<T>		self_type;
 	CWrapperAbstractItem				(LPCSTR section) : inherited(section){}
 	INHERIT_ITEM;

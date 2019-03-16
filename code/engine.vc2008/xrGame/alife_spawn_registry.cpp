@@ -18,19 +18,18 @@
 #pragma warning(disable:4995)
 #include <malloc.h>
 #pragma warning(pop)
+static xrCriticalSection mtStoryBuilder;
 
 CALifeSpawnRegistry::CALifeSpawnRegistry	(LPCSTR section)
 {
 	m_spawn_name				= "";
 	seed						(u32(CPU::QPC() & 0xffffffff));
-	m_game_graph				= 0;
 	m_chunk						= 0;
 	m_file						= 0;
 }
 
 CALifeSpawnRegistry::~CALifeSpawnRegistry	()
 {
-	xr_delete					(m_game_graph);
 	m_chunk->close				();
 	FS.r_close					(m_file);
 }
@@ -102,71 +101,71 @@ static bool ignore_save_incompatibility		()
 	return						(!!strstr(Core.Params,"-ignore_save_incompatibility"));
 }
 
-void CALifeSpawnRegistry::load				(IReader &file_stream, xrGUID *save_guid)
+void CALifeSpawnRegistry::load(IReader &file_stream, xrGUID *save_guid)
 {
 	IReader						*chunk;
-	chunk						= file_stream.open_chunk(0);
-	m_header.load				(*chunk);
-	chunk->close				();
-	R_ASSERT2					(!save_guid || (*save_guid == header().guid()) || ignore_save_incompatibility(),"Saved game doesn't correspond to the spawn : DELETE SAVED GAME!");
+	chunk = file_stream.open_chunk(0);
+	m_header.load(*chunk);
+	chunk->close();
+	R_ASSERT2(!save_guid || (*save_guid == header().guid()) || ignore_save_incompatibility(), "Saved game doesn't correspond to the spawn : DELETE SAVED GAME!");
 
-	chunk						= file_stream.open_chunk(1);
-	m_spawns.load				(*chunk);
-	chunk->close				();
+	chunk = file_stream.open_chunk(1);
+	m_spawns.load(*chunk);
+	chunk->close();
 
 #if 0
 	SPAWN_GRAPH::vertex_iterator			I = m_spawns.vertices().begin();
 	SPAWN_GRAPH::vertex_iterator			E = m_spawns.vertices().end();
-	for ( ; I != E; ++I) {
+	for (; I != E; ++I) {
 		luabind::wrap_base		*base = smart_cast<luabind::wrap_base*>(&(*I).second->data()->object());
 		if (!base)
 			continue;
 
-		if (xr_strcmp((*I).second->data()->object().name_replace(),"rostok_stalker_outfit"))
+		if (xr_strcmp((*I).second->data()->object().name_replace(), "rostok_stalker_outfit"))
 			continue;
 
 		dummy					*_dummy = (dummy*)((void*)base->m_self.m_impl);
 		lua_State				**_state = &_dummy->state;
-		Msg						("0x%08x",*(int*)&_state);
+		Msg("0x%08x", *(int*)&_state);
 		break;
 	}
 #endif
 
-	chunk						= file_stream.open_chunk(2);
-	load_data					(m_artefact_spawn_positions,*chunk);
-	chunk->close				();
+	chunk = file_stream.open_chunk(2);
+	load_data(m_artefact_spawn_positions, *chunk);
+	chunk->close();
 
-	chunk						= file_stream.open_chunk(3);
-	R_ASSERT2					(chunk,"Spawn version mismatch - REBUILD SPAWN!");
-	ai().patrol_path_storage	(*chunk);
-	chunk->close				();
+	chunk = file_stream.open_chunk(3);
+	R_ASSERT2(chunk, "Spawn version mismatch - REBUILD SPAWN!");
+	ai().patrol_path_storage(*chunk);
+	chunk->close();
 
-	VERIFY						(!m_chunk);
-	m_chunk						= file_stream.open_chunk(4);
-	R_ASSERT2					(m_chunk,"Spawn version mismatch - REBUILD SPAWN!");
+	VERIFY(!m_chunk);
+	m_chunk = file_stream.open_chunk(4);
+	R_ASSERT2(m_chunk, "Spawn version mismatch - REBUILD SPAWN!");
 
-	VERIFY						(!m_game_graph);
-	m_game_graph				= xr_new<CGameGraph>(*m_chunk);
-	ai().game_graph				(m_game_graph);
+	//m_game_graph = xr_new<CGameGraph>(*m_chunk);
+	ai().create_game_graph(*m_chunk);
 	VERIFY(ai().game_graph().validate());
 
-	R_ASSERT2					((header().graph_guid() == ai().game_graph().header().guid()) || ignore_save_incompatibility(),"Spawn doesn't correspond to the graph : REBUILD SPAWN!");
+	R_ASSERT2((header().graph_guid() == ai().game_graph().header().guid()) || ignore_save_incompatibility(), "Spawn doesn't correspond to the graph : REBUILD SPAWN!");
 
-	build_story_spawns			();
+	Device.seqParallel.emplace_back(this, &CALifeSpawnRegistry::build_story_spawns);
 
-	build_root_spawns			();
+	build_root_spawns();
 
-	Msg							("* %d spawn points are successfully loaded",m_spawns.vertex_count());
+	Msg("* %d spawn points are successfully loaded", m_spawns.vertex_count());
+	mtStoryBuilder.Lock();
+	mtStoryBuilder.Unlock();
 }
 
 void CALifeSpawnRegistry::save_updates		(IWriter &stream)
 {
-	SPAWN_GRAPH::vertex_iterator			I = m_spawns.vertices().begin();
-	SPAWN_GRAPH::vertex_iterator			E = m_spawns.vertices().end();
-	for ( ; I != E; ++I) {
-        //just save level id, that's all
-		stream.open_chunk					((*I).second->vertex_id()); 
-		stream.close_chunk					();
+	//just save level id, that's all
+	for (auto &refVerticles: m_spawns.vertices())
+	{
+		stream.open_chunk(refVerticles.second->vertex_id());
+		stream.close_chunk();
 	}
 }
 
@@ -216,30 +215,19 @@ void CALifeSpawnRegistry::build_root_spawns	()
 	);
 
 	m_spawn_roots.erase						(I,m_spawn_roots.end());
-	
-#ifdef LUACP_API
-	LogXrayOffset("CALifeSpawnRegistry.spawns",		this, &this->m_spawns);
-	LogXrayOffset("CALifeSpawnRegistry.vertices",	this, &this->m_spawns.vertices());
-	if (m_spawns.vertices().size() > 0)
-	{
-		SPAWN_GRAPH::const_vertex_iterator	I = m_spawns.vertices().begin();
-		void *pVal = I._Ptr->_Myval.second;
-		void *pWrap = &I._Ptr->_Myval.second->data();
-		LogXrayOffset("CGraphVertex.CServerEntityWrapper", pVal, pWrap);
-	}
-#endif
 }
 
 void CALifeSpawnRegistry::build_story_spawns()
 {
-	SPAWN_GRAPH::const_vertex_iterator	I = m_spawns.vertices().begin();
-	SPAWN_GRAPH::const_vertex_iterator	E = m_spawns.vertices().end();
-	for ( ; I != E; ++I) {
-		CSE_ALifeObject					*object = smart_cast<CSE_ALifeObject*>(&(*I).second->data()->object());
-		VERIFY							(object);
+	mtStoryBuilder.Lock();
+
+	for (auto &refVetricles: m_spawns.vertices())
+	{
+		CSE_ALifeObject *object = smart_cast<CSE_ALifeObject*>(&refVetricles.second->data()->object());
 		if (object->m_spawn_story_id == INVALID_SPAWN_STORY_ID)
 			continue;
 
-		m_spawn_story_ids.insert		(std::make_pair(object->m_spawn_story_id,(*I).first));
+		m_spawn_story_ids.insert(std::make_pair(object->m_spawn_story_id, refVetricles.first));
 	}
+	mtStoryBuilder.Unlock();
 }

@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: editor_environment_thunderbolts_gradient.cpp
 //	Created 	: 04.01.2008
 //  Modified 	: 10.01.2008
@@ -32,20 +32,20 @@ gradient::~gradient	()
 void gradient::load	(CInifile& config, shared_str const& section_id, LPCSTR prefix)
 {
 	string_path			temp;
-	shader				= config.r_string	(section_id, strconcat(sizeof(temp), temp, prefix, "_shader"));
-	texture				= config.r_string	(section_id, strconcat(sizeof(temp), temp, prefix, "_texture"));
-	fOpacity			= config.r_float	(section_id, strconcat(sizeof(temp), temp, prefix, "_opacity"));
-	fRadius				= config.r_fvector2	(section_id, strconcat(sizeof(temp), temp, prefix, "_radius"));
+	shader				= config.r_string	(section_id, xr_strconcat(temp, prefix, "_shader"));
+	texture				= config.r_string	(section_id, xr_strconcat(temp, prefix, "_texture"));
+	fOpacity			= config.r_float	(section_id, xr_strconcat(temp, prefix, "_opacity"));
+	fRadius				= config.r_fvector2	(section_id, xr_strconcat(temp, prefix, "_radius"));
 	m_pFlare->CreateShader	(*shader,*texture);
 }
 
 void gradient::save	(CInifile& config, shared_str const& section_id, LPCSTR prefix)
 {
 	string_path			temp;
-	config.w_string		(section_id.c_str(), strconcat(sizeof(temp), temp, prefix, "_shader" ),	shader.c_str()	);
-	config.w_string		(section_id.c_str(), strconcat(sizeof(temp), temp, prefix, "_texture"),	texture.c_str()	);
-	config.w_float		(section_id.c_str(), strconcat(sizeof(temp), temp, prefix, "_opacity"),	fOpacity		);
-	config.w_fvector2	(section_id.c_str(), strconcat(sizeof(temp), temp, prefix, "_radius" ),	fRadius			);
+	config.w_string		(section_id.c_str(), xr_strconcat(temp, prefix, "_shader" ),	shader.c_str()	);
+	config.w_string		(section_id.c_str(), xr_strconcat(temp, prefix, "_texture"),	texture.c_str()	);
+	config.w_float		(section_id.c_str(), xr_strconcat(temp, prefix, "_opacity"),	fOpacity		);
+	config.w_fvector2	(section_id.c_str(), xr_strconcat(temp, prefix, "_radius" ),	fRadius			);
 }
 
 LPCSTR gradient::shader_getter	() const

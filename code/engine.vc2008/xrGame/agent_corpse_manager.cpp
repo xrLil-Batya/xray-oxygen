@@ -38,23 +38,22 @@ struct CRemoveOfflineCorpsesPredicate {
 
 bool CAgentCorpseManager::process_corpse	(CMemberOrder &member)
 {
-	float			min_dist_sqr = flt_max;
-	CMemberCorpse	*best_corpse = 0;
-	xr_vector<CMemberCorpse>::iterator	I = m_corpses.begin();
-	xr_vector<CMemberCorpse>::iterator	E = m_corpses.end();
-	for ( ; I != E; ++I) {
-		if (!member.object().memory().visual().visible_now((*I).corpse()))
+	float min_dist_sqr = flt_max;
+	CMemberCorpse *best_corpse = nullptr;
+
+	for (CMemberCorpse &ObjMember : m_corpses)
+	{
+		if (!member.object().memory().visual().visible_now(ObjMember.corpse()))
 			continue;
 
-		float		dist_sqr = (*I).corpse()->Position().distance_to_sqr(member.object().Position());
-		if (dist_sqr < min_dist_sqr) {
-			if	(
-					(*I).reactor() && 
-					((*I).reactor()->Position().distance_to_sqr((*I).corpse()->Position()) <= min_dist_sqr)
-				)
+		float dist_sqr = ObjMember.corpse()->Position().distance_to_sqr(member.object().Position());
+		if (dist_sqr < min_dist_sqr) 
+		{
+			if(ObjMember.reactor() && (ObjMember.reactor()->Position().distance_to_sqr(ObjMember.corpse()->Position()) <= min_dist_sqr))
 				continue;
+
 			min_dist_sqr	= dist_sqr;
-			best_corpse		= &*I;
+			best_corpse		= &ObjMember;
 		}
 	}
 	
@@ -65,54 +64,38 @@ bool CAgentCorpseManager::process_corpse	(CMemberOrder &member)
 	return					(true);
 }
 
-void CAgentCorpseManager::react_on_member_death			()
+void CAgentCorpseManager::react_on_member_death()
 {
-	for (;;) {
-		bool						changed = false;
-		CAgentMemberManager::MEMBER_STORAGE::iterator	I = object().member().combat_members().begin();
-		CAgentMemberManager::MEMBER_STORAGE::iterator	E = object().member().combat_members().end();
-		for ( ; I != E; ++I)
-			if (!(*I)->member_death_reaction().m_processing)
-				changed				= process_corpse(**I);
+	while (true)
+	{
+		bool changed = false;
+		for (CMemberOrder* pMember : object().member().combat_members())
+		{
+			if (!pMember->member_death_reaction().m_processing)
+				changed = process_corpse(*pMember);
+		}
 
 		if (!changed)
 			break;
 	}
 
+	for (CMemberCorpse &ObjectMember : m_corpses)
 	{
-		MEMBER_CORPSES::iterator	I = m_corpses.begin();
-		MEMBER_CORPSES::iterator	E = m_corpses.end();
-		for ( ; I != E; ++I) {
-			if (!(*I).reactor())
-				continue;
+		if (!ObjectMember.reactor())
+			continue;
 
-			CMemberOrder::CMemberDeathReaction	&reaction = object().member().member((*I).reactor()).member_death_reaction();
-			reaction.m_member		= (*I).corpse();
-			reaction.m_time			= (*I).time();
-			reaction.m_processing	= true;
-		}
-
-		m_corpses.erase				(
-			std::remove_if(
-				m_corpses.begin(),
-				m_corpses.end(),
-				CRemoveMemberCorpsesPredicate()
-			),
-			m_corpses.end()
-		);
+		CMemberOrder::CMemberDeathReaction	&reaction = object().member().member(ObjectMember.reactor()).member_death_reaction();
+		reaction.m_member = ObjectMember.corpse();
+		reaction.m_time = ObjectMember.time();
+		reaction.m_processing = true;
 	}
+
+	m_corpses.erase(std::remove_if(m_corpses.begin(), m_corpses.end(), CRemoveMemberCorpsesPredicate()), m_corpses.end());
 }
 
 void CAgentCorpseManager::remove_links	(CObject *object)
 {
-	m_corpses.erase				(
-		std::remove_if(
-			m_corpses.begin(),
-			m_corpses.end(),
-			CRemoveOfflineCorpsesPredicate(object)
-		),
-		m_corpses.end()
-	);
+	m_corpses.erase(std::remove_if(m_corpses.begin(), m_corpses.end(), CRemoveOfflineCorpsesPredicate(object)), m_corpses.end());
 }
 
 void CAgentCorpseManager::update		()

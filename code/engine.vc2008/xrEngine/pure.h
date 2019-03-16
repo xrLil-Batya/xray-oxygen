@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // messages
 #define REG_PRIORITY_LOW		0x11111111ul
@@ -26,12 +26,16 @@ DECLARE_MESSAGE(Singlethreaded);
 
 
 
+
+
 //-----------------------------------------------------------------------------
 struct _REG_INFO {
 	void*	Object;
 	int		Prio;
 	u32		Flags;
 };
+
+
 
 template <class T> class CRegistrator		// the registrator itself
 {
@@ -68,27 +72,35 @@ public:
 		if(in_process)		changed=true;
 		else Resort			( );
 	};
+
+
 	void Remove	(T *obj)
 	{
-		for (u32 i=0; i<R.size(); i++) {
-			if (R[i].Object==obj) R[i].Prio = REG_PRIORITY_INVALID;
+
+		for (u32 i = 0; i < R.size(); i++) {
+			if (R[i].Object == obj) R[i].Prio = REG_PRIORITY_INVALID;
 		}
+
 		if(in_process)		changed=true;
 		else Resort			( );
 	};
-	void Process(RP_FUNC *f)
+	
+
+	void Process(RP_FUNC f)
 	{
+		
 		in_process = true;
     	if (R.empty()) return;
 		if (R[0].Prio==REG_PRIORITY_CAPTURE)	f(R[0].Object);
 		else {
-			for (u32 i=0; i<R.size(); i++)
-				if(R[i].Prio!=REG_PRIORITY_INVALID)
-					f(R[i].Object);
 
+			for (u32 i = 0; i < R.size(); i++)
+				if (R[i].Prio != REG_PRIORITY_INVALID)
+					f(R[i].Object);
 		}
 		if(changed)	Resort();
 		in_process = false;
+
 	};
 	void Resort(void)
 	{

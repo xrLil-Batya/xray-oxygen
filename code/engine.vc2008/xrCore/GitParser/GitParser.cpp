@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////
+////////////////////////////////////////////////////
 // Author: ForserX
 // Task  : Parsing current branch and commit hash
 ////////////////////////////////////////////////////
@@ -10,13 +10,20 @@
 #include <istream>
 #include <sstream>
 
+#if __has_include("hack.appveyor")
+#define ITS_CI_BUILD
+// https://www.appveyor.com/docs/environment-variables/
+#define NewStr(str) #str
+#define xstr(ToStr) NewStr(ToStr)
+#endif 
+
 std::vector<std::string> Split(std::string Str, size_t StrSize, char splitCh) noexcept
 {
 	std::vector<std::string> Result;
 	std::string temp_str = Str;
 
 	size_t SubStrBeginCursor = 0;
-	size_t Len;
+	size_t Len = 0;
 	for (size_t StrCursor = 0; StrCursor < StrSize; ++StrCursor)
 	{
 		if (Str[StrCursor] == splitCh)
@@ -38,11 +45,11 @@ std::vector<std::string> Split(std::string Str, size_t StrSize, char splitCh) no
 
 int main()
 {
-#ifndef APPVEYOR
-	std::ifstream *Reader;
+#ifndef ITS_CI_BUILD
+	std::ifstream *Reader = nullptr;
 	std::string PathFile = "../../../.git/";
 
-	// Получаем ветку
+	// Get repo data 
 	std::vector<std::string> Directories;
 	std::string BranchName;
 	Reader = new std::ifstream(PathFile + "HEAD");
@@ -50,29 +57,29 @@ int main()
 	Directories = Split(BranchName, BranchName.size(), '/');
 	BranchName = Directories[Directories.size() - 1];
 
-	// Получаем файл
+	// РџРѕР»СѓС‡Р°РµРј С„Р°Р№Р»
 	PathFile += "refs/heads/" + BranchName;
 	Reader->close();
 	Reader = new std::ifstream(PathFile);
 
-	// Получаем хеш коммита
+	// РџРѕР»СѓС‡Р°РµРј С…РµС€ РєРѕРјРјРёС‚Р°
 	std::string hash;
 	std::getline(*Reader, hash);
 	Reader->close();
 	delete Reader;
 #endif
-	// Создаём буффер
+	// Запишем полученные данные в oxy_version
 	std::stringstream HeaderString;
 	HeaderString << "#pragma once" << std::endl;
 	
-#ifdef APPVEYOR
-	HeaderString << "#define _BRANCH " << "\"" << #APPVEYOR_REPO_BRANCH << "\"" << std::endl;
-	HeaderString << "#define _HASH " << "\"" << #APPVEYOR_REPO_COMMIT << "\"" << std::endl;
+#ifdef ITS_CI_BUILD
+	HeaderString << "#define _AUTHOR " << "\"" << xstr(APPVEYOR_REPO_COMMIT_AUTHOR) << "\"" << std::endl;
+	HeaderString << "#define _BRANCH " << "\"" << xstr(APPVEYOR_REPO_BRANCH) << "\"" << std::endl;
+	HeaderString << "#define _HASH " << "\"" << xstr(APPVEYOR_REPO_COMMIT) << "\"" << std::endl;
 #else
 	HeaderString << "#define _BRANCH " << "\"" << BranchName << "\"" << std::endl;
 	HeaderString << "#define _HASH " << "\"" << hash << "\"" << std::endl;
 #endif
-
 	std::ofstream Writter("oxy_version.h");
 	Writter.write(HeaderString.str().c_str(), HeaderString.str().size());
 	Writter.close();

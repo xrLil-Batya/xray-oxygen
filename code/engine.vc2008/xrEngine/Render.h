@@ -1,4 +1,4 @@
-#ifndef _RENDER_H_
+﻿#ifndef _RENDER_H_
 #define _RENDER_H_
 
 #include "../xrCDB/frustum.h"
@@ -149,11 +149,10 @@ class	ENGINE_API	IRender_interface
 public:
 	enum ScreenshotMode
 	{
-		SM_NORMAL					= 0,		// jpeg,	name ignored
-		SM_FOR_CUBEMAP				= 1,		// tga,		name used as postfix
+		SM_NORMAL					= 0,		// png,		name ignored
+		SM_FOR_CUBEMAP				= 1,		// bmp,		name used as postfix
 		SM_FOR_GAMESAVE				= 2,		// dds/dxt1,name used as full-path
-		SM_FOR_LEVELMAP				= 3,		// tga,		name used as postfix (level_name)
-		SM_FOR_MPSENDING			= 4,
+		SM_FOR_LEVELMAP				= 3,		// bmp,		name used as postfix (level_name)
 		SM_forcedword				= u32(-1)
 	};
 public:
@@ -166,10 +165,8 @@ public:
 	// data
 	CFrustum						ViewBase;
 	CFrustum*						View;
-public:
-	// feature level
-	virtual bool					is_sun_static			() =0;
 
+public:
 	// Loading / Unloading
 	virtual	void					create					()											= 0;
 	virtual	void					destroy					()											= 0;
@@ -213,8 +210,10 @@ public:
 	virtual	void					add_Occluder			(Fbox2&	bb_screenspace	)					= 0;	// mask screen region as oclluded (-1..1, -1..1)
 	virtual void					add_Visual				(IRenderVisual*	V	)					= 0;	// add visual leaf	(no culling performed at all)
 	virtual void					add_Geometry			(IRenderVisual*	V	)					= 0;	// add visual(s)	(all culling performed)
+	// Добавить отметку на материале
 	virtual void					add_StaticWallmark		(const wm_shader& S, const Fvector& P, float s, CDB::TRI* T, Fvector* V)=0;
-	//	Prefer this function when possible
+	///	Prefer this function when possible
+	// Добавить отметку на материале
 	virtual void					add_StaticWallmark		(IWallMarkArray *pArray, const Fvector& P, float s, CDB::TRI* T, Fvector* V)=0;
 	virtual void					clear_static_wallmarks	()=0;
 	//	Prefer this function when possible
@@ -247,13 +246,10 @@ public:
 	// Main
 	virtual void					Calculate				()											= 0;
 	virtual void					Render					()											= 0;
-	virtual void                    BeforeWorldRender       ()                                          = 0; // ����� ����������� ����
-	virtual void                    AfterWorldRender        ()                                         = 0; // ����� ���������� ���� (�� UI)
-	
-	virtual void					Screenshot				(ScreenshotMode mode=SM_NORMAL, LPCSTR name = 0) = 0;
-	virtual	void					Screenshot				(ScreenshotMode mode, CMemoryWriter& memory_writer) = 0;
-	virtual void					ScreenshotAsyncBegin	() = 0;
-	virtual void					ScreenshotAsyncEnd		(CMemoryWriter& memory_writer) = 0;
+	virtual void                    BeforeWorldRender       ()                                          = 0; // Перед рендерингом мира
+	virtual void                    AfterWorldRender        ()											= 0; // После рендеринга мира (до UI)
+
+	virtual void					Screenshot				(ScreenshotMode mode = SM_NORMAL, LPCSTR name = nullptr) = 0;
 
 	// Render mode
 	virtual void					rmNear					()											= 0;
@@ -262,12 +258,14 @@ public:
 	virtual u32						memory_usage			()											= 0;
 	virtual u32                     active_phase            ()                                          = 0;
 
+	// Editor specific
+	//virtual void					StaticInit() = 0;
+	//virtual void					StaticDestroy() = 0;
+	//virtual u32						ShaderLoad(LPCSTR ShaderName, LPCSTR ShaderTextureList, LPCSTR ShaderConstantList, LPCSTR ShaderMatrixList) = 0;
+	//virtual IRenderVisual*			LoadVisualFromData(void* pVertexData, u32 VertexCount, void* pIndiciesData, u32 IndiciesCount) = 0;
+
 	// Constructor/destructor
 	virtual ~IRender_interface();
-protected:
-	virtual	void					ScreenshotImpl			(ScreenshotMode mode, LPCSTR name, CMemoryWriter* memory_writer) = 0;
 };
-
-//extern ENGINE_API	IRender_interface*	Render;
 
 #endif

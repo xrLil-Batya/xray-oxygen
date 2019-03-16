@@ -3,7 +3,7 @@
 //----------------------------------------------------
 #ifndef ETextureParamsH
 #define ETextureParamsH
-class INetReader;
+class IReader;
 #pragma pack(push,1)
 //struct ECORE_API STextureParams{
 struct		 STextureParams{
@@ -126,7 +126,7 @@ struct		 STextureParams{
 	}
     IC BOOL HasAlpha()
     { 
-    	// исходная текстура содержит альфа канал
+    	// РёСЃС…РѕРґРЅР°СЏ С‚РµРєСЃС‚СѓСЂР° СЃРѕРґРµСЂР¶РёС‚ Р°Р»СЊС„Р° РєР°РЅР°Р»
     	return flags.is(flHasAlpha);
     }
 	IC BOOL HasSurface()const
@@ -137,7 +137,7 @@ struct		 STextureParams{
 	{
 		flags.set( flHasSurface, val );
 	}
-	IC BOOL HasAlphaChannel() // игровая текстура содержит альфа канал
+	IC BOOL HasAlphaChannel() // РёРіСЂРѕРІР°СЏ С‚РµРєСЃС‚СѓСЂР° СЃРѕРґРµСЂР¶РёС‚ Р°Р»СЊС„Р° РєР°РЅР°Р»
 	{
 		switch (fmt)
 		{
@@ -154,7 +154,7 @@ struct		 STextureParams{
 	}
     void Load (IReader& F);
     void Save (IWriter& F);
-	void read ( INetReader	&r );
+	void read ( IReader	&r );
 	void write( IWriter	&w ) const ;
 #ifdef _EDITOR
 	PropValue::TOnChange			OnTypeChangeEvent;

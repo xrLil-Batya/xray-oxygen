@@ -20,7 +20,7 @@
 #include "graph_engine.h"
 #include "../xrEngine/x_ray.h"
 #include "restriction_space.h"
-#include "profiler.h"
+#include "../xrEngine/profiler.h"
 #include "GamePersistent.h"
 
 #ifdef DEBUG
@@ -30,7 +30,7 @@
 
 using namespace ALife;
 
-extern string_path g_last_saved_game;
+extern string_path ENGINE_API g_last_saved_game;
 
 class CSwitchPredicate {
 private:
@@ -74,15 +74,10 @@ CALifeUpdateManager::CALifeUpdateManager	(xrServer *server, LPCSTR section) :
 	m_first_time			= true;
 }
 
-CALifeUpdateManager::~CALifeUpdateManager	()
+CALifeUpdateManager::~CALifeUpdateManager()
 {
-	shedule_unregister		();
-	Device.remove_from_seq_parallel	(
-		fastdelegate::FastDelegate0<>(
-			this,
-			&CALifeUpdateManager::update
-		)
-	);
+	shedule_unregister();
+	Device.remove_from_seq_parallel(xrDelegate<void()>(BindDelegate(this, &CALifeUpdateManager::update)));
 }
 
 float CALifeUpdateManager::shedule_Scale	()
@@ -124,14 +119,14 @@ void CALifeUpdateManager::shedule_Update	(u32 dt)
 
 	if (!m_first_time) 
 	{
-		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CALifeUpdateManager::update));
+		Device.seqParallel.emplace_back(this, &CALifeUpdateManager::update);
 		return;
 	}
 
 	m_first_time					= false;
 
 	START_PROFILE("ALife/update")
-	update							();
+	Device.seqParallel.emplace_back(this, &CALifeUpdateManager::update);
 	STOP_PROFILE
 }
 
@@ -175,7 +170,7 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 	u32								holder_safe_level_vertex_id = u32(-1);
 	Fvector							holder_safe_position = Fvector().set(flt_max,flt_max,flt_max);
 	Fvector							holder_safe_angles = Fvector().set(flt_max,flt_max,flt_max);
-	CSE_ALifeObject					*holder = 0;
+	CSE_ALifeObject					*holder = nullptr;
 
 	net_packet.r					(&graph().actor()->m_tGraphID,sizeof(graph().actor()->m_tGraphID));
 	net_packet.r					(&graph().actor()->m_tNodeID,sizeof(graph().actor()->m_tNodeID));
@@ -203,12 +198,12 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 	}
 
 	string256						autoave_name;
-	strconcat						(sizeof(autoave_name),autoave_name,Core.UserName," - ","autosave");
+	xr_strconcat					(autoave_name,Core.UserName," - ","autosave");
     shared_str                      serverOption = GamePersistent().GetServerOption();
 	LPCSTR							temp0 = strstr(*serverOption,"/");
 	VERIFY							(temp0);
 	string256						temp;
-    GamePersistent().SetServerOption(strconcat(sizeof(temp), temp, autoave_name, temp0));
+    GamePersistent().SetServerOption(xr_strconcat(temp, autoave_name, temp0));
 	
 	save							(autoave_name);
 
@@ -270,13 +265,14 @@ void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_onl
 
 	xr_strcpy								(g_last_saved_game,game_name);
 
-	if (new_only || !CALifeStorageManager::load(game_name)) {
+	if (new_only || !CALifeStorageManager::load(game_name)) 
+	{
 		R_ASSERT3						(new_only || no_assert && xr_strlen(game_name),"Cannot find the specified saved game ",game_name);
 		new_game						(game_name);
 	}
 
 	if(g_pGameLevel)
-		Level().OnAlifeSimulatorLoaded();
+		Level().ResetLevel();
 
 #ifdef DEBUG
 	Msg									("* Loading alife simulator is successfully completed (%7.3f Mb)",float(Memory.mem_usage() - memory_usage)/1048576.0);
@@ -296,7 +292,7 @@ bool CALifeUpdateManager::load_game		(LPCSTR game_name, bool no_assert)
 {
 	{
 		string_path				temp,file_name;
-		strconcat				(sizeof(temp),temp,game_name,SAVE_EXTENSION);
+		xr_strconcat			(temp,game_name,SAVE_EXTENSION);
 		FS.update_path			(file_name,"$game_saves$",temp);
 		if (!FS.exist(file_name)) {
 			R_ASSERT3			(no_assert,"There is no saved game ",file_name);
@@ -308,7 +304,7 @@ bool CALifeUpdateManager::load_game		(LPCSTR game_name, bool no_assert)
 	xr_strcpy					(S,*serverOption);
 	LPSTR						temp = strchr(S,'/');
 	R_ASSERT2					(temp,"Invalid server options!");
-	strconcat					(sizeof(S1),S1,game_name,temp);
+	xr_strconcat				(S1,game_name,temp);
     GamePersistent().SetServerOption(S1);
 	return						(true);
 }
@@ -339,7 +335,7 @@ void CALifeUpdateManager::jump_to_level			(LPCSTR level_name) const
 	const CGameGraph::SLevel			&level = ai().game_graph().header().level(level_name);
 	GameGraph::_GRAPH_ID				dest = GameGraph::_GRAPH_ID(-1);
 	GraphEngineSpace::CGameLevelParams	evaluator(level.id());
-	bool								failed = !ai().graph_engine().search(ai().game_graph(),graph().actor()->m_tGraphID,GameGraph::_GRAPH_ID(-1),0,evaluator);
+	bool								failed = !ai().graph_engine().search(ai().game_graph(),graph().actor()->m_tGraphID,GameGraph::_GRAPH_ID(-1),nullptr,evaluator);
 	if (failed) {
 #ifndef MASTER_GOLD
 		Msg								("! Cannot build path via game graph from the current level to the level %s!",level_name);

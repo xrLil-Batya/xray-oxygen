@@ -1,7 +1,6 @@
 #pragma once
-
-#include "UIStatic.h"
-#include "UIDialogWnd.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UIDialogWnd.h"
 
 class CUIDragItem;
 class CUIDragDropListEx;
@@ -13,6 +12,7 @@ class ICustomDrawCellItem
 public:
 	virtual				~ICustomDrawCellItem	()	{};
 	virtual void		OnDraw					(CUICellItem* cell)	= 0;
+	
 };
 
 class ICustomDrawDragItem
@@ -43,6 +43,8 @@ protected:
 public:
 							CUICellItem				();
 	virtual					~CUICellItem			();
+
+	
 
 	virtual		bool		OnKeyboardAction				(int dik, EUIMessages keyboard_action);
 	virtual		bool		OnMouseAction					(float x, float y, EUIMessages mouse_action);

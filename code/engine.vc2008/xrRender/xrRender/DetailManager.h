@@ -43,19 +43,19 @@ extern float	ps_current_detail_height;
 class ECORE_API CDetailManager
 {
 public:
-	struct	SlotItem	{								// один кустик
+	struct	SlotItem	{								// РѕРґРёРЅ РєСѓСЃС‚РёРє
 		float						scale;
 		float						scale_calculated;
 		Fmatrix						mRotY;
-		u32							vis_ID;				// индекс в visibility списке он же тип [не качается, качается1, качается2]
+		u32							vis_ID;				// РёРЅРґРµРєСЃ РІ visibility СЃРїРёСЃРєРµ РѕРЅ Р¶Рµ С‚РёРї [РЅРµ РєР°С‡Р°РµС‚СЃСЏ, РєР°С‡Р°РµС‚СЃСЏ1, РєР°С‡Р°РµС‚СЃСЏ2]
 		float						c_hemi;
 		float						c_sun;
 	};
 	using SlotItemVec = xr_vector<SlotItem*>;
 	struct	SlotPart	{                              	// 
-		u32							id;					// ID модельки
-		SlotItemVec					items;              // список кустиков
-		SlotItemVec					r_items[3];         // список кустиков for render
+		u32							id;					// ID РјРѕРґРµР»СЊРєРё
+		SlotItemVec					items;              // СЃРїРёСЃРѕРє РєСѓСЃС‚РёРєРѕРІ
+		SlotItemVec					r_items[3];         // СЃРїРёСЃРѕРє РєСѓСЃС‚РёРєРѕРІ for render
 	};
 	enum	SlotType	{
 		stReady						= 0,				// Ready to use
@@ -63,13 +63,13 @@ public:
 
 		stFORCEDWORD				= 0xffffffff
 	};
-	struct	Slot		{								// распакованый слот размером DETAIL_SLOT_SIZE
+	struct	Slot		{								// СЂР°СЃРїР°РєРѕРІР°РЅС‹Р№ СЃР»РѕС‚ СЂР°Р·РјРµСЂРѕРј DETAIL_SLOT_SIZE
 		struct{
 			u32						empty	:1;
 			u32						type	:1;
 			u32						frame	:30;
 		};
-		int							sx,sz;				// координаты слота X x Y
+		int							sx,sz;				// РєРѕРѕСЂРґРёРЅР°С‚С‹ СЃР»РѕС‚Р° X x Y
 		vis_data					vis;				// 
 		SlotPart					G[dm_obj_in_slot];	// 
 
@@ -124,7 +124,7 @@ public:
 	int								cache_cx;
 	int								cache_cz;
 
-	PSS								poolSI;										// pool из которого выделяются SlotItem
+	PSS								poolSI;										// pool РёР· РєРѕС‚РѕСЂРѕРіРѕ РІС‹РґРµР»СЏСЋС‚СЃСЏ SlotItem
 
 	void							UpdateVisibleM	();
 	void							UpdateVisibleS	();
@@ -158,11 +158,11 @@ public:
 	void							hw_Load_Shaders	();
 	void							hw_Unload		();
 	void							hw_Render		();
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX11
 	void							hw_Render_dump	(const Fvector4 &consts, const Fvector4 &wave, const Fvector4 &wind, u32 var_id, u32 lod_id);
-#else	//	USE_DX10
+#else
 	void							hw_Render_dump	(ref_constant array, u32 var_id, u32 lod_id, u32 c_base);
-#endif	//	USE_DX10
+#endif
 
 public:
 	// get unpacked slot
@@ -186,7 +186,7 @@ public:
 	void							Render			();
 
 	/// MT stuff
-	std::recursive_mutex				MT;
+	xrCriticalSection				MTLock;
 	volatile u32					m_frame_calc;
 	volatile u32					m_frame_rendered;
 

@@ -1,12 +1,13 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #pragma hdrstop
-
 #include "xr_input.h"
 #include "IInputReceiver.h"
 #include "../include/editor/ide.hpp"
 #include "../FrayBuildConfig.hpp"
+#include "OffSetOfWrapper.inl"
+#include "IGame_AnselSDK.h"
 
-CInput *	pInput = NULL;
+CInput *	pInput = nullptr;
 IInputReceiver		dummyController;
 
 ENGINE_API float	psMouseSens = 1.f;
@@ -42,7 +43,12 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 	g_exclusive = !!bExclusive;
 
 	Log("Starting INPUT device...");
-
+#ifdef RAW_INPUT_USE
+	char inputBuffer[sizeof(RAWINPUT)] = {};
+	UINT inputBufferSize = sizeof(RAWINPUT);
+	GetRawInputData(DataInput, RID_INPUT, inputBuffer, &inputBufferSize, sizeof(RAWINPUTHEADER));
+	pDI = reinterpret_cast<RAWINPUT*>(inputBuffer);
+#else
 	pDI = NULL;
 	pMouse = NULL;
 	pKeyboard = NULL;
@@ -58,9 +64,22 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 
 	//===================== Dummy pack
 	iCapture(&dummyController);
+#endif
 
+#ifdef RAW_INPUT_USE
+	Mouse.usUsagePage = 1;
+	Mouse.usUsage = 2;
+	Mouse.dwFlags = RIDEV_CAPTUREMOUSE;
+	Mouse.hwndTarget = Device.m_hWnd;
+	RegisterRawInputDevices(&Mouse, 1, sizeof(Mouse));
+
+	KeyBoard.usUsagePage = 1;
+	KeyBoard.usUsage = 6;
+	KeyBoard.dwFlags = RIDEV_APPKEYS;
+	KeyBoard.hwndTarget = Device.m_hWnd;
+	RegisterRawInputDevices(&KeyBoard, 1, sizeof(KeyBoard));
+#else
 	if (!pDI) CHK_DX(DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&pDI, NULL));
-
 	u32 kb_input_flags = ((bExclusive) ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND;
 	u32 mouse_input_flags = ((bExclusive) ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY;
 
@@ -70,25 +89,24 @@ CInput::CInput(BOOL bExclusive, int deviceForInit)
 	// MOUSE
 	if (deviceForInit & mouse_device_key)
 		CHK_DX(CreateInputDevice(&pMouse, GUID_SysMouse, &c_dfDIMouse2, mouse_input_flags, MOUSEBUFFERSIZE));
+#endif
 
 	Debug.set_on_dialog(&on_error_dialog);
 
-#ifdef ENGINE_BUILD
 	Device.seqAppActivate.Add(this);
 	Device.seqAppDeactivate.Add(this, REG_PRIORITY_HIGH);
 	Device.seqFrame.Add(this, REG_PRIORITY_HIGH);
-#endif
 }
 
 CInput::~CInput(void)
 {
-#ifdef ENGINE_BUILD
 	Device.seqFrame.Remove(this);
 	Device.seqAppDeactivate.Remove(this);
 	Device.seqAppActivate.Remove(this);
-#endif
 	//_______________________
-
+#ifdef RAW_INPUT_USE
+	xr_delete(pDI);
+#else
 	// Unacquire and release the device's interfaces
 	if (pMouse) {
 		pMouse->Unacquire();
@@ -102,12 +120,27 @@ CInput::~CInput(void)
 
 	_SHOW_REF("Input: ", pDI);
 	_RELEASE(pDI);
+#endif
 }
 
 //-----------------------------------------------------------------------------
 // Name: CreateInputDevice()
 // Desc: Create a DirectInput device.
 //-----------------------------------------------------------------------------
+#ifdef RAW_INPUT_USE
+HRESULT CInput::CreateInputDevice(RAWINPUTDEVICE* device, GUID guidDevice, RID_DEVICE_INFO* pdidDataFormat, u32 dwFlags, u32 buf_size)
+{
+	// Obtain an interface to the input device
+	GetRegisteredRawInputDevices(device, 0, buf_size);
+
+	// Set the device data format. Note: a data format specifies which
+	// controls on a device we are interested in, and how they should be
+	// reported.
+
+	GetRawInputDeviceInfo(device, RIDI_DEVICEINFO, pdidDataFormat, (u32*)buf_size);
+	return S_OK;
+}
+#else
 HRESULT CInput::CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice, const DIDATAFORMAT* pdidDataFormat, u32 dwFlags, u32 buf_size)
 {
 	// Obtain an interface to the input device
@@ -126,7 +159,7 @@ HRESULT CInput::CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice,
 	{
 		HRESULT	_hr = (*device)->SetCooperativeLevel(RDEVICE.m_hWnd, dwFlags);
 		if (FAILED(_hr) && (_hr == E_NOTIMPL)) Msg("! INPUT: Can't set coop level. Emulation???");
-		else R_CHK(_hr);
+		//else R_CHK(_hr);
 	}
 
 	// setup the buffer size for the keyboard data
@@ -158,6 +191,7 @@ void CInput::SetKBDAcquire(BOOL bAcquire)
 {
 	if (pKeyboard)	bAcquire ? pKeyboard->Acquire() : pKeyboard->Unacquire();
 }
+#endif
 //-----------------------------------------------------------------------
 BOOL b_altF4 = FALSE;
 void CInput::KeyUpdate()
@@ -300,11 +334,10 @@ void CInput::MouseUpdate()
 			return;
 	};
 
-#ifndef _EDITOR
 	if (Device.dwPrecacheFrame)
 		return;
-#endif
-	BOOL				mouse_prev[COUNT_MOUSE_BUTTONS];
+
+	BOOL mouse_prev[COUNT_MOUSE_BUTTONS];
 	for(u16 i = 0; i < 8; i++)
 		mouse_prev[i] = mouseState[i];
 
@@ -521,11 +554,14 @@ void CInput::OnAppDeactivate(void)
 
 void CInput::OnFrame(void)
 {
-	RDEVICE.Statistic->Input.Begin();
+	ScopeStatTimer frameTimer(Device.Statistic->Engine_InputFrame);
 	dwCurTime = RDEVICE.TimerAsync_MMT();
-	if (pKeyboard)	KeyUpdate();
-	if (pMouse)		MouseUpdate();
-	RDEVICE.Statistic->Input.End();
+
+	if (Device.dwPrecacheFrame == 0 && !pGameAnsel->isActive)
+	{
+		KeyUpdate();
+		MouseUpdate();
+	}
 }
 
 IInputReceiver*	 CInput::CurrentIR()

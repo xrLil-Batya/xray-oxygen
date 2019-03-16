@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: editor_environment_ambients_ambient.cpp
 //	Created 	: 04.01.2008
 //  Modified 	: 04.01.2008
@@ -86,7 +86,7 @@ void ambient::load			(
 	)
 {
 	VERIFY					(m_load_section == section);
-	inherited::load			(
+	inherited::Load			(
 		ambients_config,
 		sound_channels_config,
 		effects_config,
@@ -116,53 +116,58 @@ void ambient::load			(
 	}
 }
 
-void ambient::save			(CInifile& config)
+void ambient::save(CInifile& config)
 {
 	u32						count = 1;
 	LPSTR					temp = 0;
 	{
 		sound_container_type::const_iterator	b = m_sound_channels_ids.begin(), i = b;
 		sound_container_type::const_iterator	e = m_sound_channels_ids.end();
-		for ( ; i != e; ++i)
-			count			+= (*i)->id().size() + 2;
+		for (; i != e; ++i)
+			count += (*i)->id().size() + 2;
 
-		temp				= (LPSTR)_alloca(count*sizeof(char));
-		*temp				= 0;
-		for (i = b; i != e; ++i) {
+		temp = new char[count];
+		*temp = 0;
+		for (i = b; i != e; ++i)
+		{
 			if (i == b) {
-				xr_strcpy	(temp, count, (*i)->id().c_str());
+				xr_strcpy(temp, count, (*i)->id().c_str());
 				continue;
 			}
 
-			xr_strcat		(temp, count, ", ");
-			xr_strcat		(temp, count, (*i)->id().c_str());
+			xr_strcat(temp, count, ", ");
+			xr_strcat(temp, count, (*i)->id().c_str());
 		}
 	}
 
-	config.w_string			(m_load_section.c_str(), "sound_channels",	  temp);
-	config.w_float			(m_load_section.c_str(), "min_effect_period", float(m_effect_period.x)/1000.f);
-	config.w_float			(m_load_section.c_str(), "max_effect_period", float(m_effect_period.y)/1000.f);
+	config.w_string(m_load_section.c_str(), "sound_channels", temp);
+	config.w_float(m_load_section.c_str(), "min_effect_period", float(m_effect_period.x) / 1000.f);
+	config.w_float(m_load_section.c_str(), "max_effect_period", float(m_effect_period.y) / 1000.f);
 
 	{
-		count				= 1;
+		count = 1;
 		effect_container_type::const_iterator	b = m_effects_ids.begin(), i = b;
 		effect_container_type::const_iterator	e = m_effects_ids.end();
-		for ( ; i != e; ++i)
-			count			+= (*i)->id().size() + 2;
+		for (; i != e; ++i)
+			count += (*i)->id().size() + 2;
 
-		temp				= (LPSTR)_alloca(count*sizeof(char));
-		*temp				= 0;
-		for (i = b; i != e; ++i) {
-			if (i == b) {
-				xr_strcpy	(temp, count, (*i)->id().c_str());
+		temp = new char[count];
+		*temp = 0;
+		for (i = b; i != e; ++i) 
+		{
+			if (i == b) 
+			{
+				xr_strcpy(temp, count, (*i)->id().c_str());
 				continue;
 			}
 
-			xr_strcat		(temp, count, ", ");
-			xr_strcat		(temp, count, (*i)->id().c_str());
+			xr_strcat(temp, count, ", ");
+			xr_strcat(temp, count, (*i)->id().c_str());
 		}
+		xr_delete(temp);
 	}
-	config.w_string			(m_load_section.c_str(), "effects", temp);
+	config.w_string(m_load_section.c_str(), "effects", temp);
+	xr_delete(temp);
 }
 
 LPCSTR ambient::id_getter						() const

@@ -10,7 +10,7 @@
 #include "script_lanim.h"
 #include "../xrEngine/LightAnimLibrary.h"
 
-
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 struct lanim_wrapper
@@ -36,7 +36,7 @@ public:
 	}
 };
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void lanim_registrator::script_register(lua_State *L)
 {
 	module(L)

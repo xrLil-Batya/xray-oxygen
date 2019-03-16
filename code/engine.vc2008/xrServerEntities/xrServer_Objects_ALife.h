@@ -24,7 +24,6 @@
 	class 	CALifeSimulator;
 #endif
 
-class CSE_ALifeItemWeapon;
 class CSE_ALifeDynamicObject;
 class CSE_ALifeObject;
 #ifdef XRGAME_EXPORTS
@@ -52,7 +51,6 @@ struct  SFillPropData
 };
 
 SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeSchedulable,IPureSchedulableObject)
-	CSE_ALifeItemWeapon				*m_tpCurrentBestWeapon;
 	CSE_ALifeDynamicObject			*m_tpBestDetector;
 	u64								m_schedule_counter;
 
@@ -63,7 +61,7 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeSchedulable,IPureSchedulableObject)
 	virtual const CSE_Abstract		*base					() const = 0;
 	virtual CSE_Abstract			*init					();
 	virtual CSE_ALifeSchedulable	*cast_schedulable		() {return this;};
-	virtual CSE_Abstract			*cast_abstract			() {return 0;};
+	virtual CSE_Abstract			*cast_abstract			() {return nullptr;};
 	// end of the virtual inheritance dependant code
 	virtual bool					need_update				(CSE_ALifeDynamicObject *object);
 	virtual u32						ef_creature_type		() const;
@@ -73,7 +71,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeSchedulable,IPureSchedulableObject)
 	virtual bool					natural_weapon			() const {return true;}
 	virtual bool					natural_detector		() const {return true;}
 #ifdef XRGAME_EXPORTS
-	virtual	CSE_ALifeItemWeapon		*tpfGetBestWeapon		(ALife::EHitType		&tHitType,			float		&fHitPower) = 0;
 	virtual bool					bfPerformAttack			()											{return(true);};
 	virtual	void					vfUpdateWeaponAmmo		()											{};
 	virtual	void					vfProcessItems			()											{};
@@ -121,7 +118,7 @@ SERVER_ENTITY_DECLARE_BEGIN2(CSE_ALifeObject,CSE_Abstract,CRandom)
 	};
 
 public:
-	typedef CSE_Abstract inherited;
+	using inherited = CSE_Abstract;
 	GameGraph::_GRAPH_ID			m_tGraphID;
 	float							m_fDistance;
 	bool							m_bOnline;
@@ -178,7 +175,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeGroupAbstract)
 	virtual CSE_Abstract			*base					() = 0;
 	virtual const CSE_Abstract		*base					() const = 0;
 	virtual CSE_ALifeGroupAbstract	*cast_group_abstract	() {return this;};
-	virtual CSE_Abstract			*cast_abstract			() {return 0;};
+	virtual CSE_Abstract			*cast_abstract			() {return nullptr;};
 #ifdef XRGAME_EXPORTS
 	virtual	bool					synchronize_location	();
 	virtual	void					try_switch_online		();
@@ -192,8 +189,8 @@ add_to_type_list(CSE_ALifeGroupAbstract)
 #define script_type_list save_type_list(CSE_ALifeGroupAbstract)
 
 template<class __A> class CSE_ALifeGroupTemplate : public __A, public CSE_ALifeGroupAbstract {
-	typedef __A					inherited1;
-	typedef CSE_ALifeGroupAbstract inherited2;
+	using inherited1 = __A;
+	using inherited2 = CSE_ALifeGroupAbstract;
 public:
 									CSE_ALifeGroupTemplate(LPCSTR caSection) : __A(pSettings->line_exist(caSection,"monster_section") ? pSettings->r_string(caSection,"monster_section") : caSection), CSE_ALifeGroupAbstract(caSection)
 	{
@@ -386,7 +383,6 @@ SERVER_ENTITY_DECLARE_BEGIN2(CSE_ALifeSmartZone,CSE_ALifeSpaceRestrictor,CSE_ALi
 	virtual CSE_ALifeSmartZone		*cast_smart_zone			() {return this;};
 #ifdef XRGAME_EXPORTS
 	virtual bool					bfActive					();
-	virtual	CSE_ALifeItemWeapon		*tpfGetBestWeapon			(ALife::EHitType		&tHitType,			float		&fHitPower);
 	virtual CSE_ALifeDynamicObject	*tpfGetBestDetector			();
 	virtual	ALife::EMeetActionType	tfGetActionType				(CSE_ALifeSchedulable	*tpALifeSchedulable,int			iGroupIndex, bool bMutualDetection);
 	// additional functionality
@@ -394,7 +390,7 @@ SERVER_ENTITY_DECLARE_BEGIN2(CSE_ALifeSmartZone,CSE_ALifeSpaceRestrictor,CSE_ALi
 	virtual float					suitable					(CSE_ALifeMonsterAbstract *object) const {return 0.f;};
 	virtual void					register_npc				(CSE_ALifeMonsterAbstract *object) {};
 	virtual void					unregister_npc				(CSE_ALifeMonsterAbstract *object) {};
-	virtual	CALifeSmartTerrainTask	*task						(CSE_ALifeMonsterAbstract *object) {return 0;};
+	virtual	CALifeSmartTerrainTask	*task						(CSE_ALifeMonsterAbstract *object) {return nullptr;};
 #endif
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeSmartZone)

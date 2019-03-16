@@ -12,6 +12,7 @@
 #include "ai_space.h"
 #include "script_engine.h"
 #include "../xrServerEntities/object_broker.h"
+#include <luabind/luabind.hpp>
 
 using smart_cover::detail::parse_table;
 using smart_cover::detail::parse_string;
@@ -41,10 +42,8 @@ bool action::applicable			() const
 {
 	luabind::functor<bool>		functor;
 
-	R_ASSERT2					(
-		ai().script_engine().functor(m_precondition_functor.c_str(),functor), 
-		make_string("failed to get [%s]", m_precondition_functor.c_str())
-	);
+	R_ASSERT_FORMAT(ai().script_engine().functor(m_precondition_functor.c_str(),functor), 
+		"failed to get [%s]", m_precondition_functor.c_str());
 
 	return						(functor(m_precondition_params.c_str()));
 }
@@ -95,13 +94,6 @@ animation_action const &action::animation	(MonsterSpace::EBodyState const &targe
 #endif // #ifndef MASTER_GOLD
 		return					(animation());
 	}
-
-#if 0 //for testing
-	VERIFY2						(
-		found != m_animations.end(),
-		make_string("There is no animation which can transfer bot to body_state [%i]", target_body_state)
-	);
-#endif
 
 	return						(**found);
 }

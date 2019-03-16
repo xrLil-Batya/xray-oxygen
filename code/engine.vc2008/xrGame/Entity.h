@@ -14,24 +14,39 @@ class	CWeaponList;
 class   CPHMovementControl;
 class	CHudItem;
 
-class CEntity : 
+class GAME_API CEntity : 
 		public CPhysicsShellHolder,
 		public CDamageManager
 {
 	friend class CEntityCondition;
 private:
-	typedef	CPhysicsShellHolder		inherited;			
+	using inherited =	CPhysicsShellHolder;			
 	CEntityConditionSimple*			m_entity_condition;
 
 protected:
-	//âðåìÿ ÷åðåç êîòîðîå ìåðòâîå òåëî óáèðåòñÿ ñ óðîâíÿ
+	//Ð²Ñ€ÐµÐ¼Ñ Ñ‡ÐµÑ€ÐµÐ· ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ðµ Ð¼ÐµÑ€Ñ‚Ð²Ð¾Ðµ Ñ‚ÐµÐ»Ð¾ ÑƒÐ±Ð¸Ñ€ÐµÑ‚ÑÑ Ñ ÑƒÑ€Ð¾Ð²Ð½Ñ
 	ALife::_TIME_ID					m_dwBodyRemoveTime;	
 protected:
 	virtual	CEntityConditionSimple	*create_entity_condition	(CEntityConditionSimple* ec);
 
 public:
-	IC float					GetfHealth			() const			{ return m_entity_condition->GetHealth(); }
-	IC float					SetfHealth			(float value)		{ m_entity_condition->SetHealth( value ) ; return value;}
+	IC float					GetfHealth			() const			
+	{
+		if (m_entity_condition != nullptr)
+		{
+			return m_entity_condition->GetHealth(); 
+		}
+		return 0.0f;
+	}
+	IC float					SetfHealth			(float value)		
+	{ 
+		if (m_entity_condition != nullptr)
+		{
+			m_entity_condition->SetHealth( value ); 
+		}
+		return value;
+	}
+
 	float						m_fMorale;
 	// Team params
 	int							id_Team;
@@ -75,7 +90,7 @@ public:
 /*	virtual*/ IC float			GetMaxHealth		()const	{ return m_entity_condition->max_health();	}
 /*	virtual*/ IC void			SetMaxHealth		(float v)	{ m_entity_condition->max_health()=v;}
 
-	/*virtual*/ IC BOOL		g_Alive				()const	{ return GetfHealth()>0; }
+	virtual BOOL			g_Alive				()const	{ return GetfHealth()>0; }
 	virtual BOOL			g_State				(SEntityState&) const	{return FALSE;}
 	
 			bool			AlreadyDie			()			{return  0!=GetLevelDeathTime()?true:false;}

@@ -17,6 +17,7 @@ class CGameGraph;
 #include "game_graph_space.h"
 
 class CPatrolPoint : public IPureSerializeObject<IReader,IWriter> {
+	friend class CPatrolPointScript;
 protected:
 	shared_str							m_name;
 	Fvector								m_position;
@@ -31,9 +32,9 @@ protected:
 #endif
 
 private:
-	IC		void						correct_position	(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph);
+	IC void correct_position (const CLevelGraph *level_graph, const CGameLevelCrossTable *cross);
 #ifdef DEBUG
-			void						verify_vertex_id	(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph) const;
+			void verify_vertex_id (const CLevelGraph *level_graph, const CGameLevelCrossTable *cross) const;
 #endif
 
 public:
@@ -41,13 +42,13 @@ public:
 										CPatrolPoint		(const CPatrolPath *path = 0);
 	virtual	void						load				(IReader &stream);
 	virtual	void						save				(IWriter &stream);
-			CPatrolPoint				&load_raw			(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph, IReader &stream);
+			CPatrolPoint				&position			(Fvector position);
+			CPatrolPoint				&load_raw			(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, IReader &stream);
 	IC		const Fvector				&position			() const;
-	IC		const u32					&level_vertex_id	(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph) const;
-	IC		const GameGraph::_GRAPH_ID	&game_vertex_id		(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, const CGameGraph *game_graph) const;
+	IC		const u32					&level_vertex_id	(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross) const;
+	IC		const GameGraph::_GRAPH_ID	&game_vertex_id		(const CLevelGraph *level_graph, const CGameLevelCrossTable *cross) const;
 	IC		const u32					&flags				() const;
 	IC		const shared_str			&name				() const;
-
 public:
 #ifdef XRGAME_EXPORTS
 			const u32					&level_vertex_id	() const;

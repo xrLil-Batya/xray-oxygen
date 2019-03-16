@@ -1,0 +1,10 @@
+function register(object_factory)
+end
+
+function get_game_clsid(game_type_option, is_server)
+	if is_server then
+		return "SV_SINGL"
+	else
+		return "CL_SINGL"	
+	end
+end

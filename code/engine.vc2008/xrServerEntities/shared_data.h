@@ -16,7 +16,7 @@ public:
 	
 	static			void DestroySingleton	()	{
 		if(!_self) return;
-		Log			("DestroySingleton::RefCounter:",_refcount);
+		Msg			("DestroySingleton::RefCounter: %d",_refcount);
 		VERIFY(_on_self_delete == false); 
 		VERIFY(_refcount == 0);
 		xr_delete(_self);
@@ -45,7 +45,7 @@ template <class T> bool CSingleton<T>::_on_self_delete	= true;
 template<class SHARED_TYPE, class KEY_TYPE> class CSharedObj : public CSingleton<CSharedObj<SHARED_TYPE, KEY_TYPE> >
 {
 	xr_map<KEY_TYPE, SHARED_TYPE*> _shared_tab;	
-	typedef typename xr_map<KEY_TYPE, SHARED_TYPE*>::iterator SHARED_DATA_MAP_IT;
+	using SHARED_DATA_MAP_IT = typename xr_map<KEY_TYPE, SHARED_TYPE*>::iterator;
 
 public:
 				CSharedObj	() {};
@@ -108,7 +108,7 @@ public:
 	const SHARED_TYPE		*get_sd			() const	{return _sd;}
 	
 	
-	// управление загрузкой данных при компонентном подходе (загрузка данных вручную)
+	// СѓРїСЂР°РІР»РµРЅРёРµ Р·Р°РіСЂСѓР·РєРѕР№ РґР°РЅРЅС‹С… РїСЂРё РєРѕРјРїРѕРЅРµРЅС‚РЅРѕРј РїРѕРґС…РѕРґРµ (Р·Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РІСЂСѓС‡РЅСѓСЋ)
 	bool start_load_shared	 (KEY_TYPE key){ 
 		_sd = pSharedObj->get_shared(key);
 		if (get_sd()->IsLoaded()) return false;

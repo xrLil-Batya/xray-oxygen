@@ -1,4 +1,4 @@
-// CDemoPlay.h: interface for the CDemoPlay class.
+﻿// CDemoPlay.h: interface for the CDemoPlay class.
 //
 //////////////////////////////////////////////////////////////////////
 

@@ -31,7 +31,7 @@ void CLightmap::Capture(CDeflector *D, int b_u, int b_v, int s_u, int s_v, BOOL 
 	D->RemapUV(tris, b_u + BORDER, b_v + BORDER, s_u - 2 * BORDER, s_v - 2 * BORDER, c_LMAP_size, c_LMAP_size, bRotated);
 
 	// Capture faces and setup their coords
-	for (auto &tris_iter: tris)
+	for (UVtri& tris_iter: tris)
 	{
 		Face *F = tris_iter.owner;
 		F->lmap_layer = this;
@@ -46,7 +46,7 @@ void CLightmap::Capture(CDeflector *D, int b_u, int b_v, int s_u, int s_v, BOOL 
 		u32 real_W = (L.width + 2 * BORDER);
 		blit(lm, c_LMAP_size, c_LMAP_size, L, real_W, real_H, b_u, b_v, 254 - BORDER);
 	}
-	else 
+	else
 	{
 		u32 real_H = (L.height + 2 * BORDER);
 		u32 real_W = (L.width + 2 * BORDER);
@@ -58,10 +58,10 @@ void CLightmap::Save(LPCSTR path)
 {
 	static int lmapNameID = 0; ++lmapNameID;
 
-	Phase("Saving...");
+	Logger.Phase("Saving...");
 
 	// Borders correction
-	Status("Borders...");
+	Logger.Status("Borders...");
 	for (u32 _y = 0; _y<c_LMAP_size; _y++)
 	{
 		for (u32 _x = 0; _x<c_LMAP_size; _x++)
@@ -70,11 +70,12 @@ void CLightmap::Save(LPCSTR path)
 			if (lm.marker[offset] >= (254 - BORDER))	lm.marker[offset] = 255; else lm.marker[offset] = 0;
 		}
 	}
-	for (u32 ref = 254; ref>(254 - 16); ref--) {
+	for (u32 ref = 254; ref>(254 - 16); ref--) 
+	{
 		ApplyBorders(lm, ref);
-		Progress(1.f - float(ref) / float(254 - 16));
+		Logger.Progress(1.f - float(ref) / float(254 - 16));
 	}
-	Progress(1.f);
+	Logger.Progress(1.f);
 
 	xr_vector<u32> lm_packed;
 	lm.Pack(lm_packed);
@@ -88,7 +89,7 @@ void CLightmap::Save(LPCSTR path)
 
 	lm.destroy();
 
-	Status("Compression base...");
+	Logger.Status("Compression base...");
 	{
 		string_path				FN;
 		xr_sprintf(lm_texture.name, "lmap#%d", lmapNameID);
@@ -106,7 +107,7 @@ void CLightmap::Save(LPCSTR path)
 		DXTCompress(FN, raw_data, 0, w, h, pitch, &fmt, 4);
 	}
 	lm_packed.clear();
-	Status("Compression hemi...");
+	Logger.Status("Compression hemi...");
 	{
 		u32 w = lm_texture.dwWidth;
 		u32 h = lm_texture.dwHeight;
@@ -124,10 +125,9 @@ void CLightmap::Save(LPCSTR path)
 		fmt.flags.set(STextureParams::flBinaryAlpha, FALSE);
 		DXTCompress(FN, raw_data, 0, w, h, pitch, &fmt, 4);
 	}
-
-
 }
-void CLightmap::read(INetReader	&r)
+
+void CLightmap::read(IReader	&r)
 {
 	lm.read(r);
 	::read(r, lm_texture);

@@ -59,7 +59,7 @@ void CRocketLauncher::AttachRocket(u16 rocket_id, CGameObject* parent_rocket_lau
 void CRocketLauncher::DetachRocket(u16 rocket_id, bool bLaunch)
 {
 	// Object may disappear
-	if (Level().Objects.net_Find(rocket_id) == 0)
+	if (Level().Objects.net_Find(rocket_id) == nullptr)
 	{
 		Msg("[RocketLauncher]: object %d is not found!", rocket_id);
 		return;

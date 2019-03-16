@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "iinputreceiver.h"
 #include "effector.h"
@@ -14,11 +14,13 @@ private:
 			bool	set_position;
 			Fvector p;
 	} g_position;
+
+	Fmatrix m_Camera;
+
 	int			iCount;
 	IWriter*	file;
 	Fvector		m_HPB;
 	Fvector		m_Position;
-	Fmatrix		m_Camera;
 	u32			m_Stage;
 
 	Fvector		m_vT;

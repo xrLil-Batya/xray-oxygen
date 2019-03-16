@@ -1,5 +1,3 @@
-#ifndef xrsharedmemH	
-#define xrsharedmemH
 #pragma once
 
 #pragma pack(push,4)
@@ -44,9 +42,7 @@ class		XRCORE_API	smem_container
 {
 private:
 	typedef xr_vector<smem_value*>		cdb;
-#ifndef _CLR_MANAGER
-    std::recursive_mutex				cs;
-#endif
+    xrCriticalSection					cs;
 	cdb									container;
 public:
 	smem_value*			dock			(u32 dwCRC, u32 dwLength, void* ptr);
@@ -56,6 +52,8 @@ public:
 						~smem_container	();
 };
 XRCORE_API	extern		smem_container*	g_pSharedMemoryContainer;
+XRCORE_API	extern		bool			g_pSharedMemoryContainer_isDestroyed;
+
 
 //////////////////////////////////////////////////////////////////////////
 template <class T>
@@ -77,6 +75,11 @@ public:
 
 	void				create		(u32 dwCRC, u32 dwLength, T* ptr)
 	{
+		if (g_pSharedMemoryContainer == nullptr)
+		{
+			R_ASSERT(!g_pSharedMemoryContainer_isDestroyed);
+			g_pSharedMemoryContainer = new smem_container();
+		}
 		smem_value* v	= g_pSharedMemoryContainer->dock(dwCRC,dwLength*sizeof(T),ptr); 
 		if (0!=v)		v->dwReference++; _dec(); p_ = v;	
 	}
@@ -116,5 +119,3 @@ template<class T>
 IC void swap			(ref_smem<T> & lhs, ref_smem<T> & rhs)			{ lhs.swap(rhs);				}
 
 #pragma pack(pop)
-
-#endif

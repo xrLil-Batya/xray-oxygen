@@ -1,4 +1,4 @@
-#ifndef perlinH
+﻿#ifndef perlinH
 #define perlinH
 
 #define SAMPLE_SIZE 256

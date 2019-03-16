@@ -258,7 +258,7 @@ void xrCompressor::CompressOne(LPCSTR path)
 			c_size_real = (u32)src->length();
 			if (0 != c_size_real)
 			{
-				u32 c_size_max = rtc_csize(src->length());
+				u32 c_size_max = XRay::Compress::RT::RtcSize(src->length());
 				u8*	c_data = xr_alloc<u8>(c_size_max);
 
 				t_compress.Begin();
@@ -326,19 +326,20 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 	string_path		fname;
 	string128		s_num;
 
-	if (strstr(KeysList, "-xdb")) {
-		strconcat(sizeof(fname), fname, tgt_folder, ".xdb", itoa(num, s_num, 20));
+	if (strstr(KeysList, "-xdb"))
+	{
+		xr_strconcat(fname, tgt_folder, ".xdb", itoa(num, s_num, 20));
 	}
-	if (strstr(KeysList, "-db")) {
-		strconcat(sizeof(fname), fname, tgt_folder, ".db", itoa(num, s_num, 20));
+	if (strstr(KeysList, "-db")) 
+	{
+		xr_strconcat(fname, tgt_folder, ".db", itoa(num, s_num, 20));
 	}
 
 	unlink(fname);
-	FS.update_path(fname, "$fs_root$", fname); // FX to LostAlphaRus: Èñïðàâëåíèå êîñÿêà ïûñ. Áåç // â íàçâàíèè ñîçäà¸òñÿ ïàïêà, à íå ôàéë
+	FS.update_path(fname, "$fs_root$", fname); // FX to LostAlphaRus: Ð˜ÑÐ¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ ÐºÐ¾ÑÑÐºÐ° Ð¿Ñ‹Ñ. Ð‘ÐµÐ· // Ð² Ð½Ð°Ð·Ð²Ð°Ð½Ð¸Ð¸ ÑÐ¾Ð·Ð´Ð°Ñ‘Ñ‚ÑÑ Ð¿Ð°Ð¿ÐºÐ°, Ð° Ð½Ðµ Ñ„Ð°Ð¹Ð»
 
 	if (strstr(KeysList, "-delete"))
 	{
-		MessageBox(0, fname, "", 0);
 		if (FS.exist(fname))
 		{
 			remove(fname);
@@ -361,17 +362,16 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 	{
 		CMemoryWriter			W;
 		CInifile::Sect&	S = config_ltx->r_section("header");
-		CInifile::SectCIt it = S.Data.begin();
-		CInifile::SectCIt it_e = S.Data.end();
 		string4096				buff;
-		xr_sprintf(buff, "[%s]", S.Name.c_str());
+		sprintf(buff, "[%s]", S.Name.c_str());
 		W.w_string(buff);
-		for (; it != it_e; ++it)
+
+		for (auto &it: S.Data)
 		{
-			const CInifile::Item& I = *it;
-			xr_sprintf(buff, "%s = %s", I.first.c_str(), I.second.c_str());
+			sprintf(buff, "%s = %s", it.first.c_str(), it.second.c_str());
 			W.w_string(buff);
 		}
+
 		W.seek(0);
 		IReader	R(W.pointer(), (u32)W.size());
 		
@@ -507,17 +507,17 @@ bool xrCompressor::IsFolderAccepted(CInifile& ltx, LPCSTR path, BOOL& recurse)
 	if (ltx.section_exist("exclude_folders"))
 	{
 		CInifile::Sect& ef_sect = ltx.r_section("exclude_folders");
-		for (CInifile::SectCIt ef_it = ef_sect.Data.begin(); ef_it != ef_sect.Data.end(); ef_it++)
+		for (auto &ef_it : ef_sect.Data)
 		{
-			recurse = CInifile::IsBOOL(ef_it->second.c_str());
+			recurse = CInifile::IsBOOL(ef_it.second.c_str());
 			if (recurse)
 			{
-				if (path == strstr(path, ef_it->first.c_str()))
+				if (path == strstr(path, ef_it.first.c_str()))
 					return false;
 			}
 			else
 			{
-				if (0 == xr_strcmp(path, ef_it->first.c_str()))
+				if (0 == xr_strcmp(path, ef_it.first.c_str()))
 					return false;
 			}
 		}
@@ -539,13 +539,13 @@ void xrCompressor::ProcessLTX(CInifile& ltx)
 	{
 		CInifile::Sect& if_sect = ltx.r_section("include_folders");
 
-		for (CInifile::SectCIt if_it = if_sect.Data.begin(); if_it != if_sect.Data.end(); ++if_it)
+		for (auto &if_it : if_sect.Data)
 		{
-			BOOL ifRecurse = CInifile::IsBOOL(if_it->second.c_str());
+			BOOL ifRecurse = CInifile::IsBOOL(if_it.second.c_str());
 			u32 folder_mask = FS_ListFolders | (ifRecurse ? 0 : FS_RootOnly);
 
 			string_path path;
-			LPCSTR _path = 0 == xr_strcmp(if_it->first.c_str(), ".\\") ? "" : if_it->first.c_str();
+			LPCSTR _path = 0 == xr_strcmp(if_it.first.c_str(), ".\\") ? "" : if_it.first.c_str();
 			xr_strcpy(path, _path);
 			u32 path_len = xr_strlen(path);
 			if ((0 != path_len) && (path[path_len - 1] != '\\')) xr_strcat(path, "\\");
@@ -592,14 +592,14 @@ void xrCompressor::ProcessLTX(CInifile& ltx)
 				Msg("-F: %s", path);
 			}
 		}
-	}//if(ltx.section_exist("include_folders"))
+	}
 
 	if (ltx.section_exist("include_files"))
 	{
 		CInifile::Sect& if_sect = ltx.r_section("include_files");
-		for (CInifile::SectCIt if_it = if_sect.Data.begin(); if_it != if_sect.Data.end(); ++if_it)
+		for (auto &if_it : if_sect.Data)
 		{
-			files_list->push_back(xr_strdup(if_it->first.c_str()));
+			files_list->push_back(xr_strdup(if_it.first.c_str()));
 		}
 	}
 

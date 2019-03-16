@@ -10,8 +10,8 @@
 
 #include "property_collection_forward.hpp"
 
-struct SThunderboltDesc;
-struct SThunderboltCollection;
+class CThunderboltDesc;
+class CThunderboltCollection;
 
 namespace editor {
 
@@ -36,8 +36,8 @@ public:
 			void			load		();
 			void			save		();
 			void			fill		(editor::property_holder* holder);
-			SThunderboltDesc*		description		(CInifile& config, shared_str const& section) const;
-			SThunderboltCollection*	get_collection	(shared_str const& section);
+			CThunderboltDesc*		description		(CInifile& config, shared_str const& section) const;
+			CThunderboltCollection*	get_collection	(shared_str const& section);
 
 public:
 			shared_str		unique_thunderbolt_id	(shared_str const& id) const;
@@ -72,12 +72,12 @@ private:
 			>							collection_collection_type;
 
 private:
-			float xr_stdcall altitude_getter		() const;
-			void xr_stdcall  altitude_setter		(float value);
-			float xr_stdcall longitude_getter		() const;
-			void xr_stdcall  longitude_setter		(float value);
-			float xr_stdcall tilt_getter			() const;
-			void xr_stdcall	 tilt_setter			(float value);
+			float  altitude_getter		() const;
+			void   altitude_setter		(float value);
+			float  longitude_getter		() const;
+			void   longitude_setter		(float value);
+			float  tilt_getter			() const;
+			void 	 tilt_setter			(float value);
 
 private:
 	thunderbolt_container_type			m_thunderbolts;

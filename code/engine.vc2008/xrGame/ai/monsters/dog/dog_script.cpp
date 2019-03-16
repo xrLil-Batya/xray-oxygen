@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "dog.h"
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

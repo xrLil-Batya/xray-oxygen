@@ -4,125 +4,72 @@
 #include "xrLc_globaldata.h"
 #pragma comment(lib,"xrCore.lib")
 #pragma comment(lib,"xrCDB.lib")
+#pragma comment(lib,"xrLCUtil.lib")
 #pragma comment(lib,"FreeImage.lib")
 #ifdef _MANAGED
 #pragma managed(push, off)
 #endif
+#include "../xrInterface/cl_cast.hpp"
 
-i_lc_log *lc_log	= 0;
+XRLC_LIGHT_API LevelCompilerLoggerWindow& Logger = LevelCompilerLoggerWindow::instance();
 
-void __cdecl	clLog( const char *format, ...)
+XRLC_LIGHT_API CThread::LogFunc ProxyMsg = cdecl_cast(
+	[](const char *format, ...)
 {
-	va_list		mark;
-	char buf	[4*256];
-	va_start	( mark, format );
-	vsprintf	( buf, format, mark );
-
-	if(!lc_log)
-	{
-		Msg( "clMsg: %s", buf );
-		return;
-	}
-
-	VERIFY			( lc_log );
-	lc_log->clLog	( buf );
+	va_list args;
+	va_start(args, format);
+	Logger.clMsgV(format, args);
+	va_end(args);
 }
-void __cdecl clMsg( const char *format, ...)
+);
+
+XRLC_LIGHT_API CThreadManager::ReportStatusFunc ProxyStatus = cdecl_cast(
+	[](const char *format, ...)
 {
-	va_list		mark;
-	char buf	[4*256];
-	va_start	( mark, format );
-	vsprintf	( buf, format, mark );
-
-	if(!lc_log)
-	{
-		Msg( "clMsg: %s", buf );
-		return;
-	}
-
-	VERIFY			( lc_log );
-	lc_log->clMsg	( buf );
+	va_list args;
+	va_start(args, format);
+	Logger.StatusV(format, args);
+	va_end(args);
 }
+);
 
-void __cdecl Status	(const char *format, ...)
-{
-	va_list				mark;
-	va_start			( mark, format );
+XRLC_LIGHT_API CThreadManager::ReportProgressFunc ProxyProgress = cdecl_cast(
+	[](float progress)
+{ Logger.Progress(progress); }
+);
 
-	char				status	[1024	]	="";
-	vsprintf			( status, format, mark );
-
-	if(!lc_log)
-	{
-		Msg( "Status: %s", status );
-		return;
-	}
-
-	//strconcat			( sizeof(status), status, "    | %s", status ); 
-	VERIFY				( lc_log );
-	lc_log->Status		(status);
-	
-}
-void Phase		( LPCSTR phase_name )
-{
-	if(!lc_log)
-	{
-		Msg( "Phase: %s", phase_name );
-		return;
-	}
-	
-	VERIFY				( lc_log );
-	lc_log->Phase		( phase_name );
-}
-void Progress	( const float F )
-{
-	if(!lc_log)
-	{
-		Msg( "Progress: %f", F );
-		return;
-	}
-
-	VERIFY				( lc_log );
-	lc_log->Progress		( F );
-}
-
-b_params	&g_params()
+b_params &g_params()
 {
 	VERIFY(inlc_global_data());
 	return inlc_global_data()->g_params();
 }
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
-    
-		switch(ul_reason_for_call) {
-		case DLL_PROCESS_ATTACH:
-			{
-				Debug._initialize	(false);
-				bool init_log	=  (0 != xr_strcmp( Core.ApplicationName, "XRayEditorTools" ));
-				Core._initialize	("xrLC_Light",0, TRUE, "fsgame.ltx");
-				if( init_log )
-					CreateLog( );
-				
-				//FPU::m64r	();
-				break;
-			}
-		case DLL_THREAD_ATTACH:
-			break;
-		case DLL_THREAD_DETACH:
-			break;
-		case DLL_PROCESS_DETACH:
-			if(inlc_global_data())
-				destroy_global_data();
-			Core._destroy();
-			break;
+	switch (ul_reason_for_call)
+	{
+	case DLL_PROCESS_ATTACH:
+	{
+		Debug._initialize();
+		bool init_log = (0 != xr_strcmp(Core.ApplicationName, "XRayEditorTools"));
+		Core._initialize("xrLC_Light", 0, TRUE, "fsgame.ltx");
+		if (init_log)
+			xrLogger::InitLog();
+
+		//FPU::m64r	();
+		break;
+	}
+	case DLL_THREAD_ATTACH:
+		break;
+	case DLL_THREAD_DETACH:
+		break;
+	case DLL_PROCESS_DETACH:
+		if (inlc_global_data())
+			destroy_global_data();
+		Core._destroy();
+		break;
 	}
 	return TRUE;
-	
-
 }
 
 #ifdef _MANAGED

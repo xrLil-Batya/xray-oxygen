@@ -8,29 +8,27 @@
 #include "stdafx.h"
 #include "UISecondTaskWnd.h"
 
-#include "xrUIXmlParser.h"
-#include "UIXmlInit.h"
-#include "UIHelper.h"
+#include "../xrUICore/xrUIXmlParser.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIHelper.h"
 
-#include "UIFrameWindow.h"
-#include "UIScrollView.h"
-#include "UIStatic.h"
-#include "UI3tButton.h"
-#include "UICheckButton.h"
-#include "UIFrameLineWnd.h"
-#include "UIFixedScrollBar.h"
-#include "UIHint.h"
+#include "../xrUICore/UIFrameWindow.h"
+#include "../xrUICore/UIScrollView.h"
+#include "../xrUICore/UIStatic.h"
+#include "../xrUICore/UI3tButton.h"
+#include "../xrUICore/UICheckButton.h"
+#include "../xrUICore/UIFrameLineWnd.h"
+#include "../xrUICore/UIFixedScrollBar.h"
+#include "../xrUICore/UIHint.h"
 #include "UITaskWnd.h"
 
 #include "../GameTaskDefs.h"
 #include "../gametask.h"
 #include "../map_location.h"
 #include "UIInventoryUtilities.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 #include "../level.h"
-#include "../gametaskmanager.h"
-#include "../actor.h"
-
+#include "../GametaskManager.h"
 
 UITaskListWnd::UITaskListWnd()
 {
@@ -41,32 +39,32 @@ UITaskListWnd::~UITaskListWnd()
 {
 }
 
-void UITaskListWnd::init_from_xml( CUIXml& xml, LPCSTR path )
+void UITaskListWnd::init_from_xml(CUIXml& xml, LPCSTR path)
 {
-	VERIFY( hint_wnd );
-	CUIXmlInit::InitWindow( xml, path, 0, this );
+	VERIFY(hint_wnd);
+	CUIXmlInit::InitWindow(xml, path, 0, this);
 
 	XML_NODE*  stored_root = xml.GetLocalRoot();
-	XML_NODE*  tmpl_root   = xml.NavigateToNode( path, 0 );
-	xml.SetLocalRoot( tmpl_root );
-	
-	m_background = UIHelper::CreateFrameWindow( xml, "background_frame", this );
-	m_caption    = UIHelper::CreateStatic( xml, "t_caption", this );
-	m_bt_close   = UIHelper::Create3tButton( xml, "btn_close", this );
+	XML_NODE*  tmpl_root = xml.NavigateToNode(path, 0);
+	xml.SetLocalRoot(tmpl_root);
 
-	Register( m_bt_close );
-	AddCallback( m_bt_close, BUTTON_DOWN, CUIWndCallback::void_function( this, &UITaskListWnd::OnBtnClose ) );
+	m_background = UIHelper::CreateFrameWindow(xml, "background_frame", this);
+	m_caption = UIHelper::CreateStatic(xml, "t_caption", this);
+	m_bt_close = UIHelper::Create3tButton(xml, "btn_close", this);
+
+	Register(m_bt_close);
+	AddCallback(m_bt_close, BUTTON_DOWN, CUIWndCallback::void_function(this, &UITaskListWnd::OnBtnClose));
 
 	m_list = xr_new<CUIScrollView>();
-	m_list->SetAutoDelete( true );
-	AttachChild( m_list );
-	CUIXmlInit::InitScrollView( xml, "task_list", 0, m_list );
+	m_list->SetAutoDelete(true);
+	AttachChild(m_list);
+	CUIXmlInit::InitScrollView(xml, "task_list", 0, m_list);
 	m_orig_h = GetHeight();
 
 	m_list->SetWindowName("---second_task_list");
-	m_list->m_sort_function = fastdelegate::MakeDelegate( this, &UITaskListWnd::SortingLessFunction );
+	m_list->m_sort_function = xrDelegate(BindDelegate(this, &UITaskListWnd::SortingLessFunction));
 
-	xml.SetLocalRoot( stored_root );
+	xml.SetLocalRoot(stored_root);
 }
 
 bool UITaskListWnd::OnMouseAction( float x, float y, EUIMessages mouse_action )

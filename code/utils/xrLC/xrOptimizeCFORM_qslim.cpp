@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "build.h"
-#include <MxStdModel.h>
-#include <MxQSlim.h>
+#include "../xrQSlim/src/MxStdModel.h"
+#include "../xrQSlim/src/MxQSlim.h"
 #include "../../xrcdb/xrcdb.h"
 #include "../common/face_smoth_flags.h"
 
@@ -75,7 +75,7 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 	if (strstr(Core.Params, "-keep_temp_files"))
 	{
 		string_path			fn;
-		SaveAsSMF(strconcat(sizeof(fn), fn, pBuild->path, "cform_source.smf"), CL);
+		SaveAsSMF(xr_strconcat(fn, pBuild->path, "cform_source.smf"), CL);
 	}
 
 	// prepare model
@@ -117,16 +117,16 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 				const u32 J = f_rm[edge_idx].y;
 				const MxFaceList& N0 = mdl->neighbors(base_f[I]);
 				const MxFaceList& N1 = mdl->neighbors(base_f[J]);
-				for (u32 K = 0; K < N1.length(); K++) mdl->face_mark(N1[K], 0);
-				for (u32 K = 0; K < N0.length(); K++) mdl->face_mark(N0[K], 1);
-				for (u32 K = 0; K < N1.length(); K++) mdl->face_mark(N1[K], mdl->face_mark(N1[K]) + 1);
+				for (u32 K = 0; K < (u32)N1.length(); K++) mdl->face_mark(N1[K], 0);
+				for (u32 K = 0; K < (u32)N0.length(); K++) mdl->face_mark(N0[K], 1);
+				for (u32 K = 0; K < (u32)N1.length(); K++) mdl->face_mark(N1[K], mdl->face_mark(N1[K]) + 1);
 				const MxFaceList& N = (N0.size() < N1.size()) ? N0 : N1;
 				face_props& base_t = FPs[f_idx];
 				if (N.size()) 
 				{
 					u32 cnt_pos = 0, cnt_neg = 0;
 					bool need_constraint = false;
-					for (u32 K = 0; K < N.length(); K++) 
+					for (u32 K = 0; K < (u32)N.length(); K++)
 					{
 						const u32 fff = N[K];
 						MxFace& cur_f = mdl->face(fff);
@@ -174,7 +174,7 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 	if (strstr(Core.Params, "-keep_temp_files"))
 	{
 		string_path			fn;
-		SaveAsSMF(strconcat(sizeof(fn), fn, pBuild->path, "cform_optimized.smf"), CL);
+		SaveAsSMF(xr_strconcat(fn, pBuild->path, "cform_optimized.smf"), CL);
 	}
 
  	xr_delete				(slim);

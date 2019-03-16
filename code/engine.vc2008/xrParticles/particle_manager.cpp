@@ -127,7 +127,7 @@ void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
 
-	if (pa == NULL)
+	if (pa == nullptr)
 		return; // ERROR
 
 	pa->lock();
@@ -168,10 +168,16 @@ void CParticleManager::Update(int effect_id, int alist_id, float dt)
 
 	// Step through all the actions in the action list.
 	float kill_old_time = 1.0f;
-	for (PAVecIt it = pa->begin(); it != pa->end(); ++it)
+	for (PAPI::ParticleAction* pAction : *pa)
 	{
-		VERIFY((*it));
-		(*it)->Execute(pe, dt, kill_old_time);
+		try
+		{
+			pAction->Execute(pe, dt, kill_old_time);
+		}
+		catch(...)
+		{
+			Log("[Warning] Current Particle action is invalid!");
+		}
 	}
 	pa->unlock();
 }
@@ -350,29 +356,29 @@ ParticleAction* CParticleManager::CreateAction(PActionEnum type)
 	pa->type = type;
 	return pa;
 }
-
 u32 CParticleManager::LoadActions(int alist_id, IReader& R)
 {
 	// Execute the specified action list.
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
-	
-    pa->lock();
-    pa->clear();
-    if (R.length())
+	pa->clear();
+	if (R.length())
 	{
         u32 cnt = R.r_u32();
         for (u32 k=0; k<cnt; k++)
 		{
-            ParticleAction* act	= CreateAction((PActionEnum)R.r_u32());
-            act->Load(R);
-            pa->append(act);
-        }
-    }
-
-    int RetSize = pa->size();
-    pa->unlock();
-    return RetSize;
+			ParticleAction* act = CreateAction((PActionEnum)R.r_u32());
+			act->Load(R);
+			try
+			{
+				pa->append(act);
+			}
+			catch (...)
+			{
+			//	Msg("[ERROR] Error particle append!");
+			}
+		}
+	}
 }
 
 void CParticleManager::SaveActions(int alist_id, IWriter& W)

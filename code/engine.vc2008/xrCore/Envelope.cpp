@@ -227,7 +227,7 @@ void CEnvelope::LoadA(IReader& F)
 	if (strstr(buf, "{ Envelope"))
 	{
 		F.r_string(buf, sizeof(buf));
-		int nkeys = atoi(buf);
+		int nkeys = atoi_17_17_17(buf);
 		keys.resize(nkeys);
 		for (u32 i = 0; i < keys.size(); ++i)
 		{
@@ -258,7 +258,7 @@ void CEnvelope::LoadA(IReader& F)
 		}
 		// behavior <pre> <post>
 		F.r_string(buf, sizeof(buf));
-		R_ASSERT(sscanf(buf, "Behaviors %d %d", behavior[0], behavior[1]) == 2);
+		R_ASSERT(sscanf(buf, "Behaviors %d %d", &behavior[0], &behavior[1]) == 2);
 	}
 }
 

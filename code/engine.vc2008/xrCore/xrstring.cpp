@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
-
+#pragma warning(disable: 4366)
 #include "xrstring.h"
 
 XRCORE_API str_container	g_pStringContainer;
@@ -44,9 +44,9 @@ struct str_container_impl
 
     void			 clean()
     {
-        for (u32 i = 0; i < buffer_size; ++i)
-        {
-            str_value** current = &buffer[i];
+        for (str_value*& i : buffer)
+        { 
+            str_value** current = &i;
 
             while (*current != nullptr)
             {
@@ -56,8 +56,7 @@ struct str_container_impl
                     *current = value->next;
                     xr_free(value);
                 }
-                else
-                    current = &value->next;
+                else current = &value->next;
             }
         }
     }
@@ -65,9 +64,8 @@ struct str_container_impl
     void			 verify()
     {
         Msg("strings verify started");
-        for (u32 i = 0; i < buffer_size; ++i)
+        for (str_value* value : buffer)
         {
-            str_value* value = buffer[i];
             while (value)
             {
                 u32			crc = crc32(value->value, value->dwLength);
@@ -82,9 +80,8 @@ struct str_container_impl
 
     void			dump(FILE* f) const
     {
-        for (u32 i = 0; i < buffer_size; ++i)
+        for (str_value* value : buffer)
         {
-            str_value* value = buffer[i];
             while (value)
             {
                 fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", value->dwReference, value->dwLength, value->dwCRC, value->value);
@@ -95,9 +92,8 @@ struct str_container_impl
 
     void			dump(IWriter* f) const
     {
-        for (u32 i = 0; i < buffer_size; ++i)
+        for (str_value* value : buffer)
         {
-            str_value* value = buffer[i];
             string4096		temp;
             while (value)
             {
@@ -111,9 +107,8 @@ struct str_container_impl
     int				stat_economy()
     {
         int				counter = 0;
-        for (u32 i = 0; i < buffer_size; ++i)
+        for (str_value* value : buffer)
         {
-            str_value* value = buffer[i];
             while (value)
             {
                 counter -= sizeof(str_value);
@@ -133,11 +128,11 @@ str_container::str_container()
 
 str_value*	str_container::dock(str_c value)
 {
-    if (!value) return 0;
+    if (!value) return nullptr;
 
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
 
-    str_value*	result = 0;
+    str_value*	result = nullptr;
 
     // calc len
     u32		s_len = xr_strlen(value);
@@ -159,7 +154,7 @@ str_value*	str_container::dock(str_c value)
 #endif //DEBUG
 
     // it may be the case, string is not found or has "non-exact" match
-    if (0 == result
+    if (nullptr == result
 #ifdef DEBUG
         || is_leaked_string
 #endif //DEBUG
@@ -189,19 +184,19 @@ str_value*	str_container::dock(str_c value)
 
 void		str_container::clean()
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     impl->clean();
 }
 
 void		str_container::verify()
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     impl->verify();
 }
 
 void		str_container::dump()
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     FILE* F = fopen("d:\\$str_dump$.txt", "w");
     impl->dump(F);
     fclose(F);
@@ -209,13 +204,13 @@ void		str_container::dump()
 
 void		str_container::dump(IWriter* W)
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     impl->dump(W);
 }
 
 u32			str_container::stat_economy()
 {
-    std::lock_guard<decltype(cs)> lock(cs);
+	xrCriticalSectionGuard guard(cs);
     int				counter = 0;
     counter -= sizeof(*this);
     counter += impl->stat_economy();
@@ -225,30 +220,41 @@ u32			str_container::stat_economy()
 str_container::~str_container()
 {
     clean();
-    //dump ();
     xr_delete(impl);
 }
 
-
 //xr_string class
-
-xr_vector<xr_string> xr_string::Split(LPCSTR Str, size_t StrSize, char splitCh)
+xr_vector<xr_string> xr_string::Split(char splitCh)
 {
-    xr_vector<xr_string> Result;
+	xr_vector<xr_string> Result;
 
-    size_t SubStrBeginCursor = 0;
-    for (size_t StrCursor = 0; StrCursor < StrSize; ++StrCursor)
-    {
-        if (Str[StrCursor] == splitCh)
-        {
-            //Don't create empty string
-            if ((StrCursor - 1 - SubStrBeginCursor) > 0)
-            {
-                Result.push_back(xr_string(&Str[SubStrBeginCursor], (int)StrCursor - 1));
-            }
-        }
-    }
+	u32 SubStrBeginCursor = 0;
+	u32 Len = 0;
 
+	u32 StrCursor = 0;
+	for (; StrCursor < size(); ++StrCursor)
+	{
+		if (at(StrCursor) == splitCh)
+		{
+			if ((StrCursor - SubStrBeginCursor) > 0)
+			{
+				Len = StrCursor - SubStrBeginCursor;
+				Result.emplace_back(xr_string(&at(SubStrBeginCursor), Len));
+				SubStrBeginCursor = StrCursor + 1;
+			}
+			else
+			{
+				Result.emplace_back("");
+				SubStrBeginCursor = StrCursor + 1;
+			}
+		}
+	}
+
+	if (StrCursor > SubStrBeginCursor)
+	{
+		Len = StrCursor - SubStrBeginCursor;
+		Result.emplace_back(xr_string(&at(SubStrBeginCursor), Len));
+	}
     return Result;
 }
 
@@ -257,7 +263,7 @@ xr_string::xr_string()
 {
 }
 
-xr_string::xr_string(LPCSTR Str, int Size)
+xr_string::xr_string(LPCSTR Str, u32 Size)
     : Super(Str, Size)
 {
 }
@@ -300,12 +306,6 @@ xr_string& xr_string::operator=(const Super& other)
     return *this;
 }
 
-xr_vector<xr_string> xr_string::Split(char splitCh)
-{
-    return Split(data(), size(), splitCh);
-}
-
-
 xr_vector<xr_string> xr_string::Split(u32 NumberOfSplits, ...)
 {
     xr_vector<xr_string> intermediateTokens;
@@ -321,12 +321,12 @@ xr_vector<xr_string> xr_string::Split(u32 NumberOfSplits, ...)
         //special case for first try
         if (i == 0)
         {
-            Result = Split(data(), size(), splitCh);
+            Result = Split(splitCh);
         }
 
         for (xr_string& str : Result)
         {
-            xr_vector<xr_string> TokenStrResult = Split(str.data(), str.size(), splitCh);
+            xr_vector<xr_string> TokenStrResult = str.Split(splitCh);
             intermediateTokens.insert(intermediateTokens.end(), TokenStrResult.begin(), TokenStrResult.end());
         }
 
@@ -395,4 +395,59 @@ bool xr_string::StartWith(LPCSTR Str, size_t Size) const
     }
 
     return true;
+}
+
+xr_string xr_string::ToString(int Value)
+{
+	string64 buf = {0};
+	itoa(Value, &buf[0], 10);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::ToString(unsigned int Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "%u", Value);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::ToString(float Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "%f", Value);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::ToString(double Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "%f", Value);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::Join(xrStringVector::iterator beginIter, xrStringVector::iterator endIter, const char delimeter /*= '\0'*/)
+{
+	xr_string Result;
+	xrStringVector::iterator cursorIter = beginIter;
+
+	while (cursorIter != endIter)
+	{
+		Result.append(*cursorIter);
+		if (delimeter != '\0')
+		{
+			Result.push_back(delimeter);
+		}
+		cursorIter++;
+	}
+
+	if (delimeter != '\0')
+	{
+		Result.erase(Result.end() - 1);
+	}
+
+	return Result;
 }

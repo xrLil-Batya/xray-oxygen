@@ -3,10 +3,11 @@
 #include "Car.h"
 #include "CarWeapon.h"
 #include "script_game_object.h"
+#include "luabind/luabind.hpp"
 
 using namespace luabind;
 
-#pragma optimize("s",on)
+#pragma optimize("gyts",on)
 void CCar::script_register(lua_State *L)
 {
 	module(L)

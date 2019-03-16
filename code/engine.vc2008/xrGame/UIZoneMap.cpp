@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "uizonemap.h"
+#include "UIZoneMap.h"
 
 #include "InfoPortion.h"
 #include "Pda.h"
 
-#include "Grenade.h"
+#include "items/Grenade.h"
 #include "level.h"
-#include "game_cl_base.h"
+
 
 #include "actor.h"
 #include "ai_space.h"
 #include "game_graph.h"
 
 #include "ui/UIMap.h"
-#include "ui/UIXmlInit.h"
-#include "ui/UIHelper.h"
+#include "../xrUICore/UIXmlInit.h"
+#include "../xrUICore/UIHelper.h"
 #include "ui/UIInventoryUtilities.h"
 //////////////////////////////////////////////////////////////////////////
 
@@ -39,10 +39,9 @@ void CUIZoneMap::Init()
 	CUIXml uiXml;
 	uiXml.Load						(CONFIG_PATH, UI_PATH, "ui_HUD.xml");
 
-	CUIXmlInit						xml_init;
-	xml_init.InitStatic				(uiXml, "minimap:background",	0, &m_background);
-	xml_init.InitWindow				(uiXml, "minimap:level_frame",	0, &m_clipFrame);
-	xml_init.InitStatic				(uiXml, "minimap:center",		0, &m_center);
+	CUIXmlInit::InitStatic(uiXml, "minimap:background",	0, &m_background);
+	CUIXmlInit::InitWindow(uiXml, "minimap:level_frame",	0, &m_clipFrame);
+	CUIXmlInit::InitStatic(uiXml, "minimap:center",		0, &m_center);
 	
 	m_clock_wnd	= UIHelper::CreateStatic(uiXml, "minimap:clock_wnd", &m_background);
     m_clock_wnd->SetAutoDelete(false);
@@ -54,7 +53,7 @@ void CUIZoneMap::Init()
 	m_activeMap->SetAutoDelete		(false);
 
 	m_activeMap->EnableHeading		(true);  
-	xml_init.InitStatic				(uiXml, "minimap:compass", 0, &m_compass);
+	CUIXmlInit::InitStatic				(uiXml, "minimap:compass", 0, &m_compass);
 	m_background.AttachChild		(&m_compass);
 
 	m_clipFrame.AttachChild			(&m_center);
@@ -96,10 +95,11 @@ void CUIZoneMap::Init()
 	rel_pos.mul				(m_background.GetWndSize());
 	m_clock_wnd->SetWndPos	(rel_pos);
 
-	xml_init.InitStatic			(uiXml, "minimap:static_counter", 0, &m_Counter);
-	m_background.AttachChild	(&m_Counter);
-	xml_init.InitTextWnd		(uiXml, "minimap:static_counter:text_static", 0, &m_Counter_text);
-	m_Counter.AttachChild		(&m_Counter_text);
+	CUIXmlInit::InitStatic(uiXml, "minimap:static_counter", 0, &m_Counter);
+	m_background.AttachChild(&m_Counter);
+
+	CUIXmlInit::InitTextWnd(uiXml, "minimap:static_counter:text_static", 0, &m_Counter_text);
+	m_Counter.AttachChild(&m_Counter_text);
 
 	rel_pos						= m_Counter.GetWndPos();
 	rel_pos.mul					(m_background.GetWndSize());
@@ -143,6 +143,7 @@ void CUIZoneMap::Render			()
 
 void CUIZoneMap::Update()
 {
+//	SetupCurrentMap();
     if (!visible) return; //Don't update, if we hided
 	CActor* pActor = smart_cast<CActor*>( Level().CurrentViewEntity() );
 	if ( !pActor ) return;
@@ -198,7 +199,7 @@ bool CUIZoneMap::ZoomOut()
 {
 	return true;
 }
-
+extern float minimap_zoom_factor;
 void CUIZoneMap::SetupCurrentMap()
 {
 	m_activeMap->Initialize			(Level().name(), "hud\\default");
@@ -208,7 +209,7 @@ void CUIZoneMap::SetupCurrentMap()
 	m_activeMap->WorkingArea().set	(r);
 	
 	Fvector2						wnd_size;
-	float zoom_factor				= float(m_clipFrame.GetWidth())/100.0f;
+	float zoom_factor				= float(m_clipFrame.GetWidth())/100.0f * minimap_zoom_factor;
 
 	LPCSTR ln						= Level().name().c_str();
 	if(	pGameIni->section_exist(ln) )

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "igame_level.h"
 #include "x_ray.h"
 
@@ -10,6 +10,7 @@
 #include "render.h"
 #include "CustomHUD.h"
 #include "CameraManager.h"
+#include "DirectXMathExternal.h"
 
 extern BOOL g_bDisableRedText;
 static Flags32 s_hud_flag = {0};
@@ -19,7 +20,7 @@ bool stored_weapon;
 bool stored_cross;
 bool stored_red_text;
 
-CDemoRecord* xrDemoRecord = 0;
+CDemoRecord* xrDemoRecord = nullptr;
 CDemoRecord::force_position CDemoRecord:: g_position = { false, { 0, 0, 0 } };
 
 Fbox curr_lm_fbox;
@@ -73,10 +74,11 @@ CDemoRecord::CDemoRecord(const char *name, float life_time) : CEffectorCam(cefDe
 	{
 		g_position.set_position = false;
 		IR_Capture();	// capture input
+
 		m_Camera.invert(Device.mView);
 
 		// parse yaw
-		Fvector& dir = m_Camera.k;
+		Fvector dir = { m_Camera._31, m_Camera._32, m_Camera._33 };
 		Fvector DYaw;	
 		DYaw.set(dir.x, 0.f, dir.z); DYaw.normalize_safe();
 
@@ -90,7 +92,7 @@ CDemoRecord::CDemoRecord(const char *name, float life_time) : CEffectorCam(cefDe
 		m_HPB.y = asinf(dir.y);
 		m_HPB.z = 0;
 
-		m_Position.set(m_Camera.c);
+		m_Position.set({ m_Camera._41, m_Camera._42, m_Camera._43 });
 
 		m_vVelocity.set(0, 0, 0);
 		m_vAngularVelocity.set(0, 0, 0);
@@ -292,7 +294,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 {
 	info.dont_apply = false;
 
-	if (0 == file)					
+	if (file == nullptr)					
 		return TRUE;
 
 	if (m_bMakeScreenshot)
@@ -303,6 +305,9 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		info.n.set(m_Camera.j);
 		info.d.set(m_Camera.k);
 		info.p.set(m_Camera.c);
+
+		
+
 	}
 	else if (m_bMakeLevelMap)
 	{
@@ -312,7 +317,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 	else if (m_bMakeCubeMap)
 	{
 		MakeCubeMapFace(info.d, info.n);
-		info.p.set(m_Camera.c);
+		info.p.set({ m_Camera._41, m_Camera._42, m_Camera._43 });
 		info.fAspect = 1.f;
 	}
 	else
@@ -352,18 +357,16 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 			speed = m_fSpeed0;
 			ang_speed = m_fAngSpeed0;
 		}
-		else
-			if (IR_GetKeyState(DIK_LALT))
-			{
-				speed = m_fSpeed2;
-				ang_speed = m_fAngSpeed2;
-			}
-			else
-				if (IR_GetKeyState(DIK_LCONTROL))
-				{
-					speed = m_fSpeed3;
-					ang_speed = m_fAngSpeed3;
-				}
+		else if (IR_GetKeyState(DIK_LALT))
+		{
+			speed = m_fSpeed2;
+			ang_speed = m_fAngSpeed2;
+		} 
+		else if (IR_GetKeyState(DIK_LCONTROL))
+		{
+			speed = m_fSpeed3;
+			ang_speed = m_fAngSpeed3;
+		}
 
 		m_vT.mul(m_vVelocity, Device.fTimeDelta * speed);
 		m_vR.mul(m_vAngularVelocity, Device.fTimeDelta * ang_speed);
@@ -383,28 +386,28 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		// move
 		Fvector vmove;
 
-		vmove.set(m_Camera.k);
+		vmove.set({ m_Camera._31, m_Camera._32, m_Camera._33 });
 		vmove.normalize_safe();
 		vmove.mul(m_vT.z);
 		m_Position.add(vmove);
 
-		vmove.set(m_Camera.i);
+		vmove.set({ m_Camera._11, m_Camera._12, m_Camera._13 });
 		vmove.normalize_safe();
 		vmove.mul(m_vT.x);
 		m_Position.add(vmove);
 
-		vmove.set(m_Camera.j);
+		vmove.set({ m_Camera._21, m_Camera._22, m_Camera._23 });
 		vmove.normalize_safe();
 		vmove.mul(m_vT.y);
 		m_Position.add(vmove);
 
-		m_Camera.setHPB(m_HPB.x, m_HPB.y, m_HPB.z);
-		m_Camera.translate_over(m_Position);
+		//m_Camera.setHPB(m_HPB.x, m_HPB.y, m_HPB.z);
+		//m_Camera.translate_over(m_Position);
 
 		// update camera
-		info.n.set(m_Camera.j);
-		info.d.set(m_Camera.k);
-		info.p.set(m_Camera.c);
+		info.n.set({ m_Camera._21, m_Camera._22, m_Camera._23 });
+		info.d.set({ m_Camera._31, m_Camera._32, m_Camera._33 });
+		info.p.set({ m_Camera._41, m_Camera._42, m_Camera._43 });
 
 		fLifeTime -= Device.fTimeDelta;
 
@@ -575,8 +578,9 @@ void CDemoRecord::IR_OnMouseHold(int btn)
 
 void CDemoRecord::RecordKey()
 {
-	Fmatrix	g_matView;
+	Fmatrix g_matView;
 	g_matView.invert(m_Camera);
+
 	file->w(&g_matView, sizeof(Fmatrix));
 	iCount++;
 }
