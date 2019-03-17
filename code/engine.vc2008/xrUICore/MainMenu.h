@@ -51,8 +51,6 @@ public:
 
 	virtual bool	IgnorePause() { return true; }
 
-	virtual void	IR_OnMousePress(int btn);
-	virtual void	IR_OnMouseRelease(int btn);
 	virtual void	IR_OnMouseMove(int x, int y);
 
 	virtual void	IR_OnKeyboardPress(u8 dik);

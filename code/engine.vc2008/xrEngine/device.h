@@ -238,8 +238,9 @@ public:
 	void Reset								(bool precache = true);
 
 	void Initialize							();
-	HWND CreateXRayWindow (HWND parent = nullptr, int Width = 0, int Height = 0);
-	void ShutDown							();
+	HWND CreateXRayWindow					(HWND parent = nullptr, int Width = 0, int Height = 0);
+	void GetXrWindowRect					(RECT& OutWindowRect, bool bClientRect = false) const;
+	void GetXrWindowPoint					(POINT& OutWindowPoint) const;
 
     void UpdateWindowPropStyle              (WindowPropStyle PropStyle = (WindowPropStyle)ps_vid_windowtype);
 

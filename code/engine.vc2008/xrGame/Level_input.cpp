@@ -57,16 +57,6 @@ void CLevel::IR_OnMouseWheel( int direction )
 	}
 }
 
-void CLevel::IR_OnMousePress(u8 btn)
-{
-	IR_OnKeyboardPress(btn);
-}
-
-void CLevel::IR_OnMouseRelease(u8 btn)
-{	
-	IR_OnKeyboardRelease(btn);
-}
-
 void CLevel::IR_OnMouseMove( int dx, int dy )
 {
 	if(g_bDisableAllInput)							return;

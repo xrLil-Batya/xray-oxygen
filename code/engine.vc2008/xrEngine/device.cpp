@@ -405,6 +405,37 @@ void CRenderDevice::BeginToWork()
 	m_pRender->ClearTarget();
 }
 
+void CRenderDevice::GetXrWindowRect(RECT& OutWindowRect, bool bClientRect /*= false*/) const
+{
+	if (m_hWnd != NULL)
+	{
+		if (bClientRect)
+		{
+			GetClientRect(m_hWnd, &OutWindowRect);
+		}
+		else
+		{
+			GetWindowRect(m_hWnd, &OutWindowRect);
+		}
+	}
+	else
+	{
+		ZeroMemory(&OutWindowRect, sizeof(RECT));
+	}
+}
+
+void CRenderDevice::GetXrWindowPoint(POINT& OutWindowPoint) const
+{
+	if (m_hWnd != NULL)
+	{
+		ScreenToClient(m_hWnd, &OutWindowPoint);
+	}
+	else
+	{
+		ZeroMemory(&OutWindowPoint, sizeof(POINT));
+	}
+}
+
 void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 {
 	// Don't drawing wnd when slash is active

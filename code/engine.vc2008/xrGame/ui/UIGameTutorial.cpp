@@ -337,21 +337,6 @@ bool CUISequencer::GrabInput()
 		return false;
 }
 
-void CUISequencer::IR_OnMousePress(int btn)
-{
-	if (!m_sequencer_items.empty())
-		m_sequencer_items.front()->OnMousePress(btn);
-
-	if (!GrabInput() && m_pStoredInputReceiver)
-		m_pStoredInputReceiver->IR_OnMousePress(btn);
-}
-
-void CUISequencer::IR_OnMouseRelease(int btn)
-{
-	if (!GrabInput() && m_pStoredInputReceiver)
-		m_pStoredInputReceiver->IR_OnMouseRelease(btn);
-}
-
 void CUISequencer::IR_OnMouseMove(int x, int y)
 {
 	if (!GrabInput() && m_pStoredInputReceiver)

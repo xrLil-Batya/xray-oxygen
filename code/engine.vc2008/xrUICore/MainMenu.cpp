@@ -215,20 +215,6 @@ void CMainMenu::OnDeviceReset()
 		m_Flags.set(flNeedVidRestart, TRUE);
 }
 
-//IInputReceiver
-//static int mouse_button_2_key[] = { VK_LBUTTON,VK_RBUTTON,VK_MBUTTON, VK_XBUTTON1, VK_XBUTTON2 };
-void CMainMenu::IR_OnMousePress(int btn)
-{
-	if (IsActive())
-		IR_OnKeyboardPress(btn);
-};
-
-void CMainMenu::IR_OnMouseRelease(int btn)
-{
-	if (IsActive())
-		IR_OnKeyboardRelease(btn);
-};
-
 void CMainMenu::IR_OnMouseMove(int x, int y)
 {
 	if (IsActive())

@@ -19,6 +19,7 @@ CInput::CInput()
 {
 	Log("Starting INPUT device...");
 
+	bActiveFocus = false;
 	UINT deviceCountGet = 0;
 	UINT rawInputDeviceCount = 0;
 	deviceCountGet = GetRawInputDeviceList(NULL, &rawInputDeviceCount, sizeof(RAWINPUTDEVICELIST));
@@ -115,12 +116,12 @@ void CInput::ProcessInput(LPARAM hRawInputParam)
 				if (mouseFlags & mouseDown)
 				{
 					pressedKeys[mouseKey] = true;
-					cbStack.back()->IR_OnMousePress(mouseKey);
+					cbStack.back()->IR_OnKeyboardPress(mouseKey);
 				}
 				if (mouseFlags & mouseUp)
 				{
 					pressedKeys[mouseKey] = false;
-					cbStack.back()->IR_OnMouseRelease(mouseKey);
+					cbStack.back()->IR_OnKeyboardRelease(mouseKey);
 				}
 			};
 
@@ -194,6 +195,7 @@ void CInput::iCapture(IInputReceiver *p)
 {
 	VERIFY(p);
 
+	ResetPressedState();
 	// change focus
 	if (!cbStack.empty())
 		cbStack.back()->IR_OnDeactivate();
@@ -203,6 +205,7 @@ void CInput::iCapture(IInputReceiver *p)
 
 void CInput::iRelease(IInputReceiver *p)
 {
+	ResetPressedState();
 	if (p == cbStack.back())
 	{
 		cbStack.back()->IR_OnDeactivate();
@@ -227,25 +230,55 @@ void CInput::iRelease(IInputReceiver *p)
 	}
 }
 
-void CInput::OnAppActivate(void)
+void CInput::OnAppActivate()
 {
 	if (CurrentIR())
 		CurrentIR()->IR_OnActivate();
 
-	ZeroMemory(inputData, sizeof(inputData));
-	ZeroMemory(pressedKeys, sizeof(pressedKeys));
+	ResetPressedState();
+	bActiveFocus = true;
+	ShowCursor(!bActiveFocus);
+
+	RECT windowRect;
+	Device.GetXrWindowRect(windowRect);
+
+	ClipCursor(&windowRect);
 }
 
-void CInput::OnAppDeactivate(void)
+void CInput::OnAppDeactivate()
 {
 	if (CurrentIR())
 		CurrentIR()->IR_OnDeactivate();
 
-	ZeroMemory(inputData, sizeof(inputData));
-	ZeroMemory(pressedKeys, sizeof(pressedKeys));
+	ResetPressedState();
+	bActiveFocus = false;
+	ShowCursor(!bActiveFocus);
+	ClipCursor(NULL);
 }
 
-void CInput::OnFrame(void)
+void CInput::ResetPressedState()
+{
+	if (!cbStack.empty())
+	{
+		// invoke necessery Release handlers
+		IInputReceiver* receiver = cbStack.back();
+		for (u8 i = 0; i < 255; ++i)
+		{
+			if (pressedKeys[i])
+			{
+				pressedKeys[i] = false;
+				receiver->IR_OnKeyboardRelease(i);
+			}
+		}
+	}
+	else
+	{
+		ZeroMemory(pressedKeys, sizeof(pressedKeys));
+	}
+}
+
+
+void CInput::OnFrame()
 {
 	ScopeStatTimer frameTimer(Device.Statistic->Engine_InputFrame);
 	if (cbStack.empty())
@@ -263,6 +296,17 @@ void CInput::OnFrame(void)
 			cbStack.back()->IR_OnKeyboardHold(i);
 		}
 	}
+
+//  	if (bActiveFocus)
+//  	{
+//  		// keep mouse inside game window
+// 		RECT windowRect;
+// 		Device.GetXrWindowRect(windowRect);
+// 
+// 		int currentWidth = windowRect.right - windowRect.left;
+// 		int currentHeight = windowRect.bottom - windowRect.top;
+// 		SetCursorPos(windowRect.right - (currentWidth / 2), windowRect.bottom - (currentHeight / 2));
+//  	}
 }
 
 IInputReceiver*	 CInput::CurrentIR()

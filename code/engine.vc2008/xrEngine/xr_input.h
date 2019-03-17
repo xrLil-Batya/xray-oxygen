@@ -10,8 +10,8 @@ public:
 
 	void						iCapture					( IInputReceiver *pc );
 	void						iRelease					( IInputReceiver *pc );
-	BOOL iGetAsyncKeyState ( u8 dik );
-	BOOL iGetAsyncBtnState ( u8 btn );
+	BOOL						iGetAsyncKeyState			( u8 dik );
+	BOOL						iGetAsyncBtnState			( u8 btn );
 	void						iGetLastMouseDelta			( Ivector2& p );
 
 	virtual void				OnFrame						() override;
@@ -19,7 +19,6 @@ public:
 	virtual void				OnAppDeactivate				() override;
 
 	void						ProcessInput(LPARAM hRawInput);
-
 	IInputReceiver*				CurrentIR					();
 
 public:
@@ -28,6 +27,9 @@ public:
 	void						feedback(u16 s1, u16 s2, float time);
 
 private:
+
+	void ResetPressedState();
+
 	RAWINPUTDEVICE		rawDevices[2];
 	u32					dwCurTime;
 
@@ -37,11 +39,9 @@ private:
 	// last input data
 	Ivector2 deltaMouse;
 	bool pressedKeys[0xFF];
+	bool bActiveFocus;
 
 	xr_vector<IInputReceiver*>	cbStack;
-
-	void						MouseUpdate();
-
 };
 
 extern ENGINE_API CInput *		pInput;

@@ -87,25 +87,27 @@ Fvector2 CUICursor::GetCursorPositionDelta()
 
 void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 {
-	Fvector2	p;
 	vPrevPos	= vPos;
 	if(m_b_use_win_cursor)
 	{
-		POINT		pti;
-		BOOL r		= GetCursorPos(&pti);
-		if(!r)		return;
-		p.x			= (float)pti.x;
-		p.y			= (float)pti.y;
-		vPos.x		= p.x * (UI_BASE_WIDTH/(float)Device.dwWidth);
-		vPos.y		= p.y * (UI_BASE_HEIGHT/(float)Device.dwHeight);
-	}else
-	{
-		float sens = 1.0f;
-		vPos.x		+= _dx*sens;
-		vPos.y		+= _dy*sens;
+		Fvector2 correctedDelta;
+		correctedDelta.x = (float)_dx * (UI_BASE_WIDTH / (float)Device.dwWidth);
+		correctedDelta.y = (float)_dy * (UI_BASE_HEIGHT / (float)Device.dwHeight);
+
+		vPos.x += correctedDelta.x;
+		vPos.y += correctedDelta.y;
+			
+		//RECT windowRect;
+		//Device.GetXrWindowRect(windowRect);
+
+		clamp<float>(vPos.x, 0.0f, UI_BASE_WIDTH);
+		clamp<float>(vPos.y, 0.0f, UI_BASE_HEIGHT);
 	}
-	clamp		(vPos.x, 0.f, UI_BASE_WIDTH);
-	clamp		(vPos.y, 0.f, UI_BASE_HEIGHT);
+	else
+	{
+		vPos.x += _dx;
+		vPos.y += _dy;
+	}
 }
 
 void CUICursor::SetUICursorPosition(Fvector2 pos)
