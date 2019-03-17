@@ -97,9 +97,6 @@ void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 		vPos.x += correctedDelta.x;
 		vPos.y += correctedDelta.y;
 			
-		//RECT windowRect;
-		//Device.GetXrWindowRect(windowRect);
-
 		clamp<float>(vPos.x, 0.0f, UI_BASE_WIDTH);
 		clamp<float>(vPos.y, 0.0f, UI_BASE_HEIGHT);
 	}

@@ -296,17 +296,6 @@ void CInput::OnFrame()
 			cbStack.back()->IR_OnKeyboardHold(i);
 		}
 	}
-
-//  	if (bActiveFocus)
-//  	{
-//  		// keep mouse inside game window
-// 		RECT windowRect;
-// 		Device.GetXrWindowRect(windowRect);
-// 
-// 		int currentWidth = windowRect.right - windowRect.left;
-// 		int currentHeight = windowRect.bottom - windowRect.top;
-// 		SetCursorPos(windowRect.right - (currentWidth / 2), windowRect.bottom - (currentHeight / 2));
-//  	}
 }
 
 IInputReceiver*	 CInput::CurrentIR()
