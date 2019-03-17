@@ -229,12 +229,6 @@ void CMainMenu::IR_OnMouseRelease(int btn)
 		IR_OnKeyboardRelease(btn);
 };
 
-void CMainMenu::IR_OnMouseHold(int btn)
-{
-	if (IsActive())
-		IR_OnKeyboardHold(btn);
-};
-
 void CMainMenu::IR_OnMouseMove(int x, int y)
 {
 	if (IsActive())

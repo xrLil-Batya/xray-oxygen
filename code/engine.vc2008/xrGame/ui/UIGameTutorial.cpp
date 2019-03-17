@@ -352,12 +352,6 @@ void CUISequencer::IR_OnMouseRelease(int btn)
 		m_pStoredInputReceiver->IR_OnMouseRelease(btn);
 }
 
-void CUISequencer::IR_OnMouseHold(int btn)
-{
-	if (!GrabInput() && m_pStoredInputReceiver)
-		m_pStoredInputReceiver->IR_OnMouseHold(btn);
-}
-
 void CUISequencer::IR_OnMouseMove(int x, int y)
 {
 	if (!GrabInput() && m_pStoredInputReceiver)

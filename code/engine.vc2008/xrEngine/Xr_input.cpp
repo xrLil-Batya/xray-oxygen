@@ -193,8 +193,6 @@ void CInput::iGetLastMouseDelta(Ivector2& p)
 void CInput::iCapture(IInputReceiver *p)
 {
 	VERIFY(p);
-// 	if (pMouse) 	MouseUpdate();
-// 	if (pKeyboard) 	KeyUpdate();
 
 	// change focus
 	if (!cbStack.empty())
@@ -235,6 +233,7 @@ void CInput::OnAppActivate(void)
 		CurrentIR()->IR_OnActivate();
 
 	ZeroMemory(inputData, sizeof(inputData));
+	ZeroMemory(pressedKeys, sizeof(pressedKeys));
 }
 
 void CInput::OnAppDeactivate(void)
@@ -243,18 +242,27 @@ void CInput::OnAppDeactivate(void)
 		CurrentIR()->IR_OnDeactivate();
 
 	ZeroMemory(inputData, sizeof(inputData));
+	ZeroMemory(pressedKeys, sizeof(pressedKeys));
 }
 
 void CInput::OnFrame(void)
 {
 	ScopeStatTimer frameTimer(Device.Statistic->Engine_InputFrame);
+	if (cbStack.empty())
+	{
+		return;
+	}
 	dwCurTime = RDEVICE.TimerAsync_MMT();
 
-// 	if (Device.dwPrecacheFrame == 0 && !pGameAnsel->isActive)
-// 	{
-// 		KeyUpdate();
-// 		MouseUpdate();
-// 	}
+	// check for holded keys
+
+	for (u8 i = 0; i < 0xFF; i++)
+	{
+		if (pressedKeys[i])
+		{
+			cbStack.back()->IR_OnKeyboardHold(i);
+		}
+	}
 }
 
 IInputReceiver*	 CInput::CurrentIR()

@@ -37,7 +37,6 @@ public:
 	//IInputReceiver
 	void IR_OnMousePress(int btn) override;
 	void IR_OnMouseRelease(int btn) override;
-	void IR_OnMouseHold(int btn) override;
 	void IR_OnMouseMove(int x, int y) override;
 
 	void IR_OnKeyboardPress(u8 dik) override;

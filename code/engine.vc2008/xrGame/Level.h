@@ -166,7 +166,6 @@ public:
 	virtual void				IR_OnKeyboardHold		(u8 btn);
 	virtual void				IR_OnMousePress			(u8 btn);
 	virtual void				IR_OnMouseRelease		(u8 btn);
-	virtual void				IR_OnMouseHold			(u8 btn);
 	virtual void				IR_OnMouseMove			(int, int);
 	virtual void				IR_OnMouseWheel			(int direction);
 	virtual void				IR_OnActivate			();

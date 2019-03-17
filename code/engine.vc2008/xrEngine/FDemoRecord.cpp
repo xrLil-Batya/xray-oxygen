@@ -483,6 +483,12 @@ void CDemoRecord::IR_OnKeyboardHold(u8 dik)
 
 	switch (dik) 
 	{
+		case VK_LBUTTON:
+			vT_delta.z += 1.0f;
+		break;
+		case VK_RBUTTON:
+			vT_delta.z -= 1.0f;
+			break;
 		case VK_A:
 		case VK_NUMPAD1:
 		case VK_LEFT:		
@@ -499,7 +505,7 @@ void CDemoRecord::IR_OnKeyboardHold(u8 dik)
 			vT_delta.y -= 1.0f; 
 			break; // Slide Down
 
-		case VK_W:			
+		case VK_W:		
 			vT_delta.y += 1.0f;
 			break; // Slide Up
 
@@ -552,29 +558,6 @@ void CDemoRecord::IR_OnMouseMove(int dx, int dy)
 	}
 
 	m_vR.add(vR_delta);
-}
-
-void CDemoRecord::IR_OnMouseHold(int btn)
-{
-	if (m_b_redirect_input_to_level)
-	{
-		g_pGameLevel->IR_OnMouseHold(btn);
-		return;
-	}
-
-	Fvector	vT_delta = Fvector().set(0, 0, 0);
-	switch (btn) 
-	{
-		case 0:			
-			vT_delta.z += 1.0f; 
-			break; // Move Backward
-
-		case 1:			
-			vT_delta.z -= 1.0f; 
-			break; // Move Forward
-	}
-
-	update_whith_timescale(m_vT, vT_delta);
 }
 
 void CDemoRecord::RecordKey()

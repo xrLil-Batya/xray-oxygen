@@ -57,14 +57,15 @@ void CLevel::IR_OnMouseWheel( int direction )
 	}
 }
 
-static int mouse_button_2_key []	=	{VK_LBUTTON,VK_RBUTTON,VK_MBUTTON};
-
 void CLevel::IR_OnMousePress(u8 btn)
-{	IR_OnKeyboardPress(mouse_button_2_key[btn]);}
+{
+	IR_OnKeyboardPress(btn);
+}
+
 void CLevel::IR_OnMouseRelease(u8 btn)
-{	IR_OnKeyboardRelease(mouse_button_2_key[btn]);}
-void CLevel::IR_OnMouseHold(u8 btn)
-{	IR_OnKeyboardHold(mouse_button_2_key[btn]);}
+{	
+	IR_OnKeyboardRelease(btn);
+}
 
 void CLevel::IR_OnMouseMove( int dx, int dy )
 {
