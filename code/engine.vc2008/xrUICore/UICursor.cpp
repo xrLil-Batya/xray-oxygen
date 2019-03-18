@@ -30,7 +30,10 @@ void CUICursor::OnScreenResolutionChanged()
 void CUICursor::InitInternal()
 {
 	m_static					= xr_new<CUIStatic>();
-	m_static->InitTextureEx		("ui\\ui_ani_cursor", "hud\\cursor");
+
+	static const bool bNewCur = strstr(Core.Params, "-hate_gsc_cursor");
+	m_static->InitTextureEx		(bNewCur ? "ui\\ui_main_cursor" : "ui\\ui_ani_cursor", "hud\\cursor");
+
 	Frect						rect;
 	rect.set					(0.0f,0.0f,40.0f,40.0f);
 	m_static->SetTextureRect	(rect);
