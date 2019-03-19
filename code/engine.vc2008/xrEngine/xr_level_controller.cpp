@@ -102,7 +102,7 @@ _keyboard keyboards[] = {
 	{ "kH",				VK_H			},	{ "kJ",				VK_J			},
 	{ "kK",				VK_K			},	{ "kL",				VK_L			},
 	{ "kSEMICOLON",		VK_OEM_1		},	{ "kAPOSTROPHE",	VK_OEM_3		},
-	{ "kGRAVE",			VK_OEM_3		},	{ "kLSHIFT",	 	VK_LSHIFT		},
+	{ "kGRAVE",			VK_OEM_3		},	{ "kLSHIFT",	 	VK_SHIFT		},
 	{ "kBACKSLASH",		VK_OEM_5		},	{ "kZ",				VK_Z			},
 	{ "kX",				VK_X			},	{ "kC",				VK_C			},
 	{ "kV",				VK_V			},	{ "kB",				VK_B			},

@@ -147,7 +147,7 @@ void CLevel::IR_OnKeyboardPress(u8 key)
         switch (_curr)
         {
         case kDEV_NOCLIP:
-            if (!pInput->iGetAsyncKeyState(VK_LSHIFT))
+            if (!pInput->iGetAsyncKeyState(VK_SHIFT))
             {
                 Console->Hide();
                 Console->Execute("demo_record 1");

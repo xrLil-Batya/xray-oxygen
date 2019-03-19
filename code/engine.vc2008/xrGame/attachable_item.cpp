@@ -136,7 +136,7 @@ void attach_adjust_mode_keyb(u8 dik)
 {
 	if(!CAttachableItem::m_dbgItem)	return;
 
-	bool b_move		= !!(pInput->iGetAsyncKeyState(VK_LSHIFT));
+	bool b_move		= !!(pInput->iGetAsyncKeyState(VK_SHIFT));
 	bool b_rot		= !!(pInput->iGetAsyncKeyState(VK_LMENU));
 	
 	int axis		= -1;

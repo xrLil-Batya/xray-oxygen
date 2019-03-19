@@ -114,7 +114,7 @@ void line_edit_control::update_key_states	()
 {
 	m_key_state.zero( );
 
-	set_key_state	( ks_LShift,	!!pInput->iGetAsyncKeyState(VK_LSHIFT)		);
+	set_key_state	( ks_LShift,	!!pInput->iGetAsyncKeyState(VK_SHIFT)		);
 	set_key_state	( ks_RShift,	!!pInput->iGetAsyncKeyState(VK_RSHIFT)		);
 	set_key_state	( ks_LCtrl,		!!pInput->iGetAsyncKeyState(VK_LCONTROL)	);
 	set_key_state	( ks_RCtrl,		!!pInput->iGetAsyncKeyState(VK_RCONTROL)	);
@@ -220,12 +220,12 @@ void line_edit_control::init( u32 str_buffer_size, init_mode mode )
 		assign_callback( VK_BACK  , ks_Ctrl, Callback( this, &line_edit_control::delete_word_back     ) );
 		assign_callback( VK_DELETE, ks_Ctrl, Callback( this, &line_edit_control::delete_word_forward  ) );
 
-		assign_callback( VK_LSHIFT, ks_Ctrl, Callback( this, &line_edit_control::SwitchKL ) );
-		assign_callback( VK_LSHIFT, ks_Alt, Callback( this, &line_edit_control::SwitchKL  ) );
+		assign_callback( VK_SHIFT, ks_Ctrl, Callback( this, &line_edit_control::SwitchKL ) );
+		assign_callback( VK_SHIFT, ks_Alt, Callback( this, &line_edit_control::SwitchKL  ) );
 
 	} // if mode
 
-	create_key_state( VK_LSHIFT  , ks_LShift );
+	create_key_state( VK_SHIFT  , ks_LShift );
 	create_key_state( VK_RSHIFT  , ks_RShift );
 	create_key_state( VK_LCONTROL, ks_LCtrl  );
 	create_key_state( VK_RCONTROL, ks_RCtrl  );
@@ -300,6 +300,7 @@ void line_edit_control::assign_char_pairs( init_mode mode )
 	}
 
 	create_char_pair( VK_SUBTRACT, '-', '_', true );
+	create_char_pair( VK_OEM_MINUS, '-', '_');
 	create_char_pair( VK_SPACE       , ' ', ' ' );
 	create_char_pair( VK_OEM_3,		 '`', '~', true );
 
@@ -442,7 +443,7 @@ void line_edit_control::on_key_hold( u8 dik )
 	switch ( dik )
 	{
 	case VK_TAB:
-	case VK_LSHIFT:   case VK_RSHIFT:
+	case VK_SHIFT:   case VK_RSHIFT:
 	case VK_LCONTROL: case VK_RCONTROL:
 	case VK_LMENU:     case VK_RMENU:
 		return;

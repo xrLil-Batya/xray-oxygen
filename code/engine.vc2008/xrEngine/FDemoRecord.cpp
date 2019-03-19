@@ -353,7 +353,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 
 		float speed = m_fSpeed1, ang_speed = m_fAngSpeed1;
 
-		if (IR_GetKeyState(VK_LSHIFT))
+		if (IR_GetKeyState(VK_SHIFT))
 		{
 			speed = m_fSpeed0;
 			ang_speed = m_fAngSpeed0;

@@ -39,7 +39,7 @@ extern u32 hud_adj_mode;
 
 void CActor::IR_OnKeyboardPress(u8 cmd)
 {
-	if (hud_adj_mode && pInput->iGetAsyncKeyState(VK_LSHIFT))
+	if (hud_adj_mode && pInput->iGetAsyncKeyState(VK_SHIFT))
 	{
 		if (pInput->iGetAsyncKeyState(VK_RETURN) || pInput->iGetAsyncKeyState(VK_BACK) ||
 			pInput->iGetAsyncKeyState(VK_DELETE))
@@ -211,7 +211,7 @@ void CActor::IR_OnMouseWheel(int direction)
 
 void CActor::IR_OnKeyboardRelease(u8 cmd)
 {
-	if(hud_adj_mode && pInput->iGetAsyncKeyState(VK_LSHIFT))	return;
+	if(hud_adj_mode && pInput->iGetAsyncKeyState(VK_SHIFT))	return;
 	if (Remote())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 
@@ -252,7 +252,7 @@ void CActor::IR_OnKeyboardRelease(u8 cmd)
 
 void CActor::IR_OnKeyboardHold(u8 cmd)
 {
-	if (hud_adj_mode && pInput->iGetAsyncKeyState(VK_LSHIFT))
+	if (hud_adj_mode && pInput->iGetAsyncKeyState(VK_SHIFT))
 	{
 		if (pInput->iGetAsyncKeyState(VK_UP))
 			g_player_hud->tune(Ivector().set(0, -1, 0));
@@ -460,7 +460,7 @@ void CActor::ActorUse()
 		{
 			element = (u16)RQ.element;
 
-			if (Level().IR_GetKeyState(VK_LSHIFT))
+			if (Level().IR_GetKeyState(VK_SHIFT))
 			{
 				bool b_allow = !!pSettings->line_exist("ph_capture_visuals", object->cNameVisual());
 				if (b_allow && !character_physics_support()->movement()->PHCapture())
@@ -679,7 +679,7 @@ void CActor::NoClipFly(int cmd)
 	Fvector cur_pos, right, left;
 	cur_pos.set(0,0,0);
 	float scale = 0.55f;
-	if(pInput->iGetAsyncKeyState(VK_LSHIFT))
+	if(pInput->iGetAsyncKeyState(VK_SHIFT))
 		scale = 0.25f;
 	else if(pInput->iGetAsyncKeyState(VK_X))
 		scale = 1.0f;

@@ -174,7 +174,7 @@ void key_binding_registrator::script_register(lua_State *L)
 				value("DIK_MULTIPLY",					int(VK_MULTIPLY		)),
 				value("DIK_SPACE",						int(VK_SPACE		)),
 				value("DIK_APOSTROPHE",					int(VK_OEM_3		)),
-				value("DIK_LSHIFT",						int(VK_LSHIFT		)),
+				value("DIK_LSHIFT",						int(VK_SHIFT		)),
 				value("DIK_RSHIFT",						int(VK_RSHIFT		)),
 				value("DIK_LMENU",						int(VK_LMENU		)),
 				value("DIK_CAPITAL",					int(VK_CAPITAL		)),

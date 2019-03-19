@@ -21,7 +21,7 @@ float _delta_rot			= 0.05f;
 
 bool is_attachable_item_tuning_mode()
 {
-	return	pInput->iGetAsyncKeyState(VK_LSHIFT)	||
+	return	pInput->iGetAsyncKeyState(VK_SHIFT)	||
 			pInput->iGetAsyncKeyState(VK_Z)			||
 			pInput->iGetAsyncKeyState(VK_X)			||
 			pInput->iGetAsyncKeyState(VK_C);
@@ -29,7 +29,7 @@ bool is_attachable_item_tuning_mode()
 
 void tune_remap(const Ivector& in_values, Ivector& out_values)
 {
-	if( pInput->iGetAsyncKeyState(VK_LSHIFT) )
+	if( pInput->iGetAsyncKeyState(VK_SHIFT) )
 	{
 		out_values = in_values;
 	}else
@@ -287,7 +287,7 @@ void hud_draw_adjust_mode()
 		return;
 
 	LPCSTR _text = nullptr;
-	if(pInput->iGetAsyncKeyState(VK_LSHIFT) && hud_adj_mode)
+	if(pInput->iGetAsyncKeyState(VK_SHIFT) && hud_adj_mode)
 		_text = "press SHIFT+NUM 0-return 1-hud_pos 2-hud_rot 3-itm_pos 4-itm_rot 5-fire_point 6-fire_2_point 7-shell_point 8-pos_step 9-rot_step";
 
 	switch (hud_adj_mode)
@@ -336,7 +336,7 @@ void hud_draw_adjust_mode()
 
 void hud_adjust_mode_keyb(u8 dik)
 {
-	if(pInput->iGetAsyncKeyState(VK_LSHIFT))
+	if(pInput->iGetAsyncKeyState(VK_SHIFT))
 	{
 		if(dik==VK_NUMPAD0)
 			hud_adj_mode = 0;
