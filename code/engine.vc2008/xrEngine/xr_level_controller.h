@@ -165,6 +165,7 @@ ENGINE_API EGameActions	action_name_to_id		(LPCSTR _name);
 ENGINE_API _action*		action_name_to_ptr		(LPCSTR _name);
 
 extern ENGINE_API _action actions[];
+extern const xr_map<u8, xr_string> KeyNamesTable;
 
 #define bindings_count kLASTACTION
 struct _binding

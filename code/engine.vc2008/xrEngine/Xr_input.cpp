@@ -31,6 +31,7 @@ CInput::CInput()
 	rightThumbstick.setZero();
 	UINT deviceCountGet = 0;
 	UINT rawInputDeviceCount = 0;
+	ResetPressedState();
 	deviceCountGet = GetRawInputDeviceList(NULL, &rawInputDeviceCount, sizeof(RAWINPUTDEVICELIST));
 	R_ASSERT(rawInputDeviceCount > 0);
 
@@ -132,13 +133,19 @@ void CInput::ProcessInput(LPARAM hRawInputParam)
 
 			if (keyboardKey.Flags == RI_KEY_MAKE)
 			{
-				pressedKeys[pressedKey] = true;
-				cbStack.back()->IR_OnKeyboardPress((u8)keyboardKey.VKey);
+				if (!pressedKeys[pressedKey])
+				{
+					pressedKeys[pressedKey] = true;
+					cbStack.back()->IR_OnKeyboardPress((u8)keyboardKey.VKey);
+				}
 			}
 			else if (keyboardKey.Flags & RI_KEY_BREAK)
 			{
-				pressedKeys[pressedKey] = false;
-				cbStack.back()->IR_OnKeyboardRelease((u8)keyboardKey.VKey);
+				if (pressedKeys[pressedKey])
+				{
+					pressedKeys[pressedKey] = false;
+					cbStack.back()->IR_OnKeyboardRelease((u8)keyboardKey.VKey);
+				}
 			}
 		}
 	}
@@ -157,13 +164,16 @@ void CInput::ProcessInput(LPARAM hRawInputParam)
 
 bool CInput::get_VK_name(u8 dik, LPSTR dest_str, int dest_sz)
 {
-	string128 keyName;
-	int keyNameSize = GetKeyNameTextA(dik, keyName, sizeof(keyName));
-	if (keyNameSize == 0)
-	{
-		return false;
-	}
-	memcpy(dest_str, keyName, keyNameSize);
+// 	string16 keyName = {0};
+// 	LONG KeyValue = 0;
+// 	UINT ScanValue = MapVirtualKeyA(dik, MAPVK_VK_TO_VSC);
+// 	KeyValue = ScanValue << 16;
+// 	int RetCode = GetKeyNameTextA(KeyValue, &keyName[0], 16);
+
+	const xr_string& keyName = KeyNamesTable.at(dik);
+
+	memcpy(dest_str, keyName.c_str(), keyName.size());
+	dest_str[keyName.size()] = '\0';
 	return true;
 }
 
@@ -285,7 +295,7 @@ void CInput::ResetPressedState()
 	}
 	else
 	{
-		ZeroMemory(pressedKeys, sizeof(pressedKeys));
+		ZeroMemory(&pressedKeys[0],		 sizeof(pressedKeys));
 	}
 }
 
@@ -364,13 +374,27 @@ void CInput::OnFrame()
 				auto ProcessValueButtonLambda = [this](float CurrentValue, float PreviousValue, bool bNegative, u8 VkKey)
 				{
 					float Comparer = bNegative ? -0.9f : 0.9f;
-					if (CurrentValue < Comparer && PreviousValue > Comparer)
+					if (bNegative)
 					{
-						cbStack.back()->IR_OnKeyboardPress(VkKey);
+						if (CurrentValue < Comparer && PreviousValue > Comparer)
+						{
+							cbStack.back()->IR_OnKeyboardPress(VkKey);
+						}
+						else if (CurrentValue > Comparer && PreviousValue < Comparer)
+						{
+							cbStack.back()->IR_OnKeyboardRelease(VkKey);
+						}
 					}
-					else if (CurrentValue > Comparer && PreviousValue < Comparer)
+					else
 					{
-						cbStack.back()->IR_OnKeyboardRelease(VkKey);
+						if (CurrentValue > Comparer && PreviousValue < Comparer)
+						{
+							cbStack.back()->IR_OnKeyboardPress(VkKey);
+						}
+						else if (CurrentValue < Comparer && PreviousValue > Comparer)
+						{
+							cbStack.back()->IR_OnKeyboardRelease(VkKey);
+						}
 					}
 				};
 
@@ -390,7 +414,7 @@ void CInput::OnFrame()
 				ProcessTriggerInputLambda(GamepadTriggerType::Left,  VK_GAMEPAD_LEFT_TRIGGER,  GamepadData.bLeftTrigger,  leftTrigger);
 				ProcessTriggerInputLambda(GamepadTriggerType::Right, VK_GAMEPAD_RIGHT_TRIGGER, GamepadData.bRightTrigger, rightTrigger);
 
-				auto ProcessThumbstickInputLambda = [this, &ProcessValueButtonLambda](Fvector2& thumbstickValue, short ThumbX, short ThumbY, short gamepadDeadZone, u8 VkKeyLeft, u8 VkKeyRight, u8 VkKeyUp, u8 VkKeyDown)
+				auto ProcessThumbstickInputLambda = [this, &ProcessValueButtonLambda](GamepadThumbstickType thumbstickType, Fvector2& thumbstickValue, short ThumbX, short ThumbY, short gamepadDeadZone, u8 VkKeyLeft, u8 VkKeyRight, u8 VkKeyUp, u8 VkKeyDown)
 				{
 					float ThumbstickXValue = 0.0f;
 					float ThumbstickYValue = 0.0f;
@@ -406,21 +430,21 @@ void CInput::OnFrame()
 
 					if (!float_equal(thumbstickValue.x, ThumbstickXValue) || !float_equal(thumbstickValue.y, ThumbstickYValue))
 					{
-						ProcessValueButtonLambda(ThumbstickXValue, thumbstickValue.x, true,  VkKeyLeft);
-						ProcessValueButtonLambda(ThumbstickXValue, thumbstickValue.x, false, VkKeyRight);
-						ProcessValueButtonLambda(ThumbstickYValue, thumbstickValue.y, true,  VkKeyUp);
-						ProcessValueButtonLambda(ThumbstickYValue, thumbstickValue.y, false, VkKeyDown);
+						ProcessValueButtonLambda(ThumbstickXValue, thumbstickValue.x, true,     VkKeyLeft);
+						ProcessValueButtonLambda(ThumbstickXValue, thumbstickValue.x, false,    VkKeyRight);
+						ProcessValueButtonLambda(ThumbstickYValue, thumbstickValue.y, true,		VkKeyUp);
+						ProcessValueButtonLambda(ThumbstickYValue, thumbstickValue.y, false,	VkKeyDown);
 
 						thumbstickValue.x = ThumbstickXValue;
 						thumbstickValue.y = ThumbstickYValue;
-						cbStack.back()->IR_OnThumbstickChanged(GamepadThumbstickType::Left, thumbstickValue);
+						cbStack.back()->IR_OnThumbstickChanged(thumbstickType, thumbstickValue);
 					}
 				};
 
-				ProcessThumbstickInputLambda(leftThumbstick, GamepadData.sThumbLX, GamepadData.sThumbLY, XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE,
+				ProcessThumbstickInputLambda(GamepadThumbstickType::Left, leftThumbstick, GamepadData.sThumbLX, GamepadData.sThumbLY, XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE,
 					VK_GAMEPAD_LEFT_THUMBSTICK_LEFT, VK_GAMEPAD_LEFT_THUMBSTICK_RIGHT, VK_GAMEPAD_LEFT_THUMBSTICK_UP, VK_GAMEPAD_LEFT_THUMBSTICK_DOWN);
 
-				ProcessThumbstickInputLambda(rightThumbstick, GamepadData.sThumbRX, GamepadData.sThumbRY, XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE,
+				ProcessThumbstickInputLambda(GamepadThumbstickType::Right, rightThumbstick, GamepadData.sThumbRX, GamepadData.sThumbRY, XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE,
 					VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT, VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT, VK_GAMEPAD_RIGHT_THUMBSTICK_UP, VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN);
 			}
 		}
