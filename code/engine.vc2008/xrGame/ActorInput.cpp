@@ -145,6 +145,7 @@ void CActor::IR_OnKeyboardPress(u8 cmd)
 			}
 		}break;
 	case kUSE:
+		m_bPickupMode = true;
 		ActorUse();
 		break;
 	case kDROP:
@@ -246,6 +247,7 @@ void CActor::IR_OnKeyboardRelease(u8 cmd)
 		{
 		    case kJUMP:		mstate_wishful &=~mcJump;		break;
 		    case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop(); break;
+			case kUSE:      m_bPickupMode = false;			break;
 		}
 	}
 }

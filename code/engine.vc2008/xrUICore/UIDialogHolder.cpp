@@ -265,12 +265,6 @@ void CDialogHolder::CleanInternals()
 
 bool CDialogHolder::IR_UIOnKeyboardPress(u8 dik)
 {
-    EGameActions GameAction = get_binded_action(dik);
-    if (GameAction == kUSE)
-    {
-        g_actor->m_bPickupMode = true;
-    }
-
 	CUIDialogWnd *TIR = TopInputReceiver();
 
 	if (!TIR)
@@ -315,10 +309,6 @@ bool CDialogHolder::IR_UIOnKeyboardRelease(u8 vKey)
     /// Actor doesn't know about that
     /// 2. Pickup mode is more HUD functionality
     EGameActions GameAction = get_binded_action(vKey);
-    if (GameAction == kUSE)
-    {
-        g_actor->m_bPickupMode = false;
-    }
 
 	CUIDialogWnd *TIR = TopInputReceiver();
 
