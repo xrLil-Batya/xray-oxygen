@@ -20,6 +20,19 @@
 #endif
 
 #include "string_concatenations.h"
+#include <charconv>
+
+// конвертирует строку в число, в случае ошибки возвращает 0
+// (в отличии от atoi, у которого местами есть неопределённое поведение)
+
+
+inline int atoi_17(const std::string_view str)
+{
+	int res{};
+    std::from_chars(str.data(), str.data() + str.size(), res);
+    return res;
+}
+
 
 // token type definition
 struct XRCORE_API xr_token

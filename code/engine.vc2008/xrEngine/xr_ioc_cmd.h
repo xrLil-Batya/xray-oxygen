@@ -10,10 +10,10 @@ class ENGINE_API	IConsole_Command
 {
 public		:
 	friend class	CConsole;
-	typedef char	TInfo	[256];
-	typedef char	TStatus	[256];
-	typedef xr_vector<shared_str>	vecTips;
-	typedef xr_vector<shared_str>	vecLRU;
+	using TInfo = char	[256];
+	using TStatus = char	[256];
+	using vecTips = xr_vector<shared_str>;
+	using vecLRU = xr_vector<shared_str>;
 
 protected	:
 	LPCSTR			cName;
@@ -29,9 +29,9 @@ protected	:
 public		:
 	IConsole_Command		(LPCSTR N	BENCH_SEC_SIGN) : 
 	  cName				(N),
-	  bEnabled			(TRUE),
-	  bLowerCaseArgs	(TRUE),
-	  bEmptyArgsHandled	(FALSE)
+	  bEnabled			(true),
+	  bLowerCaseArgs	(true),
+	  bEmptyArgsHandled	(false)
 	  {
 		  m_LRU.reserve(LRU_MAX_COUNT + 1);
 		  m_LRU.clear();
@@ -84,10 +84,10 @@ public		:
 	const BOOL GetValue()const{ return value->test(mask); }
 	virtual void	Execute	(LPCSTR args)
 	{
-		if (EQ(args,"on"))			value->set(mask,TRUE);
-		else if (EQ(args,"off"))	value->set(mask,FALSE);
-		else if (EQ(args,"1"))		value->set(mask,TRUE);
-		else if (EQ(args,"0"))		value->set(mask,FALSE);
+		if (EQ(args,"on"))			value->set(mask,true);
+		else if (EQ(args,"off"))	value->set(mask,false);
+		else if (EQ(args,"1"))		value->set(mask,true);
+		else if (EQ(args,"0"))		value->set(mask,false);
 		else InvalidSyntax();
 	}
 	virtual void	Status	(TStatus& S)
@@ -99,7 +99,7 @@ public		:
 	{
 		TStatus  str;
 		xr_sprintf( str, sizeof(str), "%s  (current)  [on/off]", value->test(mask)?"on":"off" );
-		tips.push_back( str );
+		tips.emplace_back( str );
 	}
 
 };
@@ -131,7 +131,7 @@ public		:
 	  IConsole_Command(N),
 	  value(V),
 	  mask(M)
-	{bEmptyArgsHandled=TRUE;};
+	{bEmptyArgsHandled=true;};
 	  const BOOL GetValue()const{ return value->test(mask); }
 	virtual void	Execute	(LPCSTR args)
 	{
@@ -149,7 +149,7 @@ public		:
 	{
 		TStatus  str;
 		xr_sprintf( str, sizeof(str), "%s  (current)  [on/off]", value->test(mask)?"on":"off" );
-		tips.push_back( str );
+		tips.emplace_back( str );
 	}
 
 };
@@ -189,7 +189,6 @@ public		:
 			tok++;
 		}
 		xr_strcpy(S,"?");
-		return;
 	}
 	virtual void	Info	(TInfo& I)
 	{	
@@ -213,19 +212,19 @@ public		:
 			if ( tok->id == (int)(*value) )
 			{
 				xr_sprintf( str, sizeof(str), "%s  (current)", tok->name );
-				tips.push_back( str );
+				tips.emplace_back( str );
 				res = true;
 			}
 			tok++;
 		}
 		if ( !res )
 		{
-			tips.push_back( "---  (current)" );
+			tips.emplace_back( "---  (current)" );
 		}
 		tok = GetToken();
 		while ( tok->name )
 		{
-			tips.push_back( tok->name );
+			tips.emplace_back( tok->name );
 			tok++;
 		}
 	}
@@ -266,7 +265,7 @@ public		:
 	{
 		TStatus  str;
 		xr_sprintf( str, sizeof(str), "%3.5f  (current)  [%3.3f,%3.3f]", *value, min, max );
-		tips.push_back( str );
+		tips.emplace_back( str );
 		IConsole_Command::fill_tips( tips, mode );
 	}
 
@@ -314,7 +313,7 @@ public
 	{
 		TStatus  str;
 		xr_sprintf( str, sizeof(str), "(%e, %e, %e)  (current)  [(%e,%e,%e)-(%e,%e,%e)]", value->x, value->y, value->z, min.x, min.y, min.z, max.x, max.y, max.z );
-		tips.push_back( str );
+		tips.emplace_back( str );
 		IConsole_Command::fill_tips( tips, mode );
 	}
 
@@ -338,7 +337,7 @@ public		:
 
 	virtual void	Execute	(LPCSTR args)
 	{
-		int v = atoi(args);
+		int v = atoi_17(args);
 		if (v<min || v>max) InvalidSyntax();
 		else	*value = v;
 	}
@@ -354,7 +353,7 @@ public		:
 	{
 		TStatus  str;
 		xr_sprintf( str, sizeof(str), "%d  (current)  [%d,%d]", *value, min, max );
-		tips.push_back( str );
+		tips.emplace_back( str );
  		IConsole_Command::fill_tips( tips, mode );
 	}
 };
@@ -370,7 +369,7 @@ public:
 		value	(V),
 		size	(_size)
 	{
-		bLowerCaseArgs	=	FALSE;
+		bLowerCaseArgs	=	false;
 		R_ASSERT(V);
 		R_ASSERT(size>1);
 	};
@@ -389,7 +388,7 @@ public:
 	}
 	virtual void	fill_tips(vecTips& tips, u32 mode)
 	{
-		tips.push_back( (LPCSTR)value );
+		tips.emplace_back( (LPCSTR)value );
 		IConsole_Command::fill_tips( tips, mode );
 	}
 

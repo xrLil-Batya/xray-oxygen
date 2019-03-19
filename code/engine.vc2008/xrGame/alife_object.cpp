@@ -48,7 +48,7 @@ void CSE_ALifeObject::spawn_supplies(LPCSTR ini_string)
 			if (V && xr_strlen(V)) 
 			{
 				string64 buf;
-				j = atoi(_GetItem(V, 0, buf));
+				j = atoi_17(_GetItem(V, 0, buf));
 				if (!j)	j = 1;
 
 				if (strstr(V, "scope="))

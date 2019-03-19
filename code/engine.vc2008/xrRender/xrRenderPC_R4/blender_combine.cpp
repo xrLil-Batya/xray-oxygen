@@ -78,7 +78,7 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
    IBlender::Compile		(C);
 
    if (Name)
-	   ::Render->m_MSAASample = atoi(Definition);
+	   ::Render->m_MSAASample = atoi_17(Definition);
    else
 	   ::Render->m_MSAASample = -1;
 

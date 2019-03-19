@@ -54,7 +54,7 @@ private:
 	template <>
 		T_ITEM				convert<int>		(LPCSTR str)
 	{
-		return atoi(str);
+		return atoi_17(str);
 	}
 
 	template <>

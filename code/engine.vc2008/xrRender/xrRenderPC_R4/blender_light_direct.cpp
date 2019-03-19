@@ -99,7 +99,7 @@ void	CBlender_accum_direct_msaa::Compile(CBlender_Compile& C)
 	IBlender::Compile		(C);
 
    if( Name )
-      ::Render->m_MSAASample = atoi( Definition );
+      ::Render->m_MSAASample = atoi_17( Definition );
    else
       ::Render->m_MSAASample = -1;
 
@@ -207,7 +207,7 @@ void	CBlender_accum_direct_volumetric_msaa::Compile(CBlender_Compile& C)
 	IBlender::Compile		(C);
 
    if( Name )
-      ::Render->m_MSAASample = atoi( Definition );
+      ::Render->m_MSAASample = atoi_17( Definition );
    else
       ::Render->m_MSAASample = -1;
 
@@ -240,7 +240,7 @@ void	CBlender_accum_direct_volumetric_sun_msaa::Compile(CBlender_Compile& C)
 	IBlender::Compile		(C);
 
    if( Name )
-      ::Render->m_MSAASample = atoi( Definition );
+      ::Render->m_MSAASample = atoi_17( Definition );
    else
       ::Render->m_MSAASample = -1;
 

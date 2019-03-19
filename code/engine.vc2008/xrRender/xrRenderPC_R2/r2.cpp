@@ -121,7 +121,7 @@ void					CRender::create					()
 	char*	g			= strstr(Core.Params,"-gloss ");
 	o.forcegloss		= g?	TRUE	:FALSE	;
 	if (g)				{
-		o.forcegloss_v		= float	(atoi	(g+xr_strlen("-gloss ")))/255.f;
+		o.forcegloss_v		= float	(atoi_17	(g+xr_strlen("-gloss ")))/255.f;
 	}
 
 	// options
