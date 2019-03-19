@@ -68,16 +68,12 @@
 #include "UI/UIDragDropReferenceList.h"
 #include "ZoneCampfire.h"
 
-const u32		patch_frames	= 50;
-const float		respawn_delay	= 1.f;
-const float		respawn_auto	= 7.f;
+static constexpr float mid_size = 0.097f;
+static constexpr float upsize = 0.33f;
 
-static float IReceived = 0;
-static float ICoincidenced = 0;
-extern float cammera_into_collision_shift ;
+extern float cammera_into_collision_shift;
 
-string32		ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
-//skeleton
+string32 ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
 
 void CActor::MtSecondActorUpdate(void* pActorPointer)
 {
@@ -113,7 +109,7 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 		pActor->inherited::UpdateCL();
 
 		// Pickup update
-		if (pActor->g_Alive() && pActor->m_bPickupMode)
+		if (pActor->g_Alive())
 			pActor->PickupModeUpdate();
 
 		// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
@@ -1089,7 +1085,7 @@ void CActor::shedule_Update	(u32 DT)
 
 	UpdateArtefactsOnBeltAndOutfit				();
 	m_pPhysics_support->in_shedule_Update		(DT);
-};
+}
 
 #include "debug_renderer.h"
 void CActor::renderable_Render()
@@ -1139,7 +1135,7 @@ float CActor::missile_throw_force()
 }
 
 #ifdef DEBUG
-extern	BOOL	g_ShowAnimationInfo		;
+extern	BOOL g_ShowAnimationInfo	;
 #endif // DEBUG
 
 // HUD
@@ -1149,7 +1145,7 @@ void CActor::OnHUDDraw(CCustomHUD*)
 	g_player_hud->render_hud();
 }
 
-void CActor::RenderIndicator			(Fvector dpos, float r1, float r2, const ui_shader &IndShader)
+void CActor::RenderIndicator(Fvector dpos, float r1, float r2, const ui_shader &IndShader)
 {
 	if (!g_Alive()) return;
 
@@ -1187,11 +1183,7 @@ void CActor::RenderIndicator			(Fvector dpos, float r1, float r2, const ui_shade
 	UIRender->FlushPrimitive();
 };
 
-static float mid_size = 0.097f;
-static float fontsize = 15.0f;
-static float upsize	= 0.33f;
-
-void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
+void CActor::RenderText(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 {
 	if (!g_Alive()) return;
 	
@@ -1267,13 +1259,6 @@ float CActor::Radius()const
 bool CActor::use_bolts() const
 {
 	return CInventoryOwner::use_bolts();
-};
-
-int		g_iCorpseRemove = 1;
-
-bool CActor::NeedToDestroyObject() const
-{
-		return false;
 }
 
 ALife::_TIME_ID CActor::TimePassedAfterDeath() const
@@ -1316,7 +1301,6 @@ void CActor::OnItemDrop(CInventoryItem *inventory_item, bool just_before_destroy
 	}
 }
 
-
 void CActor::OnItemDropUpdate()
 {
 	CInventoryOwner::OnItemDropUpdate();
@@ -1328,12 +1312,12 @@ void CActor::OnItemDropUpdate()
 	}
 }
 
-void CActor::OnItemRuck		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
+void CActor::OnItemRuck(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
 {
 	CInventoryOwner::OnItemRuck(inventory_item, previous_place);
 }
 
-void CActor::OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
+void CActor::OnItemBelt(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
 {
 	CInventoryOwner::OnItemBelt(inventory_item, previous_place);
 }
@@ -1427,24 +1411,23 @@ float CActor::GetProtection_ArtefactsOnBelt(ALife::EHitType hit_type)
 	return sum;
 }
 
-void	CActor::SetZoomRndSeed		(s32 Seed)
+void CActor::SetZoomRndSeed(s32 Seed)
 {
 	if (0 != Seed) m_ZoomRndSeed = Seed;
 	else m_ZoomRndSeed = s32(Level().timeServer_Async());
 };
 
-void	CActor::SetShotRndSeed		(s32 Seed)
+void CActor::SetShotRndSeed(s32 Seed)
 {
 	if (0 != Seed) m_ShotRndSeed = Seed;
 	else m_ShotRndSeed = s32(Level().timeServer_Async());
-};
+}
 
-void CActor::spawn_supplies			()
+void CActor::spawn_supplies()
 {
 	inherited::spawn_supplies		();
 	CInventoryOwner::spawn_supplies	();
 }
-
 
 void CActor::AnimTorsoPlayCallBack(CBlend* B)
 {
@@ -1452,24 +1435,19 @@ void CActor::AnimTorsoPlayCallBack(CBlend* B)
 	actor->m_bAnimTorsoPlayed = FALSE;
 }
 
-CPHDestroyable*	CActor::ph_destroyable	()
+CPHDestroyable*	CActor::ph_destroyable()
 {
 	return smart_cast<CPHDestroyable*>(character_physics_support());
 }
 
 CEntityConditionSimple *CActor::create_entity_condition	(CEntityConditionSimple* parentEntCond)
 {
-	//return (inherited::create_entity_condition((!ec) ? xr_new<CActorCondition>(this) : smart_cast<CActorCondition*>(ec)));
     if (!parentEntCond)
-    {
         m_entity_condition = xr_new<CActorCondition>(this);
-    }
     else
-    {
         m_entity_condition = smart_cast<CActorCondition*>(parentEntCond);
-    }
 
-    return		(inherited::create_entity_condition(m_entity_condition));
+    return (inherited::create_entity_condition(m_entity_condition));
 }
 
 DLL_Pure *CActor::_construct()
@@ -1646,24 +1624,14 @@ float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
 	return res;
 }
 
-void CActor::On_SetEntity()
-{
-	CCustomOutfit* pOutfit = GetOutfit();
-	if( !pOutfit )
-		g_player_hud->load_default();
-	else
-		pOutfit->ApplySkinModel(this, true, true);
-}
-
 bool CActor::unlimited_ammo()
 {
 	return !!psActorFlags.test(AF_UNLIMITEDAMMO);
 }
 
 #include "level_changer.h"
-using namespace luabind;
-
 #pragma optimize("gyts",on)
+using namespace luabind;
 void CActor::script_register(lua_State *L)
 {
 	module(L)
@@ -1671,8 +1639,8 @@ void CActor::script_register(lua_State *L)
 			class_<CActor, CGameObject>("CActor")
 			.def(constructor<>()),
 
-		class_<CLevelChanger, CGameObject>("CLevelChanger")
-		.def(constructor<>())
+			class_<CLevelChanger, CGameObject>("CLevelChanger")
+			.def(constructor<>())
 		];
 }
 

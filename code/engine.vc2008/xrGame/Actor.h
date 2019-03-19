@@ -179,8 +179,6 @@ public:
 	virtual	float						missile_throw_force		(); 
 
 	virtual bool						unlimited_ammo			();
-
-	virtual bool						NeedToDestroyObject()  const;
 	virtual ALife::_TIME_ID				TimePassedAfterDeath() const;
 
 public:
@@ -265,7 +263,6 @@ protected:
 	float					r_model_yaw;			// orientation of model
 	float					r_model_yaw_delta;		// effect on multiple "strafe"+"something"
 
-
 public:
 	SActorMotions*			m_anims;
 	SActorVehicleAnims*		m_vehicle_anims;
@@ -280,11 +277,11 @@ public:
 	// callback на анимации модели актера
 	void					SetCallbacks		();
 	void					ResetCallbacks		();
-	static void		_BCL	Spin0Callback		(CBoneInstance*);
-	static void		_BCL	Spin1Callback		(CBoneInstance*);
-	static void		_BCL	ShoulderCallback	(CBoneInstance*);
-	static void		_BCL	HeadCallback		(CBoneInstance*);
-	static void		_BCL	VehicleHeadCallback	(CBoneInstance*);
+	static void				Spin0Callback		(CBoneInstance*);
+	static void				Spin1Callback		(CBoneInstance*);
+	static void		 	ShoulderCallback	(CBoneInstance*);
+	static void		 	HeadCallback		(CBoneInstance*);
+	static void		 	VehicleHeadCallback	(CBoneInstance*);
 
 	virtual const SRotation	Orientation			()	const	{ return r_torso; };
 	SRotation				&Orientation		()			 { return r_torso; };
@@ -559,10 +556,9 @@ protected:
 
 public:
 		void							SetWeaponHideState				(u16 State, bool bSet);
-private:
-virtual void	_BCL					HideAllWeapons					(bool v) { SetWeaponHideState(INV_STATE_BLOCK_ALL,v); }	
-public:
 		void							SetCantRunState					(bool bSet);
+private:
+	virtual void						HideAllWeapons					(bool v) { SetWeaponHideState(INV_STATE_BLOCK_ALL,v); }	
 private:
 	CActorCondition						*m_entity_condition;
 
@@ -594,13 +590,8 @@ public:
 			void				SwitchNightVision				();
 			void				SwitchTorch						();
 			void				SwitchTorchMode					();
-			
-
 			void				NoClipFly						(int cmd);
-
-
 public:
-	
 	virtual	void				on_weapon_shot_start			(CWeapon *weapon);
 	virtual	void				on_weapon_shot_update			();
 	virtual	void				on_weapon_shot_stop				();
@@ -633,13 +624,11 @@ private:
 	xr_vector<ISpatial*>		ISpatialResult;
 
 private:
-	CLocationManager				*m_location_manager;
+	CLocationManager*			m_location_manager;
+	u16							m_holder_id;
 
 public:
 	IC		const CLocationManager	&locations					() const { VERIFY (m_location_manager); return (*m_location_manager); }
-
-private:
-	ALife::_OBJECT_ID	m_holder_id;
 
 public:
 	virtual bool				register_schedule				() const {return false;}
@@ -648,9 +637,6 @@ public:
 			float				GetRestoreSpeed					(ALife::EConditionRestoreType const& type);
 
 public:
-	virtual void			On_SetEntity();
-	virtual void			On_LostEntity() {};
-
 			void			DisableHitMarks(bool disable)		{m_disabled_hitmarks = disable;};
 			bool			DisableHitMarks()					{return m_disabled_hitmarks;};
 
