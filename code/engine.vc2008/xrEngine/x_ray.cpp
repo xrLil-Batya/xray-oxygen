@@ -192,6 +192,7 @@ void Startup()
 	// Main cycle
 	bEngineloaded = true;
 	Device.UpdateWindowPropStyle();
+	pInput->OnAppActivate();
 	Device.Create(Device.editor());
 	splashScreen.HideSplash();
 

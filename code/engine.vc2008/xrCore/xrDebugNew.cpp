@@ -138,6 +138,9 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 	if (handler)
 		handler();
 
+	// free cursor from any clipping
+	ClipCursor(NULL);
+
 	// Sometimes if we crashed not in main thread, we can stuck at ShowWindow
 	HWND gameWindow = NULL;
 
@@ -285,6 +288,7 @@ using _PNH = int(__cdecl *)(size_t);
 
 IC void handler_base(const char* reason_string)
 {
+	ClipCursor(NULL);
     if (crashhandler* handlerFuncPtr = Debug.get_crashhandler())
     {
         handlerFuncPtr();

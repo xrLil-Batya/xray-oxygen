@@ -27,6 +27,7 @@ public:
 	IC SelfRef	set		(const T _u, const T _v)		{ x = _u;			y = _v;					return *this; }
 	IC SelfRef	set		(SelfCRef p)					{ x = p.x;			y = p.y;				return *this; }
 	IC SelfRef	set		(const T* p)					{ x = p[0];			y = p[1];				return *this; }
+	IC SelfRef	setZero	()								{ x = 0.0f;			y = 0.0f;				return *this; }
 
 	IC SelfRef	add		(const T p)						{ x += p;			y += p;					return *this; }
 	IC SelfRef	add		(SelfCRef p)					{ x += p.x;			y += p.y;				return *this; }

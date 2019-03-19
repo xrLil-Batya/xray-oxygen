@@ -16,10 +16,18 @@ public:
 
 	virtual void				OnFrame						() override;
 	virtual void				OnAppActivate				() override;
-	virtual void				OnAppDeactivate				() override;
+
+	void						LockMouse();
+
+	virtual void				OnAppDeactivate() override;
 
 	void						ProcessInput(LPARAM hRawInput);
 	IInputReceiver*				CurrentIR					();
+
+	void						CheckGamepad();
+	bool						IsGamepadPresented() const;
+
+	void						SetAllowAccessToBorders(bool bAccessToBorders);
 
 public:
 	bool						get_VK_name(u8 dik, LPSTR dest, int dest_sz);
@@ -39,7 +47,19 @@ private:
 	// last input data
 	Ivector2 deltaMouse;
 	bool pressedKeys[0xFF];
+	// for gamepads
+	Fvector2 leftThumbstick;
+	Fvector2 rightThumbstick;
+	float    leftTrigger;
+	float    rightTrigger;
+
 	bool bActiveFocus;
+	bool bAllowBorderAccess;
+
+	bool bGamepadConnected;
+	bool bIsVibrationSupported;
+	u32  gamepadUserIndex;
+	u32  gamepadLastPacketId;
 
 	xr_vector<IInputReceiver*>	cbStack;
 };

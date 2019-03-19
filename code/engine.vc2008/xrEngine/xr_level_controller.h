@@ -114,6 +114,32 @@ enum eVK : u8
 	VK_X = 0x58,
 	VK_Y = 0x59,
 	VK_Z = 0x5A,
+
+	// gamepad keys
+	VK_GAMEPAD_A                         = 0xC3,
+	VK_GAMEPAD_B                         = 0xC4,
+	VK_GAMEPAD_X                         = 0xC5,
+	VK_GAMEPAD_Y                         = 0xC6,
+	VK_GAMEPAD_RIGHT_SHOULDER            = 0xC7,
+	VK_GAMEPAD_LEFT_SHOULDER             = 0xC8,
+	VK_GAMEPAD_LEFT_TRIGGER              = 0xC9,
+	VK_GAMEPAD_RIGHT_TRIGGER             = 0xCA,
+	VK_GAMEPAD_DPAD_UP                   = 0xCB,
+	VK_GAMEPAD_DPAD_DOWN                 = 0xCC,
+	VK_GAMEPAD_DPAD_LEFT                 = 0xCD,
+	VK_GAMEPAD_DPAD_RIGHT                = 0xCE,
+	VK_GAMEPAD_MENU                      = 0xCF,
+	VK_GAMEPAD_VIEW                      = 0xD0,
+	VK_GAMEPAD_LEFT_THUMBSTICK_BUTTON    = 0xD1,
+	VK_GAMEPAD_RIGHT_THUMBSTICK_BUTTON   = 0xD2,
+	VK_GAMEPAD_LEFT_THUMBSTICK_UP        = 0xD3,
+	VK_GAMEPAD_LEFT_THUMBSTICK_DOWN      = 0xD4,
+	VK_GAMEPAD_LEFT_THUMBSTICK_RIGHT     = 0xD5,
+	VK_GAMEPAD_LEFT_THUMBSTICK_LEFT      = 0xD6,
+	VK_GAMEPAD_RIGHT_THUMBSTICK_UP       = 0xD7,
+	VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN     = 0xD8,
+	VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT    = 0xD9,
+	VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT     = 0xDA,
 };
 
 struct _keyboard		

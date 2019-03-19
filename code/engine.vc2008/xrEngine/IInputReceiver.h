@@ -6,6 +6,18 @@
 #define IINPUTRECEIVERH
 #pragma once
 
+enum class GamepadThumbstickType
+{
+	Left,
+	Right
+};
+
+enum class GamepadTriggerType
+{
+	Left,
+	Right
+};
+
 class ENGINE_API	IInputReceiver
 {
 public:
@@ -15,7 +27,7 @@ public:
 	void			IR_GetMousePosReal				(Ivector2 &p);
 	void			IR_GetMousePosIndependent		(Fvector2 &f);
 	void			IR_GetMousePosIndependentCrop	(Fvector2 &f);
-	BOOL IR_GetKeyState (u8 dik);
+	BOOL			IR_GetKeyState (u8 dik);
 	void			IR_Capture						();
 	void			IR_Release						();
 
@@ -28,6 +40,10 @@ public:
 	virtual void	IR_OnKeyboardPress				(u8 dik)		{};
 	virtual void	IR_OnKeyboardRelease			(u8 dik)		{};
 	virtual void	IR_OnKeyboardHold				(u8 dik)		{};
+
+	// gamepad
+	virtual void    IR_OnThumbstickChanged(GamepadThumbstickType type, Fvector2& position) {};
+	virtual void    IR_OnTriggerPressed(GamepadTriggerType type, float value) {};
 };
 
 ENGINE_API extern float			psMouseSens;

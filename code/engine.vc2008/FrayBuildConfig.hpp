@@ -6,7 +6,3 @@
 
 /* Threads */
 //#define CD_BUILDER_DEBUG		// Binding CDB-thread to the main.
-
-/* Input Systems */ ///Temporary
-// #define RAW_INPUT_USE
-// #define XINPUT_USE

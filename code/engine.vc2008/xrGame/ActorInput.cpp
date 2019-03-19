@@ -101,6 +101,10 @@ void CActor::IR_OnKeyboardPress(u8 cmd)
 		if( psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)) )
 			mstate_wishful ^= mcCrouch;
 		}break;
+	case kSPRINT_TOGGLE:
+		{
+			mstate_wishful ^= mcSprint;
+		}break;
 	case kCAM_1:	cam_Set			(eacFirstEye);				
 		break;
 	case kCAM_2:
@@ -313,10 +317,6 @@ void CActor::IR_OnKeyboardHold(u8 cmd)
 	case kACCEL:	mstate_wishful |= mcAccel;									break;
 	case kL_STRAFE:	mstate_wishful |= mcLStrafe;								break;
 	case kR_STRAFE:	mstate_wishful |= mcRStrafe;								break;
-	case kSPRINT_TOGGLE:
-		if (!(mstate_real&(mcJump | mcFall | mcLanding | mcLanding2)))
-			mstate_wishful |= mcSprint;
-		break;
 	case kL_LOOKOUT:mstate_wishful |= mcLLookout;								break;
 	case kR_LOOKOUT:mstate_wishful |= mcRLookout;								break;
 	case kFWD:		mstate_wishful |= mcFwd;									break;

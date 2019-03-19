@@ -436,6 +436,15 @@ void CRenderDevice::GetXrWindowPoint(POINT& OutWindowPoint) const
 	}
 }
 
+u64 CRenderDevice::GetXrWindowStyle() const
+{
+	if (m_hWnd == NULL)
+	{
+		return 0;
+	}
+	return GetWindowLongPtr(m_hWnd, GWL_STYLE);
+}
+
 void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 {
 	// Don't drawing wnd when slash is active

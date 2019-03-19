@@ -1,11 +1,12 @@
 ﻿#include "stdafx.h"
-#pragma hdrstop
 #include "xr_input.h"
 #include "IInputReceiver.h"
 #include "../include/editor/ide.hpp"
 #include "../FrayBuildConfig.hpp"
 #include "OffSetOfWrapper.inl"
 #include "IGame_AnselSDK.h"
+#include "xr_level_controller.h"
+#include <Xinput.h>
 
 CInput *	pInput = nullptr;
 
@@ -20,6 +21,14 @@ CInput::CInput()
 	Log("Starting INPUT device...");
 
 	bActiveFocus = false;
+	bGamepadConnected = false;
+	bAllowBorderAccess = true;
+	gamepadUserIndex = 0;
+	gamepadLastPacketId = 0;
+	leftTrigger = 0.0f;
+	rightTrigger = 0.0f;
+	leftThumbstick.setZero();
+	rightThumbstick.setZero();
 	UINT deviceCountGet = 0;
 	UINT rawInputDeviceCount = 0;
 	deviceCountGet = GetRawInputDeviceList(NULL, &rawInputDeviceCount, sizeof(RAWINPUTDEVICELIST));
@@ -30,23 +39,6 @@ CInput::CInput()
 	deviceCountGet = GetRawInputDeviceList(deviceLists.data(), &rawInputDeviceCount, sizeof(RAWINPUTDEVICELIST));
 
 	R_ASSERT(deviceCountGet != -1);
-
-	Msg("[CInput] Found input devices:");
-	for (u32 i = 0; i < rawInputDeviceCount; i++)
-	{
-		string256 deviceName;
-		UINT deviceNameSize = sizeof(deviceName);
-		UINT charsCopied = GetRawInputDeviceInfoA(deviceLists[i].hDevice, RIDI_DEVICENAME, deviceName, &deviceNameSize);
-
-		if (charsCopied > 0)
-		{
-			Msg("[CInput] Device%u \"%s\"", i, deviceName);
-		}
-		else
-		{
-			Msg("[CInput] Device%u \"ERROR\"", i);
-		}
-	}
 
 	rawDevices[0].usUsagePage = 1;
 	rawDevices[0].usUsage = 2; // mouse
@@ -198,7 +190,9 @@ void CInput::iCapture(IInputReceiver *p)
 	ResetPressedState();
 	// change focus
 	if (!cbStack.empty())
+	{
 		cbStack.back()->IR_OnDeactivate();
+	}
 	cbStack.push_back(p);
 	cbStack.back()->IR_OnActivate();
 }
@@ -239,10 +233,9 @@ void CInput::OnAppActivate()
 	bActiveFocus = true;
 	ShowCursor(!bActiveFocus);
 
-	RECT windowRect;
-	Device.GetXrWindowRect(windowRect);
+	XInputEnable(TRUE);
 
-	ClipCursor(&windowRect);
+	LockMouse();
 }
 
 void CInput::OnAppDeactivate()
@@ -254,6 +247,25 @@ void CInput::OnAppDeactivate()
 	bActiveFocus = false;
 	ShowCursor(!bActiveFocus);
 	ClipCursor(NULL);
+
+	XInputEnable(FALSE);
+}
+
+void CInput::LockMouse()
+{
+	RECT windowRect;
+	Device.GetXrWindowRect(windowRect);
+
+	if (!bAllowBorderAccess)
+	{
+		// make offset for 15 px from window border, to prevent accidently resizing
+		windowRect.left += 15;
+		windowRect.right -= 15;
+		windowRect.top += 55;
+		windowRect.bottom -= 25;
+	}
+
+	ClipCursor(&windowRect);
 }
 
 void CInput::ResetPressedState()
@@ -288,7 +300,6 @@ void CInput::OnFrame()
 	dwCurTime = RDEVICE.TimerAsync_MMT();
 
 	// check for holded keys
-
 	for (u8 i = 0; i < 0xFF; i++)
 	{
 		if (pressedKeys[i])
@@ -296,14 +307,171 @@ void CInput::OnFrame()
 			cbStack.back()->IR_OnKeyboardHold(i);
 		}
 	}
+
+	// check for gamepad presense
+	if ((Device.dwFrame % 60) == 0) // per 60 frames
+	{
+		CheckGamepad();
+	}
+
+	// get gamepad inputs (if presented)
+	if (bGamepadConnected)
+	{
+		XINPUT_STATE GamepadState;
+		if ((XInputGetState(gamepadUserIndex, &GamepadState)) == ERROR_SUCCESS)
+		{
+			if (gamepadLastPacketId != GamepadState.dwPacketNumber)
+			{
+				XINPUT_GAMEPAD& GamepadData = GamepadState.Gamepad;
+				gamepadLastPacketId = GamepadState.dwPacketNumber;
+
+				// check for buttons
+				auto CheckForGamepadButtonLambda = [this, &GamepadData](u16 xInputButtonMask, u8 VkKey)
+				{
+					if (GamepadData.wButtons & xInputButtonMask)
+					{
+						if (!pressedKeys[VkKey])
+						{
+							pressedKeys[VkKey] = true;
+							cbStack.back()->IR_OnKeyboardPress(VkKey);
+						}
+					}
+					else
+					{
+						if (pressedKeys[VkKey])
+						{
+							pressedKeys[VkKey] = false;
+							cbStack.back()->IR_OnKeyboardRelease(VkKey);
+						}
+					}
+				};
+
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_DPAD_UP,			VK_GAMEPAD_DPAD_UP);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_DPAD_DOWN,		VK_GAMEPAD_DPAD_DOWN);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_DPAD_LEFT,		VK_GAMEPAD_DPAD_LEFT);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_DPAD_RIGHT,		VK_GAMEPAD_DPAD_RIGHT);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_START,			VK_GAMEPAD_MENU);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_BACK,			VK_GAMEPAD_VIEW);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_LEFT_THUMB,		VK_GAMEPAD_LEFT_THUMBSTICK_BUTTON);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_RIGHT_THUMB,		VK_GAMEPAD_RIGHT_THUMBSTICK_BUTTON);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_LEFT_SHOULDER,	VK_GAMEPAD_LEFT_SHOULDER);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_RIGHT_SHOULDER,	VK_GAMEPAD_RIGHT_SHOULDER);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_A,				VK_GAMEPAD_A);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_B,				VK_GAMEPAD_B);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_X,				VK_GAMEPAD_X);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_Y,				VK_GAMEPAD_Y);
+
+				auto ProcessValueButtonLambda = [this](float CurrentValue, float PreviousValue, bool bNegative, u8 VkKey)
+				{
+					float Comparer = bNegative ? -0.9f : 0.9f;
+					if (CurrentValue < Comparer && PreviousValue > Comparer)
+					{
+						cbStack.back()->IR_OnKeyboardPress(VkKey);
+					}
+					else if (CurrentValue > Comparer && PreviousValue < Comparer)
+					{
+						cbStack.back()->IR_OnKeyboardRelease(VkKey);
+					}
+				};
+
+				// check for triggers and thumbsticks
+				auto ProcessTriggerInputLambda = [this, &ProcessValueButtonLambda](GamepadTriggerType type, u8 VkKey, BYTE InTriggerInput, float& previousTriggerValue)
+				{
+					float fltTriggerValue = (float)InTriggerInput / 255.f;
+					if (!float_equal(fltTriggerValue, previousTriggerValue))
+					{
+						ProcessValueButtonLambda(fltTriggerValue, previousTriggerValue, false, VkKey);
+
+						previousTriggerValue = fltTriggerValue;
+						cbStack.back()->IR_OnTriggerPressed(type, previousTriggerValue);
+					}
+				};
+
+				ProcessTriggerInputLambda(GamepadTriggerType::Left,  VK_GAMEPAD_LEFT_TRIGGER,  GamepadData.bLeftTrigger,  leftTrigger);
+				ProcessTriggerInputLambda(GamepadTriggerType::Right, VK_GAMEPAD_RIGHT_TRIGGER, GamepadData.bRightTrigger, rightTrigger);
+
+				auto ProcessThumbstickInputLambda = [this, &ProcessValueButtonLambda](Fvector2& thumbstickValue, short ThumbX, short ThumbY, short gamepadDeadZone, u8 VkKeyLeft, u8 VkKeyRight, u8 VkKeyUp, u8 VkKeyDown)
+				{
+					float ThumbstickXValue = 0.0f;
+					float ThumbstickYValue = 0.0f;
+					if (ThumbX > gamepadDeadZone || ThumbX < (-gamepadDeadZone))
+					{
+						ThumbstickXValue = (float)ThumbX / 32767.f;
+					}
+					if (ThumbY > gamepadDeadZone || ThumbY < (-gamepadDeadZone))
+					{
+						ThumbstickYValue = (float)ThumbY / 32767.f;
+						ThumbstickYValue = -ThumbstickYValue;
+					}
+
+					if (!float_equal(thumbstickValue.x, ThumbstickXValue) || !float_equal(thumbstickValue.y, ThumbstickYValue))
+					{
+						ProcessValueButtonLambda(ThumbstickXValue, thumbstickValue.x, true,  VkKeyLeft);
+						ProcessValueButtonLambda(ThumbstickXValue, thumbstickValue.x, false, VkKeyRight);
+						ProcessValueButtonLambda(ThumbstickYValue, thumbstickValue.y, true,  VkKeyUp);
+						ProcessValueButtonLambda(ThumbstickYValue, thumbstickValue.y, false, VkKeyDown);
+
+						thumbstickValue.x = ThumbstickXValue;
+						thumbstickValue.y = ThumbstickYValue;
+						cbStack.back()->IR_OnThumbstickChanged(GamepadThumbstickType::Left, thumbstickValue);
+					}
+				};
+
+				ProcessThumbstickInputLambda(leftThumbstick, GamepadData.sThumbLX, GamepadData.sThumbLY, XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE,
+					VK_GAMEPAD_LEFT_THUMBSTICK_LEFT, VK_GAMEPAD_LEFT_THUMBSTICK_RIGHT, VK_GAMEPAD_LEFT_THUMBSTICK_UP, VK_GAMEPAD_LEFT_THUMBSTICK_DOWN);
+
+				ProcessThumbstickInputLambda(rightThumbstick, GamepadData.sThumbRX, GamepadData.sThumbRY, XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE,
+					VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT, VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT, VK_GAMEPAD_RIGHT_THUMBSTICK_UP, VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN);
+			}
+		}
+	}
 }
 
 IInputReceiver*	 CInput::CurrentIR()
 {
-	if (cbStack.size())
+	if (!cbStack.empty())
+	{
 		return cbStack.back();
+	}
 	else
-		return NULL;
+	{
+		return nullptr;
+	}
+}
+
+void CInput::CheckGamepad()
+{
+	XINPUT_CAPABILITIES GamepadState;
+	
+	for (u32 i = 0; i < XUSER_MAX_COUNT; i++)
+	{
+		if (XInputGetCapabilities(i, XINPUT_FLAG_GAMEPAD, &GamepadState) == ERROR_SUCCESS)
+		{
+			gamepadUserIndex = i;
+			bGamepadConnected = true;
+
+			if (GamepadState.Vibration.wLeftMotorSpeed && GamepadState.Vibration.wRightMotorSpeed)
+			{
+				bIsVibrationSupported = true;
+			}
+
+			return;
+		}
+	}
+
+	bIsVibrationSupported = false;
+	bGamepadConnected = false;
+}
+
+bool CInput::IsGamepadPresented() const
+{
+	return bGamepadConnected;
+}
+
+void CInput::SetAllowAccessToBorders(bool bAccessToBorders)
+{
+	bAllowBorderAccess = bAccessToBorders;
+	LockMouse();
 }
 
 void  CInput::feedback(u16 s1, u16 s2, float time)

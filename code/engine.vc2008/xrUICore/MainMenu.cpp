@@ -6,6 +6,7 @@
 #include "../xrEngine/IGame_Level.h"
 #include "../xrEngine/CameraManager.h"
 #include "../xrEngine/xr_Level_controller.h"
+#include "../xrEngine/xr_input.h"
 #include "UITextureMaster.h"
 #include "UIXmlInit.h"
 #include "UIBtnHint.h"
@@ -34,6 +35,7 @@ UI_API CMainMenu* MainMenu() { return (CMainMenu*) g_pGamePersistent->m_pMainMen
 CMainMenu::CMainMenu()
 {
 	m_Flags.zero();
+	m_lastLeftThumbstickValue.setZero();
 	m_startDialog = NULL;
 	m_screenshotFrame = u32(-1);
 	g_pGamePersistent->m_pMainMenu = this;
@@ -127,6 +129,7 @@ void CMainMenu::Activate(bool bActivate)
 		{
 			g_discord.SetStatus(xrDiscordPresense::StatusId::Menu);
 		}
+		pInput->SetAllowAccessToBorders(true);
 	}
 	else {
 		m_deactivated_frame = Device.dwFrame;
@@ -136,7 +139,8 @@ void CMainMenu::Activate(bool bActivate)
 		Device.seqRender.Remove(this);
 
 		bool b = !!Console->bVisible;
-		if (b) {
+		if (b) 
+		{
 			Console->Hide();
 		}
 
@@ -172,6 +176,7 @@ void CMainMenu::Activate(bool bActivate)
 			Console->Execute("vid_restart");
 		}
 		//g_discord.SetStatus(xrDiscordPresense::StatusId::In_Game);
+		pInput->SetAllowAccessToBorders(false);
 	}
 }
 
@@ -213,6 +218,16 @@ void CMainMenu::OnDeviceReset()
 {
 	if (IsActive() && g_pGameLevel)
 		m_Flags.set(flNeedVidRestart, TRUE);
+}
+
+void CMainMenu::IR_OnThumbstickChanged(GamepadThumbstickType type, Fvector2& position)
+{
+	if (IsActive() && type == GamepadThumbstickType::Left)
+	{
+		float scaledX = position.x * 3.0f;
+		float scaledY = position.y * 3.0f;
+		m_lastLeftThumbstickValue.set(scaledX, scaledY);
+	}
 }
 
 void CMainMenu::IR_OnMouseMove(int x, int y)
@@ -337,6 +352,12 @@ void CMainMenu::OnFrame()
 			ReloadUI();
 			m_startDialog->SendMessage(m_startDialog, MAIN_MENU_RELOADED, NULL);
 		}
+	}
+
+	// for gamepad test
+	if (m_lastLeftThumbstickValue.square_magnitude() > EPS_L)
+	{
+		CDialogHolder::IR_UIOnMouseMove((int)m_lastLeftThumbstickValue.x, (int)m_lastLeftThumbstickValue.y);
 	}
 }
 

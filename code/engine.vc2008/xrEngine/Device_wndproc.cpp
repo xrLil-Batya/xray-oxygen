@@ -1,10 +1,5 @@
 ﻿#include "stdafx.h"
 #include "../FrayBuildConfig.hpp"
-#ifdef XINPUT_USE
-#include <XInput.h>
-#pragma comment(lib, "xinput.lib")
-#endif
-
 #include "xr_input.h"
 
 extern ENGINE_API BOOL g_bRendering;
@@ -14,9 +9,6 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 {
 	switch (uMsg) 
 	{
-#ifdef XINPUT_USE
-	case WM_ACTIVATEAPP: XInputEnable((BOOL)wParam); break; // Controller Input Wrapper
-#endif
 	case WM_SYSKEYDOWN : return true;
 	case WM_ENTERSIZEMOVE: bResize = true; break;
 	case WM_TIMER: break;
@@ -70,6 +62,7 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 				if (height >= NULL && width >= NULL)
 				{
 					Device.ResizeProc(height, width);
+					pInput->LockMouse();
 				}
 			}
 		}

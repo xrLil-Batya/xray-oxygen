@@ -241,6 +241,7 @@ public:
 	HWND CreateXRayWindow					(HWND parent = nullptr, int Width = 0, int Height = 0);
 	void GetXrWindowRect					(RECT& OutWindowRect, bool bClientRect = false) const;
 	void GetXrWindowPoint					(POINT& OutWindowPoint) const;
+	u64  GetXrWindowStyle					() const;
 
     void UpdateWindowPropStyle              (WindowPropStyle PropStyle = (WindowPropStyle)ps_vid_windowtype);
 

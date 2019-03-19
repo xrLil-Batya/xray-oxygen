@@ -29,6 +29,7 @@ class UI_API CMainMenu : public IMainMenu, public IInputReceiver, public pureRen
 	Flags16			m_Flags;
 	string_path		m_screenshot_name;
 	u32				m_screenshotFrame;
+	Fvector2		m_lastLeftThumbstickValue;
 	void			ReadTextureInfo();
 
 	xr_vector<CUIWindow*> m_pp_draw_wnds;
@@ -52,6 +53,7 @@ public:
 	virtual bool	IgnorePause() { return true; }
 
 	virtual void	IR_OnMouseMove(int x, int y);
+	virtual void	IR_OnThumbstickChanged(GamepadThumbstickType type, Fvector2& position) override;
 
 	virtual void	IR_OnKeyboardPress(u8 dik);
 	virtual void	IR_OnKeyboardRelease(u8 dik);
