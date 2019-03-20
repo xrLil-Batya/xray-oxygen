@@ -140,7 +140,7 @@ void CInput::ProcessInput(LPARAM hRawInputParam)
 				if (!pressedKeys[pressedKey])
 				{
 					pressedKeys[pressedKey] = true;
-					cbStack.back()->IR_OnKeyboardPress((u8)keyboardKey.VKey);
+					cbStack.back()->IR_OnKeyboardPress((u8)pressedKey);
 				}
 			}
 			else if (keyboardKey.Flags & RI_KEY_BREAK)
@@ -148,8 +148,16 @@ void CInput::ProcessInput(LPARAM hRawInputParam)
 				if (pressedKeys[pressedKey])
 				{
 					pressedKeys[pressedKey] = false;
-					cbStack.back()->IR_OnKeyboardRelease((u8)keyboardKey.VKey);
+					cbStack.back()->IR_OnKeyboardRelease((u8)pressedKey);
 				}
+			}
+
+			if (pressedKeys[VK_F4] && pressedKeys[VK_MENU])
+			{
+				Engine.Event.Defer("KERNEL:disconnect");
+				Engine.Event.Defer("KERNEL:quit");
+
+				return;
 			}
 		}
 	}
@@ -168,12 +176,6 @@ void CInput::ProcessInput(LPARAM hRawInputParam)
 
 bool CInput::get_VK_name(u8 dik, LPSTR dest_str, int dest_sz)
 {
-// 	string16 keyName = {0};
-// 	LONG KeyValue = 0;
-// 	UINT ScanValue = MapVirtualKeyA(dik, MAPVK_VK_TO_VSC);
-// 	KeyValue = ScanValue << 16;
-// 	int RetCode = GetKeyNameTextA(KeyValue, &keyName[0], 16);
-
 	const xr_string& keyName = KeyNamesTable.at(dik);
 
 	memcpy(dest_str, keyName.c_str(), keyName.size());

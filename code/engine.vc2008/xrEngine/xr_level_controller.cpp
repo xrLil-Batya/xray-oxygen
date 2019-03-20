@@ -619,7 +619,6 @@ void ConsoleBindCmds::save(IWriter* F)
 	}
 }
 
-
 void CCC_RegisterInput()
 {
 	initialize_bindings									();
@@ -636,7 +635,7 @@ void CCC_RegisterInput()
 	CMD1(CCC_UnBindConsoleCmd,	"unbind_console"		);
 };
 
-#define DECLARE_KEY_ENTRY(keyName) { keyName, xr_string(#keyName)},
+#define DECLARE_KEY_ENTRY(keyName) { (u8)keyName, xr_string(#keyName)},
 
 const xr_map<u8, xr_string> KeyNamesTable =
 {
