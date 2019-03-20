@@ -94,16 +94,20 @@ void CInput::ProcessInput(LPARAM hRawInputParam)
 		RAWINPUTHEADER& header = pRawInput->header;
 		if (header.dwType == RIM_TYPEMOUSE)
 		{
-			RAWMOUSE& mouse = pRawInput->data.mouse;
-			const bool IsAbsoluteInput = (mouse.usFlags & MOUSE_MOVE_ABSOLUTE) == MOUSE_MOVE_ABSOLUTE;
+			RAWMOUSE& refMouseData = pRawInput->data.mouse;
+			const bool IsAbsoluteInput = (refMouseData.usFlags & MOUSE_MOVE_ABSOLUTE) == MOUSE_MOVE_ABSOLUTE;
 
-			if (!IsAbsoluteInput)
+			if (refMouseData.usButtonFlags & RI_MOUSE_WHEEL)
 			{
-				deltaMouse.set(mouse.lLastX, mouse.lLastY);
+				cbStack.back()->IR_OnMouseWheel(int(refMouseData.usButtonData << 16));
+			}
+			else if (!IsAbsoluteInput)
+			{
+				deltaMouse.set(refMouseData.lLastX, refMouseData.lLastY);
 				cbStack.back()->IR_OnMouseMove(deltaMouse.x, deltaMouse.y);
 			}
 
-			USHORT mouseFlags = mouse.usButtonFlags;
+			USHORT mouseFlags = refMouseData.usButtonFlags;
 			auto CheckMouseButtonState = [this, mouseFlags](u8 mouseKey, USHORT mouseDown, USHORT mouseUp)
 			{
 				if (mouseFlags & mouseDown)
