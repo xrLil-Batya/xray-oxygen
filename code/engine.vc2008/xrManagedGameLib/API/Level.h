@@ -142,13 +142,18 @@ namespace XRay
 		//static void RemoveCallForObject(const luabind::object &lua_object);
 
 		
-		static MEnvironment^ pEnvironment();
+		//static MEnvironment^ pEnvironment();
 
-		//static EnvDescriptor^ CurrentEnvironment(CEnvironment* self);
-		////extern bool g_bDisableAllInput;
-		//static void DisableInput();
-		//static void EnableInput();
-		//static void SpawnPhantom(const Fvector &position);
+		static EnvDescriptor^  CurrentEnvironment(XRay::MEnvironment^ self);
+
+		static void DisableInput();
+		static void EnableInput();
+		static void SpawnPhantom(const Fvector &position);
+		static Fbox GetBoundingVolume();
+		
+		//static void IterateSounds(LPCSTR prefix, u32 max_count, const CScriptCallbackEx<void> &callback);
+		
+
 
 	};
 }

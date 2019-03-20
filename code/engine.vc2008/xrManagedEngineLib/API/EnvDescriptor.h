@@ -8,11 +8,11 @@ namespace XRay
 	{
 	internal:
 
-		CEnvDescriptor* pNativeObject;
+		CEnvDescriptor *pNativeObject;
 
 	public:
+		EnvDescriptor(::System::IntPtr InNativeObject);
 
-		EnvDescriptor(shared_str const& identifier);
-		~EnvDescriptor();
+		//CurrentEnvironment(MEnvironment self);
 	};
 }

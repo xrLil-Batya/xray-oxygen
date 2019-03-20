@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="API\EnvDescriptorMixer.h" />
     <ClInclude Include="API\Engine.h" />
     <ClInclude Include="API\EngineClassIDs.h" />
     <ClInclude Include="API\EnvDescriptor.h" />
@@ -112,6 +113,7 @@
     <ClCompile Include="API\Engine.cpp" />
     <ClCompile Include="API\EngineClassIDs.cpp" />
     <ClCompile Include="API\EnvDescriptor.cpp" />
+    <ClCompile Include="API\EnvDescriptorMixer.cpp" />
     <ClCompile Include="API\Environment.cpp" />
     <ClCompile Include="API\LevelInfo.cpp" />
     <ClCompile Include="API\NativeObject.cpp" />

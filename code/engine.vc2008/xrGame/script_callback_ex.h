@@ -16,14 +16,11 @@ IC bool compare_safe(const luabind::object& o1, const luabind::object& o2) {
     return (o1 == o2);
 }
 
-template <typename _return_type>
+template <typename return_type>
 class CScriptCallbackEx_
 {
-public:
-    using return_type = _return_type;
-
 private:
-    using functor_type = luabind::functor<_return_type>;
+    using functor_type = luabind::functor<return_type>;
     using object_type = luabind::object;
     using unspecified_bool_type = bool (CScriptCallbackEx_::*)() const;
 
@@ -83,8 +80,8 @@ public:
     }
 };
 
-template <typename _return_type>
-class CScriptCallbackEx : public CScriptCallbackEx_<_return_type> {
+template <typename return_type>
+class CScriptCallbackEx : public CScriptCallbackEx_<return_type> {
     template <typename T>
     static void do_return(T&& value, std::true_type /*is_void*/) {
         (void) value;

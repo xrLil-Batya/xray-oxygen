@@ -11,8 +11,10 @@
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
 #include "../xrGame/HUDManager.h"
-//#include "../xrManagedUILib/API/UIDialogWnd.h"
-#include "../xrGame/UIGame.h" 
+#include "../xrGame/UIGame.h"
+
+ 
+extern GAME_API bool g_bDisableAllInput;
 
 
 System::UInt32 XRay::LevelGraph::LevelID::get()
@@ -254,7 +256,57 @@ bool XRay::Level::isLevelPresent()
 	return (!!g_pGameLevel);
 }
 
+/*
 XRay::MEnvironment^ XRay::Level::pEnvironment()
 {
-	return	(%MEnvironment());   // (&Environment())
+	return	(%MEnvironment(::System::IntPtr ));   // (&Environment())
 }
+*/
+
+XRay::EnvDescriptor^ XRay::Level::CurrentEnvironment(XRay::MEnvironment^ self)
+{
+	return		(self->CurrentEnv);
+}	
+void XRay::Level::DisableInput()
+{
+	g_bDisableAllInput = true;
+#ifdef DEBUG
+	Msg("input disabled");
+#endif // #ifdef DEBUG
+}
+void XRay::Level::EnableInput()
+{
+	g_bDisableAllInput = false;
+#ifdef DEBUG
+	Msg("input enabled");
+#endif // #ifdef DEBUG
+}
+void XRay::Level::SpawnPhantom(const Fvector &position)
+{
+	::Level().spawn_item("m_phantom", position, u32(-1), u16(-1), false);
+}
+Fbox XRay::Level::GetBoundingVolume()
+{
+	return ::Level().ObjectSpace.GetBoundingVolume();
+}
+/*
+void XRay::Level::IterateSounds(LPCSTR prefix, u32 max_count, const CScriptCallbackEx<void> &callback)
+{
+	for (int j = 0, N = _GetItemCount(prefix); j < N; ++j) {
+		string_path					fn, s;
+		LPSTR						S = (LPSTR)&s;
+		_GetItem(prefix, j, s);
+		if (FS.exist(fn, "$game_sounds$", S, ".ogg"))
+			callback(prefix);
+
+		for (u32 i = 0; i < max_count; ++i)
+		{
+			string_path					name;
+			xr_sprintf(name, "%s%d", S, i);
+			if (FS.exist(fn, "$game_sounds$", name, ".ogg"))
+				callback(name);
+		}
+	}
+}
+*/
+

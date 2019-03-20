@@ -1,23 +1,28 @@
 #pragma once
 #include "../xrEngine/Environment.h"
+#include "EnvDescriptorMixer.h"
 
 namespace XRay
 {
 	public ref class MEnvironment
 	{
-	public: 
 
-		CEnvironment* _pEnvironment = nullptr;
+	internal:
+		CEnvironment* pNativeObject;
+
+	public:
+		EnvDescriptorMixer^	CurrentEnv;
 
 
 	public:
+		MEnvironment(::System::IntPtr InNativeLevel);
 		static void ChangeGameTime(float fValue);
-		//ENGINE_API MEnvironment% Environment();
 
-	
+		
 	};
 
 }
+
 
 
 

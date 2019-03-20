@@ -2,11 +2,9 @@
 #include "EnvDescriptor.h"
 
 
-XRay::EnvDescriptor::EnvDescriptor(shared_str const& identifier) //?
+
+XRay::EnvDescriptor::EnvDescriptor(::System::IntPtr InNativeObject)
 {
-	//pNativeObject
+	CAST_TO_NATIVE_OBJECT(CEnvDescriptor, InNativeObject);
 }
 
-XRay::EnvDescriptor::~EnvDescriptor()
-{
-}
