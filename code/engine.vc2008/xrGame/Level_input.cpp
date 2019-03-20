@@ -135,7 +135,7 @@ void CLevel::IR_OnKeyboardPress(u8 key)
 	if (!bReady || !b_ui_exist)			
 		return;
 
-	if (b_ui_exist && GameUI()->IR_UIOnKeyboardPress(key)) 
+	if (GameUI()->IR_UIOnKeyboardPress(key)) 
 		return;
 
 	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	

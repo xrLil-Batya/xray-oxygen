@@ -197,7 +197,7 @@ bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool bUseCursorPos)
         SendEvent_Item2Ruck(ItemDataClass, m_pActorInvOwner->object_id());
     }
 
-    if (i != itm && pInput->iGetAsyncKeyState(VK_LCONTROL))
+    if (i != itm && pInput->iGetAsyncKeyState(VK_CONTROL))
     {
         return ToActorTrade(itm, bUseCursorPos);
     }

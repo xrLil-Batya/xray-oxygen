@@ -390,13 +390,13 @@ void line_edit_control::set_edit( LPCSTR str )
 
 // ========================================================
 
-void line_edit_control::on_key_press( u8 dik )
+void line_edit_control::on_key_press(u8 dik)
 {
-	if ( VK_COUNT <= dik )
+	if (VK_COUNT <= dik)
 	{
 		return;
 	}
-	if ( !m_hold_mode )
+	if (!m_hold_mode)
 	{
 		m_last_key_time = 0.0f;
 		m_accel = 1.0f;
@@ -407,30 +407,30 @@ void line_edit_control::on_key_press( u8 dik )
 	clear_inserted();
 	compute_positions();
 
-	if ( m_actions[dik] )
+	if (m_actions[dik])
 	{
-		m_actions[dik]->on_key_press( this );
+		m_actions[dik]->on_key_press(this);
 	}
 	// ===========
-	if ( dik == VK_LCONTROL || dik == VK_RCONTROL )
+	if (dik == VK_LCONTROL || dik == VK_RCONTROL || dik == VK_CONTROL)
 	{
-		m_mark = false;	
+		m_mark = false;
 	}
-	
-	m_edit_str[m_buffer_size-1] = 0;
+
+	m_edit_str[m_buffer_size - 1] = 0;
 	clamp_cur_pos();
 
 	add_inserted_text();
-	if ( m_mark && (!get_key_state( ks_Shift ) || !empty_inserted() ) )
+	if (m_mark && (!get_key_state(ks_Shift) || !empty_inserted()))
 	{
 		m_select_start = m_cur_pos;
 	}
 	compute_positions();
 
 	m_repeat_mode = false;
-	m_rep_time    = 0.0f;
-	
-	update_key_states( );
+	m_rep_time = 0.0f;
+
+	update_key_states();
 	update_bufs();
 }
 
@@ -443,9 +443,9 @@ void line_edit_control::on_key_hold( u8 dik )
 	switch ( dik )
 	{
 	case VK_TAB:
-	case VK_SHIFT:   case VK_RSHIFT:
-	case VK_LCONTROL: case VK_RCONTROL:
-	case VK_LMENU:     case VK_RMENU:
+	case VK_SHIFT:   
+	case VK_CONTROL: 
+	case VK_MENU:
 		return;
 		break;
 	}

@@ -205,7 +205,7 @@ void CUIDragDropListEx::OnItemDBClick(CUIWindow* w, void* pData)
 
 	if (m_f_item_db_click)
 	{
-		if (Level().IR_GetKeyState(VK_LCONTROL))
+		if (Level().IR_GetKeyState(VK_CONTROL))
 		{
 			u32 size = itm->ChildsCount();
 			for (u32 j = 0; j < size; j++)

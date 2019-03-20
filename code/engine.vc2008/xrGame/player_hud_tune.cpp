@@ -359,7 +359,7 @@ void hud_adjust_mode_keyb(u8 dik)
 		if(dik==VK_NUMPAD9)
 			hud_adj_mode = 9;
 	}
-	if(pInput->iGetAsyncKeyState(VK_LCONTROL))
+	if(pInput->iGetAsyncKeyState(VK_CONTROL))
 	{
 		if(dik==VK_NUMPAD0)
 			hud_adj_item_idx = 0;

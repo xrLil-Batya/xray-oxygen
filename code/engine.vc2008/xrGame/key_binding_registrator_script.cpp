@@ -166,7 +166,7 @@ void key_binding_registrator::script_register(lua_State *L)
 				value("DIK_TAB",						int(VK_TAB 		)),
 				value("DIK_LBRACKET",					int(VK_OEM_4)),
 				value("DIK_RBRACKET",					int(VK_OEM_6)),
-				value("DIK_LCONTROL",					int(VK_LCONTROL	)),
+				value("DIK_LCONTROL",					int(VK_CONTROL	)),
 				value("DIK_GRAVE",						int(VK_OEM_3		)),
 				value("DIK_BACKSLASH",					int(VK_OEM_7		)),
 				value("DIK_COMMA",						int(VK_OEM_COMMA	)),

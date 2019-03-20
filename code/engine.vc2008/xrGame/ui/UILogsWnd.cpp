@@ -292,8 +292,7 @@ bool CUILogsWnd::OnKeyboardAction( u8 dik, EUIMessages keyboard_action )
 				on_scroll_keys( dik );
 				return true;
 			}break;
-		case VK_RCONTROL:
-		case VK_LCONTROL:
+		case VK_CONTROL:
 			{
 				m_ctrl_press = true;
 				return true;

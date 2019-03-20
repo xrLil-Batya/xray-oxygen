@@ -156,13 +156,16 @@ void CUITalkDialogWnd::AddQuestion(LPCSTR str, LPCSTR value, int number, bool b_
 {
 	CUIQuestionItem* itm = new CUIQuestionItem(m_uiXml, "question_item");
 	itm->Init(value, str);
+
 	++number; //zero-based index
 	if (number <= 10)
 	{
 		string16 buff;
 		xr_sprintf(buff, "%d.", (number == 10) ? 0 : number);
 		itm->m_num_text->SetText(buff);
-		itm->m_text->SetAccelerator(VK_ESCAPE + number, 0);
+
+		// 0x30 + key idx: dirty hack
+		itm->m_text->SetAccelerator(VK_0 + number, 0);
 	}
 	if (b_finalizer)
 	{
