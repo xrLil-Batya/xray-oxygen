@@ -131,7 +131,7 @@ void CInput::ProcessInput(LPARAM hRawInputParam)
 			USHORT& pressedKey = keyboardKey.VKey;
 			R_ASSERT(pressedKey <= 0xFF);
 
-			if (keyboardKey.Flags == RI_KEY_MAKE)
+			if (keyboardKey.Flags == RI_KEY_MAKE || keyboardKey.Flags == RI_KEY_E0)
 			{
 				if (!pressedKeys[pressedKey])
 				{
