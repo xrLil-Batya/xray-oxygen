@@ -721,6 +721,10 @@ void CActor::UpdateCL()
 	SetZoomAimingMode(false);
 	CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());
 
+	if (m_cameraMoveWeight.square_magnitude() > EPS_L)
+	{
+		IR_OnMouseMove((int)m_cameraMoveWeight.x, (int)m_cameraMoveWeight.y);
+	}
 	cam_Update(float(Device.dwTimeDelta) / 1000.0f, currentFOV());
 
 	if (pWeapon)
@@ -941,12 +945,8 @@ void CActor::shedule_Update	(u32 DT)
 		} else f_DropPower			= 0.f;
 
 		mstate_wishful &=~mcAccel;
-		mstate_wishful &=~mcLStrafe;
-		mstate_wishful &=~mcRStrafe;
 		mstate_wishful &=~mcLLookout;
 		mstate_wishful &=~mcRLookout;
-		mstate_wishful &=~mcFwd;
-		mstate_wishful &=~mcBack;
 		if( !psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)))
 			mstate_wishful &=~mcCrouch;
 	}

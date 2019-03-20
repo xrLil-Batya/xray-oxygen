@@ -42,7 +42,7 @@ public:
 	virtual void	IR_OnKeyboardHold				(u8 dik)		{};
 
 	// gamepad
-	virtual void    IR_OnThumbstickChanged(GamepadThumbstickType type, Fvector2& position) {};
+	virtual void	IR_OnThumbstickChanged (GamepadThumbstickType type, const Fvector2& position) {};
 	virtual void    IR_OnTriggerPressed(GamepadTriggerType type, float value) {};
 };
 

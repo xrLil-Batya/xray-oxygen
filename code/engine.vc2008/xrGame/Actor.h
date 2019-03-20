@@ -405,6 +405,9 @@ protected:
 	float					m_fWalk_StrafeFactor;
 	float					m_fRun_StrafeFactor;
 
+	Fvector2				m_movementWeight;
+	Fvector2				m_cameraMoveWeight;
+
 public:
 	Fvector					GetMovementSpeed		() {return NET_SavedAccel;};
 	//////////////////////////////////////////////////////////////////////////
@@ -416,7 +419,7 @@ public:
 	virtual void			IR_OnKeyboardRelease	(u8 dik);
 	virtual void			IR_OnKeyboardHold		(u8 dik);
 	virtual void			IR_OnMouseWheel			(int direction);
-	virtual void			IR_OnThumbstickChanged	(GamepadThumbstickType type, Fvector2& position);
+	virtual void			IR_OnThumbstickChanged  (GamepadThumbstickType type, const Fvector2& position);
 	virtual	float			GetLookFactor			();
 
 public:

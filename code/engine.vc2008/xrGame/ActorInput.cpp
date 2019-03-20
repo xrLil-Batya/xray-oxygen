@@ -99,6 +99,11 @@ void CActor::IR_OnKeyboardPress(u8 cmd)
 	case kPREV_SLOT:	OnPrevWeaponSlot(); break;
 	case kNIGHT_VISION: SwitchNightVision(); break;
 
+	case kFWD:		mstate_wishful |= mcFwd;	 m_movementWeight.y =  1.0f;	break;
+	case kBACK:		mstate_wishful |= mcBack;	 m_movementWeight.y = -1.0f;	break;
+	case kL_STRAFE:	mstate_wishful |= mcLStrafe; m_movementWeight.x = -1.0f;	break;
+	case kR_STRAFE:	mstate_wishful |= mcRStrafe; m_movementWeight.x =  1.0f;	break;
+
 	case kJUMP:			 mstate_wishful |= mcJump; break;	
 	case kSPRINT_TOGGLE: mstate_wishful ^= mcSprint; break;
 	case kCAM_1:		 cam_Set(eacFirstEye); break;
@@ -202,6 +207,11 @@ void CActor::IR_OnKeyboardRelease(u8 cmd)
 		    case kJUMP:		mstate_wishful &=~mcJump; break;
 		    case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop(); break;
 			case kUSE:      m_bPickupMode = false;			break;
+
+			case kFWD:		mstate_wishful &= ~mcFwd;	  m_movementWeight.y = 0.0f;	break;
+			case kBACK:		mstate_wishful &= ~mcBack;	  m_movementWeight.y = 0.0f;	break;
+			case kL_STRAFE:	mstate_wishful &= ~mcLStrafe; m_movementWeight.x = 0.0f;	break;
+			case kR_STRAFE:	mstate_wishful &= ~mcRStrafe; m_movementWeight.x = 0.0f;	break;
 		}
 	}
 }
@@ -256,12 +266,8 @@ void CActor::IR_OnKeyboardHold(u8 cmd)
 	case kRIGHT:			if (eacFreeLook!=cam_active) cam_Active()->Move(cmd, 0, LookFactor); break;
 
 	case kACCEL:	mstate_wishful |= mcAccel;									break;
-	case kL_STRAFE:	mstate_wishful |= mcLStrafe;								break;
-	case kR_STRAFE:	mstate_wishful |= mcRStrafe;								break;
 	case kL_LOOKOUT:mstate_wishful |= mcLLookout;								break;
 	case kR_LOOKOUT:mstate_wishful |= mcRLookout;								break;
-	case kFWD:		mstate_wishful |= mcFwd;									break;
-	case kBACK:		mstate_wishful |= mcBack;									break;
 	case kCROUCH:	{
 						if (!psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)))
 							mstate_wishful |= mcCrouch;
@@ -500,12 +506,15 @@ void CActor::OnPrevWeaponSlot()
 	if (CurSlot >= NumSlotsToCheck) 
 		CurSlot	= NumSlotsToCheck-1; //last in row
 
-	for (u32 i = CurSlot - 1u; i >= 0; i--)
+	if (CurSlot != 0)
 	{
-		if (inventory().ItemFromSlot(SlotsToCheck[i]))
+		for (u32 i = CurSlot - 1u; i >= 0; i--)
 		{
-            IR_OnKeyboardPress(kWPN_1 + i);
-			return;
+			if (inventory().ItemFromSlot(SlotsToCheck[i]))
+			{
+				IR_OnKeyboardPress(kWPN_1 + i);
+				return;
+			}
 		}
 	}
 };
@@ -657,17 +666,40 @@ void CActor::NoClipFly(int cmd)
 }
 
 
-void CActor::IR_OnThumbstickChanged(GamepadThumbstickType type, Fvector2& position)
+void CActor::IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& position)
 {
 	if (type == GamepadThumbstickType::Left)
 	{
 		// movement!
+		m_movementWeight = position;
+		m_movementWeight.y = -position.y;
+		if (position.y > 0.1f)
+		{
+			mstate_wishful |= mcFwd;
+		}
 
+		if (position.y < -0.1f)
+		{
+			mstate_wishful |= mcBack;
+		}
+
+		if (position.x < -0.1f)
+		{
+			mstate_wishful |= mcLStrafe;
+		}
+
+		if (position.x > 0.1f)
+		{
+			mstate_wishful |= mcRStrafe;
+		}
 	}
 	else if (type == GamepadThumbstickType::Right)
 	{
 		// camera!
 
-
+		const float scale = 45.0f;
+		float dX = position.x * scale;
+		float dY = position.y * scale;
+		m_cameraMoveWeight.set(dX, dY);
 	}
 }

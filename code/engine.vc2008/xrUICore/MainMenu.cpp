@@ -220,7 +220,7 @@ void CMainMenu::OnDeviceReset()
 		m_Flags.set(flNeedVidRestart, TRUE);
 }
 
-void CMainMenu::IR_OnThumbstickChanged(GamepadThumbstickType type, Fvector2& position)
+void CMainMenu::IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& position)
 {
 	if (IsActive() && type == GamepadThumbstickType::Left)
 	{

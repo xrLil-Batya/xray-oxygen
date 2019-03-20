@@ -166,6 +166,8 @@ public:
 	virtual void				IR_OnKeyboardHold		(u8 btn);
 	virtual void				IR_OnMouseMove			(int, int);
 	virtual void				IR_OnMouseWheel			(int direction);
+	virtual void				IR_OnThumbstickChanged	(GamepadThumbstickType type, const Fvector2& position);
+	virtual void				IR_OnTriggerPressed		(GamepadTriggerType type, float value);
 	virtual void				IR_OnActivate			();
 
 	// Game

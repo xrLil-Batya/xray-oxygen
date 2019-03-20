@@ -53,7 +53,7 @@ public:
 	virtual bool	IgnorePause() { return true; }
 
 	virtual void	IR_OnMouseMove(int x, int y);
-	virtual void	IR_OnThumbstickChanged(GamepadThumbstickType type, Fvector2& position) override;
+	virtual void	IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& position) override;
 
 	virtual void	IR_OnKeyboardPress(u8 dik);
 	virtual void	IR_OnKeyboardRelease(u8 dik);

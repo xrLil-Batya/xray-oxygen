@@ -416,3 +416,33 @@ void CLevel::IR_OnActivate()
 		}
 	}
 }
+
+
+
+void CLevel::IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& position)
+{
+	if (g_bDisableAllInput)						return;
+	//#TODO: !
+	//if (GameUI()->IR_UIOnThumbstickChanged(type, position))		return;
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	return;
+
+	if (CURRENT_ENTITY())
+	{
+		IInputReceiver*		IR = smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		if (IR)				IR->IR_OnThumbstickChanged(type, position);
+	}
+}
+
+void CLevel::IR_OnTriggerPressed(GamepadTriggerType type, float value)
+{
+	if (g_bDisableAllInput)						return;
+	//#TODO: !
+	//if (GameUI()->IR_UIOnTriggerPressed(type, value))		return;
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	return;
+
+	if (CURRENT_ENTITY())
+	{
+		IInputReceiver*		IR = smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		if (IR)				IR->IR_OnTriggerPressed(type, value);
+	}
+}
