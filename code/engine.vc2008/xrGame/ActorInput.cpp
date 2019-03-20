@@ -655,3 +655,19 @@ void CActor::NoClipFly(int cmd)
 	XFORM().translate_add(cur_pos);
 	character_physics_support()->movement()->SetPosition(Position());
 }
+
+
+void CActor::IR_OnThumbstickChanged(GamepadThumbstickType type, Fvector2& position)
+{
+	if (type == GamepadThumbstickType::Left)
+	{
+		// movement!
+
+	}
+	else if (type == GamepadThumbstickType::Right)
+	{
+		// camera!
+
+
+	}
+}

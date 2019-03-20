@@ -251,6 +251,12 @@ void CMainMenu::IR_OnKeyboardPress(u8 dik)
 			return;
 		}
 
+		// threat PAD_A as Mouse_LButton
+		if (dik == VK_GAMEPAD_A)
+		{
+			dik = VK_LBUTTON;
+		}
+
 		CDialogHolder::IR_UIOnKeyboardPress(dik);
 	}
 }
@@ -258,7 +264,14 @@ void CMainMenu::IR_OnKeyboardPress(u8 dik)
 void CMainMenu::IR_OnKeyboardRelease(u8 dik)
 {
 	if (IsActive())
+	{
+		// threat PAD_A as Mouse_LButton
+		if (dik == VK_GAMEPAD_A)
+		{
+			dik = VK_LBUTTON;
+		}
 		CDialogHolder::IR_UIOnKeyboardRelease(dik);
+	}
 };
 
 void CMainMenu::IR_OnKeyboardHold(u8 dik)

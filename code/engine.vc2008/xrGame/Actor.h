@@ -416,6 +416,7 @@ public:
 	virtual void			IR_OnKeyboardRelease	(u8 dik);
 	virtual void			IR_OnKeyboardHold		(u8 dik);
 	virtual void			IR_OnMouseWheel			(int direction);
+	virtual void			IR_OnThumbstickChanged	(GamepadThumbstickType type, Fvector2& position);
 	virtual	float			GetLookFactor			();
 
 public:
