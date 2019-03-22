@@ -52,6 +52,12 @@ public:
 	virtual void			load				(IReader &input_packet);
 	virtual BOOL			net_SaveRelevant	()								{return inherited::net_SaveRelevant();}
 
+	//STCoP WP
+	bool UseAltScope;
+	void UpdateAltScope();
+	bool ScopeHasTexture;
+	xr_string GetNameWithAttachment();
+
 	virtual void			UpdateCL			();
 	virtual void			shedule_Update		(u32 dt);
 
@@ -151,7 +157,7 @@ public:
 	ALife::EWeaponAddonStatus	get_ScopeStatus				() const { return m_eScopeStatus; }
 	ALife::EWeaponAddonStatus	get_SilencerStatus			() const { return m_eSilencerStatus; }
 
-	virtual bool UseScopeTexture() {return true;};
+	virtual bool UseScopeTexture() {return ScopeHasTexture;};
 
 	//обновление видимости для косточек аддонов
 			void UpdateAddonsVisibility();
@@ -169,15 +175,15 @@ public:
 	float GetHudFov();
 
 	//для отоброажения иконок апгрейдов в интерфейсе
-	int	GetScopeX() {return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_x");}
-	int	GetScopeY() {return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_y");}
+	int	GetScopeX();
+	int	GetScopeY();
 	int	GetSilencerX() {return m_iSilencerX;}
 	int	GetSilencerY() {return m_iSilencerY;}
 	int	GetGrenadeLauncherX() {return m_iGrenadeLauncherX;}
 	int	GetGrenadeLauncherY() {return m_iGrenadeLauncherY;}
 
 	const xr_string& GetGrenadeLauncherName	() const{return m_sGrenadeLauncherName;}
-	const xr_string GetScopeName				() const{return pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");}
+	const xr_string GetScopeName() const;
 	const xr_string& GetSilencerName			() const{return m_sSilencerName;}
 
 	IC void	ForceUpdateAmmo						()		{ m_BriefInfo_CalcFrame = 0; }

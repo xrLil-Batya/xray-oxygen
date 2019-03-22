@@ -477,8 +477,17 @@ CSE_ALifeItemWeapon::CSE_ALifeItemWeapon	(LPCSTR caSection) : CSE_ALifeItem(caSe
 	wpn_state					= 0;
 	ammo_type					= 0;
 
-	LoadAddons("scopes_sect");
+	m_use_alt_scope = pSettings->line_exist(caSection,"scopes");
 
+	if (m_use_alt_scope)
+	{
+		LoadAddons("scopes");
+	}
+	else
+	{
+		LoadAddons("scopes_sect");
+	}
+	
 	m_fHitPower					= pSettings->r_float(caSection,"hit_power");
 	m_tHitType					= ALife::g_tfString2HitType(pSettings->r_string(caSection,"hit_type"));
 	m_caAmmoSections			= pSettings->r_string(caSection,"ammo_class");
@@ -564,10 +573,22 @@ u8 CSE_ALifeItemWeapon::GetScopeIdx(shared_str scope_name)
 		SCOPES_VECTOR::iterator it = m_scopes.begin();
 		for (; it != m_scopes.end(); it++)
 		{
-			if (pSettings->r_string((*it), "scope_name") == scope_name)
+
+			if (m_use_alt_scope)
 			{
-				return u8(it - m_scopes.begin());
+				if ((*it) == scope_name)
+				{
+					return u8(it - m_scopes.begin());
+				}
 			}
+			else
+			{
+				if (pSettings->r_string((*it), "scope_name") == scope_name)
+				{
+					return u8(it - m_scopes.begin());
+				}
+			}
+
 		}
 		return (u8)-1;
 	}
@@ -648,7 +669,6 @@ void CSE_ALifeItemWeapon::STATE_Write		(NET_Packet	&tNetPacket)
 	tNetPacket.w_u8(m_addon_flags.get()); //4 b6
 	tNetPacket.w_u8(ammo_type); //5 b7
 	tNetPacket.w_u8(a_elapsed_grenades.pack_to_byte()); //6 b8
-	//AddonsUpdate();
 	tNetPacket.w_stringZ(m_scope_name); //7 b8 + str
 }
 
