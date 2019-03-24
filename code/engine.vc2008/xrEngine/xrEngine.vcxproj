@@ -162,7 +162,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <DisableSpecificWarnings>4366;4099;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4366;4099;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
