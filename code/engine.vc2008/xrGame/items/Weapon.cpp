@@ -600,20 +600,25 @@ void CWeapon::UpdateAltScope()
 		if (!pSettings->section_exist(sectionNeedLoad))
 			return;
 
-		shared_str vis = pSettings->r_string(sectionNeedLoad, "visual");
-
-		if (vis != cNameVisual())
+		if (pSettings->line_exist(sectionNeedLoad, "visual"))
 		{
-			cNameVisual_set(vis);
+			shared_str vis = pSettings->r_string(sectionNeedLoad, "visual");
+
+			if (vis != cNameVisual())
+			{
+				cNameVisual_set(vis);
+			}
 		}
 
-		shared_str new_hud = pSettings->r_string(sectionNeedLoad, "hud");
-
-		if (new_hud != hud_sect)
+		if (pSettings->line_exist(sectionNeedLoad, "hud"))
 		{
-			hud_sect = new_hud;
-		}
+			shared_str new_hud = pSettings->r_string(sectionNeedLoad, "hud");
 
+			if (new_hud != hud_sect)
+			{
+				hud_sect = new_hud;
+			}
+		}
 	}
 	else
 	{
@@ -785,6 +790,7 @@ void CWeapon::save(NET_Packet &output_packet)
 {
 	inherited::save	(output_packet);
 	save_data		(iAmmoElapsed,					 output_packet);
+	//save_data       (m_cur_scope,                    output_packet);
 	save_data		(m_flagsAddOnState, 			 output_packet);
 	save_data		(m_ammoType,					 output_packet);
 	save_data		(m_zoom_params.m_bIsZoomModeNow, output_packet);
@@ -795,6 +801,7 @@ void CWeapon::load(IReader &input_packet)
 {
 	inherited::load	(input_packet);
 	load_data		(iAmmoElapsed,					 input_packet);
+	//load_data       (m_cur_scope,                    input_packet);
 	load_data		(m_flagsAddOnState,				 input_packet);
 	load_data		(m_ammoType,					 input_packet);
 	load_data		(m_zoom_params.m_bIsZoomModeNow, input_packet);

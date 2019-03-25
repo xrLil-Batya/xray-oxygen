@@ -557,7 +557,7 @@ void CSE_ALifeItemWeapon::AddonsLoad()
 	}
 	else
 	{
-		m_scope_idx = (u8)-1;
+		m_scope_idx = 0;
 		m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonScope, false);
 	}
 	       
@@ -566,7 +566,7 @@ void CSE_ALifeItemWeapon::AddonsLoad()
 u8 CSE_ALifeItemWeapon::GetScopeIdx(shared_str scope_name)
 {
 	if(!pSettings->section_exist(scope_name))
-		return (u8)-1;
+		return 0;
 
 	if (!m_scopes.empty())
 	{
@@ -590,11 +590,11 @@ u8 CSE_ALifeItemWeapon::GetScopeIdx(shared_str scope_name)
 			}
 
 		}
-		return (u8)-1;
+		return 0;
 	}
 	else
 	{
-		return (u8)-1;
+		return 0;
 	}
 }
 
