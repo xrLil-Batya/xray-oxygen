@@ -58,6 +58,7 @@ private:
 
 	bool bGamepadConnected;
 	bool bIsVibrationSupported;
+	bool bVibrationStarted;
 	u32  gamepadUserIndex;
 	u32  gamepadLastPacketId;
 

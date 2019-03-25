@@ -223,7 +223,6 @@
     <ClInclude Include="xr_level_controller.h" />
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="defines.h" />
-    <ClInclude Include="mp_logging.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="trivial_encryptor.h" />
     <ClInclude Include="x_ray.h" />
@@ -474,8 +473,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Effects description.txt" />
-    <None Include="features.txt" />
-    <None Include="OffSetOfWrapper.inl" />
     <None Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>

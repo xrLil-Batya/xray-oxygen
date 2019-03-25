@@ -18,19 +18,26 @@ public:
 	BOOL ProcessCam(SCamEffectorInfo& info) override;
 };
 
-class AnselManager : public CGameAnsel, public CObject, public pureFrame
+struct AnselManagerCallbackHandler;
+
+class xrAnsel : public IGameAnsel, public CObject, public pureFrame
 {
-	void*					pAnselModule;
-	AnselCamera				Camera;
-	AnselCameraEffector		Effector;
-	CTimer					Timer;
-	float					fTimeDelta;
+	friend struct AnselManagerCallbackHandler;
 
 public:
-	AnselManager();
+	xrAnsel();
+	virtual ~xrAnsel();
 
-	virtual bool Load();
+	virtual bool Load() override;
 	void Unload();
-	bool Init() const;
+	bool Init();
 	void OnFrame() override;
+
+protected:
+
+	AnselCamera					 Camera;
+	AnselCameraEffector			 Effector;
+	CTimer						 Timer;
+	float						 fTimeDelta;
+	AnselManagerCallbackHandler* pCallbackHandler;
 };

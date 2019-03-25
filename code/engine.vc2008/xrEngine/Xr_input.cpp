@@ -3,7 +3,6 @@
 #include "IInputReceiver.h"
 #include "../include/editor/ide.hpp"
 #include "../FrayBuildConfig.hpp"
-#include "OffSetOfWrapper.inl"
 #include "IGame_AnselSDK.h"
 #include "xr_level_controller.h"
 #include <Xinput.h>
@@ -22,6 +21,7 @@ CInput::CInput()
 
 	bActiveFocus = false;
 	bGamepadConnected = false;
+	bVibrationStarted = false;
 	bAllowBorderAccess = true;
 	gamepadUserIndex = 0;
 	gamepadLastPacketId = 0;
@@ -61,6 +61,7 @@ CInput::CInput()
 
 CInput::~CInput()
 {
+	ClipCursor(NULL);
 	rawDevices[0].usUsagePage = 1;
 	rawDevices[0].usUsage = 2; // mouse
 	rawDevices[0].dwFlags = RIDEV_REMOVE;
@@ -454,6 +455,19 @@ void CInput::OnFrame()
 					VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT, VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT, VK_GAMEPAD_RIGHT_THUMBSTICK_UP, VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN);
 			}
 		}
+
+		if (bVibrationStarted)
+		{
+			if (stop_vibration_time < RDEVICE.fTimeGlobal)
+			{
+				bVibrationStarted = false;
+				XINPUT_VIBRATION vibrationInputData;
+				vibrationInputData.wLeftMotorSpeed =  0;
+				vibrationInputData.wRightMotorSpeed = 0;
+
+				XInputSetState(gamepadUserIndex, &vibrationInputData);
+			}
+		}
 	}
 }
 
@@ -507,4 +521,11 @@ void CInput::SetAllowAccessToBorders(bool bAccessToBorders)
 void  CInput::feedback(u16 s1, u16 s2, float time)
 {
 	stop_vibration_time = RDEVICE.fTimeGlobal + time;
+	bVibrationStarted = true;
+
+	XINPUT_VIBRATION vibrationInputData;
+	vibrationInputData.wLeftMotorSpeed = s1;
+	vibrationInputData.wRightMotorSpeed = s2;
+	
+	XInputSetState(gamepadUserIndex, &vibrationInputData);
 }

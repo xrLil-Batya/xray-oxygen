@@ -32,7 +32,7 @@
 	extern void restore_actor();
 #endif
 
-bool g_bDisableAllInput = false;
+GAME_API bool g_bDisableAllInput = false;
 extern	float	g_fTimeFactor;
 
 #define CURRENT_ENTITY()	(CurrentEntity() ? CurrentEntity() : nullptr)

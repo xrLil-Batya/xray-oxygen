@@ -1,11 +1,10 @@
 #include "stdafx.h"
-#include "AnselWrapper.h"
+#include "Ansel.h"
 #include "../../xrEngine/IGame_Actor.h"
 #include "../../xrEngine/IGame_Persistent.h"
 #include "../../xrEngine/IGame_Level.h"
-
 #include <AnselSDK/AnselSDK.h>
-#pragma comment(lib, "AnselSDK64.lib")
+
 static bool bInited = false;
 
 AnselCamera::AnselCamera(CObject* p, u32 flags) : CCameraBase(p, flags) 
@@ -17,6 +16,58 @@ AnselCameraEffector::AnselCameraEffector() : CEffectorCam(cefAnsel, FLT_MAX)
 {
 
 }
+
+struct AnselManagerCallbackHandler
+{
+	AnselManagerCallbackHandler(xrAnsel* InManager)
+		: pManager(InManager)
+	{}
+	xrAnsel* pManager = nullptr;
+
+	ansel::StartSessionStatus StartSession(ansel::SessionConfiguration& pSessionConf)
+	{
+		if (!g_pGameLevel)
+			return ansel::kDisallowed;
+
+		pManager->bIsActive = true;
+
+		if (g_pGamePersistent->m_pMainMenu->IsActive())
+			g_pGamePersistent->m_pMainMenu->Activate(false);
+
+		pSessionConf.maximumFovInDegrees = 140;
+
+		Device.Pause(TRUE, TRUE, TRUE, "Nvidia Ansel");
+
+		g_pGameLevel->Cameras().AddCamEffector(new AnselCameraEffector());
+		Device.seqFrame.Add(pManager, REG_PRIORITY_CAPTURE);
+
+		CCameraBase* C = nullptr;
+
+		if (g_actor)
+		{
+			C = g_actor->cam_Active();
+		}
+		else
+		{
+			Log("! Failed to find camera for Ansel");
+			return ansel::kDisallowed;
+		}
+
+		pManager->Camera.Set(C->Position(), C->Direction(), C->vNormal);
+		pManager->Camera.f_fov = C->Fov();
+		pManager->Camera.f_aspect = C->Aspect();
+		return ansel::kAllowed;
+	}
+	
+	void StopSession()
+	{
+		pManager->bIsActive = false;
+		Device.Pause(FALSE, FALSE, FALSE, "Nvidia Ansel");
+		g_pGameLevel->Cameras().RemoveCamEffector(cefAnsel);
+		Device.seqFrame.Remove(pManager);
+	}
+};
+
 
 BOOL AnselCameraEffector::ProcessCam(SCamEffectorInfo& info)
 {
@@ -52,24 +103,27 @@ BOOL AnselCameraEffector::ProcessCam(SCamEffectorInfo& info)
 	return TRUE;
 }
 
-AnselManager::AnselManager() : CGameAnsel(), pAnselModule(nullptr), Camera(this, 0), fTimeDelta(EPS_S)
+xrAnsel::xrAnsel() : Camera(this, 0), fTimeDelta(EPS_S)
 {
 	Timer.Start();
+	pCallbackHandler = new AnselManagerCallbackHandler(this);
 }
 
-bool AnselManager::Load()
+xrAnsel::~xrAnsel()
 {
-	//Init();
-	//pAnselModule = LoadLibrary("AnselSDK64.dll");
-	return true;
+	delete pCallbackHandler;
+	pCallbackHandler = nullptr;
 }
 
-void AnselManager::Unload()
+bool xrAnsel::Load()
 {
-	//pAnselModule = nullptr;
+	return Init();
 }
 
-bool AnselManager::Init() const
+void xrAnsel::Unload()
+{}
+
+bool xrAnsel::Init()
 {
 	if (!bInited && ansel::isAnselAvailable())
 	{
@@ -86,59 +140,23 @@ bool AnselManager::Init() const
 		config.captureLatency = 0;
 		config.captureSettleLatency = 0;
 		config.gameWindowHandle = Device.m_hWnd;
+		config.userPointer = pCallbackHandler;
 
-		static AnselManager* mutable_this = const_cast<AnselManager*>(this);
-		config.startSessionCallback = [](ansel::SessionConfiguration& conf, void* /*context*/)
+		config.startSessionCallback = [](ansel::SessionConfiguration& conf, void* context) -> ansel::StartSessionStatus
 		{
-			if (!g_pGameLevel)
-				return ansel::kDisallowed;
-
-			pGameAnsel->isActive = true;
-
-			if (g_pGamePersistent->m_pMainMenu->IsActive())
-				g_pGamePersistent->m_pMainMenu->Activate(false);
-
-			conf.maximumFovInDegrees = 140;
-
-			Device.Pause(TRUE, TRUE, TRUE, "Nvidia Ansel");
-
-			g_pGameLevel->Cameras().AddCamEffector(new AnselCameraEffector());
-			Device.seqFrame.Add(mutable_this, REG_PRIORITY_CAPTURE);
-
-			CCameraBase* C = nullptr;
-
-			if (g_actor)
-			{
-				C = g_actor->cam_Active();
-			}
-			else
-			{
-				Log("! Failed to find camera for Ansel");
-				return ansel::kDisallowed;
-			}
-
-			mutable_this->Camera.Set(C->Position(), C->Direction(), C->vNormal);
-			mutable_this->Camera.f_fov = C->Fov();
-			mutable_this->Camera.f_aspect = C->Aspect();
-			return ansel::kAllowed;
+			AnselManagerCallbackHandler* pOurHandler = reinterpret_cast<AnselManagerCallbackHandler*>(context);
+			return pOurHandler->StartSession(conf);
 		};
 
-		config.stopSessionCallback = [](void* /*context*/)
+		config.stopSessionCallback = [](void* context)
 		{
-			pGameAnsel->isActive = false;
-			Device.Pause(FALSE, FALSE, FALSE, "Nvidia Ansel");
-			g_pGameLevel->Cameras().RemoveCamEffector(cefAnsel);
-			Device.seqFrame.Remove(mutable_this);
+			AnselManagerCallbackHandler* pOurHandler = reinterpret_cast<AnselManagerCallbackHandler*>(context);
+			pOurHandler->StopSession();
 		};
-		config.startCaptureCallback = [](const ansel::CaptureConfiguration& /*conf*/, void* /*context*/)
-		{
-			// turn non-uniform full screen effects like vignette off here
-		};
-		config.stopCaptureCallback = [](void* /*context*/)
-		{
-			// turn disabled effects back on here
-		};
-		const auto status = ansel::setConfiguration(config);
+
+		config.startCaptureCallback = nullptr;
+		config.stopCaptureCallback = nullptr;
+		const ansel::SetConfigurationStatus status = ansel::setConfiguration(config);
 		switch (status)
 		{
 		case ansel::kSetConfigurationSuccess:
@@ -163,7 +181,7 @@ bool AnselManager::Init() const
 	return false;
 }
 
-void AnselManager::OnFrame()
+void xrAnsel::OnFrame()
 {
 	const float previousFrameTime = Timer.GetElapsed_sec();
 	Timer.Start();
