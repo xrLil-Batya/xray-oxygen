@@ -70,7 +70,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 		// Load CFORM
 		{
 			string_path cform_path, rc_face_path;
-			strconcat(sizeof(cform_path), cform_path, name, "level.cform");
+			xr_strconcat(cform_path, name, "level.cform");
 			IReader* fs = FS.r_open(cform_path);
 			R_ASSERT2(fs, "can`t load level.cform");
 
@@ -90,7 +90,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			g_rc_faces.resize	(H.facecount);
 			/////////////////////////////////////////////////////////////////////
 			// New rc_face reader
-			strconcat(sizeof(rc_face_path), rc_face_path, name, "build.rc_faces");
+			xr_strconcat(rc_face_path, name, "build.rc_faces");
 			IReader* Face_fs = FS.r_open(rc_face_path);
 			R_ASSERT2(Face_fs, "can`t load build.rc_faces");
 
@@ -112,7 +112,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 
 		// Load level data
 		{
-			strconcat(sizeof(N),N,name,"build.prj");
+			xr_strconcat(N,name,"build.prj");
 			IReader* fs = FS.r_open (N);
 			R_ASSERT2(fs, "There is no file 'build.prj'!"); // Вот этот вылет никогда раньше не мог появится, хоть и был всё время
 
@@ -231,7 +231,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 	
 	// Load lights
 	{
-		strconcat(sizeof(N),N,name,"build.prj");
+		xr_strconcat(N,name,"build.prj");
 		IReader& fs = *FS.r_open(N);
 
 		// Lights (Static)
@@ -277,7 +277,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 	// Load initial map from the Level Editor
 	{
 		string_path			file_name;
-		strconcat			(sizeof(file_name),file_name,name,"build.aimap");
+		xr_strconcat(file_name,name,"build.aimap");
 		IReader				*F = FS.r_open(file_name);
 		R_ASSERT2			(F, file_name);
 

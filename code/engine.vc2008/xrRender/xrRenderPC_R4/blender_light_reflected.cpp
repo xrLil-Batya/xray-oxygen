@@ -34,7 +34,7 @@ void CBlender_accum_reflected_msaa::Compile(CBlender_Compile& C)
 	D3DBLEND	dest		= blend?D3DBLEND_ONE:D3DBLEND_ZERO;
 	
    if( Name )
-      ::Render->m_MSAASample = atoi( Definition );
+      ::Render->m_MSAASample = atoi_17( Definition );
    else
       ::Render->m_MSAASample = -1;
 

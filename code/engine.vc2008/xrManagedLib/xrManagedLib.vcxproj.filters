@@ -63,9 +63,6 @@
     <ClInclude Include="API\Ini.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\PostProcessAnimator.h">
-      <Filter>Header Files\API</Filter>
-    </ClInclude>
     <ClInclude Include="API\Xml.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
@@ -105,9 +102,6 @@
       <Filter>Source Files\API</Filter>
     </ClCompile>
     <ClCompile Include="API\Ini.cpp">
-      <Filter>Source Files\API</Filter>
-    </ClCompile>
-    <ClCompile Include="API\PostProcessAnimator.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
     <ClCompile Include="API\Xml.cpp">

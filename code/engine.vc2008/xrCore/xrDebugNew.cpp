@@ -34,8 +34,6 @@ XRCORE_API bool IsSecondaryThread()
 	return GetCurrentThreadId() == gSecondaryThreadId;
 }
 
-#define DEBUG_INVOKE	__debugbreak()
-
 XRCORE_API	xrDebug		Debug;
 
 XRCORE_API HWND gGameWindow = nullptr;
@@ -110,39 +108,22 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 	os_clipboard::copy_to_clipboard(assertion_info);
 }
 
-void xrDebug::do_exit(HWND hWnd, const xr_string &message)
+void xrDebug::do_exit(HWND hWnd, LPCSTR message)
 {
 	xrLogger::FlushLog();
 
-	if (MessageBoxA(nullptr, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
+	string2048 finalMessage;
+	xr_sprintf(finalMessage, "%s \n %s", message, "Do you want to interrupt the game?");
+
+	if (MessageBoxA(nullptr, finalMessage, "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
-		DEBUG_INVOKE;
+		DebugBreak();
         ExitProcess(1);
 	}
 #ifdef AWDA
 	// Пусть тут хранится
 	MessageBoxA(NULL, "awda", "awda", MB_OK | MB_ICONASTERISK);
 #endif
-}
-
-void xrDebug::do_exit(const xr_string &message, const xr_string &message2)
-{
-	xrLogger::FlushLog();
-
-	xr_string szMsg = "Expression: "	+
-						message			+ 
-						"\n"			+
-						"Description: "	+
-						message2		+
-						"."				+
-						"\n"			+
-						"\n Do you want to interrupt the game?";
-
-	if (MessageBoxA(nullptr, szMsg.c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
-	{
-		DEBUG_INVOKE;
-        ExitProcess(1);
-	}
 }
 
 void xrDebug::backend(const char* expression, const char* description, const char* argument0, const char* argument1, const char* file, int line, const char* function, bool &ignore_always)
@@ -190,14 +171,14 @@ const char* xrDebug::error2string(long code)
 }
 
 
-void xrDebug::do_exit2(HWND hwnd, const xr_string& message, bool& ignore_always)
+void xrDebug::do_exit2(HWND hwnd, const string4096& message, bool& ignore_always)
 {
-    int MsgRet = MessageBox(hwnd, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
+    int MsgRet = MessageBox(hwnd, message, "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
 
     switch (MsgRet)
     {
     case IDABORT:
-		DEBUG_INVOKE;	// int 3 more faster than DebugBreak()
+		DebugBreak();
         ExitProcess(1);
         break;
     case IDIGNORE:
@@ -205,7 +186,7 @@ void xrDebug::do_exit2(HWND hwnd, const xr_string& message, bool& ignore_always)
         break;
     case IDRETRY:
     default:
-		DEBUG_INVOKE;
+		DebugBreak();
         break;
     }
 }
@@ -422,7 +403,7 @@ void xrDebug::_initializeAfterFS()
     FS.update_path(DumpFilePath, "$dump$", "");
     if (!FS.path_exist(DumpFilePath))
     {
-        createPath(DumpFilePath);
+        createPath(DumpFilePath, false, true);
     }
 }
 

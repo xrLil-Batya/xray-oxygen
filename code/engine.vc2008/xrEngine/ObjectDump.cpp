@@ -48,12 +48,13 @@ ENGINE_API xr_string dbg_object_props_dump_string( const CObject *obj )
 	CObject::ObjectProperties props;
 	obj->DBGGetProps( props );
 
-	return make_string( " net_ID :%d, bActiveCounter :%d, bEnabled :%s, bVisible :%s, bDestroy :%s, \n net_Local %s, net_Ready :%s, net_SV_Update :%s, crow :%s, bPreDestroy : %s ", 
-		props.net_ID, props.bActiveCounter, get_string(bool (!!props.bEnabled ) ).c_str(), get_string(bool (!!props.bVisible ) ).c_str(), 
-		get_string(bool (!!props.bDestroy ) ).c_str() , get_string(bool (!!props.net_Local ) ).c_str(), get_string( bool (!!props.net_Ready ) ).c_str(),
-		get_string(bool (!!props.net_SV_Update ) ).c_str(), get_string( bool (!!props.crow ) ).c_str(), get_string( bool (!!props.bPreDestroy ) ).c_str() 
-		)
-		+
+	xr_string FirstPart = make_string(" net_ID :%d, bActiveCounter :%d, bEnabled :%s, bVisible :%s, bDestroy :%s, \n net_Local %s, net_Ready :%s, net_SV_Update :%s, crow :%s, bPreDestroy : %s ",
+		props.net_ID, props.bActiveCounter, get_string(bool(!!props.bEnabled)).c_str(), get_string(bool(!!props.bVisible)).c_str(),
+		get_string(bool(!!props.bDestroy)).c_str(), get_string(bool(!!props.net_Local)).c_str(), get_string(bool(!!props.net_Ready)).c_str(),
+		get_string(bool(!!props.net_SV_Update)).c_str(), get_string(bool(!!props.crow)).c_str(), get_string(bool(!!props.bPreDestroy)).c_str()
+	);
+
+	return FirstPart +
 		make_string( "\n dbg_update_cl: %d, dwFrame_UpdateCL: %d, dwFrame_AsCrow :%d, Device.dwFrame :%d, Device.dwTimeGlobal: %d  \n",
 		obj->dbg_update_cl, obj->dwFrame_UpdateCL, obj->dwFrame_AsCrow, Device.dwFrame, Device.dwTimeGlobal );
 }

@@ -16,16 +16,11 @@ int dcTriListCollider::dSortedTriBox(const dReal* triSideAx0, const dReal* triSi
 	hside[0] /= 2.f; hside[1] /= 2.f; hside[2] /= 2.f;
 
 	// find number of contacts requested
-	int maxc = flags & NUMC_MASK;
-
-	if (maxc < 1)
-		maxc = 1;
-
 	// no more than 3 contacts per box allowed
-	if (maxc > 3)
-		maxc = 3;
+	int maxc = flags & NUMC_MASK;
+	maxc = std::max(maxc, 1);
+	maxc = std::min(maxc, 3);
 
-	int code = 0;
 	dReal outDepth;
 	char signum;//,sn;
 
@@ -34,14 +29,11 @@ int dcTriListCollider::dSortedTriBox(const dReal* triSideAx0, const dReal* triSi
 	dReal depth = sidePr - dist;
 	outDepth = depth;
 	signum = -1;
-	code = 0;
 
 	if (depth < 0.f) return 0;
 
-	unsigned int i;
-
 	dVector3 norm, pos;
-	unsigned int ret = 1;
+	u32 ret = 1;
 
 	norm[0] = triAx[0] * signum;
 	norm[1] = triAx[1] * signum;
@@ -140,7 +132,7 @@ contact2_3: BAR(2, 2, 3); goto done;
 
 		   contact->depth = outDepth;
 
-		   for (i = 0; i < ret; ++i)
+		   for (u32 i = 0; i < ret; ++i)
 		   {
 			   CONTACT(contact, i*skip)->g1 = const_cast<dxGeom*> (o2);
 			   CONTACT(contact, i*skip)->g2 = const_cast<dxGeom*> (o1);

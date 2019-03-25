@@ -18,7 +18,7 @@ channels::channels()
 
 void channels::init()
 {
-	memset(factors, 1.f, max * sizeof(*factors));
+	memset(factors, 1, max * sizeof(*factors));
 }
 
 void channels::set_factor(u16 channel, float factor)

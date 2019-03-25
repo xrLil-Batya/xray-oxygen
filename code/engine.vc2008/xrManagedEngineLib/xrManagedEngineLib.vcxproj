@@ -15,7 +15,7 @@
     <ProjectGuid>{09DC3343-46CA-4D55-BFE3-317C0FF02E52}</ProjectGuid>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>xrManagedEngineLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <TargetFrameworkVersion>4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -90,6 +90,8 @@
   <ItemGroup>
     <ClInclude Include="API\Engine.h" />
     <ClInclude Include="API\EngineClassIDs.h" />
+    <ClInclude Include="API\EnvDescriptor.h" />
+    <ClInclude Include="API\Environment.h" />
     <ClInclude Include="API\LevelInfo.h" />
     <ClInclude Include="API\NativeObject.h" />
     <ClInclude Include="API\Object.h" />
@@ -100,6 +102,7 @@
     <ClInclude Include="IFunctionInvoker.h" />
     <ClInclude Include="ISpectreEngineLib.h" />
     <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="ObjectSpace.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TemplatedStrings.h" />
@@ -108,6 +111,8 @@
   <ItemGroup>
     <ClCompile Include="API\Engine.cpp" />
     <ClCompile Include="API\EngineClassIDs.cpp" />
+    <ClCompile Include="API\EnvDescriptor.cpp" />
+    <ClCompile Include="API\Environment.cpp" />
     <ClCompile Include="API\LevelInfo.cpp" />
     <ClCompile Include="API\NativeObject.cpp" />
     <ClCompile Include="API\Object.cpp" />
@@ -117,6 +122,7 @@
     <ClCompile Include="GamePersistence.cpp" />
     <ClCompile Include="ISpectreEngineLib.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
+    <ClCompile Include="ObjectSpace.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

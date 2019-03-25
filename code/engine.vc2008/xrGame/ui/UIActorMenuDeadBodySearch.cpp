@@ -131,7 +131,7 @@ void CUIActorMenu::DeInitDeadBodySearchMode() const
 		m_pInvBox->set_in_use( false );
 	}
 }
-
+	
 bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
 {
 	if (m_pPartnerInvOwner)

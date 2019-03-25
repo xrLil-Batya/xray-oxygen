@@ -196,6 +196,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 		}
 		// jump
 		m_fJumpTime				-=	dt;
+		CWeapon* W = smart_cast<CWeapon*>(inventory().ActiveItem());
 
 		if( CanJump() && (mstate_wf&mcJump) )
 		{
@@ -238,12 +239,18 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			mstate_real|=mcSprint;
 		else
 			mstate_real&=~mcSprint;
-		if(!(mstate_real&(mcFwd|mcLStrafe|mcRStrafe))||mstate_real&(mcCrouch|mcClimb)|| !isActorAccelerated(mstate_wf, IsZoomAimingMode()))
+		if (!(mstate_real&(mcFwd | mcLStrafe | mcRStrafe)) || mstate_real & (mcCrouch | mcClimb) || mstate_real & mcJump || !isActorAccelerated(mstate_wf, IsZoomAimingMode()) || W && W->GetState() == W->eFire)
 		{
 			mstate_real&=~mcSprint;
 			mstate_wishful&=~mcSprint;
 		}
 				
+		if (mstate_real & mcJump)
+		{
+			mstate_real &= ~mcFwd;
+			mstate_wishful &= ~mcFwd;
+		}
+
 		// check player move state
 		if(mstate_real&mcAnyMove)
 		{
@@ -341,8 +348,8 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 
 #define ACTOR_ANIM_SECT "actor_animation"
 
-#define ACTOR_LLOOKOUT_ANGLE	PI_DIV_4
-#define ACTOR_RLOOKOUT_ANGLE	PI_DIV_4
+#define ACTOR_LLOOKOUT_ANGLE	PI_DIV_4*1.2f
+#define ACTOR_RLOOKOUT_ANGLE	PI_DIV_4*1.2f
 
 void CActor::g_Orientate	(u32 mstate_rl, float dt)
 {
@@ -383,7 +390,7 @@ void CActor::g_Orientate	(u32 mstate_rl, float dt)
 	}
 
 	// lerp angle for "effect" and capture torso data from camera
-	angle_lerp		(r_model_yaw_delta,calc_yaw,5,dt);
+	angle_lerp		(r_model_yaw_delta,calc_yaw,2,dt);
 
 	// build matrix
 	Fmatrix mXFORM;
@@ -403,7 +410,7 @@ void CActor::g_Orientate	(u32 mstate_rl, float dt)
 			tgt_roll	= 0.0f;
 	}
 	if (!fsimilar(tgt_roll,r_torso_tgt_roll,EPS)){
-		r_torso_tgt_roll = angle_inertion_var(r_torso_tgt_roll, tgt_roll, 0.f, CurrentHeight * PI_MUL_2, PI_DIV_2, dt);
+		r_torso_tgt_roll = angle_inertion_var(r_torso_tgt_roll, tgt_roll, 0.f, CurrentHeight * 9, PI_DIV_2, dt);
 		r_torso_tgt_roll = angle_normalize_signed(r_torso_tgt_roll);
 	}
 }
@@ -481,7 +488,7 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 	} else {
 		// if camera rotated more than 45 degrees - align model with it
 		float ty = angle_normalize(r_torso.yaw);
-		if (_abs(r_model_yaw-ty)>PI_DIV_4-30)	{
+		if (_abs(r_model_yaw-ty)>PI_DIV_4-5)	{
 			r_model_yaw_dest = ty;
 			// 
 			mstate_real	|= mcTurn;
@@ -490,7 +497,7 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 			mstate_real	&=~mcTurn;
 		}
 		if (mstate_rl&mcTurn){
-			angle_lerp	(r_model_yaw,r_model_yaw_dest,26,dt);
+			angle_lerp	(r_model_yaw,r_model_yaw_dest,15,dt);
 		}
 	}
 }
@@ -522,14 +529,14 @@ bool CActor::CanAccelerate()
 
 bool CActor::CanRun()
 {
-	bool can_run = !IsZoomAimingMode() && !(mstate_real&mcLookout);
+	bool can_run = !IsZoomAimingMode() && !(mstate_real & mcJump);
 	return can_run;
 }
 
 bool CActor::CanSprint()
 {
 	bool can_Sprint = CanAccelerate() && !conditions().IsCantSprint() && CanRun()
-						&& !(mstate_real&mcLStrafe || mstate_real&mcRStrafe) 
+						&& !(mstate_real&mcLStrafe || mstate_real&mcRStrafe || mstate_real & mcJump)
 		&& InventoryAllowSprint();
 
 	return can_Sprint && (m_block_sprint_counter<=0);

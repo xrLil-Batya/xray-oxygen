@@ -12,8 +12,8 @@
 
 class CALifeSwitchManager : public virtual CALifeSimulatorBase, CRandom {
 protected:
-	typedef CALifeSimulatorBase				inherited;
-	typedef ALife::OBJECT_VECTOR			OBJECT_VECTOR;
+	using inherited = CALifeSimulatorBase;
+	using OBJECT_VECTOR = ALife::OBJECT_VECTOR;
 
 protected:
 	float			m_switch_distance;
@@ -39,11 +39,11 @@ public:
 	IC				CALifeSwitchManager		(xrServer *server, LPCSTR section);
 	virtual			~CALifeSwitchManager	();
 			void	switch_object			(CSE_ALifeDynamicObject	*object);
-	IC		float	online_distance			() const;
-	IC		float	offline_distance		() const;
-	IC		float	switch_distance			() const;
-	IC		void	set_switch_distance		(float switch_distance);
-	IC		void	set_switch_factor		(float switch_factor);
+	IC		float	online_distance			() const noexcept;
+	IC		float	offline_distance		() const noexcept;
+	IC		float	switch_distance			() const noexcept;
+	IC		void	set_switch_distance		(float switch_distance) noexcept;
+	IC		void	set_switch_factor		(float switch_factor)	noexcept;
 };
 
 #include "alife_switch_manager_inline.h"

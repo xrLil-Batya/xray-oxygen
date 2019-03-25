@@ -41,7 +41,7 @@ dx10SamplerStateCache::SHandle dx10SamplerStateCache::GetState( D3D_SAMPLER_DESC
 		StateRecord rec;
 		rec.m_crc = crc;
 		CreateState(desc, &rec.m_pState);
-		hResult = m_StateArray.size();
+		hResult = (u32)m_StateArray.size();
 		m_StateArray.push_back(rec);
 	}
 

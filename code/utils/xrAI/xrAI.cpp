@@ -180,7 +180,7 @@ void Startup(LPSTR lpCmdLine)
 
 	delete pUIParams;
 	Logger.Destroy();
-	FlushLog();
+	xrLogger::FlushLog();
 
 	if (pUIParams->isShutDown)
 		WinShutdown();

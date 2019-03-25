@@ -2,11 +2,11 @@
 
 namespace XRay
 {
-	using namespace System;
-	using System::Runtime::InteropServices::OutAttribute;
-	using System::Runtime::InteropServices::StructLayoutAttribute;
-	using System::Runtime::InteropServices::LayoutKind;
-	using System::Runtime::InteropServices::FieldOffsetAttribute;
+	using namespace ::System;
+	using ::System::Runtime::InteropServices::OutAttribute;
+	using ::System::Runtime::InteropServices::StructLayoutAttribute;
+	using ::System::Runtime::InteropServices::LayoutKind;
+	using ::System::Runtime::InteropServices::FieldOffsetAttribute;
 
 	[StructLayout(LayoutKind::Sequential, Size = sizeof(Fcolor))] public value struct ColorF
 	{

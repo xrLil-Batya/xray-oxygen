@@ -11,7 +11,7 @@ COMMUNITY_DATA::COMMUNITY_DATA (CHARACTER_COMMUNITY_INDEX idx, CHARACTER_COMMUNI
 {
 	index = idx;
 	id = idn;
-	team = (u8)atoi(team_str);
+	team = (u8)atoi_17(team_str);
 }
 
 //////////////////////////////////////////////////////////////////////////

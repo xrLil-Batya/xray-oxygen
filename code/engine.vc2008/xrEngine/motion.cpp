@@ -24,7 +24,10 @@ CCustomMotion::CCustomMotion()
     fFPS			=30.f;
 }
 
-CCustomMotion::CCustomMotion(CCustomMotion* source){
+CCustomMotion::CCustomMotion(CCustomMotion* source)
+{
+	iFrameStart = 0;
+	mtype = EMotionType::mtObject;
 	*this			= *source;
 }
 

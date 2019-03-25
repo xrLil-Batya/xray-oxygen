@@ -13,9 +13,14 @@ XRay::Game::SGameTime^ XRay::Game::Time::get()
 
 	SGameTime^ CurTime = gcnew SGameTime();
 
+	CurTime->Years = year;
+	CurTime->Months = month;
+	//CurTime->Weeks = week;
 	CurTime->Days = day;
 	CurTime->Hours = hours;
 	CurTime->Minutes = mins;
+	CurTime->Seconds = secs;
+//	CurTime->Miliseconds = milisecs;
 
 	return CurTime;
 }
@@ -24,9 +29,102 @@ void XRay::Game::Time::set(XRay::Game::SGameTime^ NewTime)
 {
 	if (::Level().Server->game && ai().get_alife())
 	{
-		u32 value = NewTime->Days * 86400 + NewTime->Hours * 3600 + NewTime->Minutes * 60;
+	//	u32 value = NewTime->Days * 86400 + NewTime->Hours * 3600 + NewTime->Minutes * 60;
+	//	float fValue = static_cast<float> (value);
+	//	value *= 1000;//msec		
+	//	Environment().ChangeGameTime(fValue);
+	//	::Level().Server->game->alife().time_manager().change_game_time(value);
+	}
+}
+
+
+void XRay::Game::SGameTime::Years::set(::System::UInt32 value)
+{
+	_years = value;
+}
+
+void XRay::Game::SGameTime::Months::set(::System::UInt32 value)
+{
+	_months = value;
+}
+
+void XRay::Game::SGameTime::Weeks::set(::System::UInt32 value)
+{
+	_weeks = value;
+}
+
+void XRay::Game::SGameTime::Days::set(::System::UInt32 value)
+{
+	_days = value;
+}
+
+void XRay::Game::SGameTime::Hours::set(::System::UInt32 value)
+{
+	_hours = value;
+}
+
+void XRay::Game::SGameTime::Minutes::set(::System::UInt32 value)
+{
+	_minutes = value;
+}
+
+void XRay::Game::SGameTime::Seconds::set(::System::UInt32 value)
+{
+	_seconds = value;
+}
+
+void XRay::Game::SGameTime::Miliseconds::set(::System::UInt32 value)
+{
+	_miliseconds = value;
+}
+
+::System::UInt32 XRay::Game::SGameTime::Years::get()
+{
+	return _years;
+}
+
+::System::UInt32 XRay::Game::SGameTime::Months::get()
+{
+	return _months;
+}
+
+::System::UInt32 XRay::Game::SGameTime::Weeks::get()
+{
+	return _weeks;
+}
+
+::System::UInt32 XRay::Game::SGameTime::Days::get()
+{
+	return _days;
+}
+
+::System::UInt32 XRay::Game::SGameTime::Hours::get()
+{
+	return _hours;
+}
+
+::System::UInt32 XRay::Game::SGameTime::Minutes::get()
+{
+	return _minutes;
+}
+
+::System::UInt32 XRay::Game::SGameTime::Seconds::get()
+{
+	return _seconds;
+}
+
+::System::UInt32 XRay::Game::SGameTime::Miliseconds::get()
+{
+	return _miliseconds;
+}
+
+void XRay::Game::SGameTime::ChangeGameTime(u32 days, u32 hours, u32 mins)
+{
+	if (::Level().Server->game && ai().get_alife())
+	{
+		u32 value = days * 86400 + hours * 3600 + mins * 60;
 		float fValue = static_cast<float> (value);
-		value *= 1000;//msec		
+		value *= 1000; //msec		
 		Environment().ChangeGameTime(fValue);
 		::Level().Server->game->alife().time_manager().change_game_time(value);
 	}

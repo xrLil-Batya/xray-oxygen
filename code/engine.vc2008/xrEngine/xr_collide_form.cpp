@@ -102,6 +102,7 @@ IC bool RAYvsCYLINDER(const Fcylinder& c_cylinder, const Fvector &S, const Fvect
 
 CCF_Skeleton::CCF_Skeleton(CObject* O) : ICollisionForm(O,cftObject)
 {
+	dwFrame = 0;
 	//getVisData
 	IRenderVisual *pVisual = O->Visual();
 	IKinematics* K	= PKinematics(pVisual); 

@@ -7,6 +7,11 @@ XRay::UIStatic::UIStatic()
 	pNativeStatic = new CUIStatic();
 }
 
+XRay::UIStatic::UIStatic(::System::IntPtr pObject)
+{
+	pNativeStatic = (CUIStatic*)pObject.ToPointer();
+}
+
 XRay::UIStatic::~UIStatic()
 {
 	delete pNativeStatic;

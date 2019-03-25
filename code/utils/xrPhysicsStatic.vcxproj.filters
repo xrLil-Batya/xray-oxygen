@@ -183,9 +183,6 @@
     <ClCompile Include="..\engine.vc2008\xrPhysics\PHActivationShape.cpp">
       <Filter>physics\ActivationBox</Filter>
     </ClCompile>
-    <ClCompile Include="..\engine.vc2008\xrPhysics\PhysicsExternalCommon.cpp">
-      <Filter>physics\Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\engine.vc2008\xrPhysics\phvalide.cpp">
       <Filter>physics\Base\Objects\Utils</Filter>
     </ClCompile>

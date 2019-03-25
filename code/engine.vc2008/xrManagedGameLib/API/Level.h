@@ -1,68 +1,53 @@
 #pragma once
 #include "ClientSpawnManager.h"
+#include "PhysicsWorldScripted.h"
 #include "Game.h"
+
 class CLevel;
 class CLevelGraph;
 
+
+
 namespace XRay
 {
+	
 	ref class LevelGraph abstract
 	{
 	public:
 		/// <summaru> Returns Level ID</summaru>
-		static property u32 LevelID
+		property ::System::UInt32 LevelID
 		{
-			u32 get();
+			::System::UInt32 get();
 		}
+
 		/// <summaru> Returns Vertex count</summaru>
-		static property u32 VertexCount
+		property ::System::UInt32 VertexCount
 		{
-			u32 get();
+			::System::UInt32 get();
 		}
 	};
 
 	public ref class Level abstract
 	{
+	internal:
+		CLevel* pNativeLevel;
+
 	public:
-		static void StartWeatherFXfromTime(::System::String^ str, float time);		
-		static bool iSWfxPlaying();
-		static void StopWeatherFX();
-		
-		
-		static float HighCoverInDirection(u32 level_vertex_id, const Fvector &direction);
-		static float LowCoverInDirection(u32 level_vertex_id, const Fvector &direction);
 
-		static ::System::Numerics::Vector3^ VertexPosition(u32 level_vertex_id);
-
-		/// <summary>Check: Current level vertex be at level</summary>
-		static bool ValidVertex(u32 level_vertex_id);
-
-		static u32 	VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance);
-
-		// Map
-		/// <summary>Check: Map has is current spot by object ID?</summary>
-		static bool MapHasObjectSpot(u16 id, LPCSTR spot_type);
-		/// <summary>Set: Set spot to level map by object ID</summary>
-		static void MapAddObjectSpot(u16 id, LPCSTR spot_type, LPCSTR text);
-		/// <summary>Set: Del spot from level map by object ID</summary>
-		static void MapRemoveObjectSpot(u16 id, LPCSTR spot_type);
-		/// <summary>Set: Set spot to level map by object ID</summary>
-		static void MapAddObjectSpotSer(u16 id, LPCSTR spot_type, LPCSTR text);
-		/// <summary>Set: Change spot hint from level map by object ID</summary>
-		static void MapChangeSpotHint(u16 id, LPCSTR spot_type, LPCSTR text);
-
-		static bool PatrolPathExists(LPCSTR patrol_path);
-		static void PrefetchSnd(LPCSTR name);
-		
 		static property ClientSpawnManager^ ClientSpawnMngr
 		{
 			ClientSpawnManager^ get();
 		}
 
+		//static property UIDialogWnd^ UIDialgWnd
+		//{
+		//	UIDialogWnd^ get();
+		//}
+
 		/// <summary>Get Name</summary>
-		static property  LPCSTR Name
+		property ::System::String^ Name
 		{
-			LPCSTR get();
+			::System::String^ get();
 		}
 		/// <summary>Set WeatherFX</summary>
 		static property ::System::String^ WeatherFX
@@ -99,8 +84,71 @@ namespace XRay
 		/// <summary>Get or set game difficulty</summary>
 		static property ESingleGameDifficulty GameDifficulty
 		{
-			ESingleGameDifficulty get ();
+			ESingleGameDifficulty get();
 			void set(ESingleGameDifficulty dif);
 		}
+
+
+		static void StartWeatherFXfromTime(::System::String^ str, float time);		
+		static bool iSWfxPlaying();
+		static void StopWeatherFX();
+		
+		
+		static float HighCoverInDirection(u32 level_vertex_id, const Fvector &direction);
+		static float LowCoverInDirection(u32 level_vertex_id, const Fvector &direction);
+
+		static ::System::Numerics::Vector3^ VertexPosition(u32 level_vertex_id);
+
+		/// <summary>Check: Current level vertex be at level</summary>
+		static bool ValidVertex(u32 level_vertex_id);
+
+		static ::System::UInt32 	VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance);
+
+		// Map
+		/// <summary>Check: Map has is current spot by object ID?</summary>
+		static bool MapHasObjectSpot(u16 id, LPCSTR spot_type);
+		/// <summary>Set: Set spot to level map by object ID</summary>
+		static void MapAddObjectSpot(u16 id, LPCSTR spot_type, LPCSTR text);
+		/// <summary>Set: Del spot from level map by object ID</summary>
+		static void MapRemoveObjectSpot(u16 id, LPCSTR spot_type);
+		/// <summary>Set: Set spot to level map by object ID</summary>
+		static void MapAddObjectSpotSer(u16 id, LPCSTR spot_type, LPCSTR text);
+		/// <summary>Set: Change spot hint from level map by object ID</summary>
+		static void MapChangeSpotHint(u16 id, LPCSTR spot_type, LPCSTR text);
+
+		static bool PatrolPathExists(LPCSTR patrol_path);
+		static void PrefetchSnd(LPCSTR name);
+
+
+
+		static XRay::PhysicsWorldScripted^ physicsWorldScripted();
+
+
+
+		static void AddDialogToRender(XRay::UIDialogWnd^ pDialog);
+		static void RemoveDialogFromRender(XRay::UIDialogWnd^ pDialog);
+
+		static void HideIndicators();
+		static void HideIndicatorsSafe();
+		static void ShowIndicators();
+		static void ShowWeapon(bool b);
+		static bool isLevelPresent();
+		//static void AddCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void AddCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
+		//static void AddCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RemoveCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RemoveCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
+		//static void RemoveCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RemoveCallForObject(const luabind::object &lua_object);
+
+		
+		static MEnvironment^ pEnvironment();
+
+		//static EnvDescriptor^ CurrentEnvironment(CEnvironment* self);
+		////extern bool g_bDisableAllInput;
+		//static void DisableInput();
+		//static void EnableInput();
+		//static void SpawnPhantom(const Fvector &position);
+
 	};
 }

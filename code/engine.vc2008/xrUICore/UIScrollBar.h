@@ -1,4 +1,5 @@
 #pragma once
+#include "xrUIXmlParser.h"
 #include "UIWindow.h"
 
 class CUI3tButton;

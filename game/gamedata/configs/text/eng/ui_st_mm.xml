@@ -402,6 +402,12 @@
 	<string id="ui_mm_rain_drops">
 		<text>Rain drops on screen</text>
 	</string>
+	<string id="ui_mm_ch_aberr">
+		<text>Chromatic Aberration</text>
+	</string>
+	<string id="ui_mm_grading">
+		<text>Color grading</text>
+	</string>
 	<string id="ui_mm_vignette">
 		<text>Vignette</text>
 	</string>

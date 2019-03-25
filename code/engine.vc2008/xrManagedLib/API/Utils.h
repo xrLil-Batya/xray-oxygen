@@ -3,7 +3,7 @@
 
 namespace XRay
 {
-	public ref class Utils abstract sealed
+	public ref class Utils abstract
 	{
 	public:
 		static ::System::Numerics::Vector3 FromFvector(System::IntPtr InVec);

@@ -83,7 +83,6 @@ public:
 	virtual void	FireStart		();
 	virtual void	FireEnd			();
 	virtual void	Reload			();
-	
 
 	virtual	void	UpdateCL		();
 	virtual void	net_Destroy		();

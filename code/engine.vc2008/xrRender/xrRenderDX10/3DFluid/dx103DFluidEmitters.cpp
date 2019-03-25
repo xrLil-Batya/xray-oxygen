@@ -51,12 +51,10 @@ void dx103DFluidEmitters::DestroyShaders()
 
 void dx103DFluidEmitters::RenderDensity(const dx103DFluidData &FluidData)
 {
-	const xr_vector<CEmitter>	&Emitters = FluidData.GetEmittersList();
-	u32	iNumEmitters = Emitters.size();
+	const xr_vector<CEmitter> &Emitters = FluidData.GetEmittersList();
 
-	for( u32 i=0; i<iNumEmitters; ++i )
+	for(const CEmitter &Emitter : Emitters)
 	{
-		const CEmitter &Emitter = Emitters[i];
 		if (Emitter.m_bApplyDensity)
 			ApplyDensity(Emitter);
 	}
@@ -64,12 +62,10 @@ void dx103DFluidEmitters::RenderDensity(const dx103DFluidData &FluidData)
 
 void dx103DFluidEmitters::RenderVelocity(const dx103DFluidData &FluidData)
 {
-	const xr_vector<CEmitter>	&Emitters = FluidData.GetEmittersList();
-	u32	iNumEmitters = Emitters.size();
+	const xr_vector<CEmitter> &Emitters = FluidData.GetEmittersList();
 
-	for( u32 i=0; i<iNumEmitters; ++i )
+	for (const CEmitter &Emitter : Emitters)
 	{
-		const CEmitter &Emitter = Emitters[i];
 		if (Emitter.m_bApplyImpulse)
 			ApplyVelocity(Emitter);
 	}

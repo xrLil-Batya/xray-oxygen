@@ -63,22 +63,7 @@ void	CBlender_accum_direct::Compile(CBlender_Compile& C)
 
 		C.r_End				();
 		break;
-	case SE_SUN_LUMINANCE:	// luminance pass
-		C.r_Pass			("stub_notransform_aa_AA","accum_sun_nomsaa",		false,	FALSE,	FALSE);
-		C.r_CullMode		(D3DCULL_NONE);
 
-		C.r_dx10Texture		("s_position",		r2_RT_P);
-		C.r_dx10Texture		("s_normal",		r2_RT_N);
-		C.r_dx10Texture		("s_material",		r2_material);
-		C.r_dx10Texture		("s_smap",			r2_RT_generic0);
-
-		C.r_dx10Sampler		("smp_nofilter");
-		C.r_dx10Sampler		("smp_material");
-		jitter				(C);
-		C.r_End				();
-		break;
-
-		//	SE_SUN_NEAR for min/max
 	case SE_SUN_NEAR_MINMAX:		// near pass - enable Z-test to perform depth-clipping
 		//	FVF::TL2uv
 		C.r_Pass			("accum_sun","accum_sun_near_nomsaa_minmax",	false,	TRUE,	FALSE,blend,D3DBLEND_ONE,dest);
@@ -114,7 +99,7 @@ void	CBlender_accum_direct_msaa::Compile(CBlender_Compile& C)
 	IBlender::Compile		(C);
 
    if( Name )
-      ::Render->m_MSAASample = atoi( Definition );
+      ::Render->m_MSAASample = atoi_17( Definition );
    else
       ::Render->m_MSAASample = -1;
 
@@ -169,20 +154,20 @@ void	CBlender_accum_direct_msaa::Compile(CBlender_Compile& C)
 
 		C.r_End				();
 		break;
-	case SE_SUN_LUMINANCE:	// luminance pass
-		C.r_Pass			("stub_notransform_aa_AA","accum_sun_msaa",		false,	FALSE,	FALSE);
-		C.r_CullMode		(D3DCULL_NONE);
-
-		C.r_dx10Texture		("s_position",		r2_RT_P);
-		C.r_dx10Texture		("s_normal",		r2_RT_N);
-		C.r_dx10Texture		("s_material",		r2_material);
-		C.r_dx10Texture		("s_smap",			r2_RT_generic0);
-
-		C.r_dx10Sampler		("smp_nofilter");
-		C.r_dx10Sampler		("smp_material");
-		jitter				(C);
-		C.r_End				();
-		break;
+	//case SE_SUN_LUMINANCE:	// luminance pass
+	//	C.r_Pass			("stub_notransform_aa_AA","accum_sun_msaa",		false,	FALSE,	FALSE);
+	//	C.r_CullMode		(D3DCULL_NONE);
+	//
+	//	C.r_dx10Texture		("s_position",		r2_RT_P);
+	//	C.r_dx10Texture		("s_normal",		r2_RT_N);
+	//	C.r_dx10Texture		("s_material",		r2_material);
+	//	C.r_dx10Texture		("s_smap",			r2_RT_generic0);
+	//
+	//	C.r_dx10Sampler		("smp_nofilter");
+	//	C.r_dx10Sampler		("smp_material");
+	//	jitter				(C);
+	//	C.r_End				();
+	//	break;
 
 		
 		//	SE_SUN_NEAR for minmax
@@ -222,7 +207,7 @@ void	CBlender_accum_direct_volumetric_msaa::Compile(CBlender_Compile& C)
 	IBlender::Compile		(C);
 
    if( Name )
-      ::Render->m_MSAASample = atoi( Definition );
+      ::Render->m_MSAASample = atoi_17( Definition );
    else
       ::Render->m_MSAASample = -1;
 
@@ -255,7 +240,7 @@ void	CBlender_accum_direct_volumetric_sun_msaa::Compile(CBlender_Compile& C)
 	IBlender::Compile		(C);
 
    if( Name )
-      ::Render->m_MSAASample = atoi( Definition );
+      ::Render->m_MSAASample = atoi_17( Definition );
    else
       ::Render->m_MSAASample = -1;
 

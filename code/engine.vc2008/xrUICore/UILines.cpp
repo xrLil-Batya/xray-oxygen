@@ -505,13 +505,13 @@ u32 CUILines::GetColorFromText(const xr_string& str)const
 	begin+=3;
 
 	single_color = str.substr(begin, comma1_pos - 1);
-	a = atoi(single_color.c_str());
+	a = atoi_17(single_color.c_str());
 	single_color = str.substr(comma1_pos + 1, comma2_pos - 1);
-	r = atoi(single_color.c_str());
+	r = atoi_17(single_color.c_str());
 	single_color = str.substr(comma2_pos + 1, comma3_pos - 1);
-	g = atoi(single_color.c_str());
+	g = atoi_17(single_color.c_str());
 	single_color = str.substr(comma3_pos + 1, end - 1);
-	b = atoi(single_color.c_str());
+	b = atoi_17(single_color.c_str());
 
     return color_argb(a,r,g,b);
 }

@@ -116,7 +116,10 @@ void CEngineAPI::Initialize(void)
 		Msg				("Loading DLL: %s",g_name);
 		hGame			= LoadLibrary	(g_name);
 		if (!hGame)
+		{
 			R_CHK(GetLastError());
+			return;
+		}
 
 		R_ASSERT3		(hGame, "Game DLL raised exception during loading or there is no game DLL at all", g_name);
 		pCreate			= (Factory_Create*)GetProcAddress(hGame,"xrFactory_Create");	R_ASSERT(pCreate);

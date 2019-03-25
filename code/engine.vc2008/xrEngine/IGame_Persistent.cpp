@@ -147,8 +147,8 @@ void IGame_Persistent::Prefetch()
 void IGame_Persistent::OnGameEnd	()
 {
 #ifndef _EDITOR
-	ObjectPool.clear					();
-	Render->models_Clear				(TRUE);
+	ObjectPool.clear();
+	Render->models_Clear(TRUE);
 #endif
 }
 
@@ -162,8 +162,8 @@ void IGame_Persistent::OnFrame()
 	}
 
 	Device.Statistic->Particles_starting = (u32)ps_needtoplay.size();
-	Device.Statistic->Particles_active = (u32)ps_active.size();
-	Device.Statistic->Particles_destroy = (u32)ps_destroy.size();
+	Device.Statistic->Particles_active   = (u32)ps_active.size();
+	Device.Statistic->Particles_destroy  = (u32)ps_destroy.size();
 
 	// Play req particle systems
 	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.Begin();
@@ -215,13 +215,15 @@ void IGame_Persistent::destroy_particles		(const bool &all_particles)
 	}
 	else
 	{
-		size_t active_size = ps_active.size();
-		CPS_Instance **I = (CPS_Instance**)_alloca(active_size * sizeof(CPS_Instance*));
-		std::copy(ps_active.begin(), ps_active.end(), I);
+		const size_t active_size = ps_active.size();
+		CPS_Instance** ppParticleInstances = new CPS_Instance*[active_size];
+		std::copy(ps_active.begin(), ps_active.end(), ppParticleInstances);
 
-		CPS_Instance **E = std::remove_if(I, I + active_size, [](CPS_Instance*const& object){ return (!object->destroy_on_game_load()); });
-		for (; I != E; ++I)
-			(*I)->PSI_internal_delete();
+		CPS_Instance **E = std::remove_if(ppParticleInstances, ppParticleInstances + active_size, [](CPS_Instance*const& object) { return (!object->destroy_on_game_load()); });
+		for (; ppParticleInstances != E; ++ppParticleInstances)
+			(*ppParticleInstances)->PSI_internal_delete();
+
+		//delete[](ppParticleInstances);
 	}
 
 	VERIFY(ps_needtoplay.empty() && ps_destroy.empty() && (!all_particles || ps_active.empty()));

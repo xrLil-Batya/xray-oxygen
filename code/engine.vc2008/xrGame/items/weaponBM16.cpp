@@ -11,6 +11,18 @@ void CWeaponBM16::Load	(LPCSTR section)
 	m_sounds.LoadSound	(section, "snd_reload_1", "sndReload1", true, m_eSoundShot);
 }
 
+void CWeaponBM16::UpdateCL()
+{
+	Fvector P = get_LastFP();
+	if (m_magazine.size() == 1)
+		m_sounds.SetPosition("sndReload1", P);
+	else
+		m_sounds.SetPosition("sndReload", P);
+
+
+	inherited::UpdateCL();
+}
+
 void CWeaponBM16::PlayReloadSound()
 {
 	if(m_magazine.size()==1)	

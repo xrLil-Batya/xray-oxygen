@@ -2772,9 +2772,6 @@
     <ClInclude Include="alife_human_object_handler_inline.h">
       <Filter>AI\ALife\server_entities\human\object_handler</Filter>
     </ClInclude>
-    <ClInclude Include="alife_human_object_handler_save.h">
-      <Filter>AI\ALife\server_entities\human\object_handler</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\alife_monster_brain.h">
       <Filter>AI\ALife\server_entities\monster_abstract\brain</Filter>
     </ClInclude>

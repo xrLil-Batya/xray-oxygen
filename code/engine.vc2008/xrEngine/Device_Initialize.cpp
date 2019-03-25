@@ -49,6 +49,12 @@ void CRenderDevice::Initialize			()
 		CreateXRayWindow();
     }
 
+	if (m_hWnd == NULL)
+	{
+		R_ASSERT(m_hWnd);
+		return;
+	}
+
     // Save window properties
     m_dwWindowStyle = GetWindowLongPtr( m_hWnd, GWL_STYLE );
 }

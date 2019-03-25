@@ -140,7 +140,7 @@ void CBuild::BuildCForm	()
 
 	// Saving
 	string_path		fn;
-	IWriter*		MFS	= FS.w_open	(strconcat(sizeof(fn),fn,pBuild->path,"level.cform"));
+	IWriter*		MFS	= FS.w_open	(xr_strconcat(fn,pBuild->path,"level.cform"));
 	Logger.Status			("Saving...");
 
 	// Header

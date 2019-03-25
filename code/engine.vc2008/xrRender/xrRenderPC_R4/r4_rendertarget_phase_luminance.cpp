@@ -60,8 +60,8 @@ void	CRenderTarget::phase_luminance()
 	u_setrt									(rt_LUM_8,NULL,NULL,NULL);
 	{
 		// Build filter-kernel
-		float		_ts				= 8;
-		float		_src			= float(64);
+		float		_ts				= 8.f;
+		float		_src			= 64.f;
 		Fvector2	a[16],b[16];
 		for (int k=0; k<16; k++)	{
 			int	_x	= (k*2+1)%8;	// 1,3,5,7
@@ -114,7 +114,7 @@ void	CRenderTarget::phase_luminance()
 		RCache.Vertex.Unlock		(4,g_bloom_filter->vb_stride);
 
 		f_luminance_adapt			= .9f*f_luminance_adapt + .1f*Device.fTimeDelta*ps_r_tonemap_adaptation;
-		float		amount			= ps_r_flags.test(R_FLAG_TONEMAP)?ps_r_tonemap_amount:0;
+		float		amount			= ps_r_postscreen_flags.test(R_FLAG_TONEMAP)?ps_r_tonemap_amount:0;
 		Fvector3	_none, _full, _result;
 				_none.set			(1,							0,		1						);
 				_full.set			(ps_r_tonemap_middlegray,	1.f,	ps_r_tonemap_low_lum	);

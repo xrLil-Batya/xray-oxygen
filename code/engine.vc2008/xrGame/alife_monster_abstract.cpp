@@ -63,14 +63,6 @@ void CSE_ALifeMonsterAbstract::on_location_change() const
 	brain().on_location_change();
 }
 
-CSE_ALifeItemWeapon	*CSE_ALifeMonsterAbstract::tpfGetBestWeapon(ALife::EHitType &tHitType, float &fHitPower)
-{
-	m_tpCurrentBestWeapon = 0;
-	fHitPower = m_fHitPower;
-	tHitType = m_tHitType;
-	return						(m_tpCurrentBestWeapon);
-}
-
 ALife::EMeetActionType	CSE_ALifeMonsterAbstract::tfGetActionType(CSE_ALifeSchedulable *tpALifeSchedulable, int iGroupIndex, bool bMutualDetection)
 {
 	return						(ALife::eMeetActionTypeIgnore);

@@ -26,6 +26,20 @@ namespace XRay
 		}
 
 		/// <summary>
+		/// Get version string, like: X-Ray Oxygen version "1.7f" Build 7298 (Jan 29 2019) Commit[ox_dev; cd5027c1157f6a5d749b0ba4a7ec0b5ba61e3e27]
+		/// </summary>
+		static property String^ GetVersionString
+		{
+			String^ get()
+			{
+				return "X-Ray Oxygen version \"" + ENGINE_VERSION
+					+ "\" Build " + BuildId
+					+ " (" + BuildDate + ") Commit["
+					+ OxygenBranch + "; " + OxygenCommitHash + "]";
+			}
+		}
+
+		/// <summary>
 		/// Build id, which unique per day
 		/// </summary>
 		static property System::UInt32 BuildId

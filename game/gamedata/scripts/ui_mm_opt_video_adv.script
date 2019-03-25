@@ -250,6 +250,18 @@ function opt_video_adv:InitControls(x, y, xml, handler)
 	ctl = xml:InitCheck("video_adv:check_rain_drops", _st)
 	table.insert(handler.m_preconditions, {func=mode_ge_2, control=_st})
 	
+	-- Хромическая абберация
+	_st = xml:InitStatic("video_adv:templ_item", nil)
+	xml:InitStatic("video_adv:cap_ch_aberr", _st)
+	ctl = xml:InitCheck("video_adv:check_ch_aberr", _st)
+	table.insert(handler.m_preconditions, {func=mode_ge_2, control=_st})
+	
+	-- Цветной градиент
+	_st = xml:InitStatic("video_adv:templ_item", nil)
+	xml:InitStatic("video_adv:cap_grading", _st)
+	ctl = xml:InitCheck("video_adv:check_grading", _st)
+	table.insert(handler.m_preconditions, {func=mode_ge_2, control=_st})
+	
 	-- Виньетка
 	_st = xml:InitStatic("video_adv:templ_item", nil)
 	xml:InitStatic("video_adv:cap_vignette", _st)

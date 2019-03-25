@@ -168,9 +168,9 @@ float CPersonalWeaponTypeFunction::ffGetTheBestWeapon()
 	}
 	else 
 	{
-		if (!ef_storage().alife().member() || !ef_storage().alife().member()->m_tpCurrentBestWeapon)
-			return(0);
-		ef_storage().alife().member_item()	= ef_storage().alife().member()->m_tpCurrentBestWeapon;
+	//	if (!ef_storage().alife().member() || !ef_storage().alife().member()->m_tpCurrentBestWeapon)
+	//		return(0);
+	//	ef_storage().alife().member_item()	= ef_storage().alife().member()->m_tpCurrentBestWeapon;
 		dwBestWeapon			= dwfGetWeaponType();
 	}
 	return(float(dwBestWeapon));

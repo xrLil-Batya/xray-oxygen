@@ -75,9 +75,9 @@ void 	CDetailManager::cache_Task		(int gx, int gz, Slot* D)
 
 BOOL	CDetailManager::cache_Validate	()
 {
-	for (int z=0; z<dm_cache_line; z++)
+	for (u32 z=0; z<dm_cache_line; z++)
 	{
-		for (int x=0; x<dm_cache_line; x++)
+		for (u32 x=0; x<dm_cache_line; x++)
 		{
 			int		w_x		= cg2w_X(x);
 			int		w_z		= cg2w_Z(z);

@@ -1,6 +1,5 @@
 #pragma once
 #include "Filesystem.h"
-using namespace System;
 using namespace System::Numerics;
 
 namespace XRay
@@ -9,15 +8,15 @@ namespace XRay
 	public ref class Ini sealed
 	{
 	internal:
-		CInifile* pNativeObject;
+		CInifile* pNativeIni;
 
 	public:
 		/// <summary> Returns file name </summary>
 		property String^ FileName
 		{
-			String^ get() override
+			virtual String^ get() 
 			{
-				return gcnew String(pNativeObject->fname());
+				return gcnew String(pNativeIni->fname());
 			}
 		};
 

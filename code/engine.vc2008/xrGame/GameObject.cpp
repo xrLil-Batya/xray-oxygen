@@ -288,64 +288,22 @@ BOOL CGameObject::net_Spawn(CSE_Abstract* pSEAbstract)
 
 void CGameObject::net_Save		(NET_Packet &net_packet)
 {
+
 	u32							position;
 	net_packet.w_chunk_open16	(position);
 	save						(net_packet);
 
 	// Script Binder Save ---------------------------------------
-#ifdef DEBUG	
-	if (psAI_Flags.test(aiSerialize))	{
-		Msg(">> **** Save script object [%s] *****", *cName());
-		Msg(">> Before save :: packet position = [%u]", net_packet.w_tell());
-	}
-
-#endif
 
 	CScriptBinder::save			(net_packet);
-
-#ifdef DEBUG	
-
-	if (psAI_Flags.test(aiSerialize))	{
-		Msg(">> After save :: packet position = [%u]", net_packet.w_tell());
-	}
-#endif
-
 	// ----------------------------------------------------------
-
 	net_packet.w_chunk_close16	(position);
 }
 
 void CGameObject::net_Load		(IReader &ireader)
 {
-	load					(ireader);
-
-	// Script Binder Load ---------------------------------------
-#ifdef DEBUG	
-	if (psAI_Flags.test(aiSerialize))	{
-		Msg(">> **** Load script object [%s] *****", *cName());
-		Msg(">> Before load :: reader position = [%i]", ireader.tell());
-	}
-
-#endif
-
-	CScriptBinder::load		(ireader);
-
-
-#ifdef DEBUG	
-
-	if (psAI_Flags.test(aiSerialize))	{
-		Msg(">> After load :: reader position = [%i]", ireader.tell());
-	}
-#endif
-	// ----------------------------------------------------------
-#ifdef DEBUG
-	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrackName(),*cName())==0)
-	{
-		Msg("CGameObject::net_Load obj %s (loaded) %f,%f,%f",PH_DBG_ObjectTrackName(),Position().x,Position().y,Position().z);
-	}
-
-#endif
-
+	load(ireader);
+	CScriptBinder::load(ireader);
 }
 
 void CGameObject::save(NET_Packet &output_packet)
@@ -380,7 +338,7 @@ void CGameObject::spawn_supplies()
 			int				n = _GetItemCount(V);
 			string16		temp;
 			if (n > 0)
-				j			= atoi(_GetItem(V,0,temp)); //count
+				j			= atoi_17(_GetItem(V,0,temp)); //count
 			
 			if(nullptr!=strstr(V,"prob="))
 				p			=(float)atof(strstr(V,"prob=")+5);

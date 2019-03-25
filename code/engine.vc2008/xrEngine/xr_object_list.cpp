@@ -166,7 +166,7 @@ void CObjectList::Update		(bool bForce)
 			}
 
 			size_t const objects_count	= workload->size();
-			CObject** objects			= (CObject**)_alloca(objects_count*sizeof(CObject*));
+			CObject** objects			= new CObject*[objects_count];
 			std::copy					( workload->begin(), workload->end(), objects );
 
 			crows.clear		();
@@ -181,6 +181,7 @@ void CObjectList::Update		(bool bForce)
 			for (CObject** i = b; i != e; ++i)
 				SingleUpdate			(*i);
 
+			xr_delete(objects);
 		}
 	}
 

@@ -15,7 +15,7 @@
     <ProjectGuid>{C4DEFC31-A910-4339-99B3-6C410DC19AD0}</ProjectGuid>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>xrManagedLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <ProjectName>xrManagedCoreLib</ProjectName>
     <TargetFrameworkVersion>4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
@@ -97,7 +97,6 @@
     <ClInclude Include="API\Ini.h" />
     <ClInclude Include="API\Log.h" />
     <ClInclude Include="API\ModInstance.h" />
-    <ClInclude Include="API\PostProcessAnimator.h" />
     <ClInclude Include="API\System.h" />
     <ClInclude Include="API\Utils.h" />
     <ClInclude Include="API\Xml.h" />
@@ -114,7 +113,6 @@
     <ClCompile Include="API\Ini.cpp" />
     <ClCompile Include="API\Log.cpp" />
     <ClCompile Include="API\ModInstance.cpp" />
-    <ClCompile Include="API\PostProcessAnimator.cpp" />
     <ClCompile Include="API\System.cpp" />
     <ClCompile Include="API\Utils.cpp" />
     <ClCompile Include="API\Xml.cpp" />

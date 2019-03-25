@@ -934,7 +934,6 @@ void xrServer::OnCL_Connected()
 
 	Perform_game_export();
 	SendConnectionData(SV_Client);
-
 	game->OnPlayerConnect(SV_Client->ID);
 }
 

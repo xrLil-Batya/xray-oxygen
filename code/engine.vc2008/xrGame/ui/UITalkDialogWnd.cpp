@@ -17,92 +17,89 @@
 
 #define TALK_XML "talk.xml"
 
-CUITalkDialogWnd::CUITalkDialogWnd()
-	:	m_pNameTextFont		(NULL)
+CUITalkDialogWnd::CUITalkDialogWnd() : m_pNameTextFont(nullptr)
 {
 	m_ClickedQuestionID = "";
 	mechanic_mode = false;
 }
 CUITalkDialogWnd::~CUITalkDialogWnd()
 {
-	xr_delete(m_uiXml);
+	delete m_uiXml;
 }
 
 void CUITalkDialogWnd::InitTalkDialogWnd()
 {
-	m_uiXml						= xr_new<CUIXml>();
-	m_uiXml->Load				(CONFIG_PATH, UI_PATH, TALK_XML);
-	CUIXmlInit					ml_init;
+	m_uiXml = new CUIXml;
+	m_uiXml->Load(CONFIG_PATH, UI_PATH, TALK_XML);
+	CUIXmlInit ml_init;
 
-	CUIXmlInit::InitWindow		(*m_uiXml, "main", 0, this);
+	CUIXmlInit::InitWindow(*m_uiXml, "main", 0, this);
 
-    // Display character icons on left and right side of dialog screen, line in Shadow of Chernobyl
-    if (g_extraFeatures.is(GAME_EXTRA_SOC_WND))
-    {
-        CUIXmlInit::InitStatic(*m_uiXml, "right_character_icon", 0, &UIOurIcon);
-        CUIXmlInit::InitStatic(*m_uiXml, "left_character_icon", 0, &UIOthersIcon);
+	// Display character icons on left and right side of dialog screen, line in Shadow of Chernobyl
+	if (g_extraFeatures.is(GAME_EXTRA_SOC_WND))
+	{
+		CUIXmlInit::InitStatic(*m_uiXml, "right_character_icon", 0, &UIOurIcon);
+		CUIXmlInit::InitStatic(*m_uiXml, "left_character_icon", 0, &UIOthersIcon);
 
-        UIOurIcon.AttachChild(&UICharacterInfoLeft);
-        UICharacterInfoLeft.InitCharacterInfo(Fvector2().set(0, 0), UIOurIcon.GetWndSize(), "talk_character.xml");
+		UIOurIcon.AttachChild(&UICharacterInfoLeft);
+		UICharacterInfoLeft.InitCharacterInfo(Fvector2().set(0, 0), UIOurIcon.GetWndSize(), "talk_character.xml");
 
-        UIOthersIcon.AttachChild(&UICharacterInfoRight);
-        UICharacterInfoRight.InitCharacterInfo(Fvector2().set(0, 0), UIOthersIcon.GetWndSize(), "talk_character.xml");
+		UIOthersIcon.AttachChild(&UICharacterInfoRight);
+		UICharacterInfoRight.InitCharacterInfo(Fvector2().set(0, 0), UIOthersIcon.GetWndSize(), "talk_character.xml");
 
-        AttachChild(&UIOurIcon);
-        AttachChild(&UIOthersIcon);
-    }
+		AttachChild(&UIOurIcon);
+		AttachChild(&UIOthersIcon);
+	}
 
 	//Ответы
-	UIAnswersList				= xr_new<CUIScrollView>();
+	UIAnswersList = new CUIScrollView;
 	UIAnswersList->SetAutoDelete(true);
 	AttachChild(UIAnswersList);
-	CUIXmlInit::InitScrollView	(*m_uiXml, "answers_list", 0, UIAnswersList);
+	CUIXmlInit::InitScrollView(*m_uiXml, "answers_list", 0, UIAnswersList);
 	UIAnswersList->SetWindowName("---UIAnswersList");
 
 	//Вопросы
-	UIQuestionsList				= xr_new<CUIScrollView>();
+	UIQuestionsList = new CUIScrollView;
 	UIQuestionsList->SetAutoDelete(true);
 	AttachChild(UIQuestionsList);
-	CUIXmlInit::InitScrollView	(*m_uiXml, "questions_list", 0, UIQuestionsList);
+	CUIXmlInit::InitScrollView(*m_uiXml, "questions_list", 0, UIQuestionsList);
 	UIQuestionsList->SetWindowName("---UIQuestionsList");
 
 
 	//кнопка перехода в режим торговли
-	AttachChild					(&UIToTradeButton);
-	CUIXmlInit::Init3tButton	(*m_uiXml, "button", 0, &UIToTradeButton);
+	AttachChild(&UIToTradeButton);
+	CUIXmlInit::Init3tButton(*m_uiXml, "button", 0, &UIToTradeButton);
 
 	// шрифт для индикации имени персонажа в окне разговора
-	CUIXmlInit::InitFont		(*m_uiXml, "font", 0, m_iNameTextColor, m_pNameTextFont);
+	CUIXmlInit::InitFont(*m_uiXml, "font", 0, m_iNameTextColor, m_pNameTextFont);
 
-	CGameFont * pFont			= NULL;
-	CUIXmlInit::InitFont		(*m_uiXml, "font", 1, m_uOurReplicsColor, pFont);
+	CGameFont* pFont = nullptr;
+	CUIXmlInit::InitFont(*m_uiXml, "font", 1, m_uOurReplicsColor, pFont);
 
+	SetWindowName("----CUITalkDialogWnd");
 
-	SetWindowName				("----CUITalkDialogWnd");
-
-	Register					(&UIToTradeButton);
-	AddCallbackStr				("question_item",LIST_ITEM_CLICKED,CUIWndCallback::void_function(this, &CUITalkDialogWnd::OnQuestionClicked));
-	AddCallback					(&UIToTradeButton,BUTTON_CLICKED,CUIWndCallback::void_function(this, &CUITalkDialogWnd::OnTradeClicked));
+	Register(&UIToTradeButton);
+	AddCallbackStr("question_item", LIST_ITEM_CLICKED, CUIWndCallback::void_function(this, &CUITalkDialogWnd::OnQuestionClicked));
+	AddCallback(&UIToTradeButton, BUTTON_CLICKED, CUIWndCallback::void_function(this, &CUITalkDialogWnd::OnTradeClicked));
 }
 
-	
 void CUITalkDialogWnd::Show()
 {
-	InventoryUtilities::SendInfoToActor				("ui_talk_show");
-	InventoryUtilities::SendInfoToLuaScripts		("ui_talk_show");
-	inherited::Show									(true);
-	inherited::Enable								(true);
+	InventoryUtilities::SendInfoToActor("ui_talk_show");
+	InventoryUtilities::SendInfoToLuaScripts("ui_talk_show");
+	inherited::Show(true);
+	inherited::Enable(true);
 
-	ResetAll										();
+	ResetAll();
 }
 
 void CUITalkDialogWnd::Hide()
 {
-	InventoryUtilities::SendInfoToActor				("ui_talk_hide");
-	InventoryUtilities::SendInfoToLuaScripts		("ui_talk_hide");
-	inherited::Show									(false);
-	inherited::Enable								(false);
-	g_btnHint->Discard								();
+	InventoryUtilities::SendInfoToActor("ui_talk_hide");
+	InventoryUtilities::SendInfoToLuaScripts("ui_talk_hide");
+	inherited::Show(false);
+	inherited::Enable(false);
+	g_btnHint->Discard();
 }
 
 void CUITalkDialogWnd::OnQuestionClicked(CUIWindow* w, void*)
@@ -118,7 +115,7 @@ void CUITalkDialogWnd::OnExitClicked(CUIWindow* w, void*)
 
 void CUITalkDialogWnd::OnTradeClicked(CUIWindow* w, void*)
 {
-	if ( mechanic_mode )
+	if (mechanic_mode)
 	{
 		GetTop()->SendMessage(this, TALK_DIALOG_UPGRADE_BUTTON_CLICKED);
 	}
@@ -135,7 +132,7 @@ void CUITalkDialogWnd::OnUpgradeClicked(CUIWindow* w, void*)
 
 void CUITalkDialogWnd::SetTradeMode()
 {
-	OnTradeClicked( &UIToTradeButton, 0 );
+	OnTradeClicked(&UIToTradeButton, 0);
 }
 
 //пересылаем сообщение родительскому окну для обработки
@@ -147,8 +144,8 @@ void CUITalkDialogWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 
 void CUITalkDialogWnd::ClearAll()
 {
-	UIAnswersList->Clear	();
-	ClearQuestions			();
+	UIAnswersList->Clear();
+	ClearQuestions();
 }
 
 void CUITalkDialogWnd::ClearQuestions()
@@ -156,203 +153,202 @@ void CUITalkDialogWnd::ClearQuestions()
 	UIQuestionsList->Clear();
 }
 
-
 void CUITalkDialogWnd::AddQuestion(LPCSTR str, LPCSTR value, int number, bool b_finalizer)
 {
-	CUIQuestionItem* itm			= xr_new<CUIQuestionItem>(m_uiXml,"question_item");
-	itm->Init						(value, str);
+	CUIQuestionItem* itm = new CUIQuestionItem(m_uiXml, "question_item");
+	itm->Init(value, str);
 	++number; //zero-based index
-	if(number<=10)
+	if (number <= 10)
 	{
 		string16 buff;
-		xr_sprintf						(buff, "%d.", (number==10)?0:number);
-		itm->m_num_text->SetText		(buff);
-		itm->m_text->SetAccelerator		(DIK_ESCAPE+number, 0);
+		xr_sprintf(buff, "%d.", (number == 10) ? 0 : number);
+		itm->m_num_text->SetText(buff);
+		itm->m_text->SetAccelerator(DIK_ESCAPE + number, 0);
 	}
-	if(b_finalizer)
+	if (b_finalizer)
 	{
-		itm->m_text->SetAccelerator		(kQUIT, 2);
-		itm->m_text->SetAccelerator		(kUSE, 3);
+		itm->m_text->SetAccelerator(kQUIT, 2);
+		itm->m_text->SetAccelerator(kUSE, 3);
 	}
 
-	itm->SetWindowName				("question_item");
-	UIQuestionsList->AddWindow		(itm, true);
-	Register						(itm);
+	itm->SetWindowName("question_item");
+	UIQuestionsList->AddWindow(itm, true);
+	Register(itm);
 }
-
 
 void CUITalkDialogWnd::AddAnswer(LPCSTR SpeakerName, LPCSTR str, bool bActor)
 {
-	CUIAnswerItem* itm				= xr_new<CUIAnswerItem>(m_uiXml,bActor?"actor_answer_item":"other_answer_item");
-	itm->Init						(str, SpeakerName);
-	UIAnswersList->AddWindow		(itm, true);
-	UIAnswersList->ScrollToEnd		();
-	
+	CUIAnswerItem* itm = new CUIAnswerItem(m_uiXml, bActor ? "actor_answer_item" : "other_answer_item");
+	itm->Init(str, SpeakerName);
+	UIAnswersList->AddWindow(itm, true);
+	UIAnswersList->ScrollToEnd();
+
 	GAME_NEWS_DATA	news_data;
 	news_data.news_caption = SpeakerName;
 
 	xr_string res;
 	res = "%c[250,255,232,208]";
 	res += str;
-	news_data.news_text	= res.c_str();
+	news_data.news_text = res.c_str();
 
-	news_data.m_type				= GAME_NEWS_DATA::eTalk;
-	CUICharacterInfo& ci			= bActor ? UICharacterInfoLeft : UICharacterInfoRight; 
+	news_data.m_type = GAME_NEWS_DATA::eTalk;
+	CUICharacterInfo& ci = bActor ? UICharacterInfoLeft : UICharacterInfoRight;
 
-	news_data.texture_name			= ci.IconName();
-	news_data.receive_time			= Level().GetGameTime();
+	news_data.texture_name = ci.IconName();
+	news_data.receive_time = Level().GetGameTime();
 
 	Actor()->game_news_registry->registry().objects().push_back(news_data);
 }
 
 void CUITalkDialogWnd::AddIconedAnswer(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name)
 {
-	CUIAnswerItemIconed* itm		= xr_new<CUIAnswerItemIconed>(m_uiXml,templ_name);
-	itm->Init						(text, caption, texture_name);
-	UIAnswersList->AddWindow		(itm, true);
-	UIAnswersList->ScrollToEnd		();
-	
-	GAME_NEWS_DATA	news_data;
-	news_data.news_caption			= caption;
-	news_data.news_text._set		( text );
+	CUIAnswerItemIconed* itm = new CUIAnswerItemIconed(m_uiXml, templ_name);
+	itm->Init(text, caption, texture_name);
+	UIAnswersList->AddWindow(itm, true);
+	UIAnswersList->ScrollToEnd();
 
-	news_data.m_type				= GAME_NEWS_DATA::eTalk;
-	news_data.texture_name			= texture_name;
-	news_data.receive_time			= Level().GetGameTime();
+	GAME_NEWS_DATA news_data;
+	news_data.news_caption = caption;
+	news_data.news_text._set(text);
+
+	news_data.m_type = GAME_NEWS_DATA::eTalk;
+	news_data.texture_name = texture_name;
+	news_data.receive_time = Level().GetGameTime();
 
 	Actor()->game_news_registry->registry().objects().push_back(news_data);
 }
 
 void CUITalkDialogWnd::SetOsoznanieMode(bool b)
 {
-    if (g_extraFeatures.is(GAME_EXTRA_SOC_WND))
-    {
-        UIOurIcon.Show(!b);
-        UIOthersIcon.Show(!b);
-    }
+	if (g_extraFeatures.is(GAME_EXTRA_SOC_WND))
+	{
+		UIOurIcon.Show(!b);
+		UIOthersIcon.Show(!b);
+	}
 
-	UIAnswersList->Show	(!b);
-
+	UIAnswersList->Show(!b);
 	UIToTradeButton.Show(!b);
-	if ( mechanic_mode )
+
+	if (mechanic_mode)
 	{
 		UIToTradeButton.m_hint_text = "ui_st_upgrade_hint";
-		UIToTradeButton.TextItemControl()->SetTextST( "ui_st_upgrade" );
+		UIToTradeButton.TextItemControl()->SetTextST("ui_st_upgrade");
 	}
 	else
 	{
 		UIToTradeButton.m_hint_text = "ui_st_trade_hint";
-		UIToTradeButton.TextItemControl()->SetTextST( "ui_st_trade" );
+		UIToTradeButton.TextItemControl()->SetTextST("ui_st_trade");
 	}
 }
 
 void CUITalkDialogWnd::UpdateButtonsLayout(bool b_disable_break, bool trade_enabled)
 {
-	UIToTradeButton.Show		(trade_enabled);
+	UIToTradeButton.Show(trade_enabled);
 }
 
-void CUIQuestionItem::SendMessage				(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIQuestionItem::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 }
 
 CUIQuestionItem::CUIQuestionItem(CUIXml* xml_doc, LPCSTR path)
 {
-	m_text							= xr_new<CUI3tButton>();
-	m_text->SetAutoDelete			(true);
-	AttachChild						(m_text);
+	m_text = new CUI3tButton;
+	m_text->SetAutoDelete(true);
+	AttachChild(m_text);
 
-	string512						str;
-	CUIXmlInit						xml_init;
+	string512 str;
+	CUIXmlInit xml_init;
 
-	xr_strcpy						(str,path);
-	xml_init.InitWindow				(*xml_doc, str, 0, this);
+	xr_strcpy(str, path);
+	xml_init.InitWindow(*xml_doc, str, 0, this);
 
-	m_min_height					= xml_doc->ReadAttribFlt(path,0,"min_height",15.0f);
+	m_min_height = xml_doc->ReadAttribFlt(path, 0, "min_height", 15.0f);
 
-	xr_strconcat					(str,path,":content_text");
-	xml_init.Init3tButton			(*xml_doc, str, 0, m_text);
+	xr_strconcat(str, path, ":content_text");
+	xml_init.Init3tButton(*xml_doc, str, 0, m_text);
 
-	Register						(m_text);
-	AddCallback						(m_text,BUTTON_CLICKED,CUIWndCallback::void_function(this, &CUIQuestionItem::OnTextClicked));
+	Register(m_text);
+	AddCallback(m_text, BUTTON_CLICKED, CUIWndCallback::void_function(this, &CUIQuestionItem::OnTextClicked));
 
-	m_num_text						= xr_new<CUITextWnd>();
-	m_num_text->SetAutoDelete		(true);
-	AttachChild						(m_num_text);
-	xr_strconcat					(str,path,":num_text");
-	xml_init.InitTextWnd			(*xml_doc, str, 0, m_num_text);
+	m_num_text = new CUITextWnd;
+	m_num_text->SetAutoDelete(true);
+	AttachChild(m_num_text);
+	xr_strconcat(str, path, ":num_text");
+	xml_init.InitTextWnd(*xml_doc, str, 0, m_num_text);
 }
 
-void CUIQuestionItem::Init			(LPCSTR val, LPCSTR text)
+void CUIQuestionItem::Init(LPCSTR val, LPCSTR text)
 {
-	m_s_value						= val;
+	m_s_value = val;
 	m_text->TextItemControl()->SetText(text);
-	m_text->AdjustHeightToText		();
-	float new_h						= std::max(m_min_height, m_text->GetWndPos().y+m_text->GetHeight());
-	SetHeight						(new_h);
+	m_text->AdjustHeightToText();
+	float new_h = std::max(m_min_height, m_text->GetWndPos().y + m_text->GetHeight());
+	SetHeight(new_h);
 }
 
-void	CUIQuestionItem::OnTextClicked(CUIWindow* w, void*)
+void CUIQuestionItem::OnTextClicked(CUIWindow* w, void*)
 {
 	GetMessageTarget()->SendMessage(this, LIST_ITEM_CLICKED, (void*)this);
 }
 
-
-CUIAnswerItem::CUIAnswerItem			(CUIXml* xml_doc, LPCSTR path)
+CUIAnswerItem::CUIAnswerItem(CUIXml* xml_doc, LPCSTR path)
 {
-	m_text							= xr_new<CUITextWnd>();m_text->SetAutoDelete(true);
-	m_name							= xr_new<CUITextWnd>();m_name->SetAutoDelete(true);
-	AttachChild						(m_text);
-	AttachChild						(m_name);
+	m_text = new CUITextWnd; 
+	m_text->SetAutoDelete(true);
+	m_name = new CUITextWnd; 
+	m_name->SetAutoDelete(true);
+	AttachChild(m_text);
+	AttachChild(m_name);
 
-	string512						str;
-	CUIXmlInit						xml_init;
+	string512 str;
+	CUIXmlInit xml_init;
 
-	xr_strcpy							(str,path);
-	xml_init.InitWindow				(*xml_doc, str, 0, this);
+	xr_strcpy(str, path);
+	xml_init.InitWindow(*xml_doc, str, 0, this);
 
-	m_min_height					= xml_doc->ReadAttribFlt(path,0,"min_height",15.0f);
-	m_bottom_footer					= xml_doc->ReadAttribFlt(path,0,"bottom_footer",0.0f);
-	xr_strconcat					(str,path, ":content_text");
-	xml_init.InitTextWnd			(*xml_doc, str, 0, m_text);
+	m_min_height = xml_doc->ReadAttribFlt(path, 0, "min_height", 15.0f);
+	m_bottom_footer = xml_doc->ReadAttribFlt(path, 0, "bottom_footer", 0.0f);
+	xr_strconcat(str, path, ":content_text");
+	xml_init.InitTextWnd(*xml_doc, str, 0, m_text);
 
-	xr_strconcat					(str,path, ":name_caption");
-	xml_init.InitTextWnd			(*xml_doc, str, 0, m_name);
-	SetAutoDelete					(true);
+	xr_strconcat(str, path, ":name_caption");
+	xml_init.InitTextWnd(*xml_doc, str, 0, m_name);
+	SetAutoDelete(true);
 }
 
-void CUIAnswerItem::Init			(LPCSTR text, LPCSTR name)
+void CUIAnswerItem::Init(LPCSTR text, LPCSTR name)
 {
-	m_name->SetText					(name);
-	m_text->SetText					(text);
-	m_text->AdjustHeightToText		();
-	float new_h						= std::max(m_min_height, m_text->GetWndPos().y+m_text->GetHeight());
-	new_h							+= m_bottom_footer;
-	SetHeight						(new_h);
+	m_name->SetText(name);
+	m_text->SetText(text);
+	m_text->AdjustHeightToText();
+	float new_h = std::max(m_min_height, m_text->GetWndPos().y + m_text->GetHeight());
+	new_h += m_bottom_footer;
+	SetHeight(new_h);
 }
 
-CUIAnswerItemIconed::CUIAnswerItemIconed		(CUIXml* xml_doc, LPCSTR path)
-:CUIAnswerItem(xml_doc, path)
+CUIAnswerItemIconed::CUIAnswerItemIconed(CUIXml* xml_doc, LPCSTR path) : CUIAnswerItem(xml_doc, path)
 {
-	m_icon							= xr_new<CUIStatic>();m_icon->SetAutoDelete(true);
-	AttachChild						(m_icon);
+	m_icon = new CUIStatic; 
+	m_icon->SetAutoDelete(true);
+	AttachChild(m_icon);
 
-	string512						str;
-	CUIXmlInit						xml_init;
+	string512 str;
+	CUIXmlInit xml_init;
 
-	xr_strconcat					(str, path, ":msg_icon");
-	xml_init.InitStatic				(*xml_doc, str, 0, m_icon);
+	xr_strconcat(str, path, ":msg_icon");
+	xml_init.InitStatic(*xml_doc, str, 0, m_icon);
 }
 
-void CUIAnswerItemIconed::Init		(LPCSTR text, LPCSTR name, LPCSTR texture_name)
+void CUIAnswerItemIconed::Init(LPCSTR text, LPCSTR name, LPCSTR texture_name)
 {
 	xr_string res;
 	res += name;
 	res += "\\n %c[250,255,232,208]";
 	res += text;
 
-	inherited::Init					(res.c_str(), "");
-	m_icon->InitTexture				(texture_name);
-	m_icon->TextureOn				();
-	m_icon->SetStretchTexture		(true);
+	inherited::Init(res.c_str(), "");
+	m_icon->InitTexture(texture_name);
+	m_icon->TextureOn();
+	m_icon->SetStretchTexture(true);
 }

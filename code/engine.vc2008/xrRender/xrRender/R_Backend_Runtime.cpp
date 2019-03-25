@@ -17,7 +17,6 @@ void CBackend::OnFrameEnd	()
 {
 #ifdef USE_DX11
 	HW.pContext->ClearState();
-	Invalidate			();
 #else
 
 	for (u32 stage=0; stage<HW.Caps.raster.dwStages; stage++)
@@ -26,8 +25,8 @@ void CBackend::OnFrameEnd	()
 	CHK_DX				(HW.pDevice->SetIndices			(0));
 	CHK_DX				(HW.pDevice->SetVertexShader	(0));
 	CHK_DX				(HW.pDevice->SetPixelShader		(0));
-	Invalidate			();
 #endif
+	Invalidate();
 }
 
 void CBackend::OnFrameBegin	()
@@ -62,8 +61,8 @@ void CBackend::Invalidate	()
 	state						= nullptr;
 	ps							= nullptr;
 	vs							= nullptr;
-DX10_ONLY(gs					= nullptr);
 #ifdef USE_DX11
+	gs = nullptr;
 	hs = 0;
 	ds = 0;
 	cs = 0;
@@ -97,7 +96,7 @@ DX10_ONLY(gs					= nullptr);
 	m_PrimitiveTopology			= D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 	m_bChangedRTorZB			= false;
 	m_pInputSignature			= NULL;
-	for (int i=0; i<MaxCBuffers; ++i)
+	for (u32 i=0; i<MaxCBuffers; ++i)
 	{
 		m_aPixelConstants[i] = 0;
 		m_aVertexConstants[i] = 0;
@@ -121,9 +120,6 @@ DX10_ONLY(gs					= nullptr);
 
 	for (u32 ps_it =0; ps_it < mtMaxPixelShaderTextures;)	textures_ps	[ps_it++]	= 0;
 	for (u32 vs_it =0; vs_it < mtMaxVertexShaderTextures;)	textures_vs	[vs_it++]	= 0;
-#ifdef _EDITOR
-	for (u32 m_it =0; m_it< 8;)		matrices	[m_it++]	= 0;
-#endif
 }
 
 void	CBackend::set_ClipPlanes	(u32 _enable, Fplane*	_planes /*=NULL */, u32 count/* =0*/)

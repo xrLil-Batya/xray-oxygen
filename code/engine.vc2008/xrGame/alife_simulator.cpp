@@ -262,7 +262,7 @@ void generate_story_ids(
 		for (; I != E; ++I)
 			R_ASSERT3((*I).first != temp, duplicated_id_description, *temp);
 
-		result.emplace_back(*temp, atoi(N));
+		result.emplace_back(*temp, atoi_17(N));
 	}
 
 	result.push_back(std::make_pair(INVALID_ID_STRING, INVALID_ID));

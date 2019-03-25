@@ -7,7 +7,7 @@ XRay::ClientSpawnManager::ClientSpawnManager()
 {
 }
 
-void XRay::ClientSpawnManager::Add(::System::UInt16 RequestingId, ::System::UInt16 RequestedId, Functor ^ Funct)
+void XRay::ClientSpawnManager::Add(::System::UInt16 RequestingId, ::System::UInt16 RequestedId, Functor^ Funct)
 {
 	CObject *object = Level().Objects.net_Find(RequestingId);
 	if (object) 

@@ -9,26 +9,20 @@
 #include "stdafx.h"
 #include "xrServer_Objects_ALife.h"
 
-CSE_ALifeItemWeapon	*CSE_ALifeSmartZone::tpfGetBestWeapon	(ALife::EHitType		&tHitType,			float		&fHitPower)
+ALife::EMeetActionType CSE_ALifeSmartZone::tfGetActionType(CSE_ALifeSchedulable	*tpALifeSchedulable, int			iGroupIndex, bool bMutualDetection)
 {
-	m_tpCurrentBestWeapon		= 0;
-	return						(m_tpCurrentBestWeapon);
+	CSE_ALifeObject *object = smart_cast<CSE_ALifeObject*>(tpALifeSchedulable->base());
+	VERIFY(object);
+	return ((object->m_tGraphID == m_tGraphID) ? ALife::eMeetActionSmartTerrain : ALife::eMeetActionTypeIgnore);
 }
 
-ALife::EMeetActionType CSE_ALifeSmartZone::tfGetActionType	(CSE_ALifeSchedulable	*tpALifeSchedulable,int			iGroupIndex, bool bMutualDetection)
+bool CSE_ALifeSmartZone::bfActive()
 {
-	CSE_ALifeObject				*object = smart_cast<CSE_ALifeObject*>(tpALifeSchedulable->base());
-	VERIFY						(object);
-	return						((object->m_tGraphID == m_tGraphID) ? ALife::eMeetActionSmartTerrain : ALife::eMeetActionTypeIgnore);
+	return (true);
 }
 
-bool CSE_ALifeSmartZone::bfActive							()
+CSE_ALifeDynamicObject *CSE_ALifeSmartZone::tpfGetBestDetector()
 {
-	return						(true);
-}
-
-CSE_ALifeDynamicObject *CSE_ALifeSmartZone::tpfGetBestDetector	()
-{
-	VERIFY2						(false,"This function shouldn't be called");
+	VERIFY2(false, "This function shouldn't be called");
 	return						(0);
 }

@@ -123,9 +123,13 @@ VOID DSplashScreen::ShowSplash()
 		// create splash thread
 		UINT threadID = 0;
 		hEvent = CreateEventA(nullptr, FALSE, FALSE, FALSE);	// splash event
-		hThread = (HANDLE)_beginthreadex(nullptr, 0, SplashThreadProc, static_cast<LPVOID>(this), 0, &threadID);
-		threadId = threadID;
-		R_ASSERT(WaitForSingleObject(hEvent, 5000) != WAIT_TIMEOUT);
+		R_ASSERT(hEvent);
+		if (hEvent != NULL)
+		{
+			hThread = (HANDLE)_beginthreadex(nullptr, 0, SplashThreadProc, static_cast<LPVOID>(this), 0, &threadID);
+			threadId = threadID;
+			R_ASSERT(WaitForSingleObject(hEvent, 5000) != WAIT_TIMEOUT);
+		}
 	}
 	else
 	{
@@ -347,13 +351,13 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 		SendMessage(pInstance->hwndProgress, PBM_SETPOS, wParam, NULL);
 
 		xr_string* msgThread = reinterpret_cast<xr_string*>(lParam);
-		if (msgThread->size() > 1000000) 
+		if (!msgThread || msgThread->size() > 1000000)
 		{
 			return 0;
 		}
 
 		// if our message is not a previos 
-		if (!msgThread->empty() && pInstance->progressMsg != *msgThread)
+		if (!msgThread->empty() && pInstance->progressMsg != *msgThread) // pInstance->progressMsg
 		{
 			pInstance->progressMsg = *msgThread;
 			SendMessage(pInstance->hwndSplash, WM_PAINT, 0, 0);

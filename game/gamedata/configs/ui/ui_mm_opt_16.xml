@@ -365,6 +365,22 @@
 			<options_item entry="r_rain_droplets" group="mm_opt_video_adv"/>
 		</check_rain_drops>
 		
+		<cap_grading x="16" y="3" width="108" height="24">
+			<text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_grading</text>
+		</cap_grading>
+		<check_grading x="133" y="0" width="35" stretch="1" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<options_item entry="r_color_grading" group="mm_opt_video_adv"/>
+		</check_grading>
+		
+		<cap_ch_aberr x="16" y="3" width="108" height="24">
+			<text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_ch_aberr</text>
+		</cap_ch_aberr>
+		<check_ch_aberr x="133" y="0" width="35" stretch="1" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<options_item entry="r_chromatic_aberr" group="mm_opt_video_adv"/>
+		</check_ch_aberr>
+		
 		<cap_vignette x="16" y="3" width="108" height="24">
 			<text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_vignette</text>
 		</cap_vignette>

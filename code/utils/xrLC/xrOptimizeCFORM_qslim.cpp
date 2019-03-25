@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "build.h"
-#include <MxStdModel.h>
-#include <MxQSlim.h>
+#include "../xrQSlim/src/MxStdModel.h"
+#include "../xrQSlim/src/MxQSlim.h"
 #include "../../xrcdb/xrcdb.h"
 #include "../common/face_smoth_flags.h"
 
@@ -75,7 +75,7 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 	if (strstr(Core.Params, "-keep_temp_files"))
 	{
 		string_path			fn;
-		SaveAsSMF(strconcat(sizeof(fn), fn, pBuild->path, "cform_source.smf"), CL);
+		SaveAsSMF(xr_strconcat(fn, pBuild->path, "cform_source.smf"), CL);
 	}
 
 	// prepare model
@@ -174,7 +174,7 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 	if (strstr(Core.Params, "-keep_temp_files"))
 	{
 		string_path			fn;
-		SaveAsSMF(strconcat(sizeof(fn), fn, pBuild->path, "cform_optimized.smf"), CL);
+		SaveAsSMF(xr_strconcat(fn, pBuild->path, "cform_optimized.smf"), CL);
 	}
 
  	xr_delete				(slim);

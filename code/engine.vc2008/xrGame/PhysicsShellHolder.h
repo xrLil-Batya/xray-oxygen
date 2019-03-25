@@ -122,7 +122,7 @@ private://IPhysicsShellHolder
 	virtual	void					_BCL					ObjectProcessingDeactivate			()						;
 	virtual	void					_BCL					ObjectProcessingActivate			()						;				
 	virtual	void					_BCL					ObjectSpatialMove					()						;
-	virtual	IPhysicsShellEx*&			_BCL					ObjectPPhysicsShell					()						;
+	virtual	IPhysicsShellEx*&		_BCL					ObjectPPhysicsShell					()						;
 	virtual bool					_BCL					has_parent_object					()						;
 	virtual	IPHCapture*				_BCL					PHCapture							()						;
 	virtual	bool					_BCL					IsInventoryItem						()						;
@@ -130,8 +130,8 @@ private://IPhysicsShellHolder
 	virtual bool					_BCL					IsStalker							()						;
 	virtual	void					_BCL					HideAllWeapons						( bool v )				;//(SetWeaponHideState(INV_STATE_BLOCK_ALL,true))
 	virtual	void					_BCL					MovementCollisionEnable				( bool enable )			;
-	virtual CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer					()  					{return ph_sound_player();}
-	virtual	ICollisionDamageReceiver* _BCL				ObjectPhCollisionDamageReceiver		()						;
+	virtual CPHSoundPlayer*			_BCL					ObjectPhSoundPlayer() { if (m_pPhysicsShell) return ph_sound_player(); else return nullptr; }
+	virtual	ICollisionDamageReceiver* _BCL					ObjectPhCollisionDamageReceiver		()						;
 	virtual	void					_BCL					BonceDamagerCallback				(float &damage_factor)	;
 	virtual	xr_string				_BCL					dump								(EDumpType type) const  ;
 };

@@ -192,7 +192,7 @@ public:
 			LPSTR comma = strchr(const_cast<LPSTR>(args), ',');
 			if (comma)
 			{
-				loops = atoi(comma + 1);
+				loops = atoi_17(comma + 1);
 				*comma = 0;	//. :)
 			}
 			xr_strconcat(fn, args, ".xrdemo");

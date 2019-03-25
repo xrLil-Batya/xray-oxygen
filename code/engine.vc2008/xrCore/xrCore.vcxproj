@@ -18,7 +18,7 @@
     <ProjectGuid>{A0F7D1FB-59A7-4717-A7E4-96F37E91998E}</ProjectGuid>
     <RootNamespace>xrCore</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -290,6 +290,7 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="DateTime.hpp" />
     <ClInclude Include="envelope.h" />
     <ClInclude Include="FTimer.h" />
+    <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="RingBuffer.h" />
     <ClInclude Include="StringsUtils.h" />
     <ClInclude Include="XMLCore\Expression.h" />
@@ -298,7 +299,6 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="xrDelegate\xrDelegateBinder.h" />
     <ClInclude Include="xrMemoryDebug.h" />
     <ClInclude Include="xrMemory_C.h" />
-    <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SPPInfo.h" />
     <ClInclude Include="stdafx.h" />

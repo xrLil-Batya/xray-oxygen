@@ -299,10 +299,8 @@ void CRender::Render()
 	//******* Main calc - DEFERRED RENDERER
 	Device.Statistic->Render_CRenderRender_render_main.Begin();
 	r_pmask(true, false, true);	// Enable priority "0",+ capture wmarks
-	set_Recorder(bSUN ? &main_coarse_structure : nullptr);
 	phase = PHASE_NORMAL;
 	render_main(Device.mFullTransform);
-	set_Recorder(nullptr);
 	r_pmask(true, false); // Disable priority "1"
 	Device.Statistic->Render_CRenderRender_render_main.End();
 
@@ -465,7 +463,7 @@ void CRender::Render()
 #endif
 
 	// Directional light - sun
-	if (bSUN)	
+	if (bSUN)
 	{
 		ScopeStatTimer sunTimer(Device.Statistic->Render_CRenderRender_Sun);
 		PIX_EVENT(DEFER_SUN);
@@ -476,7 +474,8 @@ void CRender::Render()
 		{
 			render_sun_near();
 			render_sun();
-			render_sun_filtered();
+			if (Device.dwFrame % 2)
+				render_sun_filtered();
 		}
 		Target->accum_direct_blend();
 	}

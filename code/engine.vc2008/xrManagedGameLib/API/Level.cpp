@@ -8,16 +8,19 @@
 #include "../xrGame/level_graph.h"
 #include "../xrGame/Level.h"
 #include "../xrGame/Actor.h"
-#include "../xrEngine/date_time.h"
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
+#include "../xrGame/HUDManager.h"
+//#include "../xrManagedUILib/API/UIDialogWnd.h"
+#include "../xrGame/UIGame.h" 
 
-u32 XRay::LevelGraph::LevelID::get()
+
+System::UInt32 XRay::LevelGraph::LevelID::get()
 {
 	return ai().level_graph().level_id();
 }
 
-u32 XRay::LevelGraph::VertexCount::get()
+System::UInt32 XRay::LevelGraph::VertexCount::get()
 {
 	return  ai().level_graph().header().vertex_count();
 }
@@ -105,7 +108,7 @@ float XRay::Level::RainFactor::get()
 	return (::Environment().CurrentEnv->rain_density);
 }
 
-u32	XRay::Level::VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance)
+System::UInt32	XRay::Level::VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance)
 {
 	direction.normalize_safe();
 	direction.mul(max_distance);
@@ -113,7 +116,7 @@ u32	XRay::Level::VertexInDirection(u32 level_vertex_id, Fvector direction, float
 	Fvector			finish_position = Fvector(start_position).add(direction);
 	u32				result = u32(-1);
 	ai().level_graph().farthest_vertex_in_direction(level_vertex_id, start_position, finish_position, result, nullptr);
-	return			(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
+	return			(::System::UInt32)(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
 }
 
 System::Numerics::Vector3^ XRay::Level::VertexPosition(u32 level_vertex_id)
@@ -182,9 +185,9 @@ bool XRay::Level::PatrolPathExists(LPCSTR patrol_path)
 	return		(!!ai().patrol_paths().path(patrol_path, true));
 }
 
-LPCSTR XRay::Level::Name::get()
+System::String^ XRay::Level::Name::get()
 {
-	return		*(::Level().name());
+	return gcnew ::System::String(pNativeLevel->name().c_str());
 }
 
 void XRay::Level::PrefetchSnd(LPCSTR name)
@@ -195,4 +198,63 @@ void XRay::Level::PrefetchSnd(LPCSTR name)
 XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
 {
 	return gcnew ClientSpawnManager(&(::Level().client_spawn_manager()));
+}
+
+void XRay::Level::AddDialogToRender(UIDialogWnd^ pDialog)
+{	
+	((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->AddDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
+}
+
+void XRay::Level::RemoveDialogFromRender(UIDialogWnd^ pDialog)
+{
+	((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->RemoveDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());
+}
+
+XRay::PhysicsWorldScripted^ XRay::Level::physicsWorldScripted()
+{
+	return gcnew PhysicsWorldScripted(get_script_wrapper<cphysics_world_scripted>(*physics_world()));
+}
+
+void XRay::Level::HideIndicators()
+{
+	if (((CUIGame*)UIDialogWnd::GetGameUI().ToPointer()))
+	{
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->HideShownDialogs();
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowGameIndicators(false);
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(false);
+	}
+}
+
+void XRay::Level::HideIndicatorsSafe()
+{
+	if ((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())
+	{
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowGameIndicators(false);
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(false);
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->OnExternalHideIndicators();
+	}
+}
+
+void XRay::Level::ShowIndicators()
+{
+	if (((CUIGame*)UIDialogWnd::GetGameUI().ToPointer()))
+	{
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowGameIndicators(true);
+		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(true);
+	}
+}
+
+void XRay::Level::ShowWeapon(bool b)
+{
+	psHUD_Flags.set(HUD_WEAPON_RT2, b);
+}
+
+bool XRay::Level::isLevelPresent()
+{
+	return (!!g_pGameLevel);
+}
+
+XRay::MEnvironment^ XRay::Level::pEnvironment()
+{
+	return	(%MEnvironment());   // (&Environment())
 }

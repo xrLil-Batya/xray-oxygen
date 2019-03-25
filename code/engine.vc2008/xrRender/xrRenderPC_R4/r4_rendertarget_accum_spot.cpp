@@ -116,7 +116,7 @@ void CRenderTarget::accum_spot(light* L)
 		// compute xforms
 		xf_project.mul(m_TexelAdjust2, L->X.S.project);
 		m_Lmap.mul(xf_view, xf_world);
-		m_Lmap.mul(xf_project, m_Lmap);
+		m_Lmap.mulA_44(xf_project);
 	}
 
 	// Common constants
@@ -306,7 +306,7 @@ void CRenderTarget::accum_volumetric(light* L)
 
 		Fmatrix xf_view = L->X.S.view;
 		Fmatrix xf_project;		
-		xf_project.mul(m_TexelAdjust, CastToGSCMatrix(L->X.S.project));
+		xf_project.mul(m_TexelAdjust, (L->X.S.project));
 
 		m_Shadow.mul(xf_view, xf_world);
 		m_Shadow.mulA_44(xf_project);
@@ -323,12 +323,12 @@ void CRenderTarget::accum_volumetric(light* L)
 		};
 
 		// compute xforms
-		xf_project.mul(m_TexelAdjust2, CastToGSCMatrix(L->X.S.project));
+		xf_project.mul(m_TexelAdjust2, (L->X.S.project));
 		m_Lmap.mul(xf_view, xf_world);
 		m_Lmap.mulA_44(xf_project);
 
 		// Compute light frustum in world space
-		mFrustumSrc.mul(CastToGSCMatrix(L->X.S.project), xf_view);
+		mFrustumSrc.mul((L->X.S.project), xf_view);
 		ClipFrustum.CreateFromMatrix(mFrustumSrc, FRUSTUM_P_ALL);
 		//	Adjust frustum far plane
 		//	4 - far, 5 - near

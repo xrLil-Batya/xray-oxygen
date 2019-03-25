@@ -505,8 +505,19 @@ void CUIMainIngameWnd::UpdatePickUpItem	()
 	UIPickUpItemIcon->SetWidth(m_iGridWidth*INV_GRID_WIDTH*scale*UI().get_current_kx());
 	UIPickUpItemIcon->SetHeight(m_iGridHeight*INV_GRID_HEIGHT*scale);
 
-	UIPickUpItemIcon->SetWndPos(Fvector2().set(	m_iPickUpItemIconX+(m_iPickUpItemIconWidth-UIPickUpItemIcon->GetWidth())/2.0f,
-												m_iPickUpItemIconY+(m_iPickUpItemIconHeight-UIPickUpItemIcon->GetHeight())/2.0f) );
+	Fmatrix			res;
+	res.mul(Device.mFullTransform, m_pPickUpItem->object().XFORM());
+	Fvector4		v_res;
+	Fvector			result = m_pPickUpItem->object().Position();
+	Device.mFullTransform.transform(v_res, result);
+	if (v_res.z < 0 || v_res.w < 0)	return;
+	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f) return;
+
+	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
+
+	UIPickUpItemIcon->SetWndPos(Fvector2().set(	x/1.7f+m_pPickUpItem->object().Radius(),
+												y+(m_iPickUpItemIconHeight-UIPickUpItemIcon->GetHeight())/1.7f + m_pPickUpItem->object().Radius() + Actor()->Position().distance_to(m_pPickUpItem->object().Position())/-1.5) );
 
 	UIPickUpItemIcon->SetTextureColor(color_rgba(255,255,255,192));
 	UIPickUpItemIcon->Show(true);

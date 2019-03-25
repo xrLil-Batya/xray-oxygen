@@ -1,30 +1,22 @@
 class XRPHYSICS_API CDamagableItem
 {
 protected:
-	u16 m_levels_num;
-	float m_max_health;
-	u16 m_level_applied;
-public:
-	CDamagableItem();
-	virtual		void Init(float max_health, u16 level_num);
-	void HitEffect();
-	void RestoreEffect();
-	float DamageLevelToHealth(u16 dl);
-protected:
-	u16 DamageLevel();
-	virtual		float Health() = 0;
-	virtual		void ApplyDamage(u16 level);
-};
+	u16		m_levels_num;
+	float	m_max_health;
+	u16		m_level_applied;
+	float	m_health;
 
-class XRPHYSICS_API CDamagableHealthItem :
-	public CDamagableItem
-{
-	typedef		CDamagableItem		inherited;
-	float m_health;
 public:
-	virtual		void Init(float max_health, u16 level_num);
-	void Hit(float P);
-	void SetHealth(float health) { m_health = health; }
+					  CDamagableItem();
+	virtual		void  Init(float max_health, u16 level_num);
+				void  HitEffect();
+				void  RestoreEffect();
+				float DamageLevelToHealth(u16 dl);
+
+				void  Hit(float P);
+	inline		void  SetHealth(float health) noexcept { m_health = health; }
 protected:
-	virtual		float Health() { return m_health; }
+				u16   DamageLevel();
+	inline		float Health()			const noexcept { return m_health; }
+				void  ApplyDamage(u16 level);
 };

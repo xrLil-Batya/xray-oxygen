@@ -104,11 +104,11 @@ void CRenderTarget::draw_rain( light &RainSetup )
 		j1.set						(scale_X,scale_X).add(offset);
 
 		// Fill vertex buffer
-		FVF::TL2uv* pv				= (FVF::TL2uv*) RCache.Vertex.Lock	(4,g_combine_2UV->vb_stride,Offset);
-		pv->set						(-1,	-1,	d_Z,	d_W, C, 0, 1, 0,		scale_X);	pv++;
-		pv->set						(-1,	1,	d_Z,	d_W, C, 0, 0, 0,		0);	pv++;
-		pv->set						(1,		-1,	d_Z,	d_W, C, 1, 1, scale_X,	scale_X);	pv++;
-		pv->set						(1,		1,	d_Z,	d_W, C, 1, 0, scale_X,	0);	pv++;
+		FVF::TL2uv* pv2				= (FVF::TL2uv*) RCache.Vertex.Lock	(4,g_combine_2UV->vb_stride,Offset);
+		pv2->set						(-1,	-1,	d_Z,	d_W, C, 0, 1, 0,		scale_X);	pv2++;
+		pv2->set						(-1,	1,	d_Z,	d_W, C, 0, 0, 0,		0);	pv2++;
+		pv2->set						(1,		-1,	d_Z,	d_W, C, 1, 1, scale_X,	scale_X);	pv2++;
+		pv2->set						(1,		1,	d_Z,	d_W, C, 1, 0, scale_X,	0);	pv2++;
 		RCache.Vertex.Unlock		(4,g_combine_2UV->vb_stride);
 		RCache.set_Geometry			(g_combine_2UV);
 

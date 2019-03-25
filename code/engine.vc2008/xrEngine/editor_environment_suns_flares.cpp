@@ -80,8 +80,10 @@ void flares::load	(CInifile& config, shared_str const& section)
 		Msg					("! flare count for sun [%s] is setup incorrectly. only %d flares are correct", section.c_str(), min_flare_count);
 
 	u32 const buffer_size	= max_string_count*sizeof(char);
-	LPSTR					result = (LPSTR)_alloca(buffer_size);
-	for (u32 i=0; i<min_flare_count; ++i) {
+	char* result = new char[max_string_count];
+
+	for (u32 i=0; i<min_flare_count; ++i) 
+	{
 		flare*				object = xr_new<flare>();
 		object->m_opacity	= (float)atof(_GetItem(flare_opacity  .c_str(), i, result, buffer_size));
 		object->m_position	= (float)atof(_GetItem(flare_position .c_str(), i, result, buffer_size));
@@ -90,6 +92,7 @@ void flares::load	(CInifile& config, shared_str const& section)
 		object->fill		(m_collection);
 		m_flares.push_back	(object);
 	}
+	xr_delete(result);
 }
 
 void flares::fill	(manager const& manager, editor::property_holder* holder, editor::property_holder_collection* collection)

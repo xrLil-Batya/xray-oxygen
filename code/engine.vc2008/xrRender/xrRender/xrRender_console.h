@@ -141,7 +141,7 @@ enum RenderFlags : u32
 	R_FLAG_SUN_TSM				= (1<<2),
 	R_FLAG_SUN_IGNORE_PORTALS	= (1<<3),
 	R_FLAG_DETAIL_SHADOW		= (1<<4),
-	R_FLAG_TONEMAP				= (1<<5),
+	R_FLAG_HOM_DEPTH_DRAW		= (1<<5),
 	R_FLAG_MBLUR				= (1<<6),
 	R_FLAG_GI					= (1<<7),
 	R_FLAG_FASTBLOOM			= (1<<8),
@@ -154,7 +154,7 @@ enum RenderFlags : u32
 	R_FLAG_EXP_DONT_TEST_SHADOWED			= (1<<14),
 
 	R_FLAG_USE_NVDBT			= (1<<15),
-//	R_FLAG_USE_NVSTENCIL		= (1<<16),
+	R_FLAG_GLOW_USE				= (1<<16),
 
 	R_FLAG_SOFT_WATER			= (1<<17),	//	Igor: need restart
 	R_FLAG_SOFT_PARTICLES		= (1<<18),	//	Igor: need restart
@@ -166,16 +166,21 @@ enum RenderFlags : u32
 
 	R_FLAG_ACTOR_SHADOW			= (1<<22),
 
-	R_FLAG_HOM_DEPTH_DRAW		= (1<<23),
-	R_FLAG_SUN_ZCULLING			= (1<<24),
-	R_FLAG_SUN_OLD				= (1<<25),
-	R_FLAG_GLOW_USE				= (1<<26),
-
-	R_FLAG_RAIN_DROPS			= (1<<27),
-	R_FLAG_SS_GAMMA_CORRECTION	= (1<<28),
-	R_FLAG_VIGNETTE				= (1<<29),
+	R_FLAG_SUN_ZCULLING			= (1<<23),
+	R_FLAG_SUN_OLD				= (1<<24),
 };
 
+enum RFLAG_POSTSCREEN : u32
+{
+	R_FLAG_RAIN_DROPS			= (1 << 0),
+	R_FLAG_SS_GAMMA_CORRECTION	= (1 << 1),
+	R_FLAG_VIGNETTE				= (1 << 2),
+	R_FLAG_CHROMATIC			= (1 << 3),
+	R_FLAG_TONEMAP				= (1 << 4),
+	R_FLAG_GRADING				= (1 << 5),
+};
+
+extern ECORE_API Flags32 ps_r_postscreen_flags;
 extern ECORE_API Flags32 ps_r_ssao_flags;
 enum
 {

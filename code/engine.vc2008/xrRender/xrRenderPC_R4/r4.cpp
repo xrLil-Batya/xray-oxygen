@@ -90,7 +90,7 @@ void					CRender::create()
 	o.forcegloss			= g ? TRUE : FALSE;
 	/////////////////////////////////////////////
 	if (g)
-		o.forcegloss_v		= float(atoi(g + xr_strlen("-gloss "))) / 255.f;
+		o.forcegloss_v		= float(atoi_17(g + xr_strlen("-gloss "))) / 255.f;
 	/////////////////////////////////////////////
 	// options
 	o.sunfilter				= (strstr(Core.Params, "-sunfilter")) ? TRUE : FALSE;
@@ -304,13 +304,14 @@ void CRender::reset_end()
 void CRender::OnFrame()
 {
 	ScopeStatTimer frameTimer(Device.Statistic->Engine_RenderFrame);
-	Models->DeleteQueue();
 	Device.seqParallel.insert(Device.seqParallel.begin(),
 		xrDelegate(BindDelegate(Details, &CDetailManager::MT_CALC)));
 
 	// MT-HOM (@front)
 	Device.seqParallel.insert(Device.seqParallel.begin(),
 		xrDelegate(BindDelegate(&HOM, &CHOM::MT_RENDER)));
+
+	Models->DeleteQueue();
 }
 
 // Implementation
@@ -715,15 +716,15 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 
 	if ( disasm )
 	{
-		ID3DBlob*		disasm	= nullptr;
-		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &disasm );
+		ID3DBlob*		pDisasm	= nullptr;
+		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &pDisasm);
 		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), FALSE, 0, &disasm );
 		string_path		dname;
 		xr_strconcat	(dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
 		IWriter*		W		= FS.w_open("$logs$",dname);
-		W->w			(disasm->GetBufferPointer(),(u32)disasm->GetBufferSize());
+		W->w			(pDisasm->GetBufferPointer(),(u32)pDisasm->GetBufferSize());
 		FS.w_close		(W);
-		_RELEASE		(disasm);
+		_RELEASE		(pDisasm);
 	}
 
 	return				_result;

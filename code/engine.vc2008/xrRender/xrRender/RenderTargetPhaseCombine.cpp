@@ -106,8 +106,6 @@ void CRenderTarget::phase_combine()
 
 		u32 Offset = 0;
 
-		float _w		= float(Device.dwWidth);
-		float _h		= float(Device.dwHeight);
 		float scale_X	= float(Device.dwWidth) / float(TEX_jitter);
 		float scale_Y	= float(Device.dwHeight) / float(TEX_jitter);
 
@@ -163,6 +161,8 @@ void CRenderTarget::phase_combine()
 
 		RCache.set_Geometry(g_combine);
 #else
+		float _w = float(Device.dwWidth);
+		float _h = float(Device.dwHeight);
 		// Half-pixel offset
 		Fvector2 p0, p1;
 		p0.set(0.5f / _w, 0.5f / _h); 
@@ -392,14 +392,26 @@ void CRenderTarget::phase_combine()
 	}
 
 	// Rain droplets on screen
-	if (ps_r_flags.test(R_FLAG_RAIN_DROPS))
+	if (ps_r_postscreen_flags.test(R_FLAG_RAIN_DROPS))
 	{
 		PIX_EVENT(phase_rain_droplets);
 		PhaseRainDrops();
 	}
 
+	if (ps_r_postscreen_flags.test(R_FLAG_CHROMATIC))
+	{
+		PIX_EVENT(phase_chromatic);
+		PhaseChromaticAmb();
+	}
+
+	if (ps_r_postscreen_flags.test(R_FLAG_GRADING))
+	{
+		PIX_EVENT(phase_grading);
+		PhaseGrading();
+	}
+
 	// Vignette effect
-	if (ps_r_flags.test(R_FLAG_VIGNETTE))
+	if (ps_r_postscreen_flags.test(R_FLAG_VIGNETTE))
 	{
 		PIX_EVENT(phase_vignette);
 		PhaseVignette();
@@ -513,8 +525,6 @@ void CRenderTarget::phase_combine_volumetric()
 {
 	u32 Offset = 0;
 
-	float _w		= float(Device.dwWidth);
-	float _h		= float(Device.dwHeight);
 	float scale_X	= float(Device.dwWidth) / float(TEX_jitter);
 	float scale_Y	= float(Device.dwHeight) / float(TEX_jitter);
 
@@ -541,6 +551,8 @@ void CRenderTarget::phase_combine_volumetric()
 
 		RCache.set_Geometry(g_combine);
 #else
+		float _w = float(Device.dwWidth);
+		float _h = float(Device.dwHeight);
 		Fvector2 p0, p1;
 		p0.set(0.5f / _w, 0.5f / _h);
 		p1.set((_w + 0.5f) / _w, (_h + 0.5f) / _h);

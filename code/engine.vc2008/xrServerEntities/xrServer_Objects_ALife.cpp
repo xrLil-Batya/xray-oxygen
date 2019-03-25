@@ -136,7 +136,7 @@ void	SFillPropData::load			()
         xr_strconcat		(caSection, SECTION_HEADER, itoa(i,T,10));
         R_ASSERT			(Ini->section_exist(caSection));
         for (k = 0; Ini->r_line(caSection,k,&N,&V); ++k)
-            locations[i].push_back	(xr_rtoken(V,atoi(N)));
+            locations[i].push_back	(xr_rtoken(V,atoi_17(N)));
     }
     for (k = 0; Ini->r_line("graph_points_draw_color_palette",k,&N,&V); ++k)
 	{
@@ -159,7 +159,7 @@ void	SFillPropData::load			()
 		LPCSTR section 			= "story_ids";
 		R_ASSERT				(Ini->section_exist(section));
 		for (k = 0; Ini->r_line(section,k,&N,&V); ++k)
-			story_names.push_back	(xr_rtoken(V,atoi(N)));
+			story_names.push_back	(xr_rtoken(V,atoi_17(N)));
 
 		std::sort				(story_names.begin(),story_names.end(),story_name_predicate());
 		story_names.insert		(story_names.begin(),xr_rtoken("NO STORY ID",ALife::_STORY_ID(-1)));
@@ -171,7 +171,7 @@ void	SFillPropData::load			()
 		LPCSTR section 			= "spawn_story_ids";
 		R_ASSERT				(Ini->section_exist(section));
 		for (k = 0; Ini->r_line(section,k,&N,&V); ++k)
-			spawn_story_names.push_back	(xr_rtoken(V,atoi(N)));
+			spawn_story_names.push_back	(xr_rtoken(V,atoi_17(N)));
 
 		std::sort				(spawn_story_names.begin(),spawn_story_names.end(),story_name_predicate());
 		spawn_story_names.insert(spawn_story_names.begin(),xr_rtoken("NO SPAWN STORY ID",ALife::_SPAWN_STORY_ID(-1)));
@@ -1614,7 +1614,6 @@ bool CSE_ALifeObjectProjector::used_ai_locations() const
 
 CSE_ALifeSchedulable::CSE_ALifeSchedulable	(LPCSTR caSection)
 {
-	m_tpCurrentBestWeapon		= nullptr;
 	m_tpBestDetector			= nullptr;
 	m_schedule_counter			= u64(-1);
 }

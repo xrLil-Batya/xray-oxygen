@@ -40,6 +40,24 @@ void CWeaponShotgun::Load	(LPCSTR section)
 
 }
 
+void CWeaponShotgun::UpdateCL()
+{
+	if (Device.dwFrame == dwUpdateSounds_Frame)
+		return;
+
+	dwUpdateSounds_Frame = Device.dwFrame;
+
+	Fvector P = get_LastFP();
+	if (m_bTriStateReload)
+	{
+		m_sounds.SetPosition("sndAddCartridge", P);
+		m_sounds.SetPosition("sndOpen", P);
+		m_sounds.SetPosition("sndClose", P);
+	}
+
+	inherited::UpdateCL();
+}
+
 void CWeaponShotgun::switch2_Fire	()
 {
 	inherited::switch2_Fire	();

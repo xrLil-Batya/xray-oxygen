@@ -216,7 +216,12 @@ u16 CGameFont::GetCutLengthPos(float fTargetWidth, const char * pszText)
 {
 	VERIFY(pszText);
 
-	wide_char wsStr[MAX_MB_CHARS], wsPos[MAX_MB_CHARS];
+	// Giperion: Do not use more variables in stack like that
+	// According static analyzer we exceed stack space at this function
+	//wide_char wsStr[MAX_MB_CHARS];
+
+	wide_char* wsStr = new wide_char[MAX_MB_CHARS];
+	wide_char wsPos[MAX_MB_CHARS];
 	float fCurWidth = 0.0f, fDelta = 0.0f;
 
 	u16	len = mbhMulti2Wide(wsStr, wsPos, MAX_MB_CHARS, pszText);
@@ -234,6 +239,8 @@ u16 CGameFont::GetCutLengthPos(float fTargetWidth, const char * pszText)
 			fCurWidth += fDelta;
 	}
 
+	delete[] wsStr;
+
 	return wsPos[i - 1];
 }
 
@@ -241,7 +248,13 @@ u16 CGameFont::SplitByWidth(u16 * puBuffer, u16 uBufferSize, float fTargetWidth,
 {
 	VERIFY(puBuffer && uBufferSize && pszText);
 
-	wide_char wsStr[MAX_MB_CHARS], wsPos[MAX_MB_CHARS];
+	// Giperion: Do not use more variables in stack like that
+	// According static analyzer we exceed stack space at this function
+	//wide_char wsStr[MAX_MB_CHARS];
+
+	wide_char* wsStr = new wide_char[MAX_MB_CHARS];
+	wide_char wsPos[MAX_MB_CHARS];
+
 	float fCurWidth = 0.0f, fDelta = 0.0f;
 	u16 nLines = 0;
 
@@ -267,6 +280,8 @@ u16 CGameFont::SplitByWidth(u16 * puBuffer, u16 uBufferSize, float fTargetWidth,
 		else
 			fCurWidth += fDelta;
 	}
+
+	delete[] wsStr;
 
 	return nLines;
 }
@@ -383,12 +398,12 @@ float CGameFont::CurrentHeight_()
 
 void CGameFont::SetHeightI(float S)
 {
-	VERIFY(uFlags&fsDeviceIndependent);
-	fCurrentHeight = S * RDEVICE.dwHeight;
-};
+	if (uFlags & fsDeviceIndependent)
+		fCurrentHeight = S * RDEVICE.dwHeight;
+}
 
 void CGameFont::SetHeight(float S)
 {
-	VERIFY(uFlags&fsDeviceIndependent);
-	fCurrentHeight = S;
-};
+	if (uFlags & fsDeviceIndependent)
+		fCurrentHeight = S;
+}

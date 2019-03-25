@@ -104,8 +104,6 @@ void CUIActorMenu::SendEvent_Item2Belt(PIItem pItem, u16 recipient)
 
 void CUIActorMenu::SendEvent_Item2Ruck(PIItem pItem, u16 recipient)
 {
-	if (!pItem->m_pInventory)
-		return;
 	if(pItem->parent_id()!=recipient)
 		move_item_from_to			(pItem->parent_id(), recipient, pItem->object_id());
 
@@ -705,18 +703,22 @@ bool CUIActorMenu::TryUseFoodItem(CUICellItem* cell_itm)
 	PIItem item = dynamic_cast<CFoodItem*>((PIItem)cell_itm->m_pData);
 
 	if (!item || !item->Useful())
-	{
 		return false;
-	}
 
 	u16 ActorInventoryID = m_pActorInvOwner->object_id();
 
+	// FX: Dirty hack, need fix, maybe later or never
+//	const bool bItemOnActorOwner = item->parent_id() != ActorInventoryID;
+//	if (!bItemOnActorOwner)
+//		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
+	
 	// Send event to Actor fell
-	SendEvent_Item_Eat(item, ActorInventoryID);
+	SendEvent_Item_Eat(item, item->parent_id()/* ActorInventoryID */);
 	PlaySnd(eItemUse);
 	SetCurrentItem(nullptr);
 
-    cell_itm->OwnerList()->RemoveItem(cell_itm, false);
+//	if(bItemOnActorOwner)
+		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 
 	return true;
 }
@@ -841,31 +843,31 @@ void CUIActorMenu::PropertiesBoxForSlots( PIItem item, bool& b_show )
 	{
 		if (inv.CanPutInSlot(item, INV_SLOT_2) && iitem->BaseSlot()!=DETECTOR_SLOT)
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_2",  NULL, INVENTORY_TO_SLOT2_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_2",  nullptr, INVENTORY_TO_SLOT2_ACTION );
 			b_show = true;
 		}
 
 		if (inv.CanPutInSlot(item, INV_SLOT_3) && iitem->BaseSlot()!=DETECTOR_SLOT)
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_3",  NULL, INVENTORY_TO_SLOT3_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_3",  nullptr, INVENTORY_TO_SLOT3_ACTION );
 			b_show = true;
 		}
 
 		if  (iitem->BaseSlot()==KNIFE_SLOT && inv.CanPutInSlot(item, KNIFE_SLOT))
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_knife",  NULL, INVENTORY_TO_SLOT_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_knife",  nullptr, INVENTORY_TO_SLOT_ACTION );
 			b_show = true;
 		}
 
 		if (iitem->BaseSlot()==BINOCULAR_SLOT && inv.CanPutInSlot(item, BINOCULAR_SLOT))
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_binoc",  NULL, INVENTORY_TO_SLOT_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_binoc",  nullptr, INVENTORY_TO_SLOT_ACTION );
 			b_show = true;
 		}
 
 		if (iitem->BaseSlot()==DETECTOR_SLOT && inv.CanPutInSlot(item, DETECTOR_SLOT))
 		{
-			m_UIPropertiesBox->AddItem( "st_move_to_slot_detect",  NULL, INVENTORY_TO_SLOT_ACTION );
+			m_UIPropertiesBox->AddItem( "st_move_to_slot_detect",  nullptr, INVENTORY_TO_SLOT_ACTION );
 			b_show = true;
 		}
 	}

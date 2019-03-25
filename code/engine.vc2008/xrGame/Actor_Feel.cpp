@@ -18,8 +18,6 @@
 #include "ZoneCampfire.h"
 #include "ExplosiveRocket.h"
 
-#define PICKUP_INFO_COLOR 0xFFFFA916
-
 void CActor::feel_touch_new(CObject* O)
 {
 	CPhysicsShellHolder* sh = smart_cast<CPhysicsShellHolder*>(O);
@@ -252,48 +250,31 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 	}
 };
 
-#include "eatable_item.h"
-#include "items/EliteDetector.h"
-#include "items/AdvancedDetector.h"
-#include "items/SimpleDetector.h"
-#include "items/GrenadeLauncher.h"
-#include "items/Scope.h"
-#include "items/Silencer.h"
-#include "items/CustomOutfit.h"
-#include "items/Helmet.h"
-#include "pda.h"
-
 void CActor::PickupInfoDraw(CObject* object)
 {
+	if (!object)		return;
 	LPCSTR draw_str = nullptr;
-
-	CArtefact* artefact = smart_cast<CArtefact*>(object);
-	CEatableItem* boost = smart_cast<CEatableItem*>(object);
-	CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(object);
-	CWeapon* weapon = smart_cast<CWeapon*>(object);
 	CInventoryItem* item = smart_cast<CInventoryItem*>(object);
-	CEliteDetector* edetect = smart_cast<CEliteDetector*>(object);
-	CAdvancedDetector* adetect = smart_cast<CAdvancedDetector*>(object);
-	CSimpleDetector* sdetect = smart_cast<CSimpleDetector*>(object);
-	CGrenade* grenade = smart_cast<CGrenade*>(object);
-	CGrenadeLauncher* grenadela = smart_cast<CGrenadeLauncher*>(object);
-	CScope* scope = smart_cast<CScope*>(object);
-	CSilencer* sil = smart_cast<CSilencer*>(object);
-	CCustomOutfit* outf = smart_cast<CCustomOutfit*>(object);
-	CHelmet* helm = smart_cast<CHelmet*>(object);
-	CPda* doc = smart_cast<CPda*>(object);
+
+	if (!GameUI()->GameIndicatorsShown())	return;
 	if (!item)		return;
 
 	Fmatrix			res;
 	res.mul(Device.mFullTransform, object->XFORM());
 	Fvector4		v_res;
-	Fvector			shift;
+	Fvector			result = object->Position();
+	result.y += 0.2;
+//	Fvector			shift;
+
+	Ivector4 rgb_g = READ_IF_EXISTS(pSettings, r_ivector4, *object->cNameSect(), "feel_color", Ivector4().set(200, 200, 200 , 255));
+	u32 C_FEEL		D3DCOLOR_RGBA(rgb_g.x, rgb_g.y, rgb_g.z, rgb_g.w);
 	
 	draw_str = item->NameItem();
-	shift.set(0, 0.1f, 0);
-
-	res.transform(v_res, shift);
-
+	//pos.y += size.y / 2;
+	//shift.set(pos);
+	//
+	//res.transform(v_res, shift);
+	Device.mFullTransform.transform(v_res, result);
 	if (v_res.z < 0 || v_res.w < 0)	return;
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f) return;
 
@@ -302,38 +283,10 @@ void CActor::PickupInfoDraw(CObject* object)
 
 	UI().Font().GetFont("ui_font_letterica18_russian")->SetAligment(CGameFont::alCenter);
 	if (!psActorFlags.test(AF_COLORED_FEEL))
-		UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(PICKUP_INFO_COLOR);
+		UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFFA916);
 	else
-	{
-		if (doc)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFD7A096);
-		if (ammo)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFFA121);
-		if (weapon)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF6B42);
-		if (boost)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF8330);
-		if (artefact)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFF736FD5);
-		if (edetect)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEBDD0B);
-		if (adetect)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEBFFA1);
-		if (sdetect)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEBFFC8);
-		if (grenade)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF6432);
-		if (grenadela)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEB6E0A);
-		if (scope && !grenadela)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEB8C0A);
-		if (sil && !scope && !grenadela)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFEB8C64);
-		if (outf)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF6464);
-		if (helm && !outf)
-			UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFF9178);
-	}
+		UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(C_FEEL);
+
 	UI().Font().GetFont("ui_font_letterica18_russian")->Out(x, y, draw_str);
 }
 

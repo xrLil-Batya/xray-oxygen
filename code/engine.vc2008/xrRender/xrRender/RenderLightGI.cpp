@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 #include "../xrRender/light.h"
-#include <ppl.h>
 
 IC bool pred_LI(const light_indirect& A, const light_indirect& B)
 {

@@ -216,7 +216,12 @@ void CGamePersistent::WeathersUpdate()
 		int data_set				= (Random.randF()<(1.f-Environment().CurrentEnv->weight))?0:1; 
 		
 		CEnvDescriptor* const current_env	= Environment().Current[0]; 
-		VERIFY						(current_env);
+
+		if (current_env == nullptr)
+			return;
+
+		// @ Зах оно здесь?
+//		VERIFY						(current_env);
 
 		CEnvDescriptor* const _env	= Environment().Current[data_set];
 		CEnvAmbient * env_amb = nullptr;
@@ -227,12 +232,15 @@ void CGamePersistent::WeathersUpdate()
 		}
 		else
 		{
-			CEnvAmbient * env_amb = _env->env_ambient;
+			env_amb = _env->env_ambient;
+			// Wait secondary thread
+			if (!current_env)
+				Sleep(4);
 		}
 
 		if (env_amb) 
 		{
-			CEnvAmbient::SSndChannelVec& vec	= current_env->env_ambient->get_snd_channels();
+			CEnvAmbient::SSndChannelVec& vec = current_env->env_ambient->get_snd_channels();
             auto I		= vec.begin();
             auto E		= vec.end();
 			
@@ -298,12 +306,13 @@ void CGamePersistent::WeathersUpdate()
 				}
 			}
 		}
+
 		if (Device.fTimeGlobal>=ambient_effect_wind_start && Device.fTimeGlobal<=ambient_effect_wind_in_time && ambient_effect_wind_on)
 		{
-			float delta=ambient_effect_wind_in_time-ambient_effect_wind_start;
-			float t = 0;
+			float delta = ambient_effect_wind_in_time - ambient_effect_wind_start;
+			float t = 0.f;
 
-			if (delta!=0.f)
+			if (delta != 0.f)
 			{
 				float cur_in = Device.fTimeGlobal - ambient_effect_wind_start;
 				t = cur_in / delta;
@@ -535,16 +544,10 @@ void CGamePersistent::OnFrame	()
 		}
 #endif // MASTER_GOLD
 	}
-
-    // Update sun before updating other enviroment settings
-    if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
-    {
-		Environment().CalculateDynamicSunDir();
-    }
-
 	Device.Statistic->Engine_PersistanceFrame_Begin.End();
 
 	MySuper::OnFrame();
+
 	if (!Device.Paused())
 	{
 		Device.Statistic->Engine_PersistanceFrame_Scheduler.Begin();
@@ -557,6 +560,7 @@ void CGamePersistent::OnFrame	()
 		UpdateDof();
 		Device.Statistic->Engine_PersistanceFrame_WeatherAndDOF.End();
 	}
+
 }
 
 void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)

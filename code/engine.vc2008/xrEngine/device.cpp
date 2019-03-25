@@ -49,7 +49,6 @@ BOOL CRenderDevice::Begin	()
 		// If the device was lost, do not render until we get it back
 		Sleep(33);
 		return FALSE;
-		break;
 
 	case IRenderDeviceRender::dsNeedReset:
 		// Check if the device is ready to be reset
@@ -76,43 +75,41 @@ void CRenderDevice::Clear()
 
 void CRenderDevice::End		()
 {
-	ScopeStatTimer endTimer(Device.Statistic->Render_End);
-#ifdef INGAME_EDITOR
 	bool load_finished = false;
-#endif // #ifdef INGAME_EDITOR
 	if (dwPrecacheFrame)
 	{
 		::Sound->set_master_volume	(0.f);
 		dwPrecacheFrame	--;
 		if (!dwPrecacheFrame)
 		{
-
-#ifdef INGAME_EDITOR
 			load_finished = true;
-#endif 
-			m_pRender->UpdateGamma();
 
-			if(precache_light) 
+			if (this->dwFrame % 2)
+				m_pRender->UpdateGamma();
+
+			if (precache_light)
+			{
 				precache_light->set_active(false);
-			if(precache_light)
 				precache_light.destroy();
-			::Sound->set_master_volume						(1.f);
+			}
+
+			::Sound->set_master_volume(1.f);
 
 			m_pRender->ResourcesDestroyNecessaryTextures();
 			Memory.mem_compact();
 
 			//#HACK:
-			if(g_pGamePersistent->GameType()==1)
+			if (g_pGamePersistent->GameType() == 1)
 			{
 				WINDOWINFO	wi;
-				GetWindowInfo(m_hWnd,&wi);
-				if(wi.dwWindowStatus!=WS_ACTIVECAPTION)
-					Pause(TRUE,TRUE,TRUE,"application start");
+				GetWindowInfo(m_hWnd, &wi);
+				if (wi.dwWindowStatus != WS_ACTIVECAPTION)
+					Pause(TRUE, TRUE, TRUE, "application start");
 			}
 		}
 	}
 
-	g_bRendering		= FALSE;
+	g_bRendering = FALSE;
 	// end scene
 	//	Present goes here, so call OA Frame end.
 	m_pRender->End();
@@ -287,10 +284,30 @@ void CRenderDevice::on_idle()
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
 	string128 buf = {0};
-	xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
+	MONITORINFO mi = { 0 };
+	mi.cbSize = sizeof(MONITORINFO);
+	long monitor_width = 0;
+	long monitor_height = 0;
+	HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
 
-	Console->Execute(buf);
-	m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
+	if (GetMonitorInfo(hMonitor, &mi))
+	{
+		monitor_width = mi.rcMonitor.right - mi.rcMonitor.left;
+		monitor_height = mi.rcMonitor.bottom - mi.rcMonitor.top;
+
+		if ((DWORD)monitor_width >= width && (DWORD)monitor_height >= height)
+		{
+			xr_sprintf(buf, "%s%d%s%d", "vid_mode ", width, "x", height);
+
+			Console->Execute(buf);
+			m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
+		}
+	}
+	else
+	{
+		DWORD dwError = GetLastError();
+		R_CHK(dwError);
+	}
 }
 
 #ifdef INGAME_EDITOR
@@ -406,7 +423,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     case WPS_Windowed:
     {
         psDeviceFlags.set(rsFullscreen, false);
-        dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX ;
+        dwWindowStyle = WS_OVERLAPPEDWINDOW;
 
         SetRect	(&WindowBounds,
 				(DesktopRect.right - dwWidthCurr) / 2,
@@ -441,6 +458,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         //special case
         psDeviceFlags.set(rsFullscreen, true);
         dwWindowStyle = WS_POPUP | WS_VISIBLE;
+		WindowBounds = DesktopRect;
     }
         break;
     default:

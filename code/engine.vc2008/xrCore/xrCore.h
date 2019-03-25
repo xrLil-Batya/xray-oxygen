@@ -67,9 +67,6 @@
 #define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
 #endif
 
-// #include <exception>
-// using std::exception;
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -141,6 +138,8 @@
 #include <list>
 #include <set>
 #include <map>
+#include <utility>
+#include <string_view>
 
 #include <unordered_map>
 #include <unordered_set>
@@ -164,14 +163,16 @@
 #include "xrDebug.h"
 #include "vector.h"
 #include "clsid.h"
-#include "xrDebug.h"
 
 #include "xrsharedmem.h"
 #include "xrstring.h"
 #include "xr_resource.h"
 #include "rt_compressor.h"
 #include "xr_shared.h"
-#include "string_concatenations.h"
+
+#ifdef DEBUG
+#include "dump_string.h"
+#endif
 
 // stl ext
 struct XRCORE_API xr_rtoken {

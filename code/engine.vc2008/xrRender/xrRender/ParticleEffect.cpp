@@ -2,6 +2,7 @@
 #pragma hdrstop
 #include "ParticleEffect.h"
 #include <xmmintrin.h>
+#include "../../xrCore/threadpool/ttapi.h"
 #include "../../xrEngine/DirectXMathExternal.h"
 #include "tbb/task.h"
 #include "tbb/task_group.h"
@@ -136,7 +137,7 @@ void CParticleEffect::OnFrame(u32 frame_dt)
 			}
 			ParticleManager()->Update(m_HandleEffect, m_HandleActionList, fDT_STEP);
 
-			xr_vector<PAPI::Particle> particles;
+			PAPI::Particle* particles;
 			u32 p_cnt;
 			ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
 
@@ -370,17 +371,12 @@ IC void FillSprite(FVF::LIT*& pv, const Fvector& pos, const Fvector& dir, const 
 
 extern ENGINE_API float		psHUD_FOV;
 
-struct PRS_PARAMS 
-{
+struct PRS_PARAMS {
 	FVF::LIT* pv;
 	u32 p_from;
 	u32 p_to;
-	xr_vector<PAPI::Particle> particles;
+	PAPI::Particle* particles;
 	CParticleEffect* pPE;
-
-	~PRS_PARAMS()
-	{
-	}
 };
 
 __forceinline void fsincos(const float angle, float &sine, float &cosine)
@@ -411,10 +407,12 @@ void ParticleRenderStream(PRS_PARAMS* pParams)
 	// But it must be 0xFFFFFFFF or otherwise some particles won't play
 	float angle = 0xFFFFFFFF;
 
+	
+
 	FVF::LIT* pv = pParams->pv;
 	u32 p_from = pParams->p_from;
 	u32 p_to = pParams->p_to;
-	xr_vector<PAPI::Particle>& particles = (pParams->particles);
+	PAPI::Particle* particles = pParams->particles;
 	CParticleEffect &pPE = *pParams->pPE;
 
 	for (u32 i = p_from; i < p_to; i++) {
@@ -511,10 +509,11 @@ void CParticleEffect::Render(float)
 {
 	if (Device.dwPrecacheFrame) return;
 
-	// Get a pointer to the particles in gp memory
 	u32 dwOffset, dwCount;
-	xr_vector<PAPI::Particle> particles;
+	// Get a pointer to the particles in gp memory
+	PAPI::Particle* particles;
 	u32 p_cnt;
+
 	ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
 
 	if (p_cnt > 0)
@@ -560,7 +559,10 @@ void CParticleEffect::Render(float)
 				}
 
 				ParticleEffectTasks.wait();
+			
 			}
+
+	
 
 			dwCount = p_cnt << 2;
 

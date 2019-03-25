@@ -102,10 +102,12 @@ void  dxRenderDeviceRender::Reset( HWND hWnd, u32 &dwWidth, u32 &dwHeight, float
 #ifdef DEBUG
 	_SHOW_REF("*ref -CRenderDevice::ResetTotal: DeviceREF:",HW.pDevice);
 #endif // DEBUG	
-
-	Resources->reset_begin	();
-	Memory.mem_compact		();
-	HW.Reset				(hWnd);
+	if (Resources)
+	{
+		Resources->reset_begin();
+		Memory.mem_compact();
+		HW.Reset(hWnd);
+	}
 
 #ifdef USE_DX11
 	dwWidth					= HW.m_ChainDesc.BufferDesc.Width;
@@ -117,7 +119,11 @@ void  dxRenderDeviceRender::Reset( HWND hWnd, u32 &dwWidth, u32 &dwHeight, float
 
 	fWidth_2				= float(dwWidth/2);
 	fHeight_2				= float(dwHeight/2);
-	Resources->reset_end	();
+
+	if (Resources)
+	{
+		Resources->reset_end();
+	}
 
 #ifdef DEBUG
 	_SHOW_REF("*ref +CRenderDevice::ResetTotal: DeviceREF:",HW.pDevice);
@@ -359,6 +365,7 @@ bool bNeedUpdateGammaLUT = true;
 void dxRenderDeviceRender::End()
 {
 	VERIFY	(HW.pDevice);
+	ScopeStatTimer endTimer(Device.Statistic->Render_End);
 
 	if (!psDeviceFlags.is(rsFullscreen))
 	{

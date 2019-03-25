@@ -176,8 +176,16 @@ void CRender::level_Unload()
 	xr_delete(Glows);
 
 	//*** Shaders
-	Shaders.clear		();
-	b_loaded					= FALSE;
+	try
+	{
+		Shaders.clear();
+	}
+	catch (...)
+	{
+		Msg("# [ERROR]: Shaders vector is broken! Skip...");
+	}
+
+	b_loaded = FALSE;
 }
 
 void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)

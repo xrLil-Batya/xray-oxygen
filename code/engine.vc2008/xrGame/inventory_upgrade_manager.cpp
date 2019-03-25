@@ -36,10 +36,15 @@ Manager::Manager()
 
 Manager::~Manager()
 {
-	delete_data( m_roots );
-	delete_data( m_groups );
-	delete_data( m_upgrades );
-	delete_data( m_properties );
+	if (m_roots.size())
+		delete_data( m_roots );
+	if (m_groups.size())
+		delete_data( m_groups );
+	if (m_upgrades.size())
+		delete_data( m_upgrades );
+	if (m_properties.size())
+		delete_data( m_properties );
+
 	m_roots.clear(); // !!!!!!!!!!!!
 	m_groups.clear();
 	m_upgrades.clear();
@@ -346,8 +351,8 @@ bool Manager::upgrade_install( CInventoryItem& item, shared_str const& upgrade_i
 		}
 		else
 		{
-			FATAL( make_string( "! Upgrade <%s> of item [%s] (id = %d) is EMPTY or FAILED !",
-				upgrade_id.c_str(), item.m_section_id.c_str(), item.object_id() ).c_str() );
+			R_ASSERT_FORMAT(false, "! Upgrade <%s> of item [%s] (id = %d) is EMPTY or FAILED !",
+				upgrade_id.c_str(), item.m_section_id.c_str(), item.object_id() );
 		}
 	}
 

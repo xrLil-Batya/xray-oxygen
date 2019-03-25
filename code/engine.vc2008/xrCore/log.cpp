@@ -5,6 +5,7 @@
 #include "log.h"
 
 static xrLogger theLogger;
+XRCORE_API xr_queue <xrLogger::LogRecord> xrLogger::logData;
 
 void Log(const char* s)
 {
@@ -160,6 +161,8 @@ void xrLogger::InternalOpenLogFile()
 
 void xrLogger::LogThreadEntry()
 {
+	bool isDebug = IsDebuggerPresent();
+
 	auto FlushLogIfRequestedLambda = [this]()
 	{
 		if (bFlushRequested)
@@ -205,7 +208,7 @@ void xrLogger::LogThreadEntry()
 				// line is ready, ready up everything
 
 				// Output to MSVC debug output
-				if (IsDebuggerPresent() && !bFastDebugLog)
+				if (isDebug && !bFastDebugLog)
 				{
 					OutputDebugStringA(finalLine);
 					OutputDebugStringA("\n");

@@ -33,7 +33,7 @@ xrOxygen is an project that uses experimental C++ features, has no special restr
 * Allowed to use in **any** projects
 
 ## Contributors
-
+  
  Team of developers and contributors:
 * [Oxy](https://github.com/xrOxygen/xray-oxygen/graphs/contributors)
 * [SkyLoader](https://github.com/SkyLoaderr)
