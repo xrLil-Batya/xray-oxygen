@@ -52,6 +52,8 @@ public:
 
 	virtual bool		IsZoomEnabled					()	const	{return false;}
 
+	virtual float		Weight() const { return CInventoryItemObject::Weight(); }
+
 			void		Fire2Start						();
 	virtual void		FireStart						();
 
