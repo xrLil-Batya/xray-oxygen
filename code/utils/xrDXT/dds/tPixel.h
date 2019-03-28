@@ -141,6 +141,31 @@ inline _Type Modulo(const _Type& x, const _Type& lo, const _Type& hi)
 
 //#pragma pack(push,8)
 
+// Oxygen: True unsigned
+// rad and green
+class u16v16_t	
+{
+public:
+
+    union
+    {
+        unsigned short rg[4];
+        struct
+        {
+            unsigned short r;
+            unsigned short g;
+        };
+    };
+    u16v16_t & operator += ( const u16v16_t & v );     // incrementation by a Vec4f
+
+
+    void set(unsigned short _r, unsigned short _g)
+    {
+        r = _r;
+        g = _g;
+    }
+};
+
 // red and green
 class v16u16_t
 {

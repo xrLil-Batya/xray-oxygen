@@ -169,7 +169,7 @@ void CTexture::Load		()
 
 	Preload							();
 	string_path			fn;
-	if (FS.exist(fn,"$game_textures$",*cName,".ogm"))
+	if (FS.exist(fn, "$game_textures$", *cName, ".ogm") || FS.exist(fn, "$game_textures$", *cName, ".ogv"))
 	{
 		// AVI
 		pTheora		= xr_new<CTheoraSurface>();

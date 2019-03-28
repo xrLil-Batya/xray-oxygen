@@ -160,9 +160,10 @@ float CEnvelope::GetLength(float* mn, float* mx)
 
 	if (mn)
 		*mn = 0.f;
-	if (mx)
 
+	if (mx)
 		*mx = 0.f;
+
 	return 0.f;
 }
 

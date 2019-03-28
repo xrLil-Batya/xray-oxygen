@@ -12,16 +12,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ddsTypes.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
     <ClInclude Include="dxtlib.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
-    <ClInclude Include="tPixel.h">
-      <Filter>Convert</Filter>
-    </ClInclude>
-    <ClInclude Include="tVector.h">
       <Filter>Convert</Filter>
     </ClInclude>
     <ClInclude Include="ETextureParams.h">
@@ -76,8 +67,5 @@
     </ClCompile>
     <ClCompile Include="StdAfx.cpp" />
     <ClCompile Include="ddsw.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
   </ItemGroup>
 </Project>

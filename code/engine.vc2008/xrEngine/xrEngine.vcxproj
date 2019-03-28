@@ -104,7 +104,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Gdiplus.lib;Psapi.lib;sound_static.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -171,7 +171,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Gdiplus.lib;Psapi.lib;sound_static.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
