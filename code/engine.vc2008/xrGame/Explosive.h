@@ -5,7 +5,7 @@
 #include "../xrEngine/Render.h"
 #include "../xrEngine/feel_touch.h"
 #include "inventory_item.h"
-#include "ai_sounds.h"
+#include "../xrScripts/Export/ai_sounds.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrphysics/DamageSource.h"
 #include "../xrphysics/IPhysicalWeaponObject.h"
@@ -15,7 +15,7 @@
 
 class IRender_Light;
 using BLASTED_OBJECTS_V = xr_vector<CPhysicsShellHolder*>;
-class CExplosive : public IDamageSource, public IExplosive
+class GAME_API CExplosive : public IDamageSource, public IExplosive
 {
 private:
 	collide::rq_results			rq_storage;
@@ -31,13 +31,10 @@ public:
 	virtual void				net_Relcase		(CObject* O);
 	virtual void 				UpdateCL();
 
-private:
 	virtual void 				Explode();
-public:
 	virtual void 				ExplodeParams	(const Fvector& pos, const Fvector& dir);
 
 	static float 				ExplosionEffect	(collide::rq_results& storage,CExplosive*exp_obj,CPhysicsShellHolder*blasted_obj,  const Fvector &expl_centre, const float expl_radius);
-
 
 	virtual void 				OnEvent (NET_Packet& P, u16 type) ;//{inherited::OnEvent( P, type);}
 	virtual void				OnAfterExplosion();

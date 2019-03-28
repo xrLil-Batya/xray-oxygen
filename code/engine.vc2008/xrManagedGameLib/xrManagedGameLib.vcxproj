@@ -89,6 +89,7 @@
     <ClInclude Include="API\Actor.h" />
     <ClInclude Include="API\Entity.h" />
     <ClInclude Include="API\EntityAlive.h" />
+    <ClInclude Include="API\Explosive.h" />
     <ClInclude Include="API\Game.h" />
     <ClInclude Include="API\GameClassIDs.h" />
     <ClInclude Include="API\GameInfo.h" />
@@ -111,6 +112,7 @@
     <ClCompile Include="API\Actor.cpp" />
     <ClCompile Include="API\Entity.cpp" />
     <ClCompile Include="API\EntityAlive.cpp" />
+    <ClCompile Include="API\Explosive.cpp" />
     <ClCompile Include="API\Game.cpp" />
     <ClCompile Include="API\GameClassIDs.cpp" />
     <ClCompile Include="API\GameInfo.cpp" />

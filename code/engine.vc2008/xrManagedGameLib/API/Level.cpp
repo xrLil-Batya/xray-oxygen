@@ -265,8 +265,9 @@ XRay::MEnvironment^ XRay::Level::pEnvironment()
 
 XRay::EnvDescriptor^ XRay::Level::CurrentEnvironment(XRay::MEnvironment^ self)
 {
-	return		(self->CurrentEnv);
-}	
+	return gcnew EnvDescriptor(nullptr);
+}
+
 void XRay::Level::DisableInput()
 {
 	g_bDisableAllInput = true;
