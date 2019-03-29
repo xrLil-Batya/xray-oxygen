@@ -2,7 +2,7 @@
 #include "../xrCore/PostprocessAnimator.h"
 #include "ActorEffector.h"
 
-class CPostprocessAnimator : public CEffectorPP, public BasicPostProcessAnimator
+class GAME_API CPostprocessAnimator : public CEffectorPP, public BasicPostProcessAnimator
 {
 public:
 	CPostprocessAnimator(int id, bool cyclic) : CEffectorPP((EEffectorPPType)id, 100000, true), BasicPostProcessAnimator(id, cyclic) {}

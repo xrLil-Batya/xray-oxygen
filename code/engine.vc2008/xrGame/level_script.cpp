@@ -437,7 +437,7 @@ CEnvDescriptor *current_environment(CEnvironment *self)
 {
 	return		(self->CurrentEnv);
 }
-extern bool g_bDisableAllInput;
+extern bool GAME_API g_bDisableAllInput;
 void disable_input()
 {
 	g_bDisableAllInput = true;
@@ -642,8 +642,8 @@ u32 vertex_id	(Fvector position)
 	return	(ai().level_graph().vertex_id(position));
 }
 
-CUISequencer* g_tutorial = nullptr;
-CUISequencer* g_tutorial2 = nullptr;
+GAME_API CUISequencer* g_tutorial = nullptr;
+GAME_API CUISequencer* g_tutorial2 = nullptr;
 
 void start_tutorial(LPCSTR name)
 {

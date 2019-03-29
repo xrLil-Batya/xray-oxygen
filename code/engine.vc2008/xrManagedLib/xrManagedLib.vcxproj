@@ -117,6 +117,7 @@
     <ClCompile Include="API\Utils.cpp" />
     <ClCompile Include="API\Xml.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClInclude Include="EasyDelegate.h" />
     <ClCompile Include="HelperFuncs.cpp" />
     <ClCompile Include="ScriptCompiler.cpp" />
     <ClCompile Include="stdafx.cpp">
