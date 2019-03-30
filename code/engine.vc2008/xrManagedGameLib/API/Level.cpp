@@ -21,11 +21,14 @@
 #include "../xrGame/postprocessanimator.h"
 #include "../xrGame/relation_registry.h"
 #include "../xrGame/ui/UIGameTutorial.h"
+#include "../xrGame/ui/UIMainIngameWnd.h"
+#include "../xrGame/ui/UIMotionIcon.h"
 
  
 extern GAME_API bool g_bDisableAllInput;
 extern GAME_API CUISequencer* g_tutorial;
 extern GAME_API CUISequencer* g_tutorial2;
+extern GAME_API CUIMotionIcon* g_pMotionIcon;
 
 
 System::UInt32 XRay::LevelGraph::LevelID::get()
@@ -180,7 +183,6 @@ void XRay::Level::PrefetchSnd(LPCSTR name)
 {
 	(::Level().PrefetchSound(name));
 }
-// CClientSpawnManager нет в Managed, нужно писать ему класс
 XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
 {
 	return gcnew ClientSpawnManager(&(::Level().client_spawn_manager()));
@@ -231,15 +233,16 @@ bool XRay::Level::isLevelPresent()
 {
 	return (!!g_pGameLevel);
 }
+/*
 XRay::MEnvironment^ XRay::Level::pEnvironment()
 {	
-	return	(%(MEnvironment()));    //(&Environment())
+	return	(MEnvironment(Environment())); //    (&Environment()) // fix it
 }
+*/
 XRay::EnvDescriptor^ XRay::Level::CurrentEnvironment(MEnvironment^ self)
 {
 	return gcnew EnvDescriptor(::System::IntPtr());
 }
-
 void XRay::Level::DisableInput()
 {
 	g_bDisableAllInput = true;
@@ -433,14 +436,110 @@ void XRay::Level::GSend(NET_Packet& P)
 {
 	::Level().Send(P);
 }
-
 void XRay::Level::UEventGen(NET_Packet& P, u32 _event, u32 _dest)
 {
 	CGameObject::u_EventGen(P, _event, _dest);
 }
-
 void XRay::Level::UEventSend(NET_Packet& P)
 {
 	CGameObject::u_EventSend(P);
 }
+void SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem = false)
+{
+	Level().spawn_item(sSection, vPosition, LevelVertexID, ParentID, bReturnItem);
+}
+void ShowMinimap(bool bShow)
+{
+	CUIGame* GameUI = HUD().GetGameUI();
+	GameUI->UIMainIngameWnd->ShowZoneMap(bShow);
+	if (g_pMotionIcon != nullptr)
+	{
+		g_pMotionIcon->bVisible = bShow;
+	}
+}
+XRay::ScriptGameObject^ XRay::Level::GGetTargetObject()
+{
+	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+	if (RQ.O)
+	{
+		CGameObject	*game_object = static_cast<CGameObject*>(RQ.O);
+		if (game_object)
+			return gcnew ScriptGameObject(game_object->lua_game_object());
+	}
+	return (nullptr);
+}
+float XRay::Level::GGetTargetDist()
+{
+	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+	if (RQ.range)
+		return RQ.range;
+	return (0);
+}
+::System::UInt32 XRay::Level::GGetTargetElement()
+{
+	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+	if (RQ.element)
+	{
+		return RQ.element;
+	}
+	return (0);
+}
+u8 XRay::Level::GetActiveCam()
+{
+	CActor* actor = smart_cast<CActor*>(::Level().CurrentViewEntity());
+	if (actor)
+		return (u8)actor->active_cam();
 
+	return 255;
+}
+void XRay::Level::SetActiveCam(u8 mode)
+{
+	CActor* actor = smart_cast<CActor*>(::Level().CurrentViewEntity());
+	if (actor && mode <= EActorCameras::eacMaxCam)
+		actor->cam_Set((EActorCameras)mode);
+}
+CScriptGameObject* XRay::Level::GetViewEntityScript()
+{
+	CGameObject* pGameObject = smart_cast<CGameObject*>(::Level().CurrentViewEntity());
+	if (!pGameObject)
+		return (nullptr);
+
+	return pGameObject->lua_game_object();
+}
+void XRay::Level::SetViewEntityScript(CScriptGameObject* go)
+{
+	CObject* o = smart_cast<CObject*>(&go->object());
+	if (o)
+		::Level().SetViewEntity(o);
+}
+XRay::mxrTime^ XRay::Level::GetStartTime()
+{
+	return  gcnew mxrTime(&xrTime(::Level().GetStartGameTime()));
+}
+u8 XRay::Level::GetLevelId(CLevelGraph *graph)
+{
+	return graph->level_id();
+}
+::System::UInt32 XRay::Level::GetVertexCount(CLevelGraph *graph)
+{
+	return graph->header().vertex_count();
+}
+void XRay::Level::PatrolPathAdd(LPCSTR patrol_path, CPatrolPath* path) {
+	ai().patrol_paths_raw().add_path(shared_str(patrol_path), path);
+}
+void XRay::Level::PatrolPathRemove(LPCSTR patrol_path) {
+	ai().patrol_paths_raw().remove_path(shared_str(patrol_path));
+}
+void XRay::Level::SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem = false)
+{
+	::Level().spawn_item(sSection, vPosition, LevelVertexID, ParentID, bReturnItem);
+}
+void XRay::Level::ShowMinimap(bool bShow)
+{
+	CUIGame* GameUI = HUD().GetGameUI();
+	GameUI->UIMainIngameWnd->ShowZoneMap(bShow);
+	if (g_pMotionIcon != nullptr)
+	{
+		g_pMotionIcon->bVisible = bShow;
+	}
+}

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-// Ыўсыў C++17 
+//Ыўсыў C++17
 namespace XRay::System
 {	
 	template<class T>

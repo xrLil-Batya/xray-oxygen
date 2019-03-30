@@ -3,9 +3,9 @@
 #include "../xrEngine/Environment.h"
 #include "../xrEngine/editor_environment_manager.hpp"
 
-XRay::MEnvironment::MEnvironment()
+XRay::MEnvironment::MEnvironment(CEnvironment& environment())
 {
-	//CEnvironment(); ?
+	::Environment(); //fix it
 }
 
 XRay::MEnvironment::MEnvironment(::System::IntPtr InNativeLevel)

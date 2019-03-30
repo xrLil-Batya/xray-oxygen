@@ -15,8 +15,11 @@ namespace XRay
 
 
 	public:
-		MEnvironment();
+		
 		MEnvironment(::System::IntPtr InNativeLevel);
+		MEnvironment(CEnvironment& environment());
+
+
 		static void ChangeGameTime(float fValue);
 
 		
