@@ -45,7 +45,6 @@ namespace XRay
 		virtual void ZoneEnter();
 		virtual void ZoneExit();
 
-		float AddCamEffector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func);
 		/*
 		virtual void level_border_exit();
 		virtual void level_border_enter();

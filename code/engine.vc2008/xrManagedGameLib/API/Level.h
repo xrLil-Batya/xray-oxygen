@@ -6,6 +6,8 @@
 class CLevel;
 class CLevelGraph;
 
+
+
 namespace XRay
 {
 	
@@ -23,18 +25,15 @@ namespace XRay
 		{
 			::System::UInt32 get();
 		}
-		static ::System::UInt32 GetVertexId(Fvector position);
-
 	};
 
 	public ref class Level abstract
 	{
 	internal:
 		CLevel* pNativeLevel;
-	public:
-		using CallBack = void(::System::String^);
 
 	public:
+
 		static property ClientSpawnManager^ ClientSpawnMngr
 		{
 			ClientSpawnManager^ get();
@@ -134,7 +133,6 @@ namespace XRay
 		static void ShowIndicators();
 		static void ShowWeapon(bool b);
 		static bool isLevelPresent();
-
 		//static void AddCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
 		//static void AddCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
 		//static void AddCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
@@ -144,41 +142,18 @@ namespace XRay
 		//static void RemoveCallForObject(const luabind::object &lua_object);
 
 		
-		static XRay::MEnvironment^ pEnvironment();
+		//static MEnvironment^ pEnvironment();
 
-		static XRay::EnvDescriptor^  CurrentEnvironment(XRay::MEnvironment^ self);
+		static EnvDescriptor^  CurrentEnvironment(XRay::MEnvironment^ self);
 
 		static void DisableInput();
 		static void EnableInput();
 		static void SpawnPhantom(const Fvector &position);
 		static Fbox GetBoundingVolume();
-		static void IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback);
-		//static void IterateSounds1(LPCSTR prefix, u32 max_count, luabind::functor<void> functor);		
-		//static void IterateSounds2(LPCSTR prefix, u32 max_count, luabind::object object, luabind::functor<void> functor);
-		static float AddCamEffector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func);
-		static float AddCamEffector2(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func, float cam_fov);
-		static void RemoveCamEffector(int id);
-		static float GetSndVolume();
-		static void SetSndVolume(float v);
-		static void AddComplexEffector(LPCSTR section, int id);
-		static void RemoveComplexEffector(int id);
-		static void AddPPEffector(LPCSTR fn, int id, bool cyclic);	
-		static void RemovePPEffector(int id);
-		static void SetPPEffectorFactor(int id, float f, float f_sp);		
-		static void SetPPEffectorFactor2(int id, float f);
-		static int GCommunityGoodwill(LPCSTR _community, int _entity_id);
-		static void GSetCommunityGoodwill(LPCSTR _community, int _entity_id, int val);
-		static void GChangeCommunityGoodwill(LPCSTR _community, int _entity_id, int val);
-		static int GGetCommunityRelation(LPCSTR comm_from, LPCSTR comm_to);
-		static void GSetCommunityRelation(LPCSTR comm_from, LPCSTR comm_to, int value);
-		static int GGetGeneralGoodwillBetween(u16 from, u16 to);
-		static void StartTutorial(LPCSTR name);
-		static void StopTutorial();
-		static ::System::String^ TranslateString(LPCSTR str);
-		static bool HasActiveTutotial();
-		static void GSend(NET_Packet& P);
-		static void UEventGen(NET_Packet& P, u32 _event, u32 _dest);
-		static void UEventSend(NET_Packet& P);
+		
+		//static void IterateSounds(LPCSTR prefix, u32 max_count, const CScriptCallbackEx<void> &callback);
+		
+
 
 	};
 }

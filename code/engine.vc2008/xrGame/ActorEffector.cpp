@@ -5,7 +5,7 @@
 #include "object_broker.h"
 #include "Actor.h"
 
-void GAME_API AddEffector(CActor* A, int type, const shared_str& sect_name)
+void AddEffector(CActor* A, int type, const shared_str& sect_name)
 {
 	bool bCyclic = false;
 
@@ -151,7 +151,7 @@ void AddEffector(CActor* A, int type, const shared_str& sect_name, float factor)
 	}
 }
 
-void GAME_API RemoveEffector(CActor* A, int type)
+void RemoveEffector(CActor* A, int type)
 {
 	A->Cameras().RemoveCamEffector((ECamEffectorType)type);
 	A->Cameras().RemovePPEffector((EEffectorPPType)type);
