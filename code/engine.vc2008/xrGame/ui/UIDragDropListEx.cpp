@@ -104,7 +104,7 @@ bool CUIDragDropListEx::GetVirtualCells()
 	return !!m_flags.test(flVirtualCells);
 }
 
-void CUIDragDropListEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIDragDropListEx::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 }

@@ -313,7 +313,7 @@ public:
 	virtual						~CUIActorMenu				();
 
 	virtual bool				StopAnyMove					();
-	virtual void				SendMessage					(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual void				SendMessageToWnd					(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 	virtual void				Draw						();
 	virtual void				Update						();
 	virtual void				Show						(bool status);

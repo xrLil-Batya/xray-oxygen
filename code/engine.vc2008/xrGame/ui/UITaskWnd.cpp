@@ -130,7 +130,7 @@ void CUITaskWnd::DrawHint()
 }
 
 
-void CUITaskWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUITaskWnd::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	if ( msg == PDA_TASK_SET_TARGET_MAP && pData )
 	{
@@ -163,7 +163,7 @@ void CUITaskWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 		return;
 	}
 
-	inherited::SendMessage(  pWnd, msg, pData );
+	inherited::SendMessageToWnd(  pWnd, msg, pData );
 	CUIWndCallback::OnEvent( pWnd, msg, pData );
 }
 
@@ -455,7 +455,7 @@ bool CUITaskItem::OnMouseAction( float x, float y, EUIMessages mouse_action )
 	return true;
 }
 
-void CUITaskItem::SendMessage( CUIWindow* pWnd, s16 msg, void* pData )
+void CUITaskItem::SendMessageToWnd( CUIWindow* pWnd, s16 msg, void* pData )
 {
-	inherited::SendMessage( pWnd, msg, pData );
+	inherited::SendMessageToWnd( pWnd, msg, pData );
 }

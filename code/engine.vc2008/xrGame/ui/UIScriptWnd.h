@@ -12,7 +12,7 @@ class CUIDialogWndEx :public CUIDialogWnd, public DLL_Pure
 
 private:
 			CALLBACKS			m_callbacks;
-	virtual void				SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual void				SendMessageToWnd			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 			SCallbackInfo*		NewCallback			();
 protected:
 			bool				Load				(LPCSTR xml_name);

@@ -76,7 +76,7 @@ public:
 	// ATTENTION! Для корректного функционирования значков [+-] вызов SetText
 	// Должен предшествовать SetRoot
 	virtual void SetText(LPCSTR str);
-	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData);
+	virtual void SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData);
 
 	// Ctor and Dtor
 	CUITreeViewItem();

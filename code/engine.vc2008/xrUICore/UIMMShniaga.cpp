@@ -223,8 +223,8 @@ bool CUIMMShniaga::IsButton(CUIWindow* st)
 	return false;
 }
 
-void CUIMMShniaga::SendMessage(CUIWindow* pWnd, s16 msg, void* pData){
-	CUIWindow::SendMessage(pWnd, msg, pData);
+void CUIMMShniaga::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData){
+	CUIWindow::SendMessageToWnd(pWnd, msg, pData);
 	if (IsButton(pWnd))
 	{
 		if (msg == WINDOW_FOCUS_RECEIVED)
@@ -320,7 +320,7 @@ void CUIMMShniaga::OnBtnClick()
 	else if (0 == xr_strcmp("btn_new_back", m_selected->WindowName()))
 		ShowMain();
 	else
-		GetMessageTarget()->SendMessage(m_selected, BUTTON_CLICKED);
+		GetMessageTarget()->SendMessageToWnd(m_selected, BUTTON_CLICKED);
 }
 
 bool CUIMMShniaga::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)

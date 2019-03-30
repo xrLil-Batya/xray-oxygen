@@ -93,7 +93,7 @@ void CUIComboBox::OnListItemSelect()
 	ShowList				(false);
 
 	if(bk_itoken_id!=m_itoken_id)
-		GetMessageTarget()->SendMessage(this, LIST_ITEM_SELECT, NULL);
+		GetMessageTarget()->SendMessageToWnd(this, LIST_ITEM_SELECT, NULL);
 }
 
 void CUIComboBox::SetText(LPCSTR text)
@@ -297,9 +297,9 @@ bool CUIComboBox::OnMouseAction(float x, float y, EUIMessages mouse_action){
         return false;
 }
 
-void CUIComboBox::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIComboBox::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
-	CUIWindow::SendMessage	(pWnd, msg, pData);
+	CUIWindow::SendMessageToWnd	(pWnd, msg, pData);
 
 	switch (msg)
 	{

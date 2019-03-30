@@ -137,7 +137,7 @@ void CUIActorMenu::PlaySnd(eActorMenuSndAction a)
         sounds[a].play					(nullptr, sm_2D);
 }
 
-void CUIActorMenu::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIActorMenu::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent		(pWnd, msg, pData);
 }

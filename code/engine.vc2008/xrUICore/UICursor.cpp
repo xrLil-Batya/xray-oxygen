@@ -3,6 +3,8 @@
 #include "UIStatic.h"
 #include "UIBtnHint.h"
 #include "../xrGame/Actor_Flags.h"
+#include "../xrEngine/xr_input.h"
+#include "../xrEngine/IInputReceiver.h"
 
 CUICursor::CUICursor(): m_static(NULL), m_b_use_win_cursor(false)
 {    
@@ -93,12 +95,11 @@ void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 	vPrevPos	= vPos;
 	if(m_b_use_win_cursor)
 	{
-		Fvector2 correctedDelta;
-		correctedDelta.x = (float)_dx * (UI_BASE_WIDTH / (float)Device.dwWidth);
-		correctedDelta.y = (float)_dy * (UI_BASE_HEIGHT / (float)Device.dwHeight);
+		Ivector2 mousePos;
+		pInput->CurrentIR()->IR_GetMousePosScreen(mousePos);
 
-		vPos.x += correctedDelta.x;
-		vPos.y += correctedDelta.y;
+		vPos.x = (float)mousePos.x * (UI_BASE_WIDTH / (float)Device.dwWidth);
+		vPos.y = (float)mousePos.y * (UI_BASE_HEIGHT / (float)Device.dwHeight);
 			
 		clamp<float>(vPos.x, 0.0f, UI_BASE_WIDTH);
 		clamp<float>(vPos.y, 0.0f, UI_BASE_HEIGHT);

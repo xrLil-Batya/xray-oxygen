@@ -326,7 +326,7 @@ void CUIScrollBar::SetScrollPosClamped(int iPos)
 	clamp(m_iScrollPos,m_iMinPos,m_iMaxPos-m_iPageSize+1);
 }
 
-void CUIScrollBar::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
+void CUIScrollBar::SendMessageToWnd(CUIWindow *pWnd, s16 msg, void *pData)
 {
 	if ( pWnd == m_DecButton )
 	{
@@ -352,35 +352,35 @@ void CUIScrollBar::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 			{
 				SetPosScrollFromView(m_ScrollBox->GetWndPos().x,m_ScrollBox->GetWidth(),GetHeight());
 				if (GetMessageTarget())
-					GetMessageTarget()->SendMessage(this, SCROLLBAR_HSCROLL);
+					GetMessageTarget()->SendMessageToWnd(this, SCROLLBAR_HSCROLL);
 			}
 			else
 			{
 				SetPosScrollFromView(m_ScrollBox->GetWndPos().y,m_ScrollBox->GetHeight(),GetWidth());
 				if (GetMessageTarget())
-					GetMessageTarget()->SendMessage(this, SCROLLBAR_VSCROLL);
+					GetMessageTarget()->SendMessageToWnd(this, SCROLLBAR_VSCROLL);
 			}
 		}
 	}
-	CUIWindow::SendMessage( pWnd, msg, pData );
+	CUIWindow::SendMessageToWnd( pWnd, msg, pData );
 }
 
 void CUIScrollBar::TryScrollInc(bool by_scrollbox)
 {
 	if(ScrollInc(by_scrollbox))
 		if(m_bIsHorizontal)
-			GetMessageTarget()->SendMessage(this, SCROLLBAR_HSCROLL);
+			GetMessageTarget()->SendMessageToWnd(this, SCROLLBAR_HSCROLL);
 		else
-			GetMessageTarget()->SendMessage(this, SCROLLBAR_VSCROLL);
+			GetMessageTarget()->SendMessageToWnd(this, SCROLLBAR_VSCROLL);
 }
 
 void CUIScrollBar::TryScrollDec(bool by_scrollbox)
 {
 	if(ScrollDec(by_scrollbox))
 		if(m_bIsHorizontal)
-			GetMessageTarget()->SendMessage(this, SCROLLBAR_HSCROLL);
+			GetMessageTarget()->SendMessageToWnd(this, SCROLLBAR_HSCROLL);
 		else
-			GetMessageTarget()->SendMessage(this, SCROLLBAR_VSCROLL);
+			GetMessageTarget()->SendMessageToWnd(this, SCROLLBAR_VSCROLL);
 
 }
 
@@ -455,5 +455,5 @@ void CUIScrollBar::Draw()
 
 void CUIScrollBar::Refresh()
 {
-	SendMessage(m_ScrollBox, SCROLLBOX_MOVE, NULL);
+	SendMessageToWnd(m_ScrollBox, SCROLLBOX_MOVE, NULL);
 }

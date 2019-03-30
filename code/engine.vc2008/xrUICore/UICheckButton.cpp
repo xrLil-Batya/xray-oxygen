@@ -100,7 +100,7 @@ bool CUICheckButton::OnMouseDown(int mouse_btn)
 		else
 			SetButtonState(BUTTON_NORMAL);
 	}
-	GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, NULL);
+	GetMessageTarget()->SendMessageToWnd(this, BUTTON_CLICKED, NULL);
 	return true;
 }
 

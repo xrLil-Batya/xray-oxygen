@@ -252,7 +252,7 @@ bool CUICustomMap::NeedShowPointer(Frect r)
 	return !map_visible_rect.intersected(r);
 }
 
-void	CUICustomMap::SendMessage			(CUIWindow* pWnd, s16 msg, void* pData)
+void	CUICustomMap::SendMessageToWnd			(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 }
@@ -540,9 +540,9 @@ bool CUILevelMap::OnMouseAction(float x, float y, EUIMessages mouse_action)
 	return false;
 }
 
-void CUILevelMap::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUILevelMap::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
-	inherited::SendMessage(pWnd, msg, pData);
+	inherited::SendMessageToWnd(pWnd, msg, pData);
 
 	switch (msg)
 	{

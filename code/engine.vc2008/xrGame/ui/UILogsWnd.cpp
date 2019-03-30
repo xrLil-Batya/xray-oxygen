@@ -77,9 +77,9 @@ void CUILogsWnd::Update()
 	}
 }
 
-void CUILogsWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUILogsWnd::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
-	inherited::SendMessage( pWnd, msg, pData );
+	inherited::SendMessageToWnd( pWnd, msg, pData );
 	CUIWndCallback::OnEvent( pWnd, msg, pData );
 }
 

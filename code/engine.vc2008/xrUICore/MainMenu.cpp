@@ -53,10 +53,12 @@ CMainMenu::CMainMenu()
     g_statHint = xr_new<CUIButtonHint>();
 
 	Device.seqFrame.Add(this, REG_PRIORITY_LOW - 1000);
+	Device.seqAppActivate.Add(this, REG_PRIORITY_LOW - 1000);
 }
 
 CMainMenu::~CMainMenu()
 {
+	Device.seqAppActivate.Remove(this);
 	Device.seqFrame.Remove(this);
 	xr_delete(g_btnHint);
 	xr_delete(g_statHint);
@@ -129,7 +131,8 @@ void CMainMenu::Activate(bool bActivate)
 		{
 			g_discord.SetStatus(xrDiscordPresense::StatusId::Menu);
 		}
-		pInput->SetAllowAccessToBorders(true);
+		//pInput->SetAllowAccessToBorders(true);
+		pInput->UnlockMouse();
 	}
 	else {
 		m_deactivated_frame = Device.dwFrame;
@@ -176,7 +179,8 @@ void CMainMenu::Activate(bool bActivate)
 			Console->Execute("vid_restart");
 		}
 		//g_discord.SetStatus(xrDiscordPresense::StatusId::In_Game);
-		pInput->SetAllowAccessToBorders(false);
+		//pInput->SetAllowAccessToBorders(false);
+		pInput->LockMouse();
 	}
 }
 
@@ -218,6 +222,13 @@ void CMainMenu::OnDeviceReset()
 {
 	if (IsActive() && g_pGameLevel)
 		m_Flags.set(flNeedVidRestart, TRUE);
+}
+
+void CMainMenu::OnAppActivate()
+{
+	// set gui mouse to center screen
+	// because we should synchronize with system mouse to prevent unwanted sizing
+	GetUICursor().SetUICursorPosition(Fvector2().set(512.0f, 384.0f));
 }
 
 void CMainMenu::IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& position)
@@ -363,7 +374,7 @@ void CMainMenu::OnFrame()
 		if (b_is_16_9 != m_activatedScreenRatio)
 		{
 			ReloadUI();
-			m_startDialog->SendMessage(m_startDialog, MAIN_MENU_RELOADED, NULL);
+			m_startDialog->SendMessageToWnd(m_startDialog, MAIN_MENU_RELOADED, NULL);
 		}
 	}
 

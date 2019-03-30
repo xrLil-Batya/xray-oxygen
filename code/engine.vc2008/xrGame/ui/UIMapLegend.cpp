@@ -73,7 +73,7 @@ void UIMapLegend::Show( bool status )
 	inherited::Show( status );
 }
 
-void UIMapLegend::SendMessage( CUIWindow* pWnd, s16 msg, void* pData )
+void UIMapLegend::SendMessageToWnd( CUIWindow* pWnd, s16 msg, void* pData )
 {
 	if ( pWnd == m_btn_close )
 	{
@@ -83,7 +83,7 @@ void UIMapLegend::SendMessage( CUIWindow* pWnd, s16 msg, void* pData )
 			return;
 		}
 	}
-	inherited::SendMessage( pWnd, msg, pData );
+	inherited::SendMessageToWnd( pWnd, msg, pData );
 }
 
 // =================================================================================================

@@ -22,7 +22,7 @@ public:
 
 	// CUIWindow
 	virtual void	InitSpin			(Fvector2 pos, Fvector2 size);
-	virtual void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData  = NULL);
+	virtual void	SendMessageToWnd			(CUIWindow* pWnd, s16 msg, void* pData  = NULL);
 	virtual void	Draw				();
 	virtual void	Update				();
 	virtual void	Enable				(bool status);

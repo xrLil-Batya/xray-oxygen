@@ -153,7 +153,7 @@ void CUITalkWnd::UpdateQuestions()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CUITalkWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUITalkWnd::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	if (pWnd == UITalkDialogWnd)
 	{
@@ -170,7 +170,7 @@ void CUITalkWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 			break;
 		}
 	}
-	inherited::SendMessage(pWnd, msg, pData);
+	inherited::SendMessageToWnd(pWnd, msg, pData);
 }
 
 //////////////////////////////////////////////////////////////////////////

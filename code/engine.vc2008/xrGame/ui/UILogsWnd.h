@@ -61,7 +61,7 @@ public:
 
 	virtual void 		Show				( bool status );
 	virtual void		Update				();
-	virtual void		SendMessage			( CUIWindow* pWnd, s16 msg, void* pData );
+	virtual void		SendMessageToWnd			( CUIWindow* pWnd, s16 msg, void* pData );
 
 	virtual bool		OnKeyboardAction			(u8 dik, EUIMessages keyboard_action);
 	virtual bool		OnKeyboardHold		(u8 dik);

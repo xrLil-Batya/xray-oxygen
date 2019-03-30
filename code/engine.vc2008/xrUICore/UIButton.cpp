@@ -50,7 +50,7 @@ bool  CUIButton::OnMouseAction(float x, float y, EUIMessages mouse_action)
 			if(mouse_action == WINDOW_LBUTTON_DOWN || mouse_action == WINDOW_LBUTTON_DB_CLICK)
 			{
 				SetButtonState(BUTTON_PUSHED);
-				GetMessageTarget()->SendMessage(this, BUTTON_DOWN, NULL);
+				GetMessageTarget()->SendMessageToWnd(this, BUTTON_DOWN, NULL);
 				return true;
 			}
 		}break;
@@ -89,7 +89,7 @@ bool  CUIButton::OnMouseAction(float x, float y, EUIMessages mouse_action)
 
 void CUIButton::OnClick()
 {
-	GetMessageTarget()->SendMessage(this, BUTTON_CLICKED);
+	GetMessageTarget()->SendMessageToWnd(this, BUTTON_CLICKED);
 }	
 
 void CUIButton::DrawTexture()
