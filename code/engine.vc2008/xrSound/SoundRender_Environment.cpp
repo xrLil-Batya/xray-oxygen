@@ -77,12 +77,13 @@ void CSoundRender_Environment::clamp()
 
 bool CSoundRender_Environment::load(IReader* fs)
 {
-	auto mB_to_gain= [](float mb)
+	version = fs->r_u32();
+
+	auto mB_to_gain= [this](float mb)
 	{
-		return powf(10.0f, mb / 2000.0f);
+		return version >= 0x0005 ? mb : powf(10.0f, mb / 2000.0f);
 	};
 
-	version = fs->r_u32();
 
 	if (version >= 0x0003)
 	{
@@ -101,7 +102,7 @@ bool CSoundRender_Environment::load(IReader* fs)
 		EnvironmentDiffusion = fs->r_float();
 		AirAbsorptionHF = mB_to_gain(fs->r_float());
 
-		if (version > 0x0003)
+		if (version >= 0x0004)
 			Environment = fs->r_u32();
 
 		return true;
