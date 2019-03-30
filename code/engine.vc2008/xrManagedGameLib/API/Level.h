@@ -1,10 +1,7 @@
 #pragma once
 #include "ClientSpawnManager.h"
 #include "PhysicsWorldScripted.h"
-#include "ScriptGameObject.h"
-#include "API/xrTime.h"
 #include "Game.h"
-
 
 class CLevel;
 class CLevelGraph;
@@ -15,13 +12,13 @@ namespace XRay
 	ref class LevelGraph abstract
 	{
 	public:
-		/// <summaru> Return Level ID</summaru>
+		/// <summaru> Returns Level ID</summaru>
 		property ::System::UInt32 LevelID
 		{
 			::System::UInt32 get();
 		}
 
-		/// <summaru> Return Vertex count</summaru>
+		/// <summaru> Returns Vertex count</summaru>
 		property ::System::UInt32 VertexCount
 		{
 			::System::UInt32 get();
@@ -63,17 +60,17 @@ namespace XRay
 		{
 			float get();
 		}
-		/// <summary>Return rain factor</summary>
+		/// <summary>Returns rain factor</summary>
 		static property float RainFactor
 		{
 			float get();
 		}
-		/// <summary>Return level name from a text files</summary>
+		/// <summary>Returns level name from a text files</summary>
 		static property ::System::String^ LevelName
 		{
 			::System::String^ get();
 		}
-		/// <summary>Return or set weather name</summary>
+		/// <summary>Returns or set weather name</summary>
 		static property ::System::String^ Weather
 		{
 			::System::String^ get();
@@ -96,8 +93,11 @@ namespace XRay
 		static void StartWeatherFXfromTime(::System::String^ str, float time);		
 		static bool iSWfxPlaying();
 		static void StopWeatherFX();
+		
+		
 		static float HighCoverInDirection(u32 level_vertex_id, const Fvector &direction);
 		static float LowCoverInDirection(u32 level_vertex_id, const Fvector &direction);
+
 		static ::System::Numerics::Vector3^ VertexPosition(u32 level_vertex_id);
 
 		/// <summary>Check: Current level vertex be at level</summary>
@@ -119,14 +119,22 @@ namespace XRay
 
 		static bool PatrolPathExists(LPCSTR patrol_path);
 		static void PrefetchSnd(LPCSTR name);
+
+
+
 		static XRay::PhysicsWorldScripted^ physicsWorldScripted();
+
+
+
 		static void AddDialogToRender(XRay::UIDialogWnd^ pDialog);
 		static void RemoveDialogFromRender(XRay::UIDialogWnd^ pDialog);
+
 		static void HideIndicators();
 		static void HideIndicatorsSafe();
 		static void ShowIndicators();
 		static void ShowWeapon(bool b);
 		static bool isLevelPresent();
+
 		//static void AddCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
 		//static void AddCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
 		//static void AddCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
@@ -134,16 +142,19 @@ namespace XRay
 		//static void RemoveCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
 		//static void RemoveCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
 		//static void RemoveCallForObject(const luabind::object &lua_object);
-		//static void IterateSounds1(LPCSTR prefix, u32 max_count, luabind::functor<void> functor);		
-		//static void IterateSounds2(LPCSTR prefix, u32 max_count, luabind::object object, luabind::functor<void> functor);
-		//static void IterateOnlineObjects(luabind::functor<bool> functor);
+
+		
 		static XRay::MEnvironment^ pEnvironment();
+
 		static XRay::EnvDescriptor^  CurrentEnvironment(XRay::MEnvironment^ self);
+
 		static void DisableInput();
 		static void EnableInput();
 		static void SpawnPhantom(const Fvector &position);
 		static Fbox GetBoundingVolume();
-		static void IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback);		
+		static void IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback);
+		//static void IterateSounds1(LPCSTR prefix, u32 max_count, luabind::functor<void> functor);		
+		//static void IterateSounds2(LPCSTR prefix, u32 max_count, luabind::object object, luabind::functor<void> functor);
 		static float AddCamEffector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func);
 		static float AddCamEffector2(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func, float cam_fov);
 		static void RemoveCamEffector(int id);
@@ -168,21 +179,6 @@ namespace XRay
 		static void GSend(NET_Packet& P);
 		static void UEventGen(NET_Packet& P, u32 _event, u32 _dest);
 		static void UEventSend(NET_Packet& P);
-		static void SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem = false);
-		static void ShowMinimap(bool bShow);
-		static XRay::ScriptGameObject^ GGetTargetObject();
-		static float GGetTargetDist();
-		static ::System::UInt32 GGetTargetElement();
-		static u8 GetActiveCam();
-		static void SetActiveCam(u8 mode);
-		static CScriptGameObject* GetViewEntityScript();	
-		static void SetViewEntityScript(CScriptGameObject* go);
-		static mxrTime^ GetStartTime();
-		static u8 GetLevelId(CLevelGraph *graph);
-		static ::System::UInt32 GetVertexCount(CLevelGraph *graph);
-		static void PatrolPathAdd(LPCSTR patrol_path, CPatrolPath* path);
-		static void PatrolPathRemove(LPCSTR patrol_path);
-
 
 	};
 }
