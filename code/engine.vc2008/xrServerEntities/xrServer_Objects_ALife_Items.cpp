@@ -471,22 +471,11 @@ CSE_ALifeItemWeapon::CSE_ALifeItemWeapon	(LPCSTR caSection) : CSE_ALifeItem(caSe
 	a_elapsed_grenades.grenades_count	=	0;
 	a_elapsed_grenades.grenades_type	=	0;
 
-	m_scope_idx                 = (u8)-1;
+	m_scope_idx                 = 0;
 
 	wpn_flags					= 0;
 	wpn_state					= 0;
 	ammo_type					= 0;
-
-	m_use_alt_scope = pSettings->line_exist(caSection,"scopes");
-
-	if (m_use_alt_scope)
-	{
-		LoadAddons("scopes");
-	}
-	else
-	{
-		LoadAddons("scopes_sect");
-	}
 	
 	m_fHitPower					= pSettings->r_float(caSection,"hit_power");
 	m_tHitType					= ALife::g_tfString2HitType(pSettings->r_string(caSection,"hit_type"));
@@ -507,23 +496,6 @@ CSE_ALifeItemWeapon::~CSE_ALifeItemWeapon	()
 {
 }
 
-void CSE_ALifeItemWeapon::LoadAddons(LPCSTR scopes_list)
-{
-	if (pSettings->line_exist(s_name, scopes_list))
-		 {
-		LPCSTR str = pSettings->r_string(s_name, scopes_list);
-		if (xr_strcmp(str, "none") != 0)
-			 {
-			for (int i = 0, count = _GetItemCount(str); i < count; ++i)
-				 {
-				string128 addon_section;
-				_GetItem(str, i, addon_section);
-				m_scopes.emplace_back(addon_section);
-				}
-			}
-		}
-}
-
 u32	CSE_ALifeItemWeapon::ef_main_weapon_type() const
 {
 	VERIFY	(m_ef_main_weapon_type != u32(-1));
@@ -541,78 +513,9 @@ void CSE_ALifeItemWeapon::clone_addons(CSE_ALifeItemWeapon* parent)
 	m_addon_flags = parent->m_addon_flags;
 }
 
-void CSE_ALifeItemWeapon::AddonsLoad()
-{
-	if (m_scope_name.size() != 0 && !m_scopes.empty())
-	{
-		SCOPES_VECTOR::iterator it = m_scopes.begin();
-		for (; it != m_scopes.end(); it++)
-		{
-			if ((*it) == m_scope_name)
-			{
-				m_scope_idx = u8(it - m_scopes.begin());
-				m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonScope, true);
-			}
-		}
-	}
-	else
-	{
-		m_scope_idx = 0;
-		m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonScope, false);
-	}
-	       
-}
-
-u8 CSE_ALifeItemWeapon::GetScopeIdx(shared_str scope_name)
-{
-	if(!pSettings->section_exist(scope_name))
-		return 0;
-
-	if (!m_scopes.empty())
-	{
-		SCOPES_VECTOR::iterator it = m_scopes.begin();
-		for (; it != m_scopes.end(); it++)
-		{
-
-			if (m_use_alt_scope)
-			{
-				if ((*it) == scope_name)
-				{
-					return u8(it - m_scopes.begin());
-				}
-			}
-			else
-			{
-				if (pSettings->r_string((*it), "scope_name") == scope_name)
-				{
-					return u8(it - m_scopes.begin());
-				}
-			}
-
-		}
-		return 0;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-void CSE_ALifeItemWeapon::AddonsUpdate()
-{
-	if (m_scope_idx != u8(-1) && m_scope_idx < m_scopes.size())
-		m_scope_name = m_scopes[m_scope_idx];
-	else
-	{
-		m_scope_idx = u8(-1);
-		m_scope_name = nullptr;
-	}
-}
-
 void CSE_ALifeItemWeapon::UPDATE_Read(NET_Packet	&tNetPacket)
 {
     inherited::UPDATE_Read(tNetPacket);
-
     tNetPacket.r_float_q8(m_fCondition, 0.0f, 1.0f); //1 b1
     tNetPacket.r_u8(wpn_flags);                      //2 b2
     tNetPacket.r_u16(a_elapsed);                     //3 b4
@@ -620,8 +523,8 @@ void CSE_ALifeItemWeapon::UPDATE_Read(NET_Packet	&tNetPacket)
     tNetPacket.r_u8(ammo_type);                      //5 b6
     tNetPacket.r_u8(wpn_state);                      //6 b7
     tNetPacket.r_u8(m_bZoom);                        //7 b8
-    if(m_wVersion > 128)
-        tNetPacket.r_u8(m_scope_idx);                    //8 b9
+    //if(m_wVersion > 128)
+        //tNetPacket.r_u8(m_scope_idx);                    //8 b9
 }
 
 void CSE_ALifeItemWeapon::UPDATE_Write(NET_Packet	&tNetPacket)
@@ -635,7 +538,7 @@ void CSE_ALifeItemWeapon::UPDATE_Write(NET_Packet	&tNetPacket)
 	tNetPacket.w_u8(ammo_type);                    //5 b6
 	tNetPacket.w_u8(wpn_state);                    //6 b7
 	tNetPacket.w_u8(m_bZoom);                      //7 b8
-	tNetPacket.w_u8(m_scope_idx);                  //8 b9
+	//tNetPacket.w_u8(m_scope_idx);                  //8 b9
 
 }
 
@@ -655,9 +558,7 @@ void CSE_ALifeItemWeapon::STATE_Read(NET_Packet	&tNetPacket, u16 size)
 		a_elapsed_grenades.unpack_from_byte(tNetPacket.r_u8()); //6 b8
 
     if (m_wVersion > 128)
-	    tNetPacket.r_stringZ(m_scope_name); //7 b8 + str
-
-	AddonsLoad();
+	    tNetPacket.r_u8(m_scope_idx); //7 b8 + str
 }
 
 void CSE_ALifeItemWeapon::STATE_Write		(NET_Packet	&tNetPacket)
@@ -669,7 +570,7 @@ void CSE_ALifeItemWeapon::STATE_Write		(NET_Packet	&tNetPacket)
 	tNetPacket.w_u8(m_addon_flags.get()); //4 b6
 	tNetPacket.w_u8(ammo_type); //5 b7
 	tNetPacket.w_u8(a_elapsed_grenades.pack_to_byte()); //6 b8
-	tNetPacket.w_stringZ(m_scope_name); //7 b8 + str
+	tNetPacket.w_u8(m_scope_idx); //7 b8 + str
 }
 
 void CSE_ALifeItemWeapon::OnEvent			(NET_Packet	&tNetPacket, u16 type, u32 time, ClientID sender )

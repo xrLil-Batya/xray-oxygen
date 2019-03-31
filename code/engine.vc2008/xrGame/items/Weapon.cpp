@@ -54,7 +54,7 @@ CWeapon::CWeapon()
 	m_BriefInfo_CalcFrame	= 0;
 
 	
-	
+	bScopeHasBeenLoaded = false;
 
 	eHandDependence			= hdNone;
 
@@ -67,7 +67,7 @@ CWeapon::CWeapon()
 
 	m_pFlameParticles2		= nullptr;
 	m_sFlameParticles2		= "";
-	ScopeHasTexture         = false;
+	bScopeHasTexture         = false;
 
 	m_fCurrentCartirdgeDisp = 1.f;
 
@@ -442,11 +442,11 @@ void CWeapon::Load(LPCSTR section)
 	m_zoom_params.m_bZoomEnabled = !!pSettings->r_bool(section, "zoom_enabled");
 	m_zoom_params.m_fZoomRotateTime	= pSettings->r_float(section, "zoom_rotate_time");
 
-	UseAltScope = pSettings->line_exist(section, "scopes");
+	bUseAltScope = pSettings->line_exist(section, "scopes");
 
 	if (m_eScopeStatus == ALife::eAddonAttachable)
 	{
-		if (UseAltScope)
+		if (bUseAltScope)
 		{
 			LPCSTR str = pSettings->r_string(section, "scopes");
 			for (int i = 0, count = _GetItemCount(str); i < count; ++i)
@@ -456,7 +456,7 @@ void CWeapon::Load(LPCSTR section)
 
 				if (xr_strcmp(scope_section, "none") == 0)
 				{
-					UseAltScope = false;
+					bUseAltScope = false;
 				}
 				else
 				{
@@ -486,9 +486,9 @@ void CWeapon::Load(LPCSTR section)
 		xr_string scope_tex_name = pSettings->r_string(cNameSect(), "scope_texture");
 
 		if (xr_strcmp(scope_tex_name.c_str(), "none") != 0)
-			ScopeHasTexture = true;
+			bScopeHasTexture = true;
 		else
-			ScopeHasTexture = false;
+			bScopeHasTexture = false;
 
 		m_zoom_params.m_fScopeZoomFactor = pSettings->r_float( cNameSect(), "scope_zoom_factor");
 
@@ -574,7 +574,7 @@ void CWeapon::LoadFireParams(LPCSTR section)
 
 void CWeapon::UpdateAltScope()
 {
-	if (!UseAltScope)
+	if (!bUseAltScope)
 		return;
 
 	if (m_eScopeStatus == ALife::eAddonAttachable)
@@ -631,7 +631,7 @@ const xr_string CWeapon::GetScopeName() const
 {
 	if (IsScopeAttached())
 	{
-		if (UseAltScope)
+		if (bUseAltScope)
 		{
 			return m_scopes[m_cur_scope].c_str();
 		}
@@ -651,7 +651,7 @@ int CWeapon::GetScopeX()
 {
 	if (IsScopeAttached())
 	{
-		if (UseAltScope)
+		if (bUseAltScope)
 		{
 			if (m_eScopeStatus != ALife::eAddonPermanent)
 			{
@@ -677,7 +677,7 @@ int CWeapon::GetScopeY()
 {
 	if (IsScopeAttached())
 	{
-		if (UseAltScope)
+		if (bUseAltScope)
 		{
 			if (m_eScopeStatus != ALife::eAddonPermanent)
 			{
@@ -723,7 +723,11 @@ BOOL CWeapon::net_Spawn(CSE_Abstract* DC)
 	m_flagsAddOnState = E->m_addon_flags.get();
 	m_ammoType = E->ammo_type;
 
-	m_cur_scope = (E->m_scope_idx == (u8)-1) ? NULL : E->m_scope_idx;
+	u8 scope = E->m_scope_idx;
+	if (scope < m_scopes.size() && !bScopeHasBeenLoaded)
+	{
+		m_cur_scope = scope;
+	}
 
 	SetState(E->wpn_state);
 	SetNextState(E->wpn_state);
@@ -783,14 +787,14 @@ void CWeapon::net_Export(NET_Packet& P)
 	P.w_u8(m_ammoType);
 	P.w_u8((u8)GetState());
 	P.w_u8((u8)IsZoomed());
-	P.w_u8(u8(m_cur_scope));
+	//P.w_u8(u8(m_cur_scope));
 }
 
 void CWeapon::save(NET_Packet &output_packet)
 {
 	inherited::save	(output_packet);
 	save_data		(iAmmoElapsed,					 output_packet);
-	//save_data       (m_cur_scope,                    output_packet);
+	save_data       (m_cur_scope,                    output_packet);
 	save_data		(m_flagsAddOnState, 			 output_packet);
 	save_data		(m_ammoType,					 output_packet);
 	save_data		(m_zoom_params.m_bIsZoomModeNow, output_packet);
@@ -801,7 +805,8 @@ void CWeapon::load(IReader &input_packet)
 {
 	inherited::load	(input_packet);
 	load_data		(iAmmoElapsed,					 input_packet);
-	//load_data       (m_cur_scope,                    input_packet);
+	load_data       (m_cur_scope,                    input_packet);
+	bScopeHasBeenLoaded = true;
 	load_data		(m_flagsAddOnState,				 input_packet);
 	load_data		(m_ammoType,					 input_packet);
 	load_data		(m_zoom_params.m_bIsZoomModeNow, input_packet);
@@ -1392,14 +1397,14 @@ void CWeapon::UpdateHUDAddonsVisibility()
 {
 	if (!GetHUDmode())
 		return;
-
+	u16 bone_id = HudItemData()->m_model->LL_BoneID(wpn_scope.c_str());
 	// Прицел
-	if (ScopeAttachable())
-		HudItemData()->set_bone_visible(wpn_scope.c_str(), IsScopeAttached());
+	if (ScopeAttachable() && bone_id != BI_NONE)
+			HudItemData()->set_bone_visible(wpn_scope.c_str(), IsScopeAttached());
 
-	if (m_eScopeStatus == ALife::eAddonDisabled)
+	if (m_eScopeStatus == ALife::eAddonDisabled && bone_id != BI_NONE)
 		HudItemData()->set_bone_visible(wpn_scope.c_str(), FALSE, TRUE);
-	else if (m_eScopeStatus == ALife::eAddonPermanent)
+	else if (m_eScopeStatus == ALife::eAddonPermanent && bone_id != BI_NONE)
 		HudItemData()->set_bone_visible(wpn_scope.c_str(), TRUE, TRUE);
 
 	// Глушитель
@@ -1433,7 +1438,7 @@ void CWeapon::UpdateAddonsVisibility()
 
 	// Прицел
 	bone_id = pWeaponVisual->LL_BoneID(wpn_scope.c_str());
-	if (ScopeAttachable())
+	if (ScopeAttachable() && bone_id != BI_NONE)
 	{
 		if (IsScopeAttached())
 		{
