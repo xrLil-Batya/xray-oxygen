@@ -830,7 +830,7 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 		{
 			shared_str scop_name;
 
-			if (UseAltScope)
+			if (bUseAltScope)
 				scop_name = it.c_str();
 			else
 				scop_name = pSettings->r_string_wb(it.c_str(), "scope_name");
@@ -860,7 +860,7 @@ bool CWeaponMagazined::CanDetach(const char* item_section_name)
 		{
 			shared_str scope;
 
-			if(UseAltScope)
+			if(bUseAltScope)
 				scope = it.c_str();
 			else
 				scope = pSettings->r_string_wb(it.c_str(), "scope_name");
@@ -896,7 +896,7 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 		for (auto it = m_scopes.begin(); it != m_scopes.end(); it++)
 		{
 
-			if (UseAltScope)
+			if (bUseAltScope)
 			{
 				if (pIItem->object().cNameSect().equal((*it).c_str()))
 					m_cur_scope = u8(it - m_scopes.begin());
@@ -951,7 +951,7 @@ bool CWeaponMagazined::DetachScope(const char* item_section_name, bool b_spawn_i
 	for (xr_string it : m_scopes)
 	{
 		LPCSTR iter_scope_name;
-		if (UseAltScope)
+		if (bUseAltScope)
 			iter_scope_name = it.c_str();
 		else
 			iter_scope_name = pSettings->r_string(it.c_str(), "scope_name");
@@ -1028,7 +1028,7 @@ void CWeaponMagazined::InitAddons()
 				m_zoom_params.m_fScopeZoomFactor = pSettings->r_float(GetScopeName().c_str(), "scope_zoom_factor");
 				if (xr_strcmp(scope_tex_name, "none") != 0)
 				{
-					ScopeHasTexture = true;
+					bScopeHasTexture = true;
 
 					
 					m_zoom_params.m_bUseDynamicZoom = READ_IF_EXISTS(pSettings, r_bool, GetScopeName().c_str(), "scope_dynamic_zoom", false);
@@ -1058,13 +1058,13 @@ void CWeaponMagazined::InitAddons()
 				}
 				else
 				{
-					ScopeHasTexture = false;
+					bScopeHasTexture = false;
 				}
 			}
 			else
 			{
 				xr_delete(m_UIScope);
-				ScopeHasTexture = false;
+				bScopeHasTexture = false;
 			}
 
 		}

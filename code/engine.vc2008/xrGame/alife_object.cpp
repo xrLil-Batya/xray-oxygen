@@ -41,6 +41,7 @@ void CSE_ALifeObject::spawn_supplies(LPCSTR ini_string)
 			bool bLauncher = false;
 			bool alt_scope = false;
 			xr_string st;
+			int sId = 0;
 
 			j = 1;
 			p = 1.f;
@@ -51,17 +52,7 @@ void CSE_ALifeObject::spawn_supplies(LPCSTR ini_string)
 				j = atoi_17(_GetItem(V, 0, buf));
 				if (!j)	j = 1;
 
-				if (strstr(V, "scope="))
-				{
-					st = strstr(V, "scope=");
-					st.erase(0, 6);
-					alt_scope = true;
-				}
-				else
-				{
-					bScope = (nullptr != strstr(V, "scope"));
-				}
-
+				bScope = (nullptr != strstr(V, "scope"));
 				bSilencer = (nullptr != strstr(V, "silencer"));
 				bLauncher = (nullptr != strstr(V, "launcher"));
 
@@ -74,6 +65,12 @@ void CSE_ALifeObject::spawn_supplies(LPCSTR ini_string)
 
 				if (strstr(V, "cond="))
 					f_cond = (float)atof(strstr(V, "cond=") + 5);
+
+				if (strstr(V, "scope="))
+				{
+					alt_scope = true;
+					sId = atoi_17(strstr(V, "scope=") + 6);
+				}
 			}
 
 			for (u32 i = 0; i < j; ++i)
@@ -87,9 +84,7 @@ void CSE_ALifeObject::spawn_supplies(LPCSTR ini_string)
 					{
 						if (alt_scope)
 						{
-							u8 idx = pWeapon->GetScopeIdx(st.c_str());
-							bScope = (idx != (u8)-1);
-							pWeapon->m_scope_idx = idx;
+							pWeapon->m_scope_idx = sId;
 						}
 
 						if (pWeapon->m_scope_status == ALife::eAddonAttachable)

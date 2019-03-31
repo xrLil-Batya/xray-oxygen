@@ -53,9 +53,10 @@ public:
 	virtual BOOL			net_SaveRelevant	()								{return inherited::net_SaveRelevant();}
 
 	//STCoP WP
-	bool UseAltScope;
+	bool bUseAltScope;
 	void UpdateAltScope();
-	bool ScopeHasTexture;
+	bool bScopeHasTexture;
+	bool bScopeHasBeenLoaded;
 	xr_string GetNameWithAttachment();
 
 	virtual void			UpdateCL			();
@@ -157,7 +158,7 @@ public:
 	ALife::EWeaponAddonStatus	get_ScopeStatus				() const { return m_eScopeStatus; }
 	ALife::EWeaponAddonStatus	get_SilencerStatus			() const { return m_eSilencerStatus; }
 
-	virtual bool UseScopeTexture() {return ScopeHasTexture;};
+	virtual bool UseScopeTexture() {return bScopeHasTexture;};
 
 	//обновление видимости для косточек аддонов
 			void UpdateAddonsVisibility();

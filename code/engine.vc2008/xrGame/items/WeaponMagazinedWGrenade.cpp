@@ -81,9 +81,11 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 	 
 	UpdateGrenadeVisibility(!!iAmmoElapsed);
 	SetPending			(FALSE);
-
-	iAmmoElapsed2	= weapon->a_elapsed_grenades.grenades_count;
-	m_ammoType2		= weapon->a_elapsed_grenades.grenades_type;
+	if (ALife::eAddonAttachable == m_eGrenadeLauncherStatus && 0 != (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher))
+	{
+		iAmmoElapsed2 = weapon->a_elapsed_grenades.grenades_count;
+		m_ammoType2 = weapon->a_elapsed_grenades.grenades_type;
+	}
 
 	m_DefaultCartridge2.Load(m_ammoTypes2[m_ammoType2].c_str(), m_ammoType2);
 
