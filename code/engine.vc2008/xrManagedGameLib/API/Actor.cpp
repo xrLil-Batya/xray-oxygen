@@ -2,13 +2,6 @@
 #include "Actor.h"
 #include "../xrGame/Actor.h"
 #include "../xrGame/ActorCondition.h"
-#include "../xrGame/CameraEffector.h"
-#include "../xrGame/ActorEffector.h"
-#include "../xrGame/HUDManager.h"
-#include "../xrGame/ActorEffector.h"
-#include "../xrGame/postprocessanimator.h"
-
-extern GAME_API bool g_bDisableAllInput;
 
 XRay::Actor::Actor(IntPtr InNativeObject)
 	:EntityAlive(InNativeObject)
@@ -183,3 +176,17 @@ void XRay::Actor::ZoneExit()
 {
 
 }
+
+XRay::Actor::Actor() : Actor(XRay::ClassRegistrator::GetFactoryTarget())
+{
+
+}
+
+float XRay::Actor::Satiety::get()
+{
+	return ::Actor()->conditions().GetSatiety();
+}
+
+void XRay::Actor::Satiety::set(float fNewValue)
+{
+	//::Actor()->conditions().ChangeSatiety(fNewValue);

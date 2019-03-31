@@ -101,14 +101,12 @@
     <ClInclude Include="API\PhysicsGameScripted.h" />
     <ClInclude Include="API\PhysicsWorldScripted.h" />
     <ClInclude Include="API\PhysicalGameObject.h" />
-    <ClInclude Include="API\ScriptGameObject.h" />
     <ClInclude Include="API\Torch.h" />
     <ClInclude Include="ClientSpawnManager.h" />
     <ClInclude Include="GameClassRegistrator.h" />
     <ClInclude Include="ISpectreGameLib.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="API\xrTime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="API\Actor.cpp" />
@@ -126,10 +124,8 @@
     <ClCompile Include="API\PhysicsGameScripted.cpp" />
     <ClCompile Include="API\PhysicsWorldScripted.cpp" />
     <ClCompile Include="API\PhysicalGameObject.cpp" />
-    <ClCompile Include="API\ScriptGameObject.cpp" />
     <ClCompile Include="API\Torch.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="API\xrTime.cpp" />
     <ClCompile Include="ClientSpawnManager.cpp" />
     <ClCompile Include="GameClassRegistrator.cpp" />
     <ClCompile Include="ISpectreGameLib.cpp" />

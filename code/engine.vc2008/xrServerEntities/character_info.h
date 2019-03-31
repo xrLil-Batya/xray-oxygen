@@ -78,7 +78,7 @@ public:
 
 protected:
 	const SCharacterProfile*	data				() const	{ VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd();}
-	SCharacterProfile*			data				()			{ VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd();}
+	SCharacterProfile*			data				()				{ VERIFY(inherited_shared::get_sd()); return inherited_shared::get_sd();}
 
 	static void					InitXmlIdToIndex	();
 
