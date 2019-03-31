@@ -256,7 +256,7 @@ public:
 	virtual u32						memory_usage			()											= 0;
 	virtual u32                     active_phase            ()                                          = 0;
 
-	virtual void					setCustomOcclusion		(ICustomOcclusion* pOcclusionInterface)		= 0;
+//	virtual void					setCustomOcclusion		(ICustomOcclusion* pOcclusionInterface)		= 0;
 
 	// Editor specific
 	//virtual void					StaticInit() = 0;
