@@ -20,8 +20,6 @@ class IKinematics;
 class CGameFont;
 //class IRenderDetailModel;
 
-__interface ICustomOcclusion;
-
 #ifndef _EDITOR
 extern const	float		fLightSmoothFactor;
 #else
@@ -266,11 +264,6 @@ public:
 
 	// Constructor/destructor
 	virtual ~IRender_interface();
-};
-
-__interface ICustomOcclusion
-{
-	virtual void getRenderableList(IRender_interface* pGraph) = 0;
 };
 
 #endif
