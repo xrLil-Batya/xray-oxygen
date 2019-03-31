@@ -1,16 +1,16 @@
 #pragma once
+class xrTime;
 
 namespace XRay
 {
 	public ref class Time
 	{
 	internal:
-
 		class xrTime* pNativeObject;
 
 	public:
 
 		Time(::System::IntPtr inNative);
-		Time(xrTime* obj) : pNativeObject(obj) {};
+	//	Time() : pNativeObject(new xrTime()) {};
 	};
 }

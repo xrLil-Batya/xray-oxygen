@@ -10,22 +10,17 @@
 #include "../xrGame/alife_simulator_base.h"
 #include "../xrGame/alife_time_manager.h"
 #include "../xrGame/alife_object_registry.h"
-#include "../xrGame/ActorEffector.h"
 #include "../xrGame/Actor.h"
 #include "../xrGame/level_graph.h"
 #include "../xrGame/Level.h"
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
-#include "../xrGame/HUDManager.h"
 #include "../xrGame/UIGame.h"
-#include "../xrGame/postprocessanimator.h"
 #include "../xrGame/relation_registry.h"
 #include "../xrGame/ui/UIGameTutorial.h"
 #include "../xrGame/ui/UIMainIngameWnd.h"
 #include "../xrGame/ui/UIMotionIcon.h"
 
- 
-extern GAME_API bool g_bDisableAllInput;
 extern GAME_API CUISequencer* g_tutorial;
 extern GAME_API CUISequencer* g_tutorial2;
 extern GAME_API CUIMotionIcon* g_pMotionIcon;
@@ -96,15 +91,7 @@ float XRay::Level::TimeFactor::get()
 {
 	return (::Level().GetGameTimeFactor());
 }
-void XRay::Level::GameDifficulty::set(ESingleGameDifficulty dif)
-{
-	g_SingleGameDifficulty = (::ESingleGameDifficulty)u32(dif);
-	Actor()->OnDifficultyChanged();
-}
-XRay::ESingleGameDifficulty XRay::Level::GameDifficulty::get()
-{
-	return (ESingleGameDifficulty)u32(g_SingleGameDifficulty);
-}
+
 float XRay::Level::RainFactor::get()
 {
 	return (::Environment().CurrentEnv->rain_density);
@@ -225,46 +212,35 @@ void XRay::Level::ShowIndicators()
 		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(true);
 	}
 }
-void XRay::Level::ShowWeapon(bool b)
-{
-	psHUD_Flags.set(HUD_WEAPON_RT2, b);
-}
-bool XRay::Level::isLevelPresent()
+
+
+bool XRay::Level::LevelPresent::get()
 {
 	return (!!g_pGameLevel);
 }
+
 /*
 XRay::MEnvironment^ XRay::Level::pEnvironment()
 {	
 	return	(MEnvironment(Environment())); //    (&Environment()) // fix it
 }
 */
+
 XRay::EnvDescriptor^ XRay::Level::CurrentEnvironment(MEnvironment^ self)
 {
 	return gcnew EnvDescriptor(::System::IntPtr());
 }
-void XRay::Level::DisableInput()
-{
-	g_bDisableAllInput = true;
-#ifdef DEBUG
-	Msg("input disabled");
-#endif // #ifdef DEBUG
-}
-void XRay::Level::EnableInput()
-{
-	g_bDisableAllInput = false;
-#ifdef DEBUG
-	Msg("input enabled");
-#endif // #ifdef DEBUG
-}
+
 void XRay::Level::SpawnPhantom(const Fvector &position)
 {
 	::Level().spawn_item("m_phantom", position, u32(-1), u16(-1), false);
 }
+
 Fbox XRay::Level::GetBoundingVolume()
 {
 	return ::Level().ObjectSpace.GetBoundingVolume();
 }
+
 void XRay::Level::IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback)
 {
 	for (int j = 0, N = _GetItemCount(prefix); j < N; ++j) {
@@ -283,72 +259,18 @@ void XRay::Level::IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback)
 		}
 	}
 }
-float XRay::Level::AddCamEffector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func)
-{
-	CAnimatorCamEffectorScriptCB* e = xr_new<CAnimatorCamEffectorScriptCB>(cb_func);
-	e->SetType((ECamEffectorType)id);
-	e->SetCyclic(cyclic);
-	e->Start(fn);
-	Actor()->Cameras().AddCamEffector(e);
-	return						e->GetAnimatorLength();
-}
-float XRay::Level::AddCamEffector2(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func, float cam_fov)
-{
-	CAnimatorCamEffectorScriptCB* e = xr_new<CAnimatorCamEffectorScriptCB>(cb_func);
-	e->m_bAbsolutePositioning = true;
-	e->m_fov = cam_fov;
-	e->SetType((ECamEffectorType)id);
-	e->SetCyclic(cyclic);
-	e->Start(fn);
-	Actor()->Cameras().AddCamEffector(e);
-	return						e->GetAnimatorLength();
-}
-void XRay::Level::RemoveCamEffector(int id)
-{
-	Actor()->Cameras().RemoveCamEffector((ECamEffectorType)id);
-}
+
 float XRay::Level::GetSndVolume()
 {
 	return psSoundVFactor;
 }
+
 void XRay::Level::SetSndVolume(float v)
 {
 	psSoundVFactor = v;
 	clamp(psSoundVFactor, 0.0f, 1.0f);
 }
-void XRay::Level::AddComplexEffector(LPCSTR section, int id)
-{
-	AddEffector(Actor(), id, section);
-}
-void XRay::Level::RemoveComplexEffector(int id)
-{
-	RemoveEffector(Actor(), id);
-}
-void XRay::Level::AddPPEffector(LPCSTR fn, int id, bool cyclic)
-{
-	CPostprocessAnimator* pp = xr_new<CPostprocessAnimator>(id, cyclic);
-	pp->Load(fn);
-	Actor()->Cameras().AddPPEffector(pp);
-}
-void XRay::Level::RemovePPEffector(int id)
-{
-	CPostprocessAnimator*	pp = smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector((EEffectorPPType)id));
 
-	if (pp) pp->Stop(1.0f);
-
-}
-void XRay::Level::SetPPEffectorFactor(int id, float f, float f_sp)
-{
-	CPostprocessAnimator*	pp = smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector((EEffectorPPType)id));
-
-	if (pp) pp->SetDesiredFactor(f, f_sp);
-}
-void XRay::Level::SetPPEffectorFactor2(int id, float f)
-{
-	CPostprocessAnimator*	pp = smart_cast<CPostprocessAnimator*>(Actor()->Cameras().GetPPEffector((EEffectorPPType)id));
-
-	if (pp) pp->SetCurrentFactor(f);
-}
 int XRay::Level::GCommunityGoodwill(LPCSTR _community, int _entity_id)
 {
 	CHARACTER_COMMUNITY c;
@@ -512,24 +434,27 @@ void XRay::Level::SetViewEntityScript(CScriptGameObject* go)
 	if (o)
 		::Level().SetViewEntity(o);
 }
-XRay::mxrTime^ XRay::Level::GetStartTime()
-{
-	return  gcnew mxrTime(&xrTime(::Level().GetStartGameTime()));
-}
+
 u8 XRay::Level::GetLevelId(CLevelGraph *graph)
 {
 	return graph->level_id();
 }
+
 ::System::UInt32 XRay::Level::GetVertexCount(CLevelGraph *graph)
 {
 	return graph->header().vertex_count();
 }
-void XRay::Level::PatrolPathAdd(LPCSTR patrol_path, CPatrolPath* path) {
+
+void XRay::Level::PatrolPathAdd(LPCSTR patrol_path, CPatrolPath* path) 
+{
 	ai().patrol_paths_raw().add_path(shared_str(patrol_path), path);
 }
-void XRay::Level::PatrolPathRemove(LPCSTR patrol_path) {
+
+void XRay::Level::PatrolPathRemove(LPCSTR patrol_path)
+{
 	ai().patrol_paths_raw().remove_path(shared_str(patrol_path));
 }
+
 void XRay::Level::SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem = false)
 {
 	::Level().spawn_item(sSection, vPosition, LevelVertexID, ParentID, bReturnItem);
