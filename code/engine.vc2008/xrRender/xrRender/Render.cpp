@@ -180,6 +180,11 @@ void CRender::render_main(Fmatrix& mCombined)
 	else
 	{
 		set_Object(nullptr);
+		if (m_customOcclusion != nullptr)
+		{
+			m_customOcclusion->getRenderableList(this);
+		}
+
 		if (g_pGameLevel && (phase == PHASE_NORMAL))
 			g_hud->Render_Last(); // HUD
 	}

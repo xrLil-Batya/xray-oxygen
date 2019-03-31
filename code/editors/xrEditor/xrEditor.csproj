@@ -126,7 +126,6 @@
     <ProjectReference Include="..\..\engine.vc2008\xrManagedRenderLib\xrManagedRenderLib.vcxproj">
       <Project>{42986579-d91d-4523-ae54-0bffeb0748c2}</Project>
       <Name>xrManagedRenderLib</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

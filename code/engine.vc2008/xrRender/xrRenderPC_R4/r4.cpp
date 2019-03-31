@@ -411,6 +411,11 @@ BOOL					CRender::occ_visible			(vis_data& P)		{ return HOM.visible(P);								}
 BOOL					CRender::occ_visible			(sPoly& P)			{ return HOM.visible(P);								}
 BOOL					CRender::occ_visible			(Fbox& P)			{ return HOM.visible(P);								}
 
+void CRender::setCustomOcclusion(ICustomOcclusion* pOcclusionInterface)
+{
+	m_customOcclusion = pOcclusionInterface;
+}
+
 void					CRender::add_Visual				(IRenderVisual*		V )	{ add_leafs_Dynamic((dxRender_Visual*)V);								}
 void					CRender::add_Geometry			(IRenderVisual*		V )	{ add_Static((dxRender_Visual*)V,View->getMask());					}
 void					CRender::add_StaticWallmark		(ref_shader& S, const Fvector& P, float s, CDB::TRI* T, Fvector* verts)
@@ -493,7 +498,8 @@ void					CRender::ResizeWindowProc(WORD h, WORD w)
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CRender::CRender() :m_bFirstFrameAfterReset(false)
+CRender::CRender() :m_bFirstFrameAfterReset(false),
+	m_customOcclusion(nullptr)
 {
 	init_cacades();
 }

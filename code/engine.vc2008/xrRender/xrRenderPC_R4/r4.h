@@ -324,6 +324,7 @@ public:
 	virtual BOOL					occ_visible					(vis_data&	V);
 	virtual BOOL					occ_visible					(Fbox&		B);
 	virtual BOOL					occ_visible					(sPoly&		P);
+	virtual void					setCustomOcclusion			(ICustomOcclusion* pOcclusionInterface) override;
 
 	// Main
 	virtual void					Calculate					();
@@ -350,6 +351,8 @@ public:
 private:
 	xr_vector<D3D_SHADER_MACRO>		m_ShaderOptions;
 	FS_FileSet						m_file_set;
+
+	ICustomOcclusion*				m_customOcclusion;
 };
 
 extern CRender						RImplementation;
