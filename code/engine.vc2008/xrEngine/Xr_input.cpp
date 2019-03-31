@@ -350,7 +350,6 @@ void CInput::OnFrame()
 					{
 						bCursorShowed = false;
 						ShowCursor(FALSE);
-						Msg("Hide cursor");
 					}
 				}
 				else
@@ -359,7 +358,6 @@ void CInput::OnFrame()
 					{
 						bCursorShowed = true;
 						ShowCursor(TRUE);
-						Msg("Show cursor");
 					}
 				}
 			}
