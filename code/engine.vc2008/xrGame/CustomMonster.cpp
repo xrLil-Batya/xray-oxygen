@@ -71,13 +71,13 @@ CCustomMonster::CCustomMonster() :
 	// just to remove warning C4355 if we use this instead
 	Feel::Vision				( cast_game_object() ) 
 {
-	m_sound_user_data_visitor	= 0;
-	m_memory_manager			= 0;
-	m_movement_manager			= 0;
-	m_sound_player				= 0;
+	m_sound_user_data_visitor	= nullptr;
+	m_memory_manager			= nullptr;
+	m_movement_manager			= nullptr;
+	m_sound_player				= nullptr;
 	m_already_dead				= false;
 	m_invulnerable				= false;
-	m_moving_object				= 0;
+	m_moving_object				= nullptr;
 }
 
 CCustomMonster::~CCustomMonster	()
@@ -372,7 +372,6 @@ void CCustomMonster::UpdateCL	()
 #endif
 
 	if (Local() && g_Alive()) {
-#pragma todo("Dima to All : this is FAKE, network is not supported here!")
 
 		UpdatePositionAnimation();
 	}
@@ -426,7 +425,7 @@ void CCustomMonster::UpdatePositionAnimation()
 BOOL CCustomMonster::feel_visible_isRelevant (CObject* O)
 {
 	CEntityAlive* E = smart_cast<CEntityAlive*>		(O);
-	if (0==E)								return FALSE;
+	if (nullptr==E)								return FALSE;
 	if (E->g_Team() == g_Team())			return FALSE;
 	return TRUE;
 }
@@ -1026,8 +1025,8 @@ void CCustomMonster::OnRender()
 		Level().debug_renderer().draw_line	(Fidentity,traj_start,traj_start + z_normal,D3DCOLOR_XRGB(128,255,128));
 		Level().debug_renderer().draw_line	(Fidentity,traj_end,traj_end - z_normal,D3DCOLOR_XRGB(128,255,128));
 
-		for ( u32 i=0; i<sizeof(z_offs)/sizeof(z_offs[0]); ++i )
-			Level().debug_renderer().draw_line	(Fidentity,traj_start + z_offs[i],traj_end+ z_offs[i],D3DCOLOR_XRGB(255,255,128));
+		for (Fvector z_off : z_offs)
+			Level().debug_renderer().draw_line	(Fidentity,traj_start + z_off,traj_end+ z_off,D3DCOLOR_XRGB(255,255,128));
 
 		Fvector const hor_start		=	pick.center	- pick.x_axis * pick.sizes.x * 0.5f * inv_x;
 		Fvector const hor_end		=	pick.center	+ pick.x_axis * pick.sizes.x * 0.5f * inv_x;
@@ -1041,8 +1040,8 @@ void CCustomMonster::OnRender()
 		Level().debug_renderer().draw_line	(Fidentity,hor_start,hor_start + x_normal,D3DCOLOR_XRGB(128,255,128));
 		Level().debug_renderer().draw_line	(Fidentity,hor_end,hor_end - x_normal,D3DCOLOR_XRGB(128,255,128));
 
-		for ( u32 i=0; i<sizeof(x_offs)/sizeof(x_offs[0]); ++i )
-			Level().debug_renderer().draw_line	(Fidentity,hor_start + x_offs[i],hor_end+ x_offs[i],D3DCOLOR_XRGB(255,255,128));
+		for (Fvector x_off : x_offs)
+			Level().debug_renderer().draw_line	(Fidentity,hor_start + x_off,hor_end+ x_off,D3DCOLOR_XRGB(255,255,128));
 
 		Fvector const ver_start		=	pick.center	- pick.y_axis * pick.sizes.y * 0.5f * inv_y;
 		Fvector const ver_end		=	pick.center	+ pick.y_axis * pick.sizes.y * 0.5f * inv_y;
@@ -1056,8 +1055,8 @@ void CCustomMonster::OnRender()
 		Level().debug_renderer().draw_line	(Fidentity,ver_start,ver_start + y_normal,D3DCOLOR_XRGB(128,255,128));
 		Level().debug_renderer().draw_line	(Fidentity,ver_end,ver_end - y_normal,D3DCOLOR_XRGB(128,255,128));
 
-		for ( u32 i=0; i<sizeof(y_offs)/sizeof(y_offs[0]); ++i )
-			Level().debug_renderer().draw_line	(Fidentity,ver_start + y_offs[i],ver_end+ y_offs[i],D3DCOLOR_XRGB(255,255,128));
+		for (Fvector y_off : y_offs)
+			Level().debug_renderer().draw_line	(Fidentity,ver_start + y_off,ver_end+ y_off,D3DCOLOR_XRGB(255,255,128));
 
 		Level().debug_renderer().draw_line	(Fidentity,traj_start,traj_end,D3DCOLOR_XRGB(255,0,0));
 	}

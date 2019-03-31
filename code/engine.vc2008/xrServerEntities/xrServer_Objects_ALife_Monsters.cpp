@@ -458,7 +458,7 @@ u16								CSE_ALifeTraderAbstract::object_id		() const
 	return base()->ID;
 }
 
-CHARACTER_COMMUNITY_INDEX		CSE_ALifeTraderAbstract::Community	() const
+CHARACTER_COMMUNITY_INDEX 	CSE_ALifeTraderAbstract::Community	() const
 {
 	return m_community_index;
 }

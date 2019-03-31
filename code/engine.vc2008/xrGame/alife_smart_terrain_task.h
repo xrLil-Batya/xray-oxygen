@@ -11,7 +11,7 @@
 #include "game_graph_space.h"
 #include "../xrScripts/export/script_export_space.h"
 
-class CPatrolPoint;
+class GAME_API CPatrolPoint;
 
 class CALifeSmartTerrainTask {
 private:

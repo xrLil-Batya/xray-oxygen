@@ -6,7 +6,7 @@ class CObjectAnimator;
 class CEffectorController;
 class CActor;
 
-class CActorCameraManager : public CCameraManager
+class GAME_API CActorCameraManager : public CCameraManager
 {
 	using inherited = CCameraManager;
 
@@ -25,11 +25,11 @@ public:
 
 using GET_KOEFF_FUNC = xrDelegate<float()>;
 
-void AddEffector		(CActor* A, int type, const shared_str& sect_name);
-void AddEffector		(CActor* A, int type, const shared_str& sect_name, float factor);
-void AddEffector		(CActor* A, int type, const shared_str& sect_name, GET_KOEFF_FUNC);
-void AddEffector		(CActor* A, int type, const shared_str& sect_name, CEffectorController*);
-void RemoveEffector		(CActor* A, int type);
+void GAME_API AddEffector		(CActor* A, int type, const shared_str& sect_name);
+void GAME_API AddEffector		(CActor* A, int type, const shared_str& sect_name, float factor);
+void GAME_API AddEffector		(CActor* A, int type, const shared_str& sect_name, GET_KOEFF_FUNC);
+void GAME_API AddEffector		(CActor* A, int type, const shared_str& sect_name, CEffectorController*);
+void GAME_API RemoveEffector	(CActor* A, int type);
 
 class CEffectorController
 {
@@ -47,7 +47,7 @@ public:
 	virtual		float __stdcall	GetFactor				()					= 0;
 };
 
-class CAnimatorCamEffector : public CEffectorCam
+class GAME_API CAnimatorCamEffector : public CEffectorCam
 {
 	bool				m_bCyclic;
 
@@ -71,7 +71,7 @@ public:
 	virtual bool		AbsolutePositioning		()						{return m_bAbsolutePositioning;}
 };
 
-class CAnimatorCamEffectorScriptCB : public CAnimatorCamEffector 
+class GAME_API CAnimatorCamEffectorScriptCB : public CAnimatorCamEffector 
 {
 	using inherited = 	CAnimatorCamEffector;
 

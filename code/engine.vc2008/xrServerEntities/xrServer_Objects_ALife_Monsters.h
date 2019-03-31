@@ -22,7 +22,7 @@ class CALifeOnlineOfflineGroupBrain;
 #pragma warning(push)
 #pragma warning(disable:4005)
 
-SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
+XR_EPROPS_API SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
 	enum eTraderFlags {
 		eTraderFlagInfiniteAmmo		= u32(1) << 0,
 		eTraderFlagDummy			= u32(-1),
@@ -53,7 +53,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
 #ifdef XRGAME_EXPORTS
 	//для работы с relation system
 	u16								object_id				() const;
-	CHARACTER_COMMUNITY_INDEX		Community				() const;
+	CHARACTER_COMMUNITY_INDEX	XR_EPROPS_API	Community				() const;
 	LPCSTR							CommunityName			() const;
 	CHARACTER_RANK_VALUE			Rank					();
 	CHARACTER_REPUTATION_VALUE		Reputation				();
@@ -75,7 +75,7 @@ public:
 	virtual CSE_Abstract			*base						() = 0;
 	virtual const CSE_Abstract		*base						() const = 0;
 	virtual CSE_Abstract			*init						();
-	virtual CSE_Abstract			*cast_abstract				() {return 0;};
+	virtual CSE_Abstract			*cast_abstract				() {return nullptr;};
 	virtual CSE_ALifeTraderAbstract	*cast_trader_abstract		() {return this;};
 	// end of the virtual inheritance dependant code
 			void __stdcall			OnChangeProfile				(PropValue* sender);
@@ -533,8 +533,8 @@ public:
 #endif // #ifdef XRGAME_EXPORTS
 
 public:
-	typedef CSE_ALifeMonsterAbstract						MEMBER;
-	typedef associative_vector<ALife::_OBJECT_ID,MEMBER*>	MEMBERS;
+	using MEMBER = CSE_ALifeMonsterAbstract;
+	using MEMBERS = associative_vector<ALife::_OBJECT_ID,MEMBER*>;
 
 private:
 	MEMBERS							m_members;
