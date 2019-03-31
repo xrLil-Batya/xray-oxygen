@@ -97,7 +97,6 @@ float XRay::Level::TimeFactor::get()
 void XRay::Level::GameDifficulty::set(ESingleGameDifficulty dif)
 {
 	g_SingleGameDifficulty = (::ESingleGameDifficulty)u32(dif);
-	Actor()->OnDifficultyChanged();
 }
 
 XRay::ESingleGameDifficulty XRay::Level::GameDifficulty::get()

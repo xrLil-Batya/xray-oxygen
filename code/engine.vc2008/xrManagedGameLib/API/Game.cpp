@@ -143,5 +143,5 @@ XRay::ESingleGameDifficulty XRay::Game::GameDifficulty::get()
 
 u64 XRay::Game::StartTime::get()
 {
-	return ::Level().GetStartGameTime());
+	return ::Level().GetStartGameTime();
 }
