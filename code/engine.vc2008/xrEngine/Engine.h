@@ -10,7 +10,6 @@ struct xrDispatchTable;
 class ENGINE_API CEngine
 {
 public:
-	BENCH_SEC_SCRAMBLEMEMBER1
 	// DLL api stuff
 	CEngineAPI			External;
 	CEventAPI			Event;

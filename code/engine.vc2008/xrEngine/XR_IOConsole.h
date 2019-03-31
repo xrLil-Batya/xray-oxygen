@@ -96,7 +96,6 @@ private:
 	u32				m_cmd_history_max;
 	int				m_cmd_history_idx;
 	shared_str		m_last_cmd;
-	BENCH_SEC_SCRAMBLEMEMBER1
 
 	vecTips			m_temp_tips;
 	vecTipsEx		m_tips;
@@ -145,8 +144,6 @@ public:
 protected:
 	text_editor::line_editor*			m_editor;
 	text_editor::line_edit_control&		ec();
-
-	BENCH_SEC_SCRAMBLEMEMBER2
 
 	enum Console_mark // (int)=char
 	{
