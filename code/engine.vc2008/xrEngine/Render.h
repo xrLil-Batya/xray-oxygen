@@ -19,6 +19,7 @@ class IRenderVisual;
 class IKinematics;
 class CGameFont;
 //class IRenderDetailModel;
+__interface ICustomOcclusion;
 
 #ifndef _EDITOR
 extern const	float		fLightSmoothFactor;
@@ -254,7 +255,7 @@ public:
 	virtual u32						memory_usage			()											= 0;
 	virtual u32                     active_phase            ()                                          = 0;
 
-//	virtual void					setCustomOcclusion		(ICustomOcclusion* pOcclusionInterface)		= 0;
+	virtual void					setCustomOcclusion		(ICustomOcclusion* pOcclusionInterface)		= 0;
 
 	// Editor specific
 	//virtual void					StaticInit() = 0;
@@ -264,6 +265,11 @@ public:
 
 	// Constructor/destructor
 	virtual ~IRender_interface();
+};
+
+__interface ICustomOcclusion
+{
+	virtual void getRenderableList(IRender_interface* pGraph) = 0;
 };
 
 #endif
