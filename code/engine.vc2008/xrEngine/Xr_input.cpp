@@ -569,7 +569,7 @@ bool CInput::IsGamepadPresented() const
 void CInput::SetAllowAccessToBorders(bool bAccessToBorders)
 {
 	bAllowBorderAccess = bAccessToBorders;
-	LockMouse();
+	//LockMouse();
 }
 
 void CInput::OnScreenResolutionChanged(void)

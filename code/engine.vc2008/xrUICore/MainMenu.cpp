@@ -131,7 +131,7 @@ void CMainMenu::Activate(bool bActivate)
 		{
 			g_discord.SetStatus(xrDiscordPresense::StatusId::Menu);
 		}
-		//pInput->SetAllowAccessToBorders(true);
+		pInput->SetAllowAccessToBorders(true);
 		pInput->UnlockMouse();
 	}
 	else {
@@ -179,7 +179,7 @@ void CMainMenu::Activate(bool bActivate)
 			Console->Execute("vid_restart");
 		}
 		//g_discord.SetStatus(xrDiscordPresense::StatusId::In_Game);
-		//pInput->SetAllowAccessToBorders(false);
+		pInput->SetAllowAccessToBorders(false);
 		pInput->LockMouse();
 	}
 }
