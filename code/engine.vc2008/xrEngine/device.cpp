@@ -527,7 +527,6 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     }
     else
     {
-        ShowCursor(FALSE);
 		SetForegroundWindow(m_hWnd);
     }
 }
@@ -669,15 +668,6 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM lParam)
 	const BOOL fMinimized = (BOOL)HIWORD(wParam);
 	const BOOL isWndActive = (fActive != WA_INACTIVE && !fMinimized) ? TRUE : FALSE;
 	const BOOL isGameActive = ps_always_active || isWndActive;
-
-	if (!editor() && isWndActive) 
-	{
-		ShowCursor(FALSE);
-	}
-	else
-	{
-		ShowCursor(TRUE);
-	}
 
 	if (isGameActive != Device.b_is_Active)
 	{

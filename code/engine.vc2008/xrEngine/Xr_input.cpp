@@ -341,21 +341,26 @@ void CInput::OnFrame()
 		POINT mouseCursor;
 		if (GetCursorPos(&mouseCursor))
 		{
-			if (cachedWindowRect.left + 5 < mouseCursor.x && cachedWindowRect.right  - 5 > mouseCursor.x &&
-				cachedWindowRect.top  + 5 < mouseCursor.y && cachedWindowRect.bottom - 5 > mouseCursor.y)
+			if (Device.b_is_Active)
 			{
-				if (bCursorShowed)
+				if (cachedWindowRect.left + 5 < mouseCursor.x && cachedWindowRect.right - 5 > mouseCursor.x &&
+					cachedWindowRect.top + 5 < mouseCursor.y && cachedWindowRect.bottom - 5 > mouseCursor.y)
 				{
-					bCursorShowed = false;
-					ShowCursor(FALSE);
+					if (bCursorShowed)
+					{
+						bCursorShowed = false;
+						ShowCursor(FALSE);
+						Msg("Hide cursor");
+					}
 				}
-			}
-			else
-			{
-				if (!bCursorShowed)
+				else
 				{
-					bCursorShowed = true;
-					ShowCursor(TRUE);
+					if (!bCursorShowed)
+					{
+						bCursorShowed = true;
+						ShowCursor(TRUE);
+						Msg("Show cursor");
+					}
 				}
 			}
 		}

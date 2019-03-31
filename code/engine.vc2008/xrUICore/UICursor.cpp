@@ -96,7 +96,7 @@ void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 	if(m_b_use_win_cursor)
 	{
 		Ivector2 mousePos;
-		pInput->CurrentIR()->IR_GetMousePosScreen(mousePos);
+		pInput->CurrentIR()->IR_GetMousePosReal(mousePos);
 
 		vPos.x = (float)mousePos.x * (UI_BASE_WIDTH / (float)Device.dwWidth);
 		vPos.y = (float)mousePos.y * (UI_BASE_HEIGHT / (float)Device.dwHeight);
