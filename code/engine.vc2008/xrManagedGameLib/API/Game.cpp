@@ -143,5 +143,16 @@ XRay::ESingleGameDifficulty XRay::Game::GameDifficulty::get()
 
 u64 XRay::Game::StartTime::get()
 {
-	return ::Level().GetStartGameTime());
+	return ::Level().GetStartGameTime();
+}
+
+float XRay::Game::SndVolume::get()
+{
+	return psSoundVFactor;
+}
+
+void XRay::Game::SndVolume::set(float v)
+{
+	psSoundVFactor = v;
+	clamp(psSoundVFactor, 0.0f, 1.0f);
 }

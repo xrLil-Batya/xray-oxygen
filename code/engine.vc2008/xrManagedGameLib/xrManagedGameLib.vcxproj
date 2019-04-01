@@ -62,10 +62,10 @@
       <AdditionalIncludeDirectories>./;../;../xrGame/;../xrServerEntities;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4996;4577;4315;4275;4793</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>xrGame.lib;xrEngine.lib</AdditionalDependencies>
+      <AdditionalDependencies>xrGame.lib;xrEngine.lib;xrSound.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -78,11 +78,11 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ExceptionHandling>false</ExceptionHandling>
-      <DisableSpecificWarnings>4996;4577;4315;4275</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4996;4577;4315;4275;4793</DisableSpecificWarnings>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>xrGame.lib;xrEngine.lib</AdditionalDependencies>
+      <AdditionalDependencies>xrGame.lib;xrEngine.lib;xrSound.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -103,6 +103,7 @@
     <ClInclude Include="API\PhysicalGameObject.h" />
     <ClInclude Include="API\ScriptGameObject.h" />
     <ClInclude Include="API\Torch.h" />
+    <ClInclude Include="API\WeatherFX.h" />
     <ClInclude Include="ClientSpawnManager.h" />
     <ClInclude Include="GameClassRegistrator.h" />
     <ClInclude Include="ISpectreGameLib.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="API\PhysicalGameObject.cpp" />
     <ClCompile Include="API\ScriptGameObject.cpp" />
     <ClCompile Include="API\Torch.cpp" />
+    <ClCompile Include="API\WeatherFX.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="API\xrTime.cpp" />
     <ClCompile Include="ClientSpawnManager.cpp" />

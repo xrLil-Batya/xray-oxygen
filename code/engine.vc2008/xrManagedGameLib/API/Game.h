@@ -110,5 +110,11 @@ namespace XRay
 		{
 			u64 get();
 		};
+
+		static property float SndVolume
+		{
+			float get();
+			void set(float Value);
+		}
 	};
 }

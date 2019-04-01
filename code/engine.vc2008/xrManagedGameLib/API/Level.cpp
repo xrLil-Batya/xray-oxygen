@@ -11,6 +11,7 @@
 #include "../xrGame/alife_time_manager.h"
 #include "../xrGame/alife_object_registry.h"
 #include "../xrGame/Actor.h"
+#include "../xrGame/HUDManager.h"
 #include "../xrGame/level_graph.h"
 #include "../xrGame/Level.h"
 #include "../xrGame/map_location.h"
@@ -25,11 +26,11 @@ extern GAME_API CUISequencer* g_tutorial;
 extern GAME_API CUISequencer* g_tutorial2;
 extern GAME_API CUIMotionIcon* g_pMotionIcon;
 
-
 System::UInt32 XRay::LevelGraph::LevelID::get()
 {
 	return ai().level_graph().level_id();
 }
+
 System::UInt32 XRay::LevelGraph::VertexCount::get()
 {
 	return  ai().level_graph().header().vertex_count();
@@ -38,10 +39,12 @@ System::String^ XRay::Level::LevelName::get()
 {
 	return gcnew ::System::String(::Level().name_translated().c_str());
 }
+
 System::String^ XRay::Level::Weather::get()
 {
 	return gcnew ::System::String(::Environment().GetWeather().c_str());
 }
+
 void XRay::Level::Weather::set(::System::String^ str)
 {
 	if (!Device.editor())
@@ -51,36 +54,12 @@ void XRay::Level::Weather::set(::System::String^ str)
 		::Environment().SetWeather(WetNameStr, false);
 	}
 }
-void XRay::Level::WeatherFX::set(::System::String^ str)
-{
-	if (!Device.editor())
-	{
-		string128 WetNameStr = { 0 };
-		ConvertDotNetStringToAscii(str, WetNameStr);
-		::Environment().SetWeatherFX(WetNameStr);
-	}
-}
-void XRay::Level::StartWeatherFXfromTime(::System::String^ str, float time)
-{
-	if (!Device.editor())
-	{
-		string128 WetNameStr = { 0 };
-		ConvertDotNetStringToAscii(str, WetNameStr);
-		::Environment().StartWeatherFXFromTime(WetNameStr, time);
-	}
-}
-bool XRay::Level::iSWfxPlaying()
-{
-	return (::Environment().IsWeatherFXPlaying());
-}
+
 float XRay::Level::WfxTime::get()
 {
 	return (::Environment().wfx_time);
 }
-void XRay::Level::StopWeatherFX()
-{
-	(::Environment().StopWeatherFX());
-}
+
 void XRay::Level::TimeFactor::set(float time_factor)
 {
 	if (Device.editor())
@@ -213,6 +192,20 @@ void XRay::Level::ShowIndicators()
 	}
 }
 
+XRay::GameObject^ XRay::Level::ViewEntity::get()
+{
+	CGameObject* pGameObject = smart_cast<CGameObject*>(::Level().CurrentViewEntity());
+	if (!pGameObject)
+		return (nullptr);
+
+	return gcnew GameObject(::System::IntPtr(pGameObject));
+}
+
+void XRay::Level::ViewEntity::set(XRay::GameObject^ go)
+{
+	CObject* o = static_cast<CObject*>(go->GetNativeObject().ToPointer());
+	::Level().SetViewEntity(o);
+}
 
 bool XRay::Level::LevelPresent::get()
 {
@@ -258,17 +251,6 @@ void XRay::Level::IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback)
 				callback(gcnew ::System::String(name));
 		}
 	}
-}
-
-float XRay::Level::GetSndVolume()
-{
-	return psSoundVFactor;
-}
-
-void XRay::Level::SetSndVolume(float v)
-{
-	psSoundVFactor = v;
-	clamp(psSoundVFactor, 0.0f, 1.0f);
 }
 
 int XRay::Level::GCommunityGoodwill(LPCSTR _community, int _entity_id)
@@ -420,30 +402,6 @@ void XRay::Level::SetActiveCam(u8 mode)
 	if (actor && mode <= EActorCameras::eacMaxCam)
 		actor->cam_Set((EActorCameras)mode);
 }
-CScriptGameObject* XRay::Level::GetViewEntityScript()
-{
-	CGameObject* pGameObject = smart_cast<CGameObject*>(::Level().CurrentViewEntity());
-	if (!pGameObject)
-		return (nullptr);
-
-	return pGameObject->lua_game_object();
-}
-void XRay::Level::SetViewEntityScript(CScriptGameObject* go)
-{
-	CObject* o = smart_cast<CObject*>(&go->object());
-	if (o)
-		::Level().SetViewEntity(o);
-}
-
-u8 XRay::Level::GetLevelId(CLevelGraph *graph)
-{
-	return graph->level_id();
-}
-
-::System::UInt32 XRay::Level::GetVertexCount(CLevelGraph *graph)
-{
-	return graph->header().vertex_count();
-}
 
 void XRay::Level::PatrolPathAdd(LPCSTR patrol_path, CPatrolPath* path) 
 {
@@ -455,10 +413,11 @@ void XRay::Level::PatrolPathRemove(LPCSTR patrol_path)
 	ai().patrol_paths_raw().remove_path(shared_str(patrol_path));
 }
 
-void XRay::Level::SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem = false)
+void XRay::Level::SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem)
 {
 	::Level().spawn_item(sSection, vPosition, LevelVertexID, ParentID, bReturnItem);
 }
+
 void XRay::Level::ShowMinimap(bool bShow)
 {
 	CUIGame* GameUI = HUD().GetGameUI();
