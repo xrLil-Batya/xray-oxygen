@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "xrServerEntities/character_info.h"
 #include "xrServerEntities/specific_character.h"
 #include "xrGame/Actor.h"

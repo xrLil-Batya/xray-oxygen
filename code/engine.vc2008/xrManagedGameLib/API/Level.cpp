@@ -13,10 +13,6 @@
 #include "../xrGame/HUDManager.h"
 #include "../xrGame/UIGame.h"
 
- 
-extern GAME_API bool g_bDisableAllInput;
-
-
 System::UInt32 XRay::LevelGraph::LevelID::get()
 {
 	return ai().level_graph().level_id();
@@ -97,6 +93,7 @@ float XRay::Level::TimeFactor::get()
 void XRay::Level::GameDifficulty::set(ESingleGameDifficulty dif)
 {
 	g_SingleGameDifficulty = (::ESingleGameDifficulty)u32(dif);
+	::Actor()->OnDifficultyChanged();
 }
 
 XRay::ESingleGameDifficulty XRay::Level::GameDifficulty::get()
@@ -195,7 +192,7 @@ void XRay::Level::PrefetchSnd(LPCSTR name)
 {
 	(::Level().PrefetchSound(name));
 }
-// CClientSpawnManager нет в Managed, нужно писать ему класс
+
 XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
 {
 	return gcnew ClientSpawnManager(&(::Level().client_spawn_manager()));
@@ -267,20 +264,6 @@ XRay::EnvDescriptor^ XRay::Level::CurrentEnvironment(XRay::MEnvironment^ self)
 	return gcnew EnvDescriptor(::System::IntPtr());
 }
 
-void XRay::Level::DisableInput()
-{
-	g_bDisableAllInput = true;
-#ifdef DEBUG
-	Msg("input disabled");
-#endif // #ifdef DEBUG
-}
-void XRay::Level::EnableInput()
-{
-	g_bDisableAllInput = false;
-#ifdef DEBUG
-	Msg("input enabled");
-#endif // #ifdef DEBUG
-}
 void XRay::Level::SpawnPhantom(const Fvector &position)
 {
 	::Level().spawn_item("m_phantom", position, u32(-1), u16(-1), false);

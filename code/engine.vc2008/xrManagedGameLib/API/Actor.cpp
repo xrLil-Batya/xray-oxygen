@@ -3,6 +3,8 @@
 #include "../xrGame/Actor.h"
 #include "../xrGame/ActorCondition.h"
 
+extern GAME_API bool g_bDisableAllInput;
+
 XRay::Actor::Actor(IntPtr InNativeObject)
 	:EntityAlive(InNativeObject)
 {
@@ -51,7 +53,6 @@ void XRay::Actor::Satiety::set(float fNewValue)
 ////////////////////////////////////////////////////
 //			Callbacks
 ////////////////////////////////////////////////////
-
 void XRay::Actor::UseObject(Object ^ pObj)
 {
 }

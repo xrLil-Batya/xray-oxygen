@@ -146,8 +146,6 @@ namespace XRay
 
 		static EnvDescriptor^  CurrentEnvironment(XRay::MEnvironment^ self);
 
-		static void DisableInput();
-		static void EnableInput();
 		static void SpawnPhantom(const Fvector &position);
 		static Fbox GetBoundingVolume();
 		

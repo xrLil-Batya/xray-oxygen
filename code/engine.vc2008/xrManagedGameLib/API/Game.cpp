@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "../xrEngine/date_time.h"
 #include "../xrGame/Level.h"
+#include "../xrGame/Actor.h"
 #include "../xrGame/ai_space.h"
 #include "../xrGame/alife_simulator.h"
 #include "../xrGame/alife_time_manager.h"
@@ -29,11 +30,11 @@ void XRay::Game::Time::set(XRay::Game::SGameTime^ NewTime)
 {
 	if (::Level().Server->game && ai().get_alife())
 	{
-		u32 value = NewTime->Days * 86400 + NewTime->Hours * 3600 + NewTime->Minutes * 60;
-		float fValue = static_cast<float> (value);
-		value *= 1000;//msec		
-		::Environment().ChangeGameTime(fValue);
-		::Level().Server->game->alife().time_manager().change_game_time(value);
+	//	u32 value = NewTime->Days * 86400 + NewTime->Hours * 3600 + NewTime->Minutes * 60;
+	//	float fValue = static_cast<float> (value);
+	//	value *= 1000;//msec		
+	//	Environment().ChangeGameTime(fValue);
+	//	::Level().Server->game->alife().time_manager().change_game_time(value);
 	}
 }
 
@@ -125,7 +126,7 @@ void XRay::Game::SGameTime::ChangeGameTime(u32 days, u32 hours, u32 mins)
 		u32 value = days * 86400 + hours * 3600 + mins * 60;
 		float fValue = static_cast<float> (value);
 		value *= 1000; //msec		
-		::Environment().ChangeGameTime(fValue);
+		Environment().ChangeGameTime(fValue);
 		::Level().Server->game->alife().time_manager().change_game_time(value);
 	}
 }
