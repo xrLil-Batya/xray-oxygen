@@ -96,7 +96,7 @@ _keyboard keyboards[] = {
 	{ "kI",				VK_I			},	{ "kO",				VK_O			},
 	{ "kP",				VK_P			},	{ "kLBRACKET",		VK_OEM_4		},
 	{ "kRBRACKET",		VK_OEM_6		},	{ "kRETURN",		VK_RETURN		},
-	{ "kLCONTROL",		VK_LCONTROL		},	{ "kA",				VK_A			},
+	{ "kLCONTROL",		VK_CONTROL		},	{ "kA",				VK_A			},
 	{ "kS",				VK_S			},	{ "kD",				VK_D			},
 	{ "kF",				VK_F			},	{ "kG",				VK_G			},
 	{ "kH",				VK_H			},	{ "kJ",				VK_J			},

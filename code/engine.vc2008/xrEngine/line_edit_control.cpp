@@ -116,8 +116,7 @@ void line_edit_control::update_key_states	()
 
 	set_key_state	( ks_LShift,	!!pInput->iGetAsyncKeyState(VK_SHIFT)		);
 	set_key_state	( ks_RShift,	!!pInput->iGetAsyncKeyState(VK_RSHIFT)		);
-	set_key_state	( ks_LCtrl,		!!pInput->iGetAsyncKeyState(VK_LCONTROL)	);
-	set_key_state	( ks_RCtrl,		!!pInput->iGetAsyncKeyState(VK_RCONTROL)	);
+	set_key_state	( ks_LCtrl,		!!pInput->iGetAsyncKeyState(VK_CONTROL)		);
 	set_key_state	( ks_LAlt,		!!pInput->iGetAsyncKeyState(VK_LMENU)		);
 	set_key_state	( ks_RAlt,		!!pInput->iGetAsyncKeyState(VK_RMENU)		);
 	set_key_state	( ks_CapsLock,	text_editor::get_caps_lock_state()			);

@@ -233,7 +233,7 @@ bool CUIActorMenu::ToPartnerTrade(CUICellItem* itm, bool b_use_cursor_pos)
 	else
 		new_owner->SetItem				(i);
 
-	if ((i != itm) && !!pInput->iGetAsyncKeyState(VK_LCONTROL)) return ToPartnerTrade(itm, b_use_cursor_pos);
+	if ((i != itm) && !!pInput->iGetAsyncKeyState(VK_CONTROL)) return ToPartnerTrade(itm, b_use_cursor_pos);
 	UpdatePrices();
 	return true;
 }
