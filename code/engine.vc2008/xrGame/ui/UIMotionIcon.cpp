@@ -5,7 +5,7 @@
 #include "../actor.h"
 const LPCSTR MOTION_ICON_XML = "ui_HUD.xml";
 
-GAME_API CUIMotionIcon* g_pMotionIcon = nullptr;
+CUIMotionIcon* g_pMotionIcon = NULL;
 
 CUIMotionIcon::CUIMotionIcon()
 {
@@ -18,7 +18,7 @@ CUIMotionIcon::CUIMotionIcon()
 
 CUIMotionIcon::~CUIMotionIcon()
 {
-	g_pMotionIcon = nullptr;
+	g_pMotionIcon	= NULL;
 }
 
 void CUIMotionIcon::ResetVisibility()

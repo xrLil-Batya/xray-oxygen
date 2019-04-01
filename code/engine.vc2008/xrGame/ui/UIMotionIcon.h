@@ -2,7 +2,7 @@
 #include "../xrUICore/UIProgressBar.h"
 #include "../xrUICore/UIProgressShape.h"
 
-class GAME_API CUIMotionIcon: public CUIWindow
+class CUIMotionIcon: public CUIWindow
 {
 	using inherited = CUIWindow;
 
@@ -44,4 +44,4 @@ public:
 			void			ResetVisibility		();
 };
 
-extern GAME_API CUIMotionIcon* g_pMotionIcon;
+extern CUIMotionIcon* g_pMotionIcon;

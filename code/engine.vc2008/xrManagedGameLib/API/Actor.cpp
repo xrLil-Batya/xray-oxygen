@@ -2,8 +2,6 @@
 #include "Actor.h"
 #include "../xrGame/Actor.h"
 #include "../xrGame/ActorCondition.h"
-#include "../xrGame/CameraEffector.h"
-#include "../xrGame/ActorEffector.h"
 
 XRay::Actor::Actor(IntPtr InNativeObject)
 	:EntityAlive(InNativeObject)
@@ -88,15 +86,4 @@ float XRay::Actor::Satiety::get()
 void XRay::Actor::Satiety::set(float fNewValue)
 {
 	//::Actor()->conditions().ChangeSatiety(fNewValue);
-}
-
-float XRay::Actor::AddCamEffector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func)
-{
-	CAnimatorCamEffectorScriptCB* e = new CAnimatorCamEffectorScriptCB(cb_func);
-	e->SetType((ECamEffectorType)id);
-	e->SetCyclic(cyclic);
-	e->Start(fn);
-	pNativeObject->Cameras().AddCamEffector(e);
-
-	return	e->GetAnimatorLength();
 }

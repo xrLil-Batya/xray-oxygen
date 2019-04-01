@@ -66,9 +66,6 @@
     <ClInclude Include="API\Xml.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="EasyDelegate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
