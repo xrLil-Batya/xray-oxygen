@@ -73,7 +73,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>dxguid.lib;d3dx11.lib;D3DCompiler.lib;d3d11.lib;dxgi.lib;nvapi.lib;d3d10.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3dx11.lib;D3DCompiler.lib;d3d11.lib;dxgi.lib;nvapi.lib;d3d10.lib;tbb.lib;AnselSDK64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -132,7 +132,7 @@ copy "..\..\..\..\game\bins\tbbmalloc.dll" "$(xrBinOut)"</Command>
       <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>dxguid.lib;d3dx11.lib;D3DCompiler.lib;d3d11.lib;dxgi.lib;nvapi.lib;d3d10.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3dx11.lib;D3DCompiler.lib;d3d11.lib;dxgi.lib;nvapi.lib;d3d10.lib;tbb.lib;AnselSDK64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
@@ -360,7 +360,7 @@ copy "..\..\..\..\game\bins\tbbmalloc.dll" "$(xrBinOut)"</Command>
     <ClCompile Include="..\xrRender\RenderTargetPhaseSSSS.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseVignette.cpp" />
     <ClCompile Include="..\xrRender\ScreenshotManager.cpp" />
-    <ClCompile Include="AnselWrapper.cpp" />
+    <ClCompile Include="Ansel.cpp" />
     <ClCompile Include="r3_puddles.cpp" />
     <ClCompile Include="r4_rendertarget_phase_puddles.cpp" />
     <ClCompile Include="ScreenshotManagerDX11.cpp" />

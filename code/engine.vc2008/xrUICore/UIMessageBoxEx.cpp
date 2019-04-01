@@ -54,7 +54,7 @@ LPCSTR CUIMessageBoxEx::GetText ()
 	return m_pMessageBox->GetText();
 }
 
-void CUIMessageBoxEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData /* = NULL */)
+void CUIMessageBoxEx::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData /* = NULL */)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 	if (pWnd == m_pMessageBox)
@@ -72,7 +72,7 @@ void CUIMessageBoxEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData /* = NUL
 		}
 
 		if (GetMessageTarget())
-            GetMessageTarget()->SendMessage(this,msg,pData);
+            GetMessageTarget()->SendMessageToWnd(this,msg,pData);
 	}
 	
 }

@@ -19,7 +19,7 @@ class CEntityAlive;
 
 //////////////////////////////////////////////////////////////////////////
 
-struct RELATION_REGISTRY 
+struct GAME_API RELATION_REGISTRY
 {
 public:
 	RELATION_REGISTRY  ();

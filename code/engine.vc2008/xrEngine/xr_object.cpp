@@ -13,7 +13,6 @@
 #include "x_ray.h"
 #include "GameFont.h"
 
-#include "mp_logging.h"
 #include "xr_collide_form.h"
 #include "spectre/Spectre.h"
 

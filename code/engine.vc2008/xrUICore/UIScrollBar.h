@@ -53,7 +53,7 @@ public:
 	virtual void	Enable				(bool b);
 	virtual	void	InitScrollBar		(Fvector2 pos, float length, bool bIsHorizontal, LPCSTR profile = "default");
 
-	virtual void	SendMessage			(CUIWindow *pWnd, s16 msg, void *pData);
+	virtual void	SendMessageToWnd			(CUIWindow *pWnd, s16 msg, void *pData);
 	virtual bool	OnMouseAction				(float x, float y, EUIMessages mouse_action);
 	virtual bool 	OnMouseDown			(int mouse_btn);
 	virtual	bool	OnMouseDownEx		();

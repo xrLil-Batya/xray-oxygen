@@ -463,7 +463,7 @@ bool CUIMapWnd::UpdateZoom( bool b_zoom_in )
 	return true;
 }
 
-void CUIMapWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIMapWnd::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 	if (pWnd == m_UIPropertiesBox && msg == PROPERTY_CLICKED && m_UIPropertiesBox->GetClickedItem())

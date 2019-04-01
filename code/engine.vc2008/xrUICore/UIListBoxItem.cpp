@@ -30,7 +30,7 @@ void CUIListBoxItem::Draw()
 void CUIListBoxItem::OnFocusReceive()
 {
 	inherited::OnFocusReceive();
-	GetMessageTarget()->SendMessage(this, LIST_ITEM_FOCUS_RECEIVED);
+	GetMessageTarget()->SendMessageToWnd(this, LIST_ITEM_FOCUS_RECEIVED);
 }
 
 void CUIListBoxItem::InitDefault()
@@ -53,8 +53,8 @@ bool CUIListBoxItem::OnMouseDown(int mouse_btn)
 	if (mouse_btn==VK_LBUTTON)
 	{
 		dynamic_cast<CUIScrollView*>(GetParent()->GetParent())->SetSelected(this);
-		GetMessageTarget()->SendMessage(this, LIST_ITEM_SELECT, &tag);
-		GetMessageTarget()->SendMessage(this, LIST_ITEM_CLICKED, &tag);
+		GetMessageTarget()->SendMessageToWnd(this, LIST_ITEM_SELECT, &tag);
+		GetMessageTarget()->SendMessageToWnd(this, LIST_ITEM_CLICKED, &tag);
 		return true;
 	}
 	else

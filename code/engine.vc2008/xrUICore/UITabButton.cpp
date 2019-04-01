@@ -16,13 +16,13 @@ bool CUITabButton::OnMouseDown(int mouse_btn)
 {
 	if (mouse_btn==VK_LBUTTON)
 	{
-		GetMessageTarget()->SendMessage(this, TAB_CHANGED, NULL);
+		GetMessageTarget()->SendMessageToWnd(this, TAB_CHANGED, NULL);
 		return true;
 	}else
 		return false;
 }
 
-void CUITabButton::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUITabButton::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	if (!IsEnabled())
 		return;

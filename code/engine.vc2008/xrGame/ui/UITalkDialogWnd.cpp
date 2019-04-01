@@ -104,7 +104,7 @@ void CUITalkDialogWnd::Hide()
 void CUITalkDialogWnd::OnQuestionClicked(CUIWindow* w, void*)
 {
 	m_ClickedQuestionID = ((CUIQuestionItem*)w)->m_s_value;
-	GetMessageTarget()->SendMessage(this, TALK_DIALOG_QUESTION_CLICKED);
+	GetMessageTarget()->SendMessageToWnd(this, TALK_DIALOG_QUESTION_CLICKED);
 }
 
 void CUITalkDialogWnd::OnExitClicked(CUIWindow* w, void*)
@@ -116,17 +116,17 @@ void CUITalkDialogWnd::OnTradeClicked(CUIWindow* w, void*)
 {
 	if (mechanic_mode)
 	{
-		GetTop()->SendMessage(this, TALK_DIALOG_UPGRADE_BUTTON_CLICKED);
+		GetTop()->SendMessageToWnd(this, TALK_DIALOG_UPGRADE_BUTTON_CLICKED);
 	}
 	else
 	{
-		GetTop()->SendMessage(this, TALK_DIALOG_TRADE_BUTTON_CLICKED);
+		GetTop()->SendMessageToWnd(this, TALK_DIALOG_TRADE_BUTTON_CLICKED);
 	}
 }
 
 void CUITalkDialogWnd::OnUpgradeClicked(CUIWindow* w, void*)
 {
-	GetTop()->SendMessage(this, TALK_DIALOG_UPGRADE_BUTTON_CLICKED);
+	GetTop()->SendMessageToWnd(this, TALK_DIALOG_UPGRADE_BUTTON_CLICKED);
 }
 
 void CUITalkDialogWnd::SetTradeMode()
@@ -136,7 +136,7 @@ void CUITalkDialogWnd::SetTradeMode()
 
 //пересылаем сообщение родительскому окну для обработки
 //и фильтруем если оно пришло от нашего дочернего окна
-void CUITalkDialogWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUITalkDialogWnd::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 }
@@ -248,7 +248,7 @@ void CUITalkDialogWnd::UpdateButtonsLayout(bool b_disable_break, bool trade_enab
 	UIToTradeButton.Show(trade_enabled);
 }
 
-void CUIQuestionItem::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIQuestionItem::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 }
@@ -291,7 +291,7 @@ void CUIQuestionItem::Init(LPCSTR val, LPCSTR text)
 
 void CUIQuestionItem::OnTextClicked(CUIWindow* w, void*)
 {
-	GetMessageTarget()->SendMessage(this, LIST_ITEM_CLICKED, (void*)this);
+	GetMessageTarget()->SendMessageToWnd(this, LIST_ITEM_CLICKED, (void*)this);
 }
 
 CUIAnswerItem::CUIAnswerItem(CUIXml* xml_doc, LPCSTR path)

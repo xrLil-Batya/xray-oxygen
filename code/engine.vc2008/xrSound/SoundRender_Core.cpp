@@ -528,11 +528,6 @@ void CSoundRender_Core::object_relcase(CObject* obj)
 	}
 }
 
-inline float mB_to_gain(float mb)
-{
-	return powf(10.0f, mb / 2000.0f);
-}
-
 void CSoundRender_Core::i_efx_listener_set(CSound_environment* _E)
 {
 	const auto E = static_cast<CSoundRender_Environment*>(_E);
@@ -545,18 +540,18 @@ void CSoundRender_Core::i_efx_listener_set(CSound_environment* _E)
 	alEffectf(effect, AL_REVERB_DENSITY, density);
 	alEffectf(effect, AL_REVERB_DIFFUSION, E->EnvironmentDiffusion);
 
-	alEffectf(effect, AL_REVERB_GAIN, mB_to_gain(E->Room));
-	alEffectf(effect, AL_REVERB_GAINHF, mB_to_gain(E->RoomHF));
+	alEffectf(effect, AL_REVERB_GAIN, E->Room);
+	alEffectf(effect, AL_REVERB_GAINHF, E->RoomHF);
 
 	alEffectf(effect, AL_REVERB_DECAY_TIME, E->DecayTime);
 	alEffectf(effect, AL_REVERB_DECAY_HFRATIO, E->DecayHFRatio);
 
-	alEffectf(effect, AL_REVERB_REFLECTIONS_GAIN, mB_to_gain(E->Reflections));
+	alEffectf(effect, AL_REVERB_REFLECTIONS_GAIN, E->Reflections);
 	alEffectf(effect, AL_REVERB_REFLECTIONS_DELAY, E->ReflectionsDelay);
 
-	alEffectf(effect, AL_REVERB_LATE_REVERB_GAIN, mB_to_gain(E->Reverb));
+	alEffectf(effect, AL_REVERB_LATE_REVERB_GAIN, E->Reverb);
 	alEffectf(effect, AL_REVERB_LATE_REVERB_DELAY, E->ReverbDelay);
 
-	alEffectf(effect, AL_REVERB_AIR_ABSORPTION_GAINHF, mB_to_gain(E->AirAbsorptionHF));
+	alEffectf(effect, AL_REVERB_AIR_ABSORPTION_GAINHF, E->AirAbsorptionHF);
 	alEffectf(effect, AL_REVERB_ROOM_ROLLOFF_FACTOR, E->RoomRolloffFactor);
 }

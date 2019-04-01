@@ -74,7 +74,7 @@ public:
 
 	CChangeLevelWnd();
 	virtual ~CChangeLevelWnd() {};
-	virtual void SendMessage(CUIWindow *pWnd, s16 msg, void *pData);
+	virtual void SendMessageToWnd(CUIWindow *pWnd, s16 msg, void *pData);
 	virtual bool WorkInPause()const { return true; }
 	virtual void ShowDialog(bool bDoHideIndicators);
 	virtual void HideDialog();

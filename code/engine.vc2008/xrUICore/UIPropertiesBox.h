@@ -14,7 +14,7 @@ public:
 
 			void		InitPropertiesBox					(Fvector2 pos, Fvector2 size);
 
-	virtual void		SendMessage							(CUIWindow *pWnd, s16 msg, void *pData);
+	virtual void		SendMessageToWnd							(CUIWindow *pWnd, s16 msg, void *pData);
 	virtual bool		OnMouseAction								(float x, float y, EUIMessages mouse_action);
 	virtual bool		OnKeyboardAction							(u8 dik, EUIMessages keyboard_action);
 

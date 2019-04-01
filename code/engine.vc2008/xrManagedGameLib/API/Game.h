@@ -1,4 +1,6 @@
 #pragma once
+#include "Actor.h"
+#include "xrTime.h"
 
 namespace XRay
 {
@@ -89,6 +91,13 @@ namespace XRay
 			void set(SGameTime^ NewTime);
 		}
 
+		/// <summary>Get or set game difficulty</summary>
+		static property ESingleGameDifficulty GameDifficulty
+		{
+			ESingleGameDifficulty get();
+			void set(ESingleGameDifficulty dif);
+		}
+
 		static property bool IsDeveloperMode
 		{
 			bool get()
@@ -96,5 +105,10 @@ namespace XRay
 				return GamePersistent().IsDeveloperMode();
 			}
 		}
+
+		static property u64 StartTime
+		{
+			u64 get();
+		};
 	};
 }

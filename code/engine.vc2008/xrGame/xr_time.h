@@ -5,7 +5,8 @@
 class xrTime{
 	ALife::_TIME_ID		m_time;
 public:
-	xrTime():m_time(0){}
+	xrTime():m_time(0){
+	}
 	xrTime(const xrTime& other):m_time(other.m_time){}
 	xrTime(ALife::_TIME_ID t):m_time(t){}
 

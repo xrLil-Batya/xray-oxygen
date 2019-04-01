@@ -128,7 +128,7 @@ public:
 #ifdef  XRGAME_EXPORTS
 	LPCSTR						Name					() const ;
 	shared_str					Bio						() const ;
-	const CHARACTER_COMMUNITY&	Community				() const ;
+	const CHARACTER_COMMUNITY&  Community	() const ;
 	SSpecificCharacterData::SMoneyDef& MoneyDef			() 	{return data()->money_def;}
 #endif
 

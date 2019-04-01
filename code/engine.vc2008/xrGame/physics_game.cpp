@@ -12,9 +12,6 @@
 #include "../xrPhysics/MathUtils.h"
 #include "../xrPhysics/iPHWorld.h"
 #include "../xrPhysics/Extendedgeom.h"
-
-#include "../Include/xrRender/FactoryPtr.h"
-#include "../Include/xrRender/WallMarkArray.h"
 #pragma warning(disable: 4267)
 
 /////////////////////////////////////////////////////////////

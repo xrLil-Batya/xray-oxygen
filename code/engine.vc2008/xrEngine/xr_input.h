@@ -2,7 +2,7 @@
 
 class	ENGINE_API				IInputReceiver;
 
-class ENGINE_API CInput : public pureFrame, public pureAppActivate, public pureAppDeactivate
+class ENGINE_API CInput : public pureFrame, public pureAppActivate, public pureAppDeactivate, public pureScreenResolutionChanged
 {
 public:
 	CInput();
@@ -16,10 +16,11 @@ public:
 
 	virtual void				OnFrame						() override;
 	virtual void				OnAppActivate				() override;
+	virtual void				OnAppDeactivate				() override;
 
 	void						LockMouse();
+	void						UnlockMouse();
 
-	virtual void				OnAppDeactivate() override;
 
 	void						ProcessInput(LPARAM hRawInput);
 	IInputReceiver*				CurrentIR					();
@@ -28,6 +29,8 @@ public:
 	bool						IsGamepadPresented() const;
 
 	void						SetAllowAccessToBorders(bool bAccessToBorders);
+
+	virtual void				OnScreenResolutionChanged(void) override;
 
 public:
 	bool						get_VK_name(u8 dik, LPSTR dest, int dest_sz);
@@ -42,7 +45,7 @@ private:
 	u32					dwCurTime;
 
 	// buffers for input
-	u8 inputData[2048];
+	u8 inputData[1024];
 
 	// last input data
 	Ivector2 deltaMouse;
@@ -53,13 +56,16 @@ private:
 	float    leftTrigger;
 	float    rightTrigger;
 
-	bool bActiveFocus;
 	bool bAllowBorderAccess;
+	bool bCursorShowed;
+	bool bShouldLockMouse;
 
 	bool bGamepadConnected;
 	bool bIsVibrationSupported;
+	bool bVibrationStarted;
 	u32  gamepadUserIndex;
 	u32  gamepadLastPacketId;
+	RECT cachedWindowRect;
 
 	xr_vector<IInputReceiver*>	cbStack;
 };

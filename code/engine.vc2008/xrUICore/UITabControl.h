@@ -32,7 +32,7 @@ public:
 
 	void				RemoveAll					();
 
-	virtual void		SendMessage					(CUIWindow *pWnd, s16 msg, void *pData);
+	virtual void		SendMessageToWnd					(CUIWindow *pWnd, s16 msg, void *pData);
 	virtual void		Enable						(bool status);
 
 	const shared_str&	GetActiveId					()	const						{ return m_sPushedId; }

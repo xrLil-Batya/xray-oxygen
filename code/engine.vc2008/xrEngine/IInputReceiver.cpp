@@ -1,6 +1,4 @@
 ﻿#include "stdafx.h"
-#pragma hdrstop
-
 #include "xr_input.h"
 #include "iinputreceiver.h"
 

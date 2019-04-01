@@ -82,7 +82,7 @@ void CMapSpot::Update()
 	{
 		if ( Device.dwTimeGlobal > ( m_dwFocusReceiveTime + 500 ) )
 		{
-			GetMessageTarget()->SendMessage(this, MAP_SHOW_HINT, NULL);
+			GetMessageTarget()->SendMessageToWnd(this, MAP_SHOW_HINT, NULL);
 		}
 	}
 }
@@ -94,14 +94,14 @@ bool CMapSpot::OnMouseDown( int mouse_btn )
 		CGameTask* t = Level().GameTaskManager().HasGameTask(m_map_location, true);
 		if(t)
 		{
-			GetMessageTarget()->SendMessage(this, MAP_SELECT_SPOT);
+			GetMessageTarget()->SendMessageToWnd(this, MAP_SELECT_SPOT);
 			return true;
 		}
 		return false;
 	}
     else if (mouse_btn == VK_RBUTTON)
     {
-        GetMessageTarget()->SendMessage(this, MAP_SELECT_SPOT2);
+        GetMessageTarget()->SendMessageToWnd(this, MAP_SELECT_SPOT2);
         return true;
     }
 	else
@@ -114,7 +114,7 @@ bool CMapSpot::OnMouseDown( int mouse_btn )
 void CMapSpot::OnFocusLost()
 {
 	inherited::OnFocusLost();
-	GetMessageTarget()->SendMessage(this, MAP_HIDE_HINT, NULL);
+	GetMessageTarget()->SendMessageToWnd(this, MAP_HIDE_HINT, NULL);
 }
 
 void CMapSpot::show_static_border( bool status )

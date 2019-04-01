@@ -11,7 +11,6 @@
 #include "level.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
-#include "game_base.h"
 #include "stalker_animation_data_storage.h"
 #include "stalker_velocity_holder.h"
 
@@ -34,6 +33,11 @@
 #include "../xrEngine/x_ray.h"
 #include "../xrUICore/UILoadingScreen.h"
 #include "../xrEngine/spectre/Spectre.h"
+#include "../xrEngine/xr_level_controller.h"
+
+#include "../xrEngine/string_table.h"
+#include "ui/uimainingamewnd.h"
+#include "luabind/luabind.hpp"
 
 #ifndef MASTER_GOLD
 #	include "custommonster.h"
@@ -172,7 +176,6 @@ void CGamePersistent::Disconnect()
 	m_game_params.m_e_game_type	= eGameIDNoGame;
 }
 
-#include "..\xrEngine\xr_level_controller.h"
 
 void CGamePersistent::OnGameStart()
 {
@@ -639,8 +642,7 @@ void CGamePersistent::OnRenderPPUI_main()
 	draw_wnds_rects();
 }
 
-#include "..\xrEngine\string_table.h"
-#include "../xrEngine/x_ray.h"
+
 
 void CGamePersistent::SetLoadStageTitle(const char* ls_title)
 {
@@ -655,7 +657,6 @@ void CGamePersistent::SetLoadStageTitle(const char* ls_title)
 }
 
 
-#include "luabind/luabind.hpp"
 
 void CGamePersistent::LoadTitle(bool change_tip, shared_str map_name)
 {
@@ -735,7 +736,6 @@ void CGamePersistent::UpdateDof()
 	(m_dof[0].z<m_dof[2].z)?clamp(m_dof[1].z,m_dof[0].z,m_dof[2].z):clamp(m_dof[1].z,m_dof[2].z,m_dof[0].z);
 }
 
-#include "ui\uimainingamewnd.h"
 void CGamePersistent::OnSectorChanged(int sector)
 {
 	if (GameUI())

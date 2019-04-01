@@ -86,7 +86,7 @@ void UITaskListWnd::OnMouseScroll( float iDirection )
 void UITaskListWnd::Show( bool status )
 {
 	inherited::Show( status );
-	GetMessageTarget()->SendMessage( this, PDA_TASK_HIDE_HINT, NULL );
+	GetMessageTarget()->SendMessageToWnd( this, PDA_TASK_HIDE_HINT, NULL );
 	if(status)
 		UpdateList();
 }
@@ -94,13 +94,13 @@ void UITaskListWnd::Show( bool status )
 void UITaskListWnd::OnFocusReceive()
 {
 	inherited::OnFocusReceive();
-	GetMessageTarget()->SendMessage( this, PDA_TASK_HIDE_HINT, NULL );
+	GetMessageTarget()->SendMessageToWnd( this, PDA_TASK_HIDE_HINT, NULL );
 }
 
 void UITaskListWnd::OnFocusLost()
 {
 	inherited::OnFocusLost();
-	GetMessageTarget()->SendMessage( this, PDA_TASK_HIDE_HINT, NULL );
+	GetMessageTarget()->SendMessageToWnd( this, PDA_TASK_HIDE_HINT, NULL );
 }
 
 void UITaskListWnd::Update()
@@ -108,10 +108,10 @@ void UITaskListWnd::Update()
 	inherited::Update();
 }
 
-void UITaskListWnd::SendMessage( CUIWindow* pWnd, s16 msg, void* pData )
+void UITaskListWnd::SendMessageToWnd( CUIWindow* pWnd, s16 msg, void* pData )
 {
-	GetMessageTarget()->SendMessage( pWnd, msg, pData );
-	inherited::SendMessage( pWnd, msg, pData );
+	GetMessageTarget()->SendMessageToWnd( pWnd, msg, pData );
+	inherited::SendMessageToWnd( pWnd, msg, pData );
 	CUIWndCallback::OnEvent( pWnd, msg, pData );
 }
 
@@ -208,7 +208,7 @@ void UITaskListWndItem::hide_hint()
 {
 	show_hint_can   = false;
 	show_hint       = false;
-	GetMessageTarget()->SendMessage( this, PDA_TASK_HIDE_HINT, NULL );
+	GetMessageTarget()->SendMessageToWnd( this, PDA_TASK_HIDE_HINT, NULL );
 }
 
 void UITaskListWndItem::Update()
@@ -221,7 +221,7 @@ void UITaskListWndItem::Update()
 		if ( Device.dwTimeGlobal > ( m_name->FocusReceiveTime() + 700 ) )
 		{
 			show_hint = true;
-			GetMessageTarget()->SendMessage( this, PDA_TASK_SHOW_HINT, (void*)m_task );
+			GetMessageTarget()->SendMessageToWnd( this, PDA_TASK_SHOW_HINT, (void*)m_task );
 			return;
 		}
 	}
@@ -264,13 +264,13 @@ void UITaskListWndItem::update_view()
 
 }
 
-void UITaskListWndItem::SendMessage( CUIWindow* pWnd, s16 msg, void* pData )
+void UITaskListWndItem::SendMessageToWnd( CUIWindow* pWnd, s16 msg, void* pData )
 {
 	if ( pWnd == m_bt_focus )
 	{
 		if ( msg == BUTTON_DOWN )
 		{
-			GetMessageTarget()->SendMessage( this, PDA_TASK_SET_TARGET_MAP, (void*)m_task );
+			GetMessageTarget()->SendMessageToWnd( this, PDA_TASK_SET_TARGET_MAP, (void*)m_task );
 		}
 	}
 	if ( pWnd == m_name )
@@ -283,11 +283,11 @@ void UITaskListWndItem::SendMessage( CUIWindow* pWnd, s16 msg, void* pData )
 
 		if ( msg == WINDOW_LBUTTON_DB_CLICK )
 		{
-			GetMessageTarget()->SendMessage( this, PDA_TASK_SET_TARGET_MAP, (void*)m_task );
+			GetMessageTarget()->SendMessageToWnd( this, PDA_TASK_SET_TARGET_MAP, (void*)m_task );
 		}
 	}
 
-	inherited::SendMessage( pWnd, msg, pData );
+	inherited::SendMessageToWnd( pWnd, msg, pData );
 }
 
 bool UITaskListWndItem::OnMouseAction( float x, float y, EUIMessages mouse_action )

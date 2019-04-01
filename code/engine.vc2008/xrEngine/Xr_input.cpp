@@ -3,7 +3,6 @@
 #include "IInputReceiver.h"
 #include "../include/editor/ide.hpp"
 #include "../FrayBuildConfig.hpp"
-#include "OffSetOfWrapper.inl"
 #include "IGame_AnselSDK.h"
 #include "xr_level_controller.h"
 #include <Xinput.h>
@@ -20,8 +19,8 @@ CInput::CInput()
 {
 	Log("Starting INPUT device...");
 
-	bActiveFocus = false;
 	bGamepadConnected = false;
+	bVibrationStarted = false;
 	bAllowBorderAccess = true;
 	gamepadUserIndex = 0;
 	gamepadLastPacketId = 0;
@@ -57,10 +56,12 @@ CInput::CInput()
 	Device.seqAppActivate.Add(this);
 	Device.seqAppDeactivate.Add(this, REG_PRIORITY_HIGH);
 	Device.seqFrame.Add(this, REG_PRIORITY_HIGH);
+	Device.seqResolutionChanged.Add(this, REG_PRIORITY_HIGH);
 }
 
 CInput::~CInput()
 {
+	ClipCursor(NULL);
 	rawDevices[0].usUsagePage = 1;
 	rawDevices[0].usUsage = 2; // mouse
 	rawDevices[0].dwFlags = RIDEV_REMOVE;
@@ -246,12 +247,17 @@ void CInput::OnAppActivate()
 		CurrentIR()->IR_OnActivate();
 
 	ResetPressedState();
-	bActiveFocus = true;
-	ShowCursor(!bActiveFocus);
+	// set mouse to center screen
+	RECT windowRect;
+	Device.GetXrWindowRect(windowRect);
+	cachedWindowRect = windowRect;
 
+	SetCursorPos(windowRect.right - (LONG)Device.fWidth_2, windowRect.bottom - (LONG)Device.fHeight_2);
 	XInputEnable(TRUE);
-
-	LockMouse();
+	if (bShouldLockMouse)
+	{
+		LockMouse();
+	}
 }
 
 void CInput::OnAppDeactivate()
@@ -260,15 +266,13 @@ void CInput::OnAppDeactivate()
 		CurrentIR()->IR_OnDeactivate();
 
 	ResetPressedState();
-	bActiveFocus = false;
-	ShowCursor(!bActiveFocus);
 	ClipCursor(NULL);
-
 	XInputEnable(FALSE);
 }
 
 void CInput::LockMouse()
 {
+	bShouldLockMouse = true;
 	RECT windowRect;
 	Device.GetXrWindowRect(windowRect);
 
@@ -282,6 +286,12 @@ void CInput::LockMouse()
 	}
 
 	ClipCursor(&windowRect);
+}
+
+void CInput::UnlockMouse()
+{
+	ClipCursor(NULL);
+	bShouldLockMouse = false;
 }
 
 void CInput::ResetPressedState()
@@ -323,6 +333,51 @@ void CInput::OnFrame()
 			cbStack.back()->IR_OnKeyboardHold(i);
 		}
 	}
+
+	// check if we should show/hide system cursor
+	// system cursor should be visible, if it was outside game window
+	if ((Device.dwFrame % 30) == 0) // per 30 frames
+	{
+		POINT mouseCursor;
+		if (GetCursorPos(&mouseCursor))
+		{
+			if (Device.b_is_Active)
+			{
+				if (cachedWindowRect.left + 5 < mouseCursor.x && cachedWindowRect.right - 5 > mouseCursor.x &&
+					cachedWindowRect.top + 5 < mouseCursor.y && cachedWindowRect.bottom - 5 > mouseCursor.y)
+				{
+					if (bCursorShowed)
+					{
+						bCursorShowed = false;
+						ShowCursor(FALSE);
+					}
+				}
+				else
+				{
+					if (!bCursorShowed)
+					{
+						bCursorShowed = true;
+						ShowCursor(TRUE);
+					}
+				}
+			}
+		}
+	}
+
+	// validate cursor visibility
+	if ((Device.dwFrame % 600) == 0) // per 600 frames, 10 sec for 60 fps
+	{
+		CURSORINFO cInfo;
+		cInfo.cbSize = sizeof(cInfo);
+		if (GetCursorInfo(&cInfo))
+		{
+			if (cInfo.flags & CURSOR_SHOWING)
+			{
+				bCursorShowed = true;
+			}
+		}
+	}
+
 
 	// check for gamepad presense
 	if ((Device.dwFrame % 60) == 0) // per 60 frames
@@ -454,6 +509,19 @@ void CInput::OnFrame()
 					VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT, VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT, VK_GAMEPAD_RIGHT_THUMBSTICK_UP, VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN);
 			}
 		}
+
+		if (bVibrationStarted)
+		{
+			if (stop_vibration_time < RDEVICE.fTimeGlobal)
+			{
+				bVibrationStarted = false;
+				XINPUT_VIBRATION vibrationInputData;
+				vibrationInputData.wLeftMotorSpeed =  0;
+				vibrationInputData.wRightMotorSpeed = 0;
+
+				XInputSetState(gamepadUserIndex, &vibrationInputData);
+			}
+		}
 	}
 }
 
@@ -501,10 +569,24 @@ bool CInput::IsGamepadPresented() const
 void CInput::SetAllowAccessToBorders(bool bAccessToBorders)
 {
 	bAllowBorderAccess = bAccessToBorders;
-	LockMouse();
+	//LockMouse();
+}
+
+void CInput::OnScreenResolutionChanged(void)
+{
+	RECT windowRect;
+	Device.GetXrWindowRect(windowRect);
+	cachedWindowRect = windowRect;
 }
 
 void  CInput::feedback(u16 s1, u16 s2, float time)
 {
 	stop_vibration_time = RDEVICE.fTimeGlobal + time;
+	bVibrationStarted = true;
+
+	XINPUT_VIBRATION vibrationInputData;
+	vibrationInputData.wLeftMotorSpeed = s1;
+	vibrationInputData.wRightMotorSpeed = s2;
+	
+	XInputSetState(gamepadUserIndex, &vibrationInputData);
 }

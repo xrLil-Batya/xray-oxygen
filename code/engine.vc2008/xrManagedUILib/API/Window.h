@@ -1,5 +1,4 @@
 #pragma once
-#include "xrUICore/UIWindow.h"
 
 using namespace System;
 using namespace System::Numerics;
@@ -20,7 +19,7 @@ namespace XRay
 	public ref class Window
 	{
 	internal:
-		CUIWindow* pNativeObject;
+		class CUIWindow* pNativeObject;
 
 	public:
 
@@ -28,80 +27,32 @@ namespace XRay
 
 		property Vector2 Position
 		{
-			Vector2 get()
-			{
-				Fvector2 wndPos;
-				wndPos = pNativeObject->GetWndPos();
-
-				return Vector2(wndPos.x, wndPos.y);
-			}
-
-			void set(Vector2 InPos)
-			{
-				Fvector2 wndPos;
-				wndPos.set(InPos.X, InPos.Y);
-				pNativeObject->SetWndPos(wndPos);
-			}
+			Vector2 get();
+			void set(Vector2 InPos);
 		}
 
 		property Vector2 Size
 		{
-			Vector2 get()
-			{
-				Fvector2 wndSize;
-				wndSize = pNativeObject->GetWndSize();
-
-				return Vector2(wndSize.x, wndSize.y);
-			}
-
-			void set(Vector2 InSize)
-			{
-				Fvector2 wndSize;
-				wndSize.set(InSize.X, InSize.Y);
-				pNativeObject->SetWndSize(wndSize);
-			}
+			Vector2 get();
+			void set(Vector2 InSize);
 		}
 
 		property float Width
 		{
-			float get()
-			{
-				return pNativeObject->GetWidth();
-			}
-
-			void set(float InWidth)
-			{
-				pNativeObject->SetWidth(InWidth);
-			}
+			float get();
+			void set(float InWidth);
 		}
 
 		property float Height
 		{
-			float get()
-			{
-				return pNativeObject->GetHeight();
-			}
-
-			void set(float InHeight)
-			{
-				pNativeObject->SetHeight(InHeight);
-			}
+			float get();
+			void set(float InHeight);
 		}
 
 		property WindowAligment Aligment
 		{
-			WindowAligment get()
-			{
-				EWindowAlignment windowAligment = pNativeObject->GetAlignment();
-				return WindowAligment(windowAligment);
-			}
-
-			void set(WindowAligment value)
-			{
-				int eValue = (int)value;
-				EWindowAlignment windowAligment = (EWindowAlignment)eValue;
-				pNativeObject->SetAlignment(windowAligment);
-			}
+			WindowAligment get();
+			void set(WindowAligment value);
 		}
 
 		IntPtr EngineWNDClass()

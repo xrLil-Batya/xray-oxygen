@@ -81,7 +81,6 @@ public:
 	float					wind_blast_strength_stop_value;
 	Fquaternion				wind_blast_current;
 	// Environments
-	BENCH_SEC_SCRAMBLEMEMBER2
 	CEnvDescriptorMixer*	CurrentEnv;
 	CEnvDescriptor*			Current[2];
 

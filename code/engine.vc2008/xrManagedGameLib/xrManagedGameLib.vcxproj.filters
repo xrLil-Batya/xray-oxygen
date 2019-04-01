@@ -81,6 +81,15 @@
     <ClInclude Include="API\PhysicsGameScripted.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="API\Explosive.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\ScriptGameObject.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\xrTime.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -141,6 +150,15 @@
       <Filter>Source Files\API</Filter>
     </ClCompile>
     <ClCompile Include="API\PhysicsGameScripted.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\Explosive.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\ScriptGameObject.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\xrTime.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>

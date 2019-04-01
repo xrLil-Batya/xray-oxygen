@@ -37,7 +37,7 @@ public:
 	virtual void 	OnFocusReceive		();
 	virtual void	OnFocusLost			();
 	virtual void	Update				();
-	virtual void	SendMessage			( CUIWindow* pWnd, s16 msg, void* pData );
+	virtual void	SendMessageToWnd			( CUIWindow* pWnd, s16 msg, void* pData );
 
 			void	UpdateList			();
 
@@ -76,7 +76,7 @@ public:
 	virtual void 	OnFocusReceive		();
 	virtual void	OnFocusLost			();
 	virtual void	Update				();
-	virtual void	SendMessage			( CUIWindow* pWnd, s16 msg, void* pData );
+	virtual void	SendMessageToWnd			( CUIWindow* pWnd, s16 msg, void* pData );
 	virtual bool	OnMouseAction				( float x, float y, EUIMessages mouse_action );
 
 private:

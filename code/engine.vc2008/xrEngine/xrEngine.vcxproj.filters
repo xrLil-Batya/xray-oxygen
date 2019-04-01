@@ -279,9 +279,6 @@
     <ClInclude Include="defines.h">
       <Filter>Kernel</Filter>
     </ClInclude>
-    <ClInclude Include="mp_logging.h">
-      <Filter>Kernel</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Kernel</Filter>
     </ClInclude>
@@ -1069,10 +1066,6 @@
     <None Include="Effects description.txt">
       <Filter>Engine</Filter>
     </None>
-    <None Include="OffSetOfWrapper.inl">
-      <Filter>Interfaces\Input</Filter>
-    </None>
-    <None Include="features.txt" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\xrCore.natvis">

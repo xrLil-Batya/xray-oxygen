@@ -10,6 +10,10 @@ namespace xrMaker
 		public CMakeSolution(string RefDir)
 		{
 			RefPath = RefDir;
+
+			// Make output dir
+			if(!Directory.Exists(RefPath))
+				Directory.CreateDirectory(RefPath);
 		}
 		private void MakeVBProject()
 		{
@@ -96,7 +100,13 @@ namespace xrMaker
 				"    <Import Include=\"System.Xml.Linq\" /> \r\n",
 				"    <Import Include=\"System.Threading.Tasks\" /> \r\n",
 				"  </ItemGroup> \r\n",
-				"  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.VisualBasic.targets\" /> \r\n"
+				"  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.VisualBasic.targets\" /> \r\n",
+				"  <ItemGroup>\r\n",
+				"	<ProjectReference Include=\"xrDotScripts.csproj\"> \r\n",
+				"		<Project>{03709499-bc33-44ee-9bae-7e4adb921a3a}</Project> \r\n",
+				"			<Name>xrDotScripts</Name> \r\n",
+				"		</ProjectReference> \r\n",
+				"  </ItemGroup> \r\n"
 			};
 
 			foreach (var Str in Header)
@@ -109,10 +119,8 @@ namespace xrMaker
 			{
 				"<ItemGroup> \r\n"
 			};
-			string[] FileList = Directory.GetFiles(BinaryPath + @"\..\gamedata\scripts", "*.vb", SearchOption.AllDirectories);
 
-			foreach (var FileName in FileList)
-				CompilerFilesList.Add($"<Compile Include=\"{FileName}\" /> \r\n");
+			AddScript(ref CompilerFilesList, "vb");
 
 			CompilerFilesList.Add("</ItemGroup> \r\n");
 			CompilerFilesList.Add("</Project> \r\n");
@@ -123,6 +131,17 @@ namespace xrMaker
 				fsStream.Write(array, 0, array.Length);
 			}
 			fsStream.Close();
+		}
+		private void AddScript(ref List<string> StrList, string Ext)
+		{
+			string ScriptsPath = BinaryPath + @"\..\gamedata\scripts";
+			if (Directory.Exists(ScriptsPath))
+			{
+				string[] FileList = Directory.GetFiles(ScriptsPath, $"*.{Ext}", SearchOption.AllDirectories);
+
+				foreach (var FileName in FileList)
+					StrList.Add($"<Compile Include=\"{FileName}\" /> \r\n");
+			}
 		}
 		private void MakeCSProject()
 		{
@@ -199,10 +218,8 @@ namespace xrMaker
 			{
 				"<ItemGroup> \r\n"
 			};
-			string[] FileList = Directory.GetFiles(BinaryPath + @"\..\gamedata\scripts", "*.cs", SearchOption.AllDirectories);
 
-			foreach (var FileName in FileList)
-				CompilerFilesList.Add($"<Compile Include=\"{FileName}\" /> \r\n");
+			AddScript(ref CompilerFilesList, "cs");
 
 			CompilerFilesList.Add("</ItemGroup> \r\n");
 			CompilerFilesList.Add("</Project> \r\n");

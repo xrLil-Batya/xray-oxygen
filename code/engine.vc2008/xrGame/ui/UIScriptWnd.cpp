@@ -23,13 +23,13 @@ void CUIDialogWndEx::Register(CUIWindow* pChild, LPCSTR name)
 	pChild->SetMessageTarget(this);
 }
 
-void CUIDialogWndEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIDialogWndEx::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	event_comparer ec(pWnd,msg);
 
 	CALLBACKS::iterator it = std::find_if(m_callbacks.begin(),m_callbacks.end(),ec);
 	if(it==m_callbacks.end())
-		return inherited::SendMessage(pWnd, msg, pData);
+		return inherited::SendMessageToWnd(pWnd, msg, pData);
 
 	((*it)->m_callback)();
 }

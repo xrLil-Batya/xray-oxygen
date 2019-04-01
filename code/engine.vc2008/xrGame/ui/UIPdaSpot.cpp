@@ -132,7 +132,7 @@ bool CUIPdaSpot::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
     return base_class::OnKeyboardAction(dik, keyboard_action);
 }
 
-void CUIPdaSpot::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIPdaSpot::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
     CUIWndCallback::OnEvent(pWnd, msg, pData);
 }

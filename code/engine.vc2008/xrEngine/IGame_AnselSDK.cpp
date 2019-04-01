@@ -1,9 +1,17 @@
 #include "stdafx.h"
 #include "IGame_AnselSDK.h"
 
-CGameAnsel* pGameAnsel = new CGameAnsel();
+IGameAnsel* pGameAnsel = nullptr;
 
-CGameAnsel::CGameAnsel() : isActive(false), offsetX(0.f), offsetY(0.f), viewportNear(VIEWPORT_NEAR)
+IGameAnsel::IGameAnsel() : bIsActive(false), offsetX(0.f), offsetY(0.f), viewportNear(VIEWPORT_NEAR)
+{}
+
+bool IGameAnsel::IsActive()
 {
+	if (pGameAnsel != nullptr)
+	{
+		return pGameAnsel->bIsActive;
+	}
 
+	return false;
 }

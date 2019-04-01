@@ -31,7 +31,7 @@ public:
 IC	E_MESSAGEBOX_STYLE GetBoxStyle() { return m_eMessageBoxStyle; };
 
 	virtual bool OnMouseAction			(float x, float y, EUIMessages mouse_action);
-	virtual void SendMessage		(CUIWindow *pWnd, s16 msg, void *pData);
+	virtual void SendMessageToWnd		(CUIWindow *pWnd, s16 msg, void *pData);
 
 	void		OnYesOk				();
 protected:

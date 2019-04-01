@@ -11,7 +11,8 @@ class CUIMessageBoxEx;
 #include "UIDialogHolder.h"
 #include "UIWndCallback.h"
 
-class UI_API CMainMenu : public IMainMenu, public IInputReceiver, public pureRender, public CDialogHolder, public CUIWndCallback, public CDeviceResetNotifier
+class UI_API CMainMenu : public IMainMenu, public IInputReceiver, public pureRender, public CDialogHolder, public CUIWndCallback, public CDeviceResetNotifier,
+	public pureAppActivate
 {
 	CUIDialogWnd*		m_startDialog;
 	
@@ -81,6 +82,8 @@ public:
 
 IC	const char*		GetGSVer() { return ENGINE_VERSION; };
 	virtual void	OnDeviceReset();
+
+	virtual void OnAppActivate() override;
 };
 
 extern UI_API CMainMenu* MainMenu();

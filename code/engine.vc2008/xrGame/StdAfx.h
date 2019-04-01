@@ -27,5 +27,8 @@
 #include "smart_cast.h"
 #include "GamePersistent.h"
 
+#include "../Include/xrRender/WallMarkArray.h"
+#include "../Include/xrRender/FactoryPtr.h"
+
 // Forward luaState
 struct lua_State;
