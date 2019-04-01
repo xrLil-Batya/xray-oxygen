@@ -85,12 +85,13 @@ namespace XRay
 			float get();
 			void set(float fFactor);
 		}
-
-		/// <summary>Is level inited</summary>
-		static property bool LevelPresent
+		/// <summary>Get or set game difficulty</summary>
+		static property ESingleGameDifficulty GameDifficulty
 		{
-			bool get();
+			ESingleGameDifficulty get();
+			void set(ESingleGameDifficulty dif);
 		}
+
 
 		static void StartWeatherFXfromTime(::System::String^ str, float time);		
 		static bool iSWfxPlaying();
@@ -102,7 +103,7 @@ namespace XRay
 		/// <summary>Check: Current level vertex be at level</summary>
 		static bool ValidVertex(u32 level_vertex_id);
 
-		static ::System::UInt32 VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance);
+		static ::System::UInt32 	VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance);
 
 		// Map
 		/// <summary>Check: Map has is current spot by object ID?</summary>
@@ -124,14 +125,36 @@ namespace XRay
 		static void HideIndicators();
 		static void HideIndicatorsSafe();
 		static void ShowIndicators();
-
-		//static XRay::MEnvironment^ pEnvironment();
+		static void ShowWeapon(bool b);
+		static bool isLevelPresent();
+		//static void AddCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void AddCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
+		//static void AddCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RemoveCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RemoveCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
+		//static void RemoveCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
+		//static void RemoveCallForObject(const luabind::object &lua_object);
+		//static void IterateSounds1(LPCSTR prefix, u32 max_count, luabind::functor<void> functor);		
+		//static void IterateSounds2(LPCSTR prefix, u32 max_count, luabind::object object, luabind::functor<void> functor);
+		//static void IterateOnlineObjects(luabind::functor<bool> functor);
+		static XRay::MEnvironment^ pEnvironment();
 		static XRay::EnvDescriptor^  CurrentEnvironment(XRay::MEnvironment^ self);
+		static void DisableInput();
+		static void EnableInput();
 		static void SpawnPhantom(const Fvector &position);
 		static Fbox GetBoundingVolume();
 		static void IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback);		
+		static float AddCamEffector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func);
+		static float AddCamEffector2(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func, float cam_fov);
+		static void RemoveCamEffector(int id);
 		static float GetSndVolume();
 		static void SetSndVolume(float v);
+		static void AddComplexEffector(LPCSTR section, int id);
+		static void RemoveComplexEffector(int id);
+		static void AddPPEffector(LPCSTR fn, int id, bool cyclic);	
+		static void RemovePPEffector(int id);
+		static void SetPPEffectorFactor(int id, float f, float f_sp);		
+		static void SetPPEffectorFactor2(int id, float f);
 		static int GCommunityGoodwill(LPCSTR _community, int _entity_id);
 		static void GSetCommunityGoodwill(LPCSTR _community, int _entity_id, int val);
 		static void GChangeCommunityGoodwill(LPCSTR _community, int _entity_id, int val);
@@ -154,6 +177,7 @@ namespace XRay
 		static void SetActiveCam(u8 mode);
 		static CScriptGameObject* GetViewEntityScript();	
 		static void SetViewEntityScript(CScriptGameObject* go);
+		static mxrTime^ GetStartTime();
 		static u8 GetLevelId(CLevelGraph *graph);
 		static ::System::UInt32 GetVertexCount(CLevelGraph *graph);
 		static void PatrolPathAdd(LPCSTR patrol_path, CPatrolPath* path);
