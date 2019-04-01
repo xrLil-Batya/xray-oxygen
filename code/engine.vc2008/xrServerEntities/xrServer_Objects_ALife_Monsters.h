@@ -22,7 +22,7 @@ class CALifeOnlineOfflineGroupBrain;
 #pragma warning(push)
 #pragma warning(disable:4005)
 
-XR_EPROPS_API SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
+SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
 	enum eTraderFlags {
 		eTraderFlagInfiniteAmmo		= u32(1) << 0,
 		eTraderFlagDummy			= u32(-1),

@@ -2,14 +2,13 @@
 
 namespace XRay
 {
-	public ref class WeatherFX
+	public ref class WeatherFX abstract
 	{
 	public:
-		WeatherFX();
-		void Create(::System::String^ Name);
-		void Stop();
+		static void Create(::System::String^ Name);
+		static void Stop();
 
-		property bool Enable
+		static property bool Enable
 		{
 			bool get();
 		}

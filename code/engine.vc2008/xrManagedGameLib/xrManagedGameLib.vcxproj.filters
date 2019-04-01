@@ -93,6 +93,9 @@
     <ClInclude Include="API\WeatherFX.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="API\MapManager.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -165,6 +168,9 @@
       <Filter>Source Files\API</Filter>
     </ClCompile>
     <ClCompile Include="API\WeatherFX.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="API\MapManager.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>

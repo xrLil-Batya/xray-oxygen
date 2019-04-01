@@ -57,6 +57,21 @@ void XRay::Actor::Satiety::set(float fNewValue)
 	::Actor()->conditions().ChangeSatiety(fNewValue);
 }
 
+u8  XRay::Actor::ActiveCam::get()
+{
+	CActor* actor = smart_cast<CActor*>(::Level().CurrentViewEntity());
+	if (actor)
+		return (u8)actor->active_cam();
+
+	return 255;
+}
+void XRay::Actor::ActiveCam::set(u8 mode)
+{
+	CActor* actor = smart_cast<CActor*>(::Level().CurrentViewEntity());
+	if (actor && mode <= EActorCameras::eacMaxCam)
+		actor->cam_Set((EActorCameras)mode);
+}
+
 float XRay::Actor::AddCamEffector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func)
 {
 	CAnimatorCamEffectorScriptCB* e = new CAnimatorCamEffectorScriptCB(cb_func);

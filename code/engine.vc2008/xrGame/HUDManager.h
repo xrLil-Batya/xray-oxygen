@@ -6,7 +6,7 @@
 class CHUDTarget;
 class CUIGame;
 
-class CHUDManager : public CCustomHUD
+class GAME_API CHUDManager : public CCustomHUD
 {
 	friend class CUI;
 

@@ -16,7 +16,7 @@ class	CUIStatic;
 class	CUITextWnd;
 class	CUIXml;
 
-class CUIMainIngameWnd: public CUIWindow  
+class GAME_API CUIMainIngameWnd: public CUIWindow
 {
 public:
 			CUIMainIngameWnd();

@@ -5,10 +5,6 @@
 using namespace System;
 using XRay::WeatherFX;
 
-WeatherFX::WeatherFX()
-{
-}
-
 bool WeatherFX::Enable::get()
 {
 	return ::Environment().IsWeatherFXPlaying();

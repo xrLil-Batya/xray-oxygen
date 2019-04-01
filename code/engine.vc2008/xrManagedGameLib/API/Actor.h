@@ -37,6 +37,14 @@ namespace XRay
 			void set(bool bActive);
 		}
 
+		static property u8 ActiveCam
+		{
+			u8 get();
+			void set(u8 mode);
+		}
+
+
+
 		// #TODO: Make to CamEffector class
 		static float AddCamEffector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func);
 		static float AddCamEffector2(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func, float cam_fov);
@@ -47,6 +55,9 @@ namespace XRay
 		static void RemovePPEffector(int id);
 		static void SetPPEffectorFactor(int id, float f, float f_sp);
 		static void SetPPEffectorFactor2(int id, float f);
+
+
+
 	public:
 		Inventory^ inventory;
 
@@ -66,6 +77,8 @@ namespace XRay
 
 		virtual void ZoneEnter();
 		virtual void ZoneExit();
+
+	
 
 		/*
 		virtual void level_border_exit();
