@@ -422,7 +422,7 @@ int	CScriptGameObject::GetGoodwill(CScriptGameObject* pToWho)
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"GetGoodwill available only for InventoryOwner");
 		return 0;
 	}
-	return RELATION_REGISTRY().GetGoodwill(pInventoryOwner->object_id(), pToWho->object().ID());
+	return SRelationRegistry().GetGoodwill(pInventoryOwner->object_id(), pToWho->object().ID());
 }
 
 void CScriptGameObject::SetGoodwill(int goodwill, CScriptGameObject* pWhoToSet)
@@ -433,7 +433,7 @@ void CScriptGameObject::SetGoodwill(int goodwill, CScriptGameObject* pWhoToSet)
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"SetGoodwill available only for InventoryOwner");
 		return ;
 	}
-	RELATION_REGISTRY().SetGoodwill(pInventoryOwner->object_id(), pWhoToSet->object().ID(), goodwill);
+	SRelationRegistry().SetGoodwill(pInventoryOwner->object_id(), pWhoToSet->object().ID(), goodwill);
 }
 
 void CScriptGameObject::ForceSetGoodwill(int goodwill, CScriptGameObject* pWhoToSet)
@@ -444,7 +444,7 @@ void CScriptGameObject::ForceSetGoodwill(int goodwill, CScriptGameObject* pWhoTo
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"ForceSetGoodwill available only for InventoryOwner");
 		return ;
 	}
-	RELATION_REGISTRY().ForceSetGoodwill(pInventoryOwner->object_id(), pWhoToSet->object().ID(), goodwill);
+	SRelationRegistry().ForceSetGoodwill(pInventoryOwner->object_id(), pWhoToSet->object().ID(), goodwill);
 }
 
 
@@ -456,7 +456,7 @@ void CScriptGameObject::ChangeGoodwill(int delta_goodwill, CScriptGameObject* pW
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"ChangeGoodwill available only for InventoryOwner");
 		return ;
 	}
-	RELATION_REGISTRY().ChangeGoodwill(pInventoryOwner->object_id(), pWhoToSet->object().ID(), delta_goodwill);
+	SRelationRegistry().ChangeGoodwill(pInventoryOwner->object_id(), pWhoToSet->object().ID(), delta_goodwill);
 }
 
 
@@ -477,7 +477,7 @@ void CScriptGameObject::SetRelation(ALife::ERelationType relation, CScriptGameOb
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"SetRelation available only for InventoryOwner");
 		return ;
 	}
-	RELATION_REGISTRY().SetRelationType(pInventoryOwner, pOthersInventoryOwner, relation);
+	SRelationRegistry().SetRelationType(pInventoryOwner, pOthersInventoryOwner, relation);
 }
 
 float CScriptGameObject::GetSympathy()
@@ -510,10 +510,10 @@ int CScriptGameObject::GetCommunityGoodwill_obj( LPCSTR community )
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"GetCommunityGoodwill available only for InventoryOwner");
 		return 0;
 	}
-	CHARACTER_COMMUNITY c;
+	CCharacterCommunity c;
 	c.set( community );
 
-	return RELATION_REGISTRY().GetCommunityGoodwill( c.index(), pInventoryOwner->object_id() );
+	return SRelationRegistry().GetCommunityGoodwill( c.index(), pInventoryOwner->object_id() );
 }
 
 void CScriptGameObject::SetCommunityGoodwill_obj( LPCSTR community, int goodwill )
@@ -524,10 +524,10 @@ void CScriptGameObject::SetCommunityGoodwill_obj( LPCSTR community, int goodwill
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"SetCommunityGoodwill available only for InventoryOwner");
 		return;
 	}
-	CHARACTER_COMMUNITY c;
+	CCharacterCommunity c;
 	c.set( community );
 
-	RELATION_REGISTRY().SetCommunityGoodwill( c.index(), pInventoryOwner->object_id(), goodwill );
+	SRelationRegistry().SetCommunityGoodwill( c.index(), pInventoryOwner->object_id(), goodwill );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -536,7 +536,7 @@ int	CScriptGameObject::GetAttitude			(CScriptGameObject* pToWho)
 {
 	CInventoryOwner* pInventoryOwner = smart_cast<CInventoryOwner*>(&object());VERIFY(pInventoryOwner);
 	CInventoryOwner* pOthersInventoryOwner = smart_cast<CInventoryOwner*>(&pToWho->object());VERIFY(pOthersInventoryOwner);
-	return RELATION_REGISTRY().GetAttitude(pInventoryOwner, pOthersInventoryOwner);
+	return SRelationRegistry().GetAttitude(pInventoryOwner, pOthersInventoryOwner);
 }
 
 
@@ -659,7 +659,7 @@ void CScriptGameObject::SetCharacterCommunity	(LPCSTR comm, int squad, int group
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"SetCharacterCommunity available only for InventoryOwner");
 		return;
 	}
-	CHARACTER_COMMUNITY	community;
+	CCharacterCommunity	community;
 	community.set(comm);
 	pInventoryOwner->SetCommunity(community.index());
 	entity->ChangeTeam(community.team(), squad, group);

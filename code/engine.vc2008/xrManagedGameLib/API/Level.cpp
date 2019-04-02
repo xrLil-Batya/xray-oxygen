@@ -4,7 +4,6 @@
 #include "../xrGame/alife_simulator.h"
 #include "../xrGame/alife_simulator_base.h"
 #include "../xrGame/alife_time_manager.h"
-#include "../xrGame/alife_object_registry.h"
 #include "../xrGame/Actor.h"
 #include "../xrGame/HUDManager.h"
 #include "../xrGame/level_graph.h"
@@ -12,14 +11,12 @@
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
 #include "../xrGame/UIGame.h"
-#include "../xrGame/relation_registry.h"
 #include "../xrGame/patrol_path_storage.h"
 #include "../xrGame/ui/UIMainIngameWnd.h"
 #include "../xrGame/ui/UIMotionIcon.h"
 
 extern GAME_API CUISequencer* g_tutorial;
 extern GAME_API CUISequencer* g_tutorial2;
-extern GAME_API CUIMotionIcon* g_pMotionIcon;
 
 System::UInt32 XRay::LevelGraph::LevelID::get()
 {

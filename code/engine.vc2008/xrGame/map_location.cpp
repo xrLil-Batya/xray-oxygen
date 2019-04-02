@@ -785,7 +785,7 @@ bool CRelationMapLocation::Update()
 		if(!pEnt || !pAct)	
 			return false;
 
-		m_last_relation =  RELATION_REGISTRY().GetRelationType(pEnt, pAct);
+		m_last_relation =  SRelationRegistry().GetRelationType(pEnt, pAct);
 		CSE_ALifeCreatureAbstract*		pCreature = smart_cast<CSE_ALifeCreatureAbstract*>(m_owner_se_object);
 		if(pCreature) //maybe trader ?
 			bAlive = pCreature->g_Alive		();
@@ -799,7 +799,7 @@ bool CRelationMapLocation::Update()
 		if(!pEnt || !pAct)	
 			return false;
 
-		m_last_relation =  RELATION_REGISTRY().GetRelationType(pEnt, pAct);
+		m_last_relation =  SRelationRegistry().GetRelationType(pEnt, pAct);
 		CEntityAlive* pEntAlive = smart_cast<CEntityAlive*>(pEnt);
 		if(pEntAlive)
 			bAlive = !!pEntAlive->g_Alive		();
@@ -809,7 +809,7 @@ bool CRelationMapLocation::Update()
 	if(bAlive==false)
 		sname = "deadbody_location";
 	else
-		sname = RELATION_REGISTRY().GetSpotName(m_last_relation);
+		sname = SRelationRegistry().GetSpotName(m_last_relation);
 
 	if(m_curr_spot_name != sname){
 		LoadSpot(*sname, true);

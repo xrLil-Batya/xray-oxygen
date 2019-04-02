@@ -458,14 +458,14 @@ u16								CSE_ALifeTraderAbstract::object_id		() const
 	return base()->ID;
 }
 
-CHARACTER_COMMUNITY_INDEX 	CSE_ALifeTraderAbstract::Community	() const
+int 	CSE_ALifeTraderAbstract::Community	() const
 {
 	return m_community_index;
 }
 
 LPCSTR			CSE_ALifeTraderAbstract::CommunityName () const
 {
-	return *CHARACTER_COMMUNITY::IndexToId(m_community_index);
+	return *CCharacterCommunity::IndexToId(m_community_index);
 }
 
 CHARACTER_RANK_VALUE CSE_ALifeTraderAbstract::Rank		()

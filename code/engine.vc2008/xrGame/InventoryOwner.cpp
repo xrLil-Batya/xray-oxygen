@@ -245,7 +245,7 @@ bool CInventoryOwner::OfferTalk(CInventoryOwner* talk_partner)
 	CEntityAlive* pPartnerEntityAlive = smart_cast<CEntityAlive*>(talk_partner);
 	R_ASSERT(pPartnerEntityAlive);
 	
-//	ALife::ERelationType relation = RELATION_REGISTRY().GetRelationType(this, talk_partner);
+//	ALife::ERelationType relation = SRelationRegistry().GetRelationType(this, talk_partner);
 //	if(relation == ALife::eRelationTypeEnemy) return false;
 
 	if(!is_alive() || !pPartnerEntityAlive->g_Alive()) return false;
@@ -401,7 +401,7 @@ u16 CInventoryOwner::object_id	()  const
 //////////////////////////////////////////////////////////////////////////
 //установка группировки на клиентском и серверном объкте
 
-void CInventoryOwner::SetCommunity	(CHARACTER_COMMUNITY_INDEX new_community)
+void CInventoryOwner::SetCommunity	(int new_community)
 {
 	CEntityAlive* EA					= smart_cast<CEntityAlive*>(this); VERIFY(EA);
 

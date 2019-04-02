@@ -13,56 +13,52 @@
 
 struct COMMUNITY_DATA
 {
-	COMMUNITY_DATA (CHARACTER_COMMUNITY_INDEX, CHARACTER_COMMUNITY_ID, LPCSTR);
+	COMMUNITY_DATA (int, shared_str, LPCSTR);
 
-	CHARACTER_COMMUNITY_ID		id;
-	CHARACTER_COMMUNITY_INDEX	index;
-	u8 team;
+	u8			team;
+	int			index;
+	shared_str	id;
 };
 
-
-class CHARACTER_COMMUNITY;
-
-class GAME_API CHARACTER_COMMUNITY: 
-	public CIni_IdToIndex<true, COMMUNITY_DATA, CHARACTER_COMMUNITY_ID, CHARACTER_COMMUNITY_INDEX, CHARACTER_COMMUNITY>
+class GAME_API CCharacterCommunity: 
+	public CIni_IdToIndex<true, COMMUNITY_DATA, shared_str, int, CCharacterCommunity>
 {
-private:
-	typedef CIni_IdToIndex<true, COMMUNITY_DATA, CHARACTER_COMMUNITY_ID, CHARACTER_COMMUNITY_INDEX, CHARACTER_COMMUNITY> inherited;
+	typedef CIni_IdToIndex<true, COMMUNITY_DATA, shared_str, int, CCharacterCommunity> inherited;
 	friend inherited;
 
 public:
-	CHARACTER_COMMUNITY			();
-	~CHARACTER_COMMUNITY		();
+	CCharacterCommunity			();
+	~CCharacterCommunity		();
 
-	void						set				(CHARACTER_COMMUNITY_ID);		
-	void						set				(CHARACTER_COMMUNITY_INDEX index) {m_current_index = index;};
+	void						set				(shared_str);		
+	void						set				(int index) {m_current_index = index;};
 
-	CHARACTER_COMMUNITY_ID		id				() const;
-	CHARACTER_COMMUNITY_INDEX	index			() const	{return m_current_index;};
+	shared_str					id				() const;
+	int							index			() const	{return m_current_index;};
 	u8							team			() const;
 
 private:
-	CHARACTER_COMMUNITY_INDEX	m_current_index;
+	int	m_current_index;
 
 	static	void				InitIdToIndex	();
 
 public:
 	//отношение между группировками
-	static CHARACTER_GOODWILL	relation			(CHARACTER_COMMUNITY_INDEX from, CHARACTER_COMMUNITY_INDEX to);
-	CHARACTER_GOODWILL			relation			(CHARACTER_COMMUNITY_INDEX to);
+	static CHARACTER_GOODWILL	relation			(int from, int to);
+	CHARACTER_GOODWILL			relation			(int to);
 	
-	static void					set_relation		(CHARACTER_COMMUNITY_INDEX from, CHARACTER_COMMUNITY_INDEX to, CHARACTER_GOODWILL goodwill);
+	static void					set_relation		(int from, int to, CHARACTER_GOODWILL goodwill);
 
-	static float				sympathy			(CHARACTER_COMMUNITY_INDEX);
+	static float				sympathy			(int);
 	
 	static void					DeleteIdToIndexData	();
 private:
-	typedef CIni_Table<CHARACTER_GOODWILL, CHARACTER_COMMUNITY> GOODWILL_TABLE;
+	typedef CIni_Table<CHARACTER_GOODWILL, CCharacterCommunity> GOODWILL_TABLE;
 	friend GOODWILL_TABLE;
 	static GOODWILL_TABLE m_relation_table;
 
 	//таблица коэффициентов "сочуствия" между участниками группировки
-	typedef CIni_Table<float, CHARACTER_COMMUNITY> SYMPATHY_TABLE;
+	typedef CIni_Table<float, CCharacterCommunity> SYMPATHY_TABLE;
 	friend SYMPATHY_TABLE;
 	static SYMPATHY_TABLE m_sympathy_table;
 };

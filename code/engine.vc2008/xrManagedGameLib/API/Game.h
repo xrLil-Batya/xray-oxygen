@@ -4,7 +4,7 @@
 
 namespace XRay
 {
-	public enum class ESingleGameDifficulty : ::System::UInt32
+	public enum class ESingleGameDifficulty : u32
 	{
 		egdNovice = 0,
 		egdStalker = 1,
@@ -34,63 +34,63 @@ namespace XRay
 		{
 		private:
 
-			static ::System::UInt32 _years;
-			static ::System::UInt32 _months;
-			static ::System::UInt32 _weeks;
-			static ::System::UInt32 _days;
-			static ::System::UInt32 _hours;
-			static ::System::UInt32 _minutes;
-			static ::System::UInt32 _seconds;
-			static ::System::UInt32 _miliseconds;
+			static u32 _years;
+			static u32 _months;
+			static u32 _weeks;
+			static u32 _days;
+			static u32 _hours;
+			static u32 _minutes;
+			static u32 _seconds;
+			static u32 _miliseconds;
 
 		public:
 
-			static property ::System::UInt32 Years
+			static property u32 Years
 			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
+				u32 get();
+				void set(u32 value);
 			}
 
-			static property ::System::UInt32 Months
+			static property u32 Months
 			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
+				u32 get();
+				void set(u32 value);
 			}
 			//////Weeks not used in Original //////
-			static property ::System::UInt32 Weeks
+			static property u32 Weeks
 			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
+				u32 get();
+				void set(u32 value);
 			}
 			
-			static property ::System::UInt32 Days
+			static property u32 Days
 			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
+				u32 get();
+				void set(u32 value);
 			}
 
-			static property ::System::UInt32 Hours
+			static property u32 Hours
 			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
+				u32 get();
+				void set(u32 value);
 			}
 
-			static property ::System::UInt32 Minutes
+			static property u32 Minutes
 			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
+				u32 get();
+				void set(u32 value);
 			}
 
-			static property ::System::UInt32 Seconds
+			static property u32 Seconds
 			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
+				u32 get();
+				void set(u32 value);
 			}
 
-			static property ::System::UInt32 Miliseconds
+			static property u32 Miliseconds
 			{
-				::System::UInt32 get();
-				void set(::System::UInt32 value);
+				u32 get();
+				void set(u32 value);
 			}
 
 			static void ChangeGameTime(u32 days, u32 hours, u32 mins);
@@ -134,28 +134,24 @@ namespace XRay
 		static void GlobalSend(NET_Packet& P);
 		static void UserEventGen(NET_Packet& P, u32 _event, u32 _dest);
 
-
 		static void setTutorialState(LPCSTR name, eTutorialState tutorialState);
-		static bool getTutorialState();
-
-		static int GlobalCommunityGoodwill(LPCSTR _community, int _entity_id);
-		static void GlobalSetCommunityGoodwill(LPCSTR _community, int _entity_id, int val);
-		static void GlobalChangeCommunityGoodwill(LPCSTR _community, int _entity_id, int val);
-		static int GlobalGetCommunityRelation(LPCSTR comm_from, LPCSTR comm_to);
-		static void GlobalSetCommunityRelation(LPCSTR comm_from, LPCSTR comm_to, int value);
-		static int GlobalGetGeneralGoodwillBetween(u16 from, u16 to);
+		static property bool TutorialState
+		{
+			bool get();
+		}
 
 		static Fbox GetBoundingVolume();
 		static void PrefetchSnd(LPCSTR name);
 		static void IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback);
 
-		static void SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID) { SpawnSection(sSection, vPosition, LevelVertexID, ParentID, false); };
-		static void SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem);
-		static void ShowMinimap(bool bShow);
-		static GameObject^ GlobalGetTargetObject();
-		static float GlobalGetTargetDist();
-		static ::System::UInt32 GlobalGetTargetElement();
-
-
+		static void SpawnSection(LPCSTR sSection, ::System::Numerics::Vector3 vPosition, u32 LevelVertexID, u16 ParentID) { SpawnSection(sSection, vPosition, LevelVertexID, ParentID, false); };
+		static void SpawnSection(LPCSTR sSection, ::System::Numerics::Vector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem);
+		
+		/// <summary> Current target object </summary>
+		static GameObject^	GlobalTargetObject();
+		/// <summary> Distance to target object </summary>
+		static float		GlobalTargetDist();
+		/// <summary> Current target element </summary>
+		static u32			GlobalTargetElement();
 	};
 }

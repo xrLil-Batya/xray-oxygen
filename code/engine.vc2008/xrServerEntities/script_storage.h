@@ -24,7 +24,7 @@ class CScriptThread;
 
 using namespace ScriptStorage;
 
-class GAME_API CScriptStorage
+class CScriptStorage
 {
 private:
     static CVMLua*				luaVM;

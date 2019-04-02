@@ -241,7 +241,7 @@ void CUICharacterInfo::UpdateRelation()
 		CSE_ALifeTraderAbstract* T = ch_info_get_from_id	(m_ownerID);
 		CSE_ALifeTraderAbstract* TA = ch_info_get_from_id	(Actor()->ID());
 
-		SetRelation( RELATION_REGISTRY().GetRelationType( T, TA ), RELATION_REGISTRY().GetAttitude( T, TA ) );
+		SetRelation( SRelationRegistry().GetRelationType( T, TA ), SRelationRegistry().GetAttitude( T, TA ) );
 	}
 }
 

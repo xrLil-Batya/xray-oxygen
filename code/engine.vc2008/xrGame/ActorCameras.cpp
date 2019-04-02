@@ -473,7 +473,7 @@ void CActor::cam_Update(float dt, float fFOV)
 				//.				Msg("enemy is %s", *m_locked_enemy->cNameSect());
 			}
 		}
-		else if (!Enemy_Alive || !Enemy_Alive->getEnabled() || !Enemy_Alive->g_Alive() || Enemy_Alive->Position().distance_to(Actor()->Position()) > aldist - 10.0f)//|| (!Enemy_Alive->cast_base_monster() && RELATION_REGISTRY().GetRelationType(others_inv_owner, our_inv_owner) != ALife::eRelationTypeEnemy))
+		else if (!Enemy_Alive || !Enemy_Alive->getEnabled() || !Enemy_Alive->g_Alive() || Enemy_Alive->Position().distance_to(Actor()->Position()) > aldist - 10.0f)//|| (!Enemy_Alive->cast_base_monster() && SRelationRegistry().GetRelationType(others_inv_owner, our_inv_owner) != ALife::eRelationTypeEnemy))
 		{
 
 			m_locked_enemy = nullptr;

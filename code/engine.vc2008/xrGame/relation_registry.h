@@ -19,11 +19,11 @@ class CEntityAlive;
 
 //////////////////////////////////////////////////////////////////////////
 
-struct GAME_API RELATION_REGISTRY
+struct GAME_API SRelationRegistry
 {
 public:
-	RELATION_REGISTRY  ();
-	virtual ~RELATION_REGISTRY ();
+	SRelationRegistry  ();
+	virtual ~SRelationRegistry ();
 
 public:	
 
@@ -51,14 +51,14 @@ public:
 
 	//отношения группировки к персонажу (именно так, а не наоборот)
 	//т.е. персонаж сам помнит, как к нему какая группировка отностися
-	CHARACTER_GOODWILL	 GetCommunityGoodwill		(CHARACTER_COMMUNITY_INDEX from_community, u16 to_character) const ;
-	void				 SetCommunityGoodwill		(CHARACTER_COMMUNITY_INDEX from_community, u16 to_character, CHARACTER_GOODWILL goodwill);
-	void				 ChangeCommunityGoodwill	(CHARACTER_COMMUNITY_INDEX from_community, u16 to_character, CHARACTER_GOODWILL delta_goodwill);
+	CHARACTER_GOODWILL	 GetCommunityGoodwill		(int from_community, u16 to_character) const ;
+	void				 SetCommunityGoodwill		(int from_community, u16 to_character, CHARACTER_GOODWILL goodwill);
+	void				 ChangeCommunityGoodwill	(int from_community, u16 to_character, CHARACTER_GOODWILL delta_goodwill);
 	
 	void				 ClearRelations				(u16 person_id);
 
-	CHARACTER_GOODWILL	 GetCommunityRelation		(CHARACTER_COMMUNITY_INDEX, CHARACTER_COMMUNITY_INDEX) const;	
-	void				 SetCommunityRelation		(CHARACTER_COMMUNITY_INDEX index1, CHARACTER_COMMUNITY_INDEX index2, CHARACTER_GOODWILL goodwill);
+	CHARACTER_GOODWILL	 GetCommunityRelation		(int, int) const;	
+	void				 SetCommunityRelation		(int index1, int index2, CHARACTER_GOODWILL goodwill);
 
 private:
 	CHARACTER_GOODWILL	 GetRankRelation			(CHARACTER_RANK_VALUE, CHARACTER_RANK_VALUE) const;

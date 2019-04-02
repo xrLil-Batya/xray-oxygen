@@ -154,61 +154,6 @@ void XRay::Game::SndVolume::set(float v)
 	clamp(psSoundVFactor, 0.0f, 1.0f);
 }
 
-int XRay::Game::GlobalCommunityGoodwill(LPCSTR _community, int _entity_id)
-{
-	CHARACTER_COMMUNITY c;
-	c.set(_community);
-
-	return RELATION_REGISTRY().GetCommunityGoodwill(c.index(), u16(_entity_id));
-}
-void XRay::Game::GlobalSetCommunityGoodwill(LPCSTR _community, int _entity_id, int val)
-{
-	CHARACTER_COMMUNITY	c;
-	c.set(_community);
-	RELATION_REGISTRY().SetCommunityGoodwill(c.index(), u16(_entity_id), val);
-}
-void XRay::Game::GlobalChangeCommunityGoodwill(LPCSTR _community, int _entity_id, int val)
-{
-	CHARACTER_COMMUNITY	c;
-	c.set(_community);
-	RELATION_REGISTRY().ChangeCommunityGoodwill(c.index(), u16(_entity_id), val);
-}
-int XRay::Game::GlobalGetCommunityRelation(LPCSTR comm_from, LPCSTR comm_to)
-{
-	CHARACTER_COMMUNITY	community_from;
-	community_from.set(comm_from);
-	CHARACTER_COMMUNITY	community_to;
-	community_to.set(comm_to);
-
-	return RELATION_REGISTRY().GetCommunityRelation(community_from.index(), community_to.index());
-}
-void XRay::Game::GlobalSetCommunityRelation(LPCSTR comm_from, LPCSTR comm_to, int value)
-{
-	CHARACTER_COMMUNITY	community_from;
-	community_from.set(comm_from);
-	CHARACTER_COMMUNITY	community_to;
-	community_to.set(comm_to);
-
-	RELATION_REGISTRY().SetCommunityRelation(community_from.index(), community_to.index(), value);
-}
-int XRay::Game::GlobalGetGeneralGoodwillBetween(u16 from, u16 to)
-{
-	CHARACTER_GOODWILL presonal_goodwill = RELATION_REGISTRY().GetGoodwill(from, to); VERIFY(presonal_goodwill != NO_GOODWILL);
-
-	CSE_ALifeTraderAbstract* from_obj = smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(from));
-	CSE_ALifeTraderAbstract* to_obj = smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(to));
-
-	if (!from_obj || !to_obj)
-	{
-		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "RELATION_REGISTRY::get_general_goodwill_between  : cannot convert obj to CSE_ALifeTraderAbstract!");
-		return (0);
-	}
-	CHARACTER_GOODWILL community_to_obj_goodwill = RELATION_REGISTRY().GetCommunityGoodwill(from_obj->Community(), to);
-	CHARACTER_GOODWILL community_to_community_goodwill = RELATION_REGISTRY().GetCommunityRelation(from_obj->Community(), to_obj->Community());
-
-	return presonal_goodwill + community_to_obj_goodwill + community_to_community_goodwill;
-}
-
 extern GAME_API CUISequencer* g_tutorial;
 extern GAME_API CUISequencer* g_tutorial2;
 
@@ -238,7 +183,7 @@ void XRay::Game::setTutorialState(LPCSTR name, eTutorialState tutorialState)
 	}
 
 }
-bool XRay::Game::getTutorialState()
+bool XRay::Game::TutorialState::get()
 {
 	return (g_tutorial != nullptr);
 }
@@ -284,8 +229,7 @@ void XRay::Game::PrefetchSnd(LPCSTR name)
 	(::Level().PrefetchSound(name));
 }
 
-
-XRay::GameObject^ XRay::Game::GlobalGetTargetObject()
+XRay::GameObject^ XRay::Game::GlobalTargetObject()
 {
 	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
 	if (RQ.O)
@@ -296,7 +240,8 @@ XRay::GameObject^ XRay::Game::GlobalGetTargetObject()
 	}
 	return (nullptr);
 }
-float XRay::Game::GlobalGetTargetDist()
+
+float XRay::Game::GlobalTargetDist()
 {
 	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
 	if (RQ.range)
@@ -304,22 +249,13 @@ float XRay::Game::GlobalGetTargetDist()
 	return (0);
 }
 
-void XRay::Game::SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem)
+void XRay::Game::SpawnSection(LPCSTR sSection, ::System::Numerics::Vector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem)
 {
-	::Level().spawn_item(sSection, vPosition, LevelVertexID, ParentID, bReturnItem);
+	Fvector NativeVect; NativeVect.set(vPosition.X, vPosition.Y, vPosition.Z);
+	::Level().spawn_item(sSection, NativeVect, LevelVertexID, ParentID, bReturnItem);
 }
 
-void XRay::Game::ShowMinimap(bool bShow)
-{
-	CUIGame* GameUI = HUD().GetGameUI();
-	GameUI->UIMainIngameWnd->ShowZoneMap(bShow);
-	if (g_pMotionIcon != nullptr)
-	{
-		g_pMotionIcon->bVisible = bShow;
-	}
-}
-
-::System::UInt32 XRay::Game::GlobalGetTargetElement()
+::System::UInt32 XRay::Game::GlobalTargetElement()
 {
 	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
 	if (RQ.element)

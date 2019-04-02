@@ -71,7 +71,7 @@ typedef xr_vector<SGameWeathers> GAME_WEATHERS;
 typedef xr_vector<SGameWeathers>::iterator GAME_WEATHERS_IT;
 typedef xr_vector<SGameWeathers>::const_iterator GAME_WEATHERS_CIT;
 
-class CUIGame : public IGameUI, public DLL_Pure
+class GAME_API CUIGame : public IGameUI, public DLL_Pure
 {
 protected:
 	typedef xr_vector<SDrawStaticStruct*> st_vec;
