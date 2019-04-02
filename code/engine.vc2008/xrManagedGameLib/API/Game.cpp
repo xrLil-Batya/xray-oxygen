@@ -131,18 +131,18 @@ void XRay::Game::SGameTime::ChangeGameTime(u32 days, u32 hours, u32 mins)
 	}
 }
 
-void XRay::Game::GameDifficulty::set(ESingleGameDifficulty dif)
-{
-	g_SingleGameDifficulty = (::ESingleGameDifficulty)u32(dif);
-	::Actor()->OnDifficultyChanged();
-}
-
-XRay::ESingleGameDifficulty XRay::Game::GameDifficulty::get()
-{
-	return (ESingleGameDifficulty)u32(g_SingleGameDifficulty);
-}
-
-u64 XRay::Game::StartTime::get()
-{
-	return ::Level().GetStartGameTime();
-}
+//void XRay::Game::GameDifficulty::set(ESingleGameDifficulty dif)
+//{
+//	g_SingleGameDifficulty = (::ESingleGameDifficulty)u32(dif);
+//	::Actor()->OnDifficultyChanged();
+//}
+//
+//XRay::ESingleGameDifficulty XRay::Game::GameDifficulty::get()
+//{
+//	return (ESingleGameDifficulty)u32(g_SingleGameDifficulty);
+//}
+//
+//u64 XRay::Game::StartTime::get()
+//{
+//	return ::Level().GetStartGameTime();
+//}
