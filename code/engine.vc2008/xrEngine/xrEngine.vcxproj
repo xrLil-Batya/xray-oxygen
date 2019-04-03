@@ -200,6 +200,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\FrayBuildConfig.hpp" />
+    <ClInclude Include="AMDGPUTransferee.h" />
     <ClInclude Include="CameraFirstEye.h" />
     <ClInclude Include="ClS\NET_Client.h" />
     <ClInclude Include="date_time.h" />
@@ -335,6 +336,7 @@
     <ClInclude Include="ide.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AMDGPUTransferee.cpp" />
     <ClCompile Include="BoneEditor.cpp" />
     <ClCompile Include="CameraFirstEye.cpp" />
     <ClCompile Include="ClS\NET_Client.cpp" />

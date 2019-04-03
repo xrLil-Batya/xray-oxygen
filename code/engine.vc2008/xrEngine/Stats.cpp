@@ -11,6 +11,7 @@
 #include <Wbemidl.h>
 #include <comdef.h>
 #include <timeapi.h>
+#include "AMDGPUTransferee.h"
 
 #include "../Include/xrRender/DrawUtils.h"
 
@@ -27,6 +28,7 @@ enum DebugTextColor : DWORD
     DTC_RED = 0xFFF0672B,
     DTC_YELLOW = 0xFFF6D434,
     DTC_GREEN = 0xFF67F92E,
+    DTC_BLUE = 0xFF0000FF,
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -358,18 +360,10 @@ void CStats::Show()
         }
         float sz = pFont->GetHeight();
         pFont->SetHeightI(0.018f);
-        if (fLastDisplayedFPS > 50.0f)
-        {
-            pFont->SetColor(DebugTextColor::DTC_GREEN);
-        }
-        else if (fLastDisplayedFPS > 30.0f)
-        {
-            pFont->SetColor(DebugTextColor::DTC_YELLOW);
-        }
-        else
-        {
-            pFont->SetColor(DebugTextColor::DTC_RED);
-        }
+
+        if (fLastDisplayedFPS > 50.0f)			pFont->SetColor(DebugTextColor::DTC_GREEN);
+        else if (fLastDisplayedFPS > 30.0f)		pFont->SetColor(DebugTextColor::DTC_YELLOW);
+        else									pFont->SetColor(DebugTextColor::DTC_RED);
         
         const char* FPSFormat = "FPS: %0.0f";
         //If game paused, engine not updating deltaTime variable, so FPS variable is freezed to last value
@@ -387,6 +381,11 @@ void CStats::Show()
 	{
         if ((Core.dwFrame % 25) == 0)
         {
+			static CAMDReader AMDData;
+
+			if (CAMDReader::bAMDSupportADL)
+				AMDGPULoad = AMDData.GetPercentActive();
+
 		    // init all variables
 		    MEMORYSTATUSEX mem;
 		    PROCESS_MEMORY_COUNTERS_EX pmc;
@@ -429,22 +428,27 @@ void CStats::Show()
         pFont->Out(10, 25, "MEM_AVAILABLE: %0.0fMB", AvailableMem);				// Physical memory available
         pFont->Out(10, 40, "PAGE_AVAILABLE: %0.0fMB", AvailablePageFileMem);	// Pagefile memory available
         pFont->Out(10, 55, "PAGE_APPUSED: %0.0fMB", PageFileMemUsedByApp);		// Physical memory used by app
-        if (cpuLoad > 80.0 || PhysMemoryUsedPercent > 80.0)
-            pFont->SetColor(DebugTextColor::DTC_RED);
-        else if (cpuLoad > 60.0 || PhysMemoryUsedPercent > 60.0)
-            pFont->SetColor(DebugTextColor::DTC_YELLOW);
-        else
-            pFont->SetColor(DebugTextColor::DTC_GREEN);
+
+        if (cpuLoad > 80.0 || PhysMemoryUsedPercent > 80.0)			pFont->SetColor(DebugTextColor::DTC_RED);
+        else if (cpuLoad > 60.0 || PhysMemoryUsedPercent > 60.0)	pFont->SetColor(DebugTextColor::DTC_YELLOW);
+        else														pFont->SetColor(DebugTextColor::DTC_GREEN);
+
 		pFont->Out(10, 70, "CPU_LOAD: %0.0f", cpuLoad);							// CPU load
 		pFont->Out(10, 85, "MEM_USED: %0.0f", PhysMemoryUsedPercent);			// Total Phys. memory load (%)
 
 		// get MT Load
+		float dwScale = 100;
 		for (size_t i = 0; i < CPU::Info.m_dwNumberOfProcessors; i++)
 		{
-			float dwScale = 100 + (float)i * 15;
 			pFont->Out(10, dwScale, "CPU%d: %0.0f", i, CPU::Info.fUsage[i]);
+			dwScale += 15;
 		}
 
+		if (CAMDReader::bAMDSupportADL)
+		{
+			pFont->SetColor(DebugTextColor::DTC_BLUE);
+			pFont->Out(10, dwScale, "GPU Used: %d", AMDGPULoad);
+		}
         pFont->OnRender();
 	}
 	

@@ -271,6 +271,9 @@
     <Filter Include="Game API\Environment\Hemisphere">
       <UniqueIdentifier>{6deaf446-9248-4ae4-93cc-3d7855bfcbed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\CPU\AMD">
+      <UniqueIdentifier>{8ed1a310-6252-4a03-811e-732ea1408fc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -675,6 +678,9 @@
     <ClInclude Include="profiler.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="AMDGPUTransferee.h">
+      <Filter>Engine\CPU\AMD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -1057,6 +1063,9 @@
     </ClCompile>
     <ClCompile Include="profiler.cpp">
       <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="AMDGPUTransferee.cpp">
+      <Filter>Engine\CPU\AMD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

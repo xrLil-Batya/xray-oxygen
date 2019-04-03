@@ -114,10 +114,11 @@ public:
 	CStatTimer	TEST2;				// debug counter
 	CStatTimer	TEST3;				// debug counter
 
-	FLOAT AvailableMem;
-	FLOAT AvailablePageFileMem;
-	FLOAT PageFileMemUsedByApp;
-	FLOAT PhysMemoryUsedPercent;
+	u32 AMDGPULoad;
+	float AvailableMem;
+	float AvailablePageFileMem;
+	float PageFileMemUsedByApp;
+	float PhysMemoryUsedPercent;
 
 	double cpuBefore;
 	double cpuLoad = cpuBefore;
@@ -125,6 +126,7 @@ public:
 	LPVOID MinAppAddress;
     LPVOID MaxAppAddress;
 #endif
+public:
 
 	void			Show			(void);
 	virtual void 	OnRender		();
