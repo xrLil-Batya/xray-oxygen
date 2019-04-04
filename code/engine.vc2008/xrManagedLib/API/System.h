@@ -5,6 +5,7 @@ using namespace System;
 
 extern XRCORE_API u32 build_id;
 extern XRCORE_API LPCSTR build_date;
+using String = System::String;
 
 namespace XRay
 {

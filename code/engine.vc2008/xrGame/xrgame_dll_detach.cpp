@@ -43,7 +43,7 @@ void init_game_globals()
 	InventoryUtilities::CreateShaders			    ();
 	CCharacterInfo::InitInternal					();
 	CSpecificCharacter::InitInternal				();
-	CHARACTER_COMMUNITY::InitInternal				();
+	CCharacterCommunity::InitInternal				();
 	CHARACTER_RANK::InitInternal					();
 	CHARACTER_REPUTATION::InitInternal				();
 	MONSTER_COMMUNITY::InitInternal					();
@@ -76,7 +76,7 @@ void clean_game_globals()
 	CSpecificCharacter::DeleteSharedData			();
 	CSpecificCharacter::DeleteIdToIndexData			();
 
-	CHARACTER_COMMUNITY::DeleteIdToIndexData		();
+	CCharacterCommunity::DeleteIdToIndexData		();
 	CHARACTER_RANK::DeleteIdToIndexData				();
 	CHARACTER_REPUTATION::DeleteIdToIndexData		();
 	MONSTER_COMMUNITY::DeleteIdToIndexData			();
@@ -98,7 +98,7 @@ void clean_game_globals()
 	xr_delete										(g_profiler);
 #endif
 
-	RELATION_REGISTRY::clear_relation_registry		();
+	SRelationRegistry::clear_relation_registry		();
 	clean_wnd_rects									();
 	xr_delete										(g_uiSpotXml);
 	DestroyUIGeom									();

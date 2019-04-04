@@ -1,10 +1,14 @@
 #pragma once
 #include "ClientSpawnManager.h"
 #include "PhysicsWorldScripted.h"
+#include "ScriptGameObject.h"
+#include "API/xrTime.h"
+#include "API/WeatherFX.h"
 #include "Game.h"
 
 class CLevel;
 class CLevelGraph;
+class CPatrolPath;
 
 
 
@@ -25,6 +29,10 @@ namespace XRay
 		{
 			::System::UInt32 get();
 		}
+		static ::System::UInt32 GetVertexId(Fvector position);
+
+		static void PatrolPathAdd(LPCSTR patrol_path, CPatrolPath* path);
+		static void PatrolPathRemove(LPCSTR patrol_path);
 	};
 
 	public ref class Level abstract
@@ -39,21 +47,12 @@ namespace XRay
 			ClientSpawnManager^ get();
 		}
 
-		//static property UIDialogWnd^ UIDialgWnd
-		//{
-		//	UIDialogWnd^ get();
-		//}
-
 		/// <summary>Get Name</summary>
 		property ::System::String^ Name
 		{
 			::System::String^ get();
 		}
-		/// <summary>Set WeatherFX</summary>
-		static property ::System::String^ WeatherFX
-		{
-			void set(::System::String^ str);
-		}
+
 		/// <summary>Return WfxTime</summary>
 		static property float WfxTime
 		{
@@ -88,12 +87,12 @@ namespace XRay
 			void set(ESingleGameDifficulty dif);
 		}
 
+		static property GameObject^ ViewEntity
+		{
+			GameObject^ get();
+			void set(GameObject^);
+		}
 
-		static void StartWeatherFXfromTime(::System::String^ str, float time);		
-		static bool iSWfxPlaying();
-		static void StopWeatherFX();
-		
-		
 		static float HighCoverInDirection(u32 level_vertex_id, const Fvector &direction);
 		static float LowCoverInDirection(u32 level_vertex_id, const Fvector &direction);
 
@@ -101,57 +100,13 @@ namespace XRay
 
 		/// <summary>Check: Current level vertex be at level</summary>
 		static bool ValidVertex(u32 level_vertex_id);
-
-		static ::System::UInt32 	VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance);
-
-		// Map
-		/// <summary>Check: Map has is current spot by object ID?</summary>
-		static bool MapHasObjectSpot(u16 id, LPCSTR spot_type);
-		/// <summary>Set: Set spot to level map by object ID</summary>
-		static void MapAddObjectSpot(u16 id, LPCSTR spot_type, LPCSTR text);
-		/// <summary>Set: Del spot from level map by object ID</summary>
-		static void MapRemoveObjectSpot(u16 id, LPCSTR spot_type);
-		/// <summary>Set: Set spot to level map by object ID</summary>
-		static void MapAddObjectSpotSer(u16 id, LPCSTR spot_type, LPCSTR text);
-		/// <summary>Set: Change spot hint from level map by object ID</summary>
-		static void MapChangeSpotHint(u16 id, LPCSTR spot_type, LPCSTR text);
-
+		static ::System::UInt32 VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance);
+		
 		static bool PatrolPathExists(LPCSTR patrol_path);
-		static void PrefetchSnd(LPCSTR name);
-
-
-
 		static XRay::PhysicsWorldScripted^ physicsWorldScripted();
-
-
 
 		static void AddDialogToRender(XRay::UIDialogWnd^ pDialog);
 		static void RemoveDialogFromRender(XRay::UIDialogWnd^ pDialog);
-
-		static void HideIndicators();
-		static void HideIndicatorsSafe();
-		static void ShowIndicators();
-		static void ShowWeapon(bool b);
-		static bool isLevelPresent();
-		//static void AddCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-		//static void AddCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
-		//static void AddCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-		//static void RemoveCall(const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-		//static void RemoveCall(const luabind::object &lua_object, LPCSTR condition, LPCSTR action);
-		//static void RemoveCall(const luabind::object &lua_object, const luabind::functor<bool> &condition, const luabind::functor<void> &action);
-		//static void RemoveCallForObject(const luabind::object &lua_object);
-
-		
-		//static MEnvironment^ pEnvironment();
-
-		static EnvDescriptor^  CurrentEnvironment(XRay::MEnvironment^ self);
-
 		static void SpawnPhantom(const Fvector &position);
-		static Fbox GetBoundingVolume();
-		
-		//static void IterateSounds(LPCSTR prefix, u32 max_count, const CScriptCallbackEx<void> &callback);
-		
-
-
 	};
 }

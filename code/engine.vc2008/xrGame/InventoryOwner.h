@@ -156,7 +156,7 @@ public:
 	bool								InfinitiveMoney		()	{return CharacterInfo().m_SpecificCharacter.MoneyDef().inf_money;}
 
 	//установка группировки на клиентском и серверном объкте
-	virtual void			SetCommunity	(CHARACTER_COMMUNITY_INDEX);
+	virtual void			SetCommunity	(int);
 	virtual void			SetRank			(CHARACTER_RANK_VALUE);
 	virtual void			ChangeRank		(CHARACTER_RANK_VALUE);
 	virtual void			SetReputation	(CHARACTER_REPUTATION_VALUE);
@@ -164,7 +164,7 @@ public:
 
 	//для работы с relation system
 	u16								object_id	() const;
-	CHARACTER_COMMUNITY_INDEX		Community	() const {return CharacterInfo().Community().index();};
+	int		Community	() const {return CharacterInfo().Community().index();};
 	CHARACTER_RANK_VALUE			Rank		() const {return CharacterInfo().Rank().value();};
 	CHARACTER_REPUTATION_VALUE		Reputation	() const {return CharacterInfo().Reputation().value();};
 	float							Sympathy	() const {return CharacterInfo().Sympathy(); }

@@ -58,7 +58,7 @@ void load_attack_goodwill()
 	gw_free.load("free_");
 }
 
-void RELATION_REGISTRY::Action (CEntityAlive* from, CEntityAlive* to, ERelationAction action)
+void SRelationRegistry::Action (CEntityAlive* from, CEntityAlive* to, ERelationAction action)
 {
 	static CHARACTER_GOODWILL friend_kill_goodwill				= pSettings->r_s32(ACTIONS_POINTS_SECT, "friend_kill_goodwill");
 	static CHARACTER_GOODWILL neutral_kill_goodwill				= pSettings->r_s32(ACTIONS_POINTS_SECT, "neutral_kill_goodwill");

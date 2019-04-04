@@ -358,12 +358,12 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 			speed = m_fSpeed0;
 			ang_speed = m_fAngSpeed0;
 		}
-		else if (IR_GetKeyState(VK_LMENU))
+		else if (IR_GetKeyState(VK_MENU))
 		{
 			speed = m_fSpeed2;
 			ang_speed = m_fAngSpeed2;
 		} 
-		else if (IR_GetKeyState(VK_LCONTROL))
+		else if (IR_GetKeyState(VK_CONTROL))
 		{
 			speed = m_fSpeed3;
 			ang_speed = m_fAngSpeed3;
@@ -440,7 +440,7 @@ void CDemoRecord::IR_OnKeyboardPress(u8 dik)
 		MakeCubemap();
 
 	if (dik == VK_F11)
-		MakeLevelMapScreenshot(IR_GetKeyState(VK_LCONTROL));
+		MakeLevelMapScreenshot(IR_GetKeyState(VK_CONTROL));
 
 	if (dik == VK_F12)
 		MakeScreenshot();

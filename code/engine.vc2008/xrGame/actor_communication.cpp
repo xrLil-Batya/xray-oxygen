@@ -142,7 +142,7 @@ void CActor::LostPdaContact(CInventoryOwner* pInvOwner)
 		for (int t = ALife::eRelationTypeFriend; t < ALife::eRelationTypeLast; ++t) 
 		{
 			ALife::ERelationType tt = (ALife::ERelationType)t;
-			Level().MapManager().RemoveMapLocation(RELATION_REGISTRY().GetSpotName(tt), GO->ID());
+			Level().MapManager().RemoveMapLocation(SRelationRegistry().GetSpotName(tt), GO->ID());
 		}
 
 		Level().MapManager().RemoveMapLocation("deadbody_location", GO->ID());

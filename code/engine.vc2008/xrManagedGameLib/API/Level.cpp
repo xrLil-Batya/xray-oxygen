@@ -1,10 +1,9 @@
 ﻿#include "stdafx.h"
 #include "Level.h"
-#include "../xrCore/LocatorAPI.h"
-#include "../xrGame/patrol_path_storage.h"
-#include "../xrGame/ai_space.h"
 #include "../xrGame/alife_simulator.h"
 #include "../xrGame/alife_time_manager.h"
+#include "../xrGame/Actor.h"
+#include "../xrGame/HUDManager.h"
 #include "../xrGame/level_graph.h"
 #include "../xrGame/Level.h"
 #include "../xrGame/Actor.h"
@@ -12,6 +11,13 @@
 #include "../xrGame/map_manager.h"
 #include "../xrGame/HUDManager.h"
 #include "../xrGame/UIGame.h"
+
+#include "../xrGame/patrol_path_storage.h"
+#include "../xrGame/ui/UIMainIngameWnd.h"
+#include "../xrGame/ui/UIMotionIcon.h"
+
+extern GAME_API CUISequencer* g_tutorial;
+extern GAME_API CUISequencer* g_tutorial2;
 
 System::UInt32 XRay::LevelGraph::LevelID::get()
 {
@@ -21,6 +27,15 @@ System::UInt32 XRay::LevelGraph::LevelID::get()
 System::UInt32 XRay::LevelGraph::VertexCount::get()
 {
 	return  ai().level_graph().header().vertex_count();
+}
+
+void XRay::LevelGraph::PatrolPathAdd(LPCSTR patrol_path, CPatrolPath* path)
+{
+	ai().patrol_paths_raw().add_path(shared_str(patrol_path), path);
+}
+void XRay::LevelGraph::PatrolPathRemove(LPCSTR patrol_path)
+{
+	ai().patrol_paths_raw().remove_path(shared_str(patrol_path));
 }
 
 System::String^ XRay::Level::LevelName::get()
@@ -43,39 +58,9 @@ void XRay::Level::Weather::set(::System::String^ str)
 	}
 }
 
-void XRay::Level::WeatherFX::set(::System::String^ str)
-{
-	if (!Device.editor())
-	{
-		string128 WetNameStr = { 0 };
-		ConvertDotNetStringToAscii(str, WetNameStr);
-		::Environment().SetWeatherFX(WetNameStr);
-	}
-}	
-
-void XRay::Level::StartWeatherFXfromTime(::System::String^ str, float time)
-{
-	if (!Device.editor())
-	{
-		string128 WetNameStr = { 0 };
-		ConvertDotNetStringToAscii(str, WetNameStr);
-		::Environment().StartWeatherFXFromTime(WetNameStr, time);
-	}
-}
-
-bool XRay::Level::iSWfxPlaying()
-{
-	return (::Environment().IsWeatherFXPlaying());
-}
-
 float XRay::Level::WfxTime::get()
 {
 	return (::Environment().wfx_time);
-}
-
-void XRay::Level::StopWeatherFX()
-{
-	(::Environment().StopWeatherFX());
 }
 
 void XRay::Level::TimeFactor::set(float time_factor)
@@ -88,17 +73,6 @@ void XRay::Level::TimeFactor::set(float time_factor)
 float XRay::Level::TimeFactor::get()
 {
 	return (::Level().GetGameTimeFactor());
-}
-
-void XRay::Level::GameDifficulty::set(ESingleGameDifficulty dif)
-{
-	g_SingleGameDifficulty = (::ESingleGameDifficulty)u32(dif);
-	::Actor()->OnDifficultyChanged();
-}
-
-XRay::ESingleGameDifficulty XRay::Level::GameDifficulty::get()
-{
-	return (ESingleGameDifficulty)u32(g_SingleGameDifficulty);
 }
 
 float XRay::Level::RainFactor::get()
@@ -143,41 +117,6 @@ bool XRay::Level::ValidVertex(u32 level_vertex_id)
 	return ai().level_graph().valid_vertex_id(level_vertex_id);
 }
 
-void XRay::Level::MapAddObjectSpot(u16 id, LPCSTR spot_type, LPCSTR text)
-{
-	CMapLocation* ml = (::Level().MapManager().AddMapLocation(spot_type, id));
-	if (xr_strlen(text))
-	{
-		ml->SetHint(text);
-	}
-}
-
-void XRay::Level::MapAddObjectSpotSer(u16 id, LPCSTR spot_type, LPCSTR text)
-{
-	CMapLocation* ml = (::Level().MapManager().AddMapLocation(spot_type, id));
-	if (xr_strlen(text))
-		ml->SetHint(text);
-
-	ml->SetSerializable(true);
-}
-
-void XRay::Level::MapChangeSpotHint(u16 id, LPCSTR spot_type, LPCSTR text)
-{
-	CMapLocation* ml = (::Level().MapManager().GetMapLocation(spot_type, id));
-	if (!ml)				return;
-	ml->SetHint(text);
-}
-
-void XRay::Level::MapRemoveObjectSpot(u16 id, LPCSTR spot_type)
-{
-	(::Level().MapManager().RemoveMapLocation(spot_type, id));
-}
-
-bool XRay::Level::MapHasObjectSpot(u16 id, LPCSTR spot_type)
-{
-	return (::Level().MapManager().HasMapLocation(spot_type, id));
-}
-
 bool XRay::Level::PatrolPathExists(LPCSTR patrol_path)
 {
 	return		(!!ai().patrol_paths().path(patrol_path, true));
@@ -186,11 +125,6 @@ bool XRay::Level::PatrolPathExists(LPCSTR patrol_path)
 System::String^ XRay::Level::Name::get()
 {
 	return gcnew ::System::String(pNativeLevel->name().c_str());
-}
-
-void XRay::Level::PrefetchSnd(LPCSTR name)
-{
-	(::Level().PrefetchSound(name));
 }
 
 XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
@@ -213,53 +147,27 @@ XRay::PhysicsWorldScripted^ XRay::Level::physicsWorldScripted()
 	return gcnew PhysicsWorldScripted(get_script_wrapper<cphysics_world_scripted>(*physics_world()));
 }
 
-void XRay::Level::HideIndicators()
+XRay::GameObject^ XRay::Level::ViewEntity::get()
 {
-	if (((CUIGame*)UIDialogWnd::GetGameUI().ToPointer()))
-	{
-		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->HideShownDialogs();
-		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowGameIndicators(false);
-		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(false);
-	}
+	CGameObject* pGameObject = smart_cast<CGameObject*>(::Level().CurrentViewEntity());
+	if (!pGameObject)
+		return (nullptr);
+
+	return gcnew GameObject(::System::IntPtr(pGameObject));
 }
 
-void XRay::Level::HideIndicatorsSafe()
+void XRay::Level::ViewEntity::set(XRay::GameObject^ go)
 {
-	if ((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())
-	{
-		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowGameIndicators(false);
-		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(false);
-		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->OnExternalHideIndicators();
-	}
+	CObject* o = static_cast<CObject*>(go->GetNativeObject().ToPointer());
+	::Level().SetViewEntity(o);
 }
 
-void XRay::Level::ShowIndicators()
-{
-	if (((CUIGame*)UIDialogWnd::GetGameUI().ToPointer()))
-	{
-		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowGameIndicators(true);
-		((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->ShowCrosshair(true);
-	}
-}
-
-void XRay::Level::ShowWeapon(bool b)
-{
-	psHUD_Flags.set(HUD_WEAPON_RT2, b);
-}
-
-bool XRay::Level::isLevelPresent()
+bool XRay::Level::LevelPresent::get()
 {
 	return (!!g_pGameLevel);
 }
 
-/*
-XRay::MEnvironment^ XRay::Level::pEnvironment()
-{
-	return	(%MEnvironment(::System::IntPtr ));   // (&Environment())
-}
-*/
-
-XRay::EnvDescriptor^ XRay::Level::CurrentEnvironment(XRay::MEnvironment^ self)
+XRay::EnvDescriptor^ XRay::Level::CurrentEnvironment(MEnvironment^ self)
 {
 	return gcnew EnvDescriptor(::System::IntPtr());
 }
@@ -268,28 +176,23 @@ void XRay::Level::SpawnPhantom(const Fvector &position)
 {
 	::Level().spawn_item("m_phantom", position, u32(-1), u16(-1), false);
 }
-Fbox XRay::Level::GetBoundingVolume()
-{
-	return ::Level().ObjectSpace.GetBoundingVolume();
-}
-/*
-void XRay::Level::IterateSounds(LPCSTR prefix, u32 max_count, const CScriptCallbackEx<void> &callback)
-{
-	for (int j = 0, N = _GetItemCount(prefix); j < N; ++j) {
-		string_path					fn, s;
-		LPSTR						S = (LPSTR)&s;
-		_GetItem(prefix, j, s);
-		if (FS.exist(fn, "$game_sounds$", S, ".ogg"))
-			callback(prefix);
 
-		for (u32 i = 0; i < max_count; ++i)
-		{
-			string_path					name;
-			xr_sprintf(name, "%s%d", S, i);
-			if (FS.exist(fn, "$game_sounds$", name, ".ogg"))
-				callback(name);
-		}
+::System::UInt32 XRay::LevelGraph::GetVertexId(Fvector position)
+{
+	return	(ai().level_graph().vertex_id(position));
+}
+
+void SpawnSection(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem = false)
+{
+	Level().spawn_item(sSection, vPosition, LevelVertexID, ParentID, bReturnItem);
+}
+
+void ShowMinimap(bool bShow)
+{
+	CUIGame* GameUI = HUD().GetGameUI();
+	GameUI->UIMainIngameWnd->ShowZoneMap(bShow);
+	if (g_pMotionIcon != nullptr)
+	{
+		g_pMotionIcon->bVisible = bShow;
 	}
 }
-*/
-

@@ -149,7 +149,7 @@ void CCharacterInfo::SetReputation (CHARACTER_REPUTATION_VALUE reputation)
 	m_CurrentReputation.set(reputation);
 }
 
-void CCharacterInfo::SetCommunity(CHARACTER_COMMUNITY_INDEX community)
+void CCharacterInfo::SetCommunity(int community)
 {
 	m_CurrentCommunity.set( community );
 	m_Sympathy = m_CurrentCommunity.sympathy( m_CurrentCommunity.index() );

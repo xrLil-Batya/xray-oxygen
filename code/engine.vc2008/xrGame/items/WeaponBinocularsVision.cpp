@@ -138,7 +138,7 @@ void SBinocVisibleObj::Update()
 
 					if (our_inv_owner && others_inv_owner && !monster)
 					{
-						switch (RELATION_REGISTRY().GetRelationType(others_inv_owner, our_inv_owner))
+						switch (SRelationRegistry().GetRelationType(others_inv_owner, our_inv_owner))
 						{
 						case ALife::eRelationTypeEnemy:
 							clr = C_ON_ENEMY; break;
