@@ -5,7 +5,7 @@ bool CNvReader::bSupport = false;
 
 CNvReader::CNvReader() : AdapterID(0)
 {
-	static HINSTANCE hDLL = LoadLibraryA("nvapi.dll");
+	static HINSTANCE hDLL = LoadLibraryA("nvapi64.dll");
 	if (!bSupport && hDLL)
 	{
 		bSupport = true;
