@@ -15,9 +15,6 @@
 #include "../xrGame/UIGame.h"
 #include "../xrGame/ui/UIMainIngameWnd.h"
 #include "../xrGame/ui/UIMotionIcon.h"
-#include "ScriptGameObject.h"
-
-extern GAME_API CUIMotionIcon* g_pMotionIcon;
 
 XRay::Game::SGameTime^ XRay::Game::Time::get()
 {
@@ -123,7 +120,7 @@ void XRay::Game::SGameTime::ChangeGameTime(u32 days, u32 hours, u32 mins)
 		u32 value = days * 86400 + hours * 3600 + mins * 60;
 		float fValue = static_cast<float> (value);
 		value *= 1000; //msec		
-		Environment().ChangeGameTime(fValue);
+		::Environment().ChangeGameTime(fValue);
 		::Level().Server->game->alife().time_manager().change_game_time(value);
 	}
 }

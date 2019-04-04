@@ -1,4 +1,6 @@
 #pragma once
+#include "GameObject.h"
+
 namespace XRay
 {
 	public enum class ESingleGameDifficulty : u32
@@ -128,6 +130,13 @@ namespace XRay
 		static property bool TutorialState
 		{
 			bool get();
+		}
+
+		/// <summary>Get or set game difficulty</summary>
+		static property ESingleGameDifficulty GameDifficulty
+		{
+			ESingleGameDifficulty get();
+			void set(ESingleGameDifficulty dif);
 		}
 
 		static Fbox GetBoundingVolume();

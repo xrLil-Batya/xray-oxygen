@@ -9,7 +9,7 @@ namespace XRay
 		static void ShowIndicators(); // Property set true
 		static void HideIndicatorsSafe();
 	public:
-		static enum class ETypeIndicator: ::System::Int16
+		enum class ETypeIndicator: ::System::Int16
 		{
 			HideSafe = -1,
 			Hide,

@@ -2,6 +2,9 @@
 #include "Actor.h"
 #include "../xrGame/Actor.h"
 #include "../xrGame/ActorCondition.h"
+#include "../xrGame/ActorEffector.h"
+#include "../xrGame/PostprocessAnimator.h"
+#include "../xrGame/HUDManager.h"
 
 extern GAME_API bool g_bDisableAllInput;
 
