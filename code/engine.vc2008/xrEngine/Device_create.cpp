@@ -6,41 +6,16 @@
 
 extern XRCDB_API bool *cdb_bDebug;
 
-void	SetupGPU(IRenderDeviceRender *pRender)
+void SetupGPU(IRenderDeviceRender *pRender)
 {
-	BOOL bForceGPU_SW;
-	BOOL bForceGPU_NonPure;
-	BOOL bForceGPU_REF;
-
-	if (strstr(Core.Params, "-gpu_sw") != nullptr) 
-	{
-		bForceGPU_SW = TRUE; 
-	}
-	else
-	{
-		bForceGPU_SW = FALSE;
-	}
-	if (strstr(Core.Params, "-gpu_nopure") != nullptr) 
-	{
-		bForceGPU_NonPure = TRUE; 
-	}
-	else
-	{
-		bForceGPU_NonPure = FALSE;
-	}
-	if (strstr(Core.Params, "-gpu_ref") != nullptr) 
-	{ 
-		bForceGPU_REF = TRUE; 
-	}
-	else 
-	{
-		bForceGPU_REF = FALSE;
-	}
+	const BOOL bForceGPU_SW =		!!strstr(Core.Params, "-gpu_sw");
+	const BOOL bForceGPU_NonPure =	!!strstr(Core.Params, "-gpu_nopure");
+	const BOOL bForceGPU_REF =		!!strstr(Core.Params, "-gpu_ref");
 
 	pRender->SetupGPU(bForceGPU_SW, bForceGPU_NonPure, bForceGPU_REF);
 }
 
-void CRenderDevice::_SetupStates	()
+void CRenderDevice::_SetupStates()
 {
 	// General Render States
 	mView.identity();
@@ -55,7 +30,7 @@ void CRenderDevice::_SetupStates	()
 	m_pRender->SetupStates();
 }
 
-void CRenderDevice::_Create	(LPCSTR shName)
+void CRenderDevice::_Create(LPCSTR shName)
 {
 	Memory.mem_compact();
 
