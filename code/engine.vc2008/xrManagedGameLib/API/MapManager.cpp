@@ -7,6 +7,7 @@
 #include "../xrGame/HUDManager.h"
 #include "../xrGame/map_location.h"
 #include "../xrGame/map_manager.h"
+#include "../xrGame/ui/UIMotionIcon.h"
 
 using XRay::MapManager;
 extern GAME_API CUIMotionIcon* g_pMotionIcon;
