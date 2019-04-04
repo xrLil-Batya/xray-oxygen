@@ -5,7 +5,7 @@
 #include "../actor.h"
 const LPCSTR MOTION_ICON_XML = "ui_HUD.xml";
 
-CUIMotionIcon* GAME_API g_pMotionIcon = nullptr;
+GAME_API CUIMotionIcon* g_pMotionIcon = nullptr;
 
 CUIMotionIcon::CUIMotionIcon()
 {
