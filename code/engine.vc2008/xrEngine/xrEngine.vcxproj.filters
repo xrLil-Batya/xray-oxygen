@@ -274,6 +274,9 @@
     <Filter Include="Engine\CPU\AMD">
       <UniqueIdentifier>{8ed1a310-6252-4a03-811e-732ea1408fc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\CPU\NVIDIA">
+      <UniqueIdentifier>{2a2026a0-f063-4565-8dbb-0cecec9ee7bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -681,6 +684,9 @@
     <ClInclude Include="AMDGPUTransferee.h">
       <Filter>Engine\CPU\AMD</Filter>
     </ClInclude>
+    <ClInclude Include="NvGPUTransferee.h">
+      <Filter>Engine\CPU\NVIDIA</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -1066,6 +1072,9 @@
     </ClCompile>
     <ClCompile Include="AMDGPUTransferee.cpp">
       <Filter>Engine\CPU\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="NvGPUTransferee.cpp">
+      <Filter>Engine\CPU\NVIDIA</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,7 @@
 #include <Wbemidl.h>
 #include <comdef.h>
 #include <timeapi.h>
+#include "NvGPUTransferee.h"
 #include "AMDGPUTransferee.h"
 
 #include "../Include/xrRender/DrawUtils.h"
@@ -382,6 +383,10 @@ void CStats::Show()
         if ((Core.dwFrame % 25) == 0)
         {
 			static CAMDReader AMDData;
+			static CNvReader NVData;
+
+			if (CNvReader::bSupport)
+				NVGPULoad = NVData.GetPercentActive();
 
 			if (CAMDReader::bAMDSupportADL)
 				AMDGPULoad = AMDData.GetPercentActive();
@@ -448,6 +453,11 @@ void CStats::Show()
 		{
 			pFont->SetColor(DebugTextColor::DTC_BLUE);
 			pFont->Out(10, dwScale, "GPU Used: %d", AMDGPULoad);
+		}
+		else if(CNvReader::bSupport)
+		{
+			pFont->SetColor(DebugTextColor::DTC_BLUE);
+			pFont->Out(10, dwScale, "GPU Used: %d", NVGPULoad);
 		}
         pFont->OnRender();
 	}

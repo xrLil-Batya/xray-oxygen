@@ -115,6 +115,7 @@ public:
 	CStatTimer	TEST3;				// debug counter
 
 	u32 AMDGPULoad;
+	u32 NVGPULoad;
 	float AvailableMem;
 	float AvailablePageFileMem;
 	float PageFileMemUsedByApp;
