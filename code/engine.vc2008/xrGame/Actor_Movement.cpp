@@ -245,11 +245,11 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			mstate_wishful&=~mcSprint;
 		}
 				
-		if (mstate_real & mcJump)
-		{
-			mstate_real &= ~mcFwd;
-			mstate_wishful &= ~mcFwd;
-		}
+		//if (mstate_real & mcJump)
+		//{
+		//	mstate_real &= ~mcFwd;
+		//	mstate_wishful &= ~mcFwd;
+		//}
 
 		// check player move state
 		if(mstate_real&mcAnyMove)
@@ -266,12 +266,13 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			{
 				scale	=	m_fWalkAccel/scale;
 				if (bAccelerated)
+				{
 					if (mstate_real&mcBack)
 						scale *= m_fRunBackFactor;
 					else
 						scale *= m_fRunFactor;
-				else
-					if (mstate_real&mcBack)
+				}
+				else if (mstate_real&mcBack)
 						scale *= m_fWalkBackFactor;
 
 
@@ -298,20 +299,11 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 	{
 		LPCSTR state_anm = nullptr;
 
-		if (mstate_real&mcSprint && !(mstate_old&mcSprint))
-			state_anm = "sprint";
-		else
-			if (mstate_real&mcLStrafe && !(mstate_old&mcLStrafe))
-				state_anm = "strafe_left";
-			else
-				if (mstate_real&mcRStrafe && !(mstate_old&mcRStrafe))
-					state_anm = "strafe_right";
-				else
-					if (mstate_real&mcFwd && !(mstate_old&mcFwd))
-						state_anm = "move_fwd";
-					else
-						if (mstate_real&mcBack && !(mstate_old&mcBack))
-							state_anm = "move_back";
+		if (mstate_real&mcSprint && !(mstate_old&mcSprint))			state_anm = "sprint";
+		else if (mstate_real&mcLStrafe && !(mstate_old&mcLStrafe))	state_anm = "strafe_left";
+		else if (mstate_real&mcRStrafe && !(mstate_old&mcRStrafe))	state_anm = "strafe_right";
+		else if (mstate_real&mcFwd && !(mstate_old&mcFwd))			state_anm = "move_fwd";
+		else if (mstate_real&mcBack && !(mstate_old&mcBack))		state_anm = "move_back";
 
 		if (state_anm)
 		{ //play moving cam effect
