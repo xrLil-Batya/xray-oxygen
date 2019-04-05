@@ -731,7 +731,7 @@ bool CUIActorMenu::OnItemDropped(PIItem itm, CUIDragDropListEx* new_owner, CUIDr
 	CUICellItem* _citem	= (new_owner->ItemsCount()==1) ? new_owner->GetItemIdx(0) : nullptr;
 	PIItem _iitem       = _citem ? (PIItem)_citem->m_pData : nullptr;
 
-	if (!_iitem && !_iitem->CanAttach(itm)) return	false;
+	if (!_iitem || !_iitem->CanAttach(itm)) return	false;
 	if (old_owner != m_pInventoryBagList)	return	false;
 
 	AttachAddon(_iitem);
