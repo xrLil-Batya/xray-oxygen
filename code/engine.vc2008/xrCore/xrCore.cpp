@@ -94,6 +94,7 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 		EFS._initialize();
 	}
 	xrLogger::AddLogCallback(cb);
+	bSpectreEnabled = !strstr(/*Core.*/Params, "-no_spectre");
 	init_counter++;
 }
 

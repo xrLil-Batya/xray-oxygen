@@ -21,7 +21,7 @@ void SpectreEngineClient::Initialize()
 	
 	R_ASSERT2(hManagedLib, "No 'xrManagedCoreLib.dll' library at bit path.");
 
- 	pGetInterface = GetProcAddress(hManagedLib, "GetCoreInterface");
+	pGetInterface = GetProcAddress(hManagedLib, "GetCoreInterface");
 	R_ASSERT2(pGetInterface, "Can't get 'GetCoreInterface' function from xrManagedLib.dll. DLL corrupted?");
 
 	if (!pGetInterface) return;
@@ -31,7 +31,10 @@ void SpectreEngineClient::Initialize()
 
 	// Initialize Game lib and xrScripts
 	CoreAPI->LoadGameLib();
-	CoreAPI->CompileScripts();
+	if (Core.bSpectreEnabled)
+	{
+		CoreAPI->CompileScripts();
+	}
 
 	// Get interface ptr from game lib
 	hGameManagedLib = GetModuleHandle("xrManagedEngineLib.dll"); // выдает отличный от нуля значение, при этом EngineLibAPI ещё не инициализировано (NULL), то есть мы таки выходим из функции не инициализировав значение EngineLibAPI
