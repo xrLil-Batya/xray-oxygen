@@ -117,8 +117,8 @@ void CUIActorMenu::SendEvent_Item2Ruck(PIItem pItem, u16 recipient)
 
 void CUIActorMenu::SendEvent_Item_Eat(PIItem pItem, u16 recipient)
 {
-	if(pItem->parent_id()!=recipient)
-		move_item_from_to			(pItem->parent_id(), recipient, pItem->object_id());
+	//if(pItem->parent_id()!=recipient)
+		//move_item_from_to			(pItem->parent_id(), recipient, pItem->object_id());
 
 	NET_Packet						P;
 	CGameObject::u_EventGen			(P, GEG_PLAYER_ITEM_EAT, recipient);
@@ -689,7 +689,7 @@ bool CUIActorMenu::TryUseFoodItem(CUICellItem* cell_itm)
 //		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 	
 	// Send event to Actor fell
-	SendEvent_Item_Eat(item, item->parent_id()/* ActorInventoryID */);
+	SendEvent_Item_Eat(item, ActorInventoryID/* ActorInventoryID */);
 	PlaySnd(eItemUse);
 	SetCurrentItem(nullptr);
 
@@ -1001,7 +1001,7 @@ void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 	{
 		const char* act_str = READ_IF_EXISTS(pSettings, r_string, item->object().cNameSect().c_str(), "st_use_action_name", "st_use");
 
-		m_UIPropertiesBox->AddItem(act_str, nullptr, INVENTORY_EAT_ACTION);
+		m_UIPropertiesBox->AddItem(act_str, (void*)item, INVENTORY_EAT_ACTION);
 		b_show = true;
 	}
 	else b_show = false;
