@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{91ec4981-9323-46c0-8286-99af7c81aa3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="includes">
+      <UniqueIdentifier>{28cb2b0d-61ba-4180-ba21-a3fc96ab1ea3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="libtheora\lib\decode.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\dequant.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\encapiwrapper.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\encfrag.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\encinfo.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\encode.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\enquant.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\fdct.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\fragment.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\huffdec.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\huffenc.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\idct.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\internal.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\mathops.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\mcenc.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\quant.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\rate.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\state.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\tokenize.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\analyze.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\apiwrapper.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\bitpack.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\collect.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\decapiwrapper.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="libtheora\lib\decinfo.c">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="libtheora\lib\dequant.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\encint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\enquant.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\huffdec.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\huffenc.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\huffman.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\internal.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\mathops.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\modedec.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\ocintrin.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\quant.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\state.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\apiwrapper.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\bitpack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\collect.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\dct.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\lib\decint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\include\theora\theoraenc.h">
+      <Filter>includes</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\include\theora\codec.h">
+      <Filter>includes</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\include\theora\theora.h">
+      <Filter>includes</Filter>
+    </ClInclude>
+    <ClInclude Include="libtheora\include\theora\theoradec.h">
+      <Filter>includes</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -153,7 +153,7 @@ void CUITalkWnd::UpdateQuestions()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CUITalkWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUITalkWnd::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	if (pWnd == UITalkDialogWnd)
 	{
@@ -170,7 +170,7 @@ void CUITalkWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 			break;
 		}
 	}
-	inherited::SendMessage(pWnd, msg, pData);
+	inherited::SendMessageToWnd(pWnd, msg, pData);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -342,7 +342,7 @@ void CUITalkWnd::SwitchToUpgrade()
 	GameUI()->StartUpgrade(m_pOurInvOwner, m_pOthersInvOwner);
 }
 
-bool CUITalkWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUITalkWnd::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 
 	if (keyboard_action == WINDOW_KEY_PRESSED)

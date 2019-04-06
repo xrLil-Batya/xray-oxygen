@@ -64,33 +64,34 @@ IC float	Area		(Fvector& v0, Fvector& v1, Fvector& v2)
 	return	_sqrt( p*(p-e1)*(p-e2)*(p-e3) );
 }
 
-void CHOM::Load			()
+void CHOM::Load()
 {
 	// Find and open file
 	string_path		fName;
-	FS.update_path	(fName,"$level$","level.hom");
+	FS.update_path(fName, "$level$", "level.hom");
 	if (!FS.exist(fName))
 	{
-		Msg		(" WARNING: Occlusion map '%s' not found.",fName);
+		Msg(" WARNING: Occlusion map '%s' not found.", fName);
 		return;
 	}
-	Msg	("* Loading HOM: %s",fName);
-	
-	IReader* fs				= FS.r_open(fName);
-	IReader* S				= fs->open_chunk(1);
+	Msg("* Loading HOM: %s", fName);
+
+	IReader* fs = FS.r_open(fName);
+	IReader* S = fs->open_chunk(1);
+	u32 crc = crc32(fs->pointer(), fs->length());
 
 	// Load tris and merge them
 	CDB::Collector		CL;
 	while (!S->eof())
 	{
 		HOM_poly				P;
-		S->r					(&P,sizeof(P));
-		CL.add_face_packed_D	(P.v1,P.v2,P.v3,P.flags,0.01f);
+		S->r(&P, sizeof(P));
+		CL.add_face_packed_D(P.v1, P.v2, P.v3, P.flags, 0.01f);
 	}
-	
+
 	// Determine adjacency
 	xr_vector<u32>		adjacency;
-	CL.calc_adjacency	(adjacency);
+	CL.calc_adjacency(adjacency);
 
 	// Create RASTER-triangles
 	m_pTris = xr_alloc<occTri>(CL.getTS());
@@ -115,13 +116,24 @@ void CHOM::Load			()
 		rT.skip = 0;
 		rT.center.add(v0, v1).add(v2).div(3.f);
 	}
+	// Make cache
+	string_path LevelName;
+	xr_strconcat(LevelName, FS.get_path("$level$")->m_Add, "cform_hom.cache");
+	IReader* pReaderCache = FS.r_open("$level_cache$", LevelName);
 
 	// Create AABB-tree
-	m_pModel			= xr_new<CDB::MODEL> ();
-	m_pModel->build		(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()),nullptr, false, nullptr, nullptr, false);
-	bEnabled			= TRUE;
-	S->close			();
-	FS.r_close			(fs);
+	m_pModel = xr_new<CDB::MODEL>();
+	if (pReaderCache && pReaderCache->length() > 4 && pReaderCache->r_u32() == crc)
+		m_pModel->build(CL.getV(), int(CL.getVS()), CL.getT(), int(CL.getTS()), pReaderCache, true, nullptr, nullptr, false);
+	else
+	{
+		IWriter* pWriterCache = FS.w_open("$level_cache$", LevelName);
+		pWriterCache->w_u32(crc);
+		m_pModel->build(CL.getV(), int(CL.getVS()), CL.getT(), int(CL.getTS()), pWriterCache, false, nullptr, nullptr, false);
+	}
+	bEnabled = TRUE;
+	S->close();
+	FS.r_close(fs);
 }
 
 void CHOM::Unload		()

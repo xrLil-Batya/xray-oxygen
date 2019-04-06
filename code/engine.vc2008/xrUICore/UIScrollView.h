@@ -39,7 +39,7 @@ public:
 					CUIScrollView		(CUIFixedScrollBar* scroll_bar);
 	virtual			~CUIScrollView		();
 			void	InitScrollView		();// need parent to be initialized
-	virtual void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual void	SendMessageToWnd			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 	virtual bool	OnMouseAction				(float x, float y, EUIMessages mouse_action);
 	virtual void	Draw				();
 	virtual void	Update				();

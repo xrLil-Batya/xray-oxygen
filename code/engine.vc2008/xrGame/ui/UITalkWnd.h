@@ -34,7 +34,7 @@ public:
 	void InitTalkWnd();
 
 	virtual bool StopAnyMove() { return true; }
-	virtual void SendMessage(CUIWindow* pWnd, s16 msg, void* pData = nullptr);
+	virtual void SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData = nullptr);
 
 	virtual void Draw();
 	virtual void Update();
@@ -49,7 +49,7 @@ public:
 
 	//инициализации начального диалога собеседника
 	void InitOthersStartDialog();
-	virtual bool OnKeyboardAction(int dik, EUIMessages keyboard_action);
+	virtual bool OnKeyboardAction(u8 dik, EUIMessages keyboard_action);
 	void SwitchToTrade();
 	void SwitchToUpgrade();
 	void AddIconedMessage(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name);

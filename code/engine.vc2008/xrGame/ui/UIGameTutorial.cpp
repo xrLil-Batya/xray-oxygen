@@ -63,7 +63,7 @@ void CUISequenceItem::Load(CUIXml* xml, int idx)
 	xml->SetLocalRoot(_stored_root);
 }
 
-bool CUISequenceItem::AllowKey(int dik)
+bool CUISequenceItem::AllowKey(u8 dik)
 {
 	xr_vector<int>::iterator it = std::find(m_disabled_actions.begin(), m_disabled_actions.end(), get_binded_action(dik));
 	if (it == m_disabled_actions.end())
@@ -337,46 +337,19 @@ bool CUISequencer::GrabInput()
 		return false;
 }
 
-void CUISequencer::IR_OnMousePress(int btn)
-{
-	if (!m_sequencer_items.empty())
-		m_sequencer_items.front()->OnMousePress(btn);
-
-	if (!GrabInput() && m_pStoredInputReceiver)
-		m_pStoredInputReceiver->IR_OnMousePress(btn);
-}
-
-void CUISequencer::IR_OnMouseRelease(int btn)
-{
-	if (!GrabInput() && m_pStoredInputReceiver)
-		m_pStoredInputReceiver->IR_OnMouseRelease(btn);
-}
-
-void CUISequencer::IR_OnMouseHold(int btn)
-{
-	if (!GrabInput() && m_pStoredInputReceiver)
-		m_pStoredInputReceiver->IR_OnMouseHold(btn);
-}
-
 void CUISequencer::IR_OnMouseMove(int x, int y)
 {
 	if (!GrabInput() && m_pStoredInputReceiver)
 		m_pStoredInputReceiver->IR_OnMouseMove(x, y);
 }
 
-void CUISequencer::IR_OnMouseStop(int x, int y)
-{
-	if (!GrabInput() && m_pStoredInputReceiver)
-		m_pStoredInputReceiver->IR_OnMouseStop(x, y);
-}
-
-void CUISequencer::IR_OnKeyboardRelease(int dik)
+void CUISequencer::IR_OnKeyboardRelease(u8 dik)
 {
 	if (!GrabInput() && m_pStoredInputReceiver)
 		m_pStoredInputReceiver->IR_OnKeyboardRelease(dik);
 }
 
-void CUISequencer::IR_OnKeyboardHold(int dik)
+void CUISequencer::IR_OnKeyboardHold(u8 dik)
 {
 	if (!GrabInput() && m_pStoredInputReceiver)
 		m_pStoredInputReceiver->IR_OnKeyboardHold(dik);
@@ -388,7 +361,7 @@ void CUISequencer::IR_OnMouseWheel(int direction)
 		m_pStoredInputReceiver->IR_OnMouseWheel(direction);
 }
 
-void CUISequencer::IR_OnKeyboardPress(int dik)
+void CUISequencer::IR_OnKeyboardPress(u8 dik)
 {
 	if (!m_sequencer_items.empty())
 		m_sequencer_items.front()->OnKeyboardPress(dik);
@@ -429,8 +402,8 @@ void CUISequencer::IR_OnKeyboardPress(int dik)
 void CUISequencer::IR_OnActivate()
 {
 	if (!pInput) return;
-	int i;
-	for (i = 0; i < CInput::COUNT_KB_BUTTONS; ++i)
+
+	for (int i = 0; i < 255; ++i)
 	{
 		if (IR_GetKeyState(i))
 		{

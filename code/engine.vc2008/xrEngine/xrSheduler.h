@@ -3,6 +3,7 @@
 
 class ENGINE_API CSheduler
 {
+	static void		mtShedulerThread(void*);
 private:
 	struct Item
 	{

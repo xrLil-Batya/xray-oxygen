@@ -58,9 +58,9 @@ public:
 	virtual void StopDialog(CUIDialogWnd* pDialog);
 	virtual bool IgnorePause() { return false; }
 
-	virtual bool IR_UIOnKeyboardPress(int dik);
-	virtual bool IR_UIOnKeyboardRelease(int dik);
+	virtual bool IR_UIOnKeyboardPress(u8 dik);
+	virtual bool IR_UIOnKeyboardRelease(u8 dik);
 	virtual bool IR_UIOnMouseMove(int dx, int dy);
 	virtual bool IR_UIOnMouseWheel(int direction);
-	virtual bool IR_UIOnKeyboardHold(int dik);
+	virtual bool IR_UIOnKeyboardHold(u8 dik);
 };

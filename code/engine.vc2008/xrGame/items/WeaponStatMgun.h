@@ -90,9 +90,9 @@ protected:
 public:
 	virtual bool			Use					(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos) {return !Owner();};
 	virtual void			OnMouseMove			(int x, int y);
-	virtual void			OnKeyboardPress		(int dik);
-	virtual void			OnKeyboardRelease	(int dik);
-	virtual void			OnKeyboardHold		(int dik);
+	virtual void			OnKeyboardPress		(u8 dik);
+	virtual void			OnKeyboardRelease	(u8 dik);
+	virtual void			OnKeyboardHold		(u8 dik);
 	virtual CInventory*		GetInventory		()						{return NULL;};
 	virtual void			cam_Update			(float dt, float fov=90.0f);
 

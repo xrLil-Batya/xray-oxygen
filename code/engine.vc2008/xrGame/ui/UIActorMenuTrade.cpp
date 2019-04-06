@@ -197,7 +197,7 @@ bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool bUseCursorPos)
         SendEvent_Item2Ruck(ItemDataClass, m_pActorInvOwner->object_id());
     }
 
-    if (i != itm && pInput->iGetAsyncKeyState(DIK_LCONTROL))
+    if (i != itm && pInput->iGetAsyncKeyState(VK_CONTROL))
     {
         return ToActorTrade(itm, bUseCursorPos);
     }
@@ -233,7 +233,7 @@ bool CUIActorMenu::ToPartnerTrade(CUICellItem* itm, bool b_use_cursor_pos)
 	else
 		new_owner->SetItem				(i);
 
-	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToPartnerTrade(itm, b_use_cursor_pos);
+	if ((i != itm) && !!pInput->iGetAsyncKeyState(VK_CONTROL)) return ToPartnerTrade(itm, b_use_cursor_pos);
 	UpdatePrices();
 	return true;
 }
@@ -257,7 +257,7 @@ bool CUIActorMenu::ToPartnerTradeBag(CUICellItem* itm, bool b_use_cursor_pos)
 	else
 		new_owner->SetItem				(i);
 
-	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToPartnerTradeBag(itm, b_use_cursor_pos);
+	if ((i != itm) && !!pInput->iGetAsyncKeyState(VK_LCONTROL)) return ToPartnerTradeBag(itm, b_use_cursor_pos);
 	return true;
 }
 

@@ -5,7 +5,7 @@
 #include "object_broker.h"
 #include "Actor.h"
 
-void AddEffector(CActor* A, int type, const shared_str& sect_name)
+void GAME_API AddEffector(CActor* A, int type, const shared_str& sect_name)
 {
 	bool bCyclic = false;
 
@@ -40,7 +40,7 @@ void AddEffector(CActor* A, int type, const shared_str& sect_name)
 	}
 }
 
-void AddEffector(CActor* A, int type, const shared_str& sect_name, CEffectorController* ec)
+void GAME_API AddEffector(CActor* A, int type, const shared_str& sect_name, CEffectorController* ec)
 {
 	bool bCyclic = false;
 
@@ -75,7 +75,7 @@ void AddEffector(CActor* A, int type, const shared_str& sect_name, CEffectorCont
 	}
 }
 
-void AddEffector(CActor* A, int type, const shared_str& sect_name, GET_KOEFF_FUNC k_func)
+void GAME_API AddEffector(CActor* A, int type, const shared_str& sect_name, GET_KOEFF_FUNC k_func)
 {
 	bool bCyclic = false;
 
@@ -112,7 +112,7 @@ void AddEffector(CActor* A, int type, const shared_str& sect_name, GET_KOEFF_FUN
 	}
 }
 
-void AddEffector(CActor* A, int type, const shared_str& sect_name, float factor)
+void GAME_API AddEffector(CActor* A, int type, const shared_str& sect_name, float factor)
 {
 	clamp(factor, 0.001f, 1.5f);
 
@@ -151,7 +151,7 @@ void AddEffector(CActor* A, int type, const shared_str& sect_name, float factor)
 	}
 }
 
-void RemoveEffector(CActor* A, int type)
+void GAME_API RemoveEffector(CActor* A, int type)
 {
 	A->Cameras().RemoveCamEffector((ECamEffectorType)type);
 	A->Cameras().RemovePPEffector((EEffectorPPType)type);
@@ -445,7 +445,7 @@ void CActorCameraManager::UpdateCamEffectors()
 	m_cam_info_hud.n.crossproduct(m_cam_info_hud.d, m_cam_info_hud.r);
 }
 
-void cam_effector_sub(const SCamEffectorInfo& c1, const SCamEffectorInfo& c2, SCamEffectorInfo& dest)
+void GAME_API cam_effector_sub(const SCamEffectorInfo& c1, const SCamEffectorInfo& c2, SCamEffectorInfo& dest)
 {
 	dest.p.sub(c1.p, c2.p);
 	dest.d.sub(c1.d, c2.d);
@@ -453,7 +453,7 @@ void cam_effector_sub(const SCamEffectorInfo& c1, const SCamEffectorInfo& c2, SC
 	dest.r.sub(c1.r, c2.r);
 }
 
-void cam_effector_add(const SCamEffectorInfo& diff, SCamEffectorInfo& dest)
+void GAME_API cam_effector_add(const SCamEffectorInfo& diff, SCamEffectorInfo& dest)
 {
 	dest.p.add(diff.p);
 	dest.d.add(diff.d);

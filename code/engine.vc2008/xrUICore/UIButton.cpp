@@ -50,7 +50,7 @@ bool  CUIButton::OnMouseAction(float x, float y, EUIMessages mouse_action)
 			if(mouse_action == WINDOW_LBUTTON_DOWN || mouse_action == WINDOW_LBUTTON_DB_CLICK)
 			{
 				SetButtonState(BUTTON_PUSHED);
-				GetMessageTarget()->SendMessage(this, BUTTON_DOWN, NULL);
+				GetMessageTarget()->SendMessageToWnd(this, BUTTON_DOWN, NULL);
 				return true;
 			}
 		}break;
@@ -89,7 +89,7 @@ bool  CUIButton::OnMouseAction(float x, float y, EUIMessages mouse_action)
 
 void CUIButton::OnClick()
 {
-	GetMessageTarget()->SendMessage(this, BUTTON_CLICKED);
+	GetMessageTarget()->SendMessageToWnd(this, BUTTON_CLICKED);
 }	
 
 void CUIButton::DrawTexture()
@@ -176,14 +176,14 @@ void CUIButton::OnFocusLost()
 {
 	inherited::OnFocusLost();
 	
-	if(m_eButtonState==BUTTON_PUSHED && pInput->iGetAsyncBtnState(0) && !m_bIsSwitch)
+	if(m_eButtonState==BUTTON_PUSHED && pInput->iGetAsyncBtnState(VK_LBUTTON) && !m_bIsSwitch)
 		SetButtonState(BUTTON_NORMAL); //??? 
 
 	if(g_btnHint->Owner()==this)
 		g_btnHint->Discard	();
 }
 
-bool CUIButton::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIButton::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	if (WINDOW_KEY_PRESSED == keyboard_action)
 	{

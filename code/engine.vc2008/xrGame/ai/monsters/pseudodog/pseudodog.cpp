@@ -10,7 +10,6 @@
 #include "../control_movement_base.h"
 
 #ifdef _DEBUG
-#	include <dinput.h>
 #	include "../../../ai_object_location.h"
 #	include "../../../level_debug.h"
 #	include "../../../level_graph.h"
@@ -172,7 +171,7 @@ void CAI_PseudoDog::HitEntityInJump		(const CEntity *pEntity)
 
 
 #ifdef DEBUG
-void CAI_PseudoDog::debug_on_key(int key)
+void CAI_PseudoDog::debug_on_key(u8 key)
 {
 }
 #endif

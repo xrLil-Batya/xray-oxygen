@@ -25,11 +25,6 @@
 #include "../../../PHDestroyable.h"
 #include "../../../CharacterPhysicsSupport.h"
 
-#ifdef DEBUG
-#	include <dinput.h>
-#endif // DEBUG
-
-
 namespace detail
 {
 namespace bloodsucker
@@ -854,14 +849,14 @@ void   CAI_Bloodsucker::add_debug_info (debug::text_tree& root_s)
 }
 
 #ifdef DEBUG
-void CAI_Bloodsucker::debug_on_key(int key)
+void CAI_Bloodsucker::debug_on_key(u8 key)
 {
 	switch (key){
-	case DIK_MINUS:
+	case VK_OEM_MINUS:
 		Actor()->cam_Active()->Move(Random.randI(2) ? kRIGHT : kLEFT, PI_DIV_2);
 		//set_alien_control(true);
 		break;
-	case DIK_EQUALS:
+	case VK_OEM_PLUS:
 		Actor()->cam_Active()->Move(Random.randI(2) ? kUP	 : kDOWN, PI_DIV_2);
 		//set_alien_control(false);
 		break;

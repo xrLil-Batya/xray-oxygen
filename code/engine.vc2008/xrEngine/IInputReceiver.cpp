@@ -1,16 +1,14 @@
 ﻿#include "stdafx.h"
-#pragma hdrstop
-
 #include "xr_input.h"
 #include "iinputreceiver.h"
 
-void	IInputReceiver::IR_Capture						(void)
+void	IInputReceiver::IR_Capture						()
 {
 	VERIFY(pInput);
 	pInput->iCapture(this);
 }
 
-void	IInputReceiver::IR_Release						(void)
+void	IInputReceiver::IR_Release						()
 {
 	VERIFY(pInput);
 	pInput->iRelease(this);
@@ -22,34 +20,16 @@ void	IInputReceiver::IR_GetLastMouseDelta			(Ivector2& p)
 	pInput->iGetLastMouseDelta( p );
 }
 
-void IInputReceiver::IR_OnDeactivate					(void)
-{
-	int i;
-	for (i = 0; i < CInput::COUNT_KB_BUTTONS; i++ )
-		if (IR_GetKeyState(i))	
-			IR_OnKeyboardRelease	(i);
+void IInputReceiver::IR_OnDeactivate					()
+{}
 
-	for (i = 0; i < CInput::COUNT_MOUSE_BUTTONS; i++ )
-		if(IR_GetBtnState(i))   
-			IR_OnMouseRelease( i );
-	IR_OnMouseStop	( DIMOFS_X, 0 );
-	IR_OnMouseStop	( DIMOFS_Y, 0 );
-}
+void IInputReceiver::IR_OnActivate()
+{}
 
-void IInputReceiver::IR_OnActivate(void)
-{
-}
-
-BOOL IInputReceiver::IR_GetKeyState(int dik)
+BOOL IInputReceiver::IR_GetKeyState(u8 dik)
 {
 	VERIFY(pInput);
 	return pInput->iGetAsyncKeyState(dik);
-}
-
-BOOL IInputReceiver::IR_GetBtnState(int btn)
-{
-	VERIFY(pInput);
-	return pInput->iGetAsyncBtnState(btn);
 }
 
 void	IInputReceiver::IR_GetMousePosScreen			(Ivector2& p)

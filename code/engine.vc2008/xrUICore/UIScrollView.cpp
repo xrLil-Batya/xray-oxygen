@@ -44,7 +44,7 @@ CUIScrollView::~CUIScrollView()
 	Clear	();
 }
 
-void CUIScrollView::SendMessage	(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIScrollView::SendMessageToWnd	(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 	if (CHILD_CHANGED_SIZE == msg && m_pad->IsChild(pWnd))
@@ -278,7 +278,7 @@ bool CUIScrollView::OnMouseAction(float x, float y, EUIMessages mouse_action)
 			res = true;
 		break;
 		case WINDOW_MOUSE_MOVE:
-			if( pInput->iGetAsyncBtnState(0) ){
+			if( pInput->iGetAsyncBtnState(VK_LBUTTON) ){
 				Fvector2	curr_pad_pos = m_pad->GetWndPos	();
 				curr_pad_pos.y				+= GetUICursor().GetCursorPositionDelta().y;
 				

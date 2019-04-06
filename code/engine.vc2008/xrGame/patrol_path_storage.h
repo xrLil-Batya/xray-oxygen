@@ -16,7 +16,7 @@ class CGameGraph;
 #include "object_interfaces.h"
 #include "associative_vector.h"
 
-class CPatrolPathStorage : public IPureSerializeObject<IReader,IWriter> {
+class GAME_API CPatrolPathStorage : public IPureSerializeObject<IReader,IWriter> {
 private:
 	typedef IPureSerializeObject<IReader,IWriter>		inherited;
 

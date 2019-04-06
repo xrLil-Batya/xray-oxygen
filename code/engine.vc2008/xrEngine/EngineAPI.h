@@ -29,7 +29,6 @@ private:
 	HMODULE				hGame;
 	HMODULE				hRender;
 public:
-	BENCH_SEC_SCRAMBLEMEMBER1
 	Factory_Create*		pCreate;
 	Factory_Destroy*	pDestroy;
 	void				Initialize	();
@@ -43,7 +42,6 @@ public:
 ENGINE_API void InitSettings();
 ENGINE_API void InitConsole();
 ENGINE_API void InitInput();
-ENGINE_API void InitInput(bool bExclusiveMode);
 ENGINE_API void InitSound1();
 ENGINE_API void InitSound2();
 

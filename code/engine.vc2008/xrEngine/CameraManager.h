@@ -15,8 +15,6 @@ class ENGINE_API CCameraManager {
 protected:
     SCamEffectorInfo m_cam_info;
 
-    BENCH_SEC_SCRAMBLEMEMBER1
-
     EffectorCamVec m_EffectorsCam;
     EffectorCamVec m_EffectorsCam_added_deffered;
     EffectorPPVec m_EffectorsPP;
@@ -25,7 +23,6 @@ protected:
     SPPInfo pp_affected;
     void UpdateDeffered();
 
-    BENCH_SEC_SCRAMBLEVTBL1
     virtual void UpdateCamEffectors();
     virtual void UpdatePPEffectors();
     virtual bool ProcessCameraEffector(CEffectorCam* eff);
@@ -33,8 +30,6 @@ protected:
 
 public:
     u32 dbg_upd_frame;
-
-    BENCH_SEC_SCRAMBLEMEMBER2
 
     void Dump();
     u32 Count() const { return u32(m_EffectorsCam.size() + m_EffectorsCam_added_deffered.size()); }

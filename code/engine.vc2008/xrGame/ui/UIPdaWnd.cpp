@@ -92,7 +92,7 @@ void CUIPdaWnd::Init()
 	CUIXmlInit::InitStatic	( uiXml, "noice_static", 0, UINoice );
 }
 
-void CUIPdaWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIPdaWnd::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	switch ( msg )
 	{
@@ -115,7 +115,7 @@ void CUIPdaWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 	default:
 		{
 			R_ASSERT						(m_pActiveDialog);
-			m_pActiveDialog->SendMessage	(pWnd, msg, pData);
+			m_pActiveDialog->SendMessageToWnd	(pWnd, msg, pData);
 		}
 	};
 }
@@ -307,7 +307,7 @@ void RearrangeTabButtons(CUITabControl* pTab)
 	pTab->SetWndPos( pos );
 }
 
-bool CUIPdaWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIPdaWnd::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	if (is_binded(kACTIVE_JOBS, dik))
 	{

@@ -6,6 +6,7 @@
 #include "fDemoRecord.h"
 #include "xr_ioconsole.h"
 #include "xr_input.h"
+#include "xr_level_controller.h"
 #include "xr_object.h"
 #include "render.h"
 #include "CustomHUD.h"
@@ -322,7 +323,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 	}
 	else
 	{
-		if (IR_GetKeyState(DIK_F1))
+		if (IR_GetKeyState(VK_F1))
 		{
 			pApp->pFontSystem->SetColor(color_rgba(255, 0, 0, 255));
 			pApp->pFontSystem->SetAligment(CGameFont::alCenter);
@@ -352,17 +353,17 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 
 		float speed = m_fSpeed1, ang_speed = m_fAngSpeed1;
 
-		if (IR_GetKeyState(DIK_LSHIFT))
+		if (IR_GetKeyState(VK_SHIFT))
 		{
 			speed = m_fSpeed0;
 			ang_speed = m_fAngSpeed0;
 		}
-		else if (IR_GetKeyState(DIK_LALT))
+		else if (IR_GetKeyState(VK_MENU))
 		{
 			speed = m_fSpeed2;
 			ang_speed = m_fAngSpeed2;
 		} 
-		else if (IR_GetKeyState(DIK_LCONTROL))
+		else if (IR_GetKeyState(VK_CONTROL))
 		{
 			speed = m_fSpeed3;
 			ang_speed = m_fAngSpeed3;
@@ -418,9 +419,9 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 	return TRUE;
 }
 
-void CDemoRecord::IR_OnKeyboardPress(int dik)
+void CDemoRecord::IR_OnKeyboardPress(u8 dik)
 {
-	if (dik == DIK_MULTIPLY)
+	if (dik == VK_MULTIPLY)
 		m_b_redirect_input_to_level = !m_b_redirect_input_to_level;
 
 	if (m_b_redirect_input_to_level)
@@ -429,26 +430,26 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
 		return;
 	}
 
-	if (dik == DIK_GRAVE)
+	if (dik == VK_OEM_3)
 		Console->Show();
 
-	if (dik == DIK_SPACE)
+	if (dik == VK_SPACE)
 		RecordKey();
 
-	if (dik == DIK_BACK)
+	if (dik == VK_BACK)
 		MakeCubemap();
 
-	if (dik == DIK_F11)
-		MakeLevelMapScreenshot(IR_GetKeyState(DIK_LCONTROL));
+	if (dik == VK_F11)
+		MakeLevelMapScreenshot(IR_GetKeyState(VK_CONTROL));
 
-	if (dik == DIK_F12)
+	if (dik == VK_F12)
 		MakeScreenshot();
 
-	if (dik == DIK_ESCAPE)
+	if (dik == VK_ESCAPE)
 		fLifeTime = -1;
 
 #ifndef MASTER_GOLD
-	if (dik == DIK_RETURN)
+	if (dik == VK_RETURN)
 	{
 		if (g_pGameLevel->CurrentEntity())
 		{
@@ -458,7 +459,7 @@ void CDemoRecord::IR_OnKeyboardPress(int dik)
 	}
 #endif // #ifndef MASTER_GOLD
 
-	if (dik == DIK_PAUSE)
+	if (dik == VK_PAUSE)
 		Device.Pause(!Device.Paused(), TRUE, TRUE, "demo_record");
 }
 
@@ -469,7 +470,7 @@ static void update_whith_timescale(Fvector &v, const Fvector &v_delta)
 	v.mad(v, v_delta, scale);
 }
 
-void CDemoRecord::IR_OnKeyboardHold(int dik)
+void CDemoRecord::IR_OnKeyboardHold(u8 dik)
 {
 	if (m_b_redirect_input_to_level)
 	{
@@ -482,49 +483,55 @@ void CDemoRecord::IR_OnKeyboardHold(int dik)
 
 	switch (dik) 
 	{
-		case DIK_A:
-		case DIK_NUMPAD1:
-		case DIK_LEFT:		
+		case VK_LBUTTON:
+			vT_delta.z += 1.0f;
+		break;
+		case VK_RBUTTON:
+			vT_delta.z -= 1.0f;
+			break;
+		case VK_A:
+		case VK_NUMPAD1:
+		case VK_LEFT:		
 			vT_delta.x -= 1.0f; 
 			break; // Slide Left
 
-		case DIK_D:
-		case DIK_NUMPAD3:
-		case DIK_RIGHT:		
+		case VK_D:
+		case VK_NUMPAD3:
+		case VK_RIGHT:		
 			vT_delta.x += 1.0f; 
 			break; // Slide Right
 
-		case DIK_S:			
+		case VK_S:			
 			vT_delta.y -= 1.0f; 
 			break; // Slide Down
 
-		case DIK_W:			
+		case VK_W:		
 			vT_delta.y += 1.0f;
 			break; // Slide Up
 
 		// rotate	
-		case DIK_NUMPAD2:	
+		case VK_NUMPAD2:	
 			vR_delta.x -= 1.0f; 
 			break; // Pitch Down
-		case DIK_NUMPAD8:	
+		case VK_NUMPAD8:	
 			vR_delta.x += 1.0f;
 			break; // Pitch Up
 
-		case DIK_E:
-		case DIK_NUMPAD6:	
+		case VK_E:
+		case VK_NUMPAD6:	
 			vR_delta.y += 1.0f; 
 			break; // Turn Left
 
-		case DIK_Q:
-		case DIK_NUMPAD4:	
+		case VK_Q:
+		case VK_NUMPAD4:	
 			vR_delta.y -= 1.0f; 
 			break; // Turn Right
 
-		case DIK_NUMPAD9:	
+		case VK_NUMPAD9:	
 			vR_delta.z -= 2.0f; 
 			break; // Turn Right
 
-		case DIK_NUMPAD7:	
+		case VK_NUMPAD7:	
 			vR_delta.z += 2.0f; 
 			break; // Turn Right
 	}
@@ -551,29 +558,6 @@ void CDemoRecord::IR_OnMouseMove(int dx, int dy)
 	}
 
 	m_vR.add(vR_delta);
-}
-
-void CDemoRecord::IR_OnMouseHold(int btn)
-{
-	if (m_b_redirect_input_to_level)
-	{
-		g_pGameLevel->IR_OnMouseHold(btn);
-		return;
-	}
-
-	Fvector	vT_delta = Fvector().set(0, 0, 0);
-	switch (btn) 
-	{
-		case 0:			
-			vT_delta.z += 1.0f; 
-			break; // Move Backward
-
-		case 1:			
-			vT_delta.z -= 1.0f; 
-			break; // Move Forward
-	}
-
-	update_whith_timescale(m_vT, vT_delta);
 }
 
 void CDemoRecord::RecordKey()

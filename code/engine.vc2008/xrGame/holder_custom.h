@@ -26,9 +26,9 @@ public:
 	virtual CHolderCustom	*cast_holder_custom	()				{return this;}
 			bool			Engaged				()				{return m_owner!=nullptr;}
 	virtual void			OnMouseMove			(int x, int y)	= 0;
-	virtual void			OnKeyboardPress		(int dik)		= 0;
-	virtual void			OnKeyboardRelease	(int dik)		= 0;
-	virtual void			OnKeyboardHold		(int dik)		= 0;
+	virtual void			OnKeyboardPress		(u8 dik)		= 0;
+	virtual void			OnKeyboardRelease	(u8 dik)		= 0;
+	virtual void			OnKeyboardHold		(u8 dik)		= 0;
 	// Inventory for the car
 	virtual CInventory*		GetInventory		()				= 0;
 

@@ -43,7 +43,7 @@ public:
 
 private:
 #ifdef DEBUG	
-	virtual void	debug_on_key		(int key);
+	virtual void	debug_on_key		(u8 key);
 #endif
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION

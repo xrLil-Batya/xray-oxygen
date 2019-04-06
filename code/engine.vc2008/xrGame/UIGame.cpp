@@ -104,7 +104,7 @@ void CUIGame::OnFrame()
 	if (m_game_objective)
 	{
 		bool b_remove = false;
-		int dik = get_action_dik(kSCORES, 0);
+		u8 dik = get_action_dik(kSCORES, 0);
 
 		if (dik && !pInput->iGetAsyncKeyState(dik))
 			b_remove = true;
@@ -123,9 +123,9 @@ void CUIGame::OnFrame()
 	}
 }
 
-void attach_adjust_mode_keyb(int dik);
+void attach_adjust_mode_keyb(u8 dik);
 void attach_draw_adjust_mode();
-void hud_adjust_mode_keyb(int dik);
+void hud_adjust_mode_keyb(u8 dik);
 void hud_draw_adjust_mode();
 
 void CUIGame::Render()
@@ -349,7 +349,7 @@ void CUIGame::HideShownDialogs()
 		mir->HideDialog();
 }
 
-bool CUIGame::IR_UIOnKeyboardPress(int dik)
+bool CUIGame::IR_UIOnKeyboardPress(u8 dik)
 {
 	if (CDialogHolder::IR_UIOnKeyboardPress(dik))
 		return true;

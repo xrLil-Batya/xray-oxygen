@@ -31,7 +31,7 @@ bool CUITrackBar::OnMouseAction(float x, float y, EUIMessages mouse_action)
 		{
 			if(m_bCursorOverWindow && m_b_mouse_capturer)
 			{
-				if (pInput->iGetAsyncBtnState(0))
+				if (pInput->iGetAsyncBtnState(VK_LBUTTON))
 					UpdatePosRelativeToMouse();
 			}
 		}break;
@@ -59,7 +59,7 @@ bool CUITrackBar::OnMouseAction(float x, float y, EUIMessages mouse_action)
 				m_i_val -= GetInvert()?-m_i_step:m_i_step;
 				clamp(m_i_val, m_i_min, m_i_max);
 			}
-			GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, NULL);
+			GetMessageTarget()->SendMessageToWnd(this, BUTTON_CLICKED, NULL);
 			UpdatePos			();
 			OnChangedOptValue	();
 		}
@@ -76,7 +76,7 @@ bool CUITrackBar::OnMouseAction(float x, float y, EUIMessages mouse_action)
 				m_i_val += GetInvert()?-m_i_step:m_i_step;
 				clamp(m_i_val, m_i_min, m_i_max);
 			}
-			GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, NULL);
+			GetMessageTarget()->SendMessageToWnd(this, BUTTON_CLICKED, NULL);
 			UpdatePos();
 			OnChangedOptValue	();
 		}
@@ -119,7 +119,7 @@ void CUITrackBar::Update()
 
 	if(m_b_mouse_capturer)
 	{
-		if(!pInput->iGetAsyncBtnState(0))
+		if(!pInput->iGetAsyncBtnState(VK_LBUTTON))
 			m_b_mouse_capturer = false;
 	}
 }
@@ -253,7 +253,7 @@ void CUITrackBar::UpdatePosRelativeToMouse()
 	}
 
 	if(b_ch)
-		GetMessageTarget()->SendMessage(this, BUTTON_CLICKED, NULL);
+		GetMessageTarget()->SendMessageToWnd(this, BUTTON_CLICKED, NULL);
 
 	UpdatePos	();
 	OnChangedOptValue	();

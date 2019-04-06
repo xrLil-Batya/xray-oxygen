@@ -86,7 +86,7 @@ public:
 			void	FakeUpdateIndicatorType(u8 t, float power);
 			void	EnableFakeIndicators(bool enable);
 protected:
-	static	ALife::EInfluenceType	get_indik_type( ALife::EHitType hit_type );
+	static	ALife::EInfluenceType	get_inVK_type( ALife::EHitType hit_type );
 
 			void	Load_section_type	( ALife::EInfluenceType type, LPCSTR section );
 			void	UpdateIndicatorType	( CActor* actor, ALife::EInfluenceType type );

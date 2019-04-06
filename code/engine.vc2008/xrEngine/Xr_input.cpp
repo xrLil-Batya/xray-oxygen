@@ -1,14 +1,13 @@
 ﻿#include "stdafx.h"
-#pragma hdrstop
 #include "xr_input.h"
 #include "IInputReceiver.h"
 #include "../include/editor/ide.hpp"
 #include "../FrayBuildConfig.hpp"
-#include "OffSetOfWrapper.inl"
 #include "IGame_AnselSDK.h"
+#include "xr_level_controller.h"
+#include <Xinput.h>
 
 CInput *	pInput = nullptr;
-IInputReceiver		dummyController;
 
 ENGINE_API float	psMouseSens = 1.f;
 ENGINE_API float	psMouseSensScale = 1.f;
@@ -16,501 +15,217 @@ ENGINE_API Flags32	psMouseInvert = { FALSE };
 
 float stop_vibration_time = flt_max;
 
-#define MOUSEBUFFERSIZE			64
-#define KEYBOARDBUFFERSIZE		64
-#define _KEYDOWN(name,key)		( name[key] & 0x80 )
-
-static bool g_exclusive = true;
-static void on_error_dialog(bool before)
+CInput::CInput()
 {
-#ifdef INGAME_EDITOR
-	if (Device.editor())
-		return;
-#endif // #ifdef INGAME_EDITOR
-	if (!pInput || !g_exclusive)
-		return;
-
-	if (before) {
-		pInput->unacquire();
-		return;
-	}
-
-	pInput->acquire(true);
-}
-
-CInput::CInput(BOOL bExclusive, int deviceForInit)
-{
-	g_exclusive = !!bExclusive;
-
 	Log("Starting INPUT device...");
-#ifdef RAW_INPUT_USE
-	char inputBuffer[sizeof(RAWINPUT)] = {};
-	UINT inputBufferSize = sizeof(RAWINPUT);
-	GetRawInputData(DataInput, RID_INPUT, inputBuffer, &inputBufferSize, sizeof(RAWINPUTHEADER));
-	pDI = reinterpret_cast<RAWINPUT*>(inputBuffer);
-#else
-	pDI = NULL;
-	pMouse = NULL;
-	pKeyboard = NULL;
 
-	//=====================Mouse
-	mouse_property.mouse_dt = 25;
+	bGamepadConnected = false;
+	bVibrationStarted = false;
+	bAllowBorderAccess = true;
+	gamepadUserIndex = 0;
+	gamepadLastPacketId = 0;
+	leftTrigger = 0.0f;
+	rightTrigger = 0.0f;
+	leftThumbstick.setZero();
+	rightThumbstick.setZero();
+	UINT deviceCountGet = 0;
+	UINT rawInputDeviceCount = 0;
+	ResetPressedState();
+	deviceCountGet = GetRawInputDeviceList(NULL, &rawInputDeviceCount, sizeof(RAWINPUTDEVICELIST));
+	R_ASSERT(rawInputDeviceCount > 0);
 
-	std::memset(mouseState, 0, sizeof(mouseState));
-	std::memset(KBState, 0, sizeof(KBState));
-	std::memset(timeStamp, 0, sizeof(timeStamp));
-	std::memset(timeSave, 0, sizeof(timeStamp));
-	std::memset(offs, 0, sizeof(offs));
+	xr_vector<RAWINPUTDEVICELIST> deviceLists;
+	deviceLists.resize(rawInputDeviceCount);
+	deviceCountGet = GetRawInputDeviceList(deviceLists.data(), &rawInputDeviceCount, sizeof(RAWINPUTDEVICELIST));
 
-	//===================== Dummy pack
-	iCapture(&dummyController);
-#endif
+	R_ASSERT(deviceCountGet != -1);
 
-#ifdef RAW_INPUT_USE
-	Mouse.usUsagePage = 1;
-	Mouse.usUsage = 2;
-	Mouse.dwFlags = RIDEV_CAPTUREMOUSE;
-	Mouse.hwndTarget = Device.m_hWnd;
-	RegisterRawInputDevices(&Mouse, 1, sizeof(Mouse));
+	rawDevices[0].usUsagePage = 1;
+	rawDevices[0].usUsage = 2; // mouse
+	rawDevices[0].dwFlags = 0;
+	rawDevices[0].hwndTarget = Device.m_hWnd;
 
-	KeyBoard.usUsagePage = 1;
-	KeyBoard.usUsage = 6;
-	KeyBoard.dwFlags = RIDEV_APPKEYS;
-	KeyBoard.hwndTarget = Device.m_hWnd;
-	RegisterRawInputDevices(&KeyBoard, 1, sizeof(KeyBoard));
-#else
-	if (!pDI) CHK_DX(DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&pDI, NULL));
-	u32 kb_input_flags = ((bExclusive) ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND;
-	u32 mouse_input_flags = ((bExclusive) ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY;
+	rawDevices[1].usUsagePage = 1;
+	rawDevices[1].usUsage = 6; // keyboard
+	rawDevices[1].dwFlags = 0;
+	rawDevices[1].hwndTarget = Device.m_hWnd;
+	BOOL bRegisteredInput = RegisterRawInputDevices(&rawDevices[0], 2, sizeof(RAWINPUTDEVICE));
 
-	// KEYBOARD
-	if (deviceForInit & keyboard_device_key)
-		CHK_DX(CreateInputDevice(&pKeyboard, GUID_SysKeyboard, &c_dfDIKeyboard, kb_input_flags, KEYBOARDBUFFERSIZE));
-	// MOUSE
-	if (deviceForInit & mouse_device_key)
-		CHK_DX(CreateInputDevice(&pMouse, GUID_SysMouse, &c_dfDIMouse2, mouse_input_flags, MOUSEBUFFERSIZE));
-#endif
-
-	Debug.set_on_dialog(&on_error_dialog);
+	R_ASSERT(bRegisteredInput);
 
 	Device.seqAppActivate.Add(this);
 	Device.seqAppDeactivate.Add(this, REG_PRIORITY_HIGH);
 	Device.seqFrame.Add(this, REG_PRIORITY_HIGH);
+	Device.seqResolutionChanged.Add(this, REG_PRIORITY_HIGH);
 }
 
-CInput::~CInput(void)
+CInput::~CInput()
 {
+	ClipCursor(NULL);
+	rawDevices[0].usUsagePage = 1;
+	rawDevices[0].usUsage = 2; // mouse
+	rawDevices[0].dwFlags = RIDEV_REMOVE;
+	rawDevices[0].hwndTarget = Device.m_hWnd;
+
+	rawDevices[1].usUsagePage = 1;
+	rawDevices[1].usUsage = 6; // keyboard
+	rawDevices[1].dwFlags = RIDEV_REMOVE;
+	rawDevices[1].hwndTarget = Device.m_hWnd;
+	RegisterRawInputDevices(&rawDevices[0], 2, sizeof(rawDevices));
+
 	Device.seqFrame.Remove(this);
 	Device.seqAppDeactivate.Remove(this);
 	Device.seqAppActivate.Remove(this);
-	//_______________________
-#ifdef RAW_INPUT_USE
-	xr_delete(pDI);
-#else
-	// Unacquire and release the device's interfaces
-	if (pMouse) {
-		pMouse->Unacquire();
-		_RELEASE(pMouse);
-	}
-
-	if (pKeyboard) {
-		pKeyboard->Unacquire();
-		_RELEASE(pKeyboard);
-	}
-
-	_SHOW_REF("Input: ", pDI);
-	_RELEASE(pDI);
-#endif
 }
 
-//-----------------------------------------------------------------------------
-// Name: CreateInputDevice()
-// Desc: Create a DirectInput device.
-//-----------------------------------------------------------------------------
-#ifdef RAW_INPUT_USE
-HRESULT CInput::CreateInputDevice(RAWINPUTDEVICE* device, GUID guidDevice, RID_DEVICE_INFO* pdidDataFormat, u32 dwFlags, u32 buf_size)
+void CInput::ProcessInput(LPARAM hRawInputParam)
 {
-	// Obtain an interface to the input device
-	GetRegisteredRawInputDevices(device, 0, buf_size);
+	if (cbStack.empty()) return;
+	HRAWINPUT hRawInput = (HRAWINPUT)hRawInputParam;
 
-	// Set the device data format. Note: a data format specifies which
-	// controls on a device we are interested in, and how they should be
-	// reported.
+	RAWINPUT* pRawInput = (RAWINPUT*)&inputData[0];
+	bool bShouldFreeMem = false;
+	UINT rawInputSize = sizeof(inputData);
 
-	GetRawInputDeviceInfo(device, RIDI_DEVICEINFO, pdidDataFormat, (u32*)buf_size);
-	return S_OK;
-}
-#else
-HRESULT CInput::CreateInputDevice(LPDIRECTINPUTDEVICE8* device, GUID guidDevice, const DIDATAFORMAT* pdidDataFormat, u32 dwFlags, u32 buf_size)
-{
-	// Obtain an interface to the input device
-	CHK_DX(pDI->CreateDevice(guidDevice, device, NULL));
+	GetRawInput:
+	UINT RetBytes = GetRawInputData(hRawInput, RID_INPUT, pRawInput, &rawInputSize, sizeof(RAWINPUTHEADER));
 
-	// Set the device data format. Note: a data format specifies which
-	// controls on a device we are interested in, and how they should be
-	// reported.
-	CHK_DX((*device)->SetDataFormat(pdidDataFormat));
-
-	// Set the cooperativity level to let DirectInput know how this device
-	// should interact with the system and with other DirectInput applications.
-#ifdef INGAME_EDITOR
-	if (!Device.editor())
-#endif // #ifdef INGAME_EDITOR
+	if (RetBytes != (UINT(-1)))
 	{
-		HRESULT	_hr = (*device)->SetCooperativeLevel(RDEVICE.m_hWnd, dwFlags);
-		if (FAILED(_hr) && (_hr == E_NOTIMPL)) Msg("! INPUT: Can't set coop level. Emulation???");
-		//else R_CHK(_hr);
-	}
-
-	// setup the buffer size for the keyboard data
-	DIPROPDWORD				dipdw;
-	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
-	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-	dipdw.diph.dwObj = 0;
-	dipdw.diph.dwHow = DIPH_DEVICE;
-	dipdw.dwData = buf_size;
-
-	CHK_DX((*device)->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph));
-
-	return S_OK;
-}
-
-//-----------------------------------------------------------------------
-
-void CInput::SetAllAcquire(BOOL bAcquire)
-{
-	if (pMouse)		bAcquire ? pMouse->Acquire() : pMouse->Unacquire();
-	if (pKeyboard)	bAcquire ? pKeyboard->Acquire() : pKeyboard->Unacquire();
-}
-
-void CInput::SetMouseAcquire(BOOL bAcquire)
-{
-	if (pMouse)		bAcquire ? pMouse->Acquire() : pMouse->Unacquire();
-}
-void CInput::SetKBDAcquire(BOOL bAcquire)
-{
-	if (pKeyboard)	bAcquire ? pKeyboard->Acquire() : pKeyboard->Unacquire();
-}
-#endif
-//-----------------------------------------------------------------------
-BOOL b_altF4 = FALSE;
-void CInput::KeyUpdate()
-{
-	if (b_altF4)					return;
-
-	HRESULT						hr;
-	DWORD dwElements = KEYBOARDBUFFERSIZE;
-	DIDEVICEOBJECTDATA			od[KEYBOARDBUFFERSIZE];
-	DWORD key = 0;
-
-	VERIFY(pKeyboard);
-
-	hr = pKeyboard->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), &od[0], &dwElements, 0);
-	if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
-	{
-		hr = pKeyboard->Acquire();
-		if (hr != S_OK)
-			return;
-
-		hr = pKeyboard->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), &od[0], &dwElements, 0);
-		if (hr != S_OK)
-			return;
-	}
-
-	bool b_dik_pause_was_pressed = false;
-	for (u32 idx = 0; idx < dwElements; idx++)
-	{
-		if (od[idx].dwOfs == DIK_PAUSE)
+		RAWINPUTHEADER& header = pRawInput->header;
+		if (header.dwType == RIM_TYPEMOUSE)
 		{
-			if (od[idx].dwData & 0x80)
-				b_dik_pause_was_pressed = true;
+			RAWMOUSE& refMouseData = pRawInput->data.mouse;
+			const bool IsAbsoluteInput = (refMouseData.usFlags & MOUSE_MOVE_ABSOLUTE) == MOUSE_MOVE_ABSOLUTE;
 
-			if (b_dik_pause_was_pressed && !(od[idx].dwData & 0x80))
+			if (refMouseData.usButtonFlags & RI_MOUSE_WHEEL)
 			{
-				od[idx].uAppData = 666;
-				continue; //skip one-frame pause key on-off switch
+				cbStack.back()->IR_OnMouseWheel(int(refMouseData.usButtonData << 16));
+			}
+			else if (!IsAbsoluteInput)
+			{
+				deltaMouse.set(refMouseData.lLastX, refMouseData.lLastY);
+				cbStack.back()->IR_OnMouseMove(deltaMouse.x, deltaMouse.y);
+			}
+
+			USHORT mouseFlags = refMouseData.usButtonFlags;
+			auto CheckMouseButtonState = [this, mouseFlags](u8 mouseKey, USHORT mouseDown, USHORT mouseUp)
+			{
+				if (mouseFlags & mouseDown)
+				{
+					pressedKeys[mouseKey] = true;
+					cbStack.back()->IR_OnKeyboardPress(mouseKey);
+				}
+				if (mouseFlags & mouseUp)
+				{
+					pressedKeys[mouseKey] = false;
+					cbStack.back()->IR_OnKeyboardRelease(mouseKey);
+				}
+			};
+
+			CheckMouseButtonState((u8)VK_LBUTTON, RI_MOUSE_LEFT_BUTTON_DOWN,	RI_MOUSE_LEFT_BUTTON_UP);
+			CheckMouseButtonState((u8)VK_RBUTTON, RI_MOUSE_RIGHT_BUTTON_DOWN,	RI_MOUSE_RIGHT_BUTTON_UP);
+			CheckMouseButtonState((u8)VK_MBUTTON, RI_MOUSE_MIDDLE_BUTTON_DOWN,	RI_MOUSE_MIDDLE_BUTTON_UP);
+			CheckMouseButtonState((u8)VK_XBUTTON1, RI_MOUSE_BUTTON_4_DOWN,		RI_MOUSE_BUTTON_4_UP);
+			CheckMouseButtonState((u8)VK_XBUTTON2, RI_MOUSE_BUTTON_5_DOWN,		RI_MOUSE_BUTTON_5_UP);
+		}
+		else if (header.dwType == RIM_TYPEKEYBOARD)
+		{
+			RAWKEYBOARD& keyboardKey = pRawInput->data.keyboard;
+
+			USHORT& pressedKey = keyboardKey.VKey;
+			R_ASSERT(pressedKey <= 0xFF);
+
+			if (keyboardKey.Flags == RI_KEY_MAKE || keyboardKey.Flags == RI_KEY_E0)
+			{
+				if (!pressedKeys[pressedKey])
+				{
+					pressedKeys[pressedKey] = true;
+					cbStack.back()->IR_OnKeyboardPress((u8)pressedKey);
+				}
+			}
+			else if (keyboardKey.Flags & RI_KEY_BREAK)
+			{
+				if (pressedKeys[pressedKey])
+				{
+					pressedKeys[pressedKey] = false;
+					cbStack.back()->IR_OnKeyboardRelease((u8)pressedKey);
+				}
+			}
+
+			if (pressedKeys[VK_F4] && pressedKeys[VK_MENU])
+			{
+				Engine.Event.Defer("KERNEL:disconnect");
+				Engine.Event.Defer("KERNEL:quit");
+
+				return;
 			}
 		}
-		KBState[od[idx].dwOfs] = od[idx].dwData & 0x80;
 	}
-
-	bool b_alt_tab = false;
-
-	if (!b_altF4 && KBState[DIK_F4] && (KBState[DIK_RMENU] || KBState[DIK_LMENU]))
-	{
-		b_altF4 = TRUE;
-		Engine.Event.Defer("KERNEL:disconnect");
-		Engine.Event.Defer("KERNEL:quit");
-	}
-
-	if (b_altF4)					
-		return;
-
-	if (Device.dwPrecacheFrame == 0)
-	{
-
-		for (u32 i = 0; i < dwElements; i++)
-		{
-			if (od[i].uAppData == 666) //ignored action
-				continue;
-
-			key = od[i].dwOfs;
-			if (od[i].dwData & 0x80)
-				cbStack.back()->IR_OnKeyboardPress(key);
-			else
-			{
-				cbStack.back()->IR_OnKeyboardRelease(key);
-				if (key == DIK_TAB && (iGetAsyncKeyState(DIK_RMENU) || iGetAsyncKeyState(DIK_LMENU)))
-					b_alt_tab = true;
-			}
-		}
-
-		for (u32 i = 0; i < COUNT_KB_BUTTONS; i++)
-			if (KBState[i])
-				cbStack.back()->IR_OnKeyboardHold(i);
-	}
-
-#ifndef _EDITOR
-	if (b_alt_tab)
-		SendMessage(Device.m_hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
-#endif
-}
-bool CInput::get_dik_name(int dik, LPSTR dest_str, int dest_sz)
-{
-	DIPROPSTRING keyname;
-	keyname.diph.dwSize = sizeof(DIPROPSTRING);
-	keyname.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-	keyname.diph.dwObj = static_cast<DWORD>(dik);
-	keyname.diph.dwHow = DIPH_BYOFFSET;
-	HRESULT hr = pKeyboard->GetProperty(DIPROP_KEYNAME, &keyname.diph);
-	if (FAILED(hr))
-		return false;
-
-	const wchar_t* wct = keyname.wsz;
-	if (!wcslen(wct))
-		return false;
-
-	return (WideCharToMultiByte(CP_ACP, 0, keyname.wsz, -1, dest_str, dest_sz, 0, 0) != -1);
-}
-
-#define MOUSE_1		(0xED + 100)
-#define MOUSE_8		(0xED + 107)
-
-BOOL CInput::iGetAsyncKeyState(int dik)
-{
-	if (dik<COUNT_KB_BUTTONS)
-		return !!KBState[dik];
 	else
-		if (dik >= MOUSE_1 && dik <= MOUSE_8)
-		{
-			int mk = dik - MOUSE_1;
-			return iGetAsyncBtnState(mk);
-		}
-		else
-			return FALSE; //unknown key ???
+	{
+		pRawInput = (RAWINPUT*)Memory.mem_alloc(rawInputSize);
+		bShouldFreeMem = true;
+		goto GetRawInput;
+	}
+
+	if (bShouldFreeMem)
+	{
+		Memory.mem_free(pRawInput);
+	}
 }
 
-BOOL CInput::iGetAsyncBtnState(int btn)
+bool CInput::get_VK_name(u8 dik, LPSTR dest_str, int dest_sz)
 {
-	return !!mouseState[btn];
+	const xr_string& keyName = KeyNamesTable.at(dik);
+
+	memcpy(dest_str, keyName.c_str(), keyName.size());
+	dest_str[keyName.size()] = '\0';
+	return true;
 }
 
-void CInput::MouseUpdate()
+BOOL CInput::iGetAsyncKeyState(u8 dik)
 {
-	HRESULT hr;
-	DWORD dwElements = MOUSEBUFFERSIZE;
-	DIDEVICEOBJECTDATA	od[MOUSEBUFFERSIZE];
+	return pressedKeys[dik];
+}
 
-	VERIFY(pMouse);
+BOOL CInput::iGetAsyncBtnState(u8 btn)
+{
+	return pressedKeys[btn];
+}
 
-	hr = pMouse->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), &od[0], &dwElements, 0);
-	if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED) 
-	{
-		hr = pMouse->Acquire();
-		if (hr != S_OK) 
-			return;
-		hr = pMouse->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), &od[0], &dwElements, 0);
-		if (hr != S_OK) 
-			return;
-	};
-
-	if (Device.dwPrecacheFrame)
-		return;
-
-	BOOL mouse_prev[COUNT_MOUSE_BUTTONS];
-	for(u16 i = 0; i < 8; i++)
-		mouse_prev[i] = mouseState[i];
-
-	offs[0] = offs[1] = offs[2] = 0;
-	for (u32 i = 0; i < dwElements; i++) {
-		switch (od[i].dwOfs) {
-		case DIMOFS_X:	offs[0] += od[i].dwData; timeStamp[0] = od[i].dwTimeStamp;	break;
-		case DIMOFS_Y:	offs[1] += od[i].dwData; timeStamp[1] = od[i].dwTimeStamp;	break;
-		case DIMOFS_Z:	offs[2] += od[i].dwData; timeStamp[2] = od[i].dwTimeStamp;	break;
-		case DIMOFS_BUTTON0:
-			if (od[i].dwData & 0x80)
-			{
-				mouseState[0] = TRUE;				
-				cbStack.back()->IR_OnMousePress(0);
-			}
-			if (!(od[i].dwData & 0x80))
-			{
-				mouseState[0] = FALSE;			
-				cbStack.back()->IR_OnMouseRelease(0);
-			}
-			break;
-		case DIMOFS_BUTTON1:
-			if (od[i].dwData & 0x80)
-			{
-				mouseState[1] = TRUE;				
-				cbStack.back()->IR_OnMousePress(1);
-			}
-			if (!(od[i].dwData & 0x80))
-			{
-				mouseState[1] = FALSE;			
-				cbStack.back()->IR_OnMouseRelease(1);
-			}
-			break;
-		case DIMOFS_BUTTON2:
-			if (od[i].dwData & 0x80)
-			{
-				mouseState[2] = TRUE;				
-				cbStack.back()->IR_OnMousePress(2);
-			}
-			if (!(od[i].dwData & 0x80))
-			{
-				mouseState[2] = FALSE;			
-				cbStack.back()->IR_OnMouseRelease(2);
-			}
-			break;
-		case DIMOFS_BUTTON3:
-			if (od[i].dwData & 0x80)
-			{
-				mouseState[3] = TRUE;				
-				cbStack.back()->IR_OnKeyboardPress(0xED + 103);
-			}
-			if (!(od[i].dwData & 0x80))
-			{
-				mouseState[3] = FALSE;			
-				cbStack.back()->IR_OnKeyboardRelease(0xED + 103);
-			}
-			break;
-		case DIMOFS_BUTTON4:
-			if (od[i].dwData & 0x80)
-			{
-				mouseState[4] = TRUE;				
-				cbStack.back()->IR_OnKeyboardPress(0xED + 104);
-			}
-			if (!(od[i].dwData & 0x80))
-			{
-				mouseState[4] = FALSE;			
-				cbStack.back()->IR_OnKeyboardRelease(0xED + 104);
-			}
-			break;
-		case DIMOFS_BUTTON5:
-			if (od[i].dwData & 0x80)
-			{
-				mouseState[5] = TRUE;				
-				cbStack.back()->IR_OnKeyboardPress(0xED + 105);
-			}
-			if (!(od[i].dwData & 0x80))
-			{
-				mouseState[5] = FALSE;			
-				cbStack.back()->IR_OnKeyboardRelease(0xED + 105);
-			}
-			break;
-		case DIMOFS_BUTTON6:
-			if (od[i].dwData & 0x80)
-			{
-				mouseState[6] = TRUE;				
-				cbStack.back()->IR_OnKeyboardPress(0xED + 106);
-			}
-			if (!(od[i].dwData & 0x80))
-			{
-				mouseState[6] = FALSE;			
-				cbStack.back()->IR_OnKeyboardRelease(0xED + 106);
-			}
-			break;
-		case DIMOFS_BUTTON7:
-			if (od[i].dwData & 0x80)
-			{
-				mouseState[7] = TRUE;
-				cbStack.back()->IR_OnKeyboardPress(0xED + 107);
-			}
-			if (!(od[i].dwData & 0x80))
-			{
-				mouseState[7] = FALSE;
-				cbStack.back()->IR_OnKeyboardRelease(0xED + 107);
-			}
-			break;
-		}
-	}
-
-	DIMOUSESTATE2 MouseState;
-	hr = pMouse->GetDeviceState(sizeof(MouseState), &MouseState);
-
-	auto RecheckMouseButtonFunc = [&](int MouseBtnIndx)
-	{
-		if ((MouseState.rgbButtons[MouseBtnIndx] & 0x80) && mouseState[MouseBtnIndx] == FALSE)
-		{
-			mouseState[MouseBtnIndx] = TRUE;
-			cbStack.back()->IR_OnMousePress(MouseBtnIndx);
-		}
-		else if ((!(MouseState.rgbButtons[MouseBtnIndx] & 0x80)) && mouseState[MouseBtnIndx] == TRUE)
-		{
-			mouseState[MouseBtnIndx] = FALSE;
-			cbStack.back()->IR_OnMouseRelease(MouseBtnIndx);
-		}
-	};
-
-	if (hr == DI_OK)
-	{
-		RecheckMouseButtonFunc(0);
-		RecheckMouseButtonFunc(1);
-		RecheckMouseButtonFunc(2);
-	}
-	
-	for (u32 i = 0; i < 3; i++)
-		if (mouseState[i] && mouse_prev[i])
-			cbStack.back()->IR_OnMouseHold(i);
-
-	if (dwElements) {
-		if (offs[0] || offs[1]) cbStack.back()->IR_OnMouseMove(offs[0], offs[1]);
-		if (offs[2])			cbStack.back()->IR_OnMouseWheel(offs[2]);
-	}
-	else {
-		if (timeStamp[1] && ((dwCurTime - timeStamp[1]) >= mouse_property.mouse_dt))	cbStack.back()->IR_OnMouseStop(DIMOFS_Y, timeStamp[1] = 0);
-		if (timeStamp[0] && ((dwCurTime - timeStamp[0]) >= mouse_property.mouse_dt))	cbStack.back()->IR_OnMouseStop(DIMOFS_X, timeStamp[0] = 0);
-	}
+void CInput::iGetLastMouseDelta(Ivector2& p)
+{
+	p.set(deltaMouse.x, deltaMouse.y);
 }
 
 //-------------------------------------------------------
 void CInput::iCapture(IInputReceiver *p)
 {
 	VERIFY(p);
-	if (pMouse) 	MouseUpdate();
-	if (pKeyboard) 	KeyUpdate();
 
+	ResetPressedState();
 	// change focus
 	if (!cbStack.empty())
+	{
 		cbStack.back()->IR_OnDeactivate();
+	}
 	cbStack.push_back(p);
 	cbStack.back()->IR_OnActivate();
-
-	// prepare for _new_ controller
-	std::memset(timeStamp, 0, sizeof(timeStamp));
-	std::memset(timeSave, 0, sizeof(timeStamp));
-	std::memset(offs, 0, sizeof(offs));
 }
 
 void CInput::iRelease(IInputReceiver *p)
 {
+	ResetPressedState();
 	if (p == cbStack.back())
 	{
 		cbStack.back()->IR_OnDeactivate();
 		cbStack.pop_back();
-		IInputReceiver * ir = cbStack.back();
-		ir->IR_OnActivate();
+		if (!cbStack.empty())
+		{
+			IInputReceiver * ir = cbStack.back();
+			ir->IR_OnActivate();
+		}
 	}
 	else
 	{// we are not topmost receiver, so remove the nearest one
@@ -526,89 +241,352 @@ void CInput::iRelease(IInputReceiver *p)
 	}
 }
 
-void CInput::OnAppActivate(void)
+void CInput::OnAppActivate()
 {
 	if (CurrentIR())
 		CurrentIR()->IR_OnActivate();
 
-	SetAllAcquire(true);
-	std::memset(mouseState, 0, sizeof(mouseState));
-	std::memset(KBState, 0, sizeof(KBState));
-	std::memset(timeStamp, 0, sizeof(timeStamp));
-	std::memset(timeSave, 0, sizeof(timeStamp));
-	std::memset(offs, 0, sizeof(offs));
+	ResetPressedState();
+	// set mouse to center screen
+	RECT windowRect;
+	Device.GetXrWindowRect(windowRect);
+	cachedWindowRect = windowRect;
+
+	SetCursorPos(windowRect.right - (LONG)Device.fWidth_2, windowRect.bottom - (LONG)Device.fHeight_2);
+	XInputEnable(TRUE);
+	if (bShouldLockMouse)
+	{
+		LockMouse();
+	}
 }
 
-void CInput::OnAppDeactivate(void)
+void CInput::OnAppDeactivate()
 {
 	if (CurrentIR())
 		CurrentIR()->IR_OnDeactivate();
 
-	SetAllAcquire(false);
-	std::memset(mouseState, 0, sizeof(mouseState));
-	std::memset(KBState, 0, sizeof(KBState));
-	std::memset(timeStamp, 0, sizeof(timeStamp));
-	std::memset(timeSave, 0, sizeof(timeStamp));
-	std::memset(offs, 0, sizeof(offs));
+	ResetPressedState();
+	ClipCursor(NULL);
+	XInputEnable(FALSE);
 }
 
-void CInput::OnFrame(void)
+void CInput::LockMouse()
+{
+	bShouldLockMouse = true;
+	RECT windowRect;
+	Device.GetXrWindowRect(windowRect);
+
+	if (!bAllowBorderAccess)
+	{
+		// make offset for 15 px from window border, to prevent accidently resizing
+		windowRect.left += 15;
+		windowRect.right -= 15;
+		windowRect.top += 55;
+		windowRect.bottom -= 25;
+	}
+
+	ClipCursor(&windowRect);
+}
+
+void CInput::UnlockMouse()
+{
+	ClipCursor(NULL);
+	bShouldLockMouse = false;
+}
+
+void CInput::ResetPressedState()
+{
+	if (!cbStack.empty())
+	{
+		// invoke necessery Release handlers
+		IInputReceiver* receiver = cbStack.back();
+		for (u8 i = 0; i < 255; ++i)
+		{
+			if (pressedKeys[i])
+			{
+				pressedKeys[i] = false;
+				receiver->IR_OnKeyboardRelease(i);
+			}
+		}
+	}
+	else
+	{
+		ZeroMemory(&pressedKeys[0],		 sizeof(pressedKeys));
+	}
+}
+
+
+void CInput::OnFrame()
 {
 	ScopeStatTimer frameTimer(Device.Statistic->Engine_InputFrame);
+	if (cbStack.empty())
+	{
+		return;
+	}
 	dwCurTime = RDEVICE.TimerAsync_MMT();
 
-	if (Device.dwPrecacheFrame == 0 && !pGameAnsel->isActive)
+	// check for holded keys
+	for (u8 i = 0; i < 0xFF; i++)
 	{
-		KeyUpdate();
-		MouseUpdate();
+		if (pressedKeys[i])
+		{
+			cbStack.back()->IR_OnKeyboardHold(i);
+		}
+	}
+
+	// check if we should show/hide system cursor
+	// system cursor should be visible, if it was outside game window
+	if ((Device.dwFrame % 30) == 0) // per 30 frames
+	{
+		POINT mouseCursor;
+		if (GetCursorPos(&mouseCursor))
+		{
+			if (Device.b_is_Active)
+			{
+				if (cachedWindowRect.left + 5 < mouseCursor.x && cachedWindowRect.right - 5 > mouseCursor.x &&
+					cachedWindowRect.top + 5 < mouseCursor.y && cachedWindowRect.bottom - 5 > mouseCursor.y)
+				{
+					if (bCursorShowed)
+					{
+						bCursorShowed = false;
+						ShowCursor(FALSE);
+					}
+				}
+				else
+				{
+					if (!bCursorShowed)
+					{
+						bCursorShowed = true;
+						ShowCursor(TRUE);
+					}
+				}
+			}
+		}
+	}
+
+	// validate cursor visibility
+	if ((Device.dwFrame % 600) == 0) // per 600 frames, 10 sec for 60 fps
+	{
+		CURSORINFO cInfo;
+		cInfo.cbSize = sizeof(cInfo);
+		if (GetCursorInfo(&cInfo))
+		{
+			if (cInfo.flags & CURSOR_SHOWING)
+			{
+				bCursorShowed = true;
+			}
+		}
+	}
+
+
+	// check for gamepad presense
+	if ((Device.dwFrame % 60) == 0) // per 60 frames
+	{
+		CheckGamepad();
+	}
+
+	// get gamepad inputs (if presented)
+	if (bGamepadConnected)
+	{
+		XINPUT_STATE GamepadState;
+		if ((XInputGetState(gamepadUserIndex, &GamepadState)) == ERROR_SUCCESS)
+		{
+			if (gamepadLastPacketId != GamepadState.dwPacketNumber)
+			{
+				XINPUT_GAMEPAD& GamepadData = GamepadState.Gamepad;
+				gamepadLastPacketId = GamepadState.dwPacketNumber;
+
+				// check for buttons
+				auto CheckForGamepadButtonLambda = [this, &GamepadData](u16 xInputButtonMask, u8 VkKey)
+				{
+					if (GamepadData.wButtons & xInputButtonMask)
+					{
+						if (!pressedKeys[VkKey])
+						{
+							pressedKeys[VkKey] = true;
+							cbStack.back()->IR_OnKeyboardPress(VkKey);
+						}
+					}
+					else
+					{
+						if (pressedKeys[VkKey])
+						{
+							pressedKeys[VkKey] = false;
+							cbStack.back()->IR_OnKeyboardRelease(VkKey);
+						}
+					}
+				};
+
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_DPAD_UP,			VK_GAMEPAD_DPAD_UP);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_DPAD_DOWN,		VK_GAMEPAD_DPAD_DOWN);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_DPAD_LEFT,		VK_GAMEPAD_DPAD_LEFT);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_DPAD_RIGHT,		VK_GAMEPAD_DPAD_RIGHT);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_START,			VK_GAMEPAD_MENU);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_BACK,			VK_GAMEPAD_VIEW);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_LEFT_THUMB,		VK_GAMEPAD_LEFT_THUMBSTICK_BUTTON);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_RIGHT_THUMB,		VK_GAMEPAD_RIGHT_THUMBSTICK_BUTTON);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_LEFT_SHOULDER,	VK_GAMEPAD_LEFT_SHOULDER);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_RIGHT_SHOULDER,	VK_GAMEPAD_RIGHT_SHOULDER);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_A,				VK_GAMEPAD_A);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_B,				VK_GAMEPAD_B);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_X,				VK_GAMEPAD_X);
+				CheckForGamepadButtonLambda(XINPUT_GAMEPAD_Y,				VK_GAMEPAD_Y);
+
+				auto ProcessValueButtonLambda = [this](float CurrentValue, float PreviousValue, bool bNegative, u8 VkKey)
+				{
+					float Comparer = bNegative ? -0.9f : 0.9f;
+					if (bNegative)
+					{
+						if (CurrentValue < Comparer && PreviousValue > Comparer)
+						{
+							cbStack.back()->IR_OnKeyboardPress(VkKey);
+						}
+						else if (CurrentValue > Comparer && PreviousValue < Comparer)
+						{
+							cbStack.back()->IR_OnKeyboardRelease(VkKey);
+						}
+					}
+					else
+					{
+						if (CurrentValue > Comparer && PreviousValue < Comparer)
+						{
+							cbStack.back()->IR_OnKeyboardPress(VkKey);
+						}
+						else if (CurrentValue < Comparer && PreviousValue > Comparer)
+						{
+							cbStack.back()->IR_OnKeyboardRelease(VkKey);
+						}
+					}
+				};
+
+				// check for triggers and thumbsticks
+				auto ProcessTriggerInputLambda = [this, &ProcessValueButtonLambda](GamepadTriggerType type, u8 VkKey, BYTE InTriggerInput, float& previousTriggerValue)
+				{
+					float fltTriggerValue = (float)InTriggerInput / 255.f;
+					if (!float_equal(fltTriggerValue, previousTriggerValue))
+					{
+						ProcessValueButtonLambda(fltTriggerValue, previousTriggerValue, false, VkKey);
+
+						previousTriggerValue = fltTriggerValue;
+						cbStack.back()->IR_OnTriggerPressed(type, previousTriggerValue);
+					}
+				};
+
+				ProcessTriggerInputLambda(GamepadTriggerType::Left,  VK_GAMEPAD_LEFT_TRIGGER,  GamepadData.bLeftTrigger,  leftTrigger);
+				ProcessTriggerInputLambda(GamepadTriggerType::Right, VK_GAMEPAD_RIGHT_TRIGGER, GamepadData.bRightTrigger, rightTrigger);
+
+				auto ProcessThumbstickInputLambda = [this, &ProcessValueButtonLambda](GamepadThumbstickType thumbstickType, Fvector2& thumbstickValue, short ThumbX, short ThumbY, short gamepadDeadZone, u8 VkKeyLeft, u8 VkKeyRight, u8 VkKeyUp, u8 VkKeyDown)
+				{
+					float ThumbstickXValue = 0.0f;
+					float ThumbstickYValue = 0.0f;
+					if (ThumbX > gamepadDeadZone || ThumbX < (-gamepadDeadZone))
+					{
+						ThumbstickXValue = (float)ThumbX / 32767.f;
+					}
+					if (ThumbY > gamepadDeadZone || ThumbY < (-gamepadDeadZone))
+					{
+						ThumbstickYValue = (float)ThumbY / 32767.f;
+						ThumbstickYValue = -ThumbstickYValue;
+					}
+
+					if (!float_equal(thumbstickValue.x, ThumbstickXValue) || !float_equal(thumbstickValue.y, ThumbstickYValue))
+					{
+						ProcessValueButtonLambda(ThumbstickXValue, thumbstickValue.x, true,     VkKeyLeft);
+						ProcessValueButtonLambda(ThumbstickXValue, thumbstickValue.x, false,    VkKeyRight);
+						ProcessValueButtonLambda(ThumbstickYValue, thumbstickValue.y, true,		VkKeyUp);
+						ProcessValueButtonLambda(ThumbstickYValue, thumbstickValue.y, false,	VkKeyDown);
+
+						thumbstickValue.x = ThumbstickXValue;
+						thumbstickValue.y = ThumbstickYValue;
+						cbStack.back()->IR_OnThumbstickChanged(thumbstickType, thumbstickValue);
+					}
+				};
+
+				ProcessThumbstickInputLambda(GamepadThumbstickType::Left, leftThumbstick, GamepadData.sThumbLX, GamepadData.sThumbLY, XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE,
+					VK_GAMEPAD_LEFT_THUMBSTICK_LEFT, VK_GAMEPAD_LEFT_THUMBSTICK_RIGHT, VK_GAMEPAD_LEFT_THUMBSTICK_UP, VK_GAMEPAD_LEFT_THUMBSTICK_DOWN);
+
+				ProcessThumbstickInputLambda(GamepadThumbstickType::Right, rightThumbstick, GamepadData.sThumbRX, GamepadData.sThumbRY, XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE,
+					VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT, VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT, VK_GAMEPAD_RIGHT_THUMBSTICK_UP, VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN);
+			}
+		}
+
+		if (bVibrationStarted)
+		{
+			if (stop_vibration_time < RDEVICE.fTimeGlobal)
+			{
+				bVibrationStarted = false;
+				XINPUT_VIBRATION vibrationInputData;
+				vibrationInputData.wLeftMotorSpeed =  0;
+				vibrationInputData.wRightMotorSpeed = 0;
+
+				XInputSetState(gamepadUserIndex, &vibrationInputData);
+			}
+		}
 	}
 }
 
 IInputReceiver*	 CInput::CurrentIR()
 {
-	if (cbStack.size())
+	if (!cbStack.empty())
+	{
 		return cbStack.back();
+	}
 	else
-		return NULL;
+	{
+		return nullptr;
+	}
 }
 
-void CInput::unacquire()
+void CInput::CheckGamepad()
 {
-	pKeyboard->Unacquire();
-	pMouse->Unacquire();
+	XINPUT_CAPABILITIES GamepadState;
+	
+	for (u32 i = 0; i < XUSER_MAX_COUNT; i++)
+	{
+		if (XInputGetCapabilities(i, XINPUT_FLAG_GAMEPAD, &GamepadState) == ERROR_SUCCESS)
+		{
+			gamepadUserIndex = i;
+			bGamepadConnected = true;
+
+			if (GamepadState.Vibration.wLeftMotorSpeed && GamepadState.Vibration.wRightMotorSpeed)
+			{
+				bIsVibrationSupported = true;
+			}
+
+			return;
+		}
+	}
+
+	bIsVibrationSupported = false;
+	bGamepadConnected = false;
 }
 
-void CInput::acquire(const bool &exclusive)
+bool CInput::IsGamepadPresented() const
 {
-	pKeyboard->SetCooperativeLevel(
-#ifdef INGAME_EDITOR
-		Device.editor() ? Device.editor()->main_handle() :
-#endif // #ifdef INGAME_EDITOR
-		RDEVICE.m_hWnd,
-		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND);
-	pKeyboard->Acquire();
-
-	pMouse->SetCooperativeLevel(
-#ifdef INGAME_EDITOR
-		Device.editor() ? Device.editor()->main_handle() :
-#endif // #ifdef INGAME_EDITOR
-		RDEVICE.m_hWnd,
-		(exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND | DISCL_NOWINKEY);
-	pMouse->Acquire();
+	return bGamepadConnected;
 }
 
-void CInput::exclusive_mode(const bool &exclusive)
+void CInput::SetAllowAccessToBorders(bool bAccessToBorders)
 {
-	g_exclusive = exclusive;
-	unacquire();
-	acquire(exclusive);
+	bAllowBorderAccess = bAccessToBorders;
+	//LockMouse();
 }
-bool CInput::get_exclusive_mode()
+
+void CInput::OnScreenResolutionChanged(void)
 {
-	return g_exclusive;
+	RECT windowRect;
+	Device.GetXrWindowRect(windowRect);
+	cachedWindowRect = windowRect;
 }
 
 void  CInput::feedback(u16 s1, u16 s2, float time)
 {
 	stop_vibration_time = RDEVICE.fTimeGlobal + time;
+	bVibrationStarted = true;
+
+	XINPUT_VIBRATION vibrationInputData;
+	vibrationInputData.wLeftMotorSpeed = s1;
+	vibrationInputData.wRightMotorSpeed = s2;
+	
+	XInputSetState(gamepadUserIndex, &vibrationInputData);
 }

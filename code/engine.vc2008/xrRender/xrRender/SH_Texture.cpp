@@ -169,7 +169,7 @@ void CTexture::Load		()
 
 	Preload							();
 	string_path			fn;
-	if (FS.exist(fn,"$game_textures$",*cName,".ogm"))
+	if (FS.exist(fn, "$game_textures$", *cName, ".ogm") || FS.exist(fn, "$game_textures$", *cName, ".ogv"))
 	{
 		// AVI
 		pTheora		= xr_new<CTheoraSurface>();
@@ -249,7 +249,7 @@ void CTexture::Load		()
 			flags.seqCycles	= TRUE;
 			_fs->r_string	(buffer,sizeof(buffer));
 		}
-		u32 fps	= atoi(buffer);
+		u32 fps	= atoi_17(buffer);
 		seqMSPF		= 1000/fps;
 
 		while (!_fs->eof())

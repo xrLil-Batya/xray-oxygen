@@ -3,8 +3,6 @@
 #include "../xrUICore/UIDialogWnd.h"
 #include "../xrUIcore/IGameUI.h"
 
-
-
 namespace XRay
 {
 	public ref class UIDialogWnd abstract

@@ -136,7 +136,7 @@ public:
 	//UIWindow overriding
 	virtual		void		Update				();
 	virtual		bool		OnMouseAction		(float x, float y, EUIMessages mouse_action);
-	virtual		void		SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual		void		SendMessageToWnd			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
 				void		OnDragEvent			(CUIDragItem* drag_item, bool b_receive);
 };

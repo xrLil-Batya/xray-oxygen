@@ -64,7 +64,6 @@ ui_shader	*g_EquipmentIconsShader		= nullptr;
 ui_shader	*g_MPCharIconsShader		= nullptr;
 ui_shader	*g_OutfitUpgradeIconsShader	= nullptr;
 ui_shader	*g_WeaponUpgradeIconsShader	= nullptr;
-ui_shader	*g_tmpWMShader				= nullptr;
 static CUIStatic*	GetUIStatic				();
 
 using CharInfoStringID = std::pair<CHARACTER_RANK_VALUE, shared_str>;
@@ -76,8 +75,6 @@ CharInfoStrings		*charInfoGoodwillStrings	= nullptr;
 
 void InventoryUtilities::CreateShaders()
 {
-	g_tmpWMShader = xr_new<ui_shader>();
-	(*g_tmpWMShader)->create("effects\\wallmark", "wm\\wm_grenade");
 }
 
 void InventoryUtilities::DestroyShaders()
@@ -96,9 +93,6 @@ void InventoryUtilities::DestroyShaders()
 
 	xr_delete(g_WeaponUpgradeIconsShader);
 	g_WeaponUpgradeIconsShader = 0;
-
-	xr_delete(g_tmpWMShader);
-	g_tmpWMShader = 0;
 }
 
 bool InventoryUtilities::GreaterRoomInRuck(PIItem item1, PIItem item2)

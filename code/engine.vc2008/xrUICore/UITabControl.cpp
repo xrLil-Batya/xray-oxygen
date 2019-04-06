@@ -90,7 +90,7 @@ void CUITabControl::RemoveAll()
 	m_TabsArr.clear();
 }
 
-void CUITabControl::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
+void CUITabControl::SendMessageToWnd(CUIWindow *pWnd, s16 msg, void *pData)
 {
 	if (TAB_CHANGED == msg)
 	{
@@ -125,18 +125,18 @@ void CUITabControl::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 	}
 	else
 	{
-		inherited::SendMessage(pWnd, msg, pData);
+		inherited::SendMessageToWnd(pWnd, msg, pData);
 	}
 }
 
 void CUITabControl::OnStaticFocusReceive(CUIWindow* pWnd)
 {
-	GetMessageTarget()->SendMessage			(this, WINDOW_FOCUS_RECEIVED, static_cast<void*>(pWnd));
+	GetMessageTarget()->SendMessageToWnd			(this, WINDOW_FOCUS_RECEIVED, static_cast<void*>(pWnd));
 }
 
 void CUITabControl::OnStaticFocusLost(CUIWindow* pWnd)
 {
-	GetMessageTarget()->SendMessage			(this, WINDOW_FOCUS_LOST, static_cast<void*>(pWnd));
+	GetMessageTarget()->SendMessageToWnd			(this, WINDOW_FOCUS_LOST, static_cast<void*>(pWnd));
 }
 
 void CUITabControl::OnTabChange(const shared_str& sCur, const shared_str& sPrev)
@@ -144,11 +144,11 @@ void CUITabControl::OnTabChange(const shared_str& sCur, const shared_str& sPrev)
 	CUITabButton* tb_cur					= GetButtonById			(sCur);
 	CUITabButton* tb_prev					= GetButtonById			(sPrev);
 	if(tb_prev)	
-		tb_prev->SendMessage				(tb_cur, TAB_CHANGED, nullptr);
+		tb_prev->SendMessageToWnd				(tb_cur, TAB_CHANGED, nullptr);
 
-	tb_cur->SendMessage						(tb_cur, TAB_CHANGED, nullptr);	
+	tb_cur->SendMessageToWnd						(tb_cur, TAB_CHANGED, nullptr);	
 
-	GetMessageTarget()->SendMessage			(this, TAB_CHANGED, nullptr);
+	GetMessageTarget()->SendMessageToWnd			(this, TAB_CHANGED, nullptr);
 }
 
 void CUITabControl::SetActiveTab(const shared_str& sNewTab)
@@ -162,7 +162,7 @@ void CUITabControl::SetActiveTab(const shared_str& sNewTab)
 	m_sPrevPushedId		= m_sPushedId;
 }
 
-bool CUITabControl::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUITabControl::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 
 	if (GetAcceleratorsMode() && WINDOW_KEY_PRESSED == keyboard_action)

@@ -11,7 +11,8 @@ class CUIMessageBoxEx;
 #include "UIDialogHolder.h"
 #include "UIWndCallback.h"
 
-class UI_API CMainMenu : public IMainMenu, public IInputReceiver, public pureRender, public CDialogHolder, public CUIWndCallback, public CDeviceResetNotifier
+class UI_API CMainMenu : public IMainMenu, public IInputReceiver, public pureRender, public CDialogHolder, public CUIWndCallback, public CDeviceResetNotifier,
+	public pureAppActivate
 {
 	CUIDialogWnd*		m_startDialog;
 	
@@ -29,6 +30,7 @@ class UI_API CMainMenu : public IMainMenu, public IInputReceiver, public pureRen
 	Flags16			m_Flags;
 	string_path		m_screenshot_name;
 	u32				m_screenshotFrame;
+	Fvector2		m_lastLeftThumbstickValue;
 	void			ReadTextureInfo();
 
 	xr_vector<CUIWindow*> m_pp_draw_wnds;
@@ -51,15 +53,12 @@ public:
 
 	virtual bool	IgnorePause() { return true; }
 
-	virtual void	IR_OnMousePress(int btn);
-	virtual void	IR_OnMouseRelease(int btn);
-	virtual void	IR_OnMouseHold(int btn);
 	virtual void	IR_OnMouseMove(int x, int y);
-	virtual void	IR_OnMouseStop(int x, int y);
+	virtual void	IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& position) override;
 
-	virtual void	IR_OnKeyboardPress(int dik);
-	virtual void	IR_OnKeyboardRelease(int dik);
-	virtual void	IR_OnKeyboardHold(int dik);
+	virtual void	IR_OnKeyboardPress(u8 dik);
+	virtual void	IR_OnKeyboardRelease(u8 dik);
+	virtual void	IR_OnKeyboardHold(u8 dik);
 
 	virtual void	IR_OnMouseWheel(int direction);
 
@@ -83,6 +82,8 @@ public:
 
 IC	const char*		GetGSVer() { return ENGINE_VERSION; };
 	virtual void	OnDeviceReset();
+
+	virtual void OnAppActivate() override;
 };
 
 extern UI_API CMainMenu* MainMenu();

@@ -26,17 +26,17 @@ void line_editor::on_frame()
 	m_control.on_frame();
 }
 
-void line_editor::IR_OnKeyboardPress( int dik )
+void line_editor::IR_OnKeyboardPress( u8 dik )
 {
 	m_control.on_key_press( dik );
 }
 
-void line_editor::IR_OnKeyboardHold( int dik )
+void line_editor::IR_OnKeyboardHold( u8 dik )
 {
 	m_control.on_key_hold( dik );
 }
 
-void line_editor::IR_OnKeyboardRelease( int dik )
+void line_editor::IR_OnKeyboardRelease( u8 dik )
 {
 	m_control.on_key_release( dik );
 }

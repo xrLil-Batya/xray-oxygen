@@ -4,8 +4,7 @@
 
 #pragma warning(disable:4995)
 #include "../xrEngine/stdafx.h"
-#include <DPlay/dplay8.h>
-#include <dx/dinput.h>
+#include <d3d9types.h>
 #pragma warning(default:4995)
 #pragma warning( 4 : 4018 )
 #pragma warning( 4 : 4244 )
@@ -28,33 +27,8 @@
 #include "smart_cast.h"
 #include "GamePersistent.h"
 
+#include "../Include/xrRender/WallMarkArray.h"
+#include "../Include/xrRender/FactoryPtr.h"
+
 // Forward luaState
 struct lua_State;
-
-#ifndef D3DCOLOR_XRGB
-	#define D3DCOLOR_ARGB(a,r,g,b) \
-		((D3DCOLOR)((((a)&0xff)<<24)|(((r)&0xff)<<16)|(((g)&0xff)<<8)|((b)&0xff)))
-	#define D3DCOLOR_RGBA(r,g,b,a) D3DCOLOR_ARGB(a,r,g,b)
-	#define D3DCOLOR_XRGB(r,g,b)   D3DCOLOR_ARGB(0xff,r,g,b)
-#endif
-
-/*
-extern "C" {
-#include <lua/lua.h>
-#include <lua/lualib.h>
-#include <lua/lauxlib.h>
-};
-
-#pragma warning(push)
-#pragma warning(disable:4995)
-#include <luabind/luabind.hpp>
-#pragma warning(pop)
-
-#include <luabind/object.hpp>
-#include <luabind/functor.hpp>
-#include <luabind/operator.hpp>
-#include <luabind/adopt_policy.hpp>
-#include <luabind/return_reference_to_policy.hpp>
-#include <luabind/out_value_policy.hpp>
-#include <luabind/iterator_policy.hpp>
-*/

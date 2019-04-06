@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "UIPdaSpot.h"
-#include <dinput.h>
 #include "Level.h"
 #include "map_manager.h"
 #include "map_location.h"
@@ -116,11 +115,11 @@ void CUIPdaSpot::Exit()
     HideDialog();
 }
 
-bool CUIPdaSpot::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIPdaSpot::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
     switch (dik)
     {
-    case DIK_ESCAPE:
+    case VK_ESCAPE:
     {
         if (IsShown())
         {
@@ -133,7 +132,7 @@ bool CUIPdaSpot::OnKeyboardAction(int dik, EUIMessages keyboard_action)
     return base_class::OnKeyboardAction(dik, keyboard_action);
 }
 
-void CUIPdaSpot::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIPdaSpot::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
     CUIWndCallback::OnEvent(pWnd, msg, pData);
 }

@@ -160,9 +160,10 @@ float CEnvelope::GetLength(float* mn, float* mx)
 
 	if (mn)
 		*mn = 0.f;
-	if (mx)
 
+	if (mx)
 		*mx = 0.f;
+
 	return 0.f;
 }
 
@@ -227,7 +228,7 @@ void CEnvelope::LoadA(IReader& F)
 	if (strstr(buf, "{ Envelope"))
 	{
 		F.r_string(buf, sizeof(buf));
-		int nkeys = atoi(buf);
+		int nkeys = atoi_17(buf);
 		keys.resize(nkeys);
 		for (u32 i = 0; i < keys.size(); ++i)
 		{

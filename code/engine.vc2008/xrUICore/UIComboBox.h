@@ -38,7 +38,7 @@ public:
 			void		SetItemIDX				(int idx);
 			void		SetItemToken			(int tok);
 
-	virtual void		SendMessage				(CUIWindow *pWnd, s16 msg, void* pData = 0);
+	virtual void		SendMessageToWnd				(CUIWindow *pWnd, s16 msg, void* pData = 0);
 	virtual void		OnFocusLost				();
 	virtual void		OnFocusReceive			();
 			int			CurrentID				()	{return m_itoken_id;}

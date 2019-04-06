@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "xrServerEntities/character_info.h"
 #include "xrServerEntities/specific_character.h"
 #include "xrGame/Actor.h"
@@ -24,6 +24,35 @@ namespace XRay
 			float get();
 			void set(float fNewValue);
 		}
+
+		static property bool bInputActive
+		{
+			bool get();
+			void set(bool bInput);
+		}
+
+		static property bool ShowWeapon
+		{
+			bool get();
+			void set(bool bActive);
+		}
+
+		static property u8 ActiveCam
+		{
+			u8 get();
+			void set(u8 mode);
+		}
+
+		// #TODO: Make to CamEffector class
+		static float AddCamEffector(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func);
+		static float AddCamEffector2(LPCSTR fn, int id, bool cyclic, LPCSTR cb_func, float cam_fov);
+		static void RemoveCamEffector(int id);
+		static void AddComplexEffector(LPCSTR section, int id);
+		static void RemoveComplexEffector(int id);
+		static void AddPPEffector(LPCSTR fn, int id, bool cyclic);
+		static void RemovePPEffector(int id);
+		static void SetPPEffectorFactor(int id, float f, float f_sp);
+		static void SetPPEffectorFactor2(int id, float f);
 
 	public:
 		Inventory^ inventory;
@@ -75,6 +104,5 @@ namespace XRay
 		virtual void on_action_hold();
 		virtual void map_location_added();
 		*/
-
 	};
 }

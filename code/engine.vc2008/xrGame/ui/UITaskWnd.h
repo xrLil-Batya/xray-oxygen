@@ -56,7 +56,7 @@ public:
 public:
 								CUITaskWnd				();
 	virtual						~CUITaskWnd				();
-	virtual void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData);
+	virtual void				SendMessageToWnd				(CUIWindow* pWnd, s16 msg, void* pData);
 			void				Init					();
 	virtual void				Update					();
 	virtual void				Draw					();
@@ -110,7 +110,7 @@ public:
 	virtual void				Update					();
 	virtual void				OnMouseScroll			(float iDirection);
 	virtual bool				OnMouseAction					(float x, float y, EUIMessages mouse_action);
-	virtual void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData);
+	virtual void				SendMessageToWnd				(CUIWindow* pWnd, s16 msg, void* pData);
 
 	void						Init					(CUIXml& uiXml, LPCSTR path);
 	void						InitTask				(CGameTask* task);

@@ -25,9 +25,9 @@ public:
 			void	on_frame		();
 
 protected:
-	virtual void	IR_OnKeyboardPress	( int dik );
-	virtual void	IR_OnKeyboardHold	( int dik );
-	virtual void	IR_OnKeyboardRelease( int dik );
+	virtual void	IR_OnKeyboardPress	( u8 dik );
+	virtual void	IR_OnKeyboardHold	( u8 dik );
+	virtual void	IR_OnKeyboardRelease( u8 dik );
 
 private:
 	line_edit_control		m_control;

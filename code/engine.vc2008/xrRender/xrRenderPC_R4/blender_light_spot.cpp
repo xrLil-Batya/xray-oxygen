@@ -98,7 +98,7 @@ void	CBlender_accum_spot_msaa::Compile(CBlender_Compile& C)
 	D3DBLEND	dest		= blend?D3DBLEND_ONE:D3DBLEND_ZERO;
 
    if( Name )
-      ::Render->m_MSAASample = atoi( Definition );
+      ::Render->m_MSAASample = atoi_17( Definition );
    else
       ::Render->m_MSAASample = -1;
 
@@ -185,7 +185,7 @@ void	CBlender_accum_volumetric_msaa::Compile(CBlender_Compile& C)
 	IBlender::Compile		(C);
 
    if( Name )
-      ::Render->m_MSAASample = atoi( Definition );
+      ::Render->m_MSAASample = atoi_17( Definition );
    else
       ::Render->m_MSAASample = -1;
 

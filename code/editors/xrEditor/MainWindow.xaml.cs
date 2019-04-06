@@ -21,10 +21,12 @@ namespace xrEditor
 	public partial class MainWindow : Window
 	{
 		RenderTickThread tickThread;
-		public MainWindow()
+        XRay.Editor.EditorOcclusion ourOcclusion;
+        public MainWindow()
 		{
 			tickThread = new RenderTickThread(this);
-			InitializeComponent();
+            ourOcclusion = new XRay.Editor.EditorOcclusion();
+            InitializeComponent();
 		}
 
 		public XRay.XRayRenderHost GetXRayHostInterop()
@@ -35,7 +37,9 @@ namespace xrEditor
 		public override void EndInit()
 		{
 			base.EndInit();
-			GetXRayHostInterop().EditorMode = !EngineMode.IsChecked.Value;
+            XRay.XRayRenderHost renderHost = GetXRayHostInterop();
+            
+            renderHost.EditorMode = !EngineMode.IsChecked.Value;
 			tickThread.StartLoopThread();
 		}
 		private void checkBox_Checked(object sender, RoutedEventArgs e)

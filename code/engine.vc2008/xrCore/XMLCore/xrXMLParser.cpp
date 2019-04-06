@@ -199,19 +199,19 @@ int CXml::ReadInt(XML_NODE* node, int default_int_val)
 {
 	const char* result_str = Read(node, nullptr);
 
-	return result_str ? atoi(result_str) : default_int_val;
+	return result_str ? atoi_17(result_str) : default_int_val;
 }
 
 int CXml::ReadInt(const char* path, int index, int default_int_val)
 {
 	const char* result_str = Read(path, index, nullptr);
-	return result_str ? atoi(result_str) : default_int_val;
+	return result_str ? atoi_17(result_str) : default_int_val;
 }
 
 int CXml::ReadInt(XML_NODE* start_node, const char* path, int index, int default_int_val)
 {
 	const char* result_str = Read(start_node, path, index, nullptr);
-	return result_str ? atoi(result_str) : default_int_val;
+	return result_str ? atoi_17(result_str) : default_int_val;
 }
 
 float CXml::ReadFlt(const char* path, int index, float default_flt_val)
@@ -286,19 +286,19 @@ bool CXml::ReadAttribBool(XML_NODE* start_node, const char* path, int index, con
 int CXml::ReadAttribInt(XML_NODE* node, const char* attrib, int default_int_val)
 {
 	const char* result_str = ReadAttrib(node, attrib, nullptr);
-	return result_str ? atoi(result_str) : default_int_val;
+	return result_str ? atoi_17(result_str) : default_int_val;
 }
 
 int CXml::ReadAttribInt(const char* path, int index, const char* attrib, int default_int_val)
 {
 	const char* result_str = ReadAttrib(path, index, attrib, nullptr);
-	return result_str ? atoi(result_str) : default_int_val;
+	return result_str ? atoi_17(result_str) : default_int_val;
 }
 
 int CXml::ReadAttribInt(XML_NODE* start_node, const char* path, int index, const char* attrib, int default_int_val)
 {
 	const char* result_str = ReadAttrib(start_node, path, index, attrib, nullptr);
-	return result_str ? atoi(result_str) : default_int_val;
+	return result_str ? atoi_17(result_str) : default_int_val;
 }
 
 float CXml::ReadAttribFlt(const char* path, int index, const char* attrib, float default_flt_val)

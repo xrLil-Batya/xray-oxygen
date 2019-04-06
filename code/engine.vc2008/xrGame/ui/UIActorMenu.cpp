@@ -83,7 +83,7 @@ void CUIActorMenu::SetInvBox(CInventoryBox* box)
 	if ( box )
 	{
 		m_pInvBox->set_in_use( true );
-		SetPartner( NULL );
+		SetPartner( nullptr );
 	}
 }
 
@@ -134,10 +134,10 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 void CUIActorMenu::PlaySnd(eActorMenuSndAction a)
 {
 	if (sounds[a]._handle())
-        sounds[a].play					(NULL, sm_2D);
+        sounds[a].play					(nullptr, sm_2D);
 }
 
-void CUIActorMenu::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIActorMenu::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent		(pWnd, msg, pData);
 }
@@ -145,15 +145,15 @@ void CUIActorMenu::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 void CUIActorMenu::Show(bool status)
 {
 	inherited::Show(status);
+	PlaySnd(status ? eSndOpen : eSndClose);
+
 	if (status)
 	{
 		SetMenuMode(m_currMenuMode);
-		PlaySnd(eSndOpen);
 		m_ActorStateInfo->UpdateActorInfo(m_pActorInvOwner);
 	}
 	else
 	{
-		PlaySnd(eSndClose);
 		SetMenuMode(mmUndefined);
 		Actor()->RepackAmmo();
 	}
@@ -170,7 +170,6 @@ void CUIActorMenu::Draw()
 	}
 
 	inherited::Draw();
-
 	m_ItemInfo->Draw();
 }
 
@@ -287,7 +286,7 @@ CUICellItem* CUIActorMenu::CurrentItem()
 
 PIItem CUIActorMenu::CurrentIItem()
 {
-	return	(m_pCurrentCellItem)? (PIItem)m_pCurrentCellItem->m_pData : NULL;
+	return	(m_pCurrentCellItem)? (PIItem)m_pCurrentCellItem->m_pData : nullptr;
 }
 
 void CUIActorMenu::SetCurrentItem(CUICellItem* itm)
@@ -296,7 +295,7 @@ void CUIActorMenu::SetCurrentItem(CUICellItem* itm)
 	m_pCurrentCellItem = itm;
 	if ( !itm )
 	{
-		InfoCurItem( NULL );
+		InfoCurItem( nullptr );
 	}
 	TryHidePropertiesBox();
 
@@ -310,12 +309,12 @@ void CUIActorMenu::InfoCurItem(CUICellItem* cell_item)
 {
 	if (!cell_item)
 	{
-		m_ItemInfo->InitItem(NULL);
+		m_ItemInfo->InitItem(nullptr);
 		return;
 	}
 	PIItem current_item = (PIItem)cell_item->m_pData;
 
-	PIItem compare_item = NULL;
+	PIItem compare_item = nullptr;
 	u16    compare_slot = current_item->BaseSlot();
 	if (compare_slot != NO_ACTIVE_SLOT)
 	{
@@ -349,7 +348,7 @@ void CUIActorMenu::InfoCurItem(CUICellItem* cell_item)
 		}
 
 		if (!current_item->CanTrade() ||
-			(!m_pPartnerInvOwner->trade_parameters().enabled(CTradeParameters::action_buy(0),
+			(!m_pPartnerInvOwner->trade_parameters().enabled(CTradeParameters::action_buy(nullptr),
 				current_item->object().cNameSect()) &&
 				item_owner && item_owner == m_pActorInvOwner)
 			)
@@ -522,6 +521,7 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 }
 
 #include "../items/WeaponKnife.h"
+#include "../items/WeaponBinoculars.h"
 void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
 	PIItem item = (PIItem)cell_item->m_pData;
@@ -532,11 +532,9 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 
 	highlight_item_slot(cell_item);
 
-	// не подсвечивать патроны для ножа
-	if (smart_cast<CWeaponKnife*>(item))
-	{
+	// не подсвечивать патроны для ножа или бинокля
+	if (dynamic_cast<CWeaponKnife*>(item) || dynamic_cast<CWeaponBinoculars*>(item))
 		return;
-	}
 
 	switch ( m_currMenuMode )
 	{
@@ -590,13 +588,13 @@ void CUIActorMenu::highlight_ammo_for_weapon(PIItem weapon_item, CUIDragDropList
 	CWeaponMagazinedWGrenade* wg = smart_cast<CWeaponMagazinedWGrenade*>(weapon_item);
 	if (wg)
 	{
-		if (wg->IsGrenadeLauncherAttached() && wg->m_ammoTypes2.size())
+		if (wg->IsGrenadeLauncherAttached() && !wg->m_ammoTypes2.empty())
 		{
 			ammo_types.insert(ammo_types.end(), wg->m_ammoTypes2.begin(), wg->m_ammoTypes2.end());
 		}
 	}
 
-	if (ammo_types.size() == 0)
+	if (ammo_types.empty())
 	{
 		return;
 	}
@@ -635,6 +633,9 @@ void CUIActorMenu::highlight_weapons_for_ammo(PIItem ammo_item, CUIDragDropListE
 {
 	VERIFY(ammo_item);
 	VERIFY(ddlist);
+
+
+
 	CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(ammo_item);
 	if (!ammo)
 	{
@@ -648,7 +649,7 @@ void CUIActorMenu::highlight_weapons_for_ammo(PIItem ammo_item, CUIDragDropListE
 	{
 		CUICellItem* ci = ddlist->GetItemIdx(i);
 		PIItem item = (PIItem)ci->m_pData;
-		if (!item)
+		if (!item || !item->m_name || !item->ItemDescription())
 		{
 			continue;
 		}
@@ -669,7 +670,7 @@ void CUIActorMenu::highlight_weapons_for_ammo(PIItem ammo_item, CUIDragDropListE
 
 
 		CWeaponMagazinedWGrenade* wg = smart_cast<CWeaponMagazinedWGrenade*>(item);
-		if (!wg || !wg->IsGrenadeLauncherAttached() || !wg->m_ammoTypes2.size())
+		if (!wg || !wg->IsGrenadeLauncherAttached() || wg->m_ammoTypes2.empty())
 		{
 			continue; // for i
 		}
@@ -813,9 +814,9 @@ void CUIActorMenu::CallMessageBoxOK( LPCSTR text )
 void CUIActorMenu::ResetMode()
 {
 	ClearAllLists				();
-	m_pMouseCapturer			= NULL;
+	m_pMouseCapturer			= nullptr;
 	m_UIPropertiesBox->Hide		();
-	SetCurrentItem				(NULL);
+	SetCurrentItem				(nullptr);
     GameUI()->UIMainIngameWnd->ShowZoneMap(true);
 }
 

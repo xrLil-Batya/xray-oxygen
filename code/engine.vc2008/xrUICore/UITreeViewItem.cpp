@@ -239,7 +239,7 @@ void CUITreeViewItem::SetText(LPCSTR str)
 
 //////////////////////////////////////////////////////////////////////////
 
-void CUITreeViewItem::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUITreeViewItem::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	static CUITreeViewItem *pPrevFocusedItem = NULL;
 
@@ -270,7 +270,7 @@ void CUITreeViewItem::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 		pPrevFocusedItem = NULL;
 	}
 	else
-		inherited::SendMessage(pWnd, msg, pData);
+		inherited::SendMessageToWnd(pWnd, msg, pData);
 }
 
 //////////////////////////////////////////////////////////////////////////

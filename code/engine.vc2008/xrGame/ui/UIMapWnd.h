@@ -139,10 +139,10 @@ public:
 			void				HideCurHint				();
 			void				Hint					(const shared_str& text);
 	virtual bool				OnMouseAction					(float x, float y, EUIMessages mouse_action);
-	virtual bool				OnKeyboardAction				(int dik, EUIMessages keyboard_action);
-	virtual bool				OnKeyboardHold			(int dik);
+	virtual bool				OnKeyboardAction				(u8 dik, EUIMessages keyboard_action);
+	virtual bool				OnKeyboardHold			(u8 dik);
 
-	virtual void				SendMessage				(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual void				SendMessageToWnd				(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
 	void						SetTargetMap			(CUICustomMap* m, bool bZoomIn = false);
 	void						SetTargetMap			(CUICustomMap* m, const Fvector2& pos, bool bZoomIn = false);

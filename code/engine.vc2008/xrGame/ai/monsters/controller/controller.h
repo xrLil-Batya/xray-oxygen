@@ -174,7 +174,7 @@ private:
 
 private:
 #ifdef DEBUG	
-		virtual void	debug_on_key		(int key);
+		virtual void	debug_on_key		(u8 key);
 
 		Fvector			P1,P2;
 #endif

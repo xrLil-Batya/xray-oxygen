@@ -259,7 +259,7 @@ static const float	ik_cam_shift_speed = 0.01f;
 #include "ai/stalker/ai_stalker.h"
 #include "ai/monsters/basemonster/base_monster.h"
 #include <ai/monsters/poltergeist/poltergeist.h>
-int cam_dik = DIK_LSHIFT;
+int cam_dik = VK_SHIFT;
 Fvector vel = { 0, 0, 0 };
 ref_light enemy_spotlight2;
 static shared_str pname = "_samples_particles_\\orbit_point_01";
@@ -473,7 +473,7 @@ void CActor::cam_Update(float dt, float fFOV)
 				//.				Msg("enemy is %s", *m_locked_enemy->cNameSect());
 			}
 		}
-		else if (!Enemy_Alive || !Enemy_Alive->getEnabled() || !Enemy_Alive->g_Alive() || Enemy_Alive->Position().distance_to(Actor()->Position()) > aldist - 10.0f)//|| (!Enemy_Alive->cast_base_monster() && RELATION_REGISTRY().GetRelationType(others_inv_owner, our_inv_owner) != ALife::eRelationTypeEnemy))
+		else if (!Enemy_Alive || !Enemy_Alive->getEnabled() || !Enemy_Alive->g_Alive() || Enemy_Alive->Position().distance_to(Actor()->Position()) > aldist - 10.0f)//|| (!Enemy_Alive->cast_base_monster() && SRelationRegistry().GetRelationType(others_inv_owner, our_inv_owner) != ALife::eRelationTypeEnemy))
 		{
 
 			m_locked_enemy = nullptr;

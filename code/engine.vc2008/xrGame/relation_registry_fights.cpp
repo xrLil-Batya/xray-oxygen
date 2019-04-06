@@ -8,7 +8,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-RELATION_REGISTRY::FIGHT_DATA::FIGHT_DATA			()
+SRelationRegistry::FIGHT_DATA::FIGHT_DATA			()
 {
 	attacker = defender = 0xffff;
 	total_hit = 0;
@@ -19,7 +19,7 @@ RELATION_REGISTRY::FIGHT_DATA::FIGHT_DATA			()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void RELATION_REGISTRY::FightRegister (u16 attacker, u16 defender, ALife::ERelationType defender_to_attacker, float hit_amount)
+void SRelationRegistry::FightRegister (u16 attacker, u16 defender, ALife::ERelationType defender_to_attacker, float hit_amount)
 {
 	UpdateFightRegister();
 
@@ -49,7 +49,7 @@ void RELATION_REGISTRY::FightRegister (u16 attacker, u16 defender, ALife::ERelat
 	}
 }
 
-RELATION_REGISTRY::FIGHT_DATA* RELATION_REGISTRY::FindFight(u16 object_id, bool by_attacker)
+SRelationRegistry::FIGHT_DATA* SRelationRegistry::FindFight(u16 object_id, bool by_attacker)
 {
 	FIGHT_VECTOR& fights = fight_registry();
 	for(FIGHT_DATA& fight_data : fights)
@@ -64,7 +64,7 @@ RELATION_REGISTRY::FIGHT_DATA* RELATION_REGISTRY::FindFight(u16 object_id, bool 
 }
 
 
-bool fight_time_pred(RELATION_REGISTRY::FIGHT_DATA& fight_data)
+bool fight_time_pred(SRelationRegistry::FIGHT_DATA& fight_data)
 {
 	//(c) время которое про драку помнит реестр (иначе считать неактуальным)
 	static u32 fight_remember_time	= u32(1000.f * pSettings->r_float(ACTIONS_POINTS_SECT, "fight_remember_time"));	
@@ -76,7 +76,7 @@ bool fight_time_pred(RELATION_REGISTRY::FIGHT_DATA& fight_data)
 	return false;
 }
 
-void RELATION_REGISTRY::UpdateFightRegister ()
+void SRelationRegistry::UpdateFightRegister ()
 {
 	FIGHT_VECTOR& fights = fight_registry();
     auto it = std::remove_if(fights.begin(), fights.end(), fight_time_pred);

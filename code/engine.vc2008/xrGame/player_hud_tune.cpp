@@ -10,6 +10,7 @@
 #include "../xrEngine/FDemoRecord.h"
 #include "../xrUICore/ui_base.h"
 #include "debug_renderer.h"
+#include "../xrEngine/xr_level_controller.h"
 
 u32 hud_adj_mode		= 0;
 u32 hud_adj_item_idx	= 0;
@@ -20,31 +21,31 @@ float _delta_rot			= 0.05f;
 
 bool is_attachable_item_tuning_mode()
 {
-	return	pInput->iGetAsyncKeyState(DIK_LSHIFT)	||
-			pInput->iGetAsyncKeyState(DIK_Z)		||
-			pInput->iGetAsyncKeyState(DIK_X)		||
-			pInput->iGetAsyncKeyState(DIK_C);
+	return	pInput->iGetAsyncKeyState(VK_SHIFT)	||
+			pInput->iGetAsyncKeyState(VK_Z)			||
+			pInput->iGetAsyncKeyState(VK_X)			||
+			pInput->iGetAsyncKeyState(VK_C);
 }
 
 void tune_remap(const Ivector& in_values, Ivector& out_values)
 {
-	if( pInput->iGetAsyncKeyState(DIK_LSHIFT) )
+	if( pInput->iGetAsyncKeyState(VK_SHIFT) )
 	{
 		out_values = in_values;
 	}else
-	if( pInput->iGetAsyncKeyState(DIK_Z) )
+	if( pInput->iGetAsyncKeyState(VK_Z) )
 	{ //strict by X
 		out_values.x = in_values.y;
 		out_values.y = 0;
 		out_values.z = 0;
 	}else
-	if( pInput->iGetAsyncKeyState(DIK_X) )
+	if( pInput->iGetAsyncKeyState(VK_X) )
 	{ //strict by Y
 		out_values.x = 0;
 		out_values.y = in_values.y;
 		out_values.z = 0;
 	}else
-	if( pInput->iGetAsyncKeyState(DIK_C) )
+	if( pInput->iGetAsyncKeyState(VK_C) )
 	{ //strict by Z
 		out_values.x = 0;
 		out_values.y = 0;
@@ -286,7 +287,7 @@ void hud_draw_adjust_mode()
 		return;
 
 	LPCSTR _text = nullptr;
-	if(pInput->iGetAsyncKeyState(DIK_LSHIFT) && hud_adj_mode)
+	if(pInput->iGetAsyncKeyState(VK_SHIFT) && hud_adj_mode)
 		_text = "press SHIFT+NUM 0-return 1-hud_pos 2-hud_rot 3-itm_pos 4-itm_rot 5-fire_point 6-fire_2_point 7-shell_point 8-pos_step 9-rot_step";
 
 	switch (hud_adj_mode)
@@ -333,36 +334,36 @@ void hud_draw_adjust_mode()
 		}
 }
 
-void hud_adjust_mode_keyb(int dik)
+void hud_adjust_mode_keyb(u8 dik)
 {
-	if(pInput->iGetAsyncKeyState(DIK_LSHIFT))
+	if(pInput->iGetAsyncKeyState(VK_SHIFT))
 	{
-		if(dik==DIK_NUMPAD0)
+		if(dik==VK_NUMPAD0)
 			hud_adj_mode = 0;
-		if(dik==DIK_NUMPAD1)
+		if(dik==VK_NUMPAD1)
 			hud_adj_mode = 1;
-		if(dik==DIK_NUMPAD2)
+		if(dik==VK_NUMPAD2)
 			hud_adj_mode = 2;
-		if(dik==DIK_NUMPAD3)
+		if(dik==VK_NUMPAD3)
 			hud_adj_mode = 3;
-		if(dik==DIK_NUMPAD4)
+		if(dik==VK_NUMPAD4)
 			hud_adj_mode = 4;
-		if(dik==DIK_NUMPAD5)
+		if(dik==VK_NUMPAD5)
 			hud_adj_mode = 5;
-		if(dik==DIK_NUMPAD6)
+		if(dik==VK_NUMPAD6)
 			hud_adj_mode = 6;
-		if(dik==DIK_NUMPAD7)
+		if(dik==VK_NUMPAD7)
 			hud_adj_mode = 7;
-		if(dik==DIK_NUMPAD8)
+		if(dik==VK_NUMPAD8)
 			hud_adj_mode = 8;
-		if(dik==DIK_NUMPAD9)
+		if(dik==VK_NUMPAD9)
 			hud_adj_mode = 9;
 	}
-	if(pInput->iGetAsyncKeyState(DIK_LCONTROL))
+	if(pInput->iGetAsyncKeyState(VK_CONTROL))
 	{
-		if(dik==DIK_NUMPAD0)
+		if(dik==VK_NUMPAD0)
 			hud_adj_item_idx = 0;
-		if(dik==DIK_NUMPAD1)
+		if(dik==VK_NUMPAD1)
 			hud_adj_item_idx = 1;
 	}
 }

@@ -819,7 +819,7 @@ CInventoryItem *CInventory::get_object_by_id(ALife::_OBJECT_ID tObjectID)
 #include "script_callback_ex.h"
 #include "script_game_object.h"
 
-bool CInventory::Eat(PIItem pIItem)
+bool CInventory::Eat(PIItem pIItem, bool bIgnoreParent)
 {
 	//устанаовить съедобна ли вещь
 	CEatableItem* pItemToEat = smart_cast<CEatableItem*>(pIItem);
@@ -833,11 +833,16 @@ bool CInventory::Eat(PIItem pIItem)
 
 	CInventory* pInventory = pItemToEat->m_pInventory;
 
-	if (!pInventory || pInventory != this)	return false;
-	if (pInventory != IO->m_inventory)		return false;
-	if (pItemToEat->object().H_Parent()->ID() != entity_alive->ID())		return false;
+	if(!pInventory)		return false;
 
-	if (!pItemToEat->UseBy(entity_alive))
+	if (!bIgnoreParent)
+	{
+		if (pInventory != this)	return false;
+		if (pInventory != IO->m_inventory)		return false;
+		if (pItemToEat->object().H_Parent()->ID() != entity_alive->ID())		return false;
+	}
+
+	if (!pItemToEat->UseBy(entity_alive, bIgnoreParent))
 		return false;
 
 	Actor()->callback(GameObject::eUseObject)((smart_cast<CGameObject*>(pIItem))->lua_game_object());

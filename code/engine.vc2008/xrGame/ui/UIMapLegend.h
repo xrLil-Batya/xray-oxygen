@@ -25,7 +25,7 @@ public:
 			void	init_from_xml		( CUIXml& xml, LPCSTR path );
 
 	virtual void	Show				( bool status );
-	virtual void	SendMessage			( CUIWindow* pWnd, s16 msg, void* pData );
+	virtual void	SendMessageToWnd			( CUIWindow* pWnd, s16 msg, void* pData );
 
 private: // m_
 	CUIFrameWindow*		m_background;

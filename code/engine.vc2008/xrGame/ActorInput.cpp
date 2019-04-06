@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <dinput.h>
 #include "Actor.h"
 #include "items/Torch.h"
 #include "trade.h"
@@ -36,25 +35,24 @@
 #include "../xrEngine/XR_IOConsole.h"
 #include "script_callback_ex.h"
 #include "searchlight.h"
+#include "HudItem.h"
 extern u32 hud_adj_mode;
 
-void CActor::IR_OnKeyboardPress(int cmd)
+void CActor::IR_OnKeyboardPress(u8 cmd)
 {
-	if (hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))
+	if (hud_adj_mode && pInput->iGetAsyncKeyState(VK_SHIFT))
 	{
-		if (pInput->iGetAsyncKeyState(DIK_RETURN) || pInput->iGetAsyncKeyState(DIK_BACKSPACE) ||
-			pInput->iGetAsyncKeyState(DIK_DELETE))
+		if (pInput->iGetAsyncKeyState(VK_RETURN) || pInput->iGetAsyncKeyState(VK_BACK) ||
+			pInput->iGetAsyncKeyState(VK_DELETE))
 			g_player_hud->tune(Ivector().set(0, 0, 0));
 
 			return;
 	}
 
-	if (Remote())		return;
-
 	if (IsTalking())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	
-	if (cmd == kWPN_FIRE && !pInput->iGetAsyncKeyState(DIK_LALT) && !cam_active == eacFirstEye)
+	if (cmd == kWPN_FIRE && !pInput->iGetAsyncKeyState(VK_MENU) && !cam_active == eacFirstEye)
 	{
 		u16 slot = inventory().GetActiveSlot();
 		if (inventory().ActiveItem() && (slot == INV_SLOT_3 || slot == INV_SLOT_2))
@@ -82,111 +80,81 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
 	{
 		if (GamePersistent().IsDeveloperMode())
-		{
 			callback(GameObject::eOnActionPress)(cmd);
-		}
 	}
 	else
-	{
 		callback(GameObject::eOnActionPress)(cmd);
-	}
 
 	switch(cmd)
 	{
-	case kJUMP:		
-		{
-			mstate_wishful |= mcJump;
-		}break;
-	case kCROUCH:	
-		{
-		if( psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)) )
-			mstate_wishful ^= mcCrouch;
-		}break;
-	case kCAM_1:	cam_Set			(eacFirstEye);				
-		break;
-	case kCAM_2:
-		if (!psActorFlags.test(AF_HARDCORE))
-		cam_Set			(eacLookAt);				
-		break;
-	case kCAM_3:	
-		if (!psActorFlags.test(AF_HARDCORE))
-		cam_Set			(eacFreeLook);				
-		break;
-	case kNIGHT_VISION:
-		{
-			SwitchNightVision();
-			break;
-		}
+	case kCROUCH:		 if (psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall))) mstate_wishful ^= mcCrouch; break;
+	case kCAM_2:		 if (!psActorFlags.test(AF_HARDCORE)) cam_Set(eacLookAt); break;
+	case kCAM_3:		 if (!psActorFlags.test(AF_HARDCORE)) cam_Set(eacFreeLook); break;
+
+	case kQUICK_SAVE:	Console->Execute("save"); break;
+	case kQUICK_LOAD:	Console->Execute("load"); break;
+	case kUSE:			ActorUse(); break;
+	case kDROP:			b_DropActivated = TRUE; f_DropPower = 0; break;
+	case kNEXT_SLOT:	OnNextWeaponSlot(); break;
+	case kPREV_SLOT:	OnPrevWeaponSlot(); break;
+	case kNIGHT_VISION: SwitchNightVision(); break;
+
+	case kFWD:		mstate_wishful |= mcFwd;	 m_movementWeight.y =  1.0f;	break;
+	case kBACK:		mstate_wishful |= mcBack;	 m_movementWeight.y = -1.0f;	break;
+	case kL_STRAFE:	mstate_wishful |= mcLStrafe; m_movementWeight.x = -1.0f;	break;
+	case kR_STRAFE:	mstate_wishful |= mcRStrafe; m_movementWeight.x =  1.0f;	break;
+
+	case kJUMP:			 mstate_wishful |= mcJump; break;	
+	case kSPRINT_TOGGLE: mstate_wishful ^= mcSprint; break;
+	case kCAM_1:		 cam_Set(eacFirstEye); break;
 	case kTORCH:
-		{
+	{
 		if (m_pProjWeLookingAt)
-		{
-			if (!m_pProjWeLookingAt->Get_light_active())
-				m_pProjWeLookingAt->TurnOn();
+			{
+				if (!m_pProjWeLookingAt->Get_light_active())
+					m_pProjWeLookingAt->TurnOn();
+				else
+					m_pProjWeLookingAt->TurnOff();
+			}
 			else
-				m_pProjWeLookingAt->TurnOff();
-		}
-		else
-			SwitchTorch();
-			break;
-		}
+				SwitchTorch();
+		break;
+	}
 
 	case kDETECTOR:
+	{
+		PIItem det_active					= inventory().ItemFromSlot(DETECTOR_SLOT);
+		if(det_active)
 		{
-			PIItem det_active					= inventory().ItemFromSlot(DETECTOR_SLOT);
-			if(det_active)
-			{
-				CCustomDetector* det			= smart_cast<CCustomDetector*>(det_active);
-				det->ToggleDetector				(g_player_hud->attached_item(0)!=nullptr);
-				return;
-			}
-		}break;
-	case kUSE:
-		ActorUse();
-		break;
-	case kDROP:
-		b_DropActivated			= TRUE;
-		f_DropPower				= 0;
-		break;
-	case kNEXT_SLOT:
-		{
-			OnNextWeaponSlot();
-		}break;
-	case kPREV_SLOT:
-		{
-			OnPrevWeaponSlot();
-		}break;
+			CCustomDetector* det			= smart_cast<CCustomDetector*>(det_active);
+			det->ToggleDetector				(g_player_hud->attached_item(0)!=nullptr);
+			return;
+		}
+	}break;
 
 	case kQUICK_USE_1:
 	case kQUICK_USE_2:
 	case kQUICK_USE_3:
 	case kQUICK_USE_4:
+	{
+		const shared_str& item_name		= g_quick_use_slots[cmd-kQUICK_USE_1];
+		if(item_name.size())
 		{
-			const shared_str& item_name		= g_quick_use_slots[cmd-kQUICK_USE_1];
-			if(item_name.size())
+			PIItem itm = inventory().GetAny(item_name.c_str());
+
+			if(itm)
 			{
-				PIItem itm = inventory().GetAny(item_name.c_str());
-
-				if(itm)
-				{
-					inventory().Eat				(itm);
-					
-					SDrawStaticStruct* _s		= GameUI()->AddCustomStatic("item_used", true);
-					string1024					str;
-					xr_strconcat				(str,*CStringTable().translate("st_item_used"),": ", itm->NameItem());
-					_s->wnd()->TextItemControl()->SetText(str);
-					
-					GameUI()->ActorMenu().m_pQuickSlot->ReloadReferences(this);
-				}
+				inventory().Eat				(itm);
+				
+				SDrawStaticStruct* _s		= GameUI()->AddCustomStatic("item_used", true);
+				string1024					str;
+				xr_strconcat				(str,*CStringTable().translate("st_item_used"),": ", itm->NameItem());
+				_s->wnd()->TextItemControl()->SetText(str);
+				
+				GameUI()->ActorMenu().m_pQuickSlot->ReloadReferences(this);
 			}
-		}break;
-
-    case kQUICK_SAVE:
-        Console->Execute("save");
-        break;
-    case kQUICK_LOAD:
-        Console->Execute("load");
-        break;
+		}
+	}break;
 	}
 }
 
@@ -206,9 +174,9 @@ void CActor::IR_OnMouseWheel(int direction)
 		OnPrevWeaponSlot				();
 }
 
-void CActor::IR_OnKeyboardRelease(int cmd)
+void CActor::IR_OnKeyboardRelease(u8 cmd)
 {
-	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
+	if(hud_adj_mode && pInput->iGetAsyncKeyState(VK_SHIFT))	return;
 	if (Remote())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 
@@ -218,65 +186,62 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 		if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
 		{
 			if (GamePersistent().IsDeveloperMode())
-			{
 				callback(GameObject::eOnActionRelease)(cmd);
-			}
 		}
 		else
-		{
 			callback(GameObject::eOnActionRelease)(cmd);
-		}
 
-		if(m_holder)
+		if (m_holder)
 		{
 			m_holder->OnKeyboardRelease(cmd);
-			
-			if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_STOP)) return;
+
+			if (m_holder->allowWeapon())
+				inventory().Action((u16)cmd, CMD_STOP);
+
 			return;
 		}
-        else
-        {
-			if(inventory().Action((u16)cmd, CMD_STOP))		return;
-        }
+		else inventory().Action((u16)cmd, CMD_STOP);
 
 		switch(cmd)
 		{
-		    case kJUMP:		mstate_wishful &=~mcJump;		break;
+		    case kJUMP:		mstate_wishful &=~mcJump; break;
 		    case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop(); break;
+			case kUSE:      m_bPickupMode = false;			break;
+
+			case kFWD:		mstate_wishful &= ~mcFwd;	  m_movementWeight.y = 0.0f;	break;
+			case kBACK:		mstate_wishful &= ~mcBack;	  m_movementWeight.y = 0.0f;	break;
+			case kL_STRAFE:	mstate_wishful &= ~mcLStrafe; m_movementWeight.x = 0.0f;	break;
+			case kR_STRAFE:	mstate_wishful &= ~mcRStrafe; m_movementWeight.x = 0.0f;	break;
 		}
 	}
 }
 
-void CActor::IR_OnKeyboardHold(int cmd)
+void CActor::IR_OnKeyboardHold(u8 cmd)
 {
-	if (hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))
+	if (hud_adj_mode && pInput->iGetAsyncKeyState(VK_SHIFT))
 	{
-		if (pInput->iGetAsyncKeyState(DIK_UP))
+		if (pInput->iGetAsyncKeyState(VK_UP))
 			g_player_hud->tune(Ivector().set(0, -1, 0));
-		if (pInput->iGetAsyncKeyState(DIK_DOWN))
+		if (pInput->iGetAsyncKeyState(VK_DOWN))
 			g_player_hud->tune(Ivector().set(0, 1, 0));
-		if (pInput->iGetAsyncKeyState(DIK_LEFT))
+		if (pInput->iGetAsyncKeyState(VK_LEFT))
 			g_player_hud->tune(Ivector().set(-1, 0, 0));
-		if (pInput->iGetAsyncKeyState(DIK_RIGHT))
+		if (pInput->iGetAsyncKeyState(VK_RIGHT))
 			g_player_hud->tune(Ivector().set(1, 0, 0));
 		return;
 	}
 
-	if (Remote() || !g_Alive())					return;
+	if (!g_Alive()) return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
-	if (IsTalking())							return;
+	if (IsTalking()) return;
 
 	if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
 	{
 		if (GamePersistent().IsDeveloperMode())
-		{
 			callback(GameObject::eOnActionHold)(cmd);
-		}
 	}
 	else
-	{
 		callback(GameObject::eOnActionHold)(cmd);
-	}
 
 	if(m_holder)
 	{
@@ -284,9 +249,7 @@ void CActor::IR_OnKeyboardHold(int cmd)
 		return;
 	}
 
-
-	if(psActorFlags.test(AF_NO_CLIP) && (cmd==kFWD || cmd==kBACK || cmd==kL_STRAFE || cmd==kR_STRAFE 
-		|| cmd==kJUMP || cmd==kCROUCH))
+	if(psActorFlags.test(AF_NO_CLIP) && (cmd==kFWD || cmd==kBACK || cmd==kL_STRAFE || cmd==kR_STRAFE || cmd==kJUMP || cmd==kCROUCH))
 	{
 		NoClipFly(cmd);
 		return;
@@ -296,120 +259,103 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	switch(cmd)
 	{
 	case kUP:
-	case kDOWN: 
-		cam_Active()->Move( (cmd==kUP) ? kDOWN : kUP, 0, LookFactor);									
-		break;
-
+	case kDOWN:				cam_Active()->Move( (cmd==kUP) ? kDOWN : kUP, 0, LookFactor); break;
 	case kCAM_ZOOM_IN:
-	case kCAM_ZOOM_OUT:
-	{
-		cam_Active()->Move(cmd);
-		break;
-	}
-
+	case kCAM_ZOOM_OUT:		cam_Active()->Move(cmd); break;
 	case kLEFT:
-	case kRIGHT:
-		if (eacFreeLook!=cam_active) cam_Active()->Move(cmd, 0, LookFactor);	break;
+	case kRIGHT:			if (eacFreeLook!=cam_active) cam_Active()->Move(cmd, 0, LookFactor); break;
 
 	case kACCEL:	mstate_wishful |= mcAccel;									break;
-	case kL_STRAFE:	mstate_wishful |= mcLStrafe;								break;
-	case kR_STRAFE:	mstate_wishful |= mcRStrafe;								break;
-	case kSPRINT_TOGGLE:
-		if (!(mstate_real&(mcJump | mcFall | mcLanding | mcLanding2)))
-			mstate_wishful |= mcSprint;
-		break;
 	case kL_LOOKOUT:mstate_wishful |= mcLLookout;								break;
 	case kR_LOOKOUT:mstate_wishful |= mcRLookout;								break;
-	case kFWD:		mstate_wishful |= mcFwd;									break;
-	case kBACK:		mstate_wishful |= mcBack;									break;
-	case kCROUCH:
-		{
-			if( !psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)) )
-					mstate_wishful |= mcCrouch;
-
-		}break;
+	case kCROUCH:	{
+						if (!psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall)))
+							mstate_wishful |= mcCrouch;
+					}break;
 	}
 }
 
 void CActor::IR_OnMouseMove(int dx, int dy)
 {
-
-	if(hud_adj_mode)
+	if (hud_adj_mode)
 	{
-		g_player_hud->tune	(Ivector().set(dx,dy,0));
+		g_player_hud->tune(Ivector().set(dx, dy, 0));
 		return;
 	}
 
 	PIItem iitem = inventory().ActiveItem();
-	if(iitem && iitem->cast_hud_item())
+	if (iitem && iitem->cast_hud_item())
 		iitem->cast_hud_item()->ResetSubStateTime();
 
-	if (Remote())		return;
-
-	if(m_holder) 
+	if (m_holder)
 	{
-		m_holder->OnMouseMove(dx,dy);
+		m_holder->OnMouseMove(dx, dy);
 		return;
 	}
 
 	float LookFactor = GetLookFactor();
 
-	CCameraBase* C	= cameras	[cam_active];
-	float scale		= (C->f_fov/g_fov)*psMouseSens * psMouseSensScale/50.f  / LookFactor;
-	if (dx){
+	CCameraBase* C = cameras[cam_active];
+	float scale = (C->f_fov / g_fov)*psMouseSens * psMouseSensScale / 50.f / LookFactor;
+	if (dx) 
+	{
 		float d = float(dx)*scale;
-		cam_Active()->Move((d<0)?kLEFT:kRIGHT, _abs(d));
+		cam_Active()->Move((d < 0) ? kLEFT : kRIGHT, _abs(d));
 	}
-	if (dy){
-		float d = ((psMouseInvert.test(1))?-1:1)*float(dy)*scale*3.f/4.f;
-		cam_Active()->Move((d>0)?kUP:kDOWN, _abs(d));
+	if (dy) 
+	{
+		float d = ((psMouseInvert.test(1)) ? -1 : 1)*float(dy)*scale*3.f / 4.f;
+		cam_Active()->Move((d > 0) ? kUP : kDOWN, _abs(d));
 	}
 }
-#include "HudItem.h"
-bool CActor::use_Holder				(CHolderCustom* holder)
+
+bool CActor::use_Holder(CHolderCustom* holder)
 {
+	bool bUse = false;
+	if(m_holder)
+	{
+		CGameObject* holderGO = smart_cast<CGameObject*>(m_holder);
 
-	if(m_holder){
-		bool b = false;
-		CGameObject* holderGO			= smart_cast<CGameObject*>(m_holder);
-		
-		if(smart_cast<CCar*>(holderGO))
-			b = use_Vehicle(nullptr);
-		else
-			if (holderGO->CLS_ID==CLSID_OBJECT_W_STATMGUN)
-				b = use_MountedWeapon(nullptr);
+		if (smart_cast<CCar*>(holderGO))
+			bUse = use_Vehicle(nullptr);
+		else if (holderGO->CLS_ID == CLSID_OBJECT_W_STATMGUN)
+			bUse = use_MountedWeapon(nullptr);
 
-		if(inventory().ActiveItem()){
+		if(inventory().ActiveItem())
+		{
 			CHudItem* hi = smart_cast<CHudItem*>(inventory().ActiveItem());
 			if(hi) hi->OnAnimationEnd(hi->GetState());
 		}
-
-		return b;
-	}else{
-		bool b = false;
-		CGameObject* holderGO			= smart_cast<CGameObject*>(holder);
+	}
+	else
+	{
+		bool bUse = false;
+		CGameObject* holderGO = smart_cast<CGameObject*>(holder);
 		if(smart_cast<CCar*>(holder))
-			b = use_Vehicle(holder);
+			bUse = use_Vehicle(holder);
 
 		if (holderGO->CLS_ID==CLSID_OBJECT_W_STATMGUN)
-			b = use_MountedWeapon(holder);
-		
-		if(b){//used succesfully
+			bUse = use_MountedWeapon(holder);
+
+		//used succesfully
+		if(bUse)
+		{
 			// switch off torch...
 			CAttachableItem *I = CAttachmentOwner::attachedItem(CLSID_DEVICE_TORCH);
-			if (I){
+			if (I)
+			{
 				CTorch* torch = smart_cast<CTorch*>(I);
 				if (torch) torch->Switch(false);
 			}
 		}
 
-		if(inventory().ActiveItem()){
+		if(inventory().ActiveItem())
+		{
 			CHudItem* hi = smart_cast<CHudItem*>(inventory().ActiveItem());
 			if(hi) hi->OnAnimationEnd(hi->GetState());
 		}
-
-		return b;
 	}
+	return bUse;
 }
 
 void CActor::ActorUse()
@@ -442,11 +388,8 @@ void CActor::ActorUse()
 	}
 	if (m_pProjWeLookingAt)
 	{
-		if (!m_pProjWeLookingAt->actor_use && Level().CurrentControlEntity()->Position().distance_to(m_pProjWeLookingAt->Position()) < 2.0f)
-			m_pProjWeLookingAt->actor_use = true;
-		else
-			m_pProjWeLookingAt->actor_use = false;
-
+		m_pProjWeLookingAt->actor_use = !m_pProjWeLookingAt->actor_use && 
+			Level().CurrentControlEntity()->Position().distance_to(m_pProjWeLookingAt->Position()) < 2.0f;
 		return;
 	}
 
@@ -461,7 +404,7 @@ void CActor::ActorUse()
 		{
 			element = (u16)RQ.element;
 
-			if (Level().IR_GetKeyState(DIK_LSHIFT))
+			if (Level().IR_GetKeyState(VK_SHIFT))
 			{
 				bool b_allow = !!pSettings->line_exist("ph_capture_visuals", object->cNameVisual());
 				if (b_allow && !character_physics_support()->movement()->PHCapture())
@@ -504,15 +447,16 @@ BOOL CActor::HUDview() const
 		((!m_holder) || (m_holder && m_holder->allowWeapon() && m_holder->HUDView()));
 }
 
-static	u16 SlotsToCheck [] = {
-		KNIFE_SLOT		,		// 0
-		INV_SLOT_2		,		// 1
-		INV_SLOT_3		,		// 2
-		GRENADE_SLOT	,		// 3
-		ARTEFACT_SLOT	,		// 10
+static constexpr u16 SlotsToCheck [] = 
+{
+		KNIFE_SLOT		,		// 1
+		INV_SLOT_2		,		// 2
+		INV_SLOT_3		,		// 3
+		GRENADE_SLOT	,		// 4
+		ARTEFACT_SLOT	,		// 11
 };
 
-void	CActor::OnNextWeaponSlot()
+void CActor::OnNextWeaponSlot()
 {
 	u32 ActiveSlot = inventory().GetActiveSlot();
 	if (ActiveSlot == NO_ACTIVE_SLOT) 
@@ -521,13 +465,14 @@ void	CActor::OnNextWeaponSlot()
 	if (ActiveSlot == NO_ACTIVE_SLOT) 
 		ActiveSlot = KNIFE_SLOT;
 	
-	u32 NumSlotsToCheck = sizeof(SlotsToCheck)/sizeof(SlotsToCheck[0]);	
+	u32 NumSlotsToCheck = sizeof(SlotsToCheck) / sizeof(SlotsToCheck[0]);	
 	
-	u32 CurSlot			= 0;
-	for (; CurSlot<NumSlotsToCheck; CurSlot++)
+	u32 CurSlot = 0;
+	while(CurSlot<NumSlotsToCheck)
 	{
 		if (SlotsToCheck[CurSlot] == ActiveSlot) break;
-	};
+		CurSlot++;
+	}
 
 	if (CurSlot >= NumSlotsToCheck) 
 		return;
@@ -542,7 +487,7 @@ void	CActor::OnNextWeaponSlot()
 	}
 };
 
-void	CActor::OnPrevWeaponSlot()
+void CActor::OnPrevWeaponSlot()
 {
 	u32 ActiveSlot = inventory().GetActiveSlot();
 	if (ActiveSlot == NO_ACTIVE_SLOT) 
@@ -554,56 +499,56 @@ void	CActor::OnPrevWeaponSlot()
 	u32 NumSlotsToCheck = sizeof(SlotsToCheck)/sizeof(SlotsToCheck[0]);	
 	u32 CurSlot		= 0;
 
-	for (; CurSlot<NumSlotsToCheck; CurSlot++)
+	for (; CurSlot < NumSlotsToCheck; CurSlot++)
 	{
 		if (SlotsToCheck[CurSlot] == ActiveSlot) break;
-	};
+	}
 
 	if (CurSlot >= NumSlotsToCheck) 
 		CurSlot	= NumSlotsToCheck-1; //last in row
 
-	for (s32 i=s32(CurSlot-1); i>=0; i--)
+	if (CurSlot != 0)
 	{
-		if (inventory().ItemFromSlot(SlotsToCheck[i]))
+		for (u32 i = CurSlot - 1u; i >= 0; i--)
 		{
-            IR_OnKeyboardPress(kWPN_1 + i);
-			return;
+			if (inventory().ItemFromSlot(SlotsToCheck[i]))
+			{
+				IR_OnKeyboardPress(kWPN_1 + i);
+				return;
+			}
 		}
 	}
 };
 
-float	CActor::GetLookFactor()
+float CActor::GetLookFactor()
 {
-	if (m_input_external_handler) 
+	if (m_input_external_handler)
 		return m_input_external_handler->mouse_scale_factor();
 
-	
-	float factor	= 1.f;
+	float factor = 1.f;
 
-	PIItem pItem	= inventory().ActiveItem();
-
+	PIItem pItem = inventory().ActiveItem();
 	if (pItem)
-		factor *= pItem->GetControlInertionFactor();
+		factor = pItem->GetControlInertionFactor();
 
 	VERIFY(!fis_zero(factor));
 
 	return factor;
 }
 
-void CActor::set_input_external_handler(CActorInputHandler *handler) 
+void CActor::set_input_external_handler(CActorInputHandler *handler)
 {
 	// clear state
-	if (handler) 
-		mstate_wishful			= 0;
+	if (handler)
+		mstate_wishful = 0;
 
 	// release fire button
 	if (handler)
-		IR_OnKeyboardRelease	(kWPN_FIRE);
+		IR_OnKeyboardRelease(kWPN_FIRE);
 
 	// set handler
-	m_input_external_handler	= handler;
+	m_input_external_handler = handler;
 }
-
 
 #include "items/WeaponBinoculars.h"
 #include "items/WeaponBinocularsVision.h"
@@ -618,15 +563,11 @@ void CActor::SwitchNightVision()
 	if(inventory().ItemFromSlot(INV_SLOT_3))
 		wpn2 = smart_cast<CWeapon*>(inventory().ItemFromSlot(INV_SLOT_3));
 
-	xr_vector<CAttachableItem*> const& all = CAttachmentOwner::attached_objects();
-	xr_vector<CAttachableItem*>::const_iterator it = all.begin();
-	xr_vector<CAttachableItem*>::const_iterator it_e = all.end();
-
-	for ( ; it != it_e; ++it )
+	for (CAttachableItem* pAttachObj: CAttachmentOwner::attached_objects())
 	{
-		CTorch* torch = smart_cast<CTorch*>(*it);
-		
-		if ( torch )
+		CTorch* torch = smart_cast<CTorch*>(pAttachObj);
+
+		if (torch)
 		{	
 			if(wpn1 && wpn1->IsZoomed())
 				return;
@@ -635,22 +576,16 @@ void CActor::SwitchNightVision()
 				return;
 
 			torch->SwitchNightVision();
-			
 		}
-		
 	}
-	
 }
 
 void CActor::SwitchTorch()
-{ 
-	xr_vector<CAttachableItem*> const& all = CAttachmentOwner::attached_objects();
-	xr_vector<CAttachableItem*>::const_iterator it = all.begin();
-	xr_vector<CAttachableItem*>::const_iterator it_e = all.end();
-	for ( ; it != it_e; ++it )
+{
+	for (CAttachableItem* pAttachObj : CAttachmentOwner::attached_objects())
 	{
-		CTorch* torch = smart_cast<CTorch*>(*it);
-		if ( torch )
+		CTorch* torch = smart_cast<CTorch*>(pAttachObj);
+		if (torch)
 		{		
 			torch->Switch();
 			return;
@@ -676,53 +611,33 @@ void CActor::SwitchTorchMode()
 
 void CActor::NoClipFly(int cmd)
 {
-
 	Fvector cur_pos, right, left;
 	cur_pos.set(0,0,0);
 	float scale = 0.55f;
-	if(pInput->iGetAsyncKeyState(DIK_LSHIFT))
+	if(pInput->iGetAsyncKeyState(VK_SHIFT))
 		scale = 0.25f;
-	else if(pInput->iGetAsyncKeyState(DIK_X))
+	else if(pInput->iGetAsyncKeyState(VK_X))
 		scale = 1.0f;
-	else if(pInput->iGetAsyncKeyState(DIK_LMENU))
+	else if(pInput->iGetAsyncKeyState(VK_MENU))
 		scale = 2.0f;//LALT
-	else if(pInput->iGetAsyncKeyState(DIK_TAB))
+	else if(pInput->iGetAsyncKeyState(VK_TAB))
 		scale = 5.0f;
 
 	switch(cmd)
 	{
-	case kJUMP:		
-		cur_pos.y += 0.12f;
-		break;
-	case kCROUCH:	
-		cur_pos.y -= 0.12f;
-		break;
-	case kFWD:	
-		cur_pos.mad(cam_Active()->vDirection, scale / 2.0f);
-		break;
-	case kBACK:
-		cur_pos.mad(cam_Active()->vDirection, -scale / 2.0f);
-		break;
-	case kL_STRAFE:
-		left.crossproduct(cam_Active()->vNormal, cam_Active()->vDirection);
-		cur_pos.mad(left, -scale / 2.0f);
-		break;
-	case kR_STRAFE:
-		right.crossproduct(cam_Active()->vNormal, cam_Active()->vDirection);
-		cur_pos.mad(right, scale / 2.0f);
-		break;
-	case kCAM_1:	
-		cam_Set(eacFirstEye);				
-		break;
-	case kCAM_2:	
-		cam_Set(eacLookAt);				
-		break;
-	case kCAM_3:	
-		cam_Set(eacFreeLook);
-		break;
-	case kNIGHT_VISION:
-		SwitchNightVision();
-		break;
+	case kJUMP:		cur_pos.y += 0.12f; break;
+	case kCROUCH:	cur_pos.y -= 0.12f; break;
+	case kFWD:		cur_pos.mad(cam_Active()->vDirection, scale / 2.0f); break;
+	case kBACK:		cur_pos.mad(cam_Active()->vDirection, -scale / 2.0f); break;
+	case kL_STRAFE: left.crossproduct(cam_Active()->vNormal, cam_Active()->vDirection);  cur_pos.mad(left, -scale / 2.0f); break;
+	case kR_STRAFE: right.crossproduct(cam_Active()->vNormal, cam_Active()->vDirection); cur_pos.mad(right, scale / 2.0f); break;
+	case kCAM_1:	cam_Set(eacFirstEye); break;
+	case kCAM_2:	cam_Set(eacLookAt);	 break;
+	case kCAM_3:	cam_Set(eacFreeLook); break;
+
+	case kNIGHT_VISION: SwitchNightVision(); break;
+	case kUSE:			ActorUse(); break;
+
 	case kTORCH:
 		if (m_pProjWeLookingAt)
 		{
@@ -731,8 +646,7 @@ void CActor::NoClipFly(int cmd)
 			else
 				m_pProjWeLookingAt->TurnOff();
 		}
-		else
-		SwitchTorch();
+		else SwitchTorch();
 		break;
 	case kDETECTOR:
 		{
@@ -745,12 +659,48 @@ void CActor::NoClipFly(int cmd)
 			}
 		}
 		break;
-	case kUSE:
-		ActorUse();
-		break;
 	}
 	cur_pos.mul(scale);
 	Position().add(cur_pos);
 	XFORM().translate_add(cur_pos);
 	character_physics_support()->movement()->SetPosition(Position());
+}
+
+
+void CActor::IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& position)
+{
+	if (type == GamepadThumbstickType::Left)
+	{
+		// movement!
+		m_movementWeight = position;
+		m_movementWeight.y = -position.y;
+		if (position.y > 0.1f)
+		{
+			mstate_wishful |= mcFwd;
+		}
+
+		if (position.y < -0.1f)
+		{
+			mstate_wishful |= mcBack;
+		}
+
+		if (position.x < -0.1f)
+		{
+			mstate_wishful |= mcLStrafe;
+		}
+
+		if (position.x > 0.1f)
+		{
+			mstate_wishful |= mcRStrafe;
+		}
+	}
+	else if (type == GamepadThumbstickType::Right)
+	{
+		// camera!
+
+		const float scale = 45.0f;
+		float dX = position.x * scale;
+		float dY = position.y * scale;
+		m_cameraMoveWeight.set(dX, dY);
+	}
 }

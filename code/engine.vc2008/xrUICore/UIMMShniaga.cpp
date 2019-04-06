@@ -223,8 +223,8 @@ bool CUIMMShniaga::IsButton(CUIWindow* st)
 	return false;
 }
 
-void CUIMMShniaga::SendMessage(CUIWindow* pWnd, s16 msg, void* pData){
-	CUIWindow::SendMessage(pWnd, msg, pData);
+void CUIMMShniaga::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData){
+	CUIWindow::SendMessageToWnd(pWnd, msg, pData);
 	if (IsButton(pWnd))
 	{
 		if (msg == WINDOW_FOCUS_RECEIVED)
@@ -320,30 +320,28 @@ void CUIMMShniaga::OnBtnClick()
 	else if (0 == xr_strcmp("btn_new_back", m_selected->WindowName()))
 		ShowMain();
 	else
-		GetMessageTarget()->SendMessage(m_selected, BUTTON_CLICKED);
+		GetMessageTarget()->SendMessageToWnd(m_selected, BUTTON_CLICKED);
 }
 
-#include <dinput.h>
-
-bool CUIMMShniaga::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIMMShniaga::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 
 	if (WINDOW_KEY_PRESSED == keyboard_action)
 	{
 		switch (dik)
 		{
-			case DIK_UP:
+			case VK_UP:
 				if (m_selected_btn > 0)
 					SelectBtn(m_selected_btn - 1);
 				return true;
-			case DIK_DOWN:
+			case VK_DOWN:
 				if (m_selected_btn < BtnCount() - 1)
 					SelectBtn(m_selected_btn + 1);
 				return true;
-			case DIK_RETURN:
+			case VK_RETURN:
 				OnBtnClick();
 				return true;
-			case DIK_ESCAPE:
+			case VK_ESCAPE:
 				if (m_page != epi_main)
 					ShowMain();
 				return true;

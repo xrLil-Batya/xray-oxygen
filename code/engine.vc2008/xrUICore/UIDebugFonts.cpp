@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "UIDebugFonts.h"
 #include "UIDialogHolder.h"
-#include "dinput.h"
 
 
 CUIDebugFonts::CUIDebugFonts()
@@ -24,12 +23,12 @@ void CUIDebugFonts::InitDebugFonts(Frect r)
 	m_background.InitTexture("ui\\ui_debug_font");
 }
 
-bool CUIDebugFonts::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIDebugFonts::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	switch (dik)
 	{
-	case DIK_ESCAPE: HideDialog();	break;
-	case DIK_F12: return false;		break;
+	case VK_ESCAPE: HideDialog();	break;
+	case VK_F12: return false;		break;
 	}
 
     return true;

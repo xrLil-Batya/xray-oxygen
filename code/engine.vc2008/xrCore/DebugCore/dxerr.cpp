@@ -26,8 +26,6 @@
 #include <mmeapi.h>
 #include <dsound.h>
 
-#include <dx/dinput.h>
-#include <dx/dinputd.h>
 #endif
 
 #include <dx/d3d10_1.h>
@@ -3025,38 +3023,6 @@ XRCORE_API const WCHAR* DXGetErrorStringW( _In_ HRESULT hr )
         CHK_ERRA(DDERR_NOMONITORINFORMATION)
         CHK_ERRA(DDERR_NODRIVERSUPPORT)
         CHK_ERRA(DDERR_DEVICEDOESNTOWNSURFACE)
-
-// -------------------------------------------------------------
-// dinput.h error codes
-// -------------------------------------------------------------
-        CHK_ERR(DIERR_INSUFFICIENTPRIVS, "DIERR_INSUFFICIENTPRIVS & VFW_E_INVALIDMEDIATYPE")
-        CHK_ERR(DIERR_DEVICEFULL, "DIERR_DEVICEFULL & VFW_E_INVALIDSUBTYPE & DMO_E_INVALIDSTREAMINDEX")
-        CHK_ERR(DIERR_MOREDATA, "DIERR_MOREDATA & VFW_E_NEED_OWNER & DMO_E_INVALIDTYPE")
-        CHK_ERR(DIERR_NOTDOWNLOADED, "DIERR_NOTDOWNLOADED & VFW_E_ENUM_OUT_OF_SYNC & DMO_E_TYPE_NOT_SET")
-        CHK_ERR(DIERR_HASEFFECTS, "DIERR_HASEFFECTS & VFW_E_ALREADY_CONNECTED & DMO_E_NOTACCEPTING")
-        CHK_ERR(DIERR_NOTEXCLUSIVEACQUIRED, "DIERR_NOTEXCLUSIVEACQUIRED & VFW_E_FILTER_ACTIVE & DMO_E_TYPE_NOT_ACCEPTED")
-        CHK_ERR(DIERR_INCOMPLETEEFFECT, "DIERR_INCOMPLETEEFFECT & VFW_E_NO_TYPES & DMO_E_NO_MORE_ITEMS")
-        CHK_ERR(DIERR_NOTBUFFERED, "DIERR_NOTBUFFERED & VFW_E_NO_ACCEPTABLE_TYPES")
-        CHK_ERR(DIERR_EFFECTPLAYING, "DIERR_EFFECTPLAYING & VFW_E_INVALID_DIRECTION")
-        CHK_ERR(DIERR_UNPLUGGED, "DIERR_UNPLUGGED & VFW_E_NOT_CONNECTED")
-        CHK_ERR(DIERR_REPORTFULL, "DIERR_REPORTFULL & VFW_E_NO_ALLOCATOR")
-        CHK_ERR(DIERR_MAPFILEFAIL, "DIERR_MAPFILEFAIL & VFW_E_RUNTIME_ERROR")
-
-
-// -------------------------------------------------------------
-// dinputd.h error
-// -------------------------------------------------------------
-        CHK_ERRA(DIERR_DRIVERFIRST)
-        CHK_ERR(DIERR_DRIVERFIRST+1, "DIERR_DRIVERFIRST+1")
-        CHK_ERR(DIERR_DRIVERFIRST+2, "DIERR_DRIVERFIRST+2")
-        CHK_ERR(DIERR_DRIVERFIRST+3, "DIERR_DRIVERFIRST+3")
-        CHK_ERR(DIERR_DRIVERFIRST+4, "DIERR_DRIVERFIRST+4")
-        CHK_ERR(DIERR_DRIVERFIRST+5, "DIERR_DRIVERFIRST+5")
-        CHK_ERRA(DIERR_DRIVERLAST)
-        CHK_ERR(DIERR_INVALIDCLASSINSTALLER, "DIERR_INVALIDCLASSINSTALLER")
-        CHK_ERR(DIERR_CANCELLED, "DIERR_CANCELLED & MS_E_SAMPLEALLOC")
-        CHK_ERRA(DIERR_BADINF)
-
 // -------------------------------------------------------------
 // d3d9.h error codes
 // -------------------------------------------------------------
@@ -3439,46 +3405,6 @@ void XRCORE_API DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR*
         CHK_ERR(DDERR_NOMONITORINFORMATION, "The monitor does not have EDID data.")
         CHK_ERR(DDERR_NODRIVERSUPPORT, "The driver does not enumerate display mode refresh rates.")
         CHK_ERR(DDERR_DEVICEDOESNTOWNSURFACE, "Surfaces created by one direct draw device cannot be used directly by another direct draw device.")
-
-
-// -------------------------------------------------------------
-// dinput.h error codes
-// -------------------------------------------------------------
-        CHK_ERR(DIERR_OLDDIRECTINPUTVERSION, "The application requires a newer version of DirectInput.")
-        CHK_ERR(DIERR_BETADIRECTINPUTVERSION, "The application was written for an unsupported prerelease version of DirectInput.")
-        CHK_ERR(DIERR_BADDRIVERVER, "The object could not be created due to an incompatible driver version or mismatched or incomplete driver components.")
-        CHK_ERR(DIERR_NOTINITIALIZED, "This object has not been initialized")
-        CHK_ERR(DIERR_ALREADYINITIALIZED, "This object is already initialized")
-        CHK_ERR(DIERR_INPUTLOST, "Access to the device has been lost.  It must be re-acquired.")
-        CHK_ERR(DIERR_ACQUIRED, "The operation cannot be performed while the device is acquired.")
-        CHK_ERR(DIERR_NOTACQUIRED, "The operation cannot be performed unless the device is acquired.")
-        CHK_ERR(DIERR_INSUFFICIENTPRIVS, "Unable to IDirectInputJoyConfig_Acquire because the user does not have sufficient privileges to change the joystick configuration. & An invalid media type was specified")
-        CHK_ERR(DIERR_DEVICEFULL, "The device is full. & An invalid media subtype was specified.")
-        CHK_ERR(DIERR_MOREDATA, "Not all the requested information fit into the buffer. & This object can only be created as an aggregated object.")
-        CHK_ERR(DIERR_NOTDOWNLOADED, "The effect is not downloaded. & The enumerator has become invalid.")
-        CHK_ERR(DIERR_HASEFFECTS, "The device cannot be reinitialized because there are still effects attached to it. & At least one of the pins involved in the operation is already connected.")
-        CHK_ERR(DIERR_NOTEXCLUSIVEACQUIRED, "The operation cannot be performed unless the device is acquired in DISCL_EXCLUSIVE mode. & This operation cannot be performed because the filter is active.")
-        CHK_ERR(DIERR_INCOMPLETEEFFECT, "The effect could not be downloaded because essential information is missing.  For example, no axes have been associated with the effect, or no type-specific information has been created. & One of the specified pins supports no media types.")
-        CHK_ERR(DIERR_NOTBUFFERED, "Attempted to read buffered device data from a device that is not buffered. & There is no common media type between these pins.")
-        CHK_ERR(DIERR_EFFECTPLAYING, "An attempt was made to modify parameters of an effect while it is playing.  Not all hardware devices support altering the parameters of an effect while it is playing. & Two pins of the same direction cannot be connected together.")
-        CHK_ERR(DIERR_UNPLUGGED, "The operation could not be completed because the device is not plugged in. & The operation cannot be performed because the pins are not connected.")
-        CHK_ERR(DIERR_REPORTFULL, "SendDeviceData failed because more information was requested to be sent than can be sent to the device.  Some devices have restrictions on how much data can be sent to them.  (For example, there might be a limit on the number of buttons that can be pressed at once.) & No sample buffer allocator is available.")
-        CHK_ERR(DIERR_MAPFILEFAIL, "A mapper file function failed because reading or writing the user or IHV settings file failed. & A run-time error occurred.")
-
-// -------------------------------------------------------------
-// dinputd.h error codes
-// -------------------------------------------------------------
-        CHK_ERR(DIERR_NOMOREITEMS, "No more items.")
-        CHK_ERR(DIERR_DRIVERFIRST, "Device driver-specific codes. Unless the specific driver has been precisely identified, no meaning should be attributed to these values other than that the driver originated the error.")
-        CHK_ERR(DIERR_DRIVERFIRST+1, "DIERR_DRIVERFIRST+1")
-        CHK_ERR(DIERR_DRIVERFIRST+2, "DIERR_DRIVERFIRST+2")
-        CHK_ERR(DIERR_DRIVERFIRST+3, "DIERR_DRIVERFIRST+3")
-        CHK_ERR(DIERR_DRIVERFIRST+4, "DIERR_DRIVERFIRST+4")
-        CHK_ERR(DIERR_DRIVERFIRST+5, "DIERR_DRIVERFIRST+5")
-        CHK_ERR(DIERR_DRIVERLAST, "Device installer errors.")
-        CHK_ERR(DIERR_INVALIDCLASSINSTALLER, "Registry entry or DLL for class installer invalid or class installer not found.")
-        CHK_ERR(DIERR_CANCELLED, "The user cancelled the install operation. & The stream already has allocated samples and the surface doesn't match the sample format.")
-        CHK_ERR(DIERR_BADINF, "The INF file for the selected device could not be found or is invalid or is damaged. & The specified purpose ID can't be used for the call.")
 
 // -------------------------------------------------------------
 // d3d9.h error codes

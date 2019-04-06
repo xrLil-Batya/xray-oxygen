@@ -14,7 +14,7 @@
     <ProjectGuid>{15CBFEFF-7965-41F5-B4E2-21E8795C9159}</ProjectGuid>
     <RootNamespace>libogg</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <ProjectName>sound_static</ProjectName>
+    <ProjectName>OGG and Vorbis</ProjectName>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -46,9 +46,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(xrSDKLib)</OutDir>
+    <TargetName>sound_static</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(xrSDKLib)</OutDir>
+    <TargetName>sound_static</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -101,62 +103,6 @@
     <Lib />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\libtheora\lib\analyze.c" />
-    <ClCompile Include="..\libtheora\lib\apiwrapper.c" />
-    <ClCompile Include="..\libtheora\lib\bitpack.c" />
-    <ClCompile Include="..\libtheora\lib\decapiwrapper.c" />
-    <ClCompile Include="..\libtheora\lib\decinfo.c" />
-    <ClCompile Include="..\libtheora\lib\decode.c">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
-    <ClCompile Include="..\libtheora\lib\dequant.c" />
-    <ClCompile Include="..\libtheora\lib\encapiwrapper.c" />
-    <ClCompile Include="..\libtheora\lib\encfrag.c" />
-    <ClCompile Include="..\libtheora\lib\encinfo.c" />
-    <ClCompile Include="..\libtheora\lib\encode.c" />
-    <ClCompile Include="..\libtheora\lib\enquant.c" />
-    <ClCompile Include="..\libtheora\lib\fdct.c" />
-    <ClCompile Include="..\libtheora\lib\fragment.c" />
-    <ClCompile Include="..\libtheora\lib\huffdec.c" />
-    <ClCompile Include="..\libtheora\lib\huffenc.c" />
-    <ClCompile Include="..\libtheora\lib\idct.c">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
-    <ClCompile Include="..\libtheora\lib\internal.c" />
-    <ClCompile Include="..\libtheora\lib\mathops.c" />
-    <ClCompile Include="..\libtheora\lib\mcenc.c" />
-    <ClCompile Include="..\libtheora\lib\quant.c">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
-    <ClCompile Include="..\libtheora\lib\rate.c" />
-    <ClCompile Include="..\libtheora\lib\state.c" />
-    <ClCompile Include="..\libtheora\lib\tokenize.c" />
-    <ClCompile Include="..\libtheora\lib\x86_vc\mmxencfrag.c" />
-    <ClCompile Include="..\libtheora\lib\x86_vc\mmxfdct.c" />
-    <ClCompile Include="..\libtheora\lib\x86_vc\mmxfrag.c" />
-    <ClCompile Include="..\libtheora\lib\x86_vc\mmxidct.c" />
-    <ClCompile Include="..\libtheora\lib\x86_vc\mmxstate.c" />
-    <ClCompile Include="..\libtheora\lib\x86_vc\x86cpu.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\libtheora\lib\x86_vc\x86enc.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\libtheora\lib\x86_vc\x86state.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\libvorbis-1.3.5\lib\analysis.c" />
     <ClCompile Include="..\libvorbis-1.3.5\lib\bitrate.c" />
     <ClCompile Include="..\libvorbis-1.3.5\lib\block.c" />
@@ -164,7 +110,10 @@
     <ClCompile Include="..\libvorbis-1.3.5\lib\envelope.c" />
     <ClCompile Include="..\libvorbis-1.3.5\lib\floor0.c" />
     <ClCompile Include="..\libvorbis-1.3.5\lib\floor1.c" />
-    <ClCompile Include="..\libvorbis-1.3.5\lib\info.c" />
+    <ClCompile Include="..\libvorbis-1.3.5\lib\info.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\libvorbis-1.3.5\lib\lookup.c" />
     <ClCompile Include="..\libvorbis-1.3.5\lib\lpc.c" />
     <ClCompile Include="..\libvorbis-1.3.5\lib\lsp.c" />
@@ -183,74 +132,11 @@
     <ClCompile Include="src\framing.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\libvorbis-1.3.5\win32\vorbis.def" />
     <None Include="..\ogg.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\libtheora\include\theora\codec.h" />
-    <ClInclude Include="..\libtheora\include\theora\theora.h" />
-    <ClInclude Include="..\libtheora\include\theora\theoradec.h" />
-    <ClInclude Include="..\libtheora\lib\apiwrapper.h" />
-    <ClInclude Include="..\libtheora\lib\bitpack.h" />
-    <ClInclude Include="..\libtheora\lib\dct.h" />
-    <ClInclude Include="..\libtheora\lib\decint.h" />
-    <ClInclude Include="..\libtheora\lib\dequant.h" />
-    <ClInclude Include="..\libtheora\lib\encint.h" />
-    <ClInclude Include="..\libtheora\lib\enquant.h" />
-    <ClInclude Include="..\libtheora\lib\huffdec.h" />
-    <ClInclude Include="..\libtheora\lib\huffenc.h" />
-    <ClInclude Include="..\libtheora\lib\huffman.h" />
-    <ClInclude Include="..\libtheora\lib\idct.h" />
-    <ClInclude Include="..\libtheora\lib\internal.h" />
-    <ClInclude Include="..\libtheora\lib\mathops.h" />
-    <ClInclude Include="..\libtheora\lib\modedec.h" />
-    <ClInclude Include="..\libtheora\lib\ocintrin.h" />
-    <ClInclude Include="..\libtheora\lib\quant.h" />
-    <ClInclude Include="..\libtheora\lib\x86_vc\x86cpu.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="..\libvorbis-1.3.5\include\vorbis\codec.h" />
     <ClInclude Include="..\libvorbis-1.3.5\include\vorbis\vorbisenc.h" />
     <ClInclude Include="..\libvorbis-1.3.5\include\vorbis\vorbisfile.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\backends.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\bitrate.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\books\coupled\res_books_stereo.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\books\floor\floor_books.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\books\uncoupled\res_books_uncoupled.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\codebook.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\codec_internal.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\envelope.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\highlevel.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\lookup.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\lookup_data.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\lpc.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\lsp.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\masking.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\mdct.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\misc.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\floor_all.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\psych_11.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\psych_16.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\psych_44.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\psych_8.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\residue_16.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\residue_44.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\residue_44u.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\residue_8.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_11.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_16.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_22.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_32.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_44.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_44u.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_8.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_X.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\os.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\psy.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\registry.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\scales.h" />
-    <ClInclude Include="..\libvorbis-1.3.5\lib\smallft.h" />
     <ClInclude Include="include\ogg\ogg.h" />
     <ClInclude Include="include\ogg\os_types.h" />
   </ItemGroup>

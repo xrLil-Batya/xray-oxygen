@@ -263,14 +263,8 @@ void CDialogHolder::CleanInternals()
 	GetUICursor().Hide();
 }
 
-bool CDialogHolder::IR_UIOnKeyboardPress(int dik)
+bool CDialogHolder::IR_UIOnKeyboardPress(u8 dik)
 {
-    EGameActions GameAction = get_binded_action(dik);
-    if (GameAction == kUSE)
-    {
-        g_actor->m_bPickupMode = true;
-    }
-
 	CUIDialogWnd *TIR = TopInputReceiver();
 
 	if (!TIR)
@@ -279,10 +273,10 @@ bool CDialogHolder::IR_UIOnKeyboardPress(int dik)
 	if (!TIR->IR_process())
 		return false;
 	//mouse click
-	if (dik == MOUSE_1 || dik == MOUSE_2 || dik == MOUSE_3)
+	if (isMouseButton(dik))
 	{
 		Fvector2 cp = GetUICursor().GetCursorPosition();
-		EUIMessages action = (dik == MOUSE_1) ? WINDOW_LBUTTON_DOWN : (dik == MOUSE_2) ? WINDOW_RBUTTON_DOWN : WINDOW_CBUTTON_DOWN;
+		EUIMessages action = (dik == VK_LBUTTON) ? WINDOW_LBUTTON_DOWN : (dik == VK_RBUTTON) ? WINDOW_RBUTTON_DOWN : WINDOW_CBUTTON_DOWN;
 		if (TIR->OnMouseAction(cp.x, cp.y, action))
 			return true;
 	}
@@ -308,17 +302,13 @@ bool CDialogHolder::IR_UIOnKeyboardPress(int dik)
 	return true;
 }
 
-bool CDialogHolder::IR_UIOnKeyboardRelease(int dik)
+bool CDialogHolder::IR_UIOnKeyboardRelease(u8 vKey)
 {
     /// We must disable that here, because of two reasons:
     /// 1. Keyboard releases not working when actor speaking. That's means, if we enter to pickup mode, and release the kUSE button, we still be in pickup mode, because
     /// Actor doesn't know about that
     /// 2. Pickup mode is more HUD functionality
-    EGameActions GameAction = get_binded_action(dik);
-    if (GameAction == kUSE)
-    {
-        g_actor->m_bPickupMode = false;
-    }
+    EGameActions GameAction = get_binded_action(vKey);
 
 	CUIDialogWnd *TIR = TopInputReceiver();
 
@@ -329,15 +319,15 @@ bool CDialogHolder::IR_UIOnKeyboardRelease(int dik)
 		return false;
 
 	//mouse click
-	if (dik == MOUSE_1 || dik == MOUSE_2 || dik == MOUSE_3)
+	if (isMouseButton(vKey))
 	{
 		Fvector2 cp = GetUICursor().GetCursorPosition();
-		EUIMessages action = (dik == MOUSE_1) ? WINDOW_LBUTTON_UP : (dik == MOUSE_2) ? WINDOW_RBUTTON_UP : WINDOW_CBUTTON_UP;
+		EUIMessages action = (vKey == VK_LBUTTON) ? WINDOW_LBUTTON_UP : (vKey == VK_RBUTTON) ? WINDOW_RBUTTON_UP : WINDOW_CBUTTON_UP;
 		if (TIR->OnMouseAction(cp.x, cp.y, action))
 			return true;
 	}
 
-	if (TIR->OnKeyboardAction(dik, WINDOW_KEY_RELEASED))
+	if (TIR->OnKeyboardAction(vKey, WINDOW_KEY_RELEASED))
 		return true;
 
 	if (!TIR->StopAnyMove() && g_pGameLevel)
@@ -356,7 +346,7 @@ bool CDialogHolder::IR_UIOnKeyboardRelease(int dik)
 	return true;
 }
 
-bool CDialogHolder::IR_UIOnKeyboardHold(int dik)
+bool CDialogHolder::IR_UIOnKeyboardHold(u8 dik)
 {
 	CUIDialogWnd* TIR = TopInputReceiver();
 

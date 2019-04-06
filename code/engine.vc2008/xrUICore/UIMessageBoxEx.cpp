@@ -3,7 +3,6 @@
 #include "UIMessageBox.h"
 #include "UIMessageBoxEx.h"
 #include "UIDialogHolder.h"
-#include <dinput.h>
 
 CUIMessageBoxEx::CUIMessageBoxEx(){
 	m_pMessageBox = xr_new<CUIMessageBox>();
@@ -55,7 +54,7 @@ LPCSTR CUIMessageBoxEx::GetText ()
 	return m_pMessageBox->GetText();
 }
 
-void CUIMessageBoxEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData /* = NULL */)
+void CUIMessageBoxEx::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData /* = NULL */)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 	if (pWnd == m_pMessageBox)
@@ -73,16 +72,16 @@ void CUIMessageBoxEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData /* = NUL
 		}
 
 		if (GetMessageTarget())
-            GetMessageTarget()->SendMessage(this,msg,pData);
+            GetMessageTarget()->SendMessageToWnd(this,msg,pData);
 	}
 	
 }
 
-bool CUIMessageBoxEx::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIMessageBoxEx::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	if(keyboard_action==WINDOW_KEY_PRESSED)
 	{
-		if ( dik == DIK_NUMPADENTER || dik == DIK_RETURN || dik == DIK_SPACE)
+		if (dik == VK_RETURN || dik == VK_SPACE)
 		{
 			m_pMessageBox->OnYesOk();
 			return true;

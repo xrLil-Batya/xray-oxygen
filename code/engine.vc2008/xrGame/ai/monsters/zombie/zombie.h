@@ -55,7 +55,7 @@ public:
 	void			fake_death_stand_up		();
 
 #ifdef DEBUG
-	virtual void	debug_on_key			(int key);
+	virtual void	debug_on_key			(u8 key);
 #endif
 
 

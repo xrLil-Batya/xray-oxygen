@@ -338,7 +338,7 @@ void CGameObject::spawn_supplies()
 			int				n = _GetItemCount(V);
 			string16		temp;
 			if (n > 0)
-				j			= atoi(_GetItem(V,0,temp)); //count
+				j			= atoi_17(_GetItem(V,0,temp)); //count
 			
 			if(nullptr!=strstr(V,"prob="))
 				p			=(float)atof(strstr(V,"prob=")+5);

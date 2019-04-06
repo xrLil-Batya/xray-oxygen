@@ -33,14 +33,3 @@ void XRay::UIStatic::StretchTexture::set(bool bUse)
 {
 	pNativeStatic->SetStretchTexture(bUse);
 }
-
-// Dirty hack
-void CUIWindow::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
-{
-	//оповестить дочерние окна
-	for (CUIWindow* it : m_ChildWndList)
-	{
-		if (it->IsEnabled())
-			it->SendMessage(pWnd, msg, pData);
-	}
-}

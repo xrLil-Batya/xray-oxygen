@@ -54,7 +54,7 @@ CWeapon::CWeapon()
 	m_BriefInfo_CalcFrame	= 0;
 
 	
-	
+	bScopeHasBeenLoaded = false;
 
 	eHandDependence			= hdNone;
 
@@ -67,7 +67,7 @@ CWeapon::CWeapon()
 
 	m_pFlameParticles2		= nullptr;
 	m_sFlameParticles2		= "";
-
+	bScopeHasTexture         = false;
 
 	m_fCurrentCartirdgeDisp = 1.f;
 
@@ -442,34 +442,68 @@ void CWeapon::Load(LPCSTR section)
 	m_zoom_params.m_bZoomEnabled = !!pSettings->r_bool(section, "zoom_enabled");
 	m_zoom_params.m_fZoomRotateTime	= pSettings->r_float(section, "zoom_rotate_time");
 
+	bUseAltScope = pSettings->line_exist(section, "scopes");
+
 	if (m_eScopeStatus == ALife::eAddonAttachable)
 	{
-		if (pSettings->line_exist(section, "scopes_sect"))		
+		if (bUseAltScope)
 		{
-			LPCSTR str = pSettings->r_string(section, "scopes_sect");
+			LPCSTR str = pSettings->r_string(section, "scopes");
 			for (int i = 0, count = _GetItemCount(str); i < count; ++i)
 			{
 				string128 scope_section;
 				_GetItem(str, i, scope_section);
-				m_scopes.emplace_back(scope_section);
+
+				if (xr_strcmp(scope_section, "none") == 0)
+				{
+					bUseAltScope = false;
+				}
+				else
+				{
+					m_scopes.emplace_back(scope_section);
+				}
+
 			}
 		}
 		else
-			m_scopes.emplace_back(section);
+		{
+			if (pSettings->line_exist(section, "scopes_sect"))
+			{
+				LPCSTR str = pSettings->r_string(section, "scopes_sect");
+				for (int i = 0, count = _GetItemCount(str); i < count; ++i)
+				{
+					string128 scope_section;
+					_GetItem(str, i, scope_section);
+					m_scopes.emplace_back(scope_section);
+				}
+			}
+			else
+				m_scopes.emplace_back(section);
+		}
 	}
 	else if (m_eScopeStatus == ALife::eAddonPermanent)
 	{
 		xr_string scope_tex_name = pSettings->r_string(cNameSect(), "scope_texture");
+
+		if (xr_strcmp(scope_tex_name.c_str(), "none") != 0)
+			bScopeHasTexture = true;
+		else
+			bScopeHasTexture = false;
+
 		m_zoom_params.m_fScopeZoomFactor = pSettings->r_float( cNameSect(), "scope_zoom_factor");
-        m_UIScope = xr_new<CUIWindow>();
 
-        if (!pWpnScopeXml)
-        {
-            pWpnScopeXml = xr_new<CUIXml>();
-            pWpnScopeXml->Load(CONFIG_PATH, UI_PATH, "scopes.xml");
-        }
+		if (UseScopeTexture())
+		{
+			m_UIScope = xr_new<CUIWindow>();
 
-        CUIXmlInit::InitWindow(*pWpnScopeXml, scope_tex_name.c_str(), 0, m_UIScope);
+			if (!pWpnScopeXml)
+			{
+				pWpnScopeXml = xr_new<CUIXml>();
+				pWpnScopeXml->Load(CONFIG_PATH, UI_PATH, "scopes.xml");
+			}
+
+			CUIXmlInit::InitWindow(*pWpnScopeXml, scope_tex_name.c_str(), 0, m_UIScope);
+		}
 	}
     
 	if (m_eSilencerStatus == ALife::eAddonAttachable)
@@ -485,7 +519,7 @@ void CWeapon::Load(LPCSTR section)
 		m_iGrenadeLauncherX = pSettings->r_s32(section, "grenade_launcher_x");
 		m_iGrenadeLauncherY = pSettings->r_s32(section, "grenade_launcher_y");
 	}
-
+	UpdateAltScope();
 	InitAddons();
 
 	m_dwWeaponRemoveTime = pSettings->line_exist(section, "weapon_remove_time") ? pSettings->r_u32(section, "weapon_remove_time") : WEAPON_REMOVE_TIME;
@@ -538,7 +572,145 @@ void CWeapon::LoadFireParams(LPCSTR section)
 	CShootingObject::LoadFireParams(section);
 };
 
+void CWeapon::UpdateAltScope()
+{
+	if (!bUseAltScope)
+		return;
 
+	if (m_eScopeStatus == ALife::eAddonAttachable)
+	{
+		shared_str sectionNeedLoad;
+
+		if (IsScopeAttached())
+		{
+			if (pSettings->section_exist(GetNameWithAttachment().c_str()))
+			{
+				sectionNeedLoad = GetNameWithAttachment().c_str();
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			sectionNeedLoad = m_section_id.c_str();
+		}
+
+		if (!pSettings->section_exist(sectionNeedLoad))
+			return;
+
+		if (pSettings->line_exist(sectionNeedLoad, "visual"))
+		{
+			shared_str vis = pSettings->r_string(sectionNeedLoad, "visual");
+
+			if (vis != cNameVisual())
+			{
+				cNameVisual_set(vis);
+			}
+		}
+
+		if (pSettings->line_exist(sectionNeedLoad, "hud"))
+		{
+			shared_str new_hud = pSettings->r_string(sectionNeedLoad, "hud");
+
+			if (new_hud != hud_sect)
+			{
+				hud_sect = new_hud;
+			}
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+
+const xr_string CWeapon::GetScopeName() const
+{
+	if (IsScopeAttached())
+	{
+		if (bUseAltScope)
+		{
+			return m_scopes[m_cur_scope].c_str();
+		}
+		else
+		{
+			return pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");
+		}
+	}
+	else
+	{
+		return m_section_id.c_str();
+	}
+
+}
+
+int CWeapon::GetScopeX()
+{
+	if (IsScopeAttached())
+	{
+		if (bUseAltScope)
+		{
+			if (m_eScopeStatus != ALife::eAddonPermanent)
+			{
+				return pSettings->r_s32(GetNameWithAttachment().c_str(), "scope_x");
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else
+		{
+			return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_x");
+		}
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int CWeapon::GetScopeY()
+{
+	if (IsScopeAttached())
+	{
+		if (bUseAltScope)
+		{
+			if (m_eScopeStatus != ALife::eAddonPermanent)
+			{
+				return pSettings->r_s32(GetNameWithAttachment().c_str(), "scope_y");
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else
+		{
+			return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_y");
+		}
+	}
+	else
+	{
+		return 0;
+	}
+
+}
+
+xr_string CWeapon::GetNameWithAttachment()
+{
+	string128 str;
+
+	if(IsScopeAttached())
+		xr_sprintf(str, "%s_%s", m_section_id.c_str(), GetScopeName().c_str());
+	else
+		xr_sprintf(str, "%s", m_section_id.c_str());
+
+	return (xr_string)str;
+}
 
 BOOL CWeapon::net_Spawn(CSE_Abstract* DC)
 {
@@ -551,7 +723,11 @@ BOOL CWeapon::net_Spawn(CSE_Abstract* DC)
 	m_flagsAddOnState = E->m_addon_flags.get();
 	m_ammoType = E->ammo_type;
 
-	m_cur_scope = (E->m_scope_idx == (u8)-1) ? NULL : E->m_scope_idx;
+	u8 scope = E->m_scope_idx;
+	if (scope < m_scopes.size() && !bScopeHasBeenLoaded)
+	{
+		m_cur_scope = scope;
+	}
 
 	SetState(E->wpn_state);
 	SetNextState(E->wpn_state);
@@ -565,7 +741,7 @@ BOOL CWeapon::net_Spawn(CSE_Abstract* DC)
 		for (int i = 0; i < iAmmoElapsed; ++i)
 			m_magazine.push_back(m_DefaultCartridge);
 	}
-
+	UpdateAltScope();
 	UpdateAddonsVisibility();
 	InitAddons();
 
@@ -611,13 +787,14 @@ void CWeapon::net_Export(NET_Packet& P)
 	P.w_u8(m_ammoType);
 	P.w_u8((u8)GetState());
 	P.w_u8((u8)IsZoomed());
-	P.w_u8(u8(m_cur_scope));
+	//P.w_u8(u8(m_cur_scope));
 }
 
 void CWeapon::save(NET_Packet &output_packet)
 {
 	inherited::save	(output_packet);
 	save_data		(iAmmoElapsed,					 output_packet);
+	save_data       (m_cur_scope,                    output_packet);
 	save_data		(m_flagsAddOnState, 			 output_packet);
 	save_data		(m_ammoType,					 output_packet);
 	save_data		(m_zoom_params.m_bIsZoomModeNow, output_packet);
@@ -628,6 +805,8 @@ void CWeapon::load(IReader &input_packet)
 {
 	inherited::load	(input_packet);
 	load_data		(iAmmoElapsed,					 input_packet);
+	load_data       (m_cur_scope,                    input_packet);
+	bScopeHasBeenLoaded = true;
 	load_data		(m_flagsAddOnState,				 input_packet);
 	load_data		(m_ammoType,					 input_packet);
 	load_data		(m_zoom_params.m_bIsZoomModeNow, input_packet);
@@ -1218,14 +1397,14 @@ void CWeapon::UpdateHUDAddonsVisibility()
 {
 	if (!GetHUDmode())
 		return;
-
+	u16 bone_id = HudItemData()->m_model->LL_BoneID(wpn_scope.c_str());
 	// Прицел
-	if (ScopeAttachable())
-		HudItemData()->set_bone_visible(wpn_scope.c_str(), IsScopeAttached());
+	if (ScopeAttachable() && bone_id != BI_NONE)
+			HudItemData()->set_bone_visible(wpn_scope.c_str(), IsScopeAttached());
 
-	if (m_eScopeStatus == ALife::eAddonDisabled)
+	if (m_eScopeStatus == ALife::eAddonDisabled && bone_id != BI_NONE)
 		HudItemData()->set_bone_visible(wpn_scope.c_str(), FALSE, TRUE);
-	else if (m_eScopeStatus == ALife::eAddonPermanent)
+	else if (m_eScopeStatus == ALife::eAddonPermanent && bone_id != BI_NONE)
 		HudItemData()->set_bone_visible(wpn_scope.c_str(), TRUE, TRUE);
 
 	// Глушитель
@@ -1259,7 +1438,7 @@ void CWeapon::UpdateAddonsVisibility()
 
 	// Прицел
 	bone_id = pWeaponVisual->LL_BoneID(wpn_scope.c_str());
-	if (ScopeAttachable())
+	if (ScopeAttachable() && bone_id != BI_NONE)
 	{
 		if (IsScopeAttached())
 		{

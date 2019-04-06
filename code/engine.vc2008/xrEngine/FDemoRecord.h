@@ -53,10 +53,9 @@ public:
 				CDemoRecord				(const char *name, float life_time=60*60*1000);
 	virtual		~CDemoRecord();
 
-	virtual void IR_OnKeyboardPress		(int dik);
-	virtual void IR_OnKeyboardHold		(int dik);
+	virtual void IR_OnKeyboardPress		(u8 dik);
+	virtual void IR_OnKeyboardHold		(u8 dik);
 	virtual void IR_OnMouseMove			(int dx, int dy);
-	virtual void IR_OnMouseHold			(int btn);
 	
 	virtual BOOL ProcessCam				(SCamEffectorInfo& info);
 	static	void SetGlobalPosition		( const Fvector &p ) { g_position.p.set(p), g_position.set_position= true; }

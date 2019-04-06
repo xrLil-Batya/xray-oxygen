@@ -35,12 +35,12 @@ bool CUIView::OnMouseAction(float x, float y, EUIMessages action)
 	return false;
 }
 
-bool CUIView::OnKeyboardHold(int dik)
+bool CUIView::OnKeyboardHold(u8 dik)
 {
 	return false;
 }
 
-bool CUIView::OnKeyboardAction(int dik, EUIMessages action)
+bool CUIView::OnKeyboardAction(u8 dik, EUIMessages action)
 {
 	return false;
 }

@@ -362,19 +362,19 @@ shared_str CInifile::r_string_wb(const char* S, const char* L) const
 u8 CInifile::r_u8(const char* S, const char* L) const
 {
 	const char* C = r_string(S, L);
-	return u8(atoi(C));
+	return u8(atoi_17(C));
 }
 
 u16 CInifile::r_u16(const char* S, const char* L) const
 {
 	const char* C = r_string(S, L);
-	return u16(atoi(C));
+	return u16(atoi_17(C));
 }
 
 u32 CInifile::r_u32(const char* S, const char* L) const
 {
 	const char* C = r_string(S, L);
-	return u32(atoi(C));
+	return u32(atoi_17(C));
 }
 
 u64 CInifile::r_u64(const char* S, const char* L) const
@@ -386,19 +386,19 @@ u64 CInifile::r_u64(const char* S, const char* L) const
 s8 CInifile::r_s8(const char* S, const char* L) const
 {
 	const char* C = r_string(S, L);
-	return s8(atoi(C));
+	return s8(atoi_17(C));
 }
 
 s16 CInifile::r_s16(const char* S, const char* L) const
 {
 	const char* C = r_string(S, L);
-	return s16(atoi(C));
+	return s16(atoi_17(C));
 }
 
 s32 CInifile::r_s32(const char* S, const char* L) const
 {
 	const char* C = r_string(S, L);
-	return s32(atoi(C));
+	return s32(atoi_17(C));
 }
 
 float CInifile::r_float(const char* S, const char* L) const

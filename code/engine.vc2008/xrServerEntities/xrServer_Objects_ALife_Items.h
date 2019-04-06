@@ -185,16 +185,7 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 	u32								m_ef_main_weapon_type;
 	u32								m_ef_weapon_type;
 
-
-	using SCOPES_VECTOR = xr_vector<shared_str>;
-	SCOPES_VECTOR			m_scopes;
 	u8  m_scope_idx;
-	shared_str m_scope_name;
-
-	u8 GetScopeIdx(shared_str scope_name);
-	void LoadAddons(LPCSTR scopes_list);
-	void AddonsLoad();
-	void AddonsUpdate();
 
 
 	//u8  m_silencer_idx;
@@ -214,6 +205,7 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 	void							clone_addons		(CSE_ALifeItemWeapon* parent);
 
 	virtual BOOL					Net_Relevant		();
+	virtual	bool					keep_saved_data_anyway() const { return true; };
 
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeapon)

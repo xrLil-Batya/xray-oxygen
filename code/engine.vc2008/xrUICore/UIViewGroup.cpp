@@ -46,7 +46,7 @@ bool CUIViewGroup::OnMouseAction(float x, float y, EUIMessages action)
 	return false;
 }
 
-bool CUIViewGroup::OnKeyboardHold(int dik)
+bool CUIViewGroup::OnKeyboardHold(u8 dik)
 {
 	CHILD_LIST::reverse_iterator it = m_childViews.rbegin();
 	for (; it != m_childViews.rend(); ++it)
@@ -59,7 +59,7 @@ bool CUIViewGroup::OnKeyboardHold(int dik)
 	return false;
 }
 
-bool CUIViewGroup::OnKeyboardAction(int dik, EUIMessages action)
+bool CUIViewGroup::OnKeyboardAction(u8 dik, EUIMessages action)
 {
 	CHILD_LIST::reverse_iterator it = m_childViews.rbegin();
 	for (; it != m_childViews.rend(); ++it)

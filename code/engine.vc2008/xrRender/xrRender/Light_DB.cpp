@@ -143,11 +143,11 @@ void CLight_DB::add_light(light* L)
 
 	L->frame_render = Device.dwFrame;
 
-	if (L->flags.bStatic && !ps_r_flags.test(R_FLAG_R1LIGHTS))
-		return;
-
 	if (RImplementation.o.noshadows)
 		L->flags.bShadow = FALSE;
+
+	if (L->flags.bStatic && !ps_r_flags.test(R_FLAG_R1LIGHTS))
+		return;
 
 	L->export_(package);
 }

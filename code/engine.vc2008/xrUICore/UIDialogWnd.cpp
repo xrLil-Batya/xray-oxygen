@@ -23,13 +23,13 @@ void CUIDialogWnd::Show(bool status)
 		ResetAll();
 }
 
-bool CUIDialogWnd::OnKeyboardHold(int dik)
+bool CUIDialogWnd::OnKeyboardHold(u8 dik)
 {
 	if(!IR_process()) return false;
 	return inherited::OnKeyboardHold(dik);
 }
 
-bool CUIDialogWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIDialogWnd::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	if(!IR_process()) return false;
 	if (inherited::OnKeyboardAction(dik, keyboard_action) )

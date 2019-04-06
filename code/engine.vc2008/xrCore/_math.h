@@ -27,6 +27,8 @@ namespace CPU {
 extern XRCORE_API	void	_initialize_cpu			();
 extern XRCORE_API	void	_initialize_cpu_thread	();
 
+extern XRCORE_API   bool    float_equal(float a, float b);
+
 // threading
 using thread_t =				void				( void * );
 extern XRCORE_API	void	thread_name				( const char* name);

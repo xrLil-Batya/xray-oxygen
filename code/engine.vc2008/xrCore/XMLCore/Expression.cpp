@@ -213,7 +213,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
 
             if (IsValidIntConstantDeclaration(WordAccumulator))
             {
-                int value = atoi(WordAccumulator.c_str());
+                int value = atoi_17(WordAccumulator.c_str());
                 pLexem = new Lexema(WordAccumulator, CONSTANT, UI_CONSTANT_INT, FunctionStackDepth, FunctionStack.top());
                 pLexem->intConstant = value;
                 goto FlushLexem;

@@ -76,7 +76,7 @@ void current_level_travel_speed2	(CSE_ALifeMonsterAbstract *self, float travel_s
 
 void ForceSetGoodwill(CSE_ALifeMonsterAbstract *self, int goodwill, ALife::_OBJECT_ID pWhoToSet)
 {
-	RELATION_REGISTRY().ForceSetGoodwill(self->ID, pWhoToSet, goodwill);
+	SRelationRegistry().ForceSetGoodwill(self->ID, pWhoToSet, goodwill);
 }
 
 

@@ -3,6 +3,8 @@
 #include "UIStatic.h"
 #include "UIBtnHint.h"
 #include "../xrGame/Actor_Flags.h"
+#include "../xrEngine/xr_input.h"
+#include "../xrEngine/IInputReceiver.h"
 
 CUICursor::CUICursor(): m_static(NULL), m_b_use_win_cursor(false)
 {    
@@ -30,7 +32,10 @@ void CUICursor::OnScreenResolutionChanged()
 void CUICursor::InitInternal()
 {
 	m_static					= xr_new<CUIStatic>();
-	m_static->InitTextureEx		("ui\\ui_ani_cursor", "hud\\cursor");
+
+	static const bool bNewCur = strstr(Core.Params, "-hate_gsc_cursor");
+	m_static->InitTextureEx		(bNewCur ? "ui\\ui_main_cursor" : "ui\\ui_ani_cursor", "hud\\cursor");
+
 	Frect						rect;
 	rect.set					(0.0f,0.0f,40.0f,40.0f);
 	m_static->SetTextureRect	(rect);
@@ -87,25 +92,23 @@ Fvector2 CUICursor::GetCursorPositionDelta()
 
 void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 {
-	Fvector2	p;
 	vPrevPos	= vPos;
 	if(m_b_use_win_cursor)
 	{
-		POINT		pti;
-		BOOL r		= GetCursorPos(&pti);
-		if(!r)		return;
-		p.x			= (float)pti.x;
-		p.y			= (float)pti.y;
-		vPos.x		= p.x * (UI_BASE_WIDTH/(float)Device.dwWidth);
-		vPos.y		= p.y * (UI_BASE_HEIGHT/(float)Device.dwHeight);
-	}else
-	{
-		float sens = 1.0f;
-		vPos.x		+= _dx*sens;
-		vPos.y		+= _dy*sens;
+		Ivector2 mousePos;
+		pInput->CurrentIR()->IR_GetMousePosReal(mousePos);
+
+		vPos.x = (float)mousePos.x * (UI_BASE_WIDTH / (float)Device.dwWidth);
+		vPos.y = (float)mousePos.y * (UI_BASE_HEIGHT / (float)Device.dwHeight);
+			
+		clamp<float>(vPos.x, 0.0f, UI_BASE_WIDTH);
+		clamp<float>(vPos.y, 0.0f, UI_BASE_HEIGHT);
 	}
-	clamp		(vPos.x, 0.f, UI_BASE_WIDTH);
-	clamp		(vPos.y, 0.f, UI_BASE_HEIGHT);
+	else
+	{
+		vPos.x += _dx;
+		vPos.y += _dy;
+	}
 }
 
 void CUICursor::SetUICursorPosition(Fvector2 pos)

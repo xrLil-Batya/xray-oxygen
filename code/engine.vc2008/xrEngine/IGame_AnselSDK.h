@@ -1,17 +1,21 @@
 #pragma once
 
-class ENGINE_API CGameAnsel
+class ENGINE_API IGameAnsel
 {
 public:
-	CGameAnsel();
+	IGameAnsel();
+	virtual ~IGameAnsel() = default;
 	virtual bool Load() { return false; };
 
 public:
-	bool isActive;
+	static bool IsActive();
+
 	float offsetX;
 	float offsetY;
 	float viewportNear;
 
+protected:
+	bool bIsActive;
 };
 
-ENGINE_API extern CGameAnsel* pGameAnsel;
+ENGINE_API extern IGameAnsel* pGameAnsel;

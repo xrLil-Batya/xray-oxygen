@@ -81,7 +81,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrCore.lib;xrEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrCore.lib;xrEngine.lib;XTools.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
@@ -102,7 +102,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrCore.lib;xrEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrCore.lib;xrEngine.lib;XTools.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -119,7 +119,7 @@
     </ClCompile>
     <Link>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrCore.lib;xrEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrCore.lib;xrEngine.lib;XTools.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>

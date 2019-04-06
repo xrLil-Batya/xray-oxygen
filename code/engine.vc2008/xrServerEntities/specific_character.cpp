@@ -217,7 +217,7 @@ shared_str CSpecificCharacter::Bio() const
 	return	data()->m_sBioText;
 }
 
-const CHARACTER_COMMUNITY& CSpecificCharacter::Community() const 
+const CCharacterCommunity& CSpecificCharacter::Community() const 
 {
 	return	data()->m_Community;
 }

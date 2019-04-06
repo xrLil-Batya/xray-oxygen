@@ -46,13 +46,13 @@ void CUIPropertiesBox::InitPropertiesBox(Fvector2 pos, Fvector2 size)
 	m_UIListWnd.SetWndSize	(Fvector2().set(size.x-OFFSET_X*2, size.y-OFFSET_Y*2) );
 }
 
-void CUIPropertiesBox::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
+void CUIPropertiesBox::SendMessageToWnd(CUIWindow *pWnd, s16 msg, void *pData)
 {
 	if(pWnd == &m_UIListWnd)
 	{
 		if(msg == LIST_ITEM_CLICKED)
 		{
-			GetMessageTarget()->SendMessage	(this, PROPERTY_CLICKED);
+			GetMessageTarget()->SendMessageToWnd	(this, PROPERTY_CLICKED);
 			if (!m_sub_property_box)	//i'm the last sub menu 
 			{
 				Hide							();
@@ -62,7 +62,7 @@ void CUIPropertiesBox::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 		}
 	}
 	CUIWndCallback::OnEvent	(pWnd, msg, pData);
-	inherited::SendMessage	(pWnd, msg, pData);
+	inherited::SendMessageToWnd	(pWnd, msg, pData);
 }
 
 void CUIPropertiesBox::ShowSubMenu()
@@ -226,7 +226,7 @@ void CUIPropertiesBox::Draw()
 	inherited::Draw();
 }
 
-bool CUIPropertiesBox::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIPropertiesBox::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	return true;
 }

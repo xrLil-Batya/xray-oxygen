@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "AnselWrapper.h"
+#include "Ansel.h"
 #include "r2_puddles.h"
 #include "r4.h"
 #include "../xrRender/ResourceManager.h"
@@ -53,10 +53,13 @@ void CRender::level_Load(IReader* fs)
 	Glows		= new CGlowManager();
 	Wallmarks	= new CWallmarksEngine();
 	Details		= new CDetailManager();
-	pGameAnsel  = new AnselManager();
+	pGameAnsel  = new xrAnsel();
 
 	// Init Ansel Wrapper
-	pGameAnsel->Load();
+	if (!pGameAnsel->Load())
+	{
+		Msg("[NOTE]: Ansel is not supported on your hardware");
+	}
 
 	// VB,IB,SWI
 	g_pGamePersistent->SetLoadStageTitle("st_loading_geometry");
@@ -297,7 +300,7 @@ struct b_portal
 void CRender::LoadSectors(IReader* fs)
 {
 	// allocate memory for portals
-	u32 size = fs->find_chunk(fsL_PORTALS); 
+	u32 size = (u32)fs->find_chunk(fsL_PORTALS); 
 	R_ASSERT(0==size%sizeof(b_portal));
 	u32 count = size/sizeof(b_portal);
 	Portals.resize	(count);

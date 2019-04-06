@@ -355,7 +355,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 			return 0;
 
 		// if our message is not a previos 
-		if (!msgThread->empty() && pInstance->progressMsg != *msgThread)
+		if (!msgThread->empty() && pInstance->progressMsg != *msgThread) // pInstance->progressMsg
 		{
 			pInstance->progressMsg = *msgThread;
 			SendMessage(pInstance->hwndSplash, WM_PAINT, 0, 0);

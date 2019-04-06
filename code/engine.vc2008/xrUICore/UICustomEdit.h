@@ -19,11 +19,11 @@ public:
 			void	Init			(u32 max_char_count, bool number_only_mode = false, bool read_mode = false, bool fn_mode = false );
 		
 	virtual void	InitCustomEdit	(Fvector2 pos, Fvector2 size);
-	virtual void	SendMessage		(CUIWindow* pWnd, s16 msg, void* pData = NULL);
+	virtual void	SendMessageToWnd		(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
 	virtual bool	OnMouseAction			(float x, float y, EUIMessages mouse_action);
-	virtual bool	OnKeyboardAction		(int dik, EUIMessages keyboard_action);
-	virtual bool	OnKeyboardHold	(int dik);
+	virtual bool	OnKeyboardAction		(u8 dik, EUIMessages keyboard_action);
+	virtual bool	OnKeyboardHold	(u8 dik);
 
 	virtual void	OnFocusLost		();
 	virtual void	Update			();

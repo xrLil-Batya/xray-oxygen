@@ -230,7 +230,7 @@ CChangeLevelWnd::CChangeLevelWnd()
 	AttachChild(m_messageBox);
 }
 
-void CChangeLevelWnd::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
+void CChangeLevelWnd::SendMessageToWnd(CUIWindow *pWnd, s16 msg, void *pData)
 {
 	if (pWnd == m_messageBox)
 	{
@@ -247,7 +247,7 @@ void CChangeLevelWnd::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 		}
 	}
 	else
-		inherited::SendMessage(pWnd, msg, pData);
+		inherited::SendMessageToWnd(pWnd, msg, pData);
 }
 
 void CChangeLevelWnd::OnOk()
@@ -270,7 +270,7 @@ void CChangeLevelWnd::OnCancel()
 		Actor()->MoveActor(m_position_cancel, m_angles_cancel);
 }
 
-bool CChangeLevelWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CChangeLevelWnd::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	if (keyboard_action == WINDOW_KEY_PRESSED)
 	{

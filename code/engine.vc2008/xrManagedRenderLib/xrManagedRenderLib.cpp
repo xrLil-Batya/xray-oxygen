@@ -33,6 +33,7 @@ Runtime::InteropServices::HandleRef XRay::XRayRenderHost::BuildWindowCore(Runtim
 	::Environment().Load();
 	UIRender->CreateUIGeom();
 
+
 	// Must be the last - tick thread is running at this point
 	Device.b_is_Active = TRUE;
 	return HandleRef(this, IntPtr(XRayWindow));
@@ -95,6 +96,11 @@ bool XRay::XRayRenderHost::TranslateAcceleratorCore(::System::Windows::Interop::
 bool XRay::XRayRenderHost::OnMnemonicCore(::System::Windows::Interop::MSG% msg, ModifierKeys modifiers)
 {
 	return false;
+}
+
+void XRay::XRayRenderHost::SetOcclusion(XRay::Editor::EditorOcclusion^ InOcclusion)
+{
+	_editorOcclusion = InOcclusion;
 }
 
 void XRay::XRayRenderHost::UpdateEngine()

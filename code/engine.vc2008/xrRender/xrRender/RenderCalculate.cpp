@@ -27,7 +27,7 @@ void CRender::Calculate()
 	r_dtex_range = ps_r_df_parallax_range * g_fSCREEN / (1024.f * 768.f);
 
 	// Detect camera-sector
-	if (!vLastCameraPos.similar(Device.vCameraPosition, EPS_S))
+	if (!vLastCameraPos.similar(Device.vCameraPosition, EPS_L))
 	{
 		CSector* pSector = (CSector*)detectSector(Device.vCameraPosition);
 		if (pSector && (pSector != pLastSector))

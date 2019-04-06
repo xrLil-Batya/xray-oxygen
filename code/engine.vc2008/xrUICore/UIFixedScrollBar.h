@@ -24,11 +24,11 @@ public:
 	virtual void SetHeight(float height) {};
 	virtual void Draw() {inherited::Draw();};
 
-	virtual void SendMessage(CUIWindow *pWnd, s16 msg, void *pData);
+	virtual void SendMessageToWnd(CUIWindow *pWnd, s16 msg, void *pData);
 	virtual bool OnMouseAction(float x, float y, EUIMessages mouse_action);
 	virtual bool OnMouseDown(int mouse_btn);
 	virtual	bool OnMouseDownEx();
 	virtual void OnMouseUp(int mouse_btn);
-	virtual bool OnKeyboardHold(int dik);
+	virtual bool OnKeyboardHold(u8 dik);
 
 };

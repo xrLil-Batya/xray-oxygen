@@ -134,9 +134,9 @@ void CUIFixedScrollBar::ClampByViewRect()
 }
 #include "UICursor.h"
 u32 last_hold_tm =0;
-bool CUIFixedScrollBar::OnKeyboardHold(int dik)
+bool CUIFixedScrollBar::OnKeyboardHold(u8 dik)
 {
-	if(dik == MOUSE_1 && (last_hold_tm + m_hold_delay) < Device.dwTimeContinual)
+	if(dik == VK_LBUTTON && (last_hold_tm + m_hold_delay) < Device.dwTimeContinual)
 	{
 		if(OnMouseDownEx())
 		{
@@ -186,7 +186,7 @@ bool CUIFixedScrollBar::OnMouseAction(float x, float y, EUIMessages mouse_action
 						pos.y += delta.y;
 
 					m_ScrollBox->SetWndPos(pos);
-					m_ScrollBox->GetMessageTarget()->SendMessage(m_ScrollBox, SCROLLBOX_MOVE);
+					m_ScrollBox->GetMessageTarget()->SendMessageToWnd(m_ScrollBox, SCROLLBOX_MOVE);
 				}
 				if ( !cursor_over )
 				{
@@ -201,7 +201,7 @@ bool CUIFixedScrollBar::OnMouseAction(float x, float y, EUIMessages mouse_action
 
 bool CUIFixedScrollBar::OnMouseDown(int mouse_btn)
 {
-	if(mouse_btn == MOUSE_1 && OnMouseDownEx())
+	if(mouse_btn == VK_LBUTTON && OnMouseDownEx())
 		return true;
 
 	return inherited::OnMouseDown(mouse_btn);
@@ -254,7 +254,7 @@ void CUIFixedScrollBar::OnMouseUp(int mouse_btn)
 	m_mouse_state = 0;
 }
 
-void CUIFixedScrollBar::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
+void CUIFixedScrollBar::SendMessageToWnd(CUIWindow *pWnd, s16 msg, void *pData)
 {
 	if(pWnd==m_DecButton)
 	{
@@ -276,17 +276,17 @@ void CUIFixedScrollBar::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 			{
 				SetPosScrollFromView(m_ScrollBox->GetWndPos().x,m_ScrollBox->GetWidth(),GetHeight());
 				if(GetMessageTarget())
-					GetMessageTarget()->SendMessage(this, SCROLLBAR_HSCROLL);
+					GetMessageTarget()->SendMessageToWnd(this, SCROLLBAR_HSCROLL);
 			}
 			else
 			{
 				SetPosScrollFromView(m_ScrollBox->GetWndPos().y,m_ScrollBox->GetHeight(),GetWidth());
 				if(GetMessageTarget())
-					GetMessageTarget()->SendMessage(this, SCROLLBAR_VSCROLL);
+					GetMessageTarget()->SendMessageToWnd(this, SCROLLBAR_VSCROLL);
 			}
 		}
 	}
-	CUIWindow::SendMessage( pWnd, msg, pData );
+	CUIWindow::SendMessageToWnd( pWnd, msg, pData );
 }
 
 void CUIFixedScrollBar::SetPosScrollFromView(float view_pos, float view_size, float view_offs)

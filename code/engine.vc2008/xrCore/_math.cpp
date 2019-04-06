@@ -247,6 +247,11 @@ void _initialize_cpu_thread()
 	}
 }
 
+bool float_equal(float a, float b)
+{
+	return _abs(a - b) < EPS_L;
+}
+
 unsigned long long SubtractTimes(const FILETIME one, const FILETIME two)
 { 
 	LARGE_INTEGER a, b;

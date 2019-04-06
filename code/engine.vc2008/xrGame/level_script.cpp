@@ -580,59 +580,59 @@ void set_pp_effector_factor2(int id, float f)
 
 int g_community_goodwill(LPCSTR _community, int _entity_id)
  {
-	 CHARACTER_COMMUNITY c;
+	 CCharacterCommunity c;
 	 c.set					(_community);
 
- 	return RELATION_REGISTRY().GetCommunityGoodwill(c.index(), u16(_entity_id));
+ 	return SRelationRegistry().GetCommunityGoodwill(c.index(), u16(_entity_id));
  }
 
 void g_set_community_goodwill(LPCSTR _community, int _entity_id, int val)
 {
-	CHARACTER_COMMUNITY	c;
+	CCharacterCommunity	c;
 	c.set					(_community);
-	RELATION_REGISTRY().SetCommunityGoodwill(c.index(), u16(_entity_id), val);
+	SRelationRegistry().SetCommunityGoodwill(c.index(), u16(_entity_id), val);
 }
 
 void g_change_community_goodwill(LPCSTR _community, int _entity_id, int val)
 {
-	CHARACTER_COMMUNITY	c;
+	CCharacterCommunity	c;
 	c.set					(_community);
-	RELATION_REGISTRY().ChangeCommunityGoodwill(c.index(), u16(_entity_id), val);
+	SRelationRegistry().ChangeCommunityGoodwill(c.index(), u16(_entity_id), val);
 }
 
 int g_get_community_relation( LPCSTR comm_from, LPCSTR comm_to )
 {
-	CHARACTER_COMMUNITY	community_from;
+	CCharacterCommunity	community_from;
 	community_from.set( comm_from );
-	CHARACTER_COMMUNITY	community_to;
+	CCharacterCommunity	community_to;
 	community_to.set( comm_to );
 
-	return RELATION_REGISTRY().GetCommunityRelation( community_from.index(), community_to.index() );
+	return SRelationRegistry().GetCommunityRelation( community_from.index(), community_to.index() );
 }
 
 void g_set_community_relation( LPCSTR comm_from, LPCSTR comm_to, int value )
 {
-	CHARACTER_COMMUNITY	community_from;
+	CCharacterCommunity	community_from;
 	community_from.set( comm_from );
-	CHARACTER_COMMUNITY	community_to;
+	CCharacterCommunity	community_to;
 	community_to.set( comm_to );
 
-	RELATION_REGISTRY().SetCommunityRelation( community_from.index(), community_to.index(), value );
+	SRelationRegistry().SetCommunityRelation( community_from.index(), community_to.index(), value );
 }
 
 int g_get_general_goodwill_between ( u16 from, u16 to)
 {
-	CHARACTER_GOODWILL presonal_goodwill		= RELATION_REGISTRY().GetGoodwill(from, to); VERIFY(presonal_goodwill != NO_GOODWILL);
+	CHARACTER_GOODWILL presonal_goodwill		= SRelationRegistry().GetGoodwill(from, to); VERIFY(presonal_goodwill != NO_GOODWILL);
 
 	CSE_ALifeTraderAbstract* from_obj	= smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(from));
 	CSE_ALifeTraderAbstract* to_obj		= smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(to));
 
 	if (!from_obj||!to_obj){
-		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"RELATION_REGISTRY::get_general_goodwill_between  : cannot convert obj to CSE_ALifeTraderAbstract!");
+		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"SRelationRegistry::get_general_goodwill_between  : cannot convert obj to CSE_ALifeTraderAbstract!");
 		return (0);
 	}	
-	CHARACTER_GOODWILL community_to_obj_goodwill		= RELATION_REGISTRY().GetCommunityGoodwill	(from_obj->Community(), to					);
-	CHARACTER_GOODWILL community_to_community_goodwill	= RELATION_REGISTRY().GetCommunityRelation	(from_obj->Community(), to_obj->Community()	);
+	CHARACTER_GOODWILL community_to_obj_goodwill		= SRelationRegistry().GetCommunityGoodwill	(from_obj->Community(), to					);
+	CHARACTER_GOODWILL community_to_community_goodwill	= SRelationRegistry().GetCommunityRelation	(from_obj->Community(), to_obj->Community()	);
 	
 	return presonal_goodwill + community_to_obj_goodwill + community_to_community_goodwill;
 }
@@ -642,8 +642,8 @@ u32 vertex_id	(Fvector position)
 	return	(ai().level_graph().vertex_id(position));
 }
 
-CUISequencer* g_tutorial = nullptr;
-CUISequencer* g_tutorial2 = nullptr;
+GAME_API CUISequencer* g_tutorial = nullptr;
+GAME_API CUISequencer* g_tutorial2 = nullptr;
 
 void start_tutorial(LPCSTR name)
 {

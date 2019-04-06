@@ -5,10 +5,6 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_IA32|x64">
-      <Configuration>Release_IA32</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -29,13 +25,6 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <CLRSupport>true</CLRSupport>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
@@ -49,10 +38,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\F-Ray.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\F-Ray.props" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\F-Ray.props" />
@@ -62,7 +47,6 @@
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>editor</TargetName>
@@ -71,12 +55,6 @@
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetName>editor</TargetName>
-    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
-    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
     <TargetName>editor</TargetName>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
@@ -138,40 +116,13 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(ProjectName).lib</ImportLibrary>
       <AssemblyDebug>true</AssemblyDebug>
-      <AdditionalOptions>/ignore:4248 /LTCG %(AdditionalOptions)</AdditionalOptions>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>../../sdk/include/;../../engine.vc2008/xrCore/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;EDITOR_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ExceptionHandling>
-      </ExceptionHandling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
-      <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\sdk\libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
-      <ImportLibrary>$(xrLib)$(ProjectName).lib</ImportLibrary>
-      <AssemblyDebug>true</AssemblyDebug>
-      <AdditionalOptions>/ignore:4248 /LTCG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/ignore:4248 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Reference Include="Flobbster.Windows.Forms.PropertyGrid">
+      <HintPath>..\..\SDK\binaries\Flobbster.Windows.Forms.PropertyGrid.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
@@ -197,16 +148,6 @@
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </Reference>
-    <Reference Include="editor_controls">
-      <HintPath>..\..\..\binaries\editor_controls.dll</HintPath>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-    </Reference>
-    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\SDK\binaries\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-    </Reference>
     <Reference Include="System.Design">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
@@ -215,10 +156,8 @@
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </Reference>
-    <Reference Include="Flobbster.Windows.Forms.PropertyGrid, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\SDK\binaries\Flobbster.Windows.Forms.PropertyGrid.dll</HintPath>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\..\SDK\binaries\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -422,6 +361,11 @@
       <DependentUpon>window_tree_values.h</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\xrSdkControls\xrSDKControls.csproj">
+      <Project>{e9dc16a3-d0fa-4924-af6e-f6fdf3ea0661}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

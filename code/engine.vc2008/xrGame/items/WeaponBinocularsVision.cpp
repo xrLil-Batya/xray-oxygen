@@ -138,7 +138,7 @@ void SBinocVisibleObj::Update()
 
 					if (our_inv_owner && others_inv_owner && !monster)
 					{
-						switch (RELATION_REGISTRY().GetRelationType(others_inv_owner, our_inv_owner))
+						switch (SRelationRegistry().GetRelationType(others_inv_owner, our_inv_owner))
 						{
 						case ALife::eRelationTypeEnemy:
 							clr = C_ON_ENEMY; break;
@@ -195,7 +195,7 @@ void CBinocularsVision::Update()
 		for (CVisibleObject v_it : vVisibles)
 		{
 			const CObject*	_object_ = v_it.m_object;
-			if (!pActor->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_)))
+			if (!pActor->memory().visual().visible_right_now(smart_cast<const CGameObject*>(_object_)))
 				continue;
 
 			CObject* object_ = const_cast<CObject*>(_object_);

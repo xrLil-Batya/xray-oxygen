@@ -42,7 +42,7 @@ void CAI_PhraseDialogManager::AnswerPhrase(DIALOG_SHARED_PTR& phrase_dialog)
 
 	if (!phrase_dialog->IsFinished())
 	{
-		CHARACTER_GOODWILL attitude = RELATION_REGISTRY().GetAttitude(pOthersIO, pInvOwner);
+		CHARACTER_GOODWILL attitude = SRelationRegistry().GetAttitude(pOthersIO, pInvOwner);
 
 		xr_vector<int> phrases;
 		CHARACTER_GOODWILL phrase_goodwill = NO_GOODWILL;

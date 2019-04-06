@@ -42,7 +42,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
 	void							set_specific_character	(shared_str);
 #endif
 
-	CHARACTER_COMMUNITY_INDEX		m_community_index;
+	int		m_community_index;
 	CHARACTER_REPUTATION_VALUE		m_reputation;
 	CHARACTER_RANK_VALUE			m_rank;
 	xr_string						m_character_name;
@@ -53,7 +53,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
 #ifdef XRGAME_EXPORTS
 	//для работы с relation system
 	u16								object_id				() const;
-	CHARACTER_COMMUNITY_INDEX		Community				() const;
+	int	XR_EPROPS_API				Community				() const;
 	LPCSTR							CommunityName			() const;
 	CHARACTER_RANK_VALUE			Rank					();
 	CHARACTER_REPUTATION_VALUE		Reputation				();

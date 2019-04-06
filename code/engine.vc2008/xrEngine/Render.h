@@ -19,6 +19,7 @@ class IRenderVisual;
 class IKinematics;
 class CGameFont;
 //class IRenderDetailModel;
+__interface ICustomOcclusion;
 
 #ifndef _EDITOR
 extern const	float		fLightSmoothFactor;
@@ -155,12 +156,11 @@ public:
 		SM_FOR_LEVELMAP				= 3,		// bmp,		name used as postfix (level_name)
 		SM_forcedword				= u32(-1)
 	};
+
 public:
 	// options
 	s32								m_skinning;
 	s32								m_MSAASample;
-
-	BENCH_SEC_SCRAMBLEMEMBER1
 
 	// data
 	CFrustum						ViewBase;
@@ -172,9 +172,6 @@ public:
 	virtual	void					destroy					()											= 0;
 	virtual	void					reset_begin				()											= 0;
 	virtual	void					reset_end				()											= 0;
-
-	BENCH_SEC_SCRAMBLEVTBL1
-	BENCH_SEC_SCRAMBLEVTBL3
 
 	virtual	void					level_Load				(IReader*)									= 0;
 	virtual void					level_Unload			()											= 0;
@@ -258,6 +255,8 @@ public:
 	virtual u32						memory_usage			()											= 0;
 	virtual u32                     active_phase            ()                                          = 0;
 
+	virtual void					setCustomOcclusion		(ICustomOcclusion* pOcclusionInterface)		= 0;
+
 	// Editor specific
 	//virtual void					StaticInit() = 0;
 	//virtual void					StaticDestroy() = 0;
@@ -266,6 +265,11 @@ public:
 
 	// Constructor/destructor
 	virtual ~IRender_interface();
+};
+
+__interface ICustomOcclusion
+{
+	virtual void getRenderableList(IRender_interface* pGraph) = 0;
 };
 
 #endif

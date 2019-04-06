@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EditorOcclusion.h" />
     <ClInclude Include="ISpectreRenderLib.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -95,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="EditorOcclusion.cpp" />
     <ClCompile Include="ISpectreRenderLib.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -122,6 +124,9 @@
     </ProjectReference>
     <ProjectReference Include="..\xrEngine\xrEngine.vcxproj">
       <Project>{2578c6d8-660d-48ae-9322-7422f8664f06}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\xrManagedEngineLib\xrManagedEngineLib.vcxproj">
+      <Project>{09dc3343-46ca-4d55-bfe3-317c0ff02e52}</Project>
     </ProjectReference>
     <ProjectReference Include="..\xrManagedLib\xrManagedLib.vcxproj">
       <Project>{c4defc31-a910-4339-99b3-6c410dc19ad0}</Project>

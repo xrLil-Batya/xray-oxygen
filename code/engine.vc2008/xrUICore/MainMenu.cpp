@@ -6,9 +6,9 @@
 #include "../xrEngine/IGame_Level.h"
 #include "../xrEngine/CameraManager.h"
 #include "../xrEngine/xr_Level_controller.h"
+#include "../xrEngine/xr_input.h"
 #include "UITextureMaster.h"
 #include "UIXmlInit.h"
-#include <dinput.h>
 #include "UIBtnHint.h"
 #include "UICursor.h"
 #include "..\xrEngine\string_table.h"
@@ -35,6 +35,7 @@ UI_API CMainMenu* MainMenu() { return (CMainMenu*) g_pGamePersistent->m_pMainMen
 CMainMenu::CMainMenu()
 {
 	m_Flags.zero();
+	m_lastLeftThumbstickValue.setZero();
 	m_startDialog = NULL;
 	m_screenshotFrame = u32(-1);
 	g_pGamePersistent->m_pMainMenu = this;
@@ -52,10 +53,12 @@ CMainMenu::CMainMenu()
     g_statHint = xr_new<CUIButtonHint>();
 
 	Device.seqFrame.Add(this, REG_PRIORITY_LOW - 1000);
+	Device.seqAppActivate.Add(this, REG_PRIORITY_LOW - 1000);
 }
 
 CMainMenu::~CMainMenu()
 {
+	Device.seqAppActivate.Remove(this);
 	Device.seqFrame.Remove(this);
 	xr_delete(g_btnHint);
 	xr_delete(g_statHint);
@@ -128,6 +131,8 @@ void CMainMenu::Activate(bool bActivate)
 		{
 			g_discord.SetStatus(xrDiscordPresense::StatusId::Menu);
 		}
+		pInput->SetAllowAccessToBorders(true);
+		pInput->UnlockMouse();
 	}
 	else {
 		m_deactivated_frame = Device.dwFrame;
@@ -137,7 +142,8 @@ void CMainMenu::Activate(bool bActivate)
 		Device.seqRender.Remove(this);
 
 		bool b = !!Console->bVisible;
-		if (b) {
+		if (b) 
+		{
 			Console->Hide();
 		}
 
@@ -173,6 +179,8 @@ void CMainMenu::Activate(bool bActivate)
 			Console->Execute("vid_restart");
 		}
 		//g_discord.SetStatus(xrDiscordPresense::StatusId::In_Game);
+		pInput->SetAllowAccessToBorders(false);
+		pInput->LockMouse();
 	}
 }
 
@@ -216,25 +224,22 @@ void CMainMenu::OnDeviceReset()
 		m_Flags.set(flNeedVidRestart, TRUE);
 }
 
-//IInputReceiver
-static int mouse_button_2_key[] = { MOUSE_1,MOUSE_2,MOUSE_3, MOUSE_4, MOUSE_5, MOUSE_6, MOUSE_7, MOUSE_8 };
-void CMainMenu::IR_OnMousePress(int btn)
+void CMainMenu::OnAppActivate()
 {
-	if (IsActive())
-		IR_OnKeyboardPress(mouse_button_2_key[btn]);
-};
+	// set gui mouse to center screen
+	// because we should synchronize with system mouse to prevent unwanted sizing
+	GetUICursor().SetUICursorPosition(Fvector2().set(512.0f, 384.0f));
+}
 
-void CMainMenu::IR_OnMouseRelease(int btn)
+void CMainMenu::IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& position)
 {
-	if (IsActive())
-		IR_OnKeyboardRelease(mouse_button_2_key[btn]);
-};
-
-void CMainMenu::IR_OnMouseHold(int btn)
-{
-	if (IsActive())
-		IR_OnKeyboardHold(mouse_button_2_key[btn]);
-};
+	if (IsActive() && type == GamepadThumbstickType::Left)
+	{
+		float scaledX = position.x * 3.0f;
+		float scaledY = position.y * 3.0f;
+		m_lastLeftThumbstickValue.set(scaledX, scaledY);
+	}
+}
 
 void CMainMenu::IR_OnMouseMove(int x, int y)
 {
@@ -242,11 +247,7 @@ void CMainMenu::IR_OnMouseMove(int x, int y)
 		CDialogHolder::IR_UIOnMouseMove(x, y);
 };
 
-void CMainMenu::IR_OnMouseStop(int x, int y)
-{
-};
-
-void CMainMenu::IR_OnKeyboardPress(int dik)
+void CMainMenu::IR_OnKeyboardPress(u8 dik)
 {
 	if (IsActive())
 	{
@@ -261,17 +262,30 @@ void CMainMenu::IR_OnKeyboardPress(int dik)
 			return;
 		}
 
+		// threat PAD_A as Mouse_LButton
+		if (dik == VK_GAMEPAD_A)
+		{
+			dik = VK_LBUTTON;
+		}
+
 		CDialogHolder::IR_UIOnKeyboardPress(dik);
 	}
 }
 
-void CMainMenu::IR_OnKeyboardRelease(int dik)
+void CMainMenu::IR_OnKeyboardRelease(u8 dik)
 {
 	if (IsActive())
+	{
+		// threat PAD_A as Mouse_LButton
+		if (dik == VK_GAMEPAD_A)
+		{
+			dik = VK_LBUTTON;
+		}
 		CDialogHolder::IR_UIOnKeyboardRelease(dik);
+	}
 };
 
-void CMainMenu::IR_OnKeyboardHold(int dik)
+void CMainMenu::IR_OnKeyboardHold(u8 dik)
 {
 	if (IsActive())
 		CDialogHolder::IR_UIOnKeyboardHold(dik);
@@ -360,8 +374,14 @@ void CMainMenu::OnFrame()
 		if (b_is_16_9 != m_activatedScreenRatio)
 		{
 			ReloadUI();
-			m_startDialog->SendMessage(m_startDialog, MAIN_MENU_RELOADED, NULL);
+			m_startDialog->SendMessageToWnd(m_startDialog, MAIN_MENU_RELOADED, NULL);
 		}
+	}
+
+	// for gamepad test
+	if (m_lastLeftThumbstickValue.square_magnitude() > EPS_L)
+	{
+		CDialogHolder::IR_UIOnMouseMove((int)m_lastLeftThumbstickValue.x, (int)m_lastLeftThumbstickValue.y);
 	}
 }
 

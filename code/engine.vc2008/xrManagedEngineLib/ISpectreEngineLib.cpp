@@ -12,7 +12,7 @@ FuncNode* pCurrentNode = nullptr;
 MANAGED_ENGINE_API void xrEngineInit()
 {
 	InitSettings();
-	InitInput(false);
+	InitInput();
 	InitConsole();
 
 	pApp = xr_new<CApplication>();

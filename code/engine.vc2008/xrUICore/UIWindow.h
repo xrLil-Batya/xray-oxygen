@@ -33,8 +33,8 @@ public:
 	CUIWindow*				GetChildMouseHandler();
 
 
-	virtual bool			OnKeyboardAction			(int dik, EUIMessages keyboard_action);
-	virtual bool			OnKeyboardHold		(int dik);
+	virtual bool			OnKeyboardAction			(u8 dik, EUIMessages keyboard_action);
+	virtual bool			OnKeyboardHold		(u8 dik);
 
 	virtual bool 			OnMouseAction				(float x, float y, EUIMessages mouse_action);
 	virtual void 			OnMouseMove			();
@@ -58,13 +58,7 @@ public:
 
 			void			SetKeyboardCapture	(CUIWindow* pChildWindow, bool capture_status);
 
-	//обработка сообщений не предусмотреных стандартными обработчиками
-	//ф-ция должна переопределяться
-	//pWnd - указатель на окно, которое послало сообщение
-	//pData - указатель на дополнительные данные, которые могут понадобиться
-	virtual void			SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
-	
-	
+	virtual void			SendMessageToWnd	(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
 	virtual void			Enable				(bool status)									{m_bIsEnabled=status;}
 			bool			IsEnabled			()												{return m_bIsEnabled;}

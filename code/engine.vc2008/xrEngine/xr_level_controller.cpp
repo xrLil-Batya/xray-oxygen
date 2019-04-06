@@ -1,5 +1,4 @@
 ﻿#include "stdafx.h"
-#include <dinput.h>
 #include "xr_ioconsole.h"
 #include "xr_input.h"
 #include "xr_ioc_cmd.h"
@@ -83,71 +82,73 @@ _action  actions[] = {
 };
 
 _keyboard keyboards[] = {
-	{ "kESCAPE",	 	DIK_ESCAPE		},	{ "k1",				DIK_1			},
-	{ "k2",				DIK_2			},	{ "k3",				DIK_3			},
-	{ "k4",				DIK_4			},	{ "k5",				DIK_5			},
-	{ "k6",				DIK_6			},	{ "k7",				DIK_7			},
-	{ "k8",				DIK_8			},	{ "k9",				DIK_9			},
-	{ "k0",				DIK_0			},	{ "kMINUS",			DIK_MINUS		},
-	{ "kEQUALS",		DIK_EQUALS		},	{ "kBACK",			DIK_BACK		},
-	{ "kTAB",			DIK_TAB 		},	{ "kQ",				DIK_Q			},
-	{ "kW",				DIK_W			},	{ "kE",				DIK_E			},
-	{ "kR",				DIK_R			},	{ "kT",				DIK_T			},
-	{ "kY",				DIK_Y			},	{ "kU",				DIK_U			},
-	{ "kI",				DIK_I			},	{ "kO",				DIK_O			},
-	{ "kP",				DIK_P			},	{ "kLBRACKET",		DIK_LBRACKET	},
-	{ "kRBRACKET",		DIK_RBRACKET	},	{ "kRETURN",		DIK_RETURN		},
-	{ "kLCONTROL",		DIK_LCONTROL	},	{ "kA",				DIK_A			},
-	{ "kS",				DIK_S			},	{ "kD",				DIK_D			},
-	{ "kF",				DIK_F			},	{ "kG",				DIK_G			},
-	{ "kH",				DIK_H			},	{ "kJ",				DIK_J			},
-	{ "kK",				DIK_K			},	{ "kL",				DIK_L			},
-	{ "kSEMICOLON",		DIK_SEMICOLON	},	{ "kAPOSTROPHE",	DIK_APOSTROPHE	},
-	{ "kGRAVE",			DIK_GRAVE		},	{ "kLSHIFT",	 	DIK_LSHIFT		},
-	{ "kBACKSLASH",		DIK_BACKSLASH	},	{ "kZ",				DIK_Z			},
-	{ "kX",				DIK_X			},	{ "kC",				DIK_C			},
-	{ "kV",				DIK_V			},	{ "kB",				DIK_B			},
-	{ "kN",				DIK_N			},	{ "kM",				DIK_M			},
-	{ "kCOMMA",			DIK_COMMA		},	{ "kPERIOD",		DIK_PERIOD		},
-	{ "kSLASH",			DIK_SLASH		},	{ "kRSHIFT",		DIK_RSHIFT		},
-	{ "kMULTIPLY",		DIK_MULTIPLY	},	{ "kLMENU",			DIK_LMENU		},
-	{ "kSPACE",			DIK_SPACE		},	{ "kCAPITAL",		DIK_CAPITAL		},
-	{ "kF1",			DIK_F1			},	{ "kF2",			DIK_F2			},
-	{ "kF3",			DIK_F3			},	{ "kF4",			DIK_F4			},
-	{ "kF5",			DIK_F5			},	{ "kF6",			DIK_F6			},
-	{ "kF7",			DIK_F7			},	{ "kF8",			DIK_F8			},
-	{ "kF9",			DIK_F9			},	{ "kF10",			DIK_F10			},
-	{ "kNUMLOCK",		DIK_NUMLOCK		},	{ "kSCROLL",		DIK_SCROLL		},
-	{ "kNUMPAD7",		DIK_NUMPAD7		},	{ "kNUMPAD8",		DIK_NUMPAD8		},
-	{ "kNUMPAD9",		DIK_NUMPAD9		},	{ "kSUBTRACT",		DIK_SUBTRACT	},
-	{ "kNUMPAD4",		DIK_NUMPAD4		},	{ "kNUMPAD5",		DIK_NUMPAD5		},
-	{ "kNUMPAD6",		DIK_NUMPAD6		},	{ "kADD",			DIK_ADD			},
-	{ "kNUMPAD1",		DIK_NUMPAD1		},	{ "kNUMPAD2",		DIK_NUMPAD2		},
-	{ "kNUMPAD3",		DIK_NUMPAD3		},	{ "kNUMPAD0",		DIK_NUMPAD0		},
-	{ "kDECIMAL",		DIK_DECIMAL		},	{ "kF11",			DIK_F11			},
-	{ "kF12",			DIK_F12			},	{ "kF13",			DIK_F13			},
-	{ "kF14",			DIK_F14			},	{ "kF15",			DIK_F15			},
-	{ "kKANA",			DIK_KANA		},	{ "kCONVERT",		DIK_CONVERT		},
-	{ "kNOCONVERT",		DIK_NOCONVERT	},	{ "kYEN",			DIK_YEN			},
-	{ "kNUMPADEQUALS",	DIK_NUMPADEQUALS},	{ "kCIRCUMFLEX",	DIK_CIRCUMFLEX	},
-	{ "kAT",			DIK_AT			},	{ "kCOLON",			DIK_COLON		},
-	{ "kUNDERLINE",		DIK_UNDERLINE	},	{ "kKANJI",			DIK_KANJI		},
-	{ "kSTOP",			DIK_STOP		},	{ "kAX",			DIK_AX			},
-	{ "kUNLABELED",		DIK_UNLABELED	},	{ "kNUMPADENTER",	DIK_NUMPADENTER	},
-	{ "kRCONTROL",		DIK_RCONTROL	},	{ "kNUMPADCOMMA",	DIK_NUMPADCOMMA	},
-	{ "kDIVIDE",		DIK_DIVIDE		},	{ "kSYSRQ",			DIK_SYSRQ		},
-	{ "kRMENU",			DIK_RMENU		},	{ "kHOME",			DIK_HOME		},
-	{ "kUP",			DIK_UP			},	{ "kPRIOR",			DIK_PRIOR		},
-	{ "kLEFT",			DIK_LEFT		},	{ "kRIGHT",			DIK_RIGHT		},
-	{ "kEND",			DIK_END			},	{ "kDOWN",			DIK_DOWN		},
-	{ "kNEXT",			DIK_NEXT		},	{ "kINSERT",		DIK_INSERT		},
-	{ "kDELETE",		DIK_DELETE		},	{ "kLWIN",			DIK_LWIN		},
-	{ "kRWIN",			DIK_RWIN		},	{ "kAPPS",			DIK_APPS		},
-	{ "kPAUSE",			DIK_PAUSE		},	{ "mouse1",			MOUSE_1			},
-	{ "mouse2",			MOUSE_2			},	{ "mouse3",			MOUSE_3			},
-	{ "mouse4",			MOUSE_4			},	{ "mouse5",			MOUSE_5			},
-	{ "mouse6",			MOUSE_6			},	{ "mouse7",			MOUSE_7			},
-	{ "mouse8",			MOUSE_8			},	{ NULL, 			0				}
+	{ "kESCAPE",	 	VK_ESCAPE		},	{ "k1",				VK_1			},
+	{ "k2",				VK_2			},	{ "k3",				VK_3			},
+	{ "k4",				VK_4			},	{ "k5",				VK_5			},
+	{ "k6",				VK_6			},	{ "k7",				VK_7			},
+	{ "k8",				VK_8			},	{ "k9",				VK_9			},
+	{ "k0",				VK_0			},	{ "kMINUS",			VK_OEM_MINUS	},
+	{ "kEQUALS",		VK_OEM_PLUS		},	{ "kBACK",			VK_BACK			},
+	{ "kTAB",			VK_TAB 			},	{ "kQ",				VK_Q			},
+	{ "kW",				VK_W			},	{ "kE",				VK_E			},
+	{ "kR",				VK_R			},	{ "kT",				VK_T			},
+	{ "kY",				VK_Y			},	{ "kU",				VK_U			},
+	{ "kI",				VK_I			},	{ "kO",				VK_O			},
+	{ "kP",				VK_P			},	{ "kLBRACKET",		VK_OEM_4		},
+	{ "kRBRACKET",		VK_OEM_6		},	{ "kRETURN",		VK_RETURN		},
+	{ "kLCONTROL",		VK_CONTROL		},	{ "kA",				VK_A			},
+	{ "kS",				VK_S			},	{ "kD",				VK_D			},
+	{ "kF",				VK_F			},	{ "kG",				VK_G			},
+	{ "kH",				VK_H			},	{ "kJ",				VK_J			},
+	{ "kK",				VK_K			},	{ "kL",				VK_L			},
+	{ "kSEMICOLON",		VK_OEM_1		},	{ "kAPOSTROPHE",	VK_OEM_3		},
+	{ "kGRAVE",			VK_OEM_3		},	{ "kLSHIFT",	 	VK_SHIFT		},
+	{ "kBACKSLASH",		VK_OEM_5		},	{ "kZ",				VK_Z			},
+	{ "kX",				VK_X			},	{ "kC",				VK_C			},
+	{ "kV",				VK_V			},	{ "kB",				VK_B			},
+	{ "kN",				VK_N			},	{ "kM",				VK_M			},
+	{ "kCOMMA",			VK_OEM_COMMA	},	{ "kPERIOD",		VK_OEM_PERIOD	},
+	{ "kSLASH",			VK_OEM_2		},	{ "kRSHIFT",		VK_RSHIFT		},
+	{ "kMULTIPLY",		VK_MULTIPLY		},	{ "kLMENU",			VK_LMENU		},
+	{ "kSPACE",			VK_SPACE		},	{ "kCAPITAL",		VK_CAPITAL		},
+	{ "kF1",			VK_F1			},	{ "kF2",			VK_F2			},
+	{ "kF3",			VK_F3			},	{ "kF4",			VK_F4			},
+	{ "kF5",			VK_F5			},	{ "kF6",			VK_F6			},
+	{ "kF7",			VK_F7			},	{ "kF8",			VK_F8			},
+	{ "kF9",			VK_F9			},	{ "kF10",			VK_F10			},
+	{ "kNUMLOCK",		VK_NUMLOCK		},	{ "kSCROLL",		VK_SCROLL		},
+	{ "kNUMPAD7",		VK_NUMPAD7		},	{ "kNUMPAD8",		VK_NUMPAD8		},
+	{ "kNUMPAD9",		VK_NUMPAD9		},	{ "kSUBTRACT",		VK_SUBTRACT	},
+	{ "kNUMPAD4",		VK_NUMPAD4		},	{ "kNUMPAD5",		VK_NUMPAD5		},
+	{ "kNUMPAD6",		VK_NUMPAD6		},	{ "kADD",			VK_ADD			},
+	{ "kNUMPAD1",		VK_NUMPAD1		},	{ "kNUMPAD2",		VK_NUMPAD2		},
+	{ "kNUMPAD3",		VK_NUMPAD3		},	{ "kNUMPAD0",		VK_NUMPAD0		},
+	{ "kDECIMAL",		VK_DECIMAL		},	{ "kF11",			VK_F11			},
+	{ "kF12",			VK_F12			},	{ "kF13",			VK_F13			},
+	{ "kF14",			VK_F14			},	{ "kF15",			VK_F15			},
+	{ "kKANA",			VK_KANA			},	{ "kCONVERT",		VK_CONVERT		},
+	{ "kNOCONVERT",		VK_NONCONVERT	},
+	{ "kRCONTROL",		VK_RCONTROL		},	
+	{ "kDIVIDE",		VK_DIVIDE		},	
+	{ "kRMENU",			VK_RMENU		},	{ "kHOME",			VK_HOME			},
+	{ "kUP",			VK_UP			},	{ "kPRIOR",			VK_PRIOR		},
+	{ "kLEFT",			VK_LEFT			},	{ "kRIGHT",			VK_RIGHT		},
+	{ "kEND",			VK_END			},	{ "kDOWN",			VK_DOWN			},
+	{ "kNEXT",			VK_NEXT			},	{ "kINSERT",		VK_INSERT		},
+	{ "kDELETE",		VK_DELETE		},	{ "kLWIN",			VK_LWIN			},
+	{ "kRWIN",			VK_RWIN			},	{ "kAPPS",			VK_APPS			},
+	{ "kPAUSE",			VK_PAUSE		},	{ "mouse1",			VK_LBUTTON		},
+	{ "mouse2",			VK_RBUTTON		},	{ "mouse3",			VK_MBUTTON		},
+	{ "mouse4",			VK_XBUTTON1		},	{ "mouse5",			VK_XBUTTON2		},
+	{ "kPAD_A",			VK_GAMEPAD_A	},  { "kPAD_B",			VK_GAMEPAD_B	},
+	{ "kPAD_X",			VK_GAMEPAD_X	},  { "kPAD_Y",			VK_GAMEPAD_Y	},
+	{ "kPAD_TRG_L",		VK_GAMEPAD_LEFT_TRIGGER	},  { "kPAD_TRG_R",	VK_GAMEPAD_RIGHT_TRIGGER	},
+	{ "kPAD_SHL_L",		VK_GAMEPAD_LEFT_SHOULDER},  { "kPAD_SHL_R",	VK_GAMEPAD_RIGHT_SHOULDER	},
+	{ "kPAD_DPAD_UP",	VK_GAMEPAD_DPAD_UP	},	{ "kPAD_DPAD_DOWN",	VK_GAMEPAD_DPAD_DOWN	},
+	{ "kPAD_DPAD_LEFT",	VK_GAMEPAD_DPAD_LEFT},	{ "kPAD_DPAD_RIGHT",VK_GAMEPAD_DPAD_RIGHT	},
+	{ "kPAD_MENU",		VK_GAMEPAD_MENU },	{ "kPAD_VIEW",		VK_GAMEPAD_VIEW	},
+	{ "kPAD_THSTK_L",	VK_GAMEPAD_LEFT_THUMBSTICK_BUTTON },  { "kPAD_THSTK_R",	VK_GAMEPAD_RIGHT_THUMBSTICK_BUTTON	},
+	{ NULL, 			0				}
 };
 
 void initialize_bindings()
@@ -184,13 +185,13 @@ void initialize_bindings()
 void remap_keys()
 {
 	int idx = 0;
-	string128 buff;
+	string64 buff;
 	while (keyboards[idx].key_name)
 	{
 		buff[0] = 0;
 		_keyboard& kb = keyboards[idx];
 
-		bool res = pInput->get_dik_name(kb.dik, buff, sizeof(buff));
+		bool res = pInput->get_VK_name(kb.dik, buff, sizeof(buff));
 		kb.key_local_name = res ? buff : kb.key_name;
 
 		++idx;
@@ -233,14 +234,14 @@ _action* action_name_to_ptr(LPCSTR _name)
 	return nullptr;
 }
 
-LPCSTR	dik_to_keyname(int _dik)
+LPCSTR	VK_to_keyname(u8 _dik)
 {
-	_keyboard* kb = dik_to_ptr(_dik, true);
+	_keyboard* kb = VK_to_ptr(_dik, true);
 
 	return kb ? kb->key_name : nullptr;
 }
 
-_keyboard* dik_to_ptr(int _dik, bool bSafe)
+_keyboard* VK_to_ptr(u8 _dik, bool bSafe)
 {
 	int idx = 0;
 	while (keyboards[idx].key_name)
@@ -257,7 +258,7 @@ _keyboard* dik_to_ptr(int _dik, bool bSafe)
 	return nullptr;
 }
 
-int	keyname_to_dik (LPCSTR _name)
+u8 keyname_to_dik(LPCSTR _name)
 {
 	_keyboard* _kb = keyname_to_ptr(_name);
 	return _kb->dik;
@@ -278,7 +279,7 @@ _keyboard*	keyname_to_ptr(LPCSTR _name)
 	return nullptr;
 }
 
-bool is_binded(EGameActions _action_id, int _dik)
+bool is_binded(EGameActions _action_id, u8 _dik)
 {
 	_binding* pbinding = &g_key_bindings[_action_id];
 	if (pbinding->m_keyboard[0] && pbinding->m_keyboard[0]->dik == _dik)
@@ -310,16 +311,16 @@ int get_action_dik(EGameActions _action_id, int idx)
 	return 0;
 }
 
-EGameActions get_binded_action(int _dik)
+EGameActions get_binded_action(u8 dik)
 {
 	for (_binding & g_key_binding : g_key_bindings)
 	{
 		_binding* binding = &g_key_binding;
 
-		if (binding->m_keyboard[0] && binding->m_keyboard[0]->dik == _dik)
+		if (binding->m_keyboard[0] && binding->m_keyboard[0]->dik == dik)
 			return binding->m_action->id;
 
-		if (binding->m_keyboard[1] && binding->m_keyboard[1]->dik == _dik)
+		if (binding->m_keyboard[1] && binding->m_keyboard[1]->dik == dik)
 			return binding->m_action->id;
 	}
 
@@ -551,7 +552,7 @@ public:
 		_GetItems(args, 0, cnt - 1, console_command, ' ');
 		_GetItem(args, cnt - 1, key, ' ');
 
-		int dik = keyname_to_dik(key);
+		u8 dik = keyname_to_dik(key);
 		bindConsoleCmds.bind(dik, console_command);
 	}
 
@@ -572,20 +573,20 @@ public:
 
 	virtual void Execute(LPCSTR args)
 	{
-		int _dik = keyname_to_dik(args);
+		u8 _dik = keyname_to_dik(args);
 		bindConsoleCmds.unbind(_dik);
 	}
 };
 
-void ConsoleBindCmds::bind(int dik, LPCSTR N)
+void ConsoleBindCmds::bind(u8 dik, LPCSTR N)
 {
 	_conCmd& c = m_bindConsoleCmds[dik];
 	c.cmd = N;
 }
 
-void ConsoleBindCmds::unbind(int dik)
+void ConsoleBindCmds::unbind(u8 dik)
 {
-	xr_map<int, _conCmd>::iterator it = m_bindConsoleCmds.find(dik);
+	xr_map<u8, _conCmd>::iterator it = m_bindConsoleCmds.find(dik);
 	if (it == m_bindConsoleCmds.end())
 		return;
 
@@ -597,9 +598,9 @@ void ConsoleBindCmds::clear()
 	m_bindConsoleCmds.clear();
 }
 
-bool ConsoleBindCmds::execute(int dik)
+bool ConsoleBindCmds::execute(u8 dik)
 {
-	xr_map<int, _conCmd>::iterator it = m_bindConsoleCmds.find(dik);
+	xr_map<u8, _conCmd>::iterator it = m_bindConsoleCmds.find(dik);
 	if (it == m_bindConsoleCmds.end())
 		return false;
 
@@ -609,15 +610,14 @@ bool ConsoleBindCmds::execute(int dik)
 
 void ConsoleBindCmds::save(IWriter* F)
 {
-	xr_map<int, _conCmd>::iterator it = m_bindConsoleCmds.begin();
+	xr_map<u8, _conCmd>::iterator it = m_bindConsoleCmds.begin();
 
 	for (; it != m_bindConsoleCmds.end(); ++it)
 	{
-		LPCSTR keyname = dik_to_keyname(it->first);
+		LPCSTR keyname = VK_to_keyname(it->first);
 		F->w_printf("bind_console %s %s\n", *it->second.cmd, keyname);
 	}
 }
-
 
 void CCC_RegisterInput()
 {
@@ -633,4 +633,230 @@ void CCC_RegisterInput()
 	CMD1(CCC_BindList,			"bind_list"				);
 	CMD1(CCC_BindConsoleCmd,	"bind_console"			);
 	CMD1(CCC_UnBindConsoleCmd,	"unbind_console"		);
+};
+
+#define DECLARE_KEY_ENTRY(keyName) { (u8)keyName, xr_string(#keyName)},
+
+const xr_map<u8, xr_string> KeyNamesTable =
+{
+	{VK_LBUTTON, "LMouse"},
+	{VK_RBUTTON, "RMouse"},
+	DECLARE_KEY_ENTRY(VK_CANCEL)
+	{VK_MBUTTON,  "MMouse"},
+	{VK_XBUTTON1, "Mouse3"},
+	{VK_XBUTTON2, "Mouse4"},
+	DECLARE_KEY_ENTRY(VK_BACK)
+	{VK_TAB,	  "Tab"},
+	DECLARE_KEY_ENTRY(VK_CLEAR)
+	{VK_RETURN,  "Enter"},
+	{VK_SHIFT,   "Shift"},
+	{VK_CONTROL, "Ctrl"},
+	DECLARE_KEY_ENTRY(VK_MENU)
+	DECLARE_KEY_ENTRY(VK_PAUSE)
+	{VK_CAPITAL, "Caps Lock"},
+	DECLARE_KEY_ENTRY(VK_KANA)
+	DECLARE_KEY_ENTRY(VK_HANGEUL)
+	DECLARE_KEY_ENTRY(VK_HANGUL)
+	DECLARE_KEY_ENTRY(VK_JUNJA)
+	DECLARE_KEY_ENTRY(VK_FINAL)
+	DECLARE_KEY_ENTRY(VK_HANJA)
+	DECLARE_KEY_ENTRY(VK_KANJI)
+	{VK_ESCAPE, "Esc"},
+	DECLARE_KEY_ENTRY(VK_CONVERT)
+	DECLARE_KEY_ENTRY(VK_NONCONVERT)
+	DECLARE_KEY_ENTRY(VK_ACCEPT)
+	DECLARE_KEY_ENTRY(VK_MODECHANGE)
+	{VK_SPACE, "Space"},
+	DECLARE_KEY_ENTRY(VK_PRIOR)
+	DECLARE_KEY_ENTRY(VK_NEXT)
+	DECLARE_KEY_ENTRY(VK_END)
+	DECLARE_KEY_ENTRY(VK_HOME)
+	{VK_LEFT,	"Left"},
+	{VK_UP,		"Up"},
+	{VK_RIGHT,	"Right"},
+	{VK_DOWN,	"Down"},
+	DECLARE_KEY_ENTRY(VK_SELECT)
+	DECLARE_KEY_ENTRY(VK_PRINT)
+	DECLARE_KEY_ENTRY(VK_EXECUTE)
+	DECLARE_KEY_ENTRY(VK_SNAPSHOT)
+	DECLARE_KEY_ENTRY(VK_INSERT)
+	DECLARE_KEY_ENTRY(VK_DELETE)
+	DECLARE_KEY_ENTRY(VK_HELP)
+	{VK_0, "0"},
+	{VK_1, "1"},
+	{VK_2, "2"},
+	{VK_3, "3"},
+	{VK_4, "4"},
+	{VK_5, "5"},
+	{VK_6, "6"},
+	{VK_7, "7"},
+	{VK_8, "8"},
+	{VK_9, "9"},
+	{VK_A, "A"},
+	{VK_B, "B"},
+	{VK_C, "C"},
+	{VK_D, "D"},
+	{VK_E, "E"},
+	{VK_F, "F"},
+	{VK_G, "G"},
+	{VK_H, "H"},
+	{VK_I, "I"},
+	{VK_J, "J"},
+	{VK_K, "K"},
+	{VK_L, "L"},
+	{VK_M, "M"},
+	{VK_N, "N"},
+	{VK_O, "O"},
+	{VK_P, "P"},
+	{VK_Q, "Q"},
+	{VK_R, "R"},
+	{VK_S, "S"},
+	{VK_T, "T"},
+	{VK_U, "U"},
+	{VK_V, "V"},
+	{VK_W, "W"},
+	{VK_X, "X"},
+	{VK_Y, "Y"},
+	{VK_Z, "Z"},
+	DECLARE_KEY_ENTRY(VK_LWIN)
+	DECLARE_KEY_ENTRY(VK_RWIN)
+	DECLARE_KEY_ENTRY(VK_APPS)
+	DECLARE_KEY_ENTRY(VK_SLEEP)
+	DECLARE_KEY_ENTRY(VK_NUMPAD0)
+	DECLARE_KEY_ENTRY(VK_NUMPAD1)
+	DECLARE_KEY_ENTRY(VK_NUMPAD2)
+	DECLARE_KEY_ENTRY(VK_NUMPAD3)
+	DECLARE_KEY_ENTRY(VK_NUMPAD4)
+	DECLARE_KEY_ENTRY(VK_NUMPAD5)
+	DECLARE_KEY_ENTRY(VK_NUMPAD6)
+	DECLARE_KEY_ENTRY(VK_NUMPAD7)
+	DECLARE_KEY_ENTRY(VK_NUMPAD8)
+	DECLARE_KEY_ENTRY(VK_NUMPAD9)
+	DECLARE_KEY_ENTRY(VK_MULTIPLY)
+	DECLARE_KEY_ENTRY(VK_ADD)
+	DECLARE_KEY_ENTRY(VK_SEPARATOR)
+	DECLARE_KEY_ENTRY(VK_SUBTRACT)
+	DECLARE_KEY_ENTRY(VK_DECIMAL)
+	DECLARE_KEY_ENTRY(VK_DIVIDE)
+	{VK_F1,  "F1"},
+	{VK_F2,  "F2"},
+	{VK_F3,  "F3"},
+	{VK_F4,  "F4"},
+	{VK_F5,  "F5"},
+	{VK_F6,  "F6"},
+	{VK_F7,  "F7"},
+	{VK_F8,  "F8"},
+	{VK_F9,  "F9"},
+	{VK_F10, "F10"},
+	{VK_F11, "F11"},
+	{VK_F12, "F12"},
+	{VK_F13, "F13"},
+	{VK_F14, "F14"},
+	{VK_F15, "F15"},
+	{VK_F16, "F16"},
+	{VK_F17, "F17"},
+	{VK_F18, "F18"},
+	{VK_F19, "F19"},
+	{VK_F20, "F20"},
+	{VK_F21, "F21"},
+	{VK_F22, "F22"},
+	{VK_F23, "F23"},
+	{VK_F24, "F24"},
+	DECLARE_KEY_ENTRY(VK_NUMLOCK)
+	DECLARE_KEY_ENTRY(VK_SCROLL)
+	DECLARE_KEY_ENTRY(VK_OEM_NEC_EQUAL)
+	DECLARE_KEY_ENTRY(VK_OEM_FJ_JISHO)
+	DECLARE_KEY_ENTRY(VK_OEM_FJ_MASSHOU)
+	DECLARE_KEY_ENTRY(VK_OEM_FJ_TOUROKU)
+	DECLARE_KEY_ENTRY(VK_OEM_FJ_LOYA)
+	DECLARE_KEY_ENTRY(VK_OEM_FJ_ROYA)
+	{VK_LSHIFT,   "Left Shift"},
+	{VK_RSHIFT,   "Right Shift"},
+	{VK_LCONTROL, "Left Ctrl"},
+	{VK_RCONTROL, "Right Ctrl"},
+	DECLARE_KEY_ENTRY(VK_LMENU)
+	DECLARE_KEY_ENTRY(VK_RMENU)
+	DECLARE_KEY_ENTRY(VK_BROWSER_BACK)
+	DECLARE_KEY_ENTRY(VK_BROWSER_FORWARD)
+	DECLARE_KEY_ENTRY(VK_BROWSER_REFRESH)
+	DECLARE_KEY_ENTRY(VK_BROWSER_STOP)
+	DECLARE_KEY_ENTRY(VK_BROWSER_SEARCH)
+	DECLARE_KEY_ENTRY(VK_BROWSER_FAVORITES)
+	DECLARE_KEY_ENTRY(VK_BROWSER_HOME)
+	DECLARE_KEY_ENTRY(VK_VOLUME_MUTE)
+	DECLARE_KEY_ENTRY(VK_VOLUME_DOWN)
+	DECLARE_KEY_ENTRY(VK_VOLUME_UP)
+	DECLARE_KEY_ENTRY(VK_MEDIA_NEXT_TRACK)
+	DECLARE_KEY_ENTRY(VK_MEDIA_PREV_TRACK)
+	DECLARE_KEY_ENTRY(VK_MEDIA_STOP)
+	DECLARE_KEY_ENTRY(VK_MEDIA_PLAY_PAUSE)
+	DECLARE_KEY_ENTRY(VK_LAUNCH_MAIL)
+	DECLARE_KEY_ENTRY(VK_LAUNCH_MEDIA_SELECT)
+	DECLARE_KEY_ENTRY(VK_LAUNCH_APP1)
+	DECLARE_KEY_ENTRY(VK_LAUNCH_APP2)
+	DECLARE_KEY_ENTRY(VK_OEM_1)
+	DECLARE_KEY_ENTRY(VK_OEM_PLUS)
+	DECLARE_KEY_ENTRY(VK_OEM_COMMA)
+	DECLARE_KEY_ENTRY(VK_OEM_MINUS)
+	DECLARE_KEY_ENTRY(VK_OEM_PERIOD)
+	DECLARE_KEY_ENTRY(VK_OEM_2)
+	DECLARE_KEY_ENTRY(VK_OEM_3)
+	{VK_GAMEPAD_A, "PAD A"},
+	{VK_GAMEPAD_B, "PAD B"},
+	{VK_GAMEPAD_X, "PAD X"},
+	{VK_GAMEPAD_Y, "PAD Y"},
+	{VK_GAMEPAD_RIGHT_SHOULDER, "PAD SHLD R"},
+	{VK_GAMEPAD_LEFT_SHOULDER,  "PAD SHLD L"},
+	{VK_GAMEPAD_LEFT_TRIGGER, "PAD TRG L"},
+	{VK_GAMEPAD_RIGHT_TRIGGER,"PAD TRG R"},
+	{VK_GAMEPAD_DPAD_UP, "PAD DPAD UP"},
+	{VK_GAMEPAD_DPAD_DOWN, "PAD DPAD DOWN"},
+	{VK_GAMEPAD_DPAD_LEFT, "PAD DPAD LEFT"},
+	{VK_GAMEPAD_DPAD_RIGHT, "PAD DPAD RIGHT"},
+	{VK_GAMEPAD_MENU, "PAD MENU"},
+	{VK_GAMEPAD_VIEW, "PAD VIEW"},
+	{VK_GAMEPAD_LEFT_THUMBSTICK_BUTTON, "PAD THUMB LEFT"},
+	{VK_GAMEPAD_RIGHT_THUMBSTICK_BUTTON, "PAD THUMB RIGHT"},
+	DECLARE_KEY_ENTRY(VK_GAMEPAD_LEFT_THUMBSTICK_UP)
+	DECLARE_KEY_ENTRY(VK_GAMEPAD_LEFT_THUMBSTICK_DOWN)
+	DECLARE_KEY_ENTRY(VK_GAMEPAD_LEFT_THUMBSTICK_RIGHT)
+	DECLARE_KEY_ENTRY(VK_GAMEPAD_LEFT_THUMBSTICK_LEFT)
+	DECLARE_KEY_ENTRY(VK_GAMEPAD_RIGHT_THUMBSTICK_UP)
+	DECLARE_KEY_ENTRY(VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN)
+	DECLARE_KEY_ENTRY(VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT)
+	DECLARE_KEY_ENTRY(VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT)
+	DECLARE_KEY_ENTRY(VK_OEM_4)
+	DECLARE_KEY_ENTRY(VK_OEM_5)
+	DECLARE_KEY_ENTRY(VK_OEM_6)
+	DECLARE_KEY_ENTRY(VK_OEM_7)
+	DECLARE_KEY_ENTRY(VK_OEM_8)
+	DECLARE_KEY_ENTRY(VK_OEM_AX)
+	DECLARE_KEY_ENTRY(VK_OEM_102)
+	DECLARE_KEY_ENTRY(VK_ICO_HELP)
+	DECLARE_KEY_ENTRY(VK_ICO_00)
+	DECLARE_KEY_ENTRY(VK_PROCESSKEY)
+	DECLARE_KEY_ENTRY(VK_ICO_CLEAR)
+	DECLARE_KEY_ENTRY(VK_PACKET)
+	DECLARE_KEY_ENTRY(VK_OEM_RESET)
+	DECLARE_KEY_ENTRY(VK_OEM_JUMP)
+	DECLARE_KEY_ENTRY(VK_OEM_PA1)
+	DECLARE_KEY_ENTRY(VK_OEM_PA2)
+	DECLARE_KEY_ENTRY(VK_OEM_PA3)
+	DECLARE_KEY_ENTRY(VK_OEM_WSCTRL)
+	DECLARE_KEY_ENTRY(VK_OEM_CUSEL)
+	DECLARE_KEY_ENTRY(VK_OEM_ATTN)
+	DECLARE_KEY_ENTRY(VK_OEM_FINISH)
+	DECLARE_KEY_ENTRY(VK_OEM_COPY)
+	DECLARE_KEY_ENTRY(VK_OEM_AUTO)
+	DECLARE_KEY_ENTRY(VK_OEM_ENLW)
+	DECLARE_KEY_ENTRY(VK_OEM_BACKTAB)
+	DECLARE_KEY_ENTRY(VK_ATTN)
+	DECLARE_KEY_ENTRY(VK_CRSEL)
+	DECLARE_KEY_ENTRY(VK_EXSEL)
+	DECLARE_KEY_ENTRY(VK_EREOF)
+	DECLARE_KEY_ENTRY(VK_PLAY)
+	DECLARE_KEY_ENTRY(VK_ZOOM)
+	DECLARE_KEY_ENTRY(VK_NONAME)
+	DECLARE_KEY_ENTRY(VK_PA1)
+	DECLARE_KEY_ENTRY(VK_OEM_CLEAR)
 };

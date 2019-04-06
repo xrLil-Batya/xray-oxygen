@@ -271,15 +271,18 @@
     <Filter Include="Game API\Environment\Hemisphere">
       <UniqueIdentifier>{6deaf446-9248-4ae4-93cc-3d7855bfcbed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\CPU\AMD">
+      <UniqueIdentifier>{8ed1a310-6252-4a03-811e-732ea1408fc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\CPU\NVIDIA">
+      <UniqueIdentifier>{2a2026a0-f063-4565-8dbb-0cecec9ee7bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
       <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="defines.h">
-      <Filter>Kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="mp_logging.h">
       <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
@@ -678,6 +681,12 @@
     <ClInclude Include="profiler.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="AMDGPUTransferee.h">
+      <Filter>Engine\CPU\AMD</Filter>
+    </ClInclude>
+    <ClInclude Include="NvGPUTransferee.h">
+      <Filter>Engine\CPU\NVIDIA</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -1061,6 +1070,12 @@
     <ClCompile Include="profiler.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="AMDGPUTransferee.cpp">
+      <Filter>Engine\CPU\AMD</Filter>
+    </ClCompile>
+    <ClCompile Include="NvGPUTransferee.cpp">
+      <Filter>Engine\CPU\NVIDIA</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="TODO.txt">
@@ -1069,10 +1084,6 @@
     <None Include="Effects description.txt">
       <Filter>Engine</Filter>
     </None>
-    <None Include="OffSetOfWrapper.inl">
-      <Filter>Interfaces\Input</Filter>
-    </None>
-    <None Include="features.txt" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\xrCore.natvis">

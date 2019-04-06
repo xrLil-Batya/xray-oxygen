@@ -405,6 +405,46 @@ void CRenderDevice::BeginToWork()
 	m_pRender->ClearTarget();
 }
 
+void CRenderDevice::GetXrWindowRect(RECT& OutWindowRect, bool bClientRect /*= false*/) const
+{
+	if (m_hWnd != NULL)
+	{
+		if (bClientRect)
+		{
+			GetClientRect(m_hWnd, &OutWindowRect);
+		}
+		else
+		{
+			GetWindowRect(m_hWnd, &OutWindowRect);
+		}
+	}
+	else
+	{
+		ZeroMemory(&OutWindowRect, sizeof(RECT));
+	}
+}
+
+void CRenderDevice::GetXrWindowPoint(POINT& OutWindowPoint) const
+{
+	if (m_hWnd != NULL)
+	{
+		ScreenToClient(m_hWnd, &OutWindowPoint);
+	}
+	else
+	{
+		ZeroMemory(&OutWindowPoint, sizeof(POINT));
+	}
+}
+
+u64 CRenderDevice::GetXrWindowStyle() const
+{
+	if (m_hWnd == NULL)
+	{
+		return 0;
+	}
+	return GetWindowLongPtr(m_hWnd, GWL_STYLE);
+}
+
 void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 {
 	// Don't drawing wnd when slash is active
@@ -487,7 +527,6 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     }
     else
     {
-        ShowCursor(FALSE);
 		SetForegroundWindow(m_hWnd);
     }
 }
@@ -629,15 +668,6 @@ void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM lParam)
 	const BOOL fMinimized = (BOOL)HIWORD(wParam);
 	const BOOL isWndActive = (fActive != WA_INACTIVE && !fMinimized) ? TRUE : FALSE;
 	const BOOL isGameActive = ps_always_active || isWndActive;
-
-	if (!editor() && isWndActive) 
-	{
-		ShowCursor(FALSE);
-	}
-	else
-	{
-		ShowCursor(TRUE);
-	}
 
 	if (isGameActive != Device.b_is_Active)
 	{

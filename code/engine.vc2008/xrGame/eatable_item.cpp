@@ -78,15 +78,18 @@ void CEatableItem::OnH_B_Independent(bool just_before_destroy)
 	inherited::OnH_B_Independent(just_before_destroy);
 }
 
-bool CEatableItem::UseBy (CEntityAlive* entity_alive)
+bool CEatableItem::UseBy (CEntityAlive* entity_alive,bool bIgnoreParent)
 {
 	SMedicineInfluenceValues	V;
 	V.Load						(m_physic_item->cNameSect());
 
 	CInventoryOwner* IO	= smart_cast<CInventoryOwner*>(entity_alive);
 	R_ASSERT		(IO);
-	R_ASSERT		(m_pInventory==IO->m_inventory);
-	R_ASSERT		(object().H_Parent()->ID()==entity_alive->ID());
+	if (!bIgnoreParent)
+	{
+		R_ASSERT(m_pInventory == IO->m_inventory);
+		R_ASSERT(object().H_Parent()->ID() == entity_alive->ID());
+	}
 
 	entity_alive->conditions().ApplyInfluence(V, m_physic_item->cNameSect());
 
@@ -99,11 +102,6 @@ bool CEatableItem::UseBy (CEntityAlive* entity_alive)
 			entity_alive->conditions().ApplyBooster(B, m_physic_item->cNameSect());
 		}
 	}
-
-	NET_Packet				tmp_packet;
-	CGameObject::u_EventGen	(tmp_packet, GEG_PLAYER_USE_BOOSTER, entity_alive->ID());
-	tmp_packet.w_u16		(object_id());
-	Level().Send			(tmp_packet);
 
 	if(m_iPortionsNum > 0)
 		--m_iPortionsNum;

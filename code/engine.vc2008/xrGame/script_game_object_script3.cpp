@@ -228,10 +228,10 @@ class_<CScriptGameObject> script_register_game_object2(class_<CScriptGameObject>
 
 		.enum_("ACTOR_RELATIONS")
 		[
-			value("relation_attack",						int(RELATION_REGISTRY::ATTACK)),
-			value("relation_fight_help_monster",			int(RELATION_REGISTRY::FIGHT_HELP_MONSTER)),
-			value("relation_fight_help_human",				int(RELATION_REGISTRY::FIGHT_HELP_HUMAN)),
-			value("relation_kill",							int(RELATION_REGISTRY::KILL))
+			value("relation_attack",						int(SRelationRegistry::ATTACK)),
+			value("relation_fight_help_monster",			int(SRelationRegistry::FIGHT_HELP_MONSTER)),
+			value("relation_fight_help_human",				int(SRelationRegistry::FIGHT_HELP_HUMAN)),
+			value("relation_kill",							int(SRelationRegistry::KILL))
 		]
 
 		.enum_("CLSIDS")

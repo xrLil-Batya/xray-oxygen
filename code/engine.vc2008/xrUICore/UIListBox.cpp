@@ -87,16 +87,16 @@ void CUIListBox::AddExistingItem(CUIListBoxItem* item)
 	AddWindow(item, true);
 }
 
-void CUIListBox::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
+void CUIListBox::SendMessageToWnd(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	if (m_pad->IsChild(pWnd))
 	{
 		switch (msg){
 			case LIST_ITEM_SELECT:	
-				GetMessageTarget()->SendMessage(this, LIST_ITEM_SELECT, pData);
+				GetMessageTarget()->SendMessageToWnd(this, LIST_ITEM_SELECT, pData);
 				break;
 			case LIST_ITEM_CLICKED:
-				GetMessageTarget()->SendMessage(this, LIST_ITEM_CLICKED, pData);
+				GetMessageTarget()->SendMessageToWnd(this, LIST_ITEM_CLICKED, pData);
 				break;
 			case LIST_ITEM_FOCUS_RECEIVED:
 				if (m_bImmediateSelection)
@@ -105,7 +105,7 @@ void CUIListBox::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 		}		
 	}
 
-	CUIScrollView::SendMessage(pWnd, msg, pData);
+	CUIScrollView::SendMessageToWnd(pWnd, msg, pData);
 }
 
 CUIListBoxItem* CUIListBox::GetSelectedItem()

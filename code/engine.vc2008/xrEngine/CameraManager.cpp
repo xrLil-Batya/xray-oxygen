@@ -308,7 +308,7 @@ void CCameraManager::ApplyDevice(float _viewport_near)
 
 	//+SecondVP+
 	// Пересчитываем FOV для второго вьюпорта [Recalculate scene FOV for SecondVP frame]
-	if (Device.m_SecondViewport.IsSVPFrame() && !pGameAnsel->isActive)
+	if (Device.m_SecondViewport.IsSVPFrame() && !IGameAnsel::IsActive())
 	{
 		// Для второго вьюпорта FOV выставляем здесь
 		Device.fFOV *= g_pGamePersistent->m_pGShaderConstants.hud_params.y;

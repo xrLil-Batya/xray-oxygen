@@ -269,11 +269,11 @@ bool CUIWindow::OnMouseAction(float x, float y, EUIMessages mouse_action)
 		case WINDOW_MOUSE_WHEEL_UP:
 			OnMouseScroll(WINDOW_MOUSE_WHEEL_UP);	break;
 		case WINDOW_LBUTTON_DOWN:
-			if(OnMouseDown(MOUSE_1))				return true;	break;
+			if(OnMouseDown(VK_LBUTTON))				return true;	break;
 		case WINDOW_RBUTTON_DOWN:
-			if(OnMouseDown(MOUSE_2))				return true;	break;
+			if(OnMouseDown(VK_RBUTTON))				return true;	break;
 		case WINDOW_CBUTTON_DOWN:
-			if(OnMouseDown(MOUSE_3))				return true;	break;
+			if(OnMouseDown(VK_MBUTTON))				return true;	break;
 		case WINDOW_LBUTTON_DB_CLICK:
 			if (OnDbClick())						return true;	break;
 		default:
@@ -316,7 +316,7 @@ void CUIWindow::OnMouseScroll(float iDirection){
 
 bool CUIWindow::OnDbClick(){
 	if (GetMessageTarget())
-		GetMessageTarget()->SendMessage(this, WINDOW_LBUTTON_DB_CLICK);
+		GetMessageTarget()->SendMessageToWnd(this, WINDOW_LBUTTON_DB_CLICK);
 	return false;
 }
 
@@ -333,7 +333,7 @@ void CUIWindow::OnFocusReceive()
 	m_bCursorOverWindow		= true;	
 
 	if (GetMessageTarget())
-        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_RECEIVED, nullptr);
+        GetMessageTarget()->SendMessageToWnd(this, WINDOW_FOCUS_RECEIVED, nullptr);
 }
 
 void CUIWindow::OnFocusLost()
@@ -342,7 +342,7 @@ void CUIWindow::OnFocusLost()
 	m_bCursorOverWindow		= false;	
 
 	if (GetMessageTarget())
-        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_LOST, nullptr);
+        GetMessageTarget()->SendMessageToWnd(this, WINDOW_FOCUS_LOST, nullptr);
 }
 
 
@@ -361,7 +361,7 @@ void CUIWindow::SetCapture(CUIWindow *pChildWindow, bool capture_status)
 	{
 		//оповестить дочернее окно о потере фокуса мыши
 		if(nullptr!=m_pMouseCapturer)
-			m_pMouseCapturer->SendMessage(this, WINDOW_MOUSE_CAPTURE_LOST);
+			m_pMouseCapturer->SendMessageToWnd(this, WINDOW_MOUSE_CAPTURE_LOST);
 
 		m_pMouseCapturer = pChildWindow;
 	}
@@ -373,7 +373,7 @@ void CUIWindow::SetCapture(CUIWindow *pChildWindow, bool capture_status)
 
 
 //реакция на клавиатуру
-bool CUIWindow::OnKeyboardAction(int dik, EUIMessages keyboard_action)
+bool CUIWindow::OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
 {
 	bool result;
 
@@ -400,7 +400,7 @@ bool CUIWindow::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 	return false;
 }
 
-bool CUIWindow::OnKeyboardHold(int dik)
+bool CUIWindow::OnKeyboardHold(u8 dik)
 {
 	bool result;
 
@@ -435,7 +435,7 @@ void CUIWindow::SetKeyboardCapture(CUIWindow* pChildWindow, bool capture_status)
 	{
 		//оповестить дочернее окно о потере фокуса клавиатуры
 		if(m_pKeyboardCapturer)
-			m_pKeyboardCapturer->SendMessage(this, WINDOW_KEYBOARD_CAPTURE_LOST);
+			m_pKeyboardCapturer->SendMessageToWnd(this, WINDOW_KEYBOARD_CAPTURE_LOST);
 			
 		m_pKeyboardCapturer = pChildWindow;
 	}
@@ -445,13 +445,13 @@ void CUIWindow::SetKeyboardCapture(CUIWindow* pChildWindow, bool capture_status)
 
 
 //обработка сообщений 
-void CUIWindow::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
+void CUIWindow::SendMessageToWnd(CUIWindow *pWnd, s16 msg, void *pData)
 {
 	//оповестить дочерние окна
 	for(CUIWindow* it: m_ChildWndList)
 	{
 		if(it->IsEnabled())
-			it->SendMessage(pWnd,msg,pData);
+			it->SendMessageToWnd(pWnd,msg,pData);
 	}
 }
 

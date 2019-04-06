@@ -9,13 +9,67 @@
 #include "xr_object.h"
 #include "profiler.h"
 
-BOOL			g_bSheduleInProgress = FALSE;
+BOOL g_bSheduleInProgress = FALSE;
 
+volatile bool mtShedulerIsWorking = false;
+void CSheduler::mtShedulerThread(void* pSheduler)
+{
+	CSheduler* pTrySheduler = ((CSheduler*)(pSheduler));
+	while (true)
+	{
+		if (!pTrySheduler) break;
+
+		// Initialize
+		if (!mtShedulerIsWorking) continue;
+
+		pTrySheduler->internal_Registration();
+		g_bSheduleInProgress = TRUE;
+
+		// Realtime priority
+		pTrySheduler->m_processing_now = true;
+		u32	dwTime = Device.dwTimeGlobal;
+
+		for (CSheduler::Item& item : pTrySheduler->ItemsRT)
+		{
+			R_ASSERT(item.Object);
+
+#ifdef DEBUG
+			VERIFY(item.Object->dbg_startframe != Device.dwFrame);
+			item.Object->dbg_startframe = Device.dwFrame;
+#endif
+
+			if (!item.Object->shedule_Needed())
+			{
+				item.dwTimeOfLastExecute = dwTime;
+				continue;
+			}
+
+			u32	Elapsed = dwTime - item.dwTimeOfLastExecute;
+
+			item.Object->shedule_Update(Elapsed);
+			item.dwTimeOfLastExecute = dwTime;
+
+			pTrySheduler->ProcessStep();
+
+			// Finalize
+			pTrySheduler->m_processing_now = false;
+			g_bSheduleInProgress = FALSE;
+
+			pTrySheduler->internal_Registration();
+			mtShedulerIsWorking = false;
+		}
+	
+
+	}
+	
+}
 //-------------------------------------------------------------------------------------
 void CSheduler::Initialize()
 {
 	m_current_step_obj = nullptr;
 	m_processing_now = false;
+
+	//thread_spawn(mtShedulerThread, "X-Ray: Sheduler Process Steper", 0, this);
 }
 
 void CSheduler::Destroy()
@@ -200,7 +254,9 @@ void	CSheduler::Register(ISheduled* A, BOOL RT)
 
 void	CSheduler::Unregister(ISheduled* A)
 {
-	VERIFY(Registered(A));
+	//VERIFY(Registered(A));
+
+	if (!Registered(A)) return;
 
 	if (m_processing_now) {
 		if (internal_Unregister(A, A->shedule.b_RT, false))
@@ -303,7 +359,7 @@ void CSheduler::ProcessStep()
 }
 
 void CSheduler::Update()
-{
+{	
 	R_ASSERT(Device.Statistic);
 
 	// Initialize
@@ -323,7 +379,7 @@ void CSheduler::Update()
 		item.Object->dbg_startframe = Device.dwFrame;
 #endif
 
-		if (!item.Object->shedule_Needed()) 
+		if (!item.Object->shedule_Needed())
 		{
 			item.dwTimeOfLastExecute = dwTime;
 			continue;
@@ -342,4 +398,5 @@ void CSheduler::Update()
 	// Finalize
 	g_bSheduleInProgress = FALSE;
 	internal_Registration();
+
 }
