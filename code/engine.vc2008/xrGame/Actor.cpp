@@ -921,7 +921,7 @@ void CActor::shedule_Update	(u32 DT)
 	if (Level().CurrentControlEntity() == this)
 	{
 		g_cl_CheckControls		(mstate_wishful,NET_SavedAccel,NET_Jump,dt);
-		if (!pInput->iGetAsyncKeyState(VK_LMENU) || cam_active == eacFirstEye)
+		if (!pInput->iGetAsyncKeyState(VK_MENU) || cam_active == eacFirstEye)
 		g_cl_Orientate			(mstate_real,dt);
 
 		g_Orientate				(mstate_real,dt);
