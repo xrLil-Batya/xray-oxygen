@@ -26,8 +26,6 @@
 #include <functional>
 #pragma warning(pop)
 
-ClientID BroadcastCID(0xffffffff);
-
 CClient::CClient()
 {
     flags.bConnected = FALSE;
@@ -110,13 +108,13 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 	{
 		if (game->change_level(P))
 		{
-			SendBroadcast(BroadcastCID, P);
+			SendBroadcast(P);
 		}
 	}break;
 	case M_LOAD_GAME:
 	{
 		game->load_game(P);
-		SendBroadcast(BroadcastCID, P);
+		SendBroadcast(P);
 	}break;
 	case M_SAVE_PACKET:
 	{
@@ -128,19 +126,13 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 	return 0;
 }
 
-void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P)
+void xrServer::SendBroadcast(NET_Packet& P)
 {
-    if (!SV_Client)
-        return;
-    if (SV_Client->ID == exclude)
-        return;
-    if (!SV_Client->flags.bConnected)
+    if (!SV_Client || !SV_Client->flags.bConnected)
         return;
 
 	if (SV_Client->net_Accepted)
-	{
 		Level().OnMessage(P.B.data, (u32)P.B.count);
-	}
 }
 //--------------------------------------------------------------------
 CSE_Abstract*	xrServer::entity_Create		(LPCSTR name)
@@ -450,15 +442,12 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 		pAbstractE->Spawn_Write(Packet, FALSE);
 		if (pAbstractE->s_flags.is(M_SPAWN_UPDATE))
 			pAbstractE->UPDATE_Write(Packet);
-		SendBroadcast(SV_Client->ID, Packet);
 	}
 	else // Check it
 	{
 		pAbstractE->Spawn_Write(Packet, FALSE);
 		if (pAbstractE->s_flags.is(M_SPAWN_UPDATE))
 			pAbstractE->UPDATE_Write(Packet);
-		ClientID clientID; clientID.set(0);
-		SendBroadcast(clientID, Packet);
 	}
 
 	return pAbstractE;
@@ -507,7 +496,7 @@ bool xrServer::Process_event_reject(NET_Packet& P, const u32 &time, const u16 id
 
 	// Signal to everyone (including sender) then is alife started
 	if (send_message)
-		SendBroadcast(BroadcastCID, P);
+		SendBroadcast(P);
 
 	return true;
 }
@@ -583,7 +572,7 @@ void xrServer::Perform_destroy(CSE_Abstract* object)
 	P.w_u32(Device.dwTimeGlobal - 2 * NET_Latency);
 	P.w_u16(GE_DESTROY);
 	P.w_u16(object_id);
-	SendBroadcast(BroadcastCID, P);
+	SendBroadcast(P);
 }
 
 void xrServer::SLS_Clear()
@@ -657,7 +646,7 @@ void xrServer::Process_event(NET_Packet& P)
 	case GEG_PLAYER_ITEM2RUCK:
 	case GE_ADDON_ATTACH:
 	case GE_ADDON_DETACH:
-	case GE_GRENADE_EXPLODE:			SendBroadcast(BroadcastCID, P); break;
+	case GE_GRENADE_EXPLODE:			SendBroadcast(P); break;
 	case GEG_PLAYER_ACTIVATEARTEFACT: 	Process_event_activate(P, destination, P.r_u16()); break;
 	case GE_INV_ACTION: 				if (SV_Client) Level().OnMessage(P.B.data, (u32)P.B.count); break;
 	case GE_TRADE_BUY:
@@ -681,7 +670,7 @@ void xrServer::Process_event(NET_Packet& P)
 		if (0xffff != e_entity->ID_Parent) break;
 
 		// Signal to everyone (including sender)
-		SendBroadcast(BroadcastCID, P);
+		SendBroadcast(P);
 
 		// Perfrom real destroy
 		entity_Destroy(e_entity);
@@ -700,7 +689,7 @@ void xrServer::Process_event(NET_Packet& P)
 		CSE_Abstract* e_src = ID_to_entity(id_src);
 
 		if (e_src)
-			SendBroadcast(BroadcastCID, P);
+			SendBroadcast(P);
 	} break;
 	case GE_ASSIGN_KILLER:
 	{
@@ -758,7 +747,7 @@ void xrServer::Process_event(NET_Packet& P)
 			P.w_clientID(c_src->ID);
 		}
 
-		SendBroadcast(BroadcastCID, P);
+		SendBroadcast(P);
 		//////////////////////////////////////////////////////////////////////////
 		P.w_begin(M_EVENT);
 		P.w_u32(timestamp);
@@ -826,7 +815,7 @@ void xrServer::Process_event_activate(NET_Packet& P, const u16 id_parent, const 
 	if (0xffff != e_entity->ID_Parent)
 	{
 		// Signal to everyone (including sender)
-		SendBroadcast(BroadcastCID, P);
+		SendBroadcast(P);
 	}
 }
 
@@ -983,7 +972,7 @@ void xrServer::Process_event_ownership(NET_Packet& P, u16 ID)
 	e_parent->children.push_back(id_entity);
 
 	// Signal to everyone (including sender)
-	SendBroadcast(BroadcastCID, P);
+	SendBroadcast(P);
 }
 
 void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET_Packet* pEPack)
@@ -1014,7 +1003,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET
 
 	if (0xffff == parent_id && nullptr == pEventPack)
 	{
-		SendBroadcast(BroadcastCID, P);
+		SendBroadcast(P);
 	}
 	else
 	{
@@ -1039,7 +1028,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET
 
 	if (!pEPack && pEventPack)
 	{
-		SendBroadcast(BroadcastCID, *pEventPack);
+		SendBroadcast(*pEventPack);
 	}
 
 	if (!game)

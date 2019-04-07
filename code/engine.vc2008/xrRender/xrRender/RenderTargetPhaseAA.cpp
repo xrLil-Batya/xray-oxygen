@@ -136,8 +136,6 @@ void CRenderTarget::PhaseAA()
 	case DLAA: ProcessDLAA(); break;
 	}
 	
-	if (ps_r_pp_aa_use_taa)
-	{
+	if (ps_r_pp_aa_quality > 1)
 		ProcessTAA();
-	}
 }

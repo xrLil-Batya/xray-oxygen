@@ -133,7 +133,7 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 		CSE_Abstract* e_src = Level().Server->ID_to_entity(id_src);
 
 		if (e_src)
-			Level().Server->SendBroadcast(BroadcastCID, tNetPacket);
+			Level().Server->SendBroadcast(tNetPacket);
 	}
 }
 
@@ -189,10 +189,10 @@ shared_str game_sv_GameState::level_name(const shared_str &server_options) const
 	return (alife().level_name());
 }
 
-LPCSTR default_map_version	= "1.0";
-LPCSTR map_ver_string		= "ver=";
+constexpr const char* default_map_version	= "1.0";
+constexpr const char* map_ver_string		= "ver=";
 
-shared_str game_sv_GameState::parse_level_version			(const shared_str &server_options)
+shared_str game_sv_GameState::parse_level_version(const shared_str &server_options)
 {
 	const char* map_ver = strstr(server_options.c_str(), map_ver_string);
 	string128	result_version;
@@ -203,21 +203,20 @@ shared_str game_sv_GameState::parse_level_version			(const shared_str &server_op
 			strncpy_s(result_version, map_ver, strchr(map_ver, '/') - map_ver);
 		else
 			xr_strcpy(result_version, map_ver);
-	} else
-	{
-		xr_strcpy(result_version, default_map_version);
-	}
+	} 
+	else xr_strcpy(result_version, default_map_version);
+
 	return shared_str(result_version);
 }
 
-void game_sv_GameState::on_death	(CSE_Abstract *e_dest, CSE_Abstract *e_src)
+void game_sv_GameState::on_death(CSE_Abstract *e_dest, CSE_Abstract *e_src)
 {
 	CSE_ALifeCreatureAbstract	*creature = smart_cast<CSE_ALifeCreatureAbstract*>(e_dest);
 	if (!creature)
 		return;
 
-	VERIFY						(creature->get_killer_id() == ALife::_OBJECT_ID(-1));
-	creature->set_killer_id		( e_src->ID );
+	VERIFY(creature->get_killer_id() == ALife::_OBJECT_ID(-1));
+	creature->set_killer_id(e_src->ID);
 
 	if (!ai().get_alife())
 		return;
