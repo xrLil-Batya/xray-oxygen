@@ -452,7 +452,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 			pAbstractE->UPDATE_Write(Packet);
 		SendBroadcast(SV_Client->ID, Packet);
 	}
-	else
+	else // Check it
 	{
 		pAbstractE->Spawn_Write(Packet, FALSE);
 		if (pAbstractE->s_flags.is(M_SPAWN_UPDATE))
@@ -470,34 +470,32 @@ bool xrServer::Process_event_reject(NET_Packet& P, const u32 &time, const u16 id
 	CSE_Abstract*		e_parent = ID_to_entity(id_parent);
 	CSE_Abstract*		e_entity = ID_to_entity(id_entity);
 
-	VERIFY_FORMAT(e_entity, "entity not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame);
-	if (!e_entity) {
-		Msg("! ERROR on rejecting: entity not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
+	if (!e_entity)
+	{
+		Msg("[ERROR on rejecting]: entity not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
 		return false;
 	}
 
-	VERIFY_FORMAT(e_parent, "parent not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame);
-	if (!e_parent) {
-		Msg("! ERROR on rejecting: parent not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
+	if (!e_parent)
+	{
+		Msg("[ERROR on rejecting]: parent not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
 		return false;
 	}
+	else if (0xffff == e_entity->ID_Parent)
+		return false;
 
 	xr_vector<u16>& C = e_parent->children;
 	xr_vector<u16>::iterator c = std::find(C.begin(), C.end(), id_entity);
 	if (c == C.end())
 	{
-		Msg("! ERROR: SV: can't find children [%d] of parent [%d]", id_entity, e_parent);
+		Msg("[ERROR] SV: can't find children [%d] of parent [%d]", id_entity, e_parent);
 		return false;
 	}
 
-	if (0xffff == e_entity->ID_Parent)
-	{
-		return false;
-	}
 
 	if (e_entity->ID_Parent != id_parent)
 	{
-		Msg("! ERROR: e_entity->ID_Parent = [%d]  parent = [%d][%s]  entity_id = [%d]  frame = [%d]",
+		Msg("[ERROR] e_entity->ID_Parent = [%d]  parent = [%d][%s]  entity_id = [%d]  frame = [%d]",
 			e_entity->ID_Parent, id_parent, e_parent->name_replace(), id_entity, Device.dwFrame);
 		//it can't be !!!
 	}
@@ -507,7 +505,7 @@ bool xrServer::Process_event_reject(NET_Packet& P, const u32 &time, const u16 id
 	e_entity->ID_Parent = 0xffff;
 	C.erase(c);
 
-	// Signal to everyone (including sender)
+	// Signal to everyone (including sender) then is alife started
 	if (send_message)
 		SendBroadcast(BroadcastCID, P);
 
@@ -647,7 +645,6 @@ void xrServer::Process_event(NET_Packet& P)
 	case GEG_PLAYER_DISABLE_SPRINT:
 	case GEG_PLAYER_WEAPON_HIDE_STATE:
 	case GEG_PLAYER_ACTIVATE_SLOT:
-	case GE_CHANGE_POS:
 	case GEG_PLAYER_ITEM_EAT:			Level().OnMessage(P.B.data, (u32)P.B.count); break;
 	case GE_TELEPORT_OBJECT: 			game->teleport_object(P, destination); break;
 	case GE_INFO_TRANSFER:
@@ -796,15 +793,6 @@ void xrServer::Process_event(NET_Packet& P)
 			iowner->m_deadbody_closed = (closed == 1);
 		}
 	} break;
-	case GEG_PLAYER_USE_BOOSTER:
-	{
-		if (receiver && receiver->owner && (receiver->owner != SV_Client))
-		{
-			NET_Packet tmp_packet;
-			CGameObject::u_EventGen(tmp_packet, GEG_PLAYER_USE_BOOSTER, receiver->ID);
-			Level().OnMessage(P.B.data, (u32)P.B.count);
-		}
-	}break;
 	case GE_MONEY:
 	{
 		CSE_Abstract *e_dest = receiver;

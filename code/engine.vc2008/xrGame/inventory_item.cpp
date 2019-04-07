@@ -200,33 +200,19 @@ void CInventoryItem::OnEvent (NET_Packet& P, u16 type)
 	switch (type)
 	{
 	case GE_ADDON_ATTACH:
-		{
-			u16 ItemID;
-			P.r_u16			(ItemID);
-			CInventoryItem*	 ItemToAttach	= smart_cast<CInventoryItem*>(Level().Objects.net_Find(ItemID));
-			if (!ItemToAttach) break;
-			Attach(ItemToAttach,true);
-		}break;
+	{
+		u16 ItemID;
+		P.r_u16(ItemID);
+		CInventoryItem*	 ItemToAttach = smart_cast<CInventoryItem*>(Level().Objects.net_Find(ItemID));
+		if (!ItemToAttach) break;
+		Attach(ItemToAttach, true);
+	}break;
 	case GE_ADDON_DETACH:
-		{
-			string64			i_name;
-			P.r_stringZ			(i_name);
-			Detach(i_name, true);
-		}break;	
-	case GE_CHANGE_POS:
-		{
-			Fvector p; 
-			P.r_vec3(p);
-			CPHSynchronize* pSyncObj = nullptr;
-			pSyncObj = object().PHGetSyncItem(0);
-			if (!pSyncObj) return;
-			SPHNetState state;
-			pSyncObj->get_State(state);
-			state.position = p;
-			state.previous_position = p;
-			pSyncObj->set_State(state);
-
-		}break;
+	{
+		string64			i_name;
+		P.r_stringZ(i_name);
+		Detach(i_name, true);
+	}break;
 	}
 }
 
@@ -553,7 +539,20 @@ void CInventoryItem::SetDropManual(BOOL val)
 	m_flags.set(FdropManual, val);
 }
 
-bool CInventoryItem::has_network_synchronization	() const
+void CInventoryItem::DropItem(bool bUsePos, Fvector dropPosition)
+{
+	CGameObject* pGameObject = cast_game_object();
+	if (pGameObject && !pGameObject->getDestroy() && inventory_owner().inventory().DropItem(cast_game_object(), false, false))
+	{
+		Level().m_feel_deny.feel_touch_deny(this->cast_game_object(), 1000);
+
+		// [12.11.07] Alexander Maniluk: extended GE_OWNERSHIP_REJECT packet for drop item to selected position
+		if(bUsePos)
+			cast_game_object()->MoveTo(dropPosition);
+	}
+}
+
+bool CInventoryItem::has_network_synchronization() const
 {
 	return false;
 }

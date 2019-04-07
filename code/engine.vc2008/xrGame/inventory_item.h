@@ -128,7 +128,7 @@ public:
 
 			BOOL				GetDropManual		() const	{ return m_flags.test(FdropManual);}
 			void				SetDropManual		(BOOL val);
-
+			void				DropItem			(bool bUsePos = false, Fvector dropPosition = Fvector());
 			BOOL				IsInvalid			() const;
 
 			BOOL				IsQuestItem			()	const	{return m_flags.test(FIsQuestItem);}			
