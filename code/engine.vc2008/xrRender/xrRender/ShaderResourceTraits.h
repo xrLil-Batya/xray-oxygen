@@ -119,12 +119,10 @@
 			LPCSTR						c_entry		= "main";
 
 			// Compile
-            //DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
-            DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
-            if (isGraphicDebugging)
-            {
-                shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
-            }
+           	DWORD shaderCompileFlags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
+		if (isGraphicDebugging)
+			shaderCompileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_PREFER_FLOW_CONTROL;
+			
 			HRESULT	const _hr			= ::Render->shader_compile(name,(DWORD const*)file->pointer(),file->length(), c_entry, c_target, shaderCompileFlags, (void*&)sh );
 
 			FS.r_close					( file );
