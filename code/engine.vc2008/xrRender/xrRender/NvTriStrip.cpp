@@ -83,8 +83,8 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 	//put data in format that the stripifier likes
 	WordVec				tempIndices;
 	tempIndices.resize	(in_numIndices);
-	int i;
-	for(i = 0; i < in_numIndices; i++)
+
+	for(int i = 0; i < in_numIndices; i++)
 		tempIndices[i] = in_indices[i];
 	NvStripInfoVec		tempStrips;
 	NvFaceInfoVec		tempFaces;
@@ -121,7 +121,7 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 		unsigned int indexCtr = 0;
 		for(u32 i = 0; i < tempStrips.size(); i++)
 		{
-			for(int j = 0; j < tempStrips[i]->m_faces.size(); j++)
+			for(size_t j = 0; j < tempStrips[i]->m_faces.size(); j++)
 			{
 				primGroups[0].indices[indexCtr++] = u16(tempStrips[i]->m_faces[j]->m_v0);
 				primGroups[0].indices[indexCtr++] = u16(tempStrips[i]->m_faces[j]->m_v1);
@@ -130,11 +130,11 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 		}
 
 		//do lists
-		for(u32 i = 0; i < tempFaces.size(); i++)
+		for(size_t iter = 0; iter < tempFaces.size(); iter++)
 		{
-			primGroups[0].indices[indexCtr++] = u16(tempFaces[i]->m_v0);
-			primGroups[0].indices[indexCtr++] = u16(tempFaces[i]->m_v1);
-			primGroups[0].indices[indexCtr++] = u16(tempFaces[i]->m_v2);
+			primGroups[0].indices[indexCtr++] = u16(tempFaces[iter]->m_v0);
+			primGroups[0].indices[indexCtr++] = u16(tempFaces[iter]->m_v1);
+			primGroups[0].indices[indexCtr++] = u16(tempFaces[iter]->m_v2);
 		}
 	}
 	else
@@ -188,13 +188,13 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 			int faceGroupLoc					= numGroups - 1;    //the face group is the last one
 			primGroups[faceGroupLoc].type       = PT_LIST;
 			primGroups[faceGroupLoc].indices    = xr_alloc<u16>	(tempFaces.size() * 3);
-			primGroups[faceGroupLoc].numIndices = tempFaces.size() * 3;
+			primGroups[faceGroupLoc].numIndices = (u32)tempFaces.size() * 3;
 			int indexCtr = 0;
-			for(int i = 0; i < tempFaces.size(); i++)
+			for(size_t iter = 0; iter < tempFaces.size(); iter++)
 			{
-				primGroups[faceGroupLoc].indices[indexCtr++] = u16(tempFaces[i]->m_v0);
-				primGroups[faceGroupLoc].indices[indexCtr++] = u16(tempFaces[i]->m_v1);
-				primGroups[faceGroupLoc].indices[indexCtr++] = u16(tempFaces[i]->m_v2);
+				primGroups[faceGroupLoc].indices[indexCtr++] = u16(tempFaces[iter]->m_v0);
+				primGroups[faceGroupLoc].indices[indexCtr++] = u16(tempFaces[iter]->m_v1);
+				primGroups[faceGroupLoc].indices[indexCtr++] = u16(tempFaces[iter]->m_v2);
 			}
 		}
 	}
@@ -202,7 +202,7 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 	//clean up everything
 
 	//_delete strips
-	for(u32 i = 0; i < tempStrips.size(); i++)
+	for(size_t i = 0; i < tempStrips.size(); i++)
 	{
 		for(int j = 0; j < tempStrips[i]->m_faces.size(); j++)
 		{
@@ -212,7 +212,7 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 	}
 
 	//_delete faces
-	for(u32 i = 0; i < tempFaces.size(); i++)
+	for(size_t i = 0; i < tempFaces.size(); i++)
 	{
 		xr_delete(tempFaces[i]);
 	}
