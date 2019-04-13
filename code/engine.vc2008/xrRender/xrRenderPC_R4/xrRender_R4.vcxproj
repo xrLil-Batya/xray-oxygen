@@ -346,6 +346,7 @@ copy "..\..\..\..\game\bins\tbbmalloc.dll" "$(xrBinOut)"</Command>
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\xrRenderDX11\dx11EventWrapper.cpp" />
     <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
     <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="..\xrRender\Render.cpp" />
@@ -555,6 +556,9 @@ copy "..\..\..\..\game\bins\tbbmalloc.dll" "$(xrBinOut)"</Command>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\..\xrCore.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\xrRenderDX11\dx11EventWrapper.h.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

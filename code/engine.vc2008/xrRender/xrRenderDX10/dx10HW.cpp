@@ -28,7 +28,7 @@ ENGINE_API BOOL isGraphicDebugging;
 //////////////////////////////////////////////////////////////////////
 CHW HW;
 
-CHW::CHW() : m_pAdapter(nullptr), pDevice(nullptr), m_move_window(true)	// NULL cuz it's struct
+CHW::CHW() : m_pAdapter(nullptr), pDevice(nullptr), m_move_window(true), pAnnotation(nullptr)
 {
 	Device.seqAppActivate.Add(this);
 	Device.seqAppDeactivate.Add(this);
@@ -114,7 +114,6 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	// MatthewKush to all: Please change to DXGI_SWAP_CHAIN_DESC1 (for lots of reasons)
 	DXGI_SWAP_CHAIN_DESC &sd = m_ChainDesc;
 	memset(&sd, 0, sizeof(sd));
-
 	SelectResolution(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
 	//	TODO: DX10: implement dynamic format selection
@@ -209,6 +208,8 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	};
 	R_CHK(R);
 
+	// main anotation
+	R_CHK(pContext->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), (void**)& pAnnotation));
 	_SHOW_REF("* CREATE: DeviceREF:", HW.pDevice);
 	//	Create render target and depth-stencil views here
 	UpdateViews();
@@ -241,6 +242,8 @@ void CHW::DestroyDevice()
 	_SHOW_REF("refCount:DeviceREF:", HW.pDevice);
 	_RELEASE(HW.pDevice);
 
+	// main anotation
+	_RELEASE(pAnnotation);
 
 	DestroyD3D();
 
