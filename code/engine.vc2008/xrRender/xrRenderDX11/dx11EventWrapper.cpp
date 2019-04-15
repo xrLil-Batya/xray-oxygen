@@ -3,10 +3,10 @@
 
 dxPixEventWrapper::dxPixEventWrapper(LPCWSTR wszName)
 {
-	if (HW.Annotation) HW.Annotation->BeginEvent(wszName);
+	if (HW.pAnnotation) HW.pAnnotation->BeginEvent(wszName);
 }
 
 dxPixEventWrapper::~dxPixEventWrapper()
 {
-	if (HW.Annotation) HW.Annotation->EndEvent();
+	if (HW.pAnnotation) HW.pAnnotation->EndEvent();
 }

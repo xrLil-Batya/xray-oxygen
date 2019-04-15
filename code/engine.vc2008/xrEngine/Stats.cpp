@@ -382,11 +382,8 @@ void CStats::Show()
 	{
         if ((Core.dwFrame % 25) == 0)
         {
-			static CAMDReader AMDData;
-			static CNvReader NVData;
-
 			if (CNvReader::bSupport)
-				NVGPULoad = NVData.GetPercentActive();
+				NVGPULoad = NvData.GetPercentActive();
 
 			if (CAMDReader::bAMDSupportADL)
 				AMDGPULoad = AMDData.GetPercentActive();

@@ -4,108 +4,8 @@
 #include "hwcaps.h"
 #include "hw.h"
 
-#include "NVAPI/nvapi.h"
-#include "amd/amd_ags.h"
-
-#pragma comment(lib, "amd_ags.lib")
-
-namespace
-{
-u32 GetNVGpuNum()
-{
-	NvLogicalGpuHandle  logicalGPUs	[NVAPI_MAX_LOGICAL_GPUS];
-	NvU32               logicalGPUCount;
-	NvPhysicalGpuHandle physicalGPUs[NVAPI_MAX_PHYSICAL_GPUS];
-	NvU32               physicalGPUCount;
-
-	int iGpuNum = 0;
-
-	NvAPI_Status	status;
-	status = NvAPI_Initialize();
-
-	if (status != NVAPI_OK)
-	{
-		Msg("* NVAPI is missing.");
-		return iGpuNum;
-	}
-
-	// enumerate logical gpus
-	status = NvAPI_EnumLogicalGPUs(logicalGPUs, &logicalGPUCount);
-	if (status != NVAPI_OK)
-	{
-		Msg("* NvAPI_EnumLogicalGPUs failed!");
-		return iGpuNum;
-		// error
-	}
-
-	// enumerate physical gpus
-	status = NvAPI_EnumPhysicalGPUs(physicalGPUs, &physicalGPUCount);
-	if (status != NVAPI_OK)
-	{
-		Msg("* NvAPI_EnumPhysicalGPUs failed!");
-		return iGpuNum;
-		// error
-	}
-
-	Msg	("* NVidia MGPU: Logical(%d), Physical(%d)", physicalGPUCount, logicalGPUCount);
-
-	//	Assume that we are running on logical GPU with most physical GPUs connected.
-	for ( u32 i = 0; i<logicalGPUCount; ++i )
-	{
-		status = NvAPI_GetPhysicalGPUsFromLogicalGPU( logicalGPUs[i], physicalGPUs, &physicalGPUCount);
-		if (status == NVAPI_OK)
-			iGpuNum = std::max( iGpuNum, (int)physicalGPUCount);
-	}
-
-	if (iGpuNum>1)
-	{
-		Msg	("* NVidia MGPU: %d-Way SLI detected.", iGpuNum);
-	}
-
-	return iGpuNum;
-}
-
-u32 GetATIGpuNum()
-{
-	AGSContext *ags				= nullptr;
-	AGSGPUInfo gpuInfo			= {};
-	AGSConfiguration *config	= nullptr;
-	AGSReturnCode status		= agsInit(&ags, config ,&gpuInfo);
-	if (status != AGS_SUCCESS)
-	{
-		Msg						("! AGS: Initialization failed (%d)", status);
-		return 0;
-	}
-	int crossfireGpuCount		= 1;
-	status						= agsGetCrossfireGPUCount(ags, &crossfireGpuCount);
-	if (status != AGS_SUCCESS)
-	{
-		Msg						("! AGS: Unable to get CrossFire GPU count (%d)", status);
-		agsDeInit				(ags);
-		return 1;
-	}
-	Msg							("* AGS: CrossFire GPU count: %d", crossfireGpuCount);
-	agsDeInit					(ags);
-	return crossfireGpuCount;
-}
-
-u32 GetGpuNum()
-{
-	u32 res						= GetNVGpuNum();
-	res							= std::max(res, GetATIGpuNum());
-	res							= std::max(res, 2u);
-
-	if (!res)
-	{
-		Msg("* Can't detect graphic card. Assuming that you have at least one (maybe from intel)");
-		res = 1;
-	}
-
-	Msg("* Starting rendering as %d-GPU.", res);
-	
-	return res;
-}
-}
+#include "../../xrEngine/AMDGPUTransferee.h"
+#include "../../xrEngine/NvGPUTransferee.h"
 
 #ifndef USE_DX11
 void CHWCaps::Update()
@@ -168,9 +68,6 @@ void CHWCaps::Update()
 
 	// *******1********** Compatibility : vertex shader
 	if (0==raster_major)		geometry_major=0;		// Disable VS if no PS
-#ifdef _EDITOR
-	geometry_major		= 0;
-#endif
 
 	//
 	bTableFog			=	FALSE;
@@ -215,8 +112,12 @@ void CHWCaps::Update()
     }
 
 	// DEV INFO
-
-	iGPUNum = GetGpuNum();
+	if (CNvReader::bSupport)
+		iGPUNum = NvData.GetGPUCount();
+	else if (CAMDReader::bAMDSupportADL)
+		iGPUNum = AMDData.GetGPUCount();
+	else
+		iGPUNum = 1;
 }
 #else
 void CHWCaps::Update()
@@ -273,7 +174,11 @@ void CHWCaps::Update()
 	dwMaxStencilValue=(1<<8)-1;
 
 	// DEV INFO
-
-	iGPUNum = GetGpuNum();
+	if (CNvReader::bSupport)
+		iGPUNum = NvData.GetGPUCount();
+	else if (CAMDReader::bAMDSupportADL)
+		iGPUNum = AMDData.GetGPUCount();
+	else
+		iGPUNum = 1;
 }
 #endif

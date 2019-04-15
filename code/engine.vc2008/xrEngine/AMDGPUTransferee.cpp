@@ -1,14 +1,27 @@
+//////////////////////////////////////////
+// Desc:   GPU Info
+// Model:  AMD
+// Author: ForserX
+//////////////////////////////////////////
+// Oxygen Engine (2016-2019)
+//////////////////////////////////////////
+
 #include "stdafx.h"
 #include "AMDGPUTransferee.h"
 
+CAMDReader AMDData;
 #define AMDVENDORID 1002
 
 bool CAMDReader::bAMDSupportADL = false;
 void* CAMDReader::lpBuffer = nullptr;
+static HINSTANCE hDLL;
+static HINSTANCE hDLL_AGS;
 
-CAMDReader::CAMDReader() : activity({ 0 }), AdapterID(-1)
+CAMDReader::CAMDReader() : activity({ 0 }), AdapterID(-1), AdapterAGSInfo(0)
 {
-	static HINSTANCE hDLL = LoadLibraryA("atiadlxx.dll");
+	hDLL = LoadLibraryA("atiadlxx.dll");
+	hDLL_AGS = LoadLibraryA("amd_ags_x64.dll");
+
 	if (!bAMDSupportADL && hDLL)
 	{
 		bAMDSupportADL = true;
@@ -25,28 +38,37 @@ CAMDReader::CAMDReader() : activity({ 0 }), AdapterID(-1)
 
 		activity.iSize = sizeof(ADLPMActivity);
 	}
+
+	if (bAMDSupportADL && hDLL_AGS)
+	{
+		GetAGSCrossfireGPUCount = (AGS_GPU_COUNT_GET)GetProcAddress(hDLL_AGS, "agsGetCrossfireGPUCount");
+		AGSCrossfireDeinit = (AGS_DEINIT)GetProcAddress(hDLL_AGS, "agsDeInit");
+		AGSCrossfireInit = (AGS_INIT)GetProcAddress(hDLL_AGS, "agsInit");
+
+		MakeGPUCount();
+	}
 }
 
 CAMDReader::~CAMDReader()
 {
 	Main_Control_Destroy();
 	MemoryDeallocator();
-	// FreeLibrary(hDLL);
+	FreeLibrary(hDLL);
+	FreeLibrary(hDLL_AGS);
 }
 
 void CAMDReader::InitDeviceInfo()
 {
 	LPAdapterInfo lpAdapterInfo = nullptr;
-	int iNumberAdapters = 0;
-	GetAdapter_NumberOfAdapters(&iNumberAdapters);
+	GetAdapter_NumberOfAdapters(&AdapterADLInfo);
 
-	lpAdapterInfo = new AdapterInfo[iNumberAdapters]();
-	RtlZeroMemory(lpAdapterInfo, sizeof(AdapterInfo) * iNumberAdapters);
+	lpAdapterInfo = new AdapterInfo[AdapterADLInfo]();
+	RtlZeroMemory(lpAdapterInfo, sizeof(AdapterInfo) * AdapterADLInfo);
 
 	// Get the AdapterInfo structure for all adapters in the system
-	GetAdapter_AdapterInfo(lpAdapterInfo, sizeof(AdapterInfo) * iNumberAdapters);
+	GetAdapter_AdapterInfo(lpAdapterInfo, sizeof(AdapterInfo) * AdapterADLInfo);
 
-	for (u32 i = 0; i < (u32)iNumberAdapters; i++)
+	for (u32 i = 0; i < (u32)AdapterADLInfo; i++)
 	{
 		int adapterActive = 0;
 		AdapterInfo adapterInfo = lpAdapterInfo[i];
@@ -59,8 +81,34 @@ void CAMDReader::InitDeviceInfo()
 	}
 }
 
+void CAMDReader::MakeGPUCount()
+{
+	AGSContext* ags = nullptr;
+	AGSGPUInfo gpuInfo = {};
+	AGSConfiguration* config = nullptr;
+	AGSReturnCode status = AGSCrossfireInit(&ags, config, &gpuInfo);
+
+	if (status != AGS_SUCCESS)
+	{
+		Msg("! AGS: Initialization failed (%d)", status);
+		return;
+	}
+
+	status = GetAGSCrossfireGPUCount(ags, &AdapterAGSInfo);
+
+	if (status != AGS_SUCCESS) Msg("! AGS: Unable to get CrossFire GPU count (%d)", status);
+	else					   Msg("* AGS: CrossFire GPU count: %d", AdapterAGSInfo);
+
+	AGSCrossfireDeinit(ags);
+}
+
 u32 CAMDReader::GetPercentActive()
 {
 	GetOverdrive5_CurrentActivity(AdapterID, &activity);
 	return activity.iActivityPercent;
+}
+
+u32 CAMDReader::GetGPUCount()
+{
+	return hDLL_AGS ? u32(AdapterAGSInfo) : u32(AdapterADLInfo / 2);
 }
