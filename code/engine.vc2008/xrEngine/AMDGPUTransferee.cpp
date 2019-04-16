@@ -45,6 +45,13 @@ CAMDReader::CAMDReader() : activity({ 0 }), AdapterID(-1), AdapterAGSInfo(0)
 		AGSCrossfireDeinit = (AGS_DEINIT)GetProcAddress(hDLL_AGS, "agsDeInit");
 		AGSCrossfireInit = (AGS_INIT)GetProcAddress(hDLL_AGS, "agsInit");
 
+		// 5.2 and later
+		if (!GetAGSCrossfireGPUCount)
+		{
+			GetAGSCrossfireGPUCountExt = (AGS_DX11EXT)GetProcAddress(hDLL_AGS, "agsDriverExtensionsDX11_CreateDevice");
+			AGSCrossfireGPUExtDestroy = (AGS_DX11EXTDestroy)GetProcAddress(hDLL_AGS, "agsDriverExtensionsDX11_DestroyDevice");
+		}
+
 		MakeGPUCount();
 	}
 }
@@ -94,10 +101,35 @@ void CAMDReader::MakeGPUCount()
 		return;
 	}
 
-	status = GetAGSCrossfireGPUCount(ags, &AdapterAGSInfo);
+	if (GetAGSCrossfireGPUCount)
+	{
+		// FX: Old style for Win7 and lazy users
+		// But, it's just a beautiful 
+		status = GetAGSCrossfireGPUCount(ags, &AdapterAGSInfo);
+		AdapterAGSInfo = AdapterAGSInfo ? AdapterAGSInfo : AdapterADLInfo / 2;
+		Msg("[AGS] Used old ags driver...");
+	}
+	else
+	{
+		AGSDX11DeviceCreationParams creationParams;
+		RtlZeroMemory(&creationParams, sizeof(AGSDX11DeviceCreationParams));
+		creationParams.SDKVersion = 7; // Skip debug output errors. crossfireGPUCount need only
+		creationParams.FeatureLevels = 45312; // 11.1
 
-	if (status != AGS_SUCCESS) Msg("! AGS: Unable to get CrossFire GPU count (%d)", status);
-	else					   Msg("* AGS: CrossFire GPU count: %d", AdapterAGSInfo);
+		AGSDX11ExtensionParams extensionParams = {};
+		// FX: Enable AFR without requiring a driver profile
+		extensionParams.crossfireMode = AGS_CROSSFIRE_MODE_EXPLICIT_AFR;
+		extensionParams.uavSlot = 7;
+		AGSDX11ReturnedParams returnedParams = {};
+
+		GetAGSCrossfireGPUCountExt(ags, &creationParams, &extensionParams, &returnedParams);
+		AdapterAGSInfo = returnedParams.crossfireGPUCount ? returnedParams.crossfireGPUCount : AdapterADLInfo / 2;
+
+		AGSCrossfireGPUExtDestroy(ags, nullptr, nullptr, nullptr, nullptr);
+	}
+
+	if (status != AGS_SUCCESS) Msg("[AGS] Error! Unable to get CrossFire GPU count (%d)", status);
+	else					   Msg("[AGS] CrossFire GPU count: %d", AdapterAGSInfo);
 
 	AGSCrossfireDeinit(ags);
 }

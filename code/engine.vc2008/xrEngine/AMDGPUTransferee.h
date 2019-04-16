@@ -15,6 +15,10 @@ class ENGINE_API CAMDReader
 	typedef AGSReturnCode(*AGS_DEINIT)(AGSContext* context);
 	typedef AGSReturnCode(*AGS_INIT)(AGSContext** context, const AGSConfiguration* config, AGSGPUInfo* gpuInfo);
 
+	// AGS: 5.2-5.3
+	typedef AGSReturnCode(*AGS_DX11EXT)(AGSContext* context, const AGSDX11DeviceCreationParams* creationParams, const AGSDX11ExtensionParams* extensionParams, AGSDX11ReturnedParams* returnedParams);
+	typedef AGSReturnCode(*AGS_DX11EXTDestroy)(AGSContext* context, ID3D11Device* device, unsigned int* deviceReferences, ID3D11DeviceContext* immediateContext, unsigned int* immediateContextReferences);
+
 private:
 	// Memory allocation function
 	static void* __stdcall MemoryAllocator(int iSize)
@@ -42,9 +46,11 @@ private:
 	ADL_ADAPTER_ACTIVE_GET					GetAdapter_Active;
 	ADL_OVERDRIVE5_CURRENTACTIVITY_GET		GetOverdrive5_CurrentActivity;
 
+	AGS_DX11EXT								GetAGSCrossfireGPUCountExt;
 	AGS_GPU_COUNT_GET						GetAGSCrossfireGPUCount;
 	AGS_DEINIT								AGSCrossfireDeinit;
 	AGS_INIT								AGSCrossfireInit;
+	AGS_DX11EXTDestroy						AGSCrossfireGPUExtDestroy;
 
 	int				AdapterID;
 	int				AdapterADLInfo;
