@@ -344,10 +344,6 @@
     <ClCompile Include="BoneEditor.cpp" />
     <ClCompile Include="CameraFirstEye.cpp" />
     <ClCompile Include="ClS\NET_Client.cpp" />
-    <ClCompile Include="CPU\PLC.cpp" />
-    <ClCompile Include="CPU\xrCPU_Pipe.cpp" />
-    <ClCompile Include="CPU\xrSkin2W.cpp" />
-    <ClCompile Include="CPU\xrSkin2W_thread.cpp" />
     <ClCompile Include="date_time.cpp" />
     <ClCompile Include="defines.cpp" />
     <ClCompile Include="DiscordRichPresense.cpp" />
