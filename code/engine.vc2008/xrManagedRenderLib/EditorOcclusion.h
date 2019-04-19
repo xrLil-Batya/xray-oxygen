@@ -1,7 +1,10 @@
 #pragma once
 
+#include "Model.h"
+
 using namespace System;
 using namespace System::Collections::Generic;
+
 
 namespace XRay
 {
@@ -12,12 +15,12 @@ namespace XRay
 		public:
 			EditorOcclusion();
 			~EditorOcclusion();
-			void AddObjectToRenderableList(XRay::Object^ object);
+			void AddObjectToRenderableList(XRay::Model^ object);
 			void FillOcclusionList(IntPtr pRenderInterface);
 			static EditorOcclusion^ Instance();
 		private:
 
-			List<XRay::Object^>^ _renderableList;
+			List<XRay::Model^>^ _renderableList;
 			IntPtr _opaqueOcclusionInterface;
 			static XRay::Editor::EditorOcclusion^ _Instance;
 		};

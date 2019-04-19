@@ -15,7 +15,7 @@
     <ProjectGuid>{C4DEFC31-A910-4339-99B3-6C410DC19AD0}</ProjectGuid>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>xrManagedLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>xrManagedCoreLib</ProjectName>
     <TargetFrameworkVersion>4.6.1</TargetFrameworkVersion>
   </PropertyGroup>

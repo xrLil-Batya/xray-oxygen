@@ -9,7 +9,7 @@
 /// </summary>
 namespace XRay
 {
-	public ref class ModInstance
+	public ref class ModInstance abstract
 	{
 	public:
 		virtual void OnLoad() = 0;

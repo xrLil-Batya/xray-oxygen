@@ -129,6 +129,11 @@ void File::SetLength(Int64 value)
 	throw gcnew System::NotImplementedException(gcnew String("SetLength in XRay::File is not implemented"));
 }
 
+File::File(IntPtr nativePtr)
+{
+	pReader = (IReader*)nativePtr.ToPointer();
+	pWritter = (IWriter*)pReader;
+}
 
 File::~File()
 {
@@ -151,6 +156,9 @@ File^ XRay::File::OpenExternalWrite(String^ filename)
 {
 	throw gcnew System::NotImplementedException(gcnew String("OpenExternalWrite in XRay::File is not implemented"));
 }
+
+XRay::File::File()
+{}
 
 void Filesystem::ValidateStringAndGetAsciiCopy(String^ filename, string1024& OutFileNameBuff)
 {

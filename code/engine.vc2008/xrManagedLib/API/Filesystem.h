@@ -97,6 +97,7 @@ namespace XRay
 			}
 		}
 
+		File(IntPtr nativeReader);
 		virtual ~File();
 
 		virtual void Flush() override;
@@ -111,6 +112,7 @@ namespace XRay
 		static File^ OpenExternalWrite(String^ filename);
 
 	protected:
+		File();
 
 		IReader* pReader = nullptr;
 		IWriter* pWritter = nullptr;

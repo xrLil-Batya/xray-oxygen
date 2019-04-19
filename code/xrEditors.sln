@@ -93,6 +93,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrQSlim", "utils\xrQSlim\xr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XTools", "editors\XTools\XTools.vcxproj", "{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrRender_R4", "engine.vc2008\xrRender\xrRenderPC_R4\xrRender_R4.vcxproj", "{AC9B12ED-A2D7-4337-A981-5BD8430E96D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -238,6 +240,12 @@ Global
 		{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}.Mixed|x64.Build.0 = Release|x64
 		{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}.Release|x64.ActiveCfg = Release|x64
 		{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}.Release|x64.Build.0 = Release|x64
+		{AC9B12ED-A2D7-4337-A981-5BD8430E96D8}.Debug|x64.ActiveCfg = Debug|x64
+		{AC9B12ED-A2D7-4337-A981-5BD8430E96D8}.Debug|x64.Build.0 = Debug|x64
+		{AC9B12ED-A2D7-4337-A981-5BD8430E96D8}.Mixed|x64.ActiveCfg = Release|x64
+		{AC9B12ED-A2D7-4337-A981-5BD8430E96D8}.Mixed|x64.Build.0 = Release|x64
+		{AC9B12ED-A2D7-4337-A981-5BD8430E96D8}.Release|x64.ActiveCfg = Release|x64
+		{AC9B12ED-A2D7-4337-A981-5BD8430E96D8}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -261,6 +269,7 @@ Global
 		{BE0170B5-B5C9-4BD8-87CD-12B3C7DF3EDA} = {582A3259-7499-4576-8573-EBC568143CF9}
 		{A5E0EC2A-4783-4A53-AE1E-228464FC8F69} = {BE0170B5-B5C9-4BD8-87CD-12B3C7DF3EDA}
 		{F1836CE2-59EF-4189-8B9C-D103A511CB27} = {582A3259-7499-4576-8573-EBC568143CF9}
+		{AC9B12ED-A2D7-4337-A981-5BD8430E96D8} = {582A3259-7499-4576-8573-EBC568143CF9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BBBB23C5-0934-4F23-B836-B0BF6F1E4040}

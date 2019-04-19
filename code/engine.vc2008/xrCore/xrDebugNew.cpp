@@ -387,6 +387,7 @@ void debug_on_thread_spawn()
 	_set_new_handler(&out_of_memory_handler);
 
 	_set_purecall_handler(&pure_call_handler);
+	std::set_terminate(abort);
 }
 
 void xrDebug::_initialize()

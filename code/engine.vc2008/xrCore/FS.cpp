@@ -503,3 +503,11 @@ xr_string EFS_Utils::AppendFolderToName(xr_string& tex_name, int depth, BOOL ful
 	tex_name = AppendFolderToName(nm, sizeof(nm), depth, full_name);
 	return tex_name;
 }
+
+CMemoryReader::CMemoryReader(void* InData, const int InSize, const int iterpos /*= 0*/)
+{
+	this->data = (char*)InData;
+	this->Pos = 0;
+	this->Size = InSize;
+	this->iterpos = iterpos;
+}

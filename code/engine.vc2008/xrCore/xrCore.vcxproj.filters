@@ -213,6 +213,9 @@
     <ClCompile Include="PostprocessAnimator.cpp">
       <Filter>PostProcessCore</Filter>
     </ClCompile>
+    <ClCompile Include="_bitwise.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
