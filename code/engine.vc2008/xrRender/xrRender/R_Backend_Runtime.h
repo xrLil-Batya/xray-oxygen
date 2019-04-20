@@ -5,13 +5,8 @@
 #include "sh_constant.h"
 #include "sh_rt.h"
 
-#ifdef USE_DX11
 #include "../xrRenderDX10/dx10R_Backend_Runtime.h"
 #include "../xrRenderDX10/StateManager/dx10State.h"
-#else
-#include "../xrRenderDX9/dx9R_Backend_Runtime.h"
-#include "R_Backend.h"
-#endif
 
 IC void		R_xforms::set_c_w			(R_constant* C)		{	c_w		= C;	RCache.set_c(C,m_w);	};
 IC void		R_xforms::set_c_invw		(R_constant* C)		{	c_invw	= C;	apply_invw();			};
@@ -53,45 +48,16 @@ IC	ID3DDepthStencilView* CBackend::get_ZB				()
 	return pZB;
 }
 
-ICF void	CBackend::set_States		(ID3DState* _state)
+ICF void CBackend::set_States(ID3DState* _state)
 {
-//	DX10 Manages states using it's own algorithm. Don't mess with it.
-#ifndef USE_DX11
-	if (state!=_state)
-#endif
-	{
-		PGO				(Msg("PGO:state_block"));
 #ifdef DEBUG
-		stat.states		++;
+	stat.states++;
 #endif
-		state			= _state;
-		state->Apply	();
-	}
+	state = _state;
+	state->Apply();
 }
 
-#ifdef _EDITOR
-IC void CBackend::set_Matrices			(SMatrixList*	_M)
-{
-	if (M != _M)
-	{
-		M = _M;
-		if (M)	{
-			for (u32 it=0; it<M->size(); it++)
-			{
-				CMatrix*	mat = &*((*M)[it]);
-				if (mat && matrices[it]!=mat)
-				{
-					matrices	[it]	= mat;
-					mat->Calculate		();
-					set_xform			(D3DTS_TEXTURE0+it,mat->xform);
-				}
-			}
-		}
-	}
-}
-#endif
-
-IC void CBackend::set_Element			(ShaderElement* S, u32	pass)
+IC void CBackend::set_Element(ShaderElement* S, u32	pass)
 {
 	SPass&	P		= *(S->passes[pass]);
 	set_States		(P.state);

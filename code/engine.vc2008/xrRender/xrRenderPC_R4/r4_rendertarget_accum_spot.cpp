@@ -49,14 +49,14 @@ void CRenderTarget::accum_spot(light* L)
 		RCache.set_Element(s_accum_mask->E[SE_MASK_SPOT]);		// masker
 
 		// backfaces: if (stencil>=1 && zfail)			stencil = light_id
-		RCache.set_CullMode(CULL_CW);
+		RCache.set_CullMode(D3D11_CULL_FRONT);
 		if (!RImplementation.o.dx10_msaa)
 			RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, dwLightMarkerID, 0x01, 0xff, D3DSTENCILOP_KEEP, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE);
 		else
 			RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, dwLightMarkerID, 0x01, 0x7f, D3DSTENCILOP_KEEP, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE);
 		draw_volume(L);
 
-		RCache.set_CullMode(CULL_CCW);
+		RCache.set_CullMode(D3D11_CULL_BACK);
 		if (!RImplementation.o.dx10_msaa)
 			RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0xff, D3DSTENCILOP_KEEP, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE);
 		else
@@ -67,7 +67,7 @@ void CRenderTarget::accum_spot(light* L)
 	// *****************************	Minimize overdraw	*************************************
 	// Select shader (front or back-faces), *** back, if intersect near plane
 	RCache.set_ColorWriteEnable();
-	RCache.set_CullMode(CULL_CW);		// back
+	RCache.set_CullMode(D3D11_CULL_FRONT);		// back
 
 	// 2D texgens 
 	Fmatrix	m_Texgen;			u_compute_texgen_screen(m_Texgen);
@@ -147,7 +147,7 @@ void CRenderTarget::accum_spot(light* L)
 		}
 		RCache.set_Element(shader->E[_id]);
 
-		RCache.set_CullMode(CULL_CW);		// back
+		RCache.set_CullMode(D3D11_CULL_FRONT);		// back
 
 		// Constants
 		float	att_R = L->range*.95f;
@@ -170,14 +170,14 @@ void CRenderTarget::accum_spot(light* L)
 			// per pixel
 			RCache.set_Element(shader->E[_id]);
 			RCache.set_Stencil(TRUE, D3DCMP_EQUAL, dwLightMarkerID, 0xff, 0x00);
-			RCache.set_CullMode(D3DCULL_CW);
+			RCache.set_CullMode(D3D11_CULL_FRONT);
 			draw_volume(L);
 			// per sample		
 			if (RImplementation.o.dx10_msaa_opt)
 			{
 				RCache.set_Element(shader_msaa[0]->E[_id]);
 				RCache.set_Stencil(TRUE, D3DCMP_EQUAL, dwLightMarkerID | 0x80, 0xff, 0x00);
-				RCache.set_CullMode(D3DCULL_CW);
+				RCache.set_CullMode(D3D11_CULL_FRONT);
 				draw_volume(L);
 			}
 			else // checked Holger
@@ -187,7 +187,7 @@ void CRenderTarget::accum_spot(light* L)
 					RCache.set_Element(shader_msaa[i]->E[_id]);
 					StateManager.SetSampleMask(u32(1) << i);
 					RCache.set_Stencil(TRUE, D3DCMP_EQUAL, dwLightMarkerID | 0x80, 0xff, 0x00);
-					RCache.set_CullMode(D3DCULL_CW);
+					RCache.set_CullMode(D3D11_CULL_FRONT);
 					draw_volume(L);
 				}
 				StateManager.SetSampleMask(0xffffffff);
@@ -275,7 +275,7 @@ void CRenderTarget::accum_volumetric(light* L)
 	}
 
 	RCache.set_ColorWriteEnable();
-	RCache.set_CullMode(CULL_NONE);		// back
+	RCache.set_CullMode(D3D11_CULL_NONE);		// back
 
 	// 2D texgens 
 	Fmatrix			m_Texgen;			u_compute_texgen_screen(m_Texgen);

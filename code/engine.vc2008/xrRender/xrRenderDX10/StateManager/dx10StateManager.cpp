@@ -340,12 +340,10 @@ void dx10StateManager::SetCullMode(u32 Mode)
 {
 	ValidateRDesc();
 
-	D3D_CULL_MODE	CMode = 
-		dx10StateUtils::ConvertCullMode((D3DCULL)Mode);
-	if (m_RDesc.CullMode!=CMode)
+	if (m_RDesc.CullMode != Mode)
 	{
 		m_bRSChanged = true;
-		m_RDesc.CullMode = CMode;
+		m_RDesc.CullMode = (D3D11_CULL_MODE)Mode;
 	}
 }
 

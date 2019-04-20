@@ -1,7 +1,6 @@
 ﻿// Engine.h: interface for the CEngine class.
 //////////////////////////////////////////////////////////////////////
 #pragma once
-struct xrDispatchTable;
 
 #include "engineAPI.h"
 #include "eventAPI.h"
@@ -22,6 +21,5 @@ public:
 	~CEngine();
 };
 
-ENGINE_API extern xrDispatchTable	PSGP;
-ENGINE_API extern CEngine			Engine;
+ENGINE_API extern CEngine Engine;
 

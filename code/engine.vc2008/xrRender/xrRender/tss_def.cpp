@@ -521,16 +521,16 @@ void SimulatorStates::UpdateDesc( D3D_RASTERIZER_DESC &desc ) const
 			{
 			case D3DRS_FILLMODE:
 				if (S.v2==D3DFILL_SOLID)
-					desc.FillMode = D3D_FILL_SOLID;
+					desc.FillMode = D3D11_FILL_SOLID;
 				else
 				{
 					VERIFY(S.v2==D3DFILL_WIREFRAME);
-					desc.FillMode = D3D_FILL_WIREFRAME;
+					desc.FillMode = D3D11_FILL_WIREFRAME;
 				}
 				break;
 
 			case D3DRS_CULLMODE:
-				desc.CullMode = dx10StateUtils::ConvertCullMode((D3DCULL)S.v2);
+				desc.CullMode = (D3D11_CULL_MODE)S.v2;
 				break;
 
 			//	TODO: DX10: Check how to scale unit for depth bias
@@ -565,7 +565,7 @@ void SimulatorStates::UpdateDesc( D3D_DEPTH_STENCIL_DESC &desc ) const
 				break;
 
 			case D3DRS_ZWRITEENABLE:
-				desc.DepthWriteMask = S.v2 ? D3D_DEPTH_WRITE_MASK_ALL : D3D_DEPTH_WRITE_MASK_ZERO;
+				desc.DepthWriteMask = S.v2 ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
 				break;
 
 			case D3DRS_ZFUNC:

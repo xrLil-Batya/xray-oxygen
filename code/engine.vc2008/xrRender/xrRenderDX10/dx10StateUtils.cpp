@@ -5,23 +5,6 @@
 
 namespace dx10StateUtils
 {
-
-D3D_CULL_MODE ConvertCullMode(D3DCULL Mode)
-{
-	switch (Mode)
-	{
-	case D3DCULL_NONE:
-		return D3D_CULL_NONE;
-	case D3DCULL_CW:
-		return D3D_CULL_FRONT;
-	case D3DCULL_CCW:
-		return D3D_CULL_BACK;
-	default:
-		VERIFY(!"Unexpected cull mode!");
-		return D3D_CULL_NONE;
-	}
-}
-
 D3D_COMPARISON_FUNC ConvertCmpFunction(D3DCMPFUNC Func)
 {
 	switch (Func)

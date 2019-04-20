@@ -12,7 +12,6 @@ IC void CBackend::set_RT(ID3DRenderTargetView* RT, u32 ID)
 {
 	if (RT!=pRT[ID])
 	{
-		PGO(Msg("PGO:setRT"));
 		stat.target_rt	++;
 		pRT[ID]			= RT;
 
@@ -28,7 +27,6 @@ IC void	CBackend::set_ZB(ID3DDepthStencilView* ZB)
 {
 	if (ZB!=pZB)
 	{
-		PGO				(Msg("PGO:setZB"));
 		stat.target_zb	++;
 		pZB				= ZB;
 
@@ -39,11 +37,10 @@ IC void	CBackend::set_ZB(ID3DDepthStencilView* ZB)
 	}
 }
 
-ICF void CBackend::set_Format(SDeclaration* _decl)
+inline void CBackend::set_Format(SDeclaration* _decl)
 {
 	if (decl!=_decl)
 	{
-		PGO				(Msg("PGO:v_format:%x",_decl));
 #ifdef DEBUG
 		stat.decl		++;
 #endif
@@ -51,34 +48,23 @@ ICF void CBackend::set_Format(SDeclaration* _decl)
 	}
 }
 
-ICF void CBackend::set_PS(ID3DPixelShader* _ps, LPCSTR _n)
+inline void CBackend::set_PS(ID3DPixelShader* _ps, LPCSTR _n)
 {
 	if (ps!=_ps)
 	{
-		PGO				(Msg("PGO:Pshader:%x",_ps));
 		stat.ps			++;
 		ps				= _ps;
-#ifdef USE_DX11
 		HW.pContext->PSSetShader(ps, 0, 0);
-#else
-		HW.pContext->PSSetShader(ps);
-#endif
-
 		ps_name			= _n;
 	}
 }
 
-ICF void CBackend::set_GS(ID3DGeometryShader* _gs, LPCSTR _n)
+inline void CBackend::set_GS(ID3DGeometryShader* _gs, LPCSTR _n)
 {
 	if (gs!=_gs)
 	{
-		PGO				(Msg("PGO:Gshader:%x",_ps));
 		gs				= _gs;
-#ifdef USE_DX11
 		HW.pContext->GSSetShader(gs, 0, 0);
-#else
-		HW.pContext->GSSetShader(gs);
-#endif
 
 #ifdef DEBUG
 		gs_name			= _n;
@@ -86,12 +72,10 @@ ICF void CBackend::set_GS(ID3DGeometryShader* _gs, LPCSTR _n)
 	}
 }
 
-#	ifdef USE_DX11
-ICF void CBackend::set_HS(ID3D11HullShader* _hs, LPCSTR _n)
+inline void CBackend::set_HS(ID3D11HullShader* _hs, LPCSTR _n)
 {
 	if (hs!=_hs)
 	{
-		PGO				(Msg("PGO:Hshader:%x",_ps));
 		hs				= _hs;
 		HW.pContext->HSSetShader(hs, 0, 0);
 
@@ -101,11 +85,10 @@ ICF void CBackend::set_HS(ID3D11HullShader* _hs, LPCSTR _n)
 	}
 }
 
-ICF void CBackend::set_DS(ID3D11DomainShader* _ds, LPCSTR _n)
+inline void CBackend::set_DS(ID3D11DomainShader* _ds, LPCSTR _n)
 {
 	if (ds!=_ds)
 	{
-		PGO				(Msg("PGO:Dshader:%x",_ps));
 		ds				= _ds;
 		HW.pContext->DSSetShader(ds, 0, 0);
 
@@ -115,11 +98,10 @@ ICF void CBackend::set_DS(ID3D11DomainShader* _ds, LPCSTR _n)
 	}
 }
 
-ICF void CBackend::set_CS(ID3D11ComputeShader* _cs, LPCSTR _n)
+inline void CBackend::set_CS(ID3D11ComputeShader* _cs, LPCSTR _n)
 {
 	if (cs!=_cs)
 	{
-		PGO				(Msg("PGO:Cshader:%x",_ps));
 		//	TODO: DX10: Get statistics for D Shader change
 		//stat.cs			++;
 		cs				= _cs;
@@ -131,38 +113,29 @@ ICF void CBackend::set_CS(ID3D11ComputeShader* _cs, LPCSTR _n)
 	}
 }
 
-ICF	bool CBackend::is_TessEnabled()
+inline	bool CBackend::is_TessEnabled()
 {
 	return HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 && (ds!=0 || hs!=0);
 }
 
-#	endif
 
-
-ICF void CBackend::set_VS(ID3DVertexShader* _vs, LPCSTR _n)
+inline void CBackend::set_VS(ID3DVertexShader* _vs, LPCSTR _n)
 {
 	if (vs!=_vs)
 	{
-		PGO				(Msg("PGO:Vshader:%x",_vs));
 		stat.vs			++;
 		vs				= _vs;
-#ifdef USE_DX11
 		HW.pContext->VSSetShader(vs, 0, 0);
-#else
-		HW.pContext->VSSetShader(vs);
-#endif
-
 #ifdef DEBUG
 		vs_name			= _n;
 #endif
 	}
 }
 
-ICF void CBackend::set_Vertices(ID3DVertexBuffer* _vb, u32 _vb_stride)
+inline void CBackend::set_Vertices(ID3DVertexBuffer* _vb, u32 _vb_stride)
 {
 	if ((vb!=_vb) || (vb_stride!=_vb_stride))
 	{
-		PGO				(Msg("PGO:VB:%x,%d",_vb,_vb_stride));
 #ifdef DEBUG
 		stat.vb			++;
 #endif
@@ -174,11 +147,10 @@ ICF void CBackend::set_Vertices(ID3DVertexBuffer* _vb, u32 _vb_stride)
 	}
 }
 
-ICF void CBackend::set_Indices(ID3DIndexBuffer* _ib)
+inline void CBackend::set_Indices(ID3DIndexBuffer* _ib)
 {
 	if (ib!=_ib)
 	{
-		PGO				(Msg("PGO:IB:%x",_ib));
 #ifdef DEBUG
 		stat.ib			++;
 #endif
@@ -240,7 +212,6 @@ IC void CBackend::ApplyPrimitieTopology( D3D_PRIMITIVE_TOPOLOGY Topology )
 	}
 }
 
-#ifdef USE_DX11
 IC void CBackend::Compute(UINT ThreadGroupCountX, UINT ThreadGroupCountY, UINT ThreadGroupCountZ)
 {
 	stat.calls++;
@@ -251,21 +222,14 @@ IC void CBackend::Compute(UINT ThreadGroupCountX, UINT ThreadGroupCountY, UINT T
 	constants.flush();
 	HW.pContext->Dispatch(ThreadGroupCountX,ThreadGroupCountY,ThreadGroupCountZ);
 }
-#endif
 
-
-ICF void CBackend::ResolveSubresource(ID3DResource *pDstResource, UINT DstSubresource, ID3DResource *pSrcResource, UINT SrcSubresource, DXGI_FORMAT Format)
+inline void CBackend::ResolveSubresource(ID3DResource *pDstResource, UINT DstSubresource, ID3DResource *pSrcResource, UINT SrcSubresource, DXGI_FORMAT Format)
 {
-#ifdef USE_DX11
 	HW.pContext->ResolveSubresource	(pDstResource, DstSubresource, pSrcResource, SrcSubresource, Format);
-#else
-	HW.pDevice->ResolveSubresource	(pDstResource, DstSubresource, pSrcResource, SrcSubresource, Format);
-#endif
 }
 
-ICF void CBackend::Clear(u32 Count, const D3DRECT* pRects, u32 Flags, u32 Color, float Z, u32 Stencil)
+inline void CBackend::Clear(u32 Count, const D3DRECT* pRects, u32 Flags, u32 Color, float Z, u32 Stencil)
 {
-
 	if (Flags & D3DCLEAR_TARGET)
 	{
 		// Convert u32 color to float
@@ -298,13 +262,11 @@ IC void CBackend::Render(D3DPRIMITIVETYPE PrimitiveType, u32 baseV, u32 startV, 
 	u32	iIndexCount = GetIndexCount(PrimitiveType, PC);
 
 	//!!! HACK !!!
-#ifdef USE_DX11
 	if (hs != 0 || ds != 0)
 	{
 		R_ASSERT(Topology == D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		Topology = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
 	}
-#endif
 
 	stat.calls++;
 	stat.verts += countV;
@@ -319,8 +281,6 @@ IC void CBackend::Render(D3DPRIMITIVETYPE PrimitiveType, u32 baseV, u32 startV, 
 	//	State manager may alter constants
 	constants.flush();
 	HW.pContext->DrawIndexed(iIndexCount, startI, baseV);
-
-	PGO					(Msg("PGO:DIP:%dv/%df",countV,PC));
 }
 
 IC void CBackend::Render(D3DPRIMITIVETYPE PrimitiveType, u32 startV, u32 PC)
@@ -344,7 +304,6 @@ IC void CBackend::Render(D3DPRIMITIVETYPE PrimitiveType, u32 startV, u32 PC)
 	//	State manager may alter constants
 	constants.flush();
 	HW.pContext->Draw(iVertexCount, startV);
-	PGO					(Msg("PGO:DIP:%dv/%df",3*PC,PC));
 }
 
 IC void CBackend::set_Geometry(SGeometry* _geom)
@@ -395,7 +354,7 @@ IC void	CBackend::set_ColorWriteEnable(u32 _mask )
 {
 	StateManager.SetColorWriteEnable(_mask);
 }
-ICF void CBackend::set_CullMode(u32 _mode)
+inline void CBackend::set_CullMode(u32 _mode)
 {
 	StateManager.SetCullMode(_mode);
 }
@@ -433,13 +392,13 @@ IC void CBackend::ApplyVertexLayout()
 	}	
 }
 
-ICF void CBackend::set_VS(ref_vs& _vs)
+inline void CBackend::set_VS(ref_vs& _vs)
 {
 	m_pInputSignature = _vs->signature->signature;
 	set_VS(_vs->vs,_vs->cName.c_str());
 }
 
-ICF void CBackend::set_VS(SVS* _vs)
+inline void CBackend::set_VS(SVS* _vs)
 {
 	m_pInputSignature = _vs->signature->signature;
 	set_VS(_vs->vs,_vs->cName.c_str());
@@ -474,47 +433,34 @@ IC void CBackend::set_Constants			(R_constant_table* pConstantTable)
 	xforms.unmap	();
 	hemi.unmap		();
 	tree.unmap		();
-#ifdef USE_DX11
 	LOD.unmap		();
-#endif
 	StateManager.UnmapConstants();
+
 	if (pConstantTable == nullptr)		return;
-
-	PGO				(Msg("PGO:c-table"));
-
 
 	//	Setup constant tables
 	{
 		ref_cbuffer	aPixelConstants[MaxCBuffers];
 		ref_cbuffer	aVertexConstants[MaxCBuffers];
 		ref_cbuffer	aGeometryConstants[MaxCBuffers];
-#ifdef USE_DX11
 		ref_cbuffer	aHullConstants[MaxCBuffers];
 		ref_cbuffer	aDomainConstants[MaxCBuffers];
 		ref_cbuffer	aComputeConstants[MaxCBuffers];
-#endif
 
 		for (int i=0; i<MaxCBuffers; ++i)
 		{
 			aPixelConstants[i] = m_aPixelConstants[i];
 			aVertexConstants[i] = m_aVertexConstants[i];
 			aGeometryConstants[i] = m_aGeometryConstants[i];
-
-#ifdef USE_DX11
 			aHullConstants[i] = m_aHullConstants[i];
 			aDomainConstants[i] = m_aDomainConstants[i];
 			aComputeConstants[i] = m_aComputeConstants[i];
-#endif
-
 			m_aPixelConstants[i] = 0;
 			m_aVertexConstants[i] = 0;
 			m_aGeometryConstants[i] = 0;
-
-#ifdef USE_DX11
 			m_aHullConstants[i] = 0;
 			m_aDomainConstants[i] = 0;
 			m_aComputeConstants[i] = 0;
-#endif
 		}
 		R_constant_table::cb_table::iterator	it	= pConstantTable->m_CBTable.begin();
 		R_constant_table::cb_table::iterator	end	= pConstantTable->m_CBTable.end	();
@@ -537,7 +483,6 @@ IC void CBackend::set_Constants			(R_constant_table* pConstantTable)
 				VERIFY((uiBufferIndex&CB_BufferIndexMask)<MaxCBuffers);
 				m_aGeometryConstants[uiBufferIndex&CB_BufferIndexMask] = it->second;
 			}
-#ifdef USE_DX11
 			else if ( (uiBufferIndex&CB_BufferTypeMask) == CB_BufferHullShader)
 			{
 				VERIFY((uiBufferIndex&CB_BufferIndexMask)<MaxCBuffers);
@@ -553,7 +498,6 @@ IC void CBackend::set_Constants			(R_constant_table* pConstantTable)
 				VERIFY((uiBufferIndex&CB_BufferIndexMask)<MaxCBuffers);
 				m_aComputeConstants[uiBufferIndex&CB_BufferIndexMask] = it->second;
 			}
-#endif
 			else
 				VERIFY("Invalid enumeration");
 		}
@@ -608,7 +552,6 @@ IC void CBackend::set_Constants			(R_constant_table* pConstantTable)
 			HW.pContext->GSSetConstantBuffers(uiMin, uiMax-uiMin, &tempBuffer[uiMin]);
 		}
 
-#ifdef USE_DX11
 		if (CBuffersNeedUpdate(m_aHullConstants, aHullConstants, uiMin, uiMax))
 		{
 			++uiMax;
@@ -650,7 +593,6 @@ IC void CBackend::set_Constants			(R_constant_table* pConstantTable)
 			}
 			HW.pContext->CSSetConstantBuffers(uiMin, uiMax-uiMin, &tempBuffer[uiMin]);
 		}
-#endif
 	}
 
 	// process constant-loaders
@@ -665,7 +607,7 @@ IC void CBackend::set_Constants			(R_constant_table* pConstantTable)
 	}
 }
 
-ICF void CBackend::ApplyRTandZB()
+inline void CBackend::ApplyRTandZB()
 {
 	if (m_bChangedRTorZB)
 	{

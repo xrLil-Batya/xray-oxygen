@@ -31,14 +31,12 @@ void CBackend::OnFrameEnd	()
 
 void CBackend::OnFrameBegin	()
 {
-	PGO					(Msg("PGO:*****frame[%d]*****",RDEVICE.dwFrame));
-#ifdef USE_DX11
 	Invalidate();
 	//	DX9 sets base rt nd base zb by default
 	RImplementation.rmNormal();
 	set_RT				(HW.pBaseRT);
 	set_ZB				(HW.pBaseZB);
-#endif
+
     std::memset(&stat,0,sizeof(stat));
 	Vertex.Flush		();
 	Index.Flush			();
@@ -61,12 +59,12 @@ void CBackend::Invalidate	()
 	state						= nullptr;
 	ps							= nullptr;
 	vs							= nullptr;
-#ifdef USE_DX11
+
 	gs = nullptr;
 	hs = 0;
 	ds = 0;
 	cs = 0;
-#endif
+
 	ctable						= nullptr;
 
 	T							= nullptr;
@@ -206,7 +204,6 @@ void CBackend::set_Textures			(STextureList* _T)
 #endif
 				if (load_surf)			
 				{
-					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
 				}
 			}
@@ -229,7 +226,6 @@ void CBackend::set_Textures			(STextureList* _T)
 #endif
 				if (load_surf)
 				{
-					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
 				}
 			}
@@ -251,7 +247,6 @@ void CBackend::set_Textures			(STextureList* _T)
 #endif
 				if (load_surf)
 				{
-					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
 				}
 			}
@@ -272,7 +267,6 @@ void CBackend::set_Textures			(STextureList* _T)
 #endif
 				if (load_surf)
 				{
-					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
 				}
 			}
@@ -293,7 +287,6 @@ void CBackend::set_Textures			(STextureList* _T)
 #endif
 				if (load_surf)
 				{
-					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
 				}
 			}
@@ -314,7 +307,6 @@ void CBackend::set_Textures			(STextureList* _T)
 #endif
 				if (load_surf)
 				{
-					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
 				}
 			}

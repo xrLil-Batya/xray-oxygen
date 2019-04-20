@@ -20,7 +20,7 @@ void CRenderTarget::create_minmax_SM()
    StateManager.SetColorWriteEnable( D3D_COLOR_WRITE_ENABLE_ALL );
    StateManager.SetDepthFunc( D3DCMP_ALWAYS );
    StateManager.SetDepthEnable( FALSE );
-   StateManager.SetCullMode( D3DCULL_NONE );
+   StateManager.SetCullMode(D3D11_CULL_NONE);
 	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
 
    StateManager.SetColorWriteEnable( D3D_COLOR_WRITE_ENABLE_ALL );

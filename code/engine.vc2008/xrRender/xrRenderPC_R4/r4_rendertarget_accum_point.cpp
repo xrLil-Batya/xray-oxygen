@@ -97,7 +97,7 @@ void CRenderTarget::accum_point		(light* L)
          {
 		      RCache.set_Element(shader_msaa[0]->E[ _id ]	);
             RCache.set_Stencil(TRUE,D3DCMP_EQUAL,dwLightMarkerID|0x80,0xff,0x00);
-            RCache.set_CullMode( D3DCULL_CW );
+            RCache.set_CullMode(CULL_CW);
             draw_volume			(L);
          }
          else // checked Holger
@@ -107,7 +107,7 @@ void CRenderTarget::accum_point		(light* L)
 			      RCache.set_Element		   (shader_msaa[i]->E[ _id ]	);
                StateManager.SetSampleMask (u32(1)<<i);
                RCache.set_Stencil         (TRUE,D3DCMP_EQUAL,dwLightMarkerID|0x80,0xff,0x00);
-               RCache.set_CullMode        ( D3DCULL_CW );
+               RCache.set_CullMode        (CULL_CW );
                draw_volume						(L);			
 		      }
 		      StateManager.SetSampleMask(0xffffffff);
@@ -132,14 +132,14 @@ void CRenderTarget::accum_point		(light* L)
       else // checked Holger
       {
          // per pixel
-         RCache.set_CullMode( D3DCULL_CW );
+         RCache.set_CullMode( CULL_CW );
          RCache.set_Stencil(TRUE,D3DCMP_EQUAL,dwLightMarkerID,0xff,0x00);		
          draw_volume			(L);
          if( RImplementation.o.dx10_msaa_opt )
          {
             // per sample
 		      RCache.set_Element(s_accum_mask_msaa[0]->E[SE_MASK_ACCUM_VOL]	);
-            RCache.set_CullMode( D3DCULL_CW );
+            RCache.set_CullMode( CULL_CW );
             RCache.set_Stencil(TRUE,D3DCMP_EQUAL,dwLightMarkerID|0x80,0xff,0x00);		
 		      draw_volume			(L);
          }
@@ -148,7 +148,7 @@ void CRenderTarget::accum_point		(light* L)
 		      for( u32 i = 0; i < RImplementation.o.dx10_msaa_samples; ++i )
 		      {
 			      RCache.set_Element	      (s_accum_mask_msaa[i]->E[SE_MASK_ACCUM_VOL]	);
-               RCache.set_CullMode        ( D3DCULL_CW );
+               RCache.set_CullMode        ( CULL_CW );
                StateManager.SetSampleMask ( u32(1) << i );
                RCache.set_Stencil         (TRUE,D3DCMP_EQUAL,dwLightMarkerID|0x80,0xff,0x00);		
                draw_volume					   (L);

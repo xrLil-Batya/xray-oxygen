@@ -191,10 +191,8 @@ void	_IndexStream::Destroy()
 
 u16*	_IndexStream::Lock	( u32 Count, u32& vOffset )
 {
-#ifdef USE_DX11
 	D3D11_MAPPED_SUBRESOURCE MappedSubRes;
-#endif
-	PGO						(Msg("PGO:IB_LOCK:%d",Count));
+
 	vOffset					= 0;
 	BYTE* pLockedData		= 0;
 
@@ -212,17 +210,12 @@ u16*	_IndexStream::Lock	( u32 Count, u32& vOffset )
 		mDiscardID	++;
 	}
 
-#ifdef USE_DX11
-	D3D_MAP MapMode = (dwFlags==LOCKFLAGS_APPEND) ? 
-		D3D_MAP_WRITE_NO_OVERWRITE : D3D_MAP_WRITE_DISCARD;
+	D3D_MAP MapMode = (dwFlags==LOCKFLAGS_APPEND) ?  D3D_MAP_WRITE_NO_OVERWRITE : D3D_MAP_WRITE_DISCARD;
 	HW.pContext->Map(pIB, 0, MapMode, 0, &MappedSubRes);
 	pLockedData = (BYTE*)MappedSubRes.pData;
 	pLockedData += mPosition * 2;
-#else
-	pIB->Lock				( mPosition * 2, Count * 2, (void**) &pLockedData, dwFlags);
-#endif
-	VERIFY					(pLockedData);
 
+	VERIFY					(pLockedData);
 	vOffset					=	mPosition;
 
 	return					LPWORD(pLockedData);
@@ -230,14 +223,9 @@ u16*	_IndexStream::Lock	( u32 Count, u32& vOffset )
 
 void	_IndexStream::Unlock(u32 RealCount)
 {
-	PGO						(Msg("PGO:IB_UNLOCK:%d",RealCount));
 	mPosition				+=	RealCount;
 	VERIFY					(pIB);
-#ifdef USE_DX11
 	HW.pContext->Unmap(pIB, 0);
-#else
-	pIB->Unlock();
-#endif
 }
 
 void	_IndexStream::reset_begin	()
