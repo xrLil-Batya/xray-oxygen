@@ -25,7 +25,7 @@ XRay::Editor::EditorOcclusion::~EditorOcclusion()
 	_Instance = nullptr;
 }
 
-void XRay::Editor::EditorOcclusion::AddObjectToRenderableList(XRay::Object^ object)
+void XRay::Editor::EditorOcclusion::AddObjectToRenderableList(XRay::Model^ object)
 {
 	_renderableList->Add(object);
 }
@@ -34,15 +34,14 @@ void XRay::Editor::EditorOcclusion::FillOcclusionList(IntPtr pRenderInterface)
 {
 	IRender_interface* pRenderInterfaceNative =(IRender_interface*) pRenderInterface.ToPointer();
 
-	for each (XRay::Object^ renderObj in _renderableList)
+	for each (XRay::Model^ renderObj in _renderableList)
 	{
-		IntPtr pWrappedNative = renderObj->GetNativeObject();
-		CObject* pObj = (CObject*)pWrappedNative.ToPointer();
+		IRenderVisual* pObj = (IRenderVisual*)renderObj->NativeObject.ToPointer();
 
-		pRenderInterfaceNative->set_Object(pObj);
-		pObj->renderable_Render();
-		pRenderInterfaceNative->set_Object(nullptr);
-		pRenderInterfaceNative->add_Visual(pObj->Visual());
+		//pRenderInterfaceNative->set_Object(pObj);
+		//pObj->renderable_Render();
+		//pRenderInterfaceNative->set_Object(nullptr);
+		pRenderInterfaceNative->add_Visual(pObj);
 	}
 }
 

@@ -57,7 +57,7 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 	// закончить приземление
 	if (mstate_real&(mcLanding|mcLanding2)){
 		m_fLandingTime		-= dt;
-		if (m_fLandingTime<=0.f){
+		if (m_fLandingTime<=0.f){ 
 			mstate_real		&=~	(mcLanding|mcLanding2);
 			mstate_real		&=~	(mcFall|mcJump);
 		}

@@ -427,17 +427,16 @@ public:
 };
 
 ENGINE_API BOOL r2_advanced_pp = FALSE;	//	advanced post process and effects
-u32	renderer_value = 0;
-u32 isLoaded = 2;
 extern bool g_bRendererForced;
 
 class CCC_Renderer : public CCC_Token
 {
 	typedef CCC_Token inherited;
+	bool bLoaded;
 public:
-	CCC_Renderer(LPCSTR N) : inherited(N, &renderer_value, NULL)
+	CCC_Renderer(LPCSTR N) : inherited(N, nullptr, NULL)
 	{
-		renderer_value = 3; 
+		bLoaded = false;
 	};
 	virtual ~CCC_Renderer()
 	{
@@ -445,23 +444,28 @@ public:
 	virtual void	Execute(LPCSTR args)
 	{
 		//	vid_quality_token must be already created!
-		if (isLoaded != 1)
+		if (!bLoaded)
 		{
-			tokens = vid_quality_token.data();
+			xr_string xr_args(args);
+			xr_vector<xr_string> renderArgToken = xr_args.Split('_');
+			R_ASSERT3(renderArgToken.size() == 2, "Invalid render name argument", args);
 
-			inherited::Execute(args);
+			if (renderArgToken[1] == "r2")
+			{
+				psDeviceFlags.set(rsR2, true);
+				r2_advanced_pp = true;
+			}
+			else if (renderArgToken[1] == "r4")
+			{
+				psDeviceFlags.set(rsR4, true);
+			}
+			else
+			{
+				R_ASSERT3(false, "Invalid render name", renderArgToken[1].c_str());
+			}
 
-			// 0..2 - r2
-			// 3 - r4
-			psDeviceFlags.set(rsR2, ((renderer_value >= 0) && renderer_value < 3));
-			psDeviceFlags.set(rsR4, (renderer_value == 3));
-
-			r2_advanced_pp = (renderer_value >= 3);
-
-			isLoaded--;
+			bLoaded = true;
 		}
-		else
-			isLoaded = 16;
 	}
 
 	virtual void	Save	(IWriter *F)	

@@ -119,8 +119,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\xrManagedEngineLib\xrManagedEngineLib.vcxproj">
+      <Project>{09dc3343-46ca-4d55-bfe3-317c0ff02e52}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\xrManagedLib\xrManagedLib.vcxproj">
       <Project>{c4defc31-a910-4339-99b3-6c410dc19ad0}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\xrManagedRenderLib\xrManagedRenderLib.vcxproj">
+      <Project>{42986579-d91d-4523-ae54-0bffeb0748c2}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
