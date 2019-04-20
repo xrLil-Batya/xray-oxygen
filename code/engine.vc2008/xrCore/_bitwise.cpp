@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "_bitwise.h"
 
-XRCORE_API float fFloorSSE2(float x)
+XRCORE_API float fFloorSSE2(const float &x)
 {
 	// copy to low DST element 
 	__m128 f = _mm_set_ss(x);

@@ -641,8 +641,8 @@ void CRender::render_sun_near()
 		cull_xform.mul(mdir_Project, mdir_View);
 		Fvector cam_proj = wform(cull_xform, Device.vCameraPosition);
 		Fvector	cam_pixel = wform(m_viewport, cam_proj);
-		cam_pixel.x = floorf(cam_pixel.x);
-		cam_pixel.y = floorf(cam_pixel.y);
+		cam_pixel.x = fFloorSSE2(cam_pixel.x);
+		cam_pixel.y = fFloorSSE2(cam_pixel.y);
 		Fvector cam_snapped = wform(m_viewport_inv, cam_pixel);
 		Fvector diff;		diff.sub(cam_snapped, cam_proj);
 		Fmatrix adjust;		adjust.translate(diff);
@@ -943,7 +943,7 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 		{
 			Fvector cam_proj = Device.vCameraPosition;
 			const float		align_aim_step_coef = 4.f;
-			cam_proj.set(floorf(cam_proj.x / align_aim_step_coef) + align_aim_step_coef / 2, floorf(cam_proj.y / align_aim_step_coef) + align_aim_step_coef / 2, floorf(cam_proj.z / align_aim_step_coef) + align_aim_step_coef / 2);
+			cam_proj.set(fFloorSSE2(cam_proj.x / align_aim_step_coef) + align_aim_step_coef / 2, fFloorSSE2(cam_proj.y / align_aim_step_coef) + align_aim_step_coef / 2, fFloorSSE2(cam_proj.z / align_aim_step_coef) + align_aim_step_coef / 2);
 			cam_proj.mul(align_aim_step_coef);
 			Fvector	cam_pixel = wform(cull_xform, cam_proj);
 			cam_pixel = wform(m_viewport, cam_pixel);
@@ -958,8 +958,8 @@ void CRender::render_sun_cascade(u32 cascade_ind)
 			shift_proj.y = shift_proj.y > 0 ? align_granularity : -align_granularity;
 			shift_proj.z = 0;
 
-			cam_pixel.x = cam_pixel.x / align_granularity - floorf(cam_pixel.x / align_granularity);
-			cam_pixel.y = cam_pixel.y / align_granularity - floorf(cam_pixel.y / align_granularity);
+			cam_pixel.x = cam_pixel.x / align_granularity - fFloorSSE2(cam_pixel.x / align_granularity);
+			cam_pixel.y = cam_pixel.y / align_granularity - fFloorSSE2(cam_pixel.y / align_granularity);
 			cam_pixel.x *= align_granularity;
 			cam_pixel.y *= align_granularity;
 			cam_pixel.z = 0;

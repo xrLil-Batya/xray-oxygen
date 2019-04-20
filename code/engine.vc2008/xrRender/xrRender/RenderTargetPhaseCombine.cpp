@@ -76,7 +76,7 @@ void CRenderTarget::phase_combine()
 	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
 #endif
 	
-	RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00);	// stencil should be >= 1
+	RCache.set_Stencil(TRUE, D3D11_COMPARISON_LESS_EQUAL, 0x01, 0xff, 0x00);	// stencil should be >= 1
 #ifndef USE_DX11
 	if (RImplementation.o.nvstencil)
 	{
@@ -192,12 +192,12 @@ void CRenderTarget::phase_combine()
 			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 		else
 		{
-			RCache.set_Stencil	(TRUE, D3DCMP_EQUAL, 0x01, 0x81, 0);
+			RCache.set_Stencil	(TRUE, D3D11_COMPARISON_EQUAL, 0x01, 0x81, 0);
 			RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 			if (RImplementation.o.dx10_msaa_opt)
 			{
 				RCache.set_Element	(s_combine_msaa[0]->E[0]);
-				RCache.set_Stencil	(TRUE, D3DCMP_EQUAL, 0x81, 0x81, 0);
+				RCache.set_Stencil	(TRUE, D3D11_COMPARISON_EQUAL, 0x81, 0x81, 0);
 				RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 			}
 			else
@@ -206,12 +206,12 @@ void CRenderTarget::phase_combine()
 				{
 					RCache.set_Element			(s_combine_msaa[i]->E[0]);
 					StateManager.SetSampleMask	(u32(1) << i);
-					RCache.set_Stencil			(TRUE, D3DCMP_EQUAL, 0x81, 0x81, 0);
+					RCache.set_Stencil			(TRUE, D3D11_COMPARISON_EQUAL, 0x81, 0x81, 0);
 					RCache.Render				(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 				}
 				StateManager.SetSampleMask(0xffffffff);
 			}
-			RCache.set_Stencil(FALSE, D3DCMP_EQUAL, 0x01, 0xff, 0);
+			RCache.set_Stencil(FALSE, D3D11_COMPARISON_EQUAL, 0x01, 0xff, 0);
 		}
 #else
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
@@ -483,11 +483,11 @@ void CRenderTarget::phase_combine()
 
 #ifdef USE_DX11
 	StateManager.SetDepthEnable(TRUE);
-	StateManager.SetDepthFunc(D3DCMP_LESSEQUAL);
+	StateManager.SetDepthFunc(D3D11_COMPARISON_LESS_EQUAL);
 	StateManager.Apply();
 #else
 	HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
-	RCache.set_ZFunc(D3DCMP_LESSEQUAL);
+	RCache.set_ZFunc(D3D11_COMPARISON_LESS_EQUAL);
 	HW.pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 #endif
 	for (u32 it=0; it<dbg_lines.size(); it++)
@@ -516,7 +516,7 @@ void CRenderTarget::phase_wallmarks ()
 #endif
 
 	// Stencil	- draw only where stencil >= 0x1
-	RCache.set_Stencil			(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00);
+	RCache.set_Stencil			(TRUE, D3D11_COMPARISON_LESS_EQUAL, 0x01, 0xff, 0x00);
 	RCache.set_CullMode			(CULL_CCW);
 	RCache.set_ColorWriteEnable	(D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
 }

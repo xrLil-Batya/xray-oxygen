@@ -69,7 +69,7 @@ IC	u64	btwCount1(u64 v)
 	return btwCount1(u32(v&u32(-1))) + btwCount1(u32(v >> 32));
 }
 
-XRCORE_API float fFloorSSE2(float x);
+XRCORE_API float fFloorSSE2(const float &x);
 
 ICF int iFloor (float x) 
 {

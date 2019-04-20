@@ -17,7 +17,7 @@ struct intrusive_base {
     }
 
     template <typename T>
-    void release(T* object) XR_NOEXCEPT
+    void release(T* object) 
     {
         try {
             xr_delete(object);
@@ -44,7 +44,7 @@ class intrusive_ptr {
     object_type* m_object;
 
 protected:
-    void dec() XR_NOEXCEPT
+    void dec() 
     {
         if (!m_object)
             return;
@@ -59,32 +59,32 @@ public:
     {
     }
 
-    intrusive_ptr(object_type* rhs) XR_NOEXCEPT
+    intrusive_ptr(object_type* rhs) 
         : m_object(rhs)
     {
         if (m_object != nullptr)
             m_object->acquire();
     }
 
-    intrusive_ptr(const self_type& rhs) XR_NOEXCEPT
+    intrusive_ptr(const self_type& rhs) 
         : m_object(rhs.m_object)
     {
         if (m_object != nullptr)
             m_object->acquire();
     }
 
-    intrusive_ptr(self_type&& rhs) XR_NOEXCEPT
+    intrusive_ptr(self_type&& rhs) 
         : m_object(rhs.m_object)
     {
         rhs.m_object = nullptr;
     }
 
-    ~intrusive_ptr() XR_NOEXCEPT
+    ~intrusive_ptr() 
     {
         dec();
     }
 
-    self_type& operator=(object_type* rhs) XR_NOEXCEPT
+    self_type& operator=(object_type* rhs) 
     {
         dec();
         m_object = rhs;
@@ -94,7 +94,7 @@ public:
         return *this;
     }
 
-    self_type& operator=(const self_type& rhs) XR_NOEXCEPT
+    self_type& operator=(const self_type& rhs) 
     {
         dec();
         m_object = rhs.m_object;
@@ -104,7 +104,7 @@ public:
         return *this;
     }
 
-    self_type& operator=(self_type&& rhs) XR_NOEXCEPT
+    self_type& operator=(self_type&& rhs) 
     {
         dec();
         m_object = rhs.m_object;
@@ -113,44 +113,44 @@ public:
         return *this;
     }
 
-    IC object_type& operator*() const XR_NOEXCEPT
+    IC object_type& operator*() const 
     {
         VERIFY(m_object);
         return *m_object;
     }
 
-	IC object_type* operator->() const XR_NOEXCEPT
+	IC object_type* operator->() const 
     {
         VERIFY(m_object);
         return m_object;
     }
 
-    explicit operator bool() const XR_NOEXCEPT
+    explicit operator bool() const 
     {
         return m_object != nullptr;
     }
 
-    bool operator==(const self_type& rhs) const XR_NOEXCEPT
+    bool operator==(const self_type& rhs) const 
     {
         return m_object == rhs.m_object;
     }
 
-    bool operator!=(const self_type& rhs) const XR_NOEXCEPT
+    bool operator!=(const self_type& rhs) const 
     {
         return m_object != rhs.m_object;
     }
 
-    bool operator<(const self_type& rhs) const XR_NOEXCEPT
+    bool operator<(const self_type& rhs) const 
     {
         return m_object < rhs.m_object;
     }
 
-    bool operator>(const self_type& rhs) const XR_NOEXCEPT
+    bool operator>(const self_type& rhs) const 
     {
         return m_object > rhs.m_object;
     }
 
-    void swap(self_type& rhs) XR_NOEXCEPT
+    void swap(self_type& rhs) 
     {
         object_type* tmp = m_object;
         m_object = rhs.m_object;
@@ -164,7 +164,7 @@ public:
 };
 
 template <typename object_type, typename base_type>
-void swap(intrusive_ptr<object_type, base_type>& lhs, intrusive_ptr<object_type, base_type>& rhs) XR_NOEXCEPT
+void swap(intrusive_ptr<object_type, base_type>& lhs, intrusive_ptr<object_type, base_type>& rhs) 
 {
     lhs.swap(rhs);
 }

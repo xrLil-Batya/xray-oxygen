@@ -16,7 +16,7 @@ inline void ComputeRowColsForFlat3DTexture( int depth, int *outCols, int *outRow
 {
 	// Compute # of m_iRows and m_iCols for a "flat 3D-texture" configuration
 	// (in this configuration all the slices in the volume are spread in a single 2D texture)
-	int m_iRows =(int)floorf(_sqrt((float)depth));
+	int m_iRows = iFloor(_sqrt((float)depth));
 	int m_iCols = m_iRows;
 	while( m_iRows * m_iCols < depth ) {
 		m_iCols++;
@@ -149,7 +149,7 @@ void dx103DFluidGrid::InitScreenSlice(VS_INPUT_FLUIDSIM_STRUCT** vertices, int z
 
 	// compute the offset (px, py) in the "flat 3D-texture" space for the slice with given 'z' coordinate
 	int column      = z % m_iCols;
-	int row         = (int)floorf((float)(z/m_iCols));
+	int row         = (int)iFloor((float)(z/m_iCols));
 	int px = column * m_vDim[0];
 	int py = row    * m_vDim[1];
 

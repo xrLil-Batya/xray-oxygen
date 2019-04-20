@@ -35,7 +35,7 @@ public:
 	{
 		// y = arg0 + arg1*func( (time+arg2)*arg3 )
 		float x = (t + arg[2])*arg[3];
-		return arg[0] + arg[1] * Func(x - floorf(x));
+		return arg[0] + arg[1] * Func(x - fFloorSSE2(x));
 	}
 
 	WaveForm() {

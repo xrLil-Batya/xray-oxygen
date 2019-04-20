@@ -189,8 +189,8 @@ void CRender::render_rain()
 		//	snap zero point to pixel
 		Fvector cam_proj = wform(cull_xform, Fvector().set(0, 0, 0));
 		Fvector	cam_pixel = wform(mViewPort, cam_proj);
-		cam_pixel.x = floorf(cam_pixel.x);
-		cam_pixel.y = floorf(cam_pixel.y);
+		cam_pixel.x = fFloorSSE2(cam_pixel.x);
+		cam_pixel.y = fFloorSSE2(cam_pixel.y);
 		Fvector cam_snapped = wform(m_viewport_inv, cam_pixel);
 		Fvector diff;		diff.sub(cam_snapped, cam_proj);
 		Fmatrix adjust;		adjust.translate(diff);

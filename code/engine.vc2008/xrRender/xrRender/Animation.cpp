@@ -3,7 +3,7 @@
 
 using namespace animation;
 
-const channal_rule channels::rules[channels::max] = 
+constexpr channal_rule channels::rules[channels::max] = 
 {
 	{ mix_type::lerp, mix_type::lerp}, 
 	{ mix_type::lerp, mix_type::lerp}, 

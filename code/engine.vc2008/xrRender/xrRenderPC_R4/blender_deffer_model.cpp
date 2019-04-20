@@ -91,7 +91,7 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 			if (bUseATOC)
 			{
 				uber_deffer		(C,true,"model","base_atoc",bAref,0,true);
-				C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
+				C.r_Stencil		( TRUE,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 				C.r_StencilRef	(0x01);
 				C.r_ColorWriteEnable(false, false, false, false);
 
@@ -102,16 +102,16 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 
 			uber_deffer		(C,true,	"model",	"base",bAref,0,true);
 
-			C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
+			C.r_Stencil		( TRUE,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 			C.r_StencilRef	(0x01);
-			if (bUseATOC) C.RS.SetRS	( D3DRS_ZFUNC, D3DCMP_EQUAL);
+			if (bUseATOC) C.RS.SetRS	( D3DRS_ZFUNC, D3D11_COMPARISON_EQUAL);
 			C.r_End			();
 			break;
 		case SE_R2_NORMAL_LQ: 			// deffer
 			if (bUseATOC)
 			{
 				uber_deffer		(C,false,"model","base_atoc",bAref,0,true);
-				C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
+				C.r_Stencil		( TRUE,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 				C.r_StencilRef	(0x01);
 				C.r_ColorWriteEnable(false, false, false, false);
 
@@ -121,9 +121,9 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 			}
 
 			uber_deffer		(C,false,	"model",	"base",bAref,0,true);
-			C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
+			C.r_Stencil		( TRUE,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 			C.r_StencilRef	(0x01);
-			if (bUseATOC) C.RS.SetRS	( D3DRS_ZFUNC, D3DCMP_EQUAL);
+			if (bUseATOC) C.RS.SetRS	( D3DRS_ZFUNC, D3D11_COMPARISON_EQUAL);
 			C.r_End			();
 			break;
 		case SE_R2_SHADOW:				// smap

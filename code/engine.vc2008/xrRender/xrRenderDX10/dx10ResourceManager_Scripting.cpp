@@ -147,27 +147,27 @@ void	CResourceManager::LS_Load()
 			class_<adopt_cmp_func>("cmp_func")
 			.enum_("cmp_func")
 			[
-				value("never", int(D3DCMP_NEVER)),
-				value("less", int(D3DCMP_LESS)),
-				value("equal", int(D3DCMP_EQUAL)),
-				value("lessequal", int(D3DCMP_LESSEQUAL)),
-				value("greater", int(D3DCMP_GREATER)),
-				value("notequal", int(D3DCMP_NOTEQUAL)),
-				value("greaterequal", int(D3DCMP_GREATEREQUAL)),
-				value("always", int(D3DCMP_ALWAYS))
+				value("never", int(D3D11_COMPARISON_NEVER)),
+				value("less", int(D3D11_COMPARISON_LESS)),
+				value("equal", int(D3D11_COMPARISON_EQUAL)),
+				value("lessequal", int(D3D11_COMPARISON_LESS_EQUAL)),
+				value("greater", int(D3D11_COMPARISON_GREATER)),
+				value("notequal", int(D3D11_COMPARISON_NOT_EQUAL)),
+				value("greaterequal", int(D3D11_COMPARISON_GREATER_EQUAL)),
+				value("always", int(D3D11_COMPARISON_ALWAYS))
 			],
 
 			class_<adopt_stencil_op>("stencil_op")
 			.enum_("stencil_op")
 			[
-				value("keep", int(D3DSTENCILOP_KEEP)),
-				value("zero", int(D3DSTENCILOP_ZERO)),
-				value("replace", int(D3DSTENCILOP_REPLACE)),
-				value("incrsat", int(D3DSTENCILOP_INCRSAT)),
-				value("decrsat", int(D3DSTENCILOP_DECRSAT)),
-				value("invert", int(D3DSTENCILOP_INVERT)),
-				value("incr", int(D3DSTENCILOP_INCR)),
-				value("decr", int(D3DSTENCILOP_DECR))
+				value("keep", int(D3D11_STENCIL_OP_KEEP)),
+				value("zero", int(D3D11_STENCIL_OP_ZERO)),
+				value("replace", int(D3D11_STENCIL_OP_REPLACE)),
+				value("incrsat", int(D3D11_STENCIL_OP_INCR_SAT)),
+				value("decrsat", int(D3D11_STENCIL_OP_DECR_SAT)),
+				value("invert", int(D3D11_STENCIL_OP_INVERT)),
+				value("incr", int(D3D11_STENCIL_OP_INCR)),
+				value("decr", int(D3D11_STENCIL_OP_DECR))
 			]
 		];
 

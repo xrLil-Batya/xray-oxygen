@@ -37,7 +37,7 @@ void	CRenderTarget::phase_accumulator()
 		HW.pContext->ClearRenderTargetView( rt_Accumulator->pRT, ColorRGBA);
 
 		// Stencil	- draw only where stencil >= 0x1
-		RCache.set_Stencil					(TRUE,D3DCMP_LESSEQUAL,0x01,0xff,0x00);
+		RCache.set_Stencil					(TRUE,D3D11_COMPARISON_LESS_EQUAL,0x01,0xff,0x00);
 		RCache.set_CullMode					(CULL_NONE);
 		RCache.set_ColorWriteEnable			();
 		

@@ -236,15 +236,15 @@ void SimulatorStates::UpdateDesc(D3D_DEPTH_STENCIL_DESC &desc) const
 				break;
 
 			case D3DRS_STENCILFAIL:
-				desc.front.failOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.front.failOp = vkStateUtils::ConvertStencilOp((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_STENCILZFAIL:
-				desc.front.depthFailOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.front.depthFailOp = vkStateUtils::ConvertStencilOp((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_STENCILPASS:
-				desc.front.passOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.front.passOp = vkStateUtils::ConvertStencilOp((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_STENCILFUNC:
@@ -252,15 +252,15 @@ void SimulatorStates::UpdateDesc(D3D_DEPTH_STENCIL_DESC &desc) const
 				break;
 
 			case D3DRS_CCW_STENCILFAIL:
-				desc.back.failOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.back.failOp = vkStateUtils::ConvertStencilOp((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_CCW_STENCILZFAIL:
-				desc.back.depthFailOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.back.depthFailOp = vkStateUtils::ConvertStencilOp((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_CCW_STENCILPASS:
-				desc.back.passOp = vkStateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.back.passOp = vkStateUtils::ConvertStencilOp((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_CCW_STENCILFUNC:
@@ -569,7 +569,7 @@ void SimulatorStates::UpdateDesc( D3D_DEPTH_STENCIL_DESC &desc ) const
 				break;
 
 			case D3DRS_ZFUNC:
-				desc.DepthFunc = dx10StateUtils::ConvertCmpFunction((D3DCMPFUNC)S.v2);
+				desc.DepthFunc = ((D3D11_COMPARISON_FUNC)S.v2);
 				break;
 
 			case D3DRS_STENCILENABLE:
@@ -585,35 +585,35 @@ void SimulatorStates::UpdateDesc( D3D_DEPTH_STENCIL_DESC &desc ) const
 				break;
 
 			case D3DRS_STENCILFAIL:
-				desc.FrontFace.StencilFailOp = dx10StateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.FrontFace.StencilFailOp = ((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_STENCILZFAIL:
-				desc.FrontFace.StencilDepthFailOp = dx10StateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.FrontFace.StencilDepthFailOp = ((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_STENCILPASS:
-				desc.FrontFace.StencilPassOp = dx10StateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.FrontFace.StencilPassOp = ((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_STENCILFUNC:
-				desc.FrontFace.StencilFunc = dx10StateUtils::ConvertCmpFunction((D3DCMPFUNC)S.v2);
+				desc.FrontFace.StencilFunc = ((D3D11_COMPARISON_FUNC)S.v2);
 				break;
 
 			case D3DRS_CCW_STENCILFAIL:
-				desc.BackFace.StencilFailOp = dx10StateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.BackFace.StencilFailOp = ((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_CCW_STENCILZFAIL:
-				desc.BackFace.StencilDepthFailOp = dx10StateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.BackFace.StencilDepthFailOp = ((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_CCW_STENCILPASS:
-				desc.BackFace.StencilPassOp = dx10StateUtils::ConvertStencilOp((D3DSTENCILOP)S.v2);
+				desc.BackFace.StencilPassOp = ((D3D11_STENCIL_OP)S.v2);
 				break;
 
 			case D3DRS_CCW_STENCILFUNC:
-				desc.BackFace.StencilFunc = dx10StateUtils::ConvertCmpFunction((D3DCMPFUNC)S.v2);
+				desc.BackFace.StencilFunc = ((D3D11_COMPARISON_FUNC)S.v2);
 				break;
 			}
 		}
