@@ -17,11 +17,16 @@ namespace CPU {
 	XRCORE_API extern	processor_info	Info				;
 	XRCORE_API extern	u64				QPC	()	noexcept	;
 
-#ifdef M_VISUAL
-		IC u64	GetCLK(void){
-			return __rdtsc();
-		}
-#endif
+	IC u64	GetCLK(void)
+	{
+		return __rdtsc();
+	}
+
+	IC void CachePtrToL1(void* p)
+	{
+		if (Info.hasFeature(CPUFeature::AMD_3DNow))
+			_m_prefetchw(p);
+	}
 };
 
 extern XRCORE_API	void	_initialize_cpu			();

@@ -60,6 +60,8 @@ void CTextureDescrMngr::LoadTHM(FS_FileSet& flist, LPCSTR initial, map_TD &s_tex
 {
 	STextureParams			tp;
 	string_path				fn;
+	
+	CPU::CachePtrToL1(xr_FS);
 	for(const FS_File &fs_iter: flist)
 	{
 		FS.update_path		(fn, initial, fs_iter.name.c_str());

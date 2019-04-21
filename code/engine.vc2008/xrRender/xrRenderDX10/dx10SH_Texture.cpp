@@ -357,6 +357,7 @@ void CTexture::Load()
 	string_path			fn;
 	if (FS.exist(fn, "$game_textures$", *cName, ".ogm") || FS.exist(fn, "$game_textures$", *cName, ".ogv")) 
 	{
+		CPU::CachePtrToL1(HW.pDevice);
 		// AVI
 		pTheora = xr_new<CTheoraSurface>();
 		m_play_time = 0xFFFFFFFF;
@@ -382,9 +383,9 @@ void CTexture::Load()
 			desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 			desc.SampleDesc.Count = 1;
 			desc.SampleDesc.Quality = 0;
-			desc.Usage = D3D_USAGE_DYNAMIC;
-			desc.BindFlags = D3D_BIND_SHADER_RESOURCE;
-			desc.CPUAccessFlags = D3D_CPU_ACCESS_WRITE;
+			desc.Usage = D3D11_USAGE_DYNAMIC;
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			desc.MiscFlags = 0;
 			HRESULT hrr = HW.pDevice->CreateTexture2D(&desc, 0, &pTexture);
 
@@ -492,7 +493,7 @@ void CTexture::Load()
 				u32	mem = 0;
 				pSurface = ::RImplementation.texture_load(*cName, mem, true);
 
-				if (GetUsage() == D3D_USAGE_STAGING)
+				if (GetUsage() == D3D11_USAGE_STAGING)
 				{
 					flags.bLoadedAsStaging = TRUE;
 					bCreateView = false;
