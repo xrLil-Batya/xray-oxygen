@@ -780,6 +780,8 @@ void CWeaponMagazined::switch2_Showing()
 	PlayAnimShow();
 }
 
+#include "CustomDetector.h"
+
 bool CWeaponMagazined::Action(u16 cmd, u32 flags) 
 {
 	if (inherited::Action(cmd, flags)) 
@@ -795,7 +797,15 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 	    {
 			if (iAmmoElapsed < iMagazineSize || IsMisfire())
 			{
-				Reload();
+				// Rietmon: Запрещаем перезарядку, если активен детектор
+				PIItem Det = Actor()->inventory().ItemFromSlot(DETECTOR_SLOT);
+				if (!Det) Reload(); // Rietmon: Если в слоте нету детектора, то он не может быть активен
+
+				if (Det)
+				{
+					CCustomDetector* pDet = smart_cast<CCustomDetector*>(Det);
+					if (!pDet->IsWorking()) Reload(); 
+				}
 			}
 
 			return true;
