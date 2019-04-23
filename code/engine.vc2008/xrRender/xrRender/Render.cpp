@@ -473,7 +473,7 @@ void CRender::Render()
 		ScopeStatTimer sunTimer(Device.Statistic->Render_CRenderRender_Sun);
 		PIX_EVENT(DEFER_SUN);
 		RImplementation.stats.l_visible++;
-		if (!ps_r_flags.is(R_FLAG_SUN_OLD))
+		if (ps_r_flags.is(R_FLAG_SUN_OLD))
 			render_sun_cascades();
 		else
 		{
