@@ -1,5 +1,5 @@
 function normal		(shader, t_base, t_second, t_detail)
-	shader:begin	("accum_volumetric", "accum_volumetric")
+	shader:begin	("accum_volumetric_nomsaa", "accum_volumetric_nomsaa")
 			: fog		(false)
 			: zb 		(true,false)
 			: blend		(true,blend.one,blend.one)

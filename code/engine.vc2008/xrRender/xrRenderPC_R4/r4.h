@@ -84,13 +84,11 @@ public:
 		u32		noshadows			: 1;
 		u32		Tshadows			: 1;						// transluent shadows
 		u32		disasm				: 1;
-		u32		advancedpp			: 1;	//	advanced post process (DOF, SSAO, volumetrics, etc.)
 		u32		volumetricfog		: 1;
 
       u32		dx10_msaa			: 1;	//	DX10.0 path
 	  u32		dx10_msaa_hybrid	: 1;	//	DX10.0 main path with DX10.1 A-test msaa allowed
       u32		dx10_msaa_opt	    : 1;	//	DX10.1 path
-	  u32		dx10_sm4_1			: 1;	//	DX10.1 path
       u32		dx10_msaa_alphatest	: 2;	//	A-test mode
 	  u32		dx10_msaa_samples	: 4;
 
@@ -166,7 +164,6 @@ private:
 	void							LoadBuffers					(CStreamReader	*fs,	BOOL	_alternative);
 	void							LoadVisuals					(IReader	*fs);
 	void							LoadLights					(IReader	*fs);
-	void							LoadPortals					(IReader	*fs);
 	void							LoadSectors					(IReader	*fs);
 	void							LoadSWIs					(CStreamReader	*fs);
 	void							Load3DFluid					();
@@ -177,15 +174,12 @@ private:
 	void							add_leafs_Static			(dxRender_Visual*pVisual);					// if detected node's full visibility
 
 public:
-	IRender_Sector*					rimp_detectSector			(Fvector& P, Fvector& D);
 	void							render_main					(Fmatrix& mCombined);
 	void							render_forward				();
-	void							render_smap_direct			(Fmatrix& mCombined);
 	void							render_indirect				(light*			L	);
 	void							render_lights				(light_Package& LP	);
 	void							render_sun					();
 	void							render_sun_near				();
-	void							render_sun_filtered			();
 	void							render_menu					();
 	void							render_rain					();
 
@@ -249,9 +243,6 @@ public:
 	}
 
 public:
-	// feature level
-	virtual DWORD					get_dx_level			()	{ return HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1?0x000A0001:0x000A0000; }
-
 	// Loading / Unloading
 	virtual void					create						();
 	virtual void					destroy						();

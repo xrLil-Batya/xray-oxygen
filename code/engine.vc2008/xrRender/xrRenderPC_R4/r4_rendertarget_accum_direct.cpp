@@ -598,85 +598,13 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	}
 }
 
-void CRenderTarget::accum_direct_blend	()
-{
-	PIX_EVENT(accum_direct_blend);
-// blend-copy
-	if (!RImplementation.o.fp16_blend)	{
-		VERIFY(0);
-      if( ! RImplementation.o.dx10_msaa )
-		   u_setrt						(rt_Accumulator,nullptr, nullptr,HW.pBaseZB);
-      else
-         u_setrt						(rt_Accumulator, nullptr, nullptr,rt_MSAADepth->pZRT);
-
-		//	TODO: DX10: remove half pixel offset
-		// Common calc for quad-rendering
-		u32		Offset;
-		u32		C					= color_rgba	(255,255,255,255);
-		float	_w					= float			(Device.dwWidth);
-		float	_h					= float			(Device.dwHeight);
-		Fvector2					p0,p1;
-		p0.set						(.5f/_w, .5f/_h);
-		p1.set						((_w+.5f)/_w, (_h+.5f)/_h );
-		float	d_Z	= EPS_S, d_W = 1.f;
-
-		// Fill vertex buffer
-		FVF::TL2uv* pv				= (FVF::TL2uv*) RCache.Vertex.Lock	(4,g_combine_2UV->vb_stride,Offset);
-		pv->set						(-1,	-1,	d_Z,	d_W, C, 0, 1, 0,		1);	pv++;
-		pv->set						(-1,	1,	d_Z,	d_W, C, 0, 0, 0,		0);	pv++;
-		pv->set						(1,		-1,	d_Z,	d_W, C, 1, 1, 1,	1);	pv++;
-		pv->set						(1,		1,	d_Z,	d_W, C, 1, 0, 1,	0);	pv++;
-		RCache.Vertex.Unlock		(4,g_combine_2UV->vb_stride);
-		RCache.set_Geometry			(g_combine_2UV);
-		RCache.set_Element			(s_accum_mask->E[SE_MASK_ACCUM_2D]	);
-      if( ! RImplementation.o.dx10_msaa )
-      {
-		   RCache.set_Stencil			(TRUE,D3D11_COMPARISON_LESS_EQUAL,dwLightMarkerID,0xff,0x00);
-		   RCache.Render					(D3DPT_TRIANGLELIST,Offset,0,4,0,2	);
-      }
-      else 
-      {
-		   // per pixel
-		   RCache.set_Stencil			(TRUE,D3D11_COMPARISON_EQUAL,dwLightMarkerID,0xff,0x00);
-		   RCache.Render					(D3DPT_TRIANGLELIST,Offset,0,4,0,2	);
-   		
-		   // per sample
-         if( RImplementation.o.dx10_msaa_opt )
-         {
-		      RCache.set_Element			(s_accum_mask_msaa[0]->E[SE_MASK_ACCUM_2D]	);
-            RCache.set_Stencil			(TRUE,D3D11_COMPARISON_EQUAL,dwLightMarkerID|0x80,0xff,0x00);
-            RCache.Render					(D3DPT_TRIANGLELIST,Offset,0,4,0,2	);
-         }
-         else // checked Holger
-         {
-		      for( u32 i = 0; i < RImplementation.o.dx10_msaa_samples; ++i )
-		      {
-			      RCache.set_Element		   (s_accum_mask_msaa[i]->E[SE_MASK_ACCUM_2D]	);
-               RCache.set_Stencil			(TRUE,D3D11_COMPARISON_EQUAL,dwLightMarkerID|0x80,0xff,0x00);
-               StateManager.SetSampleMask ( u32(1) << i );
-               RCache.Render					(D3DPT_TRIANGLELIST,Offset,0,4,0,2	);
-		      }
-		      StateManager.SetSampleMask( 0xffffffff );
-         }
-		   RCache.set_Stencil			(TRUE,D3D11_COMPARISON_LESS_EQUAL,dwLightMarkerID,0xff,0x00);
-      }
-	}
-	increment_light_marker();
-}
-
 void CRenderTarget::accum_direct_f		(u32 sub_phase)
 {
 	PIX_EVENT(accum_direct_f);
-// Select target
-	//if (SE_SUN_LUMINANCE==sub_phase)	{
-	//	accum_direct_lum	();
-	//	return				;
-	//}
-	phase_accumulator					();
-	if( ! RImplementation.o.dx10_msaa )
-		u_setrt								(rt_Generic_0,nullptr,nullptr,HW.pBaseZB);
-	else
-		u_setrt								(rt_Generic_0_r,nullptr,nullptr,RImplementation.Target->rt_MSAADepth->pZRT);
+
+	phase_accumulator();
+	RImplementation.o.dx10_msaa ? u_setrt(rt_Generic_0_r,nullptr,nullptr,RImplementation.Target->rt_MSAADepth->pZRT)
+								: u_setrt(rt_Generic_0,nullptr,nullptr,HW.pBaseZB);
 
 	// *** assume accumulator setted up ***
 	light*			fuckingsun			= (light*)RImplementation.Lights.sun._get()	;
@@ -875,7 +803,7 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 
 	RCache.set_ColorWriteEnable();
 
-	ref_selement	Element = s_accum_direct_volumetric->E[0];
+	ref_selement	&Element = s_accum_direct_volumetric->E[0];
 
 	if ( use_minmax_sm_this_frame())
 		Element = s_accum_direct_volumetric_minmax->E[0];

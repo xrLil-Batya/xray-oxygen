@@ -36,22 +36,21 @@ void	CRenderTarget::phase_accumulator()
 
 void	CRenderTarget::phase_vol_accumulator()
 {
+	RImplementation.o.dx10_msaa ? u_setrt(rt_Volumetric, NULL, NULL, RImplementation.Target->rt_MSAADepth->pZRT)
+								: u_setrt(rt_Volumetric, NULL, NULL, HW.pBaseZB);
+
 	if (!m_bHasActiveVolumetric)
 	{
 		m_bHasActiveVolumetric = true;
-		RImplementation.o.dx10_msaa ? u_setrt(rt_Volumetric, NULL, NULL, RImplementation.Target->rt_MSAADepth->pZRT)
-									: u_setrt(rt_Volumetric, NULL, NULL, HW.pBaseZB);
 
 		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		HW.pContext->ClearRenderTargetView(rt_Volumetric->pRT, ColorRGBA);
-	}
-	else
-	{
-		RImplementation.o.dx10_msaa ? u_setrt(rt_Volumetric, NULL, NULL, RImplementation.Target->rt_MSAADepth->pZRT)
-									: u_setrt(rt_Volumetric, NULL, NULL, HW.pBaseZB);
 	}
 
 	RCache.set_Stencil							(FALSE);
 	RCache.set_CullMode							(CULL_NONE);
 	RCache.set_ColorWriteEnable					();
+
+	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
+	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Volumetric->pTexture->surface_get());
 }

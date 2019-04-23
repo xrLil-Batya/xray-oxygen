@@ -479,10 +479,8 @@ void CRender::Render()
 		{
 			render_sun_near();
 			render_sun();
-			if (Device.dwFrame % 2)
-				render_sun_filtered();
 		}
-		Target->accum_direct_blend();
+		Target->increment_light_marker();
 	}
 
 	{
@@ -495,15 +493,7 @@ void CRender::Render()
 		RCache.set_xform_view(Device.mView);
 
 		// Stencil - write 0x1 at pixel pos
-#ifdef USE_DX11
-		if (!RImplementation.o.dx10_msaa)
-			RCache.set_Stencil(TRUE, D3D11_COMPARISON_ALWAYS, 0x01, 0xff, 0xff, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
-		else
-			RCache.set_Stencil(TRUE, D3D11_COMPARISON_ALWAYS, 0x01, 0xff, 0x7f, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
-#else
-		RCache.set_Stencil(TRUE, D3D11_COMPARISON_ALWAYS, 0x01, 0xff, 0xff, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
-#endif
-
+		RCache.set_Stencil(TRUE, D3D11_COMPARISON_ALWAYS, 0x01, 0xff, RImplementation.o.dx10_msaa ? 0x7f : 0xff, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
 		RCache.set_CullMode(CULL_CCW);
 		RCache.set_ColorWriteEnable();
 		RImplementation.r_dsgraph_render_emissive();
@@ -577,15 +567,9 @@ void CRender::AfterWorldRender()
 	if (Device.m_SecondViewport.IsSVPFrame())
 	{
 		// Copy back buffer to second viewport RT
-#ifdef USE_DX11 
 		ID3DTexture2D* pBackBuffer = nullptr;
 		HW.m_pSwapChain->GetBuffer(0, __uuidof(ID3DTexture2D), (LPVOID*)&pBackBuffer);
 		HW.pContext->CopyResource(Target->rt_secondVP->pSurface, pBackBuffer);
-#else
-		IDirect3DSurface9* pBackBuffer = nullptr;
-		HW.pDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-		D3DXLoadSurfaceFromSurface(Target->rt_secondVP->pRT, nullptr, nullptr, pBackBuffer, nullptr, nullptr, D3DX_DEFAULT, 0);
-#endif
 		pBackBuffer->Release();
 	}
 }

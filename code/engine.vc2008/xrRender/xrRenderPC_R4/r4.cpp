@@ -95,7 +95,6 @@ void					CRender::create()
 	// options
 	o.sunfilter				= (strstr(Core.Params, "-sunfilter")) ? TRUE : FALSE;
 	/////////////////////////////////////////////
-	o.advancedpp			= r2_advanced_pp;
 	o.volumetricfog			= ps_r3_flags.test(R3_FLAG_VOLUMETRIC_SMOKE);
 	/////////////////////////////////////////////
 	o.sjitter				= (strstr(Core.Params, "-sjitter")) ? TRUE : FALSE;
@@ -125,9 +124,6 @@ void					CRender::create()
 			o.hbao_vectorized = true;
 		o.ssao_opt_data = true;
 	}
-	/////////////////////////////////////////////
-	o.dx10_sm4_1			= ps_r3_flags.test(R3_FLAG_USE_DX10_1);
-	o.dx10_sm4_1			= o.dx10_sm4_1 && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1);
 	/////////////////////////////////////////////
 	//	MSAA option dependencies
 	/////////////////////////////////////////////
@@ -844,7 +840,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	CheckAndMakeDef(o.sjitter,	      "USE_SJITTER");
 	CheckAndMakeDef(o.Tshadows,	      "USE_TSHADOWS");
 	CheckAndMakeDef(o.sunfilter,      "USE_SUNFILTER");
-	CheckAndMakeDef(o.dx10_sm4_1,     "SM_4_1");
+	CheckAndMakeDef(true,			  "SM_4_1");
 	CheckAndMakeDef(o.dx10_minmax_sm, "USE_MINMAX_SM");
 
 	CheckAndMakeDef(HW.Caps.raster_major >= 3,  "USE_BRANCHING");
@@ -889,20 +885,17 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	CheckAndMakeDef(4 == m_skinning, "SKIN_4");
 
 	// Graphics. Need restart options
-	if (RImplementation.o.advancedpp)
-	{
-		CheckAndMakeDef(ps_r_flags.test(R_FLAG_SOFT_WATER),     "USE_SOFT_WATER");
-		CheckAndMakeDef(ps_r_flags.test(R_FLAG_SOFT_PARTICLES), "USE_SOFT_PARTICLES");
-		CheckAndMakeDef(ps_r_flags.test(R_FLAG_STEEP_PARALLAX), "ALLOW_STEEPPARALLAX");
-		CheckAndMakeDef(ps_r_bokeh_quality,						"USE_DOF");
-		CheckAndMakeDef(!!RImplementation.o.advancedpp,			"USE_PUDDLES");
+	CheckAndMakeDef(ps_r_flags.test(R_FLAG_SOFT_WATER),     "USE_SOFT_WATER");
+	CheckAndMakeDef(ps_r_flags.test(R_FLAG_SOFT_PARTICLES), "USE_SOFT_PARTICLES");
+	CheckAndMakeDef(ps_r_flags.test(R_FLAG_STEEP_PARALLAX), "ALLOW_STEEPPARALLAX");
+	CheckAndMakeDef(ps_r_bokeh_quality,						"USE_DOF");
+	CheckAndMakeDef(true,									"USE_PUDDLES");
 
-		CheckAndMakeDef(ps_r_sun_shafts,    "SUN_SHAFTS_QUALITY",	c_sunshaft);
-		CheckAndMakeDef(ps_r_ssao,		    "SSAO_QUALITY",			c_ssao);
-		CheckAndMakeDef(ps_r_sun_quality,   "SUN_QUALITY",			c_sun);
-		CheckAndMakeDef(ps_r_bokeh_quality, "BOKEH_QUALITY",		c_bokeh_quality);
-		CheckAndMakeDef(ps_r_pp_aa_quality, "PP_AA_QUALITY",		c_pp_aa_quality);
-	}
+	CheckAndMakeDef(ps_r_sun_shafts,    "SUN_SHAFTS_QUALITY",	c_sunshaft);
+	CheckAndMakeDef(ps_r_ssao,		    "SSAO_QUALITY",			c_ssao);
+	CheckAndMakeDef(ps_r_sun_quality,   "SUN_QUALITY",			c_sun);
+	CheckAndMakeDef(ps_r_bokeh_quality, "BOKEH_QUALITY",		c_bokeh_quality);
+	CheckAndMakeDef(ps_r_pp_aa_quality, "PP_AA_QUALITY",		c_pp_aa_quality);
 
 	//Be carefull!!!!! this should be at the end to correctly generate
 	//compiled shader name;

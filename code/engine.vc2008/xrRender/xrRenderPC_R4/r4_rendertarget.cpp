@@ -330,19 +330,9 @@ CRenderTarget::CRenderTarget()
 		else
 		{
 			// can't - mix-depth
-			if (RImplementation.o.fp16_blend)
-			{
-				// NV40
-				rt_Color.create			(r2_RT_albedo, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, SampleCount);	// expand to full
-				rt_Accumulator.create	(r2_RT_accum, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
-			}
-			else 
-			{
-				VERIFY(RImplementation.o.albedo_wo);
-				rt_Color.create				(r2_RT_albedo, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, SampleCount);	// normal
-				rt_Accumulator.create		(r2_RT_accum, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
-				rt_Accumulator_temp.create	(r2_RT_accum_temp, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
-			}
+			// NV40
+			rt_Color.create			(r2_RT_albedo, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, SampleCount);	// expand to full
+			rt_Accumulator.create	(r2_RT_accum, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
 			//rt_Normal.create(r2_RT_N, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
 
 #if 0
@@ -395,8 +385,7 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 		}
 
 		// For higher quality blends
-		if (RImplementation.o.advancedpp)
-			rt_Volumetric.create			(r2_RT_volumetric, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
+		rt_Volumetric.create				(r2_RT_volumetric, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount);
 	}
 
 	// OCCLUSION
@@ -434,34 +423,30 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 		}
 	}
 
-	if (RImplementation.o.advancedpp)
+	s_accum_direct_volumetric.create	("accum_volumetric_sun_nomsaa");
+
+	if (RImplementation.o.dx10_minmax_sm)
+		s_accum_direct_volumetric_minmax.create("accum_volumetric_sun_nomsaa_minmax");
+
+	if (RImplementation.o.dx10_msaa)
 	{
-		s_accum_direct_volumetric.create	("accum_volumetric_sun_nomsaa");
+		static LPCSTR snames[] = { 
+			"accum_volumetric_sun_msaa0",
+			"accum_volumetric_sun_msaa1",
+			"accum_volumetric_sun_msaa2",
+			"accum_volumetric_sun_msaa3",
+			"accum_volumetric_sun_msaa4",
+			"accum_volumetric_sun_msaa5",
+			"accum_volumetric_sun_msaa6",
+			"accum_volumetric_sun_msaa7" };
 
-		if (RImplementation.o.dx10_minmax_sm)
-			s_accum_direct_volumetric_minmax.create("accum_volumetric_sun_nomsaa_minmax");
+		int bound = RImplementation.o.dx10_msaa_samples;
 
-		if (RImplementation.o.dx10_msaa)
-		{
-			static LPCSTR snames[] = { 
-				"accum_volumetric_sun_msaa0",
-				"accum_volumetric_sun_msaa1",
-				"accum_volumetric_sun_msaa2",
-				"accum_volumetric_sun_msaa3",
-				"accum_volumetric_sun_msaa4",
-				"accum_volumetric_sun_msaa5",
-				"accum_volumetric_sun_msaa6",
-				"accum_volumetric_sun_msaa7" };
+		if( RImplementation.o.dx10_msaa_opt )
+				bound = 1;
 
-			int bound = RImplementation.o.dx10_msaa_samples;
-
-
-			if( RImplementation.o.dx10_msaa_opt )
-					bound = 1;
-
-			for( int i = 0; i < bound; ++i )
-				s_accum_direct_volumetric_msaa[i].create		(snames[i]);
-		}
+		for( int i = 0; i < bound; ++i )
+			s_accum_direct_volumetric_msaa[i].create		(snames[i]);
 	}
 
 	//	RAIN

@@ -197,50 +197,6 @@ void CRenderTarget::accum_spot(light* L)
 	}
 
 	// blend-copy
-	if (!RImplementation.o.fp16_blend) 
-	{
-		if (!RImplementation.o.dx10_msaa)
-			u_setrt(rt_Accumulator, nullptr, nullptr, HW.pBaseZB);
-		else
-			u_setrt(rt_Accumulator, nullptr, nullptr, rt_MSAADepth->pZRT);
-
-		RCache.set_Element(s_accum_mask->E[SE_MASK_ACCUM_VOL]);
-		RCache.set_c("m_texgen", m_Texgen);
-		RCache.set_c("m_texgen_J", m_Texgen_J);
-
-		if (!RImplementation.o.dx10_msaa)
-		{
-			RCache.set_Stencil(TRUE, D3D11_COMPARISON_EQUAL, dwLightMarkerID, 0xff, 0x00);
-			draw_volume(L);
-		}
-		else // checked Holger
-		{
-			// per pixel
-			RCache.set_Element(s_accum_mask->E[SE_MASK_ACCUM_VOL]);
-			RCache.set_Stencil(TRUE, D3D11_COMPARISON_EQUAL, dwLightMarkerID, 0xff, 0x00);
-			draw_volume(L);
-			// per sample
-			if (RImplementation.o.dx10_msaa_opt)
-			{
-				RCache.set_Element(s_accum_mask_msaa[0]->E[SE_MASK_ACCUM_VOL]);
-				RCache.set_Stencil(TRUE, D3D11_COMPARISON_EQUAL, dwLightMarkerID | 0x80, 0xff, 0x00);
-				draw_volume(L);
-			}
-			else // checked Holger
-			{
-				for (u32 i = 0; i < RImplementation.o.dx10_msaa_samples; ++i)
-				{
-					RCache.set_Element(s_accum_mask_msaa[i]->E[SE_MASK_ACCUM_VOL]);
-					StateManager.SetSampleMask(u32(1) << i);
-					RCache.set_Stencil(TRUE, D3D11_COMPARISON_EQUAL, dwLightMarkerID | 0x80, 0xff, 0x00);
-					draw_volume(L);
-				}
-				StateManager.SetSampleMask(0xffffffff);
-			}
-			RCache.set_Stencil(TRUE, D3D11_COMPARISON_EQUAL, dwLightMarkerID, 0xff, 0x00);
-		}
-	}
-
 	RCache.set_Scissor(nullptr);
 	increment_light_marker();
 }
