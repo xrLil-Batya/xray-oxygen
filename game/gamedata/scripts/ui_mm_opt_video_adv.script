@@ -19,31 +19,31 @@ function all_modes(render_id)
 end
 
 function mode_1(render_id)
-	return render_id==0
+	return false
 end
 
 function mode_ge_2a(render_id)
-	return render_id>=1
+	return true
 end
 
 function mode_ge_2(render_id)
-	return render_id>=2
+	return true
 end
 
 function mode_ge_25(render_id)
-	return render_id>=3
+	return true
 end
 
 function mode_2_25(render_id)
-	return render_id >= 2 and render_id <=3
+	return false
 end
 
 function mode_less_3(render_id)
-	return render_id<4
+	return false
 end
 
 function mode_ge_3(render_id)
-	return render_id>=4
+	return true
 end
 
 function mode_4(render_id)

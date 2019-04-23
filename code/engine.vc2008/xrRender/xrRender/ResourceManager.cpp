@@ -291,11 +291,3 @@ void CResourceManager::DeferredUpload()
 		Msg("texture loading time: %d", timer.GetElapsed_ms());
 	}
 }
-
-void	CResourceManager::Evict()
-{
-	//	TODO: DX10: check if we really need this method
-#ifndef USE_DX11
-	CHK_DX	(HW.pDevice->EvictManagedResources());
-#endif
-}

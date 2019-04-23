@@ -6,19 +6,22 @@
 //////////////////////////////////////////////////////////////////////////
 // tables to calculate view-frustum bounds in world space
 // note: D3D uses [0..1] range for Z
-static Fvector3		corners [8]			= {
+constexpr static Fvector3 corners[8] =
+{
 	{ -1, -1,  0.7 },	{ -1, -1, +1},
 	{ -1, +1, +1 },		{ -1, +1,  0.7},
 	{ +1, +1, +1 },		{ +1, +1,  0.7},
 	{ +1, -1, +1 },		{ +1, -1,  0.7}
 };
-static u16			facetable[16][3]		= {
-	{ 3, 2, 1 },  
-	{ 3, 1, 0 },		
-	{ 7, 6, 5 }, 
-	{ 5, 6, 4 },		
+
+constexpr static u16 facetable[16][3] =
+{
+	{ 3, 2, 1 },
+	{ 3, 1, 0 },
+	{ 7, 6, 5 },
+	{ 5, 6, 4 },
 	{ 3, 5, 2 },
-	{ 4, 2, 5 },		
+	{ 4, 2, 5 },
 	{ 1, 6, 7 },
 	{ 7, 0, 1 },
 
@@ -28,6 +31,7 @@ static u16			facetable[16][3]		= {
 	{ 1, 4, 6 },
 	{ 2, 4, 1 },
 };
+
 void CRenderTarget::accum_direct		(u32 sub_phase)
 {
 	// Choose normal code-path or filtered
@@ -262,8 +266,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
       }
 
 		//	Igor: draw volumetric here
-		//if (ps_r_flags.test(R2FLAG_SUN_SHAFTS))
-		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0) && ps_r_sunshafts_mode == SS_VOLUMETRIC)
+		if (ps_r_sun_shafts>0 && ps_r_sunshafts_mode == SS_VOLUMETRIC)
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
 }
@@ -589,7 +592,8 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 		//	Igor: draw volumetric here
 		//if (ps_r_flags.test(R2FLAG_SUN_SHAFTS))
-		if (need_to_render_sunshafts() && ps_r_sunshafts_mode == SS_VOLUMETRIC)
+		//if (need_to_render_sunshafts() && ps_r_sunshafts_mode == SS_VOLUMETRIC)
+		if (ps_r_sunshafts_mode == SS_VOLUMETRIC && ps_r_sun_shafts > 0)
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
 }

@@ -446,24 +446,8 @@ public:
 		//	vid_quality_token must be already created!
 		if (!bLoaded)
 		{
-			xr_string xr_args(args);
-			xr_vector<xr_string> renderArgToken = xr_args.Split('_');
-			R_ASSERT3(renderArgToken.size() == 2, "Invalid render name argument", args);
-
-			if (renderArgToken[1] == "r2")
-			{
-				psDeviceFlags.set(rsR2, true);
-				r2_advanced_pp = true;
-			}
-			else if (renderArgToken[1] == "r4")
-			{
-				psDeviceFlags.set(rsR4, true);
-			}
-			else
-			{
-				R_ASSERT3(false, "Invalid render name", renderArgToken[1].c_str());
-			}
-
+			psDeviceFlags.set(rsR4, true);
+			r2_advanced_pp = true;
 			bLoaded = true;
 		}
 	}
@@ -481,6 +465,18 @@ public:
 		return inherited::GetToken();
 	}
 
+	virtual void fill_tips(vecTips& tips, u32 mode)
+	{
+		tips.emplace_back(GetToken()->name);
+	}
+
+	virtual void Status(TStatus& S)
+	{
+		xr_token* tok = tokens;
+		xr_strcpy(S, tok->name);
+		return;
+		//xr_strcpy(S, "?");
+	}
 };
 
 class CCC_soundDevice : public CCC_Token

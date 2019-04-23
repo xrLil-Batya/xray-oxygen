@@ -55,9 +55,9 @@ private:
 	void					SelectEnv		(EnvVec* envs, CEnvDescriptor*& e, float tm);
 
 public:
-	static bool lb_env_pred			(const CEnvDescriptor* x, float val)				{ return x->exec_time < val; }
-	static bool sort_env_pred		(const CEnvDescriptor* x, const CEnvDescriptor* y)	{ return x->exec_time < y->exec_time; }
-	static bool sort_env_etl_pred	(const CEnvDescriptor* x, const CEnvDescriptor* y)	{ return x->exec_time_loaded < y->exec_time_loaded; }
+	static bool				lb_env_pred			(const CEnvDescriptor* x, float val)				{ return x->exec_time < val; }
+	static bool				sort_env_pred		(const CEnvDescriptor* x, const CEnvDescriptor* y)	{ return x->exec_time < y->exec_time; }
+	static bool				sort_env_etl_pred	(const CEnvDescriptor* x, const CEnvDescriptor* y)	{ return x->exec_time_loaded < y->exec_time_loaded; }
 
     void					CalculateDynamicSunDir();
 
@@ -144,20 +144,11 @@ public:
 	void					OnDeviceDestroy		();
 
 	// editor-related
-#ifdef _EDITOR
-public:
-	float					ed_from_time;
-	float					ed_to_time;
-public:
-    void					ED_Reload			();
-    float					GetGameTime			(){return fGameTime;}
-#else // #ifdef _EDITOR
 #	ifdef INGAME_EDITOR
 		float				GetGameTime			(){return fGameTime;}
 #	endif // #ifdef INGAME_EDITOR
 
 	bool					m_paused;
-#endif // #ifdef _EDITOR
 
 	CInifile*				m_ambients_config;
 	CInifile*				m_sound_channels_config;

@@ -16,22 +16,8 @@
 #define _RELEASE(x) { if(x) { (x)->Release(); (x)=NULL; } }
 DLL_API xr_vector<xr_token> vid_quality_token;
 
-constexpr const char* r2_name = "xrRender_R2";
 constexpr const char* r4_name = "xrRender_R4";
 /////////////////////////////////////////////////////
-bool SupportsAdvancedRendering()
-{
-	D3DCAPS9 caps;
-
-	IDirect3D9* pD3D = Direct3DCreate9(D3D_SDK_VERSION);
-	pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
-	_RELEASE(pD3D);
-
-	u16 ps_ver_major = u16(u32(u32(caps.PixelShaderVersion)&u32(0xf << 8ul)) >> 8);
-
-	return !(ps_ver_major < 3);
-}
-
 bool SupportsDX11Rendering()
 {
 	// Register class
@@ -96,31 +82,16 @@ bool SupportsDX11Rendering()
 
 void CreateRendererList()
 {
-
 	if (!vid_quality_token.empty())
 		return;
 
 	xr_vector<xr_token> modes;
 
-	// try to initialize R2
-	{
-		modes.push_back(xr_token("renderer_r2a", 0));
-		modes.emplace_back(xr_token("renderer_r2", 1));
-
-		if (SupportsAdvancedRendering())
-		{
-			modes.emplace_back(xr_token("renderer_r2.5", 2));
-		}
-	}
-
 	// try to initialize R4
-	//	Restore error handling
 	SetErrorMode(0);
+	if (SupportsDX11Rendering())
 	{
-		if (SupportsDX11Rendering())
-		{
-			modes.emplace_back(xr_token("renderer_r4", 3));
-		}
+		modes.push_back(xr_token("renderer_r4", 0));
 	}
 
 	modes.emplace_back(xr_token(nullptr, -1));

@@ -264,7 +264,6 @@ CRenderTarget::CRenderTarget()
 	param_color_add.set(0.0f, 0.0f, 0.0f);
 
 	dwAccumulatorClearMark = 0;
-	dxRenderDeviceRender::Instance().Resources->Evict();
 
 	// Blenders
 	b_occq							= xr_new<CBlender_light_occq>			();
@@ -1070,7 +1069,7 @@ void CRenderTarget::increment_light_marker()
 
 bool CRenderTarget::need_to_render_sunshafts()
 {
-	if (!RImplementation.o.advancedpp || ps_r_sun_shafts == 0)
+	if (ps_r_sun_shafts == 0)
 		return false;
 
 	light* sun = (light*)RImplementation.Lights.sun._get();

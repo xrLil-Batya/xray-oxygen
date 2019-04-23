@@ -204,13 +204,11 @@ public:
 	void			DeleteGeom				(const SGeometry* VS		);
 	void			DeferredLoad			(BOOL E)					{ bDeferredLoad=E;	}
 	void			DeferredUpload			();
-	void			Evict					();
 	void			StoreNecessaryTextures	();
 	void			DestroyNecessaryTextures();
 	void			Dump					(bool bBrief);
 
 private:
-#ifdef USE_DX11
 	map_DS	m_ds;
 	map_HS	m_hs;
 	map_CS	m_cs;
@@ -223,6 +221,4 @@ private:
 
 	template<typename T>
 	void DestroyShader(const T* sh);
-
-#endif
 };

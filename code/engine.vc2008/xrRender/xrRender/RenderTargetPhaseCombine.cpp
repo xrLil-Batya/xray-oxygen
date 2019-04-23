@@ -7,7 +7,7 @@
 #include "../xrRender/dxEnvironmentRender.h"
 #include "../xrRender/dxRenderDeviceRender.h"
 
-float hclip(float v, float dim)
+inline float hclip(float v, float dim)
 {
 	return 2.0f * v / dim - 1.0f;
 }
@@ -151,7 +151,6 @@ void CRenderTarget::phase_combine()
 		t_envmap_1->surface_set(e1); _RELEASE(e1);
 
 		// Fill VB
-#ifdef USE_DX11
 		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
 		pv->set(-1,  1,	0, 1, 0, 0,			scale_Y	); pv++;
 		pv->set(-1, -1,	0, 0, 0, 0,			0		); pv++;
@@ -160,23 +159,6 @@ void CRenderTarget::phase_combine()
 		RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 		RCache.set_Geometry(g_combine);
-#else
-		float _w = float(Device.dwWidth);
-		float _h = float(Device.dwHeight);
-		// Half-pixel offset
-		Fvector2 p0, p1;
-		p0.set(0.5f / _w, 0.5f / _h); 
-		p1.set((_w + 0.5f) / _w, (_h + 0.5f) / _h);
-
-		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine_VP->vb_stride, Offset);
-		pv->set(hclip(EPS,		_w),	hclip(_h+EPS,	_h),	p0.x, p1.y, 0, 0,		scale_Y	); pv++;
-		pv->set(hclip(EPS,		_w),	hclip(EPS,		_h),	p0.x, p0.y, 0, 0,		0		); pv++;
-		pv->set(hclip(_w+EPS,	_w),	hclip(_h+EPS,	_h),	p1.x, p1.y, 0, scale_X,	scale_Y	); pv++;
-		pv->set(hclip(_w+EPS,	_w),	hclip(EPS,		_h),	p1.x, p0.y, 0, scale_X,	0		); pv++;
-		RCache.Vertex.Unlock(4, g_combine_VP->vb_stride);
-
-		RCache.set_Geometry(g_combine_VP);
-#endif
 	
 		// Set variables
 		RCache.set_Element			(s_combine->E[0]);
@@ -187,7 +169,6 @@ void CRenderTarget::phase_combine()
 		RCache.set_c				("env_color",		envclr);
 		RCache.set_c				("ssao_params",		fSSAONoise, fSSAOKernelSize, 0.0f, 0.0f);
 
-#ifdef USE_DX11
 		if (!RImplementation.o.dx10_msaa)
 			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 		else
@@ -213,9 +194,6 @@ void CRenderTarget::phase_combine()
 			}
 			RCache.set_Stencil(FALSE, D3D11_COMPARISON_EQUAL, 0x01, 0xff, 0);
 		}
-#else
-		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-#endif
 	}
 
 	Device.Statistic->Render_Combine_Combine1.End();
@@ -225,14 +203,10 @@ void CRenderTarget::phase_combine()
 		ScopeStatTimer forwardRenderingTimer(Device.Statistic->Render_Combine_ForwardRendering);
 		PIX_EVENT(Forward_rendering);
 		// LDR RT
-#ifdef USE_DX11
 		if (!RImplementation.o.dx10_msaa)
 			u_setrt(rt_Generic_0, nullptr, nullptr, HW.pBaseZB);
 		else
 			u_setrt(rt_Generic_0_r, nullptr, nullptr, RImplementation.Target->rt_MSAADepth->pZRT);
-#else
-		u_setrt(rt_Generic_0, nullptr, nullptr, HW.pBaseZB);
-#endif
 
 		RCache.set_CullMode			(CULL_CCW);
 		RCache.set_Stencil			(FALSE);
@@ -249,14 +223,12 @@ void CRenderTarget::phase_combine()
 		phase_combine_volumetric();
 	}
 
-#ifdef USE_DX11
 	if (RImplementation.o.dx10_msaa)
 	{
 		// We need to resolve rt_Generic_1 into rt_Generic_1_r
 		RCache.ResolveSubresource(rt_Generic_1->pTexture->surface_get(), 0, rt_Generic_1_r->pTexture->surface_get(), 0, DXGI_FORMAT_R8G8B8A8_UNORM);
 		RCache.ResolveSubresource(rt_Generic_0->pTexture->surface_get(), 0, rt_Generic_0_r->pTexture->surface_get(), 0, DXGI_FORMAT_R8G8B8A8_UNORM);
 	}
-#endif
 
 	// Blooming filter
 	RCache.set_Stencil(FALSE);
@@ -271,16 +243,12 @@ void CRenderTarget::phase_combine()
 		RCache.set_ColorWriteEnable	();
 
 		// rt_Generic_1: xy - displacement, z - bloom factor, w - opacity
-#ifdef USE_DX11
 		if (!RImplementation.o.dx10_msaa)
 			u_setrt(rt_Generic_1, nullptr, nullptr, HW.pBaseZB);
 		else
 			u_setrt(rt_Generic_1_r, nullptr, nullptr, RImplementation.Target->rt_MSAADepth->pZRT);
-#else
-		u_setrt						(rt_Generic_1, nullptr, nullptr, HW.pBaseZB);
-#endif
-		RCache.Clear				(0L, nullptr, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 0), 1.0f, 0L);
 
+		RCache.Clear(0L, nullptr, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 0), 1.0f, 0L);
 		RImplementation.r_dsgraph_render_distort();
 	}
 	
@@ -295,13 +263,12 @@ void CRenderTarget::phase_combine()
 		PhaseSSSS();
 	}
 
-/*
-	if (Puddles->m_bLoaded)
+
+	if (Puddles && Puddles->m_bLoaded)
 	{
 		PIX_EVENT(phase_puddles);
 		phase_puddles();
 	}
-*/
 
 	/////////////////////////////
 	// Combine 2:
@@ -325,7 +292,7 @@ void CRenderTarget::phase_combine()
 
 		float _w = float(Device.dwWidth);
 		float _h = float(Device.dwHeight);
-#ifdef USE_DX11
+
 		p0.set(0.0f, 0.0f);
 		p1.set(1.0f, 1.0f);
 
@@ -334,14 +301,7 @@ void CRenderTarget::phase_combine()
 			u_setrt(rt_Generic, nullptr, nullptr, HW.pBaseZB);
 		else
 			u_setrt(rt_Color, nullptr, nullptr, HW.pBaseZB);
-#else
-		// Half-pixel offset
-		p0.set(0.5f / _w, 0.5f / _h);
-		p1.set((_w + 0.5f) / _w, (_h + 0.5f) / _h);
 
-		// LDR RT
-		u_setrt(rt_Color, nullptr, nullptr, HW.pBaseZB); 
-#endif
 		RCache.set_CullMode	(CULL_NONE);
 		RCache.set_Stencil	(FALSE);
 
@@ -358,14 +318,11 @@ void CRenderTarget::phase_combine()
 		vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
 		vDofKernel.mul(ps_r_dof_kernel_size);
 
-#ifdef USE_DX11
 		if (!RImplementation.o.dx10_msaa)
 			RCache.set_Element(s_combine->E[bDistort ? 2 : 1]);
 		else
 			RCache.set_Element(s_combine_msaa[0]->E[bDistort ? 2 : 1]);	
-#else
-		RCache.set_Element	(s_combine->E[bDistort ? 2 : 1]);
-#endif
+
 		RCache.set_c		("m_current", m_current);
 		RCache.set_c		("m_previous", m_previous);
 		RCache.set_c		("m_blur", m_blur_scale.x, m_blur_scale.y, 0.0f, 0.0f);

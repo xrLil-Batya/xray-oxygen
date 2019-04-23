@@ -165,7 +165,7 @@ private:
 	ref_shader					s_rain;
 	
 	ref_shader					s_rain_msaa[8]	; // up to 8 shaders for DX10.0 support
-	ref_shader              s_accum_direct_volumetric_msaa[8];
+	ref_shader					s_accum_direct_volumetric_msaa[8];
 	ref_shader					s_accum_mask_msaa[8];
 	ref_shader					s_accum_direct_msaa[8];
    ref_shader					s_mark_msaa_edges;
@@ -174,10 +174,10 @@ private:
 	ref_shader					s_accum_reflected_msaa[8];
 	ref_shader					s_accum_volume_msaa[8];
 
-	ref_geom						g_accum_point	;
-	ref_geom						g_accum_spot	;
-	ref_geom						g_accum_omnipart;
-	ref_geom						g_accum_volumetric;
+	ref_geom					g_accum_point	;
+	ref_geom					g_accum_spot	;
+	ref_geom					g_accum_omnipart;
+	ref_geom					g_accum_volumetric;
 
 	ID3DVertexBuffer*		g_accum_point_vb;
 	ID3DIndexBuffer*		g_accum_point_ib;
@@ -213,14 +213,15 @@ private:
 	ref_shader				s_combine_dbg_1;
 	ref_shader				s_combine_dbg_Accumulator;
 	ref_shader				s_combine;
-   ref_shader				s_combine_msaa[8];
+    ref_shader				s_combine_msaa[8];
 	ref_shader				s_combine_volumetric;
 public:
 	ref_shader				s_postprocess;
-   ref_shader           s_postprocess_msaa;
-	ref_geom					g_postprocess;
+   ref_shader				s_postprocess_msaa;
+	ref_geom				g_postprocess;
 	ref_shader				s_menu;
-	ref_geom					g_menu;
+	ref_geom				g_menu;
+
 private:
 	float						im_noise_time;
 	u32							im_noise_shift_w;
@@ -267,15 +268,6 @@ public:
 	void						u_calc_tc_duality_ss	(Fvector2& r0, Fvector2& r1, Fvector2& l0, Fvector2& l1);
 	BOOL						u_need_PP				();
 	bool						u_need_CM				();
-
-#ifndef USE_DX11
-	void						enable_dbt_bounds		(light* L);
-	void						u_stencil_optimize		(BOOL common_stencil = TRUE);
-	BOOL						u_DBT_enable			(float zMin, float zMax);
-	void						u_DBT_disable			();
-
-	IDirect3DSurface9*			rt_smap_ZB;		//
-#endif
 
 	void						phase_scene_prepare		();
 	void						phase_scene_begin		();

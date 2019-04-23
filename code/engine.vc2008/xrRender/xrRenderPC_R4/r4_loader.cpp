@@ -194,10 +194,9 @@ void CRender::level_Unload()
 void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 {
 	R_ASSERT2					(base_fs,"Could not load geometry. File not found.");
-	dxRenderDeviceRender::Instance().Resources->Evict		();
 
-	xr_vector<VertexDeclarator>				&_DC	= _alternative?xDC:nDC;
-	xr_vector<ID3DVertexBuffer*>		&_VB	= _alternative?xVB:nVB;
+	xr_vector<VertexDeclarator>		&_DC	= _alternative?xDC:nDC;
+	xr_vector<ID3DVertexBuffer*>	&_VB	= _alternative?xVB:nVB;
 	xr_vector<ID3DIndexBuffer*>		&_IB	= _alternative?xIB:nIB;
 
 	// Vertex buffers
