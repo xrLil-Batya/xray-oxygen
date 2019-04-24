@@ -62,9 +62,15 @@ void CHWCaps::Update()
 
 	// DEV INFO
 	if (CNvReader::bSupport)
+	{
+		id_vendor = 0x10DE;
 		iGPUNum = NvData.GetGPUCount();
+	}
 	else if (CAMDReader::bAMDSupportADL)
+	{
+		id_vendor = 1002;
 		iGPUNum = AMDData.GetGPUCount();
+	}
 	else
 		iGPUNum = 1;
 }

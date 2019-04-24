@@ -50,7 +50,4 @@ void	CRenderTarget::phase_vol_accumulator()
 	RCache.set_Stencil							(FALSE);
 	RCache.set_CullMode							(CULL_NONE);
 	RCache.set_ColorWriteEnable					();
-
-	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
-	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Volumetric->pTexture->surface_get());
 }

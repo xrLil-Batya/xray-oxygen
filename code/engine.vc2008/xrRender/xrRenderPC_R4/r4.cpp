@@ -133,12 +133,8 @@ void					CRender::create()
 	// sunshafts options
 //	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 	/////////////////////////////////////////////
-	o.dx10_msaa_opt			= ps_r3_flags.test(R3_FLAG_MSAA_OPT);
-	o.dx10_msaa_opt			= o.dx10_msaa_opt && o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1)
-							|| o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0);
-	/////////////////////////////////////////////
-	o.dx10_msaa_hybrid		= ps_r3_flags.test(R3_FLAG_USE_DX10_1);
-	o.dx10_msaa_hybrid		&= !o.dx10_msaa_opt && o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1);
+	o.dx10_msaa_opt			= ps_r3_flags.test(R3_FLAG_MSAA_OPT) && o.dx10_msaa && HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1;
+	o.dx10_msaa_hybrid		= !o.dx10_msaa_opt && o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1);
 	/////////////////////////////////////////////
 	o.dx10_msaa_alphatest = 0;
 	if (o.dx10_msaa)
@@ -166,7 +162,7 @@ void					CRender::create()
 		o.dx10_minmax_sm = MMSM_OFF;
 
 		// AMD device
-		if (HW.Caps.id_vendor == 0x1002)
+		if (HW.Caps.id_vendor == 1002)
 		{
 			if (ps_r_sun_quality >= 3)
 				o.dx10_minmax_sm = MMSM_AUTO;

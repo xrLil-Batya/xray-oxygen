@@ -27,7 +27,6 @@ xr_token q_smapsize_token[] =
 u32 ps_r_sunshafts_mode = 0;
 xr_token sunshafts_mode_token[] = 
 {
-    { "volumetric",		SS_VOLUMETRIC	},
 	{ "ss_ogse",		SS_SS_OGSE		},
 	{ "ss_manowar",		SS_SS_MANOWAR	},
     { 0,				0 }
@@ -210,9 +209,8 @@ int			ps_r_GI_depth				= 1;				// 1..5
 int			ps_r_GI_photons				= 16;				// 8..64
 float		ps_r_GI_clip				= EPS_L;			// EPS
 float		ps_r_GI_refl				= 0.9f;				// .9f
+
 // Sun
-float		ps_r_sun_tsm_projection		= 0.3f;				// 0.18f
-float		ps_r_sun_tsm_bias			= -0.01f;			// 
 float		ps_r_sun_near				= 20.0f;			// 12.0f
 float		ps_r_sun_far				= 100.0f;
 float		ps_r_sun_near_border		= 0.75f;			// 1.0f
@@ -252,7 +250,6 @@ Flags32	ps_r_flags =
 	| R_FLAG_SOFT_WATER
 	| R_FLAG_STEEP_PARALLAX
 	| R_FLAG_SUN_FOCUS
-	| R_FLAG_SUN_TSM
 	| R_FLAG_MBLUR
 	| R_FLAG_VOLUMETRIC_LIGHTS
 	| R_FLAG_GLOW_USE
@@ -850,9 +847,6 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask,		"r_sun_focus",			&ps_r_flags,				R_FLAG_SUN_FOCUS);
 	CMD3(CCC_Mask,		"r_sun_shadow_cascede_old", &ps_r_flags,			R_FLAG_SUN_OLD);
 	CMD3(CCC_Mask,		"r_glows_use",			&ps_r_flags,				R_FLAG_GLOW_USE);
-	CMD3(CCC_Mask,		"r_sun_tsm",			&ps_r_flags,				R_FLAG_SUN_TSM	);
-	CMD4(CCC_Float,		"r_sun_tsm_proj",		&ps_r_sun_tsm_projection,	0.001f,	0.8f	);
-	CMD4(CCC_Float,		"r_sun_tsm_bias",		&ps_r_sun_tsm_bias,			-0.5f,	0.5f	);
 	CMD4(CCC_Float,		"r_sun_near",			&ps_r_sun_near,				1.0f,	50.0f	);
 	CMD4(CCC_Float,		"r_sun_far",			&ps_r_sun_far,				51.0f,	180.0f	);
 	CMD4(CCC_Float,		"r_sun_near_border",	&ps_r_sun_near_border,		0.5f,	1.0f	);
@@ -929,7 +923,6 @@ void xrRender_initconsole()
 
 	// MSAA
 	CMD3(CCC_Token,		"r3_msaa",						&ps_r3_msaa,				qmsaa_token);
-	CMD3(CCC_Mask,		"r3_use_dx10_1",				&ps_r3_flags,				R3_FLAG_USE_DX10_1);
 	CMD3(CCC_Token,		"r3_msaa_alphatest",			&ps_r3_msaa_atest,			qmsaa_atest_token);
 	CMD3(CCC_Token,		"r3_minmax_sm",					&ps_r3_minmax_sm,			qminmax_sm_token);
 	// Dynamic wet surfaces
@@ -947,10 +940,8 @@ void xrRender_initconsole()
 
 	CMD4(CCC_Integer,	"game_extra_skygod_edition",	&SkyGodEdition,		0, 1);
 	// Allow real-time fog config reload
-#if	(RENDER == R_R3) || (RENDER == R_R4)
 #ifdef	DEBUG
 	CMD1(CCC_Fog_Reload,"r3_fog_reload");
-#endif
 #endif
 }
 #endif // _EDITOR
