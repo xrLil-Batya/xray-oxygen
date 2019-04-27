@@ -163,7 +163,7 @@ void CRenderTarget::accum_direct(u32 sub_phase)
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul(L_dir, ps_r_sun_tsm_bias);
+				Fvector		bias;	bias.mul(L_dir, fBias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44(bias_t);
 			}
@@ -379,7 +379,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul(L_dir, ps_r_sun_tsm_bias);
+				Fvector		bias;	bias.mul(L_dir, fBias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44(bias_t);
 			}
@@ -680,7 +680,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 			if (SE_SUN_FAR == sub_phase)
 			{
 				Fvector bias;	
-				bias.mul(L_dir, ps_r_sun_tsm_bias);
+				bias.mul(L_dir, fBias);
 
 				Fmatrix bias_t; bias_t.translate(bias.x, bias.y, bias.z);
 

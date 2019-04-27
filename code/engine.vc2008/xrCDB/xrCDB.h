@@ -64,11 +64,6 @@ namespace CDB
                 size_t		dumb : 32;
 #endif
 			};
-			struct
-			{
-				u32 dummy_low;
-				u32 dummy_high;
-			};
 		};
 
 #if defined(_M_X64)

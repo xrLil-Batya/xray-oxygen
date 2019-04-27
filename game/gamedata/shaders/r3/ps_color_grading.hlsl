@@ -17,10 +17,10 @@ float4 main(p_screen IN) : SV_Target
 	float frac = (cImage.b - blue) * lutWidth;
 
 	lutTC.x = blue + cImage.r * lutScale / lutWidth;
-	float3 sample1 = color_chart_sampler.Sample(smp_rtlinear, lutOffset + lutTC.xy).rgb;
+	float3 sample1 = color_chart_sampler.Sample(smp_nofilter, lutOffset + lutTC.xy).rgb;
 	
 	lutTC.x += 1.0f / 16.0f;
-	float3 sample2 = color_chart_sampler.Sample(smp_rtlinear, lutOffset + lutTC.xy).rgb;
+	float3 sample2 = color_chart_sampler.Sample(smp_nofilter, lutOffset + lutTC.xy).rgb;
 
 	cImage = lerp(sample1, sample2, frac);
 	
