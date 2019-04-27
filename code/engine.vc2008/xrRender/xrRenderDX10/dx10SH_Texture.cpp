@@ -46,7 +46,20 @@ CTexture::CTexture()
 
 CTexture::~CTexture()
 {
-	Unload();
+	flags.bLoaded = FALSE;
+	flags.bLoadedAsStaging = FALSE;
+	if (!seqDATA.empty()) {
+		for (u32 I = 0; I < seqDATA.size(); I++)
+		{
+			_RELEASE(seqDATA[I]);
+			_RELEASE(m_seqSRView[I]);
+		}
+		seqDATA.clear();
+		m_seqSRView.clear();
+	}
+
+	_RELEASE(pSurface);
+	_RELEASE(m_pSRView);
 
 	// release external reference
 	DEV->_DeleteTexture(this);
@@ -528,13 +541,8 @@ void CTexture::Unload()
 		}
 		seqDATA.clear();
 		m_seqSRView.clear();
-		pSurface = 0;
-		m_pSRView = 0;
 	}
 
-#ifdef DEBUG
-	_SHOW_REF(msg_buff, pSurface);
-#endif // DEBUG
 	_RELEASE(pSurface);
 	_RELEASE(m_pSRView);
 

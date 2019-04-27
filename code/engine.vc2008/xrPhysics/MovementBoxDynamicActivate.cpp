@@ -63,7 +63,7 @@ void TTestDepthCallback(bool& do_colide, bool bo1, dContact& c, SGameMtl* materi
 	{
 		float& depth = c.geom.depth;
 		float test_depth = depth - Pars::decrement_depth;
-		save_max(max_depth, test_depth);
+		max_depth = std::max(max_depth, test_depth);
 		c.surface.mu *= Pars::calback_friction_factor;
 		if (test_depth > Pars::depth_to_use_force)
 		{
@@ -254,18 +254,18 @@ protected:
 					othrers_torque = feedback->t1;
 				}
 
-				save_max(m_max_force_self, _sqrt(dDOT(self_force, self_force)));
-				save_max(m_max_torque_self, _sqrt(dDOT(self_torque, self_torque)));
-				save_max(m_max_force_self_y, _abs(self_force[1]));
-				save_max(m_max_force_self_sd, _sqrt(self_force[0] * self_force[0] + self_force[2] * self_force[2]));
+				m_max_force_self	= std::max(m_max_force_self, _sqrt(dDOT(self_force, self_force)));
+				m_max_torque_self	= std::max(m_max_torque_self, _sqrt(dDOT(self_torque, self_torque)));
+				m_max_force_self_y	= std::max(m_max_force_self_y, _abs(self_force[1]));
+				m_max_force_self_sd = std::max(m_max_force_self_sd, _sqrt(self_force[0] * self_force[0] + self_force[2] * self_force[2]));
 				if (other_body)
 				{
 					dVector3 shoulder; dVectorSub(shoulder, dJointGetPositionContact(joint), dBodyGetPosition(other_body));
 					dReal shoulder_lenght = _sqrt(dDOT(shoulder, shoulder));
 
-					save_max(m_max_force_others, _sqrt(dDOT(othrers_force, othrers_force)));
+					m_max_force_others = std::max(m_max_force_others, _sqrt(dDOT(othrers_force, othrers_force)));
 					if (!fis_zero(shoulder_lenght))
-						save_max(m_max_torque_others, _sqrt(dDOT(othrers_torque, othrers_torque)) / shoulder_lenght);
+						m_max_torque_others = std::max(m_max_torque_others, _sqrt(dDOT(othrers_torque, othrers_torque)) / shoulder_lenght);
 				}
 			}
 		}

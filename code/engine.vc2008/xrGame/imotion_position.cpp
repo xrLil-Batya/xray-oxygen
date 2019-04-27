@@ -72,7 +72,7 @@ CPhysicsShellHolder* collide_obj = nullptr;
 static float depth = 0;
 static void  get_depth( bool& do_colide, bool bo1, dContact& c, SGameMtl * /*material_1*/, SGameMtl * /*material_2*/)
 {
-	save_max( depth, c.geom.depth );
+	depth = std::max(depth, c.geom.depth);
 #ifdef DEBUG
 	if( depth != c.geom.depth )
 		return;

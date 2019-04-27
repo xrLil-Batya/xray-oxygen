@@ -458,10 +458,6 @@ u16								CSE_ALifeTraderAbstract::object_id		() const
 	return base()->ID;
 }
 
-int 	CSE_ALifeTraderAbstract::Community	() const
-{
-	return m_community_index;
-}
 
 LPCSTR			CSE_ALifeTraderAbstract::CommunityName () const
 {

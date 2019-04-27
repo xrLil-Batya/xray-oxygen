@@ -619,7 +619,8 @@ void CFunctionGraph::Init(type_function fun, float x0, float x1, int l, int t, i
 	{
 		float val = m_function(x);
 
-		save_min(min, val); save_max(max, val);
+		min = std::min(min, val);
+		max = std::max(max, val);// save_max(max, val);
 	}
 
 	R_ASSERT(min<phInfinity&&max>-phInfinity && min <= max);

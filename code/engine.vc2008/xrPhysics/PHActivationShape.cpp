@@ -38,9 +38,8 @@ static void	ActivateTestDepthCallback(bool& do_colide, bool bo1, dContact& c, SG
 	if (!do_colide || material_1->Flags.test(SGameMtl::flPassable) || material_2->Flags.test(SGameMtl::flPassable))
 		return;
 
-	float& depth = c.geom.depth;
-	float test_depth = depth;
-	save_max(max_depth, test_depth);
+	max_depth = std::max(max_depth, c.geom.depth);
+
 	c.surface.mu *= friction_factor;
 	c.surface.soft_cfm = cfm;
 	c.surface.soft_erp = erp;

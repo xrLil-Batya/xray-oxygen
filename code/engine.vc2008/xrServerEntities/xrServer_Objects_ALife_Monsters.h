@@ -53,7 +53,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
 #ifdef XRGAME_EXPORTS
 	//для работы с relation system
 	u16								object_id				() const;
-	int	XR_EPROPS_API				Community				() const;
+	int	XR_EPROPS_API				Community				() const { return m_community_index; }
 	LPCSTR							CommunityName			() const;
 	CHARACTER_RANK_VALUE			Rank					();
 	CHARACTER_REPUTATION_VALUE		Reputation				();
