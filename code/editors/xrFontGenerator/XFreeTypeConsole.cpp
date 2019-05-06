@@ -216,20 +216,15 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 			if (i >= 1072 || i == 1049)
 			{
 				current_size = int(info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top);
-				pen_y += (u32)current_size;
+				pen_y += current_size;
 			}
 			
 			if (i >= 1072 || i == 1049)
 			{
 				if ((info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
-				{
 					pen_y -= current_size;
-				}
-
-				if ((info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top) < 0)
-				{
+				else
 					pen_y += abs(current_size);
-				}
 			}
 
 			for (u32 row = 0; row < bmp->rows; ++row)
