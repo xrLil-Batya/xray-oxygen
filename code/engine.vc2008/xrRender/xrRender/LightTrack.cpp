@@ -39,6 +39,9 @@ CROS_impl::CROS_impl	()
 	sky_rays_uptodate	= 0;
 
 	MODE				= IRender_ObjectSpecific::TRACE_ALL;
+
+	for (size_t i = 0; i < NUM_FACES; ++i)
+		hemi_cube[i]	= hemi_cube_smooth[i] = 0;
 }
 
 void CROS_impl::add (light* source)
