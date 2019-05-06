@@ -7,13 +7,7 @@
 #include "../../include/xrRender/RenderVisual.h"
 #include "../../xrEngine/xr_object.h"
 
-#ifdef _EDITOR
-#	include "igame_persistent.h"
-#	include "environment.h"
-#else
-#	include "../../xrEngine/igame_persistent.h"
-#	include "../../xrEngine/environment.h"
-#endif
+#include "../../xrEngine/environment.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -67,7 +61,7 @@ IC bool	pred_energy			(const CROS_impl::Light& L1, const CROS_impl::Light& L2)	{
 #pragma warning(push)
 #pragma warning(disable:4305)
 
-const float		hdir		[lt_hemisamples][3] = 
+constexpr float hdir [lt_hemisamples][3] = 
 {
 	{-0.26287,	0.52573,	0.80902	},
 	{0.27639,	0.44721,	0.85065	},
