@@ -100,7 +100,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UI3dStatic.cpp" />
+    <ClCompile Include="UI3dStatic.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="UI3tButton.cpp" />
     <ClCompile Include="UIAnimatedStatic.cpp" />
     <ClCompile Include="UIBtnHint.cpp" />

@@ -767,7 +767,6 @@ void xrRender_initconsole()
 	tw_max.set			(2,2,2);
 	CMD4(CCC_Vector3,	"r_tree_wave",			&ps_r_Tree_Wave,			tw_min, tw_max	);
 
-	CMD3(CCC_Mask,		"r_use_nvdbt",			&ps_r_flags,				R_FLAG_USE_NVDBT);
 	CMD3(CCC_Mask,		"rs_hom_depth_draw",	&ps_r_flags,				R_FLAG_HOM_DEPTH_DRAW	);
 #endif // DEBUG
 
