@@ -26,13 +26,11 @@ void CRender::render_lights(light_Package& LP)
 		xr_vector<light*>& source = LP.v_shadowed;
 		xr_vector<light*> refactored;
 		refactored.reserve(source.size());
-		u32 total = source.size();
+		size_t total = source.size();
 
 		auto pred_area = [](light* _1, light* _2)
 		{
-			u32		a0 = _1->X.S.size;
-			u32		a1 = _2->X.S.size;
-			return	a0 > a1;	// reverse -> descending
+			return	_1->X.S.size > _2->X.S.size;	// reverse -> descending
 		};
 
 		for (u16 smap_ID = 0; refactored.size() != total; smap_ID++)
@@ -152,13 +150,13 @@ void CRender::render_lights(light_Package& LP)
 		//		if (has_point_unshadowed)	-> 	accum point unshadowed
 		if (!LP.v_point.empty())
 		{
-			light*	L = LP.v_point.back();		
+			light*	pLight = LP.v_point.back();		
 			LP.v_point.pop_back();
-			L->vis_update();
-			if (L->vis.visible)
+			pLight->vis_update();
+			if (pLight->vis.visible)
 			{
-				Target->accum_point(L);
-				render_indirect(L);
+				Target->accum_point(pLight);
+				render_indirect(pLight);
 			}
 		}
 
@@ -167,14 +165,15 @@ void CRender::render_lights(light_Package& LP)
 		// if (has_spot_unshadowed)	-> 	accum spot unshadowed
 		if (!LP.v_spot.empty()) 
 		{
-			light* L = LP.v_spot.back();	
+			light* pLight = LP.v_spot.back();
 			LP.v_spot.pop_back();
-			L->vis_update();
-			if (L->vis.visible) 
+
+			pLight->vis_update();
+			if (pLight->vis.visible)
 			{
-				LR.compute_xf_spot(L);
-				Target->accum_spot(L);
-				render_indirect(L);
+				LR.compute_xf_spot(pLight);
+				Target->accum_spot(pLight);
+				render_indirect(pLight);
 			}
 		}
 

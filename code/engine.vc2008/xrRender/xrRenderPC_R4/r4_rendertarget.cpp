@@ -466,7 +466,7 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 			if (RImplementation.o.dx10_msaa_opt)
 				bound = 1;
 
-			for (u32 i = 0; i < bound; ++i)
+			for (u32 i = 0; i < (u32)bound; ++i)
 			{
 				TempBlenderMSAA[i].SetDefine	("ISAMPLE", SampleDefs[i]);
 				s_rain_msaa[i].create		(&TempBlenderMSAA[i], "null");
@@ -889,10 +889,10 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 				desc.MiscFlags			= 0;
 
 				u32* tempData = (u32*)Memory.mem_alloc(w * h * sizeof(u32));
-				D3D_SUBRESOURCE_DATA subData;
-				std::memset(&subData, 0, sizeof(D3D_SUBRESOURCE_DATA));
-				subData.pSysMem = tempData;
-				subData.SysMemPitch = desc.Width * sampleSize;
+				D3D_SUBRESOURCE_DATA subData1;
+				std::memset(&subData1, 0, sizeof(D3D_SUBRESOURCE_DATA));
+				subData1.pSysMem = tempData;
+				subData1.SysMemPitch = desc.Width * sampleSize;
 
 				// Fill it
 				for (u32 y = 0; y < h; ++y)
@@ -901,12 +901,12 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 					{
 						DWORD data;
 						generate_jitter(&data, 1);
-						u32* p = (u32*)(LPBYTE(subData.pSysMem) + y * subData.SysMemPitch + x * 4);
+						u32* p = (u32*)(LPBYTE(subData1.pSysMem) + y * subData1.SysMemPitch + x * 4);
 						*p = data;
 					}
 				}
 
-				R_CHK(HW.pDevice->CreateTexture2D(&desc, &subData, &t_noise_hq_surf));
+				R_CHK(HW.pDevice->CreateTexture2D(&desc, &subData1, &t_noise_hq_surf));
 				t_noise_hq = dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_jitter_hq);
 				t_noise_hq->surface_set(t_noise_hq_surf);
 

@@ -116,7 +116,7 @@ ID3DBlob* CScreenshotManager::MakeScreenshotForSavedGame()
 	_RELEASE(pBackBufferRes);
 
 	// Save resource to buffer and return it
-	HRESULT hr = D3DX11SaveTextureToMemory(HW.pContext, pSmallTexture, D3DX11_IFF_DDS, &pData, 0);
+	D3DX11SaveTextureToMemory(HW.pContext, pSmallTexture, D3DX11_IFF_DDS, &pData, 0);
 	_RELEASE(pSmallTexture);
 
 	return pData;

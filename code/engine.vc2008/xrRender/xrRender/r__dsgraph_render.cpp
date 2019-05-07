@@ -85,7 +85,7 @@ template <class T> IC bool cmp_textures_lexN(const T &lhs, const T &rhs)
 }
 template <class T> void sort_tlist(xr_vector<T::template value_type *>& lst, xr_vector<T::template value_type *>& temp, T& textures)
 {
-	int amount = textures.begin()->first->size();
+	size_t amount = textures.begin()->first->size();
 
 	if (amount <= 1)
 	{

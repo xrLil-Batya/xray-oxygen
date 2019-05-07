@@ -465,15 +465,14 @@ void CInventoryItem::modify_holder_params	(float &range, float &fov) const
 
 ALife::_TIME_ID	 CInventoryItem::TimePassedAfterIndependant()	const
 {
-	return (!object().H_Parent() && m_dwItemIndependencyTime != 0) ? (Level().timeServer() - m_dwItemIndependencyTime) : 0;
+	return (!object().H_Parent() && m_dwItemIndependencyTime) ? (Level().timeServer() - m_dwItemIndependencyTime) : 0;
 }
 
-bool	CInventoryItem::CanTrade() const 
+bool	CInventoryItem::CanTrade() const
 {
 	bool res = true;
-#pragma todo("Dima to Andy : why CInventoryItem::CanTrade can be called for the item, which doesn't have owner?")
-	if(m_pInventory)
-		res = inventory_owner().AllowItemToTrade(this,m_ItemCurrPlace);
+	if (m_pInventory)
+		res = inventory_owner().AllowItemToTrade(this, m_ItemCurrPlace);
 
 	return (res && m_flags.test(FCanTrade) && !IsQuestItem());
 }

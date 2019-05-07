@@ -188,7 +188,7 @@ BOOL CPEDef::Load(IReader& F)
 	m_MaxParticles	= F.r_u32();
 
 	{
-		u32 action_list	= F.find_chunk(PED_CHUNK_ACTIONLIST); 
+		u32 action_list	= (u32)F.find_chunk(PED_CHUNK_ACTIONLIST);
 		R_ASSERT(action_list);
 		m_Actions.w		(F.pointer(),action_list);
 	}

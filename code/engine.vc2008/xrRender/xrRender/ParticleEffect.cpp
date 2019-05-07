@@ -181,7 +181,7 @@ BOOL CParticleEffect::Compile(CPEDef* def)
 		RefreshShader();
 
 		// append actions
-		IReader F(m_Def->m_Actions.pointer(), m_Def->m_Actions.size());
+		IReader F(m_Def->m_Actions.pointer(), (u32)m_Def->m_Actions.size());
 		ParticleManager()->LoadActions(m_HandleActionList, F);
 		ParticleManager()->SetMaxParticles(m_HandleEffect, m_Def->m_MaxParticles);
 		ParticleManager()->SetCallback(m_HandleEffect, OnEffectParticleBirth, OnEffectParticleDead, this, 0);
@@ -536,8 +536,8 @@ void CParticleEffect::Render(float)
 			else
 			{
 				tbb::task_group ParticleEffectTasks;
-				size_t nWorkers = CPU::Info.n_threads;
-				constexpr size_t SkinParamSize = 64;
+				u32 nWorkers = CPU::Info.n_threads;
+				constexpr u32 SkinParamSize = 64;
 				PRS_PARAMS prsParams[SkinParamSize];
 				R_ASSERT(SkinParamSize > nWorkers);
 

@@ -32,8 +32,8 @@ enum{
 class CInventoryItem;
 class CInventory;
 
-typedef CInventoryItem*				PIItem;
-typedef xr_vector<PIItem>			TIItemContainer;
+using PIItem = CInventoryItem*;
+using TIItemContainer = xr_vector<PIItem>;
 
 
 enum eItemPlace

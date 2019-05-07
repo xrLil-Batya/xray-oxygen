@@ -91,13 +91,13 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 
 			if (sh->flags.bEmissive) 
 			{
-				_MatrixItemS temp;
-				temp.ssa = SSA;
-				temp.pObject = RI.val_pObject;
-				temp.pVisual = pVisual;
-				temp.Matrix = *RI.val_pTransform;
-				temp.se = &*pVisual->shader->E[4];		// 4=L_special
-				mapHUDEmissive.emplace_back(std::make_pair(distSQ, temp));
+				_MatrixItemS temp1;
+				temp1.ssa = SSA;
+				temp1.pObject = RI.val_pObject;
+				temp1.pVisual = pVisual;
+				temp1.Matrix = *RI.val_pTransform;
+				temp1.se = &*pVisual->shader->E[4];		// 4=L_special
+				mapHUDEmissive.emplace_back(std::make_pair(distSQ, temp1));
 			}
 			return;
 		}
@@ -450,19 +450,20 @@ void CRender::add_leafs_Static(dxRender_Visual *pVisual)
 	// Visual is 100% visible - simply add it
 	xr_vector<dxRender_Visual*>::iterator I,E;	// it may be usefull for 'hierrarhy' visuals
 
-	switch (pVisual->Type) {
+	switch (pVisual->Type) 
+	{
 	case MT_PARTICLE_GROUP:
-		{
+	{
 		if (phase == PHASE_SMAP) return;
-			// Add all children, doesn't perform any tests
-			PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
-			for (auto i_it=pG->items.begin(); i_it!=pG->items.end(); i_it++){
-				PS::CParticleGroup::SItem&			I		= *i_it;
-				if (I._effect)		add_leafs_Dynamic		(I._effect);
-				for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
-				for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_leafs_Dynamic(*pit);
-			}
+		// Add all children, doesn't perform any tests
+		PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
+		for (PS::CParticleGroup::SItem& refI : pG->items) 
+		{
+			if (refI._effect)		add_leafs_Dynamic(refI._effect);
+			for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_related.begin(); pit != refI._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
+			for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_free.begin(); pit != refI._children_free.end(); pit++)	add_leafs_Dynamic(*pit);
 		}
+	}
 		return;
 	case MT_HIERRARHY:
 		{
@@ -560,19 +561,18 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 		if (phase == PHASE_SMAP) return TRUE;
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
-			for (auto i_it=pG->items.begin(); i_it!=pG->items.end(); i_it++)
+			for (PS::CParticleGroup::SItem& refI : pG->items)
 			{
-				PS::CParticleGroup::SItem&			I		= *i_it;
 				if (fcvPartial==VIS) 
 				{
-					if (I._effect)		add_Dynamic				(I._effect,planes);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_Dynamic(*pit,planes);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_Dynamic(*pit,planes);
+					if (refI._effect)		add_Dynamic				(refI._effect,planes);
+					for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_related.begin();	pit!=refI._children_related.end(); pit++)	add_Dynamic(*pit,planes);
+					for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_free.begin();		pit!=refI._children_free.end();	pit++)	add_Dynamic(*pit,planes);
 				} else 
 				{
-					if (I._effect)		add_leafs_Dynamic		(I._effect);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_leafs_Dynamic(*pit);
+					if (refI._effect)		add_leafs_Dynamic		(refI._effect);
+					for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_related.begin();	pit!=refI._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
+					for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_free.begin();		pit!=refI._children_free.end();	pit++)	add_leafs_Dynamic(*pit);
 				}
 			}
 		}
@@ -597,12 +597,15 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 			// Add all children, doesn't perform any tests
 			CKinematics * pV			= (CKinematics*)pVisual;
 			BOOL	_use_lod			= FALSE	;
-			if (pV->m_lod)				
+			if (pV->m_lod)
 			{
-				Fvector							Tpos;	float		D;
-				val_pTransform->transform_tiny	(Tpos, pV->vis.sphere.P);
-				float		ssa		=	CalcSSA	(D,Tpos,pV->vis.sphere.R/2.f);	// assume dynamics never consume full sphere
-				if (ssa<r_ssaLOD_A)	_use_lod	= TRUE		;
+				Fvector TPos;
+				float D;
+				val_pTransform->transform_tiny(TPos, pV->vis.sphere.P);
+
+				// assume dynamics never consume full sphere
+				float ssa = CalcSSA(D, TPos, pV->vis.sphere.R / 2.f);	
+				if (ssa < r_ssaLOD_A)	_use_lod = TRUE;
 			}
 			if (_use_lod)
 			{

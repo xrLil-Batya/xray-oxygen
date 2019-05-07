@@ -284,8 +284,8 @@ void CRender::Render()
 		
 	CTimer T; T.Start();
 	BOOL result = FALSE;
-	HRESULT	hr = S_FALSE;
-	while ((hr = GetData(q_sync_point[q_sync_count], &result, sizeof(result))) == S_FALSE)
+	HRESULT	HResult = S_FALSE;
+	while ((HResult = GetData(q_sync_point[q_sync_count], &result, sizeof(result))) == S_FALSE)
 	{
 		if (!SwitchToThread())
 			Sleep(ps_r_wait_sleep);
@@ -354,15 +354,15 @@ void CRender::Render()
 		light_Package& LP = Lights.package;
 
 		// stats
-		stats.l_shadowed	= LP.v_shadowed.size();
-		stats.l_unshadowed	= LP.v_point.size() + LP.v_spot.size();
+		stats.l_shadowed	= (u32)LP.v_shadowed.size();
+		stats.l_unshadowed	= (u32)LP.v_point.size() + (u32)LP.v_spot.size();
 		stats.l_total		= stats.l_shadowed + stats.l_unshadowed;
 
 		// perform tests
 		count = std::max(count, LP.v_point.size());
 		count = std::max(count, LP.v_spot.size());
 		count = std::max(count, LP.v_shadowed.size());
-		for (u32 it = 0; it < count; it++)
+		for (size_t it = 0; it < count; it++)
 		{
 			if (it < LP.v_point.size())
 			{
@@ -484,7 +484,7 @@ void CRender::Render()
 	}
 
 	{
-		ScopeStatTimer lightTimer(Device.Statistic->Render_CRenderRender_LightRender);
+		ScopeStatTimer lightTimer1(Device.Statistic->Render_CRenderRender_LightRender);
 		PIX_EVENT(DEFER_SELF_ILLUM);
 		Target->phase_accumulator();
 
@@ -500,7 +500,7 @@ void CRender::Render()
 
 		// Lighting, non dependant on OCCQ
 		{
-			ScopeStatTimer lightTimer(Device.Statistic->TEST2);
+			ScopeStatTimer lightTimer2(Device.Statistic->TEST2);
 			PIX_EVENT(DEFER_LIGHT_NO_OCCQ);
 			HOM.Disable();
 			render_lights(LP_normal);
@@ -508,7 +508,7 @@ void CRender::Render()
         
 		// Lighting, dependant on OCCQ
 		{
-			ScopeStatTimer lightTimer(Device.Statistic->TEST3);
+			ScopeStatTimer lightTimer3(Device.Statistic->TEST3);
 			PIX_EVENT(DEFER_LIGHT_OCCQ);
 			render_lights(LP_pending);
 		}
@@ -516,7 +516,7 @@ void CRender::Render()
     
 	// Postprocess
 	{
-		ScopeStatTimer lightTimer(Device.Statistic->Render_CRenderRender_Combine);
+		ScopeStatTimer lightTimer4(Device.Statistic->Render_CRenderRender_Combine);
 		PIX_EVENT(DEFER_LIGHT_COMBINE);
 		Target->phase_combine();
 	}

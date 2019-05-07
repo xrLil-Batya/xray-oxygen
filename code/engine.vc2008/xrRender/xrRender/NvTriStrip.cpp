@@ -105,13 +105,13 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 
 		//count the total number of indices
 		unsigned int numIndices = 0;
-		for(int i = 0; i < tempStrips.size(); i++)
+		for(size_t i = 0; i < tempStrips.size(); i++)
 		{
-			numIndices += tempStrips[i]->m_faces.size() * 3;
+			numIndices += (unsigned int)tempStrips[i]->m_faces.size() * 3;
 		}
 
 		//add in the list
-		numIndices += tempFaces.size() * 3;
+		numIndices += (unsigned int)tempFaces.size() * 3;
 
 		primGroups[0].type       = PT_LIST;
 		primGroups[0].numIndices = numIndices;
@@ -169,7 +169,7 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 				stripLength = i - startingLoc;
 			}
 			else
-				stripLength = stripIndices.size();
+				stripLength = (unsigned int)stripIndices.size();
 			
 			primGroups[stripCtr].type       = PT_STRIP;
 			primGroups[stripCtr].indices    = xr_alloc<u16>	(stripLength);
@@ -235,7 +235,7 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 //
 void RemapIndices(const xr_vector<PrimitiveGroup> &in_primGroups, const u16 numVerts, xr_vector<PrimitiveGroup> &remappedGroups)
 {
-	int numGroups			= in_primGroups.size();
+	int numGroups			= (int)in_primGroups.size();
 	remappedGroups.resize	(numGroups);
 
 	//caches oldIndex --> newIndex conversion

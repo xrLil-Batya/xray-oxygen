@@ -225,7 +225,7 @@ inline bool test_Level(occD* depth, int dim, float _x0, float _y0, float _x1, fl
 	// MT-Sync (delayed as possible)
 	RImplementation.HOM.MT_SYNC	();
 
-	for (u32 y = y0; y <= y1; y++)
+	for (u32 y = (u32)y0; y <= (u32)y1; y++)
 	{
 		occD* base = depth + y * dim;
 		for (occD* it = base + x0; it <= base + x1; it++)

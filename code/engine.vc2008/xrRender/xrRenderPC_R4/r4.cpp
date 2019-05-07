@@ -1063,7 +1063,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 		if (SUCCEEDED(_result))
 		{
 			IWriter* file = FS.w_open(sh_filePath);
-			u32 const crc = crc32(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize());
+			u32 const crc = crc32(pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize());
 
 			file->w_u32				(crc);
             file->w_u32             (real_sourcecodeCRC);
