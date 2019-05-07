@@ -42,6 +42,7 @@ public:
     using archives_vec = xr_vector<archive>;
     archives_vec				m_archives;
 	void						LoadArchive		(archive& A, const char* entrypoint=NULL);
+	void						ProcessOne(const char* path, const _finddata_t& entry);
 
 private:
 	struct	file_pred
@@ -66,12 +67,13 @@ private:
 
 	void						Register		(const char* name, u32 vfs, u32 crc, u32 ptr, u32 size_real, u32 size_compressed, u32 modif);
 	void						ProcessArchive	(const char* path);
-	void						ProcessOne		(const char* path, const _finddata_t& entry);
 	bool						Recurse			(const char* path);	
 
 	files_it					file_find_it	(const char* n);
 public:
-	enum{
+
+	enum
+	{
 		flNeedRescan			= (1<<0),
 		flBuildCopy				= (1<<1),
 		flReady					= (1<<2),
@@ -83,6 +85,7 @@ public:
 		flNeedCheck				= (1<<8),
 		flDumpFileActivity		= (1<<9),
 	};    
+
 	Flags32						m_Flags			;
 	u32							dwAllocGranularity;
 	u32							dwOpenCounter;
