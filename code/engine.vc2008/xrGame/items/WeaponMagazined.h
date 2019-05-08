@@ -29,6 +29,8 @@ protected:
 	ESoundTypes		m_eSoundShot;
 	ESoundTypes		m_eSoundEmptyClick;
 	ESoundTypes		m_eSoundReload;
+	ESoundTypes		m_eSoundView;
+	ESoundTypes		m_eSoundUnMis;
 
 	ESoundTypes		m_eSoundReloadEmpty;
 	ESoundTypes		m_eSoundReloadFast;
@@ -48,6 +50,8 @@ protected:
 	virtual void	switch2_Hiding	();
 	virtual void	switch2_Hidden	();
 	virtual void	switch2_Showing	();
+	virtual void	switch2_View	();
+	virtual void	switch2_UnMis	();
 	
 	virtual void	OnShot			();	
 	

@@ -51,6 +51,8 @@ _action  actions[] = {
 	{ "wpn_func",			kWPN_FUNC			},
 	{ "wpn_firemode_prev",	kWPN_FIREMODE_PREV	},
 	{ "wpn_firemode_next",	kWPN_FIREMODE_NEXT	},
+	{ "wpn_un_mis",			kWPN_UN_MIS	},
+	{ "wpn_view",			kWPN_VIEW	},
 
 	{ "pause",				kPAUSE				},
 	{ "drop",				kDROP				},
