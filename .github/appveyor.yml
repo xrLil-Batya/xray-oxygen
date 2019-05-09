@@ -4,7 +4,6 @@ pull_requests:
 shallow_clone: true
 image: Visual Studio 2019 Preview
 configuration: 
- - Debug
  - Release
 platform: x64
 build:
