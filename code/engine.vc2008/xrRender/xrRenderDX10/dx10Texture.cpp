@@ -14,11 +14,23 @@
 #include "../xrRender/dxRenderDeviceRender.h"
 #include "../../FrayBuildConfig.hpp"
 
+constexpr char* ATexturesExtSupport[6] =
+{
+	".tga", ".dds", ".bmp", // Images
+	".ogm", ".ogv", ".avi"  // Video
+};
+
 void fix_texture_name(LPSTR fn)
 {
-	LPSTR _ext = strext(fn);
-	if(_ext && (!stricmp(_ext,".tga") || !stricmp(_ext,".dds") || !stricmp(_ext,".bmp") || !stricmp(_ext,".ogm")))
-		*_ext = 0;
+	char* Ext = strext(fn);
+	if (Ext)
+	{
+		for (const char* Iter : ATexturesExtSupport)
+		{
+			if (!stricmp(Ext, Iter))
+				*Ext = 0;
+		}
+	}
 }
 
 int get_texture_load_lod(LPCSTR fn)

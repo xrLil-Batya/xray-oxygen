@@ -24,6 +24,7 @@ bool IsProcessWithAdminPrivilege()
 
 void CheckOpenAL()
 {
+#if 0
 	TCHAR szOpenALDir[MAX_PATH] = { 0 };
 	R_ASSERT(GetSystemDirectory(szOpenALDir, MAX_PATH * sizeof(TCHAR)));
 
@@ -149,4 +150,5 @@ void CheckOpenAL()
 			ExitProcess(0);
 		}
 	}
+#endif
 }
