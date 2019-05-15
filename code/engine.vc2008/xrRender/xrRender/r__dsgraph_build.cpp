@@ -32,42 +32,94 @@ ICF float CalcSSA(float& distSQ, Fvector& C, float R)
 	return R / distSQ;
 }
 
-void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fvector& Center)
+R_dsgraph_structure::R_dsgraph_structure()
 {
-	CRender&	RI			=	RImplementation;
+	val_pObject = NULL;
+	val_pTransform = NULL;
+	val_bHUD = FALSE;
+	val_bInvisible = FALSE;
+	val_bRecordMP = FALSE;
+	val_feedback = 0;
+	val_feedback_breakp = 0;
+	marker = 0;
+	r_pmask(true, true);
+	b_loaded = FALSE;
+}
 
-	if (pVisual->vis.marker	==	RI.marker)	return	;
-	pVisual->vis.marker		=	RI.marker			;
+void R_dsgraph_structure::r_dsgraph_destroy()
+{
+	nrmVS.clear();
+	nrmPS.clear();
+	nrmCS.clear();
+	nrmStates.clear();
+	nrmTextures.clear();
+	nrmTexturesTemp.clear();
 
-	float distSQ			;
-	float SSA				=	CalcSSA		(distSQ,Center,pVisual);
-	if (SSA<=r_ssaDISCARD)		return;
+	matVS.clear();
+	matPS.clear();
+	matCS.clear();
+	matStates.clear();
+	matTextures.clear();
+	matTexturesTemp.clear();
+
+	lstLODs.clear();
+	lstLODgroups.clear();
+	lstRenderables.clear();
+	lstSpatial.clear();
+
+	for (u32 i = 0; i < 2; ++i)
+	{
+		for (u32 j = 0; j < SHADER_PASSES_MAX; j++)
+		{
+			mapNormalPasses[i][j].clear();
+			mapMatrixPasses[i][j].clear();
+		}
+	}
+	mapSorted.clear();
+	mapHUD.clear();
+	mapLOD.clear();
+	mapDistort.clear();
+
+	mapWmark.clear();
+	mapEmissive.clear();
+}
+
+void R_dsgraph_structure::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector& Center)
+{
+	CRender& RI = RImplementation;
+
+	if (pVisual->vis.marker == RI.marker)	return;
+	pVisual->vis.marker = RI.marker;
+
+	float distSQ;
+	float SSA = CalcSSA(distSQ, Center, pVisual);
+	if (SSA <= r_ssaDISCARD)		return;
 
 	// Distortive geometry should be marked and R2 special-cases it
 	// a) Allow to optimize RT order
 	// b) Should be rendered to special distort buffer in another pass
-	VERIFY						(pVisual->shader._get());
-	ShaderElement*		sh_d	= &*pVisual->shader->E[4];
-	if (RImplementation.o.distortion && sh_d && sh_d->flags.bDistort && pmask[sh_d->flags.iPriority/2]) 
+	VERIFY(pVisual->shader._get());
+	ShaderElement* sh_d = &*pVisual->shader->E[4];
+	if (RImplementation.o.distortion && sh_d && sh_d->flags.bDistort && pmask[sh_d->flags.iPriority / 2])
 	{
 		_MatrixItemS temp;
-		temp.ssa		= SSA;
-		temp.pObject	= RI.val_pObject;
-		temp.pVisual	= pVisual;
-		temp.Matrix		= *RI.val_pTransform;
-		temp.se			= sh_d;
+		temp.ssa = SSA;
+		temp.pObject = RI.val_pObject;
+		temp.pVisual = pVisual;
+		temp.Matrix = *RI.val_pTransform;
+		temp.se = sh_d;
 		mapDistort.emplace_back(std::make_pair(distSQ, temp));
 	}
 
 	// Select shader
-	ShaderElement*	sh		=	RImplementation.rimp_select_sh_dynamic	(pVisual,distSQ);
-	if (0==sh)								return;
-	if (!pmask[sh->flags.iPriority/2])		return;
+	ShaderElement* sh = RImplementation.rimp_select_sh_dynamic(pVisual, distSQ);
+	if (0 == sh)								return;
+	if (!pmask[sh->flags.iPriority / 2])		return;
 
 	// HUD rendering
-	if (RI.val_bHUD)			
+	if (RI.val_bHUD)
 	{
-		if (sh->flags.bStrictB2F)	
+		if (sh->flags.bStrictB2F)
 		{
 			_MatrixItemS temp;
 			temp.ssa = SSA;
@@ -78,8 +130,8 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 
 			mapHUDSorted.emplace_back(std::make_pair(distSQ, temp));
 			return;
-		} 
-		else 
+		}
+		else
 		{
 			_MatrixItemS temp;
 			temp.ssa = SSA;
@@ -89,7 +141,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 			temp.se = sh;
 			mapHUD.emplace_back(std::make_pair(distSQ, temp));
 
-			if (sh->flags.bEmissive) 
+			if (sh->flags.bEmissive)
 			{
 				_MatrixItemS temp1;
 				temp1.ssa = SSA;
@@ -107,7 +159,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	if (RI.val_bInvisible)		return;
 
 	// strict-sorting selection
-	if (sh->flags.bStrictB2F)	
+	if (sh->flags.bStrictB2F)
 	{
 		_MatrixItemS temp;
 		temp.ssa = SSA;
@@ -151,28 +203,18 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	for (u32 iPass = 0; iPass < sh->passes.size(); ++iPass)
 	{
 		// the most common node
-		SPass &pass = *sh->passes[iPass];
-		auto &map = mapMatrixPasses[sh->flags.iPriority / 2][iPass];
+		SPass& pass = *sh->passes[iPass];
+		auto& map = mapMatrixPasses[sh->flags.iPriority / 2][iPass];
 
-#if defined(USE_DX11)
-		auto &Nvs = map[&*pass.vs];
-		auto &Ngs = Nvs[pass.gs->gs];
-		auto &Nps = Ngs[pass.ps->ps];
-#else
-		auto &Nvs = map[pass.vs->vs];
-		auto &Nps = Nvs[pass.ps->ps];
-#endif
-
-#ifdef USE_DX11
+		auto& Nvs = map[&*pass.vs];
+		auto& Ngs = Nvs[pass.gs->gs];
+		auto& Nps = Ngs[pass.ps->ps];
 		Nps.hs = pass.hs->sh;
 		Nps.ds = pass.ds->sh;
 
-		auto &Ncs = Nps.mapCS[pass.constants._get()];
-#else
-		R_dsgraph::mapMatrixStates &Ncs = Nps[pass.constants._get()];
-#endif
-		auto &Nstate = Ncs[&pass.state];
-		auto &Ntex = Nstate[pass.T._get()];
+		auto& Ncs = Nps.mapCS[pass.constants._get()];
+		auto& Nstate = Ncs[&pass.state];
+		auto& Ntex = Nstate[pass.T._get()];
 		Ntex.push_back(item);
 
 		// Need to sort for HZB efficient use// Need to sort for HZB efficient use
@@ -185,27 +227,17 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 				if (SSA > Ncs.ssa)
 				{
 					Ncs.ssa = SSA;
-#ifdef USE_DX11
 					if (SSA > Nps.mapCS.ssa)
 					{
 						Nps.mapCS.ssa = SSA;
-#else
-					if (SSA > Nps.ssa)
-					{
-						Nps.ssa = SSA;
-#endif
-#ifdef USE_DX11
 						if (SSA > Ngs.ssa)
 						{
 							Ngs.ssa = SSA;
-#endif
 							if (SSA > Nvs.ssa)
 							{
 								Nvs.ssa = SSA;
 							}
-#ifdef USE_DX11
 						}
-#endif
 					}
 				}
 			}

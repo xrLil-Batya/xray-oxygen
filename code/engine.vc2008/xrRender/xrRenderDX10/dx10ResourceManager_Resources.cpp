@@ -521,7 +521,7 @@ void		CResourceManager::DeleteGeom		(const SGeometry* Geom)
 //--------------------------------------------------------------------------------------------------------------
 CTexture* CResourceManager::_CreateTexture	(LPCSTR _Name)
 {
-	if (0==xr_strcmp(_Name,"null") || !_Name && !_Name[0])	return nullptr;
+	if (0==xr_strcmp(_Name,"null") || !_Name || !_Name[0])	return nullptr;
 
 	string_path		Name;
 	xr_strcpy			(Name,_Name); //. andy if (strext(Name)) *strext(Name)=0;

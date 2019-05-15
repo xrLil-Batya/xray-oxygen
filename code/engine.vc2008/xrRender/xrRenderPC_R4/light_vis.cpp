@@ -29,7 +29,7 @@ void	light::vis_prepare			()
 		safe_area	= std::max(std::max(VIEWPORT_NEAR, std::max(x0,x1)),c);
 	}
 
-	bool	skiptest	= false;
+	bool	skiptest	= true;
 	if (ps_r_flags.test(R_FLAG_EXP_DONT_TEST_UNSHADOWED) && !flags.bShadow)	skiptest=true;
 	if (ps_r_flags.test(R_FLAG_EXP_DONT_TEST_SHADOWED) && flags.bShadow)	skiptest=true;
 
@@ -56,7 +56,7 @@ void	light::vis_prepare			()
 	RImplementation.occq_end						(vis.query_id);
 }
 
-void	light::vis_update			()
+void	light::vis_update()
 {
 	//	. not pending	->>> return (early out)
 	//	. test-result:	visible:
@@ -66,13 +66,10 @@ void	light::vis_update			()
 
 	if (!vis.pending)	return;
 
-	u32	frame			= Device.dwFrame;
-	u64 fragments		= RImplementation.occq_get	(vis.query_id);
-	vis.visible			= (fragments > cullfragments);
-	vis.pending			= false;
+	u32	frame = Device.dwFrame;
+	u64 fragments = RImplementation.occq_get(vis.query_id);
+	vis.visible = (fragments > cullfragments);
+	vis.pending = false;
 
-	if (vis.visible)	
-		vis.frame2test	=	frame	+ ::Random.randI(delay_large_min,delay_large_max);
-	else 
-		vis.frame2test	=	frame	+ 1; 
+	vis.frame2test = frame + vis.visible ? ::Random.randI(delay_large_min, delay_large_max) : 1;
 }

@@ -255,7 +255,7 @@ void CRender::Render()
 	IMainMenu* pMainMenu = g_pGamePersistent ? g_pGamePersistent->m_pMainMenu : nullptr;
 	bool bMenu = pMainMenu ? pMainMenu->CanSkipSceneRendering() : false;
 
-	if (!(g_pGameLevel && g_hud) || bMenu)
+	if (!g_pGameLevel || !g_hud || bMenu)
 		return;
 
 	if (m_bFirstFrameAfterReset)
@@ -268,14 +268,14 @@ void CRender::Render()
 	// Configure
 	RImplementation.o.distortion = FALSE;		// disable distorion
 	Fcolor sun_color = ((light*)Lights.sun._get())->color;
-	bool bSUN = ps_r_flags.test(R_FLAG_SUN) && (Diffuse::u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS);
+	const bool bSUN = ps_r_flags.test(R_FLAG_SUN) && (Diffuse::u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS);
 
 	// HOM
 	ViewBase.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View = nullptr;
 
 	Target->phase_scene_prepare();
-    //RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //NOT EVEN a depth prepass :P
+   // RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //NOT EVEN a depth prepass :P
 
 	Device.Statistic->Render_CRenderRender_ScenePrepare.End();
 	//*******
@@ -340,12 +340,9 @@ void CRender::Render()
 	LP_normal.clear();
 	LP_pending.clear();
 
-#ifdef USE_DX11
 	if (RImplementation.o.dx10_msaa)
 		RCache.set_ZB(RImplementation.Target->rt_MSAADepth->pZRT);
-#endif
 
-	
 	{
 		PIX_EVENT(DEFER_TEST_LIGHT_VIS);
 
@@ -450,7 +447,6 @@ void CRender::Render()
 		Lights_LastFrame.clear();
 	}
 
-#ifdef USE_DX11
 	Device.Statistic->Render_CRenderRender_MSAA_Rain.Begin();
     // full screen pass to mark msaa-edge pixels in highest stencil bit
     if (RImplementation.o.dx10_msaa)
@@ -465,7 +461,6 @@ void CRender::Render()
         render_rain();
     }
 	Device.Statistic->Render_CRenderRender_MSAA_Rain.End();
-#endif
 
 	// Directional light - sun
 	if (bSUN)
@@ -473,13 +468,7 @@ void CRender::Render()
 		ScopeStatTimer sunTimer(Device.Statistic->Render_CRenderRender_Sun);
 		PIX_EVENT(DEFER_SUN);
 		RImplementation.stats.l_visible++;
-		if (ps_r_flags.is(R_FLAG_SUN_OLD))
-			render_sun_cascades();
-		else
-		{
-			render_sun_near();
-			render_sun();
-		}
+		render_sun_cascades();
 		Target->increment_light_marker();
 	}
 

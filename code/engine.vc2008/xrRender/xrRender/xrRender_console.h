@@ -136,7 +136,7 @@ enum RenderFlags : u32
 {
 	R_FLAG_SUN					= (1<<0),
 	R_FLAG_SUN_FOCUS			= (1<<1),
-	R_FLAG_SUN_OLD				= (1<<2),
+	R_FLAG_DETAIL_BUMP			= (1<<2),
 	R_FLAG_SUN_IGNORE_PORTALS	= (1<<3),
 	R_FLAG_DETAIL_SHADOW		= (1<<4),
 	R_FLAG_HOM_DEPTH_DRAW		= (1<<5),
@@ -159,10 +159,8 @@ enum RenderFlags : u32
 	R_FLAG_VOLUMETRIC_LIGHTS	= (1<<19),
 
 	R_FLAG_STEEP_PARALLAX		= (1<<20),
-	R_FLAG_DETAIL_BUMP			= (1<<21),
 
 	R_FLAG_ACTOR_SHADOW			= (1<<22),
-
 };
 
 enum RFLAG_POSTSCREEN : u32

@@ -13,10 +13,10 @@ void CRenderTarget::phase_scene_prepare()
 		HW.pContext->ClearRenderTargetView(rt_Position->pRT,	ColorRGBA);
 		HW.pContext->ClearRenderTargetView(rt_Color->pRT,		ColorRGBA);
 		HW.pContext->ClearRenderTargetView(rt_Accumulator->pRT, ColorRGBA);
-		HW.pContext->ClearDepthStencilView(HW.pBaseZB, D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
+		HW.pContext->ClearDepthStencilView(HW.pBaseZB, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		if (RImplementation.o.dx10_msaa)
-			HW.pContext->ClearDepthStencilView(rt_MSAADepth->pZRT, D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
+			HW.pContext->ClearDepthStencilView(rt_MSAADepth->pZRT, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 
 	//	Igor: for volumetric lights

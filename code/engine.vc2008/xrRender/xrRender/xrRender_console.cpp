@@ -198,7 +198,7 @@ float		ps_r_ls_psm_kernel			= 0.7f;
 float		ps_r_ls_ssm_kernel			= 0.7f;
 float		ps_r_ls_bloom_threshold		= 0.03f;
 float		ps_r_ls_depth_scale			= 1.00001f;			// 1.00001f
-float		ps_r_ls_depth_bias			= -0.0003f;			// -0.0001f
+float		ps_r_ls_depth_bias			= -0.017f;			// -0.0001f
 float		ps_r_ls_squality				= 1.0f;				// 1.00f
 float		ps_r_ls_fade				= 0.5f;				// 1.f
 // Parallax
@@ -217,7 +217,7 @@ float		ps_r_sun_near_border		= 0.75f;			// 1.0f
 float		ps_r_sun_depth_far_scale	= 1.00000f;			// 1.00001f
 float		ps_r_sun_depth_far_bias		= -0.00002f;		// -0.0000f
 float		ps_r_sun_depth_near_scale	= 1.0000f;			// 1.00001f
-float		ps_r_sun_depth_near_bias	= 0.00001f;			// -0.00005f
+float		ps_r_sun_depth_near_bias	= -0.3f;			// -0.00005f
 float		ps_r_sun_lumscale			= 1.0f;				// 1.0f
 float		ps_r_sun_lumscale_hemi		= 1.0f;				// 1.0f
 float		ps_r_sun_lumscale_amb		= 1.0f;
@@ -702,7 +702,6 @@ public:
 };
 
 // Allow real-time fog config reload
-#if	(RENDER != R_R2)
 #ifdef DEBUG
 
 #include "../xrRenderDX10/3DFluid/dx103DFluidManager.h"
@@ -716,10 +715,7 @@ public:
 		FluidManager.UpdateProfiles();
 	}
 };
-#endif	//	DEBUG
-#endif	//	(RENDER == R_R3) || (RENDER == R_R4)
 
-#ifdef DEBUG
 class CCC_SaveGammaLUT : public IConsole_Command
 {
 public:
@@ -844,7 +840,6 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask,		"r_sun",				&ps_r_flags,				R_FLAG_SUN		);
 	CMD3(CCC_Token,		"r_sun_quality",		&ps_r_sun_quality,			qsun_quality_token);
 	CMD3(CCC_Mask,		"r_sun_focus",			&ps_r_flags,				R_FLAG_SUN_FOCUS);
-	CMD3(CCC_Mask,		"r_sun_shadow_cascede_old", &ps_r_flags,			R_FLAG_SUN_OLD);
 	CMD3(CCC_Mask,		"r_glows_use",			&ps_r_flags,				R_FLAG_GLOW_USE);
 	CMD4(CCC_Float,		"r_sun_near",			&ps_r_sun_near,				1.0f,	50.0f	);
 	CMD4(CCC_Float,		"r_sun_far",			&ps_r_sun_far,				51.0f,	180.0f	);

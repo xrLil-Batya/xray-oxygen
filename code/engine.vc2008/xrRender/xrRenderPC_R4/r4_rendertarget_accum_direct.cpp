@@ -32,6 +32,9 @@ constexpr static u16 facetable[16][3] =
 	{ 2, 4, 1 },
 };
 
+// True bias for direct lighting 
+inline float TrueBias = -0.01f;
+
 void CRenderTarget::accum_direct(u32 sub_phase)
 {
 	// Choose normal code-path or filtered
@@ -163,7 +166,7 @@ void CRenderTarget::accum_direct(u32 sub_phase)
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul(L_dir, fBias);
+				Fvector		bias;	bias.mul(L_dir, TrueBias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44(bias_t);
 			}
@@ -379,7 +382,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul(L_dir, fBias);
+				Fvector		bias;	bias.mul(L_dir, TrueBias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44(bias_t);
 			}

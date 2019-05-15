@@ -476,12 +476,12 @@ void					CRender::rmFar				()
 void					CRender::rmNormal			()
 {
 	IRender_Target* T	=	getTarget	();
-	D3D_VIEWPORT VP		= {0,0,(float)T->get_width(),(float)T->get_height(),0,1.f };
+	D3D11_VIEWPORT VP		= {0,0,(float)T->get_width(),(float)T->get_height(),0,1.f };
 
 	HW.pContext->RSSetViewports(1, &VP);
 }
 
-void					CRender::ResizeWindowProc(WORD h, WORD w)
+void CRender::ResizeWindowProc(WORD h, WORD w)
 {
 	HW.ResizeWindowProc(h, w);
 }

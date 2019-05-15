@@ -178,21 +178,22 @@ public:
 	void							render_forward				();
 	void							render_indirect				(light*			L	);
 	void							render_lights				(light_Package& LP	);
-	void							render_sun					();
-	void							render_sun_near				();
 	void							render_menu					();
 	void							render_rain					();
 
-	void							render_sun_cascade			(u32 cascade_ind);
+	// Render one cascade
+	void							render_sun_cascade			(sun::cascade& Cascade);
+	// Init based cascades
 	void							init_cacades				();
+	// Rendering shadows and sun
 	void							render_sun_cascades			();
 
 public:
 	ShaderElement*					rimp_select_sh_static		(dxRender_Visual	*pVisual, float cdist_sq);
 	ShaderElement*					rimp_select_sh_dynamic		(dxRender_Visual	*pVisual, float cdist_sq);
 	D3DVERTEXELEMENT9*				getVB_Format				(int id, BOOL	_alt=FALSE);
-	ID3DVertexBuffer*			getVB						(int id, BOOL	_alt=FALSE);
-	ID3DIndexBuffer*			getIB						(int id, BOOL	_alt=FALSE);
+	ID3DVertexBuffer*				getVB						(int id, BOOL	_alt=FALSE);
+	ID3DIndexBuffer*				getIB						(int id, BOOL	_alt=FALSE);
 	FSlideWindowItem*				getSWI						(int id);
 	IRender_Portal*					getPortal					(int id);
 	IRender_Sector*					getSectorActive				();
