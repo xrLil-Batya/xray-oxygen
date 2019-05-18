@@ -115,9 +115,6 @@
     <Filter Include="Game API\GameTime">
       <UniqueIdentifier>{52a2ebd5-e7e2-4baf-b02c-6a0c4297c6c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\CPU">
-      <UniqueIdentifier>{3639cf0d-7c52-4245-ba7e-455492fb902d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game API\NetServer">
       <UniqueIdentifier>{92513ec2-b350-4a0d-b927-6ad48a38eca8}</UniqueIdentifier>
     </Filter>
@@ -271,10 +268,13 @@
     <Filter Include="Game API\Environment\Hemisphere">
       <UniqueIdentifier>{6deaf446-9248-4ae4-93cc-3d7855bfcbed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\CPU\AMD">
+    <Filter Include="Engine\GPU">
+      <UniqueIdentifier>{3639cf0d-7c52-4245-ba7e-455492fb902d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GPU\AMD">
       <UniqueIdentifier>{8ed1a310-6252-4a03-811e-732ea1408fc9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\CPU\NVIDIA">
+    <Filter Include="Engine\GPU\NVIDIA">
       <UniqueIdentifier>{2a2026a0-f063-4565-8dbb-0cecec9ee7bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -682,10 +682,10 @@
       <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="AMDGPUTransferee.h">
-      <Filter>Engine\CPU\AMD</Filter>
+      <Filter>Engine\GPU\AMD</Filter>
     </ClInclude>
     <ClInclude Include="NvGPUTransferee.h">
-      <Filter>Engine\CPU\NVIDIA</Filter>
+      <Filter>Engine\GPU\NVIDIA</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -959,18 +959,6 @@
     <ClCompile Include="ClS\NET_Client.cpp">
       <Filter>Game API\NetServer</Filter>
     </ClCompile>
-    <ClCompile Include="CPU\xrSkin2W_thread.cpp">
-      <Filter>Engine\CPU</Filter>
-    </ClCompile>
-    <ClCompile Include="CPU\xrSkin2W.cpp">
-      <Filter>Engine\CPU</Filter>
-    </ClCompile>
-    <ClCompile Include="CPU\xrCPU_Pipe.cpp">
-      <Filter>Engine\CPU</Filter>
-    </ClCompile>
-    <ClCompile Include="CPU\PLC.cpp">
-      <Filter>Engine\CPU</Filter>
-    </ClCompile>
     <ClCompile Include="date_time.cpp">
       <Filter>Game API\GameTime</Filter>
     </ClCompile>
@@ -1071,10 +1059,10 @@
       <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="AMDGPUTransferee.cpp">
-      <Filter>Engine\CPU\AMD</Filter>
+      <Filter>Engine\GPU\AMD</Filter>
     </ClCompile>
     <ClCompile Include="NvGPUTransferee.cpp">
-      <Filter>Engine\CPU\NVIDIA</Filter>
+      <Filter>Engine\GPU\NVIDIA</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

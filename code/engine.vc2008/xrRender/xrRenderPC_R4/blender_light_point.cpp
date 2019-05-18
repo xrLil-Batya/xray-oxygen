@@ -10,8 +10,6 @@ void	CBlender_accum_point::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);
 
-	BOOL		blend		= RImplementation.o.fp16_blend;
-	D3DBLEND	dest		= blend?D3DBLEND_ONE:D3DBLEND_ZERO;
 	switch (C.iElement)
 	{
 	case SE_L_FILL:			// fill projective
@@ -21,7 +19,7 @@ void	CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case SE_L_UNSHADOWED:	// unshadowed
-		C.r_Pass			("accum_volume",	"accum_omni_unshadowed_nomsaa",	false,	FALSE,FALSE,blend,D3DBLEND_ONE,dest);
+		C.r_Pass			("accum_volume",	"accum_omni_unshadowed_nomsaa",	false,	FALSE,FALSE,TRUE,D3D11_BLEND_ONE, D3D11_BLEND_ONE);
 		C.r_dx10Texture		("s_position",		r2_RT_P);
 		C.r_dx10Texture		("s_normal",		r2_RT_N);
 		C.r_dx10Texture		("s_material",		r2_material);
@@ -34,7 +32,7 @@ void	CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case SE_L_NORMAL:		// normal
-		C.r_Pass			("accum_volume",	"accum_omni_normal_nomsaa",		false,	FALSE,FALSE,blend,D3DBLEND_ONE,dest);
+		C.r_Pass			("accum_volume",	"accum_omni_normal_nomsaa",		false,	FALSE,FALSE,TRUE,D3D11_BLEND_ONE, D3D11_BLEND_ONE);
 		C.r_dx10Texture		("s_position",		r2_RT_P);
 		C.r_dx10Texture		("s_normal",		r2_RT_N);
 		C.r_dx10Texture		("s_material",		r2_material);
@@ -50,7 +48,7 @@ void	CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case SE_L_FULLSIZE:		// normal-fullsize
-		C.r_Pass			("accum_volume",	"accum_omni_normal_nomsaa",		false,	FALSE,FALSE,blend,D3DBLEND_ONE,dest);
+		C.r_Pass			("accum_volume",	"accum_omni_normal_nomsaa",		false,	FALSE,FALSE,TRUE,D3D11_BLEND_ONE, D3D11_BLEND_ONE);
 		C.r_dx10Texture		("s_position",		r2_RT_P);
 		C.r_dx10Texture		("s_normal",		r2_RT_N);
 		C.r_dx10Texture		("s_material",		r2_material);
@@ -66,7 +64,7 @@ void	CBlender_accum_point::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case SE_L_TRANSLUENT:	// shadowed + transluency
-		C.r_Pass			("accum_volume",	"accum_omni_transluent_nomsaa",	false,	FALSE,FALSE,blend,D3DBLEND_ONE,dest);
+		C.r_Pass			("accum_volume",	"accum_omni_transluent_nomsaa",	false,	FALSE,FALSE,TRUE,D3D11_BLEND_ONE, D3D11_BLEND_ONE);
 		C.r_dx10Texture		("s_position",		r2_RT_P);
 		C.r_dx10Texture		("s_normal",		r2_RT_N);
 		C.r_dx10Texture		("s_material",		r2_material);
@@ -90,7 +88,7 @@ CBlender_accum_point_msaa::~CBlender_accum_point_msaa	()	{	}
 
 //	TODO: DX10: Implement CBlender_accum_point::Compile
 void	CBlender_accum_point_msaa::Compile(CBlender_Compile& C)
-	{
+{
 	IBlender::Compile		(C);
 
    if( Name )
@@ -98,8 +96,6 @@ void	CBlender_accum_point_msaa::Compile(CBlender_Compile& C)
    else
       ::Render->m_MSAASample = -1;
 
-	BOOL		blend		= RImplementation.o.fp16_blend;
-	D3DBLEND	dest		= blend?D3DBLEND_ONE:D3DBLEND_ZERO;
 	switch (C.iElement)
 		{
 		case SE_L_FILL:			// fill projective
@@ -109,7 +105,7 @@ void	CBlender_accum_point_msaa::Compile(CBlender_Compile& C)
 			C.r_End				();
 			break;
 		case SE_L_UNSHADOWED:	// unshadowed
-			C.r_Pass			("accum_volume",	"accum_omni_unshadowed_msaa",	false,	FALSE,FALSE,blend,D3DBLEND_ONE,dest);
+			C.r_Pass			("accum_volume",	"accum_omni_unshadowed_msaa",	false,	FALSE,FALSE,TRUE,D3D11_BLEND_ONE, D3D11_BLEND_ONE);
 			C.r_dx10Texture		("s_position",		r2_RT_P);
 			C.r_dx10Texture		("s_normal",		r2_RT_N);
 			C.r_dx10Texture		("s_material",		r2_material);
@@ -122,7 +118,7 @@ void	CBlender_accum_point_msaa::Compile(CBlender_Compile& C)
 			C.r_End				();
 			break;
 		case SE_L_NORMAL:		// normal
-			C.r_Pass			("accum_volume",	"accum_omni_normal_msaa",		false,	FALSE,FALSE,blend,D3DBLEND_ONE,dest);
+			C.r_Pass			("accum_volume",	"accum_omni_normal_msaa",		false,	FALSE,FALSE,TRUE,D3D11_BLEND_ONE, D3D11_BLEND_ONE);
 			C.r_dx10Texture		("s_position",		r2_RT_P);
 			C.r_dx10Texture		("s_normal",		r2_RT_N);
 			C.r_dx10Texture		("s_material",		r2_material);
@@ -138,7 +134,7 @@ void	CBlender_accum_point_msaa::Compile(CBlender_Compile& C)
 			C.r_End				();
 			break;
 		case SE_L_FULLSIZE:		// normal-fullsize
-			C.r_Pass			("accum_volume",	"accum_omni_normal_msaa",		false,	FALSE,FALSE,blend,D3DBLEND_ONE,dest);
+			C.r_Pass			("accum_volume",	"accum_omni_normal_msaa",		false,	FALSE,FALSE,TRUE,D3D11_BLEND_ONE, D3D11_BLEND_ONE);
 			C.r_dx10Texture		("s_position",		r2_RT_P);
 			C.r_dx10Texture		("s_normal",		r2_RT_N);
 			C.r_dx10Texture		("s_material",		r2_material);
@@ -154,7 +150,7 @@ void	CBlender_accum_point_msaa::Compile(CBlender_Compile& C)
 			C.r_End				();
 			break;
 		case SE_L_TRANSLUENT:	// shadowed + transluency
-			C.r_Pass			("accum_volume",	"accum_omni_transluent_msaa",	false,	FALSE,FALSE,blend,D3DBLEND_ONE,dest);
+			C.r_Pass			("accum_volume",	"accum_omni_transluent_msaa",	false,	FALSE,FALSE,TRUE,D3D11_BLEND_ONE, D3D11_BLEND_ONE);
 			C.r_dx10Texture		("s_position",		r2_RT_P);
 			C.r_dx10Texture		("s_normal",		r2_RT_N);
 			C.r_dx10Texture		("s_material",		r2_material);

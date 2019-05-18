@@ -7,12 +7,13 @@ static const float	RSQRTDIV2	=	0.70710678118654752440084436210485f;
 light::light		(void)	: ISpatial(g_SpatialSpace)
 {
 	spatial.type	= STYPE_LIGHTSOURCE;
-	flags.type		= POINT;
-	flags.bStatic	= false;
-	flags.bActive	= false;
-	flags.bShadow	= false;
-	flags.bVolumetric = false;
-	flags.bHudMode	= false;
+	flags =
+	{
+		POINT,
+		false, false,
+		false, false, false
+	};
+
 	position.set	(0,-1000,0);
 	direction.set	(0,-1,0);
 	right.set		(0,0,0);
@@ -39,7 +40,7 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 
 light::~light()
 {
-	for (int f = 0; f < 6; f++)	xr_delete(omnipart[f]);
+	for (u32 f = 0; f < 6; f++)	xr_delete(omnipart[f]);
 	set_active(false);
 
 	// remove from Lights_LastFrame
@@ -64,9 +65,6 @@ void light::set_texture		(LPCSTR name)
 	xr_strconcat(temp,"r2\\accum_spot_",name);
 	s_spot.create			(RImplementation.Target->b_accum_spot,temp,name);
 
-#if	(RENDER==R_R2)
-	s_volumetric.create		("accum_volumetric", name);
-#else
 	s_volumetric.create		("accum_volumetric_nomsaa", name);
 	if( RImplementation.o.dx10_msaa )
 	{
@@ -82,31 +80,21 @@ void light::set_texture		(LPCSTR name)
 			s_volumetric_msaa[i].create	(RImplementation.Target->b_accum_volumetric_msaa[i], xr_strconcat(temp,"r2\\accum_volumetric_",name),name);
 		}
 	}
-#endif
 }
 
-void light::set_active		(bool a)
+void light::set_active(bool a)
 {
-	if (a)
+	if (a && !flags.bActive)
 	{
-		if (flags.bActive)					return;
-		flags.bActive						= true;
-		spatial_register					();
-		spatial_move						();
-
-#ifdef DEBUG
-		Fvector	zero = {0,-1000,0}			;
-		if (position.similar(zero))			{
-			Msg	("- Uninitialized light position.");
-		}
-#endif // DEBUG
+		flags.bActive = true;
+		spatial_register();
+		spatial_move();
 	}
-	else
+	else if(flags.bActive)
 	{
-		if (!flags.bActive)					return;
-		flags.bActive						= false;
-		spatial_move						();
-		spatial_unregister					();
+		flags.bActive = false;
+		spatial_move();
+		spatial_unregister();
 	}
 }
 
@@ -300,7 +288,6 @@ void	light::export_		(light_Package& package)
 
 						L->set_virtual_size(virtual_size);
 						// Holger - do we need to export msaa stuff as well ?
-#if	(RENDER!=R_R2)
 						if( RImplementation.o.dx10_msaa )
 						{
 							int bound = 1;
@@ -314,7 +301,7 @@ void	light::export_		(light_Package& package)
 								L->s_spot_msaa[i] = s_spot_msaa[i];
 							}
 						}
-#endif
+
 						//	Igor: add volumetric support
 						L->set_volumetric(flags.bVolumetric);
 						L->set_volumetric_quality(m_volumetric_quality);

@@ -54,11 +54,15 @@ namespace xrEditor
 		}
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            XRay.File eObject = XRay.File.OpenExternalRead("E:\\X-Ray CoP SDK\\editors\rawdata\\objects\\dynamics\\fence\\debris_01.object");
-            XRay.Editor.EObject realObject = XRay.Editor.EObject.CreateEObject(eObject);
+            string testFile = "D:\\Games\\S.T.A.L.K.E.R\\SDK\\editors\\rawdata\\objects\\dynamics\\fence\\debris_01.object";
+            XRay.File eObject = XRay.File.OpenExternalRead(testFile);
+            string[] fileTokens = testFile.Split('\\');
 
+            XRay.Editor.EObject realObject = XRay.Editor.EObject.CreateEObject(eObject, fileTokens[fileTokens.Length - 1]);
+            XRay.Model objectModel = realObject.renderable;
+            //ourOcclusion.AddObjectToRenderableList()
             // Hide console, and load to viewport a EObject
-
+            ourOcclusion.AddObjectToRenderableList(objectModel);
         }
     }
 }

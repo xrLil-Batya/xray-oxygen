@@ -3,11 +3,10 @@
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 #include "Engine.h"
-#include "CPU\xrCPU_Pipe.h"
 #include "tbb/task_scheduler_init.h"
 
 CEngine Engine;
-xrDispatchTable	PSGP;
+tbb::task_scheduler_init* pTaskSheduler = nullptr;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -22,8 +21,8 @@ CEngine::~CEngine()
 
 ENGINE_API void CEngine::Initialize(void)
 {
-	// Bind PSGP
-	xrBind_PSGP(&PSGP, &CPU::Info);
+	// TBB Init
+	pTaskSheduler = new tbb::task_scheduler_init(CPU::Info.n_threads);
 
 	// Other stuff
 	Engine.Sheduler.Initialize();
@@ -34,7 +33,5 @@ void CEngine::Destroy()
 	Engine.Sheduler.Destroy();
 	Engine.External.Destroy();
 
-	//ttapi_Done();
 	xr_delete(pTaskSheduler);
-	std::memset(&PSGP, 0, sizeof(PSGP));
 }

@@ -21,8 +21,7 @@
 #include <D3DCompiler.h>
 
 #include "../xrRender/xrD3DDefs.h"
-
-#include "../xrRender/Debug/dxPixEventWrapper.h"
+#include "../xrRenderDX11/dx11EventWrapper.h"
 
 #define		R_R1	1
 #define		R_R2	2

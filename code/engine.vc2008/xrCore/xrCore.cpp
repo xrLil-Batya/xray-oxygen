@@ -26,12 +26,10 @@ void compute_build_id();
 #include "DateTime.hpp"
 void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb, BOOL init_fs, const char* fs_fname)
 {
-	std::set_terminate(abort);
 	if (!init_counter)
 	{
 		PluginMode = false;
 		xr_strcpy(ApplicationName, _ApplicationName);
-		// Init COM so we can use CoCreateInstance
         ZeroMemory(Params, sizeof(Params));
         xr_strcpy(Params, GetCommandLine());
 		_strlwr_s(Params,sizeof(Params));

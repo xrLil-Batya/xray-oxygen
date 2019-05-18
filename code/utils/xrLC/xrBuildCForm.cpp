@@ -146,8 +146,8 @@ void CBuild::BuildCForm	()
 	// Header
 	hdrCFORM hdr;
 	hdr.version		= CFORM_CURRENT_VERSION;
-	hdr.vertcount	= (u32)CL.getVS();
-	hdr.facecount	= (u32)CL.getTS();
+	hdr.vertcount	= u32(CL.getVS());
+	hdr.facecount	= u32(CL.getTS());
 	hdr.aabb		= BB;
 	MFS->w			(&hdr, sizeof(hdr));
 
@@ -158,7 +158,7 @@ void CBuild::BuildCForm	()
 	{
 		CDB::TRI *tri = reinterpret_cast<CDB::TRI*>(&CL.getT()[i]);
 		MFS->w(&(tri->verts[0]), 12);
-		MFS->w_u32(tri->dummy_low);
+		MFS->w_u32(tri->dummy);
 	}
 	
 	// Clear pDeflector (it is stored in the same memory space with dwMaterialGame)

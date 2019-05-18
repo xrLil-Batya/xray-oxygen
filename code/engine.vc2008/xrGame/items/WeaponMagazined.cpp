@@ -82,6 +82,13 @@ void CWeaponMagazined::Load	(LPCSTR section)
 
 	if (process_if_exists_set(section, "snd_reload_bolt_only", &CInifile::r_string, TemporaryStr, true))
 		m_sounds.LoadSound(section, "snd_reload_bolt_only", "sndReloadBoltOnly", true, m_eSoundReloadBoltOnly);
+
+	// Rietmon: подгружаем звуки для осмотра и передергивания затвора, если они есть
+	if (process_if_exists_set(section, "snd_view", &CInifile::r_string, TemporaryStr, true))
+		m_sounds.LoadSound(section, "snd_view", "sndView", true, m_eSoundView);
+
+	if (process_if_exists_set(section, "snd_un_mis", &CInifile::r_string, TemporaryStr, true))
+		m_sounds.LoadSound(section, "snd_un_mis", "sndUnMis", true, m_eSoundUnMis);
 	
 	m_sSndShotCurrent = "sndShot";
 		
@@ -136,7 +143,7 @@ void CWeaponMagazined::FireStart()
 			if(!IsWorking() || AllowFireWhileWorking())
 			{
 				// Если оружие не готово - то не начинаем
-				if (GetState() == eReload || GetState() == eShowing || GetState() == eHiding || GetState() == eMisfire) 
+				if (GetState() == eReload || GetState() == eShowing || GetState() == eHiding || GetState() == eMisfire || GetState() == eUnMis) 
 					return;
 
 				inherited::FireStart();
@@ -460,6 +467,19 @@ void CWeaponMagazined::OnStateSwitch(u32 S, u32 oldState)
 			switch2_Hidden();
 			break;
 		}
+
+		case eView:
+		{
+			switch2_View();
+			break;
+		}
+
+		case eUnMis:
+		{
+			switch2_UnMis();
+			break;
+		}
+
 	}
 }
 
@@ -658,6 +678,13 @@ void CWeaponMagazined::OnAnimationEnd(u32 state)
 		case eIdle:		
 			switch2_Idle();			
 			break;  // Keep showing idle
+		case eView:
+			SwitchState(eIdle);
+			break;
+		case eUnMis:
+			bMisfire = false;
+			SwitchState(eIdle);
+			break;
 	}
 
 	inherited::OnAnimationEnd(state);
@@ -780,6 +807,26 @@ void CWeaponMagazined::switch2_Showing()
 	PlayAnimShow();
 }
 
+void CWeaponMagazined::switch2_View()
+{
+	if (m_sounds.SoundIsFound("sndView") && AnimIsFound("anm_view"))
+	{
+		PlaySound("sndView", get_LastFP());
+		PlayHUDMotion("anm_view", FALSE, this, GetState());
+	}
+}
+
+void CWeaponMagazined::switch2_UnMis()
+{
+	if (m_sounds.SoundIsFound("sndUnMis") && AnimIsFound("anm_un_mis"))
+	{
+		PlaySound("sndUnMis", get_LastFP());
+		PlayHUDMotion("anm_un_mis", FALSE, this, GetState());
+	}
+}
+
+#include "CustomDetector.h"
+
 bool CWeaponMagazined::Action(u16 cmd, u32 flags) 
 {
 	if (inherited::Action(cmd, flags)) 
@@ -795,7 +842,16 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 	    {
 			if (iAmmoElapsed < iMagazineSize || IsMisfire())
 			{
-				Reload();
+				if (GetState() == eView && GetState() == eUnMis) return false; // Rietmon: Запрещаем перезарядку, если играет анима осмотра и передергивания затвора
+				// Rietmon: Запрещаем перезарядку, если активен детектор
+				PIItem Det = Actor()->inventory().ItemFromSlot(DETECTOR_SLOT);
+				if (!Det) Reload(); // Rietmon: Если в слоте нету детектора, то он не может быть активен
+
+				if (Det)
+				{
+					CCustomDetector* pDet = smart_cast<CCustomDetector*>(Det);
+					if (!pDet->IsWorking()) Reload(); 
+				}
 			}
 
 			return true;
@@ -812,6 +868,19 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 			OnNextFireMode();
 			return true;
 		} 
+
+		case kWPN_VIEW:
+		{
+			SwitchState(eView);
+			return true;
+		}
+
+		case kWPN_UN_MIS:
+		{
+			if (IsMisfire())
+				SwitchState(eUnMis);
+			return true;
+		}
 	}
 
 	return false;

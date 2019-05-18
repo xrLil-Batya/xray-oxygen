@@ -54,7 +54,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeTraderAbstract)
 	//для работы с relation system
 	u16								object_id				() const;
 	int	XR_EPROPS_API				Community				() const;
-	LPCSTR							CommunityName			() const;
+	const char*						CommunityName			() const;
 	CHARACTER_RANK_VALUE			Rank					();
 	CHARACTER_REPUTATION_VALUE		Reputation				();
 	void							SetRank					(CHARACTER_RANK_VALUE val);

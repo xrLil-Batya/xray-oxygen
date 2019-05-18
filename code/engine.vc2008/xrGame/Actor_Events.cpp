@@ -32,77 +32,50 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 	{
 		P.r_u16(id);
 		CObject* Obj = Level().Objects.net_Find(id);
-		if (!Obj) {
+		if (!Obj) 
+		{
 			Msg("! GE_OWNERSHIP_TAKE: Object not found. object_id = [%d]", id);
 			break;
 		}
 
-		CGameObject* _GO = smart_cast<CGameObject*>(Obj);
-		if (inventory().CanTakeItem(smart_cast<CInventoryItem*>(_GO)))
+		CGameObject* pGameObject = smart_cast<CGameObject*>(Obj);
+		CInventoryItem* pItem = pGameObject->cast_inventory_item();
+		
+		if (inventory().CanTakeItem(pItem))
 		{
 			Obj->H_SetParent(smart_cast<CObject*>(this));
-			inventory().Take(_GO, false, true);
+			inventory().Take(pGameObject, false, true);
 		}
-		else
-		{
-			NET_Packet		P;
-			u_EventGen(P, GE_OWNERSHIP_REJECT, ID());
-			P.w_u16(u16(Obj->ID()));
-			u_EventSend(P);
-		}
+		else pItem->DropItem();
 	}
 		break;
 	case GE_TRADE_SELL:
 	case GE_OWNERSHIP_REJECT:
-		{
-			P.r_u16							(id);
-			CObject* Obj					= Level().Objects.net_Find	(id);
+	{
+		P.r_u16(id);
+		CObject* Obj = Level().Objects.net_Find(id);
 
-			if ( !Obj ) {
-				Msg                 ( "! GE_OWNERSHIP_REJECT: Object not found, id = %d", id );
-				break;
-			}
-
-			bool just_before_destroy		= !P.r_eof() && P.r_u8();
-			bool dont_create_shell			= (type==GE_TRADE_SELL) || just_before_destroy;
-			Obj->SetTmpPreDestroy			(just_before_destroy);
-			
-			CGameObject * GO = smart_cast<CGameObject*>(Obj);
-			
-			VERIFY( GO->H_Parent() );
-			if ( !GO->H_Parent() )
-			{
-				Msg("! ERROR: Actor [%d][%s] tries to reject item [%d][%s] that has no parent", 
-					ID(), Name(), GO->ID(), GO->cNameSect().c_str());
-				break;
-			}
-			
-			VERIFY_FORMAT( GO->H_Parent()->ID() == ID(), 
-				"actor [%d][%s] tries to drop not own object [%d][%s]",
-					ID(), Name(), GO->ID(), GO->cNameSect().c_str());
-
-			if ( GO->H_Parent()->ID() != ID() )
-			{
-				CActor* real_parent = smart_cast<CActor*>(GO->H_Parent());
-				Msg("! ERROR: Actor [%d][%s] tries to drop not own item [%d][%s], his parent is [%d][%s]",
-					ID(), Name(), GO->ID(), GO->cNameSect().c_str(), real_parent->ID(), real_parent->Name());
-				break;
-			}
-
-			if (!Obj->getDestroy() && inventory().DropItem(GO, just_before_destroy, dont_create_shell)) 
-			{
-				Level().m_feel_deny.feel_touch_deny(Obj, 1000);
-
-				// [12.11.07] Alexander Maniluk: extended GE_OWNERSHIP_REJECT packet for drop item to selected position
-				Fvector dropPosition;
-				if (!P.r_eof())
-				{
-					P.r_vec3(dropPosition);
-					GO->MoveTo(dropPosition);
-				}
-			}
+		if (!Obj) {
+			Msg("! GE_OWNERSHIP_REJECT: Object not found, id = %d", id);
+			break;
 		}
-		break;
+
+		bool just_before_destroy = !P.r_eof() && P.r_u8();
+		bool dont_create_shell = (type == GE_TRADE_SELL) || just_before_destroy;
+		Obj->SetTmpPreDestroy(just_before_destroy);
+
+		CGameObject * GO = smart_cast<CGameObject*>(Obj);
+
+		if (!GO->H_Parent())
+		{
+			Msg("! ERROR: Actor [%d][%s] tries to reject item [%d][%s] that has no parent",
+				ID(), Name(), GO->ID(), GO->cNameSect().c_str());
+			break;
+		}
+
+		if (GO->cast_inventory_item())
+			GO->cast_inventory_item()->DropItem(!P.r_eof(), P.r_vec3());
+	} break;
 	case GE_INV_ACTION:
 		{
 			u16 cmd;

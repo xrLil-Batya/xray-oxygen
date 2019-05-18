@@ -206,7 +206,7 @@ void CWallmarksEngine::AddWallmark_internal	(CDB::TRI* pTri, const Fvector* pVer
 		bb_query.get_CD		(bbc,bbd);
 		xrc.box_options		(CDB::OPT_FULL_TEST);
 		xrc.box_query		(g_pGameLevel->ObjectSpace.GetStaticModel(),bbc,bbd);
-		u32	triCount		= xrc.r_count	();
+		u32	triCount		= (u32)xrc.r_count	();
 		if (0==triCount)	
 			return;
 
@@ -333,9 +333,9 @@ ICF void FlushStream(ref_geom hGeom, ref_shader shader, u32& w_offset, FVF::LIT*
 	{
 		RCache.set_Shader		(shader);
 		RCache.set_Geometry		(hGeom);
-		if (bSuppressCull)		RCache.set_CullMode (CULL_NONE);
+		if (bSuppressCull)		RCache.set_CullMode (D3D11_CULL_NONE);
 		RCache.Render			(D3DPT_TRIANGLELIST,w_offset,w_count/3);
-		if (bSuppressCull)		RCache.set_CullMode	(CULL_CCW);
+		if (bSuppressCull)		RCache.set_CullMode	(D3D11_CULL_BACK);
 		Device.Statistic->RenderDUMP_WMT_Count += w_count/3;
 	}
 }

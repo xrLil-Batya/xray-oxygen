@@ -555,159 +555,141 @@ extern int DXTCompressImage(LPCSTR out_name, u8* raw_data,
     u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth);
 
 int DXTCompressBump(LPCSTR out_name, u8* T_height_gloss, u8* T_normal_map,
-    u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth)
+	u32 w, u32 h, u32 pitch, STextureParams* fmt, u32 depth)
 {
-    VERIFY(4 == depth);
-    NVI_Image* pSrc = new NVI_Image();
-    pSrc->Initialize(w, h, NVI_A8_R8_G8_B8, T_height_gloss);
-    pSrc->AverageRGBToAlpha();
-    // stage 0
+	VERIFY(4 == depth);
+	NVI_Image* pSrc = new NVI_Image();
+	pSrc->Initialize(w, h, NVI_A8_R8_G8_B8, T_height_gloss);
+	pSrc->AverageRGBToAlpha();
+	// stage 0
 #ifndef PVS_STUDIO
-    pitch = w*4;
+	pitch = w * 4;
 #endif
-#ifdef XR_DXT_DBG_BUMP_STAGES_DIR
-    tga_save(XR_DXT_DBG_BUMP_STAGES_DIR"\\0-height-gloss.tga", w, h, T_height_gloss, true);
-#endif
-    if (T_normal_map)
-    {
-        u8* ext_nm = pSrc->GetImageDataPointer();
-        CopyMemory(ext_nm, T_normal_map, w*h*sizeof(u32));
-    }
-    else
-    {
-        ConvertToNormalMap(pSrc, KERNEL_4x, fmt->bump_virtual_height*200.f);
-    }
-    u8* T_normal_1 = pSrc->GetImageDataPointer();
-#ifdef XR_DXT_DBG_BUMP_STAGES_DIR
-    tga_save(XR_DXT_DBG_BUMP_STAGES_DIR"\\1-normal_1.tga", w, h, T_normal_1, true);
-#endif
-    gloss_power = 0.0f;
-    // T_height_gloss.a (gloss) -> T_normal_1 + reverse of channels
-    TW_Iterate_1OP(w, h, pitch, T_normal_1, T_height_gloss, it_gloss_rev);
-    gloss_power /= float(w*h);
-#ifdef XR_DXT_DBG_BUMP_STAGES_DIR
-    tga_save(XR_DXT_DBG_BUMP_STAGES_DIR"\\2-normal_1.tga", w, h, T_normal_1, true);
-#endif
-    STextureParams fmt0;
-    fmt0.flags.assign(STextureParams::flGenerateMipMaps);
-    fmt0.type = STextureParams::ttImage;
-    fmt0.fmt = STextureParams::tfDXT5;
-    int res = DXTCompressImage(out_name, T_normal_1, w, h, pitch, &fmt0, depth);
-    // stage 1
-    if (res == 1)
-    {
-        // Decompress (back)
-        Image_DXTC* img = new Image_DXTC();
-        if (img->LoadFromFile(out_name))
-        {
-            VERIFY(w == img->Width() && h == img->Height());
-            img->Decompress();
-            u8* T_normal_1U = img->GetDecompDataPointer();
-        #ifdef XR_DXT_DBG_BUMP_STAGES_DIR
-            tga_save(XR_DXT_DBG_BUMP_STAGES_DIR"\\3-normal_1U.tga", w, h, T_normal_1U, true);
-        #endif
-            // Calculate difference
-            u8*	T_normal_1D = (u8*)calloc(w * h, sizeof(u32));
-            TW_Iterate_2OP(w, h, pitch, T_normal_1D, T_normal_1, T_normal_1U, it_difference);
-        #ifdef XR_DXT_DBG_BUMP_STAGES_DIR
-            tga_save(XR_DXT_DBG_BUMP_STAGES_DIR"\\4-normal_1D.tga", w, h, T_normal_1D, true);
-        #endif
-            // Rescale by virtual height
-            float h_scale = powf(fmt->bump_virtual_height / 0.05f, 0.75f); // move towards 1.0f
-            if (h_scale > 1.f)
-            {
-                h_scale = _sqrt(h_scale);
-            }
-            for (u32 y = 0; y < h; y++)
-            {
-                for (u32 x = 0; x < w; x++)
-                {
-                    u32& sh = *((u32*)(T_height_gloss + y*pitch) + x);
-                    u32 h = color_get_R(sh); // height -> R-channel
-                    h = iFloor(float(h)*h_scale + EPS_S);
-                    sh = color_rgba(h, color_get_G(sh), color_get_B(sh), color_get_A(sh));
-                }
-            }
-            // Calculate bounds for centering
-            u32 h_average = 0, h_min = 255, h_max = 0;
-            {
-                for (u32 y = 0; y < h; y++)
-                {
-                    for (u32 x = 0; x < w; x++)
-                    {
-                        u32 sh = *((u32*)(T_height_gloss + y*pitch) + x);
-                        u32 h = color_get_R(sh); // height -> R-channel
-                        h_average += h;
-                        if (h < h_min)
-                        {
-                            h_min = h;
-                        }
-                        if (h > h_max)
-                        {
-                            h_max = h;
-                        }
-                    }
-                }
-            }
-            // final median, which will be used for centering
-            u32 h_median = 9 * (h_average/(w*h)) + 1 * ((h_max-h_min)/2 + h_min);
-            h_median /= 10;
-            s32 h_correction = s32(127) - s32(h_median);
-            // Calculate filtered and corrected height
-            u8* T_height_pf = (u8*)calloc(w*h, sizeof(u32)); // filtered for parallax
-            for (s32 y = 0; y < s32(h); y++)
-            {
-                u32 p = pitch;
-                u8* T = T_height_gloss;
-                for (s32 x = 0; x < s32(w); x++)
-                {
-                    u32& dst = *((u32*)(T_height_pf + y*pitch) + x);
-                #ifdef XR_DXT_BUMP_FILTERING
-                    u32 val = 
-                        hsample(w,h,p,x-1,y-1,T) + hsample(w,h,p,x+0,y-1,T) + hsample(w,h,p,x+1,y-1,T) +
-                        hsample(w,h,p,x-1,y+0,T) + hsample(w,h,p,x+0,y+0,T) + hsample(w,h,p,x+1,y+0,T) +
-                        hsample(w,h,p,x-1,y+1,T) + hsample(w,h,p,x+0,y+1,T) + hsample(w,h,p,x+1,y+1,T);
-                    val	/= 9;
-                #else
-                    u32 val = hsample(w, h, p, x+0, y+0, T);
-                #endif
-                    s32	r = clampr(s32(val) + h_correction, 0, 255);
-                    dst = color_rgba(r, r, r, r);
-                }
-            }
-            // Reverse channels back + transfer heightmap
-            TW_Iterate_1OP(w, h, pitch, T_normal_1D, T_height_pf, it_height_rev);
-        #ifdef XR_DXT_DBG_BUMP_STAGES_DIR
-            tga_save(XR_DXT_DBG_BUMP_STAGES_DIR"\\5-normal_1D.tga", w, h, T_normal_1D, true);
-        #endif
-            // Compress
-            STextureParams fmt0;
-            fmt0.flags.assign(STextureParams::flGenerateMipMaps);
-            fmt0.type = STextureParams::ttImage;
-            fmt0.fmt = STextureParams::tfDXT5;
-            string256 out_name1;
-            strcpy(out_name1, out_name);
-            if (strext(out_name1))
-            {
-                *strext(out_name1) = 0;
-            }
-            strcat(out_name1, "#.dds");
-            res |= DXTCompressImage(out_name1, T_normal_1D, w, h, pitch, &fmt0, depth);
-            free(T_height_pf);
-            free(T_normal_1D);
-        }
-        else
-        {
-            res = 0;
-        }
-        delete img;
-    }
 
-    pSrc->~NVI_Image();
+	if (T_normal_map)
+	{
+		u8* ext_nm = pSrc->GetImageDataPointer();
+		CopyMemory(ext_nm, T_normal_map, w * h * sizeof(u32));
+	}
+	else
+	{
+		ConvertToNormalMap(pSrc, KERNEL_4x, fmt->bump_virtual_height * 200.f);
+	}
+	u8* T_normal_1 = pSrc->GetImageDataPointer();
 
-    if (gloss_power < 0.1f)
-    {
-        res = -1000;
-    }
-    return res;
+	gloss_power = 0.0f;
+	// T_height_gloss.a (gloss) -> T_normal_1 + reverse of channels
+	TW_Iterate_1OP(w, h, pitch, T_normal_1, T_height_gloss, it_gloss_rev);
+	gloss_power /= float(w * h);
+
+	STextureParams fmt0;
+	fmt0.flags.assign(STextureParams::flGenerateMipMaps);
+	fmt0.type = STextureParams::ttImage;
+	fmt0.fmt = STextureParams::tfDXT5;
+	int res = DXTCompressImage(out_name, T_normal_1, w, h, pitch, &fmt0, depth);
+
+	// stage 1
+	if (res == 1)
+	{
+		// Decompress (back)
+		Image_DXTC* img = new Image_DXTC();
+		if (img->LoadFromFile(out_name))
+		{
+			VERIFY(w == img->Width() && h == img->Height());
+			img->Decompress();
+			u8* T_normal_1U = img->GetDecompDataPointer();
+
+			// Calculate difference
+			u8* T_normal_1D = (u8*)calloc(w * h, sizeof(u32));
+			TW_Iterate_2OP(w, h, pitch, T_normal_1D, T_normal_1, T_normal_1U, it_difference);
+
+			// Rescale by virtual height
+			float h_scale = powf(fmt->bump_virtual_height / 0.05f, 0.75f); // move towards 1.0f
+			if (h_scale > 1.f)
+				h_scale = _sqrt(h_scale);
+
+			for (u32 y = 0; y < h; y++)
+			{
+				for (u32 x = 0; x < w; x++)
+				{
+					u32& sh = *((u32*)(T_height_gloss + y * pitch) + x);
+					u32 h = color_get_R(sh); // height -> R-channel
+					h = iFloor(float(h) * h_scale + EPS_S);
+					sh = color_rgba(h, color_get_G(sh), color_get_B(sh), color_get_A(sh));
+				}
+			}
+			// Calculate bounds for centering
+			u32 h_average = 0, h_min = 255, h_max = 0;
+			{
+				for (u32 y = 0; y < h; y++)
+				{
+					for (u32 x = 0; x < w; x++)
+					{
+						u32 sh = *((u32*)(T_height_gloss + y * pitch) + x);
+						u32 h = color_get_R(sh); // height -> R-channel
+						h_average += h;
+						
+						h_min = std::min(h, h_min);
+						h_max = std::min(h, h_max);
+					}
+				}
+			}
+			// final median, which will be used for centering
+			u32 h_median = 9 * (h_average / (w * h)) + 1 * ((h_max - h_min) / 2 + h_min);
+			h_median /= 10;
+			s32 h_correction = s32(127) - s32(h_median);
+			// Calculate filtered and corrected height
+			u8* T_height_pf = (u8*)calloc(w * h, sizeof(u32)); // filtered for parallax
+			for (s32 y = 0; y < s32(h); y++)
+			{
+				u32 p = pitch;
+				u8* T = T_height_gloss;
+				for (s32 x = 0; x < s32(w); x++)
+				{
+					u32& dst = *((u32*)(T_height_pf + y * pitch) + x);
+					u32 val;
+					if (strstr(Core.Params, "-bump_filtering"))
+					{
+						val = hsample(w, h, p, x - 1, y - 1, T) + hsample(w, h, p, x + 0, y - 1, T) + hsample(w, h, p, x + 1, y - 1, T) +
+							  hsample(w, h, p, x - 1, y + 0, T) + hsample(w, h, p, x + 0, y + 0, T) + hsample(w, h, p, x + 1, y + 0, T) +
+							  hsample(w, h, p, x - 1, y + 1, T) + hsample(w, h, p, x + 0, y + 1, T) + hsample(w, h, p, x + 1, y + 1, T);
+						val /= 9;
+					}
+					else
+						val = hsample(w, h, p, x + 0, y + 0, T);
+
+					s32	r = clampr(s32(val) + h_correction, 0, 255);
+					dst = color_rgba(r, r, r, r);
+				}
+			}
+			// Reverse channels back + transfer heightmap
+			TW_Iterate_1OP(w, h, pitch, T_normal_1D, T_height_pf, it_height_rev);
+
+			// Compress
+			STextureParams fmt0;
+			fmt0.flags.assign(STextureParams::flGenerateMipMaps);
+			fmt0.type = STextureParams::ttImage;
+			fmt0.fmt = STextureParams::tfDXT5;
+
+			string256 out_name1;
+			strcpy(out_name1, out_name);
+			if (strext(out_name1))
+				*strext(out_name1) = 0;
+
+			strcat(out_name1, "#.dds");
+			res |= DXTCompressImage(out_name1, T_normal_1D, w, h, pitch, &fmt0, depth);
+			free(T_height_pf);
+			free(T_normal_1D);
+		}
+		else res = 0;
+
+		delete img;
+	}
+
+	delete pSrc;
+
+	if (gloss_power < 0.1f)
+		res = -1000;
+
+	return res;
 }

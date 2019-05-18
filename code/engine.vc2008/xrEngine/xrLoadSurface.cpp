@@ -73,16 +73,18 @@ void	Surface_Init()
 	Msg("* %d supported formats",formats.size());
 }
 
-BOOL	Surface_Detect(string_path& F, LPSTR N)
+BOOL Surface_Detect(string_path& F, LPSTR N)
 {
-	FS.update_path		(F,"$game_textures$",strconcat(sizeof(F),F,N,".dds"));
-	int					h = _open(F,O_RDONLY|O_BINARY);
-	if (h > 0) {
-		_close			(h);
-		return			(TRUE);
+	FS.update_path(F, "$game_textures$", xr_strconcat(F, N, ".dds"));
+	int h = _open(F, O_RDONLY | O_BINARY);
+
+	if (h) 
+	{
+		_close(h);
+		return (TRUE);
 	}
 
-	return				(FALSE);
+	return (FALSE);
 }
 
 FIBITMAP*	Surface_Load(char* full_name)

@@ -163,9 +163,11 @@ static lzo_bool basic_integral_check(void)
 	COMPILE_TIME_ASSERT(USHRT_MAX  == LZO_UTYPE_MAX(sizeof(unsigned short)));
 	COMPILE_TIME_ASSERT(LZO_UINT32_MAX == LZO_UTYPE_MAX(sizeof(lzo_uint32)));
 	COMPILE_TIME_ASSERT(LZO_UINT_MAX   == LZO_UTYPE_MAX(sizeof(lzo_uint)));
-#if !defined(__LZO_IN_MINILZO)
-	COMPILE_TIME_ASSERT(SIZE_T_MAX     == LZO_UTYPE_MAX(sizeof(size_t)));
-#endif
+
+	// ForserX: Опасная вещь в x64. Смещение к 63. 
+//#if !defined(__LZO_IN_MINILZO)
+//	COMPILE_TIME_ASSERT(SIZE_T_MAX     == LZO_UTYPE_MAX(sizeof(size_t)));
+//#endif
 
 	r &= __lzo_assert(LZO_BYTE(257) == 1);
 

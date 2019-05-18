@@ -94,7 +94,7 @@ void CHOM::Load()
 	CL.calc_adjacency(adjacency);
 
 	// Create RASTER-triangles
-	m_pTris = xr_alloc<occTri>(CL.getTS());
+	m_pTris = new occTri[CL.getTS()];
 	for (u32 it = 0; it < CL.getTS(); it++)
 	{
 		CDB::TRI& clT = CL.getT()[it];
@@ -230,10 +230,10 @@ void CHOM::Render_DB			(CFrustum& base)
 #endif
 		u32		pixels			= 0;
 		int		limit			= int(P->size())-1;
-		for (int v=1; v<limit; v++)	{
+		for (int v1=1; v1<limit; v1++)	{
 			m_xform.transform	(T.raster[0],(*P)[0]);
-			m_xform.transform	(T.raster[1],(*P)[v+0]);
-			m_xform.transform	(T.raster[2],(*P)[v+1]);
+			m_xform.transform	(T.raster[1],(*P)[v1+0]);
+			m_xform.transform	(T.raster[2],(*P)[v1+1]);
 			pixels	+=			Raster.rasterize(&T);
 		}
 		if (0==pixels)	{ T.skip=next; continue; }
@@ -369,7 +369,7 @@ void CHOM::OnRender	()
             using LVec = xr_vector<FVF::L>;
 			static LVec	poly;	poly.resize(m_pModel->get_tris_count() * 3);
 			static LVec	line;	line.resize(m_pModel->get_tris_count() * 6);
-			for (u32 it = 0; it < m_pModel->get_tris_count(); it++)
+			for (u32 it = 0; it < (u32)m_pModel->get_tris_count(); it++)
 			{
 				CDB::TRI* T		= m_pModel->get_tris()+it;
 				Fvector* verts	= m_pModel->get_verts();
@@ -388,7 +388,7 @@ void CHOM::OnRender	()
 			// draw solid
 			Device.SetNearer(TRUE);
 			RCache.set_Shader	(dxRenderDeviceRender::Instance().m_SelectionShader);
-			RCache.dbg_Draw		(D3DPT_TRIANGLELIST,&*poly.begin(),poly.size()/3);
+			RCache.dbg_Draw		(D3DPT_TRIANGLELIST,&*poly.begin(), (u32)poly.size()/3);
 			Device.SetNearer(FALSE);
 			// draw wire
 			if (bDebug){
@@ -397,7 +397,7 @@ void CHOM::OnRender	()
 				Device.SetNearer(TRUE);
 			}
 			RCache.set_Shader	(dxRenderDeviceRender::Instance().m_SelectionShader);
-			RCache.dbg_Draw		(D3DPT_LINELIST,&*line.begin(),line.size()/2);
+			RCache.dbg_Draw		(D3DPT_LINELIST,&*line.begin(), (u32)line.size()/2);
 			if (bDebug){
 				RImplementation.rmNormal();
 			}else{

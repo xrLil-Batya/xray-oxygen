@@ -12,7 +12,7 @@ CBlender_deffer_model::CBlender_deffer_model	()	{
 	oAREF.value			= 32;
 	oAREF.min			= 0;
 	oAREF.max			= 255;
-	oBlend.value		= FALSE;
+	oBlend.value		= false;
 }
 CBlender_deffer_model::~CBlender_deffer_model	()	{	}
 
@@ -38,7 +38,7 @@ void	CBlender_deffer_model::Load(IReader& fs, u16 version)
 		oAREF.value = 32;
 		oAREF.min = 0;
 		oAREF.max = 255;
-		oBlend.value = FALSE;
+		oBlend.value = false;
 		break;
 
 	default:
@@ -57,9 +57,9 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);
 
-	BOOL	bForward		= FALSE;
-	if (oBlend.value && oAREF.value<16)	bForward	= TRUE;
-	if (oStrictSorting.value)			bForward	= TRUE;
+	BOOL	bForward		= false;
+	if (oBlend.value && oAREF.value<16)	bForward	= true;
+	if (oStrictSorting.value)			bForward	= true;
 
 	if (bForward)			{
 		// forward rendering
@@ -69,7 +69,7 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 		case 0:
 		case 1:
 			vsname = psname =	"model_def_lq"; 
-			C.r_Pass			(vsname,psname,TRUE,TRUE,FALSE,TRUE,D3DBLEND_SRCALPHA,	D3DBLEND_INVSRCALPHA,	TRUE,oAREF.value);
+			C.r_Pass			(vsname,psname,true,true,false,true,D3D11_BLEND_SRC_ALPHA,	D3D11_BLEND_INV_SRC_ALPHA,	true,oAREF.value);
 			C.r_dx10Texture		("s_base",	C.L_textures[0]);
 			C.r_dx10Sampler		("smp_base");
 			C.r_End				();
@@ -91,45 +91,45 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 			if (bUseATOC)
 			{
 				uber_deffer		(C,true,"model","base_atoc",bAref,0,true);
-				C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
+				C.r_Stencil		( true,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 				C.r_StencilRef	(0x01);
 				C.r_ColorWriteEnable(false, false, false, false);
 
 				//	Alpha to coverage.
-				C.RS.SetRS	(XRDX10RS_ALPHATOCOVERAGE,	TRUE);
+				C.RS.SetRS	(XRDX10RS_ALPHATOCOVERAGE,	true);
 				C.r_End			();
 			}
 
 			uber_deffer		(C,true,	"model",	"base",bAref,0,true);
 
-			C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
+			C.r_Stencil		( true,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 			C.r_StencilRef	(0x01);
-			if (bUseATOC) C.RS.SetRS	( D3DRS_ZFUNC, D3DCMP_EQUAL);
+			if (bUseATOC) C.RS.SetRS	( D3DRS_ZFUNC, D3D11_COMPARISON_EQUAL);
 			C.r_End			();
 			break;
 		case SE_R2_NORMAL_LQ: 			// deffer
 			if (bUseATOC)
 			{
 				uber_deffer		(C,false,"model","base_atoc",bAref,0,true);
-				C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
+				C.r_Stencil		( true,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 				C.r_StencilRef	(0x01);
 				C.r_ColorWriteEnable(false, false, false, false);
 
 				//	Alpha to coverage.
-				C.RS.SetRS	(XRDX10RS_ALPHATOCOVERAGE,	TRUE);
+				C.RS.SetRS	(XRDX10RS_ALPHATOCOVERAGE,	true);
 				C.r_End			();
 			}
 
 			uber_deffer		(C,false,	"model",	"base",bAref,0,true);
-			C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
+			C.r_Stencil		( true,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 			C.r_StencilRef	(0x01);
-			if (bUseATOC) C.RS.SetRS	( D3DRS_ZFUNC, D3DCMP_EQUAL);
+			if (bUseATOC) C.RS.SetRS	( D3DRS_ZFUNC, D3D11_COMPARISON_EQUAL);
 			C.r_End			();
 			break;
 		case SE_R2_SHADOW:				// smap
 			if (bAref)
 			{
-				C.r_Pass	("shadow_direct_model_aref","shadow_direct_base_aref",	FALSE,TRUE,TRUE,FALSE,D3DBLEND_ZERO,D3DBLEND_ONE,TRUE,220);
+				C.r_Pass	("shadow_direct_model_aref","shadow_direct_base_aref",	false,true,true,false,D3D11_BLEND_ZERO,D3D11_BLEND_ONE,true,220);
 				C.r_dx10Texture		("s_base",C.L_textures[0]);
 				C.r_dx10Sampler		("smp_base");
 				C.r_dx10Sampler		("smp_linear");
@@ -139,7 +139,7 @@ void	CBlender_deffer_model::Compile(CBlender_Compile& C)
 			} 
 			else 
 			{
-				C.r_Pass	("shadow_direct_model","dumb",	FALSE,TRUE,TRUE,FALSE);
+				C.r_Pass	("shadow_direct_model","dumb",	false,true,true,false);
 				C.r_dx10Texture		("s_base",C.L_textures[0]);
 				C.r_dx10Sampler		("smp_base");
 				C.r_dx10Sampler		("smp_linear");

@@ -12,17 +12,11 @@ public:
 
 	virtual		void		Compile			(CBlender_Compile& C)
 	{
-		C.r_Pass			("sky2",		"sky2",			FALSE, FALSE, FALSE);
-#ifdef USE_DX11
+		C.r_Pass			("sky2",		"sky2",			false, false, false);
 		C.r_dx10Texture		("s_sky0",		"$null"			);
 		C.r_dx10Texture		("s_sky1",		"$null"			);
 		C.r_dx10Sampler		("smp_rtlinear");
 		C.r_dx10Texture		("s_tonemap",	"$user$tonemap"	);	//. hack
-#else
-		C.r_Sampler_clf		("s_sky0",		"$null"			);
-		C.r_Sampler_clf		("s_sky1",		"$null"			);
-		C.r_Sampler_rtf		("s_tonemap",	"$user$tonemap"	);	//. hack
-#endif
 		C.r_End				();
 	}
 };

@@ -47,11 +47,7 @@ public:
 
 	// Runtime structures 
 	xr_vector<R_dsgraph::mapNormalVS::value_type*>				nrmVS;
-
-#ifdef USE_DX11
 	xr_vector<R_dsgraph::mapNormalGS::value_type*>				nrmGS;
-#endif
-
 	xr_vector<R_dsgraph::mapNormalPS::value_type*>				nrmPS;
 	xr_vector<R_dsgraph::mapNormalCS::value_type*>				nrmCS;
 	xr_vector<R_dsgraph::mapNormalStates::value_type*>			nrmStates;
@@ -59,11 +55,7 @@ public:
 	xr_vector<R_dsgraph::mapNormalTextures::value_type*>		nrmTexturesTemp;
 
 	xr_vector<R_dsgraph::mapMatrixVS::value_type*>				matVS;
-
-#ifdef USE_DX11
 	xr_vector<R_dsgraph::mapMatrixGS::value_type*>				matGS;
-#endif
-
 	xr_vector<R_dsgraph::mapMatrixPS::value_type*>				matPS;
 	xr_vector<R_dsgraph::mapMatrixCS::value_type*>				matCS;
 	xr_vector<R_dsgraph::mapMatrixStates::value_type*>			matStates;
@@ -87,57 +79,8 @@ public:
 				void					get_Counters			(u32&	s,	u32& d)				{ s=counter_S; d=counter_D;			}
 				void					clear_Counters			()								{ counter_S=counter_D=0; 			}
 public:
-	R_dsgraph_structure	()
-	{
-		val_pObject			= NULL	;
-		val_pTransform		= NULL	;
-		val_bHUD			= FALSE	;
-		val_bInvisible		= FALSE	;
-		val_bRecordMP		= FALSE	;
-		val_feedback		= 0;
-		val_feedback_breakp	= 0;
-		marker				= 0;
-		r_pmask				(true,true);
-		b_loaded			= FALSE	;
-	};
-
-	void		r_dsgraph_destroy()
-	{
-		nrmVS.clear				();
-		nrmPS.clear				();
-		nrmCS.clear				();
-		nrmStates.clear			();
-		nrmTextures.clear		();
-		nrmTexturesTemp.clear	();
-
-		matVS.clear				();
-		matPS.clear				();
-		matCS.clear				();
-		matStates.clear			();
-		matTextures.clear		();
-		matTexturesTemp.clear	();
-
-		lstLODs.clear			();
-		lstLODgroups.clear		();
-		lstRenderables.clear	();
-		lstSpatial.clear		();
-
-		for (u32 i = 0; i < 2; ++i)
-		{
-			for (u32 j = 0; j < SHADER_PASSES_MAX; j++)
-			{
-				mapNormalPasses[i][j].clear();
-				mapMatrixPasses[i][j].clear();
-			}
-		}
-		mapSorted.clear();
-		mapHUD.clear();
-		mapLOD.clear();
-		mapDistort.clear();
-
-		mapWmark.clear();
-		mapEmissive.clear();
-	}
+	R_dsgraph_structure();
+	void r_dsgraph_destroy();
 
 	void		r_pmask											(bool _1, bool _2, bool _wm=false)				{ pmask[0]=_1; pmask[1]=_2;	pmask_wmark = _wm; }
 
@@ -152,8 +95,8 @@ public:
 	void		r_dsgraph_render_emissive						();
 	void		r_dsgraph_render_wmarks							();
 	void		r_dsgraph_render_distort						();
-	void		r_dsgraph_render_subspace						(IRender_Sector* _sector, CFrustum* _frustum, Fmatrix& mCombined, Fvector& _cop, BOOL _dynamic, BOOL _precise_portals=FALSE	);
-	void		r_dsgraph_render_subspace						(IRender_Sector* _sector, Fmatrix& mCombined, Fvector& _cop, BOOL _dynamic, BOOL _precise_portals=FALSE	);
+	void		r_dsgraph_render_subspace						(IRender_Sector* _sector, CFrustum* _frustum, Fmatrix& mCombined, Fvector& _cop, BOOL _dynamic, BOOL _precise_portals=false	);
+	void		r_dsgraph_render_subspace						(IRender_Sector* _sector, Fmatrix& mCombined, Fvector& _cop, BOOL _dynamic, BOOL _precise_portals=false	);
 	void		r_dsgraph_render_R1_box							(IRender_Sector* _sector, Fbox& _bb, int _element);
 
 

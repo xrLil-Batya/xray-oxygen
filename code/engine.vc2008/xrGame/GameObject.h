@@ -46,10 +46,7 @@ class IKinematics;
 template <typename _return_type>
 class CScriptCallbackEx;
 
-class GAME_API CGameObject : 
-	public CObject, 
-	public CUsableScriptObject,
-	public CScriptBinder
+class GAME_API CGameObject : public CObject, public CUsableScriptObject, public CScriptBinder
 {
 	using inherited = CObject;
 	bool							m_spawned;

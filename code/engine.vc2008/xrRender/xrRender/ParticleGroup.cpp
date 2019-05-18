@@ -131,7 +131,7 @@ void CPGDef::Save(IWriter& F)
 	F.w_chunk		(PGD_CHUNK_FLAGS,&m_Flags,sizeof(m_Flags));
 
 	F.open_chunk	(PGD_CHUNK_EFFECTS);
-    F.w_u32			(m_Effects.size());
+    F.w_u32			((u32)m_Effects.size());
     for (SEffect* Effect : m_Effects)
 	{
     	F.w_stringZ	(Effect->m_EffectName);
@@ -155,7 +155,7 @@ void CPGDef::Save2(CInifile& ini)
 
 	ini.w_u32		("_group", "flags", m_Flags.get());
 
-    ini.w_u32		("_group", "effects_count", m_Effects.size());
+    ini.w_u32		("_group", "effects_count", (u32)m_Effects.size());
 
 	u32 counter		= 0;
 	string256		buff;
@@ -372,15 +372,15 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
     
     if (!_children_related.empty()){
         for (auto it=_children_related.begin(); it!=_children_related.end(); it++){
-            CParticleEffect* E	= static_cast<CParticleEffect*>(*it);
-            if (E){
-                E->OnFrame		(u_dt);
-                if (E->IsPlaying()){
+            CParticleEffect* pE	= static_cast<CParticleEffect*>(*it);
+            if (pE){
+                pE->OnFrame		(u_dt);
+                if (pE->IsPlaying()){
                     bPlaying	= true;
-                    if (E->vis.box.is_valid())     box.merge	(E->vis.box);
+                    if (pE->vis.box.is_valid())     box.merge	(pE->vis.box);
                 }else{
                 	if (def.m_Flags.is(CPGDef::SEffect::flOnPlayChildRewind)){
-                    	E->Play	();
+                    	pE->Play	();
                     }
                 }
             }
@@ -389,12 +389,12 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
     if (!_children_free.empty()){
     	u32 rem_cnt				= 0;
         for (auto it=_children_free.begin(); it!=_children_free.end(); it++){
-            CParticleEffect* E	= static_cast<CParticleEffect*>(*it);
-            if (E){
-                E->OnFrame		(u_dt);
-                if (E->IsPlaying()){ 
+            CParticleEffect* pE	= static_cast<CParticleEffect*>(*it);
+            if (pE){
+                pE->OnFrame		(u_dt);
+                if (pE->IsPlaying()){ 
                     bPlaying	= true;
-                    if (E->vis.box.is_valid()) box.merge	(E->vis.box);
+                    if (pE->vis.box.is_valid()) box.merge	(pE->vis.box);
                 }else{
                 	rem_cnt++	;
 					IRenderVisual *pVisual = smart_cast<IRenderVisual*>(*it);

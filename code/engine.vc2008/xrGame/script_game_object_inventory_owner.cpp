@@ -292,7 +292,7 @@ void CScriptGameObject::UnloadMagazine		()
 }
 //
 
-void CScriptGameObject::DropItem			(CScriptGameObject* pItem)
+void CScriptGameObject::DropItem(CScriptGameObject* pItem)
 {
 	CInventoryOwner* owner = smart_cast<CInventoryOwner*>(&object());
 	CInventoryItem* item = smart_cast<CInventoryItem*>(&pItem->object());
@@ -301,20 +301,31 @@ void CScriptGameObject::DropItem			(CScriptGameObject* pItem)
 		return;
 	}
 
-	NET_Packet						P;
-	CGameObject::u_EventGen			(P,GE_OWNERSHIP_REJECT, object().ID());
-	P.w_u16							(pItem->object().ID());
-	CGameObject::u_EventSend		(P);
+	item->DropItem();
 }
 
-void CScriptGameObject::DropItemAndTeleport	(CScriptGameObject* pItem, Fvector position)
+void CScriptGameObject::DropItemAndTeleport(CScriptGameObject* pItem, Fvector position)
 {
-	DropItem						(pItem);
+	DropItem(pItem);
 
-	NET_Packet						PP;
-	CGameObject::u_EventGen			(PP,GE_CHANGE_POS, pItem->object().ID());
-	PP.w_vec3						(position);
-	CGameObject::u_EventSend		(PP);
+	CPHSynchronize* pSyncObj = nullptr;
+	if (pItem->object().cast_inventory_item())
+	{
+		CInventoryItem* pInvItem = pItem->object().cast_inventory_item();
+		pSyncObj = pInvItem->object().PHGetSyncItem(0);
+	}
+	else if (pItem->object().cast_physics_shell_holder())
+	{
+		CPhysicsShellHolder* pInvItem = pItem->object().cast_physics_shell_holder();
+		pSyncObj = pInvItem->PHGetSyncItem(0);
+	}
+	else return;
+
+	SPHNetState state;
+	pSyncObj->get_State(state);
+	state.position = position;
+	state.previous_position = position;
+	pSyncObj->set_State(state);
 }
 
 void CScriptGameObject::MakeItemActive(CScriptGameObject* pItem)

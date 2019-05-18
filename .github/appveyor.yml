@@ -2,9 +2,8 @@ version: 1.7f.{build}
 pull_requests:
   do_not_increment_build_number: true
 shallow_clone: true
-image: Visual Studio 2017
+image: Visual Studio 2019 Preview
 configuration: 
- - Debug
  - Release
 platform: x64
 build:
@@ -17,8 +16,6 @@ before_build:
     copy /Y code\engine.vc2008\xrCore\GitParser\hackappveyor.inl code\engine.vc2008\xrCore\GitParser\hack.appveyor
 after_build:
 - cmd: >-
-    copy code\SDK\binaries\x64\amd_ags_x64.dll game\bins\
-    
     cd binaries\x64\%CONFIGURATION%
     
     copy *.dll ..\..\..\game\bins

@@ -11,6 +11,8 @@ function element_0(shader, t_base, t_second, t_detail)
 		:fog			(false)
 		:zb				(false, false)
 	shader:dx10texture	("s_image", "$user$generic")
+	
+	shader:dx10sampler	("smp_nofilter")
 end
 
 --// Grading
@@ -21,4 +23,6 @@ function element_1(shader, t_base, t_second, t_detail)
 		:zb				(false, false)
 	shader:dx10texture	("s_image", "$user$color_grading")
 	shader:dx10texture	("color_chart_sampler", tex_color)
+	
+	shader:dx10sampler	("smp_rtlinear")
 end

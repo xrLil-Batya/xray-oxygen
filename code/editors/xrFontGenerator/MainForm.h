@@ -30,6 +30,8 @@ namespace XFontForm {
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::GroupBox^  groupBox2;
 	private: System::Windows::Forms::Label^  label6;
+	private: System::Windows::Forms::TextBox^ TestText;
+
 
 
 	private: System::Windows::Forms::PictureBox^  TexFontBox;
@@ -77,6 +79,7 @@ namespace XFontForm {
 			this->Exit = (gcnew System::Windows::Forms::Label());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->TestText = (gcnew System::Windows::Forms::TextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->TexFontBox))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->BeginInit();
 			this->groupBox1->SuspendLayout();
@@ -89,9 +92,9 @@ namespace XFontForm {
 			this->TexFontBox->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
 			this->TexFontBox->BorderStyle = System::Windows::Forms::BorderStyle::Fixed3D;
 			this->TexFontBox->ImageLocation = L"";
-			this->TexFontBox->Location = System::Drawing::Point(369, 25);
+			this->TexFontBox->Location = System::Drawing::Point(368, 62);
 			this->TexFontBox->Name = L"TexFontBox";
-			this->TexFontBox->Size = System::Drawing::Size(239, 140);
+			this->TexFontBox->Size = System::Drawing::Size(239, 58);
 			this->TexFontBox->TabIndex = 0;
 			this->TexFontBox->TabStop = false;
 			this->TexFontBox->Visible = false;
@@ -177,10 +180,6 @@ namespace XFontForm {
 			this->button3->UseVisualStyleBackColor = true;
 			this->button3->Click += gcnew System::EventHandler(this, &MeshEdit::button3_Click);
 			// 
-			// openFileDialog1
-			// 
-			this->openFileDialog1->FileName = L"";
-			// 
 			// label4
 			// 
 			this->label4->AutoSize = true;
@@ -196,19 +195,20 @@ namespace XFontForm {
 			// numericUpDown1
 			// 
 			this->numericUpDown1->Location = System::Drawing::Point(76, 132);
-			this->numericUpDown1->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 20, 0, 0, 0 });
+			this->numericUpDown1->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 32, 0, 0, 0 });
 			this->numericUpDown1->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9, 0, 0, 0 });
 			this->numericUpDown1->Name = L"numericUpDown1";
 			this->numericUpDown1->Size = System::Drawing::Size(80, 20);
 			this->numericUpDown1->TabIndex = 10;
 			this->numericUpDown1->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9, 0, 0, 0 });
+			this->numericUpDown1->ValueChanged += gcnew System::EventHandler(this, &MeshEdit::NumericUpDown1_ValueChanged);
 			// 
 			// groupBox1
 			// 
 			this->groupBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->groupBox1->Controls->Add(this->label5);
 			this->groupBox1->Controls->Add(this->Exit);
-			this->groupBox1->Location = System::Drawing::Point(317, -14);
+			this->groupBox1->Location = System::Drawing::Point(318, -14);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(37, 33);
 			this->groupBox1->TabIndex = 11;
@@ -260,14 +260,24 @@ namespace XFontForm {
 			this->label6->TabIndex = 0;
 			this->label6->Text = L"[X-Ray Oxygen]";
 			// 
+			// TestText
+			// 
+			this->TestText->Location = System::Drawing::Point(368, 117);
+			this->TestText->Name = L"TestText";
+			this->TestText->Size = System::Drawing::Size(240, 20);
+			this->TestText->TabIndex = 13;
+			this->TestText->Text = L"Make me XFont";
+			this->TestText->TextChanged += gcnew System::EventHandler(this, &MeshEdit::TestText_TextChanged);
+			// 
 			// MeshEdit
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->ClientSize = System::Drawing::Size(357, 178);
+			this->ClientSize = System::Drawing::Size(358, 178);
 			this->ControlBox = false;
+			this->Controls->Add(this->TestText);
 			this->Controls->Add(this->groupBox2);
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->numericUpDown1);
@@ -300,14 +310,9 @@ namespace XFontForm {
 
 		}
 #pragma endregion
-private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) 
-{
-	if (this->openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
-	{
-		this->InputBox->Text = this->openFileDialog1->FileName;
-	}
-}
-private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e)
+private: System::Void MakeDraftBox();
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	if (this->folderBrowserDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 	{
@@ -325,6 +330,12 @@ private: System::Void label5_Click(System::Object^  sender, System::EventArgs^  
 }
 private: System::Void MeshEdit_Load(System::Object^  sender, System::EventArgs^  e) {
 	ShowWindow((HWND)this->Handle.ToPointer(), SW_SHOW);
+}
+	private: System::Void NumericUpDown1_ValueChanged(System::Object^ sender, System::EventArgs^ e){
+		MakeDraftBox();
+	}
+private: System::Void TestText_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+	MakeDraftBox();
 }
 };
 }

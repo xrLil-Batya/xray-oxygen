@@ -12,13 +12,13 @@ namespace RestrictionSpace {
 struct CTimeIntrusiveBase : public intrusive_base {
     u32 m_last_time_dec;
 
-    CTimeIntrusiveBase() XR_NOEXCEPT
+    CTimeIntrusiveBase() 
         : m_last_time_dec(0)
     {
     }
 
     template <typename T>
-    void release(T*) XR_NOEXCEPT
+    void release(T*) 
     {
         m_last_time_dec = Device.dwTimeGlobal;
     }

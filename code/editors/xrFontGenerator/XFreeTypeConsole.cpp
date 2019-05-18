@@ -42,7 +42,6 @@ void XRay::CFontGen::ReleaseFreeType()
 	FT_Done_FreeType(ConverterInfo.lib);
 }
 
-static bool bSkipSpaceMsg = false;
 int g_count = 0;
 int max_height_font = 0; // @ для вывода файлов, по сути обманка,
 // ибо в действительности мы уменьшаем размер шрифта и выводится
@@ -89,45 +88,29 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 	int index_to_W = 0;
 	int current_size = 0;
 
-	// @ Проверяем на пробел
-	err = FT_Load_Char(ConverterInfo.face, 0, FT_LOAD_RENDER); // Берём пустой символ (смотреть unicode таблицу)  (пробел почему-то не определяет нормально, но он тоже выходит как пробел)
-	if (!err)
-	{
-		if (!ConverterInfo.face->glyph->bitmap.rows && !ConverterInfo.face->glyph->bitmap.width)
-		{
-			// @ Пытаемся явно взять пробел
-			err = FT_Load_Char(ConverterInfo.face, 32, FT_LOAD_RENDER);
-			if (!err)
-			{
-				if (!ConverterInfo.face->glyph->bitmap.rows && !ConverterInfo.face->glyph->bitmap.width)
-				{
-					if(!bSkipSpaceMsg)
-						MessageBoxA(0, "Your font doesn't have a 'space' symbol", "Error!", MB_OK);
-
-					// @ Phantom1020 to ForserX: А ты уверен, что так лучше?
-					ConverterInfo.face->glyph->bitmap.width = 4;
-					ConverterInfo.face->glyph->bitmap.rows = 4;
-					bSkipSpaceMsg = true;
-				}
-			}
-
-		}
-	}
-
 	for (u32 i = 32; i < 128; ++i)
 	{
-		err = FT_Load_Char(ConverterInfo.face, i, FT_LOAD_RENDER);
+		err = FT_Load_Char(ConverterInfo.face, i, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_TARGET_LIGHT);
 
-		if (i == 32 && !ConverterInfo.face->glyph->bitmap.rows && !ConverterInfo.face->glyph->bitmap.width)
+		FT_Bitmap& refBMP = ConverterInfo.face->glyph->bitmap;
+		// Великий и ужасный хак с пробелами
+		if (i == 32 && !refBMP.rows && !refBMP.width)
 		{
 			// 0 is true space
-			err = FT_Load_Char(ConverterInfo.face, 0, FT_LOAD_RENDER);
+			err = FT_Load_Char(ConverterInfo.face, 0, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_TARGET_LIGHT);
+			FT_Bitmap* pBMP = &ConverterInfo.face->glyph->bitmap;
+
+			// Если опять пусто, то напишем свои данные...
+			if (!pBMP->rows && !pBMP->width)
+			{
+				pBMP->width = 9;
+				pBMP->rows = 7;
+			}
 		}
-		const FT_Bitmap &refBMP = ConverterInfo.face->glyph->bitmap;
 
 		if (err && i != 32)
 		{
-				MessageBoxA(0, "Your font doesn't have a [unknown] symbol", "Error!", MB_OK);
+				MessageBox(0, L"Your font doesn't have a [unknown] symbol", L"Error!", MB_OK);
 		}
 		else
 		{
@@ -162,18 +145,6 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 				pen_y += current_size;
 			}
 
-			for (u32 row = 0; row < refBMP.rows; ++row)
-			{
-				for (u32 col = 0; col < refBMP.width; ++col)
-				{
-					int x = pen_x + col;
-					int y = pen_y + row;
-
-					bool bSymbolIsNull = y == u32(-1) || i == 32;
-					ConverterInfo.Pixels[y * local_tex_width + x] = bSymbolIsNull ? 0 : refBMP.buffer[row * refBMP.pitch + col];
-				}
-			}
-
 			if ((i >= 42 && i <= 46) || i == 58 || i == 59)
 			{
 				if ((info_copy.y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
@@ -188,6 +159,17 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 					pen_y -= current_size;
 				else
 					pen_y += abs(current_size);
+			}
+
+			for (u32 row = 0; row < refBMP.rows; ++row)
+			{
+				for (u32 col = 0; col < refBMP.width; ++col)
+				{
+					int x = pen_x + col;
+					int y = pen_y + row;
+
+					ConverterInfo.Pixels[y * local_tex_width + x] = (i == 32) ? 0 : refBMP.buffer[row * refBMP.pitch + col];
+				}
 			}
 
 			info[arr_iter].x[0] = pen_x;
@@ -211,9 +193,9 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 		FT_Error err;
 		// @ 'Ё' и 'ё'
 		if (i != 1104)
-			err = FT_Load_Char(ConverterInfo.face, i, FT_LOAD_RENDER);
+			err = FT_Load_Char(ConverterInfo.face, i, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_TARGET_LIGHT);
 		else
-			err = FT_Load_Char(ConverterInfo.face, 1025, FT_LOAD_RENDER);
+			err = FT_Load_Char(ConverterInfo.face, 1025, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_TARGET_LIGHT);
 
 		FT_Bitmap* bmp = &ConverterInfo.face->glyph->bitmap;
 
@@ -234,7 +216,15 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 			if (i >= 1072 || i == 1049)
 			{
 				current_size = int(info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top);
-				pen_y += (u32)current_size;
+				pen_y += current_size;
+			}
+			
+			if (i >= 1072 || i == 1049)
+			{
+				if ((info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
+					pen_y -= current_size;
+				else
+					pen_y += abs(current_size);
 			}
 
 			for (u32 row = 0; row < bmp->rows; ++row)
@@ -246,31 +236,17 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 					ConverterInfo.Pixels[y * local_tex_width + x] = bmp->buffer[row * bmp->pitch + col];
 				}
 			}
-			
-			if (i >= 1072 || i == 1049)
-			{
-				if ((info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top) > 0)
-				{
-					pen_y -= current_size;
-				}
 
-				if ((info[index_to_cyrillic_A].y_off - ConverterInfo.face->glyph->bitmap_top) < 0)
-				{
-					pen_y += abs(current_size);
-				}
-			}
-
-			for (u32 CordIter = 0; CordIter < 2; CordIter++)
-			{
-				info[arr_iter].x[CordIter] = pen_x + ((CordIter == 1) ? bmp->width : 0);
-				info[arr_iter].y[CordIter] = pen_y + ((CordIter == 1) ? bmp->rows  : 0);
-			}
+			info[arr_iter].x[0] = pen_x;
+			info[arr_iter].y[0] = pen_y;
+			info[arr_iter].x[1] = pen_x + bmp->width;
+			info[arr_iter].y[1] = pen_y + bmp->rows;
 
 			info[arr_iter].x_off = ConverterInfo.face->glyph->bitmap_left;
 			info[arr_iter].y_off = ConverterInfo.face->glyph->bitmap_top;
 			info[arr_iter].advance = ConverterInfo.face->glyph->advance.x >> 6;
-			arr_iter++;
 			pen_x += bmp->width + 1;
+			arr_iter++;
 		}
 	}
 
@@ -278,9 +254,9 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 
 	for (u32 i = 0; i < (ConverterInfo.TexWid * ConverterInfo.TexHeig); ++i)
 	{
-		dds_data[i * 4] = 0;
-		dds_data[i * 4 + 1] = 0;
-		dds_data[i * 4 + 2] = 0;
+		dds_data[i * 4] = 255;
+		dds_data[i * 4 + 1] = 255;
+		dds_data[i * 4 + 2] = 255;
 		dds_data[i * 4 + 3] = ConverterInfo.Pixels[i];
 	}
 
@@ -295,7 +271,6 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 			{
 				PathSystem.FileOutName += std::to_string(ConverterInfo.FontHeig);
 				PathSystem.FileOutName += "_" + std::to_string(1600);
-				PathSystem.FileOutName += ".tga";
 				max_height_font = ConverterInfo.FontHeig;
 			} break;
 
@@ -303,17 +278,17 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 			{
 				PathSystem.FileOutName += std::to_string(max_height_font);
 				PathSystem.FileOutName += "_" + std::to_string(1024);
-				PathSystem.FileOutName += ".tga";
 			} break;
 
 			case 3:
 			{
 				PathSystem.FileOutName += std::to_string(max_height_font);
 				PathSystem.FileOutName += "_" + std::to_string(800);
-				PathSystem.FileOutName += ".tga";
 				g_count = 0;
 			} break;
 		}
+
+		PathSystem.FileOutName += ".tga";
 	}
 
 	stbi_write_tga(PathSystem.FileOutName.c_str(), ConverterInfo.TexWid, ConverterInfo.TexHeig, 4, dds_data);
@@ -522,21 +497,8 @@ void XRay::CFontGen::ManageCreationFile()
 
 	PathSystem.FileName    = FileFullPath.substr(FileFullPath.rfind("\\")+1);
 	PathSystem.FileName = PathSystem.FileName.erase(PathSystem.FileName.rfind("."));
-//	xr_vector<xr_string> NewStrSpl = PathSystem.FileName.Split('\\');
-//	NewStrSpl.erase(NewStrSpl.end() - 1);
 
-//	PathSystem.PathName = "";
-//	for (xr_string &PicePath : NewStrSpl)
-//	{
-//		PathSystem.PathName += PicePath + '\\';
-//	}
-//	PathSystem.FileName = PathSystem.FileName.substr(3, PathSystem.FileName.length() - 2);
-
-	// Font converting - start
-//	FileFullPath += ".";
-//	FileFullPath += mask;
-
-	if (mask == "ttf" || mask == "ttc")
+	if (mask == "ttf" || mask == "ttc" || mask == "otf")
 	{
 		// @ Consider it's valid file for a while. . . 
 		FT_Error err = FT_New_Face(ConverterInfo.lib, PathSystem.PathName.c_str(), 0, &ConverterInfo.face);

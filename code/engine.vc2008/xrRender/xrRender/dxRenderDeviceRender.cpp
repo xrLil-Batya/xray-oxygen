@@ -151,8 +151,8 @@ void dxRenderDeviceRender::SetupStates()
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_COLORVERTEX,		TRUE				));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_ZENABLE,			TRUE				));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_SHADEMODE,			D3DSHADE_GOURAUD	));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_CULLMODE,			D3DCULL_CCW			));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_ALPHAFUNC,			D3DCMP_GREATER		));
+	CHK_DX(HW.pDevice->SetRenderState( D3DRS_CULLMODE,			D3D11_CULL_BACK			));
+	CHK_DX(HW.pDevice->SetRenderState( D3DRS_ALPHAFUNC,			D3D11_COMPARISON_GREATER		));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_LOCALVIEWER,		TRUE				));
 
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL	));
@@ -223,19 +223,19 @@ void dxRenderDeviceRender::overdrawBegin()
 #else
 	// Turn stenciling
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILENABLE,		TRUE			));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILFUNC,		D3DCMP_ALWAYS	));
+	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILFUNC,		D3D11_COMPARISON_ALWAYS	));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILREF,		0				));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILMASK,		0x00000000		));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILWRITEMASK,	0xffffffff		));
 
 	// Increment the stencil buffer for each pixel drawn
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILFAIL,		D3DSTENCILOP_KEEP		));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILPASS,		D3DSTENCILOP_INCRSAT	));
+	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILFAIL,		D3D11_STENCIL_OP_KEEP		));
+	CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILPASS,		D3D11_STENCIL_OP_INCR_SAT	));
 
 	if (1==HW.Caps.SceneMode)		
-	{ CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILZFAIL,	D3DSTENCILOP_KEEP		)); }	// Overdraw
+	{ CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILZFAIL,	D3D11_STENCIL_OP_KEEP		)); }	// Overdraw
 	else 
-	{ CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILZFAIL,	D3DSTENCILOP_INCRSAT	)); }	// ZB access
+	{ CHK_DX(HW.pDevice->SetRenderState( D3DRS_STENCILZFAIL,	D3D11_STENCIL_OP_INCR_SAT	)); }	// ZB access
 #endif
 }
 
@@ -246,10 +246,10 @@ void dxRenderDeviceRender::overdrawEnd()
 	VERIFY(!"dxRenderDeviceRender::overdrawEnd not implemented.");
 #else
 	// Set up the stencil states
-	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILZFAIL,		D3DSTENCILOP_KEEP	));
-	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILFAIL,		D3DSTENCILOP_KEEP	));
-	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILPASS,		D3DSTENCILOP_KEEP	));
-	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILFUNC,		D3DCMP_EQUAL		));
+	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILZFAIL,		D3D11_STENCIL_OP_KEEP	));
+	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILFAIL,		D3D11_STENCIL_OP_KEEP	));
+	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILPASS,		D3D11_STENCIL_OP_KEEP	));
+	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILFUNC,		D3D11_COMPARISON_EQUAL		));
 	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILMASK,		0xff				));
 
 	// Set the background to black

@@ -91,7 +91,7 @@ void		CDetailManager::cache_Decompress(Slot* S)
 #else
 	xrc.box_options		(CDB::OPT_FULL_TEST); 
 	xrc.box_query		(g_pGameLevel->ObjectSpace.GetStaticModel(),bC,bD);
-	u32	triCount		= xrc.r_count	();
+	u32	triCount		= (u32)xrc.r_count	();
 	CDB::TRI*	tris	= g_pGameLevel->ObjectSpace.GetStaticTris();
 	Fvector*	verts	= g_pGameLevel->ObjectSpace.GetStaticVerts();
 #endif

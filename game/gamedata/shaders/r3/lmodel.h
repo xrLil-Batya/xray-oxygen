@@ -29,8 +29,8 @@ float4 plight_local(float m, float3 pnt, float3 normal, float3 light_position, f
 	float3 H		= normalize	(L+V);								// half-angle-vector
 		   rsqr		= dot		(L2P,L2P);							// distance 2 light (squared)
 	float  att 		= saturate	(1 - rsqr*light_range_rsq);			// q-linear attenuate
-	
-	float4 light	= tex3D		(s_material, float3( dot(L,N), dot(H,N), m ) ); 
+
+	float4 light = s_material.Sample(smp_material, float3(dot(L, N), dot(H, N), m)).xxxy;
 	
   return float4(att * light.xxx,0) + att*float4(light.www * (Ldynamic_color.xyz * Ldynamic_color.xyz),light.w);
 }

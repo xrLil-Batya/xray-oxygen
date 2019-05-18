@@ -8,7 +8,6 @@
 class CSE_Abstract;
 
 const u32 NET_Latency = 50;		// time in (ms)
-extern ClientID BroadcastCID;
 
 // t-defs
 using xrS_entities = xr_hash_map<u16, CSE_Abstract*>;
@@ -112,7 +111,7 @@ public:
 	virtual u32				OnMessage			(NET_Packet& P);	// Non-Zero means broadcasting with "flags" as returned
 	virtual void			OnCL_Connected		();
 
-	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P);
+	virtual	void			SendBroadcast		(NET_Packet& P);
 
 	// utilities
 	CSE_Abstract*			entity_Create		(LPCSTR name);

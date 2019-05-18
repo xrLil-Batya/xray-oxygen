@@ -10,7 +10,7 @@ namespace XRay::Editor
 	public ref class EObject
 	{
 	public:
-		static EObject^ CreateEObject(XRay::File^ file);
+		static EObject^ CreateEObject(XRay::File^ file, String^ name);
 
 		virtual ~EObject();
 
@@ -101,10 +101,30 @@ namespace XRay::Editor
 			}
 		}
 
+		property XRay::Model^ renderable
+		{
+			XRay::Model^ get()
+			{
+				if (ObjectVisual == nullptr)
+				{
+					ObjectVisual = GetVisualFromEditObject();
+				}
+
+				return ObjectVisual;
+			}
+		}
+
+
 	private:
+		XRay::Model^ GetVisualFromEditObject();
 
 		EObject(CEditableObject* InEdObject);
 
 		CEditableObject* EditObject;
+
+		///
+		/// IRenderVisual*
+		///
+		XRay::Model^	ObjectVisual;
 	};
 }

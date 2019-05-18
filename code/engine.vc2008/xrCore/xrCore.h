@@ -8,44 +8,12 @@
 #endif // DEBUG
 
 #pragma warning(disable:4996)
-
-#if (defined(_DEBUG) || defined(MIXED) || defined(DEBUG)) && !defined(FORCE_NO_EXCEPTIONS)
-	// "debug" or "mixed"
-#if !defined(_CPPUNWIND)
-#error Please enable exceptions...
-#endif
-#define _HAS_EXCEPTIONS		1	// STL
-#define XRAY_EXCEPTIONS		1	// XRAY
-
-#define XR_NOEXCEPT noexcept
-#define XR_NOEXCEPT_OP(x) noexcept(x)
-#else
-	// "release"
-#if defined(_CPPUNWIND) && !defined __BORLANDC__ && !defined(_XRLAUNCHER) && !defined(__llvm__)
-#error Please disable exceptions...
-#endif
-#define _HAS_EXCEPTIONS		1	// STL
-#define XRAY_EXCEPTIONS		0	// XRAY
-#pragma warning(disable:4530)
-
-#define XR_NOEXCEPT throw()
-#define XR_NOEXCEPT_OP(x)
-#endif
-
 #if !defined(_MT)
 	// multithreading disabled
 #error Please enable multi-threaded library...
 #endif
 
-#	include "xrCore_platform.h"
-
-// *** try to minimize code bloat of STLport
-#ifdef XRCORE_EXPORTS				// no exceptions, export allocator and common stuff
-#define _STLP_DESIGNATED_DLL	1
-#define _STLP_USE_DECLSPEC		1
-#else
-#define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
-#endif
+#include "xrCore_platform.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -56,19 +24,6 @@
 #include <cinttypes>
 #include <chrono>
 
-#ifndef DEBUG
-#ifdef _DEBUG
-#define DEBUG
-#endif
-#ifdef MIXED
-#define DEBUG
-#endif
-#endif
-
-#ifdef _EDITOR
-#	define NO_FS_SCAN
-#endif
-
 // inline control - redefine to use compiler's heuristics ONLY
 // it seems "IC" is misused in many places which cause code-bloat
 // ...and VC7.1 really don't miss opportunities for inline :)
@@ -76,16 +31,11 @@
 #define __inline		inline
 #define IC				inline
 #define ICF				__forceinline			// !!! this should be used only in critical places found by PROFILER
+#define ICN			__declspec (noinline)
 
-#	define ICN			__declspec (noinline)
-
-#ifndef DEBUG
 #pragma inline_depth	( 254 )
 #pragma inline_recursion( on )
-#ifndef __BORLANDC__
-#pragma intrinsic	(abs, fabs, fmod, sin, cos, tan, asin, acos, atan, sqrt, exp, log, log10, strcat)
-#endif
-#endif
+#pragma intrinsic	(abs, fabs, fmod, sin, cos, tan, asin, acos, atan, sqrt, exp, log, log10, strcat, pow, strlen, memset)
 
 #include <time.h>
 // work-around dumb borland compiler
@@ -119,12 +69,12 @@
 #include <set>
 #include <map>
 #include <utility>
+#include <string>
 #include <string_view>
 
 #include <unordered_map>
 #include <unordered_set>
 
-#include <string>
 #pragma warning (pop)
 #pragma warning (disable : 4100 )		// unreferenced formal parameter
 
@@ -155,7 +105,8 @@
 #endif
 
 // stl ext
-struct XRCORE_API xr_rtoken {
+struct XRCORE_API xr_rtoken
+{
 	shared_str	name;
 	int	   	id;
 	xr_rtoken(const char* _nm, int _id) { name = _nm; id = _id; }
@@ -165,8 +116,10 @@ public:
 };
 
 #pragma pack (push,1)
-struct XRCORE_API xr_shortcut {
-	enum {
+struct XRCORE_API xr_shortcut
+{
+	enum 
+	{
 		flShift = 0x20,
 		flCtrl = 0x40,
 		flAlt = 0x80,
@@ -188,23 +141,17 @@ using RStringVec = xr_vector<shared_str>;
 using RStringSet = xr_set<shared_str>;
 using RTokenVec = xr_vector<xr_rtoken>;
 
-#define			xr_pure_interface	__interface
+#define xr_pure_interface	__interface
 
 #include "FS.h"
 #include "log.h"
 #include "xr_trims.h"
 #include "xr_ini.h"
-#ifdef NO_FS_SCAN
-#	include "ELocatorAPI.h"
-#else
-#	include "LocatorAPI.h"
-#endif
+#include "LocatorAPI.h"
 #include "FileSystem.h"
 #include "FTimer.h"
 #include "intrusive_ptr.h"
-#ifndef XRCORE_STATIC
 #include "net_utils.h"
-#endif
 
 // Check if user included some files, that a prohibited
 #ifdef _MUTEX_

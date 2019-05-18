@@ -46,7 +46,7 @@ void CPortal::OnRender()
 		RCache.set_xform_world(Fidentity);
 		// draw solid
 		RCache.set_Shader(dxRenderDeviceRender::Instance().m_SelectionShader);
-		RCache.dbg_Draw(D3DPT_TRIANGLEFAN, &*V.begin(), V.size() - 2);
+		RCache.dbg_Draw(D3DPT_TRIANGLEFAN, &*V.begin(), (u32)V.size() - 2);
 
 		// draw wire
 		if (bDebug) 
@@ -55,7 +55,7 @@ void CPortal::OnRender()
 			Device.SetNearer(TRUE);
 
 		RCache.set_Shader(dxRenderDeviceRender::Instance().m_WireShader);
-		RCache.dbg_Draw(D3DPT_LINESTRIP, &*(V.begin() + 1), V.size() - 2);
+		RCache.dbg_Draw(D3DPT_LINESTRIP, &*(V.begin() + 1), (u32)V.size() - 2);
 
 		if (bDebug) 
 			RImplementation.rmNormal();
@@ -235,7 +235,7 @@ void CSector::traverse			(CFrustum &F, _scissor& R_scissor)
 void CSector::load		(IReader& fs)
 {
 	// Assign portal polygons
-	u32 size			= fs.find_chunk(fsP_Portals); R_ASSERT(0==(size&1));
+	u32 size			= (u32)fs.find_chunk(fsP_Portals); R_ASSERT(0==(size&1));
 	u32 count			= size/2;
 	m_portals.reserve	(count);
 	while (count) {
@@ -246,6 +246,6 @@ void CSector::load		(IReader& fs)
 	}
 
 	// Assign visual
-    size = fs.find_chunk(fsP_Root);	R_ASSERT(size == 4);
+    size = (u32)fs.find_chunk(fsP_Root);	R_ASSERT(size == 4);
     m_root = (dxRender_Visual*)RImplementation.getVisual(fs.r_u32());
 }

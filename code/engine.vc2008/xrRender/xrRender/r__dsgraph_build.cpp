@@ -32,42 +32,94 @@ ICF float CalcSSA(float& distSQ, Fvector& C, float R)
 	return R / distSQ;
 }
 
-void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fvector& Center)
+R_dsgraph_structure::R_dsgraph_structure()
 {
-	CRender&	RI			=	RImplementation;
+	val_pObject = NULL;
+	val_pTransform = NULL;
+	val_bHUD = false;
+	val_bInvisible = false;
+	val_bRecordMP = false;
+	val_feedback = 0;
+	val_feedback_breakp = 0;
+	marker = 0;
+	r_pmask(true, true);
+	b_loaded = false;
+}
 
-	if (pVisual->vis.marker	==	RI.marker)	return	;
-	pVisual->vis.marker		=	RI.marker			;
+void R_dsgraph_structure::r_dsgraph_destroy()
+{
+	nrmVS.clear();
+	nrmPS.clear();
+	nrmCS.clear();
+	nrmStates.clear();
+	nrmTextures.clear();
+	nrmTexturesTemp.clear();
 
-	float distSQ			;
-	float SSA				=	CalcSSA		(distSQ,Center,pVisual);
-	if (SSA<=r_ssaDISCARD)		return;
+	matVS.clear();
+	matPS.clear();
+	matCS.clear();
+	matStates.clear();
+	matTextures.clear();
+	matTexturesTemp.clear();
+
+	lstLODs.clear();
+	lstLODgroups.clear();
+	lstRenderables.clear();
+	lstSpatial.clear();
+
+	for (u32 i = 0; i < 2; ++i)
+	{
+		for (u32 j = 0; j < SHADER_PASSES_MAX; j++)
+		{
+			mapNormalPasses[i][j].clear();
+			mapMatrixPasses[i][j].clear();
+		}
+	}
+	mapSorted.clear();
+	mapHUD.clear();
+	mapLOD.clear();
+	mapDistort.clear();
+
+	mapWmark.clear();
+	mapEmissive.clear();
+}
+
+void R_dsgraph_structure::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fvector& Center)
+{
+	CRender& RI = RImplementation;
+
+	if (pVisual->vis.marker == RI.marker)	return;
+	pVisual->vis.marker = RI.marker;
+
+	float distSQ;
+	float SSA = CalcSSA(distSQ, Center, pVisual);
+	if (SSA <= r_ssaDISCARD)		return;
 
 	// Distortive geometry should be marked and R2 special-cases it
 	// a) Allow to optimize RT order
 	// b) Should be rendered to special distort buffer in another pass
-	VERIFY						(pVisual->shader._get());
-	ShaderElement*		sh_d	= &*pVisual->shader->E[4];
-	if (RImplementation.o.distortion && sh_d && sh_d->flags.bDistort && pmask[sh_d->flags.iPriority/2]) 
+	VERIFY(pVisual->shader._get());
+	ShaderElement* sh_d = &*pVisual->shader->E[4];
+	if (RImplementation.o.distortion && sh_d && sh_d->flags.bDistort && pmask[sh_d->flags.iPriority / 2])
 	{
 		_MatrixItemS temp;
-		temp.ssa		= SSA;
-		temp.pObject	= RI.val_pObject;
-		temp.pVisual	= pVisual;
-		temp.Matrix		= *RI.val_pTransform;
-		temp.se			= sh_d;
+		temp.ssa = SSA;
+		temp.pObject = RI.val_pObject;
+		temp.pVisual = pVisual;
+		temp.Matrix = *RI.val_pTransform;
+		temp.se = sh_d;
 		mapDistort.emplace_back(std::make_pair(distSQ, temp));
 	}
 
 	// Select shader
-	ShaderElement*	sh		=	RImplementation.rimp_select_sh_dynamic	(pVisual,distSQ);
-	if (0==sh)								return;
-	if (!pmask[sh->flags.iPriority/2])		return;
+	ShaderElement* sh = RImplementation.rimp_select_sh_dynamic(pVisual, distSQ);
+	if (0 == sh)								return;
+	if (!pmask[sh->flags.iPriority / 2])		return;
 
 	// HUD rendering
-	if (RI.val_bHUD)			
+	if (RI.val_bHUD)
 	{
-		if (sh->flags.bStrictB2F)	
+		if (sh->flags.bStrictB2F)
 		{
 			_MatrixItemS temp;
 			temp.ssa = SSA;
@@ -78,8 +130,8 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 
 			mapHUDSorted.emplace_back(std::make_pair(distSQ, temp));
 			return;
-		} 
-		else 
+		}
+		else
 		{
 			_MatrixItemS temp;
 			temp.ssa = SSA;
@@ -89,15 +141,15 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 			temp.se = sh;
 			mapHUD.emplace_back(std::make_pair(distSQ, temp));
 
-			if (sh->flags.bEmissive) 
+			if (sh->flags.bEmissive)
 			{
-				_MatrixItemS temp;
-				temp.ssa = SSA;
-				temp.pObject = RI.val_pObject;
-				temp.pVisual = pVisual;
-				temp.Matrix = *RI.val_pTransform;
-				temp.se = &*pVisual->shader->E[4];		// 4=L_special
-				mapHUDEmissive.emplace_back(std::make_pair(distSQ, temp));
+				_MatrixItemS temp1;
+				temp1.ssa = SSA;
+				temp1.pObject = RI.val_pObject;
+				temp1.pVisual = pVisual;
+				temp1.Matrix = *RI.val_pTransform;
+				temp1.se = &*pVisual->shader->E[4];		// 4=L_special
+				mapHUDEmissive.emplace_back(std::make_pair(distSQ, temp1));
 			}
 			return;
 		}
@@ -107,7 +159,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	if (RI.val_bInvisible)		return;
 
 	// strict-sorting selection
-	if (sh->flags.bStrictB2F)	
+	if (sh->flags.bStrictB2F)
 	{
 		_MatrixItemS temp;
 		temp.ssa = SSA;
@@ -151,28 +203,18 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	for (u32 iPass = 0; iPass < sh->passes.size(); ++iPass)
 	{
 		// the most common node
-		SPass &pass = *sh->passes[iPass];
-		auto &map = mapMatrixPasses[sh->flags.iPriority / 2][iPass];
+		SPass& pass = *sh->passes[iPass];
+		auto& map = mapMatrixPasses[sh->flags.iPriority / 2][iPass];
 
-#if defined(USE_DX11)
-		auto &Nvs = map[&*pass.vs];
-		auto &Ngs = Nvs[pass.gs->gs];
-		auto &Nps = Ngs[pass.ps->ps];
-#else
-		auto &Nvs = map[pass.vs->vs];
-		auto &Nps = Nvs[pass.ps->ps];
-#endif
-
-#ifdef USE_DX11
+		auto& Nvs = map[&*pass.vs];
+		auto& Ngs = Nvs[pass.gs->gs];
+		auto& Nps = Ngs[pass.ps->ps];
 		Nps.hs = pass.hs->sh;
 		Nps.ds = pass.ds->sh;
 
-		auto &Ncs = Nps.mapCS[pass.constants._get()];
-#else
-		R_dsgraph::mapMatrixStates &Ncs = Nps[pass.constants._get()];
-#endif
-		auto &Nstate = Ncs[&pass.state];
-		auto &Ntex = Nstate[pass.T._get()];
+		auto& Ncs = Nps.mapCS[pass.constants._get()];
+		auto& Nstate = Ncs[&pass.state];
+		auto& Ntex = Nstate[pass.T._get()];
 		Ntex.push_back(item);
 
 		// Need to sort for HZB efficient use// Need to sort for HZB efficient use
@@ -185,27 +227,17 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 				if (SSA > Ncs.ssa)
 				{
 					Ncs.ssa = SSA;
-#ifdef USE_DX11
 					if (SSA > Nps.mapCS.ssa)
 					{
 						Nps.mapCS.ssa = SSA;
-#else
-					if (SSA > Nps.ssa)
-					{
-						Nps.ssa = SSA;
-#endif
-#ifdef USE_DX11
 						if (SSA > Ngs.ssa)
 						{
 							Ngs.ssa = SSA;
-#endif
 							if (SSA > Nvs.ssa)
 							{
 								Nvs.ssa = SSA;
 							}
-#ifdef USE_DX11
 						}
-#endif
 					}
 				}
 			}
@@ -402,13 +434,13 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 		{
 			// Add all children, doesn't perform any tests
 			CKinematics * pV			= (CKinematics*)pVisual;
-			BOOL	_use_lod			= FALSE	;
+			BOOL	_use_lod			= false	;
 			if (pV->m_lod)				
 			{
 				Fvector							Tpos;	float		D;
 				val_pTransform->transform_tiny	(Tpos, pV->vis.sphere.P);
 				float		ssa		=	CalcSSA	(D,Tpos,pV->vis.sphere.R/2.f);	// assume dynamics never consume full sphere
-				if (ssa<r_ssaLOD_A)	_use_lod	= TRUE;
+				if (ssa<r_ssaLOD_A)	_use_lod	= true;
 			}
 
 			if (_use_lod)				
@@ -419,7 +451,7 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 			{
 				if (phase != PHASE_SMAP)
 				{
-					pV->CalculateBones(TRUE);
+					pV->CalculateBones(true);
 					pV->CalculateWallmarks();		//. bug?
 				}
 
@@ -450,19 +482,20 @@ void CRender::add_leafs_Static(dxRender_Visual *pVisual)
 	// Visual is 100% visible - simply add it
 	xr_vector<dxRender_Visual*>::iterator I,E;	// it may be usefull for 'hierrarhy' visuals
 
-	switch (pVisual->Type) {
+	switch (pVisual->Type) 
+	{
 	case MT_PARTICLE_GROUP:
-		{
+	{
 		if (phase == PHASE_SMAP) return;
-			// Add all children, doesn't perform any tests
-			PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
-			for (auto i_it=pG->items.begin(); i_it!=pG->items.end(); i_it++){
-				PS::CParticleGroup::SItem&			I		= *i_it;
-				if (I._effect)		add_leafs_Dynamic		(I._effect);
-				for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
-				for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_leafs_Dynamic(*pit);
-			}
+		// Add all children, doesn't perform any tests
+		PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
+		for (PS::CParticleGroup::SItem& refI : pG->items) 
+		{
+			if (refI._effect)		add_leafs_Dynamic(refI._effect);
+			for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_related.begin(); pit != refI._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
+			for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_free.begin(); pit != refI._children_free.end(); pit++)	add_leafs_Dynamic(*pit);
 		}
+	}
 		return;
 	case MT_HIERRARHY:
 		{
@@ -484,7 +517,7 @@ void CRender::add_leafs_Static(dxRender_Visual *pVisual)
 			// Add all children, doesn't perform any tests
 			CKinematics * pV = (CKinematics*)pVisual;
 			if (phase != PHASE_SMAP)
-				pV->CalculateBones(TRUE);
+				pV->CalculateBones(true);
 
 			I = pV->children.begin	();
 			E = pV->children.end	();
@@ -548,7 +581,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 
 	val_pTransform->transform_tiny	(Tpos, pVisual->vis.sphere.P);
 	VIS = View->testSphere			(Tpos, pVisual->vis.sphere.R,planes);
-	if (fcvNone==VIS) return FALSE	;
+	if (fcvNone==VIS) return false	;
 
 	// If we get here visual is visible or partially visible
 	xr_vector<dxRender_Visual*>::iterator I,E;	// it may be usefull for 'hierrarhy' visuals
@@ -557,22 +590,21 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 	{
 	case MT_PARTICLE_GROUP:
 		{
-		if (phase == PHASE_SMAP) return TRUE;
+		if (phase == PHASE_SMAP) return true;
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
-			for (auto i_it=pG->items.begin(); i_it!=pG->items.end(); i_it++)
+			for (PS::CParticleGroup::SItem& refI : pG->items)
 			{
-				PS::CParticleGroup::SItem&			I		= *i_it;
 				if (fcvPartial==VIS) 
 				{
-					if (I._effect)		add_Dynamic				(I._effect,planes);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_Dynamic(*pit,planes);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_Dynamic(*pit,planes);
+					if (refI._effect)		add_Dynamic				(refI._effect,planes);
+					for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_related.begin();	pit!=refI._children_related.end(); pit++)	add_Dynamic(*pit,planes);
+					for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_free.begin();		pit!=refI._children_free.end();	pit++)	add_Dynamic(*pit,planes);
 				} else 
 				{
-					if (I._effect)		add_leafs_Dynamic		(I._effect);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_related.begin();	pit!=I._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
-					for (xr_vector<dxRender_Visual*>::iterator pit = I._children_free.begin();		pit!=I._children_free.end();	pit++)	add_leafs_Dynamic(*pit);
+					if (refI._effect)		add_leafs_Dynamic		(refI._effect);
+					for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_related.begin();	pit!=refI._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
+					for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_free.begin();		pit!=refI._children_free.end();	pit++)	add_leafs_Dynamic(*pit);
 				}
 			}
 		}
@@ -596,13 +628,16 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 		{
 			// Add all children, doesn't perform any tests
 			CKinematics * pV			= (CKinematics*)pVisual;
-			BOOL	_use_lod			= FALSE	;
-			if (pV->m_lod)				
+			BOOL	_use_lod			= false	;
+			if (pV->m_lod)
 			{
-				Fvector							Tpos;	float		D;
-				val_pTransform->transform_tiny	(Tpos, pV->vis.sphere.P);
-				float		ssa		=	CalcSSA	(D,Tpos,pV->vis.sphere.R/2.f);	// assume dynamics never consume full sphere
-				if (ssa<r_ssaLOD_A)	_use_lod	= TRUE		;
+				Fvector TPos;
+				float D;
+				val_pTransform->transform_tiny(TPos, pV->vis.sphere.P);
+
+				// assume dynamics never consume full sphere
+				float ssa = CalcSSA(D, TPos, pV->vis.sphere.R / 2.f);	
+				if (ssa < r_ssaLOD_A)	_use_lod = true;
 			}
 			if (_use_lod)
 			{
@@ -611,7 +646,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 			{
 				if (phase != PHASE_SMAP)
 				{
-					pV->CalculateBones(TRUE);
+					pV->CalculateBones(true);
 					pV->CalculateWallmarks();		//. bug?
 				}
 
@@ -628,7 +663,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 		}
 		break;
 	}
-	return TRUE;
+	return true;
 }
 
 void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
@@ -715,7 +750,7 @@ void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
 			CKinematics * pV		= (CKinematics*)pVisual;
 
 			if (phase != PHASE_SMAP)
-				pV->CalculateBones(TRUE);
+				pV->CalculateBones(true);
 
 			if (VIS == fcvPartial)
 			{

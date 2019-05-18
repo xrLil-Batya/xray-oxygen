@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include "CPostprocessAnimator.h"
+#include <xrCore\SPPInfo.h>
 #include "PostProcessAnimator.h"
 
 #pragma warning(push)

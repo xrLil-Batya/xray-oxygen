@@ -7,7 +7,6 @@
 
 extern XRCORE_API xr_vector<xr_token> vid_quality_token;
 
-constexpr const char* r2_name = "xrRender_R2";
 constexpr const char* r4_name = "xrRender_R4";
 
 //////////////////////////////////////////////////////////////////////
@@ -27,7 +26,6 @@ CEngineAPI::~CEngineAPI()
 	vid_quality_token.clear();
 }
 
-extern u32 renderer_value; // con cmd
 bool g_bRendererForced;
 
 ENGINE_API bool is_enough_address_space_available	()
@@ -43,21 +41,9 @@ void CEngineAPI::InitializeRenderer()
 
 	// If we failed to load render,
 	// then try to fallback to lower one.
-	/// FX to Xottab-DUTU: Не трогай!
-	if (strstr(Core.Params, "-r4"))
-		Console->Execute("renderer renderer_r4");
-	else if (strstr(Core.Params, "-r2.5"))
-		Console->Execute("renderer renderer_r2.5");
-	else if (strstr(Core.Params, "-r2a"))
-		Console->Execute("renderer renderer_r2a");
-	else if (strstr(Core.Params, "-r2"))
-		Console->Execute("renderer renderer_r2");
-	else
-	{
-		CCC_LoadCFG_custom pTmp("renderer ");
-		pTmp.Execute(Console->ConfigFile);
-		g_bRendererForced = false;
-	}
+	CCC_LoadCFG_custom pTmp("renderer ");
+	pTmp.Execute(Console->ConfigFile);
+	g_bRendererForced = false;
 
 	if (psDeviceFlags.test(rsR4))
 	{
@@ -70,14 +56,6 @@ void CEngineAPI::InitializeRenderer()
 			Msg("! ...Failed - incompatible hardware/pre-Vista OS.");
 			psDeviceFlags.set(rsR2, true);
 		}
-	}
-
-	if (psDeviceFlags.test(rsR2))
-	{
-		// try to initialize R2
-		Msg("Loading DLL: %s", r2_name);
-		hRender = LoadLibrary(r2_name);
-		R_ASSERT2(hRender, "! ...Failed - incompatible hardware.");
 	}
 }
 

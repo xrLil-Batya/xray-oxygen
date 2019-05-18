@@ -583,6 +583,7 @@ void CCharacterPhysicsSupport::in_UpdateCL()
 	else if (ik_controller())
 	{
 		update_interactive_anims();
+#pragma todo("Разберись с update_interactive_anims(), нужно ли оно вообще...")
 		ik_controller()->Update();
 	}
 

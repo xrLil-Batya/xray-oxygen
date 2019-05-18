@@ -47,13 +47,10 @@ void FHierrarhyVisual::Load(const char* N, IReader *data, u32 dwFlags)
 		// From Link
 		u32 cnt = data->r_u32		();
 		children.resize				(cnt);
-		for (u32 i=0; i<cnt; i++)	{
-#ifdef _EDITOR
-			THROW;
-#else
+		for (u32 i=0; i<cnt; i++)	
+		{
 			u32 ID	= data->r_u32();
 			children[i]	= (dxRender_Visual*)::Render->getVisual(ID);
-#endif
 		}
 		bDontDelete = TRUE;
 	}

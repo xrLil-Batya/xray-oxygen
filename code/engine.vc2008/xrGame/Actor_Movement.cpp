@@ -24,6 +24,12 @@ static const float	s_fJumpTime			= 0.3f;
 static const float	s_fJumpGroundTime	= 0.1f;	// для снятия флажка Jump если на земле
 	   const float	s_fFallTime			= 0.2f;
 
+	   // Rietmon: Уменьшение скорости после прыжка
+	   float f_CoefReturnSpeed = 11.5f; // Rietmon: этот коэф. * DT 
+	   float s_fDecreaseSpeed = 14.f; // Rietmon: насколько уменьшаем скорость после прыжка
+	   float m_fDecreaseWalkAccel;
+
+
 IC static void generate_orthonormal_basis1(const Fvector& dir,Fvector& updir, Fvector& right)
 {
 	right.crossproduct(dir,updir); //. <->
@@ -57,7 +63,7 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 	// закончить приземление
 	if (mstate_real&(mcLanding|mcLanding2)){
 		m_fLandingTime		-= dt;
-		if (m_fLandingTime<=0.f){
+		if (m_fLandingTime<=0.f){ 
 			mstate_real		&=~	(mcLanding|mcLanding2);
 			mstate_real		&=~	(mcFall|mcJump);
 		}
@@ -196,6 +202,8 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 		}
 		// jump
 		m_fJumpTime				-=	dt;
+		if (m_fDecreaseWalkAccel > 0) m_fDecreaseWalkAccel -= dt * f_CoefReturnSpeed;
+		if (m_fDecreaseWalkAccel < 0) m_fDecreaseWalkAccel = 0;
 		CWeapon* W = smart_cast<CWeapon*>(inventory().ActiveItem());
 
 		if( CanJump() && (mstate_wf&mcJump) )
@@ -204,6 +212,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			m_bJumpKeyPressed	=	TRUE;
 			Jump				= m_fJumpSpeed;
 			m_fJumpTime			= s_fJumpTime;
+			m_fDecreaseWalkAccel = s_fDecreaseSpeed;
 
 
 			//уменьшить силу игрока из-за выполненого прыжка
@@ -264,7 +273,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			float	scale			= vControlAccel.magnitude();
 			if(scale>EPS)	
 			{
-				scale	=	m_fWalkAccel/scale;
+				scale	=	(m_fWalkAccel- m_fDecreaseWalkAccel)/scale;
 				if (bAccelerated)
 				{
 					if (mstate_real&mcBack)

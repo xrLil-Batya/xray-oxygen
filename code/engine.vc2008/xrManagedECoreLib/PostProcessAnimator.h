@@ -1,5 +1,4 @@
-#include "CPostprocessAnimator.h"
-#include <xrCore\SPPInfo.h>
+#pragma once
 
 namespace XRay
 {

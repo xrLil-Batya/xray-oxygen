@@ -63,7 +63,7 @@ void CRenderTarget::ProcessSMAA()
 	// Phase 0: edge detection ////////////////////////////////////////////////
 	u_setrt				(rt_smaa_edgetex, nullptr, nullptr, nullptr);
 	RCache.set_CullMode	(CULL_NONE);
-	RCache.set_Stencil	(TRUE, D3DCMP_ALWAYS, 0x1, 0, 0, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
+	RCache.set_Stencil	(TRUE, D3D11_COMPARISON_ALWAYS, 0x1, 0, 0, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
 	RCache.Clear		(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0L);
 
 	// Fill vertex buffer
@@ -82,7 +82,7 @@ void CRenderTarget::ProcessSMAA()
 	// Phase 1: blend weights calculation ////////////////////////////////////
 	u_setrt				(rt_smaa_blendtex, nullptr, nullptr, nullptr);
 	RCache.set_CullMode	(CULL_NONE);
-	RCache.set_Stencil	(TRUE, D3DCMP_EQUAL, 0x1, 0, 0, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
+	RCache.set_Stencil	(TRUE, D3D11_COMPARISON_EQUAL, 0x1, 0, 0, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
 	RCache.Clear		(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0L);
 
 	// Fill vertex buffer
@@ -136,8 +136,6 @@ void CRenderTarget::PhaseAA()
 	case DLAA: ProcessDLAA(); break;
 	}
 	
-	if (ps_r_pp_aa_use_taa)
-	{
+	if (ps_r_pp_aa_quality > 1)
 		ProcessTAA();
-	}
 }

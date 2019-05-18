@@ -438,31 +438,24 @@ void				CResourceManager::_DeleteConstantTable	(const R_constant_table* C)
 }
 
 //--------------------------------------------------------------------------------------------------------------
-#ifdef USE_DX11
-CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	DXGI_FORMAT f, u32 SampleCount, bool useUAV )
-#else
-CRT*	CResourceManager::_CreateRT		(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
-#endif
+CRT* CResourceManager::_CreateRT(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 SampleCount, bool useUAV)
 {
 	R_ASSERT(Name && Name[0] && w && h);
 
 	// ***** first pass - search already created RT
 	LPSTR N = LPSTR(Name);
-	map_RT::iterator I = m_rtargets.find	(N);
-	if (I!=m_rtargets.end())	return		I->second;
+	map_RT::iterator I = m_rtargets.find(N);
+	if (I != m_rtargets.end())	return		I->second;
 	else
 	{
-		CRT *RT					=	xr_new<CRT>();
-		RT->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
-		m_rtargets.insert		(std::make_pair(RT->set_name(Name),RT));
-#ifdef USE_DX11
-		if (Device.b_is_Ready)	RT->create	(Name,w,h,f, SampleCount, useUAV );
-#else
-		if (Device.b_is_Ready)	RT->create	(Name,w,h,f, SampleCount );
-#endif
+		CRT* RT = xr_new<CRT>();
+		RT->dwFlags |= xr_resource_flagged::RF_REGISTERED;
+		m_rtargets.insert(std::make_pair(RT->set_name(Name), RT));
+		if (Device.b_is_Ready)	RT->create(Name, w, h, f, SampleCount, useUAV);
 		return					RT;
 	}
 }
+
 void	CResourceManager::_DeleteRT		(const CRT* RT)
 {
 	if (0==(RT->dwFlags&xr_resource_flagged::RF_REGISTERED))	return;
@@ -521,8 +514,8 @@ void		CResourceManager::DeleteGeom		(const SGeometry* Geom)
 //--------------------------------------------------------------------------------------------------------------
 CTexture* CResourceManager::_CreateTexture	(LPCSTR _Name)
 {
-	if (0==xr_strcmp(_Name,"null"))	return 0;
-	R_ASSERT		(_Name && _Name[0]);
+	if (0==xr_strcmp(_Name,"null") || !_Name || !_Name[0])	return nullptr;
+
 	string_path		Name;
 	xr_strcpy			(Name,_Name); //. andy if (strext(Name)) *strext(Name)=0;
 	fix_texture_name (Name);

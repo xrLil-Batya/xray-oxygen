@@ -354,7 +354,7 @@ void CModelPool::Prefetch()
 
     for (const CInifile::Item &it : sect.Data)
     {
-        dxRender_Visual* V = Create(it.first.c_str());
+        dxRender_Visual* pVis = Create(it.first.c_str());
     }
 
 	Logging(TRUE);

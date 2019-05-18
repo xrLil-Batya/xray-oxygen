@@ -16,7 +16,7 @@
 #pragma comment(lib,"xrCore.lib")
 #pragma comment(lib,"xrLC_Light.lib")
 #pragma comment(lib, "xrLCUtil.lib")
-
+#pragma comment(lib, "XTools.lib")
 #define PROTECTED_BUILD
 
 #ifdef PROTECTED_BUILD
@@ -30,11 +30,10 @@
 CBuild*	pBuild		= nullptr;
 u32		version		= 0;
 
-static const char* h_str =
+static constexpr char* h_str =
 	"The following keys are supported / required:\n"
 	"-skip	== Skip the test invalid face\n"
 	"-? or -h		 == this help\n"
-	"-o				 == modify build options\n"
 	"-skip			 == skip crash if invalid faces exists\n"
 	"-nosun			 == disable sun-lighting\n"
 	"-norgb			 == disable common lightmap calculating\n"
@@ -82,6 +81,8 @@ void Startup(char* lpCmdLine)
 	char cmd[512], name[256];
 
 	xr_strcpy(cmd, lpCmdLine);
+	xr_strcpy(Core.Params, lpCmdLine);
+
 	strlwr(cmd);
 
 	if (strstr(cmd, "-?") || !strstr(cmd, "-f"))

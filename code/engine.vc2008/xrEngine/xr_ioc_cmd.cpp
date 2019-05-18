@@ -427,17 +427,16 @@ public:
 };
 
 ENGINE_API BOOL r2_advanced_pp = FALSE;	//	advanced post process and effects
-u32	renderer_value = 0;
-u32 isLoaded = 2;
 extern bool g_bRendererForced;
 
 class CCC_Renderer : public CCC_Token
 {
 	typedef CCC_Token inherited;
+	bool bLoaded;
 public:
-	CCC_Renderer(LPCSTR N) : inherited(N, &renderer_value, NULL)
+	CCC_Renderer(LPCSTR N) : inherited(N, nullptr, NULL)
 	{
-		renderer_value = 3; 
+		bLoaded = false;
 	};
 	virtual ~CCC_Renderer()
 	{
@@ -445,23 +444,12 @@ public:
 	virtual void	Execute(LPCSTR args)
 	{
 		//	vid_quality_token must be already created!
-		if (isLoaded != 1)
+		if (!bLoaded)
 		{
-			tokens = vid_quality_token.data();
-
-			inherited::Execute(args);
-
-			// 0..2 - r2
-			// 3 - r4
-			psDeviceFlags.set(rsR2, ((renderer_value >= 0) && renderer_value < 3));
-			psDeviceFlags.set(rsR4, (renderer_value == 3));
-
-			r2_advanced_pp = (renderer_value >= 3);
-
-			isLoaded--;
+			psDeviceFlags.set(rsR4, true);
+			r2_advanced_pp = true;
+			bLoaded = true;
 		}
-		else
-			isLoaded = 16;
 	}
 
 	virtual void	Save	(IWriter *F)	
@@ -477,6 +465,18 @@ public:
 		return inherited::GetToken();
 	}
 
+	virtual void fill_tips(vecTips& tips, u32 mode)
+	{
+		tips.emplace_back(GetToken()->name);
+	}
+
+	virtual void Status(TStatus& S)
+	{
+		xr_token* tok = tokens;
+		xr_strcpy(S, tok->name);
+		return;
+		//xr_strcpy(S, "?");
+	}
 };
 
 class CCC_soundDevice : public CCC_Token

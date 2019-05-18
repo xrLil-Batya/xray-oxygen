@@ -99,8 +99,6 @@ extern ECORE_API float			ps_r_GI_refl;				// 0.9f
 extern ECORE_API float			ps_r_sun_near;				// 10.0f
 extern ECORE_API float			ps_r_sun_near_border;		// 1.0f
 extern ECORE_API float			ps_r_sun_far;
-extern ECORE_API float			ps_r_sun_tsm_projection;	// 0.2f
-extern ECORE_API float			ps_r_sun_tsm_bias;			// 0.0001f
 extern ECORE_API float			ps_r_sun_depth_far_scale;	// 1.00001f
 extern ECORE_API float			ps_r_sun_depth_far_bias;	// -0.0001f
 extern ECORE_API float			ps_r_sun_depth_near_scale;	// 1.00001f
@@ -138,7 +136,7 @@ enum RenderFlags : u32
 {
 	R_FLAG_SUN					= (1<<0),
 	R_FLAG_SUN_FOCUS			= (1<<1),
-	R_FLAG_SUN_TSM				= (1<<2),
+	R_FLAG_DETAIL_BUMP			= (1<<2),
 	R_FLAG_SUN_IGNORE_PORTALS	= (1<<3),
 	R_FLAG_DETAIL_SHADOW		= (1<<4),
 	R_FLAG_HOM_DEPTH_DRAW		= (1<<5),
@@ -152,22 +150,17 @@ enum RenderFlags : u32
 	R_FLAG_EXP_SPLIT_SCENE					= (1<<12),
 	R_FLAG_EXP_DONT_TEST_UNSHADOWED			= (1<<13),
 	R_FLAG_EXP_DONT_TEST_SHADOWED			= (1<<14),
-
-	R_FLAG_USE_NVDBT			= (1<<15),
+	
+	R_FLAG_SUN_ZCULLING			= (1<<15),
 	R_FLAG_GLOW_USE				= (1<<16),
-
 	R_FLAG_SOFT_WATER			= (1<<17),	//	Igor: need restart
 	R_FLAG_SOFT_PARTICLES		= (1<<18),	//	Igor: need restart
 
 	R_FLAG_VOLUMETRIC_LIGHTS	= (1<<19),
 
 	R_FLAG_STEEP_PARALLAX		= (1<<20),
-	R_FLAG_DETAIL_BUMP			= (1<<21),
 
 	R_FLAG_ACTOR_SHADOW			= (1<<22),
-
-	R_FLAG_SUN_ZCULLING			= (1<<23),
-	R_FLAG_SUN_OLD				= (1<<24),
 };
 
 enum RFLAG_POSTSCREEN : u32
@@ -193,7 +186,6 @@ enum
 // Sunshafts types
 enum
 {
-    SS_VOLUMETRIC,
     SS_SS_OGSE,
     SS_SS_MANOWAR,
 };
@@ -225,7 +217,6 @@ enum
 	R3_FLAG_VOLUMETRIC_SMOKE		= (1<<1),
 	R3_FLAG_MSAA_HYBRID				= (1<<2),
 	R3_FLAG_MSAA_OPT				= (1<<3),
-	R3_FLAG_USE_DX10_1				= (1<<5),
 	//R3FLAG_MSAA					= (1<<6),
 	//R3FLAG_MSAA_ALPHATEST			= (1<<7),
 };

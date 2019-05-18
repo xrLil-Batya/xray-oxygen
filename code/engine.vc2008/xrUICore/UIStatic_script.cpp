@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "UIStatic.h"
-#include "UI3dStatic.h"
+//#include "UI3dStatic.h"
 #include "UIAnimatedStatic.h"
 
 #include "luabind/luabind.hpp"
@@ -48,29 +48,29 @@ void CUIStatic::script_register(lua_State *L)
 		.def("SetTextOffset",		&CUITextWnd::SetTextOffset),
 
 		class_<CUISleepStatic, CUIStatic>("CUISleepStatic")
-		.def(						constructor<>()),
+		.def(						constructor<>())
 		
-		class_<CUI3dStatic>("CUI3dStatic")
-			.def(constructor<>())
-			.def("AttachChild", &CUIWindow::AttachChild, adopt<2>())
-			.def("DetachChild", &CUIWindow::DetachChild)
-			.def("SetAutoDelete", &CUIWindow::SetAutoDelete)
-			.def("IsAutoDelete", &CUIWindow::IsAutoDelete)
-
-			.def("SetWndRect", (void (CUIWindow::*)(const Frect&))	&CUIWindow::SetWndRect_script)
-			.def("SetWndPos", (void (CUIWindow::*)(const Fvector2&)) &CUIWindow::SetWndPos_script)
-			.def("SetWndSize", (void (CUIWindow::*)(const Fvector2&)) &CUIWindow::SetWndSize_script)
-			.def("GetWidth", &CUIWindow::GetWidth)
-			.def("GetHeight", &CUIWindow::GetHeight)
-
-			.def("Enable", &CUIWindow::Enable)
-			.def("IsEnabled", &CUIWindow::IsEnabled)
-			.def("Show", &CUIWindow::Show)
-			.def("IsShown", &CUIWindow::IsShown)
-
-			.def("WindowName", &CUIWindow::WindowName_script)
-			.def("SetWindowName", &CUIWindow::SetWindowName)
-			.def("SetPPMode", &CUIWindow::SetPPMode)
-			.def("ResetPPMode", &CUIWindow::ResetPPMode)
+		//class_<CUI3dStatic>("CUI3dStatic")
+		//	.def(constructor<>())
+		//	.def("AttachChild", &CUIWindow::AttachChild, adopt<2>())
+		//	.def("DetachChild", &CUIWindow::DetachChild)
+		//	.def("SetAutoDelete", &CUIWindow::SetAutoDelete)
+		//	.def("IsAutoDelete", &CUIWindow::IsAutoDelete)
+		//
+		//	.def("SetWndRect", (void (CUIWindow::*)(const Frect&))	&CUIWindow::SetWndRect_script)
+		//	.def("SetWndPos", (void (CUIWindow::*)(const Fvector2&)) &CUIWindow::SetWndPos_script)
+		//	.def("SetWndSize", (void (CUIWindow::*)(const Fvector2&)) &CUIWindow::SetWndSize_script)
+		//	.def("GetWidth", &CUIWindow::GetWidth)
+		//	.def("GetHeight", &CUIWindow::GetHeight)
+		//
+		//	.def("Enable", &CUIWindow::Enable)
+		//	.def("IsEnabled", &CUIWindow::IsEnabled)
+		//	.def("Show", &CUIWindow::Show)
+		//	.def("IsShown", &CUIWindow::IsShown)
+		//
+		//	.def("WindowName", &CUIWindow::WindowName_script)
+		//	.def("SetWindowName", &CUIWindow::SetWindowName)
+		//	.def("SetPPMode", &CUIWindow::SetPPMode)
+		//	.def("ResetPPMode", &CUIWindow::ResetPPMode)
 	];
 }

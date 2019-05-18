@@ -182,14 +182,5 @@ void CScriptEngine::script_register(lua_State *L)
 #ifdef XRGAME_EXPORTS
 	function	(L,	"device",							get_device);
 	function	(L,	"is_enough_address_space_available",is_enough_address_space_available_impl);
-
-	//FX: подгрузка любых модулей
-#pragma todo("FX to FX: update load modules code...")
-/*	{
-		luabind::functor<LPCSTR> module_init;
-		R_ASSERT2(ai().script_engine().functor<LPCSTR>("fray_config.modules_init", module_init), "Can't call lua function!");
-		module_init();
-	} 
-*/
 #endif // #ifdef XRGAME_EXPORTS
 }

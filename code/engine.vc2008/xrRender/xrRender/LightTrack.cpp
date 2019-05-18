@@ -7,13 +7,7 @@
 #include "../../include/xrRender/RenderVisual.h"
 #include "../../xrEngine/xr_object.h"
 
-#ifdef _EDITOR
-#	include "igame_persistent.h"
-#	include "environment.h"
-#else
-#	include "../../xrEngine/igame_persistent.h"
-#	include "../../xrEngine/environment.h"
-#endif
+#include "../../xrEngine/environment.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -39,6 +33,9 @@ CROS_impl::CROS_impl	()
 	sky_rays_uptodate	= 0;
 
 	MODE				= IRender_ObjectSpecific::TRACE_ALL;
+
+	for (size_t i = 0; i < NUM_FACES; ++i)
+		hemi_cube[i]	= hemi_cube_smooth[i] = 0;
 }
 
 void CROS_impl::add (light* source)
@@ -48,8 +45,7 @@ void CROS_impl::add (light* source)
 		if (source == I.source)	{ I.frame_touched = Device.dwFrame; return; }
 
 	// Register _new_
-	track.emplace_back		();
-	Item&	L			= track.back();
+	Item&	L			= Item();
 	L.frame_touched		= Device.dwFrame;
 	L.source			= source;
 	L.cache.verts[0].set(0,0,0);
@@ -57,6 +53,8 @@ void CROS_impl::add (light* source)
 	L.cache.verts[2].set(0,0,0);
 	L.test				= 0.f;
 	L.energy			= 0.f;
+
+	track.emplace_back(L);
 }
 
 IC bool	pred_energy			(const CROS_impl::Light& L1, const CROS_impl::Light& L2)	{ return L1.energy>L2.energy; }
@@ -64,7 +62,7 @@ IC bool	pred_energy			(const CROS_impl::Light& L1, const CROS_impl::Light& L2)	{
 #pragma warning(push)
 #pragma warning(disable:4305)
 
-const float		hdir		[lt_hemisamples][3] = 
+constexpr float hdir [lt_hemisamples][3] = 
 {
 	{-0.26287,	0.52573,	0.80902	},
 	{0.27639,	0.44721,	0.85065	},

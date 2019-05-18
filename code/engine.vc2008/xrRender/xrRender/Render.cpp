@@ -195,7 +195,7 @@ void CRender::render_menu()
 	PIX_EVENT(render_menu);
 	// Globals
 	RCache.set_CullMode(CULL_CCW);
-	RCache.set_Stencil(FALSE);
+	RCache.set_Stencil(false);
 	RCache.set_ColorWriteEnable();
 
 	// Main Render
@@ -255,7 +255,7 @@ void CRender::Render()
 	IMainMenu* pMainMenu = g_pGamePersistent ? g_pGamePersistent->m_pMainMenu : nullptr;
 	bool bMenu = pMainMenu ? pMainMenu->CanSkipSceneRendering() : false;
 
-	if (!(g_pGameLevel && g_hud) || bMenu)
+	if (!g_pGameLevel || !g_hud || bMenu)
 		return;
 
 	if (m_bFirstFrameAfterReset)
@@ -266,16 +266,16 @@ void CRender::Render()
 
 	Device.Statistic->Render_CRenderRender_ScenePrepare.Begin();
 	// Configure
-	RImplementation.o.distortion = FALSE;		// disable distorion
+	RImplementation.o.distortion = false;		// disable distorion
 	Fcolor sun_color = ((light*)Lights.sun._get())->color;
-	bool bSUN = ps_r_flags.test(R_FLAG_SUN) && (Diffuse::u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS);
+	const bool bSUN = ps_r_flags.test(R_FLAG_SUN) && (Diffuse::u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS);
 
 	// HOM
 	ViewBase.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View = nullptr;
 
 	Target->phase_scene_prepare();
-    //RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //NOT EVEN a depth prepass :P
+   // RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //NOT EVEN a depth prepass :P
 
 	Device.Statistic->Render_CRenderRender_ScenePrepare.End();
 	//*******
@@ -283,16 +283,16 @@ void CRender::Render()
 	Device.Statistic->Render_CRenderRender_WaitForFrame.Begin();
 		
 	CTimer T; T.Start();
-	BOOL result = FALSE;
-	HRESULT	hr = S_FALSE;
-	while ((hr = GetData(q_sync_point[q_sync_count], &result, sizeof(result))) == S_FALSE)
+	BOOL result = false;
+	HRESULT	HResult = S_FALSE;
+	while ((HResult = GetData(q_sync_point[q_sync_count], &result, sizeof(result))) == S_FALSE)
 	{
 		if (!SwitchToThread())
 			Sleep(ps_r_wait_sleep);
 
 		if (T.GetElapsed_ms() > 500)
 		{
-			result = FALSE;
+			result = false;
 			break;
 		}
 	}
@@ -340,12 +340,9 @@ void CRender::Render()
 	LP_normal.clear();
 	LP_pending.clear();
 
-#ifdef USE_DX11
 	if (RImplementation.o.dx10_msaa)
 		RCache.set_ZB(RImplementation.Target->rt_MSAADepth->pZRT);
-#endif
 
-	
 	{
 		PIX_EVENT(DEFER_TEST_LIGHT_VIS);
 
@@ -354,15 +351,15 @@ void CRender::Render()
 		light_Package& LP = Lights.package;
 
 		// stats
-		stats.l_shadowed	= LP.v_shadowed.size();
-		stats.l_unshadowed	= LP.v_point.size() + LP.v_spot.size();
+		stats.l_shadowed	= (u32)LP.v_shadowed.size();
+		stats.l_unshadowed	= (u32)LP.v_point.size() + (u32)LP.v_spot.size();
 		stats.l_total		= stats.l_shadowed + stats.l_unshadowed;
 
 		// perform tests
 		count = std::max(count, LP.v_point.size());
 		count = std::max(count, LP.v_spot.size());
 		count = std::max(count, LP.v_shadowed.size());
-		for (u32 it = 0; it < count; it++)
+		for (size_t it = 0; it < count; it++)
 		{
 			if (it < LP.v_point.size())
 			{
@@ -450,7 +447,6 @@ void CRender::Render()
 		Lights_LastFrame.clear();
 	}
 
-#ifdef USE_DX11
 	Device.Statistic->Render_CRenderRender_MSAA_Rain.Begin();
     // full screen pass to mark msaa-edge pixels in highest stencil bit
     if (RImplementation.o.dx10_msaa)
@@ -465,7 +461,6 @@ void CRender::Render()
         render_rain();
     }
 	Device.Statistic->Render_CRenderRender_MSAA_Rain.End();
-#endif
 
 	// Directional light - sun
 	if (bSUN)
@@ -473,20 +468,12 @@ void CRender::Render()
 		ScopeStatTimer sunTimer(Device.Statistic->Render_CRenderRender_Sun);
 		PIX_EVENT(DEFER_SUN);
 		RImplementation.stats.l_visible++;
-		if (!ps_r_flags.is(R_FLAG_SUN_OLD))
-			render_sun_cascades();
-		else
-		{
-			render_sun_near();
-			render_sun();
-			if (Device.dwFrame % 2)
-				render_sun_filtered();
-		}
-		Target->accum_direct_blend();
+		render_sun_cascades();
+		Target->increment_light_marker();
 	}
 
 	{
-		ScopeStatTimer lightTimer(Device.Statistic->Render_CRenderRender_LightRender);
+		ScopeStatTimer lightTimer1(Device.Statistic->Render_CRenderRender_LightRender);
 		PIX_EVENT(DEFER_SELF_ILLUM);
 		Target->phase_accumulator();
 
@@ -495,22 +482,14 @@ void CRender::Render()
 		RCache.set_xform_view(Device.mView);
 
 		// Stencil - write 0x1 at pixel pos
-#ifdef USE_DX11
-		if (!RImplementation.o.dx10_msaa)
-			RCache.set_Stencil(TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0xff, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
-		else
-			RCache.set_Stencil(TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0x7f, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
-#else
-		RCache.set_Stencil(TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0xff, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
-#endif
-
+		RCache.set_Stencil(true, D3D11_COMPARISON_ALWAYS, 0x01, 0xff, RImplementation.o.dx10_msaa ? 0x7f : 0xff, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
 		RCache.set_CullMode(CULL_CCW);
 		RCache.set_ColorWriteEnable();
 		RImplementation.r_dsgraph_render_emissive();
 
 		// Lighting, non dependant on OCCQ
 		{
-			ScopeStatTimer lightTimer(Device.Statistic->TEST2);
+			ScopeStatTimer lightTimer2(Device.Statistic->TEST2);
 			PIX_EVENT(DEFER_LIGHT_NO_OCCQ);
 			HOM.Disable();
 			render_lights(LP_normal);
@@ -518,7 +497,7 @@ void CRender::Render()
         
 		// Lighting, dependant on OCCQ
 		{
-			ScopeStatTimer lightTimer(Device.Statistic->TEST3);
+			ScopeStatTimer lightTimer3(Device.Statistic->TEST3);
 			PIX_EVENT(DEFER_LIGHT_OCCQ);
 			render_lights(LP_pending);
 		}
@@ -526,7 +505,7 @@ void CRender::Render()
     
 	// Postprocess
 	{
-		ScopeStatTimer lightTimer(Device.Statistic->Render_CRenderRender_Combine);
+		ScopeStatTimer lightTimer4(Device.Statistic->Render_CRenderRender_Combine);
 		PIX_EVENT(DEFER_LIGHT_COMBINE);
 		Target->phase_combine();
 	}
@@ -563,7 +542,7 @@ void CRender::render_forward()
 		Environment().RenderLast(); // rain/thunder-bolts
 	}
 
-	RImplementation.o.distortion = FALSE; // Disable distorion
+	RImplementation.o.distortion = false; // Disable distorion
 }
 
 // Before world render
@@ -577,15 +556,9 @@ void CRender::AfterWorldRender()
 	if (Device.m_SecondViewport.IsSVPFrame())
 	{
 		// Copy back buffer to second viewport RT
-#ifdef USE_DX11 
 		ID3DTexture2D* pBackBuffer = nullptr;
 		HW.m_pSwapChain->GetBuffer(0, __uuidof(ID3DTexture2D), (LPVOID*)&pBackBuffer);
 		HW.pContext->CopyResource(Target->rt_secondVP->pSurface, pBackBuffer);
-#else
-		IDirect3DSurface9* pBackBuffer = nullptr;
-		HW.pDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-		D3DXLoadSurfaceFromSurface(Target->rt_secondVP->pRT, nullptr, nullptr, pBackBuffer, nullptr, nullptr, D3DX_DEFAULT, 0);
-#endif
 		pBackBuffer->Release();
 	}
 }

@@ -1464,9 +1464,17 @@ FS_Path* CLocatorAPI::append_path(const char* path_alias, const char* root, cons
 
 FS_Path* CLocatorAPI::get_path(const char* path)
 {
-	auto P = pathes.find(path);
-	R_ASSERT2(P != pathes.end(), path);
-	return P->second;
+	if (strstr(path, "$"))
+	{
+		auto P = pathes.find(path);
+		R_ASSERT2(P != pathes.end(), path);
+		return P->second;
+	}
+	else
+	{
+		FS_Path* pTempFSPath = new FS_Path(path, "", nullptr, nullptr, 0);
+		return pTempFSPath;
+	}
 }
 
 const char* CLocatorAPI::update_path(string_path& dest, const char* initial, const char* src)

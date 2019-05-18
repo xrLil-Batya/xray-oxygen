@@ -13,10 +13,10 @@ void CRenderTarget::phase_scene_prepare()
 		HW.pContext->ClearRenderTargetView(rt_Position->pRT,	ColorRGBA);
 		HW.pContext->ClearRenderTargetView(rt_Color->pRT,		ColorRGBA);
 		HW.pContext->ClearRenderTargetView(rt_Accumulator->pRT, ColorRGBA);
-		HW.pContext->ClearDepthStencilView(HW.pBaseZB, D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
+		HW.pContext->ClearDepthStencilView(HW.pBaseZB, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		if (RImplementation.o.dx10_msaa)
-			HW.pContext->ClearDepthStencilView(rt_MSAADepth->pZRT, D3D_CLEAR_DEPTH | D3D_CLEAR_STENCIL, 1.0f, 0);
+			HW.pContext->ClearDepthStencilView(rt_MSAADepth->pZRT, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 
 	//	Igor: for volumetric lights
@@ -42,7 +42,7 @@ void	CRenderTarget::phase_scene_begin()
 		u_setrt(rt_Position, rt_Color, pZB);
 
 	// Stencil - write 0x1 at pixel pos
-	RCache.set_Stencil(TRUE, D3DCMP_ALWAYS, 0x01, 0xff, 0x7f, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
+	RCache.set_Stencil(TRUE, D3D11_COMPARISON_ALWAYS, 0x01, 0xff, 0x7f, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
 
 	// Misc		- draw only front-faces
 	//	TODO: DX10: siable two-sided stencil here
@@ -70,7 +70,7 @@ void	CRenderTarget::phase_scene_end()
 	else
 		u_setrt(rt_Color, 0, 0, rt_MSAADepth->pZRT);
 	RCache.set_CullMode(CULL_NONE);
-	RCache.set_Stencil(TRUE, D3DCMP_LESSEQUAL, 0x01, 0xff, 0x00);	// stencil should be >= 1
+	RCache.set_Stencil(TRUE, D3D11_COMPARISON_LESS_EQUAL, 0x01, 0xff, 0x00);	// stencil should be >= 1
 	RCache.set_ColorWriteEnable();
 
 	// common calc for quad-rendering

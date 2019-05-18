@@ -401,4 +401,11 @@ public:
     virtual ~CVirtualFileRW();
 };
 
+class XRCORE_API CMemoryReader : public IReader 
+{
+public:
+	CMemoryReader(void* data, const int size, const int iterpos = 0);
+
+};
+
 #pragma warning(pop)

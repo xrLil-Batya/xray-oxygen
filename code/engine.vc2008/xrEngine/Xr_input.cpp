@@ -203,13 +203,12 @@ void CInput::iGetLastMouseDelta(Ivector2& p)
 void CInput::iCapture(IInputReceiver *p)
 {
 	VERIFY(p);
-
 	ResetPressedState();
+
 	// change focus
 	if (!cbStack.empty())
-	{
 		cbStack.back()->IR_OnDeactivate();
-	}
+
 	cbStack.push_back(p);
 	cbStack.back()->IR_OnActivate();
 }
@@ -228,7 +227,8 @@ void CInput::iRelease(IInputReceiver *p)
 		}
 	}
 	else
-	{// we are not topmost receiver, so remove the nearest one
+	{
+		// we are not topmost receiver, so remove the nearest one
 		size_t cnt = cbStack.size();
 		for (; cnt > 0; --cnt)
 			if (cbStack[cnt - 1] == p) 
@@ -254,10 +254,9 @@ void CInput::OnAppActivate()
 
 	SetCursorPos(windowRect.right - (LONG)Device.fWidth_2, windowRect.bottom - (LONG)Device.fHeight_2);
 	XInputEnable(TRUE);
+
 	if (bShouldLockMouse)
-	{
 		LockMouse();
-	}
 }
 
 void CInput::OnAppDeactivate()
@@ -286,12 +285,14 @@ void CInput::LockMouse()
 	}
 
 	ClipCursor(&windowRect);
+	ShowCursor(FALSE);
 }
 
 void CInput::UnlockMouse()
 {
 	ClipCursor(NULL);
 	bShouldLockMouse = false;
+	ShowCursor(TRUE);
 }
 
 void CInput::ResetPressedState()
@@ -311,7 +312,7 @@ void CInput::ResetPressedState()
 	}
 	else
 	{
-		ZeroMemory(&pressedKeys[0],		 sizeof(pressedKeys));
+		RtlZeroMemory(&pressedKeys[0], sizeof(pressedKeys));
 	}
 }
 
@@ -333,51 +334,6 @@ void CInput::OnFrame()
 			cbStack.back()->IR_OnKeyboardHold(i);
 		}
 	}
-
-	// check if we should show/hide system cursor
-	// system cursor should be visible, if it was outside game window
-	if ((Device.dwFrame % 30) == 0) // per 30 frames
-	{
-		POINT mouseCursor;
-		if (GetCursorPos(&mouseCursor))
-		{
-			if (Device.b_is_Active)
-			{
-				if (cachedWindowRect.left + 5 < mouseCursor.x && cachedWindowRect.right - 5 > mouseCursor.x &&
-					cachedWindowRect.top + 5 < mouseCursor.y && cachedWindowRect.bottom - 5 > mouseCursor.y)
-				{
-					if (bCursorShowed)
-					{
-						bCursorShowed = false;
-						ShowCursor(FALSE);
-					}
-				}
-				else
-				{
-					if (!bCursorShowed)
-					{
-						bCursorShowed = true;
-						ShowCursor(TRUE);
-					}
-				}
-			}
-		}
-	}
-
-	// validate cursor visibility
-	if ((Device.dwFrame % 600) == 0) // per 600 frames, 10 sec for 60 fps
-	{
-		CURSORINFO cInfo;
-		cInfo.cbSize = sizeof(cInfo);
-		if (GetCursorInfo(&cInfo))
-		{
-			if (cInfo.flags & CURSOR_SHOWING)
-			{
-				bCursorShowed = true;
-			}
-		}
-	}
-
 
 	// check for gamepad presense
 	if ((Device.dwFrame % 60) == 0) // per 60 frames
@@ -527,14 +483,7 @@ void CInput::OnFrame()
 
 IInputReceiver*	 CInput::CurrentIR()
 {
-	if (!cbStack.empty())
-	{
-		return cbStack.back();
-	}
-	else
-	{
-		return nullptr;
-	}
+	return !cbStack.empty() ? cbStack.back() : nullptr;
 }
 
 void CInput::CheckGamepad()

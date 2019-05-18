@@ -914,7 +914,7 @@ void CPHShell::SetCallbacks()
 	{
 		IKinematics &K;
 		set_bone_reference(IKinematics &K_) : K(K_) {}
-		set_bone_reference(set_bone_reference&& other) XR_NOEXCEPT : K(other.K) {}
+		set_bone_reference(set_bone_reference&& other)  : K(other.K) {}
 		set_bone_reference(const set_bone_reference& other1) = delete;
 		set_bone_reference& operator=(const set_bone_reference& other1) = delete;
 

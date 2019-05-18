@@ -24,7 +24,6 @@ enum {
 
 enum {
 	GE_OWNERSHIP_TAKE,			// DUAL: Client request for ownership of an item
-	GE_OWNERSHIP_TAKE_MP_FORCED,
 	GE_OWNERSHIP_REJECT,		// DUAL: Client request ownership rejection
 	GE_TRANSFER_AMMO,			// DUAL: Take ammo out of weapon for our weapon
 	GE_HIT,						//
@@ -86,8 +85,6 @@ enum {
 	GE_KILL_SOMEONE,
 	GE_LAUNCH_ROCKET,
 	
-	GEG_PLAYER_USE_BOOSTER,
-
 	GE_FORCEDWORD				= u32(-1)
 };
 

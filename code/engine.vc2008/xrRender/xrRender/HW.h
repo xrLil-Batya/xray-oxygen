@@ -55,6 +55,7 @@ public:
 	IDXGISwapChain*         m_pSwapChain;
 	ID3D11RenderTargetView*	pBaseRT;	//	combine with DX9 pBaseRT via typedef
 	ID3D11DepthStencilView*	pBaseZB;
+	ID3DUserDefinedAnnotation* pAnnotation;
 
 	CHWCaps					Caps;
 
