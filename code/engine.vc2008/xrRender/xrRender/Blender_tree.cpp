@@ -63,7 +63,7 @@ void	CBlender_Tree::Compile	(CBlender_Compile& C)
 		break;
 	case SE_R2_SHADOW:		// smap-spot
 //	TODO: DX10: Use dumb shader for shadowmap since shadows are drawn using hardware PCF
-		if (oBlend.value)	C.r_Pass	(tvs_s,"shadow_direct_base_aref",	FALSE,TRUE,TRUE,TRUE,D3DBLEND_ZERO,D3DBLEND_ONE,TRUE,200);
+		if (oBlend.value)	C.r_Pass	(tvs_s,"shadow_direct_base_aref",	FALSE,TRUE,TRUE,TRUE,D3D11_BLEND_ZERO,D3D11_BLEND_ONE,TRUE,200);
 		else				C.r_Pass	(tvs_s,"shadow_direct_base",		FALSE);
 		C.r_Sampler			("s_base",	C.L_textures[0]);
 		C.r_End				();
@@ -143,7 +143,7 @@ void	CBlender_Tree::Compile	(CBlender_Compile& C)
 		break;
 	case SE_R2_SHADOW:		// smap-spot
 		//	TODO: DX10: Use dumb shader for shadowmap since shadows are drawn using hardware PCF
-		if (oBlend.value)	C.r_Pass	(tvs_s,"shadow_direct_base_aref",	FALSE,TRUE,TRUE,TRUE,D3DBLEND_ZERO,D3DBLEND_ONE,TRUE,200);
+		if (oBlend.value)	C.r_Pass	(tvs_s,"shadow_direct_base_aref",	FALSE,TRUE,TRUE,TRUE,D3D11_BLEND_ZERO,D3D11_BLEND_ONE,TRUE,200);
 		else				C.r_Pass	(tvs_s,"shadow_direct_base",		FALSE);
 		C.r_dx10Texture			("s_base",	C.L_textures[0]);
 		C.r_dx10Sampler			("smp_base");

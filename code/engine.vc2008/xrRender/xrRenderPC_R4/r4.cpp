@@ -82,34 +82,34 @@ void					CRender::create()
 
 	VERIFY2(o.mrt && (HW.Caps.raster.dwInstructions >= 256), "Hardware doesn't meet minimum feature-level");
 	/////////////////////////////////////////////
-	o.albedo_wo = FALSE;
+	o.albedo_wo = false;
 	/////////////////////////////////////////////
 	// gloss
 	char* g					= strstr(Core.Params, "-gloss ");
 
-	o.forcegloss			= g ? TRUE : FALSE;
+	o.forcegloss			= g ? true : false;
 	/////////////////////////////////////////////
 	if (g)
 		o.forcegloss_v		= float(atoi_17(g + xr_strlen("-gloss "))) / 255.f;
 	/////////////////////////////////////////////
 	// options
-	o.sunfilter				= (strstr(Core.Params, "-sunfilter")) ? TRUE : FALSE;
+	o.sunfilter				= (strstr(Core.Params, "-sunfilter")) ? true : false;
 	/////////////////////////////////////////////
 	o.volumetricfog			= ps_r3_flags.test(R3_FLAG_VOLUMETRIC_SMOKE);
 	/////////////////////////////////////////////
-	o.sjitter				= (strstr(Core.Params, "-sjitter")) ? TRUE : FALSE;
-	o.depth16				= (strstr(Core.Params, "-depth16")) ? TRUE : FALSE;
+	o.sjitter				= (strstr(Core.Params, "-sjitter")) ? true : false;
+	o.depth16				= (strstr(Core.Params, "-depth16")) ? true : false;
 	/////////////////////////////////////////////
 	if (strstr(Core.Params, "-noshadows") || strstr(Core.Params, "-render_for_weak_systems"))
-		o.noshadows = TRUE;
+		o.noshadows = true;
 	else
-		o.noshadows = FALSE;
+		o.noshadows = false;
 	/////////////////////////////////////////////
-	o.Tshadows				= (strstr(Core.Params, "-tsh")) ? TRUE : FALSE;
-	o.distortion_enabled	= (strstr(Core.Params, "-nodistort")) ? FALSE : TRUE;
+	o.Tshadows				= (strstr(Core.Params, "-tsh")) ? true : false;
+	o.distortion_enabled	= (strstr(Core.Params, "-nodistort")) ? false : true;
 	o.distortion			= o.distortion_enabled;
-	o.disasm				= (strstr(Core.Params, "-disasm")) ? TRUE : FALSE;
-	o.forceskinw			= (strstr(Core.Params, "-skinw")) ? TRUE : FALSE;
+	o.disasm				= (strstr(Core.Params, "-disasm")) ? true : false;
+	o.forceskinw			= (strstr(Core.Params, "-skinw")) ? true : false;
 	/////////////////////////////////////////////
 	o.ssao_blur_on			= ps_r_ssao_flags.test(R_FLAG_SSAO_BLUR);
 	o.ssao_opt_data			= ps_r_ssao_flags.test(R_FLAG_SSAO_OPT_DATA);
@@ -715,8 +715,8 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 	if ( disasm )
 	{
 		ID3DBlob*		pDisasm	= nullptr;
-		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &pDisasm);
-		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), FALSE, 0, &disasm );
+		D3DDisassemble	(buffer, buffer_size, false, nullptr, &pDisasm);
+		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), false, 0, &disasm );
 		string_path		dname;
 		xr_strconcat	(dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
 		IWriter*		W		= FS.w_open("$logs$",dname);

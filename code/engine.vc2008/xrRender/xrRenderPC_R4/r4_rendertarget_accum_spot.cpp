@@ -33,7 +33,7 @@ void CRenderTarget::accum_spot(light* L)
 		}
 	}
 
-	BOOL bIntersect = FALSE; //enable_scissor(L);
+	BOOL bIntersect = false; //enable_scissor(L);
 	{
 		// setup xform
 		L->xform_calc();
@@ -220,7 +220,7 @@ void CRenderTarget::accum_volumetric(light* L)
 
 	// *** assume accumulator setted up ***
 	// *****************************	Mask by stencil		*************************************
-	BOOL	bIntersect = FALSE;
+	BOOL	bIntersect = false;
 	{
 		// setup xform
 		L->xform_calc();
@@ -394,7 +394,7 @@ void CRenderTarget::accum_volumetric(light* L)
 		RCache.set_ColorWriteEnable();
 
 		//	Restore clip planes
-		RCache.set_ClipPlanes(FALSE, (Fmatrix *)nullptr, 0);
+		RCache.set_ClipPlanes(false, (Fmatrix *)nullptr, 0);
 	}
 	RCache.set_Scissor(nullptr);
 }

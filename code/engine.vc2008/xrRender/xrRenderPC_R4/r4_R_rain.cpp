@@ -215,7 +215,7 @@ void CRender::render_rain()
 	}
 
 	// Fill the database
-	r_dsgraph_render_subspace(cull_sector, &cull_frustum, cull_xform, cull_COP, FALSE);
+	r_dsgraph_render_subspace(cull_sector, &cull_frustum, cull_xform, cull_COP, false);
 
 	// Finalize & Cleanup
 	RainLight.X.D.combine = cull_xform;

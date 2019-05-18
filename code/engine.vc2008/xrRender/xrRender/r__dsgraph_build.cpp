@@ -36,14 +36,14 @@ R_dsgraph_structure::R_dsgraph_structure()
 {
 	val_pObject = NULL;
 	val_pTransform = NULL;
-	val_bHUD = FALSE;
-	val_bInvisible = FALSE;
-	val_bRecordMP = FALSE;
+	val_bHUD = false;
+	val_bInvisible = false;
+	val_bRecordMP = false;
 	val_feedback = 0;
 	val_feedback_breakp = 0;
 	marker = 0;
 	r_pmask(true, true);
-	b_loaded = FALSE;
+	b_loaded = false;
 }
 
 void R_dsgraph_structure::r_dsgraph_destroy()
@@ -434,13 +434,13 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 		{
 			// Add all children, doesn't perform any tests
 			CKinematics * pV			= (CKinematics*)pVisual;
-			BOOL	_use_lod			= FALSE	;
+			BOOL	_use_lod			= false	;
 			if (pV->m_lod)				
 			{
 				Fvector							Tpos;	float		D;
 				val_pTransform->transform_tiny	(Tpos, pV->vis.sphere.P);
 				float		ssa		=	CalcSSA	(D,Tpos,pV->vis.sphere.R/2.f);	// assume dynamics never consume full sphere
-				if (ssa<r_ssaLOD_A)	_use_lod	= TRUE;
+				if (ssa<r_ssaLOD_A)	_use_lod	= true;
 			}
 
 			if (_use_lod)				
@@ -451,7 +451,7 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 			{
 				if (phase != PHASE_SMAP)
 				{
-					pV->CalculateBones(TRUE);
+					pV->CalculateBones(true);
 					pV->CalculateWallmarks();		//. bug?
 				}
 
@@ -517,7 +517,7 @@ void CRender::add_leafs_Static(dxRender_Visual *pVisual)
 			// Add all children, doesn't perform any tests
 			CKinematics * pV = (CKinematics*)pVisual;
 			if (phase != PHASE_SMAP)
-				pV->CalculateBones(TRUE);
+				pV->CalculateBones(true);
 
 			I = pV->children.begin	();
 			E = pV->children.end	();
@@ -581,7 +581,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 
 	val_pTransform->transform_tiny	(Tpos, pVisual->vis.sphere.P);
 	VIS = View->testSphere			(Tpos, pVisual->vis.sphere.R,planes);
-	if (fcvNone==VIS) return FALSE	;
+	if (fcvNone==VIS) return false	;
 
 	// If we get here visual is visible or partially visible
 	xr_vector<dxRender_Visual*>::iterator I,E;	// it may be usefull for 'hierrarhy' visuals
@@ -590,7 +590,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 	{
 	case MT_PARTICLE_GROUP:
 		{
-		if (phase == PHASE_SMAP) return TRUE;
+		if (phase == PHASE_SMAP) return true;
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
 			for (PS::CParticleGroup::SItem& refI : pG->items)
@@ -628,7 +628,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 		{
 			// Add all children, doesn't perform any tests
 			CKinematics * pV			= (CKinematics*)pVisual;
-			BOOL	_use_lod			= FALSE	;
+			BOOL	_use_lod			= false	;
 			if (pV->m_lod)
 			{
 				Fvector TPos;
@@ -637,7 +637,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 
 				// assume dynamics never consume full sphere
 				float ssa = CalcSSA(D, TPos, pV->vis.sphere.R / 2.f);	
-				if (ssa < r_ssaLOD_A)	_use_lod = TRUE;
+				if (ssa < r_ssaLOD_A)	_use_lod = true;
 			}
 			if (_use_lod)
 			{
@@ -646,7 +646,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 			{
 				if (phase != PHASE_SMAP)
 				{
-					pV->CalculateBones(TRUE);
+					pV->CalculateBones(true);
 					pV->CalculateWallmarks();		//. bug?
 				}
 
@@ -663,7 +663,7 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 		}
 		break;
 	}
-	return TRUE;
+	return true;
 }
 
 void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
@@ -750,7 +750,7 @@ void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
 			CKinematics * pV		= (CKinematics*)pVisual;
 
 			if (phase != PHASE_SMAP)
-				pV->CalculateBones(TRUE);
+				pV->CalculateBones(true);
 
 			if (VIS == fcvPartial)
 			{

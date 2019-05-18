@@ -35,6 +35,7 @@ void CLight_DB::Load(IReader *fs)
 
 			light* L = Create();
 			L->flags.bStatic = true;
+			L->set_shadow(true);
 
 			if (Ldata.type == D3DLIGHT_DIRECTIONAL)	
 			{
@@ -42,7 +43,6 @@ void CLight_DB::Load(IReader *fs)
 				tmp_R.set(1, 0, 0);
 
 				L->set_type		(IRender_Light::DIRECT);
-				L->set_shadow	(true);
 				L->set_rotation	(Ldata.direction, tmp_R);
 
 				sun = L;
@@ -59,7 +59,6 @@ void CLight_DB::Load(IReader *fs)
 				L->set_rotation	(tmp_D, tmp_R);
 				L->set_range	(Ldata.range);
 				L->set_color	(Ldata.diffuse);
-				L->set_shadow	(true);
 				L->set_active	(true);
 
 				v_static.push_back(L);
@@ -91,7 +90,7 @@ void CLight_DB::LoadHemi()
 				for (u32 i = 0; i < count; ++i) 
 				{
 					R_Light	Ldata;
-					chunk->r(&Ldata, sizeof(R_Light));
+					chunk->r(&Ldata, element);
 
 					if (Ldata.type == D3DLIGHT_POINT)
 					{
@@ -138,20 +137,18 @@ light* CLight_DB::Create()
 
 void CLight_DB::add_light(light* L)
 {
-	if (Device.dwFrame == L->frame_render)
-		return;
+	if (Device.dwFrame == L->frame_render) return;
 
 	L->frame_render = Device.dwFrame;
-
-	if (RImplementation.o.noshadows)
-		L->flags.bShadow = FALSE;
 
 	if (L->flags.bStatic && !ps_r_flags.test(R_FLAG_R1LIGHTS))
 		return;
 
+	if (RImplementation.o.noshadows)
+		L->flags.bShadow = FALSE;
+
 	L->export_(package);
 }
-
 
 void CLight_DB::Update()
 {
@@ -159,18 +156,17 @@ void CLight_DB::Update()
 	if (sun)
 	{
 		light* _sun = (light*)sun._get();
-		CEnvDescriptor&	E = *Environment().CurrentEnv;
-		VERIFY(_valid(E.sun_dir));
+		CEnvDescriptor& E = *Environment().CurrentEnv;
 
-		VERIFY2(E.sun_dir.y < 0,"Invalid sun direction settings in evironment-config");
+		VERIFY2(E.sun_dir.y < 0, "Invalid sun direction settings in evironment-config");
 		Fvector dir, pos;
 		dir.set(E.sun_dir).normalize();
 		pos.mad(Device.vCameraPosition, dir, -500.f);
 
-		sun->set_rotation	(dir, _sun->right);
-		sun->set_position	(pos);
-		sun->set_color		(E.sun_color.x*ps_r_sun_lumscale, E.sun_color.y*ps_r_sun_lumscale, E.sun_color.z*ps_r_sun_lumscale);
-		sun->set_range		(600.f);
+		sun->set_rotation(dir, _sun->right);
+		sun->set_position(pos);
+		sun->set_color(E.sun_color.x * ps_r_sun_lumscale, E.sun_color.y * ps_r_sun_lumscale, E.sun_color.z * ps_r_sun_lumscale);
+		sun->set_range(600.f);
 	}
 	// Clear selection
 	package.clear();

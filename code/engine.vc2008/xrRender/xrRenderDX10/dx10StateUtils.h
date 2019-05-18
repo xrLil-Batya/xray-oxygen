@@ -2,7 +2,7 @@
 
 namespace dx10StateUtils
 {
-	D3D_BLEND					ConvertBlendArg(D3DBLEND Arg);
+	D3D_BLEND					ConvertBlendArg(D3D11_BLEND Arg);
 	D3D_BLEND_OP				ConvertBlendOp(D3DBLENDOP Op);
 	D3D_TEXTURE_ADDRESS_MODE	ConvertTextureAddressMode(D3DTEXTUREADDRESS Mode);
 

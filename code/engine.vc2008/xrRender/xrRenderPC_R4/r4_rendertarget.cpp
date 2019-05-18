@@ -226,7 +226,7 @@ void	generate_jitter(DWORD*	dest, u32 elem_count)
 		{
 			int		dist = _abs(test.x - samples[t].x) + _abs(test.y - samples[t].y);
 			if (dist<32) {
-				valid = FALSE;
+				valid = false;
 				break;
 			}
 		}
@@ -1102,7 +1102,7 @@ void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ID3DRenderTargetView* rt, ref
 		u_setrt(w, h, rt, nullptr, nullptr, HW.pBaseZB);
 
 	RCache.set_CullMode	(CULL_NONE);
-	RCache.set_Stencil	(FALSE);
+	RCache.set_Stencil	(false);
  
 	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
 	pv->set(0, h, d_Z, d_W, C, 0, 1); pv++;

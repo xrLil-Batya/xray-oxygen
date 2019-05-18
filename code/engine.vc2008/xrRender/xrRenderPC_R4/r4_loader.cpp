@@ -23,7 +23,7 @@ void CRender::level_Load(IReader* fs)
 
 	// Begin
 	pApp->LoadBegin					();
-	dxRenderDeviceRender::Instance().Resources->DeferredLoad	(TRUE);
+	dxRenderDeviceRender::Instance().Resources->DeferredLoad	(true);
 	IReader*						chunk;
 
 	// Shaders
@@ -67,7 +67,7 @@ void CRender::level_Load(IReader* fs)
 	{
 		CStreamReader			*geom = FS.rs_open("$level$","level.geom");
 		R_ASSERT2				(geom, "level.geom");
-		LoadBuffers				(geom,FALSE);
+		LoadBuffers				(geom,false);
 		LoadSWIs				(geom);
 		FS.r_close				(geom);
 	}
@@ -76,7 +76,7 @@ void CRender::level_Load(IReader* fs)
 	{
 		CStreamReader			*geom = FS.rs_open("$level$","level.geomx");
 		R_ASSERT2				(geom, "level.geomX");
-		LoadBuffers				(geom,TRUE);
+		LoadBuffers				(geom,true);
 		FS.r_close				(geom);
 	}
 
@@ -117,7 +117,7 @@ void CRender::level_Load(IReader* fs)
 	mapLOD.clear				();
 
 	// signal loaded
-	b_loaded					= TRUE	;
+	b_loaded					= true	;
 }
 
 void CRender::level_Unload()
@@ -188,7 +188,7 @@ void CRender::level_Unload()
 		Msg("# [ERROR]: Shaders vector is broken! Skip...");
 	}
 
-	b_loaded = FALSE;
+	b_loaded = false;
 }
 
 void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)

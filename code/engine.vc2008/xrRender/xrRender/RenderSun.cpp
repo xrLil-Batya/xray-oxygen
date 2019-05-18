@@ -301,7 +301,7 @@ void CRender::render_sun_cascade(sun::cascade& Cascade)
 		r_dsgraph_render_graph(0);
 		if (ps_r_flags.test(R_FLAG_DETAIL_SHADOW))
 			Details->Render();
-		fuckingsun->X.D.transluent = FALSE;
+		fuckingsun->X.D.transluent = false;
 
 		if (bSpecial)
 		{

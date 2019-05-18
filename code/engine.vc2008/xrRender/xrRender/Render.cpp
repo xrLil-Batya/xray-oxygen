@@ -195,7 +195,7 @@ void CRender::render_menu()
 	PIX_EVENT(render_menu);
 	// Globals
 	RCache.set_CullMode(CULL_CCW);
-	RCache.set_Stencil(FALSE);
+	RCache.set_Stencil(false);
 	RCache.set_ColorWriteEnable();
 
 	// Main Render
@@ -266,7 +266,7 @@ void CRender::Render()
 
 	Device.Statistic->Render_CRenderRender_ScenePrepare.Begin();
 	// Configure
-	RImplementation.o.distortion = FALSE;		// disable distorion
+	RImplementation.o.distortion = false;		// disable distorion
 	Fcolor sun_color = ((light*)Lights.sun._get())->color;
 	const bool bSUN = ps_r_flags.test(R_FLAG_SUN) && (Diffuse::u_diffuse2s(sun_color.r, sun_color.g, sun_color.b) > EPS);
 
@@ -283,7 +283,7 @@ void CRender::Render()
 	Device.Statistic->Render_CRenderRender_WaitForFrame.Begin();
 		
 	CTimer T; T.Start();
-	BOOL result = FALSE;
+	BOOL result = false;
 	HRESULT	HResult = S_FALSE;
 	while ((HResult = GetData(q_sync_point[q_sync_count], &result, sizeof(result))) == S_FALSE)
 	{
@@ -292,7 +292,7 @@ void CRender::Render()
 
 		if (T.GetElapsed_ms() > 500)
 		{
-			result = FALSE;
+			result = false;
 			break;
 		}
 	}
@@ -482,7 +482,7 @@ void CRender::Render()
 		RCache.set_xform_view(Device.mView);
 
 		// Stencil - write 0x1 at pixel pos
-		RCache.set_Stencil(TRUE, D3D11_COMPARISON_ALWAYS, 0x01, 0xff, RImplementation.o.dx10_msaa ? 0x7f : 0xff, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
+		RCache.set_Stencil(true, D3D11_COMPARISON_ALWAYS, 0x01, 0xff, RImplementation.o.dx10_msaa ? 0x7f : 0xff, D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_REPLACE, D3D11_STENCIL_OP_KEEP);
 		RCache.set_CullMode(CULL_CCW);
 		RCache.set_ColorWriteEnable();
 		RImplementation.r_dsgraph_render_emissive();
@@ -542,7 +542,7 @@ void CRender::render_forward()
 		Environment().RenderLast(); // rain/thunder-bolts
 	}
 
-	RImplementation.o.distortion = FALSE; // Disable distorion
+	RImplementation.o.distortion = false; // Disable distorion
 }
 
 // Before world render

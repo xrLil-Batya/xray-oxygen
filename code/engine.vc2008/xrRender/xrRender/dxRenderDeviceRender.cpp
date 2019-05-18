@@ -151,7 +151,7 @@ void dxRenderDeviceRender::SetupStates()
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_COLORVERTEX,		TRUE				));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_ZENABLE,			TRUE				));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_SHADEMODE,			D3DSHADE_GOURAUD	));
-	CHK_DX(HW.pDevice->SetRenderState( D3DRS_CULLMODE,			D3DCULL_CCW			));
+	CHK_DX(HW.pDevice->SetRenderState( D3DRS_CULLMODE,			D3D11_CULL_BACK			));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_ALPHAFUNC,			D3D11_COMPARISON_GREATER		));
 	CHK_DX(HW.pDevice->SetRenderState( D3DRS_LOCALVIEWER,		TRUE				));
 

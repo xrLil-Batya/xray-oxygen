@@ -7,7 +7,7 @@
 void	r_pixel_calculator::begin	()
 {
 	rt.create		("$user$test",		rt_dimensions,rt_dimensions,HW.Caps.fTarget);
-	R_CHK			(HW.pDevice->CreateDepthStencilSurface	(rt_dimensions,rt_dimensions,HW.Caps.fDepth,D3DMULTISAMPLE_NONE,0,TRUE,&zb,NULL));
+	R_CHK			(HW.pDevice->CreateDepthStencilSurface	(rt_dimensions,rt_dimensions,HW.Caps.fDepth,D3DMULTISAMPLE_NONE,0,true,&zb,NULL));
 
 	RCache.set_RT	(rt->pRT);
 	RCache.set_ZB	(zb);

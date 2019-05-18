@@ -121,7 +121,7 @@ void CRender::render_lights(light_Package& LP)
 				RCache.set_xform_project(L->X.S.project);
 				r_dsgraph_render_graph(0);
 
-				L->X.S.transluent = FALSE;
+				L->X.S.transluent = false;
 
 				if (bSpecial) 
 				{

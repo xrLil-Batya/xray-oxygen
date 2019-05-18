@@ -65,59 +65,7 @@ void	CBlender_BmmD::Load		(IReader& fs, u16 version )
 	}
 }
 
-#if RENDER==R_R2
-
-//////////////////////////////////////////////////////////////////////////
-// R2
-//////////////////////////////////////////////////////////////////////////
-//#include "uber_deffer.h"
-void	CBlender_BmmD::Compile	(CBlender_Compile& C)
-{
-	IBlender::Compile		(C);
-	// codepath is the same, only the shaders differ
-	// ***only pixel shaders differ***
-	string256				mask;
-	xr_strconcat			(mask, C.L_textures[0].c_str(), "_mask");
-	switch(C.iElement) 
-	{
-	case SE_R2_NORMAL_HQ: 		// deffer
-		uber_deffer		(C, true,	"impl","impl",false,oT2_Name[0]?oT2_Name:0,true);
-		C.r_Sampler		("s_mask",	mask);
-		C.r_Sampler		("s_lmap",	C.L_textures[1]);
-
-		C.r_Sampler		("s_dt_r",	oR_Name,	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
-		C.r_Sampler		("s_dt_g",	oG_Name,	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
-		C.r_Sampler		("s_dt_b",	oB_Name,	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
-		C.r_Sampler		("s_dt_a",	oA_Name,	false,	D3DTADDRESS_WRAP,	D3DTEXF_ANISOTROPIC,D3DTEXF_LINEAR,	D3DTEXF_ANISOTROPIC);
-
-		if (!strstr(Core.Params, "-render_for_weak_systems"))
-		{ 
-			C.r_Sampler("s_dn_r", xr_strconcat(mask, oR_Name, "_bump"));
-			C.r_Sampler("s_dn_g", xr_strconcat(mask, oG_Name, "_bump"));
-			C.r_Sampler("s_dn_b", xr_strconcat(mask, oB_Name, "_bump"));
-			C.r_Sampler("s_dn_a", xr_strconcat(mask, oA_Name, "_bump"));
-		}
-
-		C.r_End			();
-		break;
-	case SE_R2_NORMAL_LQ: 		// deffer
-		uber_deffer		(C, false,	"base","impl",false,oT2_Name[0]?oT2_Name:0,true);
-		C.r_Sampler		("s_lmap",	C.L_textures[1]);
-		C.r_End			();
-		break;
-	case SE_R2_SHADOW:			// smap
-		if (RImplementation.o.HW_smap)	C.r_Pass	("shadow_direct_base","dumb",				FALSE,TRUE,TRUE,FALSE);
-		else							C.r_Pass	("shadow_direct_base","shadow_direct_base",	FALSE);
-		C.r_Sampler		("s_base",	C.L_textures[0]);
-		C.r_End			();
-		break;
-	}
-}
-#else
-//////////////////////////////////////////////////////////////////////////
-// R3
-//////////////////////////////////////////////////////////////////////////
-void	CBlender_BmmD::Compile	(CBlender_Compile& C)
+void CBlender_BmmD::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);
 	// codepath is the same, only the shaders differ
@@ -144,7 +92,7 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		C.r_dx10Sampler		("smp_base");
 		C.r_dx10Sampler		("smp_linear");
 
-		C.r_Stencil		( TRUE,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
+		C.r_Stencil		( true,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 		C.r_StencilRef	(0x01);
 
 		C.r_End			();
@@ -156,13 +104,13 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		C.r_dx10Sampler		("smp_linear");
 
 
-		C.r_Stencil		( TRUE,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
+		C.r_Stencil		( true,D3D11_COMPARISON_ALWAYS,0xff,0x7f,D3D11_STENCIL_OP_KEEP,D3D11_STENCIL_OP_REPLACE,D3D11_STENCIL_OP_KEEP);
 		C.r_StencilRef	(0x01);
 
 		C.r_End			();
 		break;
 	case SE_R2_SHADOW:			// smap
-		C.r_Pass	("shadow_direct_base","dumb",	FALSE,TRUE,TRUE,FALSE);
+		C.r_Pass	("shadow_direct_base","dumb",	false,true,true,false);
 		C.r_dx10Texture		("s_base",C.L_textures[0]);
 		C.r_dx10Sampler		("smp_base");
 		C.r_dx10Sampler		("smp_linear");
@@ -171,4 +119,3 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 		break;
 	}
 }
-#endif

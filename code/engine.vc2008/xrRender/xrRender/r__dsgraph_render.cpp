@@ -675,7 +675,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 		for (int K = 0; K < RImplementation.Sectors_xrc.r_count(); K++)
 		{
 			CPortal*	pPortal		= (CPortal*) RImplementation.Portals[RImplementation.rmPortals->get_tris()[RImplementation.Sectors_xrc.r_begin()[K].id].dummy];
-			pPortal->bDualRender	= TRUE;
+			pPortal->bDualRender	= true;
 		}
 	}
 
@@ -767,7 +767,7 @@ void	R_dsgraph_structure::r_dsgraph_render_R1_box(IRender_Sector* _S, Fbox& BB, 
 		{
 			// Add all children	(s)
 			CKinematics * pV = (CKinematics*)it;
-			pV->CalculateBones(TRUE);
+			pV->CalculateBones(true);
 			for (auto &i : pV->children)
 			{
 				dxRender_Visual* T = i;

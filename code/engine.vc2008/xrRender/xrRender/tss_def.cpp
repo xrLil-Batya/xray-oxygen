@@ -148,13 +148,13 @@ void SimulatorStates::UpdateDesc(D3D_RASTERIZER_DESC &desc) const
 				/*
 				switch (S.v2)
 				{
-				case D3DCULL_NONE:
+				case D3D11_CULL_NONE:
 				desc.CullMode = D3Dxx_CULL_NONE;
 				break;
-				case D3DCULL_CW:
+				case D3D11_CULL_CW:
 				desc.CullMode = D3Dxx_CULL_FRONT;
 				break;
-				case D3DCULL_CCW:
+				case D3D11_CULL_BACK:
 				desc.CullMode = D3Dxx_CULL_BACK;
 				break;
 				default:
@@ -287,12 +287,12 @@ void SimulatorStates::UpdateDesc(D3D_BLEND_DESC &desc) const
 
 			case D3DRS_SRCBLEND:
 				for (int i = 0; i < 8; ++i)
-				//	desc.RenderTarget[i].srcColorBlendFactor = vkStateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+				//	desc.RenderTarget[i].srcColorBlendFactor = vkStateUtils::ConvertBlendArg((D3D11_BLEND)S.v2);
 				break;
 
 			case D3DRS_DESTBLEND:
 				for (int i = 0; i < 8; ++i)
-				//	desc.RenderTarget[i].dstColorBlendFactor = vkStateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+				//	desc.RenderTarget[i].dstColorBlendFactor = vkStateUtils::ConvertBlendArg((D3D11_BLEND)S.v2);
 				break;
 
 				//D3DRS_ALPHAFUNC
@@ -304,12 +304,12 @@ void SimulatorStates::UpdateDesc(D3D_BLEND_DESC &desc) const
 
 			case D3DRS_SRCBLENDALPHA:
 				for (int i = 0; i < 8; ++i)
-				//	desc.RenderTarget[i].srcAlphaBlendFactor = vkStateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+				//	desc.RenderTarget[i].srcAlphaBlendFactor = vkStateUtils::ConvertBlendArg((D3D11_BLEND)S.v2);
 				break;
 
 			case D3DRS_DESTBLENDALPHA:
 				for (int i = 0; i < 8; ++i)
-				//	desc.RenderTarget[i].dstAlphaBlendFactor = vkStateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+				//	desc.RenderTarget[i].dstAlphaBlendFactor = vkStateUtils::ConvertBlendArg((D3D11_BLEND)S.v2);
 				break;
 
 			case D3DRS_BLENDOPALPHA:
@@ -636,12 +636,12 @@ void SimulatorStates::UpdateDesc( D3D_BLEND_DESC &desc ) const
 				
 			case D3DRS_SRCBLEND:
 				for ( int i=0; i<8; ++i)
-					desc.RenderTarget[i].SrcBlend = dx10StateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+					desc.RenderTarget[i].SrcBlend = dx10StateUtils::ConvertBlendArg((D3D11_BLEND)S.v2);
 				break;
 
 			case D3DRS_DESTBLEND:
 				for ( int i=0; i<8; ++i)
-					desc.RenderTarget[i].DestBlend = dx10StateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+					desc.RenderTarget[i].DestBlend = dx10StateUtils::ConvertBlendArg((D3D11_BLEND)S.v2);
 				break;
 
 			case D3DRS_BLENDOP:
@@ -651,12 +651,12 @@ void SimulatorStates::UpdateDesc( D3D_BLEND_DESC &desc ) const
 
 			case D3DRS_SRCBLENDALPHA:
 				for ( int i=0; i<8; ++i)
-					desc.RenderTarget[i].SrcBlendAlpha = dx10StateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+					desc.RenderTarget[i].SrcBlendAlpha = dx10StateUtils::ConvertBlendArg((D3D11_BLEND)S.v2);
 				break;
 
 			case D3DRS_DESTBLENDALPHA:
 				for ( int i=0; i<8; ++i)
-					desc.RenderTarget[i].DestBlendAlpha = dx10StateUtils::ConvertBlendArg((D3DBLEND)S.v2);
+					desc.RenderTarget[i].DestBlendAlpha = dx10StateUtils::ConvertBlendArg((D3D11_BLEND)S.v2);
 				break;
 
 			case D3DRS_BLENDOPALPHA:

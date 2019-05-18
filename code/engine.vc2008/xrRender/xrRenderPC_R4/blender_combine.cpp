@@ -13,8 +13,8 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 	switch (C.iElement)
 	{
 	case 0:	// combine
-		C.r_Pass			("combine_1", "combine_1_nomsaa", FALSE, FALSE, FALSE, TRUE, D3DBLEND_INVSRCALPHA, D3DBLEND_SRCALPHA);	//. MRT-blend?
-		C.r_Stencil			(TRUE, D3D11_COMPARISON_LESS_EQUAL, 0xff, 0x00);	// stencil should be >= 1
+		C.r_Pass			("combine_1", "combine_1_nomsaa", false, false, false, true, D3D11_BLEND_INV_SRC_ALPHA, D3D11_BLEND_SRC_ALPHA);	//. MRT-blend?
+		C.r_Stencil			(true, D3D11_COMPARISON_LESS_EQUAL, 0xff, 0x00);	// stencil should be >= 1
 		C.r_StencilRef		(0x01);
 
 		C.r_dx10Texture		("s_position",		r2_RT_P				);
@@ -39,7 +39,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case 1:	// combine_2: dof, mblur, bloom
-		C.r_Pass			("stub_screen_space", "combine_2", FALSE, FALSE, FALSE);
+		C.r_Pass			("stub_screen_space", "combine_2", false, false, false);
 
 		C.r_dx10Texture		("s_position",		r2_RT_P);
 		C.r_dx10Texture		("s_normal",		r2_RT_N);
@@ -51,7 +51,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case 2:	// combine_2 (with distortion)
-		C.r_Pass			("stub_screen_space", "combine_2_d", FALSE, FALSE, FALSE);
+		C.r_Pass			("stub_screen_space", "combine_2_d", false, false, false);
 		C.r_dx10Texture		("s_position",		r2_RT_P);
 		C.r_dx10Texture		("s_normal",		r2_RT_N);
 		C.r_dx10Texture		("s_image",			r2_RT_generic0);
@@ -63,7 +63,7 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case 3: // copy rt_Color to back buffer
-		C.r_Pass			("stub_screen_space", "copy_nomsaa", FALSE, FALSE, FALSE);
+		C.r_Pass			("stub_screen_space", "copy_nomsaa", false, false, false);
 		C.r_dx10Texture		("s_generic",		r2_RT_albedo);
 		C.r_End				();
 		break;
@@ -85,7 +85,7 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
    switch (C.iElement)
    {
    case 0:	// combine
-		C.r_Pass			("combine_1", "combine_1_msaa", FALSE, FALSE, FALSE, TRUE, D3DBLEND_INVSRCALPHA, D3DBLEND_SRCALPHA);	//. MRT-blend?
+		C.r_Pass			("combine_1", "combine_1_msaa", FALSE, FALSE, FALSE, TRUE, D3D11_BLEND_INV_SRC_ALPHA, D3D11_BLEND_SRC_ALPHA);	//. MRT-blend?
 		C.r_Stencil			(TRUE, D3D11_COMPARISON_LESS_EQUAL, 0xff, 0x00);	// stencil should be >= 1
 		C.r_StencilRef		(0x01);
 
@@ -111,7 +111,7 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case 1:	// combine_2: dof, mblur, bloom
-		C.r_Pass			("stub_screen_space", "combine_2", FALSE, FALSE, FALSE);
+		C.r_Pass			("stub_screen_space", "combine_2", false, false, false);
 
 		C.r_dx10Texture		("s_position",		r2_RT_P);
 		C.r_dx10Texture		("s_normal",		r2_RT_N);
@@ -123,7 +123,7 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case 2:	// combine_2 (with distortion)
-		C.r_Pass			("stub_screen_space", "combine_2_d", FALSE, FALSE, FALSE);
+		C.r_Pass			("stub_screen_space", "combine_2_d", false, false, false);
 		C.r_dx10Texture		("s_position",		r2_RT_P);
 		C.r_dx10Texture		("s_normal",		r2_RT_N);
 		C.r_dx10Texture		("s_image",			r2_RT_generic0);
@@ -135,7 +135,7 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case 3: // copy rt_Color to back buffer
-		C.r_Pass			("stub_screen_space", "copy_msaa", FALSE, FALSE, FALSE);
+		C.r_Pass			("stub_screen_space", "copy_msaa", false, false, false);
 		C.r_dx10Texture		("s_generic",		r2_RT_generic);
 		C.r_End				();
 		break;

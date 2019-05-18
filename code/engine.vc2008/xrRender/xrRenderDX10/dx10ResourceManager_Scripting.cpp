@@ -131,12 +131,12 @@ void	CResourceManager::LS_Load()
 		class_<adopt_blend>("blend")
 			.enum_("blend")
 			[
-				value("zero", int(D3DBLEND_ZERO)),
-				value("one", int(D3DBLEND_ONE)),
+				value("zero", int(D3D11_BLEND_ZERO)),
+				value("one", int(D3D11_BLEND_ONE)),
 				value("srccolor", int(D3DBLEND_SRCCOLOR)),
 				value("invsrccolor", int(D3DBLEND_INVSRCCOLOR)),
-				value("srcalpha", int(D3DBLEND_SRCALPHA)),
-				value("invsrcalpha", int(D3DBLEND_INVSRCALPHA)),
+				value("srcalpha", int(D3D11_BLEND_SRC_ALPHA)),
+				value("invsrcalpha", int(D3D11_BLEND_INV_SRC_ALPHA)),
 				value("destalpha", int(D3DBLEND_DESTALPHA)),
 				value("invdestalpha", int(D3DBLEND_INVDESTALPHA)),
 				value("destcolor", int(D3DBLEND_DESTCOLOR)),
