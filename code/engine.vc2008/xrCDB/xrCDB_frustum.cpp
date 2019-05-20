@@ -1,5 +1,12 @@
+//////////////////////////////////////////////////////////
+// Desc     : Furstrum Collider
+// Author   : ForserX
+// Original : GSC
+//////////////////////////////////////////////////////////
+// Oxygen Engine (2016-2019)
+//////////////////////////////////////////////////////////
+
 #include "stdafx.h"
-#pragma hdrstop
 
 #include "xrCDB.h"
 #include "frustum.h"
@@ -8,109 +15,92 @@
 using namespace CDB;
 using namespace Opcode;
 
-template <bool bClass3, bool bFirst>
-class frustum_collider
+class CFrustumCollider
 {
 public:
-	COLLIDER*		dest;
-	TRI*			tris;
-	Fvector*		verts;
-	
-	const CFrustum*	F;
-	
-	IC void			_init		(COLLIDER* CL, Fvector* V, TRI* T, const CFrustum* _F)
+	COLLIDER* dest;
+	TRI* tris;
+	Fvector* verts;
+	const CFrustum* F;
+	bool bClass3; bool bFirst;
+
+	CFrustumCollider(COLLIDER* CL, Fvector* V, TRI* T, const CFrustum* _F, bool bClass, bool bFrst) : bClass3(bClass), bFirst(bFrst)
 	{
-		dest		= CL;
-		tris		= T;
-		verts		= V;
-		F			= _F;
+		dest = CL;
+		tris = T;
+		verts = V;
+		F = _F;
 	}
-	IC EFC_Visible	_box		(Fvector& C, Fvector& E, u32& mask)
+
+	IC EFC_Visible Box(const Fvector& C, const Fvector& E, u32& mask)
 	{
-		Fvector		mM[2];
-		mM[0].sub	(C,E);
-		mM[1].add	(C,E);
-		return F->testAABB		(&mM[0].x,mask);
+		Fvector mM;
+		mM.sub(C, E);
+		//mM[1].add(C, E);
+
+		return F->testAABB(&mM.x, mask);
 	}
-	void			_prim		(DWORD prim)
+
+	void Prim(DWORD prim)
 	{
-		if (bClass3)	{
-			sPoly		src,dst;
-			src.resize	(3);
-			src[0]		= verts[ tris[prim].verts[0] ];
-			src[1]		= verts[ tris[prim].verts[1] ];
-			src[2]		= verts[ tris[prim].verts[2] ];
-			if (F->ClipPoly(src,dst))
+#define SetByVerts(val) \
+			val[0] = verts[tris[prim].verts[0]];\
+			val[1] = verts[tris[prim].verts[1]];\
+			val[2] = verts[tris[prim].verts[2]];\
+
+		if (bClass3)
+		{
+			sPoly src, dst;
+			src.resize(3);
+			SetByVerts(src);
+
+			if (F->ClipPoly(src, dst))
 			{
-				RESULT& R	= dest->r_add();
-				R.id		= prim;
-				R.verts[0]	= verts[ tris[prim].verts[0] ];
-				R.verts[1]	= verts[ tris[prim].verts[1] ];
-				R.verts[2]	= verts[ tris[prim].verts[2] ];
-				R.dummy		= tris[prim].dummy;
+				RESULT& R = dest->r_add();
+				R.id = prim;
+				SetByVerts(R.verts);
+				R.dummy = tris[prim].dummy;
 			}
-		} else {
-			RESULT& R	= dest->r_add();
-			R.id		= prim;
-			R.verts[0]	= verts[ tris[prim].verts[0] ];
-			R.verts[1]	= verts[ tris[prim].verts[1] ];
-			R.verts[2]	= verts[ tris[prim].verts[2] ];
-			R.dummy		= tris[prim].dummy;
+		}
+		else
+		{
+			RESULT& R = dest->r_add();
+			R.id = prim;
+			SetByVerts(R.verts);
+			R.dummy = tris[prim].dummy;
 		}
 	}
-	
-	void			_stab		(const AABBNoLeafNode* node, u32 mask)
+
+	void Stab(const AABBNoLeafNode* node, u32 mask)
 	{
 		// Actual frustum/aabb test
-		EFC_Visible	result		= _box((Fvector&)node->mAABB.mCenter,(Fvector&)node->mAABB.mExtents,mask);
+		EFC_Visible	result = Box((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, mask);
 		if (fcvNone == result)	return;
-		
+
 		// 1st chield
-		if (node->HasPosLeaf())	_prim	((DWORD)node->GetPosPrimitive());
-		else					_stab	(node->GetPos(),mask);
-		
+		if (node->HasPosLeaf())	Prim((DWORD)node->GetPosPrimitive());
+		else					Stab(node->GetPos(), mask);
+
 		// Early exit for "only first"
-		if (bFirst && dest->r_count()) return;
-		
+		if (bFirst)
+			if (dest->r_count()) return;
+
 		// 2nd chield
-		if (node->HasNegLeaf())	_prim	((DWORD)node->GetNegPrimitive());
-		else					_stab	(node->GetNeg(),mask);
+		if (node->HasNegLeaf())	Prim((DWORD)node->GetNegPrimitive());
+		else					Stab(node->GetNeg(), mask);
 	}
 };
 
-void COLLIDER::frustum_query(const MODEL *m_def, const CFrustum& F)
+void COLLIDER::frustum_query(const MODEL* m_def, const CFrustum& F)
 {
-	m_def->syncronize		();
+	m_def->syncronize();
 
 	// Get nodes
-	const AABBNoLeafTree*	T	= (const AABBNoLeafTree*)m_def->tree->GetTree();
-	const AABBNoLeafNode*	N	= T->GetNodes();
-	const DWORD				mask= F.getMask();
-	r_clear					();
-	
+	const AABBNoLeafNode* pNodes = m_def->tree->GetTree()->GetNodes();
+	const DWORD				mask = F.getMask();
+	r_clear();
+
 	// Binary dispatcher
-	if (frustum_mode&OPT_FULL_TEST) 
-	{
-		if (frustum_mode&OPT_ONLYFIRST)
-		{
-			frustum_collider<true,true> BC;
-			BC._init	(this,m_def->verts,m_def->tris,&F);
-			BC._stab	(N,mask);
-		} else {
-			frustum_collider<true,false> BC;
-			BC._init	(this,m_def->verts,m_def->tris,&F);
-			BC._stab	(N,mask);
-		}
-	} else {
-		if (frustum_mode&OPT_ONLYFIRST)
-		{
-			frustum_collider<false,true> BC;
-			BC._init	(this,m_def->verts,m_def->tris,&F);
-			BC._stab	(N,mask);
-		} else {
-			frustum_collider<false,false> BC;
-			BC._init	(this,m_def->verts,m_def->tris,&F);
-			BC._stab	(N,mask);
-		}
-	}
+	CFrustumCollider BC(this, m_def->verts, m_def->tris, &F, frustum_mode & OPT_FULL_TEST, frustum_mode & OPT_ONLYFIRST);
+	BC.Stab(pNodes, mask);
 }
