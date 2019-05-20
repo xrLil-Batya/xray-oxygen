@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////////
+// Desc   : Collision Detection Model + Cache System
+// Author : ForserX
+//////////////////////////////////////////////////////////
+// Oxygen Engine (2016-2019)
+//////////////////////////////////////////////////////////
+
 #include "stdafx.h"
 #include "xrCDB_Model.h"
 #include "../../3rd-party/OPCODE/OPC_TreeBuilders.h"
@@ -26,17 +33,18 @@ bool CDB_Model::Restore(IReader* reader)
 	return pTree->Restore(reader);
 }
 
+// Перегрузка под новый pTree
 bool CDB_Model::Build(const Opcode::OPCODECREATE& create)
 {
 	if (!create.mIMesh || !create.mIMesh->IsValid())	return false;
 
-	if (create.mSettings.mLimit != 1)	
+	if (create.mSettings.mLimit != 1)
 	{
-		Msg("OPCODE WARNING: supports complete trees only! Use mLimit = 1.\n", null);
+		Msg("OPCODE WARNING: supports complete trees only! Use mLimit = 1. Current mLimit = %d", create.mSettings.mLimit);
 		return false;
 	}
 
-	uqword NbDegenerate = create.mIMesh->CheckTopology();
+	u64 NbDegenerate = create.mIMesh->CheckTopology();
 	
 	if (NbDegenerate)	
 		Msg("OPCODE WARNING: found %d degenerate faces in model! Collision might report wrong results!\n", NbDegenerate);
@@ -44,14 +52,14 @@ bool CDB_Model::Build(const Opcode::OPCODECREATE& create)
 	Release();
 	SetMeshInterface(create.mIMesh);
 
-	uqword NbTris = create.mIMesh->GetNbTriangles();
+	u64 NbTris = create.mIMesh->GetNbTriangles();
 	if (NbTris == 1)
 	{
 		mModelCode |= Opcode::OPC_SINGLE_NODE;
 		return true;
 	}
 
-	mSource = new Opcode::AABBTree;
+	mSource = new Opcode::AABBTree();
 	CHECKALLOC(mSource);
 
 	{
@@ -66,7 +74,8 @@ bool CDB_Model::Build(const Opcode::OPCODECREATE& create)
 
 	if (!pTree->Build(mSource))	return false;
 
-	if (!create.mKeepOriginal)	DELETESINGLE(mSource);
+	if (!create.mKeepOriginal)	
+		xr_delete(mSource);
 
 	return true;
 }

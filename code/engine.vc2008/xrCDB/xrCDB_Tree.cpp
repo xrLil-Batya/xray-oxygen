@@ -1,5 +1,10 @@
-////////////////////////
-// CDB_OptimizeTree
+//////////////////////////////////////////////////////////
+// Desc   : Collision Detection OptTree + Cache System
+// Author : ForserX
+//////////////////////////////////////////////////////////
+// Oxygen Engine (2016-2019)
+//////////////////////////////////////////////////////////
+
 #include "stdafx.h"
 #include "xrCDB_Tree.h"
 #include "../../3rd-party/OPCODE/OPC_TreeBuilders.h"
@@ -25,9 +30,12 @@ bool CDB_OptimizeTree::Restore(IReader * pReader)
 		FS.r_close(pReader);
         return false;
     }
-	mNbNodes = pReader->r_s64();
 
-    if (pReader->elapsed() < mNbNodes * sizeof(Opcode::AABBNoLeafNode))
+	// Get nodes count and set default size
+	mNbNodes = pReader->r_s64();
+	const size_t mNodesSize = mNbNodes * sizeof(Opcode::AABBNoLeafNode);
+
+    if (pReader->elapsed() < mNodesSize)
     {
         Msg("* Level collision DB cache file don't have enough nodes");
 		FS.r_close(pReader);
@@ -36,8 +44,8 @@ bool CDB_OptimizeTree::Restore(IReader * pReader)
 	mNodes = xr_alloc<Opcode::AABBNoLeafNode>(mNbNodes);
 	R_ASSERT2(mNodes, "Error alloc for cform cache...");
 
-	ZeroMemory(mNodes, mNbNodes * sizeof(Opcode::AABBNoLeafNode));
-	pReader->r(mNodes, mNbNodes * sizeof(Opcode::AABBNoLeafNode));
+	ZeroMemory(mNodes, mNodesSize);
+	pReader->r(mNodes, mNodesSize);
 	
 	// Validate Pos and Neg data
 	uqword oldbase = 0, newbase = (uqword)mNodes;
@@ -53,19 +61,15 @@ bool CDB_OptimizeTree::Restore(IReader * pReader)
 
 	for (uqword CurID = 0; CurID < mNbNodes; ++CurID)
 	{
-		Opcode::AABBNoLeafNode& node = mNodes[CurID];
+		Opcode::AABBNoLeafNode& refNode = mNodes[CurID];
 
 		// Positive non-leaf node
-		if (!node.HasPosLeaf())
-		{
-			node.mPosData = newbase + (node.mPosData - oldbase);
-		}
+		if (!refNode.HasPosLeaf())
+			refNode.mPosData = newbase + (refNode.mPosData - oldbase);
 
 		// Negative non-leaf node
-		if (!node.HasNegLeaf())
-		{
-			node.mNegData = newbase + (node.mNegData - oldbase);
-		}
+		if (!refNode.HasNegLeaf())
+			refNode.mNegData = newbase + (refNode.mNegData - oldbase);
 	}
 	FS.r_close(pReader);
 	return true;
