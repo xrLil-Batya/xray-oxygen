@@ -1,81 +1,47 @@
 #pragma once
-#include "xrServerEntities/game_graph_space.h"
-
-using namespace System;
+namespace GameGraph { class CVertex; }
 
 namespace XRay
 {
 	public value class GameVertex sealed
 	{
+		GameGraph::CVertex* pNativeObject;
 	public:
 		GameVertex(IntPtr InNativeObject);
 
 		property ::System::Numerics::Vector3 LevelPoint
 		{
-			::System::Numerics::Vector3 get()
-			{
-				return Utils::FromFvector(IntPtr((void*)&pNativeObject->level_point()));
-			}
+			::System::Numerics::Vector3 get();
 		}
 
 		property ::System::Numerics::Vector3 GamePoint
 		{
-			::System::Numerics::Vector3 get()
-			{
-				return Utils::FromFvector(IntPtr((void*)&pNativeObject->game_point()));
-			}
+			::System::Numerics::Vector3 get();
 		}
 
-		property Byte LevelID
+		property ::System::Byte LevelID
 		{
-			Byte get()
-			{
-				return pNativeObject->level_id();
-			}
+			::System::Byte get();
 		}
 
-		property UInt32 LevelVertexID
+		property ::System::UInt32 LevelVertexID
 		{
-			UInt32 get()
-			{
-				return pNativeObject->level_vertex_id();
-			}
+			::System::UInt32 get();
 		}
 
-		property array<Byte>^ Mask
+		property array<::System::Byte>^ Mask
 		{
-			array<Byte>^ get()
-			{
-				array<Byte>^ Result = gcnew array<::System::Byte>(4);
-
-				const u8* pMask = pNativeObject->vertex_type();
-				Result[0] = pMask[0];
-				Result[1] = pMask[1];
-				Result[2] = pMask[2];
-				Result[3] = pMask[3];
-
-				return Result;
-			}
+			array<::System::Byte>^ get();
 		}
 
-		property Byte EdgeCount
+		property ::System::Byte EdgeCount
 		{
-			::System::Byte get()
-			{
-				return pNativeObject->edge_count();
-			}
+			::System::Byte get();
 		}
 
-		property UInt32 EdgeOffset
+		property ::System::UInt32 EdgeOffset
 		{
-			UInt32 get()
-			{
-				return pNativeObject->edge_offset();
-			}
+			::System::UInt32 get();
 		}
-
-	private:
-
-		GameGraph::CVertex* pNativeObject;
 	};
 }

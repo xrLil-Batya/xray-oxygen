@@ -17,12 +17,12 @@ R_ASSERT2(pNativeObject, "Can't construct proxy of " #Type " : Object is not a t
 	{ \
 		void add(Name##Func^ Func) \
 		{ \
-			p##Name = static_cast<Name##Func^>(Delegate::Combine(p##Name, Func)); \
+			p##Name = static_cast<Name##Func^>(::System::Delegate::Combine(p##Name, Func)); \
 		} \
 \
 		void remove(Name##Func^ Func) \
 		{ \
-			p##Name = static_cast<Name##Func^>(Delegate::Remove(p##Name, Func)); \
+			p##Name = static_cast<Name##Func^>(::System::Delegate::Remove(p##Name, Func)); \
 		} \
 \
 		void raise(__VA_ARGS__) \

@@ -1,161 +1,77 @@
 #pragma once
-#include "xrGame/Entity.h"
 #include "API/PhysicalGameObject.h"
-
-using namespace System;
+class CEntity;
 
 namespace XRay
 {
 	public ref class Entity : public PhysicalGameObject
 	{
+		CEntity* pNativeObject;
 	public:
 		Entity(IntPtr InNativeObject);
 
 		property float Health
 		{
-			float get()
-			{
-				return pNativeObject->GetfHealth();
-			}
-
-			void set(float value)
-			{
-				pNativeObject->SetfHealth(value);
-			}
+			float get();
+			void set(float value);
 		}
 
 		property float MaxHealth
 		{
-			float get()
-			{
-				return pNativeObject->GetMaxHealth();
-			}
-
-			void set(float value)
-			{
-				pNativeObject->SetMaxHealth(value);
-			}
+			float get();
+			void set(float value);
 		}
 
 		property bool IsJumping
 		{
-			bool get()
-			{
-				CEntity::SEntityState EntityState;
-				if (pNativeObject->g_State(EntityState))
-				{
-					return EntityState.bJump;
-				}
-				return false;
-			}
+			bool get();
 		}
 
 		property bool IsFalling
 		{
-			bool get()
-			{
-				CEntity::SEntityState EntityState;
-				if (pNativeObject->g_State(EntityState))
-				{
-					return EntityState.bFall;
-				}
-				return false;
-			}
+			bool get();
 		}
 
 		property bool IsCrouching
 		{
-			bool get()
-			{
-				CEntity::SEntityState EntityState;
-				if (pNativeObject->g_State(EntityState))
-				{
-					return EntityState.bCrouch;
-				}
-				return false;
-			}
+			bool get();
 		}
 
 		property bool IsSprinting
 		{
-			bool get()
-			{
-				CEntity::SEntityState EntityState;
-				if (pNativeObject->g_State(EntityState))
-				{
-					return EntityState.bSprint;
-				}
-				return false;
-			}
+			bool get();
 		}
 
 		property bool IsAlive
 		{
-			bool get()
-			{
-				return pNativeObject->g_Alive();
-			}
+			bool get();
 		}
 
-		property Int32 Team
+		property int Team
 		{
-			Int32 get()
-			{
-				return pNativeObject->g_Team();
-			}
-
-			void set(Int32 value)
-			{
-				pNativeObject->ChangeTeam(value, pNativeObject->g_Squad(), pNativeObject->g_Group());
-			}
+			int get();
+			void set(int value);
 		}
 
-		property Int32 Squad
+		property int Squad
 		{
-			Int32 get()
-			{
-				return pNativeObject->g_Squad();
-			}
-
-			void set(Int32 value)
-			{
-				pNativeObject->ChangeTeam(pNativeObject->g_Team(), value, pNativeObject->g_Group());
-			}
+			int get();
+			void set(int value);
 		}
 
-		property Int32 Group
+		property int Group
 		{
-			Int32 get()
-			{
-				return pNativeObject->g_Group();
-			}
-
-			void set(Int32 value)
-			{
-				pNativeObject->ChangeTeam(pNativeObject->g_Team(), pNativeObject->g_Squad(), value);
-			}
+			int get();
+			void set(int value);
 		}
 
 		property float Morale
 		{
-			float get()
-			{
-				return pNativeObject->m_fMorale;
-			}
-			
-			void set(float value)
-			{
-				pNativeObject->m_fMorale = value;
-			}
+			float get();
+			void set(float value);
 		}
 
 		// Will be refactored later
 		void ChangeTeam(int team, int squad, int group);
-
-
-
-	private:
-
-		CEntity* pNativeObject;
 	};
 }

@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Level.h"
 
+#include "xrGame\ai_space.h"
 #include "../xrGame/alife_simulator.h"
 #include "../xrGame/alife_simulator_base.h"
 #include "../xrGame/alife_time_manager.h"
@@ -13,6 +14,7 @@
 #include "../xrGame/UIGame.h"
 #include "../xrGame/patrol_path_storage.h"
 #include "../xrGame/ui/UIMainIngameWnd.h"
+#include "../xrGame/physics_world_scripted.h"
 
 System::UInt32 XRay::LevelGraph::LevelID::get()
 {
