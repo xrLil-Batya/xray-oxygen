@@ -1,8 +1,14 @@
+///////////////////////////////////////////////////////////
+// Desc: Skinning shader
+// Shoker, StalkMen and ForserX
+// ////////////////////////////////////////////////////////
+// Oxygen Engine 2016-2019
+// ////////////////////////////////////////////////////////
+
 #ifndef	SKIN_H
 #define SKIN_H
 
 #include "common.h"
-//RoH & SM+
 struct 	v_model_skinned_0
 {
 	float4 	P	: POSITION;		// (float,float,float,1) - quantized	// short4
@@ -11,6 +17,7 @@ struct 	v_model_skinned_0
 	float3	B	: BINORMAL;		// binormal				// DWORD
 	float2	tc	: TEXCOORD0;	// (u,v)				// short2
 };
+
 struct 	v_model_skinned_1   		// 24 bytes
 {
 	float4 	P	: POSITION;	// (float,float,float,1) - quantized	// short4
@@ -19,6 +26,7 @@ struct 	v_model_skinned_1   		// 24 bytes
 	float3	B	: BINORMAL;	// binormal				// DWORD
 	float2	tc	: TEXCOORD0;	// (u,v)				// short2
 };
+
 struct 	v_model_skinned_2		// 28 bytes
 {
 	float4 	P	: POSITION;	// (float,float,float,1) - quantized	// short4
@@ -48,27 +56,17 @@ struct 	v_model_skinned_4		// 28 bytes
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
 float4 	u_position	(float4 v)	{ return float4(v.xyz, 1.f);	}	// -12..+12
-
 //////////////////////////////////////////////////////////////////////////////////////////
-//uniform float4 	sbones_array	[256-22] : register(vs,c22);
-//tbuffer	SkeletonBones
-//{
-	float4 	sbones_array	[256-22];
-//}
+float4 	sbones_array[512]; // Size: Bones count * 3
 
-float3 	skinning_dir 	(float3 dir, float3 m0, float3 m1, float3 m2)
+float3 skinning_dir(float3 dir, float3 m0, float3 m1, float3 m2)
 {
-	float3 	U 	= unpack_normal	(dir);
-	return 	float3	
-		(
-			dot	(m0, U),
-			dot	(m1, U),
-			dot	(m2, U)
-		);
+	float3 U = unpack_normal(dir);
+	return float3(dot(m0, U), dot(m1, U), dot(m2, U));
 }
-float4 	skinning_pos 	(float4 pos, float4 m0, float4 m1, float4 m2)
+
+float4 skinning_pos(float4 pos, float4 m0, float4 m1, float4 m2)
 {
 	float4 	P	= u_position	(pos);
 	return 	float4
