@@ -22,7 +22,7 @@ CParticlesPlayer::SParticlesInfo* CParticlesPlayer::SBoneInfo::FindParticles(con
 		if (it->ps && it->ps->Name() == ps_name)
 			return &(*it);
 
-	return 0;
+	return nullptr;
 }
 
 CParticlesPlayer::SParticlesInfo* CParticlesPlayer::SBoneInfo::AppendParticles(CObject* object, const shared_str& ps_name)
@@ -54,27 +54,26 @@ void CParticlesPlayer::SBoneInfo::StopParticles(const shared_str& ps_name, bool 
 
 void CParticlesPlayer::SBoneInfo::StopParticles(u16 sender_id, bool bDestroy)
 {
-	for (auto it = particles.begin(); it != particles.end(); ++it)
-		if (it->sender_id == sender_id)
+	for (SParticlesInfo& refInfo : particles)
+	{
+		if (refInfo.sender_id == sender_id)
 		{
 			if (!bDestroy)
-				it->ps->Stop();
+				refInfo.ps->Stop();
 			else
-				CParticlesObject::Destroy(it->ps);
+				CParticlesObject::Destroy(refInfo.ps);
 		}
+	}
 }
 //-------------------------------------------------------------------------------------
 
-CParticlesPlayer::CParticlesPlayer()
+CParticlesPlayer::CParticlesPlayer() : m_bActiveBones(false)
 {
-	bone_mask = u64(1) << u64(0);
-
-	m_bActiveBones = false;
-
+	bone_mask = 1 << 0;
 	m_Bones.push_back(SBoneInfo(0, Fvector().set(0, 0, 0)));
 
 	SetParentVel(zero_vel);
-	m_self_object = 0;
+	m_self_object = nullptr;
 }
 
 CParticlesPlayer::~CParticlesPlayer()
@@ -91,7 +90,7 @@ void CParticlesPlayer::LoadParticles(IKinematics* K)
 	//считать список косточек и соответствующих
 	//офсетов  куда можно вешать партиклы
 	CInifile* ini = K->LL_UserData();
-	if (ini&&ini->section_exist("particle_bones"))
+	if (ini && ini->section_exist("particle_bones"))
 	{
 		bone_mask = 0;
 		CInifile::Sect& data = ini->r_section("particle_bones");
@@ -108,7 +107,7 @@ void CParticlesPlayer::LoadParticles(IKinematics* K)
 
 	if (m_Bones.empty())
 	{
-		bone_mask = u64(1) << u64(0);
+		bone_mask = 1 << 0;
 		m_Bones.push_back(SBoneInfo(K->LL_GetBoneRoot(), Fvector().set(0, 0, 0)));
 	}
 }

@@ -224,6 +224,7 @@
     <ClInclude Include="string_table.h" />
     <ClInclude Include="ThunderboltCollection.h" />
     <ClInclude Include="ThunderboltDesc.h" />
+    <ClInclude Include="VisMask.h" />
     <ClInclude Include="xr_ioc_cmd_ex.h" />
     <ClInclude Include="xr_level_controller.h" />
     <ClInclude Include="_d3d_extensions.h" />

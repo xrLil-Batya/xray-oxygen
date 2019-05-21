@@ -1,4 +1,5 @@
 #pragma once
+#include "..\xrEngine\VisMask.h"
 class NET_Packet;
 
 struct XRPHYSICS_API SPHNetState
@@ -45,17 +46,18 @@ using PHNETSTATE_VECTOR = xr_vector<SPHNetState>;
 
 struct XRPHYSICS_API SPHBonesData
 {
-	u64 bones_mask;
+	VisMask bones_mask;
 	u16 root_bone;
 	PHNETSTATE_VECTOR bones;
 	Fvector m_min;
 	Fvector m_max;
+
 public:
 	SPHBonesData();
-	void net_Save(NET_Packet&		P);
-	void net_Load(NET_Packet&		P);
-	void net_Load(IReader&		P);
-	void set_min_max(const Fvector& _min, const Fvector& _max);
-	const Fvector& get_min()	const { return m_min; }
-	const Fvector& get_max()	const { return m_max; }
+	void			net_Save(NET_Packet&		P);
+	void			net_Load(NET_Packet&		P);
+	void			net_Load(IReader&		P);
+	void			set_min_max(const Fvector& _min, const Fvector& _max);
+	const Fvector&	get_min()	const { return m_min; }
+	const Fvector&	get_max()	const { return m_max; }
 };

@@ -48,10 +48,7 @@ void CSkeletonX::_Copy		(CSkeletonX *B)
 	RenderMode				= B->RenderMode;
 	RMS_boneid				= B->RMS_boneid;
 	RMS_bonecount			= B->RMS_bonecount;
-
-#ifdef USE_DX11
 	m_Indices				= B->m_Indices;
-#endif
 }
 //////////////////////////////////////////////////////////////////////
 void CSkeletonX::_Render	(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCount)
@@ -78,11 +75,13 @@ void CSkeletonX::_Render	(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCount)
 			u32						count	= RMS_bonecount;
 			for (u32 mid = 0; mid<count; mid++)	
 			{
-				Fmatrix&	M				= Parent->LL_GetTransform_R(u16(mid));
-				u32			id				= mid*3;
-				RCache.set_ca				(&*array,id+0,M._11,M._21,M._31,M._41);
-				RCache.set_ca				(&*array,id+1,M._12,M._22,M._32,M._42);
-				RCache.set_ca				(&*array,id+2,M._13,M._23,M._33,M._43);
+				Fmatrix& M = Parent->LL_GetTransform_R(u16(mid));
+				u32 id = mid * 2;
+				RCache.set_ca(&*array, id + 0, M._11, M._21, M._31, M._41);
+				RCache.set_ca(&*array, id + 1, M._12, M._22, M._32, M._42);
+#ifndef QUATERNION_SKIN
+				RCache.set_ca(&*array, id + 2, M._13, M._23, M._33, M._43);
+#endif
 			}
 
 			// render

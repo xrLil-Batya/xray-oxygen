@@ -144,7 +144,7 @@ CSkeletonX* CKinematics::LL_GetChild	(u32 idx)
 	return			B	;
 }
 
-void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
+void CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 {
 	inherited::Load	(N, data, dwFlags);
 
@@ -175,12 +175,10 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
         LD->close	();
     }
 
-#ifndef _EDITOR    
 	// User data
 	IReader* UD 	= data->open_chunk(OGF_S_USERDATA);
     pUserData		= UD?xr_new<CInifile>(UD,FS.get_path("$game_config$")->m_Path):0;
     if (UD)			UD->close();
-#endif
 
 	// Globals
 	bone_map_N		= xr_new<accel>		();
@@ -196,7 +194,6 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 
     visimask.zero	();
 	int dwCount 	= data->r_u32();
-	VERIFY3			(dwCount <= 64, "More than 64 bones is a crazy thing!",N);
 	for (; dwCount; dwCount--)		{
 		string256	buf;
 
@@ -215,7 +212,7 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 		L_parents.emplace_back			(buf);
 
 		data->r						(&pBone->obb,sizeof(Fobb));
-        visimask.set				(u64(1)<<ID,TRUE);
+        visimask.set				(ID,TRUE);
 	}
 	std::sort	(bone_map_N->begin(),bone_map_N->end(),pred_sort_N);
 	std::sort	(bone_map_P->begin(),bone_map_P->end(),pred_sort_P);
@@ -398,14 +395,10 @@ void CKinematics::Depart		()
 
 	// unmask all bones
 	visimask.zero				();
-	if(bones)
+	if (bones)
 	{
 		u32 count = bones->size();
-#ifdef DEBUG
-    	if (count > 64)
-        	Msg("ahtung !!! %d", count);
-#endif // #ifdef DEBUG
-		for (u32 b=0; b<count; b++) visimask.set((u64(1)<<b),TRUE);
+		for (u32 b = 0; b < count; b++) visimask.set(b, true);
 	}
 	// visibility
 	children.insert				(children.end(),children_invisible.begin(),children_invisible.end());
@@ -432,30 +425,34 @@ void CKinematics::Release		()
 
 void CKinematics::LL_SetBoneVisible(u16 bone_id, BOOL val, BOOL bRecursive)
 {
-	VERIFY				(bone_id<LL_BoneCount());      
-    u64 mask 			= u64(1)<<bone_id;
-    visimask.set		(mask,val);
-	if (!visimask.is(mask)){
-        bone_instances[bone_id].mTransform.scale(0.f,0.f,0.f);
-	}else{
-		CalculateBones_Invalidate	();
+	VERIFY(bone_id < LL_BoneCount());
+
+	visimask.set(bone_id, val);
+	if (!visimask.is(bone_id)) 
+		bone_instances[bone_id].mTransform.scale(0.f, 0.f, 0.f);
+	else
+		CalculateBones_Invalidate();
+
+	bone_instances[bone_id].mRenderTransform.mul_43(bone_instances[bone_id].mTransform, (*bones)[bone_id]->m2b_transform);
+	if (bRecursive)
+	{
+		for (xr_vector<CBoneData*>::iterator C = (*bones)[bone_id]->children.begin(); C != (*bones)[bone_id]->children.end(); C++)
+			LL_SetBoneVisible((*C)->GetSelfID(), val, bRecursive);
 	}
-	bone_instances[bone_id].mRenderTransform.mul_43(bone_instances[bone_id].mTransform,(*bones)[bone_id]->m2b_transform);
-    if (bRecursive)		{
-        for (xr_vector<CBoneData*>::iterator C=(*bones)[bone_id]->children.begin(); C!=(*bones)[bone_id]->children.end(); C++)
-            LL_SetBoneVisible((*C)->GetSelfID(),val,bRecursive);
-    }
-	Visibility_Invalidate			();
+	Visibility_Invalidate();
 }
 
-void CKinematics::LL_SetBonesVisible(u64 mask)
+void CKinematics::LL_SetBonesVisible(VisMask mask)
 {
-	visimask.assign			(0);	
-	for (u32 b=0; b<bones->size(); b++){
-    	u64 bm				= u64(1)<<b;
-    	if (mask&bm){
-        	visimask.set	(bm,TRUE);
-        }else{
+	visimask.zero();
+	for (u32 b=0; b<bones->size(); b++)
+	{
+		if (mask.is(b)) 
+		{
+			visimask.set(b, true);
+        }
+		else
+		{
 	    	Fmatrix& A		= bone_instances[b].mTransform;
 	    	Fmatrix& B		= bone_instances[b].mRenderTransform;
         	A.scale			(0.f,0.f,0.f);
@@ -477,6 +474,7 @@ void CKinematics::Visibility_Update	()
 			children_invisible.push_back	(children[c_it]);	
 			swap(children[c_it],children.back());
 			children.pop_back				();
+			Update_Visibility = TRUE;
 		}
 	}
 
@@ -488,6 +486,7 @@ void CKinematics::Visibility_Update	()
 			children.push_back				(children_invisible[_it]);	
 			swap(children_invisible[_it],children_invisible.back());
 			children_invisible.pop_back		();
+			Update_Visibility = TRUE;
 		}
 	}
 }

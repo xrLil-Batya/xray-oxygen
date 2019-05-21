@@ -160,8 +160,9 @@ void SPHNetState::net_Load(IReader &P, const Fvector& min, const Fvector& max)
 	read(P, min, max);
 }
 
-SPHBonesData::SPHBonesData() : bones_mask(std::numeric_limits<u64>::max()), root_bone(0)
+SPHBonesData::SPHBonesData() : root_bone(0)
 {
+	bones_mask.set_all();
 	Fvector _mn, _mx;
 
 	_mn.set(-100.f, -100.f, -100.f);
@@ -175,12 +176,18 @@ void SPHBonesData::net_Save(NET_Packet &P)
 	//  if we call 2 times in a row StateWrite then we get different results
 	//	WHY???
 
-	P.w_u64(bones_mask);
+	P.w_u64(bones_mask._visimask.flags);
 	P.w_u16(root_bone);
 
 	P.w_vec3(get_min());
 	P.w_vec3(get_max());
 	P.w_u16((u16)bones.size());//bones number;
+
+	if (bones.size() > 64)
+	{
+		Msg("!![SPHBonesData::net_Save] bones_size is [%u]!", bones.size());
+		P.w_u64(bones_mask._visimask_ex.flags);
+	}
 
 	for (SPHNetState &it : bones)
 	{
@@ -192,7 +199,10 @@ void SPHBonesData::net_Load(NET_Packet &P)
 {
 	bones.clear();
 
-	bones_mask = P.r_u64();
+	// VisMask init 
+	u64 _low = P.r_u64(); // Left (0...64)
+	u64 _high = 0;		  // Right(64..128)
+
 	root_bone = P.r_u16();
 	Fvector _mn, _mx;
 	P.r_vec3(_mn);
@@ -201,6 +211,12 @@ void SPHBonesData::net_Load(NET_Packet &P)
 
 	//bones number
 	u16 bones_number = P.r_u16();
+	if (bones_number > 64)
+	{
+		Msg("!![SPHBonesData::net_Load] bones_number is [%u]!", bones_number);
+		_high = P.r_u64();
+	}
+	bones_mask.set(_low, _high);
 
 	for (u16 i = 0; i < bones_number; i++)
 	{

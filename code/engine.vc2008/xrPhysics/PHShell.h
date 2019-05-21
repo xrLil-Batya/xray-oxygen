@@ -1,8 +1,5 @@
 ///////////////////////////////////////////////////////////////////////
-
-#ifndef PH_SHELL
-#define PH_SHELL
-
+#pragma once
 class CPHShell;
 class CPHShellSplitterHolder;
 #include "PHJoint.h"
@@ -14,10 +11,7 @@ class CPHShellSplitterHolder;
 
 class CPhysicsShellAnimator;
 
-class CPHShell :
-	public IPhysicsShellEx,
-	public CPHObject,
-	public cphysics_scripted
+class CPHShell : public IPhysicsShellEx, public CPHObject, public cphysics_scripted
 {
 	friend class CPHShellSplitterHolder;
 	enum
@@ -227,7 +221,7 @@ public:
 	virtual void preBuild_FromKinematics(IKinematics* K, BONE_P_MAP* p_geting_map);
 	virtual void	__stdcall		ActivatingBonePoses(IKinematics &K);
 	virtual void ZeroCallbacks();
-	virtual void ResetCallbacks(u16 id, Flags64 &mask);
+	virtual void ResetCallbacks(u16 id, VisMask &mask);
 
 	void PlaceBindToElForms();
 
@@ -280,12 +274,12 @@ private:
 	void AddSplitter(CPHShellSplitter::EType type, u16 element, u16 joint, u16 position);
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void AddElementRecursive(IPhysicsElementEx* root_e, u16 id, Fmatrix global_parent, u16 element_number, bool *vis_check);
-	void PlaceBindToElFormsRecursive(Fmatrix parent, u16 id, u16 element, Flags64 &mask);
+	void PlaceBindToElFormsRecursive(Fmatrix parent, u16 id, u16 element, VisMask &mask);
 	void BonesBindCalculate(u16 id_from = 0);
 	void BonesBindCalculateRecursive(Fmatrix parent, u16 id);
 	void ZeroCallbacksRecursive(u16 id);
 	void SetCallbacksRecursive(u16 id, u16 element);
-	void ResetCallbacksRecursive(u16 id, u16 element, Flags64 &mask);
+	void ResetCallbacksRecursive(u16 id, u16 element, VisMask &mask);
 	void SetJointRootGeom(IPhysicsElementEx* root_e, IPhysicsJoint* J);
 	void ReanableObject();
 	void ExplosionHit(const Fvector& pos, const Fvector& dir, float val, const u16 id);
@@ -309,5 +303,3 @@ inline	void CPHShell::SetObjVsShellTransform(const Fmatrix & root_transform)
 	m_object_in_root.invert();
 	SetNotActivating();
 }
-
-#endif

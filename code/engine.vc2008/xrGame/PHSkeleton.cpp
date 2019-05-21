@@ -49,7 +49,7 @@ void CPHSkeleton::RespawnInit()
 	if(K)
 	{
 		K->LL_SetBoneRoot(0);
-		K->LL_SetBonesVisible(0xffffffffffffffffL);
+		K->LL_SetBonesVisibleAll();
 		K->CalculateBones_Invalidate();
 		K->CalculateBones(TRUE);
 	}
@@ -246,9 +246,6 @@ void CPHSkeleton::PHSplit()
 
 }
 
-
-
-
 void CPHSkeleton::UnsplitSingle(CPHSkeleton* SO)
 {
 	//Msg("%o,received has %d,",this,m_unsplited_shels.size());
@@ -263,30 +260,29 @@ void CPHSkeleton::UnsplitSingle(CPHSkeleton* SO)
 	IKinematics *newKinematics=smart_cast<IKinematics*>(O->Visual());
 	IKinematics *pKinematics  =smart_cast<IKinematics*>(obj->Visual());
 
-	Flags64 mask0,mask1;
-	u16 split_bone=m_unsplited_shels.front().second;
-	mask1.assign(pKinematics->LL_GetBonesVisible());//source bones mask
-	pKinematics->LL_SetBoneVisible(split_bone,FALSE,TRUE);
+	VisMask mask0, mask1;
+	u16 split_bone = m_unsplited_shels.front().second;
+	mask1 = pKinematics->LL_GetBonesVisible();//source bones mask
+	pKinematics->LL_SetBoneVisible(split_bone, FALSE, TRUE);
 
 	pKinematics->CalculateBones_Invalidate	();
 	pKinematics->CalculateBones				(TRUE);
 
-	mask0.assign(pKinematics->LL_GetBonesVisible());//first part mask
-	VERIFY2(mask0.flags,"mask0 -Zero");
+	mask0 = pKinematics->LL_GetBonesVisible();//first part mask
+	VERIFY2(mask0._visimask.flags, "mask0 -Zero");
 	mask0.invert();
-	mask1.and(mask0.flags);//second part mask
+	mask1.band(mask0);//second part mask
 
-
-	newKinematics->LL_SetBoneRoot		(split_bone);
-	VERIFY2(mask1.flags,"mask1 -Zero");
-	newKinematics->LL_SetBonesVisible	(mask1.flags);
+	newKinematics->LL_SetBoneRoot(split_bone);
+	VERIFY2(mask1._visimask.flags, "mask1 -Zero");
+	newKinematics->LL_SetBonesVisible(mask1);
 
 	newKinematics->CalculateBones_Invalidate	();
 	newKinematics->CalculateBones				(TRUE);
 
 	newPhysicsShell->set_Kinematics(newKinematics);
 	VERIFY(_valid(newPhysicsShell->mXFORM));
-	newPhysicsShell->ResetCallbacks(split_bone,mask1);
+	newPhysicsShell->ResetCallbacks(split_bone, mask1);
 	VERIFY(_valid(newPhysicsShell->mXFORM));
 
 	newPhysicsShell->ObjectInRoot().identity();
@@ -312,9 +308,6 @@ void CPHSkeleton::CopySpawnInit()
 			SetAutoRemove();
 }
 
-
-
-
 void CPHSkeleton::SetAutoRemove(u32 time/*=CSE_PHSkeleton::existence_time*/)
 {
 	b_removing=true;
@@ -326,25 +319,23 @@ void CPHSkeleton::SetAutoRemove(u32 time/*=CSE_PHSkeleton::existence_time*/)
 static bool removable;//for RecursiveBonesCheck
 void CPHSkeleton::RecursiveBonesCheck(u16 id)
 {
-	if(!removable) return;
-	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	IKinematics* K		= smart_cast<IKinematics*>(obj->Visual());
-	CBoneData& BD		= K->LL_GetData(u16(id));
+	if (!removable) return;
+	CPhysicsShellHolder* obj = PPhysicsShellHolder();
+	IKinematics* K = smart_cast<IKinematics*>(obj->Visual());
+	CBoneData& BD = K->LL_GetData(u16(id));
 	//////////////////////////////////////////
-	Flags64 mask;
-	mask.assign(K->LL_GetBonesVisible());
+	VisMask mask = K->LL_GetBonesVisible();
 	///////////////////////////////////////////
-	if(
-		mask.is(1ui64<<(u64)id)&& 
-		!(BD.shape.flags.is(SBoneShape::sfRemoveAfterBreak))
-		) {
-			removable = false;
-			return;
-		}
-		///////////////////////////////////////////////
-		for (vecBonesIt it=BD.children.begin(); BD.children.end() != it; ++it){
-			RecursiveBonesCheck		((*it)->GetSelfID());
-		}
+	if (mask.is(id) && !(BD.shape.flags.is(SBoneShape::sfRemoveAfterBreak)))
+	{
+		removable = false;
+		return;
+	}
+	///////////////////////////////////////////////
+	for (vecBonesIt it = BD.children.begin(); BD.children.end() != it; ++it) 
+	{
+		RecursiveBonesCheck((*it)->GetSelfID());
+	}
 }
 bool CPHSkeleton::ReadyForRemove()
 {
@@ -415,7 +406,7 @@ void CPHSkeleton::SyncNetState()
 	}
 	else 
 	{
-		saved_bones.bones_mask = 0;
+		saved_bones.bones_mask.set(u64(-1), bones_number > 64 ? u64(-1) : 0);
 		saved_bones.root_bone = 0;
 	}
 
@@ -423,7 +414,8 @@ void CPHSkeleton::SyncNetState()
 	min.set(F_MAX, F_MAX, F_MAX);
 	max.set(-F_MAX, -F_MAX, -F_MAX);
 	saved_bones.bones.clear();
-	for (u16 i = 0; i < bones_number; i++) {
+	for (u16 i = 0; i < bones_number; i++) 
+	{
 		SPHNetState state;
 		obj->PHGetSyncItem(i)->get_State(state);
 		Fvector& p = state.position;
