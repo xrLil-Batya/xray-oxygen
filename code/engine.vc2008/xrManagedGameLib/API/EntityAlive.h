@@ -1,18 +1,14 @@
 #pragma once
-#include "xrGame/entity_alive.h"
-#include "API/PhysicalGameObject.h"
-
-using namespace System;
+#include "PhysicalGameObject.h"
+class CEntityAlive;
 
 namespace XRay
 {
 	public ref class EntityAlive : public PhysicalGameObject
 	{
+		CEntityAlive* pNativeObject;
+
 	public:
 		EntityAlive(IntPtr InNativeObject);
-
-	private:
-
-		CEntityAlive* pNativeObject;
 	};
 }

@@ -1,109 +1,48 @@
 #pragma once
-#include "xrGame/InventoryOwner.h"
-#include "xrGame/Inventory.h"
 #include "API/PDA.h"
-
-using namespace System;
 
 namespace XRay
 {
 	public ref class Inventory : public NativeObject
 	{
+		CInventoryOwner* pNativeObject;
+
 	public:
 		Inventory(IntPtr InNativeObject);
 
 		property float TotalWeight
 		{
-			float get()
-			{
-				return pNativeObject->inventory().CalcTotalWeight();
-			}
+			float get();
 		}
 
 		// Can return null, be careful
-		property PDA^ pda
+		property PDA^ PDAObject
 		{
-			PDA^ get()
-			{
-				if (CPda* pPDA = pNativeObject->GetPDA())
-				{
-					return gcnew PDA(IntPtr(pPDA));
-				}
-
-				return nullptr;
-			}
+			PDA^ get();
 		}
 
-		property UInt32 money
+		property UInt32 Money
 		{
-			UInt32 get()
-			{
-				return pNativeObject->get_money();
-			}
-
-			void set(UInt32 value)
-			{
-				pNativeObject->set_money(value, true);
-			}
+			UInt32 get();
+			void set(UInt32 value);
 		}
 
-		property String^ name
+		property String^ Name
 		{
-			String^ get()
-			{
-				return gcnew String (pNativeObject->Name());
-			}
-
-			void set(String^ value)
-			{
-				array<unsigned char>^ asciiName = ::System::Text::Encoding::ASCII->GetBytes(value);
-				pin_ptr<unsigned char> bufferPtr = &asciiName[0];
-				pNativeObject->set_name((LPCSTR)*bufferPtr);
-			}
+			String^ get();
+			void set(String^ value);
 		}
 
 		property bool CanTalk
 		{
-			bool get()
-			{
-				return pNativeObject->IsTalkEnabled();
-			}
-
-			void set(bool value)
-			{
-				if (value)
-				{
-					pNativeObject->EnableTalk();
-				}
-				else
-				{
-					pNativeObject->DisableTalk();
-				}
-			}
+			bool get();
+			void set(bool value);
 		}
 
 		property bool CanTrade
 		{
-			bool get()
-			{
-				return pNativeObject->IsTradeEnabled();
-			}
-
-			void set(bool value)
-			{
-				if (value)
-				{
-					pNativeObject->EnableTrade();
-				}
-				else
-				{
-					pNativeObject->DisableTrade();
-				}
-			}
+			bool get();
+			void set(bool value);
 		}
-
-	private:
-
-		CInventoryOwner* pNativeObject;
 	};
 }
