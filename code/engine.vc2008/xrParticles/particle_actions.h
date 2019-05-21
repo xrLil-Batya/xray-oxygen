@@ -1,18 +1,18 @@
-//---------------------------------------------------------------------------
-#ifndef particle_actionsH
-#define particle_actionsH
+#pragma once
 
-namespace PAPI {
+namespace PAPI
+{
 	// refs
 	struct ParticleEffect;
-	struct PARTICLES_API			ParticleAction
+	struct PARTICLES_API ParticleAction
 	{
-		enum {
+		enum 
+		{
 			ALLOW_ROTATE = (1 << 1)
 		};
 		Flags32 m_Flags;
 		PActionEnum type;	// Type field
-		ParticleAction() { m_Flags.zero(); }
+		ParticleAction() : type(action_enum_force_dword) { m_Flags.zero(); }
 
 		virtual void Execute(ParticleEffect *pe, const float dt, float& m_max) = 0;
 		virtual void Transform(const Fmatrix& m) = 0;
@@ -29,7 +29,7 @@ namespace PAPI {
 		PAVec actions;
 		bool m_bLocked;
 	public:
-		ParticleActions() { actions.reserve(4); m_bLocked = false; }
+		ParticleActions() : m_bLocked(false) { actions.reserve(4); }
 		~ParticleActions() { clear(); }
 
 		void clear()
@@ -54,5 +54,3 @@ namespace PAPI {
 		inline void unlock() { R_ASSERT(m_bLocked); m_bLocked = false; }
 	};
 };
-//---------------------------------------------------------------------------
-#endif

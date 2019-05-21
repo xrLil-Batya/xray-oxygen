@@ -1,5 +1,3 @@
-#ifndef PhysicsShellH
-#define PhysicsShellH
 #pragma once
 
 #include "PHDefs.h"
@@ -8,6 +6,7 @@
 #include "../xrserverentities/alife_space.h"
 
 #include "../xrEngine/iphysicsshell.h"
+#include "../xrEngine/VisMask.h"
 #include "iphysics_scripted.h"
 class IPhysicsJoint;
 class IPhysicsElementEx;
@@ -374,7 +373,7 @@ public:
 	virtual			void						RunSimulation(bool place_current_forms = true) = 0;
 	virtual			void						UpdateRoot() = 0;
 	virtual			void            		    ZeroCallbacks() = 0;
-	virtual			void						ResetCallbacks(u16 id, Flags64 &mask) = 0;
+	virtual			void						ResetCallbacks(u16 id, VisMask &mask) = 0;
 	virtual			void						SetCallbacks() = 0;
 	virtual			void						EnabledCallbacks(BOOL val) = 0;
 	virtual			void						ToAnimBonesPositions(motion_history_state history_state) = 0;
@@ -418,4 +417,3 @@ bool				has_physics_collision_shapes(IKinematics& K);
 XRPHYSICS_API		void				phys_shell_verify_object_model(IPhysicsShellHolder& O);
 
 void				phys_shell_verify_model(IKinematics& K);
-#endif // PhysicsShellH

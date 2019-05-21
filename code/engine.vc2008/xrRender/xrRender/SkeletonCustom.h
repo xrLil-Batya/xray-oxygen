@@ -2,12 +2,14 @@
 #pragma once
 #ifdef GM_NON_GAME
 #define IBoneData CBoneData
-#include		"bone.h"
+#include "bone.h"
 #else
-#include		"../../xrEngine/bone.h"
+#include "../../xrEngine/bone.h"
 #endif
-#include		"fhierrarhyvisual.h"
-#include		"../../Include/xrRender/Kinematics.h"
+
+#include "FHierrarhyVisual.h"
+#include "../../Include/xrRender/Kinematics.h"
+#include "..\..\xrEngine\VisMask.h"
 
 extern	xrCriticalSection	UCalc_Mutex;
 
@@ -109,9 +111,8 @@ protected:
 
 	BOOL						Update_Visibility		;
 	u32							UCalc_Time				;
-	s32							UCalc_Visibox			;
-
-    Flags64						visimask;
+	s32							UCalc_Visibox			; 
+	VisMask						visimask;
     
 	CSkeletonX*					LL_GetChild				(u32 idx);
 
@@ -177,7 +178,7 @@ public:
         return bd;
 	}
 	u16						_BCL	LL_BoneCount		()	const			{	return u16(bones->size());										}
-	u16								LL_VisibleBoneCount	()					{	u64 F=visimask.flags&((u64(1)<<u64(LL_BoneCount()))-1); return (u16)btwCount1(F); }
+	u16								LL_VisibleBoneCount	()					{	return visimask.count(); }
 	ICF Fmatrix&			_BCL	LL_GetTransform		(u16 bone_id)		{	return LL_GetBoneInstance(bone_id).mTransform;					}
 	ICF const Fmatrix&		_BCL	LL_GetTransform		(u16 bone_id) const	{	return LL_GetBoneInstance(bone_id).mTransform;					}
 	ICF Fmatrix&					LL_GetTransform_R	(u16 bone_id)		{	return LL_GetBoneInstance(bone_id).mRenderTransform;			}	// rendering only
@@ -189,11 +190,11 @@ public:
 	u16						_BCL	LL_GetBoneRoot		()					{	return iRoot;													}
 	void							LL_SetBoneRoot		(u16 bone_id)		{	VERIFY(bone_id<LL_BoneCount());	iRoot=bone_id;					}
 
-    BOOL					_BCL	LL_GetBoneVisible	(u16 bone_id)		{	VERIFY(bone_id<LL_BoneCount()); return visimask.is(u64(1)<<bone_id);	}
+    BOOL					_BCL	LL_GetBoneVisible	(u16 bone_id)		{	VERIFY(bone_id<LL_BoneCount()); return visimask.is(bone_id);	}
 	void							LL_SetBoneVisible	(u16 bone_id, BOOL val, BOOL bRecursive);
-	u64						_BCL	LL_GetBonesVisible	()					{	return visimask.get();	}
-	void							LL_SetBonesVisible	(u64 mask);
-
+	VisMask					_BCL	LL_GetBonesVisible	()					{	return visimask;	}
+	void							LL_SetBonesVisible	(VisMask mask);
+	void							LL_SetBonesVisibleAll() { visimask.set_all(); };
 	// Main functionality
 	virtual void					CalculateBones				(BOOL bForceExact	=	FALSE);		// Recalculate skeleton
 	void							CalculateBones_Invalidate	();

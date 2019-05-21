@@ -687,6 +687,9 @@
     <ClInclude Include="NvGPUTransferee.h">
       <Filter>Engine\GPU\NVIDIA</Filter>
     </ClInclude>
+    <ClInclude Include="VisMask.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">

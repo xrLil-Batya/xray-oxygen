@@ -1,21 +1,20 @@
-﻿#ifndef __XR_COLLIDE_FORM_H__
-#define __XR_COLLIDE_FORM_H__
-
-#include "../xrcdb/xr_collide_defs.h"
+﻿#pragma once
+#include "../xrCDB/xr_collide_defs.h"
+#include "VisMask.h"
 
 // refs
 class ENGINE_API	CObject;
 class ENGINE_API	CInifile;
 
 // t-defs
-const u32	clGET_TRIS			= (1<<0);
-const u32	clGET_BOXES			= (1<<1);
-const u32	clGET_SPHERES		= (1<<2);
-const u32	clQUERY_ONLYFIRST	= (1<<3);	// stop if was any collision
-const u32	clQUERY_TOPLEVEL	= (1<<4);	// get only top level of model box/sphere
-const u32	clQUERY_STATIC		= (1<<5);	// static
-const u32	clQUERY_DYNAMIC		= (1<<6);	// dynamic
-const u32	clCOARSE			= (1<<7);	// coarse test (triangles vs obb)
+constexpr u32	clGET_TRIS			= (1<<0);
+constexpr u32	clGET_BOXES			= (1<<1);
+constexpr u32	clGET_SPHERES		= (1<<2);
+constexpr u32	clQUERY_ONLYFIRST	= (1<<3);	// stop if was any collision
+constexpr u32	clQUERY_TOPLEVEL	= (1<<4);	// get only top level of model box/sphere
+constexpr u32	clQUERY_STATIC		= (1<<5);	// static
+constexpr u32	clQUERY_DYNAMIC		= (1<<6);	// dynamic
+constexpr u32	clCOARSE			= (1<<7);	// coarse test (triangles vs obb)
 
 struct clQueryTri
 {
@@ -131,7 +130,7 @@ public:
 	};
     using ElementVec = xr_vector<SElement>;
 private:
-	u64					vis_mask;
+	VisMask				vis_mask;
 	ElementVec			elements;
 
 	u32					dwFrame;		// The model itself
@@ -190,5 +189,3 @@ public:
 	BOOL			Contact			( CObject* O	);
 	xr_vector<shape_def>& Shapes	(){return shapes;}
 };
-
-#endif //__XR_COLLIDE_FORM_H__
