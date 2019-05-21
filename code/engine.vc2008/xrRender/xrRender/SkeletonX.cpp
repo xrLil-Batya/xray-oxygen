@@ -76,7 +76,7 @@ void CSkeletonX::_Render	(ref_geom& hGeom, u32 vCount, u32 iOffset, u32 pCount)
 			for (u32 mid = 0; mid<count; mid++)	
 			{
 				Fmatrix& M = Parent->LL_GetTransform_R(u16(mid));
-				u32 id = mid * 2;
+				u32 id = mid * 3;
 				RCache.set_ca(&*array, id + 0, M._11, M._21, M._31, M._41);
 				RCache.set_ca(&*array, id + 1, M._12, M._22, M._32, M._42);
 #ifndef QUATERNION_SKIN
