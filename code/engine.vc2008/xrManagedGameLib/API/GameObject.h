@@ -1,67 +1,45 @@
 #pragma once
-#include "xrGame/GameObject.h"
-#include "xrGame/ai_object_location.h"
 #include "API/GameVertex.h"
-//#include "xrManagedEngineLib/API/NativeObject.h"
 
-using namespace System;
-
+class CGameObject;
 namespace XRay
 {
 	public ref class GameObject : public Object
 	{
+		CGameObject* pNativeObject;
 	public:
 
 		GameObject(IntPtr InNativeObject);
 
 		property UInt32 AlifeStoryId
 		{
-			UInt32 get()
-			{
-				return pNativeObject->story_id();
-			}
+			UInt32 get();
 		}
 
 		property UInt32 LevelVertexID
 		{
-			UInt32 get()
-			{
-				return pNativeObject->ai_location().level_vertex_id();
-			}
+			UInt32 get();
 		}
 
 		property UInt32 GameVertexID
 		{
-			UInt32 get()
-			{
-				return pNativeObject->ai_location().game_vertex_id();
-			}
+			UInt32 get();
 		}
 
 		property GameVertex GameVertexPtr
 		{
-			GameVertex get()
-			{
-				const GameGraph::CVertex* vertex = pNativeObject->ai_location().game_vertex();
-				return GameVertex(IntPtr((void*)vertex));
-			}
+			GameVertex get();
 		}
 
 		// Spawn time in Device.dwFrame
 		property UInt32 SpawnTimeFrame
 		{
-			UInt32 get()
-			{
-				return pNativeObject->spawn_time();
-			}
+			UInt32 get();
 		}
 
 		property bool IsAIObstacle
 		{
-			bool get()
-			{
-				return pNativeObject->is_ai_obstacle();
-			}
+			bool get();
 		}
 
 		BEGIN_DEFINE_EVENT(OnTradeStart)
@@ -87,9 +65,5 @@ namespace XRay
 
 		BEGIN_DEFINE_EVENT(OnLevelBorderExit)
 		END_DEFINE_EVENT(OnLevelBorderExit)
-
-	private:
-
-		CGameObject* pNativeObject;
 	};
 }

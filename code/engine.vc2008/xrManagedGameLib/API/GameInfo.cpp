@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameInfo.h"
 #include "Actor.h"
+#include "xrEngine\IGame_Actor.h"
 
 using namespace XRay;
 

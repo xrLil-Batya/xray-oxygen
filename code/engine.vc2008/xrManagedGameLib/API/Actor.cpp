@@ -6,6 +6,9 @@
 #include "../xrGame/PostprocessAnimator.h"
 #include "../xrGame/HUDManager.h"
 
+#include "xrServerEntities/character_info.h"
+#include "xrServerEntities/specific_character.h"
+
 extern GAME_API bool g_bDisableAllInput;
 
 XRay::Actor::Actor(IntPtr InNativeObject)
