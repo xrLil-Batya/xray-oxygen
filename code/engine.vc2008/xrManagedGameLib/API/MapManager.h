@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace XRay
 {
 	public ref class MapManager abstract
