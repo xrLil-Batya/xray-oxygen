@@ -1,20 +1,14 @@
 // HW.h: interface for the CHW class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "hwcaps.h"
 
 #ifndef _MAYA_EXPORT
 #include "stats_manager.h"
 #endif
 
-class  CHW
-#if defined(USE_DX11) || defined(USE_VK)
-	:	public pureAppActivate, 
-		public pureAppDeactivate
-#endif
+class CHW : public pureAppActivate, public pureAppDeactivate
 {
 //	Functions section
 public:
@@ -34,10 +28,6 @@ public:
 	VkFormat				SelectFmtTarget();
 	VkFormat				SelectFmtDepthStencil(VkFormat);
 	u32						SelectRefresh(u32 dwWidth, u32 dwHeight, VkFormat fmt);
-#else
-	D3DFORMAT				SelectFmtTarget();
-	D3DFORMAT				SelectFmtDepthStencil(D3DFORMAT);
-	u32						SelectRefresh(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt);
 #endif
 	void					ResizeWindowProc		(WORD h, WORD w);
 	u32						SelectPresentInterval	();
@@ -62,6 +52,8 @@ public:
 	D3D_DRIVER_TYPE			m_DriverType;	//	DevT equivalent
 	DXGI_SWAP_CHAIN_DESC	m_ChainDesc;	//	DevPP equivalent
 	bool					m_bUsePerfhud;
+	bool					m_bDX11_1;
+
 	D3D_FEATURE_LEVEL		FeatureLevel;
 	bool					IsFormatSupported		(DXGI_FORMAT fmt);
 #elif defined(USE_VK)
@@ -75,38 +67,20 @@ public:
 
 	CHWCaps					Caps;
 	VkSwapchainKHR			m_ChainDesc;
-#else
-	IDirect3D9* 			pD3D;		// D3D
-	IDirect3DDevice9*		pDevice;	// render device
-
-	IDirect3DSurface9*		pBaseRT;
-	IDirect3DSurface9*		pBaseZB;
-	CHWCaps					Caps;
-
-	UINT					DevAdapter;
-	D3DDEVTYPE				DevT;
-	D3DPRESENT_PARAMETERS	DevPP;
-	bool					IsFormatSupported		(D3DFORMAT fmt, DWORD type, DWORD usage);
 #endif
 
-#if defined(DEBUG) && (!defined(USE_DX11) || !defined(USE_VK))
-	void	Validate() { VERIFY(pDevice); /*VERIFY(pD3D);*/ };
-#else
 	void	Validate() {};
-#endif
 
 #ifdef USE_DX11
 	DXGI_RATIONAL	SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
 #endif
 
-#if defined(USE_DX11) || defined(USE_VK)
 	void			UpdateViews();
 	virtual	void	OnAppActivate();
 	virtual void	OnAppDeactivate();
-#endif
-#ifndef _MAYA_EXPORT
+
 	stats_manager			stats_manager;
-#endif
+
 private:
 	bool					m_move_window;
 };

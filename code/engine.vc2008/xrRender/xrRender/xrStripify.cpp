@@ -19,39 +19,33 @@ int xrSimulate (xr_vector<u16> &indices, int iCacheSize )
 	return count;
 }
 
-void xrStripify		(xr_vector<u16> &indices, xr_vector<u16> &perturb, int iCacheSize, int iMinStripLength)
+void xrStripify(xr_vector<u16>& indices, xr_vector<u16>& perturb, int iCacheSize, int iMinStripLength)
 {
-	SetCacheSize	(iCacheSize);
-	SetMinStripSize	(iMinStripLength);
-	SetListsOnly	(true);
+	SetCacheSize(iCacheSize);
+	SetMinStripSize(iMinStripLength);
+	SetListsOnly(true);
 
 	// Generate strips
-	xr_vector<PrimitiveGroup>	PGROUP;
-	GenerateStrips	(&*indices.begin(),(u32)indices.size(),PGROUP);
-	VERIFY			(PGROUP.size()==1);
-	VERIFY			(PGROUP[0].type==PT_LIST);
-	VERIFY			(indices.size()==PGROUP[0].numIndices);
+	PrimitiveGroup* PGROUP[2] =
+	{
+		new PrimitiveGroup[1],
+		new PrimitiveGroup[1]
+	};
+
+	u16 GroupCount = 0;
+	GenerateStrips(&*indices.begin(), (u32)indices.size(), &PGROUP[0], &GroupCount);
 
 	// Remap indices
-	xr_vector<PrimitiveGroup>	xPGROUP;
-	RemapIndices	(PGROUP,u16(perturb.size()),xPGROUP);
-	VERIFY			(xPGROUP.size()==1);
-	VERIFY			(xPGROUP[0].type==PT_LIST);
+	RemapIndices(PGROUP[0], GroupCount, u16(perturb.size()), &PGROUP[1]);
 
 	// Build perturberation table
-	for(u32 index = 0; index < PGROUP[0].numIndices; index++)
+	for (u32 index = 0; index < PGROUP[0][0].numIndices; index++)
 	{
-		u16 oldIndex = PGROUP[0].indices	[index];
-		int newIndex = xPGROUP[0].indices	[index];
-		VERIFY(oldIndex<(int)perturb.size());
-		VERIFY(newIndex<(int)perturb.size());
+		u16 oldIndex = PGROUP[0][0].indices[index];
+		u16 newIndex = PGROUP[1][0].indices[index];
 		perturb[newIndex] = oldIndex;
 	}
 
 	// Copy indices
-    std::memcpy(&*indices.begin(),xPGROUP[0].indices,indices.size()*sizeof(u16));
-
-	// Release memory
-	xPGROUP.clear	();
-	PGROUP.clear	();
+	std::memcpy(&*indices.begin(), PGROUP[1][0].indices, indices.size() * sizeof(u16));
 }

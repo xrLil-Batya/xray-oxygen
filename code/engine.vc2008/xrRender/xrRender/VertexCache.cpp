@@ -1,20 +1,36 @@
 #include "stdafx.h"
+
 #include "VertexCache.h"
+
+VertexCache::VertexCache()
+{
+	VertexCache(16);
+}
+
 
 VertexCache::VertexCache(int size)
 {
-	entries.assign	(size,-1);
+	numEntries = size;
+
+	entries = new int[numEntries];
+
+	for (int i = 0; i < numEntries; i++)
+		entries[i] = -1;
 }
+
 
 VertexCache::~VertexCache()
 {
-	entries.clear	();
+	delete[] entries; 
+	entries = 0;
 }
 
-int VertexCache::At	(int index)
+
+int VertexCache::At(int index)
 {
-  return entries[index];
+	return entries[index];
 }
+
 
 void VertexCache::Set(int index, int value)
 {
@@ -24,14 +40,48 @@ void VertexCache::Set(int index, int value)
 
 void VertexCache::Clear()
 {
-	for(u32 i = 0; i < entries.size(); i++)
-		entries[i] = -1;
+	memset(entries, -1, sizeof(int) * numEntries);
 }
 
 void VertexCache::Copy(VertexCache* inVcache)
 {
-	for(u32 i = 0; i < entries.size(); i++)
+	for (int i = 0; i < numEntries; i++)
 	{
 		inVcache->Set(i, entries[i]);
 	}
 }
+
+bool VertexCache::InCache(int entry)
+{
+	bool returnVal = false;
+
+	for (int i = 0; i < numEntries; i++)
+	{
+		if (entries[i] == entry)
+		{
+			returnVal = true;
+			break;
+		}
+	}
+
+	return returnVal;
+}
+
+
+int VertexCache::AddEntry(int entry)
+{
+	int removed;
+
+	removed = entries[numEntries - 1];
+
+	//push everything right one
+	for (int i = numEntries - 2; i >= 0; i--)
+	{
+		entries[i + 1] = entries[i];
+	}
+
+	entries[0] = entry;
+
+	return removed;
+}
+
