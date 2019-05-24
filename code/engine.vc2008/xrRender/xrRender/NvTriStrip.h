@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef NULL
-#define NULL 0
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // Public interface for stripifier
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -23,18 +19,41 @@ enum PrimType
 
 struct PrimitiveGroup
 {
-	PrimType		type;
-	unsigned int	numIndices;
+	PrimType type;
+	unsigned int numIndices;
 	unsigned short* indices;
 
-////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
 
 	PrimitiveGroup() : type(PT_STRIP), numIndices(0), indices(NULL) {}
 	~PrimitiveGroup()
 	{
-		if(indices)	xr_free(indices);
+		if (indices)
+			delete[] indices;
+		indices = NULL;
 	}
 };
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+// EnableRestart()
+//
+// For GPUs that support primitive restart, this sets a value as the restart index
+//
+// Restart is meaningless if strips are not being stitched together, so enabling restart
+//  makes NvTriStrip forcing stitching.  So, you'll get back one strip.
+//
+// Default value: disabled
+//
+void EnableRestart(const unsigned int restartVal);
+
+////////////////////////////////////////////////////////////////////////////////////////
+// DisableRestart()
+//
+// For GPUs that support primitive restart, this disables using primitive restart
+//
+void DisableRestart();
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // SetCacheSize()
@@ -91,9 +110,11 @@ void SetListsOnly(const bool bListsOnly);
 // primGroups: array of optimized/stripified PrimitiveGroups
 // numGroups: number of groups returned
 //
-// Be sure to call xr_free on the returned primGroups to avoid leaking mem
+// Be sure to call delete[] on the returned primGroups to avoid leaking mem
 //
-void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<PrimitiveGroup> &primGroups);
+bool GenerateStrips(const unsigned short* in_indices, const unsigned int in_numIndices,
+	PrimitiveGroup** primGroups, unsigned short* numGroups, bool validateEnabled = false);
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // RemapIndices()
@@ -111,4 +132,5 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 //
 // Credit goes to the MS Xbox crew for the idea for this interface.
 //
-void RemapIndices(const xr_vector<PrimitiveGroup> &in_primGroups, const u16 numVerts, xr_vector<PrimitiveGroup> &remappedGroups);
+void RemapIndices(const PrimitiveGroup* in_primGroups, const unsigned short numGroups,
+	const unsigned short numVerts, PrimitiveGroup** remappedGroups);

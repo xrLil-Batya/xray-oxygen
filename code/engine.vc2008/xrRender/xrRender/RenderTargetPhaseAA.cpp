@@ -6,38 +6,27 @@ void CRenderTarget::ProcessFXAA()
 	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_0, s_pp_antialiasing->E[0]);
 
 	// Main pass
-#ifdef USE_DX11
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
 	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_pp_antialiasing->E[1]);
 	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
-#else
-	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Color, s_pp_antialiasing->E[1]);
-#endif
 }
 
 void CRenderTarget::ProcessTAA()
 {
-#ifdef USE_DX11
 	// Temporal AA passing
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
-
 	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_pp_taa->E[0]);
 	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
-#endif
 }
 
 void CRenderTarget::ProcessDLAA()
 {
 	// Pass 0
-#ifdef USE_DX11
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
 	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_pp_antialiasing->E[5]);
 	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
-#else
-	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Color, s_pp_antialiasing->E[5]);
-#endif
 }
 
 void CRenderTarget::ProcessSMAA()
@@ -51,14 +40,9 @@ void CRenderTarget::ProcessSMAA()
 	float _w	= float(Device.dwWidth);
 	float _h	= float(Device.dwHeight);
 
-	// Half-pixel offset (DX9 only)
-#ifdef USE_DX11
+	// Half-pixel offset
 	p0.set(0.0f, 0.0f);
 	p1.set(1.0f, 1.0f);
-#else
-	p0.set(0.5f / _w, 0.5f / _h);
-	p1.set((_w + 0.5f) / _w, (_h + 0.5f) / _h);
-#endif
 
 	// Phase 0: edge detection ////////////////////////////////////////////////
 	u_setrt				(rt_smaa_edgetex, nullptr, nullptr, nullptr);
@@ -99,11 +83,7 @@ void CRenderTarget::ProcessSMAA()
 	RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
 	// Phase 2: neighbour blend //////////////////////////////////////////////
-#ifdef USE_DX11
 	u_setrt(rt_Generic_2, nullptr, nullptr, nullptr);
-#else
-	u_setrt(rt_Color, nullptr, nullptr, nullptr);
-#endif
 
 	RCache.set_CullMode	(CULL_NONE);
 	RCache.set_Stencil	(FALSE);
@@ -121,21 +101,17 @@ void CRenderTarget::ProcessSMAA()
 	RCache.set_Geometry	(g_combine);
 	RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
-#ifdef USE_DX11
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
-#endif
 }
 	
 void CRenderTarget::PhaseAA()
 {
+	// Use TAA only for additionally antialiasing 
 	switch (ps_r_pp_aa_mode)
 	{
-	case FXAA: ProcessFXAA(); break;
-	case SMAA: ProcessSMAA(); break;
-	case DLAA: ProcessDLAA(); break;
+	case FXAA: ProcessFXAA(); ProcessTAA(); break;
+	case SMAA: ProcessSMAA(); ProcessTAA(); break;
+	case DLAA: ProcessDLAA(); ProcessTAA(); break;
 	}
-	
-	if (ps_r_pp_aa_quality > 1)
-		ProcessTAA();
 }
