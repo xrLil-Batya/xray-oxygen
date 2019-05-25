@@ -4,6 +4,7 @@ function element_0(shader, t_base, t_second, t_detail)		-- [0] FXAA: pass 0 - lu
 		:fog			(false)
 		:zb				(false, false)
 	shader:dx10texture	("s_image",		"$user$albedo")
+	shader:dx10sampler	("smp_rtlinear")
 end
 
 function element_1(shader, t_base, t_second, t_detail)		-- [1] FXAA: pass 1 - actually antialiasing

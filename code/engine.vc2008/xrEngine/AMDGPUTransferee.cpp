@@ -142,5 +142,6 @@ u32 CAMDReader::GetPercentActive()
 
 u32 CAMDReader::GetGPUCount()
 {
-	return hDLL_AGS ? u32(AdapterAGSInfo) : u32(AdapterADLInfo / 2);
+	u32 uCount = hDLL_AGS ? u32(AdapterAGSInfo) : u32(AdapterADLInfo / 2);
+	return uCount ? uCount : 1;
 }
