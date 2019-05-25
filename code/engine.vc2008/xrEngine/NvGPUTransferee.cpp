@@ -75,5 +75,5 @@ u32 CNvReader::GetPercentActive()
 
 u32 CNvReader::GetGPUCount()
 {
-	return u32(AdapterFinal);
+	return u32(AdapterFinal ? AdapterFinal : 1);
 }

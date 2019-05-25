@@ -47,5 +47,7 @@ void xrStripify(xr_vector<u16>& indices, xr_vector<u16>& perturb, int iCacheSize
 	}
 
 	// Copy indices
-	std::memcpy(&*indices.begin(), PGROUP[1][0].indices, indices.size() * sizeof(u16));
+	indices.clear();
+	for (u32 Iter = 0; Iter < PGROUP[1][0].numIndices; Iter++)
+		indices.emplace_back(PGROUP[1][0].indices[Iter]);
 }

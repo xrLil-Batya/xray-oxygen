@@ -28,7 +28,7 @@ ENGINE_API BOOL isGraphicDebugging;
 //////////////////////////////////////////////////////////////////////
 CHW HW;
 
-CHW::CHW() : m_pAdapter(nullptr), pDevice(nullptr), m_move_window(true), pAnnotation(nullptr)
+CHW::CHW() : m_pAdapter(nullptr), pDevice(nullptr), m_move_window(true), pAnnotation(nullptr), m_bDX11_1(false)
 {
 	Device.seqAppActivate.Add(this);
 	Device.seqAppDeactivate.Add(this);
@@ -162,7 +162,11 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 			&FeatureLevel, &pContext
 		);
 
-		if (!FAILED(R)) break;
+		if (!FAILED(R))
+		{
+			m_bDX11_1 = refFeature == D3D_FEATURE_LEVEL_11_1;
+			break;
+		}
 	}
 
 	if (IsWindows10OrGreater())
@@ -196,7 +200,6 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 		R = pDXGIDevice->SetMaximumFrameLatency(1);
 	}
 
-
 	if (FAILED(R))
 	{
 		// Fatal error! Cannot create rendering device AT STARTUP !!!
@@ -209,7 +212,12 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	R_CHK(R);
 
 	// main anotation
-	R_CHK(pContext->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), (void**)& pAnnotation));
+	if (m_bDX11_1)
+	{
+		// Only for Win8 and later
+		R_CHK(pContext->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), (void**)& pAnnotation));
+	}
+
 	_SHOW_REF("* CREATE: DeviceREF:", HW.pDevice);
 	//	Create render target and depth-stencil views here
 	UpdateViews();
