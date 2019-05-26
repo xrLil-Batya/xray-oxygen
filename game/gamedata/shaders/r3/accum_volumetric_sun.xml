@@ -1,0 +1,15 @@
+<w>
+	<element_0 ps="accum_volumetric_sun_normal" vs="stub_notransform_2uv" fog="0" zb1="0" zb2="0">
+		<blend status="1" src="one" dest="one" />
+		<sort status="0" count="2" />
+
+        <texture name="s_smap" rt="null" />
+        <texture name="s_smap_minmax" rt="$user$smap_depth_minmax" />
+		<texture name="s_position" rt="$user$position" />
+		<texture name="jitter0" rt="$user$jitter_0" />
+		
+        <sampler name="smp_nofilter" />
+        <sampler name="smp_jitter" />
+        <sampler name="smp_smap" />
+    </element_0>
+</w>

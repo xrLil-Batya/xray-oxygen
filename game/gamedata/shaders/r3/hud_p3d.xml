@@ -1,0 +1,9 @@
+<w>
+	<element_0 ps="hud3d" vs="hud3d" fog="0" zb1="1" zb2="0">
+		<blend status="1" src="srcalpha" dest="invsrcalpha" />
+		<color r="1" g="1" b="1" a="0" />
+
+		<texture name="s_base" rt="t_base" />
+		<sampler name="smp_base" />
+	</element_0>
+</w>

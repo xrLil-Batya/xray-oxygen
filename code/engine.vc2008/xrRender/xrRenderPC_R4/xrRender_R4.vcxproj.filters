@@ -733,6 +733,7 @@
     <ClInclude Include="..\xrRender\RenderLightGI.h">
       <Filter>Lights</Filter>
     </ClInclude>
+    <ClInclude Include="..\xrRenderDX11\XMLBlend.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1328,6 +1329,7 @@
     <ClCompile Include="..\xrRenderDX11\dx11EventWrapper.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\xrRenderDX11\XMLBlend.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\..\xrCore.natvis" />

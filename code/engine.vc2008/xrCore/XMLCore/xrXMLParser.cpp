@@ -99,7 +99,7 @@ void CXml::Load(const char* path, const char* xml_filename)
 
 XML_NODE* CXml::NavigateToNode(XML_NODE* start_node, const char*  path, int node_index)
 {
-	R_ASSERT3(start_node && path, "NavigateToNode failed in XML file ", m_xml_file_name);
+	R_ASSERT3(start_node && path, "NavigateToNode failed in XML file %s", m_xml_file_name);
 	XML_NODE* node = nullptr;
 
 	string_path buf_str;

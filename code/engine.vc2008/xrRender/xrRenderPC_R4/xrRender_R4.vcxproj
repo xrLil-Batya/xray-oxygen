@@ -163,6 +163,7 @@ copy "..\..\..\..\game\bins\tbbmalloc.dll" "$(xrBinOut)"</Command>
     <ClInclude Include="..\..\utils\common\NvMender2003\mender_input_output.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h" />
+    <ClInclude Include="..\xrRenderDX11\XMLBlend.h" />
     <ClInclude Include="..\xrRender\dxGlowManager.h" />
     <ClInclude Include="..\xrRender\RenderLightGI.h" />
     <ClInclude Include="..\xrRender\r_types.h" />
@@ -347,6 +348,7 @@ copy "..\..\..\..\game\bins\tbbmalloc.dll" "$(xrBinOut)"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\xrRenderDX11\dx11EventWrapper.cpp" />
+    <ClCompile Include="..\xrRenderDX11\XMLBlend.cpp" />
     <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
     <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="..\xrRender\Render.cpp" />
