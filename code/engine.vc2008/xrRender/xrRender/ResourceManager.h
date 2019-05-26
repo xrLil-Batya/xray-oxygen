@@ -51,20 +51,15 @@ private:
 	map_RT												m_rtargets;
 	map_VS												m_vs;
 	map_PS												m_ps;
-#ifdef USE_DX11
 	map_GS												m_gs;
-#endif
 	map_TD												m_td;
 
 	xr_vector<SState*>									v_states;
 	xr_vector<SDeclaration*>							v_declarations;
 	xr_vector<SGeometry*>								v_geoms;
 	xr_vector<R_constant_table*>						v_constant_tables;
-
-#ifdef USE_DX11
 	xr_vector<dx10ConstantBuffer*>						v_constant_buffer;
 	xr_vector<SInputSignature*>							v_input_signature;
-#endif
 
 	// lists
 	xr_vector<STextureList*>							lst_textures;
@@ -74,11 +69,11 @@ private:
 	// main shader-array
 	xr_vector<SPass*>									v_passes;
 	xr_vector<ShaderElement*>							v_elements;
-	xr_vector<Shader*>									v_shaders;
 	
 	xr_vector<ref_texture>								m_necessary;
 	// misc
 public:
+	xr_vector<Shader*>									v_shaders;
 	CTextureDescrMngr									m_textures_description;
 	xr_vector<std::pair<shared_str,R_constant_setup*> >	v_constant_setup;
     CVMLua*											    luaVM;

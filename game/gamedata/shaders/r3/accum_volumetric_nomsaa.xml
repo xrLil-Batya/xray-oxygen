@@ -1,0 +1,14 @@
+<w>
+	<element_0 ps="accum_volumetric_nomsaa" vs="accum_volumetric_nomsaa" fog="0" zb1="1" zb2="0">
+		<blend status="1" src="one" dest="one" />
+		<sort status="0" count="2" />
+
+        <texture name="s_lmap" rt="t_base" />
+        <texture name="s_smap" rt="null" />
+		<texture name="s_lmap" rt="fx\\fx_noise" />
+		
+        <sampler name="smp_rtlinear" />
+        <sampler name="smp_linear" />
+        <sampler name="smp_smap" />
+    </element_0>
+</w>

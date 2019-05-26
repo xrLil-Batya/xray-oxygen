@@ -190,14 +190,12 @@ void	CBlender_Compile::PassSET_ablend_mode	(BOOL bABlend,	u32 abSRC, u32 abDST)
 	RS.SetRS(D3DRS_SRCBLEND,			bABlend?abSRC:D3D11_BLEND_ONE	);
 	RS.SetRS(D3DRS_DESTBLEND,			bABlend?abDST:D3D11_BLEND_ZERO	);
 
-#ifdef USE_DX11
 	//	Since in our engine D3DRS_SEPARATEALPHABLENDENABLE state is
 	//	always set to false and in DirectX 10 blend functions for 
 	//	color and alpha are always independent, assign blend options for
 	//	alpha in DX10 identical to color.
 	RS.SetRS(D3DRS_SRCBLENDALPHA,		bABlend?abSRC:D3D11_BLEND_ONE	);
 	RS.SetRS(D3DRS_DESTBLENDALPHA,		bABlend?abDST:D3D11_BLEND_ZERO	);
-#endif
 }
 void	CBlender_Compile::PassSET_ablend_aref	(BOOL bATest,	u32 aRef)
 {

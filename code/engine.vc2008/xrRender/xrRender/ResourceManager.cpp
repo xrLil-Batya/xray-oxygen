@@ -15,6 +15,7 @@
 #include "blenders\blender_recorder.h"
 #include "tbb/task.h"
 #include "tbb/task_group.h"
+#include "../xrRenderDX11/XMLBlend.h"
 
 //	Already defined in Texture.cpp
 void fix_texture_name(LPSTR fn);
@@ -213,21 +214,28 @@ Shader*	CResourceManager::_cpp_Create	(IBlender* B, LPCSTR s_shader, LPCSTR s_te
 	return N;
 }
 
-Shader*	CResourceManager::_cpp_Create	(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
+Shader* CResourceManager::_cpp_Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-		IBlender	*pBlender = _GetBlender(s_shader?s_shader:"null");
-		if (!pBlender) return NULL;
-		return	_cpp_Create(pBlender ,s_shader,s_textures,s_constants,s_matrices);
+	IBlender* pBlender = _GetBlender(s_shader ? s_shader : "null");
+	if (!pBlender) return NULL;
+	return	_cpp_Create(pBlender, s_shader, s_textures, s_constants, s_matrices);
 }
 
-Shader*		CResourceManager::Create	(IBlender*	B,		LPCSTR s_shader,	LPCSTR s_textures,	LPCSTR s_constants, LPCSTR s_matrices)
+Shader* CResourceManager::Create(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-    return	_cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
+	return	_cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
 }
 
 Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
-	if (_lua_HasShader(s_shader))
+	if (CXMLBlend::Check(s_shader))
+	{
+		CXMLBlend* BlendXML = new CXMLBlend(s_shader);
+		Shader* pShader = BlendXML->Compile(s_textures);
+		xr_delete(BlendXML);
+		return pShader;
+	}
+	else if (_lua_HasShader(s_shader))
 		return _lua_Create(s_shader, s_textures);
 	else
 	{
