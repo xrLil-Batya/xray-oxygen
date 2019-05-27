@@ -391,11 +391,78 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
+constexpr float O_D_L1_S_ULT = 2.0f;
+constexpr float O_D_L1_D_ULT = 30.f;
+constexpr float O_D_L2_S_ULT = 8.f;
+constexpr float O_D_L2_D_ULT = 50.f;
+constexpr float O_D_L3_S_ULT = 4000.f;
+constexpr float O_D_L3_D_ULT = 110.f;
+
+constexpr float O_D_L1_S_MED = 1.f;
+constexpr float O_D_L1_D_MED = 40.f;
+constexpr float O_D_L2_S_MED = 4.f;
+constexpr float O_D_L2_D_MED = 100.f;
+constexpr float O_D_L3_S_MED = 4000.f;
+constexpr float O_D_L3_D_MED = 200.f;
+
+// Cut off Dynamic geometry depending of size of geometryand distance to cameraand current geometry optimization settings
+IC bool IsValuableToRenderDyn(dxRender_Visual* pVisual, Fmatrix& transform_matrix, bool sm)
+{
+	auto GetDistFromCamera = [](const Fvector & from_position)
+	{
+		float distance = Device.vCameraPosition.distance_to(from_position);
+		float fov_K = 70.f / Device.fFOV;
+		float adjusted_distane = distance / fov_K;
+
+		return adjusted_distane;
+	};
+
+	if (sm && ps_r_smapsize < 4096)
+	{
+		float sphere_volume = pVisual->getVisData().sphere.volume();
+
+		Fvector    Tpos;
+		transform_matrix.transform_tiny(Tpos, pVisual->vis.sphere.P);
+
+		float adjusted_distane = GetDistFromCamera(Tpos);
+
+		if (sm && ps_r_smapsize < 4096) // Highest cut off for shadow map
+		{
+			if (adjusted_distane > 160) // don't need geometry behind the farest sun shadow cascade
+				return false;
+
+			if ((sphere_volume < O_D_L1_S_ULT) && adjusted_distane > O_D_L1_D_ULT)
+				return false;
+			else if ((sphere_volume < O_D_L2_S_ULT) && adjusted_distane > O_D_L2_D_ULT)
+				return false;
+			else if ((sphere_volume < O_D_L3_S_ULT) && adjusted_distane > O_D_L3_D_ULT)
+				return false;
+			else
+				return true;
+		}
+		else
+		{
+			if ((sphere_volume < O_D_L1_S_MED) && adjusted_distane > O_D_L1_D_MED)
+				return false;
+			else if ((sphere_volume < O_D_L2_S_MED) && adjusted_distane > O_D_L2_D_MED)
+				return false;
+			else if ((sphere_volume < O_D_L3_S_MED) && adjusted_distane > O_D_L3_D_MED)
+				return false;
+			else
+				return true;
+		}
+	}
+
+	return true;
+}
+
+void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual, bool bIgnoreOpt)
 {
 	if (pVisual == nullptr) return;
 
 	// Visual is 100% visible - simply add it
+	if (!bIgnoreOpt && !IsValuableToRenderDyn(pVisual, *val_pTransform, phase == PHASE_SMAP))
+		return;
 
 	switch (pVisual->Type)
 	{
@@ -404,16 +471,16 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 			if (phase == PHASE_SMAP) return;
 			// Add all children, doesn't perform any tests
 			PS::CParticleGroup* pG	= (PS::CParticleGroup*)pVisual;
-			for (PS::CParticleGroup::SItem& I : pG->items)	{
-				if (I._effect)		add_leafs_Dynamic		(I._effect);
+			for (PS::CParticleGroup::SItem& I : pG->items)	
+			{
+				if (I._effect)
+					add_leafs_Dynamic(I._effect, bIgnoreOpt);
+
 				for (dxRender_Visual* pChildRelated : I._children_related)
-				{
-					add_leafs_Dynamic(pChildRelated);
-				}
+					add_leafs_Dynamic(pChildRelated, bIgnoreOpt);
+
 				for (dxRender_Visual* pChildFree : I._children_free)
-				{
-					add_leafs_Dynamic(pChildFree);
-				}
+					add_leafs_Dynamic(pChildFree, bIgnoreOpt);
 			}
 		}
 		return;
@@ -433,8 +500,8 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 	case MT_SKELETON_RIGID:
 		{
 			// Add all children, doesn't perform any tests
-			CKinematics * pV			= (CKinematics*)pVisual;
-			BOOL	_use_lod			= false	;
+		CKinematics* pV = (CKinematics*)pVisual;
+		bool	_use_lod = false;
 			if (pV->m_lod)				
 			{
 				Fvector							Tpos;	float		D;
@@ -443,10 +510,10 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 				if (ssa<r_ssaLOD_A)	_use_lod	= true;
 			}
 
-			if (_use_lod)				
+			if (_use_lod)
 			{
-				add_leafs_Dynamic			(pV->m_lod)		;
-			} 
+				add_leafs_Dynamic(pV->m_lod);
+			}
 			else 
 			{
 				if (phase != PHASE_SMAP)
@@ -475,106 +542,189 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual)
 	}
 }
 
-void CRender::add_leafs_Static(dxRender_Visual *pVisual)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+constexpr float O_S_L1_S_ULT = 80.f;
+constexpr float O_S_L1_D_ULT = 40.f;
+constexpr float O_S_L2_S_ULT = 600.f;
+constexpr float O_S_L2_D_ULT = 100.f;
+constexpr float O_S_L3_S_ULT = 2500.f;
+constexpr float O_S_L3_D_ULT = 120.f;
+constexpr float O_S_L4_S_ULT = 5000.f;
+constexpr float O_S_L4_D_ULT = 140.f;
+constexpr float O_S_L5_S_ULT = 20000.f;
+constexpr float O_S_L5_D_ULT = 200.f;
+
+
+constexpr float O_S_L1_S_MED = 25.f;
+constexpr float O_S_L1_D_MED = 50.f;
+constexpr float O_S_L2_S_MED = 200.f;
+constexpr float O_S_L2_D_MED = 150.f;
+constexpr float O_S_L3_S_MED = 1000.f;
+constexpr float O_S_L3_D_MED = 200.f;
+constexpr float O_S_L4_S_MED = 2500.f;
+constexpr float O_S_L4_D_MED = 300.f;
+constexpr float O_S_L5_S_MED = 7000.f;
+constexpr float O_S_L5_D_MED = 400.f;
+
+// Cut off Static geometry depending of size of geometry and distance to camera and current geometry optimization settings
+IC bool IsValuableToRender(dxRender_Visual* pVisual, bool sm)
 {
+	auto GetDistFromCamera = [](const Fvector & from_position)
+	{
+		float distance = Device.vCameraPosition.distance_to(from_position);
+		float fov_K = 70.f / Device.fFOV;
+		float adjusted_distane = distance / fov_K;
+
+		return adjusted_distane;
+	};
+
+	if (sm && ps_r_smapsize < 4096)
+	{
+		float sphere_volume = pVisual->getVisData().sphere.volume();
+
+		float adjusted_distane = GetDistFromCamera(pVisual->vis.sphere.P);
+
+		if (sm && ps_r_smapsize < 4096) // Highest cut off for shadow map
+		{
+			if (sphere_volume < 50000.f && adjusted_distane > 160) // don't need geometry behind the farest sun shadow cascade
+				return false;
+
+			if ((sphere_volume < O_S_L1_S_ULT) && adjusted_distane > O_S_L1_D_ULT)
+				return false;
+			else if ((sphere_volume < O_S_L2_S_ULT) && adjusted_distane > O_S_L2_D_ULT)
+				return false;
+			else if ((sphere_volume < O_S_L3_S_ULT) && adjusted_distane > O_S_L3_D_ULT)
+				return false;
+			else if ((sphere_volume < O_S_L4_S_ULT) && adjusted_distane > O_S_L4_D_ULT)
+				return false;
+			else if ((sphere_volume < O_S_L5_S_ULT) && adjusted_distane > O_S_L5_D_ULT)
+				return false;
+			else
+				return true;
+		}
+		else
+		{
+			if ((sphere_volume < O_S_L1_S_MED) && adjusted_distane > O_S_L1_D_MED)
+				return false;
+			else if ((sphere_volume < O_S_L2_S_MED) && adjusted_distane > O_S_L2_D_MED)
+				return false;
+			else if ((sphere_volume < O_S_L3_S_MED) && adjusted_distane > O_S_L3_D_MED)
+				return false;
+			else if ((sphere_volume < O_S_L4_S_MED) && adjusted_distane > O_S_L4_D_MED)
+				return false;
+			else if ((sphere_volume < O_S_L5_S_MED) && adjusted_distane > O_S_L5_D_MED)
+				return false;
+			else
+				return true;
+		}
+	}
+
+	return true;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void CRender::add_leafs_Static(dxRender_Visual* pVisual)
+{
+	if (!IsValuableToRender(pVisual, phase == PHASE_SMAP))
+		return;
+
 	if (!HOM.visible(pVisual->vis))		return;
 
 	// Visual is 100% visible - simply add it
-	xr_vector<dxRender_Visual*>::iterator I,E;	// it may be usefull for 'hierrarhy' visuals
+	xr_vector<dxRender_Visual*>::iterator I, E;	// it may be usefull for 'hierrarhy' visuals
 
-	switch (pVisual->Type) 
+	switch (pVisual->Type)
 	{
 	case MT_PARTICLE_GROUP:
 	{
 		if (phase == PHASE_SMAP) return;
 		// Add all children, doesn't perform any tests
 		PS::CParticleGroup* pG = (PS::CParticleGroup*)pVisual;
-		for (PS::CParticleGroup::SItem& refI : pG->items) 
+		for (PS::CParticleGroup::SItem& refI : pG->items)
 		{
 			if (refI._effect)		add_leafs_Dynamic(refI._effect);
 			for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_related.begin(); pit != refI._children_related.end(); pit++)	add_leafs_Dynamic(*pit);
 			for (xr_vector<dxRender_Visual*>::iterator pit = refI._children_free.begin(); pit != refI._children_free.end(); pit++)	add_leafs_Dynamic(*pit);
 		}
 	}
-		return;
+	return;
 	case MT_HIERRARHY:
-		{
-			// Add all children, doesn't perform any tests
-			FHierrarhyVisual* pV	= (FHierrarhyVisual*)pVisual;
-			I = pV->children.begin	();
-			E = pV->children.end	();
+	{
+		// Add all children, doesn't perform any tests
+		FHierrarhyVisual* pV = (FHierrarhyVisual*)pVisual;
+		I = pV->children.begin();
+		E = pV->children.end();
 
-			for (; I != E; I++)
-			{
-				(*I)->vis.obj_data = pV->getVisData().obj_data;
-				add_leafs_Static(*I);
-			}
+		for (; I != E; I++)
+		{
+			(*I)->vis.obj_data = pV->getVisData().obj_data;
+			add_leafs_Static(*I);
 		}
-		return;
+	}
+	return;
 	case MT_SKELETON_ANIM:
 	case MT_SKELETON_RIGID:
+	{
+		// Add all children, doesn't perform any tests
+		CKinematics* pV = (CKinematics*)pVisual;
+		if (phase != PHASE_SMAP)
+			pV->CalculateBones(true);
+
+		I = pV->children.begin();
+		E = pV->children.end();
+
+		for (; I != E; I++)
+		{
+			(*I)->vis.obj_data = pV->getVisData().obj_data;
+			add_leafs_Static(*I);
+		}
+	}
+	return;
+	case MT_LOD:
+	{
+		FLOD* pV = (FLOD*)pVisual;
+		float		D;
+		float		ssa = CalcSSA(D, pV->vis.sphere.P, pV);
+		ssa *= pV->lod_factor;
+		if (ssa < r_ssaLOD_A)
+		{
+			if (ssa < r_ssaDISCARD)	return;
+			mapLOD.emplace_back(std::make_pair(D, _LodItem({ ssa, pVisual })));
+		}
+
+		if (ssa > r_ssaLOD_B || phase == PHASE_SMAP)
 		{
 			// Add all children, doesn't perform any tests
-			CKinematics * pV = (CKinematics*)pVisual;
-			if (phase != PHASE_SMAP)
-				pV->CalculateBones(true);
-
-			I = pV->children.begin	();
-			E = pV->children.end	();
-
+			I = pV->children.begin();
+			E = pV->children.end();
 			for (; I != E; I++)
 			{
 				(*I)->vis.obj_data = pV->getVisData().obj_data;
 				add_leafs_Static(*I);
 			}
 		}
-		return;
-	case MT_LOD:
-		{
-			FLOD		* pV	=		(FLOD*) pVisual;
-			float		D;
-			float		ssa		=		CalcSSA(D,pV->vis.sphere.P,pV);
-			ssa					*=		pV->lod_factor;
-			if (ssa<r_ssaLOD_A)
-			{
-				if (ssa<r_ssaDISCARD)	return;
-				mapLOD.emplace_back(std::make_pair(D, _LodItem({ ssa, pVisual })));
-			}
-
-			if (ssa>r_ssaLOD_B || phase==PHASE_SMAP)
-			{
-				// Add all children, doesn't perform any tests
-				I = pV->children.begin	();
-				E = pV->children.end	();
-				for (; I != E; I++)
-				{
-					(*I)->vis.obj_data = pV->getVisData().obj_data;
-					add_leafs_Static(*I);
-				}
-			}
-		}
-		return;
+	}
+	return;
 	case MT_TREE_PM:
 	case MT_TREE_ST:
-		{
-			// General type of visual
-			r_dsgraph_insert_static		(pVisual);
-		}
-		return;
+	{
+		// General type of visual
+		r_dsgraph_insert_static(pVisual);
+	}
+	return;
 	default:
-		{
-			// General type of visual
-			r_dsgraph_insert_static		(pVisual);
-		}
-		return;
+	{
+		// General type of visual
+		r_dsgraph_insert_static(pVisual);
+	}
+	return;
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 {
+	if (!IsValuableToRenderDyn(pVisual, *val_pTransform, phase == PHASE_SMAP))
+		return FALSE;
+
 	// Check frustum visibility and calculate distance to visual's center
 	Fvector		Tpos;	// transformed position
 	EFC_Visible	VIS;
@@ -668,6 +818,9 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 
 void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
 {
+	if (!IsValuableToRender(pVisual, phase == PHASE_SMAP))
+		return;
+
 	// Check frustum visibility and calculate distance to visual's center
 	EFC_Visible	VIS;
 	vis_data&	vis			= pVisual->vis;

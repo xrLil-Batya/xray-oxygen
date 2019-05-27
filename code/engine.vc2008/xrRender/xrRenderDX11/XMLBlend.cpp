@@ -29,15 +29,17 @@ Shader* CXMLBlend::Compile(const char* Texture)
 	XML_NODE* pRoot = Parser.GetRoot();
 	for (u32 Iter = 0; Iter < 16; Iter++)
 	{
-		string16 buff;
+		string16 buff, buff_nd;
 		xr_sprintf(buff, sizeof(buff), "element_%d", Iter);
+		xr_sprintf(buff_nd, sizeof(buff), "element_nd_%d", Iter);
 		XML_NODE* pElement = Parser.NavigateToNode(pRoot, buff);
+		XML_NODE* pElementND = Parser.NavigateToNode(pRoot, buff_nd);
 
-		if (pElement)
+		if (pElement || pElementND)
 		{
 			dxRenderDeviceRender::Instance().Resources->_ParseList(pCompiler->L_textures, Texture);
 			pCompiler->iElement = Iter;
-			pCompiler->bDetail = dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(pCompiler->L_textures[0], pCompiler->detail_texture, pCompiler->detail_scaler);
+			pCompiler->bDetail = pElement ? dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(pCompiler->L_textures[0], pCompiler->detail_texture, pCompiler->detail_scaler) : false;
 
 			LocShader.E[Iter] = MakeShader(Texture, pElement);
 		}
@@ -62,8 +64,8 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 	pCompiler->RS.Invalidate();
 
 	// Compile
-	//LPCSTR t_0 = *pCompiler->L_textures[0] ? *pCompiler->L_textures[0] : "null";
-	LPCSTR t_1 = (pCompiler->L_textures.size() > 1) ? *pCompiler->L_textures[1] : "null";
+	LPCSTR t_0 = *pCompiler->L_textures[0] ? *pCompiler->L_textures[0] : "null";
+	//LPCSTR t_1 = (pCompiler->L_textures.size() > 1) ? *pCompiler->L_textures[1] : "null";
 	//LPCSTR t_d = pCompiler->detail_texture ? pCompiler->detail_texture : "null";
 
 	// Parse root attributes
@@ -75,8 +77,6 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 	};
 	const char* PSName = Parser.ReadAttrib(pElement, "ps", "false");
 	const char* VSName = Parser.ReadAttrib(pElement, "vs", "false");
-	pCompiler->PassSET_LightFog(FALSE, bFog);
-	pCompiler->PassSET_ZB(bZb[0], bZb[1]);
 	pCompiler->r_Pass(VSName, PSName, bFog, bZb[0], bZb[1]);
 
 	// Check blend
@@ -98,12 +98,17 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 		pCompiler->SetParams(Count, bStatus);
 	}
 
+	// Check atoc
+	XML_NODE* pAtoc = Parser.NavigateToNode(pElement, "atoc");
+	if (pAtoc)
+		pCompiler->RS.SetRS(XRDX10RS_ALPHATOCOVERAGE, Parser.ReadAttribBool(pAtoc, "status"));
+
 	// Check aref
 	XML_NODE* pAref = Parser.NavigateToNode(pElement, "aref");
 	if (pAref)
 	{
 		bool bStatus = Parser.ReadAttribBool(pAref, "status");
-		int Count = Parser.ReadAttribInt(pAref, "status", 0);
+		int Count = Parser.ReadAttribInt(pAref, "count", 0);
 		pCompiler->PassSET_ablend_aref(bStatus, Count);
 	}
 
@@ -120,28 +125,57 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 		);
 	}
 
-	// Chec,k body 
+	// Check stencil 
+	XML_NODE* pStencil = Parser.NavigateToNode(pElement, "stencil");
+	if(pStencil)
+	{
+		bool bStatus = Parser.ReadAttribBool(pStencil, "status");
+		u32 CMP = CMPFunValidate(Parser.ReadAttrib(pStencil, "cmp", "never"));
+		u32 Mask = Parser.ReadAttribInt(pStencil, "mask", 0);
+		u32 WriteMask = Parser.ReadAttribInt(pStencil, "wmask", 0);;
+
+		u32 Fail  = StencilValidate(Parser.ReadAttrib(pStencil, "fail", "zero"));
+		u32 Pass  = StencilValidate(Parser.ReadAttrib(pStencil, "pass", "zero"));
+		u32 zFail = StencilValidate(Parser.ReadAttrib(pStencil, "zfail", "zero"));
+
+		pCompiler->r_Stencil(bStatus, CMP, Mask, WriteMask, Fail, Pass, zFail);
+
+		XML_NODE* pStencilRef = Parser.NavigateToNode(pStencil, "ref");
+		if (pStencilRef)
+			pCompiler->r_StencilRef(Parser.ReadAttribInt(pStencilRef, "value", 0));
+	}
+
+	// Check body 
 	int Idx = 1;
-	XML_NODE* pTexture = Parser.NavigateToNode(pElement, "texture");
-	do
+	XML_NODE* pTexture = Parser.NavigateToNode(pElement, "texture"); 
+	while (pTexture)
 	{
 		shared_str TextureName = Parser.ReadAttrib(pTexture, "name", "none");
 		shared_str RtName = Parser.ReadAttrib(pTexture, "rt", "none");
+		xr_string DestTexName = Parser.ReadAttrib(pTexture, "dest", "none");
 		if (TextureName != "none" && RtName != "none")
 		{
-			if(TextureName == "t_base")
-				pCompiler->r_dx10Texture(t_1, RtName.c_str());
+			if (RtName == "t_base")
+			{
+				if (DestTexName != "none")
+				{
+					xr_string TryTexName = TextureName.c_str() + DestTexName;
+					pCompiler->r_dx10Texture(TryTexName.c_str(), t_0);
+				}
+				else pCompiler->r_dx10Texture(TextureName.c_str(), t_0);
+
+			}
 			else
 				pCompiler->r_dx10Texture(TextureName.c_str(), RtName.c_str());
 		}
 
 		pTexture = Parser.NavigateToNode(pElement, "texture", Idx);
 		Idx++;
-	} while (pTexture);
+	}
 
 	Idx = 1;
 	XML_NODE* pSampler = Parser.NavigateToNode(pElement, "sampler");
-	do
+	while (pSampler)
 	{
 		shared_str SamplerName = Parser.ReadAttrib(pSampler, "name", "none");
 		if (SamplerName != "none")
@@ -149,7 +183,7 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 
 		pSampler = Parser.NavigateToNode(pElement, "sampler", Idx);
 		Idx++;
-	} while (pSampler);
+	}
 
 	pCompiler->r_End();
 	ShaderElement* pTryElement = dxRenderDeviceRender::Instance().Resources->_CreateElement(E);
@@ -188,3 +222,34 @@ u32 CXMLBlend::BlendValidate(shared_str type)
 
 	return SrcType;
 }
+
+u32 CXMLBlend::StencilValidate(shared_str type)
+{
+	u32 SrcType = 0;
+	if (type == "zero")			SrcType = 1;
+	if (type == "one")	        SrcType = 2;
+	if (type == "replace")	    SrcType = 3;
+	if (type == "incrsat")		SrcType = 4;
+	if (type == "decrsat")	    SrcType = 5;
+	if (type == "invert")		SrcType = 6;
+	if (type == "incr")			SrcType = 7;
+	if (type == "decr")			SrcType = 8;
+
+	return SrcType;
+}
+
+u32 CXMLBlend::CMPFunValidate(shared_str type)
+{
+	u32 SrcType = 0;
+	if (type == "never")		SrcType = 1;
+	if (type == "less")	        SrcType = 2;
+	if (type == "equal")	    SrcType = 3;
+	if (type == "lessequal")	SrcType = 4;
+	if (type == "greater")	    SrcType = 5;
+	if (type == "notequal")		SrcType = 6;
+	if (type == "greaterequal")	SrcType = 7;
+	if (type == "always")		SrcType = 8;
+
+	return SrcType;
+}
+

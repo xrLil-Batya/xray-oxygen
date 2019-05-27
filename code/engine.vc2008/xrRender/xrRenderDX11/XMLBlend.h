@@ -19,4 +19,6 @@ static bool			Check		(const char* FileName);
 
 private:
 	u32				BlendValidate(shared_str type);
+	u32				StencilValidate(shared_str type);
+	u32				CMPFunValidate(shared_str type);
 };
