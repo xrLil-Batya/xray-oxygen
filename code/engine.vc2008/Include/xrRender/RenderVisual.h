@@ -8,6 +8,8 @@ struct vis_data;
 class IRenderVisual
 {
 public:
+	bool bIgnoreOpt;
+	IRenderVisual() : bIgnoreOpt(false) {} ;
 	virtual ~IRenderVisual() {;}
 
 	virtual vis_data&	_BCL	getVisData() = 0;

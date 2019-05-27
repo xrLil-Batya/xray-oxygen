@@ -1,11 +1,10 @@
-﻿#ifndef IRENDERABLE_H_INCLUDED
-#define IRENDERABLE_H_INCLUDED
-
+﻿#pragma once
 #include "render.h"
 
 //////////////////////////////////////////////////////////////////////////
 // definition ("Renderable")
-class	ENGINE_API	IRenderable			{
+class	ENGINE_API	IRenderable		
+{
 public:
 	struct 
 	{
@@ -22,5 +21,3 @@ public:
 	virtual	BOOL						renderable_ShadowGenerate	()	{ return FALSE; };
 	virtual	BOOL						renderable_ShadowReceive	()	{ return FALSE; };
 };
-
-#endif // IRENDERABLE_H_INCLUDED

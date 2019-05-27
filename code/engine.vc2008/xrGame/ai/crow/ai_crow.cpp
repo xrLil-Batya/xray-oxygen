@@ -137,7 +137,8 @@ BOOL CAI_Crow::net_Spawn(CSE_Abstract* DC)
 {
 	bool inh = inherited::net_Spawn(DC);
 	setVisible	(TRUE);
-	setEnabled	(TRUE);
+	setEnabled	(TRUE); 
+	renderable.visual->bIgnoreOpt = true;
 
 	// animations
 	IKinematicsAnimated* M		= smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(M);

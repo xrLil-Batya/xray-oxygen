@@ -170,7 +170,7 @@ private:
 
 	BOOL							add_Dynamic					(dxRender_Visual*pVisual, u32 planes);		// normal processing
 	void							add_Static					(dxRender_Visual*pVisual, u32 planes);
-	void							add_leafs_Dynamic			(dxRender_Visual*pVisual);					// if detected node's full visibility
+	void							add_leafs_Dynamic			(dxRender_Visual*pVisual, bool bIgnoreOpt = false); // if detected node's full visibility
 	void							add_leafs_Static			(dxRender_Visual*pVisual);					// if detected node's full visibility
 
 public:
@@ -275,7 +275,7 @@ public:
 	// Main 
 	virtual void					flush						();
 	virtual void					set_Object					(IRenderable*		O	);
-	virtual	void					add_Occluder				(Fbox2&	bb_screenspace	);			// mask screen region as oclluded
+	virtual	void					add_Occluder				(Fbox2&	bb_screenspace	);		// mask screen region as oclluded
 	virtual void					add_Visual					(IRenderVisual*	V	);			// add visual leaf	(no culling performed at all)
 	virtual void					add_Geometry				(IRenderVisual*	V	);			// add visual(s)	(all culling performed)
 
