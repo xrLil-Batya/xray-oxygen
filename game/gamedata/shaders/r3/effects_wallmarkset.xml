@@ -1,0 +1,12 @@
+<w>
+	<element_0 ps="simple" vs="wmark" fog="false" zb1="true" zb2="false">
+		<blend status="true" src="destcolor" dest="srccolor" />
+		<sort status="false" count="1" />
+		<flags wmark="true" />
+    	<aref status="false" count="0" />
+		<color r="true" g="true" b="true" a="false" />
+
+		<texture name="s_base" rt="t_base" />
+		<sampler name="smp_rtlinear" />
+	</element_0>
+</w>

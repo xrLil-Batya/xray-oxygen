@@ -1,0 +1,11 @@
+<w>
+	<element_0 ps="gamma_gen_lut" vs="stub_screen_space" fog="false" zb1="false" zb2="false" />
+	
+    <element_1 ps="gamma_apply" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_image" 	rt="$user$generic0"/>
+		<texture name="s_gamma_lut" rt="$user$gamma_lut"/>
+		
+        <sampler name="smp_nofilter" />
+        <sampler name="smp_rtlinear" />
+    </element_1>
+</w>

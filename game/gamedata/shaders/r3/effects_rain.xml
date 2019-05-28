@@ -1,0 +1,9 @@
+<w>
+    <element_0 ps="stub_default" vs="stub_default" fog="false" zb1="true" zb2="false">
+		<blend status="true" src="srcalpha" dest="invsrcalpha" />
+		<aref status="true" count="0" />
+
+        <texture name="s_base" rt="t_base"/>
+        <sampler name="smp_base" />
+    </element_0>
+</w>

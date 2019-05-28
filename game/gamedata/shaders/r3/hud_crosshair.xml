@@ -1,0 +1,5 @@
+<w>
+	<element_0 ps="simple_color" vs="hud_crosshair" fog="false" zb1="false" zb2="false">
+		<blend status="true" src="srcalpha" dest="invsrcalpha" />
+	</element_0>
+</w>

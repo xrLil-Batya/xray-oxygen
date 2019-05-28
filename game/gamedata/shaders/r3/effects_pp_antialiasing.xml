@@ -1,0 +1,37 @@
+<w>
+	<!-- FXAA: Luma -->
+  <element_0 ps="fxaa_luma" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+        <texture name="s_image" rt="$user$albedo"/>
+	</element_0>
+	
+	<!-- FXAA: Main -->
+  <element_1 ps="fxaa_main" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+			<texture name="s_image" rt="$user$generic0"/>
+      <sampler name="smp_rtlinear" />
+	</element_1>
+	
+	<!-- SMAA: Edge -->
+  <element_2 ps="smaa_edge_detect" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_image" rt="$user$albedo"/>
+		<texture name="s_position" rt="$user$position"/>
+	</element_2>
+	
+	<!-- SMAA: Weight -->
+  <element_3 ps="smaa_bweight_calc" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_edgetex" rt="$user$smaa_edgetex"/>
+		<texture name="s_areatex" rt="shaders\\smaa_area_tex_dx10"/>
+		<texture name="s_searchtex" rt="shaders\\smaa_search_tex"/>
+	</element_3>
+	
+	<!-- SMAA: Neighbourhood -->
+  <element_4 ps="smaa_neighbour_blend" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_image" rt="$user$albedo"/>
+		<texture name="s_blendtex" rt="$user$smaa_blendtex"/>
+	</element_4>
+	
+	<!-- DLAA: Main -->
+  <element_5 ps="dlaa_main" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+			<texture name="s_image" rt="$user$albedo"/>
+      <sampler name="smp_rtlinear" />
+	</element_5>
+</w>

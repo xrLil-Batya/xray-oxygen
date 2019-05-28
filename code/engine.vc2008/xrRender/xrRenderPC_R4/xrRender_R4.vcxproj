@@ -86,8 +86,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <IgnoreSpecificDefaultLibraries>
-      </IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>xrScripts.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
       <Command>copy "$(xrSDKBins)AnselSDK64.dll" "$(xrBinOut)"</Command>
@@ -147,8 +146,7 @@ copy "..\..\..\..\game\bins\tbbmalloc.dll" "$(xrBinOut)"</Command>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <IgnoreSpecificDefaultLibraries>
-      </IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>xrScripts.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
       <Command>copy "$(xrSDKBins)AnselSDK64.dll" "$(xrBinOut)"</Command>
@@ -490,7 +488,6 @@ copy "..\..\..\..\game\bins\tbbmalloc.dll" "$(xrBinOut)"</Command>
     <ClCompile Include="..\xrRender\Shader.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10r_constants_cache.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10ResourceManager_Resources.cpp" />
-    <ClCompile Include="..\xrRenderDX10\dx10ResourceManager_Scripting.cpp" />
     <ClCompile Include="..\xrRender\ETextureParams.cpp" />
     <ClCompile Include="..\xrRender\ResourceManager.cpp" />
     <ClCompile Include="..\xrRender\ResourceManager_Loader.cpp" />

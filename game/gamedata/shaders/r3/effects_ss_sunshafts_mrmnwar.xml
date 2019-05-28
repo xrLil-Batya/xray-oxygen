@@ -1,0 +1,24 @@
+<w>
+    <element_0 ps="ssss_mrmnwar_mask" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_position" rt="$user$position"/>
+		<texture name="s_image" rt="$user$generic0"/>
+	</element_0>
+	
+    <element_1 ps="ssss_mrmnwar_mask_blur" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_mask" rt="$user$SunShaftsMask"/>
+        <sampler name="smp_rtlinear" />
+	</element_1>
+	
+    <element_2 ps="ssss_mrmnwar_generation" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_mask_blur" rt="$user$SunShaftsMaskSmoothed"/>
+	</element_2>
+	
+    <element_3 ps="ssss_mrmnwar_generation" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_mask_blur" rt="$user$SunShaftsPass0"/>
+	</element_3>
+	
+    <element_4 ps="ssss_mrmnwar_display" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_image" 	rt="$user$generic0"/>
+		<texture name="s_sunshafts" rt="$user$SunShaftsMaskSmoothed"/>
+    </element_4>
+</w>

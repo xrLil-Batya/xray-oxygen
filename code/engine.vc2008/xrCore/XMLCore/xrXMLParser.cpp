@@ -268,9 +268,19 @@ const char* CXml::ReadAttrib(XML_NODE* node, const char* attrib, const char* def
 	return default_str_val;
 }
 
+// Try boolean parser
 bool CXml::ReadAttribBool(XML_NODE* node, const char* attrib, bool default_value)
 {
-	return ReadAttribInt(node, attrib, default_value);
+	const char* result_str = ReadAttrib(node, attrib, nullptr);
+	if (result_str)
+	{
+		if (strstr(result_str, "true"))
+			return true;
+		else if (strstr(result_str, "false"))
+			return false;
+	}
+
+	return result_str ? atoi_17(result_str) : default_value;
 }
 
 bool CXml::ReadAttribBool(const char* path, int index, const char* attrib, bool default_value)

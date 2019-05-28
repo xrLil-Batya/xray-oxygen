@@ -1,0 +1,31 @@
+<w>
+    <element_0 ps="ssss_ogse_mask" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_position" 	rt="$user$position"/>
+		<texture name="s_image" 	rt="$user$generic0"/>
+	</element_0>
+	
+    <element_1 ps="ssss_ogse_blur" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_sun_shafts" rt="$user$sun_shafts0" />
+	</element_1>
+	
+    <element_2 ps="ssss_ogse_blur" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_sun_shafts" rt="$user$sun_shafts1" />
+	</element_2>
+	
+    <element_3 ps="ssss_ogse_blur" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_sun_shafts" rt="$user$sun_shafts0" />
+	</element_3>
+	
+    <element_4 ps="ssss_ogse_final" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_position" 	 rt="$user$position"/>
+		<texture name="s_image" 	 rt="$user$generic0"/>
+		<texture name="s_sun_shafts" rt="$user$sun_shafts1"/>
+
+		 <!-- Jitter -->
+		<texture name="jitter0" 	 rt="$user$jitter_0"/>
+		<texture name="jitter1" 	 rt="$user$jitter_1"/>
+		<texture name="jitter_hq" 	 rt="$user$jitter_hq"/>
+
+        <sampler name="smp_jitter" />
+	</element_4>
+</w>

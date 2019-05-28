@@ -24,5 +24,5 @@
 	<element_4 ps="bloom_filter_f" vs="stub_notransform_build" fog="0" zb1="0" zb2="0">
 		<texture name="s_bloom" rt="$user$bloom2" />
 		<sampler name="smp_rtlinear" />
-	</element_3>
+	</element_4>
 </w>

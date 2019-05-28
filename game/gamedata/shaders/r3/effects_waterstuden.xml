@@ -1,0 +1,27 @@
+<w>
+	<element_0 ps="water" vs="water" zb1="true" zb2="false">
+		<blend status="false" src="srcalpha" dest="invsrcalpha" />
+		<color r="true" g="true" b="true" a="false" />
+		<sort status="false" count="2" />
+		<flags dist="true" />
+
+		<texture name="s_base" 		rt="water\\water_studen" />
+		<texture name="s_nmap" 		rt="water\\water_normal" />
+		<texture name="s_env0" 		rt="$user$sky0" />
+		<texture name="s_env1" 		rt="$user$sky1" />
+		
+		<sampler name="smp_base" />
+		<sampler name="smp_rtlinear" />
+	</element_0>
+	
+	<element_nd_4 ps="waterd" vs="waterd" fog="false" zb1="true" zb2="false">
+		<blend status="true" src="srcalpha" dest="invsrcalpha" />
+		<sort status="true" count="2" />
+		<flags dist="true" />
+		
+		<texture name="s_base" 		rt="water\\water_studen" />
+		<texture name="s_distort" 	rt="water\\water_dudv" />
+		
+		<sampler name="smp_base" />
+	</element_nd_4>
+</w>

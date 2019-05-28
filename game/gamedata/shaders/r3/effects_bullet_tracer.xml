@@ -1,0 +1,8 @@
+<w>
+	<element_0 ps="stub_default" vs="stub_default" zb1="1" zb2="0">
+		<blend status="1" src="one" dest="one" />
+	
+		<texture name="s_base" rt="t_base" />
+		<sampler name="smp_base" />
+	</element_0>
+</w>

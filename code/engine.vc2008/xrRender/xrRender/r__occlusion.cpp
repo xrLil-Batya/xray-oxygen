@@ -37,7 +37,8 @@ void	R_occlusion::occq_destroy	(				)
 	pool.clear	();
 	fids.clear	();
 }
-u32		R_occlusion::occq_begin		(u32&	ID		)
+
+u32 R_occlusion::occq_begin(u32& ID)
 {
 	if (!enabled)		return 0;
 
@@ -50,72 +51,63 @@ u32		R_occlusion::occq_begin		(u32&	ID		)
 		return 0;
 	}
 
-	RImplementation.stats.o_queries	++;
-	if (!fids.empty())	{
-		ID				= fids.back	();	
-		fids.pop_back	();
-		VERIFY				( pool.size() );
-		used[ID]			= pool.back	();
-	} else {
-		ID					= (u32)used.size	();
-		VERIFY				( pool.size() );
-		used.push_back		(pool.back());
+	RImplementation.stats.o_queries++;
+	if (!fids.empty()) {
+		ID = fids.back();
+		fids.pop_back();
+		VERIFY(pool.size());
+		used[ID] = pool.back();
 	}
-	pool.pop_back			();
-	CHK_DX					(BeginQuery(used[ID].Q));
+	else {
+		ID = (u32)used.size();
+		VERIFY(pool.size());
+		used.push_back(pool.back());
+	}
+	pool.pop_back();
+	CHK_DX(BeginQuery(used[ID].Q));
 
-	return			used[ID].order;
+	return used[ID].order;
 }
-void	R_occlusion::occq_end		(u32&	ID		)
+
+void R_occlusion::occq_end(u32& ID)
 {
 	if (!enabled)		return;
 
 	//	Igor: prevent release crash if we issue too many queries
 	if (ID == iInvalidHandle) return;
 
-	CHK_DX			(EndQuery(used[ID].Q));
+	CHK_DX(EndQuery(used[ID].Q));
 }
-R_occlusion::occq_result R_occlusion::occq_get		(u32&	ID		)
+
+R_occlusion::occq_result R_occlusion::occq_get(u32& ID)
 {
 	if (!enabled)		return 0xffffffff;
 
 	//	Igor: prevent release crash if we issue too many queries
 	if (ID == iInvalidHandle) return 0xFFFFFFFF;
 
-	occq_result	fragments	= 0;
+	occq_result	fragments = 0;
 	HRESULT hr;
-	CTimer	T;
-	T.Start	();
-	Device.Statistic->RenderDUMP_Wait.Begin	();
-	VERIFY_FORMAT( ID<used.size(), "_Pos = %d, size() = %d ", ID, used.size());
-	while	((hr=GetData(used[ID].Q, &fragments,sizeof(fragments)))==S_FALSE) 
-	{
-		if (!SwitchToThread())			
-			Sleep(ps_r_wait_sleep);
 
-		if (T.GetElapsed_ms() > 500)	
-		{
-			fragments	= (occq_result)-1;//0xffffffff;
-			break;
-		}
-	}
-	Device.Statistic->RenderDUMP_Wait.End	();
-	if		(hr == D3DERR_DEVICELOST)	fragments = 0xffffffff;
+	if ((hr = GetData(used[ID].Q, &fragments, sizeof(fragments))) == S_FALSE)
+		fragments = (occq_result)-1; //0xffffffff;
+	if (hr == D3DERR_DEVICELOST)	fragments = 0xffffffff;
 
-	if (0==fragments)	RImplementation.stats.o_culled	++;
+	if (0 == fragments)	RImplementation.stats.o_culled++;
 
 	// insert into pool (sorting in decreasing order)
-	_Q&		Q			= used[ID];
+	_Q& Q = used[ID];
 	if (pool.empty())	pool.push_back(Q);
-	else	{
-		int		it		= int(pool.size())-1;
-		while	((it>=0) && (pool[it].order < Q.order))	it--;
-		pool.insert		(pool.begin()+it+1,Q);
+	else
+	{
+		int		it = int(pool.size()) - 1;
+		while ((it >= 0) && (pool[it].order < Q.order))	it--;
+		pool.insert(pool.begin() + it + 1, Q);
 	}
 
 	// remove from used and shrink as nesessary
-	used[ID].Q			= 0;
-	fids.push_back		(ID);
-	ID					= 0;
+	used[ID].Q = 0;
+	fids.push_back(ID);
+	ID = 0;
 	return	fragments;
 }

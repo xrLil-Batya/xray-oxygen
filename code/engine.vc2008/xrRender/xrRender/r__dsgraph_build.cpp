@@ -387,9 +387,6 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 		}
 	}
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 constexpr float O_D_L1_S_ULT = 2.0f;
 constexpr float O_D_L1_D_ULT = 30.f;
@@ -398,12 +395,12 @@ constexpr float O_D_L2_D_ULT = 50.f;
 constexpr float O_D_L3_S_ULT = 4000.f;
 constexpr float O_D_L3_D_ULT = 110.f;
 
-constexpr float O_D_L1_S_MED = 1.f;
-constexpr float O_D_L1_D_MED = 40.f;
+constexpr float O_D_L1_S_MED = 1.4f;
+constexpr float O_D_L1_D_MED = 30.f;
 constexpr float O_D_L2_S_MED = 4.f;
-constexpr float O_D_L2_D_MED = 100.f;
+constexpr float O_D_L2_D_MED = 80.f;
 constexpr float O_D_L3_S_MED = 4000.f;
-constexpr float O_D_L3_D_MED = 200.f;
+constexpr float O_D_L3_D_MED = 150.f;
 
 // Cut off Dynamic geometry depending of size of geometryand distance to cameraand current geometry optimization settings
 IC bool IsValuableToRenderDyn(dxRender_Visual* pVisual, Fmatrix& transform_matrix, bool sm)
@@ -555,16 +552,16 @@ constexpr float O_S_L5_S_ULT = 20000.f;
 constexpr float O_S_L5_D_ULT = 200.f;
 
 
-constexpr float O_S_L1_S_MED = 25.f;
-constexpr float O_S_L1_D_MED = 50.f;
-constexpr float O_S_L2_S_MED = 200.f;
-constexpr float O_S_L2_D_MED = 150.f;
-constexpr float O_S_L3_S_MED = 1000.f;
-constexpr float O_S_L3_D_MED = 200.f;
-constexpr float O_S_L4_S_MED = 2500.f;
-constexpr float O_S_L4_D_MED = 300.f;
-constexpr float O_S_L5_S_MED = 7000.f;
-constexpr float O_S_L5_D_MED = 400.f;
+constexpr float O_S_L1_S_MED = 60.f;
+constexpr float O_S_L1_D_MED = 45.f;
+constexpr float O_S_L2_S_MED = 400.f;
+constexpr float O_S_L2_D_MED = 100.f;
+constexpr float O_S_L3_S_MED = 2000.f;
+constexpr float O_S_L3_D_MED = 160.f;
+constexpr float O_S_L4_S_MED = 3800.f;
+constexpr float O_S_L4_D_MED = 200.f;
+constexpr float O_S_L5_S_MED = 13000.f;
+constexpr float O_S_L5_D_MED = 300.f;
 
 // Cut off Static geometry depending of size of geometry and distance to camera and current geometry optimization settings
 IC bool IsValuableToRender(dxRender_Visual* pVisual, bool sm)

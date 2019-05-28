@@ -1,0 +1,9 @@
+<w>
+	<element_0 ps="portal" vs="portal" fog="true" zb1="true" zb2="false">
+		<blend status="true" src="srcalpha" dest="invsrcalpha" />
+		<sort status="true" count="3" />
+	
+		<texture name="s_tonemap" rt="$user$tonemap" />
+		<sampler name="smp_base" />
+	</element_0>
+</w>
