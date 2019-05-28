@@ -2,6 +2,7 @@
 #include "GameInfo.h"
 #include "Actor.h"
 #include "xrEngine\IGame_Actor.h"
+#include "xrGame\InventoryOwner.h"
 
 using namespace XRay;
 
