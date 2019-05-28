@@ -1,0 +1,32 @@
+<w>
+	<element_0 ps="water_soft" vs="water_soft" zb1="true" zb2="false">
+		<blend status="true" src="srcalpha" dest="invsrcalpha" />
+		<sort status="false" count="2" />
+		<flags dist="true" />
+
+		<texture name="s_base" 		rt="water\\water_water" />
+		<texture name="s_nmap" 		rt="water\\water_normal" />
+		<texture name="s_env0" 		rt="$user$sky0" />
+		<texture name="s_env1" 		rt="$user$sky1" />
+		<texture name="s_position" 	rt="$user$position" />
+		<texture name="s_leaves" 	rt="water\\water_foam" />
+		
+		<sampler name="smp_base" />
+		<sampler name="smp_nofilter" />
+		<sampler name="smp_rtlinear" />
+	</element_0>
+
+  <element_nd_4 ps="water_soft" vs="water_soft" fog="false" zb1="true" zb2="false">
+		<blend status="true" src="srcalpha" dest="invsrcalpha" />
+		<sort status="true" count="2" />
+		<flags dist="true" />
+		<color r="true" g="true" b="true" a="true" />
+
+		<texture name="s_base" 		rt="water\\water_water" />
+		<texture name="s_distort" 	rt="water\\water_dudv" />
+		<texture name="s_position" 	rt="$user$position" />
+		
+		<sampler name="smp_base" />
+		<sampler name="smp_nofilter" />
+	</element_nd_4>
+</w>

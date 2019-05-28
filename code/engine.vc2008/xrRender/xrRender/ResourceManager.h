@@ -6,9 +6,6 @@
 #include	"shader.h"
 #include	"tss_def.h"
 #include	"TextureDescrManager.h"
-#include "../../xrScripts/VMLua.h"
-// refs
-struct		lua_State;
 
 class dx10ConstantBuffer;
 
@@ -76,11 +73,8 @@ public:
 	xr_vector<Shader*>									v_shaders;
 	CTextureDescrMngr									m_textures_description;
 	xr_vector<std::pair<shared_str,R_constant_setup*> >	v_constant_setup;
-    CVMLua*											    luaVM;
 	BOOL												bDeferredLoad;
-private:
-	void							LS_Load				();
-	void							LS_Unload			();
+
 public:
 	// Miscelaneous
 	void							_ParseList			(sh_list& dest, LPCSTR names);
@@ -175,8 +169,6 @@ public:
 
 	Shader*							_cpp_Create			(LPCSTR		s_shader,	LPCSTR s_textures=0,	LPCSTR s_constants=0,	LPCSTR s_matrices=0);
 	Shader*							_cpp_Create			(IBlender*	B,			LPCSTR s_shader=0,		LPCSTR s_textures=0,	LPCSTR s_constants=0, LPCSTR s_matrices=0);
-	Shader*							_lua_Create			(LPCSTR		s_shader,	LPCSTR s_textures);
-	BOOL							_lua_HasShader		(LPCSTR		s_shader);
 
 	CResourceManager						()	: bDeferredLoad(TRUE){	}
 	~CResourceManager						()	;

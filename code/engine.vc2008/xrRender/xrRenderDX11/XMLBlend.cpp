@@ -26,20 +26,26 @@ CXMLBlend::CXMLBlend(const char* FileName)
 
 Shader* CXMLBlend::Compile(const char* Texture)
 {
+	bool bUseDetail = true;
 	XML_NODE* pRoot = Parser.GetRoot();
 	for (u32 Iter = 0; Iter < 16; Iter++)
 	{
-		string16 buff, buff_nd;
+		string16 buff;
 		xr_sprintf(buff, sizeof(buff), "element_%d", Iter);
-		xr_sprintf(buff_nd, sizeof(buff), "element_nd_%d", Iter);
 		XML_NODE* pElement = Parser.NavigateToNode(pRoot, buff);
-		XML_NODE* pElementND = Parser.NavigateToNode(pRoot, buff_nd);
+		if (!pElement)
+		{
+			string16 buff_nd;
+			xr_sprintf(buff_nd, sizeof(buff), "element_nd_%d", Iter);
+			pElement = Parser.NavigateToNode(pRoot, buff_nd);
+			bUseDetail = false;
+		}
 
-		if (pElement || pElementND)
+		if (pElement)
 		{
 			dxRenderDeviceRender::Instance().Resources->_ParseList(pCompiler->L_textures, Texture);
 			pCompiler->iElement = Iter;
-			pCompiler->bDetail = pElement ? dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(pCompiler->L_textures[0], pCompiler->detail_texture, pCompiler->detail_scaler) : false;
+			pCompiler->bDetail = bUseDetail ? dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(pCompiler->L_textures[0], pCompiler->detail_texture, pCompiler->detail_scaler) : false;
 
 			LocShader.E[Iter] = MakeShader(Texture, pElement);
 		}
@@ -69,11 +75,11 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 	//LPCSTR t_d = pCompiler->detail_texture ? pCompiler->detail_texture : "null";
 
 	// Parse root attributes
-	bool bFog = Parser.ReadAttribBool(pElement, "fog");
+	bool bFog = Parser.ReadAttribBool(pElement, "fog", true);
 	bool bZb[2] =
 	{
-		Parser.ReadAttribBool(pElement, "zb1"),
-		Parser.ReadAttribBool(pElement, "zb2"),
+		Parser.ReadAttribBool(pElement, "zb1", true),
+		Parser.ReadAttribBool(pElement, "zb2", true),
 	};
 	const char* PSName = Parser.ReadAttrib(pElement, "ps", "false");
 	const char* VSName = Parser.ReadAttrib(pElement, "vs", "false");
@@ -96,6 +102,15 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 		bool bStatus = Parser.ReadAttribBool(pSorting, "status");
 		int Count = Parser.ReadAttribInt(pSorting, "count", 1);
 		pCompiler->SetParams(Count, bStatus);
+	}
+
+	// Distort, emissive and wmark
+	XML_NODE* pFlags = Parser.NavigateToNode(pElement, "flags");
+	if (pFlags)
+	{
+		pCompiler->SH->flags.bDistort = Parser.ReadAttribBool(pFlags, "dist");
+		pCompiler->SH->flags.bEmissive = Parser.ReadAttribBool(pFlags, "emissive");
+		pCompiler->SH->flags.bWmark = Parser.ReadAttribBool(pFlags, "wmark");
 	}
 
 	// Check atoc

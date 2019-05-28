@@ -1,0 +1,9 @@
+<w>
+	<element_0 ps="stub_default_ma" vs="effects_wallmark" fog="false" zb1="true" zb2="false">
+		<color r="true" g="true" b="true" a="false" />
+		<blend status="true" src="destcolor" dest="srccolor" />
+
+		<texture name="s_base"    rt="t_base" />
+		<sampler name="smp_rtlinear" />
+	</element_0>
+</w>

@@ -1,0 +1,25 @@
+<w>
+	<element_0 ps="postprocess" vs="stub_notransform_postpr" fog="false" zb1="false" zb2="false">
+		<blend status="false" src="srcalpha" dest="invsrcalpha" />
+
+		<texture name="s_base0" rt="$user$generic" />
+		<texture name="s_base1" rt="$user$generic" />
+		<texture name="s_noise" rt="fx\\fx_noise2" />
+		
+		<sampler name="smp_rtlinear" />
+		<sampler name="smp_linear" />
+	</element_0>
+
+	<element_1 ps="postprocess" vs="stub_notransform_postpr" fog="false" zb1="false" zb2="false">
+		<blend status="false" src="srcalpha" dest="invsrcalpha" />
+
+		<texture name="s_base0" rt="$user$generic" />
+		<texture name="s_base1" rt="$user$generic" />
+		<texture name="s_noise" rt="fx\\fx_noise2" />
+		<texture name="s_grad0" rt="$user$cmap0" />
+		<texture name="s_grad1" rt="$user$cmap1" />
+		
+		<sampler name="smp_rtlinear" />
+		<sampler name="smp_linear" />
+	</element_1>
+</w>

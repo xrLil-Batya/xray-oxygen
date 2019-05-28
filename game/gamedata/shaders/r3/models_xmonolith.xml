@@ -1,0 +1,25 @@
+<w>
+	<element_0 ps="model_env_lq" vs="model_env_lq"  zb1="true" zb2="false">
+		<blend status="true" src="srcalpha" dest="invsrcalpha" />
+		<sort status="true" count="3" />
+		<flags dist="true" />
+    	<aref status="true" count="0"/>
+
+		<texture name="s_base" 		  rt="t_base" />
+		<texture name="s_env" 	rt="sky\\sky_5_cube" />
+
+		<sampler name="smp_base" />
+		<sampler name="smp_rtlinear" />
+	</element_0>
+
+  <element_nd_4 ps="particle_distort" vs="model_distort4glass" fog="false" zb1="true" zb2="false">
+		<blend status="true" src="srcalpha" dest="invsrcalpha" />
+		<sort status="true" count="3" />
+		<flags dist="true" />
+
+		<texture name="s_base" 		  rt="t_base" />
+		<texture name="s_distort" 	rt="pfx\\pfx_dist_glass4" />
+
+		<sampler name="smp_linear" />
+	</element_nd_4>
+</w>

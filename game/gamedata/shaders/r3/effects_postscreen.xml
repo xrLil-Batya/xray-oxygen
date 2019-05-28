@@ -1,0 +1,20 @@
+<w>
+	<!-- Chromatic Aberration -->
+    <element_0 ps="chromatic_aberration" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+        <texture name="s_image" rt="$user$albedo"/>
+        <sampler name="smp_nofilter" />
+	</element_0>
+	
+	<!-- Grading -->
+    <element_1 ps="color_grading" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_image" rt="$user$albedo"/>
+		<texture name="color_chart_sampler" rt="shaders\\color_chart"/>
+
+        <sampler name="smp_nofilter" />
+	</element_1>
+	
+	<!-- Vignette -->
+    <element_2 ps="vignette" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
+		<texture name="s_image" rt="$user$albedo"/>
+    </element_2>
+</w>
