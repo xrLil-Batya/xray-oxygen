@@ -90,7 +90,7 @@ void CLevel::IR_OnKeyboardPress(u8 key)
 		return;
 
 #ifdef INGAME_EDITOR
-	if (Device.editor() && (pInput->iGetAsyncKeyState(VK_LMENU) || pInput->iGetAsyncKeyState(VK_RMENU)))
+	if (Device.editor() && (pInput->iGetAsyncKeyState(VK_MENU)))
 		return;
 #endif // #ifdef INGAME_EDITOR
 
@@ -204,10 +204,10 @@ void CLevel::IR_OnKeyboardPress(u8 key)
 		return;
 
 	case VK_F4: {
-		if (pInput->iGetAsyncKeyState(VK_LMENU))
+		if (pInput->iGetAsyncKeyState(VK_MENU))
 			break;
 
-		if (pInput->iGetAsyncKeyState(VK_RMENU))
+		if (pInput->iGetAsyncKeyState(VK_MENU))
 			break;
 
 		bool bOk = false;
@@ -281,7 +281,7 @@ void CLevel::IR_OnKeyboardPress(u8 key)
 
 	case VK_LBUTTON:
 	{
-		if (pInput->iGetAsyncKeyState(VK_LMENU)) {
+		if (pInput->iGetAsyncKeyState(VK_MENU)) {
 			if (smart_cast<CActor*>(CurrentEntity()))
 				try_change_current_entity();
 			else

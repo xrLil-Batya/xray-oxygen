@@ -18,10 +18,7 @@
 #include "render.h"
 #include "XR_IOConsole.h"
 /////////////////////////////////////
-#ifdef INGAME_EDITOR
 #include "../include/editor/ide.hpp"
-#include "engine_impl.hpp"
-#endif
 /////////////////////////////////////
 #include "igame_persistent.h"
 /////////////////////////////////////
@@ -315,7 +312,7 @@ void CRenderDevice::message_loop_editor	()
 {
 	m_editor->run();
 	m_editor_finalize		(m_editor);
-	xr_delete				(m_engine);
+//	xr_delete				(m_engine);
 }
 #endif
 

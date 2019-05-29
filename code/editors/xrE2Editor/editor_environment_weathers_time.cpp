@@ -6,7 +6,7 @@
 //	Description : editor environment weathers time class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_weathers_time.hpp"

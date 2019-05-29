@@ -308,37 +308,6 @@
     <ClInclude Include="Fmesh.h" />
     <ClInclude Include="SkeletonMotionDefs.h" />
     <ClInclude Include="SkeletonMotions.h" />
-    <ClInclude Include="engine_impl.hpp" />
-    <ClInclude Include="editor_environment_suns_manager.hpp" />
-    <ClInclude Include="editor_environment_suns_sun.hpp" />
-    <ClInclude Include="editor_environment_suns_gradient.hpp" />
-    <ClInclude Include="editor_environment_suns_blend.hpp" />
-    <ClInclude Include="editor_environment_suns_flares.hpp" />
-    <ClInclude Include="editor_environment_suns_flare.hpp" />
-    <ClInclude Include="editor_environment_levels_manager.hpp" />
-    <ClInclude Include="editor_environment_effects_manager.hpp" />
-    <ClInclude Include="editor_environment_effects_effect.hpp" />
-    <ClInclude Include="editor_environment_sound_channels_manager.hpp" />
-    <ClInclude Include="editor_environment_sound_channels_channel.hpp" />
-    <ClInclude Include="editor_environment_sound_channels_source.hpp" />
-    <ClInclude Include="editor_environment_manager.hpp" />
-    <ClInclude Include="editor_environment_ambients_manager.hpp" />
-    <ClInclude Include="editor_environment_ambients_ambient.hpp" />
-    <ClInclude Include="editor_environment_ambients_effect_id.hpp" />
-    <ClInclude Include="editor_environment_ambients_sound_id.hpp" />
-    <ClInclude Include="editor_environment_thunderbolts_manager.hpp" />
-    <ClInclude Include="editor_environment_thunderbolts_thunderbolt.hpp" />
-    <ClInclude Include="editor_environment_thunderbolts_gradient.hpp" />
-    <ClInclude Include="editor_environment_thunderbolts_thunderbolt_id.hpp" />
-    <ClInclude Include="editor_environment_thunderbolts_collection.hpp" />
-    <ClInclude Include="editor_environment_weathers_manager.hpp" />
-    <ClInclude Include="editor_environment_weathers_weather.hpp" />
-    <ClInclude Include="editor_environment_weathers_time.hpp" />
-    <ClInclude Include="editor_environment_detail.hpp" />
-    <ClInclude Include="property_collection.hpp" />
-    <ClInclude Include="property_collection_forward.hpp" />
-    <ClInclude Include="property_collection_inline.hpp" />
-    <ClInclude Include="ide.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AMDGPUTransferee.cpp" />
@@ -443,37 +412,6 @@
     <ClCompile Include="Stats.cpp" />
     <ClCompile Include="fmesh.cpp" />
     <ClCompile Include="SkeletonMotions.cpp" />
-    <ClCompile Include="engine_impl.cpp" />
-    <ClCompile Include="editor_environment_suns_manager.cpp" />
-    <ClCompile Include="editor_environment_suns_sun.cpp" />
-    <ClCompile Include="editor_environment_suns_gradient.cpp" />
-    <ClCompile Include="editor_environment_suns_blend.cpp" />
-    <ClCompile Include="editor_environment_suns_flares.cpp" />
-    <ClCompile Include="editor_environment_suns_flare.cpp" />
-    <ClCompile Include="editor_environment_levels_manager.cpp" />
-    <ClCompile Include="editor_environment_effects_manager.cpp" />
-    <ClCompile Include="editor_environment_effects_effect.cpp" />
-    <ClCompile Include="editor_environment_sound_channels_manager.cpp" />
-    <ClCompile Include="editor_environment_sound_channels_channel.cpp" />
-    <ClCompile Include="editor_environment_sound_channels_source.cpp" />
-    <ClCompile Include="editor_environment_manager.cpp" />
-    <ClCompile Include="editor_environment_manager_properties.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="editor_environment_ambients_manager.cpp" />
-    <ClCompile Include="editor_environment_ambients_ambient.cpp" />
-    <ClCompile Include="editor_environment_ambients_effect_id.cpp" />
-    <ClCompile Include="editor_environment_ambients_sound_id.cpp" />
-    <ClCompile Include="editor_environment_thunderbolts_manager.cpp" />
-    <ClCompile Include="editor_environment_thunderbolts_thunderbolt.cpp" />
-    <ClCompile Include="editor_environment_thunderbolts_gradient.cpp" />
-    <ClCompile Include="editor_environment_thunderbolts_thunderbolt_id.cpp" />
-    <ClCompile Include="editor_environment_thunderbolts_collection.cpp" />
-    <ClCompile Include="editor_environment_weathers_manager.cpp" />
-    <ClCompile Include="editor_environment_weathers_weather.cpp" />
-    <ClCompile Include="editor_environment_weathers_time.cpp" />
-    <ClCompile Include="editor_environment_detail.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Effects description.txt" />

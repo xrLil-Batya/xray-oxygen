@@ -6,7 +6,7 @@
 //	Description : editor environment suns sun class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_suns_sun.hpp"

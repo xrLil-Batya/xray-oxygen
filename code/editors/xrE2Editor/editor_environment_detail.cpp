@@ -6,7 +6,7 @@
 //	Description : editor environment detail namespace
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_detail.hpp"

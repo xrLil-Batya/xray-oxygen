@@ -6,7 +6,7 @@
 //	Description : editor environment ambients ambient class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_ambients_ambient.hpp"

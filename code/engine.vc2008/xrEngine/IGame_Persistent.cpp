@@ -13,9 +13,6 @@
 #	include "CustomHUD.h"
 #endif
 #include "Spectre\Spectre.h"
-#ifdef INGAME_EDITOR
-#	include "editor_environment_manager.hpp"
-#endif // INGAME_EDITOR
 
 ENGINE_API	IGame_Persistent*		g_pGamePersistent	= nullptr;
 

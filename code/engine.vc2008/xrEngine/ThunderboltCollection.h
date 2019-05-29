@@ -1,8 +1,7 @@
 #pragma once
-
 #include "ThunderboltDesc.h"
 
-class CThunderboltCollection
+class ENGINE_API CThunderboltCollection
 {
 public:
 	using DescVec = xr_vector<CThunderboltDesc*>;

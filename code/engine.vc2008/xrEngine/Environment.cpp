@@ -26,25 +26,12 @@
 #include "../Include/xrRender/RainRender.h"
 #include "../Include/xrRender/ThunderboltRender.h"
 
-#ifdef INGAME_EDITOR
-#	include "editor_environment_manager.hpp"
-#endif // INGAME_EDITOR
-
-CEnvironment* pEnvironment = nullptr;
+ENGINE_API CEnvironment* pEnvironment = nullptr;
 
 ENGINE_API CEnvironment& Environment()
 {
-	if (pEnvironment == nullptr)
-	{
-		if (RDEVICE.editor())
-		{
-			pEnvironment = xr_new<editor::environment::manager>();
-		}
-		else
-		{
-			pEnvironment = xr_new<CEnvironment>();
-		}
-	}
+	if (!pEnvironment)
+		pEnvironment = xr_new<CEnvironment>();
 
 	return *pEnvironment;
 }

@@ -6,7 +6,7 @@
 //	Description : editor environment levels manager class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 

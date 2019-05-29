@@ -6,7 +6,7 @@
 //	Description : editor environment thunderbolts collection identifier class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_thunderbolts_collection.hpp"
