@@ -478,7 +478,6 @@ void RemapIndices(const PrimitiveGroup* in_primGroups, const unsigned short numG
 
 		for (int j = 0; j < numIndices; j++)
 		{
-			Msg("%d[%d]", i, j);
 			int cachedIndex = indexCache[in_primGroups[i].indices[j]];
 			if (cachedIndex == -1) //we haven't seen this index before
 			{

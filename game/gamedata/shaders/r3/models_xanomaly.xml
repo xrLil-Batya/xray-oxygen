@@ -15,7 +15,7 @@
     <sort status="true" count="2" />
     
 		<texture name="s_base"    rt="t_base" />
-		<texture name="s_distort" rt="pfx\\pfx_dist_glass3" />
+		<texture name="s_distort" rt="pfx\pfx_dist_glass3" />
 		<sampler name="smp_linear" />
 	</element_nd_4>
 </w>

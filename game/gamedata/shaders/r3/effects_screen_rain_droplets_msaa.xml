@@ -1,7 +1,7 @@
 <w>
     <element_0 ps="rain_drops" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
 		    <texture name="s_image" 	rt="$user$generic"/>
-		    <texture name="s_droplets" 	rt="shaders\\fx_hud_droplets"/>
+		    <texture name="s_droplets" 	rt="shaders\fx_hud_droplets"/>
 
         <sampler name="smp_rtlinear" />
     </element_0>

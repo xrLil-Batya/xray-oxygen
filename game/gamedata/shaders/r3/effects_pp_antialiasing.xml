@@ -19,8 +19,8 @@
 	<!-- SMAA: Weight -->
   <element_3 ps="smaa_bweight_calc" vs="stub_screen_space" fog="false" zb1="false" zb2="false">
 		<texture name="s_edgetex" rt="$user$smaa_edgetex"/>
-		<texture name="s_areatex" rt="shaders\\smaa_area_tex_dx10"/>
-		<texture name="s_searchtex" rt="shaders\\smaa_search_tex"/>
+		<texture name="s_areatex" rt="shaders\smaa_area_tex_dx10"/>
+		<texture name="s_searchtex" rt="shaders\smaa_search_tex"/>
 	</element_3>
 	
 	<!-- SMAA: Neighbourhood -->

@@ -4,12 +4,12 @@
 		<sort status="false" count="2" />
 		<flags dist="true" />
 
-		<texture name="s_base" 		rt="water\\water_water" />
-		<texture name="s_nmap" 		rt="water\\water_normal" />
-		<texture name="s_env0" 		rt="$user$sky0" />
-		<texture name="s_env1" 		rt="$user$sky1" />
+		<texture name="s_base" 		  rt="water\water_water" />
+		<texture name="s_nmap" 		  rt="water\water_normal" />
+		<texture name="s_env0" 		  rt="$user$sky0" />
+		<texture name="s_env1" 		  rt="$user$sky1" />
 		<texture name="s_position" 	rt="$user$position" />
-		<texture name="s_leaves" 	rt="water\\water_foam" />
+		<texture name="s_leaves" 	  rt="water\water_foam" />
 		
 		<sampler name="smp_base" />
 		<sampler name="smp_nofilter" />
@@ -22,8 +22,8 @@
 		<flags dist="true" />
 		<color r="true" g="true" b="true" a="true" />
 
-		<texture name="s_base" 		rt="water\\water_water" />
-		<texture name="s_distort" 	rt="water\\water_dudv" />
+		<texture name="s_base" 		  rt="water\water_water" />
+		<texture name="s_distort" 	rt="water\water_dudv" />
 		<texture name="s_position" 	rt="$user$position" />
 		
 		<sampler name="smp_base" />

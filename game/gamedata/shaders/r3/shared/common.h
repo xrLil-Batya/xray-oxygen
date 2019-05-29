@@ -46,6 +46,7 @@ cbuffer	static_globals
 
 	float4		screen_res;		// Screen resolution (x=width, y=height, z=1/width, w=1/height)
 	float4		parallax;
+	float4		ssao_params;
 	// Глобальные параметры шейдеров --#SM+#--
 	row_major float4x4	m_script_params; 
 	float4		m_hud_params;	// zoom_rotate_factor, secondVP_zoom_factor, NULL, NULL

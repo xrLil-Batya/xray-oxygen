@@ -75,13 +75,6 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 	float	occ = calc_ssao(CS_P(P, N, I.tc0, I.tcJ, I.pos2d, ISAMPLE));
 #endif
 
-/*#ifdef USE_SSAO_BLUR	
-#	ifndef USE_MSAA
-	occ += ssao_blur_ps(I.tc0 * screen_res.xy);
-#	else
-	occ += ssao_blur_ps( I.pos2d, ISAMPLE );
-#	endif*/
-
 	hmodel(hdiffuse, hspecular, mtl, N.w, D.w, P.xyz, N.xyz);
 	hdiffuse	*= occ;
 	hspecular	*= occ;
@@ -89,12 +82,11 @@ _out main (_input I, uint iSample : SV_SAMPLEINDEX)
 	float4	light	= float4(L.rgb + hdiffuse, L.w);
 	//light *= occ;
 	float4	C		= D*light;						// rgb.gloss * light(diffuse.specular)
-	float3	spec	= C.www + hspecular;	//Colored differently (faster) now // replicated specular
+	float3	spec	= C.www * L.rgb + hspecular;	//Colored differently (faster) now // replicated specular
 	float3	color	= C.rgb + spec;
 
 	// here should be distance fog
-	//float3	pos			= P.xyz;
-	float	dist		= length(P.z);
+	float	dist		= length(P.xyz);
 	float	fog			= saturate(dist*fog_params.w + fog_params.x);
 			color		= lerp(color,fog_color,fog);
 	float	skyblend	= saturate(fog*fog);

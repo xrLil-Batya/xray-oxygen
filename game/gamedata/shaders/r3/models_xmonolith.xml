@@ -6,7 +6,7 @@
     	<aref status="true" count="0"/>
 
 		<texture name="s_base" 		  rt="t_base" />
-		<texture name="s_env" 	rt="sky\\sky_5_cube" />
+		<texture name="s_env" 	rt="sky\sky_5_cube" />
 
 		<sampler name="smp_base" />
 		<sampler name="smp_rtlinear" />
@@ -18,7 +18,7 @@
 		<flags dist="true" />
 
 		<texture name="s_base" 		  rt="t_base" />
-		<texture name="s_distort" 	rt="pfx\\pfx_dist_glass4" />
+		<texture name="s_distort" 	rt="pfx\pfx_dist_glass4" />
 
 		<sampler name="smp_linear" />
 	</element_nd_4>
