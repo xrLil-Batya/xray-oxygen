@@ -7,7 +7,7 @@ class ENGINE_API CLAItem;
 #include "../Include/xrRender/ThunderboltDescRender.h"
 #include "../Include/xrRender/ThunderboltRender.h"
 
-class CThunderboltDesc
+class ENGINE_API CThunderboltDesc
 {
 public:
 	FactoryPtr<IThunderboltDescRender> m_pRender;

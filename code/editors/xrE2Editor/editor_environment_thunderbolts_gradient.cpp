@@ -6,7 +6,7 @@
 //	Description : editor environment thunderbolts gradient class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_thunderbolts_gradient.hpp"

@@ -1,3 +1,9 @@
+/////////////////////////////////////////////////////////
+// Desc		: Simple XML Parser
+// Authors	: GSC - Base algorithm, ForserX - Rework
+/////////////////////////////////////////////////////////
+// Oxygen Engine: 2016-2019
+/////////////////////////////////////////////////////////
 #include "stdafx.h"
 #pragma hdrstop
 
@@ -180,7 +186,7 @@ const char* CXml::Read(XML_NODE* start_node, const char* path, int index, const 
 	return					Read(node, default_str_val);
 }
 
-const char*  CXml::Read(XML_NODE* node, const char* default_str_val)
+const char* CXml::Read(XML_NODE* node, const char* default_str_val)
 {
 	if (node)
 	{
@@ -249,9 +255,9 @@ const char* CXml::ReadAttrib(XML_NODE* node, const char* attrib, const char* def
 	if (node)
 	{
 		/*
-				//обязательно делаем ref_str, а то
-				//не сможем запомнить строку и return вернет левый указатель
-				shared_str result_str;
+			обязательно делаем ref_str, а то
+			не сможем запомнить строку и return вернет левый указатель
+			shared_str result_str;
 		*/
 		const char* result_str;
 		// Кастаем ниже по иерархии
@@ -285,7 +291,16 @@ bool CXml::ReadAttribBool(XML_NODE* node, const char* attrib, bool default_value
 
 bool CXml::ReadAttribBool(const char* path, int index, const char* attrib, bool default_value)
 {
-	return ReadAttribInt(path, index, attrib, default_value);
+	const char* result_str = ReadAttrib(path, index, attrib, nullptr);
+	if (result_str)
+	{
+		if (strstr(result_str, "true"))
+			return true;
+		else if (strstr(result_str, "false"))
+			return false;
+	}
+
+	return result_str ? atoi_17(result_str) : default_value;
 }
 
 bool CXml::ReadAttribBool(XML_NODE* start_node, const char* path, int index, const char* attrib, bool default_value)

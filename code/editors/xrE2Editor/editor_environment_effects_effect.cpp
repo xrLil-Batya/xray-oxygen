@@ -6,7 +6,7 @@
 //	Description : editor environment effects effect class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 

@@ -6,7 +6,7 @@
 //	Description : editor environment sound channels channel class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_sound_channels_channel.hpp"

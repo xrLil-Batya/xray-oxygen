@@ -1,32 +1,29 @@
 ﻿////////////////////////////////////////////////////////////////////////////
-//	Module 		: editor_environment_ambients_effect_id.cpp
+//	Module 		: editor_environment_ambients_sound_id.cpp
 //	Created 	: 04.01.2008
 //  Modified 	: 04.01.2008
 //	Author		: Dmitriy Iassenev
-//	Description : editor environment ambients effect identifier class
+//	Description : editor environment ambients sound identifier class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
-#include "editor_environment_ambients_effect_id.hpp"
+#include "editor_environment_ambients_sound_id.hpp"
 #include "ide.hpp"
-#include "editor_environment_effects_manager.hpp"
+#include "editor_environment_sound_channels_manager.hpp"
 
-using editor::environment::ambients::effect_id;
-using editor::environment::effects::manager;
+using editor::environment::ambients::sound_id;
+using editor::environment::sound_channels::manager;
 
-effect_id::effect_id								(
-		manager const& manager,
-		shared_str const& id
-	) :
+sound_id::sound_id			(manager const& manager, shared_str const& id) :
 	m_manager						(manager),
 	m_id							(id),
 	m_property_holder				(0)
 {
 }
 
-effect_id::~effect_id								()
+sound_id::~sound_id			()
 {
 	if (!Device.editor())
 		return;
@@ -34,33 +31,33 @@ effect_id::~effect_id								()
 	::ide().destroy					(m_property_holder);
 }
 
-LPCSTR const* effect_id::collection					()
+LPCSTR const* sound_id::collection					()
 {
-	return							(&*m_manager.effects_ids().begin());
+	return							(&*m_manager.channels_ids().begin());
 }
 
-u32 effect_id::collection_size()
+u32 sound_id::collection_size						()
 {
-	return u32(m_manager.effects_ids().size());
+	return u32(m_manager.channels_ids().size());
 }
 
-void effect_id::fill								(editor::property_holder_collection* collection)
+void sound_id::fill			(editor::property_holder_collection* collection)
 {
 	VERIFY							(!m_property_holder);
 	m_property_holder				= ::ide().create_property_holder(m_id.c_str(), collection, this);
 
 	typedef editor::property_holder::string_collection_getter_type	collection_getter_type;
 	collection_getter_type			collection_getter;
-	collection_getter.bind			(this, &effect_id::collection);
+	collection_getter.bind			(this, &sound_id::collection);
 
 	typedef editor::property_holder::string_collection_size_getter_type	collection_size_getter_type;
 	collection_size_getter_type		collection_size_getter;
-	collection_size_getter.bind		(this, &effect_id::collection_size);
+	collection_size_getter.bind		(this, &sound_id::collection_size);
 
 	m_property_holder->add_property	(
-		"effect",
+		"sound channel",
 		"properties",
-		"this option is resposible for effect",
+		"this option is resposible for sound",
 		m_id.c_str(),
 		m_id,
 		collection_getter,
@@ -70,7 +67,7 @@ void effect_id::fill								(editor::property_holder_collection* collection)
 	);
 }
 
-effect_id::property_holder_type* effect_id::object	()
+sound_id::property_holder_type* sound_id::object	()
 {
 	return							(m_property_holder);
 }

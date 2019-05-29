@@ -6,7 +6,7 @@
 //	Description : editor environment suns flares class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 #include "editor_environment_suns_flares.hpp"

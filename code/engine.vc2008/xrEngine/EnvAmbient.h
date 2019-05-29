@@ -18,7 +18,7 @@ public:
 		INGAME_EDITOR_VIRTUAL	~SEffect				()	{}
 	};
 	using EffectVec = xr_vector<SEffect*>;
-	struct SSndChannel
+	struct ENGINE_API SSndChannel
 	{
 		shared_str				m_load_section;
 		Fvector2				m_sound_dist;

@@ -60,11 +60,13 @@ private:
 	}
 };
 
-ide_impl*			g_ide = nullptr;
-
-static void initialize_impl							(editor::ide*& ide, editor::engine* engine)
+ide_impl* g_ide = nullptr;
+__declspec(dllimport) void InitEditor();
+#pragma comment(lib, "xrE2Editor.lib")
+static void initialize_impl(editor::ide*& ide, editor::engine* engine)
 {
 	VERIFY			(!g_ide);
+	InitEditor();
 	g_ide			= new ide_impl(engine);
 	ide				= g_ide;
 	g_ide->window	(gcnew window_ide_final(ide, engine));

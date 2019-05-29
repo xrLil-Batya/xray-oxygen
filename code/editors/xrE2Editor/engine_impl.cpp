@@ -6,7 +6,7 @@
 //	Description : engine implementation class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "pch.h"
 
 #ifdef INGAME_EDITOR
 #include "engine_impl.hpp"
