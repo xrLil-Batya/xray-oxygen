@@ -18,28 +18,13 @@ void CRenderTarget::phase_ssao	()
 	HW.pContext->ClearRenderTargetView(rt_ssao_temp->pRT, ColorRGBA);
 	
 	// low/hi RTs
-	if( !RImplementation.o.dx10_msaa )
-	{
-		u_setrt				( rt_ssao_temp,nullptr,nullptr,nullptr);
-	}
-	else
-	{
-		u_setrt				( rt_ssao_temp, nullptr, nullptr, nullptr);
-	}
+	u_setrt( rt_ssao_temp, nullptr, nullptr, nullptr);
 
 	RCache.set_Stencil	(FALSE);
 
 	// Compute params
 	Fmatrix m_v2w;			
 	m_v2w.invert(Device.mView);
-
-	float		fSSAONoise = 2.0f;
-	fSSAONoise *= tan(deg2rad(67.5f));
-	fSSAONoise /= tan(deg2rad(Device.fFOV));
-
-	float		fSSAOKernelSize = 150.0f;
-	fSSAOKernelSize *= tan(deg2rad(67.5f));
-	fSSAOKernelSize /= tan(deg2rad(Device.fFOV));
 
 	// Fill VB
 	float	scale_X				= float(Device.dwWidth)	* 0.5f / float(TEX_jitter);
@@ -63,8 +48,6 @@ void CRenderTarget::phase_ssao	()
 	RCache.set_Geometry			(g_combine		);
 
 	RCache.set_c				("m_v2w",			m_v2w	);
-	RCache.set_c				("ssao_noise_tile_factor",	fSSAONoise	);
-	RCache.set_c				("ssao_kernel_size",		fSSAOKernelSize	);
 	RCache.set_c				("resolution", _w, _h, 1.0f / _w, 1.0f / _h	);
 
 

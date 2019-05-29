@@ -332,6 +332,22 @@ static class cl_hemi_color : public R_constant_setup
 } binder_hemi_color;
 #endif
 
+static class cl_ssao : public R_constant_setup
+{
+	virtual void setup(R_constant* C)
+	{
+		float fSSAONoise = 2.0f;
+		fSSAONoise *= tan(deg2rad(67.5f));
+		fSSAONoise /= tan(deg2rad(Device.fFOV));
+
+		float fSSAOKernelSize = 150.0f;
+		fSSAOKernelSize *= tan(deg2rad(67.5f));
+		fSSAOKernelSize /= tan(deg2rad(Device.fFOV));
+
+		RCache.set_c(C, fSSAONoise, fSSAOKernelSize, 0.0f, 0.0f);
+	}
+} binder_ssao;
+
 static class cl_screen_res : public R_constant_setup
 {
 	virtual void setup(R_constant* C)
@@ -494,6 +510,8 @@ void CBlender_Compile::SetMapping()
 	r_Constant				("water_intensity", &binder_water_intensity);
 	// Sunshafts
 	r_Constant				("sun_shafts_intensity", &binder_sun_shafts_intensity);
+	// Sunshafts
+	r_Constant				("ssao_params", &binder_ssao);
 	///////////////////////////////////////////////////////////////////////
 
 	// Time
@@ -511,13 +529,8 @@ void CBlender_Compile::SetMapping()
 	r_Constant				("screen_res",					&binder_screen_res);
 	r_Constant				("pos_decompression_params",	&binder_pos_decompress_params);
 
-
-#ifdef USE_DX11
 	r_Constant				("m_AlphaRef",		&binder_alpha_ref);
-#ifdef USE_DX11
 	r_Constant				("triLOD",			&binder_LOD);
-#endif
-#endif
 
 	// detail
 	//if (bDetail	&& detail_scaler)

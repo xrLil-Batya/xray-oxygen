@@ -4,7 +4,7 @@
 
 		<texture name="s_base0" rt="$user$generic" />
 		<texture name="s_base1" rt="$user$generic" />
-		<texture name="s_noise" rt="fx\\fx_noise2" />
+		<texture name="s_noise" rt="fx\fx_noise2" />
 		
 		<sampler name="smp_rtlinear" />
 		<sampler name="smp_linear" />
@@ -15,7 +15,7 @@
 
 		<texture name="s_base0" rt="$user$generic" />
 		<texture name="s_base1" rt="$user$generic" />
-		<texture name="s_noise" rt="fx\\fx_noise2" />
+		<texture name="s_noise" rt="fx\fx_noise2" />
 		<texture name="s_grad0" rt="$user$cmap0" />
 		<texture name="s_grad1" rt="$user$cmap1" />
 		

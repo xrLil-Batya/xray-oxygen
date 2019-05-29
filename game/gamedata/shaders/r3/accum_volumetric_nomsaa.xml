@@ -5,7 +5,7 @@
 
         <texture name="s_lmap" rt="t_base" />
         <texture name="s_smap" rt="null" />
-		<texture name="s_lmap" rt="fx\\fx_noise" />
+		    <texture name="s_lmap" rt="fx\fx_noise" />
 		
         <sampler name="smp_rtlinear" />
         <sampler name="smp_linear" />

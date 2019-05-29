@@ -1,7 +1,7 @@
 <w>
 	<element_0 ps="base_lplanes" vs="base_lplanes" fog="false" zb1="true" zb2="false">
 		<blend status="true" src="srcalpha" dest="one" />
-		<aref status="true" count="2" />
+		<aref status="true" count="0" />
 		<sort status="false" count="2" />
 
 		<texture name="s_base" rt="t_base" />

@@ -3,7 +3,7 @@
 		<sort status="true" count="2" />
 		<blend status="true" src="one" dest="one" />
 
-		<texture name="s_base"    rt="water\\water_ryaska1" />
+		<texture name="s_base"    rt="water\water_ryaska1" />
 		<sampler name="smp_base" />
 	</element_0>
 </w>

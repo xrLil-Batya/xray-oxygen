@@ -121,14 +121,6 @@ void CRenderTarget::phase_combine()
 		envclr.z *= 2*ps_r_sun_lumscale_hemi;
 		Fvector4 sunclr, sundir;
 
-		float fSSAONoise = 2.0f;
-		fSSAONoise *= tan(deg2rad(67.5f/2.0f));
-		fSSAONoise /= tan(deg2rad(Device.fFOV/2.0f));
-
-		float fSSAOKernelSize = 150.0f;
-		fSSAOKernelSize *= tan(deg2rad(67.5f/2.0f));
-		fSSAOKernelSize /= tan(deg2rad(Device.fFOV/2.0f));
-
 		// Sun params
 		{
 			light* pSun = (light*)RImplementation.Lights.sun._get();
@@ -167,7 +159,6 @@ void CRenderTarget::phase_combine()
 		RCache.set_c				("Ldynamic_color",	sunclr);
 		RCache.set_c				("Ldynamic_dir",	sundir);
 		RCache.set_c				("env_color",		envclr);
-		RCache.set_c				("ssao_params",		fSSAONoise, fSSAOKernelSize, 0.0f, 0.0f);
 
 		if (!RImplementation.o.dx10_msaa)
 			RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
