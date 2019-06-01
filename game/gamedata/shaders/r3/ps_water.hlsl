@@ -88,7 +88,10 @@ float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
 	float	fresnel = saturate(dot(vreflect,v2point));
 	float	power = pow(fresnel,9);
 	float	amount = 0.15h + 0.25h*power;	// 1=full env, 0=no env
-
+#ifdef NEED_PUDDLES
+			fresnel *= 0.3;
+			base.rgb *= 0.5;
+#endif
 	float3	c_reflection = env * amount;
 	float3	final = lerp(c_reflection,base.rgb,base.a);
 

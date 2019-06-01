@@ -10,7 +10,7 @@
 		<texture name="s_image" rt="$user$albedo"/>
 		<texture name="color_chart_sampler" rt="shaders\color_chart"/>
 
-    <sampler name="smp_nofilter" />
+    <sampler name="smp_rtlinear" />
 	</element_1>
 	
 	<!-- Vignette -->
