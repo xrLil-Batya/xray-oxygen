@@ -28,9 +28,8 @@
 #include "Actor_Flags.h"
 BONE_P_MAP CCar::bone_map = BONE_P_MAP();
 
-CCar::CCar()
+CCar::CCar() : m_memory(nullptr), m_car_weapon(nullptr), m_car_sound(new SCarSound(this))
 {
-	m_memory = nullptr;
 	m_driver_anim_type = 0;
 	m_bone_steer = BI_NONE;
 
@@ -60,7 +59,6 @@ CCar::CCar()
 	m_breaks_to_back_rate = 1.f;
 
 	b_exploded = false;
-	m_car_weapon = nullptr;
 	m_power_neutral_factor = 0.25f;
 	m_steer_angle = 0.f;
 #ifdef DEBUG

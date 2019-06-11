@@ -5,16 +5,14 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker danger planner
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "action_planner_action_script.h"
 
 class CAI_Stalker;
 
-class CStalkerDangerPlanner : public CActionPlannerActionScript<CAI_Stalker> {
-private:
-	typedef CActionPlannerActionScript<CAI_Stalker> inherited;
+class CStalkerDangerPlanner : public CActionPlannerActionScript<CAI_Stalker>
+{
+	using inherited = CActionPlannerActionScript<CAI_Stalker>;
 
 protected:
 			void		add_evaluators			();

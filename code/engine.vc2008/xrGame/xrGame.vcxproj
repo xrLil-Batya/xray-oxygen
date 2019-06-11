@@ -993,7 +993,6 @@
     <ClInclude Include="stalker_animation_manager_impl.h" />
     <ClInclude Include="stalker_animation_manager_inline.h" />
     <ClInclude Include="stalker_animation_data_storage.h" />
-    <ClInclude Include="stalker_animation_data_storage_inline.h" />
     <ClInclude Include="stalker_animation_data.h" />
     <ClInclude Include="stalker_animation_names.h" />
     <ClInclude Include="stalker_animation_pair.h" />

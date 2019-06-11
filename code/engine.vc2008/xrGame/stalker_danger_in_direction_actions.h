@@ -5,16 +5,11 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker danger in direction actions classes
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "stalker_combat_actions.h"
 
-//////////////////////////////////////////////////////////////////////////
-// CStalkerActionDangerInDirectionTakeCover
-//////////////////////////////////////////////////////////////////////////
-
-class CStalkerActionDangerInDirectionTakeCover : public CStalkerActionCombatBase {
+class CStalkerActionDangerInDirectionTakeCover : public CStalkerActionCombatBase 
+{
 protected:
 	typedef CStalkerActionCombatBase inherited;
 
@@ -25,14 +20,11 @@ public:
 						CStalkerActionDangerInDirectionTakeCover	(CAI_Stalker *object, LPCSTR action_name = "");
 	virtual void		initialize									();
 	virtual void		execute										();
-	virtual void		finalize									();
 };
 
 //////////////////////////////////////////////////////////////////////////
-// CStalkerActionDangerInDirectionLookOut
-//////////////////////////////////////////////////////////////////////////
-
-class CStalkerActionDangerInDirectionLookOut : public CStalkerActionCombatBase {
+class CStalkerActionDangerInDirectionLookOut : public CStalkerActionCombatBase
+{
 protected:
 	typedef CStalkerActionCombatBase inherited;
 
@@ -43,14 +35,11 @@ public:
 						CStalkerActionDangerInDirectionLookOut		(CAI_Stalker *object, LPCSTR action_name = "");
 	virtual void		initialize									();
 	virtual void		execute										();
-	virtual void		finalize									();
 };
 
 //////////////////////////////////////////////////////////////////////////
-// CStalkerActionDangerInDirectionHoldPosition
-//////////////////////////////////////////////////////////////////////////
-
-class CStalkerActionDangerInDirectionHoldPosition : public CStalkerActionCombatBase {
+class CStalkerActionDangerInDirectionHoldPosition : public CStalkerActionCombatBase 
+{
 protected:
 	typedef CStalkerActionCombatBase inherited;
 
@@ -58,14 +47,11 @@ public:
 						CStalkerActionDangerInDirectionHoldPosition	(CAI_Stalker *object, LPCSTR action_name = "");
 	virtual void		initialize									();
 	virtual void		execute										();
-	virtual void		finalize									();
 };
 
 //////////////////////////////////////////////////////////////////////////
-// CStalkerActionDangerInDirectionDetour
-//////////////////////////////////////////////////////////////////////////
-
-class CStalkerActionDangerInDirectionDetour : public CStalkerActionCombatBase {
+class CStalkerActionDangerInDirectionDetour : public CStalkerActionCombatBase 
+{
 protected:
 	typedef CStalkerActionCombatBase inherited;
 
@@ -73,14 +59,11 @@ public:
 						CStalkerActionDangerInDirectionDetour		(CAI_Stalker *object, LPCSTR action_name = "");
 	virtual void		initialize									();
 	virtual void		execute										();
-	virtual void		finalize									();
 };
 
 //////////////////////////////////////////////////////////////////////////
-// CStalkerActionDangerInDirectionSearch
-//////////////////////////////////////////////////////////////////////////
-
-class CStalkerActionDangerInDirectionSearch : public CStalkerActionCombatBase {
+class CStalkerActionDangerInDirectionSearch : public CStalkerActionCombatBase
+{
 protected:
 	typedef CStalkerActionCombatBase inherited;
 
@@ -88,5 +71,4 @@ public:
 						CStalkerActionDangerInDirectionSearch	(CAI_Stalker *object, LPCSTR action_name = "");
 	virtual void		initialize								();
 	virtual void		execute									();
-	virtual void		finalize								();
 };

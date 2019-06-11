@@ -5,16 +5,14 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker danger grenade planner class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "action_planner_action_script.h"
 
 class CAI_Stalker;
 
-class CStalkerDangerGrenadePlanner : public CActionPlannerActionScript<CAI_Stalker> {
-private:
-	typedef CActionPlannerActionScript<CAI_Stalker> inherited;
+class CStalkerDangerGrenadePlanner : public CActionPlannerActionScript<CAI_Stalker> 
+{
+	using inherited = CActionPlannerActionScript<CAI_Stalker>;
 
 protected:
 			void		add_evaluators					();
@@ -24,6 +22,4 @@ public:
 						CStalkerDangerGrenadePlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
 	virtual	void		setup							(CAI_Stalker *object, CPropertyStorage *storage);
 	virtual void		initialize						();
-	virtual void		update							();
-	virtual void		finalize						();
 };

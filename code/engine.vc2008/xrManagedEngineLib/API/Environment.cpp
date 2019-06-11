@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Environment.h"
 #include "../xrEngine/Environment.h"
-#include "../xrEngine/editor_environment_manager.hpp"
 
 XRay::MEnvironment::MEnvironment(::System::IntPtr InNativeLevel)
 {

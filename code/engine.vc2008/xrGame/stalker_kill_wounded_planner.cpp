@@ -42,16 +42,6 @@ void CStalkerKillWoundedPlanner::setup					(CAI_Stalker *object, CPropertyStorag
 	add_actions				();
 }
 
-void CStalkerKillWoundedPlanner::update					()
-{
-	inherited::update		();
-
-//	if (current_action_id() == eWorldOperatorKillWoundedEnemy)
-//		inherited_action::m_storage->set_property	(eWorldPropertyKilledWounded,true);
-//	else
-//		inherited_action::m_storage->set_property	(eWorldPropertyKilledWounded,false);
-}
-
 void CStalkerKillWoundedPlanner::initialize				()
 {
 	inherited::initialize	();
@@ -61,11 +51,6 @@ void CStalkerKillWoundedPlanner::initialize				()
 	CScriptActionPlanner::m_storage.set_property	(eWorldPropertyPausedAfterKill,false);
 
 	inherited_action::m_storage->set_property		(eWorldPropertyKilledWounded,true);
-}
-
-void CStalkerKillWoundedPlanner::execute				()
-{
-	inherited::execute		();
 }
 
 void CStalkerKillWoundedPlanner::finalize				()

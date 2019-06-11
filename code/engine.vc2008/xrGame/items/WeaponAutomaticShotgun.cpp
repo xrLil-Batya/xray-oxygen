@@ -35,13 +35,12 @@ void CWeaponAutomaticShotgun::Load(LPCSTR section)
 
 }
 
-bool CWeaponAutomaticShotgun::Action(u16 cmd, u32 flags) 
+bool CWeaponAutomaticShotgun::Action(u16 cmd, u32 flags)
 {
-	if(inherited::Action(cmd, flags)) return true;
+	if (inherited::Action(cmd, flags)) return true;
 
-	if(	m_bTriStateReload && GetState()==eReload &&
-		cmd==kWPN_FIRE && flags&CMD_START &&
-		m_sub_state==eSubstateReloadInProcess		)//остановить перезагрузку
+	//остановить перезагрузку
+	if (m_bTriStateReload && GetState() == eReload && cmd == kWPN_FIRE && flags & CMD_START && m_sub_state == eSubstateReloadInProcess)
 	{
 		AddCartridge(1);
 		m_sub_state = eSubstateReloadEnd;
@@ -50,46 +49,50 @@ bool CWeaponAutomaticShotgun::Action(u16 cmd, u32 flags)
 	return false;
 }
 
-void CWeaponAutomaticShotgun::OnAnimationEnd(u32 state) 
+void CWeaponAutomaticShotgun::OnAnimationEnd(u32 state)
 {
-	if(!m_bTriStateReload || state != eReload)
+	if (!m_bTriStateReload || state != eReload)
 		return inherited::OnAnimationEnd(state);
 
-	switch(m_sub_state){
-		case eSubstateReloadBegin:{
+	switch (m_sub_state)
+	{
+		case eSubstateReloadBegin:
+		{
 			m_sub_state = eSubstateReloadInProcess;
 			SwitchState(eReload);
 		}break;
 
-		case eSubstateReloadInProcess:{
-			if( 0 != AddCartridge(1) ){
+		case eSubstateReloadInProcess:
+		{
+			if (0 != AddCartridge(1))
+			{
 				m_sub_state = eSubstateReloadEnd;
 			}
 			SwitchState(eReload);
 		}break;
 
-		case eSubstateReloadEnd:{
+		case eSubstateReloadEnd:
+		{
 			m_sub_state = eSubstateReloadBegin;
 			SwitchState(eIdle);
 		}break;
-		
 	};
 }
 
-void CWeaponAutomaticShotgun::Reload() 
+void CWeaponAutomaticShotgun::Reload()
 {
-	if(m_bTriStateReload){
+	if (m_bTriStateReload)
 		TriStateReload();
-	}else
+	else
 		inherited::Reload();
 }
 
 void CWeaponAutomaticShotgun::TriStateReload()
 {
-	if( m_magazine.size() == (u32)iMagazineSize || !HaveCartridgeInInventory(1) )return;
-	CWeapon::Reload		();
-	m_sub_state			= eSubstateReloadBegin;
-	SwitchState			(eReload);
+	if (m_magazine.size() == (u32)iMagazineSize || !HaveCartridgeInInventory(1))return;
+	CWeapon::Reload();
+	m_sub_state = eSubstateReloadBegin;
+	SwitchState(eReload);
 }
 
 void CWeaponAutomaticShotgun::OnStateSwitch(u32 S, u32 oldState)
@@ -196,7 +199,6 @@ bool CWeaponAutomaticShotgun::HaveCartridgeInInventory(u8 cnt)
 	}
 	return ac>=cnt;
 }
-
 
 u8 CWeaponAutomaticShotgun::AddCartridge		(u8 cnt)
 {

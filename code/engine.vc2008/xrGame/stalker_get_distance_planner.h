@@ -5,15 +5,13 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker get distance planner
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "action_planner_action_script.h"
 
 class CAI_Stalker;
 
-class CStalkerGetDistancePlanner : public CActionPlannerActionScript<CAI_Stalker> {
-private:
+class CStalkerGetDistancePlanner : public CActionPlannerActionScript<CAI_Stalker> 
+{
 	typedef CActionPlannerActionScript<CAI_Stalker>	inherited;
 
 private:
@@ -22,6 +20,6 @@ private:
 
 public:
 					CStalkerGetDistancePlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
-	virtual			~CStalkerGetDistancePlanner	();
+	virtual			~CStalkerGetDistancePlanner	() = default;
 	virtual	void	setup						(CAI_Stalker *object, CPropertyStorage *storage);
 };

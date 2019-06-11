@@ -5,7 +5,6 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker danger grenade actions classes
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "stalker_danger_grenade_actions.h"
 #include "ai/stalker/ai_stalker.h"
@@ -49,61 +48,62 @@ void CStalkerActionDangerGrenadeTakeCover::initialize						()
 	object().movement().set_movement_type		(eMovementTypeRun);
 }
 
-void CStalkerActionDangerGrenadeTakeCover::execute							()
+void CStalkerActionDangerGrenadeTakeCover::execute()
 {
-	inherited::execute		();
+	inherited::execute();
 	if (!object().memory().danger().selected())
 		return;
 
-	const CCoverPoint		*point = object().agent_manager().member().member(&object()).cover();
-	if (point) {
-		object().movement().set_level_dest_vertex	(point->level_vertex_id());
-		object().movement().set_desired_position	(&point->position());
-	}	
-	else
-		object().movement().set_nearest_accessible_position	();
-
-	EMentalState				temp;
+	const CCoverPoint* point = object().agent_manager().member().member(&object()).cover();
+	if (point) 
 	{
-		if (!object().inventory().ActiveItem()) {
-			object().CObjectHandler::set_goal			(eObjectActionIdle);
-			temp										= eMentalStatePanic;
+		object().movement().set_level_dest_vertex(point->level_vertex_id());
+		object().movement().set_desired_position(&point->position());
+	}
+	else object().movement().set_nearest_accessible_position();
+
+	EMentalState temp = eMentalStatePanic;
+	{
+		if (!object().inventory().ActiveItem())
+		{
+			// Panic mode :)))
+			object().CObjectHandler::set_goal(eObjectActionIdle);
 		}
-		else {
-			CWeapon					*weapon = smart_cast<CWeapon*>(&object().inventory().ActiveItem()->object());
-			if (weapon && weapon->can_be_strapped() && object().best_weapon() && (object().best_weapon()->object().ID() == weapon->ID())) {
-				object().CObjectHandler::set_goal			(eObjectActionStrapped,object().inventory().ActiveItem());
-				if (weapon->strapped_mode())
-					temp									= eMentalStatePanic;
-				else
-					temp									= eMentalStateDanger;
+		else
+		{
+			CWeapon* pWpn = smart_cast<CWeapon*>(&object().inventory().ActiveItem()->object());
+			CInventoryItem* pBest = object().best_weapon();
+			if (pWpn && pBest && pWpn->can_be_strapped() && pBest->object().ID() == pWpn->ID())
+			{
+				object().CObjectHandler::set_goal(eObjectActionStrapped, object().inventory().ActiveItem());
+				if (!pWpn->strapped_mode())
+					temp = eMentalStateDanger;
 			}
-			else {
-				object().CObjectHandler::set_goal			(eObjectActionIdle);
-				temp										= eMentalStateDanger;
+			else
+			{
+				object().CObjectHandler::set_goal(eObjectActionIdle);
+				temp = eMentalStateDanger;
 			}
 		}
 	}
 
-	if (!object().movement().path_completed()) {
-		object().movement().set_body_state			(eBodyStateStand);
-		if (object().movement().distance_to_destination_greater(2.f)) {
-			object().movement().set_mental_state	(temp);
-			object().sight().setup					(CSightAction(SightManager::eSightTypePathDirection,true,true));
+	if (!object().movement().path_completed())
+	{
+		object().movement().set_body_state(eBodyStateStand);
+		if (object().movement().distance_to_destination_greater(2.f)) 
+		{
+			object().movement().set_mental_state(temp);
+			object().sight().setup(CSightAction(SightManager::eSightTypePathDirection, true, true));
 		}
-		else {
-			object().movement().set_mental_state	(eMentalStateDanger);
-			object().sight().setup					(CSightAction(SightManager::eSightTypeCover,true,true));
+		else 
+		{
+			object().movement().set_mental_state(eMentalStateDanger);
+			object().sight().setup(CSightAction(SightManager::eSightTypeCover, true, true));
 		}
 		return;
 	}
 
-	set_property								(eWorldPropertyCoverReached,true);
-}
-
-void CStalkerActionDangerGrenadeTakeCover::finalize							()
-{
-	inherited::finalize		();
+	set_property(eWorldPropertyCoverReached, true);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -140,11 +140,6 @@ void CStalkerActionDangerGrenadeWaitForExplosion::execute							()
 		object().sight().setup					(CSightAction(SightManager::eSightTypeCover,true));
 }
 
-void CStalkerActionDangerGrenadeWaitForExplosion::finalize							()
-{
-	inherited::finalize		();
-}
-
 //////////////////////////////////////////////////////////////////////////
 // CStalkerActionDangerGrenadeTakeCoverAfterExplosion
 //////////////////////////////////////////////////////////////////////////
@@ -169,38 +164,33 @@ void CStalkerActionDangerGrenadeTakeCoverAfterExplosion::initialize						()
 	m_direction_sight		= !!::Random.randI(2);
 }
 
-void CStalkerActionDangerGrenadeTakeCoverAfterExplosion::execute							()
+void CStalkerActionDangerGrenadeTakeCoverAfterExplosion::execute()
 {
-	inherited::execute		();
+	inherited::execute();
 	if (!object().memory().danger().selected())
 		return;
 
-	const CCoverPoint		*point = object().agent_manager().member().member(&object()).cover();
-	if (point) {
-		object().movement().set_level_dest_vertex	(point->level_vertex_id());
-		object().movement().set_desired_position	(&point->position());
-	}	
-	else
-		object().movement().set_nearest_accessible_position	();
-
-	object().CObjectHandler::set_goal	(eObjectActionAimReady1,object().best_weapon());
-
-	if (!object().movement().path_completed()) {
-		object().movement().set_body_state		(eBodyStateStand);
-		object().movement().set_movement_type	(eMovementTypeRun);
-		if (!m_direction_sight || !object().movement().distance_to_destination_greater(2.f))
-			object().sight().setup				(CSightAction(SightManager::eSightTypeCover,true,true));
-		else
-			object().sight().setup				(CSightAction(SightManager::eSightTypePathDirection,true,true));
-		return;
+	const CCoverPoint* point = object().agent_manager().member().member(&object()).cover();
+	if (point) 
+	{
+		object().movement().set_level_dest_vertex(point->level_vertex_id());
+		object().movement().set_desired_position(&point->position());
 	}
+	else object().movement().set_nearest_accessible_position();
 
-	set_property								(eWorldPropertyCoverReached,true);
-}
+	object().CObjectHandler::set_goal(eObjectActionAimReady1, object().best_weapon());
 
-void CStalkerActionDangerGrenadeTakeCoverAfterExplosion::finalize							()
-{
-	inherited::finalize		();
+	if (!object().movement().path_completed()) 
+	{
+		object().movement().set_body_state(eBodyStateStand);
+		object().movement().set_movement_type(eMovementTypeRun);
+
+		if (!m_direction_sight || !object().movement().distance_to_destination_greater(2.f))
+			object().sight().setup(CSightAction(SightManager::eSightTypeCover, true, true));
+		else
+			object().sight().setup(CSightAction(SightManager::eSightTypePathDirection, true, true));
+	}
+	else set_property(eWorldPropertyCoverReached, true);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -242,11 +232,6 @@ void CStalkerActionDangerGrenadeLookAround::execute							()
 		set_property							(eWorldPropertyLookedAround,true);
 }
 
-void CStalkerActionDangerGrenadeLookAround::finalize							()
-{
-	inherited::finalize		();
-}
-
 //////////////////////////////////////////////////////////////////////////
 // CStalkerActionDangerGrenadeSearch
 //////////////////////////////////////////////////////////////////////////
@@ -268,14 +253,4 @@ void CStalkerActionDangerGrenadeSearch::initialize						()
 	object().movement().set_mental_state		(eMentalStateDanger);
 	object().sight().setup						(SightManager::eSightTypeCurrentDirection);
 	object().CObjectHandler::set_goal			(eObjectActionIdle);
-}
-
-void CStalkerActionDangerGrenadeSearch::execute							()
-{
-	inherited::execute		();
-}
-
-void CStalkerActionDangerGrenadeSearch::finalize							()
-{
-	inherited::finalize		();
 }

@@ -9,7 +9,9 @@
 
 void CRenderTarget::phase_puddles()
 {
-	u_setrt(rt_Generic_0, 0, 0, HW.pBaseZB);
+	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
+
+	u_setrt(outRT, 0, 0, HW.pBaseZB);
 	SPuddle *points = &(Puddles->points[0]);
 	bool already_rendered = false;
 	for (u32 i = 0; i < Puddles->size; ++i)

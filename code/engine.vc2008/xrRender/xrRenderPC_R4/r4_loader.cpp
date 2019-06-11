@@ -103,6 +103,11 @@ void CRender::level_Load(IReader* fs)
 	// HOM
 	HOM.Load					();
 
+	// Puddles
+	if (!Puddles)
+		Puddles = new CPuddles();
+	Puddles->Load();
+
 	// Lights
 	g_pGamePersistent->SetLoadStageTitle("st_loading_lights");
 	g_pGamePersistent->LoadTitle();
@@ -128,7 +133,7 @@ void CRender::level_Unload()
 	u32 I;
 
 	// Puddles
-	Puddles->Load();
+	Puddles->Unload();
 
 	// HOM
 	HOM.Unload				();

@@ -29,33 +29,30 @@ using namespace StalkerDecisionSpace;
 // CStalkerActionDead
 //////////////////////////////////////////////////////////////////////////
 
-CStalkerActionDead::CStalkerActionDead	(CAI_Stalker *object, LPCSTR action_name) :
-	inherited							(object,action_name)
+CStalkerActionDead::CStalkerActionDead	(CAI_Stalker *object, LPCSTR action_name) : inherited(object,action_name)
 {
 }
 
-bool CStalkerActionDead::fire			() const
+bool CStalkerActionDead::fire() const
 {
 	if (object().inventory().TotalWeight() <= 0)
 		return							(false);
 	
-	CWeapon								*weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
-	if (!weapon)
+	CWeapon *pWeapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
+	if (!pWeapon || !pWeapon->GetAmmoElapsed())
 		return							(false);
 
-	if (!weapon->GetAmmoElapsed())
-		return							(false);
-
+	// Зажат ли курок
 	if (!object().hammer_is_clutched())
-		return							(false);
+		return (false);
 
 	if (!object().character_physics_support()->can_drop_active_weapon())
-		return							(true);
-
+		return (true);
+	 
 	if (Device.dwTimeGlobal - object().GetLevelDeathTime() > 500)
-		return							(false);
+		return (false);
 
-	return								(true);
+	return (true);
 }
 
 void CStalkerActionDead::initialize		()
@@ -68,16 +65,14 @@ void CStalkerActionDead::initialize		()
 	if (!fire())
 		return;
 
-	object().inventory().Action			(kWPN_FIRE,CMD_START);
+	object().inventory().Action(kWPN_FIRE,CMD_START);
 
-	u16 active_slot						= object().inventory().GetActiveSlot();
-	if (active_slot == INV_SLOT_3) {
-		CInventoryItem*					item = object().inventory().ItemFromSlot(active_slot);
-		if (item) {
-			CWeaponMagazined*			weapon = smart_cast<CWeaponMagazined*>(item);
-			VERIFY						(weapon);
-			weapon->SetQueueSize		(weapon->GetAmmoElapsed());
-		}
+	u16 active_slot = object().inventory().GetActiveSlot();
+	if (active_slot == INV_SLOT_3)
+	{
+		CWeaponMagazined* pWeapon = smart_cast<CWeaponMagazined*>(object().inventory().ItemFromSlot(active_slot));
+		if (pWeapon)
+			pWeapon->SetQueueSize(pWeapon->GetAmmoElapsed());
 	}
 
 	u16 I = object().inventory().FirstSlot();
