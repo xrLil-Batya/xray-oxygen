@@ -868,14 +868,14 @@ void CActor::UpdateCL()
 float	NET_Jump = 0;
 void CActor::set_state_box(u32	mstate)
 {
-		if ( mstate & mcCrouch)
+	if (mstate & mcCrouch)
 	{
 		if (isActorAccelerated(mstate_real, IsZoomAimingMode()))
 			character_physics_support()->movement()->ActivateBox(1, true);
 		else
 			character_physics_support()->movement()->ActivateBox(2, true);
 	}
-	else 
+	else
 		character_physics_support()->movement()->ActivateBox(0, true);
 }
 
@@ -1123,10 +1123,7 @@ void CActor::g_PerformDrop()
 
 bool CActor::use_default_throw_force()
 {
-	if (!g_Alive())
-		return false;
-	
-	return true;
+	return !!g_Alive();
 }
 
 float CActor::missile_throw_force()
@@ -1230,7 +1227,7 @@ void CActor::RenderText(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	pFont->Out			(x,y,Text);
 	//-------------------------------------------------
 	*pdup = delta_up;
-};
+}
 
 void CActor::SetPhPosition(const Fmatrix &transform)
 {
@@ -1431,7 +1428,7 @@ void CActor::spawn_supplies()
 
 void CActor::AnimTorsoPlayCallBack(CBlend* B)
 {
-	CActor* actor		= (CActor*)B->CallbackParam;
+	CActor* actor = (CActor*)B->CallbackParam;
 	actor->m_bAnimTorsoPlayed = FALSE;
 }
 
@@ -1457,7 +1454,7 @@ DLL_Pure *CActor::_construct()
 	CInventoryOwner::_construct();
 	CStepManager::_construct();
 
-	return							(this);
+	return (this);
 }
 
 bool CActor::use_center_to_aim() const
@@ -1469,7 +1466,7 @@ bool CActor::can_attach(const CInventoryItem *inventory_item) const
 {
 	const CAttachableItem	*item = smart_cast<const CAttachableItem*>(inventory_item);
 	if (!item ||  !item->can_be_attached())
-		return			(false);
+		return (false);
 
 	if( m_attach_item_sections.end() == std::find(m_attach_item_sections.begin(),m_attach_item_sections.end(),inventory_item->object().cNameSect()) )
 		return false;
@@ -1510,7 +1507,6 @@ bool CActor::is_on_ground()
 {
 	return (character_physics_support()->movement()->Environment() != CPHMovementControl::peInAir);
 }
-
 
 bool CActor::is_ai_obstacle() const
 {

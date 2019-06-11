@@ -24,10 +24,6 @@ CStalkerGetDistancePlanner::CStalkerGetDistancePlanner	(CAI_Stalker *object, LPC
 {
 }
 
-CStalkerGetDistancePlanner::~CStalkerGetDistancePlanner	()
-{
-}
-
 void CStalkerGetDistancePlanner::setup					(CAI_Stalker *object, CPropertyStorage *storage)
 {
 	inherited::setup		(object,storage);

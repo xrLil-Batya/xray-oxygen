@@ -90,11 +90,6 @@ stalker_movement_manager_base::~stalker_movement_manager_base	()
 {
 }
 
-void stalker_movement_manager_base::Load					(LPCSTR section)
-{
-	inherited::Load				(section);
-}
-
 void stalker_movement_manager_base::reload				(LPCSTR section)
 {
 	inherited::reload			(section);
@@ -616,32 +611,20 @@ void stalker_movement_manager_base::on_build_path				()
 
 bool stalker_movement_manager_base::is_object_on_the_way		(const CGameObject *object, const float &distance)
 {
-	update_object_on_the_way			(object,distance);
+	update_object_on_the_way(object,distance);
 
-	if (m_last_query_object != object) {
+	if (m_last_query_object != object || distance - EPS_L > m_last_query_distance
+		|| !m_last_query_position.similar(this->object().Position())
+		|| !m_last_query_object_position.similar(object->Position()))
+	{
 		update_object_on_the_way		(object,distance);
-		return							(m_last_query_result);
 	}
 
-	if (distance - EPS_L > m_last_query_distance) {
-		update_object_on_the_way		(object,distance);
-		return							(m_last_query_result);
-	}
 
-	if (!m_last_query_position.similar(this->object().Position())) {
-		update_object_on_the_way		(object,distance);
-		return							(m_last_query_result);
-	}
-
-	if (!m_last_query_object_position.similar(object->Position())) {
-		update_object_on_the_way		(object,distance);
-		return							(m_last_query_result);
-	}
-
-	return								(m_last_query_result);
+	return m_last_query_result;
 }
 
-IC float distance_to_line								(const Fvector &p0, const Fvector &p1, const Fvector &p2)
+IC float distance_to_line(const Fvector &p0, const Fvector &p1, const Fvector &p2)
 {
 	if (p0.similar(p2))
 		return							(0.f);

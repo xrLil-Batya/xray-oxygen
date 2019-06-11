@@ -17,44 +17,28 @@
 
 using namespace StalkerDecisionSpace;
 
-CStalkerDangerBySoundPlanner::CStalkerDangerBySoundPlanner	(CAI_Stalker *object, LPCSTR action_name) :
-	inherited				(object,action_name)
+CStalkerDangerBySoundPlanner::CStalkerDangerBySoundPlanner(CAI_Stalker* object, LPCSTR action_name) :
+	inherited(object, action_name)
 {
 }
 
-void CStalkerDangerBySoundPlanner::setup					(CAI_Stalker *object, CPropertyStorage *storage)
+void CStalkerDangerBySoundPlanner::setup(CAI_Stalker* object, CPropertyStorage* storage)
 {
-	inherited::setup		(object,storage);
-	clear					();
-	add_evaluators			();
-	add_actions				();
+	inherited::setup(object, storage);
+	clear();
+	add_evaluators();
+	add_actions();
 }
 
-void CStalkerDangerBySoundPlanner::initialize				()
+void CStalkerDangerBySoundPlanner::add_evaluators()
 {
-	inherited::initialize	();
+	add_evaluator(eWorldPropertyDanger, xr_new<CStalkerPropertyEvaluatorDangers>(m_object, "danger"));
+	add_evaluator(eWorldPropertyDangerUnknown, xr_new<CStalkerPropertyEvaluatorConst>(false, "fake"));
 }
 
-void CStalkerDangerBySoundPlanner::update					()
+void CStalkerDangerBySoundPlanner::add_actions()
 {
-	inherited::update		();
-}
-
-void CStalkerDangerBySoundPlanner::finalize					()
-{
-	inherited::finalize		();
-}
-void CStalkerDangerBySoundPlanner::add_evaluators			()
-{
-	add_evaluator			(eWorldPropertyDanger			,xr_new<CStalkerPropertyEvaluatorDangers>			(m_object,"danger"));
-	add_evaluator			(eWorldPropertyDangerUnknown	,xr_new<CStalkerPropertyEvaluatorConst>				(false,"fake"));
-}
-
-void CStalkerDangerBySoundPlanner::add_actions				()
-{
-	CStalkerActionBase		*action;
-
-	action					= xr_new<CStalkerActionDangerBySoundTakeCover>(m_object,"fake");
-	add_effect				(action,eWorldPropertyDanger,		false);
-	add_operator			(eWorldOperatorDangerUnknownTakeCover,	action);
+	CStalkerActionBase* pAction = new CStalkerActionDangerBySoundTakeCover(m_object, "fake");
+	add_effect(pAction, eWorldPropertyDanger, false);
+	add_operator(eWorldOperatorDangerUnknownTakeCover, pAction);
 }

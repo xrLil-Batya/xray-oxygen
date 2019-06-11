@@ -5,7 +5,6 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker low cover planner
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "stalker_low_cover_planner.h"
 #include "script_game_object.h"
@@ -63,16 +62,6 @@ void stalker_low_cover_planner::initialize				()
 	object().movement().set_mental_state				(eMentalStateDanger);
 
 	CScriptActionPlanner::m_storage.set_property		(eWorldPropertyInCover,true);
-}
-
-void stalker_low_cover_planner::execute					()
-{
-	inherited::execute		();
-}
-
-void stalker_low_cover_planner::finalize				()
-{
-	inherited::finalize		();
 }
 
 void stalker_low_cover_planner::add_evaluators			()

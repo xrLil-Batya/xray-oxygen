@@ -8,8 +8,10 @@
 
 #pragma once
 
-namespace StalkerDecisionSpace {
-	enum EWorldProperties {
+namespace StalkerDecisionSpace 
+{
+	enum EWorldProperties
+	{
 		eWorldPropertyAlive			= u32(0),
 		eWorldPropertyDead,
 		eWorldPropertyAlreadyDead,
@@ -99,7 +101,8 @@ namespace StalkerDecisionSpace {
 		eWorldPropertyDummy			= u32(-1),
 	};
 
-	enum EWorldOperators {
+	enum EWorldOperators
+	{
 // death
 		eWorldOperatorDead	= u32(0),
 		eWorldOperatorDying,
@@ -216,7 +219,8 @@ namespace StalkerDecisionSpace {
 		eWorldOperatorDummy			= u32(-1),
 	};
 
-	enum ESightActionType {
+	enum ESightActionType
+	{
 		eSightActionTypeWatchItem	= u32(0),
 		eSightActionTypeWatchEnemy,
 		eSightActionTypeDummy		= u32(-1),

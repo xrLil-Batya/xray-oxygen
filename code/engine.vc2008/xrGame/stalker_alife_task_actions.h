@@ -5,18 +5,14 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker alife task action classes
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "stalker_base_action.h"
 
 class CAI_Trader;
 
 //////////////////////////////////////////////////////////////////////////
-// CStalkerActionSolveZonePuzzle
-//////////////////////////////////////////////////////////////////////////
-
-class CStalkerActionSolveZonePuzzle : public CStalkerActionBase {
+class CStalkerActionSolveZonePuzzle : public CStalkerActionBase 
+{
 protected:
 	typedef CStalkerActionBase inherited;
 
@@ -31,10 +27,8 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-// CStalkerActionSmartTerrain
-//////////////////////////////////////////////////////////////////////////
-
-class CStalkerActionSmartTerrain : public CStalkerActionBase {
+class CStalkerActionSmartTerrain : public CStalkerActionBase 
+{
 protected:
 	typedef CStalkerActionBase inherited;
 

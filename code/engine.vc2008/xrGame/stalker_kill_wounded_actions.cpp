@@ -89,12 +89,6 @@ void CStalkerActionReachWounded::initialize					()
 	object().set_goal							(eObjectActionIdle,weapon_to_kill(&object()),MIN_QUEUE,MAX_QUEUE,MIN_INTERVAL,MAX_INTERVAL);
 }
 
-void CStalkerActionReachWounded::finalize					()
-{
-	inherited::finalize		();
-//	object().movement().set_desired_position	(0);
-}
-
 void CStalkerActionReachWounded::execute					()
 {
 	inherited::execute		();
@@ -132,12 +126,6 @@ void CStalkerActionReachWounded::execute					()
 		return;
 	}
 
-//	CObject									*processor = Level().Objects.net_Find(processor_id);
-//	if (processor && processor->Position().distance_to_sqr(object().Position()) < _sqr(3.f)) {
-//		object().movement().set_movement_type	(eMovementTypeStand);
-//		return;
-//	}
-
 	if (object().Position().distance_to_sqr(mem_object.m_object_params.m_position) < _sqr(3.f)) {
 		object().movement().set_movement_type	(eMovementTypeStand);
 		return;
@@ -173,9 +161,6 @@ void CStalkerActionAimWounded::initialize				()
 
 	if (!object().memory().visual().visible_now(enemy))
 		object().movement().set_movement_type	(eMovementTypeWalk);
-
-//	m_speed									= object().movement().m_head.speed;
-//	object().movement().danger_head_speed	(PI_DIV_4);
 }
 
 void CStalkerActionAimWounded::execute					()
@@ -202,13 +187,6 @@ void CStalkerActionAimWounded::execute					()
 		return;
 
 	m_storage->set_property	(eWorldPropertyWoundedEnemyAimed,true);
-}
-
-void CStalkerActionAimWounded::finalize					()
-{
-	inherited::finalize		();
-
-//	object().movement().danger_head_speed	(m_speed);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -260,7 +238,6 @@ void CStalkerActionPrepareWounded::execute					()
 
 //	not a bug since killer do not look at enemy and can be too close
 //	to see him straight forward
-//	VERIFY						(object().memory().visual().visible_now(enemy));
 	object().sight().setup		(CSightAction(enemy,true));
 
 	if (!object().sound().active_sound_count(true))
@@ -287,11 +264,6 @@ void CStalkerActionKillWounded::initialize					()
 	object().movement().set_mental_state		(eMentalStateDanger);
 	object().movement().set_body_state			(eBodyStateStand);
 	object().movement().set_movement_type		(eMovementTypeStand);
-}
-
-void CStalkerActionKillWounded::finalize					()
-{
-	inherited::finalize		();
 }
 
 void CStalkerActionKillWounded::execute					()
@@ -354,12 +326,10 @@ void CStalkerActionPauseAfterKill::initialize	()
 	object().sight().setup						(CSightAction(SightManager::eSightTypeCurrentDirection,true));
 }
 
-void CStalkerActionPauseAfterKill::execute		()
+void CStalkerActionPauseAfterKill::execute()
 {
-	inherited::execute		();
+	inherited::execute();
 
-	if (!completed())
-		return;
-
-	m_storage->set_property	(eWorldPropertyPausedAfterKill,false);
+	if (completed())
+		m_storage->set_property(eWorldPropertyPausedAfterKill, false);
 }

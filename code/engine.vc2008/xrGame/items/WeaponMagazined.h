@@ -50,8 +50,6 @@ protected:
 	virtual void	switch2_Hiding	();
 	virtual void	switch2_Hidden	();
 	virtual void	switch2_Showing	();
-	virtual void	switch2_View	();
-	virtual void	switch2_UnMis	();
 	
 	virtual void	OnShot			();	
 	

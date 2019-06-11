@@ -5,20 +5,18 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker death planner
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "action_planner_action_script.h"
 
 class CAI_Stalker;
 
-class CStalkerDeathPlanner : public CActionPlannerActionScript<CAI_Stalker> {
-private:
+class CStalkerDeathPlanner : public CActionPlannerActionScript<CAI_Stalker>
+{
 	typedef CActionPlannerActionScript<CAI_Stalker> inherited;
 
 public:
 						CStalkerDeathPlanner	(CAI_Stalker *object = 0, LPCSTR action_name = "");
-	virtual				~CStalkerDeathPlanner	();
+	virtual				~CStalkerDeathPlanner	() = default;
 	virtual	void		setup					(CAI_Stalker *object, CPropertyStorage *storage);
 			void		add_evaluators			();
 			void		add_actions				();

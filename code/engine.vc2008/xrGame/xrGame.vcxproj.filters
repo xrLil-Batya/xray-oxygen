@@ -3879,9 +3879,6 @@
     <ClInclude Include="stalker_animation_data_storage.h">
       <Filter>AI\AMonsters\humans\stalker\AnimationManager\data_storage</Filter>
     </ClInclude>
-    <ClInclude Include="stalker_animation_data_storage_inline.h">
-      <Filter>AI\AMonsters\humans\stalker\AnimationManager\data_storage</Filter>
-    </ClInclude>
     <ClInclude Include="stalker_animation_data.h">
       <Filter>AI\AMonsters\humans\stalker\AnimationManager\data_storage\data</Filter>
     </ClInclude>

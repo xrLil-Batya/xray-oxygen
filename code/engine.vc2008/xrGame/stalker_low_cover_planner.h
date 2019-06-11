@@ -5,19 +5,15 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker low cover planner
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef STALKER_LOW_COVER_PLANNER_H_INCLUDED
-#define STALKER_LOW_COVER_PLANNER_H_INCLUDED
-
+#pragma once
 #include "action_planner_action_script.h"
 
 class CAI_Stalker;
 
-class stalker_low_cover_planner : public CActionPlannerActionScript<CAI_Stalker> {
-private:
-	typedef CActionPlannerActionScript<CAI_Stalker>	inherited;
+class stalker_low_cover_planner : public CActionPlannerActionScript<CAI_Stalker> 
+{
+	using inherited = CActionPlannerActionScript<CAI_Stalker>;
 
-private:
 			void	add_evaluators				();
 			void	add_actions					();
 
@@ -26,8 +22,4 @@ public:
 	virtual	void	setup						(CAI_Stalker *object, CPropertyStorage *storage);
 	virtual void	update						();
 	virtual void	initialize					();
-	virtual void	execute						();
-	virtual void	finalize					();
 };
-
-#endif // STALKER_LOW_COVER_PLANNER_H_INCLUDED

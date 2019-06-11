@@ -22,10 +22,6 @@ CStalkerDeathPlanner::CStalkerDeathPlanner	(CAI_Stalker *object, LPCSTR action_n
 {
 }
 
-CStalkerDeathPlanner::~CStalkerDeathPlanner	()
-{
-}
-
 void CStalkerDeathPlanner::setup			(CAI_Stalker *object, CPropertyStorage *storage)
 {
 	inherited::setup		(object,storage);

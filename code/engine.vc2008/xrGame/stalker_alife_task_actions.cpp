@@ -5,7 +5,6 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker alife task action classes
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "stalker_alife_task_actions.h"
 #include "ai/stalker/ai_stalker.h"
@@ -32,6 +31,7 @@
 #include "alife_human_brain.h"
 #include "alife_smart_terrain_task.h"
 #include "patrol_path_manager.h"
+#include "../FrayBuildConfig.hpp"
 
 using namespace StalkerSpace;
 using namespace StalkerDecisionSpace;
@@ -56,57 +56,34 @@ CStalkerActionSolveZonePuzzle::CStalkerActionSolveZonePuzzle	(CAI_Stalker *objec
 void CStalkerActionSolveZonePuzzle::initialize	()
 {
 	inherited::initialize						();
-
-#ifndef GRENADE_TEST
-	m_stop_weapon_handling_time					= Device.dwTimeGlobal;
-	if (object().inventory().ActiveItem() && object().best_weapon() && (object().inventory().ActiveItem()->object().ID() == object().best_weapon()->object().ID()))
-		m_stop_weapon_handling_time				+= ::Random32.random(30000) + 30000;
-
-//	object().movement().set_desired_position	(0);
+	
 	object().movement().set_desired_direction	(0);
-	object().movement().set_path_type			(MovementManager::ePathTypeGamePath);
 	object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
 	object().movement().set_body_state			(eBodyStateStand);
+
+#ifndef GRENADE_TEST
+	m_stop_weapon_handling_time = Device.dwTimeGlobal;
+	if (object().inventory().ActiveItem() && object().best_weapon() && (object().inventory().ActiveItem()->object().ID() == object().best_weapon()->object().ID()))
+		m_stop_weapon_handling_time += ::Random32.random(30000) + 30000;
+
+	object().movement().set_path_type			(MovementManager::ePathTypeGamePath);
 	object().movement().set_movement_type		(eMovementTypeWalk);
 	object().movement().set_mental_state		(eMentalStateFree);
 	object().sight().setup						(CSightAction(SightManager::eSightTypeCover,false,true));
 #else
-#	if 1
-//		object().movement().set_desired_position	(0);
-		object().movement().set_desired_direction	(0);
-		object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
-		object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
-		object().movement().set_body_state			(eBodyStateStand);
-		object().movement().set_movement_type		(eMovementTypeStand);
-		object().movement().set_mental_state		(eMentalStateDanger);
-		object().sight().setup						(CSightAction(g_actor,true));
-//		object().sight().setup						(CSightAction(SightManager::eSightTypeCurrentDirection));
-#	else
-//		object().movement().set_mental_state		(eMentalStateDanger);
-		object().movement().set_mental_state		(eMentalStateFree);
-		object().movement().set_movement_type		(eMovementTypeWalk);
-		object().movement().set_body_state			(eBodyStateStand);
-		object().movement().set_desired_direction	(0);
-		object().movement().set_path_type			(MovementManager::ePathTypePatrolPath);
-		object().movement().set_detail_path_type	(DetailPathManager::eDetailPathTypeSmooth);
-		object().movement().patrol().set_path		("test_sight",PatrolPathManager::ePatrolStartTypeNearest,PatrolPathManager::ePatrolRouteTypeContinue);
-//		object().movement().set_nearest_accessible_position();
-		object().sight().setup						(CSightAction(SightManager::eSightTypePathDirection));
-		//		object().CObjectHandler::set_goal			(eObjectActionFire1,object().inventory().ItemFromSlot(GRENADE_SLOT),0,1,2500,3000);
-#	endif
+	object().movement().set_path_type			(MovementManager::ePathTypeLevelPath);
+	object().movement().set_movement_type		(eMovementTypeStand);
+	object().movement().set_mental_state		(eMentalStateDanger);
+	object().sight().setup						(CSightAction(g_actor,true));
 #endif
 }
 
-void CStalkerActionSolveZonePuzzle::finalize	()
+void CStalkerActionSolveZonePuzzle::finalize()
 {
-	inherited::finalize				();
+	inherited::finalize();
 
-//	object().movement().set_desired_position	(0);
-
-	if (!object().g_Alive())
-		return;
-
-	object().sound().remove_active_sounds		(u32(eStalkerSoundMaskNoHumming));
+	if (object().g_Alive())
+		object().sound().remove_active_sounds(u32(eStalkerSoundMaskNoHumming));
 }
 
 void CStalkerActionSolveZonePuzzle::execute		()
@@ -122,53 +99,7 @@ void CStalkerActionSolveZonePuzzle::execute		()
 	else
 		object().CObjectHandler::set_goal		(eObjectActionIdle,object().best_weapon());
 #else
-#	if 1
-//		object().throw_target					(g_actor->Position(), g_actor);
-//		if (object().throw_enabled()) {
-	//			object().CObjectHandler::set_goal	(eObjectActionFire1,object().inventory().ItemFromSlot(GRENADE_SLOT));
-//			return;
-//		}
-//
-//		object().CObjectHandler::set_goal			(eObjectActionIdle,object().inventory().ItemFromSlot(GRENADE_SLOT));
-		object().CObjectHandler::set_goal			(eObjectActionFire1,object().best_weapon());
-#	else
-#		if 1
-			const CWeapon							*weapon = smart_cast<const CWeapon*>(object().best_weapon());
-			VERIFY									(weapon);
-			if (!weapon->strapped_mode())
-				object().CObjectHandler::set_goal	(eObjectActionStrapped,object().best_weapon());
-			else
-				object().CObjectHandler::set_goal	(eObjectActionIdle,object().best_weapon());
-#		else
-			const CWeapon							*weapon = smart_cast<const CWeapon*>(object().best_weapon());
-			VERIFY									(weapon);
-//			Msg										("weapon %s is strapped : %c",*weapon->cName(),weapon->strapped_mode() ? '+' : '-');
-
-			static u32 m_time_to_strap = 0;
-			static u32 m_time_to_idle = 0;
-			if (!object().inventory().ActiveItem() || (object().inventory().GetActiveSlot() == INV_SLOT_2)) {
-				if (!m_time_to_strap)
-					m_time_to_strap					= Device.dwTimeGlobal + 10000;
-				if (Device.dwTimeGlobal >= m_time_to_strap) {
-					m_time_to_idle					= 0;
-					object().CObjectHandler::set_goal	(eObjectActionStrapped,object().best_weapon());
-				}
-			}
-			else {
-				const CWeapon						*weapon = smart_cast<const CWeapon*>(object().best_weapon());
-				VERIFY								(weapon);
-				if (weapon->strapped_mode()) {
-					if (!m_time_to_idle)
-						m_time_to_idle					= Device.dwTimeGlobal + 10000;
-					if (Device.dwTimeGlobal >= m_time_to_idle) {
-						m_time_to_strap					= 0;
-						object().CObjectHandler::set_goal	(eObjectActionIdle,object().inventory().ItemFromSlot(INV_SLOT_2));
-					}
-				}
-			}
-
-#		endif
-#	endif
+		object().CObjectHandler::set_goal		(eObjectActionFire1,object().best_weapon());
 #endif
 }
 
@@ -185,7 +116,6 @@ CStalkerActionSmartTerrain::CStalkerActionSmartTerrain	(CAI_Stalker *object, LPC
 void CStalkerActionSmartTerrain::initialize				()
 {
 	inherited::initialize							();
-//	object().movement().set_desired_position		(0);
 	object().movement().set_desired_direction		(0);
 	object().movement().game_selector().set_selection_type		(eSelectionTypeMask);
 	object().movement().set_detail_path_type		(DetailPathManager::eDetailPathTypeSmooth);
@@ -194,25 +124,21 @@ void CStalkerActionSmartTerrain::initialize				()
 	object().movement().set_mental_state			(eMentalStateFree);
 	object().sight().setup							(CSightAction(SightManager::eSightTypePathDirection));
 
-	if (!object().best_weapon()) {
-		object().CObjectHandler::set_goal		(eObjectActionIdle);
+	object().CObjectHandler::set_goal(eObjectActionIdle);
+	if (!object().best_weapon())
 		return;
-	}
 
-	object().CObjectHandler::set_goal			(eObjectActionIdle);
-
-	CWeapon										*best_weapon = smart_cast<CWeapon*>(object().best_weapon());
+	CWeapon *best_weapon = smart_cast<CWeapon*>(object().best_weapon());
 	if (object().CObjectHandler::weapon_strapped(best_weapon))
 		return;
 
 	object().CObjectHandler::set_goal			(eObjectActionIdle,object().best_weapon());
 }
 
-void CStalkerActionSmartTerrain::finalize				()
+void CStalkerActionSmartTerrain::finalize()
 {
-	inherited::finalize					();
-//	object().movement().set_desired_position	(0);
-	object().movement().game_selector().set_selection_type		(eSelectionTypeRandomBranching);
+	inherited::finalize();
+	object().movement().game_selector().set_selection_type(eSelectionTypeRandomBranching);
 }
 
 void CStalkerActionSmartTerrain::execute				()

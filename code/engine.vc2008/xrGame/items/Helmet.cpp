@@ -20,11 +20,7 @@ CHelmet::CHelmet()
 CHelmet::~CHelmet()
 {
 	xr_delete(m_boneProtection);
-	if (m_binocularVision)
-	{		
-		xr_delete(m_binocularVision);
-	}
-
+	xr_delete(m_binocularVision);
 }
 
 void CHelmet::Load(LPCSTR section) 
@@ -232,13 +228,12 @@ float CHelmet::HitThroughArmor(float hit_power, s16 element, float ap, bool& add
 	else
 	{
 		float one = 0.1f;
-		if(hit_type == ALife::eHitTypeStrike || 
-		   hit_type == ALife::eHitTypeWound || 
-		   hit_type == ALife::eHitTypeWound_2 || 
-		   hit_type == ALife::eHitTypeExplosion)
+		if(hit_type == ALife::eHitTypeStrike  || hit_type == ALife::eHitTypeWound || 
+		   hit_type == ALife::eHitTypeWound_2 || hit_type == ALife::eHitTypeExplosion)
 		{
 			one = 1.0f;
 		}
+
 		float protect = GetDefHitTypeProtection(hit_type);
 		NewHitPower -= protect * one;
 

@@ -470,13 +470,21 @@ void CWeaponMagazined::OnStateSwitch(u32 S, u32 oldState)
 
 		case eView:
 		{
-			switch2_View();
+			if (m_sounds.SoundIsFound("sndView") && AnimIsFound("anm_view"))
+			{
+				PlaySound("sndView", get_LastFP());
+				PlayHUDMotion("anm_view", FALSE, this, GetState());
+			}
 			break;
 		}
 
 		case eUnMis:
 		{
-			switch2_UnMis();
+			if (m_sounds.SoundIsFound("sndUnMis") && AnimIsFound("anm_un_mis"))
+			{
+				PlaySound("sndUnMis", get_LastFP());
+				PlayHUDMotion("anm_un_mis", FALSE, this, GetState());
+			}
 			break;
 		}
 
@@ -700,33 +708,12 @@ void CWeaponMagazined::switch2_Idle()
 	PlayAnimIdle();
 }
 
-#ifdef DEBUG
-#include "ai\stalker\ai_stalker.h"
-#include "object_handler_planner.h"
-#endif
 void CWeaponMagazined::switch2_Fire	()
 {
 	CInventoryOwner* io	= smart_cast<CInventoryOwner*>(H_Parent());
-	CInventoryItem* ii = smart_cast<CInventoryItem*>(this);
 
 	if (!io)
 		return;
-
-#ifdef DEBUG
-	if (ii != io->inventory().ActiveItem())
-		Msg("! not an active item, item %s, owner %s, active item %s",*cName(),*H_Parent()->cName(),io->inventory().ActiveItem() ? *io->inventory().ActiveItem()->object().cName() : "no_active_item");
-
-	if (!(io && (ii == io->inventory().ActiveItem()))) 
-	{
-		CAI_Stalker *stalker = smart_cast<CAI_Stalker*>(H_Parent());
-		if (stalker) 
-		{
-			stalker->planner().show						();
-			stalker->planner().show_current_world_state	();
-			stalker->planner().show_target_world_state	();
-		}
-	}
-#endif // DEBUG
 
 	m_bStopedAfterQueueFired = false;
 	m_bFireSingleShot = true;
@@ -805,24 +792,6 @@ void CWeaponMagazined::switch2_Showing()
 
 	SetPending(TRUE);
 	PlayAnimShow();
-}
-
-void CWeaponMagazined::switch2_View()
-{
-	if (m_sounds.SoundIsFound("sndView") && AnimIsFound("anm_view"))
-	{
-		PlaySound("sndView", get_LastFP());
-		PlayHUDMotion("anm_view", FALSE, this, GetState());
-	}
-}
-
-void CWeaponMagazined::switch2_UnMis()
-{
-	if (m_sounds.SoundIsFound("sndUnMis") && AnimIsFound("anm_un_mis"))
-	{
-		PlaySound("sndUnMis", get_LastFP());
-		PlayHUDMotion("anm_un_mis", FALSE, this, GetState());
-	}
 }
 
 #include "CustomDetector.h"

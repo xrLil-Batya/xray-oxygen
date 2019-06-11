@@ -331,7 +331,7 @@ void CShootingObject::StopFlameParticles	()
 
 void CShootingObject::UpdateFlameParticles	()
 {
-	if(0==m_sFlameParticlesCurrent.size())		return;
+	if(!m_sFlameParticlesCurrent.size())		return;
 	if(!m_pFlameParticles)				return;
 
 	Fmatrix		pos; 
@@ -342,9 +342,7 @@ void CShootingObject::UpdateFlameParticles	()
 
 	m_pFlameParticles->SetXFORM			(pos);
 
-	if(!m_pFlameParticles->IsLooped() && 
-		!m_pFlameParticles->IsPlaying() &&
-		!m_pFlameParticles->PSI_alive())
+	if(!m_pFlameParticles->IsLooped() && !m_pFlameParticles->IsPlaying() && !m_pFlameParticles->PSI_alive())
 	{
 		m_pFlameParticles->Stop();
 		CParticlesObject::Destroy(m_pFlameParticles);
@@ -361,11 +359,10 @@ void CShootingObject::UpdateLight()
 	}
 }
 
-void CShootingObject::StopLight			()
+void CShootingObject::StopLight()
 {
-	if(light_render){
+	if(light_render)
 		light_render->set_active(false);
-	}
 }
 
 void CShootingObject::RenderLight()

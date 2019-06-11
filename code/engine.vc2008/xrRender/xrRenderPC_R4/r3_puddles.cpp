@@ -43,8 +43,8 @@ void CPuddles::Load()
 	}
 	// можно было экспортировать из рендера CModelPool->Instance_Load, да ну нафиг возиться
 	string_path		fn;
-	if (!FS.exist(fn, "$game_meshes$", "ogse_puddles.ogf"))
-		Debug.fatal(DEBUG_INFO, "Can't find model ogse_puddles.ogf");
+	if (!FS.exist(fn, "$game_meshes$", "puddles.ogf"))
+		Debug.fatal(DEBUG_INFO, "Can't find model puddles.ogf");
 
 	IReader*			data = FS.r_open(fn);
 	ogf_header			H;

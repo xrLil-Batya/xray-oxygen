@@ -5,10 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : stalker movement manager base class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef STALKER_MOVEMENT_MANAGER_BASE_H_INCLUDED
-#define STALKER_MOVEMENT_MANAGER_BASE_H_INCLUDED
-
+#pragma once
 #include "movement_manager.h"
 #include "ai_monster_space.h"
 #include "stalker_movement_params.h"
@@ -26,7 +23,8 @@ class CAI_Stalker;
 class CStalkerVelocityCollection;
 class CGameObject;
 
-class stalker_movement_manager_base : public CMovementManager {
+class stalker_movement_manager_base : public CMovementManager 
+{
 private:
 	typedef CMovementManager						inherited;
 
@@ -43,7 +41,6 @@ public:
 public:
 					stalker_movement_manager_base	(CAI_Stalker *object);
 	virtual			~stalker_movement_manager_base	();
-	virtual	void	Load							(LPCSTR section);
 	virtual	void	reinit							();
 	virtual	void	reload							(LPCSTR section);
 	virtual	void	update							(u32 time_delta);
@@ -134,5 +131,3 @@ private:
 }; // class stalker_movement_manager_base
 
 #include "stalker_movement_manager_base_inline.h"
-
-#endif // #ifndef STALKER_MOVEMENT_MANAGER_BASE_H_INCLUDED

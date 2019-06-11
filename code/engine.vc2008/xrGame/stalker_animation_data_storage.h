@@ -5,13 +5,13 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker animation data storage
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
 
 class CStalkerAnimationData;
 class IKinematicsAnimated;
 
-class CStalkerAnimationDataStorage {
+class CStalkerAnimationDataStorage 
+{
 public:
 	typedef std::pair<IKinematicsAnimated*,CStalkerAnimationData*>		OBJECT;
 	typedef xr_vector<OBJECT>											OBJECTS;
@@ -25,8 +25,13 @@ public:
 			void						clear							();
 };
 
-IC		CStalkerAnimationDataStorage	&stalker_animation_data_storage	();
+extern CStalkerAnimationDataStorage *g_stalker_animation_data_storage;
 
-extern CStalkerAnimationDataStorage		*g_stalker_animation_data_storage;
+IC	CStalkerAnimationDataStorage& stalker_animation_data_storage()
+{
+	if (g_stalker_animation_data_storage)
+		return							(*g_stalker_animation_data_storage);
 
-#include "stalker_animation_data_storage_inline.h"
+	g_stalker_animation_data_storage =  new CStalkerAnimationDataStorage();
+	return								(*g_stalker_animation_data_storage);
+}

@@ -5,10 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker low cover actions
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef STALKER_LOW_COVER_ACTIONS_H_INCLUDED
-#define STALKER_LOW_COVER_ACTIONS_H_INCLUDED
-
+#pragma once
 #include "stalker_combat_action_base.h"
 
 class CCoverPoint;
@@ -70,5 +67,3 @@ public:
 	virtual void		execute								();
 	virtual void		finalize							();
 };
-
-#endif // STALKER_LOW_COVER_ACTIONS_H_INCLUDED

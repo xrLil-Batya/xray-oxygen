@@ -5,7 +5,6 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker low cover actions
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "stalker_low_cover_actions.h"
 #include "ai/stalker/ai_stalker.h"
@@ -128,44 +127,39 @@ void CStalkerActionHoldPositionLowCover::initialize							()
 	set_inertia_time					(1000 + ::Random32.random(2000));
 }
 
-void CStalkerActionHoldPositionLowCover::execute							()
+void CStalkerActionHoldPositionLowCover::execute()
 {
-	inherited::execute					();
+	inherited::execute();
 
 	CMemoryInfo							mem_object = object().memory().memory(object().memory().enemy().selected());
 
 	if (!mem_object.m_object)
 		return;
 
-	object().sight().setup				(CSightAction(SightManager::eSightTypePosition,mem_object.m_object_params.m_position,true));
+	object().sight().setup(CSightAction(SightManager::eSightTypePosition, mem_object.m_object_params.m_position, true));
 
-	if (completed()) {
-		if	(
-				object().agent_manager().member().can_detour() ||
-				!object().agent_manager().member().cover_detouring() ||
-				!fire_make_sense()
-			) {
-			CStalkerCombatPlanner		&planner = smart_cast<CStalkerCombatPlanner&>(object().brain().current_action());
-			planner.CScriptActionPlanner::m_storage.set_property(eWorldPropertyLookedOut,true);
-			planner.CScriptActionPlanner::m_storage.set_property(eWorldPropertyPositionHolded,true);
-			planner.CScriptActionPlanner::m_storage.set_property(eWorldPropertyInCover,false);
-		}
+	if (completed() && (object().agent_manager().member().can_detour()
+		|| !object().agent_manager().member().cover_detouring() || !fire_make_sense()))
+	{
+		CStalkerCombatPlanner& planner = smart_cast<CStalkerCombatPlanner&>(object().brain().current_action());
+		planner.CScriptActionPlanner::m_storage.set_property(eWorldPropertyLookedOut, true);
+		planner.CScriptActionPlanner::m_storage.set_property(eWorldPropertyPositionHolded, true);
+		planner.CScriptActionPlanner::m_storage.set_property(eWorldPropertyInCover, false);
 	}
 
-	if (object().agent_manager().member().cover_detouring() && fire_make_sense()) {
-		object().sound().play			(StalkerSpace::eStalkerSoundNeedBackup,3000,3000,10000,10000);
-		fire							();
+	if (object().agent_manager().member().cover_detouring() && fire_make_sense()) 
+	{
+		object().sound().play(StalkerSpace::eStalkerSoundNeedBackup, 3000, 3000, 10000, 10000);
+		fire();
 	}
-	else {
-		aim_ready						();
-	}
+	else aim_ready();
 
-	if (object().memory().enemy().selected()) {
+	if (object().memory().enemy().selected())
+	{
 		CMemoryInfo						mem_object = object().memory().memory(object().memory().enemy().selected());
 
-		if (mem_object.m_object) {
-			object().best_cover			(mem_object.m_object_params.m_position);
-		}
+		if (mem_object.m_object)
+			object().best_cover(mem_object.m_object_params.m_position);
 	}
 }
 
