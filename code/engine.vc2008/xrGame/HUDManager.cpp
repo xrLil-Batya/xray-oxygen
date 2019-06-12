@@ -38,10 +38,7 @@ CHUDManager::~CHUDManager()
 
 void CHUDManager::OnFrame()
 {
-	if (!psHUD_Flags.is(HUD_DRAW_RT2))
-		return;
-
-	if (!b_online)
+	if (!psHUD_Flags.is(HUD_DRAW_RT2) || !b_online)
 		return;
 
 	if (pUIHud)
@@ -66,10 +63,7 @@ void CHUDManager::Render_First()
 
 	CActor* A = smart_cast<CActor*> (O);
 
-	if (!A)
-		return;
-
-	if (!A->HUDview())
+	if (!A || !A->HUDview())
 		return;
 
 	// only shadow
@@ -101,10 +95,7 @@ void CHUDManager::Render_Last()
 	if (!psHUD_Flags.is(HUD_WEAPON | HUD_WEAPON_RT | HUD_WEAPON_RT2 | HUD_DRAW_RT2))
 		return;
 
-	if (!pUIHud)
-		return;
-
-	if (!need_render_hud())
+	if (!pUIHud || !need_render_hud())
 		return;
 
 	CObject *O = g_pGameLevel->CurrentViewEntity();

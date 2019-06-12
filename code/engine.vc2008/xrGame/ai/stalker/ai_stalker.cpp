@@ -792,37 +792,34 @@ void CAI_Stalker::shedule_Update(u32 DT)
 
 	inherited::inherited::shedule_Update(DT);
 
-	if (!Remote())
+	// here is monster AI call
+	VERIFY(_valid(Position()));
+	m_fTimeUpdateDelta = dt;
+
+	if (GetScriptControl())
+		ProcessScripts();
+	else
+		Think();
+
+	m_dwLastUpdateTime = Device.dwTimeGlobal;
+	VERIFY(_valid(Position()));
+
+	// Look and action streams
+	if (conditions().health())
 	{
-		// here is monster AI call
-		VERIFY(_valid(Position()));
-		m_fTimeUpdateDelta = dt;
-
-		if (GetScriptControl())
-			ProcessScripts();
-		else
-			Think();
-
-		m_dwLastUpdateTime = Device.dwTimeGlobal;
-		VERIFY(_valid(Position()));
-
-		// Look and action streams
-		if (conditions().health())
-		{
-			Fvector C;
-			Center(C);
-			feel_touch_update(C, Radius());
-		}
-
-		// Push next update
-		net_update uNext;
-		uNext.dwTimeStamp = Level().timeServer();
-		uNext.o_model = movement().m_body.current.yaw;
-		uNext.o_torso = movement().m_head.current;
-		uNext.p_pos = vNewPosition;
-		uNext.fHealth = GetfHealth();
-		NET.push_back(uNext);
+		Fvector C;
+		Center(C);
+		feel_touch_update(C, Radius());
 	}
+
+	// Push next update
+	net_update uNext;
+	uNext.dwTimeStamp = Level().timeServer();
+	uNext.o_model = movement().m_body.current.yaw;
+	uNext.o_torso = movement().m_head.current;
+	uNext.p_pos = vNewPosition;
+	uNext.fHealth = GetfHealth();
+	NET.push_back(uNext);
 
 	VERIFY(_valid(Position()));
 	UpdateInventoryOwner(DT);

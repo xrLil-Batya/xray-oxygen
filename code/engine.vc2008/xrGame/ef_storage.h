@@ -174,26 +174,10 @@ public:
 
 	// complex functions
 	CPatternFunction						*m_pfWeaponEffectiveness;
-	CPatternFunction						*m_pfCreatureEffectiveness;
-	CPatternFunction						*m_pfIntellectCreatureEffectiveness;
-	CPatternFunction						*m_pfAccuracyWeaponEffectiveness;
-	CPatternFunction						*m_pfFinalCreatureEffectiveness;
 	CPatternFunction						*m_pfVictoryProbability;
-	CPatternFunction						*m_pfEntityCost;
 	CPatternFunction						*m_pfExpediency;
-	CPatternFunction						*m_pfSurgeDeathProbability;
-	CPatternFunction						*m_pfEquipmentValue;
 	CPatternFunction						*m_pfMainWeaponValue;
 	CPatternFunction						*m_pfSmallWeaponValue;
-	CPatternFunction						*m_pfTerrainType;
-	CPatternFunction						*m_pfWeaponAttackTimes;
-	CPatternFunction						*m_pfWeaponSuccessProbability;
-	CPatternFunction						*m_pfEnemyDetectability;
-	CPatternFunction						*m_pfEnemyDetectProbability;
-	CPatternFunction						*m_pfEnemyRetreatProbability;
-	CPatternFunction						*m_pfAnomalyDetectProbability;
-	CPatternFunction						*m_pfAnomalyInteractProbability;
-	CPatternFunction						*m_pfAnomalyRetreatProbability;
 	CPatternFunction						*m_pfBirthPercentage;
 	CPatternFunction						*m_pfBirthProbability;
 	CPatternFunction						*m_pfBirthSpeed;

@@ -93,7 +93,7 @@ void CCoverManager::compute_static_cover()
 
 	tbb::parallel_for(tbb::blocked_range<u32>(0, levelVertexCount), [&](const tbb::blocked_range<u32> & range)
 	{
-		for (u32 i = 0; i < levelVertexCount; ++i)
+		for (u32 i = range.begin(); i < range.end(); ++i)
 		{
 			CLevelGraph::CVertex const& vertex = *graph.vertex(i);
 			if (vertex.high_cover(0) + vertex.high_cover(1) + vertex.high_cover(2) + vertex.high_cover(3))

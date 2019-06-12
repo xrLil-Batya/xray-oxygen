@@ -46,7 +46,6 @@ void CHudItem::Load(LPCSTR section)
 	m_sounds.LoadSound(section, "snd_bore", "sndBore", true);
 }
 
-
 void CHudItem::PlaySound(LPCSTR alias, const Fvector& position)
 {
 	m_sounds.PlaySound(alias, position, object().H_Root(), !!GetHUDmode());
