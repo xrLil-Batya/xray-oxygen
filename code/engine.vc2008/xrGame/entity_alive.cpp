@@ -187,18 +187,12 @@ void CEntityAlive::shedule_Update(u32 dt)
 	conditions().UpdateWounds();
 
 	// Kill entity
-	if (Local() && !g_Alive() && !AlreadyDie())
+	if (!g_Alive() && !AlreadyDie())
 	{
 		if (conditions().GetWhoHitLastTime())
-		{
-			// Msg("%6d : KillEntity from CEntityAlive (using who hit last time) for object %s",Device.dwTimeGlobal,*cName());
 			KillEntity(conditions().GetWhoHitLastTimeID());
-		}
 		else
-		{
-			// Msg("%6d : KillEntity from CEntityAlive for object %s",Device.dwTimeGlobal,*cName());
 			KillEntity(ID());
-		}
 	}
 }
 
@@ -580,33 +574,12 @@ CEntityConditionSimple* CEntityAlive::create_entity_condition(CEntityConditionSi
 	return inherited::create_entity_condition(m_entity_condition);
 }
 
-/*
-float CEntityAlive::GetfHealth	() const
-{
-	return conditions().health()*100.f;
-}
-
-float CEntityAlive::SetfHealth	(float value)
-{
-	conditions().health() = value/100.f;
-	return value;
-}
-*/
 float CEntityAlive::SetfRadiation(float value)
 {
 	conditions().radiation() = value / 100.f;
 	return value;
 }
-/*
-float CEntityAlive::g_Health	() const
-{
-	return conditions().GetHealth()*100.f;
-}
-float CEntityAlive::g_MaxHealth	() const
-{
-	return conditions().GetMaxHealth()*100.f;
-}
-*/
+
 float CEntityAlive::g_Radiation() const
 {
 	return conditions().GetRadiation()*100.f;

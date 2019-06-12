@@ -19,6 +19,7 @@ public:
 //////////////////////////////////////////////////////////////////////////
 class	R_dsgraph_structure										: public IRender_interface, public pureFrame
 {
+	xrCriticalSection											InsertStaticCritsect;
 public:
 	IRenderable*												val_pObject;
 	Fmatrix*													val_pTransform;

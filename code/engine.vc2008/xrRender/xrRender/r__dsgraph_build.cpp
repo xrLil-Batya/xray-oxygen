@@ -44,10 +44,15 @@ R_dsgraph_structure::R_dsgraph_structure()
 	marker = 0;
 	r_pmask(true, true);
 	b_loaded = false;
+
+	InsertStaticCritsect.Unlock();
 }
 
 void R_dsgraph_structure::r_dsgraph_destroy()
 {
+	while (InsertStaticCritsect.TryLock())
+		Sleep(1);
+
 	nrmVS.clear();
 	nrmPS.clear();
 	nrmCS.clear();
@@ -247,13 +252,14 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fve
 
 void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 {
-	CRender&	RI				=	RImplementation;
+	if (pVisual->vis.marker == RImplementation.marker)	return;
+	xrCriticalSectionGuard xrCritGuard(InsertStaticCritsect);
 
-	if (pVisual->vis.marker		==	RI.marker)	return	;
-	pVisual->vis.marker			=	RI.marker			;
+	CRender& RI					= RImplementation;
+	pVisual->vis.marker			= RI.marker;
 
 	float distSQ;
-	float SSA					=	CalcSSA		(distSQ,pVisual->vis.sphere.P,pVisual);
+	float SSA					= CalcSSA(distSQ,pVisual->vis.sphere.P,pVisual);
 	if (SSA<=r_ssaDISCARD)		return;
 
 	// Distortive geometry should be marked and R2 special-cases it
@@ -329,23 +335,14 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 		SPass& pass	= *sh->passes[iPass];
 		mapNormal_T& map = mapNormalPasses[sh->flags.iPriority/2][iPass];
 
-#ifdef USE_DX11
 		R_dsgraph::mapNormalGS& Nvs = map[&*pass.vs];
 		R_dsgraph::mapNormalPS& Ngs = Nvs[pass.gs->gs];
 		R_dsgraph::mapNormalAdvStages& Nps = Ngs[pass.ps->ps];
-#else
-		auto &Nvs = map[pass.vs->vs];
-		auto &Nps = Nvs[pass.ps->ps];
-#endif
 
-#ifdef USE_DX11
 		Nps.hs = pass.hs->sh;
 		Nps.ds = pass.ds->sh;
 
 		auto &Ncs = Nps.mapCS[pass.constants._get()];
-#else
-		auto &Ncs = Nps[pass.constants._get()];
-#endif
 		auto &Nstate = Ncs[&pass.state];
 		auto &Ntex = Nstate[pass.T._get()];
 		Ntex.push_back(item);
@@ -360,27 +357,17 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 				if (SSA > Ncs.ssa)
 				{
 					Ncs.ssa = SSA;
-#ifdef USE_DX11
 					if (SSA > Nps.mapCS.ssa)
 					{
 						Nps.mapCS.ssa = SSA;
-#else
-					if (SSA > Nps.ssa)
-					{
-						Nps.ssa = SSA;
-#endif
-#ifdef USE_DX11
+
 						if (SSA > Ngs.ssa)
 						{
 							Ngs.ssa = SSA;
-#endif
+
 							if (SSA > Nvs.ssa)
-							{
 								Nvs.ssa = SSA;
-							}
-#ifdef USE_DX11
 						}
-#endif
 					}
 				}
 			}

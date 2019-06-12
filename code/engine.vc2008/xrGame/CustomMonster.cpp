@@ -80,25 +80,18 @@ CCustomMonster::CCustomMonster() :
 	m_moving_object				= 0;
 }
 
-CCustomMonster::~CCustomMonster	()
+CCustomMonster::~CCustomMonster()
 {
-	xr_delete					(m_sound_user_data_visitor);
-	xr_delete					(m_memory_manager);
-	xr_delete					(m_movement_manager);
-	xr_delete					(m_sound_player);
+	xr_delete(m_sound_user_data_visitor);
+	xr_delete(m_memory_manager);
+	xr_delete(m_movement_manager);
+	xr_delete(m_sound_player);
 
 	// Lain: added (asking GameLevel to forget about self)
-	if ( g_pGameLevel )
-	{
+	if (g_pGameLevel)
 		g_pGameLevel->SoundEvent_OnDestDestroy(this);
-	}
 
-#ifdef DEBUG
-	Msg							("dumping client spawn manager stuff for object with id %d",ID());
-	Level().client_spawn_manager().dump	(ID());
-#endif // DEBUG
 	Level().client_spawn_manager().clear(ID());
-
 }
 
 void CCustomMonster::Load		(LPCSTR section)
@@ -207,80 +200,58 @@ void CCustomMonster::net_Export(NET_Packet& P)					// export to server
 	P.w_u8					(u8(g_Group()));
 }
 
-void CCustomMonster::shedule_Update	( u32 DT )
+void CCustomMonster::shedule_Update(u32 DT)
 {
-	VERIFY				(!g_Alive() || processing_enabled());
+	VERIFY(!g_Alive() || processing_enabled());
 	// Queue shrink
-	VERIFY				(_valid(Position()));
-	u32	dwTimeCL		= Level().timeServer()-NET_Latency;
-	VERIFY				(!NET.empty());
-	while ((NET.size()>2) && (NET[1].dwTimeStamp<dwTimeCL)) NET.pop_front();
+	VERIFY(_valid(Position()));
+	u32	dwTimeCL = Level().timeServer() - NET_Latency;
+	VERIFY(!NET.empty());
+	while ((NET.size() > 2) && (NET[1].dwTimeStamp < dwTimeCL)) NET.pop_front();
 
-	float dt			= float(DT)/1000.f;
+	float dt = float(DT) / 1000.f;
 	// *** general stuff
 	if (g_Alive())
 	{
 		Device.seqParallel.emplace_back(this, &CCustomMonster::Exec_Visibility);
 		memory().update(dt);
 	}
-	inherited::shedule_Update	(DT);
+	inherited::shedule_Update(DT);
 
 	// Queue setup
 	if (dt > 3) return;
 
-	m_dwCurrentTime	= Device.dwTimeGlobal;
+	m_dwCurrentTime = Device.dwTimeGlobal;
 
-	VERIFY				(_valid(Position()));
-	if (Remote())		{
-	} else {
-		// here is monster AI call
-		m_fTimeUpdateDelta				= dt;
-		Device.Statistic->AI_Think.Begin	();
-		if (GetScriptControl())
-			ProcessScripts();
-		else {
-			if (Device.dwFrame > spawn_time() + g_AI_inactive_time)
-				Think					();
-		}
-		m_dwLastUpdateTime				= Device.dwTimeGlobal;
-		Device.Statistic->AI_Think.End	();
+	VERIFY(_valid(Position()));
 
-		// Look and action streams
-		float							temp = conditions().health();
-		if (temp > 0) {
-			Exec_Action				(dt);
-			VERIFY					(_valid(Position()));
-			//////////////////////////////////////
-			//Fvector C; float R;
-			//////////////////////////////////////
-			// Ñ Îëåñÿ - ÏÈÂÎ!!!! (Äèìå :-))))
-			// m_PhysicMovementControl->GetBoundingSphere	(C,R);
-			//////////////////////////////////////
-			//Center(C);
-			//R = Radius();
-			//////////////////////////////////////
-			/// #pragma todo("Oles to all AI guys: perf/logical problem: Only few objects needs 'feel_touch' why to call update for everybody?")
-			///			feel_touch_update		(C,R);
-
-			net_update				uNext;
-			uNext.dwTimeStamp		= Level().timeServer();
-			uNext.o_model			= movement().m_body.current.yaw;
-			uNext.o_torso			= movement().m_body.current;
-			uNext.p_pos				= Position();
-			uNext.fHealth			= GetfHealth();
-			NET.push_back			(uNext);
-		}
-		else 
-		{
-			net_update			uNext;
-			uNext.dwTimeStamp	= Level().timeServer();
-			uNext.o_model		= movement().m_body.current.yaw;
-			uNext.o_torso		= movement().m_body.current;
-			uNext.p_pos			= Position();
-			uNext.fHealth		= GetfHealth();
-			NET.push_back		(uNext);
-		}
+	// here is monster AI call
+	m_fTimeUpdateDelta = dt;
+	Device.Statistic->AI_Think.Begin();
+	if (GetScriptControl())
+		ProcessScripts();
+	else
+	{
+		if (Device.dwFrame > spawn_time() + g_AI_inactive_time)
+			Think();
 	}
+	m_dwLastUpdateTime = Device.dwTimeGlobal;
+	Device.Statistic->AI_Think.End();
+
+	// Look and action streams
+	float temp = conditions().health();
+	if (temp > 0)
+	{
+		Exec_Action(dt);
+		VERIFY(_valid(Position()));
+	}
+	net_update uNext;
+	uNext.dwTimeStamp = Level().timeServer();
+	uNext.o_model = movement().m_body.current.yaw;
+	uNext.o_torso = movement().m_body.current;
+	uNext.p_pos = Position();
+	uNext.fHealth = GetfHealth();
+	NET.push_back(uNext);
 }
 
 void CCustomMonster::net_update::lerp(CCustomMonster::net_update& A, CCustomMonster::net_update& B, float f)
