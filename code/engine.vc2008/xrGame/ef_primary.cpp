@@ -77,48 +77,19 @@ IC	CLASS_ID CBaseFunction::clsid_enemy() const
 
 float CDistanceFunction::ffGetValue()
 {
-	return (ef_storage().non_alife().member()) 
+	return (ef_storage().non_alife().member())
 		? (ef_storage().non_alife().member()->Position().distance_to(ef_storage().non_alife().enemy()->Position()))
 		: (ef_storage().alife().member()->base()->Position().distance_to(ef_storage().alife().enemy()->base()->Position()));
 }
-
-float CPersonalHealthFunction::ffGetValue()
-{
-	if (ef_storage().non_alife().member()) 
-	{
-		m_fMaxResultValue = ef_storage().non_alife().member()->GetMaxHealth();
-		return(ef_storage().non_alife().member()->GetfHealth());
-	}
-	else 
-	{
-		const CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<const CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-		VERIFY3(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
-		m_fMaxResultValue = l_tpALifeMonsterAbstract->g_MaxHealth();
-		return(l_tpALifeMonsterAbstract->get_health());
-	}
-}
-
-float CPersonalMoraleFunction::ffGetValue()
-{
-	if (ef_storage().non_alife().member())
-		return(ef_storage().non_alife().member()->m_fMorale);
-	else 
-	{
-		const CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<const CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-		VERIFY3(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
-		return(l_tpALifeMonsterAbstract->m_fMorale);
-	}
-}
-
 float CPersonalCreatureTypeFunction::ffGetValue()
 {
 	u32 result;
 	if (ef_storage().non_alife().member())
-		result	= ef_storage().non_alife().member()->ef_creature_type();
-	else 
+		result = ef_storage().non_alife().member()->ef_creature_type();
+	else
 	{
-		VERIFY2	(ef_storage().alife().member(),"No object specified for evaluation function");
-		result	= ef_storage().alife().member()->ef_creature_type();
+		VERIFY2(ef_storage().alife().member(), "No object specified for evaluation function");
+		result = ef_storage().alife().member()->ef_creature_type();
 	}
 
 	VERIFY(float(result) < m_fMaxResultValue + 1);
@@ -127,14 +98,14 @@ float CPersonalCreatureTypeFunction::ffGetValue()
 
 u32 CPersonalWeaponTypeFunction::dwfGetWeaponType()
 {
-	u32			result;
+	u32 result;
 	if (ef_storage().non_alife().member_item())
-		result	= ef_storage().non_alife().member_item()->ef_weapon_type();
+		result = ef_storage().non_alife().member_item()->ef_weapon_type();
 	else {
-		VERIFY2	(ef_storage().alife().member_item(),"No object specified for evaluation function");
-		result	= ef_storage().alife().member_item()->ef_weapon_type();
+		VERIFY2(ef_storage().alife().member_item(), "No object specified for evaluation function");
+		result = ef_storage().alife().member_item()->ef_weapon_type();
 	}
-	return		(result);
+	return (result);
 }
 
 float CPersonalWeaponTypeFunction::ffGetTheBestWeapon() 
@@ -142,7 +113,7 @@ float CPersonalWeaponTypeFunction::ffGetTheBestWeapon()
 	u32 dwBestWeapon = 0;
 	
 	if (ef_storage().non_alife().member() && ef_storage().non_alife().member_item())
-		return			(float(dwfGetWeaponType()));
+		return (float(dwfGetWeaponType()));
 
 	if (ef_storage().non_alife().member()) {
 		const CInventoryOwner *tpInventoryOwner = smart_cast<const CInventoryOwner*>(ef_storage().non_alife().member());
@@ -160,7 +131,7 @@ float CPersonalWeaponTypeFunction::ffGetTheBestWeapon()
 						u32 dwCurrentBestWeapon = dwfGetWeaponType();
 						if (dwCurrentBestWeapon > dwBestWeapon)
 							dwBestWeapon = dwCurrentBestWeapon;
-						ef_storage().non_alife().member_item() = 0;
+						ef_storage().non_alife().member_item() = nullptr;
 					}
 				}
 			}
@@ -168,17 +139,14 @@ float CPersonalWeaponTypeFunction::ffGetTheBestWeapon()
 	}
 	else 
 	{
-	//	if (!ef_storage().alife().member() || !ef_storage().alife().member()->m_tpCurrentBestWeapon)
-	//		return(0);
-	//	ef_storage().alife().member_item()	= ef_storage().alife().member()->m_tpCurrentBestWeapon;
-		dwBestWeapon			= dwfGetWeaponType();
+		dwBestWeapon = dwfGetWeaponType();
 	}
 	return(float(dwBestWeapon));
 }
 
 float CPersonalWeaponTypeFunction::ffGetValue()
 {
-	float			result;
+	float result;
 	if (ef_storage().non_alife().member())
 		if (ef_storage().non_alife().member()->natural_weapon())
 			result = (float)ef_storage().non_alife().member()->ef_weapon_type();
@@ -196,29 +164,6 @@ float CPersonalWeaponTypeFunction::ffGetValue()
 	return		(result);
 }
 
-float CPersonalAccuracyFunction::ffGetValue()
-{
-	if (ef_storage().non_alife().member())
-		return(ef_storage().non_alife().member()->m_fAccuracy);
-	else 
-	{
-		const CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<const CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-		VERIFY3(l_tpALifeMonsterAbstract, "Invalid object passed to the evaluation function ", m_caName);
-		return(l_tpALifeMonsterAbstract->m_fAccuracy);
-	}
-}
-
-float CPersonalIntelligenceFunction::ffGetValue()
-{
-	if (ef_storage().non_alife().member())
-		return(ef_storage().non_alife().member()->m_fIntelligence);
-	else 
-	{
-		const CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<const CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-		VERIFY3(l_tpALifeMonsterAbstract, "Invalid object passed to the evaluation function ", m_caName);
-		return(l_tpALifeMonsterAbstract->m_fIntelligence);
-	}
-}
 
 float CPersonalRelationFunction::ffGetValue()
 {
@@ -249,7 +194,7 @@ float CEnemyRukzakWeightFunction::ffGetValue()
 	float m_fLastValue;
 	if (ef_storage().non_alife().member())
 	{
-		const CInventoryOwner	*tpInventoryOwner = smart_cast<const CInventoryOwner*>(ef_storage().non_alife().member());
+		const CInventoryOwner* tpInventoryOwner = smart_cast<const CInventoryOwner*>(ef_storage().non_alife().member());
 		if (tpInventoryOwner)
 			m_fLastValue = tpInventoryOwner->inventory().TotalWeight();
 		else
@@ -264,66 +209,9 @@ float CEnemyAnomalityFunction::ffGetValue()
 #pragma todo("Dima to Dima : Implement enemy anomality function")
 	return(0);
 }
-
-float CGraphPointType0::ffGetValue()
-{
-	return							(ai().game_graph().vertex(ef_storage().alife().member_item()->m_tGraphID)->vertex_type()[0]);
-}
-
-float CPersonalEyeRange::ffGetValue()
-{
-	const CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<const CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-	VERIFY3							(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
-	return							(l_tpALifeMonsterAbstract->m_fEyeRange);
-}
-
-float CPersonalMaxHealth::ffGetValue()
-{
-	CSE_ALifeMonsterAbstract		*l_tpALifeMonsterAbstract = smart_cast<CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-	VERIFY3							(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
-	const CSE_ALifeGroupAbstract	*l_tpALifeGroupAbstract = smart_cast<const CSE_ALifeGroupAbstract*>(ef_storage().alife().member());
-	if (!l_tpALifeGroupAbstract)
-		return						(l_tpALifeMonsterAbstract->m_fMaxHealthValue);
-	else
-		return						(l_tpALifeMonsterAbstract->m_fMaxHealthValue*l_tpALifeGroupAbstract->m_wCount); 
-}
-
-u32 CPersonalMaxHealth::dwfGetDiscreteValue(u32 dwDiscretizationValue)
-{
-	float fTemp = ffGetValue();
-	if (fTemp <= m_fMinResultValue)
-		return(0);
-	else
-	{
-		if (fTemp >= m_fMaxResultValue)
-			return(dwDiscretizationValue - 1);
-		else
-		{
-			float const_dw = float(dwDiscretizationValue) / 10 + .5f;
-			if (fTemp <= 30)
-				return(iFloor(1 * const_dw));
-			if (fTemp <= 50)
-				return(iFloor(2 * const_dw));
-			if (fTemp <= 80)
-				return(iFloor(3 * const_dw));
-			if (fTemp <= 100)
-				return(iFloor(4 * const_dw));
-			if (fTemp <= 150)
-				return(iFloor(5 * const_dw));
-			if (fTemp <= 250)
-				return(iFloor(6 * const_dw));
-			if (fTemp <= 500)
-				return(iFloor(7 * const_dw));
-			if (fTemp <= 750)
-				return(iFloor(8 * const_dw));
-			return(iFloor(9 * const_dw));
-		}
-	}
-}
-
 float CEquipmentType::ffGetValue()
 {
-	u32			result;
+	u32 result;
 	if (ef_storage().non_alife().member_item())
 		result	= ef_storage().non_alife().member_item()->ef_equipment_type();
 	else {
@@ -334,40 +222,9 @@ float CEquipmentType::ffGetValue()
 	return		(float(result));
 }
 
-float CItemDeterioration::ffGetValue()
-{
-	if (ef_storage().non_alife().member_item()) {
-		const CWeapon			*weapon = smart_cast<const CWeapon*>(ef_storage().non_alife().member_item());
-		if (weapon)
-			return				(1.f - weapon->GetCondition());
-
-#pragma todo("Dima to Dima : Append ItemDeterioration with non-ALife non-weapon branch")
-		return					(0.f);
-	}
-	else {
-		const CSE_ALifeInventoryItem	*l_tpALifeInventoryItem = smart_cast<const CSE_ALifeInventoryItem*>(ef_storage().alife().member_item());
-		R_ASSERT2				(l_tpALifeInventoryItem,"Non-item object specified for the ItemDeterioration evaluation function");
-		return					(l_tpALifeInventoryItem->m_fDeteriorationValue);
-	}
-}
-
-#ifndef NO_HUMAN_BRAIN
-float CEquipmentPreference::ffGetValue()
-{
-	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append EquipmentPreference with non-ALife branch")
-		return					(0);
-	}
-	else {
-		CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
-		R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human object in EquipmentPreference evaluation function");
-		return					(l_tpALifeHumanAbstract->brain().m_cpEquipmentPreferences[ef_storage().m_pfEquipmentType->dwfGetDiscreteValue()]);
-	}
-}
-
 float CMainWeaponType::ffGetValue()
 {
-	u32			result;
+	u32 result;
 	if (ef_storage().non_alife().member_item())
 		result	= ef_storage().non_alife().member_item()->ef_main_weapon_type();
 	else {
@@ -385,51 +242,11 @@ float CMainWeaponPreference::ffGetValue()
 		return					(0);
 	}
 	else {
-		CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
-		R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human object in EquipmentPreference evaluation function");
+		CSE_ALifeHumanAbstract* l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
+		R_ASSERT2(l_tpALifeHumanAbstract, "Non-human object in EquipmentPreference evaluation function");
 		return					(l_tpALifeHumanAbstract->brain().m_cpMainWeaponPreferences[ef_storage().m_pfMainWeaponType->dwfGetDiscreteValue(iFloor(ef_storage().m_pfMainWeaponType->ffGetMaxResultValue() + .5f))]);
 	}
 }
-#else
-float CEquipmentPreference::ffGetValue()
-{
-	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append EquipmentPreference with non-ALife branch")
-		return					(0);
-	}
-	else {
-		CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
-		R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human object in EquipmentPreference evaluation function");
-		return					(l_tpALifeHumanAbstract->m_cpEquipmentPreferences[ef_storage().m_pfEquipmentType->dwfGetDiscreteValue()]);
-	}
-}
-
-float CMainWeaponType::ffGetValue()
-{
-	u32			result;
-	if (ef_storage().non_alife().member_item())
-		result	= ef_storage().non_alife().member_item()->ef_main_weapon_type();
-	else {
-		VERIFY2	(ef_storage().alife().member_item(),"No object specified for evaluation function");
-		result	= ef_storage().alife().member_item()->ef_main_weapon_type();
-	}
-	VERIFY		(float(result) < m_fMaxResultValue + 1.f);
-	return		(float(result));
-}
-
-float CMainWeaponPreference::ffGetValue()
-{
-	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append MainWeaponPreference with non-ALife branch")
-		return					(0);
-	}
-	else {
-		CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
-		R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human object in EquipmentPreference evaluation function");
-		return					(l_tpALifeHumanAbstract->m_cpMainWeaponPreferences[ef_storage().m_pfMainWeaponType->dwfGetDiscreteValue(iFloor(ef_storage().m_pfMainWeaponType->ffGetMaxResultValue() + .5f))]);
-	}
-}
-#endif
 
 float CItemValue::ffGetValue()
 {
@@ -444,7 +261,6 @@ float CItemValue::ffGetValue()
 	}
 }
 
-#ifndef NO_HUMAN_BRAIN
 float CWeaponAmmoCount::ffGetValue()
 {
 	if (ef_storage().non_alife().member()) {
@@ -452,25 +268,11 @@ float CWeaponAmmoCount::ffGetValue()
 		return					(0);
 	}
 	else {
-		CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
-		R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human object in WeaponAmmoCount evaluation function");
-		return					(l_tpALifeHumanAbstract->brain().objects().get_available_ammo_count(smart_cast<const CSE_ALifeItemWeapon*>(ef_storage().alife().member_item()),l_tpALifeHumanAbstract->alife().m_temp_item_vector));
+		CSE_ALifeHumanAbstract* l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
+		R_ASSERT2(l_tpALifeHumanAbstract, "Non-human object in WeaponAmmoCount evaluation function");
+		return					(l_tpALifeHumanAbstract->brain().objects().get_available_ammo_count(smart_cast<const CSE_ALifeItemWeapon*>(ef_storage().alife().member_item()), l_tpALifeHumanAbstract->alife().m_temp_item_vector));
 	}
 }
-#else
-float CWeaponAmmoCount::ffGetValue()
-{
-	if (ef_storage().non_alife().member()) {
-#pragma todo("Dima to Dima : Append WeaponAmmoCount with non-ALife branch")
-		return					(0);
-	}
-	else {
-		CSE_ALifeHumanAbstract	*l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
-		R_ASSERT2				(l_tpALifeHumanAbstract,"Non-human object in WeaponAmmoCount evaluation function");
-		return					(l_tpALifeHumanAbstract->get_available_ammo_count(smart_cast<const CSE_ALifeItemWeapon*>(ef_storage().alife().member_item()),l_tpALifeHumanAbstract->alife().m_temp_item_vector));
-	}
-}
-#endif
 
 u32	 CWeaponAmmoCount::dwfGetDiscreteValue(u32 dwDiscretizationValue)
 {
@@ -481,32 +283,18 @@ u32	 CWeaponAmmoCount::dwfGetDiscreteValue(u32 dwDiscretizationValue)
 		if (fTemp >= m_fMaxResultValue)
 			return(dwDiscretizationValue - 1);
 		else {
-			const CSE_ALifeItemWeapon	*l_tpALifeItemWeapon = smart_cast<const CSE_ALifeItemWeapon*>(ef_storage().alife().member_item());
+			const CSE_ALifeItemWeapon* l_tpALifeItemWeapon = smart_cast<const CSE_ALifeItemWeapon*>(ef_storage().alife().member_item());
 			if (l_tpALifeItemWeapon && l_tpALifeItemWeapon->m_caAmmoSections) {
 				string32		S;
-				_GetItem		(l_tpALifeItemWeapon->m_caAmmoSections,0,S);
-				u32				l_dwBoxSize = pSettings->r_s32(S,"box_size");
-				if (fTemp <= 3*l_dwBoxSize)
-					return(iFloor(1*float(dwDiscretizationValue)/10 + .5f));
-				return(iFloor(2*float(dwDiscretizationValue)/10 + .5f));
+				_GetItem(l_tpALifeItemWeapon->m_caAmmoSections, 0, S);
+				u32				l_dwBoxSize = pSettings->r_s32(S, "box_size");
+				if (fTemp <= 3 * l_dwBoxSize)
+					return(iFloor(1 * float(dwDiscretizationValue) / 10 + .5f));
+				return(iFloor(2 * float(dwDiscretizationValue) / 10 + .5f));
 			}
 			else
 				return(dwDiscretizationValue - 1);
 		}
-}
-
-float CEnemyAnomalyType::ffGetValue()
-{
-	u32			result;
-	if (ef_storage().non_alife().enemy())
-		result	= ef_storage().non_alife().enemy()->ef_anomaly_type();
-	else {
-		VERIFY2	(ef_storage().alife().enemy(),"No object specified for evaluation function");
-		result	= ef_storage().alife().enemy()->ef_anomaly_type();
-	}
-	VERIFY		(float(result) < m_fMaxResultValue + 1.f);
-	return		(float(result));
-
 }
 
 float CDetectorType::ffGetValue()
@@ -535,19 +323,4 @@ float CDetectorType::ffGetValue()
 	}
 	VERIFY		(float(result) < m_fMaxResultValue + 1.f);
 	return		(float(result));
-}
-
-float CEnemyDistanceToGraphPoint::ffGetValue()
-{
-	CSE_ALifeDynamicObject	*l_tpALifeDynamicObject = smart_cast<CSE_ALifeDynamicObject*>(ef_storage().alife().enemy());
-	R_ASSERT3				(l_tpALifeDynamicObject,"Invalid object passed to the evaluation function ",m_caName);
-	if (l_tpALifeDynamicObject->m_fDistance < 5.f)
-		return				(0);
-	if (l_tpALifeDynamicObject->m_fDistance < 10.f)
-		return				(1);
-	if (l_tpALifeDynamicObject->m_fDistance < 15.f)
-		return				(2);
-	if (l_tpALifeDynamicObject->m_fDistance < 20.f)
-		return				(3);
-	return					(4);
 }
