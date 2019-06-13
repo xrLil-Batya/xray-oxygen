@@ -5786,9 +5786,6 @@
     <ClCompile Include="ef_storage.cpp">
       <Filter>AI\AEval\storage</Filter>
     </ClCompile>
-    <ClCompile Include="ef_storage_script.cpp">
-      <Filter>AI\AEval\storage</Filter>
-    </ClCompile>
     <ClCompile Include="agent_manager.cpp">
       <Filter>AI\AGroup\agent_manager</Filter>
     </ClCompile>

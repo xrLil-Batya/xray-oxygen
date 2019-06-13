@@ -1654,7 +1654,6 @@
     <ClCompile Include="ef_primary.cpp" />
     <ClCompile Include="ef_pattern.cpp" />
     <ClCompile Include="ef_storage.cpp" />
-    <ClCompile Include="ef_storage_script.cpp" />
     <ClCompile Include="agent_manager.cpp" />
     <ClCompile Include="agent_corpse_manager.cpp" />
     <ClCompile Include="agent_enemy_manager.cpp" />
