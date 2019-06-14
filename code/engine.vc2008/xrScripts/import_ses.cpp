@@ -1,4 +1,4 @@
-#include "../xrCore/xrCore.h"
+#include "stdafx.h"
 #include "import_ses.hpp"
 
 //LPCSTR import_ses::user_name()

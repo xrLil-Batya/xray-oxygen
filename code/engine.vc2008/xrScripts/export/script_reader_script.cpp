@@ -5,7 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script reader
 ////////////////////////////////////////////////////////////////////////////
-
+#include "stdafx.h"
 #include "luabind.inl"
 #include "script_reader.h"
 

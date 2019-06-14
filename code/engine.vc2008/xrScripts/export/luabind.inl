@@ -1,6 +1,3 @@
-#include "../../xrCore/xrCore.h"
-#include "../luajit/lua.hpp"
-
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <luabind/luabind.hpp>

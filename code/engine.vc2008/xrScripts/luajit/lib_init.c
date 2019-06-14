@@ -5,6 +5,7 @@
 ** Major parts taken verbatim from the Lua interpreter.
 ** Copyright (C) 1994-2008 Lua.org, PUC-Rio. See Copyright Notice in lua.h
 */
+#include "cstdafx.h"
 
 #define lib_init_c
 #define LUA_LIB

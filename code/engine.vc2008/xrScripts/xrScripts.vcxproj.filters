@@ -373,6 +373,12 @@
     <ClCompile Include="luajit\lj_profile.c">
       <Filter>Lua\LuaJIT</Filter>
     </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="cstdafx.c">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SDK\include\luabind\config.hpp">
@@ -905,6 +911,12 @@
     </ClInclude>
     <ClInclude Include="export\script_abstract_action.h" />
     <ClInclude Include="VMLua.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="cstdafx.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

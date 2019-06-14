@@ -2,6 +2,7 @@
 ** Math helper functions for assembler VM.
 ** Copyright (C) 2005-2017 Mike Pall. See Copyright Notice in luajit.h
 */
+#include "cstdafx.h"
 
 #define lj_vmmath_c
 #define LUA_CORE

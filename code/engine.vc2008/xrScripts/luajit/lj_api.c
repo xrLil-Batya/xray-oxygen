@@ -5,6 +5,7 @@
 ** Major portions taken verbatim or adapted from the Lua interpreter.
 ** Copyright (C) 1994-2008 Lua.org, PUC-Rio. See Copyright Notice in lua.h
 */
+#include "cstdafx.h"
 
 #define lj_api_c
 #define LUA_CORE

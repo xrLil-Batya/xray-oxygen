@@ -5,7 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : XRay Script net packet class script export
 ////////////////////////////////////////////////////////////////////////////
-
+#include "stdafx.h"
 #include "luabind.inl"
 #include "script_net_packet.h"
 

@@ -5,6 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script rtoken list class export
 ////////////////////////////////////////////////////////////////////////////
+#include "stdafx.h"
 #include "luabind.inl"
 #include "script_rtoken_list.h"
 

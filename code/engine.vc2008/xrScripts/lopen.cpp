@@ -1,9 +1,7 @@
 // file:	lopen.cpp
 // func:	Open lua modules-namespace
 // author:	ForserX
-
-#include "luajit\lua.hpp"
-#include "../xrCore/xrCore.h"
+#include "stdafx.h"
 #include "luaopen.hpp"
 
 extern "C"

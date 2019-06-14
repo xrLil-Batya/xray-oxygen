@@ -29,6 +29,7 @@
 * OTHER DEALINGS IN THE SOFTWARE.
 */
 #pragma warning(disable: 4018 4267)
+#include "cstdafx.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>

@@ -5,6 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script token list class export
 ////////////////////////////////////////////////////////////////////////////
+#include "stdafx.h"
 #include "luabind.inl"
 #include "script_token_list.h"
 

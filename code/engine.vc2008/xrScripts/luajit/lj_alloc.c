@@ -19,6 +19,7 @@
 ** - ptmalloc: http://www.malloc.de/
 ** - nedmalloc: http://www.nedprod.com/programs/portable/nedmalloc/
 */
+#include "cstdafx.h"
 
 #define lj_alloc_c
 #define LUA_CORE
