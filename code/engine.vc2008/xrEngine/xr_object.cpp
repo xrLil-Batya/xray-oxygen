@@ -199,7 +199,7 @@ void CObject::Load				(LPCSTR section )
 	setVisible					(false);
 }
 
-BOOL CObject::net_Spawn			(CSE_Abstract* data)
+BOOL CObject::net_Spawn(CSE_Abstract* data)
 {
 	PositionStack.clear			();
 
@@ -208,7 +208,8 @@ BOOL CObject::net_Spawn			(CSE_Abstract* data)
 	if (0==Visual() && pSettings->line_exist( cNameSect(), "visual" ) )
 		cNameVisual_set			(pSettings->r_string( cNameSect(), "visual" ) );
 
-	if (0==collidable.model) 	{
+	if (0==collidable.model) 	
+	{
 		if (pSettings->line_exist(cNameSect(),"cform")) {
 			VERIFY3				(*NameVisual, "Model isn't assigned for object, but cform requisted",*cName());
 			collidable.model	= xr_new<CCF_Skeleton>	(this);
@@ -224,8 +225,6 @@ BOOL CObject::net_Spawn			(CSE_Abstract* data)
 	// reinitialize flags
 	processing_activate			();
 	setDestroy					(false);
-
-	MakeMeCrow					();
 
 	return TRUE					;
 }

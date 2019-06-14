@@ -5,35 +5,33 @@
 #include "../Include/xrRender/UIShader.h"
 #include "../Include/xrRender/UIRender.h"
 
-CUIProgressShape::CUIProgressShape()
+CUIProgressShape::CUIProgressShape(): m_stage(0.f), m_angle_begin(0.f), m_angle_end(PI_MUL_2), m_blend(true), m_bText(false)
 {
-	m_bText			= false;
-	m_blend			= true;
-	m_angle_begin	= 0.0f;
-	m_angle_end		= PI_MUL_2;
-};
+}
 
 CUIProgressShape::~CUIProgressShape()
 {
 }	
 
-void CUIProgressShape::SetPos(float pos){
-	m_stage					= pos;
+void CUIProgressShape::SetPos(float pos)
+{
+	m_stage = pos;
 }
 
-void CUIProgressShape::SetPos(int pos, int max){
-	m_stage					= float(pos)/float(max);
+void CUIProgressShape::SetPos(int pos, int max) 
+{
+	m_stage = float(pos) / float(max);
 	if (m_bText)
 	{
 		string256 _buff;
-		TextItemControl()->SetText(itoa(pos,_buff,10));
+		TextItemControl()->SetText(itoa(pos, _buff, 10));
 	}
 }
 
-void CUIProgressShape::SetTextVisible(bool b){
+void CUIProgressShape::SetTextVisible(bool b)
+{
 	m_bText = b;
 }
-
 
 void _make_rot_pos(Fvector2& pt, float sin_a, float cos_a, float R1, float R2)
 { 
@@ -49,13 +47,13 @@ void _make_rot_tex(Fvector2& pt, float src, float sin_a, float cos_a)
 
 float calc_color(u32 idx, u32 total, float stage, float max_stage, bool blend)
 {
-	float kk = ( stage/max_stage ) *  (float(total+1));
-	if ( blend )
+	float kk = (stage / max_stage) * (float(total + 1));
+	if (blend)
 	{
-		return ( 1/(exp((float(idx)-kk)*0.9f)+1.0f) );
+		return (1 / (exp((float(idx) - kk) * 0.9f) + 1.0f));
 	}
-	
-	if ( (float)idx < kk )
+
+	if ((float)idx < kk)
 	{
 		return 1.0f;
 	}
@@ -65,12 +63,11 @@ float calc_color(u32 idx, u32 total, float stage, float max_stage, bool blend)
 void CUIProgressShape::Draw()
 {
 	if(m_bText)
-		DrawText		();
+		DrawText();
 
-	UIRender->SetShader				(*GetShader());
-	Fvector2						tsize;
+	UIRender->SetShader(*GetShader());
+	Fvector2 tsize;
 	UIRender->GetActiveTextureResolution(tsize);
-
 	
 	UIRender->StartPrimitive		(m_sectorCount*3,IUIRender::ptTriList, UI().m_currentPointType);
 
