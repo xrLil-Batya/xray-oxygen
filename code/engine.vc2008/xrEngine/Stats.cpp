@@ -35,7 +35,7 @@ enum DebugTextColor : DWORD
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-BOOL			g_bDisableRedText	= FALSE;
+BOOL g_bDisableRedText	= FALSE;
 CStats::CStats	()
 {
 	fFPS				= 30.f;
@@ -61,7 +61,6 @@ void _draw_cam_pos(CGameFont* pFont)
 	pFont->SetColor	(0xffffffff);
 	pFont->Out		(10, 600, "CAMERA POSITION:  [%3.2f,%3.2f,%3.2f]",VPUSH(Device.vCameraPosition));
 	pFont->SetHeight(sz);
-	pFont->OnRender	();
 }
 
 void CStats::Show() 
@@ -442,6 +441,7 @@ void CStats::Show()
 		float dwScale = 100;
 		for (size_t i = 0; i < CPU::Info.m_dwNumberOfProcessors; i++)
 		{
+			if (CPU::Info.fUsage[i] >= 60) pFont->SetColor(DebugTextColor::DTC_RED);
 			pFont->Out(10, dwScale, "CPU%d: %0.0f", i, CPU::Info.fUsage[i]);
 			dwScale += 15;
 		}
