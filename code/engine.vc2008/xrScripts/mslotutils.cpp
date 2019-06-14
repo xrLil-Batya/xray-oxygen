@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "mslotutils.hpp"
 
 inline void CMailSlotMsg::Read(void* dst, int sz) {

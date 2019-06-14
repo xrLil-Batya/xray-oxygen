@@ -5,7 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script float matrix script export
 ////////////////////////////////////////////////////////////////////////////
-
+#include "stdafx.h"
 #include "luabind.inl"
 #include "script_fmatrix.h"
 

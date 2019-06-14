@@ -1,17 +1,12 @@
 #pragma once
-#include "../xrCore/xrCore.h"
 #include "xrScripts.h"
-#if XRGAME_EXPORTS | XRSE_FACTORY_EXPORTS | XR_SCRIPTS
-#	define	_memcpy std::memcpy
-#	define	_memset std::memset
-#	define	_strlen xr_strlen
-#else
-#	define	_memcpy memcpy
-#	define	_memset memset
-#	define	_strlen strlen
-#endif
 
-class SCRIPT_API CMailSlotMsg {
+#define	_memcpy std::memcpy
+#define	_memset std::memset
+#define	_strlen xr_strlen
+
+class SCRIPT_API CMailSlotMsg 
+{
 	char	m_buff [2048];
 	DWORD	m_len;
 	int     m_pos;

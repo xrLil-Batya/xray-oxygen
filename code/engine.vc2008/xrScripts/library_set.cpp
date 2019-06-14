@@ -4,6 +4,7 @@
 //	Author		: sv3nk
 //	Description : luabind settings
 ////////////////////////////////////////////////////////////////////////////
+#include "stdafx.h"
 #include <luabind\luabind_memory.h>
 
 luabind::memory_allocation_function_pointer		luabind::allocator = 0;

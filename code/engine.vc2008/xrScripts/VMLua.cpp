@@ -1,9 +1,8 @@
 // Singleton LuaVM 
 // ForserX 27.05.2018 for xrOxygen
-#include "luajit/lua.hpp"
+#include "stdafx.h"
 #include <luabind/luabind.hpp>
 
-#include "../xrCore/xrCore.h"
 #include "VMLua.h"
 #include "luaopen.hpp"
 

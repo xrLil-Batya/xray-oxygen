@@ -8,6 +8,7 @@
 //	Author		: ForserX
 //	Description : Lua functionality extension
 ////////////////////////////////////////////////////////////////////////////
+#include "stdafx.h"
 extern "C"
 {
 #include <lua/lua.h>

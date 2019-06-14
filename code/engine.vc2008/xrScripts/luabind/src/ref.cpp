@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <algorithm>
 #include <luabind/config.hpp>
 #include <luabind/detail/ref.hpp>

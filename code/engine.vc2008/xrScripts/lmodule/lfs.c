@@ -32,6 +32,7 @@
 #ifndef LFS_DO_NOT_USE_LARGE_FILE
 #define _LARGEFILE64_SOURCE
 #endif
+#include "cstdafx.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -41,7 +42,6 @@
 #include <sys/stat.h>
 
 #include <direct.h>
-#include <windows.h>
 #include <io.h>
 #include <sys/locking.h>
 #include <sys/utime.h>

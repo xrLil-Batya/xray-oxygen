@@ -1,5 +1,6 @@
 // Author:	Abramcumner
 // Modifer: ForserX, Giperion
+#include "cstdafx.h"
 
 #include "lj_def.h"
 #include "lj_arch.h"

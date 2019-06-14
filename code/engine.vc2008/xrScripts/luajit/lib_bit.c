@@ -2,6 +2,7 @@
 ** Bit manipulation library.
 ** Copyright (C) 2005-2017 Mike Pall. See Copyright Notice in luajit.h
 */
+#include "cstdafx.h"
 
 #define lib_bit_c
 #define LUA_LIB

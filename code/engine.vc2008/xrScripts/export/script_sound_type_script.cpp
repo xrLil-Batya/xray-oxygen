@@ -5,6 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script sound type script export
 ////////////////////////////////////////////////////////////////////////////
+#include "stdafx.h"
 #include "luabind.inl"
 #include "script_sound_type.h"
 #include "ai_sounds.h"

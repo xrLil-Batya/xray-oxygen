@@ -5,7 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script flags script export
 ////////////////////////////////////////////////////////////////////////////
-
+#include "stdafx.h"
 #include "luabind.inl"
 #include "script_flags.h"
 
