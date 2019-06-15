@@ -535,8 +535,8 @@ Interface( long version, GlobalFunc *global, LWInterface *local,
 }
 
 ServerRecord ServerDesc[] = {
-   { LWSHADER_HCLASS, SH_PLUGIN_NAME, Handler },
-   { LWSHADER_ICLASS, SH_PLUGIN_NAME, Interface },
+   { LWSHADER_HCLASS, "xrShaderHandle", Handler },
+   { LWSHADER_ICLASS, "xrShaderInterface", Interface },
    { NULL }
 };
 

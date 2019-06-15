@@ -21,7 +21,7 @@ old nvMeshMender interface for all those using it already
 #include "stdafx.h"
 #include "assert.h"
 #include "nvMeshMender.h"
-
+#pragma comment(lib, "d3d9.lib")
 namespace
 {
 	const unsigned int NO_GROUP = 0xFFFFFFFF;

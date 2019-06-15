@@ -1,6 +1,4 @@
-#ifndef AIMapExportH
-#define AIMapExportH
-
+#pragma once
 //----------------------------------------------------
 struct SAIParams
 {
@@ -19,12 +17,11 @@ struct SAIParams
 };
 
 // chunks
-#define E_AIMAP_VERSION  			0x0001
+#define E_AIMAP_VERSION  			0x0002
 //----------------------------------------------------
 #define E_AIMAP_CHUNK_VERSION		0x0001
 #define E_AIMAP_CHUNK_BOX			0x0002
 #define E_AIMAP_CHUNK_PARAMS		0x0003
 #define E_AIMAP_CHUNK_NODES			0x0004
 //----------------------------------------------------
-#endif
  

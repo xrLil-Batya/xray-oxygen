@@ -174,7 +174,7 @@ public:
 };
 #endif
 
-struct ECORE_API SAnimParams		{
+struct SAnimParams		{
     float			t_current;
     float			tmp;
     float			min_t;

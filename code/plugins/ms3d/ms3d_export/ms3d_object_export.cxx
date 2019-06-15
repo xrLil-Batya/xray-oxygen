@@ -87,10 +87,19 @@ int ms3d_object_export::do_export(const char* path)
 
 	ms3d_mesh_builder* xmesh = new ms3d_mesh_builder;
 	int status = xmesh->build(m_model, num_bones > 0);
-	if (status == 0) {
+	if (status == 0) 
+	{
 		xmesh->commit(*object);
 		object->denominate();
-		status = object->save_object(path) ? 0 : -1;
+
+		if (!strstr(path, ".object"))
+		{
+			char* TryPath = strdup(path);
+			strcat(TryPath, ".object");
+			status = object->save_object(TryPath) ? 0 : -1;
+		}
+		else
+			status = object->save_object(path) ? 0 : -1;
 	}
 	delete object;
 
