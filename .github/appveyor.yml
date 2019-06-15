@@ -2,7 +2,7 @@ version: 1.7f.{build}
 pull_requests:
   do_not_increment_build_number: true
 shallow_clone: true
-image: Visual Studio 2019 Preview
+image: Visual Studio 2019
 configuration: 
  - Release
 platform: x64
