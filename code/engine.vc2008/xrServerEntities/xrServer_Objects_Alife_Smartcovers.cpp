@@ -474,7 +474,7 @@ void CSE_SmartCover::load_draw_data () {
 		return;
 	}
 
-	for (auto it: loopholes) 
+	for (auto it : loopholes)
 	{
 		bool loophole_exist = true;
 		if (m_available_loopholes.is_valid())
@@ -496,37 +496,37 @@ void CSE_SmartCover::load_draw_data () {
 
 		luabind::object			table = it;
 		if (table.type() != LUA_TTABLE) {
-			VERIFY	(table.type() != LUA_TNIL);
+			VERIFY(table.type() != LUA_TNIL);
 			continue;
 		}
-		m_draw_data.resize		(m_draw_data.size()+1);
-		SSCDrawHelper& H		= m_draw_data.back();
+		m_draw_data.resize(m_draw_data.size() + 1);
+		SSCDrawHelper& H = m_draw_data.back();
 
-		H.string_identifier		= parse_string(table,"id");
-		H.point_position		= parse_fvector(table, "fov_position");
-		H.is_enterable			= false;
-		H.fov_direction			= parse_fvector(table, "fov_direction");
+		H.string_identifier = parse_string(table, "id");
+		H.point_position = parse_fvector(table, "fov_position");
+		H.is_enterable = false;
+		H.fov_direction = parse_fvector(table, "fov_direction");
 
 		if (H.fov_direction.square_magnitude() < EPS_L) {
-			Msg				("! fov direction for loophole %s is setup incorrectly", H.string_identifier.c_str());
+			Msg("! fov direction for loophole %s is setup incorrectly", H.string_identifier.c_str());
 			H.fov_direction.set(0.f, 0.f, 1.f);
 		}
 		else
-			H.fov_direction.normalize	();
+			H.fov_direction.normalize();
 
-		H.enter_direction		= parse_fvector(table, "enter_direction");
+		H.enter_direction = parse_fvector(table, "enter_direction");
 
 		if (H.enter_direction.square_magnitude() < EPS_L) {
-			Msg				("! enter direction for loophole %s is setup incorrectly", H.string_identifier.c_str());
+			Msg("! enter direction for loophole %s is setup incorrectly", H.string_identifier.c_str());
 			H.enter_direction.set(0.f, 0.f, 1.f);
 		}
 		else
-			H.enter_direction.normalize	();
+			H.enter_direction.normalize();
 
-		H.fov					= parse_float(table, "fov", 0.f, 360.f);
-		H.range					= parse_float(table, "range", 0.f);
+		H.fov = parse_float(table, "fov", 0.f, 360.f);
+		H.range = parse_float(table, "range", 0.f);
 
-	H.animation_id	= make_string("loophole_%s_visual", H.string_identifier.c_str()).c_str();
+		H.animation_id = make_string("loophole_%s_visual", H.string_identifier.c_str());
 	}
 
 	check_enterable_loopholes	(m_description);
