@@ -83,7 +83,7 @@ template <class T> void Deallocate3D (int iRows, int iSlices,
     T*** aaatArray);
 
 #include "WmlSystem.inl"
-#include "WmlSystem.mcr"
+//#include "WmlSystem.mcr"
 
 }
 

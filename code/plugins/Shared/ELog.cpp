@@ -172,8 +172,6 @@ void CLog::Msg(TMsgDlgType mt, LPCSTR _Format, ...)
 	}
 #endif
 
-	::LogExecCB = FALSE;
-    ::Msg		(buf);
-	::LogExecCB	= TRUE;
+    ::Msg(buf);
 }
 //----------------------------------------------------

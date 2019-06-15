@@ -2,7 +2,8 @@
 // file: Log.h
 //----------------------------------------------------
 #pragma once
-class ECORE_API CLog{
+class CLog
+{
 public:
 	bool 		in_use;
 public:
@@ -12,6 +13,6 @@ public:
 	int 		DlgMsg 	(TMsgDlgType mt, TMsgDlgButtons btn, LPCSTR _Format, ...);
 };
 
-void ECORE_API ELogCallback(LPCSTR txt);
+void ELogCallback(LPCSTR txt);
 
-extern ECORE_API CLog ELog;
+extern CLog ELog;

@@ -96,7 +96,9 @@
     <ClCompile Include="..\..\engine.vc2008\xrEngine\SkeletonMotions.cpp">
       <Filter>Shared Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
+    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp">
+      <Filter>Shared Files\MeshMender</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Export\stdafx.h">

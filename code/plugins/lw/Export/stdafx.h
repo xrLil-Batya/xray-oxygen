@@ -12,7 +12,7 @@ enum TMsgDlgBtn { mbYes, mbNo, mbOK, mbCancel, mbAbort, mbRetry, mbIgnore, mbAll
 typedef TMsgDlgBtn TMsgDlgButtons[mbHelp];
 
 
-#define ECORE_API
+#define ECORE_API __declspec(dllimport)
 
 #include "..\..\Shared\ELog.h"
 #include <d3d9types.h>

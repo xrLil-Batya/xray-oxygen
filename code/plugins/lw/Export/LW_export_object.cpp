@@ -115,7 +115,7 @@ extern "C" {
 						{// append path
 							string_path		path,dr,di;
 							_splitpath		(lwo_nm,dr,di,0,0);
-							strconcat		(sizeof(path),path,dr,di);                                       
+							xr_strconcat		(path,dr,di);                                       
 							if (!FS.path_exist(path)) FS.append_path(path,path,0,FALSE);
 						}
 						if (FS.exist(lwo_nm)){
