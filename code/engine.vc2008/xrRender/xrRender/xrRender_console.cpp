@@ -83,10 +83,8 @@ xr_token qsun_quality_token[] =
 	{ "st_opt_low",		0	},
 	{ "st_opt_medium",	1	},
 	{ "st_opt_high",	2	},
-#ifdef USE_DX11
 	{ "st_opt_ultra",	3	},
 	{ "st_opt_extreme",	4	},
-#endif
 	{ 0,				0	}
 };
 
@@ -785,7 +783,7 @@ void xrRender_initconsole()
 	// Vignette
 	CMD3(CCC_Mask,		"r_vignette",			&ps_r_postscreen_flags,		R_FLAG_VIGNETTE);
 	CMD3(CCC_Mask,		"r_chromatic_aberr",	&ps_r_postscreen_flags,		R_FLAG_CHROMATIC);
-	CMD3(CCC_Mask,		"r_color_grading",		&ps_r_postscreen_flags,		R_FLAG_GRADING);
+//	CMD3(CCC_Mask,		"r_color_grading",		&ps_r_postscreen_flags,		R_FLAG_GRADING);
 
 	// Shadows
 	CMD3(CCC_Token,		"r_shadow_map_size",	&ps_r_smapsize,				q_smapsize_token);
