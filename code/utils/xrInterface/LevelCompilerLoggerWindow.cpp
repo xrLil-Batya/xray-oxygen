@@ -7,12 +7,32 @@
 #include <CommCtrl.h>
 #include "UIParams.hpp"
 
+namespace LCLog
+{
+	struct LogRecord
+	{
+		LogRecord() {}
+		LogRecord(LPCSTR Msg, u32 sizeMsg) : Message(Msg, sizeMsg) {}
+		xr_string Message;
+		Time time;
+	};
+	xr_queue <LogRecord> logData;
+
+	void Msg(const char* format)
+	{
+		logData.emplace(LogRecord(format, xr_strlen(format)));
+		::Msg(format); // To logFile
+	}
+}
+
 UIParams* pUIParams = nullptr;
 
 LevelCompilerLoggerWindow::LevelCompilerLoggerWindow()
 {
 	*status = 0;
 	*phase = 0;
+	progress = 0.f;
+	csLog.Unlock();
 }
 
 void LevelCompilerLoggerWindow::Initialize(const char* name)
@@ -95,7 +115,7 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 
 		SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);
 		// transfer data
-		while (!csLog.TryLock())
+		while (csLog.TryLock())
 		{
 			ProcessMessages();
 			Sleep(1);
@@ -109,18 +129,20 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 
 		{
 			xrCriticalSectionGuard LogGuard(csLog);
-			if (LogSize != xrLogger::logData.size())
+			if (LogSize != LCLog::logData.size())
 			{
 				bWasChanges = TRUE;
-				for (size_t Iter = 0; Iter < xrLogger::logData.size(); Iter++)
+				for (size_t Iter = 0; Iter < LCLog::logData.size(); Iter++)
 				{
-					const char* S = xrLogger::logData.front().Message.c_str();
+					const char* S = LCLog::logData.front().Message.c_str();
 					if (!S)
 						S = "";
 					SendMessage(hwLog, LB_ADDSTRING, 0, (LPARAM)S);
+
+					LCLog::logData.pop();
 				}
 				SendMessage(hwLog, LB_SETTOPINDEX, LogSize - 1, 0);
-				xrLogger::FlushLog();
+				//xrLogger::FlushLog();
 			}
 		}
 
@@ -195,7 +217,7 @@ void LevelCompilerLoggerWindow::clMsgV(const char* format, va_list args)
 	xrCriticalSectionGuard LogGuard(csLog);
 	string1024 msg;
 	xr_strconcat(msg, "    |    | ", buf);
-	Log(msg);
+	LCLog::Msg(msg);
 }
 
 void LevelCompilerLoggerWindow::clLog(const char* format, ...)
@@ -204,9 +226,8 @@ void LevelCompilerLoggerWindow::clLog(const char* format, ...)
 	char buf[1024];
 	va_start(args, format);
 	vsprintf(buf, format, args);
-
 	xrCriticalSectionGuard LogGuard(csLog);
-	Log(buf);
+	LCLog::Msg(buf);
 }
 
 void LevelCompilerLoggerWindow::Status(const char* format, ...)
@@ -219,13 +240,14 @@ void LevelCompilerLoggerWindow::Status(const char* format, ...)
 
 void LevelCompilerLoggerWindow::StatusV(const char* format, va_list args)
 {
-	char buf[1024];
+	char buf[1024], buf2[1024] = {};
 	vsprintf(buf, format, args);
 
 	xrCriticalSectionGuard LogGuard(csLog);
 	xr_strcpy(status, buf);
 	bStatusChange = true;
-	Msg("    | %s", buf);
+	sprintf(buf2, "    | %s", buf);
+	LCLog::Msg(buf2);
 }
 
 void LevelCompilerLoggerWindow::Progress(float progress) { this->progress = progress; }

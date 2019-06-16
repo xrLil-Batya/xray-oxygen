@@ -1,18 +1,19 @@
 #include "pch.hpp"
 #include "xrThread.hpp"
 
-void CThread::StubLog(const char*, ...) {}
+void CThread::StubLog(const char* format, ...) 
+{
+	Msg(format);
+}
 void CThread::startup(void* P)
 {
     CThread* T = (CThread*)P;
 
-    if (T->thMessages)
-        T->log("* THREAD #%d: Started.", T->thID);
+    T->log("* THREAD #%d: Started.", T->thID);
     FPU::m64r();
     T->Execute();
     T->thCompleted = TRUE;
-    if (T->thMessages)
-        T->log("* THREAD #%d: Task Completed.", T->thID);
+    T->log("* THREAD #%d: Task Completed.", T->thID);
 }
 
 void CThreadManager::start(CThread* T)

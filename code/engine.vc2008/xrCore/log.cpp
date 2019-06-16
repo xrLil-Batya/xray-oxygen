@@ -159,8 +159,10 @@ void xrLogger::InternalOpenLogFile()
 	CHECK_OR_EXIT(logFile, "Can't create log file");
 }
 
+XRCORE_API bool bStartedThread = false;
 void xrLogger::LogThreadEntry()
 {
+	if (bStartedThread) return;
 	bool isDebug = IsDebuggerPresent();
 
 	auto FlushLogIfRequestedLambda = [this]()
@@ -174,7 +176,7 @@ void xrLogger::LogThreadEntry()
 			}
 		}
 	};
-
+	bStartedThread = true;
 	while (bIsAlive)
 	{
 		bool bHaveMore = true;
@@ -234,7 +236,7 @@ void xrLogger::LogThreadEntry()
 
 		Sleep(13); // work at 60 FPS roughly
 	}
-
+	bStartedThread = false;
 	FlushLogIfRequestedLambda();
 }
 

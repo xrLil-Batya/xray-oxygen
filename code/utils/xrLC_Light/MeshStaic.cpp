@@ -60,25 +60,25 @@ void xrLC_GlobalData::vertices_isolate_and_pool_reload()
 	u32 not_empty_verts = 0;
 	/////////////////////////////////////////////////////////
 	string_path path_name;
-	FS.update_path(path_name, "$app_root$", "ccc__temp__vertices");
-	{
-		IWriter * file = FS.w_open(path_name);
-		R_ASSERT(file);
-		for (u32 i = 0; i < inital_verts_count; ++i)
-		{
-			Vertex	&v = *_g_vertices[i];
-			if (v.m_adjacents.empty())
-			{
-				::destroy_vertex(_g_vertices[i], false);
-				continue;
-			}
+	if (FS.exist(path_name, "$app_root$", "ccc__temp__vertices"))
+		FS.file_delete(path_name);
 
-			v.isolate_pool_clear_write(*file);
+	IWriter * file = FS.w_open(path_name);
+	R_ASSERT(file);
+	for (u32 i = 0; i < inital_verts_count; ++i)
+	{
+		Vertex	&v = *_g_vertices[i];
+		if (v.m_adjacents.empty())
+		{
 			::destroy_vertex(_g_vertices[i], false);
-			++not_empty_verts;
+			continue;
 		}
-		FS.w_close(file);
+
+		v.isolate_pool_clear_write(*file);
+		::destroy_vertex(_g_vertices[i], false);
+		++not_empty_verts;
 	}
+	FS.w_close(file);
 	/////////////////////////////////////////////////////////
 	_g_vertices.clear();
 	Logger.clLog("mem usage before clear pool: %u", Memory.mem_usage());
