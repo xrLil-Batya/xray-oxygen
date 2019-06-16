@@ -253,7 +253,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic(dxRender_Visual* pVisual, Fve
 void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 {
 	if (pVisual->vis.marker == RImplementation.marker)	return;
-	xrCriticalSectionGuard xrCritGuard(InsertStaticCritsect);
 
 	CRender& RI					= RImplementation;
 	pVisual->vis.marker			= RI.marker;
