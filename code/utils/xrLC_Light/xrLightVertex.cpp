@@ -104,8 +104,8 @@ public:
 	}
 	void Execute () override
 	{
-		u32	counter		= 0;
-		for (;; counter++)
+		
+		for (u32 counter = 0;; counter++)
 		{
 			u32 id				= VLT.get();
 			if (id==VLT_END)	break;

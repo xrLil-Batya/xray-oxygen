@@ -69,7 +69,7 @@ public:
 
 	void free()
 	{
-		if (m_ptr && m_type == DeviceBufferType::CPU)
+		if (m_type == DeviceBufferType::CPU)
 		{
 			delete[] m_ptr;
 		}

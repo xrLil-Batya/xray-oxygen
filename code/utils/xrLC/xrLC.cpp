@@ -26,7 +26,7 @@
 #	undef TRIVIAL_ENCRYPTOR_ENCODER
 #	undef TRIVIAL_ENCRYPTOR_DECODER
 #endif // PROTECTED_BUILD
-
+extern XRCORE_API bool bStartedThread;
 CBuild*	pBuild		= nullptr;
 u32		version		= 0;
 
@@ -77,6 +77,7 @@ using xrOptions = int __cdecl(b_params* params, u32 version, bool bRunBuild);
 
 void Startup(char* lpCmdLine)
 {
+	bStartedThread = true;
 	create_global_data();
 	char cmd[512], name[256];
 

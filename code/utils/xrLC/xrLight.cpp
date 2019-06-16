@@ -26,26 +26,26 @@ public:
     {
         CDeflector* D = 0;
 
-        for (;;)
+        while (true)
         {
-            // Get task
-            task_CS.Enter();
-            thProgress = 1.f - float(task_pool.size()) / float(lc_global_data()->g_deflectors().size());
-            if (task_pool.empty())
-            {
-				xrCriticalSectionGuard guard(task_CS);
-                thProgress = 1.f - float(task_pool.size()) / float(lc_global_data()->g_deflectors().size());
-                if (task_pool.empty()) return;
+			thProgress = 1.f - float(task_pool.size()) / float(lc_global_data()->g_deflectors().size());
+            // Get task (Guard)
+			{
+				xrCriticalSectionGuard TaskGuard(task_CS);
+				if (task_pool.empty())
+				{
+					//xrCriticalSectionGuard guard(task_CS);
+					thProgress = 1.f - float(task_pool.size()) / float(lc_global_data()->g_deflectors().size());
+					if (task_pool.empty()) return;
 
-                D = lc_global_data()->g_deflectors()[task_pool.back()];
-                task_pool.pop_back();
-            }
+					D = lc_global_data()->g_deflectors()[task_pool.back()];
+					task_pool.pop_back();
+				}
 
-            int DeflectorID = task_pool.back();
-            D = lc_global_data()->g_deflectors()[DeflectorID];
-            task_pool.pop_back();
-            task_CS.Leave();
-
+				int DeflectorID = task_pool.back();
+				D = lc_global_data()->g_deflectors()[DeflectorID];
+				task_pool.pop_back();
+			}
             // Perform operation
             try {
                 D->Light(&DB, &LightsSelected, H);
