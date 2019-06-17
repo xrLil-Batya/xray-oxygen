@@ -72,6 +72,47 @@ bool CEditableObject::LoadObject(const char* fname)
 	return false;
 }
 //#endif
+bool CEditableObject::Save(const char* fname)
+{
+	if (IsModified())
+	{
+		// update transform matrix
+		Fmatrix	mTransform, mScale, mTranslate, mRotate;
+		if (!fsimilar(t_vRotate.magnitude(), 0) ||
+			!fsimilar(t_vScale.magnitude(), 1.73205f) ||
+			!fsimilar(t_vPosition.magnitude(), 0))
+		{
+			mRotate.setHPB(t_vRotate.y, t_vRotate.x, t_vRotate.z);
+			mScale.scale(t_vScale);
+			mTranslate.translate(t_vPosition);
+			mTransform.mul(mTranslate, mRotate);
+			mTransform.mulB_43(mScale);
+			TranslateToWorld(mTransform);
+			t_vRotate.set(0, 0, 0);
+			t_vPosition.set(0, 0, 0);
+			t_vScale.set(1, 1, 1);
+		}
+	}
+
+	// save object
+	IWriter* F = FS.w_open(fname);
+	if (F)
+	{
+		F->open_chunk(EOBJ_CHUNK_OBJECT_BODY);
+		Save(*F);
+		F->close_chunk();
+
+		FS.w_close(F);
+
+		m_LoadName = fname;
+		m_ObjectVersion = (int)FS.get_file_age(fname);
+		VERIFY3(m_ObjectVersion > 0, "Invalid file age:", fname);
+		return			true;
+	}
+	else {
+		return 			false;
+	}
+}
 
 bool CEditableObject::SaveObject(const char* fname)
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include <xrCore/xrCore.h>
+#include "../../engine.vc2008/xrCore/xrCore.h"
 
 #ifndef ECORE_API
 	#define ECORE_API __declspec(dllexport)

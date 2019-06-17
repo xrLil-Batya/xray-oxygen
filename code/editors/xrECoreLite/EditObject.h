@@ -1,13 +1,13 @@
 #pragma once
 #include "GameMtlLib.h"
-#ifndef _LW_PLUGIN
+#if !defined(_LW_PLUGIN) && !defined(NT_PLUGIN)
 #include "xrCDB/xrCDB.h"
 #include "xrSound/Sound.h"
 #endif
 #include "bone.h"
 #include "motion.h"
 
-#ifndef _LW_PLUGIN
+#if !defined(_LW_PLUGIN) && !defined(NT_PLUGIN)
 #include "xrEngine/GameMtlLib.h"
 #endif
 #ifdef _EDITOR
@@ -394,6 +394,7 @@ public:
 	bool SaveObject(const char* fname);
 	bool Load(IReader&);
 	void Save(IWriter&);
+	bool Save(const char* fname);
 #ifdef _EDITOR
 	void FillMotionList(const char* pref, ListItemsVec& items, int modeID);
 	void FillBoneList(const char* pref, ListItemsVec& items, int modeID);

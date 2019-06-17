@@ -207,7 +207,7 @@ VertNormalBuffer(nullptr)
 		gCalcDevice = gCalc->CreateDevice(gpuidx);
 		break;
 	case xrHardwareLight::Mode::CUDA:
-		PrimeContext = optix::prime::Context::create(RTP_CONTEXT_TYPE_CUDA);
+		PrimeContext = optix::prime::ContextObj::create(RTP_CONTEXT_TYPE_CUDA);
 		DeviceMemoryForLevel = 0;
 		break;
 	default:

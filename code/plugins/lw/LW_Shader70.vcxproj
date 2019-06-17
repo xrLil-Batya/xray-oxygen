@@ -145,7 +145,7 @@
       <ModuleDefinitionFile>Server\serv.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)xray_shader.pdb</ProgramDatabaseFile>
-      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
+      <ImportLibrary>$(xrLib)\$(ProjectName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
