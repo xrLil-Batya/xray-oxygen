@@ -8,8 +8,10 @@ int main()
 {
 	Core._initialize("EvReader1", nullptr, true, "fsgame.ltx");
 	CReadEvaluation Reader;
-    std::cout << "Hello World!\n"; 
-	Reader.MakeOutFile("common\\SmallWeaponValue1.efd", "F:\\X-Ray\\xray-oxygen\\common_wpn_efd.ltx");
+    std::cout << "Your file: "; 
+	std::string FName = "";
+	std::cin >> FName;
+	Reader.MakeOutFile(FName.c_str(), (FName + ".ltx").c_str());
 
 	std::cout << "Done!\n";
 }

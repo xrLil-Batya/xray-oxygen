@@ -185,6 +185,7 @@ void LightVertex	()
 			v->C._set		(R);
 		}
 	}
-	xr_delete	(g_trans);
+	// Эти векторы меня когда-нибудь убьют...
+	//xr_delete	(g_trans);
 	Logger.Status				("Wating...");
 }
