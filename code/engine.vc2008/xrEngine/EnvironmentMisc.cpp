@@ -194,10 +194,10 @@ void CEnvironment::LoadWeatherEffects()
 		env.reserve					(sections.size() + 2);
 		env.push_back				(CreateDescriptor("00:00:00", false));
 
-		for (auto& section : sections) 
+		for (auto[name, unused] : sections)
 		{
-			CEnvDescriptor*			object = CreateDescriptor(section.second->Name, config);
-			env.push_back			(object);
+			CEnvDescriptor* object = CreateDescriptor(name, config);
+			env.push_back(object);
 		}
 
 		xr_delete(pIdentifier);
@@ -208,13 +208,13 @@ void CEnvironment::LoadWeatherEffects()
 
 	}
 
-	FS.file_list_close				(pfile_list);
+	FS.file_list_close(pfile_list);
 
 	// sorting weather envs
-	for (auto& it : WeatherFXs)
+	for (auto[SharedString, Vector] : WeatherFXs)
 	{
-		R_ASSERT3(it.second.size() > 1, "Must be >=2 environments in weather", it.first.c_str());
-		std::sort(it.second.begin(), it.second.end(), sort_env_etl_pred);
+		R_ASSERT3(Vector.size() > 1, "Must be >=2 environments in weather", SharedString.c_str());
+		std::sort(Vector.begin(), Vector.end(), sort_env_etl_pred);
 	}
 }
 
