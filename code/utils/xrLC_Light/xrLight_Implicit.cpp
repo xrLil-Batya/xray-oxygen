@@ -224,20 +224,20 @@ void XRLC_LIGHT_API ImplicitNetWait()
 static xr_vector<u32> not_clear;
 void ImplicitLightingExec(u32 thCount)
 {
-
-	Implicit		calculator;
+	Implicit calculator;
 
 	cl_globs.Allocate();
 	not_clear.clear();
 	// Sorting
 	Logger.Status("Sorting faces...");
-	for (vecFaceIt I = inlc_global_data()->g_faces().begin(); I != inlc_global_data()->g_faces().end(); I++)
+	size_t Iterator = 0;
+	for (Face* F: inlc_global_data()->g_faces())
 	{
-		Face* F = *I;
+		Iterator++;
 		if (F->pDeflector)				continue;
 		if (!F->hasImplicitLighting())	continue;
 
-		Logger.Progress(float(I - inlc_global_data()->g_faces().begin()) / float(inlc_global_data()->g_faces().size()));
+		Logger.Progress(inlc_global_data()->g_faces().size() / Iterator);
 		b_material&		M = inlc_global_data()->materials()[F->dwMaterial];
 		u32				Tid = M.surfidx;
 		b_BuildTexture*	T = &(inlc_global_data()->textures()[Tid]);
@@ -251,7 +251,8 @@ void ImplicitLightingExec(u32 thCount)
 			calculator.insert(std::make_pair(Tid, ImpD));
 			not_clear.push_back(Tid);
 		}
-		else {
+		else
+		{
 			ImplicitDeflector&	ImpD = it->second;
 			ImpD.faces.push_back(F);
 		}
@@ -259,7 +260,7 @@ void ImplicitLightingExec(u32 thCount)
 
 
 	// Lighing
-	for (auto& imp : calculator)
+	for (auto imp : calculator)
 	{
 		ImplicitDeflector& defl = imp.second;
 		Logger.Status("Lighting implicit map '%s'...", defl.texture->name);
@@ -307,7 +308,7 @@ void ImplicitLightingExec(u32 thCount)
 			xr_strconcat(out_name, name, "\\", TEX.name, ".dds");
 			FS.update_path(out_name, "$game_levels$", out_name);
 			Logger.clMsg("Saving texture '%s'...", out_name);
-			createPath(out_name);
+			createPath(out_name, true);
 			BYTE* raw_data = LPBYTE(TEX.pSurface);
 			u32	w = TEX.dwWidth;
 			u32	h = TEX.dwHeight;
@@ -329,7 +330,7 @@ void ImplicitLightingExec(u32 thCount)
 			xr_strconcat(out_name, name, "\\", TEX.name, "_lm.dds");
 			FS.update_path(out_name, "$game_levels$", out_name);
 			Logger.clMsg("Saving texture '%s'...", out_name);
-			createPath(out_name);
+			createPath(out_name, true);
 			BYTE* raw_data = LPBYTE(&*packed.begin());
 			u32	w = TEX.dwWidth;
 			u32	h = TEX.dwHeight;

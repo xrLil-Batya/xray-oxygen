@@ -71,7 +71,7 @@ void CBuild::LMapsLocal()
     u32	thNUM = 1;
     if (!g_build_options.b_optix_accel)
     {
-        thNUM = CPU::Info.n_threads - 1;
+        thNUM = CPU::Info.n_threads - 2;
     }
     //u32	thNUM = 5;
     CTimer	start_time;	start_time.Start();
@@ -116,6 +116,7 @@ void CBuild::Light()
     mem_Compact();
 
     LightVertex();
+	WaitMuModelsLocalCalcLightening();
     //****************************************** Merge LMAPS
     {
         Logger.Phase("LIGHT: Merging lightmaps...");

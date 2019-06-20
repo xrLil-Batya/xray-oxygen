@@ -133,7 +133,11 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(xrSDKBins)optix_prime.1.dll $(xrBinOut)</Command>
+      <Command>copy $(xrSDKBins)optix_prime.1.dll $(xrBinOut)
+copy $(xrSDKBins)MagicFM.dll $(xrBinOut)
+copy $(xrSDKBins)FreeImage.dll $(xrBinOut)
+copy $(xrSDKBins)Calc.dll $(xrBinOut)
+copy $(xrSDKBins)RadeonRays.dll $(xrBinOut)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">
