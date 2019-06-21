@@ -152,12 +152,13 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 	while (ShowCursor(TRUE) < 0);
 
 
-#if !defined(DEBUG) && !defined(MIXED_NEW)
-	do_exit(gameWindow, assertion_info);
-#else
+//#if !defined(DEBUG) && !defined(MIXED_NEW)
+//	do_exit(gameWindow, assertion_info);
+//#else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
+	//[FX]: Why release don't have skip option? 
 	do_exit2(gameWindow, assertion_info, ignore_always);
-#endif
+//#endif
 
 	// And we should show window again, damn pause manager
 	if (GetCurrentThreadId() == m_mainThreadId)

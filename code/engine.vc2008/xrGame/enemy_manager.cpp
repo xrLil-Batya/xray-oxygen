@@ -34,7 +34,7 @@ static const u32 ENEMY_INERTIA_TIME_FROM_ACTOR	= 6000;
 bool g_enemy_manager_second_update	 = false;
 #endif // _DEBUG
 
-#define USE_EVALUATOR
+//#define USE_EVALUATOR
 
 CEnemyManager::CEnemyManager									(CCustomMonster *object)
 {
@@ -133,10 +133,7 @@ float CEnemyManager::evaluate				(const CEntityAlive *object) const
 	);
 #else // USE_EVALUATOR
 	float					distance = m_object->Position().distance_to_sqr(object->Position());
-	return					(
-		1000.f*(visible ? 0.f : 1.f) +
-		distance
-	);
+	return (penalty + distance / 100 * 0.86f);
 #endif // USE_EVALUATOR
 }
 

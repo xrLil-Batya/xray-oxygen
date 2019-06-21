@@ -4,6 +4,7 @@
 #include "../xrParticles/ParticlesObject.h"
 #include "GamePersistent.h"
 #include "../xrEngine/LightAnimLibrary.h"
+#include "../xrEngine/Rain.h"
 
 CZoneCampfire::CZoneCampfire() : m_pDisabledParticles(nullptr), m_pEnablingParticles(nullptr), m_turned_on(true), m_turn_time(0) {}
 
@@ -46,18 +47,20 @@ void CZoneCampfire::GoDisabledState()
 {
 	inherited::GoDisabledState();
 
-	R_ASSERT(!m_pDisabledParticles);
-	LPCSTR str = pSettings->r_string(cNameSect(), "disabled_particles");
-	m_pDisabledParticles = CParticlesObject::Create(str, false);
-	m_pDisabledParticles->UpdateParent(XFORM(), zero_vel);
-	m_pDisabledParticles->Play(false);
+	if (!m_pDisabledParticles)
+	{
+		LPCSTR str = pSettings->r_string(cNameSect(), "disabled_particles");
+		m_pDisabledParticles = CParticlesObject::Create(str, false);
+		m_pDisabledParticles->UpdateParent(XFORM(), zero_vel);
+		m_pDisabledParticles->Play(false);
 
-	m_sound.stop();
-	m_sound.destroy();
+		m_sound.stop();
+		m_sound.destroy();
 
-	str = pSettings->r_string(cNameSect(), "disabled_sound");
-	m_sound.create(str, st_Effect, sg_SourceType);
-	m_sound.play_at_pos(this, Position(), true);
+		const char* SndStr = pSettings->r_string(cNameSect(), "disabled_sound");
+		m_sound.create(SndStr, st_Effect, sg_SourceType);
+		m_sound.play_at_pos(this, Position(), true);
+	}
 }
 
 static const int OVL_TIME = 3000;
@@ -118,6 +121,10 @@ BOOL CZoneCampfire::AlwaysTheCrow()
 void CZoneCampfire::UpdateWorkload(u32 dt)
 {
 	inherited::UpdateWorkload(dt);
+
+	if (m_turned_on && Environment().eff_Rain->GetWorldWetness() > 0.4)
+		turn_off_script();
+
 	if (m_turn_time > Device.dwTimeGlobal)
 	{
 		float k = float(m_turn_time - Device.dwTimeGlobal) / float(OVL_TIME);
