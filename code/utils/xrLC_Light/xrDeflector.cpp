@@ -239,63 +239,56 @@ void CDeflector::GetRect	(Fvector2 &min, Fvector2 &max)
 	}
 }
 
-void CDeflector::RemapUV	(xr_vector<UVtri>& dest, u32 base_u, u32 base_v, u32 size_u, u32 size_v, u32 lm_u, u32 lm_v, BOOL bRotate)
+void CDeflector::RemapUV(xr_vector<UVtri>& dest, u32 base_u, u32 base_v, u32 size_u, u32 size_v, u32 lm_u, u32 lm_v, BOOL bRotate)
 {
-	dest.clear	();
+	dest.clear();
 	dest.reserve(UVpolys.size());
-	
+
 	// UV rect (actual)
-	Fvector2		a_min,a_max,a_size;
-	GetRect		(a_min,a_max);
-	a_size.sub	(a_max,a_min);
-	
+	Fvector2 a_min, a_max, a_size;
+	GetRect(a_min, a_max);
+	a_size.sub(a_max, a_min);
+
 	// UV rect (dedicated)
-	Fvector2		d_min,d_max,d_size;
-	d_min.x		= (float(base_u)+.5f)/float(lm_u);
-	d_min.y		= (float(base_v)+.5f)/float(lm_v);
-	d_max.x		= (float(base_u+size_u)-.5f)/float(lm_u);
-	d_max.y		= (float(base_v+size_v)-.5f)/float(lm_v);
-	if (d_min.x>=d_max.x)	{ d_min.x=d_max.x=(d_min.x+d_max.x)/2; d_min.x-=EPS_S; d_max.x+=EPS_S; }
-	if (d_min.y>=d_max.y)	{ d_min.y=d_max.y=(d_min.y+d_max.y)/2; d_min.y-=EPS_S; d_max.y+=EPS_S; }
-	d_size.sub	(d_max,d_min);
-	
+	Fvector2 d_min, d_max, d_size;
+	d_min.x = (float(base_u) + .5f) / float(lm_u);
+	d_min.y = (float(base_v) + .5f) / float(lm_v);
+	d_max.x = (float(base_u + size_u) - .5f) / float(lm_u);
+	d_max.y = (float(base_v + size_v) - .5f) / float(lm_v);
+
+	if (d_min.x >= d_max.x) { d_min.x = d_max.x = (d_min.x + d_max.x) / 2; d_min.x -= EPS_S; d_max.x += EPS_S; }
+	if (d_min.y >= d_max.y) { d_min.y = d_max.y = (d_min.y + d_max.y) / 2; d_min.y -= EPS_S; d_max.y += EPS_S; }
+	d_size.sub(d_max, d_min);
+
 	// Remapping
-	Fvector2		tc;
-	UVtri		tnew;
-	if (bRotate)	{
-		for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); it++)
+	Fvector2 tc;
+	UVtri tnew;
+	for (UVtri& T : UVpolys)
+	{
+		tnew.owner = T.owner;
+		for (int i = 0; i < 3; i++)
 		{
-			UVtri&	T	= *it;
-			tnew.owner	= T.owner;
-			for (int i=0; i<3; i++) 
+			if (bRotate)
 			{
-				tc.x = ((T.uv[i].y-a_min.y)/a_size.y)*d_size.x + d_min.x;
-				tc.y = ((T.uv[i].x-a_min.x)/a_size.x)*d_size.y + d_min.y;
-				tnew.uv[i].set(tc);
+				tc.x = ((T.uv[i].y - a_min.y) / a_size.y) * d_size.x + d_min.x;
+				tc.y = ((T.uv[i].x - a_min.x) / a_size.x) * d_size.y + d_min.y;
 			}
-			dest.push_back	(tnew);
-		}
-	} else {
-		for (UVIt it = UVpolys.begin(); it!=UVpolys.end(); it++)
-		{
-			UVtri&	T	= *it;
-			tnew.owner	= T.owner;
-			for (int i=0; i<3; i++) 
+			else
 			{
-				tc.x = ((T.uv[i].x-a_min.x)/a_size.x)*d_size.x + d_min.x;
-				tc.y = ((T.uv[i].y-a_min.y)/a_size.y)*d_size.y + d_min.y;
-				tnew.uv[i].set(tc);
+				tc.x = ((T.uv[i].x - a_min.x) / a_size.x) * d_size.x + d_min.x;
+				tc.y = ((T.uv[i].y - a_min.y) / a_size.y) * d_size.y + d_min.y;
 			}
-			dest.push_back	(tnew);
+			tnew.uv[i].set(tc);
 		}
+		dest.push_back(tnew);
 	}
 }
 
 void CDeflector::RemapUV(u32 base_u, u32 base_v, u32 size_u, u32 size_v, u32 lm_u, u32 lm_v, BOOL bRotate)
 {
-	xr_vector<UVtri>	tris_new;
-	RemapUV			(tris_new,base_u,base_v,size_u,size_v,lm_u,lm_v,bRotate);
-	UVpolys			= tris_new;
+	xr_vector<UVtri>* tris_new = new xr_vector<UVtri>();
+	RemapUV			(*tris_new,base_u,base_v,size_u,size_v,lm_u,lm_v,bRotate);
+	UVpolys			= *tris_new;
 }
 
 

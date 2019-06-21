@@ -10,7 +10,7 @@ void base_lighting::select(xr_vector<R_Light>& dest, xr_vector<R_Light>& src, Fv
 	Sphere.set(P, R);
 	dest.clear();
 
-	for (R_Light& refLight : src)
+	for (R_Light refLight : src)
 	{
 		if (refLight.type == LT_POINT)
 		{
@@ -53,7 +53,8 @@ void base_lighting::select(xr_vector<DWORD>& dest, xr_vector<R_Light>& src, Fvec
 			if (dist > (Sphere.R + LightObj.range))	continue;
 		}
 
-		dest.push_back(++IteratorForLight);
+		dest.push_back(IteratorForLight);
+		IteratorForLight++;
 	}
 }
 

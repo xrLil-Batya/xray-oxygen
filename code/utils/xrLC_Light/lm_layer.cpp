@@ -19,11 +19,45 @@ void lm_layer::Pack(xr_vector<u32>& dest)const
 	}
 }
 
+void lm_layer::Pack(std::vector<u32>& dest)const
+{
+	dest.resize(width * height);
+	std::vector<u32>::iterator W = dest.begin();
+	for (const auto surface_it : surface)
+	{
+		base_color_c C;
+		surface_it._get(C);
+
+		u8	_r = u8_clr(C.rgb.x);
+		u8	_g = u8_clr(C.rgb.y);
+		u8	_b = u8_clr(C.rgb.z);
+		u8	_d = u8_clr(C.sun);
+		*W++ = color_rgba(_r, _g, _b, _d);
+	}
+}
+
 void lm_layer::Pack_hemi(xr_vector<u32>& dest)const	//.
 {
 	dest.resize(width * height);
 
 	xr_vector<u32>::iterator W = dest.begin();
+	for (const auto surface_it : surface)
+	{
+		base_color_c C;
+		surface_it._get(C);
+
+		u8	_d = u8_clr(C.sun);
+		u8	_h = u8_clr(C.hemi);
+		*W++ = color_rgba(_d, _d, _d, _h);
+	}
+}
+
+
+void lm_layer::Pack_hemi(std::vector<u32>& dest)const	//.
+{
+	dest.resize(width * height);
+
+	std::vector<u32>::iterator W = dest.begin();
 	for (const auto surface_it : surface)
 	{
 		base_color_c C;
