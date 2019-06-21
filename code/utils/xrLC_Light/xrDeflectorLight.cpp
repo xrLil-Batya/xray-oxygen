@@ -973,17 +973,17 @@ BOOL	__stdcall rms_test(lm_layer& lm, u32 w, u32 h, u32 rms)
     if ((w <= 1) || (h <= 1))	return FALSE;
 
     // scale down(lanczos3) and up (bilinear, as video board) //.
-    xr_vector<u32>	pOriginal_base;	lm.Pack(pOriginal_base);
-    xr_vector<u32>	pScaled_base;	pScaled_base.resize(w*h);
-    xr_vector<u32>	pRestored_base;	pRestored_base.resize(lm.width*lm.height);
-    xr_vector<u32>	pOriginal_hemi;	lm.Pack_hemi(pOriginal_hemi);
-    xr_vector<u32>	pScaled_hemi;	pScaled_hemi.resize(w*h);
-    xr_vector<u32>	pRestored_hemi;	pRestored_hemi.resize(lm.width*lm.height);
+	std::vector<u32>	pOriginal_base;	lm.Pack(pOriginal_base);
+    std::vector<u32>	pScaled_base;	pScaled_base.resize(w*h);
+	std::vector<u32>	pRestored_base;	pRestored_base.resize(lm.width*lm.height);
+	std::vector<u32>	pOriginal_hemi;	lm.Pack_hemi(pOriginal_hemi);
+	std::vector<u32>	pScaled_hemi;	pScaled_hemi.resize(w*h);
+	std::vector<u32>	pRestored_hemi;	pRestored_hemi.resize(lm.width*lm.height);
 
     try {
         // rgb + sun
-        imf_Process(&*pScaled_base.begin(), w, h, &*pOriginal_base.begin(), lm.width, lm.height, imf_lanczos3);
-        imf_Process(&*pRestored_base.begin(), lm.width, lm.height, &*pScaled_base.begin(), w, h, imf_filter);
+        imf_Process(pScaled_base, w, h, pOriginal_base, lm.width, lm.height, imf_lanczos3);
+        imf_Process(pRestored_base, lm.width, lm.height, pScaled_base, w, h, imf_filter);
         // hemi
         //.
         /*
@@ -992,8 +992,8 @@ BOOL	__stdcall rms_test(lm_layer& lm, u32 w, u32 h, u32 rms)
         imf_Process	(&*pOriginal_hemi.begin(),	lm.width,	lm.height,	&*pRestored_hemi.begin(),	lm.width/2,	lm.height/2,imf_filter		);
         }
         */
-        imf_Process(&*pScaled_hemi.begin(), w, h, &*pOriginal_hemi.begin(), lm.width, lm.height, imf_lanczos3);
-        imf_Process(&*pRestored_hemi.begin(), lm.width, lm.height, &*pScaled_hemi.begin(), w, h, imf_filter);
+        imf_Process(pScaled_hemi, w, h,pOriginal_hemi, lm.width, lm.height, imf_lanczos3);
+        imf_Process(pRestored_hemi, lm.width, lm.height, pScaled_hemi, w, h, imf_filter);
     }
     catch (...) {
         Logger.clMsg("* ERROR: imf_Process");

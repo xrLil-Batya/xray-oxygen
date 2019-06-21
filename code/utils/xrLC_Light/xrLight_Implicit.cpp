@@ -315,9 +315,9 @@ void ImplicitLightingExec(u32 thCount)
 			u32	pitch = w * 4;
 			STextureParams			fmt = TEX.THM;
 			fmt.fmt = STextureParams::tfDXT5;
-			fmt.flags.set(STextureParams::flDitherColor, FALSE);
-			fmt.flags.set(STextureParams::flGenerateMipMaps, FALSE);
-			fmt.flags.set(STextureParams::flBinaryAlpha, FALSE);
+			fmt.flags.set(STextureParams::flDitherColor, false);
+			fmt.flags.set(STextureParams::flGenerateMipMaps, false);
+			fmt.flags.set(STextureParams::flBinaryAlpha, false);
 			DXTCompress(out_name, raw_data, nullptr, w, h, pitch, &fmt, 4);
 		}
 
@@ -337,9 +337,9 @@ void ImplicitLightingExec(u32 thCount)
 			u32	pitch = w * 4;
 			STextureParams			fmt;
 			fmt.fmt = STextureParams::tfRGBA;
-			fmt.flags.set(STextureParams::flDitherColor, FALSE);
-			fmt.flags.set(STextureParams::flGenerateMipMaps, FALSE);
-			fmt.flags.set(STextureParams::flBinaryAlpha, FALSE);
+			fmt.flags.set(STextureParams::flDitherColor, false);
+			fmt.flags.set(STextureParams::flGenerateMipMaps, false);
+			fmt.flags.set(STextureParams::flBinaryAlpha, false);
 			DXTCompress(out_name, raw_data, nullptr, w, h, pitch, &fmt, 4);
 		}
 	}
