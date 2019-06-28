@@ -27,7 +27,7 @@ namespace SpectreCallback
 		}
 	}
 
-
 	DEFINE_CLIENT_CALLBACK_FUNC(shedule_update, u32)
+	DEFINE_CLIENT_CALLBACK_FUNC(SecondaryCombine)
 }
 

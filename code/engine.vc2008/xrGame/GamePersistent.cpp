@@ -78,8 +78,6 @@ CGamePersistent::CGamePersistent()
 	eQuickLoad				= Engine.Event.Handler_Attach("Game:QuickLoad",this);
 	Fvector3* DofValue		= Console->GetFVectorPtr("r_dof");
 	SetBaseDof				(*DofValue);
-
-	SpectreEngineClient::Initialize();
 }
 
 CGamePersistent::~CGamePersistent()

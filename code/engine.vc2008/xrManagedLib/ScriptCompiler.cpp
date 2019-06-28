@@ -150,6 +150,7 @@ bool xrScriptCompiler::CompileScripts()
 	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedEngineLib.dll"));
 	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedGameLib.dll"));
 	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedUILib.dll"));
+	Parameters->ReferencedAssemblies->Add(GetPathToBuildAssembly("xrManagedRenderLib.dll"));
 	Parameters->GenerateInMemory = false;
 	Parameters->GenerateExecutable = false;
 

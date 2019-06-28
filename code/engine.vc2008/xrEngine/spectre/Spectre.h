@@ -1,6 +1,6 @@
 #pragma once
-#include "../xrManagedLib/ISpectreEngine.h"
-#include "../xrManagedEngineLib/ISpectreEngineLib.h"
+#include "../../xrManagedLib/ISpectreEngine.h"
+#include "../../xrManagedEngineLib/ISpectreEngineLib.h"
 #include "ExternalCallbackTypes.h"
 
 class ENGINE_API SpectreEngineClient

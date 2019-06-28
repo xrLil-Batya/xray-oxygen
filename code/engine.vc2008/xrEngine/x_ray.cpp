@@ -22,7 +22,7 @@
 #include <locale.h>
 #include "DynamicSplash.h"
 #include "DiscordRichPresense.h"
-
+#include "spectre\Spectre.h"
 #include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni = nullptr;
@@ -185,6 +185,7 @@ void Startup()
 	LALib.OnCreate();
 	
 	/////// ENGINE INITIALIZATION COMPLETE
+	SpectreEngineClient::Initialize();
 	splashScreen.SetProgressPosition(100, "Engine initialization complete");
 
 	Msg("** Engine initialization complete.");
@@ -195,7 +196,6 @@ void Startup()
 	pInput->OnAppActivate();
 	Device.Create(Device.editor());
 	splashScreen.HideSplash();
-
 
 	pApp = xr_new<CApplication>();
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);

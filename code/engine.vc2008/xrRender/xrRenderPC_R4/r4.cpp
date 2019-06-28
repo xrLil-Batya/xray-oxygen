@@ -20,7 +20,7 @@
 
 ENGINE_API BOOL isGraphicDebugging;
 
-CRender RImplementation;
+RENDER_API CRender RImplementation;
 
 template<UINT TNameLength>
 IC void SetDebugObjectName(ID3D11DeviceChild* resource, const char(&name)[TNameLength])

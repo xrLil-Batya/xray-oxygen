@@ -13,8 +13,10 @@
 #include "../xrRenderDX10/DX10 Rain/dx10RainBlender.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
-
+#include "../../xrEngine/std_classes.h"
+#include "../../xrEngine/Spectre/Spectre.h"
 #include <D3DX10Tex.h>
+RENDER_API CRenderTarget* pRenderTarget = nullptr;
 
 void	CRenderTarget::u_setrt(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, ID3DDepthStencilView* zb)
 {
@@ -238,6 +240,10 @@ void	generate_jitter(DWORD*	dest, u32 elem_count)
 
 CRenderTarget::CRenderTarget()
 {
+	CLS_ID = CLSID_RENDER;
+	SpectreObjectId = SpectreEngineClient::CreateProxyObject(this);
+
+	pRenderTarget = this;
 	u32 SampleCount = 1;
 
 	if (ps_r_ssao_mode != 2)

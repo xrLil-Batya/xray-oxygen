@@ -24,7 +24,7 @@
 class dxRender_Visual;
 
 // definition
-class CRender	:	public R_dsgraph_structure
+class RENDER_API CRender: public R_dsgraph_structure
 {
 public:
 	enum
@@ -347,4 +347,4 @@ private:
 	ICustomOcclusion*				m_customOcclusion;
 };
 
-extern CRender						RImplementation;
+extern RENDER_API CRender RImplementation;

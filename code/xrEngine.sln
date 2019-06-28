@@ -90,6 +90,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedRenderLib", "engine.vc2008\xrManagedRenderLib\xrManagedRenderLib.vcxproj", "{42986579-D91D-4523-AE54-0BFFEB0748C2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CCCA7859-EB86-493E-9B53-C4235F45B3C5} = {CCCA7859-EB86-493E-9B53-C4235F45B3C5}
+		{AC9B12ED-A2D7-4337-A981-5BD8430E96D8} = {AC9B12ED-A2D7-4337-A981-5BD8430E96D8}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lzo", "3rd-party\lzo\lzo.vcxproj", "{4DA914AA-B7E4-4CF3-8AD0-02674BFC44FA}"

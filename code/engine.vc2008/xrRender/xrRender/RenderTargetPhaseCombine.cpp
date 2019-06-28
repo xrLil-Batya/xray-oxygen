@@ -6,11 +6,7 @@
 #include "r2_puddles.h"
 #include "../xrRender/dxEnvironmentRender.h"
 #include "../xrRender/dxRenderDeviceRender.h"
-
-inline float hclip(float v, float dim)
-{
-	return 2.0f * v / dim - 1.0f;
-}
+#include "../../xrEngine/Spectre/Spectre.h"
 
 void CRenderTarget::phase_combine()
 {
@@ -41,7 +37,6 @@ void CRenderTarget::phase_combine()
 		phase_ssao();
 
 	// low/hi RTs
-#ifdef USE_DX11
 	if (!RImplementation.o.dx10_msaa)
 	{
 		u_setrt(rt_Generic_0, rt_Generic_1, nullptr, HW.pBaseZB);
@@ -52,38 +47,21 @@ void CRenderTarget::phase_combine()
 		u_setrt(rt_Generic_0_r, rt_Generic_1_r, nullptr, RImplementation.Target->rt_MSAADepth->pZRT);
 		RCache.Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
-#else
-	u_setrt				(rt_Generic_0, rt_Generic_1, nullptr, HW.pBaseZB);
-#endif
+
 	RCache.set_Stencil	(FALSE);
 	Device.Statistic->Render_Combine_Begin.End();
 
 	// Draw skybox & clouds without Z-test to avoid silhouettes.
 	// However, it's a bit slower process.
 	RCache.set_ColorWriteEnable();
-#ifndef USE_DX11
-	// RCache.set_Z(FALSE);
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE));
-#endif
 	Device.Statistic->Render_Combine_Sky.Begin();
 	Environment().RenderSky();
 	Device.Statistic->Render_Combine_Sky.End();
 	Device.Statistic->Render_Combine_Cloud.Begin();
 	Environment().RenderClouds();
 	Device.Statistic->Render_Combine_Cloud.End();
-#ifndef USE_DX11
-	// RCache.set_Z(TRUE);
-	CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE));
-#endif
 	
 	RCache.set_Stencil(TRUE, D3D11_COMPARISON_LESS_EQUAL, 0x01, 0xff, 0x00);	// stencil should be >= 1
-#ifndef USE_DX11
-	if (RImplementation.o.nvstencil)
-	{
-		u_stencil_optimize(FALSE);
-		RCache.set_ColorWriteEnable();
-	}
-#endif
 
 	// calc m-blur matrices
 	Device.Statistic->Render_Combine_Combine1.Begin();
@@ -372,16 +350,14 @@ void CRenderTarget::phase_combine()
 		phase_pp();
 	}
 
+	SpectreCallback::SecondaryCombine->Invoke(SpectreObjectId);
+
 	// Final stage: copy rt_Color to back buffer. Let's do it with GPU.
 	{
-#ifdef USE_DX11
 		if (RImplementation.o.dx10_msaa)
 			RenderScreenQuad(Device.dwWidth, Device.dwHeight, HW.pBaseRT, s_combine_msaa[0]->E[3]);
 		else
 			RenderScreenQuad(Device.dwWidth, Device.dwHeight, HW.pBaseRT, s_combine->E[3]);
-#else
-		RenderScreenQuad(Device.dwWidth, Device.dwHeight, HW.pBaseRT, s_combine->E[3]);
-#endif
 	}
 
 	// Re-adapt luminance
@@ -489,7 +465,6 @@ void CRenderTarget::phase_combine_volumetric()
 	RCache.set_ColorWriteEnable(D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
 	{
 		// Fill VB
-#ifdef USE_DX11
 		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
 		pv->set(-1,	 1,	0, 1, 0, 0,			scale_Y	); pv++;
 		pv->set(-1,	-1,	0, 0, 0, 0,			0		); pv++;
@@ -498,23 +473,6 @@ void CRenderTarget::phase_combine_volumetric()
 		RCache.Vertex.Unlock(4, g_combine->vb_stride);
 
 		RCache.set_Geometry(g_combine);
-#else
-		float _w = float(Device.dwWidth);
-		float _h = float(Device.dwHeight);
-		Fvector2 p0, p1;
-		p0.set(0.5f / _w, 0.5f / _h);
-		p1.set((_w + 0.5f) / _w, (_h + 0.5f) / _h);
-
-		FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine_VP->vb_stride, Offset);
-		pv->set(hclip(EPS,		_w),	hclip(_h+EPS,	_h),	p0.x, p1.y, 0, 0,		scale_Y	); pv++;
-		pv->set(hclip(EPS,		_w),	hclip(EPS,		_h),	p0.x, p0.y, 0, 0,		0		); pv++;
-		pv->set(hclip(_w+EPS,	_w),	hclip(_h+EPS,	_h),	p1.x, p1.y, 0, scale_X,	scale_Y	); pv++;
-		pv->set(hclip(_w+EPS,	_w),	hclip(EPS,		_h),	p1.x, p0.y, 0, scale_X,	0		); pv++;
-		RCache.Vertex.Unlock(4, g_combine_VP->vb_stride);
-
-		RCache.set_Geometry(g_combine_VP);
-#endif
-
 		// Draw
 		RCache.set_Element(s_combine_volumetric->E[0]);
 

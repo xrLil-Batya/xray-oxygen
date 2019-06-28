@@ -2,8 +2,6 @@
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/irenderable.h"
 #include "../xrRender/FBasicVisual.h"
-#include <ppl.h>
-#include <concurrent_vector.h>
 
 const	float	tweak_COP_initial_offs = 900.f;
 
