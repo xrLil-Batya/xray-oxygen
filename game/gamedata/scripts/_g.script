@@ -456,7 +456,7 @@ function abort(fmt, ...)
 	local reason = string.format(fmt, ...)
 	
     if db.actor ~= nil then
-	    news_manager.send_tip(db.actor, "Произошла критическая ошибка, подробности в логе.", nil, nil, nil)
+	    news_manager.send_tip(db.actor, "Critical error, check log!", nil, nil, nil)
 	end
 	
 	if ScriptDebug then
