@@ -5,8 +5,7 @@ namespace xrSpectre
 {
 	public class RenderTarget : XRay.CRenderTarget
 	{
-		public RenderTarget(IntPtr InNativeObject)
-		: base(InNativeObject)
+		public RenderTarget() : base()
 		{
 			XRay.Log.Warning("RenderTarget Inited!");
 		}
