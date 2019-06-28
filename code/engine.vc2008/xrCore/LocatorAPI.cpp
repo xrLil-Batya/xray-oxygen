@@ -1467,7 +1467,7 @@ FS_Path* CLocatorAPI::get_path(const char* path)
 	if (strstr(path, "$"))
 	{
 		auto P = pathes.find(path);
-		R_ASSERT2(P != pathes.end(), path);
+		R_ASSERT3(P != pathes.end(), path, "Please update fsgame.ltx");
 		return P->second;
 	}
 	else

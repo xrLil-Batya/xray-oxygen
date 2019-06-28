@@ -223,17 +223,19 @@ bool CXMLBlend::Check(const char* FileName)
 u32 CXMLBlend::BlendValidate(shared_str type)
 {
 	u32 SrcType = 0;
-	if (type == "zero")			SrcType = 1;
-	if (type == "one")	        SrcType = 2;
-	if (type == "srccolor")	    SrcType = 3;
-	if (type == "invsrccolor")  SrcType = 4;
-	if (type == "srcalpha")	    SrcType = 5;
-	if (type == "invsrcalpha")  SrcType = 6;
-	if (type == "destalpha")	SrcType = 7;
-	if (type == "invdestalpha") SrcType = 8;
-	if (type == "destcolor")	SrcType = 9;
-	if (type == "invdestcolor")	SrcType = 10;
-	if (type == "srcalphasat")	SrcType = 11;
+	if (type == "zero")			SrcType = D3DBLEND::D3DBLEND_ZERO;
+	if (type == "one")	        SrcType = D3DBLEND::D3DBLEND_ONE;
+	if (type == "srccolor")	    SrcType = D3DBLEND::D3DBLEND_SRCCOLOR;
+	if (type == "invsrccolor")  SrcType = D3DBLEND::D3DBLEND_INVSRCCOLOR;
+	if (type == "srcalpha")	    SrcType = D3DBLEND::D3DBLEND_SRCALPHA;
+	if (type == "invsrcalpha")  SrcType = D3DBLEND::D3DBLEND_INVSRCALPHA;
+	if (type == "destalpha")	SrcType = D3DBLEND::D3DBLEND_DESTALPHA;
+	if (type == "invdestalpha") SrcType = D3DBLEND::D3DBLEND_INVDESTALPHA;
+	if (type == "destcolor")	SrcType = D3DBLEND::D3DBLEND_DESTCOLOR;
+	if (type == "invdestcolor")	SrcType = D3DBLEND::D3DBLEND_INVDESTCOLOR;
+	if (type == "srcalphasat")	SrcType = D3DBLEND::D3DBLEND_SRCALPHASAT;
+
+	R_ASSERT_FORMAT(SrcType != 0, "FILE: %s - undefined blend function (D3DBLEND) value: %s", File, type.c_str());
 
 	return SrcType;
 }
@@ -241,14 +243,16 @@ u32 CXMLBlend::BlendValidate(shared_str type)
 u32 CXMLBlend::StencilValidate(shared_str type)
 {
 	u32 SrcType = 0;
-	if (type == "zero")			SrcType = 1;
-	if (type == "one")	        SrcType = 2;
-	if (type == "replace")	    SrcType = 3;
-	if (type == "incrsat")		SrcType = 4;
-	if (type == "decrsat")	    SrcType = 5;
-	if (type == "invert")		SrcType = 6;
-	if (type == "incr")			SrcType = 7;
-	if (type == "decr")			SrcType = 8;
+	if (type == "keep")			SrcType = D3DSTENCILOP::D3DSTENCILOP_KEEP;
+	if (type == "zero")			SrcType = D3DSTENCILOP::D3DSTENCILOP_ZERO;
+	if (type == "replace")	    SrcType = D3DSTENCILOP::D3DSTENCILOP_REPLACE;
+	if (type == "incrsat")		SrcType = D3DSTENCILOP::D3DSTENCILOP_INCRSAT;
+	if (type == "decrsat")	    SrcType = D3DSTENCILOP::D3DSTENCILOP_DECRSAT;
+	if (type == "invert")		SrcType = D3DSTENCILOP::D3DSTENCILOP_INVERT;
+	if (type == "incr")			SrcType = D3DSTENCILOP::D3DSTENCILOP_INCR;
+	if (type == "decr")			SrcType = D3DSTENCILOP::D3DSTENCILOP_DECR;
+
+	R_ASSERT_FORMAT(SrcType != 0, "FILE: %s - undefined stencil operator (D3DSTENCILOP) value: %s", File, type.c_str());
 
 	return SrcType;
 }
@@ -256,14 +260,16 @@ u32 CXMLBlend::StencilValidate(shared_str type)
 u32 CXMLBlend::CMPFunValidate(shared_str type)
 {
 	u32 SrcType = 0;
-	if (type == "never")		SrcType = 1;
-	if (type == "less")	        SrcType = 2;
-	if (type == "equal")	    SrcType = 3;
-	if (type == "lessequal")	SrcType = 4;
-	if (type == "greater")	    SrcType = 5;
-	if (type == "notequal")		SrcType = 6;
-	if (type == "greaterequal")	SrcType = 7;
-	if (type == "always")		SrcType = 8;
+	if (type == "never")		SrcType = D3DCMPFUNC::D3DCMP_NEVER;
+	if (type == "less")	        SrcType = D3DCMPFUNC::D3DCMP_LESS;
+	if (type == "equal")	    SrcType = D3DCMPFUNC::D3DCMP_EQUAL;
+	if (type == "lessequal")	SrcType = D3DCMPFUNC::D3DCMP_LESSEQUAL;
+	if (type == "greater")	    SrcType = D3DCMPFUNC::D3DCMP_GREATER;
+	if (type == "notequal")		SrcType = D3DCMPFUNC::D3DCMP_NOTEQUAL;
+	if (type == "greaterequal")	SrcType = D3DCMPFUNC::D3DCMP_GREATEREQUAL;
+	if (type == "always")		SrcType = D3DCMPFUNC::D3DCMP_ALWAYS;
+
+	R_ASSERT_FORMAT(SrcType != 0, "FILE: %s - undefined compare function (D3DCMPFUNC) value: %s", File, type.c_str());
 
 	return SrcType;
 }
