@@ -216,6 +216,9 @@
     <ClCompile Include="_bitwise.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="xrMemoryUtils.cpp">
+      <Filter>Memory manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -460,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="PostprocessAnimator.h">
       <Filter>PostProcessCore</Filter>
+    </ClInclude>
+    <ClInclude Include="xrMemoryUtils.h">
+      <Filter>Memory manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

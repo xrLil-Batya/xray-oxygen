@@ -1,0 +1,102 @@
+#pragma once
+
+/// Helper class to allocate temporary memory in scope and release after scope ends
+struct xrScopeMemPtr 
+{
+	xrScopeMemPtr();
+	explicit xrScopeMemPtr(void* InMem);
+	explicit xrScopeMemPtr(const size_t memSize);
+
+	~xrScopeMemPtr();
+
+	xrScopeMemPtr& operator = (void* InMem);
+
+	operator void* () const;
+	void reset(void* newMem);
+private:
+	void* memPtr;
+};
+
+// --- HEADER
+/// Helper class to allocate one or several objects in heap and destroy them at the end of scope
+template<class Type>
+struct xrScopePtr
+{
+	xrScopePtr();
+	explicit xrScopePtr(Type* pElem);
+
+	~xrScopePtr();
+
+	void reset(Type* newElem);
+
+	Type& operator*() const;
+	Type* operator->() const;
+	Type& operator[](size_t i) const;
+
+	/// automatic access to internal memory. I hope no one will try to free memory by pointer
+	operator Type* () const;
+
+	Type* get() const;
+
+private:
+	Type* memory;
+};
+
+template<class Type>
+xrScopePtr<Type>::operator Type* () const
+{
+	return memory;
+}
+
+// --- END
+// --- IMPLEMENTATION
+
+template<class Type>
+Type* xrScopePtr<Type>::get() const
+{
+	return memory;
+}
+
+template<class Type>
+Type* xrScopePtr<Type>::operator->() const
+{
+	R_ASSERT2(memory != nullptr, "Attempt to access a NULL scoped pointer");
+	return memory;
+}
+
+template<class Type>
+Type& xrScopePtr<Type>::operator*() const
+{
+	R_ASSERT2(memory != nullptr, "Attempt to access a NULL scoped pointer");
+	return *memory;
+}
+
+template<class Type>
+Type& xrScopePtr<Type>::operator[](size_t i) const
+{
+	R_ASSERT2(memory != nullptr, "Attempt to access a NULL scoped pointer");
+	return memory[i];
+}
+
+template<class Type>
+void xrScopePtr<Type>::reset(Type* newElem)
+{
+	delete memory; memory = nullptr;
+	memory = newElem;
+}
+
+template<class Type>
+xrScopePtr<Type>::~xrScopePtr()
+{
+	delete memory; memory = nullptr;
+}
+
+template<class Type>
+xrScopePtr<Type>::xrScopePtr(Type* pElem)
+	: memory(pElem)
+{}
+
+template<class Type>
+xrScopePtr<Type>::xrScopePtr()
+	: memory(nullptr)
+{}

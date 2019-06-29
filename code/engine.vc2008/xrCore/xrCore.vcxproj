@@ -251,6 +251,7 @@ start GitParser\GitParser.exe</Command>
     <ClCompile Include="XMLCore\xrXMLParser.cpp" />
     <ClCompile Include="xrCore.cpp" />
     <ClCompile Include="xrMemoryDebug.cpp" />
+    <ClCompile Include="xrMemoryUtils.cpp" />
     <ClCompile Include="_bitwise.cpp" />
     <ClCompile Include="_compressed_normal.cpp" />
     <ClCompile Include="_math.cpp" />
@@ -299,6 +300,7 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="xrDelegate\xrDelegateArguments.h" />
     <ClInclude Include="xrDelegate\xrDelegateBinder.h" />
     <ClInclude Include="xrMemoryDebug.h" />
+    <ClInclude Include="xrMemoryUtils.h" />
     <ClInclude Include="xrMemory_C.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SPPInfo.h" />

@@ -87,10 +87,11 @@
 
 #include "_types.h"
 #include "RingBuffer.h"
+#include "thread_utils.h"
+#include "xrDebug.h"
 #include "xrMemory.h"
 #include "_stl_extensions.h"
 #include "thread_utils.h"
-#include "xrDebug.h"
 #include "vector.h"
 #include "clsid.h"
 

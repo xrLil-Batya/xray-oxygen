@@ -47,14 +47,6 @@ static bool terminate_char( char c, bool check_space = false )
 
 line_edit_control::line_edit_control( u32 str_buffer_size )
 {
-	m_edit_str	= NULL;
-	m_inserted	= NULL;
-	m_undo_buf	= NULL;
-	m_buf0		= NULL;
-	m_buf1		= NULL;
-	m_buf2		= NULL;
-	m_buf3		= NULL;
-
 	for ( u32 i = 0; i < VK_COUNT; ++i )
 	{
 		m_actions[i] = NULL;
@@ -67,14 +59,6 @@ line_edit_control::line_edit_control( u32 str_buffer_size )
 
 line_edit_control::~line_edit_control()
 {
-	xr_free( m_edit_str );
-	xr_free( m_inserted );
-	xr_free( m_undo_buf );
-	xr_free( m_buf0 );
-	xr_free( m_buf1 );
-	xr_free( m_buf2 );
-	xr_free( m_buf3 );
-
 	size_t const array_size	= sizeof(m_actions)/sizeof(m_actions[0]);
 	buffer_vector<Base*>	lineActions(m_actions, array_size, &m_actions[0], &m_actions[0] + array_size);
 	std::sort				(lineActions.begin(), lineActions.end());
@@ -161,14 +145,14 @@ void line_edit_control::init( u32 str_buffer_size, init_mode mode )
 	m_buffer_size = str_buffer_size;
 	clamp( m_buffer_size, (int)MIN_BUF_SIZE, (int)MAX_BUF_SIZE );
 
-	xr_free( m_edit_str );	m_edit_str = (char*)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_inserted );	m_inserted = (char*)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_undo_buf );	m_undo_buf = (char*)xr_malloc( m_buffer_size * sizeof(char) );
-	
-	xr_free( m_buf0 );		m_buf0 = (char*)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_buf1 );		m_buf1 = (char*)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_buf2 );		m_buf2 = (char*)xr_malloc( m_buffer_size * sizeof(char) );
-	xr_free( m_buf3 );		m_buf3 = (char*)xr_malloc( m_buffer_size * sizeof(char) );
+	m_edit_str.reset((char*)xr_malloc(m_buffer_size * sizeof(char)));
+	m_undo_buf.reset((char*)xr_malloc(m_buffer_size * sizeof(char)));
+	m_inserted.reset((char*)xr_malloc(m_buffer_size * sizeof(char)));
+
+	m_buf0.reset((char*)xr_malloc(m_buffer_size * sizeof(char)));
+	m_buf1.reset((char*)xr_malloc(m_buffer_size * sizeof(char)));
+	m_buf2.reset((char*)xr_malloc(m_buffer_size * sizeof(char)));
+	m_buf3.reset((char*)xr_malloc(m_buffer_size * sizeof(char)));
 
 	clear_states();
 
