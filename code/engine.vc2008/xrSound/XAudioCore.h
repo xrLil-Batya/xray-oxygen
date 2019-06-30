@@ -77,7 +77,6 @@ using XAUDIO_DATA = struct
 	XAUDIO2_VOICE_STATE			voiceState;
 	XAUDIO2_VOICE_SENDS			voiceSends;
 	XAUDIO2_DEVICE_DETAILS		deviceDetail;
-	std::unique_ptr<uint8_t[]>	waveData;
 };
 
 using XAUDIO_STATE = struct

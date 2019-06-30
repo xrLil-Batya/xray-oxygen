@@ -123,6 +123,7 @@
     <ClCompile Include="CallbackTypes.cpp" />
     <ClCompile Include="ClassRegistrator.cpp" />
     <ClCompile Include="EngineConsole.cpp" />
+    <ClCompile Include="FunctionInvoker.cpp" />
     <ClCompile Include="GamePersistence.cpp" />
     <ClCompile Include="ISpectreEngineLib.cpp" />
     <ClCompile Include="ObjectPool.cpp" />

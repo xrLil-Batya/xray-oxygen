@@ -16,3 +16,10 @@ MANAGED_RENDER_API void xrRenderInit()
 	Device.ConnectToRender();
 	Device.m_pRender->SetupGPU(false, false, false);
 }
+
+// This function required to initialize static variables. LoadLibrary do not initialize them for some reason
+MANAGED_RENDER_API void DummyFunction()
+{
+	//XRay::Log::Warning( gcnew System::String(SecondaryCombine_Invoker.Name));
+	XRay::Log::Info("X-Ray Spectre Render Library was loaded");
+}

@@ -292,6 +292,7 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="DateTime.hpp" />
     <ClInclude Include="envelope.h" />
     <ClInclude Include="FTimer.h" />
+    <ClInclude Include="Platform\xrPlatformUtils.h" />
     <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="RingBuffer.h" />
     <ClInclude Include="StringsUtils.h" />

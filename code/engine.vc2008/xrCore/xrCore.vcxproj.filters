@@ -70,6 +70,18 @@
     <Filter Include="PostProcessCore\SPPInfo">
       <UniqueIdentifier>{ceef9aed-568b-4121-9891-a1f94935ab1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{5f556809-f409-4c0b-91bd-18a0166da0cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Generic">
+      <UniqueIdentifier>{63519b5c-0cc6-4905-86f5-d36c1c856804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{343cee18-b143-418f-96eb-f0c91616c0a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\XboxOne">
+      <UniqueIdentifier>{d4ae2434-9597-4a21-bed2-86c28438bccb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -466,6 +478,9 @@
     </ClInclude>
     <ClInclude Include="xrMemoryUtils.h">
       <Filter>Memory manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\xrPlatformUtils.h">
+      <Filter>Platform\Generic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

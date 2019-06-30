@@ -73,8 +73,17 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 			break;
 		}
 
-		if (GO->cast_inventory_item())
-			GO->cast_inventory_item()->DropItem(!P.r_eof(), P.r_vec3());
+		if (CInventoryItem* InventoryItem = GO->cast_inventory_item())
+		{
+			Fvector DropPosition;
+			DropPosition.set(0.0f, 0.0f, 0.0f);
+			bool bHasPosition = !P.r_eof();
+			if (bHasPosition)
+			{
+				DropPosition = P.r_vec3();
+			}
+			InventoryItem->DropItem(bHasPosition, DropPosition);
+		}
 	} break;
 	case GE_INV_ACTION:
 		{

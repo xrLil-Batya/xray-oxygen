@@ -10,14 +10,12 @@
 
 IC CGameGraph &CAI_Space::game_graph() const
 {
-	VERIFY(m_game_graph);
-	return *m_game_graph.get();
+	return *m_game_graph;
 }
 
 IC CLevelGraph &CAI_Space::level_graph() const
 {
-	VERIFY(m_level_graph);
-	return *m_level_graph.get();
+	return *m_level_graph;
 }
 
 IC const CLevelGraph *CAI_Space::get_level_graph() const
@@ -27,14 +25,12 @@ IC const CLevelGraph *CAI_Space::get_level_graph() const
 
 IC CEF_Storage &CAI_Space::ef_storage() const
 {
-	VERIFY(m_ef_storage);
-	return *m_ef_storage.get();
+	return *m_ef_storage;
 }
 
 IC CGraphEngine &CAI_Space::graph_engine() const
 {
-	VERIFY(m_graph_engine);
-	return *m_graph_engine.get();
+	return *m_graph_engine;
 }
 
 IC const CALifeSimulator &CAI_Space::alife() const
@@ -50,7 +46,6 @@ IC const CALifeSimulator *CAI_Space::get_alife() const
 
 IC const CCoverManager &CAI_Space::cover_manager() const
 {
-	VERIFY(m_cover_manager);
 	return *m_cover_manager;
 }
 
@@ -62,24 +57,20 @@ IC CScriptEngine &CAI_Space::script_engine() const
 
 IC const CPatrolPathStorage &CAI_Space::patrol_paths() const
 {
-	VERIFY(m_patrol_path_storage);
 	return *m_patrol_path_storage;
 }
 
 IC moving_objects &CAI_Space::moving_objects() const
 {
-	VERIFY(m_moving_objects);
 	return *m_moving_objects;
 }
 
 IC doors::manager& CAI_Space::doors() const
 {
-	VERIFY(m_doors_manager);
 	return *m_doors_manager;
 }
 
 IC CPatrolPathStorage &CAI_Space::patrol_paths_raw()
 {
-	VERIFY(m_patrol_path_storage);
 	return *m_patrol_path_storage;
 }

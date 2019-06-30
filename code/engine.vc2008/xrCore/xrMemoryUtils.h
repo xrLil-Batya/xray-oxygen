@@ -1,3 +1,13 @@
+// Giperion June 2019
+// [EUREKA] 3.10.2
+// X-Ray Oxygen, Oxygen Team
+
+//////////////////////////////////////////////////////////////
+// Desc		: Smart pointers and other useful classes for managing memory
+// Author	: Giperion
+//////////////////////////////////////////////////////////////
+// Oxygen Engine 2016-2019
+//////////////////////////////////////////////////////////////
 #pragma once
 
 /// Helper class to allocate temporary memory in scope and release after scope ends
@@ -28,6 +38,7 @@ struct xrScopePtr
 	~xrScopePtr();
 
 	void reset(Type* newElem);
+	xrScopePtr<Type>& operator=(Type* pElem);
 
 	Type& operator*() const;
 	Type* operator->() const;
@@ -42,14 +53,22 @@ private:
 	Type* memory;
 };
 
+// --- END
+// --- IMPLEMENTATION
+
+template<class Type>
+xrScopePtr<Type>& xrScopePtr<Type>::operator=(Type* pElem)
+{
+	delete memory; memory = nullptr;
+	memory = pElem;
+	return *this;
+}
+
 template<class Type>
 xrScopePtr<Type>::operator Type* () const
 {
 	return memory;
 }
-
-// --- END
-// --- IMPLEMENTATION
 
 template<class Type>
 Type* xrScopePtr<Type>::get() const

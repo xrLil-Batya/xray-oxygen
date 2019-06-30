@@ -33,14 +33,14 @@ private:
 
 private:
 
-	std::unique_ptr<CGameGraph			>			m_game_graph;
-	std::unique_ptr<CLevelGraph			>			m_level_graph;
-	std::unique_ptr<CGraphEngine		>			m_graph_engine;
-	std::unique_ptr<CEF_Storage			>			m_ef_storage;
-	std::unique_ptr<CCoverManager		>			m_cover_manager;
-	std::unique_ptr<CPatrolPathStorage	>			m_patrol_path_storage;
-	std::unique_ptr<moving_objects		>			m_moving_objects;
-	std::unique_ptr<doors::manager		>			m_doors_manager;
+	xrScopePtr<CGameGraph			>			m_game_graph;
+	xrScopePtr<CLevelGraph			>			m_level_graph;
+	xrScopePtr<CGraphEngine			>			m_graph_engine;
+	xrScopePtr<CEF_Storage			>			m_ef_storage;
+	xrScopePtr<CCoverManager		>			m_cover_manager;
+	xrScopePtr<CPatrolPathStorage	>			m_patrol_path_storage;
+	xrScopePtr<moving_objects		>			m_moving_objects;
+	xrScopePtr<doors::manager		>			m_doors_manager;
 
 	CALifeSimulator* m_alife_simulator = nullptr;
 	CScriptEngine*   m_script_engine   = nullptr;
