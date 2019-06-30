@@ -21,6 +21,7 @@ public:
 	IC	SelfRef	assign	(const T mask)								{ flags	=	mask;		return *this;	}
 	IC	SelfRef	set		(const T mask,	bool value)					{ if (value) flags|=mask; else flags&=~mask; return *this; }
 	IC 	bool	is		(const T mask)						const	{ return mask==(flags&mask);			}
+	IC  bool    bitTest (const int bitNum)					const	{ u64 tempFlag = flags; return _bittest64((LONG64*)&tempFlag, bitNum); }
 	IC 	bool	is_any	(const T mask)						const	{ return !!(flags&mask);				}
 	IC 	bool	test	(const T mask)						const	{ return !!(flags&mask);				}
 	IC 	SelfRef	or		(const T mask)								{ flags|=mask;			return *this;	}
