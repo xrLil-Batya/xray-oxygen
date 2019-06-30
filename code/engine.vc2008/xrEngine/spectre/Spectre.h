@@ -18,6 +18,8 @@ private:
 	static ISpectreCoreServer* CoreAPI;
 	static ISpectreEngineLib* EngineLibAPI;
 
+	static HMODULE hManagedLib;
+	static HMODULE hGameManagedLib;
 };
 
 extern bool gSpectreIsLoaded;

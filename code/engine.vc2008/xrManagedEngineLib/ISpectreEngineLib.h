@@ -13,8 +13,8 @@ struct FuncNode
 	FuncNode* NextNode = nullptr;
 };
 
-extern FuncNode* pRootNode;
-extern FuncNode* pCurrentNode;
+extern MANAGED_ENGINE_API FuncNode* pRootNode;
+extern MANAGED_ENGINE_API FuncNode* pCurrentNode;
 
 xr_pure_interface MANAGED_ENGINE_API ISpectreEngineLib
 {

@@ -140,6 +140,9 @@
     <ClCompile Include="EngineConsole.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
+    <ClCompile Include="FunctionInvoker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">

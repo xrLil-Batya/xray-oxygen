@@ -1,8 +1,8 @@
-#pragma once
+п»ї#pragma once
 
 #define PIX_EVENT(Name)	dxPixEventWrapper	pixEvent##Name(L#Name)
 
-class dxPixEventWrapper // новый клас для анотации
+class dxPixEventWrapper // РЅРѕРІС‹Р№ РєР»Р°СЃ РґР»СЏ Р°РЅРѕС‚Р°С†РёРё
 {
 public:
     dxPixEventWrapper(LPCWSTR wszName);

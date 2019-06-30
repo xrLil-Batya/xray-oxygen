@@ -3,13 +3,17 @@
 
 ISpectreCoreServer* SpectreEngineClient::CoreAPI;
 ISpectreEngineLib* SpectreEngineClient::EngineLibAPI;
+
+HMODULE SpectreEngineClient::hManagedLib = NULL;
+
+HMODULE SpectreEngineClient::hGameManagedLib = NULL;
+
 bool gSpectreIsLoaded = false;
 
 void SpectreEngineClient::Initialize()
 {
 	// Get interface ptr from xrManagedLib
-	HMODULE hManagedLib = NULL;
-	HMODULE hGameManagedLib = NULL;
+
 	FARPROC pGetInterface = nullptr;
 	INT_PTR pAPI = NULL;
 	FuncNode* pServerNode = nullptr;
@@ -37,7 +41,7 @@ void SpectreEngineClient::Initialize()
 	}
 
 	// Get interface ptr from game lib
-	hGameManagedLib = GetModuleHandle("xrManagedEngineLib.dll"); // выдает отличный от нуля значение, при этом EngineLibAPI ещё не инициализировано (NULL), то есть мы таки выходим из функции не инициализировав значение EngineLibAPI
+	hGameManagedLib = GetModuleHandle("xrManagedEngineLib.dll");
 	if (!hGameManagedLib)
 		hGameManagedLib = LoadLibrary("xrManagedEngineLib.dll");
 	
@@ -49,6 +53,11 @@ void SpectreEngineClient::Initialize()
 
 	pAPI = pGetInterface();
 	EngineLibAPI = reinterpret_cast<ISpectreEngineLib*>(pAPI);
+
+	// Initialize render lib statics
+	HMODULE hRenderModule = GetModuleHandle("xrManagedRenderLib.dll");
+	FARPROC hDummyFunctionFunc = GetProcAddress(hRenderModule, "DummyFunction");
+	hDummyFunctionFunc();
 
 	// Get all callbacks prototype, and hook up all our interface prototypes
 	pServerNode = EngineLibAPI->GetFunctionLinkedListStart();
@@ -77,6 +86,8 @@ void SpectreEngineClient::Shutdown()
 {
 	EngineLibAPI->OnShutdown();
 	CoreAPI->Shutdown();
+	FreeLibrary(hGameManagedLib); hGameManagedLib = NULL;
+	FreeLibrary(hManagedLib); hManagedLib = NULL;
 }
 
 DWORD SpectreEngineClient::CreateProxyObject(DLL_Pure* pObject)

@@ -5,8 +5,6 @@
 #include "TemplatedStrings.h"
 #include "ISpectreEngineLib.h"
 #include "IFunctionInvoker.h"
-#include "API/NativeObject.h"
-#include "ObjectPool.h"
 
 using namespace System::Reflection;
 
@@ -68,6 +66,13 @@ public:
 	}
 };
 
+class FunctionSearcher
+{
+public:
+
+	static MethodInfo^ GetObjectAndMethod(u32 ObjectHandle, u32 NameCRC32, System::Object^& OutObject);
+};
+
 template<typename... FunctionsArgs>
 struct FunctionInvoker : public IFunctionInvoker<FunctionsArgs...>
 {
@@ -108,15 +113,11 @@ struct FunctionInvoker : public IFunctionInvoker<FunctionsArgs...>
 
 	virtual void Invoke(u32 ObjectHandle, FunctionsArgs... FArgs) override
 	{
-		MethodInfo^ methodInfo = nullptr;
-		XRay::NativeObject^ Object = XRay::ObjectPool::GetObjectByHandle(ObjectHandle);
-		if (Object == nullptr) return;
-
-		// Get function name from type param
-		methodInfo = Object->GetCachedMethod(NameCRC32);
+		System::Object^ Object = nullptr;
+		MethodInfo^ methodInfo = FunctionSearcher::GetObjectAndMethod(ObjectHandle, NameCRC32, Object);
 		if (methodInfo == nullptr)
 		{
-			XRay::Log::Warning("Can't invoke a method");
+			//XRay::Log::Warning("Can't invoke a method");
 			return;
 		}
 
@@ -134,3 +135,13 @@ struct FunctionInvoker : public IFunctionInvoker<FunctionsArgs...>
 	FuncNode ThisFuncNode;
 };
 
+
+struct MANAGED_ENGINE_API FunctionInvokerVoid : public IFunctionInvoker<void>
+{
+	FunctionInvokerVoid(const string64 InFuncName);
+
+	virtual void Invoke(u32 ObjectHandle) override;
+
+	u32 NameCRC32;
+	FuncNode ThisFuncNode;
+};

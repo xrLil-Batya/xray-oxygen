@@ -116,6 +116,7 @@ void SpectreEngine::GameLibInit()
 		String^ LoadFilename = BinDirectory + "\\xrManagedGameLib.dll";
 
 		Assembly^ GameAssembly = Assembly::LoadFrom(LoadFilename);
+		R_ASSERT2(GameAssembly != nullptr, "Can't load xrManagedGameLib.dll");
 
 		// Invoke class registrator
 		array<Type^>^ GameTypes = GameAssembly->GetTypes();
@@ -136,9 +137,16 @@ void SpectreEngine::GameLibInit()
 				}
 			}
 		}
+
+		// make sure that xrManagedRenderLib was loaded
+		HMODULE hManagedRenderLib = GetModuleHandle("xrManagedRenderLib");
+		if (hManagedRenderLib == NULL)
+		{
+			String^ RenderLoadFilename = BinDirectory + "\\xrManagedRenderLib.dll";
+			Assembly^ RenderAssembly = Assembly::LoadFrom(RenderLoadFilename);
+			R_ASSERT2(RenderAssembly != nullptr, "Can't load xrManagedRenderLib.dll");
+		}
 	}
-	hManagedGameLib = GetModuleHandle("xrManagedGameLib");
-	R_ASSERT2(hManagedGameLib, "Can't load xrManagedGameLib.dll");
 }
 
 void SpectreEngine::CompileScripts()

@@ -17,7 +17,7 @@ public:
 //////////////////////////////////////////////////////////////////////////
 // common part of interface implementation for all D3D renderers		//
 //////////////////////////////////////////////////////////////////////////
-class	R_dsgraph_structure										: public IRender_interface, public pureFrame
+class RENDER_API R_dsgraph_structure							: public IRender_interface, public pureFrame
 {
 	xrCriticalSection											InsertStaticCritsect;
 public:
