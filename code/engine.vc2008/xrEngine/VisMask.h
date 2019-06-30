@@ -68,10 +68,10 @@ struct ENGINE_API VisMask final
 	{
 		u16 _c = 0;
 		for (u16 i = 0; i < 64; ++i)
-			if (_visimask.is(i))
+			if (_visimask.bitTest(i))
 				++_c;
 		for (u16 j = 0; j < 64; ++j)
-			if (_visimask_ex.is(j))
+			if (_visimask_ex.bitTest(j))
 				++_c;
 		return _c;
 	}
