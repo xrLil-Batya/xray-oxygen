@@ -7,7 +7,7 @@ class xrWindowsPlatformUtils : public xrGenericPlatformUtils
 public:
 	virtual LPCSTR GetName() override;
 
-	virtual void ShowCursor(bool bShowCursor) override;
+	virtual int ShowCursor(bool bShowCursor) override;
 
 };
 
