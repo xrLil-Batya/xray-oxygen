@@ -6,6 +6,7 @@ class ENGINE_API CAMDReader
 {
 	typedef int(*ADL_MAIN_CONTROL_CREATE)(ADL_MAIN_MALLOC_CALLBACK, int);
 	typedef int(*ADL_ADAPTER_ACTIVE_GET) (int, int*);
+	typedef int(*ADL_OVERDRIVE5_TEMPERATURE_GET) (int iAdapterIndex, int iThermalControllerIndex, ADLTemperature* lpTemperature);
 	typedef int(*ADL_ADAPTER_NUMBEROFADAPTERS_GET) (int*);
 	typedef int(*ADL_ADAPTER_ADAPTERINFO_GET) (LPAdapterInfo, int);
 	typedef int(*ADL_OVERDRIVE5_CURRENTACTIVITY_GET) (int iAdapterIndex, ADLPMActivity *lpActivity);
@@ -45,6 +46,7 @@ private:
 	ADL_ADAPTER_NUMBEROFADAPTERS_GET		GetAdapter_NumberOfAdapters;
 	ADL_ADAPTER_ACTIVE_GET					GetAdapter_Active;
 	ADL_OVERDRIVE5_CURRENTACTIVITY_GET		GetOverdrive5_CurrentActivity;
+	ADL_OVERDRIVE5_TEMPERATURE_GET			GetTemperatureGPU;
 
 	AGS_DX11EXT								GetAGSCrossfireGPUCountExt;
 	AGS_GPU_COUNT_GET						GetAGSCrossfireGPUCount;
@@ -67,6 +69,7 @@ public:
 			~CAMDReader		();
 
 	u32		GetPercentActive();
+	u32		GetTemperature();
 	u32		GetGPUCount		();
 
 public:
