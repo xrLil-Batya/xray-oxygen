@@ -7,7 +7,8 @@ public:
 	{
 		dsOK = 0,
 		dsLost,
-		dsNeedReset
+		dsNeedReset,
+		dsRemoved
 	};
 
 public:
