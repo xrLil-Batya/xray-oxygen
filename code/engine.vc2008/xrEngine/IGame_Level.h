@@ -87,7 +87,6 @@ public:
 	void                        SoundEvent_OnDestDestroy(Feel::Sound*);
 
 	// Loader interface
-	void						LL_CheckTextures		();
 	virtual void				SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTimeFactor) = 0;
 };
 

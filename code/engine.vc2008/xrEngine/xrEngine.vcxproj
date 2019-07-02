@@ -124,9 +124,6 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalLibraryDirectories>$(xrSDKLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
-    <Manifest>
-      <AdditionalManifestFiles>as-invoker-manifest-part.xml;%(AdditionalManifestFiles)</AdditionalManifestFiles>
-    </Manifest>
     <PostBuildEvent>
       <Command>
       </Command>
@@ -349,7 +346,6 @@
     <ClCompile Include="ICollidable.cpp" />
     <ClCompile Include="phdebug.cpp" />
     <ClCompile Include="IGame_Level.cpp" />
-    <ClCompile Include="IGame_Level_check_textures.cpp" />
     <ClCompile Include="IGame_Persistent.cpp" />
     <ClCompile Include="IGame_ObjectPool.cpp" />
     <ClCompile Include="pure_relcase.cpp" />
