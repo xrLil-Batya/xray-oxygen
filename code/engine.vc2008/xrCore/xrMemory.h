@@ -10,13 +10,10 @@ public:
 	void				_initialize();
 	void				_destroy();
 
-	u32					stat_calls;
-	s32					stat_counter;
+	u32					stat_calls = 0;
 public:
 	IC u32				mem_usage(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr) { return mem_usage_impl(pBlocksUsed, pBlocksFree); }
 	void				mem_compact();
-	void				mem_counter_set(u32 _val) { stat_counter = _val; }
-	u32					mem_counter_get() { return stat_counter; }
 
 	void*				mem_alloc(size_t size);
 
@@ -25,6 +22,10 @@ public:
 
 	void				debug_MarkPointerAsChoosenOne(void* ptr);
 
+private:
+	HANDLE hHeap = NULL;
+	DWORD dwPageSize = 0;
+	bool bInitialized = false;
 };
 
 extern XRCORE_API xrMemory Memory;
@@ -64,7 +65,6 @@ IC void		operator delete[]	(void* p)		{ xr_free(p); }
 const		u32			mem_pools_count = 54;
 const		u32			mem_pools_ebase = 16;
 const		u32			mem_generic = mem_pools_count + 1;
-extern		bool		mem_initialized;
 
 XRCORE_API void vminfo(size_t *_free, size_t *reserved, size_t *committed);
 XRCORE_API void log_vminfo();

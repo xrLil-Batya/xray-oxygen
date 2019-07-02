@@ -167,7 +167,6 @@ void CAI_Space::create_game_graph(IReader& chunk)
 {
 	VERIFY(m_alife_simulator);
 	VERIFY(!m_game_graph);
-	VERIFY(!m_game_graph);
 
 	m_game_graph = new CGameGraph(chunk);
 	m_graph_engine = new CGraphEngine(game_graph().header().vertex_count());

@@ -18,7 +18,6 @@
 #pragma warning(disable:4995)
 #include <malloc.h>
 #pragma warning(pop)
-static xrCriticalSection mtStoryBuilder;
 
 CALifeSpawnRegistry::CALifeSpawnRegistry	(LPCSTR section)
 {
@@ -150,13 +149,10 @@ void CALifeSpawnRegistry::load(IReader &file_stream, xrGUID *save_guid)
 
 	R_ASSERT2((header().graph_guid() == ai().game_graph().header().guid()) || ignore_save_incompatibility(), "Spawn doesn't correspond to the graph : REBUILD SPAWN!");
 
-	Device.seqParallel.emplace_back(this, &CALifeSpawnRegistry::build_story_spawns);
-
+	build_story_spawns();
 	build_root_spawns();
 
 	Msg("* %d spawn points are successfully loaded", m_spawns.vertex_count());
-	mtStoryBuilder.Lock();
-	mtStoryBuilder.Unlock();
 }
 
 void CALifeSpawnRegistry::save_updates		(IWriter &stream)
@@ -219,8 +215,6 @@ void CALifeSpawnRegistry::build_root_spawns	()
 
 void CALifeSpawnRegistry::build_story_spawns()
 {
-	mtStoryBuilder.Lock();
-
 	for (auto VerticesPair : m_spawns.vertices())
 	{
 		CSE_ALifeObject *object = smart_cast<CSE_ALifeObject*>(&VerticesPair.second->data()->object());
@@ -229,5 +223,4 @@ void CALifeSpawnRegistry::build_story_spawns()
 
 		m_spawn_story_ids.insert(std::make_pair(object->m_spawn_story_id, VerticesPair.first));
 	}
-	mtStoryBuilder.Unlock();
 }
