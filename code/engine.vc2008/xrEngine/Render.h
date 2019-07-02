@@ -1,14 +1,11 @@
-﻿#ifndef _RENDER_H_
-#define _RENDER_H_
-
+﻿#pragma once
 #include "../xrCDB/frustum.h"
 #include "vis_common.h"
-//#include "IRenderDetailModel.h"
 
 #include "../xrCore/xrAPI.h"
 #include "../Include/xrRender/FactoryPtr.h"
 class IUIShader;
-typedef FactoryPtr<IUIShader> wm_shader;
+using wm_shader = FactoryPtr<IUIShader>;
 
 // refs
 class ENGINE_API	IRenderable;
@@ -21,14 +18,11 @@ class CGameFont;
 //class IRenderDetailModel;
 xr_interface ICustomOcclusion;
 
-#ifndef _EDITOR
-extern const	float		fLightSmoothFactor;
-#else
-const	float		fLightSmoothFactor = 4.f;
-#endif
+extern const float fLightSmoothFactor;
 //////////////////////////////////////////////////////////////////////////
 // definition (Dynamic Light)
-class	ENGINE_API	IRender_Light	: public xr_resource									{
+class ENGINE_API IRender_Light : public xr_resource
+{
 public:
 	enum LT
 	{
@@ -60,15 +54,17 @@ public:
 	virtual bool					get_hud_mode		()									= 0;
 	virtual ~IRender_Light()		;
 };
-struct ENGINE_API		resptrcode_light	: public resptr_base<IRender_Light>
+
+struct ENGINE_API resptrcode_light : public resptr_base<IRender_Light>
 {
-	void				destroy			()				{ _set(NULL);						}
+	void destroy() { _set(nullptr); }
 };
-typedef	resptr_core<IRender_Light,resptrcode_light >	ref_light;
+using ref_light = resptr_core<IRender_Light,resptrcode_light>;
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Dynamic Glow)
-class	ENGINE_API		IRender_Glow	: public xr_resource									{
+class ENGINE_API IRender_Glow : public xr_resource
+{
 public:
 	virtual void					set_active			(bool)								= 0;
 	virtual bool					get_active			()									= 0;
@@ -80,15 +76,17 @@ public:
 	virtual void					set_color			(float r, float g, float b)			= 0;
 	virtual ~IRender_Glow()			;
 };
-struct ENGINE_API		resptrcode_glow	: public resptr_base<IRender_Glow>
+
+struct ENGINE_API resptrcode_glow : public resptr_base<IRender_Glow>
 {
-	void				destroy			()					{ _set(NULL);					}
+	void destroy () { _set(nullptr);}
 };
-typedef	resptr_core<IRender_Glow,resptrcode_glow >		ref_glow;
+using ref_glow = resptr_core<IRender_Glow,resptrcode_glow>;
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Per-object render-specific data)
-class	ENGINE_API	IRender_ObjectSpecific		{
+class	ENGINE_API	IRender_ObjectSpecific		
+{
 public:
 	enum mode
 	{
@@ -108,18 +106,18 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Portal)
-class	ENGINE_API	IRender_Portal				
+class ENGINE_API IRender_Portal				
 {
 public:
-	virtual ~IRender_Portal()			{};
+	virtual ~IRender_Portal() {};
 };
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Sector)
-class	ENGINE_API	IRender_Sector				
+class ENGINE_API IRender_Sector				
 {
 public:
-	virtual ~IRender_Sector()			{};
+	virtual ~IRender_Sector() {};
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -136,7 +134,6 @@ public:
 	virtual void					set_noise_fps		(float	f)							= 0;
 	virtual void					set_color_base		(u32	f)							= 0;
 	virtual void					set_color_gray		(u32	f)							= 0;
-	//virtual void					set_color_add		(u32	f)							= 0;
 	virtual void					set_color_add		(const Fvector	&f)					= 0;
 	virtual u32						get_width			()									= 0;
 	virtual u32						get_height			()									= 0;
@@ -255,8 +252,8 @@ public:
 	// Editor specific
 	//virtual void					StaticInit() = 0;
 	//virtual void					StaticDestroy() = 0;
-	//virtual u32						ShaderLoad(LPCSTR ShaderName, LPCSTR ShaderTextureList, LPCSTR ShaderConstantList, LPCSTR ShaderMatrixList) = 0;
-	//virtual IRenderVisual*			LoadVisualFromData(void* pVertexData, u32 VertexCount, void* pIndiciesData, u32 IndiciesCount) = 0;
+	//virtual u32					ShaderLoad(LPCSTR ShaderName, LPCSTR ShaderTextureList, LPCSTR ShaderConstantList, LPCSTR ShaderMatrixList) = 0;
+	//virtual IRenderVisual*		LoadVisualFromData(void* pVertexData, u32 VertexCount, void* pIndiciesData, u32 IndiciesCount) = 0;
 
 	// Constructor/destructor
 	virtual ~IRender_interface();
@@ -266,5 +263,3 @@ xr_interface ICustomOcclusion
 {
 	virtual void getRenderableList(IRender_interface* pGraph) = 0;
 };
-
-#endif

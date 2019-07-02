@@ -32,6 +32,7 @@
 #define IC				inline
 #define ICF				__forceinline			// !!! this should be used only in critical places found by PROFILER
 #define ICN				__declspec(noinline)
+#define xr_interface	__interface
 
 #pragma inline_depth	( 254 )
 #pragma inline_recursion( on )
@@ -145,8 +146,6 @@ using RStringVec = xr_vector<shared_str>;
 using RStringSet = xr_set<shared_str>;
 using RTokenVec = xr_vector<xr_rtoken>;
 
-#define xr_interface class __declspec(novtable)
-
 #include "FS.h"
 #include "log.h"
 #include "xr_trims.h"
@@ -201,10 +200,10 @@ struct XRCORE_API xrCore
 };
 
 //Borland class dll interface
-#define	_BCL			__stdcall
+#define	_BCL __stdcall
 
 //Borland global function dll interface
-#define	_BGCL			__stdcall
+#define	_BGCL __stdcall
 
 extern XRCORE_API xrCore Core;
 extern XRCORE_API bool   gModulesLoaded;
