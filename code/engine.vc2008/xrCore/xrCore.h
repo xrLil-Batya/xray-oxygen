@@ -32,6 +32,7 @@
 #define IC				inline
 #define ICF				__forceinline			// !!! this should be used only in critical places found by PROFILER
 #define ICN				__declspec(noinline)
+#define xr_interface	__interface
 
 #pragma inline_depth	( 254 )
 #pragma inline_recursion( on )
@@ -144,8 +145,6 @@ struct XRCORE_API xr_shortcut
 using RStringVec = xr_vector<shared_str>;
 using RStringSet = xr_set<shared_str>;
 using RTokenVec = xr_vector<xr_rtoken>;
-
-#define xr_interface class __declspec(novtable)
 
 #include "FS.h"
 #include "log.h"
