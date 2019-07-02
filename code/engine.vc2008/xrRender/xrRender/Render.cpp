@@ -562,3 +562,16 @@ void CRender::AfterWorldRender()
 		pBackBuffer->Release();
 	}
 }
+
+// 
+void CRender::ChangeMark(pcstr mark)
+{
+	if (0 == xr_strcmp(Target->m_MarkTexture.c_str(), mark)) return;
+
+	Target->m_MarkTexture = mark;
+
+	ref_texture tmp;
+	tmp.create(mark);
+
+	Target->rt_OXY_holomarks->surface_set(tmp->surface_get());
+}

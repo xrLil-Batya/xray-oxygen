@@ -58,6 +58,8 @@
 #define		r2_jitter_mipped	"$user$jitter_mipped"			// --- dither
 #define		r2_sunmask			"shaders\\sunmask"
 
+#define     r2_OXY_holo_mark    "$user$scope_mark"     // Mortan: передаёт в шейдер текстуру текущей марки;
+
 // SMAA
 #define		r2_RT_smaa_edgetex	"$user$smaa_edgetex"
 #define		r2_RT_smaa_blendtex	"$user$smaa_blendtex"

@@ -1015,6 +1015,7 @@ bool CWeaponMagazined::Detach(const char* item_section_name, bool b_spawn_item)
 			return true;
 		}
 		m_flagsAddOnState &= ~CSE_ALifeItemWeapon::eWeaponAddonScope;
+		current_mark = 0;
 		UpdateAltScope();
 		UpdateAddonsVisibility();
 		InitAddons();
@@ -1097,6 +1098,11 @@ void CWeaponMagazined::InitAddons()
 				else
 				{
 					bScopeHasTexture = false;
+
+					bool bHasCoustomMark = LoadMarks(GetScopeName().c_str());
+
+					if (!bHasCoustomMark)
+						LoadDefaultMark();
 				}
 			}
 			else

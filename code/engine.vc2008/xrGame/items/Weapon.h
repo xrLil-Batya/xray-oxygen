@@ -59,6 +59,28 @@ public:
 	bool bScopeHasBeenLoaded;
 	xr_string GetNameWithAttachment();
 
+	bool bMarkIsLoaded;
+
+	//Отвечает за замену прицельной марки коллиматора через особый шейдер
+	u8 current_mark;
+
+	// Контролер переключения маркера
+	void ChangeNextMark();
+	void ChangePrevMark();
+
+	// Дефотные параметры и обновлениме марки
+	bool LoadMarks(pcstr section);
+	void UpdateMark();
+	void ChangeCurrentMark(pcstr mark);
+	void LoadDefaultMark();
+
+	bool bInZoomRightNow();
+
+	// Хранилище
+
+	using SCOPES_VECTOR = xr_vector<xr_string>;
+	SCOPES_VECTOR marks;
+
 	virtual void			UpdateCL			();
 	virtual void			shedule_Update		(u32 dt);
 
@@ -466,7 +488,6 @@ protected:
 public:
 	
 
-	using SCOPES_VECTOR = xr_vector<xr_string>;
 	SCOPES_VECTOR			m_scopes;
 	u8						m_cur_scope;
 
