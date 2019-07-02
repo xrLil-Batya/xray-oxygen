@@ -1,22 +1,26 @@
 #pragma once
 template <class T>
-struct _rect {
-public:
+struct _rect
+{
 	typedef T			TYPE;
 	typedef _rect<T>	Self;
 	typedef Self&		SelfRef;
 	typedef const Self&	SelfCRef;
 	typedef _vector2<T>	Tvector;
-public:
-	union{
-		struct{
+
+	union
+	{
+		struct
+		{
 			T 	x1, y1, x2, y2;
 		};
-		struct{
+		struct
+		{
 			T 	left, top, right, bottom;
 		};
 
-		struct{
+		struct
+		{
 			Tvector lt;
 			Tvector rb;
 		};

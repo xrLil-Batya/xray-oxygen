@@ -22,14 +22,9 @@ class   CCharacterPhysicsSupport;
 //	CObject
 //-----------------------------------------------------------------------------------------------------------
 class	IPhysicsShell;
-xr_pure_interface	IObjectPhysicsCollision;
+xr_interface IObjectPhysicsCollision;
 #pragma pack(push,4)
-class	ENGINE_API						CObject :	
-	public DLL_Pure,
-	public ISpatial,
-	public ISheduled,
-	public IRenderable,
-	public ICollidable
+class ENGINE_API CObject : public DLL_Pure, public ISpatial, public ISheduled, public IRenderable, public ICollidable
 {
 public:
 	struct	SavedPosition
@@ -124,9 +119,9 @@ public:
 	CObject*							dcast_CObject		() override			{ return this;						}
 	IRenderable*						dcast_Renderable	() override			{ return this;						}
 	virtual void						OnChangeVisual		()					{ }
-	virtual		IPhysicsShell			*physics_shell		()					{ return  0; }
+	virtual		IPhysicsShell			*physics_shell		()					{ return nullptr; }
 	virtual	CCharacterPhysicsSupport*	character_physics_support()				{ return nullptr; }
-	virtual	const IObjectPhysicsCollision	*physics_collision	()				{ return  0; }
+	virtual	const IObjectPhysicsCollision *physics_collision	()				{ return nullptr; }
 	// Name management
 	ICF shared_str						cName				()			const	{ return NameObject;				}
 	void								cName_set			(shared_str N);
@@ -190,10 +185,8 @@ public:
 	virtual void						On_SetEntity		()	{};
 	virtual void						On_LostEntity		()	{};
 
-public:
 	virtual bool						register_schedule	() const {return true;}
 
-public:
 	virtual	Fvector						get_new_local_point_on_mesh	( u16& bone_id ) const;
 	virtual	Fvector						get_last_local_point_on_mesh( Fvector const& last_point, u16 bone_id ) const;
 };

@@ -1,6 +1,4 @@
-#ifndef _COMPR_NORMAL_
-#define _COMPR_NORMAL_
-
+#pragma once
 // A Unit Vector to 16-bit word conversion algorithm
 // based on work of Rafael Baptista (rafael@oroboro.com)
 // Accuracy improved by O.D. (punkfloyd@rocketmail.com)
@@ -11,5 +9,3 @@
 XRCORE_API u16		pvCompress			( const Fvector& vec );
 XRCORE_API void		pvDecompress		( Fvector& vec, u16 mVec );
 XRCORE_API void		pvInitializeStatics	( void );
-
-#endif
