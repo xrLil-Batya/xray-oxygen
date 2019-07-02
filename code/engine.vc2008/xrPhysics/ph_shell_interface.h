@@ -1,6 +1,5 @@
 #pragma once
-#define _interface class __declspec(novtable)
-_interface IPhysicShellCreator
+xr_interface IPhysicShellCreator
 {
 public:
 	IPhysicShellCreator() {}

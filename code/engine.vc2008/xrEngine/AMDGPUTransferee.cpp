@@ -148,7 +148,7 @@ u32 CAMDReader::GetTemperature()
 	ADLTemperature adlTemperature = { 0 };
 	adlTemperature.iSize = sizeof(ADLTemperature);
 	GetTemperatureGPU(AdapterID, 0, &adlTemperature);
-	return u32();
+	return u32(adlTemperature.iTemperature);
 }
 
 u32 CAMDReader::GetGPUCount()
