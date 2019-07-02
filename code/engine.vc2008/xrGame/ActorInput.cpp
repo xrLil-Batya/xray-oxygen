@@ -76,6 +76,23 @@ void CActor::IR_OnKeyboardPress(u8 cmd)
 		return;
 	}
 
+	if (pInput->iGetAsyncKeyState(VK_PRIOR))
+	{
+		CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());
+
+		if (pWeapon)
+			pWeapon->ChangeNextMark();
+	}
+
+
+	if (pInput->iGetAsyncKeyState(VK_NEXT))
+	{
+		CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());
+
+		if (pWeapon)
+			pWeapon->ChangePrevMark();
+	}
+
 	// Dev actions should work only if we on developer mode (-developer)
 	if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
 	{

@@ -798,10 +798,15 @@ void CActor::UpdateCL()
 			psHUD_Flags.set(HUD_CROSSHAIR_RT2, pWeapon->show_crosshair());
 			psHUD_Flags.set(HUD_DRAW_RT, pWeapon->show_indicators());
 
+			pWeapon->UpdateMark();
 			pWeapon->UpdateSecondVP();
 
 			GamePersistent().m_pGShaderConstants.hud_params.x = pWeapon->GetZRotatingFactor(); //--#SM+#--
 			GamePersistent().m_pGShaderConstants.hud_params.y = pWeapon->GetSecondVP_FovFactor(); //--#SM+#-- 
+
+			float x = pWeapon->bInZoomRightNow() ? 1.0f : 0.0f;
+
+			GamePersistent().m_pGShaderConstants.collimator_mark.x = x;
 		}
 	}
 	else
@@ -819,6 +824,7 @@ void CActor::UpdateCL()
 			}
 
 			GamePersistent().m_pGShaderConstants.hud_params.set(0.f, 0.f, 0.f, 0.f); //--#SM+#--
+			GamePersistent().m_pGShaderConstants.collimator_mark.set(0.f, 0.f, 0.f, 0.f);
 			Device.m_SecondViewport.SetSVPActive(false);
 		}
 	}

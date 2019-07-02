@@ -236,6 +236,9 @@ public:
 	virtual void                    BeforeWorldRender       ()                                          = 0; // Перед рендерингом мира
 	virtual void                    AfterWorldRender        ()											= 0; // После рендеринга мира (до UI)
 
+	virtual void					ChangeMark				(pcstr mark)								= 0; // Каждый кадр проверяем не поменялась ли текстура
+
+
 	virtual void					Screenshot				(ScreenshotMode mode = SM_NORMAL, LPCSTR name = nullptr) = 0;
 
 	// Render mode

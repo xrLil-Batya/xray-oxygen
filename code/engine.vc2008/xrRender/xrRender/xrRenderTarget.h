@@ -76,6 +76,8 @@ public:
 	ref_rt						rt_LUM_8;			// 64bit, 8x8,		log-average in all components
 
 	ref_rt                      rt_secondVP;        // 32bit		(r,g,b,a) +SecondVP+
+	ref_texture                 rt_OXY_holomarks;   // Mortan: for collimators mark control
+	xr_string                   m_MarkTexture;
 
 	ref_rt						rt_LUM_pool[CHWCaps::MAX_GPUS*2];	// 1xfp32,1x1,		exp-result -> scaler
 	ref_texture					t_LUM_src;			// source

@@ -90,12 +90,15 @@ CWeapon::CWeapon()
 	EnableHudInertion(TRUE);
 	m_strap_bone0_id = -1;
 	m_strap_bone1_id = -1;
+	current_mark = 0;
+	bMarkIsLoaded = false;
 }
 
 CWeapon::~CWeapon()
 {
 	xr_delete				(m_UIScope);
 	delete_data				( m_scopes );
+	delete_data				( marks	   );
 }
 
 void CWeapon::Hit(SHit* pHDS)
@@ -113,7 +116,7 @@ void CWeapon::UpdateSecondVP()
 
 	CActor* pActor = smart_cast<CActor*>(H_Parent());
 
-	bool bCond_1 = m_zoom_params.m_fZoomRotationFactor > 0.05f;    // Мы должны целиться
+	bool bCond_1 = bInZoomRightNow();							   // Мы должны целиться
 	bool bCond_2 = m_zoom_params.m_fSecondVP_FovFactor > 0.0f;     // В конфиге должен быть прописан фактор зума (scope_lense_fov_factor) больше чем 0
 	bool bCond_3 = pActor->cam_Active() == pActor->cam_FirstEye(); // Мы должны быть от 1-го лица
 	//bool bCond_4 = m_bGrenadeMode == false;                        // Мы не должны быть в режиме подствольника
@@ -627,6 +630,50 @@ void CWeapon::UpdateAltScope()
 }
 
 
+bool CWeapon::bInZoomRightNow()
+{
+	return m_zoom_params.m_fZoomRotationFactor > 0.05f;
+}
+
+
+void CWeapon::ChangeNextMark()
+{
+	if (marks.empty())
+		return;
+
+	if (current_mark < marks.size() - 1)
+		++current_mark;
+	else
+		current_mark = 0;
+}
+
+void CWeapon::ChangePrevMark()
+{
+	if (marks.empty())
+		return;
+
+	if (current_mark > 0)
+		--current_mark;
+	else if (current_mark == 0 && marks.size() > 1)
+		current_mark = marks.size() - 1;
+}
+
+void CWeapon::UpdateMark()
+{
+	bool b_is_active_item = (m_pInventory != NULL) && (m_pInventory->ActiveItem() == this);
+
+	if (!b_is_active_item)
+		return;
+
+	if (!IsScopeAttached() || bScopeHasTexture)
+		return;
+
+	if (!marks.empty())
+		ChangeCurrentMark(marks[current_mark].c_str());
+	else
+		LoadDefaultMark();
+}
+
 const xr_string CWeapon::GetScopeName() const
 {
 	if (IsScopeAttached())
@@ -745,6 +792,12 @@ BOOL CWeapon::net_Spawn(CSE_Abstract* DC)
 	UpdateAddonsVisibility();
 	InitAddons();
 
+	if (IsScopeAttached() && !bScopeHasTexture && !bMarkIsLoaded)
+	{
+		LoadDefaultMark();
+	}
+
+
 	m_dwWeaponIndependencyTime = 0;
 
 	VERIFY((u32)iAmmoElapsed == m_magazine.size());
@@ -799,6 +852,7 @@ void CWeapon::save(NET_Packet &output_packet)
 	save_data		(m_ammoType,					 output_packet);
 	save_data		(m_zoom_params.m_bIsZoomModeNow, output_packet);
 	save_data		(m_bRememberActorNVisnStatus,	 output_packet);
+	save_data		(current_mark,					 output_packet);
 }
 
 void CWeapon::load(IReader &input_packet)
@@ -817,6 +871,17 @@ void CWeapon::load(IReader &input_packet)
 		OnZoomOut();
 
 	load_data		(m_bRememberActorNVisnStatus,	 input_packet);
+
+	u8 temp;
+
+	load_data		(temp,							 input_packet);
+
+	if (temp >= marks.size() && !marks.empty())
+		current_mark = 0;
+	else
+		current_mark = temp;
+
+	bMarkIsLoaded = true;
 }
 
 
@@ -1179,6 +1244,47 @@ bool CWeapon::SwitchAmmoType(u32 flags)
 	{
 		m_set_next_ammoType_on_reload = l_newType;
 		Reload();
+	}
+
+	return true;
+}
+
+void CWeapon::LoadDefaultMark()
+{
+	shared_str mark = READ_IF_EXISTS(pSettings, r_string, GetScopeName().c_str(), "mark1", "wpn\\wpn_addon_scope_red_dot");
+
+	::Render->ChangeMark(mark.c_str());
+}
+
+void CWeapon::ChangeCurrentMark(pcstr mark)
+{
+	::Render->ChangeMark(mark);
+}
+
+
+bool CWeapon::LoadMarks(pcstr section)
+{
+	if (!marks.empty())
+		marks.clear();
+
+	// В данный момент количество марок зашито в движок - не более 10
+
+	if (!pSettings->line_exist(section, "mark1"))
+		return false;
+
+	LPCSTR str = pSettings->r_string(section, "mark1");
+	marks.push_back(str);
+
+	for (int i = 2; i <= 10; i++)
+	{
+		string16 it = "mark";
+		xr_sprintf(it, "%s%d", it, i);
+
+		if (pSettings->line_exist(section, it))
+		{
+			str = pSettings->r_string(section, it);
+			marks.push_back(str);
+		}
 	}
 
 	return true;
