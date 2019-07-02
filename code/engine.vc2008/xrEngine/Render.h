@@ -101,21 +101,19 @@ public:
 	virtual float						get_luminocity_hemi	()									= 0;
 	virtual float*						get_luminocity_hemi_cube		()									= 0;
 
-	virtual ~IRender_ObjectSpecific()	{};
+	virtual ~IRender_ObjectSpecific()	{}; 
 };
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Portal)
-class ENGINE_API IRender_Portal				
-{
+class	ENGINE_API	IRender_Portal {
 public:
 	virtual ~IRender_Portal() {};
 };
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Sector)
-class	ENGINE_API	IRender_Sector				
-{
+class	ENGINE_API	IRender_Sector {
 public:
 	virtual ~IRender_Sector() {};
 };

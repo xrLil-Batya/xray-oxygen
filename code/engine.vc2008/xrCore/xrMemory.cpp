@@ -4,20 +4,23 @@
 #include	"xrsharedmem.h"
 
 xrMemory Memory;
-bool mem_initialized = false;
 
 xrMemory::xrMemory()
-{}
+{
+	// do not place code here. 
+	// If you need something initialized - place that in _initialize
+}
 
 xrMemory::~xrMemory()
 {}
 
 void xrMemory::_initialize()
 {
-	stat_calls = 0;
-	stat_counter = 0;
-
-	mem_initialized = true;
+	hHeap = HeapCreate(0, 0, 0);
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+	dwPageSize = info.dwPageSize;
+	bInitialized = true;
 }
 
 void xrMemory::_destroy()
@@ -25,8 +28,7 @@ void xrMemory::_destroy()
 	g_pSharedMemoryContainer_isDestroyed = true;
 	xr_delete(g_pSharedMemoryContainer);
 	g_pSharedMemoryContainer = nullptr;
-
-	mem_initialized = false;
+	bInitialized = false;
 }
 
 inline const size_t external_size = size_t(-1);

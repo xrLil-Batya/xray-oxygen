@@ -105,7 +105,7 @@ void ai_obstacle::compute_matrix(Fmatrix &result, const Fvector &additional)
 	u16							bone_count = kinematics->LL_BoneCount();
 	VERIFY						(bone_count);
 	u16							visible_bone_count = kinematics->LL_VisibleBoneCount();
-	VERIFY(bone_count > visible_bone_count);
+	VERIFY(bone_count >= visible_bone_count);
 	if (!visible_bone_count) {
 		result.scale			(0.f,0.f,0.f);
 		return;
