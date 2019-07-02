@@ -16,7 +16,7 @@ class IRenderVisual;
 class IKinematics;
 class CGameFont;
 //class IRenderDetailModel;
-xr_pure_interface ICustomOcclusion;
+xr_interface ICustomOcclusion;
 
 extern const float fLightSmoothFactor;
 //////////////////////////////////////////////////////////////////////////
@@ -106,19 +106,24 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Portal)
+class ENGINE_API IRender_Portal				
+{
 public:
 	virtual ~IRender_Portal() {};
 };
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Sector)
+class	ENGINE_API	IRender_Sector				
+{
 public:
 	virtual ~IRender_Sector() {};
 };
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Target)
-class	ENGINE_API	IRender_Target				{
+class	ENGINE_API	IRender_Target				
+{
 public:
 	virtual	void					set_blur			(float	f)							= 0;
 	virtual	void					set_gray			(float	f)							= 0;
@@ -172,16 +177,8 @@ public:
 	virtual void					level_Unload			()											= 0;
 
 			void					shader_option_skinning	(s32 mode)									{ m_skinning=mode;	}
-	virtual HRESULT					shader_compile			(
-		LPCSTR							name,
-		DWORD const*                    pSrcData,
-		UINT                            SrcDataLen,
-		LPCSTR                          pFunctionName,
-		LPCSTR                          pTarget,
-		DWORD                           Flags,
-		void*&							result
-	)																									= 0;
-
+	virtual HRESULT					shader_compile			(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, 
+															 LPCSTR pFunctionName, LPCSTR pTarget, DWORD Flags, void*& result) = 0;
 	// Information
 	virtual	void					Statistics				(CGameFont* F	)							{};
 

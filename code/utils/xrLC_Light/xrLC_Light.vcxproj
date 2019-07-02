@@ -120,6 +120,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
       <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -133,6 +134,7 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrCDB.lib;cuda.lib;cudart_static.lib;optix_prime.1.lib;Calc.lib;CLW.lib;RadeonRays.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>$(IntermediateOutputPath)LightPoint.cu.obj %(AdditionalOptions)</AdditionalOptions>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>

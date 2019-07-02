@@ -174,9 +174,9 @@ public:
 		if(!b_abs_name)
 			FS.update_path	(cfg_full_name, "$app_data_root$", cfg_full_name);
 
-		if (strext(cfg_full_name))	
-			*strext(cfg_full_name) = 0;
-		xr_strcat			(cfg_full_name,".ltx");
+		//if (strext(cfg_full_name))	
+		//*strext(cfg_full_name) = 0;
+		//xr_strcat			(cfg_full_name,".ltx");
 		
 		BOOL b_allow = TRUE;
 		if ( FS.exist(cfg_full_name) )
