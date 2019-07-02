@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////
 #pragma once
 
-xr_interface xrGenericPlatformUtils
+class xrGenericPlatformUtils
 {
 public:
 	/// Get platform name
