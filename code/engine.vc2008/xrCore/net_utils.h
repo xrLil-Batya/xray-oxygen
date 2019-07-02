@@ -1,14 +1,18 @@
 #pragma once
 #include "client_id.h"
 
-static constexpr const size_t NET_PacketSizeLimit = 16 * 1024;
+static constexpr const size_t NET_PacketSizeLimit = 15 * 1024;
 
-struct NET_Buffer {
-    BYTE data[NET_PacketSizeLimit];
+struct NET_Buffer 
+{
+	NET_Buffer() : data(new BYTE[NET_PacketSizeLimit]), count(0) { RtlZeroMemory(data, sizeof(data)); }
+	~NET_Buffer() { delete data; }
+    BYTE* data;
     size_t count;
 };
 
-class XRCORE_API NET_Packet {
+class XRCORE_API NET_Packet
+{
 public:
     NET_Buffer B;
     u32 r_pos;
