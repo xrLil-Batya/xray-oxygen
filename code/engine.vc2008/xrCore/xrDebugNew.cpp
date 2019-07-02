@@ -149,7 +149,7 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 		ShowWindow(gGameWindow, SW_HIDE);
 		gameWindow = gGameWindow;
 	}
-	while (ShowCursor(TRUE) < 0);
+	while (PlatformUtils.ShowCursor(true) < 0);
 
 
 //#if !defined(DEBUG) && !defined(MIXED_NEW)

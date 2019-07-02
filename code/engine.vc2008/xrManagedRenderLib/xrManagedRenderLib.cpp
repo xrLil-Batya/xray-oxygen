@@ -61,13 +61,13 @@ System::IntPtr XRay::XRayRenderHost::WndProc(IntPtr hwnd, Int32 msg, IntPtr wPar
 System::Void XRay::XRayRenderHost::OnMouseRightButtonDown(::System::Windows::Input::MouseButtonEventArgs^ e)
 {
 	HwndHost::OnMouseRightButtonDown(e);
-	ShowCursor(FALSE);
+	PlatformUtils.ShowCursor(FALSE);
 }
 
 System::Void XRay::XRayRenderHost::OnMouseRightButtonUp(::System::Windows::Input::MouseButtonEventArgs^ e)
 {
 	HwndHost::OnMouseRightButtonUp(e);
-	ShowCursor(TRUE);
+	PlatformUtils.ShowCursor(TRUE);
 }
 
 XRay::XRayRenderHost::~XRayRenderHost()

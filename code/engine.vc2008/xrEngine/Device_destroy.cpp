@@ -23,7 +23,7 @@ void CRenderDevice::Destroy	(void) {
 
 	Log("Destroying Direct3D...");
 
-	ShowCursor	(TRUE);
+	PlatformUtils.ShowCursor	(TRUE);
 	m_pRender->ValidateHW();
 
 	_Destroy					(FALSE);

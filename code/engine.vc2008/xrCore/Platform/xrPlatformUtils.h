@@ -10,3 +10,15 @@
 //////////////////////////////////////////////////////////////
 #pragma once
 
+
+class xrGenericPlatformUtils
+{
+public:
+
+	/// Get platform name
+	virtual LPCSTR GetName() = 0;
+
+	/// Show or hide system mouse cursor
+	virtual int ShowCursor(bool bShowCursor) = 0;
+
+};

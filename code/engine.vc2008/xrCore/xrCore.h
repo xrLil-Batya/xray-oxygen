@@ -87,8 +87,13 @@
 #include "xrDebug.h"
 #include "xrMemory.h"
 #include "_stl_extensions.h"
-#include "thread_utils.h"
 #include "vector.h"
+
+#if PLATFORM == WINDOWS
+	#include "Platform/Windows/xrWindowsPlatformUtils.h"
+#elif PLATFORM == XBOXONE
+#endif
+
 #include "clsid.h"
 
 #include "xrsharedmem.h"
