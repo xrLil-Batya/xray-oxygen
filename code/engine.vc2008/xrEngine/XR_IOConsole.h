@@ -115,7 +115,7 @@ public:
 	void			ClearLog();
 
 	virtual void		OnRender			();
-	virtual void _BCL	OnFrame				();
+	virtual void 	OnFrame				();
 	virtual void	OnScreenResolutionChanged();
 	string64		ConfigFile;
 	bool			bVisible;

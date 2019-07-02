@@ -322,7 +322,7 @@ public:
 	virtual void					Calculate					();
 	virtual void					Render						();
 	virtual void					Screenshot					(ScreenshotMode mode = SM_NORMAL, LPCSTR name = nullptr);
-	virtual void		_BCL		OnFrame						();
+	virtual void				OnFrame						();
 	virtual void                    BeforeWorldRender           (); // +SecondVP+ Вызывается перед началом рендера мира и пост-эффектов
 	virtual void                    AfterWorldRender            ();  // +SecondVP+ Вызывается после рендера мира и перед UI
 

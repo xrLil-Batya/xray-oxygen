@@ -37,7 +37,7 @@ bool bEngineloaded = false;
 //////////////////////////////////////////////////////////////////////////
 struct _SoundProcessor : public pureFrame
 {
-	virtual void _BCL OnFrame()
+	virtual void  OnFrame()
 	{
 		Device.Statistic->Sound.Begin();
 		if (::Sound != nullptr)

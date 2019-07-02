@@ -63,7 +63,7 @@ public:
 	virtual		void			Activate(const Fmatrix& form, bool disable = false) = 0;
 	virtual	const	Fmatrix		&XFORM()const { return mXFORM; }
 	virtual		void			get_xform(Fmatrix& form) const { form.set(XFORM()); }
-	virtual		void	_BCL	InterpolateGlobalTransform(Fmatrix* m) = 0;
+	virtual		void		InterpolateGlobalTransform(Fmatrix* m) = 0;
 
 	virtual		void			InterpolateGlobalPosition(Fvector* v) = 0;
 

@@ -29,7 +29,7 @@ public:
 
 	void Destroy();				//be careful
 
-	void	_BCL	OnFrame() override;
+	void		OnFrame() override;
 	void OnRender() override;
 	CUIWindow* MainWnd() { return m_UIWindow; }
 	bool IsActive() { return !!m_flags.test(etsActive); }
