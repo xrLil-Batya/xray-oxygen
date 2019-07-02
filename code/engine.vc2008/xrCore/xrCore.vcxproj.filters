@@ -231,6 +231,9 @@
     <ClCompile Include="xrMemoryUtils.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
+    <ClCompile Include="Platform\Windows\xrWindowsPlatformUtils.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -481,6 +484,9 @@
     </ClInclude>
     <ClInclude Include="Platform\xrPlatformUtils.h">
       <Filter>Platform\Generic</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Windows\xrWindowsPlatformUtils.h">
+      <Filter>Platform\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

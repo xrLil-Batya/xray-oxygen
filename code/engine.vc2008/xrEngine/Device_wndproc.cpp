@@ -29,7 +29,7 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 			break;
 		}	
 		
-		ShowCursor(wParam == WA_INACTIVE);
+		PlatformUtils.ShowCursor(wParam == WA_INACTIVE);
 		
 		OnWM_Activate(wParam, lParam);
 		return (false);
