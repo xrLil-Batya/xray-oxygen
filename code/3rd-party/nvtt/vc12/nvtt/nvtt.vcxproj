@@ -314,7 +314,7 @@
     </ClCompile>
     <Link>
       <ImportLibrary>$(xrSDKLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>nvcore.lib;nvimage.lib;squish.lib;nvmath.lib;</AdditionalDependencies>
+      <AdditionalDependencies>nvcore.lib;nvimage.lib;squish.lib;nvmath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -335,10 +335,11 @@
       <PreprocessorDefinitions>NVTT_EXPORTS;NVTT_SHARED=1;__SSE2__;__SSE__;__MMX__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <ImportLibrary>$(xrSDKLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>nvcore.lib;nvimage.lib;squish.lib;nvmath.lib;</AdditionalDependencies>
+      <AdditionalDependencies>nvcore.lib;nvimage.lib;squish.lib;nvmath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

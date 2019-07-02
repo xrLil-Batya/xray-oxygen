@@ -995,7 +995,8 @@ BOOL	__stdcall rms_test(lm_layer& lm, u32 w, u32 h, u32 rms)
         imf_Process(pScaled_hemi, w, h,pOriginal_hemi, lm.width, lm.height, imf_lanczos3);
         imf_Process(pRestored_hemi, lm.width, lm.height, pScaled_hemi, w, h, imf_filter);
     }
-    catch (...) {
+    catch (...)
+	{
         Logger.clMsg("* ERROR: imf_Process");
         return	FALSE;
     }
@@ -1218,13 +1219,14 @@ void CDeflector::Light(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH& H
             // Transfer
             for (u32 x = 0; x<T.width; x++)
             {
-                int			px = int(x) - BORDER;
+                int px = int(x) - BORDER;
                 clamp(px, 0, int(layer.width - 1));
                 base_color	C = layer.surface[px];
-                T.surface[0 * T.width + x] = C;
-                T.marker[0 * T.width + x] = 255;
-                T.surface[1 * T.width + x] = C;
-                T.marker[1 * T.width + x] = 255;
+                T.surface[x] = C;
+                T.marker [x] = 255;
+
+                T.surface[T.width + x] = C;
+                T.marker[ T.width + x] = 255;
             }
 
             // Exchange

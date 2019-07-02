@@ -47,13 +47,7 @@ public:
 				task_pool.pop_back();
 			}
             // Perform operation
-            try {
-                D->Light(&DB, &LightsSelected, H);
-            }
-            catch (...)
-            {
-                Logger.clMsg("* ERROR: CLMThread::Execute - light");
-            }
+            D->Light(&DB, &LightsSelected, H);
         }
     }
 };
