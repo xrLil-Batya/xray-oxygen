@@ -629,12 +629,10 @@ void CWeapon::UpdateAltScope()
 	}
 }
 
-
-bool CWeapon::bInZoomRightNow()
+bool CWeapon::bInZoomRightNow() const
 {
 	return m_zoom_params.m_fZoomRotationFactor > 0.05f;
 }
-
 
 void CWeapon::ChangeNextMark()
 {
@@ -660,12 +658,9 @@ void CWeapon::ChangePrevMark()
 
 void CWeapon::UpdateMark()
 {
-	bool b_is_active_item = (m_pInventory != NULL) && (m_pInventory->ActiveItem() == this);
+	bool b_is_active_item = m_pInventory && (m_pInventory->ActiveItem() == this);
 
-	if (!b_is_active_item)
-		return;
-
-	if (!IsScopeAttached() || bScopeHasTexture)
+	if (!b_is_active_item || !IsScopeAttached() || bScopeHasTexture)
 		return;
 
 	if (!marks.empty())
@@ -678,14 +673,7 @@ const xr_string CWeapon::GetScopeName() const
 {
 	if (IsScopeAttached())
 	{
-		if (bUseAltScope)
-		{
-			return m_scopes[m_cur_scope].c_str();
-		}
-		else
-		{
-			return pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");
-		}
+		return bUseAltScope ? m_scopes[m_cur_scope].c_str() : pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");
 	}
 	else
 	{
@@ -704,20 +692,13 @@ int CWeapon::GetScopeX()
 			{
 				return pSettings->r_s32(GetNameWithAttachment().c_str(), "scope_x");
 			}
-			else
-			{
-				return 0;
-			}
 		}
 		else
 		{
 			return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_x");
 		}
 	}
-	else
-	{
-		return 0;
-	}
+	return 0;
 }
 
 int CWeapon::GetScopeY()
@@ -730,21 +711,13 @@ int CWeapon::GetScopeY()
 			{
 				return pSettings->r_s32(GetNameWithAttachment().c_str(), "scope_y");
 			}
-			else
-			{
-				return 0;
-			}
 		}
 		else
 		{
 			return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_y");
 		}
 	}
-	else
-	{
-		return 0;
-	}
-
+	return 0;
 }
 
 xr_string CWeapon::GetNameWithAttachment()
@@ -1261,30 +1234,28 @@ void CWeapon::ChangeCurrentMark(pcstr mark)
 	::Render->ChangeMark(mark);
 }
 
-
 bool CWeapon::LoadMarks(pcstr section)
 {
 	if (!marks.empty())
 		marks.clear();
 
 	// В данный момент количество марок зашито в движок - не более 10
-
 	if (!pSettings->line_exist(section, "mark1"))
 		return false;
+	shared_str Mark = pSettings->r_string(section, "mark1");
+	marks.emplace_back(Mark);
 
-	LPCSTR str = pSettings->r_string(section, "mark1");
-	marks.push_back(str);
-
-	for (int i = 2; i <= 10; i++)
+	for (u32 i = 2; i <= 10; i++)
 	{
 		string16 it = "mark";
 		xr_sprintf(it, "%s%d", it, i);
 
 		if (pSettings->line_exist(section, it))
 		{
-			str = pSettings->r_string(section, it);
-			marks.push_back(str);
+			Mark = pSettings->r_string(section, it);
+			marks.emplace_back(Mark);
 		}
+		else break;
 	}
 
 	return true;
@@ -1297,7 +1268,7 @@ void CWeapon::SpawnAmmo(u32 boxCurr, LPCSTR ammoSect, u32 ParentID)
 
 	m_bAmmoWasSpawned = true;
 	
-	int l_type = 0;
+	u32 l_type = 0;
 	l_type %= m_ammoTypes.size();
 
 	if (!ammoSect) 

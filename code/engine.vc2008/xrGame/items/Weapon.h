@@ -28,6 +28,13 @@ class CNightVisionEffector;
 
 class CWeapon : public CHudItemObject, public CShootingObject, public IWeaponObject, public CMagazine
 {
+	bool bUseAltScope;
+	bool bMarkIsLoaded;
+	bool bScopeHasTexture;
+	bool bScopeHasBeenLoaded;
+	//Отвечает за замену прицельной марки коллиматора через особый шейдер
+	u8 current_mark;
+
 private:
 	typedef CHudItemObject inherited;
 
@@ -53,28 +60,19 @@ public:
 	virtual BOOL			net_SaveRelevant	()								{return inherited::net_SaveRelevant();}
 
 	//STCoP WP
-	bool bUseAltScope;
-	void UpdateAltScope();
-	bool bScopeHasTexture;
-	bool bScopeHasBeenLoaded;
-	xr_string GetNameWithAttachment();
-
-	bool bMarkIsLoaded;
-
-	//Отвечает за замену прицельной марки коллиматора через особый шейдер
-	u8 current_mark;
+	void UpdateAltScope				();
+	xr_string GetNameWithAttachment	();
 
 	// Контролер переключения маркера
-	void ChangeNextMark();
-	void ChangePrevMark();
+	void ChangeNextMark				();
+	void ChangePrevMark				();
+	bool LoadMarks					(const char* section);
+	void LoadDefaultMark			();
+	void ChangeCurrentMark			(const char* mark);
 
 	// Дефотные параметры и обновлениме марки
-	bool LoadMarks(pcstr section);
-	void UpdateMark();
-	void ChangeCurrentMark(pcstr mark);
-	void LoadDefaultMark();
-
-	bool bInZoomRightNow();
+	void UpdateMark					();
+	bool bInZoomRightNow			() const;
 
 	// Хранилище
 

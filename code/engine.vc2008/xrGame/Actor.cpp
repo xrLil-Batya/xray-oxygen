@@ -804,9 +804,9 @@ void CActor::UpdateCL()
 			GamePersistent().m_pGShaderConstants.hud_params.x = pWeapon->GetZRotatingFactor(); //--#SM+#--
 			GamePersistent().m_pGShaderConstants.hud_params.y = pWeapon->GetSecondVP_FovFactor(); //--#SM+#-- 
 
-			float x = pWeapon->bInZoomRightNow() ? 1.0f : 0.0f;
+			bool bUseMark = !!pWeapon->bInZoomRightNow();
 
-			GamePersistent().m_pGShaderConstants.collimator_mark.x = x;
+			GamePersistent().m_pGShaderConstants.collimator_mark.x = bUseMark;
 		}
 	}
 	else
@@ -832,7 +832,8 @@ void CActor::UpdateCL()
 	DWORD WaitResult = WAIT_TIMEOUT;
 	do
 	{
-		WaitResult = WaitForSingleObject(MtSecondUpdaterEventEnd, 66); // update message box with 15 fps
+		// update message box with 15 fps
+		WaitResult = WaitForSingleObject(MtSecondUpdaterEventEnd, 66); 
 		if (WaitResult == WAIT_TIMEOUT)
 		{
 			Device.ProcessSingleMessage();
