@@ -673,7 +673,6 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 #include "UIActorStateInfo.h"
 bool CUIActorMenu::TryUseFoodItem(CUICellItem* cell_itm)
 {
-#pragma todo("FX to all: Need fix InventoryBox looting. Use itm on BoxOwner for check!")
 	if (!cell_itm)	
 		return false;
 
@@ -683,18 +682,13 @@ bool CUIActorMenu::TryUseFoodItem(CUICellItem* cell_itm)
 		return false;
 
 	u16 ActorInventoryID = m_pActorInvOwner->object_id();
-	// FX: Dirty hack, need fix, maybe later or never
-//	const bool bItemOnActorOwner = item->parent_id() != ActorInventoryID;
-//	if (!bItemOnActorOwner)
-//		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 	
 	// Send event to Actor fell
-	SendEvent_Item_Eat(item, ActorInventoryID/* ActorInventoryID */);
+	SendEvent_Item_Eat(item, ActorInventoryID);
 	PlaySnd(eItemUse);
 	SetCurrentItem(nullptr);
 
-//	if(bItemOnActorOwner)
-		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
+	cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 
 	return true;
 }

@@ -93,18 +93,6 @@ IC	void CPatrolPathManager::make_inactual()
 	m_completed = false;
 }
 
-IC	void CPatrolPathManager::set_path(shared_str path_name)
-{
-	set_path(ai().patrol_paths().path(path_name), path_name);
-}
-
-IC	void CPatrolPathManager::set_path(shared_str path_name, const EPatrolStartType patrol_start_type, const EPatrolRouteType patrol_route_type, bool random)
-{
-	set_path(ai().patrol_paths().path(path_name), path_name);
-	set_start_type(patrol_start_type);
-	set_route_type(patrol_route_type);
-	set_random(random);
-}
 IC	u32	CPatrolPathManager::get_current_point_index() const
 {
 	return					(m_curr_point_index);

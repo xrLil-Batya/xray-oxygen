@@ -7,17 +7,14 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "gameobject.h"
+#include "GameObject.h"
 #include "patrol_path_manager.h"
 #include "script_game_object.h"
 #include "restricted_object.h"
-#include "ai_space.h"
-#include "script_engine.h"
 #include "ai_object_location.h"
 #include "script_entity_space.h"
 #include "script_callback_ex.h"
 #include "game_object_space.h"
-#include "level_graph.h"
 #include "space_restriction_manager.h"
 
 static void show_restrictions(LPCSTR restrictions)
@@ -364,4 +361,17 @@ void CPatrolPathManager::reset()
 
 	m_start_type = ePatrolStartTypeDummy;
 	m_route_type = ePatrolRouteTypeDummy;
+}
+
+void CPatrolPathManager::set_path(shared_str path_name)
+{
+	set_path(ai().patrol_paths().path(path_name), path_name);
+}
+
+void CPatrolPathManager::set_path(shared_str path_name, const EPatrolStartType patrol_start_type, const EPatrolRouteType patrol_route_type, bool random)
+{
+	set_path(ai().patrol_paths().path(path_name), path_name);
+	set_start_type(patrol_start_type);
+	set_route_type(patrol_route_type);
+	set_random(random);
 }

@@ -61,8 +61,8 @@ public:
 	IC			void				make_inactual();
 	IC			const CPatrolPath	*get_path() const;
 	IC			void				set_path(const CPatrolPath *path, shared_str path_name);
-	IC			void				set_path(shared_str path_name);
-	IC			void				set_path(shared_str path_name, const EPatrolStartType patrol_start_type = ePatrolStartTypeNearest, const EPatrolRouteType patrol_route_type = ePatrolRouteTypeContinue, bool random = true);
+				void				set_path(shared_str path_name);
+				void				set_path(shared_str path_name, const EPatrolStartType patrol_start_type = ePatrolStartTypeNearest, const EPatrolRouteType patrol_route_type = ePatrolRouteTypeContinue, bool random = true);
 	IC			void				set_start_type(const EPatrolStartType patrol_start_type);
 	IC			void				set_route_type(const EPatrolRouteType patrol_route_type);
 	IC			void				set_random(bool random);

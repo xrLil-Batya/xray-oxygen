@@ -5,33 +5,28 @@
 //	Author		: Dmitriy Iassenev
 //	Description : AI space class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
+#include "game_graph.h"
+#include "level_graph.h"
+#include "ef_storage.h"
+#include "doors_manager.h"
+#include "patrol_path_manager.h"
+#include "cover_manager.h"
+#include "moving_objects.h"
+#include "script_engine.h"
+#include "alife_simulator.h"
+#include "graph_engine.h"
 
-class CGameGraph;
 class CGameLevelCrossTable;
-class CLevelGraph;
 class CGraphEngine;
-class CEF_Storage;
-class CALifeSimulator;
-class CCoverManager;
-class CScriptEngine;
-class CPatrolPathStorage;
-class moving_objects;
 
-namespace doors {
-	class manager;
-} // namespace doors
-
-class GAME_API CAI_Space {
-private:
+class GAME_API CAI_Space 
+{
 	friend class CALifeSimulator;
 	friend class CALifeGraphRegistry;
 	friend class CALifeSpawnRegistry;
 	friend class CALifeSpawnRegistry;
 	friend class CLevel;
-
-private:
 
 	xrScopePtr<CGameGraph			>			m_game_graph;
 	xrScopePtr<CLevelGraph			>			m_level_graph;

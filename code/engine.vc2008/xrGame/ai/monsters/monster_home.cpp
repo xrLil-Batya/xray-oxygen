@@ -82,7 +82,7 @@ void CMonsterHome::load(LPCSTR line)
 
 	}
 
-	m_aggressive = false;
+	bAggressive = false;
 }
 
 void CMonsterHome::setup(LPCSTR path_name, float min_radius, float max_radius, bool aggressive, float middle_radius)
@@ -98,7 +98,7 @@ void CMonsterHome::setup(LPCSTR path_name, float min_radius, float max_radius, b
 		m_radius_middle = middle_radius;
 	}
 
-	m_aggressive	= aggressive;
+	bAggressive = aggressive;
 }
 void CMonsterHome::setup(u32 lv_ID, float min_radius, float max_radius, bool aggressive, float middle_radius)
 {
@@ -113,7 +113,7 @@ void CMonsterHome::setup(u32 lv_ID, float min_radius, float max_radius, bool agg
 		m_radius_middle = middle_radius;
 	}
 
-	m_aggressive	= aggressive;
+	bAggressive = aggressive;
 }
 
 u32 CMonsterHome::get_place_in_min_home()
@@ -452,9 +452,9 @@ bool CMonsterHome::at_home(const Fvector &pos, float const radius)
 
 void CMonsterHome::remove_home()
 {
-	m_path			= 0;
+	m_path = 0;
 	m_level_vertex_id = u32(-1);
-	m_aggressive	= false;
+	bAggressive = false;
 }
 
 void CMonsterHome::set_move_dists(u32 min_dist, u32 max_dist)

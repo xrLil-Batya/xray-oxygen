@@ -653,7 +653,7 @@ void CWeapon::ChangePrevMark()
 	if (current_mark > 0)
 		--current_mark;
 	else if (current_mark == 0 && marks.size() > 1)
-		current_mark = marks.size() - 1;
+		current_mark = u8(marks.size() - 1);
 }
 
 void CWeapon::UpdateMark()
@@ -673,7 +673,7 @@ const xr_string CWeapon::GetScopeName() const
 {
 	if (IsScopeAttached())
 	{
-		return bUseAltScope ? m_scopes[m_cur_scope].c_str() : pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");
+		return bUseAltScope ? m_scopes[m_cur_scope] : pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");
 	}
 	else
 	{
@@ -729,7 +729,7 @@ xr_string CWeapon::GetNameWithAttachment()
 	else
 		xr_sprintf(str, "%s", m_section_id.c_str());
 
-	return (xr_string)str;
+	return str;
 }
 
 BOOL CWeapon::net_Spawn(CSE_Abstract* DC)
@@ -1242,7 +1242,7 @@ bool CWeapon::LoadMarks(pcstr section)
 	// В данный момент количество марок зашито в движок - не более 10
 	if (!pSettings->line_exist(section, "mark1"))
 		return false;
-	shared_str Mark = pSettings->r_string(section, "mark1");
+	xr_string Mark = pSettings->r_string(section, "mark1");
 	marks.emplace_back(Mark);
 
 	for (u32 i = 2; i <= 10; i++)
