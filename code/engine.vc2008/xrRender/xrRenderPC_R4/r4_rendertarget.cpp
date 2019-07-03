@@ -385,7 +385,7 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 		rt_secondVP.create					(r2_RT_secondVP, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 		rt_OXY_holomarks.create				(r2_OXY_holo_mark); // конкретно с этим мы и будем работать далее,
 																// заменяя ссылку на текстуру с нужной маркой
-		m_MarkTexture						= nullptr;
+		m_MarkTexture						= "";
 
 		if (RImplementation.o.dx10_msaa)
 		{
