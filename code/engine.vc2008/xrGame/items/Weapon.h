@@ -28,15 +28,15 @@ class CNightVisionEffector;
 
 class CWeapon : public CHudItemObject, public CShootingObject, public IWeaponObject, public CMagazine
 {
-	typedef CHudItemObject inherited;
-
-protected:
 	bool bUseAltScope;
 	bool bMarkIsLoaded;
 	bool bScopeHasTexture;
 	bool bScopeHasBeenLoaded;
 	//Отвечает за замену прицельной марки коллиматора через особый шейдер
 	u8 current_mark;
+
+private:
+	typedef CHudItemObject inherited;
 
 public:
 							CWeapon				();

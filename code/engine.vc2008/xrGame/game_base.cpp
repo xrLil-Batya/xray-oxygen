@@ -178,5 +178,5 @@ EGameLanguage g_Language = EGameLanguage::eglRussian;
 xr_token language_type_token[] =
 {
 	{ "Русский", 0 },
-	{ "English", 1 }
+{ "English", 1 }
 };

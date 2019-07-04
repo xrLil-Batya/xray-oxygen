@@ -5,12 +5,14 @@
 //	Author		: Dmitriy Iassenev
 //	Description : moving objects
 ////////////////////////////////////////////////////////////////////////////
-#pragma once
+
+#ifndef MOVING_OBJECT_H
+#define MOVING_OBJECT_H
+
 #include "entity_alive.h"
 #include "obstacles_query.h"
 
-class moving_object 
-{
+class moving_object {
 public:
 	enum action_type {
 		action_move			= u32(0),
@@ -59,3 +61,5 @@ public:
 };
 
 #include "moving_object_inline.h"
+
+#endif // MOVING_OBJECT_H

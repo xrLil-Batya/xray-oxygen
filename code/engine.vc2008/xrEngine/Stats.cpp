@@ -149,8 +149,7 @@ void CStats::Show()
 	}
 
 	// calc FPS & TPS
-	if (fRawFrameDeltaTime > EPS_S) 
-	{
+	if (fRawFrameDeltaTime > EPS_S) {
 		float fps  = 1.f / fRawFrameDeltaTime;
 		float fOne = 0.3f;
 		float fInv = 1.f-fOne;
@@ -158,7 +157,8 @@ void CStats::Show()
 
 		if (RenderTOTAL.result>EPS_S) {
 			u32	rendered_polies = Device.m_pRender->GetCacheStatPolys();
-			fTPS = fInv * fTPS + fOne * float(rendered_polies / RenderTOTAL.result * 1000);
+			fTPS = fInv*fTPS + fOne*float(rendered_polies)/(RenderTOTAL.result*1000.f);
+			//fTPS = fInv*fTPS + fOne*float(RCache.stat.polys)/(RenderTOTAL.result*1000.f);
 			fRFPS= fInv*fRFPS+ fOne*1000.f/RenderTOTAL.result;
 		}
 	}
@@ -275,6 +275,25 @@ void CStats::Show()
 		F.OutSkip	();
 
 		F.OutNext	("  HOM:       %2.2fms, %d", RenderCALC_HOM.result, RenderCALC_HOM.count);
+
+#if 0
+		F.OutNext	("  Skeletons: %2.2fms, %d",Animation.result,		Animation.count);
+		F.OutNext	("R_DUMP:      %2.2fms, %2.1f%%",RenderDUMP.result, GetPercentOf(RenderDUMP.result, RenderTOTAL));
+		F.OutNext	("  Wait-L:    %2.2fms",RenderDUMP_Wait.result);	
+		F.OutNext	("  Wait-S:    %2.2fms", Render_CRenderRender_WaitForFrame.result);
+		F.OutNext	("  Skinning:  %2.2fms",RenderDUMP_SKIN.result);	
+		F.OutNext	("  DT_Vis/Cnt:%2.2fms/%d",RenderDUMP_DT_VIS.result,RenderDUMP_DT_Count);	
+		F.OutNext	("  DT_Render: %2.2fms",RenderDUMP_DT_Render.result);	
+		F.OutNext	("  DT_Cache:  %2.2fms",RenderDUMP_DT_Cache.result);	
+		F.OutNext	("  Wallmarks: %2.2fms, %d/%d - %d",RenderDUMP_WM.result,RenderDUMP_WMS_Count,RenderDUMP_WMD_Count,RenderDUMP_WMT_Count);
+		F.OutNext	("  Glows:     %2.2fms",RenderDUMP_Glows.result);	
+		F.OutNext	("  Lights:    %2.2fms, %d",RenderDUMP_Lights.result,RenderDUMP_Lights.count);
+		F.OutNext	("  RT:        %2.2fms, %d",RenderDUMP_RT.result,RenderDUMP_RT.count);
+		F.OutNext	("  HUD:       %2.2fms",RenderDUMP_HUD.result);	
+		F.OutNext	("  P_calc:    %2.2fms",RenderDUMP_Pcalc.result);
+		F.OutNext	("  S_calc:    %2.2fms",RenderDUMP_Scalc.result);
+		F.OutNext	("  S_render:  %2.2fms, %d",RenderDUMP_Srender.result,RenderDUMP_Srender.count);
+#endif
 		F.OutSkip	();
 
 
