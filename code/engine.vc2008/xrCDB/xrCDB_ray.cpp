@@ -320,16 +320,16 @@ public:
 		{
 			if (dest->r_count())	
 			{
-				RESULT& R = *dest->r_begin();
-				if (r<R.range)	{
-					R.id		= prim;
-					R.range		= r;
-					R.u			= u;
-					R.v			= v;
-					R.verts	[0]	= verts[tris[prim].verts[0]];
-					R.verts	[1]	= verts[tris[prim].verts[1]];
-					R.verts	[2]	= verts[tris[prim].verts[2]];
-					R.dummy		= tris[prim].dummy;
+				auto R_iter = dest->r_realBegin();
+				if (r < R_iter->range)	{
+					R_iter->id		= prim;
+					R_iter->range		= r;
+					R_iter->u			= u;
+					R_iter->v			= v;
+					R_iter->verts	[0]	= verts[tris[prim].verts[0]];
+					R_iter->verts	[1]	= verts[tris[prim].verts[1]];
+					R_iter->verts	[2]	= verts[tris[prim].verts[2]];
+					R_iter->dummy		= tris[prim].dummy;
 					rRange		= r;
 					rRange2		= r*r;
 				}

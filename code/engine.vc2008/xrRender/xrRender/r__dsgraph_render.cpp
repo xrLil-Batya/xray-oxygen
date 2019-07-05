@@ -672,10 +672,13 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 		Fvector box_radius;		box_radius.set	(EPS_L*20,EPS_L*20,EPS_L*20);
 		RImplementation.Sectors_xrc.box_options	(CDB::OPT_FULL_TEST);
 		RImplementation.Sectors_xrc.box_query	(RImplementation.rmPortals,_cop,box_radius);
-		for (int K = 0; K < RImplementation.Sectors_xrc.r_count(); K++)
+
+		for (auto it = RImplementation.Sectors_xrc.r_realBegin(); it != RImplementation.Sectors_xrc.r_realEnd(); it++)
 		{
-			CPortal*	pPortal		= (CPortal*) RImplementation.Portals[RImplementation.rmPortals->get_tris()[RImplementation.Sectors_xrc.r_begin()[K].id].dummy];
-			pPortal->bDualRender	= true;
+			int sectorId = it->id;
+			CDB::TRI& portalTriangle = RImplementation.rmPortals->get_tris()[sectorId];
+			CPortal* pPortal = (CPortal*)RImplementation.Portals[portalTriangle.dummy];
+			pPortal->bDualRender = true;
 		}
 	}
 

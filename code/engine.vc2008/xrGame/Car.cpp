@@ -1414,7 +1414,7 @@ bool CCar::Use(const Fvector& pos, const Fvector& dir, const Fvector& foot_pos)
 		int y = (int)R.r_count();
 		for (int k = 0; k<y; ++k)
 		{
-			collide::rq_result* I = R.r_begin() + k;
+			collide::rq_result* I = R.r_getElement(k);
 			if (is_Door((u16)I->element, i))
 			{
 				bool front = i->second.IsFront(pos, dir);

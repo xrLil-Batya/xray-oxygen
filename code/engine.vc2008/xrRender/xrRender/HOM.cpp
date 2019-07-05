@@ -143,24 +143,6 @@ void CHOM::Unload		()
 	bEnabled			= FALSE;
 }
 
-class	pred_fb	{
-public:
-	occTri*		m_pTris	;
-	Fvector		camera	;
-public:
-	pred_fb		(occTri* _t) : m_pTris(_t)	{}
-	pred_fb		(occTri* _t, Fvector& _c) : m_pTris(_t), camera(_c)	{}
-	ICF bool	operator()		(const CDB::RESULT& _1, const CDB::RESULT& _2) const {
-		occTri&	t0	= m_pTris	[_1.id];
-		occTri&	t1	= m_pTris	[_2.id];
-		return	camera.distance_to_sqr(t0.center) < camera.distance_to_sqr(t1.center);
-	}
-	ICF bool	operator()		(const CDB::RESULT& _1)	const {
-		occTri&	T	= m_pTris	[_1.id];
-		return	T.skip>Device.dwFrame;
-	}
-};
-
 void CHOM::Render_DB			(CFrustum& base)
 {
 	//Update projection matrices on every frame to ensure valid HOM culling
@@ -183,15 +165,26 @@ void CHOM::Render_DB			(CFrustum& base)
 	// Query DB
 	xrc.frustum_options			(0);
 	xrc.frustum_query			(m_pModel,base);
-	if (0==xrc.r_count())		return;
+	if (xrc.r_empty())
+	{
+		return;
+	}
 
 	// Prepare
-	CDB::RESULT*	it			= xrc.r_begin	();
-	CDB::RESULT*	end			= xrc.r_end		();
-	
 	Fvector			COP			= Device.vCameraPosition;
-	end				= std::remove_if	(it,end,pred_fb(m_pTris));
-	std::sort		(it,end,pred_fb(m_pTris,COP));
+	auto lastIter = std::remove_if(xrc.r_realBegin(), xrc.r_realEnd(), [this](auto& element)
+	{
+		occTri& T = m_pTris[element.id];
+		return	T.skip > Device.dwFrame;
+	});
+	(void)lastIter;
+
+	std::sort(xrc.r_realBegin(), xrc.r_realEnd(), [this, COP](auto& first, auto& second)
+	{
+		occTri& t0 = m_pTris[first.id];
+		occTri& t1 = m_pTris[second.id];
+		return	COP.distance_to_sqr(t0.center) < COP.distance_to_sqr(t1.center);
+	});
 
 	// Build frustum with near plane only
 	CFrustum					clip;
@@ -204,7 +197,7 @@ void CHOM::Render_DB			(CFrustum& base)
 #endif
 
 	// Perfrom selection, sorting, culling
-	for (; it!=end; it++)
+	for (auto it = xrc.r_realBegin(); it != xrc.r_realEnd(); it++)
 	{
 		// Control skipping
 		occTri& T			= m_pTris	[it->id];

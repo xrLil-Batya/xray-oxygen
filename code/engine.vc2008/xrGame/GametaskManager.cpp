@@ -77,8 +77,9 @@ vGameTasks&	CGameTaskManager::GetGameTasks	()
 CGameTask* CGameTaskManager::HasGameTask(const shared_str& id, bool only_inprocess)
 {
 	FindTaskByID key(id, only_inprocess);
-    auto it = std::find_if(GetGameTasks().begin(),GetGameTasks().end(),key);
-	if( it!=GetGameTasks().end() )
+	vGameTasks& gameTasks = GetGameTasks();
+    auto it = std::find_if(gameTasks.begin(), gameTasks.end(), key);
+	if( it!= gameTasks.end() )
 		return (*it).game_task;
 	
 	return nullptr;

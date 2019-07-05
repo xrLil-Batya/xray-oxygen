@@ -206,15 +206,16 @@ namespace CDB
 		ICF void		frustum_options	(u32 f)	{	frustum_mode = f;	}
 		void			frustum_query	(const MODEL *m_def, const CFrustum& F);
 
-#ifndef PVS_STUDIO
-		ICF RESULT*		r_begin			()	{	return &*rd.begin(); };
-		ICF RESULT*		r_end			()	{	return &*rd.end(); };
+		ICF xr_vector<RESULT>::iterator r_realBegin()	{ return rd.begin(); };
+		ICF xr_vector<RESULT>::iterator r_realEnd()		{ return rd.end();	 };
+		ICF CDB::RESULT& r_getElement(size_t id) { VERIFY(rd.size() > id); return rd.at(id); }
+
 		RESULT&			r_add			()	;
 		void			r_free			()	;
 		ICF size_t		r_count			()	{	return rd.size(); };
+		ICF bool		r_empty			()	{	return rd.empty(); };
 		ICF void		r_clear			()	{	rd.clear(); };
 		ICF void		r_clear_compact	()	{	rd.clear(); };
-#endif
 	};
 
 	//

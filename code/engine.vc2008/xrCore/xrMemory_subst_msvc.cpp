@@ -79,8 +79,15 @@ void* xrMemory::mem_realloc(void* P, size_t size)
 #else
 	if constexpr (MEM_HARD_DEBUG)
 	{
-		VirtualFree(P, 0, MEM_RELEASE);
 		ptr = DebugAllocate(size, dwPageSize);
+		if (P != nullptr)
+		{
+			MEMORY_BASIC_INFORMATION info;
+			VirtualQuery(P, &info, sizeof(info));
+			size_t copiedSize = std::min(size, info.RegionSize);
+			memcpy(ptr, P, copiedSize);
+			VirtualFree(P, 0, MEM_RELEASE);
+		}
 	}
 	else
 	{

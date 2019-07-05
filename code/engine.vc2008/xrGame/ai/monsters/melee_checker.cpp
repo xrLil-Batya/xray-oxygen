@@ -24,8 +24,9 @@ float CMeleeChecker::distance_to_enemy(const CEntityAlive *enemy)
 	r_res.r_clear			();
 
 	if (m_object->CFORM()->_RayQuery(r_query, r_res)) {
-		if (r_res.r_begin()->O == enemy)
-			dist			= r_res.r_begin()->range;
+		collide::rq_result* res = r_res.r_getElement(0);
+		if (res->O == enemy)
+			dist			= res->range;
 	}
 
 	return					(dist);
