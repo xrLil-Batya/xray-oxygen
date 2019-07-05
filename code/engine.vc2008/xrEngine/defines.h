@@ -16,7 +16,6 @@ enum: unsigned long
 	rsTripleBuffering				= (1<<4),
 	rsStatistic						= (1<<5),
 	rsDetails						= (1<<6),
-	rsRefresh60hz					= (1<<7),
 	rsConstantFPS					= (1<<8),
 	rsDrawStatic					= (1<<9),
 	rsDrawDynamic					= (1<<10),
@@ -29,7 +28,6 @@ enum: unsigned long
 	rsScheduleProfiler				= (1<<15),
 
 	rsCameraPos						= (1<<18),
-	rsRefresh120hz					= (1<<19),
 	rsR2							= (1<<20),
 	rsR4							= (1<<22), // was reserved to Editor
 	rsDrawFPS						= (1<<23), // was reserved to Editor
@@ -39,6 +37,7 @@ enum: unsigned long
 };
 
 ENGINE_API extern	u32			psCurrentVidMode[];
+ENGINE_API extern	u32			ps_r_RefreshHZ;
 ENGINE_API extern	Flags32		psDeviceFlags;
 
 // game path definition
