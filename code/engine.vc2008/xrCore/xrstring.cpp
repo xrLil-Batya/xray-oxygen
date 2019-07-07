@@ -211,6 +211,7 @@ str_value*	str_container::dock(str_c value)
     sv->dwReference = 0;
     sv->dwLength = s_len;
     sv->dwCRC = crc32(value, s_len);
+	sv->nextNode = nullptr;
 
     // search
     result = impl->find(sv, value);
@@ -223,6 +224,7 @@ str_value*	str_container::dock(str_c value)
         result->dwReference = 0;
         result->dwLength = sv->dwLength;
         result->dwCRC = sv->dwCRC;
+		result->nextNode = nullptr;
         std::memcpy(result->value, value, s_len_with_zero);
 
         impl->insert(result);

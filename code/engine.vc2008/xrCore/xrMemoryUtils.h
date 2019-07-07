@@ -33,21 +33,21 @@ template<class Type>
 struct xrScopePtr
 {
 	xrScopePtr();
-	explicit xrScopePtr(Type* pElem);
+	ICF explicit xrScopePtr(Type* pElem);
 
-	~xrScopePtr();
+	ICF ~xrScopePtr();
 
-	void reset(Type* newElem);
-	xrScopePtr<Type>& operator=(Type* pElem);
+	ICF void reset(Type* newElem);
+	ICF xrScopePtr<Type>& operator=(Type* pElem);
 
-	Type& operator*() const;
-	Type* operator->() const;
-	Type& operator[](size_t i) const;
+	ICF Type& operator*() const;
+	ICF Type* operator->() const;
+	ICF Type& operator[](size_t i) const;
 
 	/// automatic access to internal memory. I hope no one will try to free memory by pointer
-	operator Type* () const;
+	ICF operator Type* () const;
 
-	Type* get() const;
+	ICF Type* get() const;
 
 private:
 	Type* memory;
@@ -107,7 +107,8 @@ void xrScopePtr<Type>::reset(Type* newElem)
 template<class Type>
 xrScopePtr<Type>::~xrScopePtr()
 {
-	delete memory; memory = nullptr;
+	delete memory;
+	memory = nullptr;
 }
 
 template<class Type>
