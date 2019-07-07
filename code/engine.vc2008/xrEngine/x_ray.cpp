@@ -102,11 +102,6 @@ ENGINE_API void InitInput()
 	pInput = xr_new<CInput>();
 }
 
-void destroyInput()
-{
-	xr_delete(pInput);
-}
-
 ENGINE_API void InitSound1()
 {
 	CSound_manager_interface::_create(0);
@@ -115,37 +110,6 @@ ENGINE_API void InitSound1()
 ENGINE_API void InitSound2()
 {
 	CSound_manager_interface::_create(1);
-}
-
-inline void destroySound()
-{
-	CSound_manager_interface::_destroy();
-}
-
-void destroySettings()
-{
-	CInifile** s = (CInifile**)(&pSettings);
-	xr_delete(*s);
-	xr_delete(pGameIni);
-}
-
-void destroyConsole()
-{
-	Console->Execute("cfg_save");
-	Console->Destroy();
-	xr_delete(Console);
-}
-
-void destroyEngine()
-{
-	Device.Destroy();
-	Engine.Destroy();
-}
-
-void execUserScript()
-{
-	Console->Execute("default_controls");
-	Console->ExecuteScript(Console->ConfigFile);
 }
 
 void Startup()
@@ -157,7 +121,8 @@ void Startup()
 	InitSound1();
 
 	splashScreen.SetProgressPosition(65, "Initializing user scripts");
-	execUserScript();
+	Console->Execute("default_controls");
+	Console->ExecuteScript(Console->ConfigFile);
 
 	splashScreen.SetProgressPosition(70, "Initializing sound (second part)");
 	InitSound2();
@@ -215,137 +180,35 @@ void Startup()
 	Engine.Event.Dump();
 
 	// Destroying
-	destroyInput();
-	if (!g_bBenchmark) { destroySettings(); }		//#DELETE:
+	xr_delete(pInput);
+
+	CInifile** s = (CInifile * *)(&pSettings);
+	xr_delete(*s);
+	xr_delete(pGameIni);
+
 	LALib.OnDestroy();
-	if (!g_bBenchmark) { destroyConsole(); }		//#DELETE:
-	else { Console->Destroy(); }
-	
-	destroySound();
-	destroyEngine();
+
+	Console->Execute("cfg_save");
+	Console->Destroy();
+	xr_delete(Console);
+
+	CSound_manager_interface::_destroy();
+
+	Device.Destroy();
+	Engine.Destroy();
 }
 
 static INT_PTR CALLBACK logDlgProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
 	switch (msg) 
 	{
-	case WM_DESTROY:
-		break;
-	case WM_CLOSE:
-		DestroyWindow(hw);
-		break;
-	case WM_COMMAND:
-		if (LOWORD(wp) == IDCANCEL)
-			DestroyWindow(hw);
-		break;
-	default:
-		return FALSE;
+		case WM_DESTROY: break;
+		case WM_CLOSE:   DestroyWindow(hw); break;
+		case WM_COMMAND: if (LOWORD(wp) == IDCANCEL) DestroyWindow(hw); break;
+		default:		 return FALSE;
 	}
 	return TRUE;
 }
-extern void	testbed	(void);
-
-// video
-#define dwStickyKeysStructSize sizeof( STICKYKEYS )
-#define dwFilterKeysStructSize sizeof( FILTERKEYS )
-#define dwToggleKeysStructSize sizeof( TOGGLEKEYS )
-
-struct damn_keys_filter 
-{
-	BOOL bScreenSaverState;
-
-	// Sticky & Filter & Toggle keys
-
-	STICKYKEYS StickyKeysStruct = { NULL };
-	FILTERKEYS FilterKeysStruct = { NULL };
-	TOGGLEKEYS ToggleKeysStruct = { NULL };
-
-	DWORD dwStickyKeysFlags; 
-	DWORD dwFilterKeysFlags;
-	DWORD dwToggleKeysFlags;
-
-	damn_keys_filter()
-	{
-		// Screen saver stuff
-		bScreenSaverState = FALSE;
-
-		// Saveing current state
-		SystemParametersInfoA(SPI_GETSCREENSAVEACTIVE, 0, (PVOID)&bScreenSaverState, 0);
-
-		if (bScreenSaverState)		
-			SystemParametersInfoA(SPI_SETSCREENSAVEACTIVE, FALSE, NULL, 0);		// Disable screensaver
-
-		dwStickyKeysFlags = 0;
-		dwFilterKeysFlags = 0;
-		dwToggleKeysFlags = 0;
-
-		StickyKeysStruct.cbSize = dwStickyKeysStructSize;
-		FilterKeysStruct.cbSize = dwFilterKeysStructSize;
-		ToggleKeysStruct.cbSize = dwToggleKeysStructSize;
-
-		// Saving current state
-		SystemParametersInfoA(SPI_GETSTICKYKEYS, dwStickyKeysStructSize, (PVOID)&StickyKeysStruct, 0);
-		SystemParametersInfoA(SPI_GETFILTERKEYS, dwFilterKeysStructSize, (PVOID)&FilterKeysStruct, 0);
-		SystemParametersInfoA(SPI_GETTOGGLEKEYS, dwToggleKeysStructSize, (PVOID)&ToggleKeysStruct, 0);
-
-		if ( StickyKeysStruct.dwFlags & SKF_AVAILABLE ) 
-		{
-			// Disable StickyKeys feature
-			dwStickyKeysFlags = StickyKeysStruct.dwFlags;
-			StickyKeysStruct.dwFlags = 0;
-			SystemParametersInfoA(SPI_SETSTICKYKEYS, dwStickyKeysStructSize, (PVOID)&StickyKeysStruct, 0);
-		}
-
-		if ( FilterKeysStruct.dwFlags & FKF_AVAILABLE ) 
-		{
-			// Disable FilterKeys feature
-			dwFilterKeysFlags = FilterKeysStruct.dwFlags;
-			FilterKeysStruct.dwFlags = 0;
-			SystemParametersInfoA(SPI_SETFILTERKEYS, dwFilterKeysStructSize, (PVOID)&FilterKeysStruct, 0);
-		}
-
-		if ( ToggleKeysStruct.dwFlags & TKF_AVAILABLE ) 
-		{
-			// Disable FilterKeys feature
-			dwToggleKeysFlags = ToggleKeysStruct.dwFlags;
-			ToggleKeysStruct.dwFlags = 0;
-			SystemParametersInfoA(SPI_SETTOGGLEKEYS, dwToggleKeysStructSize, (PVOID)&ToggleKeysStruct, 0);
-		}
-	}
-
-	~damn_keys_filter	()
-	{
-		if (bScreenSaverState)
-			// Restoring screen saver
-			SystemParametersInfoA(SPI_SETSCREENSAVEACTIVE, TRUE, NULL, 0);
-
-		if (dwStickyKeysFlags) 
-		{
-			// Restore StickyKeys feature
-			StickyKeysStruct.dwFlags = dwStickyKeysFlags;
-			SystemParametersInfoA(SPI_SETSTICKYKEYS, dwStickyKeysStructSize, (PVOID)&StickyKeysStruct, 0);
-		}
-
-		if (dwFilterKeysFlags) 
-		{
-			// Restore FilterKeys feature
-			FilterKeysStruct.dwFlags = dwFilterKeysFlags;
-			SystemParametersInfoA(SPI_SETFILTERKEYS, dwFilterKeysStructSize, (PVOID)&FilterKeysStruct, 0);
-		}
-
-		if (dwToggleKeysFlags) 
-		{
-			// Restore FilterKeys feature
-			ToggleKeysStruct.dwFlags = dwToggleKeysFlags;
-			SystemParametersInfoA(SPI_SETTOGGLEKEYS, dwToggleKeysStructSize, (PVOID)&ToggleKeysStruct, 0);
-		}
-
-	}
-};
-
-#undef dwStickyKeysStructSize
-#undef dwFilterKeysStructSize
-#undef dwToggleKeysStructSize
 
 #include "xr_ioc_cmd.h"
 extern "C"
@@ -378,9 +241,7 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	InitSettings();
 
 	if (strstr(Core.Params, "-renderdebug"))
-	{
 		isGraphicDebugging = TRUE;
-	}
 
 	// Adjust player & computer name for Asian
 	if (pSettings->line_exist("string_table", "no_native_input"))
@@ -394,7 +255,7 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	splashScreen.SetProgressPosition(35, "Initializing engine");
 	InitEngine();
 	splashScreen.SetProgressPosition(40, "Initializing input");
-	InitInput();
+	pInput = new CInput();
 	splashScreen.SetProgressPosition(45, "Initializing console");
 	InitConsole();
 
@@ -405,6 +266,7 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	Core._destroy();
 }
 }
+
 LPCSTR _GetFontTexName (LPCSTR section)
 {
 	static char* tex_names[] = { "texture800","texture","texture1600" };
@@ -413,14 +275,11 @@ LPCSTR _GetFontTexName (LPCSTR section)
 
 	u32 h = Device.dwHeight;
 
-	if (h <= 600)		
-		idx = 0;
-	else if (h < 1024)	
-		idx = 1;
-	else 			
-		idx = 2;
-	
-	while(idx>=0)
+	if (h <= 600)	   idx = 0;
+	else if (h < 1024) idx = 1;
+	else               idx = 2;
+
+	while (idx >= 0)
 	{
 		if( pSettings->line_exist(section,tex_names[idx]))
 			return pSettings->r_string(section,tex_names[idx]);
@@ -453,34 +312,28 @@ void _InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 
 }
 
-CApplication::CApplication()
+CApplication::CApplication() : loadingScreen(nullptr), pFontSystem(nullptr)
 {
 	dwLoadReference	= 0;
 	load_stage = 0;
 	max_load_stage = 0;
 
 	// events
-	eQuit						= Engine.Event.Handler_Attach("KERNEL:quit",this);
-	eStart						= Engine.Event.Handler_Attach("KERNEL:start",this);
-	eStartLoad					= Engine.Event.Handler_Attach("KERNEL:load",this);
-	eDisconnect					= Engine.Event.Handler_Attach("KERNEL:disconnect",this);
-	eConsole					= Engine.Event.Handler_Attach("KERNEL:console",this);
+	eQuit			= Engine.Event.Handler_Attach("KERNEL:quit",this);
+	eStart			= Engine.Event.Handler_Attach("KERNEL:start",this);
+	eStartLoad		= Engine.Event.Handler_Attach("KERNEL:load",this);
+	eDisconnect		= Engine.Event.Handler_Attach("KERNEL:disconnect",this);
+	eConsole		= Engine.Event.Handler_Attach("KERNEL:console",this);
 
 	// levels
-	Level_Current				= u32(-1);
-	Level_Scan					( );
-
-	// Font
-	pFontSystem					= NULL;
+	Level_Current	= u32(-1);
+	Level_Scan		( );
 
 	// Register us
-	Device.seqFrame.Add			(this, REG_PRIORITY_HIGH+1000);
-	Device.seqFrameMT.Add		(&SoundProcessor);
+	Device.seqFrame.Add(this, REG_PRIORITY_HIGH+1000);
+	Device.seqFrameMT.Add(&SoundProcessor);
 
-	Console->Show				( );
-
-	// App Title
-	loadingScreen = nullptr;
+	Console->Show();
 }
 
 CApplication::~CApplication()
@@ -518,11 +371,11 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 	}
 	else if(E == eStart) 
 	{
-		LPSTR		op_server		= LPSTR	(P1);
-		LPSTR		op_client		= LPSTR	(P2);
-		Level_Current				= u32(-1);
-		R_ASSERT	(!g_pGameLevel);
-		R_ASSERT	(g_pGamePersistent);
+		LPSTR op_server = LPSTR	(P1);
+		LPSTR op_client = LPSTR	(P2);
+		Level_Current   = u32(-1);
+
+		R_ASSERT(!g_pGameLevel || g_pGamePersistent);
 		{		
 			Console->Execute("main_menu off");
 			Console->Hide();
@@ -537,8 +390,8 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 			g_pGameLevel->net_Start			(op_server,op_client);
 			pApp->LoadEnd					(); 
 		}
-		xr_free							(op_server);
-		xr_free							(op_client);
+		xr_free(op_server);
+		xr_free(op_client);
 	} 
 	else if (E==eDisconnect) 
 	{
@@ -569,7 +422,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 	}
 }
 
-static	CTimer	phase_timer;
+static CTimer phase_timer;
 
 void CApplication::LoadBegin()
 {
@@ -589,9 +442,7 @@ void CApplication::LoadEnd()
     VERIFY(dwLoadReference != 0);
 	dwLoadReference--;
 	if (0 == dwLoadReference)
-	{
 		g_appLoaded = TRUE;
-	}
 }
 
 void CApplication::SetLoadingScreen(ILoadingScreen* newScreen)
@@ -637,6 +488,7 @@ void CApplication::LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3)
 	if (loadingScreen)
 		loadingScreen->SetStageTip(str1, str2, str3);
 }
+
 void CApplication::LoadStage()
 {
 	VERIFY(dwLoadReference);
@@ -665,42 +517,38 @@ void CApplication::OnFrame	( )
 		g_pGameLevel->SoundEvent_Dispatch	( );
 }
 
-void CApplication::Level_Append		(LPCSTR folder)
+void CApplication::Level_Append(LPCSTR folder)
 {
-	string_path	N1,N2,N3,N4;
+	string_path	N1, N2, N3, N4;
 	xr_strconcat(N1, folder, "level");
 	xr_strconcat(N2, folder, "level.ltx");
 	xr_strconcat(N3, folder, "level.geom");
 	xr_strconcat(N4, folder, "level.cform");
-	if	(
-		FS.exist("$game_levels$",N1)		&&
-		FS.exist("$game_levels$",N2)		&&
-		FS.exist("$game_levels$",N3)		&&
-		FS.exist("$game_levels$",N4)	
-		)
+
+	if (FS.exist("$game_levels$", N1) && FS.exist("$game_levels$", N2) && FS.exist("$game_levels$", N3) && FS.exist("$game_levels$", N4))
 	{
 		sLevelInfo			LI;
-		LI.folder			= xr_strdup(folder);
-		LI.name				= 0;
-		Levels.push_back	(LI);
+		LI.folder = xr_strdup(folder);
+		LI.name = 0;
+		Levels.push_back(LI);
 	}
 }
 
 void CApplication::Level_Scan()
 {
-	for (u32 i=0; i<Levels.size(); i++)
+	for (sLevelInfo &lvlInfo: Levels)
 	{
-		xr_free(Levels[i].folder);
-		xr_free(Levels[i].name);
+		xr_free(lvlInfo.folder);
+		xr_free(lvlInfo.name);
 	}
-	Levels.clear	();
+	Levels.clear();
 
-	xr_vector<char*>* folder			= FS.file_list_open		("$game_levels$",FS_ListFolders|FS_RootOnly);
+	xr_vector<char*>* folder = FS.file_list_open("$game_levels$",FS_ListFolders|FS_RootOnly);
 	
-	for (u32 i=0; i<folder->size(); ++i)	
-		Level_Append((*folder)[i]);
+	for (char* Folder: *folder)
+		Level_Append(Folder);
 	
-	FS.file_list_close		(folder);
+	FS.file_list_close(folder);
 }
 
 void gen_logo_name(string_path& dest, LPCSTR level_name, int num)
@@ -726,7 +574,6 @@ void CApplication::Level_Set(u32 L)
 	if (Level_Current != L)
 	{
 		path[0] = 0;
-
 		Level_Current = L;
 
 		int count = 0;
@@ -749,22 +596,23 @@ void CApplication::Level_Set(u32 L)
 
 	if (path[0] && loadingScreen)
 		loadingScreen->SetLevelLogo(path);
+
 	g_discord.SetStatus(xrDiscordPresense::StatusId::In_Game);
 }
 
 int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 {
 	int result = -1;
-	bool arch_res					= false;
+	bool arch_res = false;
 
-	for(auto it = FS.m_archives.begin(); it != FS.m_archives.end(); ++it)
+	for (CLocatorAPI::archive& A : FS.m_archives)
 	{
-		CLocatorAPI::archive& A		= *it;
-		if(A.hSrcFile==NULL)
+		if (!A.hSrcFile)
 		{
 			LPCSTR ln = A.header->r_string("header", "level_name");
 			LPCSTR lv = A.header->r_string("header", "level_ver");
-			if ( 0==_stricmp(ln,name) && 0==_stricmp(lv,ver) )
+
+			if (0 == _stricmp(ln, name) && 0 == _stricmp(lv, ver))
 			{
 				FS.LoadArchive(A);
 				arch_res = true;
@@ -772,19 +620,18 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 		}
 	}
 
-	if( arch_res )
-		Level_Scan							();
+	if (arch_res)
+		Level_Scan();
 	
-	string256		buffer = {0};
+	string256 buffer = {0};
 	xr_strconcat (buffer,name,"\\");
 	for (u32 I=0; I<Levels.size(); ++I)
 	{
 		if (0==stricmp(buffer,Levels[I].folder))	
 		{
-			if (Levels[I].name == nullptr)
-			{
+			if (!Levels[I].name)
 				Levels[I].name = xr_strdup(name);
-			}
+
 			result = int(I);	
 			break;
 		}
@@ -799,18 +646,15 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 	return result;
 }
 
-CInifile*  CApplication::GetArchiveHeader(LPCSTR name, LPCSTR ver)
+CInifile* CApplication::GetArchiveHeader(LPCSTR name, LPCSTR ver)
 {
-	for(auto it = FS.m_archives.begin(); it!=FS.m_archives.end(); ++it)
+	for(CLocatorAPI::archive& A: FS.m_archives)
 	{
-		CLocatorAPI::archive& A		= *it;
-
 		LPCSTR ln = A.header->r_string("header", "level_name");
 		LPCSTR lv = A.header->r_string("header", "level_ver");
+
 		if(!_stricmp(ln,name) && 0==_stricmp(lv, ver))
-		{
 			return A.header;
-		}
 	}
 	return nullptr;
 }
@@ -823,6 +667,7 @@ void CApplication::LoadAllArchives()
 		g_pGamePersistent->OnAssetsChanged	();
 	}
 }
+
 #pragma optimize("g", off)
 void CApplication::load_draw_internal()
 {

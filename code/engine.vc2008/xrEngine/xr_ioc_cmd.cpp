@@ -541,13 +541,22 @@ public		:
 ENGINE_API float psHUD_FOV_def = 0.45f;
 ENGINE_API float psHUD_FOV = psHUD_FOV_def;
 
-extern int			rsDVB_Size;
-extern int			rsDIB_Size;
+extern int rsDVB_Size;
+extern int rsDIB_Size;
 
-extern int			g_ErrorLineCount;
-extern int			ps_rs_loading_stages;
+extern int g_ErrorLineCount;
+extern int ps_rs_loading_stages;
 
-ENGINE_API int			ps_always_active			= 0;
+ENGINE_API int ps_always_active = 0;
+
+u32 ps_r_RefreshHZ = 0;
+xr_token RefreshHZ[] =
+{
+	{ "60hz" , 0},
+	{ "120hz" , 1},
+	{ "auto" , 2},
+    { 0, 0	}
+};
 
 void CCC_Register()
 {
@@ -581,8 +590,7 @@ void CCC_Register()
 
 	CMD3(CCC_Mask,		"rs_triple_buffering",	&psDeviceFlags,		rsTripleBuffering		);
 	CMD3(CCC_Mask,		"rs_v_sync",			&psDeviceFlags,		rsVSync					);
-	CMD3(CCC_Mask,		"rs_refresh_60hz",		&psDeviceFlags,		rsRefresh60hz			);
-	CMD3(CCC_Mask,		"rs_refresh_120hz",		&psDeviceFlags,		rsRefresh120hz			);
+	CMD3(CCC_Token,		"rs_refresh_hz",		&ps_r_RefreshHZ,	RefreshHZ			);
 	CMD3(CCC_Mask,		"rs_stats",				&psDeviceFlags,		rsStatistic				);
 	CMD3(CCC_Mask,		"rs_stats_game",		&psDeviceFlags,		rsGameProfiler			);
 	CMD3(CCC_Mask,		"rs_stats_schedule",    &psDeviceFlags,		rsScheduleProfiler		);
