@@ -864,14 +864,14 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 	// Прицел
 	if (pScope && m_eScopeStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonScope) == 0)
 	{
-		for (xr_string &it : m_scopes)
+		for (const xr_string& scopeName : m_scopes)
 		{
 			shared_str scop_name;
 
 			if (bUseAltScope)
-				scop_name = it.c_str();
+				scop_name = scopeName.c_str();
 			else
-				scop_name = pSettings->r_string_wb(it.c_str(), "scope_name");
+				scop_name = pSettings->r_string_wb(scopeName.c_str(), "scope_name");
 
 			if (scop_name == pIItem->object().cNameSect())
 				return true;

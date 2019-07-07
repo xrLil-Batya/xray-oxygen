@@ -338,13 +338,13 @@ DXGI_RATIONAL CHW::SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
 	res.Numerator = 60;
 	res.Denominator = 1;
 
-	float CurrentFreq = 60.0f;
+	float	CurrentFreq = 60.0f;
 
-	if (ps_r_RefreshHZ = 1)
+	if (psDeviceFlags.is(rsRefresh60hz))
 	{
 		return res;
 	}
-	else if (ps_r_RefreshHZ == 1)
+	else if (psDeviceFlags.is(rsRefresh120hz))
 	{
 		res.Numerator = 120;
 		return res;

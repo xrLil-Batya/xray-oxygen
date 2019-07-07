@@ -582,7 +582,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		return;
 
 	UpdateQuickSlots();
-	GameUI()->PdaMenu().UpdateRankingWnd();
+	GameUI()->PdaMenu().UpdateRankingWnd(); 
 
 	u8 flags = LA_CYCLIC | LA_ONLYALPHA | LA_TEXTURECOLOR;
 	auto MakeIcon = [this](bool bShow, CUIStatic * pStatic, float Koef, float DefKoef1, float DefKoef2, shared_str Sections[3])
@@ -630,7 +630,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 			"ui_inGame2_circle_bloodloose_green", "ui_inGame2_circle_bloodloose_yellow","ui_inGame2_circle_bloodloose_red",
 			"ui_slow_blinking_alpha", "ui_medium_blinking_alpha", "ui_fast_blinking_alpha"
 		};
-		MakeIcon(fis_zero(bleeding, EPS), m_ind_bleeding, bleeding, 0.35f, 0.7f, Sects);
+		MakeIcon(!fis_zero(bleeding, EPS), m_ind_bleeding, bleeding, 0.35f, 0.7f, Sects);
 	}
 
 	// Radiation icon
@@ -641,7 +641,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 			"ui_inGame2_circle_radiation_green", "ui_inGame2_circle_radiation_yellow", "ui_inGame2_circle_radiation_red",
 			"ui_medium_blinking_alpha", "ui_medium_blinking_alpha", "ui_fast_blinking_alpha"
 		};
-		MakeIcon(fis_zero(radiation, EPS), m_ind_radiation, radiation, 0.35f, 0.7f, Sects);
+		MakeIcon(!fis_zero(radiation, EPS), m_ind_radiation, radiation, 0.35f, 0.7f, Sects);
 	}
 
 	// Satiety icon

@@ -11,9 +11,9 @@
 #include "game_graph_space.h"
 #include "xrserver_space.h"
 #include "alife_space.h"
-#include "xrServer_Objects_ALife_Monsters.h"
 #include "../xrScripts/export/script_export_space.h"
 
+class CSE_ALifeMonsterAbstract;
 class CALifeMonsterMovementManager;
 class CSE_ALifeSmartZone;
 class NET_Packet;

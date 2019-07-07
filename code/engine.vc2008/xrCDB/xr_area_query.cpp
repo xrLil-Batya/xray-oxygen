@@ -35,8 +35,8 @@ bool CObjectSpace::BoxQuery	(Fvector const & 		box_center,
 
 	if ( out_tris )
 	{
-		for ( CDB::RESULT*	result	=	xrc.r_begin(); 
-							result != 	xrc.r_end(); 
+		for ( auto	result	=	xrc.r_realBegin(); 
+							result != 	xrc.r_realEnd(); 
 							++result )
 		{
 			out_tris->push_back	(result->verts[0]);
@@ -45,5 +45,5 @@ bool CObjectSpace::BoxQuery	(Fvector const & 		box_center,
 		}
 	}
 
-	return						!!xrc.r_count();
+	return						!xrc.r_empty();
 }

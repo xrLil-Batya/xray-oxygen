@@ -13,8 +13,8 @@ xrCriticalSection::~xrCriticalSection()
 
 void xrCriticalSection::Enter()
 {
-	isLocked = true;
 	EnterCriticalSection(&Section);
+	isLocked = true;
 }
 
 void xrCriticalSection::Leave()
@@ -120,3 +120,50 @@ HANDLE thread_spawn(thread_t* entry, const char* name, unsigned stack, void* arg
 	uintptr_t hThread = _beginthread(thread_entry, stack, startup);
 	return reinterpret_cast<HANDLE> (hThread);
 }
+
+xrSharedCriticalSectionGuard::xrSharedCriticalSectionGuard(xrCriticalSection& InSection)
+	: pSection(&InSection)
+{
+	pSection->Enter();
+	pReference = new xr_atomic_u32();
+	(*pReference) = 1;
+}
+
+xrSharedCriticalSectionGuard::xrSharedCriticalSectionGuard(const xrSharedCriticalSectionGuard& InSharedSection)
+	: pSection(InSharedSection.pSection), pReference(InSharedSection.pReference)
+{
+	(*pReference)++;
+}
+
+xrSharedCriticalSectionGuard::~xrSharedCriticalSectionGuard()
+{
+	ConditionalFreeLock();
+}
+
+void xrSharedCriticalSectionGuard::ConditionalFreeLock()
+{
+	u32 refCount = --(*pReference);
+
+	if (refCount == 0)
+	{
+		pSection->Leave();
+		pSection = nullptr;
+		delete pReference;
+	}
+}
+
+xrSharedCriticalSectionGuard& xrSharedCriticalSectionGuard::operator=(const xrSharedCriticalSectionGuard& Other)
+{
+	ConditionalFreeLock();
+
+	VERIFY(Other.pSection   != nullptr);
+	VERIFY(Other.pReference != nullptr);
+
+	pSection = Other.pSection;
+	pReference = Other.pReference;
+
+	(*pReference)++;
+
+	return *this;
+}
+

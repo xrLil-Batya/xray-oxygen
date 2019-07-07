@@ -653,7 +653,7 @@ void CWeapon::ChangePrevMark()
 	if (current_mark > 0)
 		--current_mark;
 	else if (current_mark == 0 && marks.size() > 1)
-		current_mark = u8(marks.size() - 1);
+		current_mark = u8 (marks.size() - 1);
 }
 
 void CWeapon::UpdateMark()
@@ -729,7 +729,7 @@ xr_string CWeapon::GetNameWithAttachment()
 	else
 		xr_sprintf(str, "%s", m_section_id.c_str());
 
-	return str;
+	return xr_string(str);
 }
 
 BOOL CWeapon::net_Spawn(CSE_Abstract* DC)

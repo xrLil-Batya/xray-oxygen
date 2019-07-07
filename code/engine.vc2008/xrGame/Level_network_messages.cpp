@@ -50,7 +50,7 @@ void CLevel::ClientReceive()
 				while (!P->r_eof())
 				{
 					tmpP.B.count = P->r_u8();
-					P->r(&tmpP.B.data, tmpP.B.count);
+					P->r(tmpP.B.data, tmpP.B.count);
 					tmpP.timeReceive = P->timeReceive;
 
 					game_events->insert		(tmpP);

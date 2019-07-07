@@ -3,6 +3,7 @@
 //#define SLOW_VERIFY_ENTITIES			// Very slow verifing every entity on every game update
 //#define MEM_DEBUG						// Debbuging memory allocator
 #define MEM_HARD_DEBUG	false			// Debbuging memory allocation on steroids. Checking for overwrite pages
+#define MEM_PURE_ALLOC  false
 //#define TBB_ALLOC						// Use TBB allocators
 
 /* Threads */

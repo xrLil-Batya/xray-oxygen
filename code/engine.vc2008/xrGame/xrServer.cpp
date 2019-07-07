@@ -98,7 +98,7 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 		while (!P.r_eof())
 		{
 			tmpP.B.count = P.r_u8();
-			P.r(&tmpP.B.data, tmpP.B.count);
+			P.r(tmpP.B.data, tmpP.B.count);
 
 			OnMessage(tmpP);
 		};
@@ -1017,13 +1017,13 @@ void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET
 			if (!pEventPack) pEventPack = &P2;
 
 			pEventPack->w_u8(u8(tmpP.B.count));
-			pEventPack->w(&tmpP.B.data, tmpP.B.count);
+			pEventPack->w(tmpP.B.data, tmpP.B.count);
 		};
 
 		CGameObject::u_EventGen(tmpP, GE_DESTROY, id_dest);
 
 		pEventPack->w_u8(u8(tmpP.B.count));
-		pEventPack->w(&tmpP.B.data, tmpP.B.count);
+		pEventPack->w(tmpP.B.data, tmpP.B.count);
 	}
 
 	if (!pEPack && pEventPack)

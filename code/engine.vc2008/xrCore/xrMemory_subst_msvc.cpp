@@ -2,6 +2,7 @@
 #include "xrMemory.h"
 #include "xrMemoryDebug.h"
 #include "../FRayBuildConfig.hpp"
+#include "mimalloc/mimalloc.h"
 
 #ifdef TBB_ALLOC
 	#include "tbb/scalable_allocator.h"
@@ -30,9 +31,13 @@ void* xrMemory::mem_alloc(size_t size)
 	{
 		ptr = DebugAllocate(size, dwPageSize);
 	}
-	else
+	else if constexpr(MEM_PURE_ALLOC)
 	{
 		ptr = HeapAlloc(hHeap, 0, size);
+	}
+	else
+	{
+		ptr = mi_malloc_aligned(size, 16);
 	}
 #endif
 
@@ -57,9 +62,13 @@ void xrMemory::mem_free(void* P)
 	{
 		VirtualFree(P, 0, MEM_RELEASE);
 	}
-	else
+	else if constexpr(MEM_PURE_ALLOC)
 	{
 		HeapFree(hHeap, 0, P);
+	}
+	else
+	{
+		mi_free(P);
 	}
 #endif
 
@@ -79,10 +88,17 @@ void* xrMemory::mem_realloc(void* P, size_t size)
 #else
 	if constexpr (MEM_HARD_DEBUG)
 	{
-		VirtualFree(P, 0, MEM_RELEASE);
 		ptr = DebugAllocate(size, dwPageSize);
+		if (P != nullptr)
+		{
+			MEMORY_BASIC_INFORMATION info;
+			VirtualQuery(P, &info, sizeof(info));
+			size_t copiedSize = std::min(size, info.RegionSize);
+			memcpy(ptr, P, copiedSize);
+			VirtualFree(P, 0, MEM_RELEASE);
+		}
 	}
-	else
+	else if constexpr(MEM_PURE_ALLOC)
 	{
 		if (P == nullptr)
 		{
@@ -92,6 +108,10 @@ void* xrMemory::mem_realloc(void* P, size_t size)
 		{
 			ptr = HeapReAlloc(hHeap, 0, P, size);
 		}
+	}
+	else
+	{
+		ptr = mi_realloc_aligned(P, size, 16);
 	}
 #endif
 

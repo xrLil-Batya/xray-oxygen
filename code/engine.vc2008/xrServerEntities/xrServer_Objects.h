@@ -227,4 +227,6 @@ add_to_type_list(CSE_AbstractVisual)
 #ifndef AI_COMPILER
 extern CSE_Abstract	*F_entity_Create	(LPCSTR caSection);
 #endif
+
+
 #pragma warning(pop)

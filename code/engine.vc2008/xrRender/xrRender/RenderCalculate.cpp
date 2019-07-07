@@ -46,10 +46,13 @@ void CRender::Calculate()
 		Sectors_xrc.box_options(CDB::OPT_FULL_TEST);
 		Sectors_xrc.box_query(rmPortals, Device.vCameraPosition, box_radius);
 
-		for (int K = 0; K < Sectors_xrc.r_count(); K++) 
+		if (!Sectors_xrc.r_empty())
 		{
-			CPortal*	pPortal = (CPortal*)Portals[rmPortals->get_tris()[Sectors_xrc.r_begin()[K].id].dummy];
-			pPortal->bDualRender = TRUE;
+			for (auto sectorIter = Sectors_xrc.r_realBegin(); sectorIter != Sectors_xrc.r_realEnd(); sectorIter++)
+			{
+				CDB::TRI& targetTriangle = rmPortals->get_tris()[sectorIter->id];
+				CPortal* pPortal = (CPortal*)Portals[targetTriangle.dummy];
+			}
 		}
 	}
 

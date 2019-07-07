@@ -5,37 +5,42 @@
 //	Author		: Dmitriy Iassenev
 //	Description : AI space class
 ////////////////////////////////////////////////////////////////////////////
+
 #pragma once
-#include "game_graph.h"
-#include "level_graph.h"
-#include "ef_storage.h"
-#include "doors_manager.h"
-#include "patrol_path_manager.h"
-#include "cover_manager.h"
-#include "moving_objects.h"
-#include "script_engine.h"
-#include "alife_simulator.h"
-#include "graph_engine.h"
 
+class CGameGraph;
 class CGameLevelCrossTable;
+class CLevelGraph;
 class CGraphEngine;
+class CEF_Storage;
+class CALifeSimulator;
+class CCoverManager;
+class CScriptEngine;
+class CPatrolPathStorage;
+class moving_objects;
 
-class GAME_API CAI_Space 
-{
+namespace doors {
+	class manager;
+} // namespace doors
+
+class GAME_API CAI_Space {
+private:
 	friend class CALifeSimulator;
 	friend class CALifeGraphRegistry;
 	friend class CALifeSpawnRegistry;
 	friend class CALifeSpawnRegistry;
 	friend class CLevel;
 
-	xrScopePtr<CGameGraph			>			m_game_graph;
-	xrScopePtr<CLevelGraph			>			m_level_graph;
-	xrScopePtr<CGraphEngine			>			m_graph_engine;
-	xrScopePtr<CEF_Storage			>			m_ef_storage;
-	xrScopePtr<CCoverManager		>			m_cover_manager;
-	xrScopePtr<CPatrolPathStorage	>			m_patrol_path_storage;
-	xrScopePtr<moving_objects		>			m_moving_objects;
-	xrScopePtr<doors::manager		>			m_doors_manager;
+private:
+
+	std::unique_ptr<CGameGraph			>			m_game_graph;
+	std::unique_ptr<CLevelGraph			>			m_level_graph;
+	std::unique_ptr<CGraphEngine		>			m_graph_engine;
+	std::unique_ptr<CEF_Storage			>			m_ef_storage;
+	std::unique_ptr<CCoverManager		>			m_cover_manager;
+	std::unique_ptr<CPatrolPathStorage	>			m_patrol_path_storage;
+	std::unique_ptr<moving_objects		>			m_moving_objects;
+	std::unique_ptr<doors::manager		>			m_doors_manager;
 
 	CALifeSimulator* m_alife_simulator = nullptr;
 	CScriptEngine*   m_script_engine   = nullptr;

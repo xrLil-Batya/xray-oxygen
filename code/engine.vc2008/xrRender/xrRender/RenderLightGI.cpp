@@ -34,10 +34,10 @@ void light::gi_generate()
 		dir.normalize();
 		xrc.ray_query(model, position, dir, range);
 
-		if (!xrc.r_count())
+		if (xrc.r_empty())
 			continue;
 
-		CDB::RESULT *R = RImplementation.Sectors_xrc.r_begin();
+		auto R = RImplementation.Sectors_xrc.r_realBegin();
 		CDB::TRI&	T = tris[R->id];
 		Fvector		Tv[3] = { verts[T.verts[0]],verts[T.verts[1]],verts[T.verts[2]] };
 		Fvector		TN;		TN.mknormal(Tv[0], Tv[1], Tv[2]);

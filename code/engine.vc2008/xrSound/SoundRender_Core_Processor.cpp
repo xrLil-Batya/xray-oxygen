@@ -209,14 +209,13 @@ float CSoundRender_Core::get_occlusion_to(const Fvector& hear_pt, const Fvector&
 		geom_DB.ray_options(CDB::OPT_CULL);
 		geom_DB.ray_query(geom_SOM, hear_pt, dir, range);
 		size_t r_cnt = geom_DB.r_count();
-		CDB::RESULT*	_B = geom_DB.r_begin();
 
 		if (0 != r_cnt)
 		{
 			for (u32 k = 0; k < r_cnt; ++k)
 			{
-				CDB::RESULT* R = _B + k;
-				occ_value *= *(float*)&R->dummy;
+				CDB::RESULT& triElement = geom_DB.r_getElement(k);
+				occ_value *= *(float*)& triElement.dummy;
 			}
 		}
 	}
@@ -258,7 +257,7 @@ float CSoundRender_Core::get_occlusion(Fvector& P, float R, Fvector* occ)
 			if (0 != geom_DB.r_count())
 			{
 				// cache polygon
-				const CDB::RESULT* pR = geom_DB.r_begin();
+				const auto pR = geom_DB.r_realBegin();
 				const CDB::TRI& T = geom_MODEL->get_tris()[pR->id];
 				const Fvector* V = geom_MODEL->get_verts();
 				occ[0].set(V[T.verts[0]]);
@@ -274,14 +273,13 @@ float CSoundRender_Core::get_occlusion(Fvector& P, float R, Fvector* occ)
 		geom_DB.ray_options(CDB::OPT_CULL);
 		geom_DB.ray_query(geom_SOM, base, dir, range);
 		size_t r_cnt = geom_DB.r_count();
-		CDB::RESULT*	_B = geom_DB.r_begin();
 
 		if (0 != r_cnt)
 		{
 			for (u32 k = 0; k < r_cnt; ++k)
 			{
-				CDB::RESULT* pR = _B + k;
-				occ_value *= *(float*)&pR->dummy;
+				CDB::RESULT& pR = geom_DB.r_getElement(k);
+				occ_value *= *(float*)&pR.dummy;
 			}
 		}
 	}

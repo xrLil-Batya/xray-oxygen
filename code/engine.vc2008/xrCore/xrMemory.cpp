@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#pragma hdrstop
-
-#include	"xrsharedmem.h"
+#include "xrsharedmem.h"
+#include "FrayBuildConfig.hpp"
+#include "mimalloc/mimalloc.h"
 
 xrMemory Memory;
 
@@ -54,12 +54,19 @@ void xrMemory::mem_compact()
 // xr_strdup
 char* xr_strdup(const char* string)
 {
-	VERIFY(string);
-	size_t len = xr_strlen(string) + 1;
-	char *	memory = (char*)Memory.mem_alloc(len);
-	std::memcpy(memory, string, len);
+	if constexpr (MEM_PURE_ALLOC)
+	{
+		VERIFY(string);
+		size_t len = xr_strlen(string) + 1;
+		char *	memory = (char*)Memory.mem_alloc(len);
+		std::memcpy(memory, string, len);
 
-	return memory;
+		return memory;
+	}
+	else
+	{
+		return mi_strdup(string);
+	}
 }
 
 XRCORE_API bool is_stack_ptr(void* _ptr)

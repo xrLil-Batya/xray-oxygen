@@ -14,7 +14,7 @@ class CMonsterHome
 	u32					min_move_dist;
 	u32					max_move_dist;
 
-	bool				bAggressive;
+	bool				m_bAggressive;
 
 public:
 	CMonsterHome	            (CBaseMonster *obj) : m_object(obj) {}
@@ -41,5 +41,5 @@ public:
 	float	get_mid_radius		() { return m_radius_middle; }
 	float	get_max_radius		() { return m_radius_max;    };
 IC	bool	has_home			() { return (m_path != 0) || (m_level_vertex_id != u32(-1));   }
-IC	bool	is_aggressive		() { return bAggressive;    }
+IC	bool	is_aggressive		() { return m_bAggressive;    }
 };

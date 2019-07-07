@@ -8,34 +8,31 @@
 
 #include "stdafx.h"
 #include "object_factory.h"
+#include "../xrUICore/xrUIXmlParser.h"
 #include "..\xrEngine\xr_level_controller.h"
 #include "../xrEngine/profiler.h"
 #include "../xrEngine/spectre/Spectre.h"
 #pragma comment (lib, "xrCore.lib")
 #pragma comment (lib,"xrEngine.lib")
-#pragma comment(lib, "xrSound.lib")
 
-extern "C" 
-{
-	DLL_API DLL_Pure* __cdecl xrFactory_Create(CLASS_ID clsid)
+extern "C" {
+	DLL_API DLL_Pure*	__cdecl xrFactory_Create		(CLASS_ID clsid)
 	{
-		DLL_Pure *pPureObject = object_factory().client_object(clsid);
-		if (pPureObject)
-		{
-			pPureObject->CLS_ID = clsid;
+		DLL_Pure			*object = object_factory().client_object(clsid);
+#ifdef DEBUG
+		if (!object)
+			return			(nullptr);
+#endif
+		object->CLS_ID		= clsid;
 
-			//Invoke Spectre proxy constructor
-			pPureObject->SpectreObjectId = SpectreEngineClient::CreateProxyObject(pPureObject);
-		}
-		else
-			Msg("[ERROR] CL Object %s don't create!");
-
-		return pPureObject;
+		//Invoke Spectre proxy constructor
+		object->SpectreObjectId = SpectreEngineClient::CreateProxyObject(object);
+		return				(object);
 	}
 
-	DLL_API void __cdecl xrFactory_Destroy(DLL_Pure* pPureObject)
+	DLL_API void		__cdecl	xrFactory_Destroy		(DLL_Pure* O)
 	{
-		xr_delete(pPureObject);
+		xr_delete			(O);
 	}
 };
 
@@ -46,10 +43,8 @@ void LoadGameExtraFeatures();
 
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {
-	switch (ul_reason_for_call) 
-	{
-		case DLL_PROCESS_ATTACH: 
-		{
+	switch (ul_reason_for_call) {
+		case DLL_PROCESS_ATTACH: {
 			// register console commands
 			CCC_RegisterCommands();
 
@@ -61,10 +56,14 @@ BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 
             // register expression delegates
             RegisterExpressionDelegates();
-			g_profiler = new CProfiler();
-		} break;
+			g_profiler			= xr_new<CProfiler>();
 
-		case DLL_PROCESS_DETACH: break;
+			break;
+		}
+
+		case DLL_PROCESS_DETACH: {
+			break;
+		}
 	}
-	return true;
+    return								(TRUE);
 }

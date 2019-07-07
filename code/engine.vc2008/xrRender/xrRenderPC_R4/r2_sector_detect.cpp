@@ -41,8 +41,8 @@ IRender_Sector* CRender::detectSector(const Fvector& P, Fvector& dir)
 	if (rmPortals)
 	{
 		Sectors_xrc.ray_query(rmPortals, P, dir, range1);
-		if (Sectors_xrc.r_count()) {
-			CDB::RESULT *RP1 = Sectors_xrc.r_begin();
+		if (!Sectors_xrc.r_empty()) {
+			CDB::RESULT *RP1 = &(*Sectors_xrc.r_realBegin());
 			id1 = RP1->id; range1 = RP1->range;
 		}
 	}
@@ -51,8 +51,8 @@ IRender_Sector* CRender::detectSector(const Fvector& P, Fvector& dir)
 	int		id2 = -1;
 	float	range2 = range1;
 	Sectors_xrc.ray_query(g_pGameLevel->ObjectSpace.GetStaticModel(), P, dir, range2);
-	if (Sectors_xrc.r_count()) {
-		CDB::RESULT *RP2 = Sectors_xrc.r_begin();
+	if (!Sectors_xrc.r_empty()) {
+		CDB::RESULT *RP2 = &(*Sectors_xrc.r_realBegin());
 		id2 = RP2->id; range2 = RP2->range;
 	}
 
