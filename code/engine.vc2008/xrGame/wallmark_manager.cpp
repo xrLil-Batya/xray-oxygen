@@ -67,8 +67,6 @@ void CWalmarkManager::StartWorkflow()
 
 	CDB::TRI*		T_array					= Level().ObjectSpace.GetStaticTris();
 	Fvector*		V_array					= Level().ObjectSpace.GetStaticVerts();
-	CDB::RESULT*	R_begin                 = XRC.r_begin();
-	CDB::RESULT*    R_end                   = XRC.r_end();
 	u32				wm_count	= 0;
 
 
@@ -76,7 +74,7 @@ void CWalmarkManager::StartWorkflow()
 	u32 _tri_not_plane	= 0;
 	u32 _not_dist		= 0;
 
-	for (CDB::RESULT* Res=R_begin; Res!=R_end; ++Res)
+	for (auto Res = XRC.r_realBegin(); Res != XRC.r_realEnd(); ++Res)
 	{
 		if(wm_count >= max_wallmarks_count) break;
 		

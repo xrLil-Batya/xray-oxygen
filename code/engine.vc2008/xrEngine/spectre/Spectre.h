@@ -1,6 +1,6 @@
 #pragma once
-#include "../xrManagedLib/ISpectreEngine.h"
-#include "../xrManagedEngineLib/ISpectreEngineLib.h"
+#include "../../xrManagedLib/ISpectreEngine.h"
+#include "../../xrManagedEngineLib/ISpectreEngineLib.h"
 #include "ExternalCallbackTypes.h"
 
 class ENGINE_API SpectreEngineClient
@@ -18,6 +18,8 @@ private:
 	static ISpectreCoreServer* CoreAPI;
 	static ISpectreEngineLib* EngineLibAPI;
 
+	static HMODULE hManagedLib;
+	static HMODULE hGameManagedLib;
 };
 
 extern bool gSpectreIsLoaded;

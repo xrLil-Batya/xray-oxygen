@@ -3144,14 +3144,7 @@ function create_cutscene_actor_with_weapon(actor, npc, p)
 	end
 
 	if (active_item) then
-		local new_weapon = alife():create(section_name,
-													ptr:point(index),
-													ptr:level_vertex_id(0),
-													ptr:game_vertex_id(0),
-													npc.id)
-		if section_name ~= "wpn_gauss" then
-			new_weapon:clone_addons(actor_weapon)
-		end
+		alife():create(section_name, ptr:point(index), ptr:level_vertex_id(0), ptr:game_vertex_id(0), npc.id)
 	end
 end
 

@@ -8,65 +8,65 @@
 
 #pragma once
 
-IC CGameGraph &CAI_Space::game_graph() const
+IC CGameGraph& CAI_Space::game_graph() const
 {
 	VERIFY(m_game_graph);
 	return *m_game_graph.get();
 }
 
-IC CLevelGraph &CAI_Space::level_graph() const
+IC CLevelGraph& CAI_Space::level_graph() const
 {
 	VERIFY(m_level_graph);
 	return *m_level_graph.get();
 }
 
-IC const CLevelGraph *CAI_Space::get_level_graph() const
+IC const CLevelGraph* CAI_Space::get_level_graph() const
 {
 	return m_level_graph.get();
 }
 
-IC CEF_Storage &CAI_Space::ef_storage() const
+IC CEF_Storage& CAI_Space::ef_storage() const
 {
 	VERIFY(m_ef_storage);
 	return *m_ef_storage.get();
 }
 
-IC CGraphEngine &CAI_Space::graph_engine() const
+IC CGraphEngine& CAI_Space::graph_engine() const
 {
 	VERIFY(m_graph_engine);
 	return *m_graph_engine.get();
 }
 
-IC const CALifeSimulator &CAI_Space::alife() const
+IC const CALifeSimulator& CAI_Space::alife() const
 {
 	VERIFY(m_alife_simulator);
 	return *m_alife_simulator;
 }
 
-IC const CALifeSimulator *CAI_Space::get_alife() const
+IC const CALifeSimulator* CAI_Space::get_alife() const
 {
 	return m_alife_simulator;
 }
 
-IC const CCoverManager &CAI_Space::cover_manager() const
+IC const CCoverManager& CAI_Space::cover_manager() const
 {
 	VERIFY(m_cover_manager);
 	return *m_cover_manager;
 }
 
-IC CScriptEngine &CAI_Space::script_engine() const
+IC CScriptEngine& CAI_Space::script_engine() const
 {
 	VERIFY(m_script_engine);
 	return *m_script_engine;
 }
 
-IC const CPatrolPathStorage &CAI_Space::patrol_paths() const
+IC const CPatrolPathStorage& CAI_Space::patrol_paths() const
 {
 	VERIFY(m_patrol_path_storage);
 	return *m_patrol_path_storage;
 }
 
-IC moving_objects &CAI_Space::moving_objects() const
+IC moving_objects& CAI_Space::moving_objects() const
 {
 	VERIFY(m_moving_objects);
 	return *m_moving_objects;
@@ -78,7 +78,7 @@ IC doors::manager& CAI_Space::doors() const
 	return *m_doors_manager;
 }
 
-IC CPatrolPathStorage &CAI_Space::patrol_paths_raw()
+IC CPatrolPathStorage& CAI_Space::patrol_paths_raw()
 {
 	VERIFY(m_patrol_path_storage);
 	return *m_patrol_path_storage;

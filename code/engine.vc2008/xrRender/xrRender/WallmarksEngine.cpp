@@ -111,12 +111,10 @@ void CWallmarksEngine::static_wm_render(CWallmarksEngine::static_wallmark*	W, FV
 	float		a = 1 - (W->ttl / ps_r_WallmarkTTL);
 	int			aC = iFloor(a * 255.f);	clamp(aC, 0, 255);
 	u32			C = color_rgba(128, 128, 128, aC);
-	FVF::LIT*	S = &*W->verts.begin();
-	FVF::LIT*	E = &*W->verts.end();
-	for (; S != E; S++, V++) {
-		V->p.set(S->p);
+	for (const FVF::LIT& elem : W->verts) {
+		V->p.set(elem.p);
 		V->color = C;
-		V->t.set(S->t);
+		V->t.set(elem.t);
 	}
 }
 
@@ -215,7 +213,8 @@ void CWallmarksEngine::AddWallmark_internal	(CDB::TRI* pTri, const Fvector* pVer
 		sml_collector.add_face_packed_D	(pVerts[pTri->verts[0]],pVerts[pTri->verts[1]],pVerts[pTri->verts[2]],0);
 		for (u32 t=0; t<triCount; t++)	
 		{
-			CDB::TRI*	T	= tris+xrc.r_begin()[t].id;
+			CDB::RESULT& sectorTris = xrc.r_getElement(t);
+			CDB::TRI*	T	= tris + sectorTris.id;
 			if (T==pTri)	continue;
 			sml_collector.add_face_packed_D		(pVerts[T->verts[0]],pVerts[T->verts[1]],pVerts[T->verts[2]],0);
 		}
@@ -247,9 +246,10 @@ void CWallmarksEngine::AddWallmark_internal	(CDB::TRI* pTri, const Fvector* pVer
 	{
 		Fbox bb;	bb.invalidate();
 
-		FVF::LIT* I=&*W->verts.begin	();
-		FVF::LIT* E=&*W->verts.end		();
-		for (; I!=E; I++)	bb.modify	(I->p);
+		for (FVF::LIT& elem : W->verts)
+		{
+			bb.modify(elem.p);
+		}
 		bb.getsphere					(W->bounds.P, W->bounds.R);
 	}
 

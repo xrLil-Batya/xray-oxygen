@@ -1,23 +1,26 @@
 #include "stdafx.h"
-#pragma hdrstop
-
-#include	"xrsharedmem.h"
+#include "xrsharedmem.h"
+#include "FrayBuildConfig.hpp"
+#include "mimalloc/mimalloc.h"
 
 xrMemory Memory;
-bool mem_initialized = false;
 
 xrMemory::xrMemory()
-{}
+{
+	// do not place code here. 
+	// If you need something initialized - place that in _initialize
+}
 
 xrMemory::~xrMemory()
 {}
 
 void xrMemory::_initialize()
 {
-	stat_calls = 0;
-	stat_counter = 0;
-
-	mem_initialized = true;
+	hHeap = HeapCreate(0, 0, 0);
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+	dwPageSize = info.dwPageSize;
+	bInitialized = true;
 }
 
 void xrMemory::_destroy()
@@ -25,8 +28,7 @@ void xrMemory::_destroy()
 	g_pSharedMemoryContainer_isDestroyed = true;
 	xr_delete(g_pSharedMemoryContainer);
 	g_pSharedMemoryContainer = nullptr;
-
-	mem_initialized = false;
+	bInitialized = false;
 }
 
 inline const size_t external_size = size_t(-1);
@@ -52,12 +54,19 @@ void xrMemory::mem_compact()
 // xr_strdup
 char* xr_strdup(const char* string)
 {
-	VERIFY(string);
-	size_t len = xr_strlen(string) + 1;
-	char *	memory = (char*)Memory.mem_alloc(len);
-	std::memcpy(memory, string, len);
+	if constexpr (MEM_PURE_ALLOC)
+	{
+		VERIFY(string);
+		size_t len = xr_strlen(string) + 1;
+		char *	memory = (char*)Memory.mem_alloc(len);
+		std::memcpy(memory, string, len);
 
-	return memory;
+		return memory;
+	}
+	else
+	{
+		return mi_strdup(string);
+	}
 }
 
 XRCORE_API bool is_stack_ptr(void* _ptr)

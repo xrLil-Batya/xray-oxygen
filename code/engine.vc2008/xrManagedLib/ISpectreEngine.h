@@ -7,7 +7,7 @@
 #endif
 
 // Bridge interface for unmanaged libs
-xr_pure_interface MANAGED_API ISpectreCoreServer
+xr_interface MANAGED_API ISpectreCoreServer
 {
 	virtual void CompileScripts() = 0;
 	virtual void LoadGameLib() = 0;

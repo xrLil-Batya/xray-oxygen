@@ -5,7 +5,7 @@
 #define CAST_TO_NATIVE_OBJECT(Type, IntPtr) \
 DLL_Pure* NativeObject = reinterpret_cast<DLL_Pure*> (IntPtr.ToPointer()); \
 R_ASSERT2(NativeObject, "Can't construct proxy of " #Type " : Native object is null!"); \
-pNativeObject = smart_cast<Type*>(NativeObject); \
+pNativeObject = dynamic_cast<Type*>(NativeObject); \
 R_ASSERT2(pNativeObject, "Can't construct proxy of " #Type " : Object is not a target type!")
 
 // start declaring a new event. VA_ARGS - parameters WITH types

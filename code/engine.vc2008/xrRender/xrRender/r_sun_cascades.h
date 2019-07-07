@@ -1,5 +1,4 @@
 #pragma once
-#include <concurrent_vector.h>
 
 namespace sun
 {

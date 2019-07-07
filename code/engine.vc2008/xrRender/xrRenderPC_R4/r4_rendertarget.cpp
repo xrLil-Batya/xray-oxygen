@@ -13,8 +13,10 @@
 #include "../xrRenderDX10/DX10 Rain/dx10RainBlender.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
-
+#include "../../xrEngine/std_classes.h"
+#include "../../xrEngine/Spectre/Spectre.h"
 #include <D3DX10Tex.h>
+RENDER_API CRenderTarget* pRenderTarget = nullptr;
 
 void	CRenderTarget::u_setrt(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, ID3DDepthStencilView* zb)
 {
@@ -238,6 +240,10 @@ void	generate_jitter(DWORD*	dest, u32 elem_count)
 
 CRenderTarget::CRenderTarget()
 {
+	CLS_ID = CLSID_RENDER;
+	SpectreObjectId = SpectreEngineClient::CreateProxyObject(this);
+
+	pRenderTarget = this;
 	u32 SampleCount = 1;
 
 	if (ps_r_ssao_mode != 2)
@@ -377,6 +383,9 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 
 		// Second viewport
 		rt_secondVP.create					(r2_RT_secondVP, w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
+		rt_OXY_holomarks.create				(r2_OXY_holo_mark); // конкретно с этим мы и будем работать далее,
+																// заменяя ссылку на текстуру с нужной маркой
+		m_MarkTexture						= "";
 
 		if (RImplementation.o.dx10_msaa)
 		{

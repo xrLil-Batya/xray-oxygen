@@ -15,6 +15,6 @@ enum		EIMF_Type
 
 	imf_FORCEDWORD=0xffffffff
 };
-XRLC_LIGHT_API	void imf_Process(u32* dst, u32 dstW, u32 dstH, u32* src, u32 srcW, u32 srcH, EIMF_Type FILTER);
+XRLC_LIGHT_API	void imf_Process(std::vector<u32> dst, u32 dstW, u32 dstH, std::vector<u32> src, u32 srcW, u32 srcH, EIMF_Type FILTER);
 
 #endif

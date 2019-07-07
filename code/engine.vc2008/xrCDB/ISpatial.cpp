@@ -160,12 +160,11 @@ ISpatial_DB::~ISpatial_DB()
 		}
 	}
 
-
-	while (!allocator_pool.empty())
+	for (auto i = allocator_pool.rbegin(); i != allocator_pool.rend(); i--)
 	{
-		allocator.destroy(allocator_pool.back());
-		allocator_pool.pop_back	();
+		allocator.destroy(*i);
 	}
+	allocator_pool.clear();
 }
 
 #pragma todo("FX to Giperion: allocator_pool.reserve(128) --> 256 and allocator --> 256. Мне лень пересобирать сейчас")

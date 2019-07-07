@@ -52,6 +52,10 @@ BOOL CRenderDevice::Begin	()
 		Reset();
 		break;
 
+	case IRenderDeviceRender::dsRemoved:
+		// Driver error. Bye-bye
+		Debug.fatal(DEBUG_INFO, "Video card driver broken! I'm sorry...");
+
 	default:
 		R_ASSERT(0);
 	}

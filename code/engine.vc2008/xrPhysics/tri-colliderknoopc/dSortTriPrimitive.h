@@ -93,21 +93,21 @@ inline int dcTriListCollider::dSortTriPrimitiveCollide(
 		//VERIFY( g_pGameLevel );
 		XRC.box_query(inl_ph_world().ObjectSpace().GetStaticModel(), cast_fv(p), aabb);
 
-		CDB::RESULT*    R_begin = XRC.r_begin();
-		CDB::RESULT*    R_end = XRC.r_end();
-#ifdef DEBUG
-
-		debug_output().dbg_total_saved_tries() -= data->cashed_tries.size();
-		debug_output().dbg_new_queries_per_step()++;
-#endif
 		data->cashed_tries.clear();
-		for (CDB::RESULT* Res = R_begin; Res != R_end; ++Res)
+		if (!XRC.r_empty())
 		{
-			data->cashed_tries.push_back(Res->id);
-		}
 #ifdef DEBUG
-		debug_output().dbg_total_saved_tries() += data->cashed_tries.size();
+			debug_output().dbg_total_saved_tries() -= data->cashed_tries.size();
+			debug_output().dbg_new_queries_per_step()++;
 #endif
+			for (auto Res = XRC.r_realBegin(); Res != XRC.r_realEnd(); ++Res)
+			{
+				data->cashed_tries.push_back(Res->id);
+			}
+#ifdef DEBUG
+			debug_output().dbg_total_saved_tries() += data->cashed_tries.size();
+#endif
+		}
 		data->last_aabb_pos.set(cast_fv(p));
 		data->last_aabb_size.set(aabb);
 	}
@@ -181,139 +181,142 @@ inline int dcTriListCollider::dSortTriPrimitiveCollide(
 
 	bool b_pushing = *pushing_neg;//||*pushing_b_neg;
 	gl_cl_tries_state.resize(data->cashed_tries.size(), Flags8().assign(0));
-	B = data->cashed_tries.begin(), E = data->cashed_tries.end();
-	bool gb_pased = false;
-	for (I = B; I != E; ++I)
+	if (!data->cashed_tries.empty())
 	{
+		B = data->cashed_tries.begin(), E = data->cashed_tries.end();
+		bool gb_pased = false;
+		for (I = B; I != E; ++I)
+		{
 #ifdef DEBUG
-		debug_output().dbg_saved_tries_for_active_objects()++;
+			debug_output().dbg_saved_tries_for_active_objects()++;
 #endif
-		CDB::TRI* T = T_array + *I;
-		const Point vertices[3] = { Point((dReal*)&V_array[T->verts[0]]),Point((dReal*)&V_array[T->verts[1]]),Point((dReal*)&V_array[T->verts[2]]) };
-		if (!aabb_tri_aabb(Point(p), Point((float*)&AABB), vertices))
-			continue;
+			CDB::TRI* T = T_array + *I;
+			const Point vertices[3] = { Point((dReal*)& V_array[T->verts[0]]),Point((dReal*)& V_array[T->verts[1]]),Point((dReal*)& V_array[T->verts[2]]) };
+			if (!aabb_tri_aabb(Point(p), Point((float*)& AABB), vertices))
+				continue;
 #ifdef DEBUG
-		if (debug_output().ph_dbg_draw_mask().test(phDBgDrawIntersectedTries))
-			debug_output().DBG_DrawTri(T, V_array, D3DCOLOR_XRGB(0, 255, 0));
-		debug_output().dbg_tries_num()++;
+			if (debug_output().ph_dbg_draw_mask().test(phDBgDrawIntersectedTries))
+				debug_output().DBG_DrawTri(T, V_array, D3DCOLOR_XRGB(0, 255, 0));
+			debug_output().dbg_tries_num()++;
 #endif
-		Triangle	tri;
-		CalculateTri(T, p, tri, vertices);
-		if (tri.dist < 0.f) {
+			Triangle	tri;
+			CalculateTri(T, p, tri, vertices);
+			if (tri.dist < 0.f) {
 #ifdef DEBUG
-			if (debug_output().ph_dbg_draw_mask().test(phDBgDrawNegativeTries))
-				debug_output().DBG_DrawTri(T, V_array, D3DCOLOR_XRGB(0, 0, 255));
+				if (debug_output().ph_dbg_draw_mask().test(phDBgDrawNegativeTries))
+					debug_output().DBG_DrawTri(T, V_array, D3DCOLOR_XRGB(0, 0, 255));
 #endif
-			float last_pos_dist = dDOT(last_pos, tri.norm) - tri.pos;
-			if ((!(last_pos_dist < 0.f)) || b_pushing)
-				if (__aabb_tri(Point(p), Point((float*)&AABB), vertices))
-				{
-#ifdef DEBUG
-					if (debug_output().ph_dbg_draw_mask().test(phDBgDrawTriesChangesSign))
-						debug_output().DBG_DrawTri(T, V_array, D3DCOLOR_XRGB(0, 255, 0));
-#endif
-					SGameMtl* material = GMLibrary().GetMaterialByIdx(T->material);
-					VERIFY(material);
-					bool	b_passable = !!material->Flags.test(SGameMtl::flPassable);
-					bool contain_pos = TriContainPoint(
-						vertices[0],
-						vertices[1],
-						vertices[2],
-						tri.norm, tri.side0,
-						tri.side1, p);
-					bool b_pased = false;
-					if (!b_pushing && !gb_pased)
+				float last_pos_dist = dDOT(last_pos, tri.norm) - tri.pos;
+				if ((!(last_pos_dist < 0.f)) || b_pushing)
+					if (__aabb_tri(Point(p), Point((float*)& AABB), vertices))
 					{
-						if (!no_last_pos && !b_passable)
+#ifdef DEBUG
+						if (debug_output().ph_dbg_draw_mask().test(phDBgDrawTriesChangesSign))
+							debug_output().DBG_DrawTri(T, V_array, D3DCOLOR_XRGB(0, 255, 0));
+#endif
+						SGameMtl* material = GMLibrary().GetMaterialByIdx(T->material);
+						VERIFY(material);
+						bool	b_passable = !!material->Flags.test(SGameMtl::flPassable);
+						bool contain_pos = TriContainPoint(
+							vertices[0],
+							vertices[1],
+							vertices[2],
+							tri.norm, tri.side0,
+							tri.side1, p);
+						bool b_pased = false;
+						if (!b_pushing && !gb_pased)
 						{
-#ifdef DEBUG
-							if (debug_output().ph_dbg_draw_mask().test(phDbgDrawTriTrace))
-								debug_output().DBG_DrawLine(cast_fv(last_pos), cast_fv(p), D3DCOLOR_XRGB(255, 0, 255));
-#endif
-							dVector3 tri_point;
-							PlanePoint(tri, last_pos, p, last_pos_dist, tri_point);
-#ifdef DEBUG
-							if (debug_output().ph_dbg_draw_mask().test(phDbgDrawTriPoint))
-								debug_output().DBG_DrawPoint(cast_fv(tri_point), 0.01f, D3DCOLOR_XRGB(255, 0, 255));
-#endif
-							bool was_intersect = intersect;
-							intersect = intersect || TriContainPoint(
-								vertices[0],
-								vertices[1],
-								vertices[2],
-								tri.norm, tri.side0,
-								tri.side1, tri_point);
-							b_pased = intersect && !was_intersect;
-							gb_pased = b_pased || gb_pased;
-#ifdef	DEBUG
-							if (b_pased && debug_output().ph_dbg_draw_mask().test(phDbgDrawTriPoint))
+							if (!no_last_pos && !b_passable)
 							{
-								dVectorSet(last_pos, tri_point);
-								debug_output().DBG_OpenCashedDraw();
-								debug_output().DBG_DrawPoint(cast_fv(tri_point), 0.01f, D3DCOLOR_XRGB(255, 0, 255));
-								debug_output().DBG_ClosedCashedDraw(1000000);
-							}
+#ifdef DEBUG
+								if (debug_output().ph_dbg_draw_mask().test(phDbgDrawTriTrace))
+									debug_output().DBG_DrawLine(cast_fv(last_pos), cast_fv(p), D3DCOLOR_XRGB(255, 0, 255));
 #endif
+								dVector3 tri_point;
+								PlanePoint(tri, last_pos, p, last_pos_dist, tri_point);
+#ifdef DEBUG
+								if (debug_output().ph_dbg_draw_mask().test(phDbgDrawTriPoint))
+									debug_output().DBG_DrawPoint(cast_fv(tri_point), 0.01f, D3DCOLOR_XRGB(255, 0, 255));
+#endif
+								bool was_intersect = intersect;
+								intersect = intersect || TriContainPoint(
+									vertices[0],
+									vertices[1],
+									vertices[2],
+									tri.norm, tri.side0,
+									tri.side1, tri_point);
+								b_pased = intersect && !was_intersect;
+								gb_pased = b_pased || gb_pased;
+#ifdef	DEBUG
+								if (b_pased && debug_output().ph_dbg_draw_mask().test(phDbgDrawTriPoint))
+								{
+									dVectorSet(last_pos, tri_point);
+									debug_output().DBG_OpenCashedDraw();
+									debug_output().DBG_DrawPoint(cast_fv(tri_point), 0.01f, D3DCOLOR_XRGB(255, 0, 255));
+									debug_output().DBG_ClosedCashedDraw(1000000);
+								}
+#endif
+							}
+							else
+							{
+								if (contain_pos && primitive.Proj(o1, tri.norm) > -tri.dist)
+									intersect = true;
+							}
 						}
 						else
 						{
-							if (contain_pos&&primitive.Proj(o1, tri.norm) > -tri.dist)
-								intersect = true;
+							intersect = true;
 						}
-					}
-					else
-					{
-						intersect = true;
-					}
 
-					if (!b_passable && (b_pased || (contain_pos && no_last_pos)))
-					{
-						dReal sidePr = primitive.Proj(o1, tri.norm);
-						tri.depth = sidePr - tri.dist;
-						if (neg_depth > tri.depth && (!(*pushing_neg || spushing_neg) || dDOT(neg_tri.norm, tri.norm) > -M_SQRT1_2) && (!(*pushing_b_neg || spushing_b_neg) || dDOT(b_neg_tri.norm, tri.norm) > -M_SQRT1_2))//exclude switching on opposite side &&(!*pushing_b_neg||dDOT(b_neg_tri->norm,tri.norm)>-M_SQRT1_2)
+						if (!b_passable && (b_pased || (contain_pos && no_last_pos)))
 						{
-							neg_depth = tri.depth;
-							neg_tri = tri;
-							data->neg_tri = tri.T;
+							dReal sidePr = primitive.Proj(o1, tri.norm);
+							tri.depth = sidePr - tri.dist;
+							if (neg_depth > tri.depth && (!(*pushing_neg || spushing_neg) || dDOT(neg_tri.norm, tri.norm) > -M_SQRT1_2) && (!(*pushing_b_neg || spushing_b_neg) || dDOT(b_neg_tri.norm, tri.norm) > -M_SQRT1_2))//exclude switching on opposite side &&(!*pushing_b_neg||dDOT(b_neg_tri->norm,tri.norm)>-M_SQRT1_2)
+							{
+								neg_depth = tri.depth;
+								neg_tri = tri;
+								data->neg_tri = tri.T;
+							}
 						}
-					}
 
-					if (!b_pased && b_passable) {
-						++b_count;
-						dReal sidePr = primitive.Proj(o1, tri.norm);
-						tri.depth = sidePr - tri.dist;
-						if (b_neg_depth > tri.depth && (!(*pushing_b_neg || spushing_b_neg) || dDOT(b_neg_tri.norm, tri.norm) > -M_SQRT1_2) && ((!*pushing_neg || !spushing_neg) || dDOT(neg_tri.norm, tri.norm) > -M_SQRT1_2)) {//exclude switching on opposite side &&(!*pushing_neg||dDOT(neg_tri->norm,tri.norm)>-M_SQRT1_2)
-							b_neg_depth = tri.depth;
-							b_neg_tri = tri;
-							data->b_neg_tri = tri.T;
+						if (!b_pased && b_passable) {
+							++b_count;
+							dReal sidePr = primitive.Proj(o1, tri.norm);
+							tri.depth = sidePr - tri.dist;
+							if (b_neg_depth > tri.depth && (!(*pushing_b_neg || spushing_b_neg) || dDOT(b_neg_tri.norm, tri.norm) > -M_SQRT1_2) && ((!*pushing_neg || !spushing_neg) || dDOT(neg_tri.norm, tri.norm) > -M_SQRT1_2)) {//exclude switching on opposite side &&(!*pushing_neg||dDOT(neg_tri->norm,tri.norm)>-M_SQRT1_2)
+								b_neg_depth = tri.depth;
+								b_neg_tri = tri;
+								data->b_neg_tri = tri.T;
+							}
 						}
 					}
-				}
-		}
-		else
-		{
+			}
+			else
+			{
 #ifdef DEBUG
-			if (debug_output().ph_dbg_draw_mask().test(phDBgDrawPositiveTries))
-				debug_output().DBG_DrawTri(T, V_array, D3DCOLOR_XRGB(255, 0, 0));
+				if (debug_output().ph_dbg_draw_mask().test(phDBgDrawPositiveTries))
+					debug_output().DBG_DrawTri(T, V_array, D3DCOLOR_XRGB(255, 0, 0));
 #endif
-			if (ret > flags - 10)
-				continue;
+				if (ret > flags - 10)
+					continue;
 
-			if (!b_pushing && (!intersect || no_last_pos))
-				ret += primitive.Collide(
-					vertices[0],
-					vertices[1],
-					vertices[2],
-					&tri,
-					o1,
-					o2,
-					3,
-					CONTACT(contact, ret * skip), skip);
-			if (no_last_pos)
-				pos_tries.push_back(tri);
+				if (!b_pushing && (!intersect || no_last_pos))
+					ret += primitive.Collide(
+						vertices[0],
+						vertices[1],
+						vertices[2],
+						&tri,
+						o1,
+						o2,
+						3,
+						CONTACT(contact, ret * skip), skip);
+				if (no_last_pos)
+					pos_tries.push_back(tri);
+			}
 		}
-	}
 
+	}
 	xr_vector<Triangle>::iterator i;
 
 	if (intersect)

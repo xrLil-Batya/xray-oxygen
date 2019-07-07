@@ -9,12 +9,12 @@
 
 #include "xrImage_Resampler.h"
 
-typedef	u32	Pixel;
+using Pixel = u32;
 struct Image
 {
 	int		xsize;		/* horizontal size of the image in Pixels */
 	int		ysize;		/* vertical size of the image in Pixels */
-	Pixel *	data;		/* pointer to first scanline of image */
+	std::vector<Pixel>	data;		/* pointer to first scanline of image */
 	int		span;		/* byte offset between two scanlines */
 };
 
@@ -25,36 +25,58 @@ struct Image
 *	generic image access and i/o support routines
 */
 
-Image *	new_image(int xsize, int ysize)		/* create a blank image */
+inline void fill_zeros(std::vector<u32>& arr, u32 length)
 {
-	Image *image;
-
-	if ((0 != (image = (Image *)xr_malloc(sizeof(Image)))) && (0 != (image->data = (Pixel *)xr_malloc(ysize*xsize * sizeof(Pixel)))))
+	for (u32 i = 0; i < length; i++)
 	{
-		std::memset(image->data, 0, ysize*xsize * sizeof(Pixel));
-		image->xsize = xsize;
-		image->ysize = ysize;
-		image->span = xsize;
+		arr.emplace_back(0);
 	}
-	return	(image);
 }
 
-void	free_image(Image* image)
+
+Image* new_image(int xsize, int ysize)		/* create a blank image */
 {
-	xr_free(image->data);
-	xr_free(image);
+	Image *pImage = new Image();	
+
+	// fill_zeros(pImage->data, xsize * ysize);
+
+ 	pImage->data.resize(xsize * ysize);
+
+	if (pImage)
+	{
+		pImage->xsize = xsize;
+		pImage->ysize = ysize;
+		pImage->span = xsize;
+	}
+	return pImage;
+}
+
+
+void free_image(Image* image)
+{	
+	image->data.clear();
 }
 
 Pixel	get_pixel(Image* image, int x, int y)
 {
 	if ((x < 0) || (x >= image->xsize) || (y < 0) || (y >= image->ysize)) return 0;
-	return image->data[(y * image->span) + x];
+	return image->data[( (y * image->span) + x )];
+
 }
 
-void	get_row(Pixel* row, Image* image, int y)
+inline void	copy_in_line(std::vector<Pixel>& row, Image* image, u32 y)
+{
+	for (u32 i = y, r = 0; i < y * image->span; i++, r++)
+	{
+		row[r] = image->data[i];
+	}
+}
+
+void	get_row(std::vector<Pixel>& row, Image* image, u32 y)
 {
 	if ((y < 0) || (y >= image->ysize)) return;
-	std::memcpy(row, image->data + (y * image->span), (sizeof(Pixel) * image->xsize));
+	//std::memcpy(row, (void*)(image->data[0] + (y * image->span)), (sizeof(Pixel) * image->xsize));
+	copy_in_line(row, image, y);
 }
 
 void	get_column(Pixel* column, Image* image, int x)
@@ -65,9 +87,27 @@ void	get_column(Pixel* column, Image* image, int x)
 	if ((x < 0) || (x >= image->xsize)) return;
 
 	d = image->span;
-	for (i = image->ysize, p = image->data + x; i-- > 0; p += d) {
+	for (i = image->ysize, p = &image->data[x]; i-- > 0; p += d) 
+	{
 		*column++ = *p;
 	}
+}
+void	get_column(std::vector<Pixel>& column, Image* image, int x)
+{
+	int i, d;
+	Pixel* p;
+
+	if ((x < 0) || (x >= image->xsize)) return;
+
+	d = image->span;
+
+	std::vector<Pixel>::iterator I = column.begin();
+
+	for (i = image->ysize, p = &image->data[x]; i-- > 0; p += d)
+	{
+		*I++ = *p;
+	}
+
 }
 
 Pixel	put_pixel(Image* image, int x, int y, Pixel data)
@@ -80,8 +120,6 @@ Pixel	put_pixel(Image* image, int x, int y, Pixel data)
 /*
 *	filter function definitions
 */
-
-//
 #define	filter_support		(1.0)
 float	filter(float t)
 {
@@ -90,16 +128,12 @@ float	filter(float t)
 	if (t < 1.0) return		float((2.0 * t - 3.0) * t * t + 1.0);
 	return(0.0);
 }
-
-//
 #define	box_support			(0.5)
 float	box_filter(float t)
 {
 	if ((t > -0.5) && (t <= 0.5)) return(1.0);
 	return(0.0);
 }
-
-//
 #define	triangle_support	(1.0)
 float	triangle_filter(float t)
 {
@@ -107,8 +141,6 @@ float	triangle_filter(float t)
 	if (t < 1.0f) return(1.0f - t);
 	return(0.0f);
 }
-
-//
 #define	bell_support		(1.5)
 float	bell_filter(float t)		/* box (*) box (*) box */
 {
@@ -120,8 +152,6 @@ float	bell_filter(float t)		/* box (*) box (*) box */
 	}
 	return(0.0);
 }
-
-//
 #define	B_spline_support	(2.0)
 float	B_spline_filter(float t)	/* box (*) box (*) box (*) box */
 {
@@ -138,8 +168,6 @@ float	B_spline_filter(float t)	/* box (*) box (*) box (*) box */
 	}
 	return(0.0f);
 }
-
-//
 #define	Lanczos3_support	(3.0)
 float	sinc(float x)
 {
@@ -153,12 +181,9 @@ float	Lanczos3_filter(float t)
 	if (t < 3.0f) return	float(sinc(t) * sinc(t / 3.0f));
 	return(0.0);
 }
-
-//
 #define	Mitchell_support	(2.0)
 #define	B	(1.0f / 3.0f)
 #define	C	(1.0f / 3.0f)
-
 float	Mitchell_filter(float t)
 {
 	float tt;
@@ -194,7 +219,7 @@ struct CONTRIB
 struct CLIST
 {
 	int		n;					/* number of contributors */
-	CONTRIB	*p;					/* pointer to _list_ of contributions */
+	std::vector<CONTRIB> p;		/* pointer to _list_ of contributions */
 };
 
 u32	CC(float a)
@@ -204,17 +229,31 @@ u32	CC(float a)
 	return p;
 }
 
-void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, EIMF_Type FILTER)
+void	imf_Process(std::vector<u32> dstI, u32 dstW, u32 dstH, std::vector<u32> srcI, u32 srcW, u32 srcH, EIMF_Type FILTER)
 {
-	R_ASSERT(dstI);	R_ASSERT(dstW>1);	R_ASSERT(dstH>1);
-	R_ASSERT(srcI);	R_ASSERT(srcW>1);	R_ASSERT(srcH>1);
+	//R_ASSERT(dstI);
+	R_ASSERT(dstW>1);	R_ASSERT(dstH>1);
+	//R_ASSERT(srcI);
+	R_ASSERT(srcW>1);	R_ASSERT(srcH>1);
+
+
 
 	// SRC & DST images
-	Image		src;	src.xsize = srcW;	src.ysize = srcH;	src.data = srcI;	src.span = srcW;
-	Image		dst;	dst.xsize = dstW;	dst.ysize = dstH;	dst.data = dstI;	dst.span = dstW;
+	Image		src;	
+	src.xsize = srcW;	
+	src.ysize = srcH;	
+	src.data = srcI;
+	src.span = srcW;
+
+	Image		dst;	
+	dst.xsize = dstW;	
+	dst.ysize = dstH;	
+	dst.data = dstI;
+	dst.span = dstW;
+
 
 	// Select filter
-	float(*filterf)(float);	filterf = 0;
+	float(*filterf)(float);	filterf = nullptr;
 	float		fwidth = 0;
 	switch (FILTER)
 	{
@@ -229,17 +268,18 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 
 
 	//
-	Image	*tmp = 0;			/* intermediate image */
+	Image	*tmp = nullptr;			/* intermediate image */
 	float	xscale = 0, yscale = 0;/* zoom scale factors */
 	int		i, j, k;				/* loop variables */
 	int		n;						/* pixel number */
 	float	center, left, right;	/* filter calculation variables */
 	float	width, fscale, weight;	/* filter calculation variables */
-	Pixel	*raster = 0;			/* a row or column of pixels */
-	CLIST	*contrib = 0;			/* array of contribution lists */
 
-									/* create intermediate image to hold horizontal zoom */
-	try {
+	std::vector<CLIST> contrib(dst.xsize * dst.ysize); /* array of contribution lists */
+		
+	/* create intermediate image to hold horizontal zoom */
+	try 
+	{
 		tmp = new_image(dst.xsize, src.ysize);
 		xscale = float(dst.xsize) / float(src.xsize);
 		yscale = float(dst.ysize) / float(src.ysize);
@@ -249,22 +289,16 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 	};
 
 	/* pre-calculate filter contributions for a row */
-	try {
-		contrib = (CLIST *)xr_malloc(dst.xsize * sizeof(CLIST));
-		std::memset(contrib, 0, dst.xsize * sizeof(CLIST));
-	}
-	catch (...) {
-		Msg("imf_Process::2");
-	};
-	if (xscale < 1.0) {
+	if (xscale < 1.0)   //downscale
+	{
 		try {
 			width = fwidth / xscale;
 			fscale = 1.0f / xscale;
 			for (i = 0; i < dst.xsize; ++i)
 			{
 				contrib[i].n = 0;
-				contrib[i].p = (CONTRIB *)xr_malloc((int)(width * 2 + 1) * sizeof(CONTRIB));
-				std::memset(contrib[i].p, 0, (size_t(width) * 2 + 1) * sizeof(CONTRIB));
+				contrib[i].p.resize(width * 2 + 1);
+
 				center = float(i) / xscale;
 				left = ceil(center - width);
 				right = floor(center + width);
@@ -281,6 +315,10 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 					else {
 						n = j;
 					}
+
+					if (contrib[i].p.size() > u32(width) * 2 + 1)
+						break;
+
 					k = contrib[i].n++;
 					contrib[i].p[k].pixel = (n<src.xsize) ? n : (src.xsize - 1);
 					contrib[i].p[k].weight = weight;
@@ -291,13 +329,13 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 			Msg("imf_Process::3 (xscale<1.0)");
 		};
 	}
-	else {
+	else { //upscale
 		try {
 			for (i = 0; i < dst.xsize; ++i)
 			{
 				contrib[i].n = 0;
-				contrib[i].p = (CONTRIB *)xr_malloc((int)(fwidth * 2 + 1) * sizeof(CONTRIB));
-				std::memset(contrib[i].p, 0, (fwidth * 2 + 1) * sizeof(CONTRIB));
+				contrib[i].n = 0;
+				contrib[i].p.resize(fwidth * 2 + 1);
 				center = float(i) / xscale;
 				left = ceil(center - fwidth);
 				right = floor(center + fwidth);
@@ -314,6 +352,8 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 					else {
 						n = j;
 					}
+								
+
 					k = contrib[i].n++;
 					contrib[i].p[k].pixel = (n<src.xsize) ? n : (src.xsize - 1);
 					contrib[i].p[k].weight = weight;
@@ -326,23 +366,34 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 	}
 
 	/* apply filter to zoom horizontally from src to tmp */
+
+	std::vector<Pixel> vRaster;
+	vRaster.reserve(src.xsize);
+
+	/*
 	try {
-		raster = (Pixel *)xr_malloc(src.xsize * sizeof(Pixel));
+		raster = new Pixel[src.xsize];
 		std::memset(raster, 0, src.xsize * sizeof(Pixel));
 	}
+	
 	catch (...) { Msg("imf_Process::4"); };
+	*/
+	
 	try {
 		for (k = 0; k < tmp->ysize; ++k)
 		{
-			get_row(raster, &src, k);
+			get_row(vRaster, &src, k);
 			for (i = 0; i < tmp->xsize; ++i)
 			{
 				float	w_r = 0., w_g = 0., w_b = 0., w_a = 0.;
 
 				for (j = 0; j < contrib[i].n; ++j)
 				{
+					if (contrib[i].p[j].pixel >= dst.xsize)
+						continue;
+
 					float	W = contrib[i].p[j].weight;
-					Pixel	P = raster[contrib[i].p[j].pixel];
+					Pixel	P = vRaster[contrib[i].p[j].pixel];
 					w_r += W * float(color_get_R(P));
 					w_g += W * float(color_get_G(P));
 					w_b += W * float(color_get_B(P));
@@ -351,32 +402,23 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 				put_pixel(tmp, i, k, color_rgba(CC(w_r), CC(w_g), CC(w_b), CC(w_a + 0.5f)));
 			}
 		}
-		xr_free(raster);
 	}
 	catch (...) { Msg("imf_Process::5"); };
 
 	/* xr_free the memory allocated for horizontal filter weights */
-	try {
-		for (i = 0; i < tmp->xsize; ++i) xr_free(contrib[i].p);
-		xr_free(contrib);
-	}
-	catch (...) { Msg("imf_Process::6"); };
+	contrib.clear();
 
 	/* pre-calculate filter contributions for a column */
-	try {
-		contrib = (CLIST *)xr_malloc(dst.ysize * sizeof(CLIST));
-		std::memset(contrib, 0, dst.ysize * sizeof(CLIST));
-	}
-	catch (...) { Msg("imf_Process::7"); };
-	if (yscale < 1.0) {
+	
+	 
+	if (yscale < 1.0) {	//downscale
 		try {
 			width = fwidth / yscale;
 			fscale = 1.0f / yscale;
 			for (i = 0; i < dst.ysize; ++i)
 			{
 				contrib[i].n = 0;
-				contrib[i].p = (CONTRIB *)xr_malloc((int)(width * 2 + 1) * sizeof(CONTRIB));
-				std::memset(contrib[i].p, 0, (width * 2 + 1) * sizeof(CONTRIB));
+				contrib[i].p.reserve(width * 2 + 1);
 				center = (float)i / yscale;
 				left = ceil(center - width);
 				right = floor(center + width);
@@ -393,6 +435,11 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 					else {
 						n = j;
 					}
+
+
+					if (contrib[i].p.size() >= width * 2)
+						break;
+
 					k = contrib[i].n++;
 					contrib[i].p[k].pixel = (n<tmp->ysize) ? n : (tmp->ysize - 1);
 					contrib[i].p[k].weight = weight;
@@ -401,13 +448,12 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 		}
 		catch (...) { Msg("imf_Process::8 (yscale<1.0)"); };
 	}
-	else {
+	else {  //upscale
 		try {
 			for (i = 0; i < dst.ysize; ++i)
 			{
 				contrib[i].n = 0;
-				contrib[i].p = (CONTRIB *)xr_malloc((int)(fwidth * 2 + 1) * sizeof(CONTRIB));
-				std::memset(contrib[i].p, 0, (fwidth * 2 + 1) * sizeof(CONTRIB));
+				contrib[i].p.resize(fwidth * 2 + 1);
 				center = (float)i / yscale;
 				left = ceil(center - fwidth);
 				right = floor(center + fwidth);
@@ -423,6 +469,10 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 					else {
 						n = j;
 					}
+
+					if (contrib[i].p.size() >= width * 2)
+						break;
+
 					k = contrib[i].n++;
 					contrib[i].p[k].pixel = (n<tmp->ysize) ? n : (tmp->ysize - 1);
 					contrib[i].p[k].weight = weight;
@@ -432,24 +482,22 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 		catch (...) { Msg("imf_Process::8 (yscale>1.0)"); };
 	}
 
-	/* apply filter to zoom vertically from tmp to dst */
-	try {
-		raster = (Pixel *)xr_malloc(tmp->ysize * sizeof(Pixel));
-		std::memset(raster, 0, tmp->ysize * sizeof(Pixel));
-	}
-	catch (...) { Msg("imf_Process::9"); };
+	
 	try {
 		for (k = 0; k < dst.xsize; ++k)
 		{
-			get_column(raster, tmp, k);
+			get_column(vRaster, tmp, k);
 			for (i = 0; i < dst.ysize; ++i)
 			{
 				float	w_r = 0., w_g = 0., w_b = 0., w_a = 0.;
 
 				for (j = 0; j < contrib[i].n; ++j)
 				{
+					if(contrib[i].p[j].pixel >= dst.xsize)
+						continue;
+
 					float	W = contrib[i].p[j].weight;
-					Pixel	P = raster[contrib[i].p[j].pixel];
+					Pixel	P = vRaster[contrib[i].p[j].pixel];
 					w_r += W * float(color_get_R(P));
 					w_g += W * float(color_get_G(P));
 					w_b += W * float(color_get_B(P));
@@ -459,16 +507,12 @@ void	imf_Process(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, E
 			}
 
 		}
-		xr_free(raster);
 	}
 	catch (...) { Msg("imf_Process::A"); };
 
 	/* xr_free the memory allocated for vertical filter weights */
-	try {
-		for (i = 0; i < dst.ysize; ++i) xr_free(contrib[i].p);
-		xr_free(contrib);
-	}
-	catch (...) { Msg("imf_Process::B"); };
-
+	//delete[](contrib);
+	vRaster.clear();
 	free_image(tmp);
 }
+

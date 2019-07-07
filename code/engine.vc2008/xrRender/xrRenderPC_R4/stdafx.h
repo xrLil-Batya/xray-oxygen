@@ -8,7 +8,6 @@
 #include "../../xrEngine/stdafx.h"
 #pragma warning(disable:4995 4005)
 #include <d3dx9.h>
-#include <ppl.h>
 #pragma warning(default:4995 4005)
 #pragma warning(disable:4714)
 #pragma warning( 4 : 4018 )
@@ -28,6 +27,12 @@
 #define		R_R3	3
 #define		R_R4	4
 #define		RENDER	R_R4
+
+#ifdef XRRENDER_R4_EXPORTS
+#define RENDER_API __declspec(dllexport)
+#else
+#define RENDER_API __declspec(dllimport)
+#endif
 
 #include "../../xrParticles/psystem.h"
 

@@ -8,7 +8,6 @@
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
 #include <xmmintrin.h>
-#include <ppl.h>
 
 const float dbgOffset			= 0.f;
 const int	dbgItems			= 128;
@@ -306,11 +305,9 @@ void CDetailManager::UpdateVisibleM()
 						float				R = objects[sp.id]->bv_sphere.R;
 						float				Rq_drcp = R * R*dist_sq_rcp;	// reordered expression for 'ssa' calc
 
-						SlotItem			**siIT = &(*sp.items.begin()), **siEND = &(*sp.items.end());
-						for (; siIT != siEND; siIT++) 
-
+						for (CDetailManager::SlotItem* item : sp.items)
 						{
-							SlotItem& Item = *(*siIT);
+							SlotItem& Item = *item;
 							float scale = Item.scale_calculated = Item.scale*alpha_i;
 							float ssa = scale * scale*Rq_drcp;
 
@@ -321,7 +318,7 @@ void CDetailManager::UpdateVisibleM()
 							if (ssa > r_ssaCHEAP)	
 								vis_id = Item.vis_ID;
 
-							sp.r_items[vis_id].push_back(*siIT);
+							sp.r_items[vis_id].push_back(item);
 						}
 					}
 				}

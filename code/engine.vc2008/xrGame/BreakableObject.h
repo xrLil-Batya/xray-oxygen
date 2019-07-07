@@ -56,7 +56,7 @@ private:
 	void			CheckHitBreak		(float power,ALife::EHitType hit_type);
 	void			ProcessDamage		();
 	void			SendDestroy			();
-	void	_BCL		enable_notificate	();
+	void			enable_notificate	();
 private:
 	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()								{return (this);}
 	virtual		void					CollisionHit				( u16 source_id, u16 bone_id, float power, const Fvector &dir, Fvector &pos );

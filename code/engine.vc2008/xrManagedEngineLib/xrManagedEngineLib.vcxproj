@@ -41,10 +41,12 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\F-Ray.props" />
+    <Import Project="..\..\WindowsPlatform.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\F-Ray.props" />
+    <Import Project="..\..\WindowsPlatform.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -97,6 +99,7 @@
     <ClInclude Include="API\NativeObject.h" />
     <ClInclude Include="API\Object.h" />
     <ClInclude Include="ClassRegistrator.h" />
+    <ClInclude Include="EngineConsole.h" />
     <ClInclude Include="GamePersistence.h" />
     <ClInclude Include="HelpfulMacro.h" />
     <ClInclude Include="FunctionInvoker.h" />
@@ -121,6 +124,8 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="CallbackTypes.cpp" />
     <ClCompile Include="ClassRegistrator.cpp" />
+    <ClCompile Include="EngineConsole.cpp" />
+    <ClCompile Include="FunctionInvoker.cpp" />
     <ClCompile Include="GamePersistence.cpp" />
     <ClCompile Include="ISpectreEngineLib.cpp" />
     <ClCompile Include="ObjectPool.cpp" />

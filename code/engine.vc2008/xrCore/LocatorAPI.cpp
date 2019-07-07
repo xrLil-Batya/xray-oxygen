@@ -28,6 +28,9 @@ CLocatorAPI*		xr_FS = nullptr;
 
 #define FSLTX "fsgame.ltx"
 
+// Xottab-DUTY
+constexpr u32 VFS_STANDARD_FILE = std::numeric_limits<u32>::max();
+
 //#TODO: Make a part of CLocatorAPI class later
 std::experimental::filesystem::path fsRoot;
 
@@ -226,7 +229,7 @@ void CLocatorAPI::Register(const char* name, u32 vfs, u32 crc, u32 ptr, u32 size
 		if (!exist(path))
 		{
 			desc.name = xr_strdup(path);
-			desc.vfs = 0xffffffff;
+			desc.vfs = VFS_STANDARD_FILE;
 			desc.ptr = 0;
 			desc.size_real = 0;
 			desc.size_compressed = 0;
@@ -470,14 +473,14 @@ void CLocatorAPI::ProcessOne(const char* path, const _finddata_t& entry)
 		if (!xr_strcmp(entry.name, "."))	return;
 		if (!xr_strcmp(entry.name, ".."))	return;
 		xr_strcat(N, "\\");
-		Register(N, 0xffffffff, 0, 0, entry.size, entry.size, (u32)entry.time_write);
+		Register(N, VFS_STANDARD_FILE, 0, 0, entry.size, entry.size, (u32)entry.time_write);
 		Recurse(N);
 	}
 	else {
 		if (strext(N) && (!strncmp(strext(N), ".db", 3) || !strncmp(strext(N), ".xdb", 4)))
 			ProcessArchive(N);
 		else
-			Register(N, 0xffffffff, 0, 0, entry.size, entry.size, (u32)entry.time_write);
+			Register(N, VFS_STANDARD_FILE, 0, 0, entry.size, entry.size, (u32)entry.time_write);
 	}
 }
 
@@ -555,7 +558,8 @@ bool CLocatorAPI::Recurse(const char* path)
 	}
 	// insert self
 	if (path && path[0] != 0)
-		Register(path, 0xffffffff, 0, 0, 0, 0, 0);
+		Register(path, VFS_STANDARD_FILE, 0, 0, 0, 0, 0);
+
 	return true;
 }
 
@@ -957,7 +961,7 @@ int CLocatorAPI::file_list(FS_FileSet& dest, const char* path, u32 flags, const 
 				file.name = entry_begin;
 
 
-			u32 fl = (entry.vfs != 0xffffffff ? FS_File::flVFS : 0);
+			u32 fl = (entry.vfs != VFS_STANDARD_FILE ? FS_File::flVFS : 0);
 			file.size = entry.size_real;
 			file.time_write = entry.modif;
 			file.attrib = fl;
@@ -1033,7 +1037,7 @@ void CLocatorAPI::check_cached_files(char* fname, const u32 &fname_size, const f
 		xr_delete(_dst);
 		xr_delete(_src);
 		set_file_age(fname_in_cache, desc.modif);
-		Register(fname_in_cache, 0xffffffff, 0, 0, desc.size_real, desc.size_real, desc.modif);
+		Register(fname_in_cache, VFS_STANDARD_FILE, 0, 0, desc.size_real, desc.size_real, desc.modif);
 	}
 
 	// Use
@@ -1228,7 +1232,7 @@ T *CLocatorAPI::r_open_impl(const char* path, const char* _fname)
 		return				(0);
 
 	// OK, analyse
-	if (0xffffffff == desc->vfs)
+	if (VFS_STANDARD_FILE == desc->vfs)
 		file_from_cache(R, fname, sizeof(fname), *desc, source_name);
 	else
 		file_from_archive(R, fname, *desc);
@@ -1302,7 +1306,7 @@ void	CLocatorAPI::w_close(IWriter* &S)
 		{
 			struct _stat st;
 			_stat(fname, &st);
-			Register(fname, 0xFFFFFFFF, 0, 0, st.st_size, st.st_size, (u32)st.st_mtime);
+			Register(fname, VFS_STANDARD_FILE, 0, 0, st.st_size, st.st_size, (u32)st.st_mtime);
 		}
 	}
 }
@@ -1467,7 +1471,7 @@ FS_Path* CLocatorAPI::get_path(const char* path)
 	if (strstr(path, "$"))
 	{
 		auto P = pathes.find(path);
-		R_ASSERT2(P != pathes.end(), path);
+		R_ASSERT3(P != pathes.end(), path, "Please update fsgame.ltx");
 		return P->second;
 	}
 	else
@@ -1529,7 +1533,7 @@ void CLocatorAPI::rescan_path(const char* full_path, BOOL bRecurse)
 		I = cur_item; I++;
 		if (0 != strncmp(entry.name, full_path, base_len))
 			break;	// end of list
-		if (entry.vfs != 0xFFFFFFFF)
+		if (entry.vfs != VFS_STANDARD_FILE)
 			continue;
 		const char* entry_begin = entry.name + base_len;
 		if (!bRecurse && strstr(entry_begin, "\\"))

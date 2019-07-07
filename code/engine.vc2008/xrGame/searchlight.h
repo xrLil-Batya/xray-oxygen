@@ -51,8 +51,8 @@ public:
 private:
 	
 	// Rotation routines
-	static void	_BCL	BoneCallbackX(CBoneInstance *B);
-	static void	_BCL	BoneCallbackY(CBoneInstance *B);
+	static void		BoneCallbackX(CBoneInstance *B);
+	static void		BoneCallbackY(CBoneInstance *B);
 
 	void			SetTarget		(const Fvector &target_pos);
 };

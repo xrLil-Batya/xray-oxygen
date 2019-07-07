@@ -5,7 +5,7 @@
 class  ENGINE_API CAviPlayerCustom;
 class  CTheoraSurface;
 
-class  ECORE_API CTexture : public xr_resource_named
+class RENDER_API CTexture : public xr_resource_named
 {
 public:
 	//	Since DX10 allows up to 128 unique textures, 

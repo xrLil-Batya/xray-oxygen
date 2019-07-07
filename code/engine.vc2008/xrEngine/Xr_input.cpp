@@ -216,6 +216,8 @@ void CInput::iCapture(IInputReceiver *p)
 void CInput::iRelease(IInputReceiver *p)
 {
 	ResetPressedState();
+
+	if (cbStack.empty()) return;
 	if (p == cbStack.back())
 	{
 		cbStack.back()->IR_OnDeactivate();
@@ -285,14 +287,14 @@ void CInput::LockMouse()
 	}
 
 	ClipCursor(&windowRect);
-	ShowCursor(FALSE);
+	PlatformUtils.ShowCursor(FALSE);
 }
 
 void CInput::UnlockMouse()
 {
 	ClipCursor(NULL);
 	bShouldLockMouse = false;
-	ShowCursor(TRUE);
+	PlatformUtils.ShowCursor(TRUE);
 }
 
 void CInput::ResetPressedState()

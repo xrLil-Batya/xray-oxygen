@@ -378,13 +378,15 @@ void CTorch::UpdateCL()
 				M2.mul(actor->XFORM(), BI2.mTransform);
 
 				light_render->set_rotation(M2.k, M2.i);
+				light_omni->set_rotation(M2.k, M2.i);
 			}
 			else
-			light_render->set_rotation(dir, right);
-			light_omni->set_rotation(dir, right);
+			{
+				light_render->set_rotation(dir, right);
+				light_omni->set_rotation(dir, right);
+			}
 
 			glow_render->set_direction(dir);
-
 		}
 		else
 		{

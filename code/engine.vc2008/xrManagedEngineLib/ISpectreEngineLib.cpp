@@ -6,8 +6,8 @@
 #include "../xrCDB/ISpatial.h"
 #include "ObjectPool.h"
 
-FuncNode* pRootNode = nullptr;
-FuncNode* pCurrentNode = nullptr;
+MANAGED_ENGINE_API FuncNode* pRootNode = nullptr;
+MANAGED_ENGINE_API FuncNode* pCurrentNode = nullptr;
 
 MANAGED_ENGINE_API void xrEngineInit()
 {

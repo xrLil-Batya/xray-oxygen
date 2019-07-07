@@ -381,7 +381,7 @@ void CGameObject::setup_parent_ai_locations(bool assign_position)
 {
 	//	CGameObject				*l_tpGameObject	= static_cast<CGameObject*>(H_Root());
 	VERIFY(H_Parent());
-	CGameObject				*l_tpGameObject = static_cast<CGameObject*>(H_Parent());
+	CGameObject *l_tpGameObject = static_cast<CGameObject*>(H_Parent());
 	VERIFY(l_tpGameObject);
 
 	// get parent's position
@@ -389,7 +389,8 @@ void CGameObject::setup_parent_ai_locations(bool assign_position)
 		Position().set(l_tpGameObject->Position());
 
 	// setup its ai locations
-	if (!UsedAI_Locations())
+	// FX: [#NOTE] Need check PARENT!!! 
+	if (!UsedAI_Locations() || !l_tpGameObject->m_ai_location)
 		return;
 
 	if (!ai().get_level_graph())

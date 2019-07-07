@@ -1,5 +1,5 @@
 #pragma once
-#include "../xrManagedEngineLib/IFunctionInvoker.h"
+#include "../../xrManagedEngineLib/IFunctionInvoker.h"
 
 namespace SpectreCallback
 {
@@ -15,7 +15,7 @@ namespace SpectreCallback
 	extern IClientCallbackDeclaration* pRootNode;
 
 #define DECLARE_CLIENT_CALLBACK_FUNC(FunctionName, ...) \
-	extern IFunctionInvoker<__VA_ARGS__>* FunctionName; \
+	extern ENGINE_API IFunctionInvoker<__VA_ARGS__>* FunctionName; \
  	struct FunctionName##CallbackDeclaration : IClientCallbackDeclaration \
  	{ \
 		FunctionName##CallbackDeclaration() : IClientCallbackDeclaration(#FunctionName) {} \
@@ -24,7 +24,7 @@ namespace SpectreCallback
 	}
 
 #define DEFINE_CLIENT_CALLBACK_FUNC(FunctionName, ...) \
-	IFunctionInvoker<__VA_ARGS__>* FunctionName = nullptr; \
+	ENGINE_API IFunctionInvoker<__VA_ARGS__>* FunctionName = nullptr; \
 	void FunctionName##CallbackDeclaration::InitializeClientCallback(void* pCallbackFunc) \
 	{ \
 		FunctionName = reinterpret_cast<IFunctionInvoker<__VA_ARGS__>*>(pCallbackFunc); \
@@ -32,4 +32,5 @@ namespace SpectreCallback
 	FunctionName##CallbackDeclaration FunctionName##Instance;
 
 	DECLARE_CLIENT_CALLBACK_FUNC(shedule_update, u32);
+	DECLARE_CLIENT_CALLBACK_FUNC(SecondaryCombine);
 }

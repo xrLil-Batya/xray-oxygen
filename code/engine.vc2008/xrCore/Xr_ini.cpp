@@ -721,7 +721,7 @@ void CInifile::save_as(IWriter& writer, bool bcheck) const
 		if (bcheck) 
 		{
 			xr_sprintf(temp, sizeof(temp), "; %d %d %d", pairIter.second->Name._get()->dwCRC,
-				pairIter.second->Name._get()->dwReference, pairIter.second->Name._get()->dwLength);
+				pairIter.second->Name._get()->dwReference.load(), pairIter.second->Name._get()->dwLength);
 			writer.w_string(temp);
 		}
 

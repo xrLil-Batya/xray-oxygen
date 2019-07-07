@@ -30,3 +30,7 @@
 #include <windows.h>
 #include <windowsx.h>
 #pragma warning(pop)
+
+#ifdef _M_AMD64
+#pragma warning (disable : 4512 )
+#endif

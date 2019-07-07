@@ -450,9 +450,9 @@
 		inline_			BOOL		IsValid()	const
 									{
 										// Consistency condition for (Center, Extents) boxes: Extents >= 0
-										if(IS_NEGATIVE_FLOAT(mExtents.x))	return FALSE;
-										if(IS_NEGATIVE_FLOAT(mExtents.y))	return FALSE;
-										if(IS_NEGATIVE_FLOAT(mExtents.z))	return FALSE;
+										if(mExtents.x < 0.f)	return FALSE;
+										if(mExtents.y < 0.f)	return FALSE;
+										if(mExtents.z < 0.f)	return FALSE;
 										return TRUE;
 									}
 

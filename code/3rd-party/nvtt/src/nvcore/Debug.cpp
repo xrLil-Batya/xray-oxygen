@@ -286,7 +286,7 @@ namespace
 		{
 			bool result = false;
 			
-			HINSTANCE kern_lib = LoadLibraryExA( "kernel32.dll", NULL, 0 );
+			HINSTANCE kern_lib = LoadLibraryExA( "kernel32.dll", nullptr, 0 );
 			if( kern_lib ) {
 				FARPROC lIsDebuggerPresent = GetProcAddress( kern_lib, "IsDebuggerPresent" );
 				if( lIsDebuggerPresent && lIsDebuggerPresent() ) {
@@ -302,7 +302,7 @@ namespace
 		static void flushMessageQueue()
 		{
 			MSG msg;
-			while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) ) {
+			while( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) ) {
 				if( msg.message == WM_QUIT ) break;
 				TranslateMessage( &msg );
 				DispatchMessage( &msg );
@@ -310,12 +310,12 @@ namespace
 		}
 	
 		// Assert handler method.
-		virtual int assert( const char * exp, const char * file, int line, const char * func/*=NULL*/ )
+		int assert( const char * exp, const char * file, int line, const char * func/*=NULL*/ ) override
 		{
 			int ret = NV_ABORT_EXIT;
 			
 			StringBuilder error_string;
-			if( func != NULL ) {
+			if( func != nullptr ) {
 				error_string.format( "*** Assertion failed: %s\n    On file: %s\n    On function: %s\n    On line: %d\n ", exp, file, func, line );
 				nvDebug( error_string );
 			}
@@ -331,7 +331,7 @@ namespace
 			}
 			
 			flushMessageQueue();
-			int action = MessageBoxA(NULL, error_string, "Assertion failed", MB_ABORTRETRYIGNORE|MB_ICONERROR);
+			int action = MessageBoxA(nullptr, error_string, "Assertion failed", MB_ABORTRETRYIGNORE|MB_ICONERROR);
 			switch( action ) {
 				case IDRETRY:
 					ret = NV_ABORT_DEBUG;

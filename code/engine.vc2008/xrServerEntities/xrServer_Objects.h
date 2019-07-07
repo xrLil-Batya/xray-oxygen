@@ -228,14 +228,5 @@ add_to_type_list(CSE_AbstractVisual)
 extern CSE_Abstract	*F_entity_Create	(LPCSTR caSection);
 #endif
 
-/**
-SERVER_ENTITY_DECLARE_BEGIN(CSE_SpawnGroup,CSE_Abstract)
-public:
-									CSE_SpawnGroup	(LPCSTR caSection);
-	virtual							~CSE_SpawnGroup	();
-SERVER_ENTITY_DECLARE_END
-add_to_type_list(CSE_SpawnGroup)
-#define script_type_list save_type_list(CSE_SpawnGroup)
-/**/
 
 #pragma warning(pop)

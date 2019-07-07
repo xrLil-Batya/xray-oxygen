@@ -129,8 +129,12 @@ namespace collide
 			results.push_back			(res);
 		}
 		IC size_t		r_count			()	{ return results.size();	}
-		IC rq_result*	r_begin			()	{ return &*results.begin();	}
-		IC rq_result*	r_end			()	{ return &*results.end();	}
+
+		IC rqVec::iterator	r_realBegin()	{ return results.begin(); }
+		IC rqVec::iterator	r_realEnd()		{ return results.end(); }
+		IC bool				r_empty()		{ return results.empty(); }
+		IC rq_result*		r_getElement(size_t index) { VERIFY(index < results.size()); return &results[index]; }
+
 		IC void			r_clear			()	{ results.clear();	}
 		IC void			r_sort			()	{ std::sort(results.begin(),results.end(),r_sort_pred);}
 		IC rqVec		&r_results		()	{ return results; }

@@ -435,6 +435,14 @@ static class cl_sun_shafts_intensity : public R_constant_setup
 	}
 } binder_sun_shafts_intensity;
 
+static class cl_collimator_state : public R_constant_setup
+{
+	virtual void setup(R_constant* C) 
+	{ 
+		RCache.set_c(C, g_pGamePersistent->m_pGShaderConstants.collimator_mark);
+	}
+} binder_collimator_state;
+
 #ifdef USE_DX11
 static class cl_alpha_ref : public R_constant_setup
 {
@@ -461,6 +469,9 @@ static class cl_LOD : public R_constant_setup
 void CBlender_Compile::SetMapping()
 {
     r_Constant("ogse_c_screen", &binder_screen_params);
+
+	// collimator
+	r_Constant("m_collimator_state", &binder_collimator_state);
 
 	// Matrices
 	r_Constant				("m_W",				&binder_w);

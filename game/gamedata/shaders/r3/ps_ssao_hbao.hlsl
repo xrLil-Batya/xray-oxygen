@@ -335,7 +335,7 @@ float4 calc_hbao(float z, float3 N, float2 tc0, float4 pos2d)
 #ifndef HBAO_WORLD_JITTER
     float3 rand_Dir = jitter4.Load(int3((int)pos2d.x&63, (int)pos2d.y&63, 0)).xyz;
 #else
-    float3 tc1	= mul(m_invV, float4(P,1));
+    float3 tc1	= mul(m_v2w, float4(P,1));
 	const float ssao_noise_tile_factor = ssao_params.x;
     tc1 *= ssao_noise_tile_factor;
     tc1.xz += tc1.y; 

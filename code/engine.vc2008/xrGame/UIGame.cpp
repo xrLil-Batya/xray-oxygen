@@ -210,8 +210,11 @@ void CUIGame::RemoveCustomStatic(LPCSTR id)
 
 void CUIGame::OnInventoryAction(PIItem item, u16 action_type)
 {
-	if (m_ActorMenu->IsShown())
-		m_ActorMenu->OnInventoryAction(item, action_type);
+	if (m_ActorMenu != nullptr)
+	{
+		if (m_ActorMenu->IsShown())
+			m_ActorMenu->OnInventoryAction(item, action_type);
+	}
 }
 
 #include "ui/UIGameTutorial.h"

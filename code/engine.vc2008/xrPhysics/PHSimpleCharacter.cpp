@@ -848,9 +848,7 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 	}
 #endif
 
-	CDB::RESULT*    R_begin = XRC.r_begin();
-	CDB::RESULT*    R_end = XRC.r_end();
-	for (CDB::RESULT* Res = R_begin; Res != R_end; ++Res)
+	for (auto Res = XRC.r_realBegin(); Res != XRC.r_realEnd(); ++Res)
 	{
 		SGameMtl* m = GMLibrary().GetMaterialByIdx(Res->material);
 		if (m->Flags.test(SGameMtl::flPassable))
@@ -864,7 +862,7 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 #ifdef DEBUG
 				if (debug_output().ph_dbg_draw_mask().test(phDbgCharacterControl))
 				{
-					debug_output().DBG_DrawTri(Res, D3DCOLOR_XRGB(255, 0, 0));
+					debug_output().DBG_DrawTri(&(*Res), D3DCOLOR_XRGB(255, 0, 0));
 				}
 #endif
 				b_side_contact = true;
@@ -874,7 +872,7 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 		}
 	}
 
-	for (CDB::RESULT* Res = R_begin; Res != R_end; ++Res)
+	for (auto Res = XRC.r_realBegin(); Res != XRC.r_realEnd(); ++Res)
 	{
 		SGameMtl* m = GMLibrary().GetMaterialByIdx(Res->material);
 		if (m->Flags.test(SGameMtl::flPassable))continue;
@@ -885,7 +883,7 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 #ifdef DEBUG
 				if (debug_output().ph_dbg_draw_mask().test(phDbgCharacterControl))
 				{
-					debug_output().DBG_DrawTri(Res, D3DCOLOR_XRGB(0, 255, 0));
+					debug_output().DBG_DrawTri(&(*Res), D3DCOLOR_XRGB(0, 255, 0));
 				}
 #endif
 				return true;
@@ -1300,7 +1298,7 @@ u16 CPHSimpleCharacter::RetriveContactBone()
 	VERIFY(!fis_zero(Q.dir.square_magnitude()));
 	if (inl_ph_world().ObjectSpace().RayQuery(RQR, m_phys_ref_object->ObjectCollisionModel(), Q))
 	{
-		collide::rq_result* R = RQR.r_begin();
+		collide::rq_result* R = RQR.r_getElement(0);
 		contact_bone = (u16)R->element;
 	}
 	else

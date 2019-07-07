@@ -5,11 +5,8 @@
 #pragma warning(disable:4995)
 #include <malloc.h>
 #include <dxerr/dxerr.h>
-//#pragma warning(pop)
+#pragma warning(pop)
 
-#pragma comment(lib, "dxguid.lib")
-
-// 
 INetQueue::INetQueue()		
 {
 	unused.reserve	(128);

@@ -4,9 +4,7 @@
 //	Author		: Evgeniy Sokolov
 //	Description : line edit control class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef LINE_EDIT_CONTROL_H_INCLUDED
-#define LINE_EDIT_CONTROL_H_INCLUDED
+#pragma once
 
 namespace text_editor
 {
@@ -128,13 +126,13 @@ private:
 	enum			{ VK_COUNT = 256 };
 	Base*			m_actions[VK_COUNT];
 
-	char*			m_edit_str;
-	char*			m_undo_buf;
-	char*			m_inserted;
-	char*			m_buf0;
-	char*			m_buf1;
-	char*			m_buf2;
-	char*			m_buf3;
+	xrScopePtr<char>m_edit_str;
+	xrScopePtr<char>m_undo_buf;
+	xrScopePtr<char>m_inserted;
+	xrScopePtr<char>m_buf0;
+	xrScopePtr<char>m_buf1;
+	xrScopePtr<char>m_buf2;
+	xrScopePtr<char>m_buf3;
 
 	enum			{ MIN_BUF_SIZE = 8, MAX_BUF_SIZE = 4096 };
 	int				m_buffer_size;
@@ -164,4 +162,3 @@ private:
 
 } // namespace text_editor
 
-#endif // ##ifndef LINE_EDIT_CONTROL_H_INCLUDED

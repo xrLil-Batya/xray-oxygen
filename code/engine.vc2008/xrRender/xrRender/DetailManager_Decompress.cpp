@@ -199,7 +199,8 @@ void		CDetailManager::cache_Decompress(Slot* S)
 					}
 				}
 #else
-				CDB::TRI&	T		= tris[xrc.r_begin()[tid].id];
+				CDB::RESULT& sectorTri = xrc.r_getElement(tid);
+				CDB::TRI&	T		= tris[sectorTri.id];
 				SGameMtl* mtl		= GMLib.GetMaterialByIdx(T.material);
 				if(mtl->Flags.test(SGameMtl::flPassable))	
 					continue;

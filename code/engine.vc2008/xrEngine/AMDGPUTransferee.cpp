@@ -32,7 +32,7 @@ CAMDReader::CAMDReader() : activity({ 0 }), AdapterID(-1), AdapterAGSInfo(0)
 		GetAdapter_Active = (ADL_ADAPTER_ACTIVE_GET)GetProcAddress(hDLL, "ADL_Adapter_Active_Get");
 		GetOverdrive5_CurrentActivity = (ADL_OVERDRIVE5_CURRENTACTIVITY_GET)GetProcAddress(hDLL, "ADL_Overdrive5_CurrentActivity_Get");
 		Main_Control_Destroy = (ADL_MAIN_CONTROL_DESTROY)GetProcAddress(hDLL, "ADL_Main_Control_Destroy");
-
+		GetTemperatureGPU = (ADL_OVERDRIVE5_TEMPERATURE_GET)GetProcAddress(hDLL, "ADL_Overdrive5_Temperature_Get");
 		Main_Control_Create(MemoryAllocator, 1);
 		InitDeviceInfo();
 
@@ -58,10 +58,13 @@ CAMDReader::CAMDReader() : activity({ 0 }), AdapterID(-1), AdapterAGSInfo(0)
 
 CAMDReader::~CAMDReader()
 {
-	Main_Control_Destroy();
-	MemoryDeallocator();
-	FreeLibrary(hDLL);
-	FreeLibrary(hDLL_AGS);
+	if (bAMDSupportADL)
+	{
+		Main_Control_Destroy();
+		MemoryDeallocator();
+		FreeLibrary(hDLL);
+		FreeLibrary(hDLL_AGS);
+	}
 }
 
 void CAMDReader::InitDeviceInfo()
@@ -138,6 +141,14 @@ u32 CAMDReader::GetPercentActive()
 {
 	GetOverdrive5_CurrentActivity(AdapterID, &activity);
 	return activity.iActivityPercent;
+}
+
+u32 CAMDReader::GetTemperature()
+{
+	ADLTemperature adlTemperature = { 0 };
+	adlTemperature.iSize = sizeof(ADLTemperature);
+	GetTemperatureGPU(AdapterID, 0, &adlTemperature);
+	return u32(adlTemperature.iTemperature);
 }
 
 u32 CAMDReader::GetGPUCount()

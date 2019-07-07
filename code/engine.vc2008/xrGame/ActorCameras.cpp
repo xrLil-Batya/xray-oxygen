@@ -117,10 +117,7 @@ ICF void calc_gl_point(Fvector& pt, const Fmatrix& xform, float radius, float an
 }
 ICF BOOL test_point( const Fvector	&pt, xrXRC& xrc,  const Fmatrix33& mat, const Fvector& ext )
 {
-
-	CDB::RESULT* it	=xrc.r_begin();
-	CDB::RESULT* end=xrc.r_end	();
-	for (; it!=end; it++)	{
+	for (auto it = xrc.r_realBegin(); it != xrc.r_realEnd(); it++)	{
 		CDB::RESULT&	O	= *it;
 		if ( GMLib.GetMaterialByIdx(O.material)->Flags.is(SGameMtl::flPassable) )
 			continue;

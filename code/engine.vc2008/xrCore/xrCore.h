@@ -1,7 +1,7 @@
 #pragma once
 #pragma warning (disable : 4530 )		// C++ vector(985)
 
-#define ENGINE_VERSION "1.7f"
+#define ENGINE_VERSION "Preview 2.0"
 
 #ifndef DEBUG
 #	define MASTER_GOLD
@@ -31,7 +31,8 @@
 #define __inline		inline
 #define IC				inline
 #define ICF				__forceinline			// !!! this should be used only in critical places found by PROFILER
-#define ICN			__declspec (noinline)
+#define ICN				__declspec(noinline)
+#define xr_interface	__interface
 
 #pragma inline_depth	( 254 )
 #pragma inline_recursion( on )
@@ -52,10 +53,6 @@
 #ifndef DEBUG
 #pragma warning (disable : 4189 )		//  local variable is initialized but not refenced
 #endif									//	frequently in release code due to large amount of VERIFY
-
-#ifdef _M_AMD64
-#pragma warning (disable : 4512 )
-#endif
 
 // stl
 #pragma warning (push)
@@ -87,11 +84,17 @@
 
 #include "_types.h"
 #include "RingBuffer.h"
-#include "xrMemory.h"
-#include "_stl_extensions.h"
 #include "thread_utils.h"
 #include "xrDebug.h"
+#include "xrMemory.h"
+#include "_stl_extensions.h"
 #include "vector.h"
+
+#if PLATFORM == WINDOWS
+	#include "Platform/Windows/xrWindowsPlatformUtils.h"
+#elif PLATFORM == XBOXONE
+#endif
+
 #include "clsid.h"
 
 #include "xrsharedmem.h"
@@ -108,11 +111,11 @@
 struct XRCORE_API xr_rtoken
 {
 	shared_str	name;
-	int	   	id;
-	xr_rtoken(const char* _nm, int _id) { name = _nm; id = _id; }
-public:
-	void	rename(const char* _nm) { name = _nm; }
-	bool	equal(const char* _nm) { return (0 == xr_strcmp(*name, _nm)); }
+	int	   		id;
+
+			xr_rtoken	(const char* _nm, int _id): name(_nm), id(_id) {}
+	void	rename		(const char* _nm) { name = _nm; }
+	bool	equal		(const char* _nm) { return (0 == xr_strcmp(*name, _nm)); }
 };
 
 #pragma pack (push,1)
@@ -121,27 +124,27 @@ struct XRCORE_API xr_shortcut
 	enum 
 	{
 		flShift = 0x20,
-		flCtrl = 0x40,
-		flAlt = 0x80,
+		flCtrl  = 0x40,
+		flAlt   = 0x80,
 	};
-	union {
-		struct {
+	union 
+	{
+		struct 
+		{
 			u8	 	key;
 			Flags8	ext;
 		};
-		u16		hotkey;
+		u16 hotkey;
 	};
-	xr_shortcut(u8 k, BOOL a, BOOL c, BOOL s) :key(k) { ext.assign(u8((a ? flAlt : 0) | (c ? flCtrl : 0) | (s ? flShift : 0))); }
-	xr_shortcut() { ext.zero(); key = 0; }
-	bool		similar(const xr_shortcut& v)const { return (ext.flags == v.ext.flags) && (key == v.key); }
+			xr_shortcut(u8 k, BOOL a, BOOL c, BOOL s) :key(k) { ext.assign(u8((a ? flAlt : 0) | (c ? flCtrl : 0) | (s ? flShift : 0))); }
+			xr_shortcut() { ext.zero(); key = 0; }
+	bool	similar(const xr_shortcut& v) const { return (ext.flags == v.ext.flags) && (key == v.key); }
 };
 #pragma pack (pop)
 
 using RStringVec = xr_vector<shared_str>;
 using RStringSet = xr_set<shared_str>;
 using RTokenVec = xr_vector<xr_rtoken>;
-
-#define xr_pure_interface	__interface
 
 #include "FS.h"
 #include "log.h"
@@ -159,7 +162,7 @@ using RTokenVec = xr_vector<xr_rtoken>;
 #endif
 // Ban std::thread also
 #ifdef _THREAD_
-#error <thread> is prohibited, please use ttapi, or _beginthreadex
+#error <thread> is prohibited, please use TBB Task, or _beginthreadex
 #endif
 
 // destructor
@@ -177,32 +180,26 @@ public:
 };
 
 // ********************************************** The Core definition
-class XRCORE_API xrCore
+struct XRCORE_API xrCore
 {
-public:
-	string64	ApplicationName;
-	string_path	ApplicationPath;
-	string_path	WorkingPath;
-	string64	UserName;
-	string64	CompName;
-	string1024	Params;
+	bool		PluginMode;
+	bool		bSpectreEnabled;
+
 	DWORD		dwFrame;
 
-public:
+	string64	ApplicationName;
+	string64	UserName;
+	string64	CompName;
+	string_path	ApplicationPath;
+	string_path	WorkingPath;
+	string1024	Params;
+
 	void		_initialize(const char* ApplicationName, xrLogger::LogCallback cb = 0, BOOL init_fs = TRUE, const char* fs_fname = 0);
 	void		_destroy();
-	IC	void		SetPluginMode() { PluginMode = true; }
-
-public:
-	bool		PluginMode;
-	bool bSpectreEnabled;
+	IC	void	SetPluginMode() { PluginMode = true; }
 };
-
-//Borland class dll interface
-#define	_BCL			__stdcall
-
-//Borland global function dll interface
-#define	_BGCL			__stdcall
 
 extern XRCORE_API xrCore Core;
 extern XRCORE_API bool   gModulesLoaded;
+
+#include "XMLCore\xrXMLParser.h"

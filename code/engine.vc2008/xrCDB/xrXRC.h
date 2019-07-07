@@ -59,10 +59,13 @@ public:
 #endif
 	}
 	
-	IC CDB::RESULT*	r_begin			()	{	return CL.r_begin();		};
-	IC CDB::RESULT*	r_end			()	{	return CL.r_end();			};
+	IC xr_vector<CDB::RESULT>::iterator r_realBegin()	{ return CL.r_realBegin();    };
+	IC xr_vector<CDB::RESULT>::iterator r_realEnd()		{ return CL.r_realEnd();	  };
+	IC CDB::RESULT& r_getElement(size_t id)				{ return CL.r_getElement(id); };
+
 	IC void			r_free			()	{	CL.r_free();				}
 	IC size_t		r_count			()	{	return CL.r_count();		};
+	IC bool			r_empty			()	{	return CL.r_empty();		};
 	IC void			r_clear			()	{	CL.r_clear();				};
 	IC void			r_clear_compact	()	{	CL.r_clear_compact();		};
 	

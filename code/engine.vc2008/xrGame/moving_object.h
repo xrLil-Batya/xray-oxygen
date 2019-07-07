@@ -6,9 +6,7 @@
 //	Description : moving objects
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef MOVING_OBJECT_H
-#define MOVING_OBJECT_H
-
+#pragma once
 #include "entity_alive.h"
 #include "obstacles_query.h"
 
@@ -62,4 +60,3 @@ public:
 
 #include "moving_object_inline.h"
 
-#endif // MOVING_OBJECT_H

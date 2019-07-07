@@ -81,6 +81,9 @@
     <ClInclude Include="API\EnvDescriptorMixer.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="EngineConsole.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xrManagedEngineLib.cpp">
@@ -133,6 +136,12 @@
     </ClCompile>
     <ClCompile Include="API\EnvDescriptorMixer.cpp">
       <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineConsole.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="FunctionInvoker.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -59,9 +59,6 @@ XCore::~XCore()
 
 	// free library and unitialize COM-pointers
 	if (XAudioDLL) { FreeLibrary(XAudioDLL); }
-
-	// reset XAudio2 data pointer
-	xData.waveData.reset();
 }
 
 LPCSTR GetAnsiStringFromUnicodeString(LPCWSTR wString)

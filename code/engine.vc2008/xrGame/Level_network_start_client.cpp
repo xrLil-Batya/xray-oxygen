@@ -97,7 +97,6 @@ bool CLevel::net_start_client5()
     g_pGamePersistent->LoadTitle();
     Device.m_pRender->DeferredLoad(FALSE);
     Device.m_pRender->ResourcesDeferredUpload();
-    LL_CheckTextures();
     deny_m_spawn = TRUE;
 
 	return true;

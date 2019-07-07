@@ -20,7 +20,7 @@ class IBlender;
 
 #pragma pack(push,4)
 //////////////////////////////////////////////////////////////////////////
-struct ECORE_API STextureList : public xr_resource_flagged, public xr_vector<std::pair<u32, ref_texture>>
+struct RENDER_API STextureList : public xr_resource_flagged, public xr_vector<std::pair<u32, ref_texture>>
 {
 	typedef xr_vector<std::pair<u32,ref_texture> > inherited_vec;
 						~STextureList	();
@@ -42,20 +42,20 @@ struct ECORE_API STextureList : public xr_resource_flagged, public xr_vector<std
 };
 typedef	resptr_core<STextureList,resptr_base<STextureList>> ref_texture_list;
 //////////////////////////////////////////////////////////////////////////
-struct ECORE_API SMatrixList : public xr_resource_flagged, public svector<ref_matrix, 4>
+struct RENDER_API SMatrixList : public xr_resource_flagged, public svector<ref_matrix, 4>
 {
-						~SMatrixList	();
+	~SMatrixList	();
 };
 typedef	resptr_core<SMatrixList, resptr_base<SMatrixList>> ref_matrix_list;
 //////////////////////////////////////////////////////////////////////////
-struct ECORE_API SConstantList : public xr_resource_flagged, public svector<ref_constant_obsolette, 4>
+struct RENDER_API SConstantList : public xr_resource_flagged, public svector<ref_constant_obsolette, 4>
 {
-						~SConstantList	();
+	~SConstantList	();
 };
 typedef	resptr_core<SConstantList, resptr_base<SConstantList>> ref_constant_list;
 
 //////////////////////////////////////////////////////////////////////////
-struct ECORE_API SGeometry : public xr_resource_flagged
+struct RENDER_API SGeometry : public xr_resource_flagged
 {
 	ref_declaration		dcl;
 	ID3DVertexBuffer*	vb;
@@ -64,7 +64,7 @@ struct ECORE_API SGeometry : public xr_resource_flagged
 						~SGeometry		();
 };
 
-struct ECORE_API resptrcode_geom : public resptr_base<SGeometry>
+struct RENDER_API resptrcode_geom : public resptr_base<SGeometry>
 {
 	void 				create			(D3DVERTEXELEMENT9* decl, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib);
 	void				create			(u32 FVF				, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib);
@@ -100,7 +100,7 @@ struct ECORE_API SPass : public xr_resource_flagged
 typedef	resptr_core<SPass, resptr_base<SPass>> ref_pass;
 
 //////////////////////////////////////////////////////////////////////////
-struct ECORE_API ShaderElement : public xr_resource_flagged
+struct RENDER_API ShaderElement : public xr_resource_flagged
 {
 public:
 	struct Sflags
@@ -123,7 +123,7 @@ public:
 typedef	resptr_core<ShaderElement, resptr_base<ShaderElement>> ref_selement;
 
 //////////////////////////////////////////////////////////////////////////
-struct ECORE_API Shader : public xr_resource_flagged
+struct RENDER_API Shader : public xr_resource_flagged
 {
 public:
 	ref_selement E[SHADER_ELEMENTS_MAX];// R1 - 0=norm_lod0(det),	1=norm_lod1(normal),	2=L_point,		3=L_spot,	4=L_for_models,	
@@ -132,7 +132,8 @@ public:
 	BOOL				equal			(Shader& S);
 	BOOL				equal			(Shader* S);
 };
-struct ECORE_API resptrcode_shader : public resptr_base<Shader>
+
+struct RENDER_API resptrcode_shader : public resptr_base<Shader>
 {
 	void				create			(LPCSTR s_shader = 0, LPCSTR s_textures = 0, LPCSTR s_constants = 0, LPCSTR s_matrices = 0);
 	void				create			(IBlender*	B, LPCSTR s_shader = 0, LPCSTR s_textures = 0, LPCSTR s_constants = 0, LPCSTR s_matrices = 0);

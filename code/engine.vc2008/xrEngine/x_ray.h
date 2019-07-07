@@ -63,7 +63,7 @@ public:
 							CApplication		();
 	virtual					~CApplication		();
 
-	virtual void	_BCL	OnFrame				();
+	virtual void		OnFrame				();
 			void			load_draw_internal	();
 
 			void SetLoadingScreen				(ILoadingScreen* newScreen);

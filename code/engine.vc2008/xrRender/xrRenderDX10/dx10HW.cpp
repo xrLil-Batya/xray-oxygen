@@ -26,7 +26,7 @@ ENGINE_API BOOL isGraphicDebugging;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CHW HW;
+RENDER_API CHW HW;
 
 CHW::CHW() : m_pAdapter(nullptr), pDevice(nullptr), m_move_window(true), pAnnotation(nullptr), m_bDX11_1(false)
 {

@@ -79,15 +79,15 @@ SState*		CResourceManager::_CreateState		(SimulatorStates& state_code)
 	}
 
 	// Create New
-	v_states.push_back				(xr_new<SState>());
-	v_states.back()->dwFlags		|= xr_resource_flagged::RF_REGISTERED;
+	SState* state = v_states.emplace_back(xr_new<SState>());
+	state->dwFlags		|= xr_resource_flagged::RF_REGISTERED;
 #ifdef USE_DX11
-	v_states.back()->state			= ID3DState::Create(state_code);
+	state->state			= ID3DState::Create(state_code);
 #else
-	v_states.back()->state			= state_code.record();
+	state->state			= state_code.record();
 #endif
-	v_states.back()->state_code		= state_code;
-	return v_states.back();
+	state->state_code		= state_code;
+	return state;
 }
 void		CResourceManager::_DeleteState		(const SState* state)
 {

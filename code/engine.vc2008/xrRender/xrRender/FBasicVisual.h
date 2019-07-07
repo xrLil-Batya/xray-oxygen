@@ -40,7 +40,7 @@ public:
     ogf_desc					desc		;
 #endif
 	shared_str					dbg_name	;
-	virtual shared_str	_BCL	getDebugName() { return dbg_name; }
+	virtual shared_str		getDebugName() { return dbg_name; }
 public:
 	// Common data for rendering
 	u32							Type		;				// visual's type
@@ -54,7 +54,7 @@ public:
 	virtual void				Spawn						()				{};
 	virtual void				Depart						()				{};
 
-	virtual vis_data&	_BCL	getVisData() { return vis;}
+	virtual vis_data&		getVisData() { return vis;}
 	virtual u32					getType()	 { return Type;}
 
 	dxRender_Visual				();

@@ -8,7 +8,7 @@
 #include "stats_manager.h"
 #endif
 
-class CHW : public pureAppActivate, public pureAppDeactivate
+class RENDER_API CHW : public pureAppActivate, public pureAppDeactivate
 {
 //	Functions section
 public:
@@ -71,9 +71,7 @@ public:
 
 	void	Validate() {};
 
-#ifdef USE_DX11
 	DXGI_RATIONAL	SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
-#endif
 
 	void			UpdateViews();
 	virtual	void	OnAppActivate();
@@ -85,4 +83,4 @@ private:
 	bool					m_move_window;
 };
 
-extern ECORE_API CHW		HW;
+extern RENDER_API CHW HW;

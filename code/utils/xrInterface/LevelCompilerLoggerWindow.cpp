@@ -127,6 +127,7 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 		BOOL bWasChanges = FALSE;
 		char tbuf[256];
 
+		try
 		{
 			xrCriticalSectionGuard LogGuard(csLog);
 			if (LogSize != LCLog::logData.size())
@@ -145,7 +146,7 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 				//xrLogger::FlushLog();
 			}
 		}
-
+		catch (...) {}
 		if (_abs(PrSave - progress) > EPS_L)
 		{
 			bWasChanges = TRUE;

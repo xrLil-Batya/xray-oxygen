@@ -7,14 +7,14 @@ class light;
 //	no less than 2
 #define	VOLUMETRIC_SLICES	100
 
-class CRenderTarget		: public IRender_Target
+class RENDER_API CRenderTarget: public IRender_Target, private DLL_Pure
 {
-private:
-	u32							dwWidth;
-	u32							dwHeight;
-	u32							dwAccumulatorClearMark;
+
+	u32 dwWidth;
+	u32 dwHeight;
+	u32 dwAccumulatorClearMark;
 public:
-	enum	eStencilOptimizeMode
+	enum eStencilOptimizeMode
 	{
 		SO_Light = 0,	//	Default
 		SO_Combine,		//	Default
@@ -31,7 +31,6 @@ public:
 	IBlender*					b_ssao;
 	IBlender*					b_combine;
 
-#ifdef USE_DX11
 	IBlender*					b_ssao_msaa[8];
 	IBlender*					b_combine_msaa[8];
 	IBlender*					b_accum_mask_msaa[8];
@@ -42,9 +41,6 @@ public:
 	IBlender*					b_accum_volumetric_msaa[8];
 	IBlender*					b_accum_point_msaa[8];
 	IBlender*					b_accum_reflected_msaa[8];
-#else
-	IBlender*					b_accum_direct_cascade;
-#endif
 
 #ifdef DEBUG
 	struct		dbg_line_t 
@@ -80,6 +76,8 @@ public:
 	ref_rt						rt_LUM_8;			// 64bit, 8x8,		log-average in all components
 
 	ref_rt                      rt_secondVP;        // 32bit		(r,g,b,a) +SecondVP+
+	ref_texture                 rt_OXY_holomarks;   // Mortan: for collimators mark control
+	xr_string                   m_MarkTexture;
 
 	ref_rt						rt_LUM_pool[CHWCaps::MAX_GPUS*2];	// 1xfp32,1x1,		exp-result -> scaler
 	ref_texture					t_LUM_src;			// source
@@ -168,7 +166,7 @@ private:
 	ref_shader					s_accum_direct_volumetric_msaa[8];
 	ref_shader					s_accum_mask_msaa[8];
 	ref_shader					s_accum_direct_msaa[8];
-   ref_shader					s_mark_msaa_edges;
+    ref_shader					s_mark_msaa_edges;
 	ref_shader					s_accum_point_msaa[8]	;
 	ref_shader					s_accum_spot_msaa[8]	;
 	ref_shader					s_accum_reflected_msaa[8];
@@ -343,9 +341,9 @@ public:
 	virtual u32					get_width				()				{ return dwWidth;					}
 	virtual u32					get_height				()				{ return dwHeight;					}
 
-	virtual void				set_cm_imfluence	(float	f)		{ param_color_map_influence = f;							}
-	virtual void				set_cm_interpolate	(float	f)		{ param_color_map_interpolate = f;							}
-	virtual void				set_cm_textures		(const shared_str &tex0, const shared_str &tex1) {color_map_manager.SetTextures(tex0, tex1);}
+	virtual void				set_cm_imfluence		(float	f)		{ param_color_map_influence = f;							}
+	virtual void				set_cm_interpolate		(float	f)		{ param_color_map_interpolate = f;							}
+	virtual void				set_cm_textures			(const shared_str &tex0, const shared_str &tex1) {color_map_manager.SetTextures(tex0, tex1);}
 
 	//	Need to reset stencil only when marker overflows.
 	//	Don't clear when render for the first time
@@ -366,7 +364,9 @@ public:
 	IC void						dbg_addline				(Fvector& P0, Fvector& P1, u32 c)					{}
 	IC void						dbg_addplane			(Fplane& P0,  u32 c)								{}
 #endif
-private:
+
 	void						RenderScreenQuad		(u32 w, u32 h, ID3DRenderTargetView* rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
 	void						RenderScreenQuad		(u32 w, u32 h, ref_rt &rt,				 ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
 };
+
+extern RENDER_API CRenderTarget* pRenderTarget;

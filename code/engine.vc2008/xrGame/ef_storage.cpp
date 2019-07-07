@@ -38,7 +38,7 @@ CEF_Storage::CEF_Storage()
 	m_pfBirthPercentage					= new CPatternFunction("BirthPercentage.efd",			this);
 	m_pfBirthProbability				= new CPatternFunction("BirthProbability.efd",			this);
 	m_pfBirthSpeed						= new CPatternFunction("BirthSpeed.efd",				this);
-	m_pfVictoryProbability				= new CPatternFunction("VictoryProbability.efd",		this);
+	m_pfVictoryProbability				= new CPatternFunction("WeaponEffectiveness.efd",		this);
 
 	// Using into m_pfMainWeaponValue
 	m_pfEntityCost = new CPatternFunction("EntityCost.efd", this);
