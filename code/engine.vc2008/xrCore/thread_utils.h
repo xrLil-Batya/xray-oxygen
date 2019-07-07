@@ -24,9 +24,30 @@ private:
 class XRCORE_API xrCriticalSectionGuard
 {
 public:
-	xrCriticalSectionGuard(xrCriticalSection& InSection);
+	explicit xrCriticalSectionGuard(xrCriticalSection& InSection);
 	~xrCriticalSectionGuard();
+
+	// do not allow sharing
+	xrCriticalSectionGuard(const xrCriticalSectionGuard& Other) = delete;
+	xrCriticalSectionGuard& operator=(const xrCriticalSectionGuard& Other) = delete;
 
 private:
 	xrCriticalSection& Section;
+};
+
+// very slow due mem allocation
+class XRCORE_API xrSharedCriticalSectionGuard
+{
+public:
+	explicit xrSharedCriticalSectionGuard(xrCriticalSection& InSection);
+	xrSharedCriticalSectionGuard(const xrSharedCriticalSectionGuard& InSharedSection);
+	~xrSharedCriticalSectionGuard();
+
+	xrSharedCriticalSectionGuard& operator=(const xrSharedCriticalSectionGuard& Other);
+
+private:
+	void ConditionalFreeLock();
+
+	xr_atomic_u32* pReference;
+	xrCriticalSection* pSection;
 };

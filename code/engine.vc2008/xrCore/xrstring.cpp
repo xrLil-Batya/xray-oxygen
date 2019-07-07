@@ -7,123 +7,189 @@ XRCORE_API str_container	g_pStringContainer;
 
 struct str_container_impl
 {
-    static const u32 buffer_size = 1024 * 256;
-    str_value*		 buffer[buffer_size];
-    int              num_docs;
+	xr_map<u32, str_value*> buffer;
 
     str_container_impl()
-    {
-        num_docs = 0;
-		ZeroMemory(buffer, sizeof(buffer));
-    }
+    {}
 
     str_value*       find(str_value* value, const char* str)
     {
-        str_value* candidate = buffer[value->dwCRC % buffer_size];
-        while (candidate)
-        {
-            if (candidate->dwCRC == value->dwCRC &&
-                candidate->dwLength == value->dwLength &&
-                !memcmp(candidate->value, str, value->dwLength))
-            {
-                return candidate;
-            }
+		auto strNode = buffer.find(value->dwCRC);
+		if (strNode != buffer.end())
+		{
+			str_value* strNodeValue = strNode->second;
+			while (strNodeValue != nullptr)
+			{
+				if (value->dwLength == strNodeValue->dwLength &&
+					memcmp(strNodeValue->value, str, strNodeValue->dwLength) == 0)
+				{
+					return strNodeValue;
+				}
+				strNodeValue = strNodeValue->nextNode;
+			}
+		}
 
-            candidate = candidate->next;
-        }
-
-        return nullptr;
+		return nullptr;
     }
 
     void			 insert(str_value* value)
     {
-        str_value** element = &buffer[value->dwCRC % buffer_size];
-        value->next = *element;
-        *element = value;
+		auto bufIter = buffer.find(value->dwCRC);
+		if (bufIter != buffer.end())
+		{
+			// node with same crc32 founded
+			// let's make sanity check first
+			str_value* node = bufIter->second;
+			while (node->nextNode != nullptr)
+			{
+				VERIFY(xr_strcmp(bufIter->second->value, value->value) != 0);
+				node = node->nextNode;
+			}
+
+			node->nextNode = value;
+		}
+		else
+		{
+			// no strings with this crc32 - add this one
+			buffer[value->dwCRC] = value;
+		}
     }
 
     void			 clean()
     {
-        for (str_value*& i : buffer)
-        { 
-            str_value** current = &i;
+		for (auto iter = buffer.begin(); iter != buffer.end();)
+		{
+			str_value* prevNode = nullptr;
+			str_value* strValueNode = iter->second;
+			while (strValueNode != nullptr)
+			{
+				if (strValueNode->dwReference == 0)
+				{
+					str_value* nodeToDelete = strValueNode;
+					strValueNode = strValueNode->nextNode;
+					xr_free(nodeToDelete);
+					if (prevNode != nullptr)
+					{
+						prevNode->nextNode = strValueNode;
+					}
 
-            while (*current != nullptr)
-            {
-                str_value* value = *current;
-                if (!value->dwReference)
-                {
-                    *current = value->next;
-                    xr_free(value);
-                }
-                else current = &value->next;
-            }
-        }
+					if (strValueNode == nullptr)
+					{
+						if (prevNode == nullptr)
+						{
+							iter = buffer.erase(iter);
+							break;
+						}
+					}
+					else
+					{
+						iter->second = strValueNode;
+					}
+				}
+				else
+				{
+					prevNode = strValueNode;
+					strValueNode = strValueNode->nextNode;
+				}
+			}
+
+			// additional check, because "erase" can return end
+			if (iter == buffer.end())
+				break;
+
+			iter++;
+		}
     }
 
     void			 verify()
     {
-        Msg("strings verify started");
-        for (str_value* value : buffer)
-        {
-            while (value)
-            {
-                u32			crc = crc32(value->value, value->dwLength);
-                string32	crc_str;
-                R_ASSERT3(crc == value->dwCRC, "CorePanic: read-only memory corruption (shared_strings)", itoa(value->dwCRC, crc_str, 16));
-                R_ASSERT3(value->dwLength == xr_strlen(value->value), "CorePanic: read-only memory corruption (shared_strings, internal structures)", value->value);
-                value = value->next;
-            }
-        }
-        Msg("strings verify completed");
+//         Msg("strings verify started");
+//         for (str_value* value : buffer)
+//         {
+//             while (value)
+//             {
+//                 u32			crc = crc32(value->value, value->dwLength);
+//                 string32	crc_str;
+//                 R_ASSERT3(crc == value->dwCRC, "CorePanic: read-only memory corruption (shared_strings)", itoa(value->dwCRC, crc_str, 16));
+//                 R_ASSERT3(value->dwLength == xr_strlen(value->value), "CorePanic: read-only memory corruption (shared_strings, internal structures)", value->value);
+//                 value = value->next;
+//             }
+//         }
+//         Msg("strings verify completed");
     }
 
     void			dump(FILE* f) const
     {
-        for (str_value* value : buffer)
-        {
-            while (value)
-            {
-                fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", value->dwReference, value->dwLength, value->dwCRC, value->value);
-                value = value->next;
-            }
-        }
+//         for (str_value* value : buffer)
+//         {
+//             while (value)
+//             {
+//                 fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", value->dwReference, value->dwLength, value->dwCRC, value->value);
+//                 value = value->next;
+//             }
+//         }
     }
 
     void			dump(IWriter* f) const
     {
-        for (str_value* value : buffer)
-        {
-            string4096		temp;
-            while (value)
-            {
-                xr_sprintf(temp, sizeof(temp), "ref[%4d]-len[%3d]-crc[%8X] : %s\n", value->dwReference, value->dwLength, value->dwCRC, value->value);
-                f->w_string(temp);
-                value = value->next;
-            }
-        }
+//         for (str_value* value : buffer)
+//         {
+//             string4096		temp;
+//             while (value)
+//             {
+//                 xr_sprintf(temp, sizeof(temp), "ref[%4d]-len[%3d]-crc[%8X] : %s\n", value->dwReference, value->dwLength, value->dwCRC, value->value);
+//                 f->w_string(temp);
+//                 value = value->next;
+//             }
+//         }
     }
 
     int				stat_economy()
     {
-        int				counter = 0;
-        for (str_value* value : buffer)
-        {
-            while (value)
-            {
-                counter -= sizeof(str_value);
-                counter += (value->dwReference - 1)*(value->dwLength + 1);
-                value = value->next;
-            }
-        }
+        int counter = 0;
+		for (auto pair : buffer)
+		{
+			counter += pair.second->dwLength + 1;
+		}
 
         return counter;
     }
+
+	bool isNodePresented(shared_str const* pNode)
+	{
+		if (pNode == nullptr) return false;
+		if (const str_value* strNode = pNode->_get())
+		{
+			auto bufferNodeIter = buffer.find(strNode->dwCRC);
+			if (bufferNodeIter != buffer.end())
+			{
+				str_value* bufferStrNode = bufferNodeIter->second;
+
+				while (bufferStrNode != nullptr)
+				{
+					if (bufferStrNode->dwLength == strNode->dwLength &&
+						memcmp(bufferStrNode->value, strNode->value, bufferStrNode->dwLength) == 0)
+					{
+						return true;
+					}
+					bufferStrNode = bufferStrNode->nextNode;
+				}
+			}
+		}
+
+		return false;
+	}
+
 };
 
 str_container::str_container()
 {
     impl = new str_container_impl();
+	constexpr size_t emptySize = sizeof(str_value) + 1;
+	pEmpty = (str_value*)Memory.mem_alloc(emptySize);
+	ZeroMemory(pEmpty, emptySize);
+	pEmpty->dwCRC = crc32("", 1);
+	pEmpty->dwReference = 9999;
 }
 
 str_value*	str_container::dock(str_c value)
@@ -149,27 +215,10 @@ str_value*	str_container::dock(str_c value)
     // search
     result = impl->find(sv, value);
 
-#ifdef DEBUG
-    bool is_leaked_string = !xr_strcmp(value, "enter leaked string here");
-#endif //DEBUG
-
     // it may be the case, string is not found or has "non-exact" match
-    if (nullptr == result
-#ifdef DEBUG
-        || is_leaked_string
-#endif //DEBUG
-        ) {
-
+    if (result == nullptr) 
+	{
         result = (str_value*)Memory.mem_alloc(sizeof(str_value) + s_len_with_zero);
-
-#ifdef DEBUG
-        static int num_leaked_string = 0;
-        if (is_leaked_string)
-        {
-            ++num_leaked_string;
-            Msg("leaked_string: %d 0x%08x", num_leaked_string, result);
-        }
-#endif // DEBUG
 
         result->dwReference = 0;
         result->dwLength = sv->dwLength;
@@ -217,10 +266,37 @@ u32			str_container::stat_economy()
     return			u32(counter);
 }
 
+bool str_container::isNodePresented(shared_str const* pNode)
+{
+	xrCriticalSectionGuard guard(cs);
+	return impl->isNodePresented(pNode);
+}
+
+str_value* str_container::getEmpty() const
+{
+	return pEmpty;
+}
+
 str_container::~str_container()
 {
+	xrCriticalSectionGuard guard(cs);
     clean();
     xr_delete(impl);
+}
+
+xrSharedCriticalSectionGuard str_container::acquireLock()
+{
+	return xrSharedCriticalSectionGuard(cs);
+}
+
+void str_container::enterLock()
+{
+	cs.Enter();
+}
+
+void str_container::leaveLock()
+{
+	cs.Leave();
 }
 
 //xr_string class

@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <limits>
+#include <atomic>
 // Type defs
 using s8 = std::int8_t;
 using u8 = std::uint8_t;
@@ -76,3 +77,14 @@ using wstring1024  = wchar_t[1024];
 using wstring2048  = wchar_t[2048];
 using wstring4096  = wchar_t[4096];
 using wstring_path = wchar_t[2 * max_path];
+
+
+using xr_atomic_u8  = std::atomic<u8>;
+using xr_atomic_u16 = std::atomic<u16>;
+using xr_atomic_u32 = std::atomic<u32>;
+using xr_atomic_u64 = std::atomic<u64>;
+
+using xr_atomic_s8  = std::atomic<s8>;
+using xr_atomic_s16 = std::atomic<s16>;
+using xr_atomic_s32 = std::atomic<s32>;
+using xr_atomic_s64 = std::atomic<s64>;

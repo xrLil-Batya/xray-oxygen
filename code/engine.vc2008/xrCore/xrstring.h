@@ -8,11 +8,11 @@ using str_c = const char*;
 #pragma warning(disable : 4200)
 struct XRCORE_API str_value
 {
-	u32			dwReference;
-	u32			dwLength;
-	u32			dwCRC;
-	str_value*  next;
-	char		value[];
+	xr_atomic_s32	dwReference;
+	u32				dwLength;
+	u32				dwCRC;
+	str_value*		nextNode; // next node is a node with same CRC32 but different value
+	char			value[];
 };
 
 struct XRCORE_API str_value_cmp	// less
@@ -27,22 +27,30 @@ struct XRCORE_API str_hash_function
 
 struct str_container_impl;
 class IWriter;
+class shared_str;
 //////////////////////////////////////////////////////////////////////////
 class XRCORE_API str_container
 {
 private:
     xrCriticalSection	cs;
 	str_container_impl* impl;
+	str_value* pEmpty;
 public:
 						str_container	();
 						~str_container  ();
 
+	xrSharedCriticalSectionGuard acquireLock();
+
+	void enterLock();
+	void leaveLock();
 	str_value*			dock			(str_c value);
 	void				clean			();
 	void				dump			();
 	void				dump			(IWriter* W);
 	void				verify			();
 	u32					stat_economy	();
+	bool				isNodePresented (shared_str const* pNode);
+	str_value*			getEmpty		() const;
 };
 XRCORE_API extern str_container g_pStringContainer;
 
@@ -52,12 +60,94 @@ class shared_str
 	str_value*			p_;
 protected:
 	// ref-counting
-	void				_dec		()								{	if (p_== nullptr) return;	p_->dwReference--; 	if (0==p_->dwReference)	p_ = nullptr;		}
-public:
-	void				_set		(str_c rhs) 					{	str_value* v = g_pStringContainer.dock(rhs); if (nullptr!=v) v->dwReference++; _dec(); p_ = v;	}
-	void				_set		(shared_str const &rhs)			{	str_value* v = rhs.p_; if (nullptr!=v) v->dwReference++; _dec(); p_ = v;							}
+	void				_dec		()								
+	{	
+		if (p_ == nullptr)
+		{
+			return;
+		}
 
-	const str_value*	_get		()	const						{	return p_;	}
+		if (p_->dwLength == 0) // empty string
+		{
+			p_ = nullptr;
+			return;
+		}
+
+		// multithread warning!
+		// do not allow dwReference to overload
+		VERIFY(g_pStringContainer.isNodePresented(this));
+		while (true)
+		{
+			s32 currentValue = p_->dwReference.load();
+			if (currentValue == 0)
+			{
+				// what? it's already zero??
+				// but it should be at least 1, because we still hold a reference
+				VERIFY(currentValue != 0);
+				break;
+			}
+			s32 newValue = std::max<s32>(currentValue - 1, 0);
+
+			if (p_->dwReference.compare_exchange_strong(currentValue, newValue))
+				break;
+		}
+
+		p_ = nullptr;
+	}
+public:
+	void				_set		(str_c rhs) 					
+	{	
+		if (rhs == nullptr)
+		{
+			_dec();
+			return;
+		}
+
+		// fast routine for empty string
+		if (rhs[0] == '\0')
+		{
+			_dec();
+			p_ = g_pStringContainer.getEmpty();
+			return;
+		}
+
+		// another thread can try dock same string at same time, resulting bad conditions
+		//xrSharedCriticalSectionGuard lock = g_pStringContainer.acquireLock();
+		g_pStringContainer.enterLock();
+
+		str_value* sharedStrNode = g_pStringContainer.dock(rhs); 
+		if (sharedStrNode != nullptr)
+		{
+			sharedStrNode->dwReference++;
+		}
+		_dec(); 
+		p_ = sharedStrNode;
+		g_pStringContainer.leaveLock();
+	}
+	void				_set		(shared_str const &rhs)			
+	{	
+		// another thread can try dock same string at same time, resulting bad conditions
+		//xrSharedCriticalSectionGuard lock = g_pStringContainer.acquireLock();
+		g_pStringContainer.enterLock();
+
+		str_value* sharedStrNode = rhs.p_; 
+		if (sharedStrNode != nullptr)
+		{
+			if (sharedStrNode->dwLength != 0)
+			{
+				VERIFY(g_pStringContainer.isNodePresented(&rhs));
+				sharedStrNode->dwReference++;
+			}
+		}
+		_dec(); 
+		p_ = sharedStrNode;				
+		g_pStringContainer.leaveLock();
+	}
+
+	const str_value*	_get		()	const						
+	{	
+		return p_;	
+	}
 public:
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// construction
@@ -68,8 +158,8 @@ public:
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// assignment & accessors
-	shared_str&			operator=	(str_c rhs)						{	_set(rhs);	return (shared_str&)*this;		}
-	shared_str&			operator=	(shared_str const &rhs)			{	_set(rhs);	return (shared_str&)*this;		}
+	shared_str&			operator=	(str_c rhs)						{	_set(rhs);	return *this;		}
+	shared_str&			operator=	(shared_str const &rhs)			{	_set(rhs);	return *this;		}
 	str_c				operator*	() const						{	return p_ ? p_->value : nullptr;			}
 	bool				operator!	() const						{	return p_ == nullptr;						}
 	char				operator[]	(size_t id)						{	return p_->value[id];						}
@@ -79,8 +169,21 @@ public:
 	char*				data		() const						{	return p_ ? p_->value : nullptr;			}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// misc func
-	u32					size		()						 const	{	if (nullptr==p_) return 0; else return p_->dwLength; }
-	void				swap		(shared_str & rhs)				{	str_value* tmp = p_; p_ = rhs.p_; rhs.p_ = tmp;	}
+	u32					size		()						 const	
+	{	
+		if (p_ == nullptr)
+		{
+			return 0;
+		}
+
+		return p_->dwLength; 
+	}
+	void				swap		(shared_str & rhs)				
+	{	
+		str_value* tmp = p_; 
+		p_ = rhs.p_; 
+		rhs.p_ = tmp;	
+	}
 	bool				equal		(const shared_str & rhs) const	{	return (p_ == rhs.p_);							}
 
 	shared_str& __cdecl	printf		(const char* format, ...)		
@@ -91,7 +194,7 @@ public:
 		int vs_sz	= _vsnprintf(buf,sizeof(buf)-1,format,p); buf[sizeof(buf)-1]=0;
 		va_end		(p);
 		if (vs_sz)	_set(buf);	
-		return 		(shared_str&)*this;
+		return 		*this;
 	}
 };
 

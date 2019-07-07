@@ -117,6 +117,11 @@ u32 CLAItem::InterpolateRGB(int frame)
         A--;
     }
 
+	if (A == Keys.end())
+	{
+		return 0;
+	}
+
     R_ASSERT(Keys.size()>1);
     // интерполируем цвет
     Fcolor c, c0, c1;
