@@ -61,7 +61,6 @@ struct	BTHREAD_params
 void MODEL::build_thread(void *params)
 {
 	_initialize_cpu_thread();
-	FPU::m64r();
 	BTHREAD_params	BuildParams = *((BTHREAD_params*)params);
 	xrCriticalSectionGuard guard(BuildParams.Model->lock);
 	BuildParams.Model->build_internal(

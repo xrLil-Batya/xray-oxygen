@@ -29,6 +29,7 @@ static const float	s_fJumpGroundTime	= 0.1f;	// для снятия флажка
 	   float s_fDecreaseSpeed = 14.f; // Rietmon: насколько уменьшаем скорость после прыжка
 	   float m_fDecreaseWalkAccel;
 
+extern	BOOL g_ShowAnimationInfo;
 
 IC static void generate_orthonormal_basis1(const Fvector& dir,Fvector& updir, Fvector& right)
 {
@@ -171,11 +172,37 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 			mstate_wf &= ~mcJump;
 		}
 	}
-	// update player accel
-	if (mstate_wf&mcFwd)		vControlAccel.z +=  m_movementWeight.y;
-	if (mstate_wf&mcBack)		vControlAccel.z +=	m_movementWeight.y;
-	if (mstate_wf&mcLStrafe)	vControlAccel.x +=	m_movementWeight.x;
-	if (mstate_wf&mcRStrafe)	vControlAccel.x +=	m_movementWeight.x;
+	else
+	{
+		// update player accel
+		if (mstate_wf&mcFwd)		vControlAccel.z +=  m_movementWeight.y;
+		if (mstate_wf&mcBack)		vControlAccel.z +=	m_movementWeight.y;
+		if (mstate_wf&mcLStrafe)	vControlAccel.x +=	m_movementWeight.x;
+		if (mstate_wf&mcRStrafe)	vControlAccel.x +=	m_movementWeight.x;
+	}
+
+	if ((Level().CurrentControlEntity() == this) && g_ShowAnimationInfo)
+	{
+		string128 buf;
+		xr_strcpy(buf, "");
+		CGameFont* StatFont = UI().Font().GetFont("stat_font");
+		StatFont->SetColor(0xFFFFFFFF);
+		if (isActorAccelerated(mstate_wf, IsZoomAimingMode()))		xr_strcat(buf, "Accel ");
+		if (mstate_wf & mcCrouch)		xr_strcat(buf, "Crouch ");
+		if (mstate_wf & mcFwd)		xr_strcat(buf, "Fwd ");
+		if (mstate_wf & mcBack)		xr_strcat(buf, "Back ");
+		if (mstate_wf & mcLStrafe)	xr_strcat(buf, "LStrafe ");
+		if (mstate_wf & mcRStrafe)	xr_strcat(buf, "RStrafe ");
+		if (mstate_wf & mcJump)		xr_strcat(buf, "Jump ");
+		if (mstate_wf & mcFall)		xr_strcat(buf, "Fall ");
+		if (mstate_wf & mcTurn)		xr_strcat(buf, "Turn ");
+		if (mstate_wf & mcLanding)	xr_strcat(buf, "Landing ");
+		if (mstate_wf & mcLLookout)	xr_strcat(buf, "LLookout ");
+		if (mstate_wf & mcRLookout)	xr_strcat(buf, "RLookout ");
+		if (m_bJumpKeyPressed)		xr_strcat(buf, "+Jumping ");
+		StatFont->OutNext("MSTATE WISHFUL:     [%s]", buf);
+		StatFont->OutNext("vControlAccel:     [%f, %f, %f]", vControlAccel.x, vControlAccel.y, vControlAccel.z);
+	};
 
 	CPHMovementControl::EEnvironment curr_env = character_physics_support()->movement()->Environment();
 	if(curr_env==CPHMovementControl::peOnGround || curr_env==CPHMovementControl::peAtWall)
@@ -267,7 +294,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 
 			// correct "mstate_real" if opposite keys pressed
 			if (_abs(vControlAccel.z)<EPS)	mstate_real &= ~(mcFwd+mcBack		);
-			if (_abs(vControlAccel.x)<EPS)	mstate_real &= ~(mcLStrafe+mcRStrafe);
+			//if (_abs(vControlAccel.x)<EPS)	mstate_real &= ~(mcLStrafe+mcRStrafe);
 
 			// normalize and analyze crouch and run
 			float	scale			= vControlAccel.magnitude();

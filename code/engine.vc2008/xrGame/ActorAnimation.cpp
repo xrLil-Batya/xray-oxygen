@@ -8,7 +8,6 @@
 #include "level.h"
 #ifdef DEBUG
 #include "PHDebug.h"
-#include "../xrUICore/ui_base.h"
 #endif
 #include "hit.h"
 #include "PHDestroyable.h"
@@ -20,6 +19,8 @@
 #include "IKLimbsController.h"
 #include "player_hud.h"
 #include "items/WeaponKnife.h"
+
+#include "../xrUICore/ui_base.h"
 
 static const float y_spin0_factor		= 0.0f;
 static const float y_spin1_factor		= 0.4f;
@@ -311,9 +312,8 @@ CMotion*        FindMotionKeys(MotionID motion_ID,IRenderVisual* V)
 	return (VA && motion_ID.valid())?VA->LL_GetRootMotion(motion_ID):nullptr;
 }
 
-#ifdef DEBUG
-BOOL	g_ShowAnimationInfo = TRUE;
-#endif // DEBUG
+BOOL	g_ShowAnimationInfo = FALSE;
+
 char* mov_state[] ={
 	"idle",
 	"walk",
@@ -322,8 +322,6 @@ char* mov_state[] ={
 };
 void CActor::g_SetAnimation( u32 mstate_rl )
 {
-
-
 	if (!g_Alive()) {
 		if (m_current_legs||m_current_torso){
 			SActorState*				ST = nullptr;
@@ -612,27 +610,27 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		CStepManager::on_animation_start(M_legs, m_current_legs_blend);
 	}
 
-
-
-#ifdef DEBUG
-	if(bDebug && g_ShowAnimationInfo)
+	if(g_ShowAnimationInfo)
 	{
-		UI().Font().GetFont("stat_font")->OutSetI	(0,0);
-		UI().Font().GetFont("stat_font")->OutNext("[%s]",mov_state[moving_idx]);
+		CGameFont* StatFont = UI().Font().GetFont("stat_font");
+		StatFont->SetColor(0xFFFFFFFF);
+		StatFont->OutSetI	(0,0);
+		StatFont->OutNext("[%s]",mov_state[moving_idx]);
 		IKinematicsAnimated* KA = smart_cast<IKinematicsAnimated*>(Visual());
 		if(M_torso)
-			UI().Font().GetFont("stat_font")->OutNext("torso [%s]",KA->LL_MotionDefName_dbg(M_torso).first);
+			StatFont->OutNext("torso [%s]",KA->LL_MotionDefName_dbg(M_torso).first);
 		if(M_head)
-			UI().Font().GetFont("stat_font")->OutNext("head [%s]",KA->LL_MotionDefName_dbg(M_head).first);
+			StatFont->OutNext("head [%s]",KA->LL_MotionDefName_dbg(M_head).first);
 		if(M_legs)
-			UI().Font().GetFont("stat_font")->OutNext("legs [%s]",KA->LL_MotionDefName_dbg(M_legs).first);
+			StatFont->OutNext("legs [%s]",KA->LL_MotionDefName_dbg(M_legs).first);
 	}
-#endif
 
-#ifdef DEBUG
-	if ((Level().CurrentControlEntity() == this) && g_ShowAnimationInfo) {
+	if ((Level().CurrentControlEntity() == this) && g_ShowAnimationInfo) 
+	{
 		string128 buf;
 		xr_strcpy(buf,"");
+		CGameFont* StatFont = UI().Font().GetFont("stat_font");
+		StatFont->SetColor(0xFFFFFFFF);
 		if (isActorAccelerated(mstate_rl, IsZoomAimingMode()))		xr_strcat(buf,"Accel ");
 		if (mstate_rl&mcCrouch)		xr_strcat(buf,"Crouch ");
 		if (mstate_rl&mcFwd)		xr_strcat(buf,"Fwd ");
@@ -646,7 +644,7 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		if (mstate_rl&mcLLookout)	xr_strcat(buf,"LLookout ");
 		if (mstate_rl&mcRLookout)	xr_strcat(buf,"RLookout ");
 		if (m_bJumpKeyPressed)		xr_strcat(buf,"+Jumping ");
-		UI().Font().GetFont("stat_font")->OutNext	("MSTATE:     [%s]",buf);
+		StatFont->OutNext	("MSTATE:     [%s]",buf);
 /*
 		switch (m_PhysicMovementControl->Environment())
 		{
@@ -662,7 +660,6 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 		Game().m_WeaponUsageStatistic->Draw();
 		*/
 	};
-#endif
 
 	if (!m_current_torso_blend)
 		return;

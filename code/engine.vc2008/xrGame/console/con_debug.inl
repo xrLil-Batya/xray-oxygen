@@ -3,7 +3,6 @@
 #	include "game_graph.h"
 #	include "CharacterPhysicsSupport.h"
 
-extern	BOOL	g_ShowAnimationInfo		;
 		Flags32	dbg_net_Draw_Flags		= {0};
 
 		BOOL	g_bDebugNode			= FALSE;

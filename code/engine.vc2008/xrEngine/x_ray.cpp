@@ -250,8 +250,6 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 		xr_strcpy(Core.CompName, sizeof(Core.CompName), "Computer");
 	}
 
-	splashScreen.SetProgressPosition(20, "FPU m24r");
-	FPU::m24r();
 	splashScreen.SetProgressPosition(35, "Initializing engine");
 	InitEngine();
 	splashScreen.SetProgressPosition(40, "Initializing input");

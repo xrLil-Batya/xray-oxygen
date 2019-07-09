@@ -1138,9 +1138,7 @@ float CActor::missile_throw_force()
 	return 0.f;
 }
 
-#ifdef DEBUG
-extern	BOOL g_ShowAnimationInfo	;
-#endif // DEBUG
+extern	BOOL g_ShowAnimationInfo;
 
 // HUD
 void CActor::OnHUDDraw(CCustomHUD*)

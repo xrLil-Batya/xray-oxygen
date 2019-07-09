@@ -83,6 +83,7 @@ float			g_aim_predict_time = 0.44f;
 int				g_keypress_on_start	= 1;
 
 ENGINE_API extern float	g_console_sensitive;
+extern	BOOL	g_ShowAnimationInfo;
 //-----------------------------------------------------------
 #ifdef DEBUG
 #	include "console/con_debug.inl"
@@ -422,12 +423,12 @@ void CCC_RegisterCommands()
 	CMD4(CCC_Integer, "wpn_aim_toggle",  &b_toggle_weapon_aim, 0, 1);
 //	CMD4(CCC_Integer,	"hud_old_style", &g_old_style_ui_hud, 0, 1);
 
+	CMD4(CCC_Integer, "dbg_show_ani_info", &g_ShowAnimationInfo, 0, 1);
 #ifdef DEBUG
 	CMD4(CCC_Float, "ai_smart_cover_animation_speed_factor", &g_smart_cover_animation_speed_factor, .1f, 10.f);
 	CMD4(CCC_Float, "air_resistance_epsilon", &air_resistance_epsilon, .0f, 1.f);
 
 	CMD4(CCC_Integer, "show_wnd_rect_all", &g_show_wnd_rect2, 0, 1);
-	CMD4(CCC_Integer, "dbg_show_ani_info", &g_ShowAnimationInfo, 0, 1);
 
 	extern BOOL dbg_moving_bones_snd_player;
 	CMD4(CCC_Integer, "dbg_bones_snd_player", &dbg_moving_bones_snd_player, FALSE, TRUE);

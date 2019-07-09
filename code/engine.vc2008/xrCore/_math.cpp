@@ -23,35 +23,8 @@ typedef struct _PROCESSOR_POWER_INFORMATION
 
 namespace FPU
 {
-	// Когда-нибудь можно будет задавать точность для float в х64...
-	XRCORE_API void m24(void)
-	{
-		_controlfp(_RC_CHOP, MCW_RC);
-	}
-	XRCORE_API void m24r(void)
-	{
-		_controlfp(_RC_NEAR, MCW_RC);
-	}
-	XRCORE_API void m53(void)
-	{
-		_controlfp(_RC_CHOP, MCW_RC);
-	}
-	XRCORE_API void m53r(void)
-	{
-		_controlfp(_RC_NEAR, MCW_RC);
-	}
-	XRCORE_API void m64(void)
-	{
-		_controlfp(_RC_CHOP, MCW_RC);
-	}
-	XRCORE_API void m64r(void)
-	{
-		_controlfp(_RC_NEAR, MCW_RC);
-	}
-
 	void initialize()
 	{
-		m24r();
 		::Random.seed(u32(CPU::GetCLK() % (1i64 << 32i64)));
 	}
 };
@@ -226,12 +199,6 @@ void debug_on_thread_spawn();
 void _initialize_cpu_thread()
 {
 	debug_on_thread_spawn();
-
-	// fpu & sse
-	if (Core.PluginMode)
-		FPU::m64r();
-	else
-		FPU::m24r();
 
 	_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
 	if (_denormals_are_zero_supported)

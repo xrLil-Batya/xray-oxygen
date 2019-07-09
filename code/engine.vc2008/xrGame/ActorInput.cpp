@@ -116,10 +116,10 @@ void CActor::IR_OnKeyboardPress(u8 cmd)
 	case kPREV_SLOT:	OnPrevWeaponSlot(); break;
 	case kNIGHT_VISION: SwitchNightVision(); break;
 
-	case kFWD:		mstate_wishful |= mcFwd;	 m_movementWeight.y =  1.0f;	break;
-	case kBACK:		mstate_wishful |= mcBack;	 m_movementWeight.y = -1.0f;	break;
-	case kL_STRAFE:	mstate_wishful |= mcLStrafe; m_movementWeight.x = -1.0f;	break;
-	case kR_STRAFE:	mstate_wishful |= mcRStrafe; m_movementWeight.x =  1.0f;	break;
+	case kFWD:		mstate_wishful |= mcFwd;	 m_movementWeight.y +=  1.0f;	break;
+	case kBACK:		mstate_wishful |= mcBack;	 m_movementWeight.y += -1.0f;	break;
+	case kL_STRAFE:	mstate_wishful |= mcLStrafe; m_movementWeight.x += -1.0f;	break;
+	case kR_STRAFE:	mstate_wishful |= mcRStrafe; m_movementWeight.x +=  1.0f;	break;
 
 	case kJUMP:			 mstate_wishful |= mcJump; break;	
 	case kSPRINT_TOGGLE: mstate_wishful ^= mcSprint; break;
@@ -225,10 +225,10 @@ void CActor::IR_OnKeyboardRelease(u8 cmd)
 		    case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop(); break;
 			case kUSE:      m_bPickupMode = false;			break;
 
-			case kFWD:		mstate_wishful &= ~mcFwd;	  m_movementWeight.y = 0.0f;	break;
-			case kBACK:		mstate_wishful &= ~mcBack;	  m_movementWeight.y = 0.0f;	break;
-			case kL_STRAFE:	mstate_wishful &= ~mcLStrafe; m_movementWeight.x = 0.0f;	break;
-			case kR_STRAFE:	mstate_wishful &= ~mcRStrafe; m_movementWeight.x = 0.0f;	break;
+			case kFWD:		mstate_wishful &= ~mcFwd;	  m_movementWeight.y -= 1.0f;	break;
+			case kBACK:		mstate_wishful &= ~mcBack;	  m_movementWeight.y += 1.0f;	break;
+			case kL_STRAFE:	mstate_wishful &= ~mcLStrafe; m_movementWeight.x += 1.0f;	break;
+			case kR_STRAFE:	mstate_wishful &= ~mcRStrafe; m_movementWeight.x -= 1.0f;	break;
 		}
 	}
 }
