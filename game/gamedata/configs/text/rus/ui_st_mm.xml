@@ -145,7 +145,7 @@
 		<text>Угол обзора ГГ (HudFOV)</text>
 	</string>
 	<string id="ui_mm_mblur_enabled">
-		<text>Montion Blur</text>
+		<text>Размытие при движений</text>
 	</string>
 	<string id="ui_mm_detail_density">
 		<text>Плотность травы</text>

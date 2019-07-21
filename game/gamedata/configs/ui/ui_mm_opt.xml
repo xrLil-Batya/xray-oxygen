@@ -140,7 +140,22 @@
           <track_brightness x="175" y="187" width="235" height="16">
             <options_item entry="rs_c_brightness" group="mm_opt_video" depend="runtime"/>
         </track_brightness>
+		
+		<cap_vsync x="248" y="234" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_vsync</text>
+        </cap_vsync>
+        <check_vsync x="380" y="233" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="rs_v_sync" group="mm_opt_video_adv" depend="vid"/>
+        </check_vsync>
 
+		<cap_triple_buffering x="248" y="212" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_triple_buffering</text>
+        </cap_triple_buffering>
+        <check_triple_buffering x="380" y="210" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="rs_triple_buffering" group="mm_opt_video_adv" depend="vid"/>
+        </check_triple_buffering>
 
         <btn_advanced x="338" y="322" width="108" height="24">
             <text align="c" font="letterica16">ui_mm_advanced</text>
@@ -157,24 +172,176 @@
         vert_interval="0" always_show_scroll="0"/>
 
         <templ_item width="430" height="30"/>
-
-		<!-- --------------------------------- Дополнительные -------------------------------- -->
-        <line_menu_2 x="320" y="10" width="235" height="24">
-            <text r="170" g="170" b="255" font="ui_font_graffiti22_russian">st_opt_anothers</text>
-        </line_menu_2>
 		
-		<cap_glows x="205" y="0" width="135" height="24">
+		<!-- --------------------------------- Общее -------------------------------- -->
+        <line_menu_1 x="300" y="10" width="135" height="24">
+            <text r="170" g="170" b="170" font="ui_font_graffiti22_russian">st_opt_general</text>
+        </line_menu_1>
+		
+		<!-- Line 1-->
+		<!-- Detail bump -->
+        <cap_r_detail_bump x="20" y="3" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r_detail_bump</text>
+        </cap_r_detail_bump>
+        <check_r_detail_bump x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_detail_bump" group="mm_opt_video"/>
+        </check_r_detail_bump>
+
+		<!-- Steep parallax -->
+        <cap_r_steep_parallax x="240" y="5" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="l">ui_mm_r_steep_parallax</text>
+        </cap_r_steep_parallax>
+        <check_r_steep_parallax x="390" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_steep_parallax" group="mm_opt_video"/>
+        </check_r_steep_parallax>
+		<!-- Line end --> 
+		
+		<!-- Line 2 -->
+		<!-- Soft Water -->
+		<cap_soft_water x="20" y="3" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_soft_water</text>
+        </cap_soft_water>
+        <check_soft_water x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_soft_water" group="mm_opt_video_adv" depend="vid"/>
+        </check_soft_water>
+
+		<!-- Soft Particles -->
+        <cap_soft_particles x="240" y="5" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="l">ui_mm_soft_particles</text>
+        </cap_soft_particles>
+        <check_soft_particles x="390" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_soft_particles" group="mm_opt_video_adv" depend="vid"/>
+        </check_soft_particles>
+		<!-- Line end --> 
+		
+		<!-- Line 3 -->
+		<!-- Volumetric Light -->
+		<cap_volumetric_light x="20" y="3" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_volumetric_light</text>
+        </cap_volumetric_light>
+        <check_volumetric_light x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_volumetric_lights" group="mm_opt_video_adv" depend="vid"/>
+        </check_volumetric_light>
+		
+		<!-- Wet surfaces -->
+		<cap_r3_dynamic_wet_surfaces x="240" y="5" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="l">ui_mm_r3_dynamic_wet_surfaces</text>
+        </cap_r3_dynamic_wet_surfaces>
+        <check_r3_dynamic_wet_surfaces x="390" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r3_dynamic_wet_surfaces" group="mm_opt_video"/>
+        </check_r3_dynamic_wet_surfaces>
+		<!-- Line end --> 
+		
+		<!-- Line 4 -->
+		<!-- Volumetric smoke -->
+		<cap_r3_volumetric_smoke x="20" y="0" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r3_volumetric_smoke</text>
+        </cap_r3_volumetric_smoke>
+        <check_r3_volumetric_smoke x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r3_volumetric_smoke" group="mm_opt_video"/>
+        </check_r3_volumetric_smoke>
+		
+		<!-- Tesselation -->
+		<cap_r4_tessellation x="240" y="5" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r4_enable_tessellation</text>
+        </cap_r4_tessellation>
+        <check_r4_tessellation x="390" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r4_enable_tessellation" group="mm_opt_video_adv" depend="vid"/>
+        </check_r4_tessellation>
+		<!-- Line end --> 
+		
+		<!-- Line 5 -->
+		<!-- Sun shadow -->
+		<cap_r_sun x="20" y="3" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r_sun</text>
+        </cap_r_sun>
+        <check_r_sun x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_sun" group="mm_opt_video"/>
+        </check_r_sun>
+		
+		<!-- Grass shadow -->
+		<cap_sun_details x="240" y="5" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_sun_details</text>
+        </cap_sun_details>
+        <check_sun_details x="390" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_detail_shadow" group="mm_opt_video"/>
+        </check_sun_details>
+		<!-- Line end -->
+		
+		<!-- Line 6 -->
+		<!-- Player shadow -->
+		<cap_actor_shadow x="20" y="3" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_actor_shadow</text>
+        </cap_actor_shadow>
+        <check_actor_shadow x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_actor_shadow" group="mm_opt_video"/>
+        </check_actor_shadow>
+		
+		<!-- Statics glows -->
+		<cap_glows x="240" y="5" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_glows</text>
         </cap_glows>
         <check_glows x="390" y="0" width="44" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="r_glows_use" group="mm_opt_video_adv" depend="vid"/>
         </check_glows>
+		<!-- Line end -->
+
+		<!-- --------------------------------- Дополнительные -------------------------------- -->
+        <line_menu_2 x="300" y="10" width="135" height="24">
+            <text r="170" g="170" b="170" font="ui_font_graffiti22_russian">st_opt_anothers</text>
+        </line_menu_2>
 		
-		<!-- --------------------------------- Общее -------------------------------- -->
-        <line_menu_1 x="400" y="10" width="135" height="24">
-            <text r="170" g="170" b="255" font="ui_font_graffiti22_russian" align="r">st_opt_general</text>
-        </line_menu_1>
+		<!-- Line 1 -->
+		<!-- Rain drops on screen -->
+		<cap_rain_drops x="20" y="3" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_rain_drops</text>
+        </cap_rain_drops>
+        <check_rain_drops x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_rain_droplets" group="mm_opt_video_adv"/>
+        </check_rain_drops>
+		
+		<!-- Vignette -->
+		<cap_vignette x="240" y="5" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_vignette</text>
+        </cap_vignette>
+        <check_vignette x="390" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_vignette" group="mm_opt_video_adv"/>
+        </check_vignette>
+		<!-- Line end -->
+		
+		<!-- Line 2 -->
+		<!-- Color grading -->
+		<cap_grading x="20" y="5" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_grading</text>
+        </cap_grading>
+        <check_grading x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_color_grading" group="mm_opt_video_adv"/>
+        </check_grading>
+		
+		<!-- Chromatic aberration -->
+		<cap_ch_aberr x="240" y="5" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_ch_aberr</text>
+        </cap_ch_aberr>
+        <check_ch_aberr x="390" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="r_chromatic_aberr" group="mm_opt_video_adv"/>
+        </check_ch_aberr>
+		<!-- Line end -->
 		
         <cap_vis_dist x="20" y="3" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_vis_distance</text>
@@ -232,13 +399,15 @@
             <options_item entry="r_tf_aniso" group="mm_opt_video_adv"/>
         </track_aniso>
 
-        <check_mblur_enabled x="20" y="-1" width="44" height="29">
+
+        <cap_mblur_enabled x="20" y="0" width="135" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_mblur_enabled</text>
+        </cap_mblur_enabled>
+		<check_mblur_enabled x="168" y="0" width="44" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="r_mblur_enabled" group="mm_opt_video_adv" depend="vid"/>
         </check_mblur_enabled>
-        <cap_mblur_enabled x="25" y="0" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_mblur_enabled</text>
-        </cap_mblur_enabled>
+		<!-- NOT USED -->
         <track_mblur x="180" y="6" width="235" height="16" step="0.05" is_integer="1">
             <options_item entry="r_mblur" group="mm_opt_video_adv"/>
         </track_mblur>
@@ -254,30 +423,6 @@
             </text_color>
         </combo_msaa>
 
-        <cap_r_sun x="20" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r_sun</text>
-        </cap_r_sun>
-        <check_r_sun x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_sun" group="mm_opt_video"/>
-        </check_r_sun>
-		
-        <cap_sun_details x="179" y="0" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_sun_details</text>
-        </cap_sun_details>
-        <check_sun_details x="390" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_detail_shadow" group="mm_opt_video"/>
-        </check_sun_details>
-		
-        <cap_actor_shadow x="20" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_actor_shadow</text>
-        </cap_actor_shadow>
-        <check_actor_shadow x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_actor_shadow" group="mm_opt_video"/>
-        </check_actor_shadow>
-
         <cap_r1_detail_textures x="20" y="3" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r1_detail_textures</text>
         </cap_r1_detail_textures>
@@ -285,27 +430,9 @@
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="r1_detail_textures" group="mm_opt_video"/>
         </check_r1_detail_textures>
-
-		<!-- Line -->
-        <cap_r_detail_bump x="20" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r_detail_bump</text>
-        </cap_r_detail_bump>
-        <check_r_detail_bump x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_detail_bump" group="mm_opt_video"/>
-        </check_r_detail_bump>
-
-        <cap_r_steep_parallax x="171" y="5" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="l">ui_mm_r_steep_parallax</text>
-        </cap_r_steep_parallax>
-        <check_r_steep_parallax x="390" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_steep_parallax" group="mm_opt_video"/>
-        </check_r_steep_parallax>
-		<!-- Line end --> 
 		
 		<cap_r_sun_shafts_mode x="20" y="3" width="135" height="24">
-            <text color= "yellow" font="letterica16" align="r" vert_align="c">ui_mm_r_sun_shafts_mode</text>
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r_sun_shafts_mode</text>
         </cap_r_sun_shafts_mode>
         <list_r_sun_shafts_mode x="180" y="0" width="235" height="20" list_length="3" always_show_scroll="0">
             <options_item entry="r_sunshafts_mode" group="mm_opt_video" depend="restart"/>
@@ -326,23 +453,6 @@
             </text_color>
         </list_r_sun_quality>
 
-        <cap_r3_dynamic_wet_surfaces x="237" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="l">ui_mm_r3_dynamic_wet_surfaces</text>
-        </cap_r3_dynamic_wet_surfaces>
-        <check_r3_dynamic_wet_surfaces x="390" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r3_dynamic_wet_surfaces" group="mm_opt_video"/>
-        </check_r3_dynamic_wet_surfaces>
-
-        <cap_r3_volumetric_smoke x="20" y="0" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r3_volumetric_smoke</text>
-        </cap_r3_volumetric_smoke>
-        <check_r3_volumetric_smoke x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r3_volumetric_smoke" group="mm_opt_video"/>
-        </check_r3_volumetric_smoke>
-
-
         <cap_light_distance x="20" y="3" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_light_distance</text>
         </cap_light_distance>
@@ -356,41 +466,6 @@
         <track_particles_distance x="180" y="6" width="235" height="16" step="0.1">
             <options_item entry="r_ls_squality" group="mm_opt_video_adv"/>
         </track_particles_distance>
-		
-		<!-- Line -->
-        <cap_rain_drops x="20" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_rain_drops</text>
-        </cap_rain_drops>
-        <check_rain_drops x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_rain_droplets" group="mm_opt_video_adv"/>
-        </check_rain_drops>
-		
-        <cap_vignette x="137" y="0" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_vignette</text>
-        </cap_vignette>
-        <check_vignette x="390" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_vignette" group="mm_opt_video_adv"/>
-        </check_vignette>
-		
-		<!-- Line -->
-        <cap_grading x="20" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_grading</text>
-        </cap_grading>
-        <check_grading x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_color_grading" group="mm_opt_video_adv"/>
-        </check_grading>
-		
-		<cap_ch_aberr x="262" y="0" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_ch_aberr</text>
-        </cap_ch_aberr>
-        <check_ch_aberr x="390" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_chromatic_aberr" group="mm_opt_video_adv"/>
-        </check_ch_aberr>
-		<!-- Line -->
 		
 		<cap_aa_mode x="20" y="3" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_aa_mode</text>
@@ -413,22 +488,6 @@
 	            <e r="170" g="170" b="170"/>
             </text_color>
         </combo_aa_quality>
-		
-        <cap_vsync x="248" y="234" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_vsync</text>
-        </cap_vsync>
-        <check_vsync x="380" y="233" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="rs_v_sync" group="mm_opt_video_adv" depend="vid"/>
-        </check_vsync>
-
-		<cap_triple_buffering x="248" y="212" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_triple_buffering</text>
-        </cap_triple_buffering>
-        <check_triple_buffering x="380" y="210" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="rs_triple_buffering" group="mm_opt_video_adv" depend="vid"/>
-        </check_triple_buffering>
 		
         <cap_60hz x="20" y="3" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_60_hz</text>
@@ -485,22 +544,6 @@
             </text_color>
         </combo_shadow_map>
 
-        <cap_soft_water x="20" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_soft_water</text>
-        </cap_soft_water>
-        <check_soft_water x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_soft_water" group="mm_opt_video_adv" depend="vid"/>
-        </check_soft_water>
-
-        <cap_soft_particles x="186" y="5" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="l">ui_mm_soft_particles</text>
-        </cap_soft_particles>
-        <check_soft_particles x="390" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_soft_particles" group="mm_opt_video_adv" depend="vid"/>
-        </check_soft_particles>
-
         <cap_dof x="20" y="3" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_dof</text>
         </cap_dof>
@@ -511,14 +554,6 @@
 	            <e r="170" g="170" b="170"/>
             </text_color>
         </combo_dof>
-
-        <cap_volumetric_light x="20" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_volumetric_light</text>
-        </cap_volumetric_light>
-        <check_volumetric_light x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_volumetric_lights" group="mm_opt_video_adv" depend="vid"/>
-        </check_volumetric_light>
 
         <cap_r3_msaa_alphatest x="20" y="3" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_msaa_alphatest</text>
@@ -539,14 +574,6 @@
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="r3_msaa_opt" group="mm_opt_video_adv" depend="vid"/>
         </check_r3_msaa_opt>
-
-        <cap_r4_tessellation x="152" y="0" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r4_enable_tessellation</text>
-        </cap_r4_tessellation>
-        <check_r4_tessellation x="390" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r4_enable_tessellation" group="mm_opt_video_adv" depend="vid"/>
-        </check_r4_tessellation>
 
         <btn_to_simply x="338" y="322" width="108" height="24">
             <text align="c" font="letterica16">ui_mm_simply</text>
