@@ -54,28 +54,25 @@ void BreakableObjectCollisionCallback(bool&/**do_colide/**/, bool bo1, dContact&
 	dxGeomUserData* usr_data_1 = retrieveGeomUserData(c.geom.g1);
 	dxGeomUserData* usr_data_2 = retrieveGeomUserData(c.geom.g2);
 
-	VERIFY(usr_data_1);
-	VERIFY(usr_data_2);
+	if (!usr_data_1 || !usr_data2)
+	        return;
 
-	//CBreakableObject* this_object	= 0;
-	ICollisionDamageReceiver* damag_receiver = 0;
+	ICollisionDamageReceiver* damag_receiver = nullptr;
 
 	dBodyID	body = 0;
-	float norm_sign = 0;
+	float norm_sign = bo1 ? -1.f : 1.f;
 
 	if (bo1)
 	{
 		VERIFY(usr_data_1->ph_ref_object);
 		damag_receiver = usr_data_1->ph_ref_object->ObjectPhCollisionDamageReceiver();
 		body = dGeomGetBody(c.geom.g2);
-		norm_sign = -1.f;
 	}
 	else
 	{
 		VERIFY(usr_data_2->ph_ref_object);
 		damag_receiver = usr_data_2->ph_ref_object->ObjectPhCollisionDamageReceiver();
 		body = dGeomGetBody(c.geom.g1);
-		norm_sign = 1.f;
 	}
 
 	VERIFY(damag_receiver);
