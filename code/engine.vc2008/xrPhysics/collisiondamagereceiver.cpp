@@ -54,7 +54,7 @@ void BreakableObjectCollisionCallback(bool&/**do_colide/**/, bool bo1, dContact&
 	dxGeomUserData* usr_data_1 = retrieveGeomUserData(c.geom.g1);
 	dxGeomUserData* usr_data_2 = retrieveGeomUserData(c.geom.g2);
 
-	if (!usr_data_1 || !usr_data2)
+	if (!usr_data_1 || !usr_data_2)
 	        return;
 
 	ICollisionDamageReceiver* damag_receiver = nullptr;
