@@ -2,9 +2,6 @@
 #pragma warning(disable: 4005)
 
 #include <process.h>
-#include <powerbase.h>
-#pragma comment (lib, "PowrProf.lib")
-#include <mmsystem.h>
 
 // Initialized on startup
 XRCORE_API Fmatrix Fidentity;
@@ -23,35 +20,8 @@ typedef struct _PROCESSOR_POWER_INFORMATION
 
 namespace FPU
 {
-	// Когда-нибудь можно будет задавать точность для float в х64...
-	XRCORE_API void m24(void)
-	{
-		_controlfp(_RC_CHOP, MCW_RC);
-	}
-	XRCORE_API void m24r(void)
-	{
-		_controlfp(_RC_NEAR, MCW_RC);
-	}
-	XRCORE_API void m53(void)
-	{
-		_controlfp(_RC_CHOP, MCW_RC);
-	}
-	XRCORE_API void m53r(void)
-	{
-		_controlfp(_RC_NEAR, MCW_RC);
-	}
-	XRCORE_API void m64(void)
-	{
-		_controlfp(_RC_CHOP, MCW_RC);
-	}
-	XRCORE_API void m64r(void)
-	{
-		_controlfp(_RC_NEAR, MCW_RC);
-	}
-
 	void initialize()
 	{
-		m24r();
 		::Random.seed(u32(CPU::GetCLK() % (1i64 << 32i64)));
 	}
 };
@@ -68,40 +38,6 @@ namespace CPU
 		QueryPerformanceCounter(PLARGE_INTEGER(&_dest));
 		qpc_counter++;
 		return _dest;
-	}
-
-	u64 getProcessorFrequencyGeneral()
-	{
-		u64 start, end;
-		u32 dwStart, dwTest;
-
-		dwTest = timeGetTime();
-		do { dwStart = timeGetTime(); } while (dwTest == dwStart);
-		start = GetCLK();
-		while (timeGetTime() - dwStart < 1000);
-		end = GetCLK();
-		return end - start;
-	}
-
-	typedef struct _PROCESSOR_POWER_INFORMATION
-	{
-		ULONG Number;
-		ULONG MaxMhz;
-		ULONG CurrentMhz;
-		ULONG MhzLimit;
-		ULONG MaxIdleState;
-		ULONG CurrentIdleState;
-	} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
-
-	u64 getProcessorFrequency(u32 logicalProcessorCount)
-	{
-		PROCESSOR_POWER_INFORMATION* pInfo = reinterpret_cast<PROCESSOR_POWER_INFORMATION*> (alloca(sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount));
-		LONG retCode = CallNtPowerInformation(ProcessorInformation, nullptr, 0, pInfo, sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount);
-		if (retCode != 0x0l)
-		{
-			return getProcessorFrequencyGeneral();
-		}
-		return pInfo->MhzLimit * u64(1000000);
 	}
 };
 
@@ -226,12 +162,6 @@ void debug_on_thread_spawn();
 void _initialize_cpu_thread()
 {
 	debug_on_thread_spawn();
-
-	// fpu & sse
-	if (Core.PluginMode)
-		FPU::m64r();
-	else
-		FPU::m24r();
 
 	_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
 	if (_denormals_are_zero_supported)

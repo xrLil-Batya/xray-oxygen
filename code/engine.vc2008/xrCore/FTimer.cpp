@@ -12,7 +12,7 @@ void CStatTimer::FrameStart()
 
 void CStatTimer::FrameEnd()
 {
-	double Time = 1000 * double(accum / CPU::qpc_freq);
+	double Time = 1000.0 * double(accum) / double(CPU::qpc_freq);
     if (Time > result) result = Time;
     else result = 0.99 * result + 0.01* Time;
 }

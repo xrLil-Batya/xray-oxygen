@@ -340,7 +340,7 @@ DXGI_RATIONAL CHW::SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
 
 	float CurrentFreq = 60.0f;
 
-	if (ps_r_RefreshHZ = 1)
+	if (ps_r_RefreshHZ == 0)
 	{
 		return res;
 	}

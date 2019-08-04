@@ -133,10 +133,10 @@
 		<text>Do you really want to delete this file?</text>
 	</string>
 	<string id="ui_mm_fov">
-		<text>Field of View (FOV)</text>
+		<text>Field of View</text>
 	</string>
 	<string id="ui_mm_hud_fov">
-		<text>HUD Field of View (HudFOV)</text>
+		<text>HUD Field of View</text>
 	</string>
 	<string id="ui_mm_mblur_enabled">
 		<text>Motion Blur</text>
@@ -151,10 +151,10 @@
 		<text>Grass detail density</text>
 	</string>
 	<string id="ui_mm_actor_shadow">
-		<text>Player Shadow</text>
+		<text>Player shadow</text>
 	</string>
 	<string id="ui_mm_detail_radius">
-		<text>Grass Radius</text>
+		<text>Grass radius</text>
 	</string>
 	<string id="ui_mm_difficulty">
 		<text>Difficulty</text>
@@ -403,7 +403,7 @@
 		<text>Rain drops on screen</text>
 	</string>
 	<string id="ui_mm_ch_aberr">
-		<text>Chromatic Aberration</text>
+		<text>Chromatic aberration</text>
 	</string>
 	<string id="ui_mm_grading">
 		<text>Color grading</text>
@@ -436,7 +436,7 @@
 		<text>Triple buffering</text>
 	</string>
 	<string id="ui_mm_glows">
-		<text>Statics Glows</text>
+		<text>Statics glows</text>
 	</string>
 	<string id="ui_mp_gamespy_changing_unique_nick">
 		<text>Change unique name</text>
@@ -722,5 +722,11 @@
 	</string>
 	<string id="ui_mm_language">
 		<text>Language</text>
+	</string>
+		<string id="st_opt_general">
+		<text>General</text>
+	</string>
+	<string id="st_opt_anothers">
+		<text>Additional</text>
 	</string>
 </string_table>

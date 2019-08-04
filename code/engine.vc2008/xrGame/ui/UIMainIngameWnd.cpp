@@ -585,20 +585,20 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 	GameUI()->PdaMenu().UpdateRankingWnd(); 
 
 	u8 flags = LA_CYCLIC | LA_ONLYALPHA | LA_TEXTURECOLOR;
-	auto MakeIcon = [this](bool bShow, CUIStatic * pStatic, float Koef, float DefKoef1, float DefKoef2, shared_str Sections[3])
+	auto MakeIcon = [this](bool bShow, CUIStatic * pStatic, float Koef, float DefKoef1, float DefKoef2, const shared_str Sections[3])
 	{
 		pStatic->Show(bShow);
 		if (bShow)
 		{
-			if (Koef > DefKoef1)
+			if (Koef < DefKoef1)
 				pStatic->InitTexture(Sections[0].c_str());
-			else if (Koef > DefKoef2)
+			else if (Koef < DefKoef2)
 				pStatic->InitTexture(Sections[1].c_str());
 			else
 				pStatic->InitTexture(Sections[2].c_str());
 		}
 	};
-	auto MakeAnmIcon = [this, &flags](bool bShow, CUIStatic * pStatic, float Koef, float DefKoef1, float DefKoef2, shared_str Sections[6])
+	auto MakeAnmIcon = [this, &flags](bool bShow, CUIStatic * pStatic, float Koef, float DefKoef1, float DefKoef2, const shared_str Sections[6])
 	{
 		pStatic->Show(bShow);
 		if (bShow)
@@ -625,23 +625,23 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 	// Bleeding icon
 	{
 		float bleeding = pActor->conditions().BleedingSpeed();
-		shared_str Sects[6] =
+		static const shared_str Sects[6] =
 		{
 			"ui_inGame2_circle_bloodloose_green", "ui_inGame2_circle_bloodloose_yellow","ui_inGame2_circle_bloodloose_red",
 			"ui_slow_blinking_alpha", "ui_medium_blinking_alpha", "ui_fast_blinking_alpha"
 		};
-		MakeIcon(!fis_zero(bleeding, EPS), m_ind_bleeding, bleeding, 0.35f, 0.7f, Sects);
+		MakeAnmIcon(!fis_zero(bleeding, EPS), m_ind_bleeding, bleeding, 0.35f, 0.7f, Sects);
 	}
 
 	// Radiation icon
 	{
 		float radiation = pActor->conditions().GetRadiation();
-		shared_str Sects[6] =
+		static const shared_str Sects[6] =
 		{
 			"ui_inGame2_circle_radiation_green", "ui_inGame2_circle_radiation_yellow", "ui_inGame2_circle_radiation_red",
 			"ui_medium_blinking_alpha", "ui_medium_blinking_alpha", "ui_fast_blinking_alpha"
 		};
-		MakeIcon(!fis_zero(radiation, EPS), m_ind_radiation, radiation, 0.35f, 0.7f, Sects);
+		MakeAnmIcon(!fis_zero(radiation, EPS), m_ind_radiation, radiation, 0.35f, 0.7f, Sects);
 	}
 
 	// Satiety icon
@@ -650,7 +650,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		const float satiety_critical = pActor->conditions().SatietyCritical();
 		const float satiety_koef = (satiety - satiety_critical) / (satiety >= satiety_critical ? 1 - satiety_critical : satiety_critical);
 
-		shared_str Sects[3] =
+		static const shared_str Sects[3] =
 		{
 			"ui_inGame2_circle_hunger_green", "ui_inGame2_circle_hunger_yellow","ui_inGame2_circle_hunger_red"
 		};
@@ -663,7 +663,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
         float thirst = pActor->conditions().GetThirst();
         float thirst_critical = pActor->conditions().ThirstCritical();
         float thirst_koef = (thirst - thirst_critical) / (thirst >= thirst_critical ? 1 - thirst_critical : thirst_critical);
-		shared_str Sects[3] =
+		static const shared_str Sects[3] =
 		{
 			"ui_inGame2_circle_thirst_green", "ui_inGame2_circle_thirst_yellow","ui_inGame2_circle_thirst_red"
 		};
@@ -676,7 +676,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 	if (pOutfit)
 	{
 		float condition = pOutfit->GetCondition();
-		shared_str Sects[3] =
+		static const shared_str Sects[3] =
 		{
 			"ui_inGame2_circle_Armorbroken_green", "ui_inGame2_circle_Armorbroken_yellow", "ui_inGame2_circle_Armorbroken_red"
 		};
@@ -688,7 +688,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 	if(pHelmet)
 	{
 		float condition = pHelmet->GetCondition();
-		shared_str Sects[3] =
+		static const shared_str Sects[3] =
 		{
 			"ui_inGame2_circle_Helmetbroken_green", "ui_inGame2_circle_Helmetbroken_yellow", "ui_inGame2_circle_Helmetbroken_red"
 		};
@@ -706,7 +706,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 			float condition = weapon->GetCondition();
 			float start_misf_cond = weapon->GetMisfireStartCondition();
 			float end_misf_cond = weapon->GetMisfireEndCondition();
-			shared_str Sects[3] =
+			static const shared_str Sects[3] =
 			{
 				"ui_inGame2_circle_Gunbroken_green", "ui_inGame2_circle_Gunbroken_yellow", "ui_inGame2_circle_Gunbroken_red"
 			};

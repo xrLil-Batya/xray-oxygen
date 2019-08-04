@@ -44,12 +44,12 @@ function opt_video:InitControls(x, y, xml, handler)
 	handler:Register				(btn, "btn_advanced_graphic")
 	
 	-- Тройная буферизация
-	xml:InitStatic("video_adv:cap_triple_buffering", self)
-	handler.triple_check = xml:InitCheck("video_adv:check_triple_buffering", self)
+	xml:InitStatic("tab_video:cap_triple_buffering", self)
+	handler.triple_check = xml:InitCheck("tab_video:check_triple_buffering", self)
 	handler:Register(handler.triple_check, "check_triple_buffering")
 	
 	-- Вертикальная синхронизация
-	xml:InitStatic("video_adv:cap_vsync", self)
-	handler.vsync = xml:InitCheck("video_adv:check_vsync", self)
+	xml:InitStatic("tab_video:cap_vsync", self)
+	handler.vsync = xml:InitCheck("tab_video:check_vsync", self)
 	handler:Register(handler.vsync, "check_vsync")
 end

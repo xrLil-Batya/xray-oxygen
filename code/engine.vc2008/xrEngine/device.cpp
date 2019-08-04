@@ -62,7 +62,6 @@ BOOL CRenderDevice::Begin	()
 
 	m_pRender->Begin();
 
-	FPU::m24r();
 	g_bRendering = TRUE;
 	g_bL = true;
 
@@ -381,7 +380,8 @@ void CRenderDevice::BeginToWork()
 
 	Msg("Value of system displays: %d.", GetNumOfDisplays());
 
-	thread_name("X-Ray: Primary thread");
+	string128 primaryThreadName = "X-Ray: Primary thread";
+	PlatformUtils.SetCurrentThreadName(primaryThreadName);
 
 	// Startup timers and calculate timer delta
 	dwTimeGlobal = 0;

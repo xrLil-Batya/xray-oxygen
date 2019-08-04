@@ -160,10 +160,11 @@ ISpatial_DB::~ISpatial_DB()
 		}
 	}
 
-	for (auto i = allocator_pool.rbegin(); i != allocator_pool.rend(); i--)
-	{
-		allocator.destroy(*i);
-	}
+	//#GIPERION: TEMP!
+	//for (auto i = allocator_pool.rbegin(); i != allocator_pool.rend(); i--)
+	//{
+	//	allocator.destroy(*i);
+	//}
 	allocator_pool.clear();
 }
 

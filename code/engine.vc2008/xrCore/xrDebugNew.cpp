@@ -269,7 +269,7 @@ static UnhandledExceptionFilterType	*previous_filter = nullptr;
 
 void format_message(char* buffer, const u32 &buffer_size)
 {
-	char* message = nullptr;
+	string512 SystemMessage = {0};
 	DWORD error_code = GetLastError();
 
 	if (!error_code) 
@@ -278,10 +278,14 @@ void format_message(char* buffer, const u32 &buffer_size)
 		return;
 	}
 
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 0, nullptr);
-
-	xr_sprintf(buffer, buffer_size, "[error][%8d]    : %s", error_code, message);
-	LocalFree(message);
+	if (!FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), SystemMessage, sizeof(SystemMessage), nullptr))
+	{
+		xr_sprintf(buffer, buffer_size, "[error][%8d]    : %s", error_code, "FormatMessage fails to get error");
+	}
+	else
+	{
+		xr_sprintf(buffer, buffer_size, "[error][%8d]    : %s", error_code, SystemMessage);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////

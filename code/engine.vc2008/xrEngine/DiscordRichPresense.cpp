@@ -87,7 +87,7 @@ void xrDiscordPresense::SetStatus(StatusId status)
 	{
 		string64 LevelName;
 		string64 utf8LevelName;
-		ConvertToUTF8(g_pGameLevel->name_translated(), utf8LevelName);
+		StringUtils::ConvertToUTF8(g_pGameLevel->name_translated(), utf8LevelName);
 		xr_strconcat(LevelName, "Level: ", utf8LevelName);
 		presenseInfo.details = std::move(LevelName);
 	}
