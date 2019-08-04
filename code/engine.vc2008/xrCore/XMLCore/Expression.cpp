@@ -195,7 +195,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
             {
                 if (WordAccumulator[WordAccumulator.size() - 1] != '\"')
                 {
-                    wsprintf(str, "'%s' is not a valid string constant declaration", WordAccumulator.c_str());
+					xr_sprintf(str, "'%s' is not a valid string constant declaration", WordAccumulator.c_str());
                     FailCompileWithReason(str);
                     return;
                 }
@@ -223,7 +223,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
                 goto FlushLexem;
             }
 
-            wsprintf(str, "'%s' is not a valid variable name", WordAccumulator.c_str());
+			xr_sprintf(str, "'%s' is not a valid variable name", WordAccumulator.c_str());
             SetCompileError(str);
             return;
         }
@@ -246,7 +246,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
         if (FunctionByteCode == UI_NONE)
         {
             string128 str = { 0 };
-            wsprintf(str, "'%s' is not a function name", WordAccumulator.c_str());
+			xr_sprintf(str, "'%s' is not a function name", WordAccumulator.c_str());
             SetCompileError(str);
             return;
         }
@@ -285,7 +285,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
             if (FunctionStackDepth == 0)
             {
                 string128 str = { 0 };
-                wsprintf(str, "Negative Function stack depth (expression have extra ')'). Did you forgot a '('?", WordAccumulator.c_str());
+				xr_sprintf(str, "Negative Function stack depth (expression have extra ')'). Did you forgot a '('?", WordAccumulator.c_str());
                 FailCompileWithReason(str);
                 return;
             }
@@ -305,7 +305,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
                 {
                     FlushCompileError();
                     string128 str = { 0 };
-                    wsprintf(str, "'%s' is not a function or variable name", WordAccumulator.c_str());
+					xr_sprintf(str, "'%s' is not a function or variable name", WordAccumulator.c_str());
                     FailCompileWithReason(str);
                     return;
                 }
@@ -357,7 +357,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
             if ((!IsCharAlphaNumeric(ch)) && ch != '.')
             {
                 string128 str = { 0 };
-                wsprintf(str, "Character '%c' is not allowed in constant or variable declaration", ch);
+				xr_sprintf(str, "Character '%c' is not allowed in constant or variable declaration", ch);
                 FailCompileWithReason(str);
                 return;
             }
@@ -495,7 +495,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
                 if (NextLexIter == LexemList.end())
                 {
                     string128 str = { 0 };
-                    wsprintf(str, "You should place variable/constant/function after operator");
+                    xr_sprintf(str, "You should place variable/constant/function after operator");
                     FailCompileWithReason(str);
                     return;
                 }
@@ -724,7 +724,7 @@ bool CExpression::IsValidFloatConstantDeclaration(xr_string& LexemStr) const
                 if (bHaveDot == true)
                 {
                     string128 str = { 0 };
-                    wsprintf(str, "Double dot in numeric constant declaration: %s", LexemStr.c_str());
+					xr_sprintf(str, "Double dot in numeric constant declaration: %s", LexemStr.c_str());
                     FailCompileWithReason(str);
                     return false;
                 }

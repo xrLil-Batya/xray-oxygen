@@ -6,11 +6,11 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#pragma hdrstop
 #include "os_clipboard.h"
 
 void os_clipboard::copy_to_clipboard(const char* buf)
 {
+#if PLATFORM == _WINDOWS
 	if (OpenClipboard(nullptr))
 	{
 		const size_t handle_size = (xr_strlen(buf) + 1) * sizeof(char);
@@ -26,10 +26,12 @@ void os_clipboard::copy_to_clipboard(const char* buf)
 		}
 		CloseClipboard();
 	}
+#endif
 }
 
 void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
 {
+#if PLATFORM == _WINDOWS
 	VERIFY(buffer);
 	VERIFY(buffer_size > 0);
 
@@ -54,10 +56,12 @@ void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
 		}
 		CloseClipboard();
 	}
+#endif
 }
 
 void os_clipboard::update_clipboard(const char* string)
 {
+#if PLATFORM == _WINDOWS
 	if (OpenClipboard(nullptr))
 	{
 		const HGLOBAL handle = GetClipboardData(CF_TEXT);
@@ -81,4 +85,5 @@ void os_clipboard::update_clipboard(const char* string)
 			copy_to_clipboard(string);
 		}
 	}
+#endif
 }

@@ -90,9 +90,11 @@
 #include "_stl_extensions.h"
 #include "vector.h"
 
-#if PLATFORM == WINDOWS
+#if PLATFORM == _WINDOWS
 	#include "Platform/Windows/xrWindowsPlatformUtils.h"
-#elif PLATFORM == XBOXONE
+#elif PLATFORM == _XBOX_ONE
+	#include "Platform/Xbox/xrXboxPlatformUtils.h"
+	#include "Platform/Xbox/xrXboxAdvApi.h"
 #endif
 
 #include "clsid.h"
@@ -163,6 +165,10 @@ using RTokenVec = xr_vector<xr_rtoken>;
 // Ban std::thread also
 #ifdef _THREAD_
 #error <thread> is prohibited, please use TBB Task, or _beginthreadex
+#endif
+
+#ifdef _CHARCONV_
+#error <charconv> is prohibited, it doesn't exist on all supported platforms
 #endif
 
 // destructor

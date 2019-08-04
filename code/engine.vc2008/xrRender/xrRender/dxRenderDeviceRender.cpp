@@ -292,7 +292,3 @@ void  dxRenderDeviceRender::OnAssetsChanged()
     Resources->m_textures_description.Load();
 }
 
-void dxRenderDeviceRender::ResizeWindowProc(WORD h, WORD w)
-{
-	HW.ResizeWindowProc(h, w);
-}

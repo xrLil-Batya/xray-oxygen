@@ -179,7 +179,8 @@ VOID DSplashScreen::SetProgressColor(COLORREF refColor)
 
 UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 {
-	thread_name("X-RAY Splashscreen thread");
+	string128 SplashScreenThreadName = "X-RAY Splashscreen thread";
+	PlatformUtils.SetCurrentThreadName(SplashScreenThreadName);
 
 	DSplashScreen* pSplash = static_cast<DSplashScreen*>(pData);
 	if (!pSplash) { return 0; }

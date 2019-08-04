@@ -75,7 +75,6 @@ public:
 	virtual void	ClearTarget();
 	virtual void	SetCacheXform(const Fmatrix &mView, const Fmatrix &mProject);
 	virtual void	OnAssetsChanged();
-	virtual void	ResizeWindowProc(WORD h, WORD w);
 
 public:
 	CResourceManager*	Resources;

@@ -58,7 +58,7 @@ private:
 
 	bool bAllowBorderAccess;
 	bool bCursorShowed;
-	bool bShouldLockMouse;
+	bool bShouldLockMouse = true;
 
 	bool bGamepadConnected;
 	bool bIsVibrationSupported;

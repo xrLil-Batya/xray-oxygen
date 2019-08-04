@@ -1,11 +1,13 @@
 #pragma once
 
-#define VC_EXTRALEAN				// Exclude rarely-used stuff from Windows headers
-#define WIN32_LEAN_AND_MEAN			// Exclude rarely-used stuff from Windows headers
 
-// windows.h
-#ifndef _WIN32_WINNT
-#	define _WIN32_WINNT 0x0600
+#if PLATFORM == _WINDOWS
+	#define WIN32_LEAN_AND_MEAN			// Exclude rarely-used stuff from Windows headers
+	#define VC_EXTRALEAN				// Exclude rarely-used stuff from Windows headers
+	// windows.h
+	#ifndef _WIN32_WINNT
+	#	define _WIN32_WINNT 0x0600
+	#endif
 #endif
 
 #define NOGDICAPMASKS
@@ -28,9 +30,15 @@
 #pragma warning(push)
 #pragma warning(disable:4005)
 #include <windows.h>
-#include <windowsx.h>
+
+#if PLATFORM == _WINDOWS
+	#include <windowsx.h>
+#endif
 #pragma warning(pop)
 
-#ifdef _M_AMD64
-#pragma warning (disable : 4512 )
+// Not available for all platforms
+#ifdef FORMAT_MESSAGE_ALLOCATE_BUFFER
+	#undef FORMAT_MESSAGE_ALLOCATE_BUFFER
 #endif
+
+#pragma warning (disable : 4512 )

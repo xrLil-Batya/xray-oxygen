@@ -78,8 +78,14 @@
 	<string id="st_rank_veteran">
 		<text>ветеран</text>
 	</string>
+	<string id="st_opt_general">
+		<text>Общие</text>
+	</string>
+	<string id="st_opt_anothers">
+		<text>Дополнительные</text>
+	</string>
 	<string id="ui_mm_60_hz">
-		<text>Частота 60Гц</text>
+		<text>Частота</text>
 	</string>
 	<string id="ui_mm_action">
 		<text>Действие</text>
@@ -139,13 +145,7 @@
 		<text>Угол обзора ГГ (HudFOV)</text>
 	</string>
 	<string id="ui_mm_mblur_enabled">
-		<text>Moution Blur</text>
-	</string>
-	<string id="ui_mm_mblur">
-		<text>Коэф. Moution Blur'a</text>
-	</string>
-	<string id="ui_mm_r_rain_drops_debug_control">
-		<text>Кол-во капель на экране</text>
+		<text>Размытие при движений</text>
 	</string>
 	<string id="ui_mm_detail_density">
 		<text>Плотность травы</text>
@@ -400,7 +400,7 @@
 		<text>SMAA</text>
 	</string>
 	<string id="ui_mm_rain_drops">
-		<text>Капли дождя на экране</text>
+		<text>Намокание HUD</text>
 	</string>
 	<string id="ui_mm_grading">
 		<text>Цветной градиент</text>
@@ -713,9 +713,6 @@
 	</string>
 	<string id="ui_st_show_date">
 		<text>Дата под миникартой</text>
-	</string>
-	<string id="ui_mm_120_hz">
-		<text>Частота 120Гц</text>
 	</string>
 	<string id="ui_st_loadingscreen_custom">
 		<text>Загрузочный экран V.2</text>

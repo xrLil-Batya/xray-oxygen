@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#pragma hdrstop
 #include "postprocessanimator.h"
 #include "FS_internal.h" //for CFileReader
 // postprocess value LOAD method implementation
