@@ -204,9 +204,6 @@
     <ClCompile Include="Buildcpp.cpp">
       <Filter>Kernel</Filter>
     </ClCompile>
-    <ClCompile Include="DebugCore\dxerr.cpp">
-      <Filter>Debug core</Filter>
-    </ClCompile>
     <ClCompile Include="threadpool\ttapi_oxygen.cpp">
       <Filter>OS</Filter>
     </ClCompile>
@@ -233,6 +230,15 @@
     </ClCompile>
     <ClCompile Include="Platform\Windows\xrWindowsPlatformUtils.cpp">
       <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxPlatformUtils.cpp">
+      <Filter>Platform\XboxOne</Filter>
+    </ClCompile>
+    <ClCompile Include="StringsUtils.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxAdvApi.cpp">
+      <Filter>Platform\XboxOne</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -487,6 +493,12 @@
     </ClInclude>
     <ClInclude Include="Platform\Windows\xrWindowsPlatformUtils.h">
       <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxPlatformUtils.h">
+      <Filter>Platform\XboxOne</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxAdvApi.h">
+      <Filter>Platform\XboxOne</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

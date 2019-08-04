@@ -28,5 +28,4 @@ extern XRCORE_API   bool    float_equal(float a, float b);
 
 // threading
 using thread_t =				void				( void * );
-extern XRCORE_API	void	thread_name				( const char* name);
 extern XRCORE_API HANDLE thread_spawn (thread_t* entry, const char* name, unsigned stack, void* arglist);

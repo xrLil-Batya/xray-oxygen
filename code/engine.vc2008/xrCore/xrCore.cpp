@@ -1,8 +1,6 @@
 // xrCore.cpp : Defines the entry point for the DLL application.
 //
 #include "stdafx.h"
-#pragma hdrstop
-#include <mmsystem.h>
 #include <objbase.h>
 #include "../FrayBuildConfig.hpp"
 #include "oxy_version.h"
@@ -43,13 +41,11 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 		GetCurrentDirectory(sizeof(WorkingPath), WorkingPath);
 
 		// User/Comp Name
-		string64 _uname;
-		DWORD	sz_user = sizeof(_uname);
-		GetUserName(_uname, &sz_user);
-		xr_strcpy(UserName, _uname);
+		ZeroMemory(UserName, sizeof(UserName));
+		ZeroMemory(CompName, sizeof(CompName));
 
-		DWORD	sz_comp = sizeof(CompName);
-		GetComputerName(CompName, &sz_comp);
+		PlatformUtils.GetUsername(UserName);
+		PlatformUtils.GetComputerName(CompName);
 
 		// Mathematics & PSI detection
 		Memory._initialize();
@@ -59,7 +55,9 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 		XRay::Compress::RT::RtcInitialize();
 
 		xr_FS = new CLocatorAPI();
+#ifdef WITH_EFS
 		xr_EFS = new EFS_Utils();
+#endif
 	}
 	if (init_fs)
 	{
@@ -104,7 +102,9 @@ void xrCore::_destroy()
 		FS._destroy			();
 		EFS._destroy		();
 		xr_delete			(xr_FS);
+#ifdef WITH_EFS
 		xr_delete			(xr_EFS);
+#endif
 
 		Memory._destroy		();
 	}
@@ -120,13 +120,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvRese
 			_controlfp(_RC_CHOP, _MCW_RC);
 			_controlfp(_RC_NEAR, _MCW_RC);
 			_control87(_MCW_EM, MCW_EM);
-			timeBeginPeriod(1);
 		}
 		break;
 	case DLL_PROCESS_DETACH:
 		{
 			_clearfp();
-			timeEndPeriod(1);
 		}
 		break;
 	}

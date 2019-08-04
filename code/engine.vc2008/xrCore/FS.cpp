@@ -8,7 +8,6 @@
 #include <direct.h>
 #include <fcntl.h>
 #include <sys\stat.h>
-#include <Shlobj.h>
 #pragma warning(default:4995)
 
 //////////////////////////////////////////////////////////////////////
@@ -318,7 +317,6 @@ void IReader::r_string(char* dest, const size_t tgt_sz) {
     char* src = data + Pos;
     const size_t sz = advance_term_string();
     R_ASSERT2(sz < (tgt_sz - 1), "Dest string less than needed.");
-    R_ASSERT(!IsBadReadPtr(src, sz));
 
     strncpy_s(dest, tgt_sz, src, sz);
     dest[sz] = 0;
@@ -448,14 +446,6 @@ CVirtualFileReader::~CVirtualFileReader()
     UnmapViewOfFile(data);
     CloseHandle(hSrcMap);
     CloseHandle(hSrcFile);
-}
-
-int CALLBACK BrowseCallbackProc(HWND hWnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
-{
-	if (uMsg == BFFM_INITIALIZED)
-		SendMessage(hWnd, BFFM_SETSELECTION, TRUE, lpData);
-
-	return 0;
 }
 
 bool EFS_Utils::GetOpenName(const char* initial, xr_string& buffer, bool bMulti, const char* offset, int start_flt_ext)

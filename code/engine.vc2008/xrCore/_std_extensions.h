@@ -20,17 +20,19 @@
 #endif
 
 #include "string_concatenations.h"
-#include <charconv>
+//#include <charconv>
 
 // конвертирует строку в число, в случае ошибки возвращает 0
 // (в отличии от atoi, у которого местами есть неопределённое поведение)
-
+// UPDATE: charconv is not available on Xbox One (at least in that SDK that we using)
+// so we use good old atoi
 
 inline int atoi_17(const std::string_view str)
 {
-	int res{};
-    std::from_chars(str.data(), str.data() + str.size(), res);
-    return res;
+	string64 tempStr = {0};
+	VERIFY(str.size() < 64);
+	memcpy(tempStr, str.data(), str.size());
+	return atoi(tempStr);
 }
 
 

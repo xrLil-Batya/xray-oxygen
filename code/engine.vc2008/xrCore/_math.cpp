@@ -2,9 +2,6 @@
 #pragma warning(disable: 4005)
 
 #include <process.h>
-#include <powerbase.h>
-#pragma comment (lib, "PowrProf.lib")
-#include <mmsystem.h>
 
 // Initialized on startup
 XRCORE_API Fmatrix Fidentity;
@@ -41,40 +38,6 @@ namespace CPU
 		QueryPerformanceCounter(PLARGE_INTEGER(&_dest));
 		qpc_counter++;
 		return _dest;
-	}
-
-	u64 getProcessorFrequencyGeneral()
-	{
-		u64 start, end;
-		u32 dwStart, dwTest;
-
-		dwTest = timeGetTime();
-		do { dwStart = timeGetTime(); } while (dwTest == dwStart);
-		start = GetCLK();
-		while (timeGetTime() - dwStart < 1000);
-		end = GetCLK();
-		return end - start;
-	}
-
-	typedef struct _PROCESSOR_POWER_INFORMATION
-	{
-		ULONG Number;
-		ULONG MaxMhz;
-		ULONG CurrentMhz;
-		ULONG MhzLimit;
-		ULONG MaxIdleState;
-		ULONG CurrentIdleState;
-	} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
-
-	u64 getProcessorFrequency(u32 logicalProcessorCount)
-	{
-		PROCESSOR_POWER_INFORMATION* pInfo = reinterpret_cast<PROCESSOR_POWER_INFORMATION*> (alloca(sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount));
-		LONG retCode = CallNtPowerInformation(ProcessorInformation, nullptr, 0, pInfo, sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount);
-		if (retCode != 0x0l)
-		{
-			return getProcessorFrequencyGeneral();
-		}
-		return pInfo->MhzLimit * u64(1000000);
 	}
 };
 
