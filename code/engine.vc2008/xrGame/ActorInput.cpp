@@ -36,6 +36,7 @@
 #include "script_callback_ex.h"
 #include "searchlight.h"
 #include "HudItem.h"
+#include "../xrEngine/x_ray.h"
 extern u32 hud_adj_mode;
 
 void CActor::IR_OnKeyboardPress(u8 cmd)
@@ -102,31 +103,33 @@ void CActor::IR_OnKeyboardPress(u8 cmd)
 	else
 		callback(GameObject::eOnActionPress)(cmd);
 
-	switch(cmd)
+	if (g_appLoaded)
 	{
-	case kCROUCH:		 if (psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real&(mcJump | mcFall))) mstate_wishful ^= mcCrouch; break;
-	case kCAM_2:		 if (!psActorFlags.test(AF_HARDCORE)) cam_Set(eacLookAt); break;
-	case kCAM_3:		 if (!psActorFlags.test(AF_HARDCORE)) cam_Set(eacFreeLook); break;
+		switch (cmd)
+		{
+		case kCROUCH:		 if (psActorFlags.test(AF_CROUCH_TOGGLE) && !(mstate_real & (mcJump | mcFall))) mstate_wishful ^= mcCrouch; break;
+		case kCAM_2:		 if (!psActorFlags.test(AF_HARDCORE)) cam_Set(eacLookAt); break;
+		case kCAM_3:		 if (!psActorFlags.test(AF_HARDCORE)) cam_Set(eacFreeLook); break;
 
-	case kQUICK_SAVE:	Console->Execute("save"); break;
-	case kQUICK_LOAD:	Console->Execute("load"); break;
-	case kUSE:			ActorUse(); break;
-	case kDROP:			b_DropActivated = TRUE; f_DropPower = 0; break;
-	case kNEXT_SLOT:	OnNextWeaponSlot(); break;
-	case kPREV_SLOT:	OnPrevWeaponSlot(); break;
-	case kNIGHT_VISION: SwitchNightVision(); break;
+		case kQUICK_SAVE:	Console->Execute("save"); break;
+		case kQUICK_LOAD:	Console->Execute("load"); break;
+		case kUSE:			ActorUse(); break;
+		case kDROP:			b_DropActivated = TRUE; f_DropPower = 0; break;
+		case kNEXT_SLOT:	OnNextWeaponSlot(); break;
+		case kPREV_SLOT:	OnPrevWeaponSlot(); break;
+		case kNIGHT_VISION: SwitchNightVision(); break;
 
-	case kFWD:		mstate_wishful |= mcFwd;	 m_movementWeight.y +=  1.0f;	break;
-	case kBACK:		mstate_wishful |= mcBack;	 m_movementWeight.y += -1.0f;	break;
-	case kL_STRAFE:	mstate_wishful |= mcLStrafe; m_movementWeight.x += -1.0f;	break;
-	case kR_STRAFE:	mstate_wishful |= mcRStrafe; m_movementWeight.x +=  1.0f;	break;
+		case kFWD:		mstate_wishful |= mcFwd;	 m_movementWeight.y += 1.0f; Msg("(Press)Movement Weight: %f, %f", m_movementWeight.x, m_movementWeight.y);	break;
+		case kBACK:		mstate_wishful |= mcBack;	 m_movementWeight.y += -1.0f; Msg("(Press)Movement Weight: %f, %f", m_movementWeight.x, m_movementWeight.y);	break;
+		case kL_STRAFE:	mstate_wishful |= mcLStrafe; m_movementWeight.x += -1.0f; Msg("(Press)Movement Weight: %f, %f", m_movementWeight.x, m_movementWeight.y);	break;
+		case kR_STRAFE:	mstate_wishful |= mcRStrafe; m_movementWeight.x += 1.0f; Msg("(Press)Movement Weight: %f, %f", m_movementWeight.x, m_movementWeight.y);	break;
 
-	case kJUMP:			 mstate_wishful |= mcJump; break;	
-	case kSPRINT_TOGGLE: mstate_wishful ^= mcSprint; break;
-	case kCAM_1:		 cam_Set(eacFirstEye); break;
-	case kTORCH:
-	{
-		if (m_pProjWeLookingAt)
+		case kJUMP:			 mstate_wishful |= mcJump; break;
+		case kSPRINT_TOGGLE: mstate_wishful ^= mcSprint; break;
+		case kCAM_1:		 cam_Set(eacFirstEye); break;
+		case kTORCH:
+		{
+			if (m_pProjWeLookingAt)
 			{
 				if (!m_pProjWeLookingAt->Get_light_active())
 					m_pProjWeLookingAt->TurnOn();
@@ -135,43 +138,44 @@ void CActor::IR_OnKeyboardPress(u8 cmd)
 			}
 			else
 				SwitchTorch();
-		break;
-	}
-
-	case kDETECTOR:
-	{
-		PIItem det_active					= inventory().ItemFromSlot(DETECTOR_SLOT);
-		if(det_active)
-		{
-			CCustomDetector* det			= smart_cast<CCustomDetector*>(det_active);
-			det->ToggleDetector				(g_player_hud->attached_item(0)!=nullptr);
-			return;
+			break;
 		}
-	}break;
 
-	case kQUICK_USE_1:
-	case kQUICK_USE_2:
-	case kQUICK_USE_3:
-	case kQUICK_USE_4:
-	{
-		const shared_str& item_name		= g_quick_use_slots[cmd-kQUICK_USE_1];
-		if(item_name.size())
+		case kDETECTOR:
 		{
-			PIItem itm = inventory().GetAny(item_name.c_str());
-
-			if(itm)
+			PIItem det_active = inventory().ItemFromSlot(DETECTOR_SLOT);
+			if (det_active)
 			{
-				inventory().Eat				(itm);
-				
-				SDrawStaticStruct* _s		= GameUI()->AddCustomStatic("item_used", true);
-				string1024					str;
-				xr_strconcat				(str,*CStringTable().translate("st_item_used"),": ", itm->NameItem());
-				_s->wnd()->TextItemControl()->SetText(str);
-				
-				GameUI()->ActorMenu().m_pQuickSlot->ReloadReferences(this);
+				CCustomDetector* det = smart_cast<CCustomDetector*>(det_active);
+				det->ToggleDetector(g_player_hud->attached_item(0) != nullptr);
+				return;
 			}
+		}break;
+
+		case kQUICK_USE_1:
+		case kQUICK_USE_2:
+		case kQUICK_USE_3:
+		case kQUICK_USE_4:
+		{
+			const shared_str& item_name = g_quick_use_slots[cmd - kQUICK_USE_1];
+			if (item_name.size())
+			{
+				PIItem itm = inventory().GetAny(item_name.c_str());
+
+				if (itm)
+				{
+					inventory().Eat(itm);
+
+					SDrawStaticStruct* _s = GameUI()->AddCustomStatic("item_used", true);
+					string1024					str;
+					xr_strconcat(str, *CStringTable().translate("st_item_used"), ": ", itm->NameItem());
+					_s->wnd()->TextItemControl()->SetText(str);
+
+					GameUI()->ActorMenu().m_pQuickSlot->ReloadReferences(this);
+				}
+			}
+		}break;
 		}
-	}break;
 	}
 }
 
@@ -196,7 +200,7 @@ void CActor::IR_OnKeyboardRelease(u8 cmd)
 	if(hud_adj_mode && pInput->iGetAsyncKeyState(VK_SHIFT))	return;
 	if (Remote())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
-
+	//g_loading_events
 	if (g_Alive())	
 	{
 		// Dev actions should work only if we on developer mode (-developer)
@@ -219,17 +223,21 @@ void CActor::IR_OnKeyboardRelease(u8 cmd)
 		}
 		else inventory().Action((u16)cmd, CMD_STOP);
 
-		switch(cmd)
+		if (g_appLoaded)
 		{
-		    case kJUMP:		mstate_wishful &=~mcJump; break;
-		    case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop(); break;
+			switch (cmd)
+			{
+			case kJUMP:		mstate_wishful &= ~mcJump; break;
+			case kDROP:		if (GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop(); break;
 			case kUSE:      m_bPickupMode = false;			break;
 
-			case kFWD:		mstate_wishful &= ~mcFwd;	  m_movementWeight.y -= 1.0f;	break;
-			case kBACK:		mstate_wishful &= ~mcBack;	  m_movementWeight.y += 1.0f;	break;
-			case kL_STRAFE:	mstate_wishful &= ~mcLStrafe; m_movementWeight.x += 1.0f;	break;
-			case kR_STRAFE:	mstate_wishful &= ~mcRStrafe; m_movementWeight.x -= 1.0f;	break;
+			case kFWD:		mstate_wishful &= ~mcFwd;	  m_movementWeight.y -= 1.0f; Msg("(Release)Movement Weight: %f, %f", m_movementWeight.x, m_movementWeight.y);	break;
+			case kBACK:		mstate_wishful &= ~mcBack;	  m_movementWeight.y += 1.0f; Msg("(Release)Movement Weight: %f, %f", m_movementWeight.x, m_movementWeight.y);	break;
+			case kL_STRAFE:	mstate_wishful &= ~mcLStrafe; m_movementWeight.x += 1.0f; Msg("(Release)Movement Weight: %f, %f", m_movementWeight.x, m_movementWeight.y);	break;
+			case kR_STRAFE:	mstate_wishful &= ~mcRStrafe; m_movementWeight.x -= 1.0f; Msg("(Release)Movement Weight: %f, %f", m_movementWeight.x, m_movementWeight.y);	break;
+			}
 		}
+
 	}
 }
 
@@ -719,5 +727,35 @@ void CActor::IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& 
 		float dX = position.x * scale;
 		float dY = position.y * scale;
 		m_cameraMoveWeight.set(dX, dY);
+	}
+}
+
+
+void CActor::ResetMovementWeight()
+{
+	m_movementWeight.x = 0.0f;
+	m_movementWeight.y = 0.0f;
+	int forwardKey = get_action_dik(kFWD);
+	int backKey = get_action_dik(kBACK);
+	int LeftStrafeKey = get_action_dik(kL_STRAFE);
+	int RightStrafeKey = get_action_dik(kR_STRAFE);
+	if (pInput->iGetAsyncBtnState(forwardKey))
+	{
+		m_movementWeight.y += 1.0f;
+	}
+
+	if (pInput->iGetAsyncBtnState(backKey))
+	{
+		m_movementWeight.y += -1.0f;
+	}
+
+	if (pInput->iGetAsyncBtnState(LeftStrafeKey))
+	{
+		m_movementWeight.x += -1.0f;
+	}
+
+	if (pInput->iGetAsyncBtnState(RightStrafeKey))
+	{
+		m_movementWeight.x += 1.0f;
 	}
 }

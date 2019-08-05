@@ -44,7 +44,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "..\..\binaries\x64\Release\*.dll"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\binaries\x64\Release\xrPlay.exe"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\binaries\x64\Release\alsoft.ini"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
-Source: "..\..\game\fsgame.ltx"; DestDir: "{app}"
+Source: "..\..\game\fsgame.ltx"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: OnFsltxIsAboutToBeCreated
 Source: "..\..\game\gamedata\*.*"; DestDir: "{app}\gamedata"; Flags: ignoreversion recursesubdirs
 Source: "vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "..\..\game\external\oalinst.exe"; DestDir: "{tmp}"; Flags: ignoreversion
@@ -186,6 +186,19 @@ begin
 	
 end;
 
+procedure OnFsltxIsAboutToBeCreated();
+var
+    fsGameFilePath : String;
+    fsGameFilePathChanged : String;
+begin
+  fsGameFilePath := ExpandConstant('{app}\fsgame.ltx');
+	if FileExists(fsGameFilePath) = True then
+	begin
+		fsGameFilePathChanged := ExpandConstant('{app}\fsgame_OLD.ltx');
+		RenameFile(fsGameFilePath, fsGameFilePathChanged);
+	end;
+end;
+
 procedure OnPresetChanged(Sender: TObject);
 begin
 	if cmbPresets.ItemIndex = 0 then
@@ -320,6 +333,9 @@ procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
 	gameDataFilePath : String;
 	gameDataFilePathChanged : String;
+
+  fsGameFilePath : String;
+  fsGameFilePathChanged : String;
 begin
 	if CurUninstallStep = usPostUninstall then
 	begin
@@ -327,10 +343,17 @@ begin
 		// if so - we should rename it back to "gamedata"
 		gameDataFilePath := ExpandConstant('{app}\gamedata');
 		gameDataFilePathChanged := ExpandConstant('{app}\gamedata_OLD');
+    fsGameFilePath := ExpandConstant('{app}\fsgame.ltx');
+    fsGameFilePathChanged := ExpandConstant('{app}\fsgame_OLD.ltx');
 		if DirExists(gameDataFilePathChanged) = True then
 		begin
 			RenameFile(gameDataFilePathChanged, gameDataFilePath);
 		end;
+
+    if FileExists(fsGameFilePathChanged) = True then
+    begin
+      RenameFile(fsGameFilePathChanged, fsGameFilePath);
+    end;
 	end;
 end;
 

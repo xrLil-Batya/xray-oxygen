@@ -9,6 +9,10 @@ enum EGameLanguage
 	eglEnglish = 1
 };
 
+extern xr_token language_type_token[];
+
+extern EGameLanguage g_Language;
+
 using STRING_TABLE_MAP = xr_map<shared_str, shared_str>;
 
 struct STRING_TABLE_DATA

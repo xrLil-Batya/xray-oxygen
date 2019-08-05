@@ -266,8 +266,9 @@ void game_sv_GameState::restart_simulator(LPCSTR saved_game_name)
 {
 	shared_str options = GamePersistent().GetServerOption();
 
-	try { xr_delete(m_alife_simulator); }
-	catch (...) { m_alife_simulator = nullptr; }
+	m_alife_simulator->destroy();
+	xr_delete(m_alife_simulator);
+	m_alife_simulator = nullptr;
 
 	Level().Server->clear_ids();
 

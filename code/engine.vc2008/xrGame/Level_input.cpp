@@ -279,17 +279,17 @@ void CLevel::IR_OnKeyboardPress(u8 key)
 		break;
 	}
 
-	case VK_LBUTTON:
-	{
-		if (pInput->iGetAsyncKeyState(VK_MENU)) {
-			if (smart_cast<CActor*>(CurrentEntity()))
-				try_change_current_entity();
-			else
-				restore_actor();
-			return;
-		}
-		break;
-	}
+	//case VK_LBUTTON:
+	//{
+	//	if (pInput->iGetAsyncKeyState(VK_MENU)) {
+	//		if (smart_cast<CActor*>(CurrentEntity()))
+	//			try_change_current_entity();
+	//		else
+	//			restore_actor();
+	//		return;
+	//	}
+	//	break;
+	//}
 	/**/
 	}
 #endif // DEBUG
