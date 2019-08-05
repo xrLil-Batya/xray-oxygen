@@ -320,7 +320,7 @@ bool CInifile::section_exist(const shared_str& S)
 
 CInifile::Sect& CInifile::r_section(const char* S) const
 {
-	R_ASSERT2(S && strlen(S), "Empty section (null\\'') passed into CInifile::r_section(). See info above ^, check your configs and 'call stack'."); //--#SM+#--
+	R_ASSERT2(S != nullptr, "Empty section passed into CInifile::r_section");
 
 	char section[256];
 	strcpy_s(section, sizeof(section), S);
@@ -333,8 +333,11 @@ CInifile::Sect& CInifile::r_section(const char* S) const
 
 const char* CInifile::r_string(const char* S, const char* L) const
 {
-	if (!S || !L || !strlen(S) || !strlen(L)) //--#SM+#-- [fix for one of "xrDebug - Invalid handler" error log]
-		Msg("!![ERROR] CInifile::r_string: S = [%s], L = [%s]", S, L);
+	R_ASSERT2(S != nullptr, "CInifile::r_string was invoked without section!");
+	R_ASSERT3(L != nullptr, "CInifile::r_string was invoked without location!", S);
+
+	VERIFY(xr_strlen(S) > 0);
+	VERIFY(xr_strlen(L) > 0);
 
 	Sect&   I = r_section(S);
 	shared_str k(L);

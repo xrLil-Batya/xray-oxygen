@@ -6,6 +6,7 @@
 #include "cameramanager.h"
 #include "environment.h"
 #include "xr_input.h"
+#include "string_table.h"
 
 #include <regex>
 #include "../Include/xrRender/RenderDeviceRender.h"
@@ -567,6 +568,7 @@ void CCC_Register()
 	CMD1(CCC_Disconnect,"disconnect"			);
 	CMD1(CCC_SaveCFG,	"cfg_save"				);
 	CMD1(CCC_LoadCFG,	"cfg_load"				);
+	CMD1(CCC_GameLanguage, "g_game_languages");
 
 #ifdef DEBUG
 	CMD1(CCC_DbgStrCheck,	"dbg_str_check"		);
@@ -684,4 +686,20 @@ void IConsole_Command::InvalidSyntax()
 	TInfo I; Info(I);
 	Msg("~ Invalid syntax in call to '%s'", cName);
 	Msg("~ Valid arguments: %s", I);
+}
+
+CCC_GameLanguage::CCC_GameLanguage(LPCSTR N)
+	: CCC_Token(N, (u32*)& g_Language, language_type_token)
+{}
+
+void CCC_GameLanguage::Execute(LPCSTR args)
+{
+	CCC_Token::Execute(args);
+	Msg("[GAME] Game language changed!");
+	CStringTable().ReInit(g_Language);
+}
+
+void CCC_GameLanguage::Info(TInfo& I)
+{
+	xr_strcpy(I, "Game language");
 }

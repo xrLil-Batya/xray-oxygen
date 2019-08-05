@@ -59,7 +59,6 @@ float minimap_zoom_factor =1.0f;
 extern	u64		g_qwStartGameTime;
 extern 	u32 	hud_adj_mode;
 
-extern  EGameLanguage g_Language;
 ENGINE_API extern  float   psHUD_FOV_def;
 extern	float	psSqueezeVelocity;
 extern	int		psLUA_GCSTEP;
@@ -107,7 +106,6 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "hud_crosshair_collide", &psActorFlags, AF_CROSSHAIR_COLLIDE);
 	CMD3(CCC_Mask, "hud_crosshair_inert", &psActorFlags, AF_CROSSHAIR_INERT);
 	CMD1(CCC_GameDifficulty, "g_game_difficulty");
-	CMD1(CCC_GameLanguage, "g_game_languages");
 
 	CMD3(CCC_Mask, "g_backrun", &psActorFlags, AF_RUN_BACKWARD);
 

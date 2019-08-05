@@ -405,3 +405,11 @@ public:
 					CCC_LoadCFG_custom(LPCSTR cmd);
 	virtual bool	allow			(LPCSTR cmd);
 };
+
+class CCC_GameLanguage : public CCC_Token
+{
+public:
+	CCC_GameLanguage(LPCSTR N);
+	virtual void Execute(LPCSTR args);
+	virtual void Info(TInfo& I);
+};

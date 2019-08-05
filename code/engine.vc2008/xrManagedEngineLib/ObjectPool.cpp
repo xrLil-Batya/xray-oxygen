@@ -11,6 +11,8 @@ UInt32 XRay::ObjectPool::CreateObject(IntPtr pDllPure)
 	DLL_Pure* DllPure = reinterpret_cast<DLL_Pure*>(pDllPure.ToPointer());
 	Type^ ClassType = ClassRegistrator::GetTypeForClassId(DllPure->CLS_ID);
 
+	//#TEMP: Uncomment when spectre will be in active development
+#if 0
 	if (ClassType == nullptr)
 	{
 		string16 temp; CLSID2TEXT(DllPure->CLS_ID, temp);
@@ -19,6 +21,12 @@ UInt32 XRay::ObjectPool::CreateObject(IntPtr pDllPure)
 		XRay::Log::Warning(gcnew String(Msg));
 		return 0;
 	}
+#else
+	if (ClassType == nullptr)
+	{
+		return 0;
+	}
+#endif
 
 	// Get compiled lambda activator for that type
 	System::Object^ Activator = nullptr;
