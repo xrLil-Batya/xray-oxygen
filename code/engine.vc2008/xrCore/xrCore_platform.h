@@ -37,8 +37,9 @@
 #pragma warning(pop)
 
 // Not available for all platforms
-#ifdef FORMAT_MESSAGE_ALLOCATE_BUFFER
-	#undef FORMAT_MESSAGE_ALLOCATE_BUFFER
-#endif
+// Can't exclude macros - used in MS headers
+//#ifdef FORMAT_MESSAGE_ALLOCATE_BUFFER
+//	#undef FORMAT_MESSAGE_ALLOCATE_BUFFER
+//#endif
 
 #pragma warning (disable : 4512 )
