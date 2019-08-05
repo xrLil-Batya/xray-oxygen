@@ -218,6 +218,7 @@ begin
   txtPresets.Left := ScaleY(0);
   txtPresets.Caption := CustomMessage('STR_OXY_PRESET');
   txtPresets.AutoSize := True;
+  txtPresets.Anchors := [akLeft, akTop, akRight];
   txtPresets.Parent := Page.Surface;
 
   cmbPresets := TNewComboBox.Create(Page);
@@ -240,7 +241,7 @@ begin
 	chkLstFeatures.Parent := Page.Surface;
 	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_MONSTER_INV'), '', 0, False, True, False, False, nil);
 	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_ANTIFREEZE'), '', 0, False, True, False, False, nil);
-	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_POLTERHEIST'), '', 0, False, True, False, False, nil);
+	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_POLTERHEIST'), '', 0, True, True, False, False, nil);
 	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_THIRST'), '', 0, False, True, False, False, nil);
   
 end;

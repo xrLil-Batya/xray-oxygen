@@ -10,7 +10,7 @@
 namespace StringUtils
 {
 
-const char* ConvertToUTF8(const shared_str& pStr, string64& OutUtf8String)
+XRCORE_API const char* ConvertToUTF8(const shared_str& pStr, string64& OutUtf8String)
 {
 	R_ASSERT(pStr.size() < 64);
 	wchar_t utfRusStr[64] = { 0 };
@@ -20,7 +20,7 @@ const char* ConvertToUTF8(const shared_str& pStr, string64& OutUtf8String)
 	return &OutUtf8String[0];
 }
 
-const char* ConvertToUTF8(const xr_string& pStr, string64& OutUtf8String)
+XRCORE_API const char* ConvertToUTF8(const xr_string& pStr, string64& OutUtf8String)
 {
 	R_ASSERT(pStr.size() < 64);
 	wchar_t utfRusStr[64] = { 0 };
