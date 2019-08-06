@@ -484,7 +484,8 @@ void CCC_RegisterCommands()
     CMD3(CCC_MaskNoSave, "game_extra_thirst",			&g_extraFeatures, GAME_EXTRA_THIRST);
     CMD3(CCC_MaskNoSave, "game_extra_npc_grenade_up",	&g_extraFeatures, GAME_EXTRA_NPC_GRENADE_ATTAK_ALL);
     CMD3(CCC_MaskNoSave, "game_extra_lamps_immunity",	&g_extraFeatures, GAME_EXTRA_LAMP_IMMUNITY_SUPPORT);
-    CMD3(CCC_MaskNoSave, "game_extra_polter_show_particles_on_dead", &g_extraFeatures, GAME_EXTRA_POLTER_SHOW_PARTICLES_ON_DEAD);
+	CMD3(CCC_MaskNoSave, "game_extra_polter_show_particles_on_dead", &g_extraFeatures, GAME_EXTRA_POLTER_SHOW_PARTICLES_ON_DEAD);
+	CMD3(CCC_MaskNoSave, "game_extra_always_pickup", &g_extraFeatures, GAME_EXTRA_ALWAYS_PICKUP);
 
 	CMD1(CCC_UIMapUpdate,"rs_minimap_zoom_factor");
 	CMD4(CCC_U32,		"hud_adjust_mode", &hud_adj_mode, 0, 5); /// adjust mode support

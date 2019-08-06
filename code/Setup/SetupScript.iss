@@ -90,6 +90,8 @@ english.STR_OXY_FEATURE_POLTERHEIST=Polterheist Death Particles
 russian.STR_OXY_FEATURE_POLTERHEIST=Эффект смерти у Полтергейста
 english.STR_OXY_FEATURE_THIRST=Thirst
 russian.STR_OXY_FEATURE_THIRST=Жажда
+english.STR_OXY_FEATURE_PICKUP=Always show pickup item text
+russian.STR_OXY_FEATURE_PICKUP=Всегда показывать подсказки по предметам вокруг
 
 [Code]
 // Splash code
@@ -256,6 +258,7 @@ begin
 	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_ANTIFREEZE'), '', 0, False, True, False, False, nil);
 	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_POLTERHEIST'), '', 0, True, True, False, False, nil);
 	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_THIRST'), '', 0, False, True, False, False, nil);
+	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_PICKUP'), '', 0, False, True, False, False, nil);
   
 end;
 
@@ -324,6 +327,15 @@ begin
 		
 		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_npc_grenade_up on'#13#10]);
 		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_lamps_immunity off'#13#10]);
+		
+		if chkLstFeatures.State[4] = cbChecked then
+		begin
+			gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_always_pickup on'#13#10]);
+		end
+		else
+		begin
+			gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_always_pickup off'#13#10]);
+		end;
 		
 		SaveStringToFile(gameExtraFilePath, gameExtraContent, False);
 	end;

@@ -247,6 +247,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 
         //подбирание объекта
         Game().SendPickUpEvent(ID(), ValidatedPickableItem->object().ID());
+		m_bPickupMode = false; // force disable pickup mode.
 	}
 };
 
