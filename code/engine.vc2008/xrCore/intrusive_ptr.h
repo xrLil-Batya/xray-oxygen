@@ -19,10 +19,7 @@ struct intrusive_base {
     template <typename T>
     void release(T* object) 
     {
-        try {
-            xr_delete(object);
-        } catch (...) {
-        }
+        xr_delete(object);
     }
 
     IC void acquire()			noexcept { ++m_ref_count; }
@@ -30,7 +27,7 @@ struct intrusive_base {
     IC bool released() const	noexcept { return m_ref_count == 0; }
 
 private:
-    std::size_t m_ref_count;
+    xr_atomic_s32 m_ref_count;
 };
 
 template <typename ObjectType, typename BaseType = intrusive_base>
