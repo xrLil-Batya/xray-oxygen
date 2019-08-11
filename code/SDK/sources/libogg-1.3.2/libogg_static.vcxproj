@@ -213,15 +213,17 @@
     <ClCompile Include="..\libvorbis-1.3.5\lib\window.c" />
     <ClCompile Include="src\bitwise.c" />
     <ClCompile Include="src\framing.c" />
+    <ClCompile Include="src\memory.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ogg.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\ogg\ogg.h" />
+    <ClInclude Include="..\..\include\ogg\oggMemory.h" />
+    <ClInclude Include="..\..\include\ogg\os_types.h" />
     <ClInclude Include="..\libvorbis-1.3.5\include\vorbis\vorbisenc.h" />
     <ClInclude Include="..\libvorbis-1.3.5\include\vorbis\vorbisfile.h" />
-    <ClInclude Include="include\ogg\ogg.h" />
-    <ClInclude Include="include\ogg\os_types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -113,7 +113,7 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 			pActor->PickupModeUpdate();
 
 		// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
-		pActor->PickupModeUpdate_COD(pActor->m_bPickupMode || g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP));
+		pActor->PickupModeUpdate_COD(pActor->m_bPickupMode);
 
 		SetEvent(pActor->MtSecondUpdaterEventEnd);
 	}

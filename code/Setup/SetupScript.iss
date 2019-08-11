@@ -18,7 +18,6 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
@@ -32,6 +31,11 @@ AppCopyright=Oxygen Team 2019
 MinVersion=0,6.1
 SetupIconFile=oxygen_logo_setup.ico
 WizardImageFile=Oxygen_Setup_eng.bmp
+DefaultDirName={autopf}\
+DisableDirPage=no
+EnableDirDoesntExistWarning=True
+DirExistsWarning=no
+AppendDefaultDirName=False
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -92,6 +96,8 @@ english.STR_OXY_FEATURE_THIRST=Thirst
 russian.STR_OXY_FEATURE_THIRST=Жажда
 english.STR_OXY_FEATURE_PICKUP=Always show pickup item text
 russian.STR_OXY_FEATURE_PICKUP=Всегда показывать подсказки по предметам вокруг
+english.STR_OXY_SELECTED_WRONG_FOLDER=You must select existence installation of S.T.A.L.K.E.R. Call of Pripyat
+russian.STR_OXY_SELECTED_WRONG_FOLDER=Вы должны выбрать уже установленную папку с S.T.A.L.K.E.R. Call of Pripyat
 
 [Code]
 // Splash code
@@ -301,7 +307,7 @@ begin
 		
 		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_weapon_autoreload off'#13#10]);
 		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_dynamic_sun_movement off'#13#10]);
-		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_hold_to_pickup on'#13#10]);
+		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_hold_to_pickup off'#13#10]);
 		
 		if chkLstFeatures.State[2] = cbChecked then
 		begin
@@ -366,6 +372,27 @@ begin
     begin
       RenameFile(fsGameFilePathChanged, fsGameFilePath);
     end;
+	end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+	selectedGameDirectoryWithFsgame : String;
+begin
+	// check if selected folder contain fsgame.ltx
+	Result := True;
+	if CurPageID = wpSelectDir then
+	begin
+		selectedGameDirectoryWithFsgame := ExpandConstant('{app}\fsgame.ltx');
+		if FileExists(selectedGameDirectoryWithFsgame) = True then
+		begin
+			Result := True;
+		end
+		else 
+		begin
+			MsgBox(CustomMessage('STR_OXY_SELECTED_WRONG_FOLDER'), mbError, MB_OK);
+			Result := False;
+		end;
 	end;
 end;
 
