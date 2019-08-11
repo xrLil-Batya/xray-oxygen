@@ -71,27 +71,27 @@ Filename: "{tmp}\oalinst.exe"; WorkingDir: "{app}"; Flags: postinstall; Descript
 english.MSG_OXY_AWDA=AWDA
 russian.MSG_OXY_AWDA=AWDA
 english.STR_OXY_CONFIG=Config
-russian.STR_OXY_CONFIG=Конфигурация
+russian.STR_OXY_CONFIG=ГЉГ®Г­ГґГЁГЈГіГ°Г Г¶ГЁГї
 english.STR_OXY_PRESET=Preset
-russian.STR_OXY_PRESET=Шаблон
+russian.STR_OXY_PRESET=ГГ ГЎГ«Г®Г­
 english.STR_OXY_VANILLA=Vanilla
-russian.STR_OXY_VANILLA=Оригинальные
+russian.STR_OXY_VANILLA=ГЋГ°ГЁГЈГЁГ­Г Г«ГјГ­Г»ГҐ
 english.STR_OXY_EVERYTHING=Everything
-russian.STR_OXY_EVERYTHING=Всё
+russian.STR_OXY_EVERYTHING=Г‚Г±Вё
 english.STR_OXY_MSVS_REDIST=Install Microsoft Visual Studio redistributables (recommended)
-russian.STR_OXY_MSVS_REDIST=Установить Microsoft Visual Studio redistributables (рекомендуется)
+russian.STR_OXY_MSVS_REDIST=Г“Г±ГІГ Г­Г®ГўГЁГІГј Microsoft Visual Studio redistributables (Г°ГҐГЄГ®Г¬ГҐГ­Г¤ГіГҐГІГ±Гї)
 english.STR_OXY_OAL=Install OpenAL Soft
-russian.STR_OXY_OAL=Установить OpenAL Soft
+russian.STR_OXY_OAL=Г“Г±ГІГ Г­Г®ГўГЁГІГј OpenAL Soft
 english.STR_OXY_FEATURE_MONSTER_INV=Monster Inventory
-russian.STR_OXY_FEATURE_MONSTER_INV=Инвентарь у монстров
+russian.STR_OXY_FEATURE_MONSTER_INV=Г€Г­ГўГҐГ­ГІГ Г°Гј Гі Г¬Г®Г­Г±ГІГ°Г®Гў
 english.STR_OXY_FEATURE_ANTIFREEZE=Delayed npc spawn (increase performance)
-russian.STR_OXY_FEATURE_ANTIFREEZE=Отложенный респавн НПС (повышает производительность)
+russian.STR_OXY_FEATURE_ANTIFREEZE=ГЋГІГ«Г®Г¦ГҐГ­Г­Г»Г© Г°ГҐГ±ГЇГ ГўГ­ ГЌГЏГ‘ (ГЇГ®ГўГ»ГёГ ГҐГІ ГЇГ°Г®ГЁГ§ГўГ®Г¤ГЁГІГҐГ«ГјГ­Г®Г±ГІГј)
 english.STR_OXY_FEATURE_POLTERHEIST=Polterheist Death Particles
-russian.STR_OXY_FEATURE_POLTERHEIST=Эффект смерти у Полтергейста
+russian.STR_OXY_FEATURE_POLTERHEIST=ГќГґГґГҐГЄГІ Г±Г¬ГҐГ°ГІГЁ Гі ГЏГ®Г«ГІГҐГ°ГЈГҐГ©Г±ГІГ 
 english.STR_OXY_FEATURE_THIRST=Thirst
-russian.STR_OXY_FEATURE_THIRST=Жажда
+russian.STR_OXY_FEATURE_THIRST=Г†Г Г¦Г¤Г 
 english.STR_OXY_FEATURE_PICKUP=Always show pickup item text
-russian.STR_OXY_FEATURE_PICKUP=Всегда показывать подсказки по предметам вокруг
+russian.STR_OXY_FEATURE_PICKUP=Г‚Г±ГҐГЈГ¤Г  ГЇГ®ГЄГ Г§Г»ГўГ ГІГј ГЇГ®Г¤Г±ГЄГ Г§ГЄГЁ ГЇГ® ГЇГ°ГҐГ¤Г¬ГҐГІГ Г¬ ГўГ®ГЄГ°ГіГЈ
 
 [Code]
 // Splash code
@@ -271,7 +271,7 @@ begin
 	begin
 		// install custom config
 		// function SaveStringToFile(const FileName: String; const S: AnsiString; const Append: Boolean): Boolean;
-		gameExtraFilePath := ExpandConstant('{app}\gamedata\configs\gameextra.ltx');
+		gameExtraFilePath := ExpandConstant('{app}\gamedata\configs\GameExtra.cfg');
 		DeleteFile(gameExtraFilePath);
 		
 		// dump settings
