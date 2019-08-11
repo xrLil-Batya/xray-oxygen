@@ -495,7 +495,7 @@ void LoadGameExtraFeatures()
 {
     g_extraFeatures.zero();
     string_path configFilePath;
-    FS.update_path(configFilePath, "$game_config$", "GameExtra.ltx");
+    FS.update_path(configFilePath, "$game_config$", "GameExtra.cfg");
 
     string_path cmdLoadCfg;
 	xr_strconcat( cmdLoadCfg, "cfg_load", " ", configFilePath);
