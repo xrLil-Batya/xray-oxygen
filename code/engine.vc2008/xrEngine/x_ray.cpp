@@ -88,11 +88,11 @@ ENGINE_API void InitConsole	()
 	Console = xr_new<CConsole>();
 	Console->Initialize();
 
-	xr_strcpy(Console->ConfigFile,"user.ltx");
-	if (strstr(Core.Params,"-ltx ")) 
+	xr_strcpy(Console->ConfigFile,"user.cfg");
+	if (strstr(Core.Params,"-cfg ")) 
 	{
 		string64 c_name;
-		sscanf(strstr(Core.Params,"-ltx ")+5,"%[^ ] ",c_name);
+		sscanf(strstr(Core.Params,"-cfg ")+5,"%[^ ] ",c_name);
 		xr_strcpy(Console->ConfigFile,c_name);
 	}
 }
