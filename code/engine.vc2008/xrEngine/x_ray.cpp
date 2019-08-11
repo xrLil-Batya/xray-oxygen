@@ -83,8 +83,16 @@ ENGINE_API void InitSettings	()
 	CHECK_OR_EXIT(!pGameIni->sections().empty(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.", fname));
 }
 
-ENGINE_API void InitConsole	()
+ENGINE_API void InitConsole()	
 {
+	// #TEMP
+	string_path userFilePath;
+        FS.update_path(userFilePath, "$app_data_root$", "user.ltx");
+	if (FS.exist(userFilePath))
+	{
+		FS.file_rename(userFilePath, "user.cfg", false);
+	}
+ 
 	Console = xr_new<CConsole>();
 	Console->Initialize();
 
