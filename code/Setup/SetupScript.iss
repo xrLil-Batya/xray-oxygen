@@ -96,8 +96,8 @@ english.STR_OXY_FEATURE_THIRST=Thirst
 russian.STR_OXY_FEATURE_THIRST=Жажда
 english.STR_OXY_FEATURE_PICKUP=Always show pickup item text
 russian.STR_OXY_FEATURE_PICKUP=Всегда показывать подсказки по предметам вокруг
-english.STR_OXY_SELECTED_WRONG_FOLDER=You must select existence installation of S.T.A.L.K.E.R. Call of Pripyat
-russian.STR_OXY_SELECTED_WRONG_FOLDER=Вы должны выбрать уже установленную папку с S.T.A.L.K.E.R. Call of Pripyat
+english.STR_OXY_SELECTED_WRONG_FOLDER=You must select existence installation of S.T.A.L.K.E.R.: Call of Pripyat
+russian.STR_OXY_SELECTED_WRONG_FOLDER=Вы должны выбрать уже установленную папку с S.T.A.L.K.E.R.: Call of Pripyat
 
 [Code]
 // Splash code
