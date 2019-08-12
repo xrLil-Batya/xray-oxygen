@@ -318,6 +318,9 @@ void CLevel::IR_OnKeyboardPress(u8 key)
 
 void CLevel::IR_OnKeyboardRelease(u8 key)
 {
+	if (Device.dwPrecacheFrame)
+		return;
+
 	if (!bReady || g_bDisableAllInput)								
 		return;
 

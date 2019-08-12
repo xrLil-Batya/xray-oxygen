@@ -1,15 +1,28 @@
 #include "stdafx.h"
 #pragma hdrstop
 #include "../../3rd-party/lzo/lzo1.h"
+#include "../../3rd-party/lzo/lzoutil.h"
 
 #define HEAP_ALLOC(var,size) \
 	lzo_align_t var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo_align_t) ]
 
 __declspec(thread) HEAP_ALLOC(rtc_wrkmem, LZO1_MEM_COMPRESS);
 
+lzo_voidp lzoAllocMemory (lzo_uint size, lzo_uint alignment)
+{
+	(void)alignment;
+	return Memory.mem_alloc(size);
+}
+
+void lzoFreeMemory (lzo_voidp ptr)
+{
+	Memory.mem_free(ptr);
+}
 
 void XRay::Compress::RT::RtcInitialize()
 {
+	lzo_alloc_hook = lzoAllocMemory;
+	lzo_free_hook = lzoFreeMemory;
 	VERIFY(lzo_init()==LZO_E_OK);
 }
 

@@ -311,7 +311,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)..\Release\xrGame.lib</ImportLibrary>
-      <AdditionalDependencies>xrUICore.lib;IKAN.lib;min_obb.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrUICore.lib;IKAN.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions> /EDITANDCONTINUE /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>

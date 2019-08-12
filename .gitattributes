@@ -5,3 +5,8 @@
 *.script text linguist-language=Lua
 *.ltx    text linguist-language=INI
 *.cpp    text linguist-language=cpp
+*.h      text linguist-language=cpp
+*.iss    text linguist-language=pascal
+
+# Diff
+*.iss    diff=pascal

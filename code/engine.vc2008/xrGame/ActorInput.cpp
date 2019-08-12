@@ -395,9 +395,6 @@ void CActor::ActorUse()
 		return;
 	}
 
-    // Pickup item
-    PickupModeUpdate_COD(true);
-
 	if (character_physics_support()->movement()->PHCapture())
 		character_physics_support()->movement()->PHReleaseObject();
 
@@ -463,7 +460,12 @@ void CActor::ActorUse()
 	}
 	// переключение костра при юзании
 	if (m_CapmfireWeLookingAt)
+	{
 		m_CapmfireWeLookingAt->is_on() ? m_CapmfireWeLookingAt->turn_off_script() : m_CapmfireWeLookingAt->turn_on_script();
+		return;
+	}
+
+	m_bPickupMode = true;
 }
 
 BOOL CActor::HUDview() const

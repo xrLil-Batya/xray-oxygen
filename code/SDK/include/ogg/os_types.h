@@ -17,12 +17,21 @@
 #ifndef _OS_TYPES_H
 #define _OS_TYPES_H
 
-/* make it easy on the folks that want to compile the libs with a
-   different malloc than stdlib */
-#define _ogg_malloc  malloc
-#define _ogg_calloc  calloc
-#define _ogg_realloc realloc
-#define _ogg_free    free
+ // Oxygen start - make a bindable delegates for ogg, vorbis and theora
+
+ /* make it easy on the folks that want to compile the libs with a
+	different malloc than stdlib */
+	//#define _ogg_malloc  malloc
+	//#define _ogg_calloc  calloc
+	//#define _ogg_realloc realloc
+	//#define _ogg_free    free
+
+void* _ogg_malloc(size_t size);
+void* _ogg_calloc(size_t num, size_t SizeOfElem);
+void* _ogg_realloc(void* ptr, size_t newSize);
+void _ogg_free(void* ptr);
+
+// Oxygen end
 
 #if defined(_WIN32)
 
