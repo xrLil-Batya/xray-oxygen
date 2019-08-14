@@ -9,6 +9,7 @@
 #include "level.h"
 #include "UIGame.h"
 #include "..\xrEngine\string_table.h"
+#include "..\xrEngine\xr_input.h"
 #include "ActorCondition.h"
 #include "items/WeaponMagazined.h"
 #include "CharacterPhysicsSupport.h"
@@ -608,6 +609,10 @@ void CActor::StopAnyMove()
 {
 	mstate_wishful	&=		~mcAnyMove;
 	mstate_real		&=		~mcAnyMove;
+	
+	pInput->CallResetPressedState();
+	m_movementWeight.x = 0.0f;
+	m_movementWeight.y = 0.0f;
 
 	if (this == Level().CurrentViewEntity())
 	{

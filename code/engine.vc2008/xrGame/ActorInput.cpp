@@ -571,7 +571,7 @@ void CActor::set_input_external_handler(CActorInputHandler *handler)
 
 	// release fire button
 	if (handler)
-		IR_OnKeyboardRelease(kWPN_FIRE);
+		IR_OnKeyboardRelease(get_action_dik(kWPN_FIRE));
 
 	// set handler
 	m_input_external_handler = handler;
@@ -760,4 +760,13 @@ void CActor::ResetMovementWeight()
 	{
 		m_movementWeight.x += 1.0f;
 	}
+}
+
+void CActor::StopTalk()
+{
+	pInput->CallResetPressedState();
+	m_movementWeight.x = 0.0f;
+	m_movementWeight.y = 0.0f;
+
+	CInventoryOwner::StopTalk();
 }

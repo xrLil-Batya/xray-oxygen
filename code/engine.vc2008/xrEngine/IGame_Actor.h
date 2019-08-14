@@ -19,7 +19,7 @@ protected:
 public:
 	virtual ~CIActor() = default;
 
-		    void StopAnyMove() {}
+	virtual	void StopAnyMove() {}
 
 	virtual void IR_OnMouseMove(int x, int y) {}
 	virtual void IR_OnKeyboardPress(u8 dik) {}

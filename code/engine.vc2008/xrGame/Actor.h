@@ -135,6 +135,7 @@ public:
 	void			AddGameNews_deffered	 (GAME_NEWS_DATA& news_data, u32 delay);
 	virtual void	AddGameNews				 (GAME_NEWS_DATA& news_data);
 	virtual void	StartTalk				 (CInventoryOwner* talk_partner, bool bStartTrade = false);
+	virtual void    StopTalk				 ();
 			void	RunTalkDialog			 (CInventoryOwner* talk_partner, bool disable_break);
 
 	CGameNewsRegistryWrapper		*game_news_registry;
@@ -382,7 +383,7 @@ public:
 	float					CurrentHeight;	
 	bool					CanSprint				();
 	bool					CanRun					();
-	void					StopAnyMove				();
+	virtual void			StopAnyMove				();
 
 	bool					AnyAction				()	{return (mstate_real & mcAnyAction) != 0;};
 	bool					AnyMove					()	{return (mstate_real & mcAnyMove) != 0;};
