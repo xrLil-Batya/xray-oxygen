@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 // Note:
 // ZNear - always 0.0f
 // ZFar  - always 1.0f
@@ -9,7 +9,8 @@
 #include "stats.h"
 #include "DirectXMathExternal.h"
 
-#define VIEWPORT_NEAR  0.2f//0.05f
+#define VIEWPORT_NEAR  0.2f
+#define VIEWPORT_NEAR_HUD 0.05f
 
 #define DEVICE_RESET_PRECACHE_FRAME_COUNT 10
 

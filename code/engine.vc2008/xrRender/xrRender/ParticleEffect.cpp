@@ -573,7 +573,7 @@ void CParticleEffect::Render(float)
 				Fmatrix FTold = Device.mFullTransform;
 				if (GetHudMode())
 				{
-					RDEVICE.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, /*VIEWPORT_NEAR*/0.05f, Environment().CurrentEnv->far_plane);
+					RDEVICE.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR_HUD, Environment().CurrentEnv->far_plane);
 					
 					Device.mFullTransform.mul(Device.mProject, Device.mView);
 					RCache.set_xform_project(Device.mProject);
