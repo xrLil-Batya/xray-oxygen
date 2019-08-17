@@ -1439,7 +1439,7 @@ void CLocatorAPI::file_rename(const char* src, const char* dest, bool bOwerwrite
 		m_files.insert(new_desc);
 
 		// physically rename file
-		createPath(dest);
+		createPath(dest, true);
 		rename(src, dest);
 	}
 }
