@@ -248,7 +248,7 @@ class CCC_Start : public IConsole_Command
 protected:
 	xr_string parse(const xr_string &str)
 	{
-		std::regex Reg("\\(([^)]+)\\)");
+		static std::regex Reg("\\(([^)]+)\\)");
 		std::smatch results;
 		R_ASSERT3(std::regex_search(str, results, Reg), "Failed parsing string: [%s]", str.c_str());
 		return results[1].str().c_str();
