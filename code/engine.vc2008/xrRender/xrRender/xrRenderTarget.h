@@ -294,7 +294,7 @@ public:
 	void						PhaseGammaGenerateLUT	();
 	void						PhaseGammaApply			();
 	void						SaveGammaLUT			();
-
+	void						phase_clear_position	();
 	void						phase_puddles			();
 
 	//	Generates min/max sm
