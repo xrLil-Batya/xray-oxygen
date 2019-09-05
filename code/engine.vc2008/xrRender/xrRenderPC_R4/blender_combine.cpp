@@ -120,7 +120,7 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
 
 		C.r_dx10Sampler		("smp_nofilter");
 		C.r_dx10Sampler		("smp_rtlinear");
-		C.r_End				();
+		C.r_End			();
 		break;
 	case 2:	// combine_2 (with distortion)
 		C.r_Pass			("stub_screen_space", "combine_2_d", false, false, false);
@@ -132,12 +132,17 @@ void	CBlender_combine_msaa::Compile(CBlender_Compile& C)
 
 		C.r_dx10Sampler		("smp_nofilter");
 		C.r_dx10Sampler		("smp_rtlinear");
-		C.r_End				();
+		C.r_End			();
 		break;
 	case 3: // copy rt_Color to back buffer
-		C.r_Pass			("stub_screen_space", "copy_msaa", false, false, false);
+		C.r_Pass		("stub_screen_space", "copy_msaa", false, false, false);
 		C.r_dx10Texture		("s_generic",		r2_RT_generic);
-		C.r_End				();
+		C.r_End			();
+		break;
+		   
+	case 4:	// Cleanup position and normal
+		C.r_Pass		("stub_screen_space", "clear_position", false, false, false);
+		C.r_End			();
 		break;
    }
    ::Render->m_MSAASample = -1;
