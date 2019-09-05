@@ -11,6 +11,6 @@ clear_position_out main(combine_aa In)
 {
 	clear_position_out Out;
 	Out.Pos = float4(0.f, 0.f ,10000.f, 0.f);
-	Out.N = flaot4(0.f, 0.f, 0.f, 0.f);
+	Out.N = float4(0.f, 0.f, 0.f, 0.f);
 	return Out;
 }
