@@ -3,8 +3,6 @@
 #include <d3d11.h>
 ////////////////////////////////////
 #pragma comment(lib, "xrCore.lib")
-#pragma comment(lib, "d3d9.lib")
-#pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -18,6 +16,16 @@ DLL_API xr_vector<xr_token> vid_quality_token;
 
 constexpr const char* r4_name = "xrRender_R4";
 /////////////////////////////////////////////////////
+extern "C"
+{
+	// https://docs.nvidia.com/gameworks/content/technologies/desktop/optimus.htm
+	ENGINE_API DWORD NvOptimusEnablement = 0x00000001; // NVIDIA Optimus
+
+	// https://gpuopen.com/amdpowerxpressrequesthighperformance/
+	ENGINE_API DWORD AmdPowerXpressRequestHighPerformance = 0x00000001; // PowerXpress or Hybrid Graphics
+}
+/////////////////////////////////////////////////////
+
 bool SupportsDX11Rendering()
 {
 	// Register class
