@@ -9,7 +9,6 @@
 #include <direct.h>
 #include <fcntl.h>
 #include <sys\stat.h>
-#include <ppl.h>
 #pragma warning(default:4995)
 
 #include "FS_internal.h"
@@ -24,7 +23,7 @@ const u32 BIG_FILE_READER_WINDOW_SIZE = 1024 * 1024;
 #	include <malloc.h>
 #	pragma warning(pop)
 
-CLocatorAPI*		xr_FS = nullptr;
+CLocatorAPI* xr_FS = nullptr;
 
 #define FSLTX "fsgame.ltx"
 
@@ -32,7 +31,7 @@ CLocatorAPI*		xr_FS = nullptr;
 constexpr u32 VFS_STANDARD_FILE = std::numeric_limits<u32>::max();
 
 //#TODO: Make a part of CLocatorAPI class later
-std::experimental::filesystem::path fsRoot;
+std::filesystem::path fsRoot;
 
 bool file_handle_internal(const char* file_name, size_t& size, HANDLE& file_handle);
 void* FileDownload(const char* file_name, size_t* buffer_size);
@@ -577,16 +576,16 @@ static void searchForFsltx(const char* fs_name, string_path& fsltxPath)
 	}
 
 	//try in working dir
-	if (std::experimental::filesystem::exists(realFsltxName))
+	if (std::filesystem::exists(realFsltxName))
 	{
 		xr_strcpy(fsltxPath, realFsltxName);
 		return;
 	}
 
-	auto tryPathFunc = [realFsltxName](std::experimental::filesystem::path possibleLocationFsltx, string_path& fsltxPath) -> bool
+	auto tryPathFunc = [realFsltxName](std::filesystem::path possibleLocationFsltx, string_path& fsltxPath) -> bool
 	{
 		possibleLocationFsltx.append(realFsltxName);
-		if (std::experimental::filesystem::exists(possibleLocationFsltx))
+		if (std::filesystem::exists(possibleLocationFsltx))
 		{
 			xr_strcpy(fsltxPath, possibleLocationFsltx.generic_string().c_str());
 			return true;
@@ -601,11 +600,11 @@ static void searchForFsltx(const char* fs_name, string_path& fsltxPath)
 	if (tryPathFunc("../../", fsltxPath)) return;
 
 	//must... find... fs_name... file...
-	std::experimental::filesystem::path currentPath = std::experimental::filesystem::current_path();
-	std::experimental::filesystem::directory_iterator curPathIter(currentPath);
+	std::filesystem::path currentPath = std::filesystem::current_path();
+	std::filesystem::directory_iterator curPathIter(currentPath);
 	for (auto& dirEntry : curPathIter)
 	{
-		if (std::experimental::filesystem::is_directory(dirEntry))
+		if (std::filesystem::is_directory(dirEntry))
 		{
 			if (tryPathFunc(dirEntry, fsltxPath)) return;
 		}
@@ -637,7 +636,7 @@ IReader *CLocatorAPI::setup_fs_ltx(const char* fs_name)
 	CHECK_OR_EXIT(fs_path[0] != 0, make_string("Cannot find fsltx file: \"%s\"\nCheck your working directory", fs_name));
 	xr_strlwr(fs_path);
 	fsRoot = fs_path;
-	fsRoot = std::experimental::filesystem::absolute(fsRoot);
+	fsRoot = std::filesystem::absolute(fsRoot);
 	fsRoot = fsRoot.parent_path();
 
 	Msg("using fs-ltx %s", fs_path);
@@ -1574,10 +1573,10 @@ void CLocatorAPI::unlock_rescan()
 
 bool CLocatorAPI::getFileName(LPCSTR path, string512& outFilename)
 {
-	std::experimental::filesystem::path stdPath = path;
+	std::filesystem::path stdPath = path;
 	if (stdPath.has_filename())
 	{
-		std::experimental::filesystem::path fileNamePath = stdPath.filename();
+		std::filesystem::path fileNamePath = stdPath.filename();
 		std::string fileNameStr = fileNamePath.u8string();
 		R_ASSERT2(fileNameStr.size() < sizeof(string512), fileNameStr.c_str());
 
