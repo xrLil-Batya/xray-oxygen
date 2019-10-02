@@ -19,10 +19,10 @@ constexpr const char* r4_name = "xrRender_R4";
 extern "C"
 {
 	// https://docs.nvidia.com/gameworks/content/technologies/desktop/optimus.htm
-	ENGINE_API DWORD NvOptimusEnablement = 0x00000001; // NVIDIA Optimus
+	__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001; // NVIDIA Optimus
 
 	// https://gpuopen.com/amdpowerxpressrequesthighperformance/
-	ENGINE_API DWORD AmdPowerXpressRequestHighPerformance = 0x00000001; // PowerXpress or Hybrid Graphics
+	__declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001; // PowerXpress or Hybrid Graphics
 }
 /////////////////////////////////////////////////////
 
