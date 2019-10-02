@@ -1,4 +1,10 @@
-// Author: phantom1020
+///////////////////////////////////////
+// Author: phantom1020, ForserX
+// Desc  : Font converter
+///////////////////////////////////////
+// Oxygen Engine 2.0
+///////////////////////////////////////
+
 #pragma unmanaged // No CLR, Please!
 #include <fstream>
 #include "../../engine.vc2008/xrCore/xrCore.h"
@@ -6,11 +12,11 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h" 
  
-// @ Думал что это будет удобно
+// @ Г„ГіГ¬Г Г« Г·ГІГ® ГЅГІГ® ГЎГіГ¤ГҐГІ ГіГ¤Г®ГЎГ­Г®
 #define PAUSE_AND_CLEAR system("pause"); system("cls");
 #define CLEAR_WINDOW system("cls");
 
-// @ Цвета для консоли
+// @ Г–ГўГҐГІГ  Г¤Г«Гї ГЄГ®Г­Г±Г®Г«ГЁ
 constexpr int DEFAULT_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 constexpr int ERROR_COLOR = 28;
 constexpr int OK_COLOR = 26;
@@ -43,9 +49,9 @@ void XRay::CFontGen::ReleaseFreeType()
 }
 
 int g_count = 0;
-int max_height_font = 0; // @ для вывода файлов, по сути обманка,
-// ибо в действительности мы уменьшаем размер шрифта и выводится
-//должно под каждый размер, но мы делаем как ПЫС, то есть _size_800, _size_1600, _size, где size одно и то же число
+int max_height_font = 0; // @ Г¤Г«Гї ГўГ»ГўГ®Г¤Г  ГґГ Г©Г«Г®Гў, ГЇГ® Г±ГіГІГЁ Г®ГЎГ¬Г Г­ГЄГ ,
+// ГЁГЎГ® Гў Г¤ГҐГ©Г±ГІГўГЁГІГҐГ«ГјГ­Г®Г±ГІГЁ Г¬Г» ГіГ¬ГҐГ­ГјГёГ ГҐГ¬ Г°Г Г§Г¬ГҐГ° ГёГ°ГЁГґГІГ  ГЁ ГўГ»ГўГ®Г¤ГЁГІГ±Гї
+//Г¤Г®Г«Г¦Г­Г® ГЇГ®Г¤ ГЄГ Г¦Г¤Г»Г© Г°Г Г§Г¬ГҐГ°, Г­Г® Г¬Г» Г¤ГҐГ«Г ГҐГ¬ ГЄГ ГЄ ГЏГ›Г‘, ГІГ® ГҐГ±ГІГј _size_800, _size_1600, _size, ГЈГ¤ГҐ size Г®Г¤Г­Г® ГЁ ГІГ® Г¦ГҐ Г·ГЁГ±Г«Г®
 void XRay::CFontGen::ParseFont(int index, int max_value)
 {
 	g_count++;
@@ -63,7 +69,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 	float max_dm = ((1 + (ConverterInfo.face->size->metrics.height >> 6)) * ceilf(sqrtf(TOTAL_ANSCII)));
 	int current_state = (1 + (ConverterInfo.face->size->metrics.height >> 6));
 
-	// @ Просчитываем размер текстуры умножая на 2
+	// @ ГЏГ°Г®Г±Г·ГЁГІГ»ГўГ ГҐГ¬ Г°Г Г§Г¬ГҐГ° ГІГҐГЄГ±ГІГіГ°Г» ГіГ¬Г­Г®Г¦Г Гї Г­Г  2
 	while (ConverterInfo.TexWid < max_dm)
 		ConverterInfo.TexWid <<= 1;
 
@@ -93,14 +99,14 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 		err = FT_Load_Char(ConverterInfo.face, i, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_TARGET_LIGHT);
 
 		FT_Bitmap& refBMP = ConverterInfo.face->glyph->bitmap;
-		// Великий и ужасный хак с пробелами
+		// Г‚ГҐГ«ГЁГЄГЁГ© ГЁ ГіГ¦Г Г±Г­Г»Г© ГµГ ГЄ Г± ГЇГ°Г®ГЎГҐГ«Г Г¬ГЁ
 		if (i == 32 && !refBMP.rows && !refBMP.width)
 		{
 			// 0 is true space
 			err = FT_Load_Char(ConverterInfo.face, 0, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_TARGET_LIGHT);
 			FT_Bitmap* pBMP = &ConverterInfo.face->glyph->bitmap;
 
-			// Если опять пусто, то напишем свои данные...
+			// Г…Г±Г«ГЁ Г®ГЇГїГІГј ГЇГіГ±ГІГ®, ГІГ® Г­Г ГЇГЁГёГҐГ¬ Г±ГўГ®ГЁ Г¤Г Г­Г­Г»ГҐ...
 			if (!pBMP->rows && !pBMP->width)
 			{
 				pBMP->width = 9;
@@ -132,7 +138,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 				pen_y += current_size;
 			}
 
-			// @ двоеточие и точка с запятой
+			// @ Г¤ГўГ®ГҐГІГ®Г·ГЁГҐ ГЁ ГІГ®Г·ГЄГ  Г± Г§Г ГЇГїГІГ®Г©
 			if (i == 58 || i == 59)
 			{
 				current_size = int(info_copy.y_off - ConverterInfo.face->glyph->bitmap_top);
@@ -191,7 +197,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 	{
 		
 		FT_Error err;
-		// @ 'Ё' и 'ё'
+		// @ 'ВЁ' ГЁ 'Вё'
 		if (i != 1104)
 			err = FT_Load_Char(ConverterInfo.face, i, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT | FT_LOAD_TARGET_LIGHT);
 		else
@@ -296,7 +302,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 	free(ConverterInfo.Pixels);
 	ZeroMemory(&ConverterInfo.Pixels, sizeof(ConverterInfo.Pixels)); 
 
-	// @ Создание ini файла
+	// @ Г‘Г®Г§Г¤Г Г­ГЁГҐ ini ГґГ Г©Г«Г 
 	std::ofstream INIFile;
 	xr_string output_copy = PathSystem.FileOutName;
 	INIFile.open((PathSystem.FileOutName.erase(PathSystem.FileOutName.rfind(".")) + ".ini").c_str());
@@ -330,8 +336,8 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 			x = " = ";
 		}
 
-		// @ Идёт Латиница и служебные символы (снача служебные символы, затем латынь)
-		size_t local_it = 0; // @ Нужно учитывать что перессылка разная, особенно с данным массивом
+		// @ Г€Г¤ВёГІ Г‹Г ГІГЁГ­ГЁГ¶Г  ГЁ Г±Г«ГіГ¦ГҐГЎГ­Г»ГҐ Г±ГЁГ¬ГўГ®Г«Г» (Г±Г­Г Г·Г  Г±Г«ГіГ¦ГҐГЎГ­Г»ГҐ Г±ГЁГ¬ГўГ®Г«Г», Г§Г ГІГҐГ¬ Г«Г ГІГ»Г­Гј)
+		size_t local_it = 0; // @ ГЌГіГ¦Г­Г® ГіГ·ГЁГІГ»ГўГ ГІГј Г·ГІГ® ГЇГҐГ°ГҐГ±Г±Г»Г«ГЄГ  Г°Г Г§Г­Г Гї, Г®Г±Г®ГЎГҐГ­Г­Г® Г± Г¤Г Г­Г­Г»Г¬ Г¬Г Г±Г±ГЁГўГ®Г¬
 		for (u32 i = 32; i < 128; ++i)
 		{
 			for (u32 CordIter = 0; CordIter < 2; CordIter++)
@@ -360,10 +366,10 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 			x = " = ";
 		};
 
-		// @ ПЫСовские мусорные символы, в текстурах они не содержаться (не то что в оригинале!)
+		// @ ГЏГ›Г‘Г®ГўГ±ГЄГЁГҐ Г¬ГіГ±Г®Г°Г­Г»ГҐ Г±ГЁГ¬ГўГ®Г«Г», Гў ГІГҐГЄГ±ГІГіГ°Г Гµ Г®Г­ГЁ Г­ГҐ Г±Г®Г¤ГҐГ°Г¦Г ГІГјГ±Гї (Г­ГҐ ГІГ® Г·ГІГ® Гў Г®Г°ГЁГЈГЁГ­Г Г«ГҐ!)
 		for (size_t i = 128; i < 192; ++i)
 		{
-			// @ Записываем Ё
+			// @ Г‡Г ГЇГЁГ±Г»ГўГ ГҐГ¬ ВЁ
 			if (i == 168)
 			{
 				for (u32 CordIter = 0; CordIter < 2; CordIter++)
@@ -382,7 +388,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 				continue;
 			}
 
-			// @ Записываем ё
+			// @ Г‡Г ГЇГЁГ±Г»ГўГ ГҐГ¬ Вё
 			if (i == 184)
 			{
 				for (u32 CordIter = 0; CordIter < 2; CordIter++)
@@ -405,7 +411,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 			WriteToINI(i);
 		}
 
-		// @ Идёт кириллица
+		// @ Г€Г¤ВёГІ ГЄГЁГ°ГЁГ«Г«ГЁГ¶Г 
 		for (size_t i = 192; i < 256; ++i)
 		{
 			for (u32 CordIter = 0; CordIter < 2; CordIter++)
@@ -423,7 +429,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 
 	if (ConverterInfo.bHaveTexconv)
 	{
-		// @ Записали уже .tga -> конвертируем в соответствующий размер под dds
+		// @ Г‡Г ГЇГЁГ±Г Г«ГЁ ГіГ¦ГҐ .tga -> ГЄГ®Г­ГўГҐГ°ГІГЁГ°ГіГҐГ¬ Гў Г±Г®Г®ГІГўГҐГІГ±ГІГўГіГѕГ№ГЁГ© Г°Г Г§Г¬ГҐГ° ГЇГ®Г¤ dds
 		system(("texconv.exe -f DXT5 " + output_copy + " -o " + PathSystem.PathOutName +" -y").c_str());
 		system(("texconv.exe " + output_copy + " -ft png -f R8G8B8A8_UNORM" + " -o " + PathSystem.PathOutName).c_str());
 	}
@@ -433,7 +439,7 @@ void XRay::CFontGen::ParseFont(int index, int max_value)
 
 void XRay::CFontGen::CheckTexConv()
 {
-	ConverterInfo.bHaveTexconv = std::experimental::filesystem::exists("texconv.exe");
+	ConverterInfo.bHaveTexconv = std::filesystem::exists("texconv.exe");
 }
 
 void XRay::CFontGen::CreateGSCFonts()
@@ -441,7 +447,7 @@ void XRay::CFontGen::CreateGSCFonts()
 	if (PathSystem.FontSize)
 	{
 		for(u32 Iter = 0; Iter < 3; Iter++)
-			// Каждый последующий размер уменьшается с шагом *2 (то есть -2, -4)
+			// ГЉГ Г¦Г¤Г»Г© ГЇГ®Г±Г«ГҐГ¤ГіГѕГ№ГЁГ© Г°Г Г§Г¬ГҐГ° ГіГ¬ГҐГ­ГјГёГ ГҐГІГ±Гї Г± ГёГ ГЈГ®Г¬ *2 (ГІГ® ГҐГ±ГІГј -2, -4)
 			ParseFont(PathSystem.FontSize - (Iter * 2), PathSystem.FontSize); 
 	}
 }
@@ -469,14 +475,14 @@ void XRay::CFontGen::InitFont()
 
 void XRay::CFontGen::CreateFolder()
 {	
-	if (std::experimental::filesystem::create_directory(PathSystem.PathOutName))
+	if (std::filesystem::create_directory(PathSystem.PathOutName))
 	{
 		bSucDir = true;
 	}
 	else
 	{
 		// @ But we must be sure that if the folder exists
-		if (std::experimental::filesystem::exists(PathSystem.PathOutName))
+		if (std::filesystem::exists(PathSystem.PathOutName))
 		{
 			bSucDir = true;
 		}
