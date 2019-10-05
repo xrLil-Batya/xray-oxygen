@@ -879,26 +879,26 @@ void CUICellContainer::Draw()
 	Frect clientArea;
 	m_pParentDragDropList->GetClientArea(clientArea);
 
-	Ivector2			cell_cnt = m_pParentDragDropList->CellsCapacity();
-	if					(cell_cnt.x==0 || cell_cnt.y==0)	return;
+	Ivector2 cell_cnt = m_pParentDragDropList->CellsCapacity();
+	if (cell_cnt.x==0 || cell_cnt.y==0)	return;
 
-	Ivector2			cell_sz = CellSize();
-	cell_sz.add			(m_cellSpacing);
+	Ivector2 cell_sz = CellSize();
+	cell_sz.add(m_cellSpacing);
 
-	Irect				tgt_cells;
+	Irect tgt_cells;
 	tgt_cells.lt		= TopVisibleCell();
 	tgt_cells.x2		= iFloor( (float(clientArea.width())+float(cell_sz.x)-EPS)/float(cell_sz.x)) + tgt_cells.lt.x;
 	tgt_cells.y2		= iFloor( (float(clientArea.height())+float(cell_sz.y)-EPS)/float(cell_sz.y)) + tgt_cells.lt.y;
 
-	clamp				(tgt_cells.x2, 0, cell_cnt.x-1);
-	clamp				(tgt_cells.y2, 0, cell_cnt.y-1);
+	clamp(tgt_cells.x2, 0, cell_cnt.x-1);
+	clamp(tgt_cells.y2, 0, cell_cnt.y-1);
 
-	Fvector2			lt_abs_pos;
+	Fvector2 lt_abs_pos;
 	GetAbsolutePos		(lt_abs_pos);
 
-	Fvector2					drawLT;
-	drawLT.set					(lt_abs_pos.x+tgt_cells.lt.x*(cell_sz.x+m_cellSpacing.x), lt_abs_pos.y+tgt_cells.lt.y*(cell_sz.y+m_cellSpacing.y));
-	UI().ClientToScreenScaled	(drawLT, drawLT.x, drawLT.y);
+	Fvector2 drawLT;
+	drawLT.set(lt_abs_pos.x + tgt_cells.lt.x * cell_sz.x, lt_abs_pos.y + tgt_cells.lt.y * cell_sz.y);
+	UI().ClientToScreenScaled(drawLT, drawLT.x, drawLT.y);
 
 	const Fvector2 pts[6] =		{{0.0f,0.0f},{1.0f,0.0f},{1.0f,1.0f},
 								 {0.0f,0.0f},{1.0f,1.0f},{0.0f,1.0f}};
