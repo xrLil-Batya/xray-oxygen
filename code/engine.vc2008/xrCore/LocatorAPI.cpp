@@ -1577,7 +1577,11 @@ bool CLocatorAPI::getFileName(LPCSTR path, string512& outFilename)
 	if (stdPath.has_filename())
 	{
 		std::filesystem::path fileNamePath = stdPath.filename();
+#if _MSC_VER > 1921
+		std::string fileNameStr = fileNamePath.string();
+#else
 		std::string fileNameStr = fileNamePath.u8string();
+#endif
 		R_ASSERT2(fileNameStr.size() < sizeof(string512), fileNameStr.c_str());
 
 		xr_strcpy(outFilename, fileNameStr.c_str());
