@@ -1982,7 +1982,6 @@
     <ClCompile Include="alife_trader.cpp" />
     <ClCompile Include="alife_trader_abstract.cpp" />
     <ClCompile Include="CustomMonster.cpp" />
-    <ClCompile Include="CustomMonster_VCPU.cpp" />
     <ClCompile Include="AI\ai_monsters_misc.cpp" />
     <ClCompile Include="script_binder.cpp" />
     <ClCompile Include="script_entity.cpp" />
