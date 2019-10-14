@@ -41,7 +41,11 @@ public:
 #ifdef USE_DX11
 	IDXGIAdapter1*			m_pAdapter;	//	pD3D equivalent
 	ID3D11Device*			pDevice;	//	combine with DX9 pDevice via typedef
+
+	ID3D11DeviceContext*	pContextDeffered[4];	//	combine with DX9 pDevice via typedef
 	ID3D11DeviceContext*    pContext;	//	combine with DX9 pDevice via typedef
+	ID3D11CommandList*      pContextCmdList[4];
+
 	IDXGISwapChain*         m_pSwapChain;
 	ID3D11RenderTargetView*	pBaseRT;	//	combine with DX9 pBaseRT via typedef
 	ID3D11DepthStencilView*	pBaseZB;
@@ -55,7 +59,11 @@ public:
 	bool					m_bDX11_1;
 
 	D3D_FEATURE_LEVEL		FeatureLevel;
-	bool					IsFormatSupported		(DXGI_FORMAT fmt);
+	void 					SetLocalData(ID3D11CommandList** pList, ID3D11DeviceContext* pContextExt);
+	bool					IsFormatSupported(DXGI_FORMAT fmt);
+	
+	ID3DDeviceContext*		GetDefContext();
+	ID3D11CommandList**		GetCmdList();
 #elif defined(USE_VK)
 	VkPhysicalDevice*		m_pAdapter;	//	pD3D equivalent
 	VkDevice*				pDevice;	//	combine with DX9 pDevice via typedef

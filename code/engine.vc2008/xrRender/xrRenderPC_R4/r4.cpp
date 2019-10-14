@@ -203,7 +203,7 @@ void					CRender::create()
 	/////////////////////////////////////////////
 	for (u32 i = 0; i<HW.Caps.iGPUNum; ++i)
 		R_CHK(HW.pDevice->CreateQuery(&qdesc, &q_sync_point[i]));
-	HW.pContext->End(q_sync_point[0]);
+	HW.GetDefContext()->End(q_sync_point[0]);
 	/////////////////////////////////////////////
 	::PortalTraverser.initialize();
 	FluidManager.Initialize(70, 70, 70);
@@ -274,7 +274,7 @@ void CRender::reset_end()
 		R_CHK(HW.pDevice->CreateQuery(&qdesc,&q_sync_point[i]));
 	//	Prevent error on first get data
 	/////////////////////////////////////////////
-	HW.pContext->End(q_sync_point[0]);
+	HW.GetDefContext()->End(q_sync_point[0]);
 	HWOCC.occq_create			(occq_size);
 
 	Target = xr_new<CRenderTarget>();
@@ -462,7 +462,7 @@ void					CRender::rmNear				()
 	IRender_Target* T	=	getTarget	();
 	D3D_VIEWPORT VP		=	{0,0,(float)T->get_width(),(float)T->get_height(),0,0.02f };
 
-	HW.pContext->RSSetViewports(1, &VP);
+	HW.GetDefContext()->RSSetViewports(1, &VP);
 	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 void					CRender::rmFar				()
@@ -470,7 +470,7 @@ void					CRender::rmFar				()
 	IRender_Target* T	=	getTarget	();
 	D3D_VIEWPORT VP		=	{0,0,(float)T->get_width(),(float)T->get_height(),0.99999f,1.f };
 
-	HW.pContext->RSSetViewports(1, &VP);
+	HW.GetDefContext()->RSSetViewports(1, &VP);
 	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 void					CRender::rmNormal			()
@@ -478,7 +478,7 @@ void					CRender::rmNormal			()
 	IRender_Target* T	=	getTarget	();
 	D3D11_VIEWPORT VP		= {0,0,(float)T->get_width(),(float)T->get_height(),0,1.f };
 
-	HW.pContext->RSSetViewports(1, &VP);
+	HW.GetDefContext()->RSSetViewports(1, &VP);
 }
 
 void CRender::ResizeWindowProc(WORD h, WORD w)

@@ -5,7 +5,7 @@ void	CRenderTarget::phase_smap_direct		(light* L, u32 sub_phase)
 	// Targets
 	u_setrt	(rt_smap_surf, NULL, NULL, rt_smap_depth->pZRT);
 
-	HW.pContext->ClearDepthStencilView(rt_smap_depth->pZRT, D3D_CLEAR_DEPTH, 1.0f, 0L);
+	HW.GetDefContext()->ClearDepthStencilView(rt_smap_depth->pZRT, D3D_CLEAR_DEPTH, 1.0f, 0L);
 
 	//	Prepare viewport for shadow map rendering
 	if (sub_phase!=SE_SUN_RAIN_SMAP	)
@@ -16,7 +16,7 @@ void	CRenderTarget::phase_smap_direct		(light* L, u32 sub_phase)
 			(float)(L->X.D.maxX - L->X.D.minX) , 
 			(float)(L->X.D.maxY - L->X.D.minY) , 
 			0,1 };
-		HW.pContext->RSSetViewports(1, &VP);
+		HW.GetDefContext()->RSSetViewports(1, &VP);
 	}
 
 	// Stencil	- disable
@@ -31,5 +31,5 @@ void	CRenderTarget::phase_smap_direct_tsh	(light* L, u32 sub_phase)
 	RCache.set_ColorWriteEnable			();
 	//	Prepare viewport for shadow map rendering
 	RImplementation.rmNormal();
-	HW.pContext->ClearRenderTargetView( RCache.get_RT(0), ColorRGBA);
+	HW.GetDefContext()->ClearRenderTargetView( RCache.get_RT(0), ColorRGBA);
 }

@@ -558,7 +558,7 @@ void CRender::AfterWorldRender()
 		// Copy back buffer to second viewport RT
 		ID3DTexture2D* pBackBuffer = nullptr;
 		HW.m_pSwapChain->GetBuffer(0, __uuidof(ID3DTexture2D), (LPVOID*)&pBackBuffer);
-		HW.pContext->CopyResource(Target->rt_secondVP->pSurface, pBackBuffer);
+		HW.GetDefContext()->CopyResource(Target->rt_secondVP->pSurface, pBackBuffer);
 		pBackBuffer->Release();
 	}
 }

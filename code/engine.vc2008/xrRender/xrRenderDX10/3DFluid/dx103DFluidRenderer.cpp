@@ -409,7 +409,7 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 	// Raycast into the temporary render target: 
 	//  raycasting is done at the smaller resolution, using a fullscreen quad
 	float ColorRGBA[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	HW.pContext->ClearRenderTargetView(RT[RRT_RayCastTex]->pRT, ColorRGBA);
+	HW.GetDefContext()->ClearRenderTargetView(RT[RRT_RayCastTex]->pRT, ColorRGBA);
 
 	pTarget->u_setrt(RT[RRT_RayCastTex], nullptr, nullptr, nullptr); // LDR RT
 
@@ -447,7 +447,7 @@ void dx103DFluidRenderer::ComputeRayData(const dx103DFluidData &FluidData)
 {
 	// Clear the color buffer to 0
 	float blackColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	HW.pContext->ClearRenderTargetView( RT[RRT_RayDataTex]->pRT, blackColor );
+	HW.GetDefContext()->ClearRenderTargetView( RT[RRT_RayDataTex]->pRT, blackColor );
 	CRenderTarget* pTarget = RImplementation.Target;
 	pTarget->u_setrt(RT[RRT_RayDataTex],0,0,0);		// LDR RT
 	RCache.set_Element(m_RendererTechnique[RS_CompRayData_Back]);

@@ -584,7 +584,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	{
 		// For sun-filter - clear to zero
 		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
+		HW.GetDefContext()->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
 
 		// Fill vertex buffer
 		FVF::TL* pv					= (FVF::TL*)	RCache.Vertex.Lock	(4,g_combine->vb_stride,Offset);

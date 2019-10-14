@@ -86,7 +86,7 @@ void dx10ConstantBuffer::Flush()
 		void	*pData = nullptr;
 #ifdef USE_DX11
 		D3D11_MAPPED_SUBRESOURCE	pSubRes;
-		CHK_DX(HW.pContext->Map(m_pBuffer, 0, D3D_MAP_WRITE_DISCARD, 0, &pSubRes));
+		CHK_DX(HW.GetDefContext()->Map(m_pBuffer, 0, D3D_MAP_WRITE_DISCARD, 0, &pSubRes));
 		pData = pSubRes.pData;
 #else
 		CHK_DX(m_pBuffer->Map(D3D_MAP_WRITE_DISCARD, 0, &pData));
@@ -95,7 +95,7 @@ void dx10ConstantBuffer::Flush()
 		VERIFY(m_pBufferData);
         std::memcpy(pData, m_pBufferData, m_uiBufferSize);
 #ifdef USE_DX11
-		HW.pContext->Unmap(m_pBuffer, 0);
+		HW.GetDefContext()->Unmap(m_pBuffer, 0);
 #else
 		m_pBuffer->Unmap();
 #endif

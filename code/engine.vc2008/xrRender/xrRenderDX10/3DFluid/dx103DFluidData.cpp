@@ -83,7 +83,7 @@ void dx103DFluidData::CreateRTTextureAndViews(int rtIndex, D3D_TEXTURE3D_DESC Te
 
 	float color[4] = {0, 0, 0, 0 };
 
-	HW.pContext->ClearRenderTargetView( m_pRenderTargetViews[rtIndex], color );
+	HW.GetDefContext()->ClearRenderTargetView( m_pRenderTargetViews[rtIndex], color );
 }
 
 void dx103DFluidData::DestroyRTTextureAndViews(int rtIndex)

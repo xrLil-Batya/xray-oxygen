@@ -16,7 +16,7 @@
 void CBackend::OnFrameEnd	()
 {
 #ifdef USE_DX11
-	HW.pContext->ClearState();
+	HW.GetDefContext()->ClearState();
 #else
 
 	for (u32 stage=0; stage<HW.Caps.raster.dwStages; stage++)
@@ -31,16 +31,18 @@ void CBackend::OnFrameEnd	()
 
 void CBackend::OnFrameBegin	()
 {
+	HW.SetLocalData(&HW.pContextCmdList[0], HW.GetDefContext()->pContextDeffered[0]);
+	
 	Invalidate();
 	//	DX9 sets base rt nd base zb by default
 	RImplementation.rmNormal();
-	set_RT				(HW.pBaseRT);
-	set_ZB				(HW.pBaseZB);
+	set_RT(HW.pBaseRT);
+	set_ZB(HW.pBaseZB);
 
-    std::memset(&stat,0,sizeof(stat));
-	Vertex.Flush		();
-	Index.Flush			();
-	set_Stencil			(FALSE);
+    std::memset(&stat, 0, sizeof(stat));
+	Vertex.Flush();
+	Index.Flush();
+	set_Stencil(FALSE);
 }
 
 void CBackend::Invalidate	()

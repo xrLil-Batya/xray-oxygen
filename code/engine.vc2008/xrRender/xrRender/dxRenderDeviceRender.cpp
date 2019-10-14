@@ -226,13 +226,13 @@ void dxRenderDeviceRender::Begin()
 
 void dxRenderDeviceRender::Clear()
 {
-	HW.pContext->ClearDepthStencilView(RCache.get_ZB(), 
+	HW.GetDefContext()->ClearDepthStencilView(RCache.get_ZB(), 
 		D3D_CLEAR_DEPTH|D3D_CLEAR_STENCIL, 1.0f, 0);
 
 	if (psDeviceFlags.test(rsClearBB))
 	{
 		FLOAT ColorRGBA[4] = {0.0f,0.0f,0.0f,0.0f};
-		HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
+		HW.GetDefContext()->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
 	}
 }
 
@@ -256,10 +256,31 @@ void dxRenderDeviceRender::End()
 		RImplementation.Target->PhaseGammaApply();
 	}
 
-	RCache.OnFrameEnd	();
+	RCache.OnFrameEnd();
+	HRESULT hResult = HW.GetDefContext()->FinishCommandList(false, HW.GetCmdList());
+	if (hResult == S_OK)
+	{
+		HW.pContext->ExecuteCmdList(*HW.GetCmdList(), false);
+		(*HW.GetCommandList())->Release();
 
-	if (!Device.m_SecondViewport.IsSVPFrame() && !Device.m_SecondViewport.m_bCamReady) //+SecondVP+ Не выводим кадр из второго вьюпорта на экран (на практике у нас экранная картинка обновляется минимум в два раза реже) [don't flush image into display for SecondVP-frame]
+		if (!Device.m_SecondViewport.IsSVPFrame() && !Device.m_SecondViewport.m_bCamReady) //+SecondVP+ Не выводим кадр из второго вьюпорта на экран (на практике у нас экранная картинка обновляется минимум в два раза реже) [don't flush image into display for SecondVP-frame]
 		HW.m_pSwapChain->Present(psDeviceFlags.test(rsVSync) ? 1 : 0, 0);
+	}
+	else
+	{
+		switch (hResult)
+		{
+		case E_OUTOFMEMORY:
+			Msg("Render: FinishCommandList error - OUTOFMEMORY"); 
+			break;
+		case DXGI_ERROR_INVALID_CALL:
+			Msg("Render: FinishCommandList error - DXGI_ERROR_INVALID_CALL"); 
+			break;
+		case DXGI_ERROR_DEVICE_REMOVED:
+			Msg("Render: FinishCommandList error - DXGI_ERROR_DEVICE_REMOVED"); 
+			break;
+		}
+	}	
 }
 
 void dxRenderDeviceRender::ResourcesDestroyNecessaryTextures()
@@ -270,7 +291,7 @@ void dxRenderDeviceRender::ResourcesDestroyNecessaryTextures()
 void dxRenderDeviceRender::ClearTarget()
 {
 	float ColorRGBA[4] = {0.0f,0.0f,0.0f,0.0f};
-	HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
+	HW.GetDefContext()->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
 }
 
 void dxRenderDeviceRender::SetCacheXform(const Fmatrix &mView, const Fmatrix &mProject)

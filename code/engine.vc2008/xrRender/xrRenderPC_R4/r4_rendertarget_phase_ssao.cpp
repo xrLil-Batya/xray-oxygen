@@ -15,7 +15,7 @@ void CRenderTarget::phase_ssao	()
 	u32	Offset	= 0;
 
 	FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-	HW.pContext->ClearRenderTargetView(rt_ssao_temp->pRT, ColorRGBA);
+	HW.GetDefContext()->ClearRenderTargetView(rt_ssao_temp->pRT, ColorRGBA);
 	
 	// low/hi RTs
 	u_setrt( rt_ssao_temp, nullptr, nullptr, nullptr);
@@ -33,7 +33,7 @@ void CRenderTarget::phase_ssao	()
 	float _w = float(Device.dwWidth) * 0.5f;
 	float _h = float(Device.dwHeight) * 0.5f;
 
-	set_viewport(HW.pContext, _w, _h);
+	set_viewport(HW.GetDefContext(), _w, _h);
 
 	// Fill vertex buffer
 	FVF::TL* pv					= (FVF::TL*)	RCache.Vertex.Lock	(4,g_combine->vb_stride,Offset);
@@ -58,7 +58,7 @@ void CRenderTarget::phase_ssao	()
 		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
 	}  
 
-	set_viewport(HW.pContext, float(Device.dwWidth), float(Device.dwHeight));
+	set_viewport(HW.GetDefContext(), float(Device.dwWidth), float(Device.dwHeight));
 
 	RCache.set_Stencil	(FALSE);
 }
@@ -70,13 +70,13 @@ void CRenderTarget::phase_downsamp	()
 
     u_setrt( rt_half_depth,nullptr,nullptr,nullptr);
 	FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-    HW.pContext->ClearRenderTargetView(rt_half_depth->pRT, ColorRGBA);
+    HW.GetDefContext()->ClearRenderTargetView(rt_half_depth->pRT, ColorRGBA);
 	u32 w = Device.dwWidth;
 	u32 h = Device.dwHeight;
 
 	if (RImplementation.o.ssao_half_data)
 	{
-		set_viewport(HW.pContext, float(Device.dwWidth) * 0.5f, float(Device.dwHeight) * 0.5f);
+		set_viewport(HW.GetDefContext(), float(Device.dwWidth) * 0.5f, float(Device.dwHeight) * 0.5f);
 		w /= 2;
 		h /= 2;
 	}
@@ -108,5 +108,5 @@ void CRenderTarget::phase_downsamp	()
 	}
 
 	if (RImplementation.o.ssao_half_data)
-		set_viewport(HW.pContext, float(Device.dwWidth), float(Device.dwHeight));
+		set_viewport(HW.GetDefContext(), float(Device.dwWidth), float(Device.dwHeight));
 }

@@ -49,7 +49,7 @@ void CRenderTarget::PhaseGammaApply()
 #ifdef USE_DX11
 	ID3DResource* pTmpTexture = rt_Generic_0->pTexture->surface_get();
 	HW.pBaseRT->GetResource(&pTmpTexture);
-	HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), pTmpTexture);
+	HW.GetDefContext()->CopyResource(rt_Generic_0->pTexture->surface_get(), pTmpTexture);
 	_RELEASE(pTmpTexture);
 #else
 	CHK_DX(HW.pDevice->StretchRect(HW.pBaseRT, nullptr, rt_Generic_0->pRT, nullptr, D3DTEXF_NONE));
@@ -71,7 +71,7 @@ void CRenderTarget::SaveGammaLUT()
 	rt_GammaLUT->pRT->GetResource(&pSrcTexture);
 	VERIFY(pSrcTexture);
 
-	CHK_DX(D3DX11SaveTextureToMemory(HW.pContext, pSrcTexture, D3DX11_IFF_PNG, &saved, 0));
+	CHK_DX(D3DX11SaveTextureToMemory(HW.GetDefContext(), pSrcTexture, D3DX11_IFF_PNG, &saved, 0));
 	_RELEASE(pSrcTexture);
 #else
 	IDirect3DSurface9* pFB;

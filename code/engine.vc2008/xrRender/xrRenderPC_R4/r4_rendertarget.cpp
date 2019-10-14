@@ -573,7 +573,7 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 			xr_sprintf(name, "%s_%d", r2_RT_luminance_pool, it);
 			rt_LUM_pool[it].create(name, 1, 1, DXGI_FORMAT_R32_FLOAT);
 			FLOAT ColorRGBA[4] = { 127.0f / 255.0f, 127.0f / 255.0f, 127.0f / 255.0f, 127.0f / 255.0f };
-			HW.pContext->ClearRenderTargetView(rt_LUM_pool[it]->pRT, ColorRGBA);
+			HW.GetDefContext()->ClearRenderTargetView(rt_LUM_pool[it]->pRT, ColorRGBA);
 		}
 		u_setrt(Device.dwWidth, Device.dwHeight, HW.pBaseRT, nullptr, nullptr, HW.pBaseZB);
 	}
@@ -874,9 +874,9 @@ rt_Color.create(r2_RT_albedo, w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, SampleCount)
 				t_noise_mipped->surface_set(t_noise_surf_mipped);
 
 				// Update texture. Generate mips.
-				HW.pContext->CopySubresourceRegion(t_noise_surf_mipped, 0, 0, 0, 0, t_noise_surf[0], 0, nullptr);
+				HW.GetDefContext()->CopySubresourceRegion(t_noise_surf_mipped, 0, 0, 0, 0, t_noise_surf[0], 0, nullptr);
 
-				D3DX11FilterTexture(HW.pContext, t_noise_surf_mipped, 0, D3DX10_FILTER_POINT);
+				D3DX11FilterTexture(HW.GetDefContext(), t_noise_surf_mipped, 0, D3DX10_FILTER_POINT);
 			}
 		
 			// HQ noise

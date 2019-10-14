@@ -79,20 +79,20 @@ void ComputeShader::Dispatch(u32 dimx, u32 dimy, u32 dimz)
 		if (Cs->handler)	Cs->handler->setup(Cs);
 	}
 
-	HW.pContext->CSSetConstantBuffers(0, count, tempBuffer);
+	HW.GetDefContext()->CSSetConstantBuffers(0, count, tempBuffer);
 
 	if (!m_Textures.empty())
-		HW.pContext->CSSetShaderResources(0, (UINT)m_Textures.size(), &m_Textures[0]);
+		HW.GetDefContext()->CSSetShaderResources(0, (UINT)m_Textures.size(), &m_Textures[0]);
 
 	if (!m_Samplers.empty())
-		HW.pContext->CSSetSamplers(0, (UINT)m_Samplers.size(), &m_Samplers[0]);
+		HW.GetDefContext()->CSSetSamplers(0, (UINT)m_Samplers.size(), &m_Samplers[0]);
 
 	if (!m_Outputs.empty())
 	{
 		UINT num = 0;
-		HW.pContext->CSSetUnorderedAccessViews(0, (UINT)m_Outputs.size(), &m_Outputs[0], &num);
+		HW.GetDefContext()->CSSetUnorderedAccessViews(0, (UINT)m_Outputs.size(), &m_Outputs[0], &num);
 	}
 
-	HW.pContext->Dispatch(dimx, dimy, dimz);
+	HW.GetDefContext()->Dispatch(dimx, dimy, dimz);
 }
 

@@ -95,7 +95,7 @@ void				TW_Save	(ID3DTexture2D* T, LPCSTR name, LPCSTR prefix, LPCSTR postfix)
 		if ('\\'==fn[it])	fn[it]	= '_';
 	string256		fn2;	xr_strconcat	(fn2,"debug\\",fn,".dds");
 	Msg						("* debug texture save: %s",fn2);
-	R_CHK					(D3DX11SaveTextureToFile(HW.pContext, T, D3DX11_IFF_DDS, fn2));
+	R_CHK					(D3DX11SaveTextureToFile(HW.GetDefContext(), T, D3DX11_IFF_DDS, fn2));
 }
 
 ID3DBaseTexture*	CRender::texture_load(LPCSTR fRName, u32& ret_msize, bool bStaging)

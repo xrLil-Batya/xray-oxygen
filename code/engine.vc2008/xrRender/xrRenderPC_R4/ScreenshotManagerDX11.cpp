@@ -78,8 +78,8 @@ ID3DBlob* CScreenshotManager::MakeScreenshotNormal(u32 fmt)
 
 	// Save resource to buffer and return it
 	CHK_DX(HW.pDevice->CreateTexture2D(&desc, &TexData , &pSmallTexture));
-	CHK_DX(D3DX11LoadTextureFromTexture(HW.pContext, pBackBufferRes, nullptr, pSmallTexture));
-	CHK_DX(D3DX11SaveTextureToMemory(HW.pContext, pBackBufferRes, (D3DX11_IMAGE_FILE_FORMAT)fmt, &pData, 0)); // Use pSmallTexture for gamma
+	CHK_DX(D3DX11LoadTextureFromTexture(HW.GetDefContext(), pBackBufferRes, nullptr, pSmallTexture));
+	CHK_DX(D3DX11SaveTextureToMemory(HW.GetDefContext(), pBackBufferRes, (D3DX11_IMAGE_FILE_FORMAT)fmt, &pData, 0)); // Use pSmallTexture for gamma
 
 	// Cleanup
 	_RELEASE(pSmallTexture);
@@ -112,11 +112,11 @@ ID3DBlob* CScreenshotManager::MakeScreenshotForSavedGame()
 
 	// Create small texture, copy (and resize) resourse to it
 	CHK_DX(HW.pDevice->CreateTexture2D(&desc, nullptr, &pSmallTexture));
-	CHK_DX(D3DX11LoadTextureFromTexture(HW.pContext, pBackBufferRes, nullptr, pSmallTexture));
+	CHK_DX(D3DX11LoadTextureFromTexture(HW.GetDefContext(), pBackBufferRes, nullptr, pSmallTexture));
 	_RELEASE(pBackBufferRes);
 
 	// Save resource to buffer and return it
-	D3DX11SaveTextureToMemory(HW.pContext, pSmallTexture, D3DX11_IFF_DDS, &pData, 0);
+	D3DX11SaveTextureToMemory(HW.GetDefContext(), pSmallTexture, D3DX11_IFF_DDS, &pData, 0);
 	_RELEASE(pSmallTexture);
 
 	return pData;

@@ -112,7 +112,7 @@ void vkSamplerStateCache::VSApplySamplers(HArray &samplers)
 	u32 uiMin;
 	u32 uiMax;
 	PrepareSamplerStates(samplers, pSS, m_aVSSamplers, uiMin, uiMax);
-	//HW.pContext->VSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
+	//HW.GetDefContext()->VSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
 }
 
 void vkSamplerStateCache::PSApplySamplers(HArray &samplers)
@@ -121,7 +121,7 @@ void vkSamplerStateCache::PSApplySamplers(HArray &samplers)
 	u32 uiMin;
 	u32 uiMax;
 	PrepareSamplerStates(samplers, pSS, m_aPSSamplers, uiMin, uiMax);
-	//HW.pContext->PSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
+	//HW.GetDefContext()->PSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
 }
 
 void vkSamplerStateCache::GSApplySamplers(HArray &samplers)
@@ -130,7 +130,7 @@ void vkSamplerStateCache::GSApplySamplers(HArray &samplers)
 	u32 uiMin;
 	u32 uiMax;
 	PrepareSamplerStates(samplers, pSS, m_aGSSamplers, uiMin, uiMax);
-	//HW.pContext->GSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
+	//HW.GetDefContext()->GSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
 }
 
 #ifdef USE_DX11
@@ -140,7 +140,7 @@ void vkSamplerStateCache::HSApplySamplers(HArray &samplers)
 	u32 uiMin;
 	u32 uiMax;
 	PrepareSamplerStates(samplers, pSS, m_aHSSamplers, uiMin, uiMax);
-	HW.pContext->HSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
+	HW.GetDefContext()->HSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
 }
 
 void vkSamplerStateCache::DSApplySamplers(HArray &samplers)
@@ -149,7 +149,7 @@ void vkSamplerStateCache::DSApplySamplers(HArray &samplers)
 	u32 uiMin;
 	u32 uiMax;
 	PrepareSamplerStates(samplers, pSS, m_aDSSamplers, uiMin, uiMax);
-	HW.pContext->DSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
+	HW.GetDefContext()->DSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
 }
 
 void vkSamplerStateCache::CSApplySamplers(HArray &samplers)
@@ -158,7 +158,7 @@ void vkSamplerStateCache::CSApplySamplers(HArray &samplers)
 	u32 uiMin;
 	u32 uiMax;
 	PrepareSamplerStates(samplers, pSS, m_aCSSamplers, uiMin, uiMax);
-	HW.pContext->CSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
+	HW.GetDefContext()->CSSetSamplers(uiMin, uiMax - uiMin + 1, &pSS[uiMin]);
 }
 #endif
 

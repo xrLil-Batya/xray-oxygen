@@ -317,7 +317,7 @@ void CRenderTarget::phase_bloom	()
 	if (_menu_pp)			
 	{
 		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		HW.pContext->ClearRenderTargetView( RCache.get_RT(), ColorRGBA);
+		HW.GetDefContext()->ClearRenderTargetView( RCache.get_RT(), ColorRGBA);
 	};
 
 	// re-enable z-buffer

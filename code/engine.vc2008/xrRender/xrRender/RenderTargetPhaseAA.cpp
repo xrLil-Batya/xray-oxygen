@@ -9,7 +9,7 @@ void CRenderTarget::ProcessFXAA()
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
 	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_pp_antialiasing->E[1]);
-	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
+	HW.GetDefContext()->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 }
 
 void CRenderTarget::ProcessTAA()
@@ -17,7 +17,7 @@ void CRenderTarget::ProcessTAA()
 	// Temporal AA passing
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_pp_taa->E[0]);
-	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
+	HW.GetDefContext()->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 }
 
 void CRenderTarget::ProcessDLAA()
@@ -26,7 +26,7 @@ void CRenderTarget::ProcessDLAA()
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
 
 	RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_2, s_pp_antialiasing->E[5]);
-	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
+	HW.GetDefContext()->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 }
 
 void CRenderTarget::ProcessSMAA()
@@ -102,7 +102,7 @@ void CRenderTarget::ProcessSMAA()
 	RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
-	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
+	HW.GetDefContext()->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 }
 	
 void CRenderTarget::PhaseAA()

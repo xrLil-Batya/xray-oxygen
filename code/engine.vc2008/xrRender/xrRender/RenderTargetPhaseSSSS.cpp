@@ -32,7 +32,7 @@ void CRenderTarget::PhaseSSSS()
 		params.y = ps_r_prop_ss_blend;
 #ifdef USE_DX11
 		RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic, s_ssss_mrmnwar->E[4], &consts);
-		HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
+		HW.GetDefContext()->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
 #else
 		RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic_0, s_ssss_mrmnwar->E[4], &consts);
 #endif
@@ -65,6 +65,6 @@ void CRenderTarget::PhaseSSSS()
 		// Combining sunshafts texture and image for further processing
 		params.z = 0.0f;
 		RenderScreenQuad(Device.dwWidth, Device.dwHeight, rt_Generic, s_ssss_ogse->E[4], &consts);
-		HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
+		HW.GetDefContext()->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
 	}
 }

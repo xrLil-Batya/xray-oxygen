@@ -218,6 +218,9 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 		R_CHK(pContext->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), (void**)& pAnnotation));
 	}
 
+	R_CHK(pDevice->CreateDeferredContext(0, &pContextDeffered[0]));
+	SetLocalData(&pContextCmdList[0], pContext);
+
 	_SHOW_REF("* CREATE: DeviceREF:", HW.pDevice);
 	//	Create render target and depth-stencil views here
 	UpdateViews();
@@ -433,7 +436,6 @@ struct _uniq_mode
 	bool operator() (LPCSTR _other) { return !stricmp(_val, _other); }
 };
 
-#ifndef _EDITOR
 void CHW::FreeVidModeList()
 {
 	for (int i = 0; vid_mode_token[i].name; i++)
@@ -540,4 +542,25 @@ void CHW::UpdateViews()
 
 	_RELEASE(pDepthStencil);
 }
-#endif
+
+struct SDefferedData 
+{
+	ID3D11DeviceContext* pContext;
+	ID3D11CommandList**	lpCommandList;
+};
+
+__declspec(thread) SDefferedData MtDefferedData = { nullptr, nullptr };
+ID3D11DeviceContext* CHW::GetDefContext()
+{
+	return MtDefferedData.pContext;
+}
+
+ID3D11CommandList** CHW::GetCmdList()
+{
+	return MtDefferedData.lpCommandList;
+}
+
+void CHW::SetLocalData(ID3D11CommandList** pList, ID3D11DeviceContext* pContextExt)
+{
+	MtDefferedData = { pContextExt, pList };
+}

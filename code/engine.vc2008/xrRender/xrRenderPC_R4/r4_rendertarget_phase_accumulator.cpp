@@ -21,7 +21,7 @@ void	CRenderTarget::phase_accumulator()
 		reset_light_marker();
 		
 		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		HW.pContext->ClearRenderTargetView( rt_Accumulator->pRT, ColorRGBA);
+		HW.GetDefContext()->ClearRenderTargetView( rt_Accumulator->pRT, ColorRGBA);
 
 		// Stencil	- draw only where stencil >= 0x1
 		RCache.set_Stencil					(TRUE,D3D11_COMPARISON_LESS_EQUAL,0x01,0xff,0x00);
@@ -44,7 +44,7 @@ void	CRenderTarget::phase_vol_accumulator()
 		m_bHasActiveVolumetric = true;
 
 		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		HW.pContext->ClearRenderTargetView(rt_Volumetric->pRT, ColorRGBA);
+		HW.GetDefContext()->ClearRenderTargetView(rt_Volumetric->pRT, ColorRGBA);
 	}
 
 	RCache.set_Stencil							(FALSE);

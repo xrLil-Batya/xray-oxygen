@@ -204,7 +204,7 @@ void CTexture::ProcessStaging()
 		VERIFY(!"CTexture::ProcessStaging unsupported dimensions.");
 	}
 
-	HW.pContext->CopyResource(pTargetSurface, pSurface);
+	HW.GetDefContext()->CopyResource(pTargetSurface, pSurface);
 
 	flags.bLoadedAsStaging = FALSE;
 
@@ -272,7 +272,7 @@ void CTexture::apply_theora(u32 dwStage)
 		u32 _w = pTheora->Width(false);
 
 #ifdef USE_DX11
-		R_CHK(HW.pContext->Map(T2D, 0, D3D_MAP_WRITE_DISCARD, 0, &mapData));
+		R_CHK(HW.GetDefContext()->Map(T2D, 0, D3D_MAP_WRITE_DISCARD, 0, &mapData));
 #else
 		R_CHK(T2D->Map(0, D3D_MAP_WRITE_DISCARD, 0, &mapData));
 #endif
@@ -281,7 +281,7 @@ void CTexture::apply_theora(u32 dwStage)
 		pTheora->DecompressFrame((u32*)mapData.pData, _w - rect.right, _pos);
 		VERIFY(u32(_pos) == rect.bottom*_w);
 #ifdef USE_DX11
-		HW.pContext->Unmap(T2D, 0);
+		HW.GetDefContext()->Unmap(T2D, 0);
 #else
 		T2D->Unmap(0);
 #endif
@@ -299,7 +299,7 @@ void CTexture::apply_avi(u32 dwStage)
 
 		// AVI
 #ifdef USE_DX11
-		R_CHK(HW.pContext->Map(T2D, 0, D3D_MAP_WRITE_DISCARD, 0, &mapData));
+		R_CHK(HW.GetDefContext()->Map(T2D, 0, D3D_MAP_WRITE_DISCARD, 0, &mapData));
 #else
 		R_CHK(T2D->Map(0, D3D_MAP_WRITE_DISCARD, 0, &mapData));
 #endif
@@ -307,7 +307,7 @@ void CTexture::apply_avi(u32 dwStage)
 		BYTE* ptr; pAVI->GetFrame(&ptr);
 		std::memcpy(mapData.pData, ptr, pAVI->m_dwWidth*pAVI->m_dwHeight * 4);
 #ifdef USE_DX11
-		HW.pContext->Unmap(T2D, 0);
+		HW.GetDefContext()->Unmap(T2D, 0);
 #else
 		T2D->Unmap(0);
 #endif

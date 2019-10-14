@@ -148,5 +148,5 @@ void CRenderTarget::phase_pp		()
 	// D3D10/D3D11 can't use the same RT both as input and output
 	// so we need to render in one and then copy in another...
 	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
-	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
+	HW.GetDefContext()->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 }
