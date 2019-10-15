@@ -39,13 +39,20 @@ void CRenderTarget::phase_combine()
 	// low/hi RTs
 	if (!RImplementation.o.dx10_msaa)
 	{
+		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+		HW.GetDefContext()->ClearRenderTargetView(rt_Generic_0->pRT, ColorRGBA);
+		HW.GetDefContext()->ClearRenderTargetView(rt_Generic_1->pRT, ColorRGBA);
+		
 		u_setrt(rt_Generic_0, rt_Generic_1, nullptr, HW.pBaseZB);
-		RCache.Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
+//		RCache.Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 	else
 	{
+		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+		HW.GetDefContext()->ClearRenderTargetView(rt_Generic_0_r->pRT, ColorRGBA);
+		HW.GetDefContext()->ClearRenderTargetView(rt_Generic_1_r->pRT, ColorRGBA);
 		u_setrt(rt_Generic_0_r, rt_Generic_1_r, nullptr, RImplementation.Target->rt_MSAADepth->pZRT);
-		RCache.Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
+//		RCache.Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 
 	RCache.set_Stencil	(FALSE);
@@ -191,6 +198,9 @@ void CRenderTarget::phase_combine()
 		PIX_EVENT(phase_combine_volumetric);
 		phase_combine_volumetric();
 	}
+	
+	// Perform blooming filter and distortion if needed
+	RCache.set_Stencil	(FALSE);
 
 	if (RImplementation.o.dx10_msaa)
 	{
@@ -200,7 +210,6 @@ void CRenderTarget::phase_combine()
 	}
 
 	// Blooming filter
-	RCache.set_Stencil(FALSE);
 	phase_bloom(); // HDR RT invalidated here
 
 	// Distortion filter
@@ -210,14 +219,15 @@ void CRenderTarget::phase_combine()
 		RCache.set_CullMode			(CULL_CCW);
 		RCache.set_Stencil			(FALSE);
 		RCache.set_ColorWriteEnable	();
-
+		
+			
 		// rt_Generic_1: xy - displacement, z - bloom factor, w - opacity
 		if (!RImplementation.o.dx10_msaa)
 			u_setrt(rt_Generic_1, nullptr, nullptr, HW.pBaseZB);
 		else
 			u_setrt(rt_Generic_1_r, nullptr, nullptr, RImplementation.Target->rt_MSAADepth->pZRT);
 
-		RCache.Clear(0L, nullptr, D3DCLEAR_TARGET, color_rgba(127, 127, 0, 0), 1.0f, 0L);
+		HW.GetDefContext()->ClearRenderTargetView(RImplementation.o.dx10_msaa ? rt_Generic_1_r : rt_Generic_1, color_rgba(127, 127, 0, 0));
 		RImplementation.r_dsgraph_render_distort();
 	}
 	

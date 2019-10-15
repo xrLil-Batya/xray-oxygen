@@ -31,7 +31,7 @@ void CBackend::OnFrameEnd	()
 
 void CBackend::OnFrameBegin	()
 {
-	HW.SetLocalData(&HW.pContextCmdList[0], HW.GetDefContext()->pContextDeffered[0]);
+	HW.SetLocalData(&HW.pContextCmdList[0], HW.pContextDeffered[0]);
 	
 	Invalidate();
 	//	DX9 sets base rt nd base zb by default

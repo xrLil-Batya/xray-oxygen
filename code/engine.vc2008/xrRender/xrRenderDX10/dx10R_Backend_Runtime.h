@@ -225,7 +225,7 @@ IC void CBackend::Compute(UINT ThreadGroupCountX, UINT ThreadGroupCountY, UINT T
 
 inline void CBackend::ResolveSubresource(ID3DResource *pDstResource, UINT DstSubresource, ID3DResource *pSrcResource, UINT SrcSubresource, DXGI_FORMAT Format)
 {
-	HW.pContext->ResolveSubresource	(pDstResource, DstSubresource, pSrcResource, SrcSubresource, Format);
+	HW.GetDefContext()->ResolveSubresource(pDstResource, DstSubresource, pSrcResource, SrcSubresource, Format);
 }
 
 inline void CBackend::Clear(u32 Count, const D3DRECT* pRects, u32 Flags, u32 Color, float Z, u32 Stencil)
