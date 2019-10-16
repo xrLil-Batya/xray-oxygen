@@ -227,7 +227,7 @@ void CRenderTarget::phase_combine()
 		else
 			u_setrt(rt_Generic_1_r, nullptr, nullptr, RImplementation.Target->rt_MSAADepth->pZRT);
 
-		HW.GetDefContext()->ClearRenderTargetView(RImplementation.o.dx10_msaa ? rt_Generic_1_r : rt_Generic_1, color_rgba(127, 127, 0, 0));
+		HW.GetDefContext()->ClearRenderTargetView(RImplementation.o.dx10_msaa ? rt_Generic_1_r->pRT : rt_Generic_1->pRT, color_rgba(127, 127, 0, 0));
 		RImplementation.r_dsgraph_render_distort();
 	}
 	

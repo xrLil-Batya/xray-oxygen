@@ -6,7 +6,6 @@
 #include "HOM.h"
 #include "occRasterizer.h"
 #include "../../xrEngine/GameFont.h"
-#include "../../xrEngine/DirectXMathExternal.h"
 
 #include "dxRenderDeviceRender.h"
  
