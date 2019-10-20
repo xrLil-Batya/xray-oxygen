@@ -338,20 +338,18 @@ void CAI_Stalker::OnItemTake			(CInventoryItem *inventory_item)
 	m_sell_info_actuality		= false;
 }
 
-void CAI_Stalker::OnItemDrop			(CInventoryItem *inventory_item, bool just_before_destroy)
+void CAI_Stalker::OnItemDrop(CInventoryItem *inventory_item, bool just_before_destroy)
 {
-	CObjectHandler::OnItemDrop	(inventory_item, just_before_destroy);
+	CObjectHandler::OnItemDrop(inventory_item, just_before_destroy);
 
-	m_item_actuality			= false;
-	m_sell_info_actuality		= false;
+	m_item_actuality = false;
+	m_sell_info_actuality = false;
 
 	if (!g_Alive())
 		return;
 
 	if (!critically_wounded())
 		return;
-
-//	VERIFY						(inventory().ActiveItem());
 
 	if (inventory().ActiveItem() && (inventory().ActiveItem() != inventory_item))
 		return;
@@ -569,39 +567,46 @@ public:
 
 IC BOOL ray_query_callback	(collide::rq_result& result, LPVOID params)
 {
-	ray_query_param						*param = (ray_query_param*)params;
-	float								power = param->m_holder->feel_vision_mtl_transp(result.O,result.element);
-	param->m_power						*= power;
+	ray_query_param *param = (ray_query_param*)params;
+	float power = param->m_holder->feel_vision_mtl_transp(result.O,result.element);
+	param->m_power *= power;
 
-//	if (power >= .05f) {
-//		param->m_pick_distance			= result.range;
-//		return							(true);
-//	}
-
-	if (!result.O) {
+	if (!result.O) 
+	{
+		// статический объект
+		// получить треугольник и узнать его материал
+		CDB::TRI* T   = Level().ObjectSpace.GetStaticTris() + result.element;
+		SGameMtl* mtl = GMLib.GetMaterialByIdx( T->material );
+		
+		// Если материал полностью простреливаемый, продолжаем
+		// трассировку.
+		if (fsimilar( mtl->fShootFactor, 1.0f, EPS))
+			return true;
+		
 		if (param->m_power > param->m_power_threshold)
-			return						(true);
+			return true;
 
-		param->m_pick_distance			= result.range;
-		return							(false);
+		param->m_pick_distance = result.range;
+		return false;
 	}
 
-	CEntityAlive						*entity_alive = smart_cast<CEntityAlive*>(result.O);
-	if (!entity_alive) {
+	CEntityAlive *pEntityAlive = smart_cast<CEntityAlive*>(result.O);
+	if (!pEntityAlive)
+	{
 		if (param->m_power > param->m_power_threshold)
-			return						(true);
+			return (true);
 
-		param->m_pick_distance			= result.range;
-		return							(false);
+		param->m_pick_distance = result.range;
+		return (false);
 	}
 
-	if (param->m_holder->is_relation_enemy(entity_alive))
-		param->m_can_kill_enemy			= true;
+	if (param->m_holder->is_relation_enemy(pEntityAlive))
+		param->m_can_kill_enemy = true;
 	else
-		param->m_can_kill_member		= true;
+		param->m_can_kill_member = true;
 
-	param->m_pick_distance				= result.range;
-	return								(false);
+	param->m_pick_distance = result.range;
+	return (false);
 }
 
 void CAI_Stalker::can_kill_entity		(const Fvector &position, const Fvector &direction, float distance, collide::rq_results& rq_storage)
