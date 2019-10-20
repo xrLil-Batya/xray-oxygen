@@ -28,11 +28,8 @@ struct SCRIPT_API raii_guard
 	}
 }; // struct raii_guard
 
-class SCRIPT_API CVMLua
+class SCRIPT_API CVMLua : public TNonCopyable
 {
-	CVMLua(const CVMLua &) = delete;
-	CVMLua &operator= (const CVMLua &) = delete;
-
 	lua_State * m_virtual_machine;
 
 public:

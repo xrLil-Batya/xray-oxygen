@@ -2,12 +2,12 @@
 #include "../xrRender/light.h"
 #include "../xrRender/FBasicVisual.h"
 
-		smapvis::smapvis	()
+smapvis::smapvis	()
 {
 	invalidate				();
 	frame_sleep				= 0;
 }
-		smapvis::~smapvis	()
+smapvis::~smapvis	()
 {
 	flushoccq				();
 	invalidate				();

@@ -3,23 +3,19 @@
 //	Author		: Dmitriy Iassenev
 //	Copyright (C) GSC Game World - 2009
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef DOORS_ACTOR_H_INCLUDED
-#define DOORS_ACTOR_H_INCLUDED
-
+#pragma once
 #include "doors.h"
 
 class CAI_Stalker;
 
-namespace doors {
+namespace doors 
+{
 
-class actor {
+class actor : public TNonCopyable
+{
 public:
 						actor			( CAI_Stalker const& object );
-                        actor(const actor&) = delete;
 	virtual				~actor			( );
-
-    actor&              operator= (const actor&) = delete;
 
 	Fvector const&		get_position	( ) const;
 	bool				need_update		( ) const;
@@ -61,5 +57,3 @@ private:
 }; // class actor
 
 } // namespace doors
-
-#endif // #ifndef DOORS_ACTOR_H_INCLUDED

@@ -12,16 +12,13 @@ class CGameObject;
 class IKinematics;
 class IKinematicsAnimated;
 
-namespace aimers {
-
-class base
+namespace aimers 
+{
+class base: public TNonCopyable
 {
 public:
 	base(CGameObject* object, LPCSTR animation_id, bool animation_start, Fvector const& target);
-
-    base(const base&) = delete;
-    base& operator= (const base&) = delete;
-
+	
 protected:
 	template <u32 bone_count0, u32 bone_count1>
 IC	void fill_bones			(u32 const (&bones)[bone_count0], u16 const (&bones_ids)[bone_count1], Fmatrix (&local_bones)[bone_count1], Fmatrix (&global_bones)[bone_count1]);

@@ -14,7 +14,7 @@
 #endif
 
 #include "xrCore_platform.h"
-
+#include "xrLang.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -32,7 +32,6 @@
 #define IC				inline
 #define ICF				__forceinline			// !!! this should be used only in critical places found by PROFILER
 #define ICN				__declspec(noinline)
-#define xr_interface	__interface
 
 #pragma inline_depth	( 254 )
 #pragma inline_recursion( on )
