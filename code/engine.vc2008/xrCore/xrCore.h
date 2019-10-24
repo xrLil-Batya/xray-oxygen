@@ -7,22 +7,14 @@
 #	define MASTER_GOLD
 #endif // DEBUG
 
-#pragma warning(disable:4996)
-#if !defined(_MT)
-	// multithreading disabled
-#error Please enable multi-threaded library...
-#endif
-
 #include "xrCore_platform.h"
 #include "xrLang.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <math.h>
-#include <string.h>
 #include <typeinfo>
 #include <cinttypes>
-#include <chrono>
 
 // inline control - redefine to use compiler's heuristics ONLY
 // it seems "IC" is misused in many places which cause code-bloat
@@ -35,12 +27,6 @@
 
 #pragma inline_depth	( 254 )
 #pragma inline_recursion( on )
-#pragma intrinsic	(abs, fabs, fmod, sin, cos, tan, asin, acos, atan, sqrt, exp, log, log10, strcat, pow, strlen, memset)
-
-#include <time.h>
-// work-around dumb borland compiler
-#define ALIGN(a)		__declspec(align(a))
-#include <sys\utime.h>
 
 // Warnings
 #pragma warning (disable : 4251 )		// object needs DLL interface
@@ -66,7 +52,6 @@
 #include <map>
 #include <utility>
 #include <string>
-#include <string_view>
 
 #include <unordered_map>
 #include <unordered_set>
@@ -98,8 +83,8 @@
 
 #include "clsid.h"
 
-#include "xrsharedmem.h"
-#include "xrstring.h"
+#include "xrSharedMem.h"
+#include "xrString.h"
 #include "xr_resource.h"
 #include "rt_compressor.h"
 #include "xr_shared.h"
@@ -156,19 +141,6 @@ using RTokenVec = xr_vector<xr_rtoken>;
 #include "FTimer.h"
 #include "intrusive_ptr.h"
 #include "net_utils.h"
-
-// Check if user included some files, that a prohibited
-#ifdef _MUTEX_
-#error <mutex> file is prohibited, please use xrCriticalSection and xrCriticalSectionGuard instead
-#endif
-// Ban std::thread also
-#ifdef _THREAD_
-#error <thread> is prohibited, please use TBB Task, or _beginthreadex
-#endif
-
-#ifdef _CHARCONV_
-#error <charconv> is prohibited, it doesn't exist on all supported platforms
-#endif
 
 // destructor
 template <class T>
