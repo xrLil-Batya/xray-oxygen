@@ -55,7 +55,7 @@ private:
 					TNonCopyable	&operator=(const TNonCopyable &) = delete;
 };
 
-#define TMakeSingleton(T)
+#define TMakeSingleton(T)				\
 	public:                             \
 	T(T const&) = delete;               \
 	void operator=(T const&) = delete;  \
