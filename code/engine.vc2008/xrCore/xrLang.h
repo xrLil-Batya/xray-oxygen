@@ -47,10 +47,9 @@
 #define xr_interface __interface
 #define ALIGN(a) __declspec(align(a))
 
-class TNonCopyable
+struct TNonCopyable
 {
 	virtual			~TNonCopyable	() = default;
-private:
 					TNonCopyable	(const TNonCopyable &) = delete;
 					TNonCopyable	&operator=(const TNonCopyable &) = delete;
 };
