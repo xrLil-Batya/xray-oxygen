@@ -47,11 +47,15 @@
 #define xr_interface __interface
 #define ALIGN(a) __declspec(align(a))
 
-struct TNonCopyable
+class TNonCopyable
 {
-	virtual			~TNonCopyable	() = default;
-					TNonCopyable	(const TNonCopyable &) = delete;
-					TNonCopyable	&operator=(const TNonCopyable &) = delete;
+public:
+    TNonCopyable() = default;
+    ~TNonCopyable() = default;
+
+private:
+    TNonCopyable(const TNonCopyable&) = delete;
+    TNonCopyable& operator=(const TNonCopyable&) = delete;
 };
 
 #define TMakeSingleton(T)				\
