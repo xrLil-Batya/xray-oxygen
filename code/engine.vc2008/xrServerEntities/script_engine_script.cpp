@@ -94,7 +94,7 @@ struct profile_timer_script
 		return accumulator < profile_timer.accumulator;
 	}
 
-	void start()
+	IC void start()
 	{
 		if (recurse_mark) 
 		{

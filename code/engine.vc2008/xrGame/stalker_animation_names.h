@@ -7,16 +7,16 @@
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-extern constexpr char* state_names			[];
-extern constexpr char* weapon_names			[];
-extern constexpr char* weapon_action_names	[];
-extern constexpr char* food_names			[];
-extern constexpr char* food_action_names	[];
-extern constexpr char* movement_names		[];
-extern constexpr char* movement_action_names[];
-extern constexpr char* in_place_names		[];
-extern constexpr char* global_names			[];
-extern constexpr char* head_names			[];
+extern const char* state_names			[];
+extern const char* weapon_names			[];
+extern const char* weapon_action_names	[];
+extern const char* food_names			[];
+extern const char* food_action_names	[];
+extern const char* movement_names		[];
+extern const char* movement_action_names[];
+extern const char* in_place_names		[];
+extern const char* global_names			[];
+extern const char* head_names			[];
 
 enum ECriticalWoundType 
 {
