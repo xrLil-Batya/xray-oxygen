@@ -84,8 +84,8 @@ struct ENGINE_API VisMask final
 
 	IC	void band (const VisMask& _second)
 	{
-		_visimask. and (_second._visimask.flags);
-		_visimask_ex. and (_second._visimask_ex.flags);
+		_visimask. maskAnd (_second._visimask.flags);
+		_visimask_ex. maskAnd (_second._visimask_ex.flags);
 	}
 
 	IC	void invert()

@@ -38,4 +38,16 @@
   <Type Name="CAI_Stalker">
     <DisplayString>{NameObject.p_->value, s}, $(Type)</DisplayString>
   </Type>
+
+  <Type Name="xrLazyVector&lt;*&gt;">
+    <DisplayString>Size: {_size}</DisplayString>
+    <Expand>
+      <Item Name="[size]" ExcludeView="simple">_size</Item>
+      <Item Name="[capacity]" ExcludeView="simple">_capacity</Item>
+      <ArrayItems>
+        <Size>_size</Size>
+        <ValuePointer>_container</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
 </AutoVisualizer>

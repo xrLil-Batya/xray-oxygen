@@ -1,9 +1,10 @@
 //{{NO_DEPENDENCIES}}
-// Р’РєР»СЋС‡Р°РµРјС‹Р№ С„Р°Р№Р», СЃРѕР·РґР°РЅРЅС‹Р№ РІ Microsoft Visual C++.
-// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ xrCore.rc
+// Включаемый файл, созданный в Microsoft Visual C++.
+// Используется xrCore.rc
 //
 #define IDD_STOP                        101
 #define IDD_CRASH                       103
+#define IDD_CRASH2                      104
 #define IDC_DESC                        1001
 #define IDC_FILE                        1002
 #define IDC_LINE                        1003
@@ -14,7 +15,10 @@
 #define IDC_CRASHOKBTN                  1007
 #define IDC_CRASHTYPE                   1008
 #define IDC_CRASHNAME                   1009
+#define IDC_SYSLINK1                    1009
 #define IDC_CRASHEXPERSSION             1010
+#define IDC_EDIT1                       1010
+#define IDC_CRASHREPORT                 1010
 #define IDC_CRASHARG1                   1011
 #define IDC_CRASHARG2                   1012
 #define IDC_CRASHARG3                   1013
@@ -24,9 +28,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        104
+#define _APS_NEXT_RESOURCE_VALUE        106
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1009
+#define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

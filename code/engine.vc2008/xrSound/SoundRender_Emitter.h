@@ -29,8 +29,6 @@ public:
 	};
 
 public:
-	u32 dbg_ID;
-
 	CSoundRender_Target* target;
 	ref_sound_data_ptr owner_data;
 
@@ -59,7 +57,7 @@ public:
 	float fTimeToStop;			// time to "Stop"
 	float fTimeToPropagade;
 
-	u32 marker;
+	u32 lastUpdateFrame;
 	void i_stop();
 
 	void set_cursor(u32 p);

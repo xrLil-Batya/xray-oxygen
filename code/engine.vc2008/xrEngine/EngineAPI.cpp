@@ -48,8 +48,7 @@ void CEngineAPI::InitializeRenderer()
 	if (psDeviceFlags.test(rsR4))
 	{
 		// try to initialize R4
-		Msg("Loading DLL: %s", r4_name);
-		hRender = LoadLibrary(r4_name);
+		hRender = Core.LoadModule(r4_name);
 		if (!hRender)
 		{
 			// try to load R4
@@ -91,8 +90,7 @@ void CEngineAPI::Initialize(void)
 		if (strstr(Core.Params, "-debug_game"))
 			g_name = "xrGame_debug";
 
-		Msg				("Loading DLL: %s",g_name);
-		hGame			= LoadLibrary	(g_name);
+		hGame			= Core.LoadModule(g_name);
 		if (!hGame)
 		{
 			R_CHK(GetLastError());

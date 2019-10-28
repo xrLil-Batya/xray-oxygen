@@ -32,7 +32,7 @@ ENGINE_API BOOL g_bRendering = FALSE;
 /////////////////////////////////////
 BOOL		g_bLoaded		= FALSE;
 bool		g_bL			= false;
-ref_light	precache_light	= nullptr;
+ref_light	precache_light;
 /////////////////////////////////////
 
 BOOL CRenderDevice::Begin	()

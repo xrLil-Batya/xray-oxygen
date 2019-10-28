@@ -82,6 +82,9 @@
     <Filter Include="Platform\XboxOne">
       <UniqueIdentifier>{d4ae2434-9597-4a21-bed2-86c28438bccb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="containers">
+      <UniqueIdentifier>{f9da55c7-edd6-462d-9740-dae6e53f648b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -239,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxAdvApi.cpp">
       <Filter>Platform\XboxOne</Filter>
+    </ClCompile>
+    <ClCompile Include="xrDebugSymbol.cpp">
+      <Filter>Debug core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -499,6 +505,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxAdvApi.h">
       <Filter>Platform\XboxOne</Filter>
+    </ClInclude>
+    <ClInclude Include="xrLazyVector.h">
+      <Filter>containers</Filter>
+    </ClInclude>
+    <ClInclude Include="xrDebugSymbol.h">
+      <Filter>Debug core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

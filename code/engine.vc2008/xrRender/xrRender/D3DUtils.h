@@ -24,7 +24,7 @@ struct SPrimitiveBuffer{
     void 			RenderDIP()	{DU_DRAW_DIP(p_type,pGeom,0,0,v_cnt,0,p_cnt);}
     void 			RenderDP()	{DU_DRAW_DP	(p_type,pGeom,0,p_cnt);}
 public:
-                            SPrimitiveBuffer():OnRender(nullptr),pGeom(nullptr){;}
+                            SPrimitiveBuffer() : OnRender(nullptr) {}
     void					CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF, LPVOID vertices, u32 _v_cnt, u16* indices=nullptr, u32 _i_cnt=0);
     void					Destroy();
     void					Render(){OnRender();}
@@ -62,9 +62,6 @@ public:
 public:
 	CDrawUtilities()
     {
-        vs_L	= nullptr;
-        vs_TL	= nullptr;
-        vs_LIT	= nullptr;
         m_DD_pv			= nullptr;
         m_DD_pv_start	= nullptr;
         m_DD_base		= 0;

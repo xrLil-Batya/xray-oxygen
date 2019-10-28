@@ -18,7 +18,7 @@
 #define		PRIORITY_NORMAL	8
 #define		PRIORITY_LOW	4
 
-void resptrcode_texture::create(LPCSTR _name)
+void ref_texture::create(LPCSTR _name)
 {
 	_set(DEV->_CreateTexture(_name));
 }

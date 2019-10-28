@@ -103,7 +103,7 @@ public:
         Tvector kDirection;
         kDirection.set(dir.dotproduct(m_rotate.i),dir.dotproduct(m_rotate.j),dir.dotproduct(m_rotate.k));
 
-        T fT0 = 0.0f, fT1 = type_max(T);
+        T fT0 = 0.0f, fT1 = type_max<T>();
         if (intersect(kOrigin,kDirection,m_halfsize, fT0,fT1)){
             bool bPick=false;
             if ( fT0 > 0.0f ){
@@ -116,15 +116,14 @@ public:
         }
         return false;
     }
+
+	BOOL _valid(const _obb<T>& m)
+	{
+		return _valid(m_rotate) && _valid(m_translate) && _valid(m_halfsize);
+	}
 };
 
 typedef		_obb<float>		Fobb;
 typedef		_obb<double>	Dobb;
-
-template <class T>
-BOOL	_valid			(const _obb<T>& m)		
-{ 
-	return _valid(m_rotate) && _valid(m_translate) && _valid(m_halfsize);
-}
 
 #endif

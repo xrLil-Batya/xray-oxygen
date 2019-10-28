@@ -30,8 +30,8 @@ public:
 	bool bReady;
 
 	CTimer Timer;
-	float fTimer_Value;
-	float fTimer_Delta;
+	float lastTimestamp;
+	float lastDeltaTime;
 	sound_event* Handler;
 
 protected:
@@ -46,11 +46,10 @@ protected:
 
 	// Containers
 	xr_vector<CSoundRender_Source*>	s_sources;
-	xr_vector<CSoundRender_Emitter*> s_emitters;
-	u32 s_emitters_u;			// emitter update marker
-	xr_vector<CSoundRender_Target*>	s_targets;
-	xr_vector<CSoundRender_Target*>	s_targets_defer;
-	u32									s_targets_pu;			// parameters update
+	xr_vector<CSoundRender_Emitter*> emitters;
+	u32 lastUpdateFrame;			// emitter update marker
+	xr_vector<CSoundRender_Target*>	targets;
+	xr_list<CSoundRender_Target*>	targetShouldUpdateLater;
 	SoundEnvironment_LIB* s_environment;
 	CSoundRender_Environment s_user_environment;
 

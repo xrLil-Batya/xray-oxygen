@@ -4,10 +4,13 @@
 #include "UIMessages.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "uiabstract.h"
-#include "../xrCore/XMLCore/Expression.h"
+#include "xrCore/XMLCore/Expression.h"
+#include "xrCore/xrLazyVector.h"
 
-template <typename T, typename allocator = xalloc<T>>
-using ui_list = xr_list<T, allocator>; // xr_vector<T, allocator>;
+//template <typename T, typename allocator = xalloc<T>>
+//using ui_list = xr_list<T, allocator>; // xr_vector<T, allocator>;
+template <typename T>
+using ui_list = xrLazyVector<T>; // xr_vector<T, allocator>;
 class UI_API CUIWindow  : public CUISimpleWindow
 {
 public:

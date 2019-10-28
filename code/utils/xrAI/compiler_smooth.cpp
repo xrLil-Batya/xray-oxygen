@@ -44,8 +44,8 @@ BOOL	ValidNode(vertex& N)
 	for (u32 i=0; i<dwCount; i++)
 	{
 		tri&		D = tris.last();
-		CDB::RESULT&rp = XRC.r_begin()[i];
-		*(Level.get_tris()+XRC.r_begin()[i].id);
+		CDB::RESULT&rp = XRC.r_realBegin()[i];
+		//*(Level.get_tris()+XRC.r_begin()[i].id);
 
 		D.v[0].set	(rp.verts[0]);
 		D.v[1].set	(rp.verts[1]);

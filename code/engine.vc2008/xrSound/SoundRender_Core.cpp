@@ -44,15 +44,14 @@ CSoundRender_Core::CSoundRender_Core()
 	geom_SOM = nullptr;
 	s_environment = nullptr;
 	Handler = nullptr;
-	s_targets_pu = 0;
-	s_emitters_u = 0;
+	lastUpdateFrame = 0;
 	e_current.set_identity();
 	e_target.set_identity();
 	bListenerMoved = false;
 	bReady = false;
 	bLocked = false;
-	fTimer_Value = Timer.GetElapsed_sec();
-	fTimer_Delta = 0.0f;
+	lastTimestamp = Timer.GetElapsed_sec();
+	lastDeltaTime = 0.0f;
 	m_iPauseCounter = 1;
 
 	effect = 0;
@@ -112,17 +111,17 @@ void CSoundRender_Core::_clear()
 	s_sources.clear();
 
 	// remove emiters
-	for (u32 eit = 0; eit < s_emitters.size(); ++eit)
-		xr_delete(s_emitters[eit]);
-	s_emitters.clear();
+	for (u32 eit = 0; eit < emitters.size(); ++eit)
+		xr_delete(emitters[eit]);
+	emitters.clear();
 
 	g_target_temp_data.clear();
 }
 
 void CSoundRender_Core::stop_emitters()
 {
-	for (u32 eit = 0; eit < s_emitters.size(); ++eit)
-		s_emitters[eit]->stop(false);
+	for (u32 eit = 0; eit < emitters.size(); ++eit)
+		emitters[eit]->stop(false);
 }
 
 int CSoundRender_Core::pause_emitters(bool val)
@@ -130,8 +129,8 @@ int CSoundRender_Core::pause_emitters(bool val)
 	m_iPauseCounter += val ? +1 : -1;
 	VERIFY(m_iPauseCounter >= 0);
 
-	for (u32 it = 0; it < s_emitters.size(); ++it)
-		((CSoundRender_Emitter*)s_emitters[it])->pause(val, val ? m_iPauseCounter : m_iPauseCounter + 1);
+	for (u32 it = 0; it < emitters.size(); ++it)
+		((CSoundRender_Emitter*)emitters[it])->pause(val, val ? m_iPauseCounter : m_iPauseCounter + 1);
 
 	return m_iPauseCounter;
 }
@@ -520,11 +519,11 @@ bool CSoundRender_Core::i_efx_commit_setting()
 
 void CSoundRender_Core::object_relcase(CObject* obj)
 {
-	if (obj) for (u32 eit = 0; eit < s_emitters.size(); eit++)
+	if (obj) for (u32 eit = 0; eit < emitters.size(); eit++)
 	{
-		if (s_emitters[eit] && s_emitters[eit]->owner_data)
-			if (obj == s_emitters[eit]->owner_data->g_object)
-				s_emitters[eit]->owner_data->g_object = 0;
+		if (emitters[eit] && emitters[eit]->owner_data)
+			if (obj == emitters[eit]->owner_data->g_object)
+				emitters[eit]->owner_data->g_object = 0;
 	}
 }
 

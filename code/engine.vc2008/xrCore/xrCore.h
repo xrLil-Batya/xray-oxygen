@@ -87,6 +87,7 @@
 #include "thread_utils.h"
 #include "xrDebug.h"
 #include "xrMemory.h"
+#include "_std_extensions.h"
 #include "_stl_extensions.h"
 #include "vector.h"
 
@@ -203,6 +204,8 @@ struct XRCORE_API xrCore
 	void		_initialize(const char* ApplicationName, xrLogger::LogCallback cb = 0, BOOL init_fs = TRUE, const char* fs_fname = 0);
 	void		_destroy();
 	IC	void	SetPluginMode() { PluginMode = true; }
+
+	HMODULE LoadModule(LPCSTR ModuleName, bool bAllowFail = false);
 };
 
 extern XRCORE_API xrCore Core;

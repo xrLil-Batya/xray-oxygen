@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include <Windows.h>
+#include "afxres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -36,6 +36,19 @@ BEGIN
     PUSHBUTTON      "Debug",IDC_DEBUG,216,102,102,18,BS_FLAT,WS_EX_TRANSPARENT
 END
 
+IDD_CRASH2 DIALOGEX 0, 0, 309, 176
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_NOFAILCREATE | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Crash"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Continue",IDOK,198,155,50,14
+    PUSHBUTTON      "Break",IDCANCEL,252,155,50,14
+    LTEXT           "Error occured",IDC_STATIC,128,21,44,8
+    CONTROL         "<a href=""https://discord.gg/Gt5GT5x"">https://discord.gg/Gt5GT5x</a>",IDC_SYSLINK1,
+                    "SysLink",WS_TABSTOP,111,39,90,14
+    EDITTEXT        IDC_CRASHREPORT,7,54,295,92,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -52,8 +65,27 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 117
     END
+
+    IDD_CRASH2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 169
+    END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_CRASH2 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 #endif    // Нейтральный resources
 /////////////////////////////////////////////////////////////////////////////

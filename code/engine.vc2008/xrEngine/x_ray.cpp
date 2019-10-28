@@ -234,6 +234,9 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	// Skip intro
 	g_bIntroFinished = true;
 
+	//#DELETE_ME: !
+	R_ASSERT(false);
+
 	g_sLaunchOnExit_app[0] = 0;
 	g_sLaunchOnExit_params[0] = 0;
 

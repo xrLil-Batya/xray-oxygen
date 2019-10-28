@@ -145,7 +145,6 @@ virtual	void	write_vertices		( IWriter	&w )const;
 
 	void	CalcNormal2	()
 	{
-		FPU::m64r		();
 		Fvector			v0,v1,v2,t1,t2,dN;
 		v0.set			(v[0]->P);
 		v1.set			(v[1]->P);

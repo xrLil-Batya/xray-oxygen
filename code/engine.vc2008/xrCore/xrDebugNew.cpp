@@ -17,6 +17,10 @@
 #include <intrin.h>		// for __debugbreak
 #include "cpuid.h"
 #include <DbgHelp.h>
+#include "xrDebugSymbol.h"
+#include "resource.h"
+#include <CommCtrl.h>
+#include <shellapi.h>
 
 /////////////////////////////////////
 XRCORE_API DWORD gMainThreadId = 0xFFFFFFFF;
@@ -44,6 +48,16 @@ static bool error_after_dialog = false;
 static bool bException = false;
 
 LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo);
+
+struct CrashDialogParam
+{
+	bool bCanContinue;
+	LPCSTR CrashReport;
+} sCrashReport;
+
+// static memory for writting report in it (since we can't use memory allocation paths)
+constexpr int ReportMemSize = 1024 * 1024;
+char ReportMem[ReportMemSize];
 
 void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, char* assertion_info, u32 const assertion_info_size)
 {
@@ -126,14 +140,14 @@ void xrDebug::do_exit(HWND hWnd, LPCSTR message)
 #endif
 }
 
-void xrDebug::backend(const char* expression, const char* description, const char* argument0, const char* argument1, const char* file, int line, const char* function, bool &ignore_always)
+void xrDebug::backend(const char* reason, const char* expression, const char *argument0, const char *argument1, const char* file, int line, const char *function)
 {
 	xrCriticalSectionGuard guard(Lock);
 	error_after_dialog = true;
 
 	string4096 assertion_info;
 
-	gather_info(expression, description, argument0, argument1, file, line, function, assertion_info, sizeof(assertion_info));
+	gather_info(reason, expression, argument0, argument1, file, line, function, assertion_info, sizeof(assertion_info));
 
 	if (handler)
 		handler();
@@ -151,13 +165,20 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 	}
 	while (PlatformUtils.ShowCursor(true) < 0);
 
+	if (crashhandler * handlerFuncPtr = Debug.get_crashhandler())
+	{
+		handlerFuncPtr();
+	}
+	if (!IsDebuggerPresent())
+	{
+		WriteMinidump(nullptr);
+	}
 
 //#if !defined(DEBUG) && !defined(MIXED_NEW)
 //	do_exit(gameWindow, assertion_info);
 //#else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
-	//[FX]: Why release don't have skip option? 
-	do_exit2(gameWindow, assertion_info, ignore_always);
+	do_exit2(gameWindow, assertion_info);
 //#endif
 
 	// And we should show window again, damn pause manager
@@ -175,8 +196,9 @@ const char* xrDebug::error2string(long code)
 }
 
 
-void xrDebug::do_exit2(HWND hwnd, const string4096& message, bool& ignore_always)
+void xrDebug::do_exit2(HWND hwnd, const string4096& message)
 {
+#if 0
     int MsgRet = MessageBox(hwnd, message, "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
 
     switch (MsgRet)
@@ -186,43 +208,136 @@ void xrDebug::do_exit2(HWND hwnd, const string4096& message, bool& ignore_always
         ExitProcess(1);
         break;
     case IDIGNORE:
-        ignore_always = true;
+        bIgnoreAlways = true;
         break;
     case IDRETRY:
     default:
 		DebugBreak();
         break;
     }
+#endif
+	if (!ShowCrashDialog(true))
+	{
+		ExitProcess(1);
+	}
 }
 
-void xrDebug::error(long hr, const char* expr, const char *file, int line, const char *function, bool &ignore_always)
+BOOL CALLBACK CrashDialogProc(HWND hwndDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
 {
-	backend(error2string(hr), expr, nullptr, nullptr, file, line, function, ignore_always);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+	{
+		if (sCrashReport.CrashReport != nullptr)
+		{
+			SetDlgItemText(hwndDlg, IDC_CRASHREPORT, sCrashReport.CrashReport);
+		}
+
+		HWND hOkBtn = GetDlgItem(hwndDlg, IDOK);
+		if (sCrashReport.bCanContinue)
+		{
+			EnableWindow(hOkBtn, TRUE);
+		}
+		else
+		{
+			EnableWindow(hOkBtn, FALSE);
+		}
+	}
+	return TRUE;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+			// Continue
+			EndDialog(hwndDlg, TRUE);
+			break;
+		case IDCANCEL:
+			// Break
+			EndDialog(hwndDlg, FALSE);
+			break;
+		}
+
+		return TRUE;
+	case WM_NOTIFY:
+		switch (((LPNMHDR)lParam)->code)
+		{
+		case NM_CLICK:
+		case NM_RETURN:
+		{
+			PNMLINK pNMLink = (PNMLINK)lParam;
+			LITEM   item = pNMLink->item;
+
+			if (item.iLink == 0)
+			{
+				ShellExecuteW(NULL, L"open", item.szUrl, NULL, NULL, SW_SHOW);
+			}
+
+			break;
+		}
+		}
+		break;
+	}
+	return FALSE;
 }
 
-void xrDebug::error(long hr, const char* expr, const char* e2, const char *file, int line, const char *function, bool &ignore_always)
+bool xrDebug::ShowCrashDialog(bool bCanContinue)
 {
-	backend(error2string(hr), expr, e2, nullptr, file, line, function, ignore_always);
+	void* pStack[64];
+	ZeroMemory(&pStack, sizeof(pStack));
+	u16 framesNum = DebugSymbols.GetCurrentStack(&pStack[0], 64);
+
+	int WriteCursor = 0;
+	WriteCursor += xr_sprintf(&ReportMem[WriteCursor], ReportMemSize - WriteCursor, "Console Params: %s\r\n", Core.Params);
+	WriteCursor += xr_sprintf(&ReportMem[WriteCursor], ReportMemSize - WriteCursor, "\r\n");
+
+	for (u16 i = 0; i < framesNum; ++i)
+	{
+		string1024 SymbolInfo;
+		DebugSymbols.ResolveFrame(pStack[i], SymbolInfo);
+		WriteCursor += xr_sprintf(&ReportMem[WriteCursor], ReportMemSize - WriteCursor, "%s\r\n", SymbolInfo);
+	}
+
+	sCrashReport.bCanContinue = bCanContinue;
+	sCrashReport.CrashReport = &ReportMem[0];
+	// show dialog
+	static HMODULE hCoreModule = GetModuleHandle("xrCore.dll");
+	INT_PTR DialogResult = DialogBoxA(hCoreModule, MAKEINTRESOURCE(IDD_CRASH2), NULL, (DLGPROC)CrashDialogProc);
+
+	// INT_PTR -> bool
+	return !!((BOOL)DialogResult);
 }
 
-void xrDebug::fail(const char *e1, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::error(long hr, const char* expr, const char *file, int line, const char *function)
 {
-	backend("assertion failed", e1, nullptr, nullptr, file, line, function, ignore_always);
+	backend(error2string(hr), expr, nullptr, nullptr, file, line, function);
 }
 
-void xrDebug::fail(const char *e1, const char *e2, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::error(long hr, const char* expr, const char* e2, const char *file, int line, const char *function)
 {
-	backend(e1, e2, nullptr, nullptr, file, line, function, ignore_always);
+	backend(error2string(hr), expr, e2, nullptr, file, line, function);
 }
 
-void xrDebug::fail(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::fail(const char *e1, const char *file, int line, const char *function)
 {
-	backend(e1, e2, e3, nullptr, file, line, function, ignore_always);
+	backend("assertion failed", e1, nullptr, nullptr, file, line, function);
 }
 
-void xrDebug::fail(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::fail(const char *e1, const char *e2, const char *file, int line, const char *function)
 {
-	backend(e1, e2, e3, e4, file, line, function, ignore_always);
+	backend(e1, e2, nullptr, nullptr, file, line, function);
+}
+
+void xrDebug::fail(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function)
+{
+	backend(e1, e2, e3, nullptr, file, line, function);
+}
+
+void xrDebug::fail(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function)
+{
+	backend(e1, e2, e3, e4, file, line, function);
 }
 
 void __cdecl xrDebug::fatal(const char *file, int line, const char *function, const char* F, ...)
@@ -234,9 +349,7 @@ void __cdecl xrDebug::fatal(const char *file, int line, const char *function, co
 	vsprintf(buffer, F, p);
 	va_end(p);
 
-	bool		ignore_always = true;
-
-	backend("Fatal error", "<no expression>", buffer, nullptr, file, line, function, ignore_always);
+	backend("Fatal error", "<no expression>", buffer, nullptr, file, line, function);
 }
 
 using full_memory_stats_callback_type = void(*) ();
@@ -293,23 +406,11 @@ using _PNH = int(__cdecl *)(size_t);
 
 IC void handler_base(const char* reason_string)
 {
-	ClipCursor(NULL);
-    if (crashhandler* handlerFuncPtr = Debug.get_crashhandler())
-    {
-        handlerFuncPtr();
-    }
-	bool alw_ignored = false;
-    if (!IsDebuggerPresent())
-    {
-        WriteMinidump(nullptr);
-    }
-	Debug.backend("Error handler is invoked!", reason_string, nullptr, nullptr, DEBUG_INFO, alw_ignored);
+	Debug.backend("Error handler is invoked!", reason_string, nullptr, nullptr, DEBUG_INFO);
 }
 
 static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *function, const wchar_t *file, unsigned int line, uintptr_t reserved)
 {
-	bool ignore_always = false;
-
 	string4096	expression_,
 		function_,
 		file_;
@@ -334,7 +435,7 @@ static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *
 		xr_strcpy(file_, __FILE__);
 	}
 
-	Debug.backend("Error handler is invoked!", expression_, nullptr, nullptr, file_, line, function_, ignore_always);
+	Debug.backend("Error handler is invoked!", expression_, nullptr, nullptr, file_, line, function_);
 }
 
 IC void pure_call_handler()
@@ -405,6 +506,7 @@ void xrDebug::_initialize()
 	*g_bug_report_file = 0;
 	debug_on_thread_spawn();
 	previous_filter = ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions
+	DebugSymbols.Initialize();
 }
 
 
@@ -630,7 +732,7 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
 LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
 	Log("[FAIL] Type: UNHANDLED EXCEPTION");
-	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 1.3f");
+	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 2.0f");
 	Log("[FAIL] Report: To https://discord.gg/NAp6ZtX");
 
 	crashhandler* pCrashHandler = Debug.get_crashhandler();
@@ -638,6 +740,8 @@ LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo)
 	{
 		pCrashHandler();
 	}
+
+	Debug.ShowCrashDialog(false);
 
     return WriteMinidump(pExceptionInfo);
 }

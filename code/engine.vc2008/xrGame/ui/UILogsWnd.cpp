@@ -238,7 +238,7 @@ void CUILogsWnd::AddNewsItem(GAME_NEWS_DATA& news_data)
 	CUINewsItemWnd*	news_itm	= smart_cast<CUINewsItemWnd*>(news_itm_w);
 	news_itm->Setup				(news_data);
 	
-	m_items_ready.push_back		(news_itm);
+	m_items_ready.push_back		((CUIWindow*)news_itm);
 }
 
 void CUILogsWnd::UpdateChecks( CUIWindow* w, void* d )

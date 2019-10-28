@@ -55,11 +55,14 @@ public:
 	virtual ~IRender_Light()		;
 };
 
-struct ENGINE_API resptrcode_light : public resptr_base<IRender_Light>
+struct ENGINE_API ref_light : public resptr_core<IRender_Light>
 {
+	using RenderLightCore = resptr_core< IRender_Light>;
+	using RenderLightCore::RenderLightCore;
+
+
 	void destroy() { _set(nullptr); }
 };
-using ref_light = resptr_core<IRender_Light,resptrcode_light>;
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Dynamic Glow)
@@ -77,11 +80,13 @@ public:
 	virtual ~IRender_Glow()			;
 };
 
-struct ENGINE_API resptrcode_glow : public resptr_base<IRender_Glow>
+struct ENGINE_API ref_glow : public resptr_core<IRender_Glow>
 {
+	using RenderGlowCore = resptr_core<IRender_Glow>;
+	using RenderGlowCore::RenderGlowCore;
+
 	void destroy () { _set(nullptr);}
 };
-using ref_glow = resptr_core<IRender_Glow,resptrcode_glow>;
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Per-object render-specific data)

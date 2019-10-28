@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <tlhelp32.h>
 #include <shlwapi.h>
+#include <CommCtrl.h>
 ////////////////////////////////////
 #include "../xrCore/xrCore.h"
 
@@ -24,6 +25,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int)
 {
     gModulesLoaded = true;
 
+	InitCommonControls();
+
+	INITCOMMONCONTROLSEX controlEx;
+	controlEx.dwSize = sizeof(controlEx);
+	controlEx.dwICC = ICC_STANDARD_CLASSES | ICC_LINK_CLASS;
+	if (!InitCommonControlsEx(&controlEx))
+	{
+		MessageBoxA(nullptr, "Can't initialize common controls!", "Init error", MB_OK | MB_ICONHAND);
+		return 1;
+	}
+
 	try
 	{
 		// Init X-ray core
@@ -33,6 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int)
 	catch (...)
 	{
 		MessageBoxA(nullptr, "Can't load xrCore!", "Init error", MB_OK | MB_ICONHAND);
+		return 1;
 	}
 
 #ifndef DEBUG
@@ -148,7 +161,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int)
 #endif
 	}
 
-	HMODULE hLib = LoadLibrary("xrEngine.dll");
+	HMODULE hLib = Core.LoadModule("xrEngine.dll");
 	if (hLib == nullptr)
 	{
 		MessageBoxA(nullptr, "Cannot load xrEngine.dll!", "X-Ray Oxygen - Error", MB_OK | MB_ICONERROR);

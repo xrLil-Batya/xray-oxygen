@@ -34,7 +34,7 @@ IC float getLastRP_Scale(CDB::COLLIDER* DB, RayCache& C)
 	{
 		for (u32 I = 0; I<tris_count; I++)
 		{
-			CDB::RESULT& rpinf = DB->r_begin()[I];
+			CDB::RESULT& rpinf = DB->r_realBegin()[I];
 			// Access to texture
 			Level.get_tris()[rpinf.id];
 			b_rc_face& F = g_rc_faces[rpinf.id];
@@ -261,7 +261,6 @@ public:
 	virtual void		Execute()
 	{
 		DB.ray_options(CDB::OPT_CULL);
-		FPU::m24r();
 
 		Q.Begin(g_nodes.size());
 		for (u32 N = Nstart; N<Nend; N++) {

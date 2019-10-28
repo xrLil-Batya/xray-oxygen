@@ -37,16 +37,19 @@ public:
 		gather_info	( expression, description, argument0, argument1, file, line, function, assertion_info, count);
 	}
 
-	void			fail				(const char *e1, const char *file, int line, const char *function, bool &ignore_always);
-	void			fail				(const char *e1, const char *e2, const char *file, int line, const char *function, bool &ignore_always);
-	void			fail				(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function, bool &ignore_always);
-	void			fail				(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function, bool &ignore_always);
-	void			error				(long  code, const char* e1, const char *file, int line, const char *function, bool &ignore_always);
-	void			error				(long  code, const char* e1, const char* e2, const char *file, int line, const char *function, bool &ignore_always);
+	void			fail				(const char *e1, const char *file, int line, const char *function);
+	void			fail				(const char *e1, const char *e2, const char *file, int line, const char *function);
+	void			fail				(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function);
+	void			fail				(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function);
+	void			error				(long  code, const char* e1, const char *file, int line, const char *function);
+	void			error				(long  code, const char* e1, const char* e2, const char *file, int line, const char *function);
 	void _cdecl		fatal				(const char *file, int line, const char *function, const char* F,...);
 	void			do_exit				(HWND hWnd, LPCSTR message);
-    void			do_exit2			(HWND hwnd, const string4096& message, bool& ignore_always);
-	void			backend				(const char* reason, const char* expression, const char *argument0, const char *argument1, const char* file, int line, const char *function, bool &ignore_always);
+    void do_exit2 (HWND hwnd, const string4096& message);
+
+	bool ShowCrashDialog(bool bCanContinue);
+
+	void backend(const char* reason, const char* expression, const char* argument0, const char* argument1, const char* file, int line, const char* function);
 };
 
 LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo);

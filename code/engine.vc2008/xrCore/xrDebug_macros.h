@@ -6,16 +6,16 @@
 
 #define CHECK_OR_EXIT(expr,message)	do {if (!(expr)) ::Debug.do_exit(NULL,message);} while (false)
 
-#define R_ASSERT(expr)				do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(_TRE(#expr),DEBUG_INFO,ignore_always);} while(false)
-#define R_ASSERT2(expr,e2)			do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(_TRE(#expr),_TRE(e2),DEBUG_INFO,ignore_always);} while(false)
-#define R_ASSERT3(expr,e2,e3)		do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(_TRE(#expr),_TRE(e2),_TRE(e3),DEBUG_INFO,ignore_always);} while(false)
-#define R_ASSERT4(expr,e2,e3,e4)	do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(_TRE(#expr),_TRE(e2),_TRE(e3),_TRE(e4),DEBUG_INFO,ignore_always);} while(false)
-#define R_CHK(expr)					do {static bool ignore_always = false; HRESULT hr = expr; if (!ignore_always && FAILED(hr)) ::Debug.error(hr,_TRE(#expr),DEBUG_INFO,ignore_always);} while(false)
-#define R_CHK2(expr,e2)				do {static bool ignore_always = false; HRESULT hr = expr; if (!ignore_always && FAILED(hr)) ::Debug.error(hr,_TRE(#expr),_TRE(e2),DEBUG_INFO,ignore_always);} while(false)
+#define R_ASSERT(expr)				do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(_TRE(#expr),DEBUG_INFO);} while(false)
+#define R_ASSERT2(expr,e2)			do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(_TRE(#expr),_TRE(e2),DEBUG_INFO);} while(false)
+#define R_ASSERT3(expr,e2,e3)		do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(_TRE(#expr),_TRE(e2),_TRE(e3),DEBUG_INFO);} while(false)
+#define R_ASSERT4(expr,e2,e3,e4)	do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(_TRE(#expr),_TRE(e2),_TRE(e3),_TRE(e4),DEBUG_INFO);} while(false)
+#define R_CHK(expr)					do {static bool ignore_always = false; HRESULT hr = expr; if (!ignore_always && FAILED(hr)) ::Debug.error(hr,_TRE(#expr),DEBUG_INFO);} while(false)
+#define R_CHK2(expr,e2)				do {static bool ignore_always = false; HRESULT hr = expr; if (!ignore_always && FAILED(hr)) ::Debug.error(hr,_TRE(#expr),_TRE(e2),DEBUG_INFO);} while(false)
 #define FATAL(description)			Debug.fatal(DEBUG_INFO,description)
 
 
-#define R_ASSERT_FORMAT(expr, format, ...) do {static bool ignore_always = false; if (!ignore_always && !(expr)) {string1024 msg; xr_sprintf(msg, format, __VA_ARGS__); ::Debug.fail(_TRE(#expr), msg, DEBUG_INFO,ignore_always);}} while(false)
+#define R_ASSERT_FORMAT(expr, format, ...) do {static bool ignore_always = false; if (!ignore_always && !(expr)) {string1024 msg; xr_sprintf(msg, format, __VA_ARGS__); ::Debug.fail(_TRE(#expr), msg, DEBUG_INFO);}} while(false)
 
 
 #ifdef VERIFY
@@ -24,12 +24,12 @@
 
 #ifdef DEBUG
 #	define NODEFAULT					FATAL("nodefault reached")
-#	define VERIFY(expr)					do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(#expr,DEBUG_INFO,ignore_always);} while(false)
-#	define VERIFY2(expr,e2)				do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(#expr,e2,DEBUG_INFO,ignore_always);} while(false)
-#	define VERIFY3(expr,e2,e3)			do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(#expr,e2,e3,DEBUG_INFO,ignore_always);} while(false)
-#	define VERIFY4(expr,e2,e3,e4)		do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(#expr,e2,e3,e4,DEBUG_INFO,ignore_always);} while(false)
-#	define CHK_DX(expr)					do {static bool ignore_always = false; HRESULT hr = expr; if (!ignore_always && FAILED(hr)) ::Debug.error(hr,#expr,DEBUG_INFO,ignore_always);} while(false)
-#	define VERIFY_FORMAT(expr, format, ...) do {static bool ignore_always = false; if (!ignore_always && !(expr)) {string1024 msg; xr_sprintf(msg, format, __VA_ARGS__); ::Debug.fail(_TRE(#expr), msg, DEBUG_INFO,ignore_always);}} while(false)
+#	define VERIFY(expr)					do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(#expr,DEBUG_INFO);} while(false)
+#	define VERIFY2(expr,e2)				do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(#expr,e2,DEBUG_INFO);} while(false)
+#	define VERIFY3(expr,e2,e3)			do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(#expr,e2,e3,DEBUG_INFO);} while(false)
+#	define VERIFY4(expr,e2,e3,e4)		do {static bool ignore_always = false; if (!ignore_always && !(expr)) ::Debug.fail(#expr,e2,e3,e4,DEBUG_INFO);} while(false)
+#	define CHK_DX(expr)					do {static bool ignore_always = false; HRESULT hr = expr; if (!ignore_always && FAILED(hr)) ::Debug.error(hr,#expr,DEBUG_INFO);} while(false)
+#	define VERIFY_FORMAT(expr, format, ...) do {static bool ignore_always = false; if (!ignore_always && !(expr)) {string1024 msg; xr_sprintf(msg, format, __VA_ARGS__); ::Debug.fail(_TRE(#expr), msg, DEBUG_INFO);}} while(false)
 #else // DEBUG
 #	ifdef __BORLANDC__
 #		define NODEFAULT

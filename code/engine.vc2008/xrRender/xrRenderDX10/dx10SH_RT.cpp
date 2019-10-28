@@ -157,7 +157,7 @@ void CRT::reset_end()
 	create(*cName,dwWidth,dwHeight,fmt);
 }
 
-void resptrcode_crt::create(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 SampleCount, bool useUAV )
+void ref_rt::create(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 SampleCount, bool useUAV )
 {
 	_set(DEV->_CreateRT(Name,w,h,f, SampleCount, useUAV ));
 }

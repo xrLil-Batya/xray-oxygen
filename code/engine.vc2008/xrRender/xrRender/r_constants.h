@@ -136,7 +136,8 @@ struct ECORE_API	R_constant			:public xr_resource
 		return equal(*C);
 	}
 };
-typedef	resptr_core<R_constant,resptr_base<R_constant> > ref_constant;
+
+typedef	resptr_core<R_constant> ref_constant;
 
 // Automatic constant setup
 class	 ECORE_API			R_constant_setup
@@ -179,7 +180,7 @@ public:
 private:
 
 };
-typedef	resptr_core<R_constant_table,resptr_base<R_constant_table> >				ref_ctable;
+typedef	resptr_core<R_constant_table>				ref_ctable;
 
 #ifdef USE_DX11
 #include "../xrRenderDX10/dx10ConstantBuffer_impl.h"
