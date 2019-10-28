@@ -179,13 +179,6 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 				mstate_wishful	&=~mcSprint;
 			}
 		}break;
-
-	case GEG_PLAYER_WEAPON_HIDE_STATE:
-		{
-			u16 State		= P.r_u16();
-			BOOL	Set		= !!P.r_u8();
-			inventory().SetSlotsBlocked	(State, !!Set);
-		}break;
 	case GE_MOVE_ACTOR:
 		{
 			Fvector NewPos, NewRot;

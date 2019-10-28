@@ -18,7 +18,6 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
@@ -32,6 +31,11 @@ AppCopyright=Oxygen Team 2019
 MinVersion=0,6.1
 SetupIconFile=oxygen_logo_setup.ico
 WizardImageFile=Oxygen_Setup_eng.bmp
+DefaultDirName={autopf}\
+DisableDirPage=no
+EnableDirDoesntExistWarning=True
+DirExistsWarning=no
+AppendDefaultDirName=False
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -44,7 +48,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "..\..\binaries\x64\Release\*.dll"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\binaries\x64\Release\xrPlay.exe"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\binaries\x64\Release\alsoft.ini"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
-Source: "..\..\game\fsgame.ltx"; DestDir: "{app}"
+Source: "..\..\game\fsgame.ltx"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: OnFsltxIsAboutToBeCreated
 Source: "..\..\game\gamedata\*.*"; DestDir: "{app}\gamedata"; Flags: ignoreversion recursesubdirs
 Source: "vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "..\..\game\external\oalinst.exe"; DestDir: "{tmp}"; Flags: ignoreversion
@@ -90,6 +94,10 @@ english.STR_OXY_FEATURE_POLTERHEIST=Polterheist Death Particles
 russian.STR_OXY_FEATURE_POLTERHEIST=Эффект смерти у Полтергейста
 english.STR_OXY_FEATURE_THIRST=Thirst
 russian.STR_OXY_FEATURE_THIRST=Жажда
+english.STR_OXY_FEATURE_PICKUP=Always show pickup item text
+russian.STR_OXY_FEATURE_PICKUP=Всегда показывать подсказки по предметам вокруг
+english.STR_OXY_SELECTED_WRONG_FOLDER=You must select existing installation of S.T.A.L.K.E.R.: Call of Pripyat
+russian.STR_OXY_SELECTED_WRONG_FOLDER=Вы должны выбрать папку с уже установленной S.T.A.L.K.E.R.: Call of Pripyat
 
 [Code]
 // Splash code
@@ -186,6 +194,19 @@ begin
 	
 end;
 
+procedure OnFsltxIsAboutToBeCreated();
+var
+    fsGameFilePath : String;
+    fsGameFilePathChanged : String;
+begin
+  fsGameFilePath := ExpandConstant('{app}\fsgame.ltx');
+	if FileExists(fsGameFilePath) = True then
+	begin
+		fsGameFilePathChanged := ExpandConstant('{app}\fsgame_OLD.ltx');
+		RenameFile(fsGameFilePath, fsGameFilePathChanged);
+	end;
+end;
+
 procedure OnPresetChanged(Sender: TObject);
 begin
 	if cmbPresets.ItemIndex = 0 then
@@ -218,6 +239,7 @@ begin
   txtPresets.Left := ScaleY(0);
   txtPresets.Caption := CustomMessage('STR_OXY_PRESET');
   txtPresets.AutoSize := True;
+  txtPresets.Anchors := [akLeft, akTop, akRight];
   txtPresets.Parent := Page.Surface;
 
   cmbPresets := TNewComboBox.Create(Page);
@@ -240,8 +262,9 @@ begin
 	chkLstFeatures.Parent := Page.Surface;
 	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_MONSTER_INV'), '', 0, False, True, False, False, nil);
 	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_ANTIFREEZE'), '', 0, False, True, False, False, nil);
-	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_POLTERHEIST'), '', 0, False, True, False, False, nil);
+	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_POLTERHEIST'), '', 0, True, True, False, False, nil);
 	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_THIRST'), '', 0, False, True, False, False, nil);
+	chkLstFeatures.AddCheckBox(CustomMessage('STR_OXY_FEATURE_PICKUP'), '', 0, False, True, False, False, nil);
   
 end;
 
@@ -284,7 +307,7 @@ begin
 		
 		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_weapon_autoreload off'#13#10]);
 		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_dynamic_sun_movement off'#13#10]);
-		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_hold_to_pickup on'#13#10]);
+		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_hold_to_pickup off'#13#10]);
 		
 		if chkLstFeatures.State[2] = cbChecked then
 		begin
@@ -311,6 +334,15 @@ begin
 		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_npc_grenade_up on'#13#10]);
 		gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_lamps_immunity off'#13#10]);
 		
+		if chkLstFeatures.State[4] = cbChecked then
+		begin
+			gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_always_pickup on'#13#10]);
+		end
+		else
+		begin
+			gameExtraContent := Format('%s%s', [gameExtraContent, 'game_extra_always_pickup off'#13#10]);
+		end;
+		
 		SaveStringToFile(gameExtraFilePath, gameExtraContent, False);
 	end;
 end;
@@ -319,6 +351,9 @@ procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
 	gameDataFilePath : String;
 	gameDataFilePathChanged : String;
+
+  fsGameFilePath : String;
+  fsGameFilePathChanged : String;
 begin
 	if CurUninstallStep = usPostUninstall then
 	begin
@@ -326,9 +361,37 @@ begin
 		// if so - we should rename it back to "gamedata"
 		gameDataFilePath := ExpandConstant('{app}\gamedata');
 		gameDataFilePathChanged := ExpandConstant('{app}\gamedata_OLD');
+    fsGameFilePath := ExpandConstant('{app}\fsgame.ltx');
+    fsGameFilePathChanged := ExpandConstant('{app}\fsgame_OLD.ltx');
 		if DirExists(gameDataFilePathChanged) = True then
 		begin
 			RenameFile(gameDataFilePathChanged, gameDataFilePath);
+		end;
+
+    if FileExists(fsGameFilePathChanged) = True then
+    begin
+      RenameFile(fsGameFilePathChanged, fsGameFilePath);
+    end;
+	end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+	selectedGameDirectoryWithFsgame : String;
+begin
+	// check if selected folder contain fsgame.ltx
+	Result := True;
+	if CurPageID = wpSelectDir then
+	begin
+		selectedGameDirectoryWithFsgame := ExpandConstant('{app}\fsgame.ltx');
+		if FileExists(selectedGameDirectoryWithFsgame) = True then
+		begin
+			Result := True;
+		end
+		else 
+		begin
+			MsgBox(CustomMessage('STR_OXY_SELECTED_WRONG_FOLDER'), mbError, MB_OK);
+			Result := False;
 		end;
 	end;
 end;

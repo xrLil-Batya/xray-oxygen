@@ -30,15 +30,28 @@ void FS_File::set(xr_string nm, long sz, time_t modif,unsigned attr)
 //////////////////////////////////////////////////////////////////////
 FS_Path::FS_Path	(const char* _Root, const char* _Add, const char* _DefExt, const char* _FilterCaption, u32 flags)
 {
-	string_path		temp;
-    xr_strcpy		(temp,sizeof(temp),_Root);
+	xr_string temp2 = _Root;
     //Giperion: fs_root can goes without trailing slash, add one, if we miss that on root
-	xr_string::FixSlashes(temp);
+	xr_string::FixSlashes(temp2);
     //Giperion end
 
-    if (_Add) 		xr_strcat(temp,_Add);
-	if (temp[0] && temp[xr_strlen(temp)-1]!='\\') xr_strcat(temp,"\\");
-	m_Path			= xr_strlwr(xr_strdup(temp));
+	if (_Add)
+	{
+		temp2.append(_Add);
+	}
+
+	if (!temp2.empty())
+	{
+		if (temp2[temp2.size() - 1] != '\\')
+		{
+			temp2.push_back('\\');
+		}
+	}
+
+	string_path finalPath;
+	ExpandEnvironmentStrings(temp2.c_str(), finalPath, sizeof(finalPath));
+
+	m_Path			= xr_strlwr(xr_strdup(finalPath));
 	m_DefExt		= _DefExt?xr_strlwr(xr_strdup(_DefExt)):nullptr;
 	m_FilterCaption	= _FilterCaption?xr_strlwr(xr_strdup(_FilterCaption)):nullptr;
 	m_Add			= _Add?xr_strlwr(xr_strdup(_Add)):nullptr;

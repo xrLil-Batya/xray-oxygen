@@ -279,17 +279,17 @@ void CLevel::IR_OnKeyboardPress(u8 key)
 		break;
 	}
 
-	case VK_LBUTTON:
-	{
-		if (pInput->iGetAsyncKeyState(VK_MENU)) {
-			if (smart_cast<CActor*>(CurrentEntity()))
-				try_change_current_entity();
-			else
-				restore_actor();
-			return;
-		}
-		break;
-	}
+	//case VK_LBUTTON:
+	//{
+	//	if (pInput->iGetAsyncKeyState(VK_MENU)) {
+	//		if (smart_cast<CActor*>(CurrentEntity()))
+	//			try_change_current_entity();
+	//		else
+	//			restore_actor();
+	//		return;
+	//	}
+	//	break;
+	//}
 	/**/
 	}
 #endif // DEBUG
@@ -318,11 +318,20 @@ void CLevel::IR_OnKeyboardPress(u8 key)
 
 void CLevel::IR_OnKeyboardRelease(u8 key)
 {
+	if (Device.dwPrecacheFrame)
+		return;
+
 	if (!bReady || g_bDisableAllInput)								
 		return;
 
-	if (GameUI() && GameUI()->IR_UIOnKeyboardRelease(key)) 
+	if (GameUI() && GameUI()->IR_UIOnKeyboardRelease(key))
+	{
+		if (GameUI()->TopInputReceiver() == nullptr)
+		{
+			g_actor->StopAnyMove();
+		}
 		return;
+	}
 
 	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;

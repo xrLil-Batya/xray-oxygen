@@ -81,22 +81,6 @@ public:
 	}
 };
 
-class CCC_GameLanguage : public CCC_Token 
-{
-public:
-	CCC_GameLanguage(LPCSTR N) : CCC_Token(N, (u32*)&g_Language, language_type_token) {};
-	virtual void Execute(LPCSTR args) 
-	{
-		CCC_Token::Execute(args);
-		Msg("[GAME] Game language changed!");
-		CStringTable().ReInit(g_Language);
-	}
-	virtual void Info(TInfo& I)
-	{
-		xr_strcpy(I, "Game language");
-	}
-};
-
 // console commands
 class CCC_GameDifficulty : public CCC_Token 
 {

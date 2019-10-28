@@ -18,8 +18,16 @@ xrOxygen is an project that uses experimental C++ features, has no special restr
 ## Downloads
 
 * [Engine](https://github.com/xrOxygen/xray-oxygen/releases/)
-* [Modkit xrGame](https://github.com/xrOxygen/xray-oxygen/releases/tag/1.6.02.872m)
-* [Lightwawe 2015 Plugins](https://github.com/xrOxygen/xray-oxygen/releases/tag/LW_PLGN)
+* [LightWave 2015 - 2019 Plugins](http://xray-oxygen.org/index.php/LightWave_2015:_Export)
+* [Maya 2019 Plugins](http://xray-oxygen.org/index.php/Maya_2019:_Plugins)
+* [xrAI without restrictions on AI-Map](http://xray-oxygen.org/index.php/LevelBuilder:_xrAI)
+* [xrDO Light with advanced options](http://xray-oxygen.org/index.php/LevelBuilder:_xrDO)
+* [xrLC - Multithreaded, with experimental calculation on the GPU](http://xray-oxygen.org/index.php/LevelBuilder:_xrLC)
+* [Fix for AE: 127 bones](https://vk.com/doc419644782_506925469?hash=11db26f22b86101afe&dl=0e8db7a15372bf3719)
+* [Weather Editor (for 1335 release)](https://cdn.discordapp.com/attachments/385903500581928969/590542657663533103/WeatherEditor_1335.7z)
+* [.efd unpacker](https://cdn.discordapp.com/attachments/385903500581928969/590555274079633408/EFD_Reader.7z)
+* [Font rasterizer for Stalker](https://www.gameru.net/forum/index.php?showtopic=71831)
+* [Spectre solutions generator](http://xray-oxygen.org/index.php/VS_integration)
 
 ## Documentation
 

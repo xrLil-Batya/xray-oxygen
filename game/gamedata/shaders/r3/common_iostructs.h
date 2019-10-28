@@ -410,63 +410,70 @@ struct	v_shadow_direct
 
 struct	v2p_shadow_direct_aref
 {
-	float2	tc0		: TEXCOORD1;	// Diffuse map for aref
-	float4	hpos	: SV_Position;	// Clip-space position         (for rasterization)
+	float2	tc0  : TEXCOORD1;   // Diffuse map for aref
+	float4	hpos : SV_Position; // Clip-space position (for rasterization)
 };
 
 struct	v2p_shadow_direct
 {
-	float4	hpos	: SV_Position;		// Clip-space position         (for rasterization)
+	float4	hpos : SV_Position; // Clip-space position (for rasterization)
 };
 
 struct	p_shadow_direct_aref
 {
-	float2	tc0		: TEXCOORD1;	// Diffuse map for aref
+	float2	tc0 : TEXCOORD1;	// Diffuse map for aref
 };
 
 ////////////////////////////////////////////////////////////////
 //	Model
 struct	v_model
 {
-	float4	P		: POSITION;		// (float,float,float,1)
-	float3	N		: NORMAL;		// (nx,ny,nz)
-	float3	T		: TANGENT;		// (nx,ny,nz)
-	float3	B		: BINORMAL;		// (nx,ny,nz)
-	float2	tc		: TEXCOORD0;	// (u,v)
+	float4	P   : POSITION;		// (float,float,float,1)
+	float3	N   : NORMAL;		// (nx,ny,nz)
+	float3	T   : TANGENT;		// (nx,ny,nz)
+	float3	B   : BINORMAL;		// (nx,ny,nz)
+	float2	tc  : TEXCOORD0;	// (u,v)
 };
 
 ////////////////////////////////////////////////////////////////
 //	Tree
 struct	v_tree
 {
-	float4	P		: POSITION;		// (float,float,float,1)
-	float4	Nh		: NORMAL;		// (nx,ny,nz)
-	float3	T		: TANGENT;		// tangent
-	float3	B		: BINORMAL;		// binormal
-	int4	tc		: TEXCOORD0;	// (u,v,frac,???)
+	float4	P   : POSITION;		// (float,float,float,1)
+	float4	Nh  : NORMAL;		// (nx,ny,nz)
+	float3	T   : TANGENT;		// tangent
+	float3	B   : BINORMAL;		// binormal
+	int4	tc  : TEXCOORD0;	// (u,v,frac,???)
 };
 
 ////////////////////////////////////////////////////////////////
 //	Details
 struct v_detail                    
 {
-        float4      pos         : POSITION;         // (float,float,float,1)
-        int4        misc        : TEXCOORD0;        // (u(Q),v(Q),frac,matrix-id)
+        float4 pos   : POSITION;         // (float,float,float,1)
+        int4   misc  : TEXCOORD0;        // (u(Q),v(Q),frac,matrix-id)
 };
 
 struct p_screen
 {
-        float4          hpos 	: SV_Position;
-        float2          tc0		: TEXCOORD0;        // Texture coordinates         (for sampling maps)
+        float4 hpos    : SV_Position;
+        float2 tc0     : TEXCOORD0;        // Texture coordinates         (for sampling maps)
 };
 
 struct	v2p_screen
 {
 	float2 tc0 : TEXCOORD0;
 #ifdef SM_2_0
-	float4 HPos : POSITION;	// Clip-space position 	(for rasterization)
+	float4 HPos : POSITION;	 // Clip-space position (for rasterization)
 #else
-	float4 HPos : POSITIONT;  	// Clip-space position 	(for rasterization)
+	float4 HPos : POSITIONT; // Clip-space position (for rasterization)
 #endif
 };
-#endif	//	common_iostructs_h_included
+
+struct clear_position_out
+{
+	float4 Pos : COLOR0;
+	float4 N   : COLOR1;
+};
+
+#endif

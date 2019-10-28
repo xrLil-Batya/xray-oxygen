@@ -8,8 +8,8 @@
 
 namespace StringUtils
 {
-const char* ConvertToUTF8(const shared_str& pStr, string64& OutUtf8String);
-const char* ConvertToUTF8(const xr_string& pStr, string64& OutUtf8String);
+	XRCORE_API const char* ConvertToUTF8(const shared_str& pStr, string64& OutUtf8String);
+	XRCORE_API const char* ConvertToUTF8(const xr_string& pStr, string64& OutUtf8String);
 
 template<typename StringType>
 const wchar_t* ConvertToUnicode(const char* pStr, const u32 Lenght, StringType& OutString);

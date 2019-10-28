@@ -431,6 +431,7 @@ void CGamePersistent::update_game_loaded()
 {
 	xr_delete				(m_intro);
 	Msg("intro_delete ::update_game_loaded");
+	Actor()->ResetMovementWeight();
 	start_game_intro		();
 }
 
@@ -590,6 +591,7 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
         pApp->LoadBegin();
 		Level().Server->game->restart_simulator	(saved_name);
 		xr_free (saved_name);
+		pApp->LoadEnd();
 		return;
 	}
 }

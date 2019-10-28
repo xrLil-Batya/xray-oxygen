@@ -212,13 +212,16 @@ BOOL CCF_Skeleton::_RayQuery( const collide::ray_defs& Q, collide::rq_results& R
 	Fsphere::ERP_Result res				= w_bv_sphere.intersect(Q.start,Q.dir,tgt_dist,quant,aft);
 	if ((Fsphere::rpNone==res)||((Fsphere::rpOriginOutside==res)&&(aft[0]>tgt_dist)) ) return FALSE;
 
-	if (dwFrame != Device.dwFrame)		BuildState	();
-	else{
-		IKinematics* K	= PKinematics	(owner->Visual());
-		if (K->LL_GetBonesVisible()!=vis_mask)	{
-			// Model changed between ray-picks
-			dwFrame		= Device.dwFrame-1	;
-			BuildState	();
+	if (IsMainThread())
+	{
+		if (dwFrame != Device.dwFrame)		BuildState();
+		else {
+			IKinematics* K = PKinematics(owner->Visual());
+			if (K->LL_GetBonesVisible() != vis_mask) {
+				// Model changed between ray-picks
+				dwFrame = Device.dwFrame - 1;
+				BuildState();
+			}
 		}
 	}
 

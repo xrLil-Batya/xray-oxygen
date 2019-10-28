@@ -6,6 +6,15 @@
 
 STRING_TABLE_DATA* CStringTable::pData = nullptr;
 
+EGameLanguage g_Language = EGameLanguage::eglRussian;
+
+xr_token language_type_token[] =
+{
+	{ "Русский", 0  },
+	{ "English", 1  },
+	{ nullptr,	 2	} // required
+};
+
 CStringTable::CStringTable	()
 {
 	Init();
@@ -29,8 +38,14 @@ void CStringTable::Init		()
     
 	pData = xr_new<STRING_TABLE_DATA>();
 	
-	//имя языка, если не задано (NULL), то первый <text> в <string> в XML
-	pData->m_sLanguage	= pSettings->r_string("string_table", "language");
+	if (g_Language == EGameLanguage::eglEnglish)
+	{
+		pData->m_sLanguage = "eng";
+	}
+	else if (g_Language == EGameLanguage::eglRussian)
+	{
+		pData->m_sLanguage = "rus";
+	}
 
 //---
 	FS_FileSet fset;
@@ -52,6 +67,7 @@ void CStringTable::Init		()
 
 void CStringTable::ReInit(EGameLanguage lang)
 {
+	if (lang == g_Language) return;
 	if (pData != nullptr)
 	{
 		Destroy();

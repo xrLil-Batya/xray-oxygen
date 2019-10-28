@@ -632,7 +632,6 @@ void xrServer::Process_event(NET_Packet& P)
 	switch (type)
 	{
 	case GEG_PLAYER_DISABLE_SPRINT:
-	case GEG_PLAYER_WEAPON_HIDE_STATE:
 	case GEG_PLAYER_ACTIVATE_SLOT:
 	case GEG_PLAYER_ITEM_EAT:			Level().OnMessage(P.B.data, (u32)P.B.count); break;
 	case GE_TELEPORT_OBJECT: 			game->teleport_object(P, destination); break;

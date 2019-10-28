@@ -541,3 +541,8 @@ void  CInput::feedback(u16 s1, u16 s2, float time)
 	
 	XInputSetState(gamepadUserIndex, &vibrationInputData);
 }
+
+void CInput::CallResetPressedState()
+{
+	ResetPressedState();
+}

@@ -451,9 +451,13 @@ start GitParser\GitParser.exe</Command>
   <ItemGroup>
     <ClCompile Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxAdvApi.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxPlatformUtils.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\xrEngine\interp.cpp" />
     <ClCompile Include="Buildcpp.cpp" />
@@ -527,9 +531,13 @@ start GitParser\GitParser.exe</Command>
   <ItemGroup>
     <ClInclude Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxAdvApi.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxPlatformUtils.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="BaseEffector.h" />
     <ClInclude Include="DateTime.hpp" />

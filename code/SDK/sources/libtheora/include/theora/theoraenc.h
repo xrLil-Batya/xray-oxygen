@@ -21,7 +21,7 @@
 #if !defined(_O_THEORA_THEORAENC_H_)
 # define _O_THEORA_THEORAENC_H_ (1)
 # include <stddef.h>
-# include "../../../libogg-1.3.2/include/ogg/ogg.h"
+#include <ogg/ogg.h>
 # include "codec.h"
 
 #if defined(__cplusplus)

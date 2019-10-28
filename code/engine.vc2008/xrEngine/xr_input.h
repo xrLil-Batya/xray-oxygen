@@ -37,6 +37,9 @@ public:
 
 	void						feedback(u16 s1, u16 s2, float time);
 
+	// HACK: Remove later, needed for demo
+	void						CallResetPressedState();
+
 private:
 
 	void ResetPressedState();

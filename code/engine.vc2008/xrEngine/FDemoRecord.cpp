@@ -385,7 +385,7 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 			g_position.p.set(m_Position);
 
 		// move
-		Fvector vmove;
+		Fvector vmove; 
 
 		vmove.set({ m_Camera._31, m_Camera._32, m_Camera._33 });
 		vmove.normalize_safe();
@@ -402,8 +402,8 @@ BOOL CDemoRecord::ProcessCam(SCamEffectorInfo& info)
 		vmove.mul(m_vT.y);
 		m_Position.add(vmove);
 
-		//m_Camera.setHPB(m_HPB.x, m_HPB.y, m_HPB.z);
-		//m_Camera.translate_over(m_Position);
+		m_Camera.setHPB(m_HPB.x, m_HPB.y, m_HPB.z);
+		m_Camera.translate_over(m_Position);
 
 		// update camera
 		info.n.set({ m_Camera._21, m_Camera._22, m_Camera._23 });
