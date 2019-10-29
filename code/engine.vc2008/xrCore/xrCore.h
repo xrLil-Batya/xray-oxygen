@@ -105,6 +105,7 @@
 #include "xr_resource.h"
 #include "rt_compressor.h"
 #include "xr_shared.h"
+#include "ScopeHandle.h"
 
 #ifdef DEBUG
 #include "dump_string.h"

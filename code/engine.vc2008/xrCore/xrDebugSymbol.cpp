@@ -110,19 +110,52 @@ u16 xrDebugSymbols::GetCurrentStack(void** ppStacks, u16 StacksSize)
 
 u16 xrDebugSymbols::GetCallStack(HANDLE hThread, void** ppStacks, u16 StackSize)
 {
+	R_ASSERT(StackSize > 0x10);
+
+	u16 StacksReceived = 0;
+	auto RecordStackLambda = [&StacksReceived, ppStacks, StackSize](void* Frame) -> bool
+	{
+		if (StacksReceived + 1 < StackSize)
+		{
+			ppStacks[StacksReceived++] = Frame;
+			return true;
+		}
+		return false;
+	};
+
 	if (GetCurrentThread() == hThread)
 	{
 		return GetCurrentStack(ppStacks, StackSize);
 	}
 
 	STACKFRAME64 Frame;
+	ZeroMemory(&Frame, sizeof(Frame));
 	CONTEXT ThreadContext;
 	if (GetThreadContext(hThread, &ThreadContext))
 	{
-		//StackWalk(IMAGE_FILE_MACHINE_AMD64, GetCurrentProcess(), hThread, &Frame, )
+		RecordStackLambda((void*)ThreadContext.Rip); // potential dangerous. I hope 128-bit will not come soon
+		Frame.AddrPC.Mode = AddrModeFlat;
+		Frame.AddrPC.Offset = ThreadContext.Rip;
+		Frame.AddrFrame.Mode = AddrModeFlat;
+		Frame.AddrFrame.Offset = ThreadContext.Rbp;
+		Frame.AddrStack.Mode = AddrModeFlat;
+		Frame.AddrStack.Offset = ThreadContext.Rsp;
+
+		while (true)
+		{
+			if (!StackWalk(IMAGE_FILE_MACHINE_AMD64, GetCurrentProcess(), hThread, &Frame, &ThreadContext, NULL, SymFunctionTableAccess, SymGetModuleBase64, NULL))
+			{
+				break;
+			}
+
+			if (!RecordStackLambda((void*)Frame.AddrPC.Offset))
+			{
+				break;
+			}
+		}
 	}
 
-	return 0;
+	return StacksReceived;
 }
 
 void xrDebugSymbols::LoadSymbol(LPCSTR ModuleName, HMODULE hMod)
@@ -158,9 +191,21 @@ void xrDebugSymbols::ResolveFrame(void* Frame, string1024& OutSymbolInfo)
 	pSymbol->SizeOfStruct = sizeof(IMAGEHLP_SYMBOL64);
 	pSymbol->MaxNameLength = sizeof(string512);
 
+	IMAGEHLP_MODULE64 ModuleInfo;
+	ZeroMemory(&ModuleInfo, sizeof(ModuleInfo));
+	ModuleInfo.SizeOfStruct = sizeof(IMAGEHLP_MODULE64);
+	if (SymGetModuleInfo64(GetCurrentProcess(), (DWORD64)Frame, &ModuleInfo))
+	{
+		xr_sprintf(OutSymbolInfo, "%s!", ModuleInfo.ModuleName);
+	}
+	else
+	{
+		xr_sprintf(OutSymbolInfo, "Unknown!");
+	}
+
 	if (SymGetSymFromAddr64(GetCurrentProcess(), (DWORD64)Frame, nullptr, pSymbol))
 	{
-		xr_sprintf(OutSymbolInfo, "%s()", pSymbol->Name);
+		xr_strconcat(OutSymbolInfo, pSymbol->Name, "()");
 	}
 
 	IMAGEHLP_LINE LineInfo;

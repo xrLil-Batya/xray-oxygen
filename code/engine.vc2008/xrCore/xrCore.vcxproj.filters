@@ -246,6 +246,9 @@
     <ClCompile Include="xrDebugSymbol.cpp">
       <Filter>Debug core</Filter>
     </ClCompile>
+    <ClCompile Include="ScopeHandle.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -511,6 +514,9 @@
     </ClInclude>
     <ClInclude Include="xrDebugSymbol.h">
       <Filter>Debug core</Filter>
+    </ClInclude>
+    <ClInclude Include="ScopeHandle.h">
+      <Filter>Kernel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

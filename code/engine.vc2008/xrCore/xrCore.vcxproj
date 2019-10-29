@@ -465,6 +465,7 @@ start GitParser\GitParser.exe</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="PostprocessAnimator.cpp" />
+    <ClCompile Include="ScopeHandle.cpp" />
     <ClCompile Include="SPPInfo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -547,6 +548,7 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="Platform\xrPlatformUtils.h" />
     <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="RingBuffer.h" />
+    <ClInclude Include="ScopeHandle.h" />
     <ClInclude Include="StringsUtils.h" />
     <ClInclude Include="XMLCore\Expression.h" />
     <ClInclude Include="xrDebugSymbol.h" />

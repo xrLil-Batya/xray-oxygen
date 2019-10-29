@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#pragma hdrstop
 
 #include "xrdebug.h"
 #include "os_clipboard.h"
@@ -14,13 +13,13 @@
 #include <new.h>		// for _set_new_mode
 #include <signal.h>		// for signals
 #include <sal.h>
-#include <intrin.h>		// for __debugbreak
 #include "cpuid.h"
 #include <DbgHelp.h>
 #include "xrDebugSymbol.h"
 #include "resource.h"
 #include <CommCtrl.h>
 #include <shellapi.h>
+#include <tlhelp32.h>
 
 /////////////////////////////////////
 XRCORE_API DWORD gMainThreadId = 0xFFFFFFFF;
@@ -285,20 +284,88 @@ BOOL CALLBACK CrashDialogProc(HWND hwndDlg,
 
 bool xrDebug::ShowCrashDialog(bool bCanContinue)
 {
-	void* pStack[64];
+	constexpr u16 StackSize = 64u;
+	void* pStack[StackSize];
 	ZeroMemory(&pStack, sizeof(pStack));
-	u16 framesNum = DebugSymbols.GetCurrentStack(&pStack[0], 64);
+	u16 framesNum = DebugSymbols.GetCurrentStack(&pStack[0], StackSize);
 
 	int WriteCursor = 0;
-	WriteCursor += xr_sprintf(&ReportMem[WriteCursor], ReportMemSize - WriteCursor, "Console Params: %s\r\n", Core.Params);
-	WriteCursor += xr_sprintf(&ReportMem[WriteCursor], ReportMemSize - WriteCursor, "\r\n");
 
-	for (u16 i = 0; i < framesNum; ++i)
+	// I hate macros, but I have no choice
+#define WriteToReportMacro(format, ...) WriteCursor += xr_sprintf(&ReportMem[WriteCursor], ReportMemSize - WriteCursor, format, __VA_ARGS__)
+
+	WriteToReportMacro("Console Params: %s\r\n", Core.Params);
+	WriteToReportMacro("\r\n");
+	WriteToReportMacro("Crash thread stack\r\n");
+
+	auto WriteStackInfoToReportLambda = [&WriteCursor](void** pStack, u16 framesNum)
 	{
-		string1024 SymbolInfo;
-		DebugSymbols.ResolveFrame(pStack[i], SymbolInfo);
-		WriteCursor += xr_sprintf(&ReportMem[WriteCursor], ReportMemSize - WriteCursor, "%s\r\n", SymbolInfo);
+		for (u16 i = 0; i < framesNum; ++i)
+		{
+			string1024 SymbolInfo;
+			DebugSymbols.ResolveFrame(pStack[i], SymbolInfo);
+			WriteToReportMacro("%s\r\n", SymbolInfo);
+		}
+	};
+
+	WriteStackInfoToReportLambda(pStack, framesNum);
+
+	// get other's thread stacks
+	constexpr size_t ThreadArraySize = 128;
+	DWORD ThreadIDs[ThreadArraySize];
+	auto GetThreadIDListLambda = [&ThreadIDs, ThreadArraySize]() -> DWORD
+	{
+		DWORD ThreadCount = 0;
+		WinScopeHandle hThreadTraversal = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+		if (hThreadTraversal.IsValid())
+		{
+			THREADENTRY32 threadEntry;
+			threadEntry.dwSize = sizeof(THREADENTRY32);
+			if (!Thread32First(hThreadTraversal, &threadEntry))
+			{
+				return ThreadCount;
+			}
+			ThreadIDs[ThreadCount++] = threadEntry.th32ThreadID;
+
+			while (Thread32Next(hThreadTraversal, &threadEntry))
+			{
+				ThreadIDs[ThreadCount++] = threadEntry.th32ThreadID;
+				if (ThreadCount == ThreadArraySize)
+				{
+					// Thread list in process more then 128. 
+					// Consider to increase the list
+					if (IsDebuggerPresent())
+					{
+						DebugBreak();
+					}
+					return ThreadCount;
+				}
+			}
+		}
+
+		return ThreadCount;
+	};
+
+	WriteToReportMacro("\r\n\r\n");
+
+	DWORD AliveThreads = GetThreadIDListLambda();
+	WriteToReportMacro("Threads: %u\r\n", AliveThreads);
+
+	for (DWORD thrIndx = 0; thrIndx < AliveThreads; thrIndx++)
+	{
+		WinScopeHandle ThreadHandle = OpenThread(THREAD_ALL_ACCESS, FALSE, ThreadIDs[thrIndx]);
+		if (ThreadHandle.IsValid())
+		{
+			WriteToReportMacro("Thread \"%u\"\r\n", ThreadIDs[thrIndx]);
+			u16 StackSize = DebugSymbols.GetCallStack(ThreadHandle, &pStack[0], StackSize);
+			WriteStackInfoToReportLambda(pStack, framesNum);
+			WriteToReportMacro("\r\n\r\n", ThreadIDs[thrIndx]);
+		}
 	}
+
+	//#TODO: Write lua stack
+
+	//#TODO: Write Spectre stack
 
 	sCrashReport.bCanContinue = bCanContinue;
 	sCrashReport.CrashReport = &ReportMem[0];
@@ -306,6 +373,7 @@ bool xrDebug::ShowCrashDialog(bool bCanContinue)
 	static HMODULE hCoreModule = GetModuleHandle("xrCore.dll");
 	INT_PTR DialogResult = DialogBoxA(hCoreModule, MAKEINTRESOURCE(IDD_CRASH2), NULL, (DLGPROC)CrashDialogProc);
 
+#undef WriteToReportMacro
 	// INT_PTR -> bool
 	return !!((BOOL)DialogResult);
 }
