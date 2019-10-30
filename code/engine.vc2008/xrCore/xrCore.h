@@ -20,7 +20,7 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
-#include <typeinfo.h>
+#include <typeinfo>
 #include <cinttypes>
 #include <chrono>
 

@@ -7,7 +7,7 @@ bool WindowsHandleOperators::IsValidHandle(HANDLE handle)
 
 void WindowsHandleOperators::CloseHandle(HANDLE handle)
 {
-	CloseHandle(handle);
+	::CloseHandle(handle);
 }
 
 HANDLE WindowsHandleOperators::GetInvalidHandle()

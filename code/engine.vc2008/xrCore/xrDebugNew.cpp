@@ -320,25 +320,28 @@ bool xrDebug::ShowCrashDialog(bool bCanContinue)
 		if (hThreadTraversal.IsValid())
 		{
 			THREADENTRY32 threadEntry;
+			ZeroMemory(&threadEntry, sizeof(threadEntry));
 			threadEntry.dwSize = sizeof(THREADENTRY32);
-			if (!Thread32First(hThreadTraversal, &threadEntry))
+			if (!Thread32First(hThreadTraversal.Get(), &threadEntry))
 			{
 				return ThreadCount;
 			}
-			ThreadIDs[ThreadCount++] = threadEntry.th32ThreadID;
 
 			while (Thread32Next(hThreadTraversal, &threadEntry))
 			{
-				ThreadIDs[ThreadCount++] = threadEntry.th32ThreadID;
-				if (ThreadCount == ThreadArraySize)
+				if (threadEntry.th32OwnerProcessID == GetCurrentProcessId())
 				{
-					// Thread list in process more then 128. 
-					// Consider to increase the list
-					if (IsDebuggerPresent())
+					ThreadIDs[ThreadCount++] = threadEntry.th32ThreadID;
+					if (ThreadCount == ThreadArraySize)
 					{
-						DebugBreak();
+						// Thread list in process more then 128. 
+						// Consider to increase the list
+						if (IsDebuggerPresent())
+						{
+							DebugBreak();
+						}
+						return ThreadCount;
 					}
-					return ThreadCount;
 				}
 			}
 		}
@@ -353,12 +356,17 @@ bool xrDebug::ShowCrashDialog(bool bCanContinue)
 
 	for (DWORD thrIndx = 0; thrIndx < AliveThreads; thrIndx++)
 	{
+		DWORD ThreadID = ThreadIDs[thrIndx];
+		if (ThreadID == GetCurrentThreadId())
+		{
+			continue;
+		}
 		WinScopeHandle ThreadHandle = OpenThread(THREAD_ALL_ACCESS, FALSE, ThreadIDs[thrIndx]);
 		if (ThreadHandle.IsValid())
 		{
 			WriteToReportMacro("Thread \"%u\"\r\n", ThreadIDs[thrIndx]);
-			u16 StackSize = DebugSymbols.GetCallStack(ThreadHandle, &pStack[0], StackSize);
-			WriteStackInfoToReportLambda(pStack, framesNum);
+			u16 ThreadStackSize = DebugSymbols.GetCallStack(ThreadHandle, &pStack[0], StackSize);
+			WriteStackInfoToReportLambda(pStack, ThreadStackSize);
 			WriteToReportMacro("\r\n\r\n", ThreadIDs[thrIndx]);
 		}
 	}

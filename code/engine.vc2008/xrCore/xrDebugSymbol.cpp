@@ -37,6 +37,7 @@ void xrDebugSymbols::Initialize(bool bPDBShouldMatch /*= false*/)
 
 	ExistedOptions |= SYMOPT_DEFERRED_LOADS;
 	ExistedOptions |= SYMOPT_AUTO_PUBLICS;
+	//ExistedOptions |= SYMOPT_DEBUG;
 
 	if (bPDBShouldMatch)
 	{
@@ -128,9 +129,12 @@ u16 xrDebugSymbols::GetCallStack(HANDLE hThread, void** ppStacks, u16 StackSize)
 		return GetCurrentStack(ppStacks, StackSize);
 	}
 
+	DWORD debugSysCount = SuspendThread(hThread);
 	STACKFRAME64 Frame;
 	ZeroMemory(&Frame, sizeof(Frame));
 	CONTEXT ThreadContext;
+	ZeroMemory(&ThreadContext, sizeof(ThreadContext));
+	ThreadContext.ContextFlags = CONTEXT_FULL;
 	if (GetThreadContext(hThread, &ThreadContext))
 	{
 		RecordStackLambda((void*)ThreadContext.Rip); // potential dangerous. I hope 128-bit will not come soon
@@ -154,6 +158,7 @@ u16 xrDebugSymbols::GetCallStack(HANDLE hThread, void** ppStacks, u16 StackSize)
 			}
 		}
 	}
+	ResumeThread(hThread);
 
 	return StacksReceived;
 }
@@ -175,7 +180,7 @@ void xrDebugSymbols::LoadSymbol(LPCSTR ModuleName, HMODULE hMod)
 	SymLoadModuleEx(GetCurrentProcess(),
 		hMod, 
 		ImageName,
-		ModuleName, 
+		NULL, 
 		(DWORD64)ModInfo.lpBaseOfDll, 
 		ModInfo.SizeOfImage, 
 		nullptr, 0);
@@ -205,7 +210,11 @@ void xrDebugSymbols::ResolveFrame(void* Frame, string1024& OutSymbolInfo)
 
 	if (SymGetSymFromAddr64(GetCurrentProcess(), (DWORD64)Frame, nullptr, pSymbol))
 	{
-		xr_strconcat(OutSymbolInfo, pSymbol->Name, "()");
+		xr_strconcat(OutSymbolInfo, OutSymbolInfo, pSymbol->Name, "()");
+	}
+	else
+	{
+		xr_strconcat(OutSymbolInfo, OutSymbolInfo, "<Not available>");
 	}
 
 	IMAGEHLP_LINE LineInfo;

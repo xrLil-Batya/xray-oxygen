@@ -41,7 +41,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_NOFAILCREATE | WS_POPUP | WS
 CAPTION "Crash"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "Continue",IDOK,198,155,50,14
+    DEFPUSHBUTTON   "Continue",IDOK,195,155,50,14
     PUSHBUTTON      "Break",IDCANCEL,252,155,50,14
     LTEXT           "Error occured",IDC_STATIC,128,21,44,8
     CONTROL         "<a href=""https://discord.gg/Gt5GT5x"">https://discord.gg/Gt5GT5x</a>",IDC_SYSLINK1,
