@@ -85,6 +85,7 @@
 #include "_types.h"
 #include "RingBuffer.h"
 #include "thread_utils.h"
+#include "xrProfiling.h"
 #include "xrDebug.h"
 #include "xrMemory.h"
 #include "_std_extensions.h"

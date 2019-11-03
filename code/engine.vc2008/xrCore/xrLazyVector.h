@@ -480,12 +480,7 @@ struct xrLazyVector
 
 	reverse_iterator rbegin()
 	{
-		if (_container != nullptr)
-		{
-			return reverse_iterator(this, _size - 1);
-		}
-
-		return reverse_iterator(this, 0);
+		return reverse_iterator(this, _size - 1);
 	}
 
 	reverse_iterator rend()

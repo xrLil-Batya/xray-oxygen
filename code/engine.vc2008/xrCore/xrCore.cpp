@@ -46,6 +46,12 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 
 		// Mathematics & PSI detection
 		Memory._initialize();
+		if (strstr(Params, "-vTune") != nullptr)
+		{
+			Profiling.Initialize();
+		}
+		// Immediately pause profiling. We want to get normal list of hotspots
+		Profiling.PauseProfiling();
 
 		xrLogger::InitLog();
 		_initialize_cpu();

@@ -230,18 +230,20 @@ Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_co
 {
 	if (CXMLBlend::Check(s_shader))
 	{
-		CXMLBlend* BlendXML = new CXMLBlend(s_shader);
-		Shader* pShader = BlendXML->Compile(s_textures);
-		xr_delete(BlendXML);
+		CXMLBlend BlendXML(s_shader);
+		Shader* pShader = BlendXML.Compile(s_textures);
 
-		R_ASSERT3(pShader, "XMLBlend error: name = %s", s_shader);
+		R_ASSERT3(pShader != nullptr, "XMLBlend failed to compile shader", s_shader);
 		return pShader;
 	}
 	else
 	{
 		Shader* pShader = _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
+		R_ASSERT2(pShader != nullptr, s_shader);
 		if (pShader)
+		{
 			return pShader;
+		}
 		else
 		{
 			if (CXMLBlend::Check("stub_default"))

@@ -625,42 +625,6 @@ void CActor::g_SetAnimation( u32 mstate_rl )
 			StatFont->OutNext("legs [%s]",KA->LL_MotionDefName_dbg(M_legs).first);
 	}
 
-	if ((Level().CurrentControlEntity() == this) && g_ShowAnimationInfo) 
-	{
-		string128 buf;
-		xr_strcpy(buf,"");
-		CGameFont* StatFont = UI().Font().GetFont("stat_font");
-		StatFont->SetColor(0xFFFFFFFF);
-		if (isActorAccelerated(mstate_rl, IsZoomAimingMode()))		xr_strcat(buf,"Accel ");
-		if (mstate_rl&mcCrouch)		xr_strcat(buf,"Crouch ");
-		if (mstate_rl&mcFwd)		xr_strcat(buf,"Fwd ");
-		if (mstate_rl&mcBack)		xr_strcat(buf,"Back ");
-		if (mstate_rl&mcLStrafe)	xr_strcat(buf,"LStrafe ");
-		if (mstate_rl&mcRStrafe)	xr_strcat(buf,"RStrafe ");
-		if (mstate_rl&mcJump)		xr_strcat(buf,"Jump ");
-		if (mstate_rl&mcFall)		xr_strcat(buf,"Fall ");
-		if (mstate_rl&mcTurn)		xr_strcat(buf,"Turn ");
-		if (mstate_rl&mcLanding)	xr_strcat(buf,"Landing ");
-		if (mstate_rl&mcLLookout)	xr_strcat(buf,"LLookout ");
-		if (mstate_rl&mcRLookout)	xr_strcat(buf,"RLookout ");
-		if (m_bJumpKeyPressed)		xr_strcat(buf,"+Jumping ");
-		StatFont->OutNext	("MSTATE:     [%s]",buf);
-/*
-		switch (m_PhysicMovementControl->Environment())
-		{
-		case CPHMovementControl::peOnGround:	xr_strcpy(buf,"ground");			break;
-		case CPHMovementControl::peInAir:		xr_strcpy(buf,"air");				break;
-		case CPHMovementControl::peAtWall:		xr_strcpy(buf,"wall");				break;
-		}
-		UI().Font().pFontStat->OutNext	(buf);
-		UI().Font().pFontStat->OutNext	("Accel     [%3.2f, %3.2f, %3.2f]",VPUSH(NET_SavedAccel));
-		UI().Font().pFontStat->OutNext	("V         [%3.2f, %3.2f, %3.2f]",VPUSH(m_PhysicMovementControl->GetVelocity()));
-		UI().Font().pFontStat->OutNext	("vertex ID   %d",ai_location().level_vertex_id());
-		
-		Game().m_WeaponUsageStatistic->Draw();
-		*/
-	};
-
 	if (!m_current_torso_blend)
 		return;
 

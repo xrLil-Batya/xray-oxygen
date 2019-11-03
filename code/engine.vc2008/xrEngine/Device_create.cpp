@@ -41,6 +41,7 @@ void CRenderDevice::_Create(LPCSTR shName)
 	m_pRender->OnDeviceCreate(shName);
 
 	dwFrame = 0;
+	dwFrameAsync = 0;
 }
 
 void CRenderDevice::ConnectToRender()

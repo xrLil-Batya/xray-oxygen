@@ -21,6 +21,7 @@ void* xrMemory::mem_alloc(size_t size)
 	{
 		_initialize();
 	}
+	Profiling.StartAlloc(size);
 	stat_calls++;
 
 	void* ptr = nullptr;
@@ -45,11 +46,13 @@ void* xrMemory::mem_alloc(size_t size)
 	RegisterPointer(ptr);
 #endif
 
+	Profiling.EndAlloc(ptr, size);
 	return ptr;
 }
 
 void xrMemory::mem_free(void* P)
 {
+	Profiling.StartFree(P);
 	stat_calls++;
 #if defined(DEBUG) && defined(MEM_DEBUG)
 	UnregisterPointer(P);
@@ -71,11 +74,12 @@ void xrMemory::mem_free(void* P)
 		mi_free(P);
 	}
 #endif
-
+	Profiling.EndFree(P);
 }
 
 void* xrMemory::mem_realloc(void* P, size_t size)
 {
+	Profiling.StartReAlloc(P, size);
 #if defined(DEBUG) && defined(MEM_DEBUG)
 	UnregisterPointer(P);
 #endif
@@ -119,6 +123,7 @@ void* xrMemory::mem_realloc(void* P, size_t size)
 	RegisterPointer(ptr);
 #endif
 
+	Profiling.EndReAlloc(P, &ptr, size);
 	return ptr;
 }
 

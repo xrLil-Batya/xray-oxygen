@@ -85,6 +85,9 @@
     <Filter Include="containers">
       <UniqueIdentifier>{f9da55c7-edd6-462d-9740-dae6e53f648b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Profiling">
+      <UniqueIdentifier>{8a4043d9-ace8-4d6b-b0c3-3f32bdd550bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -248,6 +251,9 @@
     </ClCompile>
     <ClCompile Include="ScopeHandle.cpp">
       <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="xrProfiling.cpp">
+      <Filter>Profiling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -517,6 +523,9 @@
     </ClInclude>
     <ClInclude Include="ScopeHandle.h">
       <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="xrProfiling.h">
+      <Filter>Profiling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

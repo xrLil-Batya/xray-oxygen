@@ -16,3 +16,5 @@
 #include "object_destroyer.h"
 #include "object_loader.h"
 #include "object_saver.h"
+
+#define time_to_delete 300000

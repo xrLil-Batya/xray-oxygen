@@ -86,34 +86,38 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 		if (pActor != g_actor) return;
 
-		pActor->setSVU(true);
-
-		// if player flags changed
-		if (!lastActorFlagsState.equal(psActorFlags)) 
 		{
-			// Update hardcode mode
-			if (psActorFlags.test(AF_HARDCORE))
-				pActor->cam_Set(eacFirstEye);
+			xrProfilingTask SyncTask("Second Actor Update");
 
-			lastActorFlagsState.assign(psActorFlags);
+			pActor->setSVU(true);
+
+			// if player flags changed
+			if (!lastActorFlagsState.equal(psActorFlags))
+			{
+				// Update hardcode mode
+				if (psActorFlags.test(AF_HARDCORE))
+					pActor->cam_Set(eacFirstEye);
+
+				lastActorFlagsState.assign(psActorFlags);
+			}
+
+			// Update inventory
+			pActor->UpdateInventoryOwner(Device.dwTimeDelta);
+
+			// Update holder
+			if (pActor->Holder())
+				pActor->Holder()->UpdateEx(pActor->currentFOV());
+
+			pActor->m_snd_noise -= 0.3f * Device.fTimeDelta;
+			pActor->inherited::UpdateCL();
+
+			// Pickup update
+			if (pActor->g_Alive() && (g_extraFeatures.is(GAME_EXTRA_ALWAYS_PICKUP) || pActor->m_bPickupMode))
+				pActor->PickupModeUpdate();
+
+			// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
+			pActor->PickupModeUpdate_COD(pActor->m_bPickupMode);
 		}
-
-		// Update inventory
-		pActor->UpdateInventoryOwner(Device.dwTimeDelta);
-
-		// Update holder
-		if (pActor->Holder())
-			pActor->Holder()->UpdateEx(pActor->currentFOV());
-
-		pActor->m_snd_noise -= 0.3f*Device.fTimeDelta;
-		pActor->inherited::UpdateCL();
-
-		// Pickup update
-		if (pActor->g_Alive() && (g_extraFeatures.is(GAME_EXTRA_ALWAYS_PICKUP) || pActor->m_bPickupMode))
-			pActor->PickupModeUpdate();
-
-		// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
-		pActor->PickupModeUpdate_COD(pActor->m_bPickupMode);
 
 		SetEvent(pActor->MtSecondUpdaterEventEnd);
 	}
@@ -1139,8 +1143,6 @@ float CActor::missile_throw_force()
 {
 	return 0.f;
 }
-
-extern	BOOL g_ShowAnimationInfo;
 
 // HUD
 void CActor::OnHUDDraw(CCustomHUD*)

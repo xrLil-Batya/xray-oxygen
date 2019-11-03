@@ -11,17 +11,22 @@
 
 CXMLBlend::CXMLBlend(const char* FileName)
 {
-	string256 NewName;
+	string256 FixedName;
 	for (int i = 0, l = xr_strlen(FileName) + 1; i < l; ++i)
-		NewName[i] = ('\\' == FileName[i]) ? '_' : FileName[i];
+		FixedName[i] = ('\\' == FileName[i]) ? '_' : FileName[i];
 
-	xr_strconcat(NewName, NewName, ".xml");
-	File = NewName;
+	xr_strconcat(FixedName, FixedName, ".xml");
+	memcpy(File, FixedName, sizeof(FixedName));
 
 	pCompiler = new CBlender_Compile();
 	Parser.Load("$game_shaders$", "r3", File);
 	pCompiler->detail_texture = nullptr;
 	pCompiler->detail_scaler = nullptr;
+}
+
+CXMLBlend::~CXMLBlend()
+{
+	xr_delete(pCompiler);
 }
 
 Shader* CXMLBlend::Compile(const char* Texture)

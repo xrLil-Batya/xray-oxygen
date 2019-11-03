@@ -174,14 +174,18 @@ inline int xr_sprintf	( char* destination, size_t const buffer_size, const char*
 {
 	va_list args;
 	va_start					( args, format_string);
-	return						vsprintf_s( destination, buffer_size, format_string, args );
+	int Result =				vsprintf_s( destination, buffer_size, format_string, args );
+	va_end(args);
+	return Result;
 }
 template <int count>
 inline int xr_sprintf	( char (&destination)[count], const char* format_string, ... )
 {
 	va_list args;
 	va_start					( args, format_string);
-	return						vsprintf_s( destination, count, format_string, args );
+	int Result =				vsprintf_s( destination, count, format_string, args );
+	va_end(args);
+	return Result;
 }
 
 #else // #ifndef MASTER_GOLD
@@ -210,7 +214,9 @@ inline int __cdecl xr_sprintf	( char* destination, size_t const buffer_size, con
 {
 	va_list args;
 	va_start					( args, format_string);
-	return						vsnprintf_s( destination, buffer_size, buffer_size - 1, format_string, args );
+	int Result =				vsnprintf_s( destination, buffer_size, buffer_size - 1, format_string, args );
+	va_end(args);
+	return Result;
 }
 
 template <int count>
@@ -218,7 +224,9 @@ inline int __cdecl xr_sprintf	( char (&destination)[count], const char* format_s
 {
 	va_list args;
 	va_start					( args, format_string);
-	return						vsnprintf_s( destination, count, count - 1, format_string, args );
+	int Result =				vsnprintf_s( destination, count, count - 1, format_string, args );
+	va_end(args);
+	return Result;
 }
 #endif // #ifndef MASTER_GOLD
 

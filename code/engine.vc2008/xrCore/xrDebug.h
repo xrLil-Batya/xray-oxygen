@@ -47,7 +47,7 @@ public:
 	void			do_exit				(HWND hWnd, LPCSTR message);
     void do_exit2 (HWND hwnd, const string4096& message);
 
-	bool ShowCrashDialog(bool bCanContinue);
+	bool ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanContinue, const char* message);
 
 	void backend(const char* reason, const char* expression, const char* argument0, const char* argument1, const char* file, int line, const char* function);
 };

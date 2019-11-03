@@ -20,6 +20,7 @@
 #include <CommCtrl.h>
 #include <shellapi.h>
 #include <tlhelp32.h>
+#include "oxy_version.h"
 
 /////////////////////////////////////
 XRCORE_API DWORD gMainThreadId = 0xFFFFFFFF;
@@ -215,7 +216,7 @@ void xrDebug::do_exit2(HWND hwnd, const string4096& message)
         break;
     }
 #endif
-	if (!ShowCrashDialog(true))
+	if (!ShowCrashDialog(nullptr, true, message))
 	{
 		ExitProcess(1);
 	}
@@ -282,7 +283,7 @@ BOOL CALLBACK CrashDialogProc(HWND hwndDlg,
 	return FALSE;
 }
 
-bool xrDebug::ShowCrashDialog(bool bCanContinue)
+bool xrDebug::ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanContinue, const char* message)
 {
 	constexpr u16 StackSize = 64u;
 	void* pStack[StackSize];
@@ -294,6 +295,53 @@ bool xrDebug::ShowCrashDialog(bool bCanContinue)
 	// I hate macros, but I have no choice
 #define WriteToReportMacro(format, ...) WriteCursor += xr_sprintf(&ReportMem[WriteCursor], ReportMemSize - WriteCursor, format, __VA_ARGS__)
 
+	if (message != nullptr)
+	{
+		WriteToReportMacro("%s", message);
+		WriteToReportMacro("\r\n\r\n");
+	}
+
+	WriteToReportMacro("Oxygen \"%s\" branch, builted in %s\r\n", _BRANCH, __DATE__);
+	if (ExceptionInfo != nullptr)
+	{
+		if (ExceptionInfo->ExceptionRecord != nullptr)
+		{
+			PEXCEPTION_RECORD Record = ExceptionInfo->ExceptionRecord;
+			WriteToReportMacro("Exception code ");
+			if (Record->ExceptionCode == STATUS_ACCESS_VIOLATION)
+			{
+				WriteToReportMacro("\"ACCESS VIOLATION\"");
+			}
+			else if (Record->ExceptionCode == STATUS_INVALID_HANDLE)
+			{
+				WriteToReportMacro("\"INVALID HANDLE\"");
+			}
+			else if (Record->ExceptionCode == STATUS_ILLEGAL_INSTRUCTION)
+			{
+				WriteToReportMacro("\"ILLEGAL INSTRUCTION\" CPU not supported?");
+			}
+			else if (Record->ExceptionCode == STATUS_STACK_OVERFLOW)
+			{
+				WriteToReportMacro("\"STACK OVERFLOW\"");
+			}
+			else
+			{
+				WriteToReportMacro("\"%x\"", Record->ExceptionCode);
+			}
+
+			WriteToReportMacro(" at location \"%p\"\r\n", Record->ExceptionAddress);
+
+			if (Record->NumberParameters > 0)
+			{
+				WriteToReportMacro("Params: ");
+				for (DWORD i = 0; i < Record->NumberParameters && i < 12; i++)
+				{
+					WriteToReportMacro("Param %u: \"%x\" ", i, Record->ExceptionInformation[i]);
+				}
+				WriteToReportMacro("\r\n");
+			}
+		}
+	}
 	WriteToReportMacro("Console Params: %s\r\n", Core.Params);
 	WriteToReportMacro("\r\n");
 	WriteToReportMacro("Crash thread stack\r\n");
@@ -352,7 +400,7 @@ bool xrDebug::ShowCrashDialog(bool bCanContinue)
 	WriteToReportMacro("\r\n\r\n");
 
 	DWORD AliveThreads = GetThreadIDListLambda();
-	WriteToReportMacro("Threads: %u\r\n", AliveThreads);
+	WriteToReportMacro("Total Threads: %u\r\n", AliveThreads);
 
 	for (DWORD thrIndx = 0; thrIndx < AliveThreads; thrIndx++)
 	{
@@ -817,7 +865,7 @@ LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo)
 		pCrashHandler();
 	}
 
-	Debug.ShowCrashDialog(false);
+	Debug.ShowCrashDialog(pExceptionInfo, false, nullptr);
 
     return WriteMinidump(pExceptionInfo);
 }

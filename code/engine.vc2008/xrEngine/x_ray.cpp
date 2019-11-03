@@ -234,9 +234,6 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	// Skip intro
 	g_bIntroFinished = true;
 
-	//#DELETE_ME: !
-	R_ASSERT(false);
-
 	g_sLaunchOnExit_app[0] = 0;
 	g_sLaunchOnExit_params[0] = 0;
 
@@ -430,6 +427,7 @@ void CApplication::LoadBegin()
 	dwLoadReference++;
 	if (1==dwLoadReference)	
 	{
+		Profiling.PauseProfiling();
 		g_appLoaded			= FALSE;
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
@@ -443,7 +441,10 @@ void CApplication::LoadEnd()
     VERIFY(dwLoadReference != 0);
 	dwLoadReference--;
 	if (0 == dwLoadReference)
+	{
 		g_appLoaded = TRUE;
+		Profiling.ResumeProfiling();
+	}
 }
 
 void CApplication::SetLoadingScreen(ILoadingScreen* newScreen)
@@ -466,6 +467,7 @@ ENGINE_API void CApplication::LoadDraw		()
 {
 	if(g_appLoaded)				return;
 	Device.dwFrame				+= 1;
+	Device.dwFrameAsync			+= 1;
 
 	if(!Device.Begin () )		return;
 	load_draw_internal			();

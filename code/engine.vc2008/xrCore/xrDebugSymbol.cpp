@@ -214,7 +214,9 @@ void xrDebugSymbols::ResolveFrame(void* Frame, string1024& OutSymbolInfo)
 	}
 	else
 	{
-		xr_strconcat(OutSymbolInfo, OutSymbolInfo, "<Not available>");
+		char PointerStr[32] = { 0 };
+		xr_sprintf(PointerStr, "0x%p", Frame);
+		xr_strconcat(OutSymbolInfo, OutSymbolInfo, PointerStr);
 	}
 
 	IMAGEHLP_LINE LineInfo;
@@ -231,6 +233,6 @@ void xrDebugSymbols::ResolveFrame(void* Frame, string1024& OutSymbolInfo)
 	}
 	else
 	{
-		xr_strconcat(OutSymbolInfo, OutSymbolInfo, " - UNKHOWN : 0");
+		//xr_strconcat(OutSymbolInfo, OutSymbolInfo, " - UNKHOWN : 0");
 	}
 }

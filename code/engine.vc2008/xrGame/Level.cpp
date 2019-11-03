@@ -92,15 +92,19 @@ void CLevel::mtLevelScriptUpdater(void* pCLevel)
 		WaitForSingleObject(pLevel->m_mtScriptUpdaterEventStart, INFINITE);
 		if (g_pGameLevel != pLevel) return;
 
-		// Disable objects
-		psDeviceFlags.set(rsDisableObjectsAsCrows, false);
+		{
+			xrProfilingTask SyncTask("Level Script Update");
 
-		Fvector temp_vector;
-		pLevel->m_feel_deny.feel_touch_update(temp_vector, 0.f);
+			// Disable objects
+			psDeviceFlags.set(rsDisableObjectsAsCrows, false);
 
-		// Call level script
-		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
-		if (levelScript) levelScript->update();
+			Fvector temp_vector;
+			pLevel->m_feel_deny.feel_touch_update(temp_vector, 0.f);
+
+			// Call level script
+			CScriptProcess* levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
+			if (levelScript) levelScript->update();
+		}
 
 		SetEvent(pLevel->m_mtScriptUpdaterEventEnd);
 	}
@@ -464,7 +468,7 @@ void CLevel::OnFrame()
 	} while (WaitResult == WAIT_TIMEOUT);
 }
 
-int		psLUA_GCSTEP = 10;
+int		psLUA_GCSTEP = 100;
 void	CLevel::script_gc()
 {
 	lua_gc(ai().script_engine().lua(), LUA_GCSTEP, psLUA_GCSTEP);
