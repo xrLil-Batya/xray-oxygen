@@ -3,6 +3,10 @@
 
 #include <process.h>
 
+// timeGetTime()
+#include <mmsystem.h>
+#pragma comment(lib, "Winmm.lib")
+
 // Initialized on startup
 XRCORE_API Fmatrix Fidentity;
 XRCORE_API Dmatrix Didentity;

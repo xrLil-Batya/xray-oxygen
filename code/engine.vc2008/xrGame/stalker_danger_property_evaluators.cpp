@@ -251,13 +251,18 @@ CStalkerPropertyEvaluatorEnemyWounded::CStalkerPropertyEvaluatorEnemyWounded	(CA
 
 _value_type CStalkerPropertyEvaluatorEnemyWounded::evaluate	()
 {
-	const CEntityAlive			*enemy = object().memory().enemy().selected();
-	if (!enemy)
-		return					(false);
+	const CEntityAlive *pEnemy = object().memory().enemy().selected();
+	if (!pEnemy)
+		return false;
 
-	const CAI_Stalker			*stalker = smart_cast<const CAI_Stalker *>(enemy);
-	if (!stalker)
-		return					(false);
+	const CAI_Stalker *pStalker = smart_cast<const CAI_Stalker *>(pEnemy);
+	if (!pStalker)
+		return false;
 
-	return						(stalker->wounded(&object().movement().restrictions()));
+	// Only one will finish
+	u64 ProcessorID = object().agent_manager().enemy().wounded_processor(pEnemy);
+	if (ProcessorID != object().ID())
+	  return false;
+
+	return (pStalker->wounded(&object().movement().restrictions()));
 }
