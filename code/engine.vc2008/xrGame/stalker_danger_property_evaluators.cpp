@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////
-//	Module 		: stalker_danger_property_evaluators.cpp
-//	Created 	: 31.05.2005
+//      Module 		: stalker_danger_property_evaluators.cpp
+//      Created 	: 31.05.2005
 //      Modified 	: 31.05.2005
-//	Author		: Dmitriy Iassenev
-//	Description : Stalker danger property evaluators classes
+//      Author		: Dmitriy Iassenev
+//      Description : Stalker danger property evaluators classes
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -25,6 +25,7 @@
 #include "enemy_manager.h"
 #include "stalker_animation_manager.h"
 #include "agent_manager.h"
+#include "agent_enemy_manager.h"
 
 using namespace StalkerDecisionSpace;
 
