@@ -25,7 +25,7 @@
 #include "../../../PHDestroyable.h"
 #include "../../../CharacterPhysicsSupport.h"
 
-namespace detail
+namespace bloodsuckerDetails
 {
 namespace bloodsucker
 {
@@ -60,7 +60,7 @@ CAI_Bloodsucker::CAI_Bloodsucker()
 	m_force_visibility_state		=	unset;
 	m_runaway_invisible_time		=	0;
 
-	using namespace						detail::bloodsucker;
+	using namespace						bloodsuckerDetails::bloodsucker;
 }
 
 CAI_Bloodsucker::~CAI_Bloodsucker()
@@ -230,7 +230,7 @@ void CAI_Bloodsucker::Load(LPCSTR section)
 
 	invisible_particle_name			= pSettings->r_string(section,"Particle_Invisible");
 
-	using namespace detail::bloodsucker;
+	using namespace bloodsuckerDetails::bloodsucker;
 
 	READ_IF_EXISTS(pSettings, r_float, section, "separate_factor", 0.f);
 
@@ -427,19 +427,19 @@ BOOL CAI_Bloodsucker::net_Spawn (CSE_Abstract* DC)
 
 float   CAI_Bloodsucker::get_full_visibility_radius ()
 {
-	using namespace detail::bloodsucker;
+	using namespace bloodsuckerDetails::bloodsucker;
 	return override_if_debug(full_visibility_radius_string, m_full_visibility_radius);
 }
 
 float   CAI_Bloodsucker::get_partial_visibility_radius ()
 {
-	using namespace detail::bloodsucker;
+	using namespace bloodsuckerDetails::bloodsucker;
 	return override_if_debug(partial_visibility_radius_string, m_partial_visibility_radius);
 }
 
 TTime   CAI_Bloodsucker::get_visibility_state_change_min_delay ()
 {
-	using namespace detail::bloodsucker;
+	using namespace bloodsuckerDetails::bloodsucker;
 	return override_if_debug(visibility_state_change_min_delay_string, m_visibility_state_change_min_delay);
 }
 
@@ -499,7 +499,7 @@ void   CAI_Bloodsucker::update_invisibility ()
 {
 	if(CCustomMonster::use_simplified_visual())	return;
 
-	using namespace							detail::bloodsucker;
+	using namespace							bloodsuckerDetails::bloodsucker;
 
 	if ( !g_Alive() )
 	{

@@ -5,7 +5,7 @@
 #include "../../ActorEffector.h"
 //#include "../../HudSound.h"
 
-namespace detail
+namespace MonsterAuraDetails
 {
 	static pcstr const	s_pp_effector_name_string	=	"_pp_effector_name";
 	static pcstr const	s_pp_highest_at_string		=	"_pp_highest_at";
@@ -52,11 +52,10 @@ float   monster_aura::calculate () const
 
 	float const epsilon				=	0.0001f;
 
-	using namespace						detail;
-	float linear_factor				=	override_if_debug(s_linear_factor_string, m_linear_factor);
-	float quadratic_factor			=	override_if_debug(s_quadratic_factor_string, m_quadratic_factor);
-	float max_power					=	override_if_debug(s_max_power_string, m_max_power);
-	float max_distance				=	override_if_debug(s_max_distance_string, m_max_distance);
+	float linear_factor				=	override_if_debug(MonsterAuraDetails::s_linear_factor_string, m_linear_factor);
+	float quadratic_factor			=	override_if_debug(MonsterAuraDetails::s_quadratic_factor_string, m_quadratic_factor);
+	float max_power					=	override_if_debug(MonsterAuraDetails::s_max_power_string, m_max_power);
+	float max_distance				=	override_if_debug(MonsterAuraDetails::s_max_distance_string, m_max_distance);
 
 	if ( distance > max_distance )
 	{
@@ -77,33 +76,32 @@ float   monster_aura::calculate () const
 
 void   monster_aura::load_from_ini (CInifile* ini, pcstr const section, bool enable_for_dead_default)
 {
-	using namespace						detail;
 	string512			tempBuffer;
-	xr_strconcat		(tempBuffer, m_name, s_pp_effector_name_string);
+	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_pp_effector_name_string);
 	m_pp_effector_name = READ_IF_EXISTS(ini, r_string, section, tempBuffer, NULL);
 	
-	xr_strconcat		(tempBuffer, m_name, s_pp_highest_at_string);
+	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_pp_highest_at_string);
 	m_pp_highest_at = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 1.f);
 
-	xr_strconcat		(tempBuffer, m_name, s_linear_factor_string);
+	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_linear_factor_string);
 	m_linear_factor = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 0.f);
 
-	xr_strconcat		(tempBuffer, m_name, s_quadratic_factor_string);
+	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_quadratic_factor_string);
 	m_quadratic_factor = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 0.f);
 
-	xr_strconcat		(tempBuffer, m_name, s_max_power_string);
+	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_max_power_string);
 	m_max_power = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 0.f);
 
-	xr_strconcat		(tempBuffer, m_name, s_max_distance_string);
+	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_max_distance_string);
 	m_max_distance = READ_IF_EXISTS(ini, r_float, section, tempBuffer, 0.f);
 
-	xr_strconcat		(tempBuffer, m_name, s_sound_string);
+	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_sound_string);
 	LPCSTR sound_name = READ_IF_EXISTS(ini, r_string, section, tempBuffer, NULL);
 	
-	xr_strconcat		(tempBuffer, m_name, s_detect_sound_string);
+	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_detect_sound_string);
 	LPCSTR detect_sound_name = READ_IF_EXISTS(ini, r_string, section, tempBuffer, NULL);
 
-	xr_strconcat		(tempBuffer, m_name, s_enable_for_dead_string);
+	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_enable_for_dead_string);
 
 	m_enable_for_dead	= !!READ_IF_EXISTS(ini, r_bool, section, tempBuffer, enable_for_dead_default);
 
@@ -141,8 +139,7 @@ void   monster_aura::remove_pp_effector ()
 
 float   monster_aura::get_post_process_factor () const
 {
-	using	namespace					detail;
-	float	pp_highest_at			=	override_if_debug(s_pp_highest_at_string, m_pp_highest_at);
+	float	pp_highest_at			=	override_if_debug(MonsterAuraDetails::s_pp_highest_at_string, m_pp_highest_at);
 	VERIFY								(pp_highest_at != 0.f);
 
 	float 	factor					=	calculate() / m_pp_highest_at;

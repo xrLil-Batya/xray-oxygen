@@ -1059,11 +1059,6 @@ void CSE_ALifeObjectPhysic::STATE_Write		(NET_Packet	&tNetPacket)
 
 }
 
-static inline bool check (const u8 &mask, const u8 &test)
-{
-	return							(!!(mask & test));
-}
-
 const	u32		CSE_ALifeObjectPhysic::m_freeze_delta_time		= 5000;
 const	u32		CSE_ALifeObjectPhysic::random_limit				= 40;		
 

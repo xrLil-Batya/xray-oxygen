@@ -370,7 +370,7 @@ xr_string   make_xrstr (ESquadCommandType value)
 	}
 }
 
-namespace detail
+namespace BaseMonsterDebug
 {
 
 void   add_debug_info (debug::text_tree& root_s, const CEntity* pE)
@@ -522,7 +522,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 	//-----------------------------------------------
 	TextTree& general_s = root_s.find_or_add("General");
 
-	detail::add_debug_info(general_s, this);
+	BaseMonsterDebug::add_debug_info(general_s, this);
 	TextTree& current_visual_s = general_s.add_line("Current_Visual");
 	current_visual_s.add_line(*cNameVisual());
 
@@ -565,7 +565,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 		SoundElem	last_sound;
 		bool		last_dangerous;
 		SoundMemory.GetSound(last_sound, last_dangerous);
-		detail::add_debug_info(last_s, last_sound, last_dangerous);
+		BaseMonsterDebug::add_debug_info(last_s, last_sound, last_dangerous);
 
 		if ( SoundMemory.GetNumSounds() > 1 )
 		{
@@ -574,7 +574,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 			SoundMemory.GetFirstSound(first_sound, first_dangerous);
 
 			TextTree&   first_s = sounds_s.add_line("First");
-			detail::add_debug_info(first_s, first_sound, first_dangerous);
+			BaseMonsterDebug::add_debug_info(first_s, first_sound, first_dangerous);
 		}
 	}
 	else
@@ -591,7 +591,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 	if ( HitMemory.is_hit() ) 
 	{
 		TextTree& last_hit_object_s = hit_s.add_line("Object");
-		detail::add_debug_info(last_hit_object_s, smart_cast<CEntity*>(HitMemory.get_last_hit_object()));
+		BaseMonsterDebug::add_debug_info(last_hit_object_s, smart_cast<CEntity*>(HitMemory.get_last_hit_object()));
 		hit_s.add_line("Time", HitMemory.get_last_hit_time());
 		hit_s.add_line("Pos", HitMemory.get_last_hit_position());
 		hit_s.add_line("Dir", HitMemory.get_last_hit_dir());
@@ -619,7 +619,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 	{
 		squad_s.add_line("SquadActive", squad->SquadActive());
 		squad_s.add_line("Im_Leader", squad->GetLeader() == this);
-		detail::add_debug_info(squad_s.add_line("Leader"), squad->GetLeader());
+		BaseMonsterDebug::add_debug_info(squad_s.add_line("Leader"), squad->GetLeader());
 
 		int num_alive = squad->squad_alife_count();
 		if ( !num_alive && g_Alive() )
@@ -633,7 +633,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 
 		TextTree& squad_goal_s = squad_s.add_line("My_Squad_Goal");
 		squad_goal_s.add_line("Goal_Type", squad->GetGoal(this).type);
-		detail::add_debug_info(squad_goal_s.add_line("Goal_Entity"), squad->GetGoal(this).entity);
+		BaseMonsterDebug::add_debug_info(squad_goal_s.add_line("Goal_Entity"), squad->GetGoal(this).entity);
 	}
 
 	group_s.add_line("Group", g_Group());
@@ -658,7 +658,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 		TextTree& cur_script_action_s = brain_s.add_line("Current_Script_Action");
 		if ( m_tpCurrentEntityAction )
 		{
-			detail::add_debug_info(cur_script_action_s, m_tpCurrentEntityAction);
+			BaseMonsterDebug::add_debug_info(cur_script_action_s, m_tpCurrentEntityAction);
 		}
 		else
 		{
@@ -668,7 +668,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 		TextTree& next_script_action_s = brain_s.add_line("Next_Script_Action");
 		if ( m_tpActionQueue.size() )
 		{
-			detail::add_debug_info(next_script_action_s, m_tpActionQueue.front());
+			BaseMonsterDebug::add_debug_info(next_script_action_s, m_tpActionQueue.front());
 		}
 		else
 		{
@@ -709,7 +709,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 	TextTree& current_enemy_s = enemies_s.find_or_add("Current_Enemy");
 	if ( EnemyMan.get_enemy() )
 	{
-		detail::add_enemy_debug_info(current_enemy_s, this, EnemyMan.get_enemy());
+		BaseMonsterDebug::add_enemy_debug_info(current_enemy_s, this, EnemyMan.get_enemy());
 		current_enemy_s.add_line("Time_Last_Seen",  EnemyMan.get_enemy_time_last_seen());
 		current_enemy_s.add_line("See_Duration",    EnemyMan.see_enemy_duration());
 	}
@@ -727,7 +727,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 		if ( p_enemy != EnemyMan.get_enemy() )
 		{
 			TextTree& enemy_s = enemies_s.add_line(make_xrstr("Enemy %i", index++));
-			detail::add_enemy_debug_info(enemy_s, this, p_enemy);
+			BaseMonsterDebug::add_enemy_debug_info(enemy_s, this, p_enemy);
 		}			
 	}
 
@@ -748,7 +748,7 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 	
 	if ( p_blend )
 	{
-		detail::add_debug_info(current_animation_s, p_blend);
+		BaseMonsterDebug::add_debug_info(current_animation_s, p_blend);
 		current_animation_s.add_line("Script_Animation?", p_blend->motionID == m_tpScriptAnimation);
 	}
 	else
@@ -773,9 +773,9 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 	movement_s.add_line("Level_Vertex_ID", ai_location().level_vertex_id());
 	movement_s.add_line("Game_Vertex_ID", ai_location().game_vertex_id());
 
-	detail::add_debug_info(movement_s.add_line("Orientation_Current"), 
+	BaseMonsterDebug::add_debug_info(movement_s.add_line("Orientation_Current"), 
 		                   movement().body_orientation().current);
-	detail::add_debug_info(movement_s.add_line("Orientation_Target"), 
+	BaseMonsterDebug::add_debug_info(movement_s.add_line("Orientation_Target"), 
 		                   movement().body_orientation().target);
 	movement_s.add_line("Rotation_Speed", movement().body_orientation().speed);
 
@@ -862,10 +862,10 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 		  movement().restrictions().base_out_restrictions().size() ||
 		  movement().restrictions().base_in_restrictions().size() )
 	{
-		detail::add_debug_info_restrictions(restrictions_s.add_line("out"), *movement().restrictions().out_restrictions());
-		detail::add_debug_info_restrictions(restrictions_s.add_line("in"), *movement().restrictions().in_restrictions());
-		detail::add_debug_info_restrictions(restrictions_s.add_line("base_out"), *movement().restrictions().base_out_restrictions());
-		detail::add_debug_info_restrictions(restrictions_s.add_line("base_in"), *movement().restrictions().base_in_restrictions());
+		BaseMonsterDebug::add_debug_info_restrictions(restrictions_s.add_line("out"), *movement().restrictions().out_restrictions());
+		BaseMonsterDebug::add_debug_info_restrictions(restrictions_s.add_line("in"), *movement().restrictions().in_restrictions());
+		BaseMonsterDebug::add_debug_info_restrictions(restrictions_s.add_line("base_out"), *movement().restrictions().base_out_restrictions());
+		BaseMonsterDebug::add_debug_info_restrictions(restrictions_s.add_line("base_in"), *movement().restrictions().base_in_restrictions());
 
 		restrictions_s.add_line("Actor_Accessible?", actor ?
 			movement().restrictions().accessible(actor->Position()) : false);

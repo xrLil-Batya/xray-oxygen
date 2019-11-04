@@ -13,12 +13,6 @@
 #include "../xrServerEntities/object_broker.h"
 #include <luabind/luabind.hpp>
 
-using smart_cover::detail::parse_string;
-using smart_cover::detail::parse_int;
-using smart_cover::detail::parse_table;
-using smart_cover::detail::parse_bool;
-using smart_cover::detail::parse_fvector;
-
 smart_cover::action::action(luabind::object const &description)
 {
 	luabind::object movement = description["movement"];
@@ -34,7 +28,7 @@ smart_cover::action::action(luabind::object const &description)
 		m_movement				= false;
 
 	luabind::object animations;
-	parse_table					(description, "animations", animations);
+	smart_cover::detail::parse_table					(description, "animations", animations);
 	typedef luabind::object::iterator	iterator;
 	iterator		I = animations.begin();
 	iterator		E = animations.end();

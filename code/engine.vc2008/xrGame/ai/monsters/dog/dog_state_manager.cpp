@@ -16,7 +16,7 @@
 #include "../group_states/group_state_panic.h"
 #include "../group_states/group_state_hear_danger_sound.h"
 
-namespace detail
+namespace DogStateManagerDetails
 {
 	namespace dog
 	{
@@ -54,7 +54,7 @@ void CStateManagerDog::execute()
 			if (object->Home->at_min_home(enemy_pos))
 				squad->set_home_in_danger();
 
-			if (object->Position().distance_to(enemy_pos) < detail::dog::atack_decision_maxdist)
+			if (object->Position().distance_to(enemy_pos) < DogStateManagerDetails::dog::atack_decision_maxdist)
 				squad->set_home_in_danger();
 
 			if (squad->home_in_danger())
