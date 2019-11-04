@@ -26,18 +26,17 @@
 #include <ai/monsters/poltergeist/poltergeist.h>
 
 
-u32 C_ON_ENEMY		D3DCOLOR_RGBA(0xff,0,0,0x80);
-u32 C_ON_NEUTRAL	D3DCOLOR_RGBA(0xff,0xff,0x80,0x80);
-u32 C_ON_FRIEND		D3DCOLOR_RGBA(0,0xff,0,0x80);
+namespace HUDTargetDetails
+{
+	constexpr D3DCOLOR DefaultColor = D3DCOLOR_RGBA(250, 250, 250, 255);
+	constexpr D3DCOLOR NoAllowColor = D3DCOLOR_RGBA(160, 160, 160, 200);
 
+	constexpr float Size = 0.025f;
+	constexpr float NearLim = 0.5f;
 
-#define C_DEFAULT	D3DCOLOR_RGBA(250,250,250,255)
-#define C_NO_ALLOW	D3DCOLOR_RGBA(160,160,160,200)
-#define C_SIZE		0.025f
-#define NEAR_LIM	0.5f
-
-#define SHOW_INFO_SPEED		0.5f
-#define HIDE_INFO_SPEED		10.f
+	constexpr float ShowInfoSpeed = 0.5f;
+	constexpr float HideInfoSpeed = 10.0f;
+}
 
 
 IC	float	recon_mindist	()		{
@@ -126,7 +125,7 @@ void CHUDTarget::CursorOnFrame ()
 		PP.pass				= 0;
 
 		if(Level().ObjectSpace.RayQuery(RQR,RD, (collide::rq_callback*)pick_trace_callback, &PP, NULL, Level().CurrentEntity()))
-			clamp			(PP.RQ.range, NEAR_LIM, PP.RQ.range);
+			clamp			(PP.RQ.range, HUDTargetDetails::NearLim, PP.RQ.range);
 	}
 
 }
@@ -148,14 +147,14 @@ void CHUDTarget::Render()
 	Fvector dir			= Device.vCameraDirection;
 	
 	// Render cursor
-	u32 C				= C_DEFAULT;
+	u32 C				= HUDTargetDetails::DefaultColor;
 	
 	Fvector				p2;
 	p2.mad				(p1,dir,PP.RQ.range);
 	Fvector4			pt;
 	Device.mFullTransform.transform(pt, p2);
 	pt.y = -pt.y;
-	float				di_size = C_SIZE/powf(pt.w,.2f);
+	float				di_size = HUDTargetDetails::Size / powf(pt.w,.2f);
 
 	CGameFont* F		= UI().Font().GetFont("ui_font_graffiti19_russian");
 	F->SetAligment		(CGameFont::alCenter);
@@ -171,7 +170,7 @@ void CHUDTarget::Render()
 		CWeapon* pWeapon = smart_cast<CWeapon*>(Actor()->inventory().ActiveItem());
 		CWeaponKnife* pKnife = smart_cast<CWeaponKnife*>(pWeapon);
 		if (pWeapon && PP.RQ.range > pWeapon->fireDistance && !pKnife)
-			C = C_NO_ALLOW;
+			C = HUDTargetDetails::NoAllowColor;
 
 		if( (PP.RQ.O && PP.RQ.O->getVisible()) || is_poltergeist )
 		{
@@ -184,7 +183,7 @@ void CHUDTarget::Render()
 				
 				if (E && E->g_Alive() && E->cast_base_monster())
 				{
-					C				= C_ON_ENEMY;
+					C				= TargetColors::EnemyColor;
 				}
 				else if (E && E->g_Alive() && !E->cast_base_monster())
 				{
@@ -195,11 +194,11 @@ void CHUDTarget::Render()
 						switch(SRelationRegistry().GetRelationType(others_inv_owner, our_inv_owner))
 						{
 						case ALife::eRelationTypeEnemy:
-							C = C_ON_ENEMY; break;
+							C = TargetColors::EnemyColor; break;
 						case ALife::eRelationTypeNeutral:
-							C = C_ON_NEUTRAL; break;
+							C = TargetColors::NeutralColor; break;
 						case ALife::eRelationTypeFriend:
-							C = C_ON_FRIEND; break;
+							C = TargetColors::FriendColor; break;
 						}
 
 						if (fuzzyShowInfo>0.5f)
@@ -211,7 +210,7 @@ void CHUDTarget::Render()
 						}
 					}
 
-					fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
+					fuzzyShowInfo += HUDTargetDetails::ShowInfoSpeed*Device.fTimeDelta;
 				}
 				//else 
 				//	if (l_pI && our_inv_owner && PP.RQ.range < 2.0f*2.0f)
@@ -221,13 +220,13 @@ void CHUDTarget::Render()
 				//			F->SetColor	(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));
 				//			F->OutNext	("%s",l_pI->NameItem());
 				//		}
-				//		fuzzyShowInfo += SHOW_INFO_SPEED*Device.fTimeDelta;
+				//		fuzzyShowInfo += HUDTargetDetails::ShowInfoSpeed *Device.fTimeDelta;
 				//	}
 			}
 
 		}
 		else
-			fuzzyShowInfo -= HIDE_INFO_SPEED*Device.fTimeDelta;
+			fuzzyShowInfo -= HUDTargetDetails::HideInfoSpeed * Device.fTimeDelta;
 		
 		clamp(fuzzyShowInfo,0.f,1.f);
 	}

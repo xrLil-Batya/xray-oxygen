@@ -16,10 +16,6 @@
 
 #define RECT_SIZE	11
 
-extern u32 C_ON_ENEMY;
-extern u32 C_ON_NEUTRAL;
-extern u32 C_ON_FRIEND;
-
 struct FindVisObjByObject{
 	const CObject*			O;
 	FindVisObjByObject(const CObject* o):O(o){}
@@ -141,11 +137,11 @@ void SBinocVisibleObj::Update()
 						switch (SRelationRegistry().GetRelationType(others_inv_owner, our_inv_owner))
 						{
 						case ALife::eRelationTypeEnemy:
-							clr = C_ON_ENEMY; break;
+							clr = TargetColors::EnemyColor; break;
 						case ALife::eRelationTypeNeutral:
-							clr = C_ON_NEUTRAL; break;
+							clr = TargetColors::NeutralColor; break;
 						case ALife::eRelationTypeFriend:
-							clr = C_ON_FRIEND; break;
+							clr = TargetColors::FriendColor; break;
 						}
 					}
 				}

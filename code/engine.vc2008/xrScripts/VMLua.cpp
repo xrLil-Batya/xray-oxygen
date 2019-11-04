@@ -24,7 +24,7 @@ static void* __cdecl luabind_allocator(luabind::memory_allocation_function_param
 	return		(Memory.mem_realloc(non_const_pointer, size));
 }
 
-void setup_luabind_allocator()
+SCRIPT_API void setup_luabind_allocator()
 {
     luabind::allocator = &luabind_allocator;
     luabind::allocator_parameter = 0;

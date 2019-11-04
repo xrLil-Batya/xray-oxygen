@@ -482,8 +482,6 @@ void test_precise_path();
 extern	Flags32	dbg_net_Draw_Flags;
 #endif
 
-extern void draw_wnds_rects();
-
 void CLevel::OnRender()
 {
 	::Render->BeforeWorldRender();

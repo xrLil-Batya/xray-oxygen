@@ -37,7 +37,7 @@ extern "C" {
 };
 
 void CCC_RegisterCommands	();
-void setup_luabind_allocator();
+SCRIPT_API void setup_luabind_allocator();
 void RegisterExpressionDelegates();
 void LoadGameExtraFeatures();
 
