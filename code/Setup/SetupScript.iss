@@ -20,7 +20,6 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
-PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
 OutputBaseFilename=OxygenSetup
 Compression=lzma
@@ -55,6 +54,7 @@ Source: "..\..\game\external\oalinst.exe"; DestDir: "{tmp}"; Flags: ignoreversio
 Source: "Splash.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
 Source: "Oxygen_Setup.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
 Source: "Oxygen_Setup_eng.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
+Source: "..\..\binaries\x64\Release\*.pdb"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\Oxygen\{#MyAppExeName}"

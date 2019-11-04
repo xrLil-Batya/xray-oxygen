@@ -46,7 +46,7 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 
 		// Mathematics & PSI detection
 		Memory._initialize();
-		if (strstr(Params, "-vTune") != nullptr)
+		if (strstr(Params, "-vtune") != nullptr)
 		{
 			Profiling.Initialize();
 		}
