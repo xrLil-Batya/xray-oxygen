@@ -25,7 +25,7 @@ CNvReader::~CNvReader()
 
 void CNvReader::Initialize()
 {
-	R_ASSERT2(!bSupport, "Double call to CNvReader::Initialize()");
+	if (bSupport) return;
 	hNvAPIDLL = LoadLibraryA("nvapi64.dll");
 	if (hNvAPIDLL != NULL)
 	{

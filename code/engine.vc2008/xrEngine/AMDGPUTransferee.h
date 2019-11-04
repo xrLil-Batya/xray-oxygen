@@ -50,6 +50,8 @@ private:
 	HMODULE		    hAMDMain;
 	HMODULE		    hAMDAGS;
 
+	bool bInitialized = false;
+
 private:
 	void	InitDeviceInfo	();
 	void	MakeGPUCount	();

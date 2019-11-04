@@ -39,6 +39,7 @@ CAMDReader::~CAMDReader()
 
 void CAMDReader::Initialize()
 {
+	if (bInitialized) return;
 	hAMDMain = LoadLibraryA("atiadlxx.dll");
 
 	if (hAMDMain != NULL)
@@ -131,6 +132,8 @@ void CAMDReader::Initialize()
 
 		MakeGPUCount();
 	}
+
+	bInitialized = true;
 }
 
 void CAMDReader::InitDeviceInfo()

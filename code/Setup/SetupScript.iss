@@ -47,7 +47,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "..\..\binaries\x64\Release\*.dll"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\binaries\x64\Release\xrPlay.exe"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\binaries\x64\Release\alsoft.ini"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
-Source: "..\..\game\fsgame.ltx"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: OnFsltxIsAboutToBeCreated
+Source: "..\..\game\oxy_fsgame.ltx"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: OnFsltxIsAboutToBeCreated
 Source: "..\..\game\gamedata\*.*"; DestDir: "{app}\gamedata"; Flags: ignoreversion recursesubdirs
 Source: "vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "..\..\game\external\oalinst.exe"; DestDir: "{tmp}"; Flags: ignoreversion
@@ -199,10 +199,10 @@ var
     fsGameFilePath : String;
     fsGameFilePathChanged : String;
 begin
-  fsGameFilePath := ExpandConstant('{app}\fsgame.ltx');
+  fsGameFilePath := ExpandConstant('{app}\oxy_fsgame.ltx');
 	if FileExists(fsGameFilePath) = True then
 	begin
-		fsGameFilePathChanged := ExpandConstant('{app}\fsgame_OLD.ltx');
+		fsGameFilePathChanged := ExpandConstant('{app}\oxy_fsgame_OLD.ltx');
 		RenameFile(fsGameFilePath, fsGameFilePathChanged);
 	end;
 end;
@@ -361,8 +361,8 @@ begin
 		// if so - we should rename it back to "gamedata"
 		gameDataFilePath := ExpandConstant('{app}\gamedata');
 		gameDataFilePathChanged := ExpandConstant('{app}\gamedata_OLD');
-    fsGameFilePath := ExpandConstant('{app}\fsgame.ltx');
-    fsGameFilePathChanged := ExpandConstant('{app}\fsgame_OLD.ltx');
+    fsGameFilePath := ExpandConstant('{app}\oxy_fsgame.ltx');
+    fsGameFilePathChanged := ExpandConstant('{app}\oxy_fsgame_OLD.ltx');
 		if DirExists(gameDataFilePathChanged) = True then
 		begin
 			RenameFile(gameDataFilePathChanged, gameDataFilePath);

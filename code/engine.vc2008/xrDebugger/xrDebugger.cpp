@@ -7,7 +7,7 @@
 int main()
 {
 	Debug._initialize();
-	Core._initialize("X-Ray Oxygen Test Runner", nullptr, TRUE, "fsgame.ltx");
+	Core._initialize("X-Ray Oxygen Test Runner", nullptr, TRUE, "oxy_fsgame.ltx");
 	xrLogger::EnableFastDebugLog();
 
 	Msg("Hallo!");
