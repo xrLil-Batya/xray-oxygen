@@ -19,7 +19,7 @@ struct ECORE_API SInputSignature : public xr_resource_flagged
 	SInputSignature(ID3DBlob* pBlob);
 	~SInputSignature();
 };
-typedef	resptr_core<SInputSignature,resptr_base<SInputSignature> >	ref_input_sign;
+typedef	resptr_core<SInputSignature>	ref_input_sign;
 #endif
 //////////////////////////////////////////////////////////////////////////
 struct ECORE_API SVS : public xr_resource_named							
@@ -32,7 +32,7 @@ struct ECORE_API SVS : public xr_resource_named
 	SVS				();
 	~SVS			();
 };
-typedef	resptr_core<SVS,resptr_base<SVS> >	ref_vs;
+typedef	resptr_core<SVS>	ref_vs;
 
 //////////////////////////////////////////////////////////////////////////
 struct ECORE_API SPS : public xr_resource_named
@@ -41,7 +41,7 @@ struct ECORE_API SPS : public xr_resource_named
 	R_constant_table					constants;
 	~SPS			();
 };
-typedef	resptr_core<SPS,resptr_base<SPS> > ref_ps;
+typedef	resptr_core<SPS> ref_ps;
 
 #ifdef USE_DX11
 //////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ struct ECORE_API SGS : public xr_resource_named
 	R_constant_table					constants;
 	~SGS			();
 };
-typedef	resptr_core<SGS,resptr_base<SGS> > ref_gs;
+typedef	resptr_core<SGS> ref_gs;
 #endif
 
 #ifdef USE_DX11
@@ -62,7 +62,7 @@ struct ECORE_API SHS : public xr_resource_named
 	R_constant_table					constants;
 	~SHS			();
 };
-typedef	resptr_core< SHS, resptr_base<SHS> >	ref_hs;
+typedef	resptr_core<SHS>	ref_hs;
 
 struct ECORE_API SDS : public xr_resource_named
 {
@@ -70,7 +70,7 @@ struct ECORE_API SDS : public xr_resource_named
 	R_constant_table					constants;
 	~SDS			();
 };
-typedef	resptr_core< SDS, resptr_base<SDS> >	ref_ds;
+typedef	resptr_core<SDS>	ref_ds;
 
 struct ECORE_API SCS : public xr_resource_named
 {
@@ -78,7 +78,7 @@ struct ECORE_API SCS : public xr_resource_named
 	R_constant_table					constants;
 	~SCS			();
 };
-typedef	resptr_core< SCS, resptr_base<SCS> >	ref_cs;
+typedef	resptr_core<SCS>	ref_cs;
 
 #endif
 
@@ -89,7 +89,7 @@ struct ECORE_API SState : public xr_resource_flagged
 	SimulatorStates						state_code;
 	~SState			();
 };
-typedef	resptr_core<SState,resptr_base<SState> >	ref_state;
+typedef	resptr_core<SState>	ref_state;
 
 //////////////////////////////////////////////////////////////////////////
 struct ECORE_API SDeclaration : public xr_resource_flagged
@@ -107,6 +107,6 @@ struct ECORE_API SDeclaration : public xr_resource_flagged
 	xr_vector<D3DVERTEXELEMENT9>		dcl_code;
 	~SDeclaration	();
 };
-typedef	resptr_core<SDeclaration,resptr_base<SDeclaration> >	ref_declaration;
+typedef	resptr_core<SDeclaration>	ref_declaration;
 
 #pragma pack(pop)

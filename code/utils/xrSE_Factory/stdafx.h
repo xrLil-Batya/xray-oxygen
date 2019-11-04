@@ -17,7 +17,6 @@
 
 #define ENGINE_API
 #define ECORE_API
-#define GAME_API
 #define DLL_API __declspec(dllexport)
 #define GAME_API DLL_API
 
@@ -28,8 +27,10 @@ namespace boost { void throw_exception( std::exception const& A ); }
 
 #include "smart_cast.h"
 
-#define READ_IF_EXISTS(ltx,method,section,name,default_value)\
+#ifndef READ_IF_EXISTS
+	#define READ_IF_EXISTS(ltx,method,section,name,default_value)\
 	(ltx->line_exist(section,name)) ? ltx->method(section,name) : default_value
+#endif
 
 #if XRAY_EXCEPTIONS
 IC	xr_string string2xr_string(LPCSTR s) {return s ? s : "";}

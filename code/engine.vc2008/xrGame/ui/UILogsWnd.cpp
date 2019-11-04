@@ -31,9 +31,6 @@
 
 #define  PDA_LOGS_XML		"pda_logs.xml"
 
-extern u64	generate_time	(u32 years, u32 months, u32 days, u32 hours, u32 minutes, u32 seconds, u32 milliseconds = 0);
-extern void	split_time		(u64 time, u32 &years, u32 &months, u32 &days, u32 &hours, u32 &minutes, u32 &seconds, u32 &milliseconds);
-
 u64 const day2ms			= u64( 24 * 60 * 60 * 1000 );
 
 CUILogsWnd::CUILogsWnd()
@@ -238,7 +235,7 @@ void CUILogsWnd::AddNewsItem(GAME_NEWS_DATA& news_data)
 	CUINewsItemWnd*	news_itm	= smart_cast<CUINewsItemWnd*>(news_itm_w);
 	news_itm->Setup				(news_data);
 	
-	m_items_ready.push_back		(news_itm);
+	m_items_ready.push_back		((CUIWindow*)news_itm);
 }
 
 void CUILogsWnd::UpdateChecks( CUIWindow* w, void* d )

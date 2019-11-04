@@ -166,7 +166,6 @@ void CBuild::Run(LPCSTR P)
 	}
 
 	//****************************************** Optimizing + checking for T-junctions
-	FPU::m64r();
 	Msg("\n %s", "Optimizing");
 	mem_Compact();
 	PreOptimize();
@@ -174,7 +173,6 @@ void CBuild::Run(LPCSTR P)
 	Logger.Phase("Optimizing");
 
 	//****************************************** HEMI-Tesselate
-	FPU::m64r();
 	Msg("%s", "Adaptive HT...");
 	mem_Compact();
 #ifndef CFORM_ONLY
@@ -183,7 +181,6 @@ void CBuild::Run(LPCSTR P)
 	Logger.Phase("Adaptive HT...");
 
 	//****************************************** Building normals
-	FPU::m64r();
 	Msg("%s", "Building normals...");
 	mem_Compact();
 	CalcNormals();
@@ -192,7 +189,6 @@ void CBuild::Run(LPCSTR P)
 	//#TODO: LC Redux don't use that collision database anymore. But i remove it, when decide cut off old system support
 	//****************************************** Collision DB
 	//should be after normals, so that double-sided faces gets separated
-	FPU::m64r();
 	Msg("%s", "Building collision database...");
 	mem_Compact();
 	BuildCForm();
@@ -206,7 +202,6 @@ void CBuild::Run(LPCSTR P)
 
 	//****************************************** T-Basis
 	{
-		FPU::m64r();
 		Msg("%s", "Building tangent-basis...");
 		xrPhase_TangentBasis();
 		mem_Compact();
@@ -216,7 +211,6 @@ void CBuild::Run(LPCSTR P)
 	//****************************************** GLOBAL-ILLUMINATION
 	if (g_build_options.b_radiosity)
 	{
-		FPU::m64r();
 		Msg("%s", "Radiosity-Solver...");
 		mem_Compact();
 		Light_prepare();
@@ -225,13 +219,11 @@ void CBuild::Run(LPCSTR P)
 	}
 
 	//****************************************** Starting MU
-	FPU::m64r();
 	mem_Compact();
 	Light_prepare();
 	StartMu();
 	Logger.Phase("LIGHT: Starting MU...");
 	//****************************************** Resolve materials
-	FPU::m64r();
 	Msg("%s", "Resolving materials...");
 	mem_Compact();
 	xrPhase_ResolveMaterials();
@@ -240,7 +232,6 @@ void CBuild::Run(LPCSTR P)
 
 	//****************************************** UV mapping
 	{
-		FPU::m64r();
 		Msg("%s", "Build UV mapping...");
 		mem_Compact();
 		xrPhase_UVmap();
@@ -249,7 +240,6 @@ void CBuild::Run(LPCSTR P)
 	}
 
 	//****************************************** Subdivide geometry
-	FPU::m64r();
 	Msg("%s", "Subdividing geometry...");
 	mem_Compact();
 	xrPhase_Subdivide();
@@ -273,28 +263,24 @@ void	CBuild::StartMu()
 void CBuild::RunAfterLight(IWriter* fs)
 {
 	//****************************************** Merge geometry
-	FPU::m64r();
 	Msg("%s", "Merging geometry...");
 	mem_Compact();
 	xrPhase_MergeGeometry();
 	Logger.Phase("Merging geometry...");
 
 	//****************************************** Convert to OGF
-	FPU::m64r();
 	Msg("%s", "Merging geometry...");
 	mem_Compact();
 	Flex2OGF();
 	Logger.Phase("Converting to OGFs...");
 
 	//****************************************** Wait for MU
-	FPU::m64r();
 	Msg("%s", "LIGHT: Waiting for MU-thread...");
 	mem_Compact();
 	wait_mu_base();
 	wait_mu_secondary();
 	Logger.Phase("LIGHT: Waiting for MU-thread...");
 	//****************************************** Export MU-models
-	FPU::m64r();
 	Msg("%s", "Converting MU-models to OGFs...");
 	mem_Compact();
 	{
@@ -313,21 +299,18 @@ void CBuild::RunAfterLight(IWriter* fs)
 	}
 
 	//****************************************** Destroy RCast-model
-	FPU::m64r();
 	Msg("%s", "Destroying ray-trace model...");
 	mem_Compact();
 	lc_global_data()->destroy_rcmodel();
 	Logger.Phase("Destroying ray-trace model...");
 
 	//****************************************** Build sectors
-	FPU::m64r();
 	Msg("%s", "Building sectors...");
 	mem_Compact();
 	BuildSectors();
 	Logger.Phase("Building sectors...");
 
 	//****************************************** Saving MISC stuff
-	FPU::m64r();
 	Msg("%s", "Saving...");
 	mem_Compact();
 	SaveLights(*fs);

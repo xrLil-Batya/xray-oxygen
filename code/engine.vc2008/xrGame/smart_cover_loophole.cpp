@@ -11,18 +11,9 @@
 #include "smart_cover_object.h"
 #include <luabind/luabind.hpp>
 
-using smart_cover::loophole;
-using smart_cover::action;
-using smart_cover::detail::parse_string;
-using smart_cover::detail::parse_float;
-using smart_cover::detail::parse_table;
-using smart_cover::detail::parse_fvector;
-using smart_cover::detail::parse_bool;
-
 namespace smart_cover {
 	shared_str	transform_vertex(shared_str const &vertex_id, bool const &in);
 	shared_str	parse_vertex	(luabind::object const &table, LPCSTR identifier, bool const &in);
-} // namespace smart_cover
 
 class id_predicate {
 	shared_str m_id;
@@ -46,13 +37,13 @@ loophole::loophole	(luabind::object const &description) :
 {
 	VERIFY2			(description.type() == LUA_TTABLE, "invalid loophole description passed");
 
-	m_id			= parse_string(description,"id");
+	m_id			= smart_cover::detail::parse_string(description,"id");
 
-	m_usable		= parse_bool(description,"usable");
+	m_usable		= smart_cover::detail::parse_bool(description,"usable");
 
-	m_fov_position	= parse_fvector(description, "fov_position");
+	m_fov_position	= smart_cover::detail::parse_fvector(description, "fov_position");
 
-	m_fov_direction	= parse_fvector(description, "fov_direction");
+	m_fov_direction	= smart_cover::detail::parse_fvector(description, "fov_direction");
 	if (m_fov_direction.square_magnitude() < EPS_L) {
 		Msg				("! fov direction for loophole %s is setup incorrectly", m_id.c_str());
 		m_fov_direction.set(0.f, 0.f, 1.f);
@@ -60,7 +51,7 @@ loophole::loophole	(luabind::object const &description) :
 	else
 		m_fov_direction.normalize	();
 
-	m_danger_fov_direction	= parse_fvector(description, "danger_fov_direction");
+	m_danger_fov_direction	= smart_cover::detail::parse_fvector(description, "danger_fov_direction");
 	if (m_danger_fov_direction.square_magnitude() < EPS_L) {
 		Msg				("! danger fov direction for loophole %s is setup incorrectly", m_id.c_str());
 		m_danger_fov_direction.set(0.f, 0.f, 1.f);
@@ -68,7 +59,7 @@ loophole::loophole	(luabind::object const &description) :
 	else
 		m_danger_fov_direction.normalize	();
 
-	m_enter_direction	= parse_fvector(description, "enter_direction");
+	m_enter_direction	= smart_cover::detail::parse_fvector(description, "enter_direction");
 
 	if (m_enter_direction.square_magnitude() < EPS_L) {
 		Msg				("! enter direction for loophole %s is setup incorrectly", m_id.c_str());
@@ -78,7 +69,7 @@ loophole::loophole	(luabind::object const &description) :
 		m_enter_direction.normalize	();
 
 	luabind::object	actions;
-	parse_table		(description, "actions", actions);
+	smart_cover::detail::parse_table		(description, "actions", actions);
 	
 	typedef luabind::object::iterator	iterator;
 	iterator		I = actions.begin();
@@ -100,13 +91,13 @@ loophole::loophole	(luabind::object const &description) :
 		return;
 
 	luabind::object	transitions;
-	parse_table		(description, "transitions", transitions);
+	smart_cover::detail::parse_table		(description, "transitions", transitions);
 
 	fill_transitions(transitions);
 
-	m_fov			= deg2rad(parse_float(description, "fov", 0.f, 360.f));
-	m_danger_fov	= deg2rad(parse_float(description, "danger_fov", 0.f, 360.f));
-	m_range			= parse_float(description, "range", 0.f);
+	m_fov			= deg2rad(smart_cover::detail::parse_float(description, "fov", 0.f, 360.f));
+	m_danger_fov	= deg2rad(smart_cover::detail::parse_float(description, "danger_fov", 0.f, 360.f));
+	m_range			= smart_cover::detail::parse_float(description, "range", 0.f);
 }
 
 void loophole::add_action(LPCSTR type, luabind::object const &table)
@@ -141,7 +132,7 @@ void loophole::fill_transitions(luabind::object const & transitions_table)
 		shared_str		action_from = parse_vertex(table, "action_from", true);
 		shared_str		action_to = parse_vertex(table, "action_to", false);
 		luabind::object	result;
-		parse_table		(table, "animations", result);
+		smart_cover::detail::parse_table		(table, "animations", result);
 		TransitionData	tmp;
 		luabind::object::iterator i = result.begin();
 		luabind::object::iterator e = result.end();
@@ -164,7 +155,7 @@ void loophole::fill_transitions(luabind::object const & transitions_table)
 					animation.c_str());
 			tmp.push_back	(animation);
 		}
-		float			weight = parse_float(table, "weight");
+		float			weight = smart_cover::detail::parse_float(table, "weight");
 
 		if (!m_transitions.vertex(action_from))
 			m_transitions.add_vertex	(imdexlib::empty(), action_from);
@@ -202,3 +193,5 @@ void loophole::exit_position			(Fvector &position) const
 	if (found != m_actions.end())
 		position = found->second->target_position();
 }
+
+} // namespace smart_cover

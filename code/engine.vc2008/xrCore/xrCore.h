@@ -20,7 +20,7 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
-#include <typeinfo.h>
+#include <typeinfo>
 #include <cinttypes>
 #include <chrono>
 
@@ -85,8 +85,10 @@
 #include "_types.h"
 #include "RingBuffer.h"
 #include "thread_utils.h"
+#include "xrProfiling.h"
 #include "xrDebug.h"
 #include "xrMemory.h"
+#include "_std_extensions.h"
 #include "_stl_extensions.h"
 #include "vector.h"
 
@@ -104,6 +106,7 @@
 #include "xr_resource.h"
 #include "rt_compressor.h"
 #include "xr_shared.h"
+#include "ScopeHandle.h"
 
 #ifdef DEBUG
 #include "dump_string.h"
@@ -203,6 +206,8 @@ struct XRCORE_API xrCore
 	void		_initialize(const char* ApplicationName, xrLogger::LogCallback cb = 0, BOOL init_fs = TRUE, const char* fs_fname = 0);
 	void		_destroy();
 	IC	void	SetPluginMode() { PluginMode = true; }
+
+	HMODULE LoadModule(LPCSTR ModuleName, bool bAllowFail = false);
 };
 
 extern XRCORE_API xrCore Core;

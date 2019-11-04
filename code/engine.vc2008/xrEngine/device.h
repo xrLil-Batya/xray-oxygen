@@ -60,6 +60,7 @@ public:
 
 		// Engine flow-control
 	u32										dwFrame;
+	xr_atomic_u32							dwFrameAsync;
 
 	float									fTimeDelta;
 	float									fTimeGlobal;
@@ -262,9 +263,10 @@ public:
     WindowPropStyle GetCurrentWindowPropStyle() const { return (WindowPropStyle)ps_vid_windowtype; };
 
 	// Multi-threading
-	xrCriticalSection	mt_csEnter;
-	xrCriticalSection	mt_csLeave;
 	volatile BOOL		mt_bMustExit;
+	xrConditionalVariable SecondThreadSync;
+	xrCriticalSection SecondThreadCS;
+	xr_atomic_u32 SecondThreadMarker;
 
 	ICF		void			remove_from_seq_parallel(const xrDelegate<void()> &delegate)
 	{

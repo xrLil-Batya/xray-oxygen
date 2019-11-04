@@ -26,8 +26,7 @@ inline u32 calc_cursor(const float& fTimeStarted, float& fTime, const float& fTi
 
 void CSoundRender_Emitter::update(float dt)
 {
-	float fTime = SoundRender->fTimer_Value;
-	float fDeltaTime = SoundRender->fTimer_Delta;
+	float fTime = SoundRender->lastTimestamp;
 
 	VERIFY2(!!(owner_data) || (!(owner_data) && (m_current_state == stStopped)), "owner");
 	VERIFY2(owner_data ? *(int*)(&owner_data->feedback) : 1, "owner");
@@ -113,9 +112,9 @@ void CSoundRender_Emitter::update(float dt)
 				SoundRender->i_stop(this);
 				m_current_state = stSimulating;
 			}
-			fTimeStarted += fDeltaTime;
-			fTimeToStop += fDeltaTime;
-			fTimeToPropagade += fDeltaTime;
+			fTimeStarted += dt;
+			fTimeToStop += dt;
+			fTimeToPropagade += dt;
 			break;
 		}
 		if (fTime >= fTimeToStop)
@@ -142,9 +141,9 @@ void CSoundRender_Emitter::update(float dt)
 	case stSimulating:
 		if (iPaused)
 		{
-			fTimeStarted += fDeltaTime;
-			fTimeToStop += fDeltaTime;
-			fTimeToPropagade += fDeltaTime;
+			fTimeStarted += dt;
+			fTimeToStop += dt;
+			fTimeToPropagade += dt;
 			break;
 		}
 		if (fTime >= fTimeToStop)
@@ -175,8 +174,8 @@ void CSoundRender_Emitter::update(float dt)
 				SoundRender->i_stop(this);
 				m_current_state = stSimulatingLooped;
 			}
-			fTimeStarted += fDeltaTime;
-			fTimeToPropagade += fDeltaTime;
+			fTimeStarted += dt;
+			fTimeToPropagade += dt;
 			break;
 		}
 		if (!update_culling(dt))
@@ -194,8 +193,8 @@ void CSoundRender_Emitter::update(float dt)
 	case stSimulatingLooped:
 		if (iPaused)
 		{
-			fTimeStarted += fDeltaTime;
-			fTimeToPropagade += fDeltaTime;
+			fTimeStarted += dt;
+			fTimeToPropagade += dt;
 			break;
 		}
 		if (update_culling(dt))
@@ -270,9 +269,16 @@ bool CSoundRender_Emitter::update_culling(float dt)
 		}
 
 		// Calc attenuated volume
-		float att = p_source.min_distance / (psSoundRolloff*dist);	clamp(att, 0.f, 1.f);
-		float fade_scale = bStopping || (att*p_source.base_volume*p_source.volume*(owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVMusic) < psSoundCull) ? -1.f : 1.f;
-		fade_volume += dt * 10.f*fade_scale;
+		float attenuation = p_source.min_distance / (psSoundRolloff*dist);	clamp(attenuation, 0.f, 1.f);
+
+		float fadeScale2 = 1.0f;
+		float soundMass = attenuation * p_source.base_volume * p_source.volume * (owner_data->s_type == st_Effect ? psSoundVEffects * psSoundVFactor : psSoundVMusic);
+		if (bStopping || soundMass < psSoundCull)
+		{
+			fadeScale2 = -1.0f;
+		}
+
+		fade_volume += dt * 10.f * fadeScale2;
 
 		// Update occlusion
 		float occ = (owner_data->g_type == SOUND_TYPE_WORLD_AMBIENT) ? 1.0f : SoundRender->get_occlusion(p_source.position, .2f, occluder);

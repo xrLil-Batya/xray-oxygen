@@ -51,7 +51,7 @@ float   base::calc_dist_factor (float dist) const
 float   base::calc_dist_factor (vec_arg factor, float dist) const
 {
 	STEER_ASSERT(m_p_params->min_factor_dist >= s_min_factor_dist);
-	const float  r   = detail::min(dist, m_p_params->min_factor_dist);
+	const float  r   = steering_behaviour::detail::min(dist, m_p_params->min_factor_dist);
 	const float  r2  = r*r;
 
 	return factor.x + factor.y/r + factor.z/r2;
@@ -66,16 +66,16 @@ vec   evade::calc_acceleration ()
 	const vec   dest2pos     = m_p_params->dest - m_p_params->pos;
 	const float dest2pos_mag = magnitude(dest2pos);
 
-	const float dist = detail::max(dest2pos_mag, detail::near_zero);
+	const float dist = steering_behaviour::detail::max(dest2pos_mag, steering_behaviour::detail::near_zero);
 
 	if ( dist > m_p_params->max_evade_range )
 	{
-		return detail::zero_vec;
+		return steering_behaviour::detail::zero_vec;
 	}
 
 	STEER_ASSERT(m_p_params->pf_random_dir != NULL);
 
-	const vec pos2dest_norm = (dest2pos_mag > detail::near_zero) ? 
+	const vec pos2dest_norm = (dest2pos_mag > steering_behaviour::detail::near_zero) ?
 		                      (dest2pos * (1.f/dest2pos_mag)) : normalize( (*m_p_params->pf_random_dir)() );
 
 	return pos2dest_norm * calc_dist_factor(dist);
@@ -92,7 +92,7 @@ vec   pursue::calc_acceleration ()
 
 	if ( dist < m_p_params->arrive_range )
 	{
-		return detail::zero_vec;
+		return steering_behaviour::detail::zero_vec;
 	}
 
 	const vec pos2dest_norm = pos2dest * (1.f/dist);
@@ -104,10 +104,10 @@ vec   pursue::calc_acceleration ()
 		const float sum_vel    = vel + arrive_vel;
 		
 
-		if ( sum_vel < detail::near_zero )
+		if ( sum_vel < steering_behaviour::detail::near_zero )
 		{
 			// fix it ??
-			return detail::zero_vec;
+			return steering_behaviour::detail::zero_vec;
 		}
 
 		const float path_time = 2 * dist / sum_vel;
@@ -130,7 +130,7 @@ vec   restrictor::calc_acceleration ()
 
 	if ( dist <= m_p_params->max_allowed_range )
 	{
-		return detail::zero_vec;
+		return steering_behaviour::detail::zero_vec;
 	}
 	else
 	{
@@ -153,15 +153,15 @@ vec   wander::calc_acceleration ()
 
 	const float proj_dir_mag = magnitude(proj_dir);
 
-	if ( proj_dir_mag < detail::near_zero )
+	if ( proj_dir_mag < steering_behaviour::detail::near_zero )
 	{
-		return detail::zero_vec;
+		return steering_behaviour::detail::zero_vec;
 	}
 	
 	const float cosa = _cos(m_wander_angle);
 	const float sina = _sin(m_wander_angle);
 	
-	vec res = detail::zero_vec;
+	vec res = steering_behaviour::detail::zero_vec;
 	proj_x(res) = proj_dir.x*cosa - proj_dir.y*sina;
 	proj_y(res) = proj_dir.x*sina + proj_dir.y*cosa;
 
@@ -197,14 +197,14 @@ const float&   wander::proj_y (const vec& v)
 
 vec   containment::calc_acceleration ()
 {
-	STEER_ASSERT( magnitude(m_p_params->dir) > detail::near_zero );
-	STEER_ASSERT( magnitude(m_p_params->up)  > detail::near_zero );
+	STEER_ASSERT( magnitude(m_p_params->dir) > steering_behaviour::detail::near_zero );
+	STEER_ASSERT( magnitude(m_p_params->up)  > steering_behaviour::detail::near_zero );
 
 	const vec  dir   = normalize(m_p_params->dir);
 	const vec  up    = normalize(m_p_params->up);
 	const vec  right = normalize( crossproduct(dir, up) );
 
-	vec steer = detail::zero_vec;
+	vec steer = steering_behaviour::detail::zero_vec;
 	for ( params::Probes::iterator i=m_p_params->probes.begin(), e=m_p_params->probes.end(); 
 		  i!=e; ++i )
 	{
@@ -236,8 +236,8 @@ vec   containment::calc_acceleration ()
 
 vec   grouping::calc_acceleration ()
 {
-	vec steer = detail::zero_vec;
-	vec sum_nearest = detail::zero_vec;
+	vec steer = steering_behaviour::detail::zero_vec;
+	vec sum_nearest = steering_behaviour::detail::zero_vec;
 	
 	int num_nearest = 0;
 	vec cur_nearest;
@@ -250,7 +250,7 @@ vec   grouping::calc_acceleration ()
 		
 		if ( point2pos_mag < m_p_params->max_separate_range )
 		{
-			const vec pos2dest_norm = (point2pos_mag > detail::near_zero) ? 
+			const vec pos2dest_norm = (point2pos_mag > steering_behaviour::detail::near_zero) ?
 		                              (point2pos * (1.f/point2pos_mag)) : 
 			                           normalize( (*m_p_params->pf_random_dir)() );
 
@@ -263,7 +263,7 @@ vec   grouping::calc_acceleration ()
 
 	if ( !num_nearest )
 	{
-		return detail::zero_vec;
+		return steering_behaviour::detail::zero_vec;
 	}
 
 	const vec   center         = sum_nearest * (1.f/num_nearest);
@@ -271,7 +271,7 @@ vec   grouping::calc_acceleration ()
 	const float pos2center_mag = magnitude(pos2center);
 
 	// add cohesion force
-	if ( pos2center_mag > detail::near_zero )
+	if ( pos2center_mag > steering_behaviour::detail::near_zero )
 	{
 		steer = steer + normalize(pos2center)*calc_dist_factor(m_p_params->cohesion_factor, pos2center_mag);
 	}
@@ -287,7 +287,7 @@ vec   manager::calc_acceleration ()
 {
 	remove_scheduled ();
 
-	vec v = detail::zero_vec;
+	vec v = steering_behaviour::detail::zero_vec;
 	for ( Behaviours::iterator i=m_behaviours.begin(), e=m_behaviours.end(); i!=e; ++i )
 	{
 		base* p_base = (*i);

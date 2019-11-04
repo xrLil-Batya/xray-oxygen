@@ -87,7 +87,7 @@ public:
 		params (float   max_evade_range, 
 				vec_arg factor,
 				float   min_factor_dist   = base::s_min_factor_dist,
-				vec    (*pf_random_dir)() = &detail::random_vec) 
+				vec    (*pf_random_dir)() = &steering_behaviour::detail::random_vec)
 				: base::params(factor, min_factor_dist),
 				  max_evade_range(max_evade_range), pf_random_dir(pf_random_dir) {}
 
@@ -273,7 +273,7 @@ public:
 			   vec_arg separation_factor, 
 			   float   max_separate_range, 
 			   float   min_factor_dist = base::s_min_factor_dist,
-			   vec (*pf_random_dir)()  = &detail::random_vec) 
+			   vec (*pf_random_dir)()  = &steering_behaviour::detail::random_vec)
 			   : base::params(separation_factor, min_factor_dist), pf_random_dir(pf_random_dir),
 			     cohesion_factor(cohesion_factor), separation_factor(separation_factor),
 				 max_separate_range(max_separate_range) {}

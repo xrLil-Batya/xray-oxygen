@@ -32,7 +32,7 @@ ENGINE_API BOOL g_bRendering = FALSE;
 /////////////////////////////////////
 BOOL		g_bLoaded		= FALSE;
 bool		g_bL			= false;
-ref_light	precache_light	= nullptr;
+ref_light	precache_light;
 /////////////////////////////////////
 
 BOOL CRenderDevice::Begin	()
@@ -121,7 +121,6 @@ void CRenderDevice::End		()
 
 }
 
-volatile u32 mt_Thread_marker = 0x12345678;
 
 void mt_Thread(void *ptr)	
 {
@@ -129,8 +128,7 @@ void mt_Thread(void *ptr)
 
 	while (true) 
 	{
-		// waiting for Device permission to execute
-		Device.mt_csEnter.Enter	();
+		Device.SecondThreadSync.Sleep(Device.SecondThreadCS);
 
 		if (Device.mt_bMustExit) 
 		{
@@ -138,20 +136,17 @@ void mt_Thread(void *ptr)
 			return;
 		}
 		// we has granted permission to execute
-		mt_Thread_marker = Device.dwFrame;
+		Device.SecondThreadMarker = Device.dwFrameAsync.load();
  
-		for (xrDelegate<void()> &refParallelDelegate : Device.seqParallel)
-			refParallelDelegate();
+		{
+			xrProfilingTask SyncTask("Second Thread");
+			for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
+				refParallelDelegate();
 
-		Device.seqParallel.clear();
-		Device.seqFrameMT.Process(rp_Frame);
-
-		// now we give control to device - signals that we are ended our work
-		Device.mt_csEnter.Leave();
-		// waits for device signal to continue - to start again
-		Device.mt_csLeave.Enter();
-		// returns sync signal to device
-		Device.mt_csLeave.Leave();
+			Device.seqParallel.clear();
+			Device.seqFrameMT.Process(rp_Frame);
+		}
+		Device.SecondThreadCS.Leave();
 	}
 }
 
@@ -203,8 +198,10 @@ void CRenderDevice::on_idle()
 		pApp->LoadDraw();
 		return;
 	}
-	else
+
+	Profiling.StartFrame(xrProfiling::eEngineFrame::Main);
 	{
+		xrProfilingTask FrameTask("FrameMove");
 		FrameMove();
 	}
 
@@ -229,16 +226,13 @@ void CRenderDevice::on_idle()
 	mView_saved = mView;
 	mProject_saved = mProject;
 
-	// *** Resume threads
-	// Capture end point - thread must run only ONE cycle
-	// Release start point - allow thread to run
-	mt_csLeave.Enter();
-	mt_csEnter.Leave();
+	SecondThreadSync.WakeOne();
 
 	Statistic->RenderTOTAL_Real.FrameStart();
 	Statistic->RenderTOTAL_Real.Begin();
 	if (b_is_Active)
 	{
+		xrProfilingTask RenderTask("Render");
 		if (Begin())
 		{
 			seqRender.Process(rp_Render);
@@ -259,21 +253,26 @@ void CRenderDevice::on_idle()
 	Statistic->RenderTOTAL_Real.FrameEnd();
 	Statistic->RenderTOTAL.accum = Statistic->RenderTOTAL_Real.accum;
 
-	// *** Suspend threads
-	// Capture startup point
-	// Release end point - allow thread to wait for startup point
-	mt_csEnter.Enter();
-	mt_csLeave.Leave();
+	while (dwFrameAsync != Device.SecondThreadMarker)
+	{
+		Sleep(0);
+	}
+
+	SecondThreadCS.Enter();
+	SecondThreadCS.Leave();
 
 	// Ensure, that second thread gets chance to execute anyway
-	if (dwFrame != mt_Thread_marker)
-	{
-		for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
-			refParallelDelegate();
+// 	if (dwFrame != Device.SecondThreadMarker)
+// 	{
+// 		xrProfilingTask SyncTask("seqParallel");
+// 		for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
+// 			refParallelDelegate();
+// 
+// 		Device.seqParallel.clear();
+// 		seqFrameMT.Process(rp_Frame);
+// 	}
 
-		Device.seqParallel.clear();
-		seqFrameMT.Process(rp_Frame);
-	}
+	Profiling.EndFrame(xrProfiling::eEngineFrame::Main);
 
 	if (!b_is_Active) 
 	{ 
@@ -368,7 +367,7 @@ void CRenderDevice::Run			()
 
 	// Stop Balance-Thread
 	mt_bMustExit			= TRUE;
-	mt_csEnter.Leave();
+	SecondThreadSync.WakeOne();
 	while (mt_bMustExit)	
 		Sleep(0);
 }
@@ -397,13 +396,13 @@ void CRenderDevice::BeginToWork()
 	}
 
 	// Start all threads
-	mt_csEnter.Enter();
 	mt_bMustExit = FALSE;
 	thread_spawn(mt_Thread, "X-RAY Secondary thread", 0, nullptr);
 
 	// Message cycle
 	seqAppStart.Process(rp_AppStart);
 	m_pRender->ClearTarget();
+	Profiling.ResumeProfiling();
 }
 
 void CRenderDevice::GetXrWindowRect(RECT& OutWindowRect, bool bClientRect /*= false*/) const
@@ -539,6 +538,7 @@ void ProcessLoading(RP_FUNC *f);
 void CRenderDevice::FrameMove()
 {
 	dwFrame			++;
+	dwFrameAsync++;
 
 	Core.dwFrame = dwFrame;
 

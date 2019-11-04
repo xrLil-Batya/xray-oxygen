@@ -286,6 +286,20 @@ bool dxRenderDeviceRender::HWSupportsShaderYUV2RGB()
 	return (v_dev>=v_need);
 }
 
+u32 dxRenderDeviceRender::GetGPULoadPercent()
+{
+	if (HW.Caps.IsNvidiaCard())
+	{
+		return HW.Caps.NvidiaSpecific.GetPercentActive();
+	}
+	else if (HW.Caps.IsAMDCard())
+	{
+		return HW.Caps.AMDSpecific.GetPercentActive();
+	}
+
+	return 0;
+}
+
 void  dxRenderDeviceRender::OnAssetsChanged()
 {
     Resources->m_textures_description.UnLoad();

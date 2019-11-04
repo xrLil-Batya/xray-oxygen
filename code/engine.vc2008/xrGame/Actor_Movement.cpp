@@ -182,6 +182,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 		if (mstate_wf&mcRStrafe)	vControlAccel.x +=	m_movementWeight.x;
 	}
 
+#if 0
 	if ((Level().CurrentControlEntity() == this) && g_ShowAnimationInfo)
 	{
 		string128 buf;
@@ -204,6 +205,7 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 		StatFont->OutNext("MSTATE WISHFUL:     [%s]", buf);
 		StatFont->OutNext("vControlAccel:     [%f, %f, %f]", vControlAccel.x, vControlAccel.y, vControlAccel.z);
 	};
+#endif
 
 	CPHMovementControl::EEnvironment curr_env = character_physics_support()->movement()->Environment();
 	if(curr_env==CPHMovementControl::peOnGround || curr_env==CPHMovementControl::peAtWall)

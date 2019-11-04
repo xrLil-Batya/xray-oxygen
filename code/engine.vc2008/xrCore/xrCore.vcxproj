@@ -55,31 +55,26 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
     <Import Project="..\..\F-Ray.props" />
     <Import Project="..\..\WindowsPlatform.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Durango'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
     <Import Project="..\..\F-Ray.props" />
     <Import Project="..\..\xBoxPlatform.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
     <Import Project="..\..\F-Ray.props" />
     <Import Project="..\..\WindowsPlatform.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Durango'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
     <Import Project="..\..\F-Ray.props" />
     <Import Project="..\..\xBoxPlatform.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
     <Import Project="..\..\F-Ray.props" />
     <Import Project="..\..\WindowsPlatform.props" />
   </ImportGroup>
@@ -164,7 +159,7 @@
       </DataExecutionPrevention>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo ### Parsing git... ###
@@ -237,7 +232,6 @@ start GitParser\GitParser.exe</Command>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
-      <FloatingPointModel>Fast</FloatingPointModel>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -252,7 +246,6 @@ start GitParser\GitParser.exe</Command>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -270,7 +263,7 @@ start GitParser\GitParser.exe</Command>
       </DataExecutionPrevention>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo ### Parsing git... ###
@@ -384,7 +377,7 @@ start GitParser\GitParser.exe</Command>
       </DataExecutionPrevention>
       <AdditionalLibraryDirectories>$(xrLib)..\Release\;</AdditionalLibraryDirectories>
       <ImportLibrary>$(xrLib)..\Release\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo ### Parsing git... ###
@@ -470,6 +463,7 @@ start GitParser\GitParser.exe</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="PostprocessAnimator.cpp" />
+    <ClCompile Include="ScopeHandle.cpp" />
     <ClCompile Include="SPPInfo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -487,8 +481,10 @@ start GitParser\GitParser.exe</Command>
     <ClCompile Include="XMLCore\tinyxml.cpp" />
     <ClCompile Include="XMLCore\xrXMLParser.cpp" />
     <ClCompile Include="xrCore.cpp" />
+    <ClCompile Include="xrDebugSymbol.cpp" />
     <ClCompile Include="xrMemoryDebug.cpp" />
     <ClCompile Include="xrMemoryUtils.cpp" />
+    <ClCompile Include="xrProfiling.cpp" />
     <ClCompile Include="_bitwise.cpp" />
     <ClCompile Include="_compressed_normal.cpp" />
     <ClCompile Include="_math.cpp" />
@@ -551,11 +547,14 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="Platform\xrPlatformUtils.h" />
     <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="RingBuffer.h" />
+    <ClInclude Include="ScopeHandle.h" />
     <ClInclude Include="StringsUtils.h" />
     <ClInclude Include="XMLCore\Expression.h" />
+    <ClInclude Include="xrDebugSymbol.h" />
     <ClInclude Include="xrDelegate\xrDelegate.h" />
     <ClInclude Include="xrDelegate\xrDelegateArguments.h" />
     <ClInclude Include="xrDelegate\xrDelegateBinder.h" />
+    <ClInclude Include="xrLazyVector.h" />
     <ClInclude Include="xrMemoryDebug.h" />
     <ClInclude Include="xrMemoryUtils.h" />
     <ClInclude Include="xrMemory_C.h" />
@@ -566,6 +565,7 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="xrAPI.h" />
     <ClInclude Include="xrCore.h" />
     <ClInclude Include="xrCore_platform.h" />
+    <ClInclude Include="xrProfiling.h" />
     <ClInclude Include="_bitwise.h" />
     <ClInclude Include="_color.h" />
     <ClInclude Include="_compressed_normal.h" />

@@ -28,9 +28,11 @@ public:
 	u64						_order;
 };
 
-struct RENDER_API resptrcode_crt: public resptr_base<CRT>
+struct RENDER_API ref_rt : public resptr_core<CRT>
 {
+	using RenderTargetRefCore = resptr_core<CRT>;
+	using RenderTargetRefCore::RenderTargetRefCore;
+
 	void create			(LPCSTR Name, u32 w, u32 h, DXGI_FORMAT f, u32 SampleCount = 1, bool useUAV = false );
 	void destroy		()	{ _set(NULL);		}
 };
-typedef	resptr_core<CRT,resptrcode_crt>		ref_rt;

@@ -190,7 +190,7 @@ void CAI_Dog::UpdateCL()
 {
 	inherited::UpdateCL();
 
-	if ( !detail::object_exists_in_alife_registry (ID()) )
+	if ( !AlifeUtils::object_exists_in_alife_registry (ID()) )
 		return;
 
 	if ( b_anim_end )

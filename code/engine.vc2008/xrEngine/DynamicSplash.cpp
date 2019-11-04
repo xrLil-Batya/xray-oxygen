@@ -126,7 +126,7 @@ VOID DSplashScreen::ShowSplash()
 		R_ASSERT(hEvent);
 		if (hEvent != NULL)
 		{
-			hThread = (HANDLE)_beginthreadex(nullptr, 0, SplashThreadProc, static_cast<LPVOID>(this), 0, &threadID);
+			hThread = thread_spawn(SplashThreadProc, "Splash thread", 0, this);
 			threadId = threadID;
 			R_ASSERT(WaitForSingleObject(hEvent, 5000) != WAIT_TIMEOUT);
 		}
@@ -177,13 +177,10 @@ VOID DSplashScreen::SetProgressColor(COLORREF refColor)
 	PostThreadMessage(threadId, PBM_SETBARCOLOR, NULL, refColor);
 }
 
-UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
+void WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 {
-	string128 SplashScreenThreadName = "X-RAY Splashscreen thread";
-	PlatformUtils.SetCurrentThreadName(SplashScreenThreadName);
-
 	DSplashScreen* pSplash = static_cast<DSplashScreen*>(pData);
-	if (!pSplash) { return 0; }
+	if (!pSplash) { return; }
 
 	Gdiplus::Image* pSplashImage = reinterpret_cast<Gdiplus::Image*>(pSplash->pMainImage);
 
@@ -297,7 +294,6 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 	}
 
 	DestroyWindow(pSplash->hwndSplash);
-	return NULL;
 }
 
 LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

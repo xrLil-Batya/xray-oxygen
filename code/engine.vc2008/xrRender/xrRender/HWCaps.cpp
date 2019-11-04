@@ -7,6 +7,27 @@
 #include "../../xrEngine/AMDGPUTransferee.h"
 #include "../../xrEngine/NvGPUTransferee.h"
 
+bool CHWCaps::IsNvidiaCard() const
+{
+	constexpr UINT NvidiaVendorID = 0x10DE;
+	return id_vendor == NvidiaVendorID;
+}
+
+bool CHWCaps::IsAMDCard() const
+{
+	constexpr UINT AMD1VendorID = 0x1002;
+	constexpr UINT AMD2VendorID = 0x1022;
+	return id_vendor == AMD1VendorID || id_vendor == AMD2VendorID;
+}
+
+bool CHWCaps::IsIntelCard() const
+{
+	constexpr UINT Intel1VendorID = 0x163C;
+	constexpr UINT Intel2VendorID = 0x8086;
+	constexpr UINT Intel3VendorID = 0x8087;
+	return id_vendor == Intel1VendorID || id_vendor == Intel2VendorID || id_vendor == Intel3VendorID;
+}
+
 void CHWCaps::Update()
 {
 	// ***************** GEOMETRY
@@ -61,15 +82,33 @@ void CHWCaps::Update()
 	dwMaxStencilValue=(1<<8)-1;
 
 	// DEV INFO
+	DXGI_ADAPTER_DESC videoAdapterDesc;
+	ZeroMemory(&videoAdapterDesc, sizeof(videoAdapterDesc));
+	if (SUCCEEDED(HW.m_pAdapter->GetDesc(&videoAdapterDesc)))
+	{
+		id_vendor = videoAdapterDesc.VendorId;
+
+		if (IsNvidiaCard())
+		{
+			NvidiaSpecific.Initialize();
+		}
+		else if (IsAMDCard())
+		{
+			AMDSpecific.Initialize();
+		}
+	}
+	else
+	{
+		Msg("* HW.m_pAdapter->GetDesc failed!");
+	}
+
 	if (CNvReader::bSupport)
 	{
-		id_vendor = 0x10DE;
-		iGPUNum = NvData.GetGPUCount();
+		iGPUNum = NvidiaSpecific.GetGPUCount();
 	}
 	else if (CAMDReader::bAMDSupportADL)
 	{
-		id_vendor = 1002;
-		iGPUNum = AMDData.GetGPUCount();
+		iGPUNum = AMDSpecific.GetGPUCount();
 	}
 	else
 		iGPUNum = 1;

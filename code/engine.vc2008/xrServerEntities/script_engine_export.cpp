@@ -13,6 +13,8 @@
 #include "script_engine_export.h"
 #pragma warning(pop)
 
+#undef SCRIPT_REGISTRATOR
+
 #pragma optimize("s",on)
 template <typename TList> struct Register
 {

@@ -3,10 +3,13 @@
 #include "BaseMonster/base_monster.h"
 #include "control_manager.h"
 
-#define CHECK_YAW					165 * PI / 180
-#define ROTATION_JUMP_DELAY_MIN		500
-#define ROTATION_JUMP_DELAY_MAX		1000
-#define MAX_DISTANCE_TO_ENEMY		4.f
+namespace ControlMeleeJumpDetails
+{
+	constexpr float CheckYaw = 165.0f * PI / 180.0f;
+	constexpr int RotationJumpDelayMin = 500;
+	constexpr int RotationJumpDelayMax = 1000;
+	constexpr float MaxDistanceToEnemy = 4.0f;
+}
 
 void CControlMeleeJump::reinit()
 {
@@ -26,8 +29,8 @@ bool CControlMeleeJump::check_start_conditions()
 
 	Fvector				enemy_position;
 	enemy_position.set	(m_object->EnemyMan.get_enemy()->Position());
-	if (m_man->direction().is_face_target(enemy_position, CHECK_YAW))				return false;
-	if (enemy_position.distance_to(m_object->Position()) > MAX_DISTANCE_TO_ENEMY)	return false;
+	if (m_man->direction().is_face_target(enemy_position, ControlMeleeJumpDetails::CheckYaw))				return false;
+	if (enemy_position.distance_to(m_object->Position()) > ControlMeleeJumpDetails::MaxDistanceToEnemy)	return false;
 
 	return true;		
 }
@@ -80,7 +83,7 @@ void CControlMeleeJump::on_release()
 	m_man->release_pure	(this);
 	m_man->unsubscribe	(this, ControlCom::eventAnimationEnd);
 
-	m_time_next_melee_jump = Device.dwTimeGlobal + Random.randI(ROTATION_JUMP_DELAY_MIN,ROTATION_JUMP_DELAY_MAX);
+	m_time_next_melee_jump = Device.dwTimeGlobal + Random.randI(ControlMeleeJumpDetails::RotationJumpDelayMin, ControlMeleeJumpDetails::RotationJumpDelayMax);
 }
 
 void CControlMeleeJump::on_event(ControlCom::EEventType type, ControlCom::IEventData *dat)

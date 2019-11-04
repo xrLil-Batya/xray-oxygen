@@ -54,6 +54,8 @@ void __cdecl thread_entry(void*	_params)
 	// initialize
 	THREAD_STARTUP* startup = (THREAD_STARTUP*)_params;
 	PlatformUtils.SetCurrentThreadName(startup->name);
+	Profiling.SetCurrentThreadName(startup->name);
+
 	thread_t* entry = startup->entry;
 	void* arglist = startup->args;
 	xr_delete(startup);
@@ -122,3 +124,26 @@ xrSharedCriticalSectionGuard& xrSharedCriticalSectionGuard::operator=(const xrSh
 	return *this;
 }
 
+xrConditionalVariable::xrConditionalVariable()
+{
+	InitializeConditionVariable(&Variable);
+}
+
+xrConditionalVariable::~xrConditionalVariable()
+{}
+
+void xrConditionalVariable::WakeOne()
+{
+	WakeConditionVariable(&Variable);
+}
+
+void xrConditionalVariable::WakeAll()
+{
+	WakeAllConditionVariable(&Variable);
+}
+
+void xrConditionalVariable::Sleep(xrCriticalSection& AcquiringCS)
+{
+	SleepConditionVariableCS(&Variable, &AcquiringCS.Section, INFINITE);
+	AcquiringCS.isLocked = true;
+}

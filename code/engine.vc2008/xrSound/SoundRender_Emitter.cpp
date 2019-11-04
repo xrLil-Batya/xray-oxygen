@@ -20,12 +20,8 @@ void CSoundRender_Emitter::set_position(const Fvector &pos)
 }
 
 CSoundRender_Emitter::CSoundRender_Emitter() : target(nullptr), owner_data(nullptr), smooth_volume(1.f), occluder_volume(1.f),
-		fade_volume(1.f), m_current_state(stStopped), bMoved(true), b2D(false), bStopping(false), bRewind(false), marker(0xabababab)
+		fade_volume(1.f), m_current_state(stStopped), bMoved(true), b2D(false), bStopping(false), bRewind(false), lastUpdateFrame(0xabababab)
 {
-#ifdef DEBUG
-	static	u32 incrementalID = 0;
-	dbg_ID = ++incrementalID;
-#endif
 	memset(occluder, 0, sizeof(Fvector));
 	set_cursor(0);
 
@@ -100,7 +96,7 @@ void CSoundRender_Emitter::switch_to_3D()
 u32	CSoundRender_Emitter::play_time()
 {
 	if (m_current_state == stPlaying || m_current_state == stPlayingLooped || m_current_state == stSimulating || m_current_state == stSimulatingLooped)
-		return iFloor((SoundRender->fTimer_Value - fTimeStarted)*1000.0f);
+		return iFloor((SoundRender->lastTimestamp - fTimeStarted)*1000.0f);
 	else
 		return 0;
 }

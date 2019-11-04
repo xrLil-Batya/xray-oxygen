@@ -124,6 +124,8 @@ volatile size_t g_threads = 0;
 
 void mtInitGlobals(void *)
 {
+	xrProfilingTask SyncTask("Init Game Info");
+
 	InterlockedIncrement(&g_threads);
 	Log("* Init game globals...");
 	init_game_globals();

@@ -24,25 +24,14 @@ private:
 	// Memory allocation function
 	static void* __stdcall MemoryAllocator(int iSize)
 	{
-		lpBuffer = xr_malloc(iSize);
-		return lpBuffer;
-	}
-
-	// Optional Memory de-allocation function
-	static void MemoryDeallocator()
-	{
-		if (lpBuffer)
-		{
-			xr_free(lpBuffer);
-			lpBuffer = nullptr;
-		}
+		return xr_malloc(iSize);
 	}
 
 private:
 	ADL_MAIN_CONTROL_CREATE					Main_Control_Create;
 	ADL_MAIN_CONTROL_DESTROY				Main_Control_Destroy;
 
-	ADL_ADAPTER_ADAPTERINFO_GET				GetAdapter_AdapterInfo;
+	ADL_ADAPTER_ADAPTERINFO_GET				ADL_Adapter_AdapterInfo_Get;
 	ADL_ADAPTER_NUMBEROFADAPTERS_GET		GetAdapter_NumberOfAdapters;
 	ADL_ADAPTER_ACTIVE_GET					GetAdapter_Active;
 	ADL_OVERDRIVE5_CURRENTACTIVITY_GET		GetOverdrive5_CurrentActivity;
@@ -57,8 +46,11 @@ private:
 	int				AdapterID;
 	int				AdapterADLInfo;
 	int				AdapterAGSInfo;
-	static void*	lpBuffer;
 	ADLPMActivity	activity;
+	HMODULE		    hAMDMain;
+	HMODULE		    hAMDAGS;
+
+	bool bInitialized = false;
 
 private:
 	void	InitDeviceInfo	();
@@ -68,6 +60,7 @@ public:
 			CAMDReader		();
 			~CAMDReader		();
 
+	void	Initialize();
 	u32		GetPercentActive();
 	u32		GetTemperature();
 	u32		GetGPUCount		();
@@ -75,5 +68,3 @@ public:
 public:
 	static bool bAMDSupportADL;
 };
-
-extern ENGINE_API CAMDReader AMDData;

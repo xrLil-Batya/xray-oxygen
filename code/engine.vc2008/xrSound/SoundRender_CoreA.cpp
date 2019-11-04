@@ -102,7 +102,7 @@ void CSoundRender_CoreA::_initialize(int stage)
 			if (T->_initialize())
 			{
 				if (bEFX)T->alAuxInit(slot);
-				s_targets.push_back(T);
+				targets.push_back(T);
 			}
 			else
 			{
@@ -126,9 +126,9 @@ void CSoundRender_CoreA::_clear()
 	inherited::_clear();
 	// remove targets
 	CSoundRender_Target*	T = 0;
-	for (u32 tit = 0; tit < s_targets.size(); tit++)
+	for (u32 tit = 0; tit < targets.size(); tit++)
 	{
-		T = s_targets[tit];
+		T = targets[tit];
 		T->_destroy();
 		xr_delete(T);
 	}
