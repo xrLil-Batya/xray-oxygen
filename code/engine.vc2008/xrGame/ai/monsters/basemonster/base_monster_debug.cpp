@@ -469,7 +469,7 @@ void   add_debug_info (debug::text_tree& root_s, CScriptEntityAction* p_action)
 
 	if ( action_condition.m_dwFlags & CScriptActionCondition::MOVEMENT_FLAG	)
 	{
-		pcstr const path_name				=	 move_action.m_path_name.c_str();
+		LPCSTR const path_name				=	 move_action.m_path_name.c_str();
 
 		movement_action_s.add_line("Path_Name", path_name ? path_name : "-");
 		movement_action_s.add_line("Move_Action", (int)move_action.m_tMoveAction);

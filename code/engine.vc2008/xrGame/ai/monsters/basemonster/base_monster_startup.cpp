@@ -185,10 +185,10 @@ void CBaseMonster::PostLoad (LPCSTR section)
 	{
 		SVelocityParam&	velocity_run		=	move().get_velocity(MonsterMovement::eVelocityParameterRunNormal);
 
-		pcstr	attack_on_move_anim_l		=	READ_IF_EXISTS(pSettings, r_string, section, 
+		LPCSTR	attack_on_move_anim_l		=	READ_IF_EXISTS(pSettings, r_string, section, 
 																"aom_animation_left", "stand_attack_run_");
 		anim().AddAnim (eAnimAttackOnRunLeft, attack_on_move_anim_l, -1, &velocity_run, PS_STAND);
-		pcstr	attack_on_move_anim_r		=	READ_IF_EXISTS(pSettings, r_string, section, 
+		LPCSTR	attack_on_move_anim_r		=	READ_IF_EXISTS(pSettings, r_string, section, 
 																"aom_animation_right", "stand_attack_run_");
 		anim().AddAnim (eAnimAttackOnRunRight, attack_on_move_anim_r, -1, &velocity_run, PS_STAND);
 	}
@@ -203,7 +203,7 @@ void CBaseMonster::PostLoad (LPCSTR section)
 		m_anti_aim							=	xr_new<anti_aim_ability>(this);
 		control().add							(m_anti_aim,  ControlCom::eAntiAim);
 
-		pcstr	anti_aim_animation			=	READ_IF_EXISTS(pSettings, r_string, section, 
+		LPCSTR	anti_aim_animation			=	READ_IF_EXISTS(pSettings, r_string, section, 
 												"anti_aim_animation", "stand_attack_");
 		anim().AddAnim							(eAnimAntiAimAbility, anti_aim_animation, -1, 
 												&velocity_stand, PS_STAND);

@@ -115,7 +115,7 @@ int   CScriptGameObject::get_visibility_state ()
 	return monster->get_visibility_state();
 }
 
-void   CScriptGameObject::set_override_animation (pcstr anim_name)
+void   CScriptGameObject::set_override_animation (LPCSTR anim_name)
 {
 	CBaseMonster* monster	=	smart_cast<CBaseMonster*>(&object());
 	if (!monster) {

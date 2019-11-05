@@ -18,9 +18,6 @@ using u64 = std::uint64_t;
 using f32 = float;
 using f64 = double;
 
-using pstr = char*;
-using pcstr = const char*;
-
 #	undef max
 #	undef min
 

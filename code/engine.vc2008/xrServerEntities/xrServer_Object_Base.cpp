@@ -96,7 +96,7 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 	m_ini_file					= nullptr;
 
 	if (pSettings->line_exist(caSection,"custom_data")) {
-		pcstr const raw_file_name	= pSettings->r_string(caSection,"custom_data");
+		LPCSTR const raw_file_name	= pSettings->r_string(caSection,"custom_data");
 		IReader const* config	= nullptr;
 		
 #ifdef XRGAME_EXPORTS

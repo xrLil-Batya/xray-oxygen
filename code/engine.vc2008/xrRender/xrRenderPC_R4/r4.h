@@ -326,7 +326,7 @@ public:
 	virtual void                    BeforeWorldRender           (); // +SecondVP+ Вызывается перед началом рендера мира и пост-эффектов
 	virtual void                    AfterWorldRender            ();  // +SecondVP+ Вызывается после рендера мира и перед UI
 
-	virtual void					ChangeMark					(pcstr mark); // Mortan: проверяем каждый кадр
+	virtual void					ChangeMark					(LPCSTR mark); // Mortan: проверяем каждый кадр
 
 	// Render mode
 	virtual void					rmNear						();
