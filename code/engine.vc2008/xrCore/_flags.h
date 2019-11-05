@@ -24,10 +24,10 @@ public:
 	IC  bool    bitTest (const int bitNum)					const	{ u64 tempFlag = flags; return _bittest64((LONG64*)&tempFlag, bitNum); }
 	IC 	bool	is_any	(const T mask)						const	{ return !!(flags&mask);				}
 	IC 	bool	test	(const T mask)						const	{ return !!(flags&mask);				}
-	IC 	SelfRef	or		(const T mask)								{ flags|=mask;			return *this;	}
-	IC 	SelfRef	or		(const Self& f, const T mask) 				{ flags=f.flags|mask;	return *this;	}
-	IC 	SelfRef	and		(const T mask)								{ flags&=mask;			return *this;	}
-	IC 	SelfRef	and		(const Self& f, const T mask) 				{ flags=f.flags&mask;	return *this;	}
+	IC 	SelfRef	maskOr		(const T mask)							{ flags|=mask;			return *this;	}
+	IC 	SelfRef	maskOr		(const Self& f, const T mask) 			{ flags=f.flags|mask;	return *this;	}
+	IC 	SelfRef	maskAnd		(const T mask)							{ flags&=mask;			return *this;	}
+	IC 	SelfRef	maskAnd		(const Self& f, const T mask) 			{ flags=f.flags&mask;	return *this;	}
 	IC 	bool	equal	(const Self& f) 			  		const	{ return flags==f.flags;}
 	IC 	bool	equal	(const Self& f, const T mask) 		const	{ return (flags&mask)==(f.flags&mask);}
 };

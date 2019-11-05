@@ -20,13 +20,13 @@ XCore::XCore()
 	//if (!strstr(Core.Params, "-editor")) { CoInitializeEx(NULL, COINIT_MULTITHREADED); }
 
 	// load any version of XAudio2
-	XAudioDLL = ::LoadLibraryExA("XAudio2_9.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	XAudioDLL = Core.LoadModule("XAudio2_9.DLL", true);
 	if (!XAudioDLL)
 	{
-		XAudioDLL = ::LoadLibraryExA("XAudio2_8.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+		XAudioDLL = Core.LoadModule("XAudio2_8.DLL", true);
 		if (!XAudioDLL)
 		{
-			XAudioDLL = ::LoadLibraryExA("XAudio2_7.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+			XAudioDLL = Core.LoadModule("XAudio2_7.DLL", false);
 		}
 	}
 
@@ -317,7 +317,7 @@ void CSoundRender_CoreB::_initialize(int stage)
 			T = new CSoundRender_TargetB();
 			if (T->_initialize())
 			{
-				s_targets.push_back(T);
+				targets.push_back(T);
 			}
 			else
 			{
@@ -338,9 +338,9 @@ void CSoundRender_CoreB::_clear()
 	
 	// remove all targets
 	CSoundRender_Target* T = 0;
-	for (u32 tit = 0; tit < s_targets.size(); tit++)
+	for (u32 tit = 0; tit < targets.size(); tit++)
 	{
-		T = s_targets[tit];
+		T = targets[tit];
 		T->_destroy();
 		xr_delete(T);
 	}

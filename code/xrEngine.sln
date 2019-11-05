@@ -122,6 +122,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrShaders", "engine.vc2008\xrRender\xrShaders\xrShaders.vcxproj", "{58818F0E-2DA2-48E4-9BB8-4D7629426F25}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrDebugger", "engine.vc2008\xrDebugger\xrDebugger.vcxproj", "{77B2C98B-7F21-4595-9E67-47289E30BDBD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E} = {A0F7D1FB-59A7-4717-A7E4-96F37E91998E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Theora", "SDK\sources\Theora.vcxproj", "{3E53F102-980E-43D2-A181-0EE92A6BAD54}"
 EndProject

@@ -7,7 +7,7 @@
 #include "../../Inventory.h"
 #include "../../items/Weapon.h"
 
-namespace detail
+namespace AntiAimAbilityDetails
 {
 	static pcstr const	s_anti_aim_timeout_string				=	"anti_aim_timeout";
 	static pcstr const	s_anti_aim_effectors_string				=	"anti_aim_effectors";
@@ -35,14 +35,12 @@ anti_aim_ability::~anti_aim_ability ()
 
 void   anti_aim_ability::load_from_ini (CInifile* ini, pcstr const section)
 {
-	using namespace						detail;
-
-	m_timeout						=	READ_IF_EXISTS(ini, r_float, section, s_anti_aim_timeout_string, 5.f);
-	m_freeze_time					=	READ_IF_EXISTS(ini, r_float, section, s_anti_aim_freeze_time_string, 1.f);
-	m_max_angle						=	READ_IF_EXISTS(ini, r_float, section, s_anti_aim_max_angle_string, 0.5f);
-	m_detection_gain_speed			=	READ_IF_EXISTS(ini, r_float, section, s_anti_aim_detection_gain_speed_string, 1.f);
-	m_detection_loose_speed			=	READ_IF_EXISTS(ini, r_float, section, s_anti_aim_detection_loose_speed_string, 0.1f);
-	pcstr effectors					=	READ_IF_EXISTS(ini, r_string, section, s_anti_aim_effectors_string, NULL);
+	m_timeout						=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_timeout_string, 5.f);
+	m_freeze_time					=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_freeze_time_string, 1.f);
+	m_max_angle						=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_max_angle_string, 0.5f);
+	m_detection_gain_speed			=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_detection_gain_speed_string, 1.f);
+	m_detection_loose_speed			=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_detection_loose_speed_string, 0.1f);
+	pcstr effectors					=	READ_IF_EXISTS(ini, r_string, section, AntiAimAbilityDetails::s_anti_aim_effectors_string, NULL);
 
 	if ( effectors )
 	{

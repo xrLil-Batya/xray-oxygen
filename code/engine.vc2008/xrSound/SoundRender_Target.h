@@ -31,7 +31,7 @@ public:
 	virtual ~CSoundRender_Target();
 
 	inline CSoundRender_Emitter* get_emitter() { return m_pEmitter; }
-	inline bool get_Rendering() { return rendering; }
+	inline bool IsRendering() { return rendering; }
 
 	virtual bool _initialize() = 0;
 	virtual void _destroy() = 0;

@@ -21,21 +21,21 @@ SGeometry::~SGeometry					()			{	DEV->DeleteGeom			(this);			}
 Shader::~Shader							()			{	DEV->Delete				(this);			}
 																							 
 //////////////////////////////////////////////////////////////////////////					 
-void	resptrcode_shader::create		(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
+void	ref_shader::create		(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 	_set(DEV->Create		(s_shader,s_textures,s_constants,s_matrices));
 }
-void	resptrcode_shader::create		(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
+void	ref_shader::create		(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 	_set(DEV->Create		(B,s_shader,s_textures,s_constants,s_matrices));
 }
 
 //////////////////////////////////////////////////////////////////////////
-void	resptrcode_geom::create			(u32 FVF , ID3DVertexBuffer* vb, ID3DIndexBuffer* ib)
+void	ref_geom::create			(u32 FVF , ID3DVertexBuffer* vb, ID3DIndexBuffer* ib)
 {
 	_set(DEV->CreateGeom		(FVF,vb,ib));
 }
-void	resptrcode_geom::create			(D3DVERTEXELEMENT9* decl, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib)
+void	ref_geom::create			(D3DVERTEXELEMENT9* decl, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib)
 {
 	_set(DEV->CreateGeom		(decl,vb,ib));
 }

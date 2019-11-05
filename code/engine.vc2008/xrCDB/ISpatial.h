@@ -136,7 +136,7 @@ class XRCDB_API	ISpatial_DB
 private:
 	xrCriticalSection				cs;
 
-	poolSS< ISpatial_NODE, 128 >	allocator;
+	poolSS< ISpatial_NODE, 256 >	allocator;
 
 	xr_vector<ISpatial_NODE*>		allocator_pool;
 	ISpatial*						rt_insert_object;

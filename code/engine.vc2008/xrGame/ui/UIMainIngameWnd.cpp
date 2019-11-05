@@ -53,17 +53,6 @@
 
 
 using namespace InventoryUtilities;
-const u32	g_clWhite					= 0xffffffff;
-
-#define		DEFAULT_MAP_SCALE			1.f
-
-#define		C_SIZE						0.025f
-#define		NEAR_LIM					0.5f
-
-#define		SHOW_INFO_SPEED				0.5f
-#define		HIDE_INFO_SPEED				10.f
-#define		C_ON_ENEMY					D3DCOLOR_XRGB(0xff,0,0)
-#define		C_DEFAULT					D3DCOLOR_XRGB(0xff,0xff,0xff)
 
 #define				MAININGAME_XML				"ui_HUD.xml"
 

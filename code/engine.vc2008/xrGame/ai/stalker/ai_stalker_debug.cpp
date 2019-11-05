@@ -971,7 +971,7 @@ void CAI_Stalker::dbg_draw_vision	()
 
 typedef xr_vector<Fvector>	COLLIDE_POINTS;
 
-class ray_query_param	{
+class AiStalkerDebug_ray_query_param	{
 public:
 	CCustomMonster			*m_holder;
 	float					m_power;
@@ -982,7 +982,7 @@ public:
 	COLLIDE_POINTS			*m_points;
 
 public:
-	IC				ray_query_param		(CCustomMonster *holder, float power_threshold, float distance, const Fvector &start_position, const Fvector &direction, COLLIDE_POINTS &points)
+	IC				AiStalkerDebug_ray_query_param		(CCustomMonster *holder, float power_threshold, float distance, const Fvector &start_position, const Fvector &direction, COLLIDE_POINTS &points)
 	{
 		m_holder			= holder;
 		m_power				= 1.f;
@@ -994,9 +994,9 @@ public:
 	}
 };
 
-BOOL _ray_query_callback	(collide::rq_result& result, LPVOID params)
+BOOL aiStalkerDebug_ray_query_callback	(collide::rq_result& result, LPVOID params)
 {
-	ray_query_param						*param = (ray_query_param*)params;
+	AiStalkerDebug_ray_query_param						*param = (AiStalkerDebug_ray_query_param*)params;
 	param->m_points->push_back			(
 		Fvector().mad(
 			param->m_start_position,
@@ -1021,9 +1021,9 @@ void fill_points			(CCustomMonster *self, const Fvector &position, const Fvector
 	collide::ray_defs				ray_defs(position,direction,distance,CDB::OPT_CULL,collide::rqtBoth);
 	VERIFY							(!fis_zero(ray_defs.dir.square_magnitude()));
 	
-	ray_query_param					params(self,self->memory().visual().transparency_threshold(),distance,position,direction,points);
+	AiStalkerDebug_ray_query_param					params(self,self->memory().visual().transparency_threshold(),distance,position,direction,points);
 
-	Level().ObjectSpace.RayQuery	(rq_storage, ray_defs, (collide::rq_callback*)_ray_query_callback, &params, nullptr, self);
+	Level().ObjectSpace.RayQuery	(rq_storage, ray_defs, (collide::rq_callback*)aiStalkerDebug_ray_query_callback, &params, nullptr, self);
 
 	pick_distance					= params.m_pick_distance;
 }

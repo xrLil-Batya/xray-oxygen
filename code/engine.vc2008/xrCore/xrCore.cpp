@@ -4,11 +4,9 @@
 #include <objbase.h>
 #include "../FrayBuildConfig.hpp"
 #include "oxy_version.h"
+#include "xrDebugSymbol.h"
+#include "DateTime.hpp"
 #pragma comment(lib,"winmm.lib")
-
-#ifdef DEBUG
-#	include	<malloc.h>
-#endif // DEBUG
 
 XRCORE_API xrCore Core;
 XRCORE_API u32 build_id;
@@ -21,7 +19,6 @@ XRCORE_API xr_vector<xr_token> vid_quality_token;
 static u32	init_counter = 0;
 void compute_build_id();
 
-#include "DateTime.hpp"
 void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb, BOOL init_fs, const char* fs_fname)
 {
 	if (!init_counter)
@@ -49,6 +46,12 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 
 		// Mathematics & PSI detection
 		Memory._initialize();
+		if (strstr(Params, "-vtune") != nullptr)
+		{
+			Profiling.Initialize();
+		}
+		// Immediately pause profiling. We want to get normal list of hotspots
+		Profiling.PauseProfiling();
 
 		xrLogger::InitLog();
 		_initialize_cpu();
@@ -108,6 +111,24 @@ void xrCore::_destroy()
 
 		Memory._destroy		();
 	}
+}
+
+HMODULE xrCore::LoadModule(LPCSTR ModuleName, bool bAllowFail /*= false*/)
+{
+	Msg("Loading DLL: %s", ModuleName);
+	HMODULE hMod = LoadLibraryA(ModuleName);
+	
+	if (hMod == NULL && !bAllowFail)
+	{
+		R_ASSERT3(hMod, "Can't load module", ModuleName);
+	}
+
+	if (DebugSymbols.IsInitialized())
+	{
+		DebugSymbols.LoadSymbol(ModuleName, hMod);
+	}
+
+	return hMod;
 }
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)

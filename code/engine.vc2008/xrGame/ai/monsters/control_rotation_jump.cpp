@@ -7,10 +7,13 @@
 #include "control_movement_base.h"
 #include "control_animation_base.h"
 
-#define ROTATION_JUMP_DELAY_MIN		3000
-#define ROTATION_JUMP_DELAY_MAX		5000
-#define CHECK_YAW					150 * PI / 180
-#define START_SPEED_DELTA			2.f
+namespace ControlRotationJumpDetails
+{
+	constexpr int RotationJumpDelayMin = 3000;
+	constexpr int RotationJumpDelayMax = 5000;
+	constexpr float CheckYaw = 150.0f * PI / 180.0f;
+	constexpr float StartSpeedDelta = 2.0f;
+}
 
 void CControlRotationJump::reinit()
 {
@@ -52,7 +55,7 @@ void CControlRotationJump::on_release()
 	m_man->release_pure	(this);
 	m_man->unsubscribe	(this, ControlCom::eventAnimationEnd);
 
-	m_time_next_rotation_jump = Device.dwTimeGlobal + Random.randI(ROTATION_JUMP_DELAY_MIN,ROTATION_JUMP_DELAY_MAX);
+	m_time_next_rotation_jump = Device.dwTimeGlobal + Random.randI(ControlRotationJumpDetails::RotationJumpDelayMin, ControlRotationJumpDetails::RotationJumpDelayMax);
 }
 
 bool CControlRotationJump::check_start_conditions()
@@ -65,10 +68,10 @@ bool CControlRotationJump::check_start_conditions()
 
 	Fvector									enemy_position;
 	enemy_position.set						(m_object->EnemyMan.get_enemy()->Position());
-	if (m_man->direction().is_face_target(enemy_position, CHECK_YAW))	return false;
+	if (m_man->direction().is_face_target(enemy_position, ControlRotationJumpDetails::CheckYaw))	return false;
 	
 	SVelocityParam &velocity_run			= m_object->move().get_velocity(MonsterMovement::eVelocityParameterRunNormal);
-	if (!fsimilar(m_man->movement().velocity_current(), velocity_run.velocity.linear, START_SPEED_DELTA)) return false;
+	if (!fsimilar(m_man->movement().velocity_current(), velocity_run.velocity.linear, ControlRotationJumpDetails::StartSpeedDelta)) return false;
 	
 	return true;
 }

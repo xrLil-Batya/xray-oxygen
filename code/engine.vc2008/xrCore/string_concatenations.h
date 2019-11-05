@@ -13,6 +13,7 @@ char* xr_strconcat(StringReceiverType& receiver, ArgList... args)
 	char* pStrCursor = &receiver[0];
 	char* pStrEnd = &receiver[0] + sizeof(StringReceiverType);
 	int dummy[] = { _strconcatSingle(pStrCursor, pStrEnd, args)... };
+	(void)dummy;
 
 	*pStrCursor = '\0';
 	return &receiver[0];

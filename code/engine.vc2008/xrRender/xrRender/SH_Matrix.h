@@ -53,5 +53,4 @@ public:
 	void			Save		(IWriter* fs);
 };
 
-typedef	resptr_core<CMatrix,resptr_base<CMatrix> >	
-	ref_matrix;
+typedef	resptr_core<CMatrix> ref_matrix;

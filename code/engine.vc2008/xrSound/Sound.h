@@ -83,7 +83,7 @@ public:
 	virtual void invalidate() = 0;
 };
 
-typedef resptr_core<CSound_UserData, resptr_base<CSound_UserData> >	CSound_UserDataPtr;
+typedef resptr_core<CSound_UserData>	CSound_UserDataPtr;
 
 class ref_sound_data : public xr_resource
 {
@@ -107,7 +107,7 @@ public:
 	virtual ~ref_sound_data();
 	float get_length_sec() const { return fTimeTotal; };
 };
-typedef resptr_core<ref_sound_data, resptr_base<ref_sound_data> >	ref_sound_data_ptr;
+typedef resptr_core<ref_sound_data>	ref_sound_data_ptr;
 /*! \class ref_sound
 \brief Sound source + control
 

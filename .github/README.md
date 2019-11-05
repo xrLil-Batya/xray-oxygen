@@ -52,3 +52,4 @@ xrOxygen is an project that uses experimental C++ features, has no special restr
 * [OpenXRay](https://github.com/openxray) Team with different developers of forks and another open projects
 * [X-Ray Engine by Alpet & KD](https://xp-dev.com/summary/210311)
 * [OGSR Fork](https://github.com/KRodinn/OGSR-Engine)
+* CorryZeron (Installer background)

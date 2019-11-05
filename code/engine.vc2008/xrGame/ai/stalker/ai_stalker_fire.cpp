@@ -55,15 +55,16 @@
 
 using namespace StalkerSpace;
 
-static float const DANGER_DISTANCE			= 3.f;
-static u32	 const DANGER_INTERVAL			= 120000;
+namespace AiStalkerFireDetails
+{
+	static float const DANGER_DISTANCE			= 3.f;
+	static u32	 const DANGER_INTERVAL			= 120000;
 			 
-static float const PRECISE_DISTANCE			= 2.5f;
-static float const FLOOR_DISTANCE			= 2.f;
-static float const NEAR_DISTANCE			= 2.5f;
-static u32	 const FIRE_MAKE_SENSE_INTERVAL	= 10000;
-
-static float const min_throw_distance		= 10.f;
+	static float const PRECISE_DISTANCE			= 2.5f;
+	static float const FLOOR_DISTANCE			= 2.f;
+	static float const NEAR_DISTANCE			= 2.5f;
+	static u32	 const FIRE_MAKE_SENSE_INTERVAL	= 10000;
+}
 
 float CAI_Stalker::GetWeaponAccuracy	() const
 {
@@ -256,7 +257,7 @@ void CAI_Stalker::Hit(SHit* pHDS)
 			if ( !invulnerable() && cover && HDS.initiator() &&
 				( HDS.initiator()->ID() != ID() ) && !fis_zero( HDS.damage() ) && brain().affect_cover() )
 			{
-				agent_manager().location().add( xr_new<CDangerCoverLocation>(cover,Device.dwTimeGlobal,DANGER_INTERVAL,DANGER_DISTANCE) );
+				agent_manager().location().add( xr_new<CDangerCoverLocation>(cover,Device.dwTimeGlobal, AiStalkerFireDetails::DANGER_INTERVAL, AiStalkerFireDetails::DANGER_DISTANCE) );
 			}
 		}
 
@@ -544,7 +545,7 @@ bool CAI_Stalker::ready_to_detour		()
 	return				(weapon->GetAmmoElapsed() > weapon->GetAmmoMagSize()/2);
 }
 
-class ray_query_param	{
+class AiStalkerFire_ray_query_param	{
 public:
 	CAI_Stalker				*m_holder;
 	float					m_power;
@@ -554,7 +555,7 @@ public:
 	float					m_pick_distance;
 
 public:
-	IC				ray_query_param		(const CAI_Stalker *holder, float power_threshold, float distance)
+	IC				AiStalkerFire_ray_query_param		(const CAI_Stalker *holder, float power_threshold, float distance)
 	{
 		m_holder			= const_cast<CAI_Stalker*>(holder);
 		m_power_threshold	= power_threshold;
@@ -565,9 +566,9 @@ public:
 	}
 };
 
-IC BOOL ray_query_callback	(collide::rq_result& result, LPVOID params)
+IC BOOL AiStalkerFire_ray_query_callback	(collide::rq_result& result, LPVOID params)
 {
-	ray_query_param *param = (ray_query_param*)params;
+	AiStalkerFire_ray_query_param *param = (AiStalkerFire_ray_query_param*)params;
 	float power = param->m_holder->feel_vision_mtl_transp(result.O,result.element);
 	param->m_power *= power;
 
@@ -616,9 +617,9 @@ void CAI_Stalker::can_kill_entity		(const Fvector &position, const Fvector &dire
 	collide::ray_defs				ray_defs(position,direction,distance,CDB::OPT_CULL,collide::rqtBoth);
 	VERIFY							(!fis_zero(ray_defs.dir.square_magnitude()));
 	
-	ray_query_param					params(this,memory().visual().transparency_threshold(),distance);
+	AiStalkerFire_ray_query_param					params(this,memory().visual().transparency_threshold(),distance);
 
-	Level().ObjectSpace.RayQuery	(rq_storage,ray_defs, (collide::rq_callback*)ray_query_callback,&params,nullptr,this);
+	Level().ObjectSpace.RayQuery	(rq_storage,ray_defs, (collide::rq_callback*)AiStalkerFire_ray_query_callback,&params,nullptr,this);
 	m_can_kill_enemy				= m_can_kill_enemy  || params.m_can_kill_enemy;
 	m_can_kill_member				= m_can_kill_member || params.m_can_kill_member;
 	m_pick_distance					= std::max(m_pick_distance,params.m_pick_distance);
@@ -765,13 +766,13 @@ bool CAI_Stalker::fire_make_sense		()
 	if (!enemy)
 		return				(false);
 
-	if ((pick_distance() + PRECISE_DISTANCE) < Position().distance_to(enemy->Position()))
+	if ((pick_distance() + AiStalkerFireDetails::PRECISE_DISTANCE) < Position().distance_to(enemy->Position()))
 		return				(false);
 
-	if (_abs(Position().y - enemy->Position().y) > FLOOR_DISTANCE)
+	if (_abs(Position().y - enemy->Position().y) > AiStalkerFireDetails::FLOOR_DISTANCE)
 		return				(false);
 
-	if (pick_distance() < NEAR_DISTANCE)
+	if (pick_distance() < AiStalkerFireDetails::NEAR_DISTANCE)
 		return				(false);
 
 	if (memory().visual().visible_right_now(enemy))
@@ -781,7 +782,7 @@ bool CAI_Stalker::fire_make_sense		()
 	if (last_time_seen == u32(-1))
 		return				(false);
 
-	if (Device.dwTimeGlobal > last_time_seen + FIRE_MAKE_SENSE_INTERVAL)
+	if (Device.dwTimeGlobal > last_time_seen + AiStalkerFireDetails::FIRE_MAKE_SENSE_INTERVAL)
 		return				(false);
 
 	// if we do not have a weapon

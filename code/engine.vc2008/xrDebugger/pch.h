@@ -10,5 +10,6 @@
 #define PCH_H
 
 // TODO: add headers that you want to pre-compile here
+#include "xrCore.h"
 
 #endif //PCH_H

@@ -16,7 +16,10 @@ xrMemory::~xrMemory()
 
 void xrMemory::_initialize()
 {
-	hHeap = HeapCreate(0, 0, 0);
+	if constexpr (MEM_PURE_ALLOC)
+	{
+		hHeap = HeapCreate(0, 0, 0);
+	}
 	SYSTEM_INFO info;
 	GetSystemInfo(&info);
 	dwPageSize = info.dwPageSize;
@@ -35,9 +38,12 @@ inline const size_t external_size = size_t(-1);
 
 void xrMemory::mem_compact()
 {
-	_heapmin();
+	if constexpr (MEM_PURE_ALLOC)
+	{
+		_heapmin();
 
-	HeapCompact(GetProcessHeap(), 0);
+		HeapCompact(GetProcessHeap(), 0);
+	}
 
 	g_pStringContainer.clean();
 

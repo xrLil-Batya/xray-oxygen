@@ -381,12 +381,7 @@ void CStats::Show()
 	{
         if ((Core.dwFrame % 25) == 0)
         {
-			if (CNvReader::bSupport)
-				NVGPULoad = NvData.GetPercentActive();
-
-			if (CAMDReader::bAMDSupportADL)
-				AMDGPULoad = AMDData.GetPercentActive();
-
+			GPULoad = Device.m_pRender->GetGPULoadPercent();
 		    // init all variables
 		    MEMORYSTATUSEX mem;
 		    PROCESS_MEMORY_COUNTERS_EX pmc;
@@ -411,8 +406,6 @@ void CStats::Show()
 
 		    // Counting CPU load
             CPU::Info.getCPULoad(cpuLoad);
-            cpuBefore = cpuLoad;
-
 			CPU::Info.MTCPULoad();
         }
 
@@ -446,15 +439,10 @@ void CStats::Show()
 			dwScale += 15;
 		}
 
-		if (CAMDReader::bAMDSupportADL)
+		if (GPULoad != 0)
 		{
 			pFont->SetColor(DebugTextColor::DTC_BLUE);
-			pFont->Out(10, dwScale, "GPU Used: %d", AMDGPULoad);
-		}
-		else if(CNvReader::bSupport)
-		{
-			pFont->SetColor(DebugTextColor::DTC_BLUE);
-			pFont->Out(10, dwScale, "GPU Used: %d", NVGPULoad);
+			pFont->Out(10, dwScale, "GPU Used: %d", GPULoad);
 		}
         pFont->OnRender();
 	}
@@ -619,7 +607,7 @@ void CStats::OnRender				()
 				if (g_stats_flags.is(st_sound_max_dist))
 					DU->DrawSphere		(Fidentity, item.params.position, item.params.max_distance, 0x4000FF00,	0xFF008000, true, true);
 				
-				xr_string out_txt		= (out_txt.size() && g_stats_flags.is(st_sound_info_name)) ? item.name.c_str():"";
+				xr_string out_txt		= (!out_txt.empty() && g_stats_flags.is(st_sound_info_name)) ? item.name.c_str():"";
 
 				if (item.game_object)
 				{

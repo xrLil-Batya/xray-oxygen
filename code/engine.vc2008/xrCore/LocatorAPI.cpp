@@ -25,7 +25,7 @@ const u32 BIG_FILE_READER_WINDOW_SIZE = 1024 * 1024;
 
 CLocatorAPI* xr_FS = nullptr;
 
-#define FSLTX "fsgame.ltx"
+#define FSLTX "oxy_fsgame.ltx"
 
 // Xottab-DUTY
 constexpr u32 VFS_STANDARD_FILE = std::numeric_limits<u32>::max();
@@ -747,7 +747,7 @@ void CLocatorAPI::_initialize(u32 flags, const char* target_folder, const char* 
 			m_Flags.set(flCacheFiles, FALSE);
 #endif // DEBUG
 
-			//CHECK_OR_EXIT		(I.second,"The file 'fsgame.ltx' is corrupted (it contains duplicated lines).\nPlease reinstall the game or fix the problem manually.");
+			//CHECK_OR_EXIT		(I.second,"The file 'oxy_fsgame.ltx' is corrupted (it contains duplicated lines).\nPlease reinstall the game or fix the problem manually.");
 		}
 		r_close(pFSltx);
 		R_ASSERT(path_exist("$app_data_root$"));
@@ -1470,7 +1470,7 @@ FS_Path* CLocatorAPI::get_path(const char* path)
 	if (strstr(path, "$"))
 	{
 		auto P = pathes.find(path);
-		R_ASSERT3(P != pathes.end(), path, "Please update fsgame.ltx");
+		R_ASSERT3(P != pathes.end(), path, "Please update oxy_fsgame.ltx");
 		return P->second;
 	}
 	else
@@ -1577,11 +1577,8 @@ bool CLocatorAPI::getFileName(LPCSTR path, string512& outFilename)
 	if (stdPath.has_filename())
 	{
 		std::filesystem::path fileNamePath = stdPath.filename();
-#if _MSC_VER > 1921
 		std::string fileNameStr = fileNamePath.string();
-#else
-		std::string fileNameStr = fileNamePath.u8string();
-#endif
+    
 		R_ASSERT2(fileNameStr.size() < sizeof(string512), fileNameStr.c_str());
 
 		xr_strcpy(outFilename, fileNameStr.c_str());

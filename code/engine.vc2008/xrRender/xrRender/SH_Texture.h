@@ -103,11 +103,13 @@ private:
 	xr_vector<ID3DShaderResourceView*>m_seqSRView;
 #endif
 };
-struct 		resptrcode_texture	: public resptr_base<CTexture>
+struct 		ref_texture : public resptr_core<CTexture>
 {
+	using TextureRefCore = resptr_core<CTexture>;
+	using TextureRefCore::TextureRefCore;
+
 	void				create			(LPCSTR	_name);
 	void				destroy			()					{ _set(nullptr);					}
 	shared_str			bump_get		()					{ return _get()->m_bumpmap;		}
 	bool				bump_exist		()					{ return 0!=bump_get().size();	}
 };
-using ref_texture =	resptr_core<CTexture,resptrcode_texture >;

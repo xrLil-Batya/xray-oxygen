@@ -449,9 +449,9 @@ void CCustomMonster::eye_pp_s1			()
 	if (g_Alive()) 
 	{
 #ifndef USE_STALKER_VISION_FOR_MONSTERS
-		update_range_fov					(new_range, new_fov, human_being() ? memory().visual().current_state().m_max_view_distance*eye_range : eye_range, eye_fov);
+		update_range_fov					(new_range, new_fov, human_being() ? memory().visual().current_state2().m_max_view_distance*eye_range : eye_range, eye_fov);
 #else 
-		update_range_fov					(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
+		update_range_fov					(new_range, new_fov, memory().visual().current_state2().m_max_view_distance*eye_range, eye_fov);
 #endif
 	}
 
@@ -490,7 +490,7 @@ void CCustomMonster::UpdateCamera()
 {
 	float									new_range = eye_range, new_fov = eye_fov;
 	if (g_Alive())
-		update_range_fov					(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
+		update_range_fov					(new_range, new_fov, memory().visual().current_state2().m_max_view_distance*eye_range, eye_fov);
 	g_pGameLevel->Cameras().Update(eye_matrix.c,eye_matrix.k,eye_matrix.j,new_fov,.75f,new_range,0);
 }
 
@@ -962,7 +962,7 @@ void CCustomMonster::OnRender()
 		float					new_range = eye_range, new_fov = eye_fov;
 		
 		if (g_Alive())
-			update_range_fov	(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
+			update_range_fov	(new_range, new_fov, memory().visual().current_state2().m_max_view_distance*eye_range, eye_fov);
 
 		dbg_draw_frustum		(new_fov,new_range,1,eye_matrix.c,eye_matrix.k,eye_matrix.j);
 	}

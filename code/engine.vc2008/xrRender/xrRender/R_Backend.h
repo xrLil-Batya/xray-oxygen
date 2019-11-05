@@ -213,7 +213,6 @@ public:
 #endif
 
 	// API
-	IC	void						set_xform			(u32 ID, const Fmatrix& M_);
 	IC	void						set_xform_world		(const Fmatrix& M);
 //	IC void set_xform_world(const Matrix4x4 & fM);
 	IC	void						set_xform_view		(const Fmatrix& M);

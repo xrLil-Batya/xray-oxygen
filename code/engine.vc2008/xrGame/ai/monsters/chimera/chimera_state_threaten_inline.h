@@ -11,6 +11,13 @@
 
 #define CStateChimeraThreatenAbstract CStateChimeraThreaten<_Object>
 
+namespace ChimeraStateThreatenDetails
+{
+	constexpr float MinDistToEnemy = 3.0f;
+	constexpr float MoraleThreshold = 0.8f;
+	constexpr u32 ThreatenDelay = 10000;
+}
+
 TEMPLATE_SPECIALIZATION
 CStateChimeraThreatenAbstract::CStateChimeraThreaten(_Object *obj) : inherited(obj)
 {
@@ -32,19 +39,14 @@ void CStateChimeraThreatenAbstract::reinit()
 	m_last_time_threaten = 0;
 }
 
-
-#define MIN_DIST_TO_ENEMY	3.f
-#define MORALE_THRESHOLD	0.8f
-#define THREATEN_DELAY		10000
-
 TEMPLATE_SPECIALIZATION
 bool CStateChimeraThreatenAbstract::check_start_conditions()
 {
 	if (object->tfGetRelationType(object->EnemyMan.get_enemy()) == ALife::eRelationTypeWorstEnemy) return false;
-	if (object->Position().distance_to(object->EnemyMan.get_enemy_position()) < MIN_DIST_TO_ENEMY) return false;
+	if (object->Position().distance_to(object->EnemyMan.get_enemy_position()) < ChimeraStateThreatenDetails::MinDistToEnemy) return false;
 	if (object->HitMemory.is_hit())						return false;
 	if (object->hear_dangerous_sound)					return false;
-	if (m_last_time_threaten + THREATEN_DELAY > Device.dwTimeGlobal) return false;
+	if (m_last_time_threaten + ChimeraStateThreatenDetails::ThreatenDelay > Device.dwTimeGlobal) return false;
 
 	return true;
 }
@@ -52,7 +54,7 @@ bool CStateChimeraThreatenAbstract::check_start_conditions()
 TEMPLATE_SPECIALIZATION
 bool CStateChimeraThreatenAbstract::check_completion()
 {
-	if (object->Position().distance_to(object->EnemyMan.get_enemy_position()) < MIN_DIST_TO_ENEMY) return true;
+	if (object->Position().distance_to(object->EnemyMan.get_enemy_position()) < ChimeraStateThreatenDetails::MinDistToEnemy) return true;
 	if (object->HitMemory.is_hit()) return true;
 	if (object->tfGetRelationType(object->EnemyMan.get_enemy()) == ALife::eRelationTypeWorstEnemy) return true;
 

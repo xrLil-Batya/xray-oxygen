@@ -551,3 +551,10 @@ public:
 			bool			GetRememberActorNVisnStatus	() {return m_bRememberActorNVisnStatus;};
 	virtual void			EnableActorNVisnAfterZoom	();
 };
+
+namespace TargetColors
+{
+	constexpr D3DCOLOR EnemyColor = D3DCOLOR_RGBA(0xff, 0, 0, 0x80);
+	constexpr D3DCOLOR NeutralColor = D3DCOLOR_RGBA(0xff, 0xff, 0x80, 0x80);
+	constexpr D3DCOLOR FriendColor = D3DCOLOR_RGBA(0, 0xff, 0, 0x80);
+}

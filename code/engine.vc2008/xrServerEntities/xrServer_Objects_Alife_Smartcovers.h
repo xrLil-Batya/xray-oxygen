@@ -5,6 +5,7 @@
 //	Author		: Alexander Plichko
 //	Description : Server objects smartcovers for ALife simulator
 ////////////////////////////////////////////////////////////////////////////
+#pragma once
 #include "xrServer_Objects_ALife.h"
 #include <luabind\luabind.hpp>
 #pragma warning(push)

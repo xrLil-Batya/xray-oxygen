@@ -12,16 +12,11 @@ void CMonsterStateManagerAbstract::reinit()
 	inherited::reinit();
 }
 
-namespace detail
-{ // helper function implemented in file alife_simulator.cpp
-	bool object_exists_in_alife_registry (u32 id);
-} // namespace detail
-
 TEMPLATE_SPECIALIZATION
 void CMonsterStateManagerAbstract::update()
 {
 	// Lain: added
-	if ( !detail::object_exists_in_alife_registry (object->ID()) )
+	if ( !AlifeUtils::object_exists_in_alife_registry (object->ID()) )
 	{
 		return;
 	}

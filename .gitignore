@@ -28,6 +28,8 @@
 *.db-wal
 *.bat
 
+VTune Amplifier Results
+
 binaries/
 intermediatex64/
 librariesx64/

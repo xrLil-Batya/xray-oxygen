@@ -136,7 +136,7 @@ public:
 				}
 				xrc.ray_query(model, src.position, dir, src.range);
 				if (!xrc.r_count()) continue;
-				CDB::RESULT *R = xrc.r_begin();
+				xr_vector<CDB::RESULT>::iterator R = xrc.r_realBegin();
 				CDB::TRI&	T = tris[R->id];
 				Fvector		Tv[3] = { verts[T.verts[0]],verts[T.verts[1]],verts[T.verts[2]] };
 				Fvector		TN;		TN.mknormal(Tv[0], Tv[1], Tv[2]);

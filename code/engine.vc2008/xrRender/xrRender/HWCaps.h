@@ -1,4 +1,6 @@
 #pragma once
+#include "../../xrEngine/NvGPUTransferee.h"
+#include "../../xrEngine/AMDGPUTransferee.h"
 
 #define	CAP_VERSION(a,b)	(u32(a)*10 + u32(b))
 
@@ -57,6 +59,10 @@ public:
 	u32				id_vendor		;
 	u32				id_device		;
 
+	bool IsNvidiaCard()		const;
+	bool IsAMDCard()		const;
+	bool IsIntelCard()		const;
+
 	BOOL			bStencil;			// stencil buffer present
 	BOOL			bScissor;			// scissor rect supported
 	BOOL			bTableFog;			//
@@ -64,6 +70,9 @@ public:
 	// some precalculated values
 	D3D11_STENCIL_OP	soDec, soInc;		// best stencil OPs for shadows
 	u32				dwMaxStencilValue;  // maximum value the stencil buffer can hold
+
+	CNvReader		NvidiaSpecific;
+	CAMDReader		AMDSpecific;
 
 	void			Update(void);
 };
