@@ -16,9 +16,10 @@ static void computeFinalTx(dGeomID geom_transform, dReal* final_pos, dReal* fina
 	const	dReal	*R = dGeomGetRotation(geom_transform);
 	const	dReal	*pos = dGeomGetPosition(geom_transform);
 	dMULTIPLY0_331(final_pos, R, dGeomGetPosition(obj));
-	final_pos[0] += pos[0];
-	final_pos[1] += pos[1];
-	final_pos[2] += pos[2];
+
+	for(u32 Iter = 0; Iter < 3; Iter++)
+		final_pos[Iter] += pos[Iter];
+		
 	dMULTIPLY0_333(final_R, R, dGeomGetRotation(obj));
 }
 
@@ -31,8 +32,8 @@ void GetBoxExtensions(dGeomID box, const dReal* axis,
 	dGeomBoxGetLengths(box, length);
 	dReal dif = dDOT(pos, axis) - center_prg;
 	dReal ful_ext = dFabs(dDOT14(axis, rot + 0))*length[0]
-		+ dFabs(dDOT14(axis, rot + 1))*length[1]
-		+ dFabs(dDOT14(axis, rot + 2))*length[2];
+					+ dFabs(dDOT14(axis, rot + 1))*length[1]
+					+ dFabs(dDOT14(axis, rot + 2))*length[2];
 	ful_ext /= 2.f;
 	*lo_ext = -ful_ext + dif;
 	*hi_ext = ful_ext + dif;
@@ -154,16 +155,16 @@ void	CODEGeom::get_xform(Fmatrix& form) const
 	PHDynamicData::DMXPStoFMX(rot, pos, form);
 }
 
-bool	CODEGeom::collide_fluids() const
+bool CODEGeom::collide_fluids() const
 {
 	return !m_flags.test(SBoneShape::sfNoFogCollider);
 }
-void	CODEGeom::get_Box(Fmatrix& form, Fvector&	sz)const
+
+void CODEGeom::get_Box(Fmatrix& form, Fvector&	sz)const
 {
 	get_xform(form);
-	Fvector c;
-	t_get_box(this, form, sz, c);
-	form.c = c;
+	form.c.set(0.f, 0.f, 0.f);
+	t_get_box(this, form, sz, form.c);
 }
 
 void CODEGeom::set_static_ref_form(const Fmatrix& form)
@@ -523,15 +524,13 @@ const Fvector& CBoxGeom::local_center()
 
 void CBoxGeom::get_local_form(Fmatrix& form)
 {
-	form._14 = 0;
-	form._24 = 0;
-	form._34 = 0;
-	form._44 = 1;
+	form.identity();
 	form.i.set(m_box.m_rotate.i);
 	form.j.set(m_box.m_rotate.j);
 	form.k.set(m_box.m_rotate.k);
 	form.c.set(m_box.m_translate);
 }
+
 void CBoxGeom::set_local_form(const Fmatrix& form)
 {
 	m_box.m_rotate.i.set(form.i);
@@ -562,11 +561,10 @@ void	CBoxGeom::set_size(const Fvector&	half_size)
 void	CBoxGeom::get_size(Fvector&	half_size) const
 {
 	VERIFY(geom());
-	dGeomBoxGetLengths(geom(),
-		cast_fp(half_size)
-	);
+	dGeomBoxGetLengths(geom(), cast_fp(half_size));
 	half_size.mul(0.5f);
 }
+
 void CBoxGeom::set_build_position(const Fvector& ref_point)
 {
 	inherited::set_build_position(ref_point);

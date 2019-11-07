@@ -9,6 +9,7 @@ public:
 
 public:
 	CDB_Model	();
+	~CDB_Model	();
 	bool Build	(const Opcode::OPCODECREATE& create);
 IC  CDB_OptimizeTree*	GetTree() { return pTree; }
 
