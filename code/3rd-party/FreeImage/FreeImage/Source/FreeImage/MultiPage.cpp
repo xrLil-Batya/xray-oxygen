@@ -251,7 +251,7 @@ FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL crea
 			PluginNode *node = list->FindNodeFromFIF(fif);
 
 			if (node) {
-				std::auto_ptr<FreeImageIO> io (new FreeImageIO);
+				std::unique_ptr<FreeImageIO> io (new FreeImageIO);
 
 				SetDefaultIO(io.get());
 
@@ -262,8 +262,8 @@ FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL crea
 					}
 				}
 
-				std::auto_ptr<FIMULTIBITMAP> bitmap (new FIMULTIBITMAP);
-				std::auto_ptr<MULTIBITMAPHEADER> header (new MULTIBITMAPHEADER);
+				std::unique_ptr<FIMULTIBITMAP> bitmap (new FIMULTIBITMAP);
+				std::unique_ptr<MULTIBITMAPHEADER> header (new MULTIBITMAPHEADER);
 				header->m_filename = new char[strlen(filename) + 1];
 				strcpy(header->m_filename, filename);
 				header->node = node;
