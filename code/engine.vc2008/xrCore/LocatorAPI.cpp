@@ -1061,7 +1061,7 @@ void CLocatorAPI::file_from_cache_impl(CStreamReader *&R, char* fname, const fil
 }
 
 template <typename T>
-void CLocatorAPI::file_from_cache(T *&R, char* fname, const u32 &fname_size, const file &desc, const char* &source_name)
+void CLocatorAPI::file_from_cache(T *&R, char* fname, [[maybe_unused]] const u32 &fname_size, const file &desc, [[maybe_unused]] const char* &source_name)
 {
 #ifdef DEBUG
 	if (m_Flags.is(flCacheFiles))

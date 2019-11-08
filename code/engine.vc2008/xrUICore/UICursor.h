@@ -22,7 +22,7 @@ public:
 	void			UpdateCursorPosition		(int _dx, int _dy);
 	virtual void	OnScreenResolutionChanged	();
 
-	bool			IsVisible					() {return bVisible;}
+[[nodiscard]] bool	IsVisible					() {return bVisible;}
 	void			Show						() {bVisible = true;}
 	void			Hide						() {bVisible = false;}
 };
