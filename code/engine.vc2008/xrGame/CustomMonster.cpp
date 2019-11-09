@@ -1106,7 +1106,6 @@ void CCustomMonster::destroy_anim_mov_ctrl	()
 void CCustomMonster::ForceTransform(const Fmatrix& m)
 {
 	character_physics_support()->ForceTransform( m );
-	const float block_damage_time_seconds = 2.f;
 }
 
 Fvector	CCustomMonster::spatial_sector_point()

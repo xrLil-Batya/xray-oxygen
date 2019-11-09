@@ -269,20 +269,10 @@ void CAI_Stalker::Hit(SHit* pHDS)
 //				sound().play		(eStalkerSoundInjuringByFriend);
 		}
 
-		int							weapon_type = -1;
-		if (best_weapon())
-			weapon_type				= best_weapon()->object().ef_weapon_type();
-
-		if	(
-				!wounded() &&
-				!already_critically_wounded)
+		if	(!wounded() && !already_critically_wounded)
 		{
-			bool					became_critically_wounded = update_critical_wounded(HDS.boneID,HDS.power);
-			if	(
-				!became_critically_wounded &&
-				animation().script_animations().empty() &&
-				(HDS.bone() != BI_NONE)
-			)
+			bool became_critically_wounded = update_critical_wounded(HDS.boneID,HDS.power);
+			if	(!became_critically_wounded && animation().script_animations().empty() && (HDS.bone() != BI_NONE))
 			{
 				Fvector					D;
 				float					yaw, pitch;
@@ -296,14 +286,12 @@ void CAI_Stalker::Hit(SHit* pHDS)
 				IKinematics *tpKinematics = smart_cast<IKinematics*>(Visual());
 	#ifdef DEBUG
 				tpKinematics->LL_GetBoneInstance	(HDS.bone());
-				if (HDS.bone() >= tpKinematics->LL_BoneCount()) {
-					Msg					("tpKinematics has no bone_id %d",HDS.bone());
-					HDS._dump			();
+				if (HDS.bone() >= tpKinematics->LL_BoneCount()) 
+				{
+					Msg("tpKinematics has no bone_id %d",HDS.bone());
+					HDS._dump();
 				}
 	#endif
-//				int						fx_index = iFloor(tpKinematics->LL_GetBoneInstance(HDS.bone()).get_param(1) + (angle_difference(movement().m_body.current.yaw,-yaw) <= PI_DIV_2 ? 0 : 1));
-//				if (fx_index != -1)
-//					animation().play_fx	(power_factor,fx_index);
 			}
 			else {
 				if (!already_critically_wounded && became_critically_wounded) {
@@ -1230,14 +1218,17 @@ bool CAI_Stalker::can_kill_enemy							()
 bool CAI_Stalker::too_far_to_kill_enemy						(const Fvector &position)
 {
 #if 1
+#pragma todo("FX to all: Maybe restore?")
 	return					(false);
 #else
 	VERIFY					(memory().enemy().selected());
 	VERIFY					(best_weapon());
 
-	int						weapon_type = best_weapon()->object().ef_weapon_type();
-	float					distance = position.distance_to(Position());
-	switch (weapon_type) {
+	int weapon_type = best_weapon()->object().ef_weapon_type();
+	float distance = position.distance_to(Position());
+	
+	switch (weapon_type) 
+	{
 		// pistols
 		case 5 : return		(distance > 10.f);
 		// shotguns
