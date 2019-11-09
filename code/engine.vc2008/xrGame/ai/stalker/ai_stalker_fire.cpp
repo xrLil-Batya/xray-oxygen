@@ -268,52 +268,39 @@ void CAI_Stalker::Hit(SHit* pHDS)
 //			else
 //				sound().play		(eStalkerSoundInjuringByFriend);
 		}
-
-		if	(!wounded() && !already_critically_wounded)
+		
+		if (!wounded() && !already_critically_wounded)
 		{
-			bool became_critically_wounded = update_critical_wounded(HDS.boneID,HDS.power);
+			const bool became_critically_wounded = update_critical_wounded(HDS.boneID, HDS.power);
+#ifdef DEBUG
 			if	(!became_critically_wounded && animation().script_animations().empty() && (HDS.bone() != BI_NONE))
 			{
-				Fvector					D;
-				float					yaw, pitch;
-				D.getHP					(yaw,pitch);
-
-	#pragma todo("Dima to Dima : forward-back bone impulse direction has been determined incorrectly!")
-				float					power_factor = m_power_fx_factor * HDS.damage() / 100.f;
-				clamp					(power_factor,0.f,1.f);
-
-				//IKinematicsAnimated		*tpKinematics = smart_cast<IKinematicsAnimated*>(Visual());
 				IKinematics *tpKinematics = smart_cast<IKinematics*>(Visual());
-	#ifdef DEBUG
-				tpKinematics->LL_GetBoneInstance	(HDS.bone());
+				tpKinematics->LL_GetBoneInstance(HDS.bone());
 				if (HDS.bone() >= tpKinematics->LL_BoneCount()) 
 				{
-					Msg("tpKinematics has no bone_id %d",HDS.bone());
+					Msg("tpKinematics has no bone_id %d", HDS.bone());
 					HDS._dump();
 				}
-	#endif
 			}
-			else {
-				if (!already_critically_wounded && became_critically_wounded) {
-					if (HDS.who) {
-						CAI_Stalker		*stalker = smart_cast<CAI_Stalker*>(HDS.who);
-						if ( stalker && stalker->g_Alive() )
-							stalker->on_critical_wound_initiator	(this);
-					}
-				}
+			else 
+#endif	
+			if (became_critically_wounded && HDS.who) 
+			{
+				CAI_Stalker *pStalker = smart_cast<CAI_Stalker*>(HDS.who);
+				if (pStalker && pStalker->g_Alive())
+					pStalker->on_critical_wound_initiator(this);
 			}
 		}
 	}
 
 	if ( g_Alive() && ( !m_hit_callback || m_hit_callback( &HDS ) ) )
 	{
-		float const damage_factor	= invulnerable() ? 0.f : 100.f;
-		memory().hit().add			( damage_factor*HDS.damage(), HDS.direction(), HDS.who, HDS.boneID );
+		float const damage_factor = invulnerable() ? 0.f : 100.f;
+		memory().hit().add(damage_factor * HDS.damage(), HDS.direction(), HDS.who, HDS.boneID);
 	}
 
-	//conditions().health()			= 1.f;
-
-	inherited::Hit					( &HDS );
+	inherited::Hit(&HDS);
 }
 
 void CAI_Stalker::HitSignal				(float amount, Fvector& vLocalDir, CObject* who, s16 element)
