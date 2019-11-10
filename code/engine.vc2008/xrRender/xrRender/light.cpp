@@ -90,7 +90,7 @@ void light::set_active(bool a)
 		spatial_register();
 		spatial_move();
 	}
-	else if(flags.bActive)
+	else if(!a && flags.bActive)
 	{
 		flags.bActive = false;
 		spatial_move();
@@ -214,11 +214,11 @@ void	light::xform_calc			()
 	}
 
 	// matrix
-	Matrix4x4 mR;
-	mR.x	= { L_right.x, L_right.y, L_right.z, 0};
-	mR.y	= { L_up.x, L_up.y, L_up.z, 0 };
-	mR.z	= { L_dir.x, L_dir.y, L_dir.z, 0 };
-	mR.w	= { position.x, position.y, position.z, 1 };
+	Fmatrix					mR;
+	mR.i					= L_right;	mR._14	= 0;
+	mR.j					= L_up;		mR._24	= 0;
+	mR.k					= L_dir;	mR._34	= 0;
+	mR.c					= position;	mR._44	= 1;
 
 	// switch
 	switch(flags.type)	
