@@ -31,10 +31,10 @@ CXMLBlend::~CXMLBlend()
 
 Shader* CXMLBlend::Compile(const char* Texture)
 {
-	bool bUseDetail = true;
 	XML_NODE* pRoot = Parser.GetRoot();
 	for (u32 Iter = 0; Iter < 16; Iter++)
 	{
+		bool bUseDetail = true;
 		string16 buff;
 		xr_sprintf(buff, sizeof(buff), "element_%d", Iter);
 		XML_NODE* pElement = Parser.NavigateToNode(pRoot, buff);
@@ -70,8 +70,8 @@ Shader* CXMLBlend::Compile(const char* Texture)
 
 ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 {
-	ShaderElement E;
-	pCompiler->SH = &E;
+	ShaderElement* pShaderElement;
+	pCompiler->SH = pShaderElement;
 	pCompiler->RS.Invalidate();
 
 	// Compile
@@ -206,7 +206,7 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 	}
 
 	pCompiler->r_End();
-	ShaderElement* pTryElement = dxRenderDeviceRender::Instance().Resources->_CreateElement(E);
+	ShaderElement* pTryElement = dxRenderDeviceRender::Instance().Resources->_CreateElement(*pShaderElement);
 	return pTryElement;
 }
 
