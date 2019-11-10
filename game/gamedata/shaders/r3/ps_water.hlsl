@@ -70,14 +70,10 @@ float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
 			Nw = normalize(Nw);
 	float3	v2point = normalize(I.v2point);
 	float3	vreflect = reflect(v2point, Nw);
-
-	float3 vreflectabs    = abs(vreflect);
-	float  vreflectmax    = max(vreflectabs.x, max(vreflectabs.y, vreflectabs.z));
-		   vreflect      /= vreflectmax;
-
-	if (vreflect.y < 0.999)
-			vreflect.y = vreflect.y * 2 - 1;     // fake remapping
-
+	
+		 // fake remapping
+	vreflect.y = vreflect.y * 2 - 1;
+		
 	base.rgb *= I.c0.xyz;
 	
 	float3	env0 = s_env0.Sample(smp_rtlinear, vreflect);
