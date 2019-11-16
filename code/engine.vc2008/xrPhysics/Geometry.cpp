@@ -163,7 +163,6 @@ bool CODEGeom::collide_fluids() const
 void CODEGeom::get_Box(Fmatrix& form, Fvector&	sz)const
 {
 	get_xform(form);
-	form.c.set(0.f, 0.f, 0.f);
 	t_get_box(this, form, sz, form.c);
 }
 
