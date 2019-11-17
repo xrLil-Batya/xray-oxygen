@@ -109,59 +109,61 @@ void	CBlender_Compile::_cpp_Compile	(ShaderElement* _SH)
 void	CBlender_Compile::SetParams		(int iPriority, bool bStrictB2F)
 {
 	SH->flags.iPriority		= iPriority;
-	SH->flags.bStrictB2F	= bStrictB2F;
 
-	if (bStrictB2F && 1 != (SH->flags.iPriority / 2))
+	if (bStrictB2F && 1 != (iPriority / 2))
 	{
 		Log("!If StrictB2F true then Priority must div 2.");
 		SH->flags.bStrictB2F = FALSE;
 	}
+	else
+		SH->flags.bStrictB2F = bStrictB2F;
 }
 
 void	CBlender_Compile::PassBegin		()
 {
-	RS.Invalidate			();
-	passTextures.clear		();
-	passMatrices.clear		();
-	passConstants.clear		();
-	xr_strcpy					(pass_ps,"null");
-	xr_strcpy					(pass_vs,"null");
-	dwStage					= 0;
+	RS.Invalidate();
+
+	// Clear containers
+	passTextures.clear();
+	passMatrices.clear();
+	passConstants.clear();
+    ctable.clear();
+
+	xr_strcpy(pass_ps,"null");
+	xr_strcpy(pass_vs,"null");
+	dwStage = 0;
 }
 
 void	CBlender_Compile::PassEnd			()
 {
 	// Last Stage - disable
-	RS.SetTSS				(Stage(),D3DTSS_COLOROP,D3DTOP_DISABLE);
-	RS.SetTSS				(Stage(),D3DTSS_ALPHAOP,D3DTOP_DISABLE);
+	RS.SetTSS(Stage(),D3DTSS_COLOROP,D3DTOP_DISABLE);
+	RS.SetTSS(Stage(),D3DTSS_ALPHAOP,D3DTOP_DISABLE);
 
-	SPass	proto;
 	// Create pass
-	proto.state		= DEV->_CreateState		(RS.GetContainer());
-	proto.ps		= DEV->_CreatePS			(pass_ps);
-	proto.vs		= DEV->_CreateVS			(pass_vs);
-	ctable.merge	(&proto.ps->constants);
-	ctable.merge	(&proto.vs->constants);
+	dest.state = DEV->_CreateState(RS.GetContainer());
 
-	proto.gs		= DEV->_CreateGS			(pass_gs);
-	ctable.merge	(&proto.gs->constants);
+	dest.ps = DEV->_CreatePS(pass_ps);
+	dest.vs = DEV->_CreateVS(pass_vs);
+	dest.gs = DEV->_CreateGS(pass_gs);
+	dest.hs = DEV->_CreateHS(pass_hs);
+	dest.ds = DEV->_CreateDS(pass_ds);
+	dest.cs = DEV->_CreateCS(pass_cs);
 
-	proto.hs		= DEV->_CreateHS			(pass_hs);
-	ctable.merge	(&proto.hs->constants);
+	ctable.merge(&dest.ps->constants);
+	ctable.merge(&dest.vs->constants);
+	ctable.merge(&dest.gs->constants);
+	ctable.merge(&dest.hs->constants);
+	ctable.merge(&dest.ds->constants);
+	ctable.merge(&dest.cs->constants);
 
-	proto.ds		= DEV->_CreateDS			(pass_ds);
-	ctable.merge	(&proto.ds->constants);
+	SetMapping();
+	dest.constants = DEV->_CreateConstantTable(ctable);
+	dest.T = DEV->_CreateTextureList(passTextures);
+	dest.C = DEV->_CreateConstantList(passConstants);
 
-	proto.cs		= DEV->_CreateCS			(pass_cs);
-	ctable.merge	(&proto.cs->constants);
-
-	SetMapping				();
-	proto.constants	= DEV->_CreateConstantTable(ctable);
-	proto.T 		= DEV->_CreateTextureList	(passTextures);
-	proto.C			= DEV->_CreateConstantList	(passConstants);
-
-	ref_pass	_pass_		= DEV->_CreatePass			(proto);
-	SH->passes.push_back	(_pass_);
+	ref_pass _pass_	= DEV->_CreatePass(dest);
+	SH->passes.emplace_back(_pass_);
 }
 
 void	CBlender_Compile::PassSET_PS		(LPCSTR name)
