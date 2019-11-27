@@ -113,7 +113,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>xrCore.lib;xrEngine.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalOptions>/USEPROFILE %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">

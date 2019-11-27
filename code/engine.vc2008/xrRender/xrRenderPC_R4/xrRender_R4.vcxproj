@@ -225,7 +225,7 @@ copy "..\..\..\..\game\bins\tbbmalloc.dll" "$(xrBinOut)"</Command>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>xrScripts.lib</IgnoreSpecificDefaultLibraries>
-      <AdditionalOptions>/USEPROFILE %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PreBuildEvent>
       <Command>copy "$(xrSDKBins)AnselSDK64.dll" "$(xrBinOut)"</Command>

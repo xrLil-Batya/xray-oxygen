@@ -238,7 +238,6 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalLibraryDirectories>../../SDK/libraries/x64/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>/USEPROFILE %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>copy "..\..\SDK\binaries\x64\soft_oal.dll" "$(xrBinOut)"</Command>
