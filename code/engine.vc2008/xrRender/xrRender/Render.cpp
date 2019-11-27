@@ -564,7 +564,7 @@ void CRender::AfterWorldRender()
 }
 
 // 
-void CRender::ChangeMark(pcstr mark)
+void CRender::ChangeMark(LPCSTR mark)
 {
 	if (0 == xr_strcmp(Target->m_MarkTexture.c_str(), mark)) return;
 

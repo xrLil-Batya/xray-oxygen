@@ -90,7 +90,7 @@ BOOL CTheoraSurface::Load(const char* fname)
 	if (res){
 		string_path		alpha,ext;
 		xr_strcpy			(alpha,fname);
-		pstr pext		= strext(alpha);
+		char* pext		= strext(alpha);
 		if (pext){	
 			xr_strcpy		(ext,pext);
 			*pext		= 0;
