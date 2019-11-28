@@ -132,7 +132,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalOptions>lj_vm.obj  /ignore:4281 /USEPROFILE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>lj_vm.obj %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <BaseAddress>0x33000000</BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>

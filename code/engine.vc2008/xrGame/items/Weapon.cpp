@@ -1229,12 +1229,12 @@ void CWeapon::LoadDefaultMark()
 	::Render->ChangeMark(mark.c_str());
 }
 
-void CWeapon::ChangeCurrentMark(pcstr mark)
+void CWeapon::ChangeCurrentMark(LPCSTR mark)
 {
 	::Render->ChangeMark(mark);
 }
 
-bool CWeapon::LoadMarks(pcstr section)
+bool CWeapon::LoadMarks(LPCSTR section)
 {
 	if (!marks.empty())
 		marks.clear();

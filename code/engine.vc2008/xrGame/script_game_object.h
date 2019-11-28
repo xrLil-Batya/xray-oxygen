@@ -275,7 +275,7 @@ public:
 			int					get_visibility_state	();
 
 	// CBaseMonster
-			void				set_override_animation	(pcstr anim_name);
+			void				set_override_animation	(LPCSTR anim_name);
 			void				clear_override_animation();
 
 			void				force_stand_sleep_animation	(u32 index);

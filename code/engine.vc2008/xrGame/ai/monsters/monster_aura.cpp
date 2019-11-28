@@ -7,19 +7,19 @@
 
 namespace MonsterAuraDetails
 {
-	static pcstr const	s_pp_effector_name_string	=	"_pp_effector_name";
-	static pcstr const	s_pp_highest_at_string		=	"_pp_highest_at";
-	static pcstr const	s_linear_factor_string		=	"_linear_factor";
-	static pcstr const	s_quadratic_factor_string	=	"_quadratic_factor";
-	static pcstr const	s_max_power_string			=	"_max_power";
-	static pcstr const	s_max_distance_string		=	"_max_distance";
-	static pcstr const	s_sound_string				=	"_sound";
-	static pcstr const	s_detect_sound_string		=	"_detect_sound";
-	static pcstr const	s_enable_for_dead_string	=	"_enable_for_dead";
+	static LPCSTR const	s_pp_effector_name_string	=	"_pp_effector_name";
+	static LPCSTR const	s_pp_highest_at_string		=	"_pp_highest_at";
+	static LPCSTR const	s_linear_factor_string		=	"_linear_factor";
+	static LPCSTR const	s_quadratic_factor_string	=	"_quadratic_factor";
+	static LPCSTR const	s_max_power_string			=	"_max_power";
+	static LPCSTR const	s_max_distance_string		=	"_max_distance";
+	static LPCSTR const	s_sound_string				=	"_sound";
+	static LPCSTR const	s_detect_sound_string		=	"_detect_sound";
+	static LPCSTR const	s_enable_for_dead_string	=	"_enable_for_dead";
 
 } // namespace detail
 
-monster_aura::monster_aura (CBaseMonster* const object, pcstr const name) 
+monster_aura::monster_aura (CBaseMonster* const object, LPCSTR const name) 
 						: m_object(object), m_pp_effector_name(NULL), m_pp_index(0)
 {
 	xr_strcpy							(m_name, sizeof(m_name), name); 
@@ -33,7 +33,7 @@ monster_aura::~monster_aura ()
 	remove_pp_effector();
 }
 
-float   monster_aura::override_if_debug (pcstr var_name, float const value) const
+float   monster_aura::override_if_debug (LPCSTR var_name, float const value) const
 {
 #ifdef DEBUG
 	string256							full_var_name;
@@ -74,7 +74,7 @@ float   monster_aura::calculate () const
 	return								(power < max_power) ? power : max_power;
 }
 
-void   monster_aura::load_from_ini (CInifile* ini, pcstr const section, bool enable_for_dead_default)
+void   monster_aura::load_from_ini (CInifile* ini, LPCSTR const section, bool enable_for_dead_default)
 {
 	string512			tempBuffer;
 	xr_strconcat		(tempBuffer, m_name, MonsterAuraDetails::s_pp_effector_name_string);

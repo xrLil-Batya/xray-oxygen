@@ -42,7 +42,7 @@ public:
 								anti_aim_ability		(CBaseMonster* object);
 								~anti_aim_ability		();
 
-	void						load_from_ini			(CInifile* ini, pcstr section);
+	void						load_from_ini			(CInifile* ini, LPCSTR section);
 	void						update_schedule			();
 
 	void						set_callback			(hit_callback callback) { m_callback = callback; }

@@ -21,7 +21,7 @@ public:
 	bool				need_update		( ) const;
 	bool				update_doors	( doors_type const& doors, float average_speed );
 	void				on_door_destroy	( door& door );
-	pcstr				get_name		( ) const;
+	LPCSTR				get_name		( ) const;
 #ifdef DEBUG
 	void				render			( ) const;
 #endif // #ifdef DEBUG

@@ -9,7 +9,7 @@ SCRIPT_API int dojitopt(lua_State *L, const char *opt);
 struct SCRIPT_API lopen
 {
 	static int luaopen_ext(lua_State *L);
-	static void open_lib(lua_State *L, pcstr module_name, lua_CFunction function);
+	static void open_lib(lua_State *L, LPCSTR module_name, lua_CFunction function);
 	static void open_luaicp(lua_State* Ls);
 #ifndef DEBUG
 	static void put_function(lua_State* state, u8 const* buffer, u32 const buffer_size, const char* package_id);

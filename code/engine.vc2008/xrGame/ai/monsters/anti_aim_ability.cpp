@@ -9,12 +9,12 @@
 
 namespace AntiAimAbilityDetails
 {
-	static pcstr const	s_anti_aim_timeout_string				=	"anti_aim_timeout";
-	static pcstr const	s_anti_aim_effectors_string				=	"anti_aim_effectors";
-	static pcstr const	s_anti_aim_freeze_time_string			=	"anti_aim_freeze_time";
-	static pcstr const	s_anti_aim_max_angle_string				=	"anti_aim_max_angle";
-	static pcstr const	s_anti_aim_detection_gain_speed_string	=	"anti_aim_detection_gain_speed";
-	static pcstr const	s_anti_aim_detection_loose_speed_string	=	"anti_aim_detection_loose_speed";
+	static LPCSTR const	s_anti_aim_timeout_string				=	"anti_aim_timeout";
+	static LPCSTR const	s_anti_aim_effectors_string				=	"anti_aim_effectors";
+	static LPCSTR const	s_anti_aim_freeze_time_string			=	"anti_aim_freeze_time";
+	static LPCSTR const	s_anti_aim_max_angle_string				=	"anti_aim_max_angle";
+	static LPCSTR const	s_anti_aim_detection_gain_speed_string	=	"anti_aim_detection_gain_speed";
+	static LPCSTR const	s_anti_aim_detection_loose_speed_string	=	"anti_aim_detection_loose_speed";
 
 } // namespace detail
 
@@ -33,14 +33,14 @@ anti_aim_ability::~anti_aim_ability ()
 	do_deactivate						();
 }
 
-void   anti_aim_ability::load_from_ini (CInifile* ini, pcstr const section)
+void   anti_aim_ability::load_from_ini (CInifile* ini, LPCSTR const section)
 {
 	m_timeout						=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_timeout_string, 5.f);
 	m_freeze_time					=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_freeze_time_string, 1.f);
 	m_max_angle						=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_max_angle_string, 0.5f);
 	m_detection_gain_speed			=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_detection_gain_speed_string, 1.f);
 	m_detection_loose_speed			=	READ_IF_EXISTS(ini, r_float, section, AntiAimAbilityDetails::s_anti_aim_detection_loose_speed_string, 0.1f);
-	pcstr effectors					=	READ_IF_EXISTS(ini, r_string, section, AntiAimAbilityDetails::s_anti_aim_effectors_string, NULL);
+	LPCSTR effectors					=	READ_IF_EXISTS(ini, r_string, section, AntiAimAbilityDetails::s_anti_aim_effectors_string, NULL);
 
 	if ( effectors )
 	{
@@ -165,7 +165,7 @@ void   anti_aim_ability::start_camera_effector ()
 {
 	VERIFY								(!m_effector_id);
 	VERIFY								(m_effectors.size());
-	pcstr const effector_name		=	m_effectors[rand() % m_effectors.size()].c_str();
+	LPCSTR const effector_name		=	m_effectors[rand() % m_effectors.size()].c_str();
 		
 	m_effector_id					=	Actor()->Cameras().RequestCamEffectorId();
 

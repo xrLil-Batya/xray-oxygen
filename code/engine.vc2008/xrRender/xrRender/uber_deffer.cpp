@@ -18,7 +18,7 @@ void	uber_deffer(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BOO
 	if (C.L_textures.size() < 3)	lmap = false;
 	else
 	{
-		pcstr		tex = C.L_textures[2].c_str();
+		LPCSTR		tex = C.L_textures[2].c_str();
 		if (tex[0] == 'l' && tex[1] == 'm' && tex[2] == 'a' && tex[3] == 'p')	lmap = true;
 		else															lmap = false;
 	}
@@ -196,7 +196,7 @@ void uber_shadow(CBlender_Compile& C, LPCSTR _vspec)
 	if (C.L_textures.size() < 3)	lmap = false;
 	else
 	{
-		pcstr		tex = C.L_textures[2].c_str();
+		LPCSTR		tex = C.L_textures[2].c_str();
 		if (tex[0] == 'l' && tex[1] == 'm' && tex[2] == 'a' && tex[3] == 'p')	lmap = true;
 		else															lmap = false;
 	}

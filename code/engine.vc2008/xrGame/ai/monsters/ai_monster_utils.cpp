@@ -43,7 +43,7 @@ Fvector get_bone_position	(CObject *object, LPCSTR bone_name)
 
 Fvector get_head_position(CObject *object) 
 {
-	pcstr bone_name		=	"bip01_head";
+	LPCSTR bone_name		=	"bip01_head";
 	if ( CBaseMonster* monster = smart_cast<CBaseMonster*>(object) )
 	{
 		bone_name		=	monster->get_head_bone_name();
