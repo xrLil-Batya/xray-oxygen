@@ -105,7 +105,7 @@ void CRender::render_rain()
 
 		// Search for default sector - assume "default" or "outdoor" sector is the largest one
 		//. hack: need to know real outdoor sector
-		CSector* largest_sector = Sectors[0];
+		CSector* largest_sector = (CSector*)Sectors[0];
 		float largest_sector_vol = 0;
 		for (u32 s = 0; s < Sectors.size(); s++)
 		{

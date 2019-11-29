@@ -163,7 +163,7 @@ void	CBlender_Compile::PassEnd			()
 	dest.C = DEV->_CreateConstantList(passConstants);
 
 	ref_pass _pass_	= DEV->_CreatePass(dest);
-	SH->passes.emplace_back(_pass_);
+	SH->passes.push_back(_pass_);
 }
 
 void	CBlender_Compile::PassSET_PS		(LPCSTR name)
