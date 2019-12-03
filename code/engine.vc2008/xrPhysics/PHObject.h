@@ -1,6 +1,5 @@
 #pragma once
-#ifndef CPHOBJECT
-#define CPHOBJECT
+
 #include "../xrcdb/ispatial.h"
 #include "PHItemList.h"
 #include "PHIsland.h"
@@ -120,5 +119,3 @@ public:
 };
 
 DEFINE_PHITEM_LIST(CPHObject, PH_OBJECT_STORAGE, PH_OBJECT_I)
-
-#endif//CPHOBJECT

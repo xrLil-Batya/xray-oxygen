@@ -18,13 +18,12 @@
 BOOL dbg_draw_doors = false;
 
 CPhysicObject::CPhysicObject() :
-	m_anim_blend(nullptr), m_type(epotBox), m_mass(10.f), m_collision_hit_callback(nullptr), bones_snd_player(nullptr), m_net_updateData(nullptr)
+	m_anim_blend(nullptr), m_type(epotBox), m_mass(10.f), m_collision_hit_callback(nullptr), bones_snd_player(nullptr)
 {
 }
 
 CPhysicObject::~CPhysicObject()
 {
-	xr_delete(m_net_updateData);
 }
 
 BOOL CPhysicObject::net_Spawn(CSE_Abstract* DC)
@@ -40,7 +39,6 @@ BOOL CPhysicObject::net_Spawn(CSE_Abstract* DC)
 
 	create_collision_model();
 
-
 	CPHSkeleton::Spawn(e);
 	setVisible(TRUE);
 	setEnabled(TRUE);
@@ -54,16 +52,6 @@ BOOL CPhysicObject::net_Spawn(CSE_Abstract* DC)
 	m_just_after_spawn = true;
 	m_activated = false;
 
-	if (DC->s_flags.is(M_SPAWN_UPDATE)) {
-		NET_Packet				temp;
-		temp.B.count = 0;
-		DC->UPDATE_Write(temp);
-		if (temp.B.count > 0)
-		{
-			temp.r_seek(0);
-			net_Import(temp);
-		}
-	}
 #ifdef	DEBUG
 	if (dbg_draw_doors)
 	{
@@ -116,18 +104,9 @@ void CPhysicObject::stop_bones_sound()
 static CPhysicsShellHolder* retrive_collide_object(bool bo1, dContact& c)
 {
 	CPhysicsShellHolder* collide_obj = nullptr;
-	dxGeomUserData* ud = nullptr;
+	dxGeomUserData* pUserData = PHRetrieveGeomUserData(bo1 ? c.geom.g2 : c.geom.g1);
 
-	if (bo1)
-		ud = PHRetrieveGeomUserData(c.geom.g2);
-	else
-		ud = PHRetrieveGeomUserData(c.geom.g1);
-
-	if (ud)
-		collide_obj = static_cast<CPhysicsShellHolder*>(ud->ph_ref_object);
-	else
-		collide_obj = nullptr;
-	return collide_obj;
+	return pUserData ? (CPhysicsShellHolder*)pUserData->ph_ref_object : nullptr;
 }
 
 static void door_ignore(bool& do_collide, bool bo1, dContact& c, SGameMtl * /*material_1*/, SGameMtl * /*material_2*/)
@@ -142,7 +121,6 @@ static void door_ignore(bool& do_collide, bool bo1, dContact& c, SGameMtl * /*ma
 		do_collide = false;//? must be AI
 		return;
 	}
-	VERIFY(ph_shell);
 
 	if (ph_shell->HasTracedGeoms())
 		return;
@@ -192,48 +170,47 @@ void CPhysicObject::RunStartupAnim(CSE_Abstract *D)
 	}
 }
 
-IC	bool check_blend(CBlend * b, LPCSTR name, LPCSTR sect, LPCSTR visual)
-{
-	return !!b;
-}
-
 void CPhysicObject::run_anim_forward()
 {
-	if (!check_blend(m_anim_blend, cName().c_str(), cNameSect().c_str(), cNameVisual().c_str()))
+	if (!m_anim_blend)
 		return;
+	
 	m_anim_blend->playing = TRUE;
 	m_anim_blend->stop_at_end_callback = TRUE;
+	
 	if (m_anim_blend->speed < 0.f)
 		m_anim_blend->speed = -m_anim_blend->speed;
 
 }
 void CPhysicObject::run_anim_back()
 {
-	if (!check_blend(m_anim_blend, cName().c_str(), cNameSect().c_str(), cNameVisual().c_str()))
+	if (!m_anim_blend)
 		return;
+	
 	m_anim_blend->playing = TRUE;
 	m_anim_blend->stop_at_end_callback = TRUE;
+	
 	if (m_anim_blend->speed > 0.f)
 		m_anim_blend->speed = -m_anim_blend->speed;
 }
 
 void CPhysicObject::stop_anim()
 {
-	if (!check_blend(m_anim_blend, cName().c_str(), cNameSect().c_str(), cNameVisual().c_str()))
+	if (!m_anim_blend)
 		return;
 	m_anim_blend->playing = FALSE;
 }
 
 float	CPhysicObject::anim_time_get()
 {
-	if (!check_blend(m_anim_blend, cName().c_str(), cNameSect().c_str(), cNameVisual().c_str()))
+	if (!m_anim_blend)
 		return 0.f;
 	return m_anim_blend->timeCurrent;
 }
 
 void CPhysicObject::anim_time_set(float time)
 {
-	if (!check_blend(m_anim_blend, cName().c_str(), cNameSect().c_str(), cNameVisual().c_str()))
+	if (!m_anim_blend)
 		return;
 
 	if (time < 0.f || time > m_anim_blend->timeTotal)
@@ -349,11 +326,9 @@ void CPhysicObject::AddElement(IPhysicsElementEx* root_e, int id)
 	E->mXFORM.set(K->LL_GetTransform(u16(id)));
 	Fobb bb = K->LL_GetBox(u16(id));
 
-	if (bb.m_halfsize.magnitude()<0.05f)
-	{
+	if (bb.m_halfsize.magnitude() < 0.05f)
 		bb.m_halfsize.add(0.05f);
-
-	}
+		
 	E->add_Box(bb);
 	E->setMass(10.f);
 	E->set_ParentElement(root_e);
@@ -417,7 +392,7 @@ BOOL CPhysicObject::net_SaveRelevant()
 
 BOOL CPhysicObject::UsedAI_Locations()
 {
-	return					(FALSE);
+	return (FALSE);
 }
 
 
@@ -441,7 +416,7 @@ void CPhysicObject::set_collision_hit_callback(ICollisionHitCallback *cc)
 //////////////////////////////////////////////////////////////////////////
 bool CPhysicObject::is_ai_obstacle() const
 {
-	return							!!(READ_IF_EXISTS(pSettings, r_bool, cNameSect(), "is_ai_obstacle", true));
+	return !!(READ_IF_EXISTS(pSettings, r_bool, cNameSect(), "is_ai_obstacle", true));
 }
 
 // network synchronization ----------------------------
@@ -450,52 +425,7 @@ void CPhysicObject::net_Export(NET_Packet& P)
 	P.w_u8(0);
 }
 
-void CPhysicObject::net_Import(NET_Packet& P)
-{
-	u8 NumItems = P.r_u8();
-	if (NumItems)
-	{
-		CSE_ALifeObjectPhysic::mask_num_items num_items;
-		num_items.common = NumItems;
-		NumItems = num_items.num_items;
-
-		////////////////////////////////////////////
-		P.r_u8();	// freezed or not..
-	}
-}
-
-//-----------
-float CPhysicObject::interpolate_states(net_update_PItem const & first, net_update_PItem const & last, SPHNetState & current)
-{
-	float ret_val = 0.f;
-	u32 CurTime = Device.dwTimeGlobal;
-
-	if (CurTime == last.dwTimeStamp)
-		return 0.f;
-
-	float factor = float(CurTime - last.dwTimeStamp) / float(last.dwTimeStamp - first.dwTimeStamp);
-
-	ret_val = factor;
-	if (factor > 1.f)
-	{
-		factor = 1.f;
-	}
-	else if (factor < 0.f)
-	{
-		factor = 0.f;
-	}
-
-	current.position.x = first.State.position.x + (factor * (last.State.position.x - first.State.position.x));
-	current.position.y = first.State.position.y + (factor * (last.State.position.y - first.State.position.y));
-	current.position.z = first.State.position.z + (factor * (last.State.position.z - first.State.position.z));
-	current.previous_position = current.position;
-
-	current.quaternion.slerp(first.State.quaternion, last.State.quaternion, factor);
-	current.previous_quaternion = current.quaternion;
-	return ret_val;
-}
-
-bool	CPhysicObject::get_door_vectors(Fvector& closed, Fvector& open) const
+bool CPhysicObject::get_door_vectors(Fvector& closed, Fvector& open) const
 {
 	VERIFY(Visual());
 	IKinematics *K = Visual()->dcast_PKinematics();

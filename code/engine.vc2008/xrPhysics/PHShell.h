@@ -211,8 +211,6 @@ public:
 	virtual void InitContact(dContact* c, bool &do_collide, u16 /*material_idx_1*/, u16 /*material_idx_2*/) {};
 	virtual void FreezeContent();
 	virtual void UnFreezeContent();
-	virtual void Freeze();
-	virtual void UnFreeze();
 	virtual void NetInterpolationModeON() { CPHObject::NetInterpolationON(); }
 	virtual void NetInterpolationModeOFF() { CPHObject::NetInterpolationOFF(); }
 	virtual void StepFrameUpdate(dReal step) {};
@@ -284,7 +282,7 @@ private:
 	void ReanableObject();
 	void ExplosionHit(const Fvector& pos, const Fvector& dir, float val, const u16 id);
 	void ClearBreakInfo();
-	Fmatrix& get_animation_root_matrix(Fmatrix& m);
+	
 	void update_root_transforms();
 	inline CPHElement &root_element() { VERIFY(!elements.empty()); return *(*elements.begin()); }
 

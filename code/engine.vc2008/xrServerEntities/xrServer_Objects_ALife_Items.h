@@ -230,20 +230,34 @@ SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponMagazinedWGL)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponMagazinedWGL)
 
-SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeaponShotGun,CSE_ALifeItemWeaponMagazined)
-	xr_vector<u8>				m_AmmoIDs;
-								CSE_ALifeItemWeaponShotGun(LPCSTR caSection);
-virtual							~CSE_ALifeItemWeaponShotGun();
+//////////////////////////////////////
+// CSE_ALifeItemWeaponShotGun
 
-SERVER_ENTITY_DECLARE_END
+class CSE_ALifeItemWeaponShotGun : public CSE_ALifeItemWeaponMagazined
+{
+public:
+		xr_vector<u8> m_AmmoIDs;
+public:
+			CSE_ALifeItemWeaponShotGun(LPCSTR caSection);
+	virtual ~CSE_ALifeItemWeaponShotGun() = default;
+	
+	virtual void UPDATE_Write(NET_Packet& P);
+	virtual void UPDATE_Read(NET_Packet& P);
+}
+
 add_to_type_list(CSE_ALifeItemWeaponShotGun)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponShotGun)
 
-SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeaponAutoShotGun,CSE_ALifeItemWeaponShotGun)
-								CSE_ALifeItemWeaponAutoShotGun(LPCSTR caSection);
-virtual							~CSE_ALifeItemWeaponAutoShotGun();
+//////////////////////////////////////
+// CSE_ALifeItemWeaponAutoShotGun
 
-SERVER_ENTITY_DECLARE_END
+class CSE_ALifeItemWeaponAutoShotGun : public CSE_ALifeItemWeaponShotGun
+{
+public:
+			CSE_ALifeItemWeaponAutoShotGun(LPCSTR caSection);
+	virtual ~CSE_ALifeItemWeaponAutoShotGun() = default;
+}
+
 add_to_type_list(CSE_ALifeItemWeaponAutoShotGun)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponAutoShotGun)
 
