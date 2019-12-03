@@ -211,6 +211,9 @@ public:
 	virtual void InitContact(dContact* c, bool &do_collide, u16 /*material_idx_1*/, u16 /*material_idx_2*/) {};
 	virtual void FreezeContent();
 	virtual void UnFreezeContent();
+	
+	virtual void Freeze() { CPHObject::Freeze();}
+	virtual void UnFreeze() { CPHObject::UnFreeze();}
 	virtual void NetInterpolationModeON() { CPHObject::NetInterpolationON(); }
 	virtual void NetInterpolationModeOFF() { CPHObject::NetInterpolationOFF(); }
 	virtual void StepFrameUpdate(dReal step) {};
