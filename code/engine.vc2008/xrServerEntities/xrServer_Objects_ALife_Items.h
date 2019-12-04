@@ -235,6 +235,7 @@ add_to_type_list(CSE_ALifeItemWeaponMagazinedWGL)
 
 class CSE_ALifeItemWeaponShotGun : public CSE_ALifeItemWeaponMagazined
 {
+	using inherited = CSE_ALifeItemWeaponMagazined;
 public:
 		xr_vector<u8> m_AmmoIDs;
 public:
@@ -243,7 +244,7 @@ public:
 	
 	virtual void UPDATE_Write(NET_Packet& P);
 	virtual void UPDATE_Read(NET_Packet& P);
-}
+};
 
 add_to_type_list(CSE_ALifeItemWeaponShotGun)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponShotGun)
@@ -253,10 +254,11 @@ add_to_type_list(CSE_ALifeItemWeaponShotGun)
 
 class CSE_ALifeItemWeaponAutoShotGun : public CSE_ALifeItemWeaponShotGun
 {
+	using inherited = CSE_ALifeItemWeaponShotGun;
 public:
 			CSE_ALifeItemWeaponAutoShotGun(LPCSTR caSection);
 	virtual ~CSE_ALifeItemWeaponAutoShotGun() = default;
-}
+};
 
 add_to_type_list(CSE_ALifeItemWeaponAutoShotGun)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponAutoShotGun)
