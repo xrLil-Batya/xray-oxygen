@@ -244,6 +244,8 @@ public:
 	
 	virtual void UPDATE_Write(NET_Packet& P);
 	virtual void UPDATE_Read(NET_Packet& P);
+
+	DECLARE_SCRIPT_REGISTER_FUNCTION;
 };
 
 add_to_type_list(CSE_ALifeItemWeaponShotGun)
@@ -258,6 +260,8 @@ class CSE_ALifeItemWeaponAutoShotGun : public CSE_ALifeItemWeaponShotGun
 public:
 			CSE_ALifeItemWeaponAutoShotGun(LPCSTR caSection);
 	virtual ~CSE_ALifeItemWeaponAutoShotGun() = default;
+	
+	DECLARE_SCRIPT_REGISTER_FUNCTION;
 };
 
 add_to_type_list(CSE_ALifeItemWeaponAutoShotGun)
