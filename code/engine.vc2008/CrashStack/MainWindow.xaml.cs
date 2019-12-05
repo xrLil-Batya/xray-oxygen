@@ -28,11 +28,9 @@ namespace CrashStack
             var Localization = System.Globalization.CultureInfo.CurrentCulture;
             if (Localization.ToString() == "ru-RU")
             {
-                //this.ErrorText.Content = "Oшибка: Исключение. Сообщите: ";
                 this.BreakBtn.Content = "Прервать";
                 this.ContinueBtn.Content = "Продолжить";
                 this.ReportBtn.Content = "Сообщить";
-                //this.DiscordBlock.Margin = new Thickness(this.DiscordBlock.Margin.Left + 10, 0, 0, this.DiscordBlock.Margin.Bottom);
             }
         }
 

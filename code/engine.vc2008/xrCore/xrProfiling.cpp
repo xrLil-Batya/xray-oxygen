@@ -14,7 +14,7 @@
 
 XRCORE_API xrProfiling Profiling;
 
-#define APP_DOMAIN "X-Ray Oxygen"
+#define APP_DOMAIN "Oxygen Engine 2.0"
 
 struct TrackedID
 {

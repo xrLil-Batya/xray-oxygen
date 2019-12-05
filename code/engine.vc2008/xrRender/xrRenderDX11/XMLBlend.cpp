@@ -70,14 +70,11 @@ Shader* CXMLBlend::Compile(const char* Texture)
 
 ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 {
-	ShaderElement* pShaderElement;
-	pCompiler->SH = pShaderElement;
+	pCompiler->SH = new ShaderElement();
 	pCompiler->RS.Invalidate();
 
 	// Compile
 	LPCSTR t_0 = *pCompiler->L_textures[0] ? *pCompiler->L_textures[0] : "null";
-	//LPCSTR t_1 = (pCompiler->L_textures.size() > 1) ? *pCompiler->L_textures[1] : "null";
-	//LPCSTR t_d = pCompiler->detail_texture ? pCompiler->detail_texture : "null";
 
 	// Parse root attributes
 	bool bFog = Parser.ReadAttribBool(pElement, "fog", true);
@@ -206,7 +203,7 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 	}
 
 	pCompiler->r_End();
-	ShaderElement* pTryElement = dxRenderDeviceRender::Instance().Resources->_CreateElement(*pShaderElement);
+	ShaderElement* pTryElement = dxRenderDeviceRender::Instance().Resources->_CreateElement(*pCompiler->SH);
 	return pTryElement;
 }
 

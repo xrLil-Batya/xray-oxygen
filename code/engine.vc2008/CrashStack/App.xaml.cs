@@ -14,7 +14,7 @@ namespace CrashStack
     public partial class App : Application
     {
         public static int ExitCode;
-        // Ужасный способ инита, ну да и пофиг
+		
         [STAThread]
         public static int Main(string[] InputText)
         {
