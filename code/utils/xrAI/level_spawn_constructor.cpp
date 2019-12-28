@@ -14,7 +14,6 @@
 #include "xrServer_Objects_ALife_All.h"
 #include "factory_api.h"
 #include "clsid_game.h"
-//#include "game_base.h"
 #include "game_spawn_constructor.h"
 #include "patrol_path_storage.h"
 #include "space_restrictor_wrapper.h"
@@ -258,7 +257,8 @@ void CLevelSpawnConstructor::correct_objects()
 		}
 
 		for (int i = 0; i<(int)m_spawns.size(); i++) {
-			if (!m_spawns[i]->used_ai_locations()) {
+			if (!m_spawns[i]->used_ai_locations()) 
+			{
 				m_spawns[i]->m_tGraphID = (GameGraph::_GRAPH_ID)m_level_graph_vertex_id;
 				m_spawns[i]->m_fDistance = 0.f;
 				m_spawns[i]->m_tNodeID = game_graph().vertex(m_level_graph_vertex_id)->level_vertex_id();
@@ -274,14 +274,25 @@ void CLevelSpawnConstructor::correct_objects()
 				m_spawns[i]->o_Position = new_position;
 			}
 			u32					dwBest = cross_table().vertex(m_spawns[i]->m_tNodeID).game_vertex_id();
-			if (game_graph().vertex(dwBest)->level_id() != m_level.id()) {
+			if (game_graph().vertex(dwBest)->level_id() != m_level.id()) 
+			{
 				string4096	S1;
 				char		*S = S1;
 				S += xr_sprintf(S, sizeof(S1) - (S1 - &S[0]), "Corresponding graph vertex for the spawn point is located on the ANOTHER level\n", m_spawns[i]->name_replace());
 				S += xr_sprintf(S, sizeof(S1) - (S1 - &S[0]), "Current level  : [%d][%s]\n", m_level.id(), *game_graph().header().level(m_level.id()).name());
 				S += xr_sprintf(S, sizeof(S1) - (S1 - &S[0]), "Conflict level : [%d][%s]\n", game_graph().vertex(dwBest)->level_id(), *game_graph().header().level(game_graph().vertex(dwBest)->level_id()).name());
-				S += xr_sprintf(S, sizeof(S1) - (S1 - &S[0]), "Probably, you filled offsets in \"game_levels.ltx\" incorrect");
-				R_ASSERT2(game_graph().vertex(dwBest)->level_id() == m_level.id(), S1);
+				S += xr_sprintf(S, sizeof(S1) - (S1 - &S[0]), "Probably, you filled offsets in \"game_levels.ltx\" incorrect \n");
+				S += xr_sprintf(S, sizeof(S1) - (S1 - &S[0]), "Broken graph id: %s", dwBest);
+				
+				if(!strstr(Core.Params, "-skip_graph_validation")
+					R_ASSERT2(game_graph().vertex(dwBest)->level_id() == m_level.id(), S1);
+				else
+				{
+					m_spawns[i]->m_tGraphID = (GameGraph::_GRAPH_ID)m_level_graph_vertex_id;
+					m_spawns[i]->m_fDistance = 0.f;
+					m_spawns[i]->m_tNodeID = game_graph().vertex(m_level_graph_vertex_id)->level_vertex_id();
+					continue;
+				}
 			}
 
 			float				fCurrentBestDistance = cross_table().vertex(m_spawns[i]->m_tNodeID).distance();
