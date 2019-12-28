@@ -88,9 +88,6 @@ void CBuild::Flex2OGF()
 			
 			// Collect textures
 			OGF_Texture			T;
-			//pOGF->shader		= M->shader;
-			//pOGF->shader_xrlc	= &F->Shader();
-			
 			TRY(T.name			= textures()[M->surfidx].name);
 			TRY(T.pBuildSurface	= &(textures()[M->surfidx]));
 			TRY(pOGF->textures.push_back(T));
@@ -102,7 +99,6 @@ void CBuild::Flex2OGF()
 					string_path		tn;
 					xr_strconcat(tn,*T.name,"_lm.dds");
 					T.name			= tn;
-					T.pBuildSurface		= T.pBuildSurface;	// Leave surface intact
 					R_ASSERT		(pOGF);
 					pOGF->textures.push_back(T);
 				} else {

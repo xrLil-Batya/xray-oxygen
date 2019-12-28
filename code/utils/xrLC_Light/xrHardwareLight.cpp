@@ -419,7 +419,6 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 	LightSizeBuffer->copyToBuffer(&LightSize, 1);
 
 	LightBuffer = new DeviceBuffer<R_Light>(RGBSize + SunSize + HemiSize, GetBufferTypeByMode(mode));
-	R_Light* LightDevicePtr = LightBuffer->ptr();
 	size_t LightPtrOffset = 0;
 
 	//	RGB

@@ -345,7 +345,7 @@ void xrBuildNodes()
 			Msg		("Can't align emitter");
 			abort	();
 		} else {
-			CDB::RESULT& R = *XRC.r_begin();
+			CDB::RESULT& R = *XRC.r_realBegin();
 			Pos.y = Pos.y - R.range;
 		}
 		
