@@ -62,9 +62,8 @@ protected:
 	// ref-counting
 	void				_dec		()								
 	{
-		if (empty()) // empty string
+		if (empty())
 		{
-			p_ = nullptr;
 			return;
 		}
 
@@ -162,7 +161,7 @@ public:
 
 	str_c				c_str		() const						{	return p_ ? p_->value : nullptr;			}
 	char*				data		() const						{	return p_ ? p_->value : nullptr;			}
-	IC bool 			empty		() const 						{ 	return size() > 0; 							}
+	IC bool 			empty		() const 						{ 	return size() == 0; 						}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// misc func
 	u32 size() const	

@@ -38,7 +38,6 @@ bool CDB_Model::Restore(IReader* reader)
 	return pTree->Restore(reader);
 }
 
-// ���������� ��� ����� pTree
 bool CDB_Model::Build(const Opcode::OPCODECREATE& create)
 {
 	if (!create.mIMesh || !create.mIMesh->IsValid())	return false;
