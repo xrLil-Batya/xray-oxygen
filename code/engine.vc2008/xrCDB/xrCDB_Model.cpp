@@ -15,6 +15,11 @@ CDB_Model::CDB_Model()
 	pTree = new CDB_OptimizeTree();
 }
 
+CDB_Model::~CDB_Model()
+{
+	xr_delete(pTree);
+}
+
 void CDB_Model::Store(IWriter* writer)
 {
 	writer->w_u64(mModelCode);
@@ -33,7 +38,6 @@ bool CDB_Model::Restore(IReader* reader)
 	return pTree->Restore(reader);
 }
 
-// Перегрузка под новый pTree
 bool CDB_Model::Build(const Opcode::OPCODECREATE& create)
 {
 	if (!create.mIMesh || !create.mIMesh->IsValid())	return false;

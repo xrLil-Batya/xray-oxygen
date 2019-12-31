@@ -10,11 +10,10 @@ CWound::CWound(u16 bone_num)
 {
 	m_bToBeDestroy = false;
 
-	m_Wounds.resize	(ALife::eHitTypeMax);
-	for(int i=0; i<ALife::eHitTypeMax; i++)
-	{
+	m_Wounds.resize(ALife::eHitTypeMax);
+	
+	for(u32 i=0; i < ALife::eHitTypeMax; i++)
 		m_Wounds[i] = 0.f;
-	}
 
 	m_iBoneNum = bone_num;
 	m_iParticleBoneNum = BI_NONE;
@@ -27,7 +26,7 @@ CWound::~CWound()
 {
 }
 
-#define  WOUND_MAX 10.f
+constexpr float WOUND_MAX = 10.f;
 
 
 //serialization

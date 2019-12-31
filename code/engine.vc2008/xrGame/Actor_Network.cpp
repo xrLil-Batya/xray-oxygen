@@ -134,14 +134,14 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	}
 }
 
-static void w_vec_q8(NET_Packet& P,const Fvector& vec,const Fvector& min,const Fvector& max)
+IC void w_vec_q8(NET_Packet& P,const Fvector& vec,const Fvector& min,const Fvector& max)
 {
 	P.w_float_q8(vec.x,min.x,max.x);
 	P.w_float_q8(vec.y,min.y,max.y);
 	P.w_float_q8(vec.z,min.z,max.z);
 }
 
-static void w_qt_q8(NET_Packet& P,const Fquaternion& q)
+IC void w_qt_q8(NET_Packet& P,const Fquaternion& q)
 {
 	///////////////////////////////////////////////////
 	P.w_float_q8(q.x,-1.f,1.f);
@@ -151,9 +151,7 @@ static void w_qt_q8(NET_Packet& P,const Fquaternion& q)
 	///////////////////////////////////////////
 }
 
-#define F_MAX         3.402823466e+38F
-
-static void	UpdateLimits (Fvector &p, Fvector& min, Fvector& max)
+IC void	UpdateLimits (Fvector &p, Fvector& min, Fvector& max)
 {
 	if(p.x<min.x)min.x=p.x;
 	if(p.y<min.y)min.y=p.y;
@@ -177,9 +175,9 @@ void		CActor::net_ExportDeadBody		(NET_Packet &P)
 {
 	/////////////////////////////
 	Fvector min,max;
-
-	min.set(F_MAX,F_MAX,F_MAX);
-	max.set(-F_MAX,-F_MAX,-F_MAX);
+	  
+	min.set(FLT_MAX,FLT_MAX,FLT_MAX);
+	max.set(-FLT_MAX,-FLT_MAX,-FLT_MAX);
 	/////////////////////////////////////
 	u16 bones_number		= PHGetSyncItemsNumber();
 	for(u16 i=0;i<bones_number;i++)
@@ -497,7 +495,7 @@ void CActor::OnChangeVisual()
 
 void CActor::ChangeVisual ( shared_str NewVisual )
 {
-	if (!NewVisual.size()) return;
+	if (NewVisual.empty()) return;
 	if (cNameVisual().size() )
 	{
 		if (cNameVisual() == NewVisual) return;
@@ -579,11 +577,6 @@ bool CActor::InventoryAllowSprint()
 		return false;
 
 	return true;
-};
-
-BOOL CActor::BonePassBullet(int boneID)
-{
-	return inherited::BonePassBullet(boneID);
 }
 
 void CActor::On_B_NotCurrentEntity()

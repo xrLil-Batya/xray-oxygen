@@ -22,7 +22,6 @@ inline void dMULTIPLY3_333(dReal *A, const dReal *B, const dReal *C)
 	dMULTIPLYOP3_333(A, =, B, C)
 }
 
-class CGameObject;
 class CPHObject;
 class XRPHYSICS_API CODEGeom :
 	public IPhysicsGeometry
@@ -31,29 +30,28 @@ protected:
 	dGeomID m_geom_transform;
 	u16		m_bone_id;
 	Flags16 m_flags;
-protected:
 
 public:
 	//get
 	virtual		float		volume() = 0;
 	virtual		void		get_mass(dMass& m) = 0;		//unit dencity mass;
-	void		get_mass(dMass& m, const Fvector& ref_point, float density);
-	void		get_mass(dMass& m, const Fvector& ref_point);
-	void		add_self_mass(dMass& m, const Fvector& ref_point);
-	void		add_self_mass(dMass& m, const Fvector& ref_point, float density);
-	void		get_local_center_bt(Fvector& center);		//for built
-	void		get_global_center_bt(Fvector& center);		//for built
-	void		get_local_form_bt(Fmatrix& form);	    //for built
+				void		get_mass(dMass& m, const Fvector& ref_point, float density);
+				void		get_mass(dMass& m, const Fvector& ref_point);
+				void		add_self_mass(dMass& m, const Fvector& ref_point);
+				void		add_self_mass(dMass& m, const Fvector& ref_point, float density);
+				void		get_local_center_bt(Fvector& center);		//for built
+				void		get_global_center_bt(Fvector& center);		//for built
+				void		get_local_form_bt(Fmatrix& form);	    //for built
 	virtual		void		get_xform(Fmatrix& form) const;
 	virtual		void		dbg_draw(float scale, u32 color, Flags32 flags) const;
 	virtual		void		get_Box(Fmatrix& form, Fvector&	sz)const;
 	virtual		bool		collide_fluids() const;
-	void		set_static_ref_form(const Fmatrix& form);		//for built
+				void		set_static_ref_form(const Fmatrix& form);		//for built
 	virtual		void		get_max_area_dir_bt(Fvector& dir) = 0;
 	virtual		float		radius() = 0;
 	virtual		void		get_Extensions(const Fvector& axis, float center_prg, float& lo_ext, float& hi_ext)const = 0;
 
-	void		clear_cashed_tries();
+				void		clear_cashed_tries();
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	inline			dGeomID		geom()
@@ -197,7 +195,7 @@ public:
 	virtual		float		radius();
 	virtual		void		get_Extensions(const Fvector& axis, float center_prg, float& lo_ext, float& hi_ext)const;
 	virtual		void		get_max_area_dir_bt(Fvector& dir) {};
-	virtual const	Fvector&	local_center();
+	virtual const Fvector&	local_center();
 	virtual		void		get_mass(dMass& m);//unit dencity mass;
 	virtual		void		get_local_form(Fmatrix& form);
 	virtual		void		set_local_form(const Fmatrix& form);

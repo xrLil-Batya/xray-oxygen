@@ -20,8 +20,6 @@ struct XRPHYSICS_API SPHNetState
 	Fquaternion	previous_quaternion;
 	bool		enabled;
 	void net_Export(NET_Packet& P);
-	void net_Import(NET_Packet& P);
-	void net_Import(IReader& P);
 	void net_Save(NET_Packet& P);
 	void net_Load(NET_Packet& P);
 	void net_Load(IReader& P);
@@ -31,9 +29,9 @@ struct XRPHYSICS_API SPHNetState
 
 private:
 	template<typename src>
+	
 	void read(src&			P);
 	template<typename src>
-
 	void read(src&		P, const Fvector& min, const Fvector& max);
 };
 

@@ -1,24 +1,22 @@
 #include	"stdafx.h"
-
 #include	"interactive_animation.h"
-
-#include	"../xrphysics/physicsshell.h"
-#include	"../xrphysics/ExtendedGeom.h"
-#include	"../xrphysics/mathutils.h"
-
+#include	"../xrPhysics/physicsshell.h"
+#include	"../xrPhysics/ExtendedGeom.h"
+#include	"../xrPhysics/mathutils.h"
 #include	"../Include/xrRender/KinematicsAnimated.h"
 
-interactive_animation::interactive_animation(CPhysicsShellHolder* O, CBlend* b) : physics_shell_animated(O, false), blend(b)
+static float depth = 0;
+
+interactive_animation::interactive_animation(CPhysicsShellHolder* O, CBlend* b) : CPhShellAnimated(O, false), blend(b)
 {
 }
 
 interactive_animation::~interactive_animation()
 {
 }
-static float depth = 0;
+
 bool interactive_animation::collide()
 {
-//	depth = 0;
 	physics_shell->CollideAll();
 	return depth > 0.05;
 }

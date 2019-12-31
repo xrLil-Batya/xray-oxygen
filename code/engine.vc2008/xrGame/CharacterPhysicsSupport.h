@@ -15,7 +15,7 @@ class CPHMovementControl;
 class CIKLimbsController;
 class interactive_motion;
 class interactive_animation;
-class physics_shell_animated;
+class CPhShellAnimated;
 class CODEGeom;
 class IPhysicsElementEx;
 class activating_character_delay;
@@ -71,7 +71,7 @@ private:
 	interactive_motion					*m_interactive_motion;
 	character_shell_control				m_character_shell_control;
 	interactive_animation				*m_interactive_animation;
-	physics_shell_animated				*m_physics_shell_animated;
+	CPhShellAnimated					*m_physics_shell_animated;
 	activating_character_delay			*m_collision_activating_delay;
 	xr_vector<CODEGeom*>				m_weapon_geoms;
 	xr_vector<anim_bone_fix*>			m_weapon_bone_fixes;
@@ -132,8 +132,8 @@ IC		CIKLimbsController				*ik_controller			()					{ return m_ik_controller; }
 		void							set_collision_hit_callback		( ICollisionHitCallback* cc );
 		void							run_interactive					( CBlend* B );
 		void							update_interactive_anims		( );
-IC		physics_shell_animated			*animation_collision			( ){ return m_physics_shell_animated; }
-IC		const physics_shell_animated	*animation_collision			( )const{ return m_physics_shell_animated; }
+IC		CPhShellAnimated			*animation_collision			( ){ return m_physics_shell_animated; }
+IC		const CPhShellAnimated	*animation_collision			( )const{ return m_physics_shell_animated; }
 		void							create_animation_collision		( );
 		void							destroy_animation_collision		( );
 		u16								PHGetSyncItemsNumber			( );

@@ -27,14 +27,10 @@ CTelekineticObject* CTeleWhirlwind::activate(CPhysicsShellHolder *obj, float str
 	else
 		return 0;
 }
+
 void CTeleWhirlwind::clear_impacts()
 {
 	m_saved_impacts.clear();
-}
-void CTeleWhirlwind::clear()
-{
-	inherited::clear();
-	
 }
 
 void CTeleWhirlwind::add_impact(const Fvector& dir,float val)
@@ -69,18 +65,10 @@ void CTeleWhirlwind::draw_out_impact(Fvector& dir,float& val)
 void CTeleWhirlwind::clear_notrelevant()
 {
 	//убрать все объеты со старыми параметрами
-	objects.erase	(
-		std::remove_if(
-			objects.begin(),
-			objects.end(),
+	objects.erase(std::remove_if(objects.begin(), objects.end(),
 			[](CTelekineticObject* tele_object)
-	{
-		return (!tele_object->get_object() ||
-			tele_object->get_object()->getDestroy());
-	}
-		),
-		objects.end()
-	);
+			  { return (!tele_object->get_object() || tele_object->get_object()->getDestroy()); }
+		), objects.end());
 }
 
 
@@ -88,15 +76,15 @@ void CTeleWhirlwind::play_destroy(CTeleWhirlwindObject *obj)
 {
 	
 }
-	CTeleWhirlwindObject::		CTeleWhirlwindObject()
+
+CTeleWhirlwindObject::CTeleWhirlwindObject()
 {
-			m_telekinesis=0;
-			throw_power=0.f;
-			
+	m_telekinesis=0;
+	throw_power=0.f;
 }
 	
 
-bool		CTeleWhirlwindObject::		init(CTelekinesis* tele,CPhysicsShellHolder *obj, float s, float h, u32 ttk,bool rot)
+bool CTeleWhirlwindObject::init(CTelekinesis* tele,CPhysicsShellHolder *obj, float s, float h, u32 ttk,bool rot)
 {
 			bool result			=inherited::init(tele,obj,s,h,ttk,rot);
 			m_telekinesis		=static_cast<CTeleWhirlwind*>(tele);

@@ -3,7 +3,6 @@
 
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
-#include "../../xrEngine/DirectXMathExternal.h"
 
 #include "../xrRenderDX10/dx10BufferUtils.h"
 

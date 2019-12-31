@@ -31,17 +31,17 @@ HRESULT	CreateIndexBuffer( ID3DIndexBuffer** ppBuffer, const void* pData, UINT D
 	return CreateBuffer( ppBuffer, pData, DataSize, bImmutable, true);
 }
 
-HRESULT	CreateConstantBuffer( ID3DBuffer** ppBuffer, UINT DataSize)
+HRESULT CreateConstantBuffer(ID3DBuffer** ppBuffer, UINT DataSize)
 {
-	D3D_BUFFER_DESC desc;
-	desc.ByteWidth = DataSize;
-	desc.Usage = D3D_USAGE_DYNAMIC;
-	desc.BindFlags = D3D_BIND_CONSTANT_BUFFER;
-	desc.CPUAccessFlags = D3D_CPU_ACCESS_WRITE;
-	desc.MiscFlags = 0;
+    D3D_BUFFER_DESC desc;
+    desc.ByteWidth = DataSize;
+    desc.Usage = D3D_USAGE_DEFAULT;// D3D_USAGE_DYNAMIC;
+    desc.BindFlags = D3D_BIND_CONSTANT_BUFFER;
+    desc.CPUAccessFlags = 0;// D3D_CPU_ACCESS_WRITE;
+    desc.MiscFlags = 0;
 
-	HRESULT res = HW.pDevice->CreateBuffer( &desc, 0, ppBuffer);
-	return res;
+    HRESULT res = HW.pDevice->CreateBuffer(&desc, 0, ppBuffer);
+    return res;
 }
 
 struct VertexFormatPairs

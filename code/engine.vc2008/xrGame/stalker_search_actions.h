@@ -5,10 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : stalker search enemy action classes
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef STALKER_SEARCH_ACTIONS_H_INCLUDED
-#define STALKER_SEARCH_ACTIONS_H_INCLUDED
-
+#pragma once
 #include "stalker_combat_action_base.h"
 
 class CCoverPoint;
@@ -17,8 +14,8 @@ class CCoverPoint;
 // CStalkerActionReachEnemyLocation
 //////////////////////////////////////////////////////////////////////////
 
-class CStalkerActionReachEnemyLocation : public CStalkerActionCombatBase {
-private:
+class CStalkerActionReachEnemyLocation : public CStalkerActionCombatBase 
+{
 	CPropertyStorage	*m_combat_storage;
 	u32					m_last_hit_time;
 
@@ -29,15 +26,14 @@ public:
 					CStalkerActionReachEnemyLocation(CAI_Stalker *object, CPropertyStorage *combat_storage, LPCSTR action_name = "");
 	virtual void	initialize						();
 	virtual void	execute							();
-	virtual void	finalize						();
 };
 
 //////////////////////////////////////////////////////////////////////////
 // CStalkerActionReachAmbushLocation
 //////////////////////////////////////////////////////////////////////////
 
-class CStalkerActionReachAmbushLocation : public CStalkerActionCombatBase {
-private:
+class CStalkerActionReachAmbushLocation : public CStalkerActionCombatBase 
+{
 	CPropertyStorage	*m_combat_storage;
 	u32					m_last_hit_time;
 
@@ -48,15 +44,14 @@ public:
 					CStalkerActionReachAmbushLocation	(CAI_Stalker *object, CPropertyStorage *combat_storage, LPCSTR action_name = "");
 	virtual void	initialize						();
 	virtual void	execute							();
-	virtual void	finalize						();
 };
 
 //////////////////////////////////////////////////////////////////////////
 // CStalkerActionHoldAmbushLocation
 //////////////////////////////////////////////////////////////////////////
 
-class CStalkerActionHoldAmbushLocation : public CStalkerActionCombatBase {
-private:
+class CStalkerActionHoldAmbushLocation : public CStalkerActionCombatBase 
+{
 	CPropertyStorage	*m_combat_storage;
 	u32					m_last_hit_time;
 
@@ -67,7 +62,4 @@ public:
 					CStalkerActionHoldAmbushLocation(CAI_Stalker *object, CPropertyStorage *combat_storage, LPCSTR action_name = "");
 	virtual void	initialize						();
 	virtual void	execute							();
-	virtual void	finalize						();
 };
-
-#endif // STALKER_SEARCH_ACTIONS_H_INCLUDED

@@ -59,11 +59,6 @@ void CStalkerActionReachEnemyLocation::initialize		()
 		m_last_hit_time					= hit->m_level_time;
 }
 
-void CStalkerActionReachEnemyLocation::finalize()
-{
-	inherited::finalize					();
-}
-
 void CStalkerActionReachEnemyLocation::execute()
 {
 	inherited::execute();
@@ -134,11 +129,6 @@ void CStalkerActionReachAmbushLocation::initialize					()
 		m_last_hit_time					= hit->m_level_time;
 }
 
-void CStalkerActionReachAmbushLocation::finalize					()
-{
-	inherited::finalize					();
-}
-
 void CStalkerActionReachAmbushLocation::execute						()
 {
 	inherited::execute					();
@@ -202,11 +192,6 @@ void CStalkerActionHoldAmbushLocation::initialize					()
 
 	object().movement().set_body_state	(eBodyStateCrouch);
 	object().sight().setup				(CSightAction(SightManager::eSightTypeCoverLookOver,true));
-}
-
-void CStalkerActionHoldAmbushLocation::finalize						()
-{
-	inherited::finalize					();
 }
 
 void CStalkerActionHoldAmbushLocation::execute						()

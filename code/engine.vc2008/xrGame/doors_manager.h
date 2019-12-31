@@ -12,18 +12,16 @@
 
 class CPhysicObject;
 
-namespace doors {
-
+namespace doors 
+{
 class actor;
 class door;
 
-class manager {
+class manager : public TNonCopyable
+{
 public:
 				manager					( Fbox const& bounding_box );
-                manager(const manager&) = delete;
 				~manager				( );
-
-    manager&    operator=               (const manager&) = delete;
 
 	door*		register_door			( CPhysicObject& object );
 	void		unregister_door			( door*& door );

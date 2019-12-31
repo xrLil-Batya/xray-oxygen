@@ -1,0 +1,11 @@
+﻿<Window x:Class="CrashStack.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Oxygen Enigne: Crash Stacker" Height="350" Width="525">
+    <Grid>
+        <TextBox x:Name="ReportBox" Margin="10,10,10,31" TextWrapping="Wrap" Text="TextBlock" Background="#FFF7F8F9" Grid.ColumnSpan="2"/>
+        <Button x:Name="BreakBtn" Content="Break" Margin="0,0,10,5" VerticalAlignment="Bottom" Background="#FFF1F1F1" Click="MakeBreak" HorizontalAlignment="Right" Width="75"/>
+        <Button x:Name="ContinueBtn" Content="Continue" Margin="10,0,0,4" VerticalAlignment="Bottom" Background="#FFF1F1F1" Click="MakeContinue" HorizontalAlignment="Left" Width="75"/>
+        <Button x:Name="ReportBtn" Content="Report" Margin="215,0,232,4" VerticalAlignment="Bottom" Background="#FFF1F1F1" Click="MakeReport"/>
+    </Grid>
+</Window>

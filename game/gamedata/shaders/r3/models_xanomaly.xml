@@ -11,7 +11,7 @@
 
   <element_nd_4 ps="particle_distort" vs="model_distort4glass" fog="false" zb1="true" zb2="true">
     <blend status="true" src="srcalpha" dest="invsrcalpha" />
-    <flags emissive="true" />
+    <flags dist="true" />
     <sort status="true" count="2" />
     
 		<texture name="s_base"    rt="t_base" />

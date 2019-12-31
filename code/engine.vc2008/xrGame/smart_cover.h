@@ -10,7 +10,8 @@
 #include "smart_cover_loophole.h"
 #include "smart_cover_object.h"
 
-namespace smart_cover {
+namespace smart_cover 
+{
 
 class storage;
 
@@ -23,7 +24,7 @@ struct loophole_data
 	u32							m_level_vertex_id;
 };
 
-class cover final: public  CCoverPoint
+class cover final: public  CCoverPoint, public TNonCopyable
 {
 public:
 	typedef intrusive_ptr<
@@ -53,10 +54,7 @@ private:
 			void				vertex					(loophole const &loophole, loophole_data &loophole_data);
 public:
 								cover					(object const &object, DescriptionPtr description, bool is_combat_cover, bool can_fire, luabind::object const &loopholes);
-                                cover(const cover&) = delete;
 								~cover					();
-
-    cover&                      operator=               (const cover&) = delete;
 
 	IC		Loopholes const		&loopholes				() const;
 	IC		object const		&object					() const;

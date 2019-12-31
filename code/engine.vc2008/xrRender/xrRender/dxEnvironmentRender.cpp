@@ -280,7 +280,7 @@ void dxEnvironmentRender::RenderClouds(CEnvironment &env)
 	Fmatrix	mXFORM, mScale;
 	mScale.scale(10, 0.4f, 10);
 
-	mXFORM.rotateY(SkyGodEdition ? env.CurrentEnv->wind_direction : env.CurrentEnv->sky_rotation); // wind_direction
+	mXFORM.rotateY(env.CurrentEnv->wind_direction ); // wind_direction
 	mXFORM.mulB_43(mScale);
 	mXFORM.translate_over(Device.vCameraPosition);
 

@@ -708,7 +708,7 @@ void CCharacterPhysicsSupport::create_animation_collision()
 	m_physics_shell_animated_time_destroy = Device.dwTimeGlobal + physics_shell_animated_destroy_delay;
 	if (m_physics_shell_animated)
 		return;
-	m_physics_shell_animated = xr_new<physics_shell_animated>(&m_EntityAlife, true);
+	m_physics_shell_animated = xr_new<CPhShellAnimated>(&m_EntityAlife, true);
 }
 
 void CCharacterPhysicsSupport::update_animation_collision()

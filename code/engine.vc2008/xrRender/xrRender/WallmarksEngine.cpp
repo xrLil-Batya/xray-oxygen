@@ -344,11 +344,11 @@ ICF void FlushStream(ref_geom hGeom, ref_shader shader, u32& w_offset, FVF::LIT*
 void CWallmarksEngine::Render()
 {
 	// Projection and xform
-	Fmatrix WallmarksProject = Device.mProject;
+	float _43 = Device.mProject._43;
 
-	WallmarksProject._43			-= ps_r_WallmarkSHIFT;
+	Device.mProject._43			-= ps_r_WallmarkSHIFT;
 	RCache.set_xform_world		(Fidentity);
-	RCache.set_xform_project	(WallmarksProject);
+	RCache.set_xform_project	(Device.mProject);
 
 	Fmatrix mSavedView = Device.mView;
 	Fvector	mViewPos			;
@@ -448,6 +448,7 @@ void CWallmarksEngine::Render()
 
 	// Projection
 	Device.mView				= mSavedView;
+	Device.mProject._43			= _43;
 	RCache.set_xform_view		(Device.mView);
 	RCache.set_xform_project	(Device.mProject);
 }

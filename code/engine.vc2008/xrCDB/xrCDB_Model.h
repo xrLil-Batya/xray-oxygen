@@ -9,7 +9,11 @@ public:
 
 public:
 	CDB_Model	();
+	~CDB_Model	();
+	
+	// Overload for using CDB_OptimizeTree into Build Model 
 	bool Build	(const Opcode::OPCODECREATE& create);
+	
 IC  CDB_OptimizeTree*	GetTree() { return pTree; }
 
 protected:

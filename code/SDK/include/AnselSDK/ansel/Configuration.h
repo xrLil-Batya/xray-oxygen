@@ -83,7 +83,11 @@ namespace ansel
         // 1. If GeForce profile exists for the game that name will be used
         // 2. If 'titleNameUtf8' is set that will be used
         // 3. The executable name is used as a last resort
+#if _MSC_VER > 1921
         const char8_t* titleNameUtf8;
+#else
+		const char* titleNameUtf8;
+#endif
         // Camera structure will contain vertical FOV if this is set to kVerticalFov
         // but horizontal FOV if this is set to kHorizontalFov. To simplify integration set
         // this to the same orientation as the game is using.

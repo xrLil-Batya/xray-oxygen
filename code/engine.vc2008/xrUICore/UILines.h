@@ -44,7 +44,7 @@ public:
 	// own methods
 			void			Reset										();
 			void			ParseText									(bool force=false);
-			float			GetVisibleHeight							();
+[[nodiscard]] float			GetVisibleHeight							();
 
 		Fvector2			m_TextOffset;
 		Fvector2			m_wndSize;
@@ -52,8 +52,8 @@ public:
 protected:
 				// %c[255,255,255,255]
 		u32					GetColorFromText							(const xr_string& str)							const;
-		float				GetIndentByAlign							()												const;
-		float				GetVIndentByAlign							();
+[[nodiscard]] float			GetIndentByAlign							()												const;
+[[nodiscard]] float			GetVIndentByAlign							();
 		void				CutFirstColoredTextEntry					(xr_string& entry, u32& color,xr_string& text)	const;
 	CUILine*				ParseTextToColoredLine						(const xr_string& str);
 

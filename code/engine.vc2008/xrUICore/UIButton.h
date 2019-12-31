@@ -23,18 +23,19 @@ public:
 	virtual void	OnFocusLost				();
 
 	//состояния в которых находится кнопка
-	typedef enum{BUTTON_NORMAL, //кнопка никак не затрагивается
+	using E_BUTTON_STATE = enum
+	{
+		BUTTON_NORMAL, 			//кнопка никак не затрагивается
 		BUTTON_PUSHED,			//в нажатом сотоянии
 		BUTTON_UP				//при удерживаемой кнопки мыши 
-	} E_BUTTON_STATE;
-
+	};
 
 	//заново подготовить состояние
     virtual void	Reset					();
 
 	// Установка состояния кнопки: утоплена, не утоплена
-	void				SetButtonState			(E_BUTTON_STATE eBtnState)	{ m_eButtonState = eBtnState; }
-	E_BUTTON_STATE		GetButtonState			() const					{ return m_eButtonState;}
+	void                     SetButtonState			(E_BUTTON_STATE eBtnState)	{ m_eButtonState = eBtnState; }
+[[nodiscard]] E_BUTTON_STATE GetButtonState			() const					{ return m_eButtonState;}
 
 	// Поведение кнопки как переключателя реализовано пока только в режиме NORMAL_PRESS
 	void				SetButtonAsSwitch		(bool bAsSwitch)			{ m_bIsSwitch = bAsSwitch; }

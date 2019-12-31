@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////
-//	Module 		: stalker_danger_property_evaluators.cpp
-//	Created 	: 31.05.2005
-//  Modified 	: 31.05.2005
-//	Author		: Dmitriy Iassenev
-//	Description : Stalker danger property evaluators classes
+//      Module 		: stalker_danger_property_evaluators.cpp
+//      Created 	: 31.05.2005
+//      Modified 	: 31.05.2005
+//      Author		: Dmitriy Iassenev
+//      Description : Stalker danger property evaluators classes
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -24,6 +24,8 @@
 #include "stalker_movement_restriction.h"
 #include "enemy_manager.h"
 #include "stalker_animation_manager.h"
+#include "agent_manager.h"
+#include "agent_enemy_manager.h"
 
 using namespace StalkerDecisionSpace;
 
@@ -59,7 +61,8 @@ _value_type CStalkerPropertyEvaluatorDangerUnknown::evaluate	()
 	if (!m_object->memory().danger().selected())
 		return			(false);
 
-	switch (m_object->memory().danger().selected()->type()) {
+	switch (m_object->memory().danger().selected()->type())
+	{
 		case CDangerObject::eDangerTypeBulletRicochet :
 		case CDangerObject::eDangerTypeEntityDeath :
 		case CDangerObject::eDangerTypeFreshEntityCorpse :
@@ -83,13 +86,15 @@ _value_type CStalkerPropertyEvaluatorDangerInDirection::evaluate	()
 	if (!m_object->memory().danger().selected())
 		return			(false);
 
-	switch (m_object->memory().danger().selected()->type()) {
+	switch (m_object->memory().danger().selected()->type())
+	{
 		case CDangerObject::eDangerTypeAttackSound :
 		case CDangerObject::eDangerTypeEntityAttacked :
 		case CDangerObject::eDangerTypeAttacked :
 		// fakes, temporarily
 //		case CDangerObject::eDangerTypeBulletRicochet :
 //		case CDangerObject::eDangerTypeEntityDeath :
+#pragma todo("FX to all: Maybe restore 'eDangerTypeFreshEntityCorpse' check?"
 //		case CDangerObject::eDangerTypeFreshEntityCorpse :
 		case CDangerObject::eDangerTypeEnemySound :
 			return		(true);
@@ -251,13 +256,18 @@ CStalkerPropertyEvaluatorEnemyWounded::CStalkerPropertyEvaluatorEnemyWounded	(CA
 
 _value_type CStalkerPropertyEvaluatorEnemyWounded::evaluate	()
 {
-	const CEntityAlive			*enemy = object().memory().enemy().selected();
-	if (!enemy)
-		return					(false);
+	const CEntityAlive *pEnemy = object().memory().enemy().selected();
+	if (!pEnemy)
+		return false;
 
-	const CAI_Stalker			*stalker = smart_cast<const CAI_Stalker *>(enemy);
-	if (!stalker)
-		return					(false);
+	const CAI_Stalker *pStalker = smart_cast<const CAI_Stalker *>(pEnemy);
+	if (!pStalker)
+		return false;
 
-	return						(stalker->wounded(&object().movement().restrictions()));
+	// Only one will finish
+	u64 ProcessorID = object().agent_manager().enemy().wounded_processor(pEnemy);
+	if (ProcessorID != object().ID())
+	  return false;
+
+	return (pStalker->wounded(&object().movement().restrictions()));
 }

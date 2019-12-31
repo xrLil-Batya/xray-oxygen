@@ -61,15 +61,9 @@ class shared_str
 protected:
 	// ref-counting
 	void				_dec		()								
-	{	
-		if (p_ == nullptr)
+	{
+		if (empty())
 		{
-			return;
-		}
-
-		if (p_->dwLength == 0) // empty string
-		{
-			p_ = nullptr;
 			return;
 		}
 
@@ -167,9 +161,10 @@ public:
 
 	str_c				c_str		() const						{	return p_ ? p_->value : nullptr;			}
 	char*				data		() const						{	return p_ ? p_->value : nullptr;			}
+	IC bool 			empty		() const 						{ 	return size() == 0; 						}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// misc func
-	u32					size		()						 const	
+	u32 size() const	
 	{	
 		if (p_ == nullptr)
 		{
@@ -178,6 +173,8 @@ public:
 
 		return p_->dwLength; 
 	}
+	
+	
 	void				swap		(shared_str & rhs)				
 	{	
 		str_value* tmp = p_; 

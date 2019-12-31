@@ -14,13 +14,11 @@ namespace doors {
 class actor;
 enum door_state;
 
-class door {
+class door : public TNonCopyable
+{
 public:
 						door				( CPhysicObject* object );
-                        door(const door&) = delete;
 						~door				( );
-
-                        door& operator= (const door&) = delete;
 
 	void				change_state		( actor* initiator, door_state state );
 	void 				on_change_state		( door_state const state );

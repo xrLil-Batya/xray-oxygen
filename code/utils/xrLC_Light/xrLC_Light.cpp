@@ -56,7 +56,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 		if (init_log)
 			xrLogger::InitLog();
 
-		//FPU::m64r	();
 		break;
 	}
 	case DLL_THREAD_ATTACH:

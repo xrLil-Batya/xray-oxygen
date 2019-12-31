@@ -13,15 +13,16 @@
 #include "space_restriction_bridge.h"
 #include "object_broker.h"
 
-struct CSpaceRestrictionManager::CClientRestriction {
+struct CSpaceRestrictionManager::CClientRestriction 
+{
 	CRestrictionPtr					m_restriction;
 	shared_str						m_base_out_restrictions;
 	shared_str						m_base_in_restrictions;
 };
 
-CSpaceRestrictionManager::CSpaceRestrictionManager			()
+CSpaceRestrictionManager::CSpaceRestrictionManager()
 {
-	m_clients						= xr_new<CLIENT_RESTRICTIONS>();
+	m_clients = xr_new<CLIENT_RESTRICTIONS>();
 }
 
 CSpaceRestrictionManager::~CSpaceRestrictionManager			()

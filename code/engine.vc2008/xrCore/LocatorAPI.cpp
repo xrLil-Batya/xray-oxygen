@@ -9,7 +9,6 @@
 #include <direct.h>
 #include <fcntl.h>
 #include <sys\stat.h>
-#include <ppl.h>
 #pragma warning(default:4995)
 
 #include "FS_internal.h"
@@ -24,7 +23,7 @@ const u32 BIG_FILE_READER_WINDOW_SIZE = 1024 * 1024;
 #	include <malloc.h>
 #	pragma warning(pop)
 
-CLocatorAPI*		xr_FS = nullptr;
+CLocatorAPI* xr_FS = nullptr;
 
 #define FSLTX "oxy_fsgame.ltx"
 
@@ -1062,7 +1061,7 @@ void CLocatorAPI::file_from_cache_impl(CStreamReader *&R, char* fname, const fil
 }
 
 template <typename T>
-void CLocatorAPI::file_from_cache(T *&R, char* fname, const u32 &fname_size, const file &desc, const char* &source_name)
+void CLocatorAPI::file_from_cache(T *&R, char* fname, [[maybe_unused]] const u32 &fname_size, const file &desc, [[maybe_unused]] const char* &source_name)
 {
 #ifdef DEBUG
 	if (m_Flags.is(flCacheFiles))
@@ -1579,6 +1578,7 @@ bool CLocatorAPI::getFileName(LPCSTR path, string512& outFilename)
 	{
 		std::filesystem::path fileNamePath = stdPath.filename();
 		std::string fileNameStr = fileNamePath.string();
+    
 		R_ASSERT2(fileNameStr.size() < sizeof(string512), fileNameStr.c_str());
 
 		xr_strcpy(outFilename, fileNameStr.c_str());

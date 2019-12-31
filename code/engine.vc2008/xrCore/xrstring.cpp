@@ -507,6 +507,22 @@ xr_string xr_string::ToString(double Value)
 	return xr_string(buf);
 }
 
+xr_string xr_string::ToString(const Fvector& Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::ToString(const Dvector& Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
+
+	return xr_string(buf);
+}
+
 xr_string xr_string::Join(xrStringVector::iterator beginIter, xrStringVector::iterator endIter, const char delimeter /*= '\0'*/)
 {
 	xr_string Result;

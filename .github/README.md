@@ -1,8 +1,8 @@
-# X-Ray Oxygen 1.7
+# Oxygen Engine
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/024d7b2b5c6745eba5d00301bc250f2c)](https://app.codacy.com/app/sv3nk/xray-oxygen?utm_source=github.com&utm_medium=referral&utm_content=xrOxygen/xray-oxygen&utm_campaign=Badge_Grade_Settings) [![Build status](https://ci.appveyor.com/api/projects/status/dt2q9gjuxi2q9i6v/branch/master?svg=true)](https://ci.appveyor.com/project/xrOxygen/xray-oxygen/branch/master)
-![Logo](https://pp.userapi.com/c830608/v830608826/fd611/DtQWCVM4BgU.jpg)
-->  X-Ray 1.7f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
+![Logo](https://sun9-45.userapi.com/c850020/v850020464/97b37/sxHUPvLdvjQ.jpg)
+->  Based by [Im-Dex X-Ray Engine 1.7](https://github.com/Im-dex/xray-162).
 ```lua
 xrOxygen is an project that uses experimental C++ features, has no special restrictions on changing the engine and tries to bring something new to the usual modding.
 ```
@@ -14,6 +14,7 @@ xrOxygen is an project that uses experimental C++ features, has no special restr
 * Correction of X-Ray errors
 * Remove unnecessary, obsolete and dead code 
 * Make modkit
+* Use of modern technologies
 
 ## Downloads
 
@@ -31,8 +32,8 @@ xrOxygen is an project that uses experimental C++ features, has no special restr
 
 ## Documentation
 
-* [Change log](https://github.com/ForserX/FRay-Project/wiki)
-* [Features](https://github.com/ForserX/FRay-Project/wiki/Features)
+* [Old Wiki (eng)](https://github.com/ForserX/FRay-Project/wiki)
+* [New Wiki (rus)](http://xray-oxygen.org/index.php/)
 
 ## License
 
@@ -44,12 +45,9 @@ xrOxygen is an project that uses experimental C++ features, has no special restr
   
  Team of developers and contributors:
 * [Oxy](https://github.com/xrOxygen/xray-oxygen/graphs/contributors)
-* [SkyLoader](https://github.com/SkyLoaderr)
-* Полтергейст
-* Kolmogor
-* Swartz27
-* [DJYar](https://github.com/DJYar)
 * [OpenXRay](https://github.com/openxray) Team with different developers of forks and another open projects
 * [X-Ray Engine by Alpet & KD](https://xp-dev.com/summary/210311)
 * [OGSR Fork](https://github.com/KRodinn/OGSR-Engine)
 * CorryZeron (Installer background)
+* Полтергейст
+* Kolmogor
