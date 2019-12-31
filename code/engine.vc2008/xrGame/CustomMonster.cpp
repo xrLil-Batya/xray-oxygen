@@ -1118,13 +1118,13 @@ void CCustomMonster::mk_rotation(Fvector &dir, SRotation &R)
 {
 	// parse yaw
 	Fvector DYaw;	
-	DYaw.set(dir.x,0.f,dir.z); 
+	DYaw.set(dir.x, 0.f, dir.z); 
 	DYaw.normalize_safe();
 	
 	// Aaarrrrrgdgs, constants...
-	clamp(DYaw.x,-0.9999999f,0.9999999f);
-	clamp(DYaw.y,-0.9999999f,0.9999999f);
-	clamp(DYaw.z,-0.9999999f,0.9999999f);
+	clamp(DYaw.x, -1.f, 1.f);
+	clamp(DYaw.y, -1.f, 1.f);
+	clamp(DYaw.z, -1.f, 1.f);
 
 	R.yaw = DYaw.x >= 0 ? acosf(DYaw.z) : 2*PI-acosf(DYaw.z);
 	

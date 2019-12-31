@@ -3,14 +3,6 @@
 
 #include <process.h>
 
-#ifdef _M_X64
-// timeGetTime()
-#	include <mmsystem.h>
-#	pragma comment(lib, "Winmm.lib")
-#elif 
-#	error "Need Winmm analogy"
-#endif
-
 // Initialized on startup
 XRCORE_API Fmatrix Fidentity;
 XRCORE_API Dmatrix Didentity;
@@ -53,19 +45,11 @@ namespace CPU
 	{
 		// Timers & frequency
 		u64 start,end;
-		u32 dwStart,dwTest;
-
+		
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 
-		// Detect Freq
-		dwTest	= timeGetTime();
-		do 
-		{ 
-			dwStart = timeGetTime(); 
-		} while (dwTest == dwStart);
-
 		start = GetCLK();
-		while (timeGetTime() - dwStart < 1000);
+		while (GetCLK() - start < 1000);
 		end = GetCLK();
 		clk_per_second = end - start;
 
