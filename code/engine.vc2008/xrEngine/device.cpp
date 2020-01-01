@@ -386,13 +386,11 @@ void CRenderDevice::BeginToWork()
 	dwTimeGlobal = 0;
 	Timer_MM_Delta = 0;
 	{
-		u32 time_mm = timeGetTime();
+		u32 time_mm = TimerAsync();
 		// wait for next tick
-		while (timeGetTime() == time_mm);	 //-V529
+		while (TimerAsync() == time_mm);	 //-V529 
 
-		u32 time_system = timeGetTime();
-		u32 time_local = TimerAsync();
-		Timer_MM_Delta = time_system - time_local;
+		Timer_MM_Delta = TimerAsync() - time_mm;
 	}
 
 	// Start all threads

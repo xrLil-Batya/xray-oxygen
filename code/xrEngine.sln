@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCDB", "engine.vc2008\xrCDB\xrCDB.vcxproj", "{A19B1DF2-82EC-4364-8BDF-85D13A1C89B5}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -521,18 +521,19 @@ Global
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25}.Release|Mixed Platforms.ActiveCfg = Release|Win32
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{58818F0E-2DA2-48E4-9BB8-4D7629426F25}.Release|x64.ActiveCfg = Release|x64
-		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Debug|Mixed Platforms.Build.0 = Debug|x64
 		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Debug|x64.ActiveCfg = Debug|x64
-		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Mixed|Any CPU.ActiveCfg = Release|Win32
-		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Mixed|Mixed Platforms.ActiveCfg = Release|Win32
-		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Mixed|Mixed Platforms.Build.0 = Release|Win32
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Mixed|Any CPU.ActiveCfg = Release|Durango
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Mixed|Any CPU.Build.0 = Release|Durango
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Mixed|Mixed Platforms.ActiveCfg = Release|x64
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Mixed|Mixed Platforms.Build.0 = Release|x64
 		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Mixed|x64.ActiveCfg = Release|x64
 		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Mixed|x64.Build.0 = Release|x64
-		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Release|Any CPU.ActiveCfg = Release|Win32
-		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Release|Any CPU.ActiveCfg = Release|x64
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Release|Mixed Platforms.Build.0 = Release|x64
 		{77B2C98B-7F21-4595-9E67-47289E30BDBD}.Release|x64.ActiveCfg = Debug|x64
 		{3E53F102-980E-43D2-A181-0EE92A6BAD54}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{3E53F102-980E-43D2-A181-0EE92A6BAD54}.Debug|Mixed Platforms.ActiveCfg = Debug|x64

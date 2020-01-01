@@ -6,7 +6,6 @@
 #include "oxy_version.h"
 #include "xrDebugSymbol.h"
 #include "DateTime.hpp"
-#pragma comment(lib,"winmm.lib")
 
 XRCORE_API xrCore Core;
 XRCORE_API u32 build_id;

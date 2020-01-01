@@ -22,6 +22,8 @@
 #include <tlhelp32.h>
 #include "oxy_version.h"
 
+#include <filesystem>
+
 /////////////////////////////////////
 XRCORE_API DWORD gMainThreadId = 0xFFFFFFFF;
 XRCORE_API DWORD gSecondaryThreadId = 0xFFFFFFFF;
@@ -426,8 +428,66 @@ bool xrDebug::ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanConti
 	sCrashReport.bCanContinue = bCanContinue;
 	sCrashReport.CrashReport = &ReportMem[0];
 	// show dialog
-	static HMODULE hCoreModule = GetModuleHandle("xrCore.dll");
-	INT_PTR DialogResult = DialogBoxA(hCoreModule, MAKEINTRESOURCE(IDD_CRASH2), NULL, (DLGPROC)CrashDialogProc);
+	// invoke separate process for crash dialog
+	INT_PTR DialogResult = 0;
+	PROCESS_INFORMATION CrashStackProcessInfo;
+	STARTUPINFO cif;
+	ZeroMemory(&cif, sizeof(STARTUPINFO));
+	ZeroMemory(&CrashStackProcessInfo, sizeof(CrashStackProcessInfo));
+
+	string_path CoreModulePath;
+	GetModuleFileName(GetModuleHandle(NULL), CoreModulePath, sizeof(CoreModulePath));
+	std::filesystem::path CoreModulePath2(CoreModulePath);
+	std::filesystem::path binPathCleared = CoreModulePath2.parent_path();
+	binPathCleared = binPathCleared / "CrashStack.exe";
+	if (std::filesystem::exists(binPathCleared))
+	{
+		// save text info to external file
+		string_path TempPath;
+		GetTempPath(sizeof(TempPath), TempPath);
+		xr_strcat(TempPath, "OxygenLastCrash.txt");
+
+		HANDLE hTempInfoFile = CreateFile(TempPath, GENERIC_ALL, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (hTempInfoFile == INVALID_HANDLE_VALUE)
+		{
+			goto Fallback;
+		}
+
+		u32 ReportSize = xr_strlen(&ReportMem[0]);
+		DWORD bytesWritten = 0;
+		WriteFile(hTempInfoFile, &ReportMem[0], ReportSize, &bytesWritten, 0);
+		CloseHandle(hTempInfoFile);
+
+		string_path CommandLine;
+		ZeroMemory(CommandLine, sizeof(CommandLine));
+		xr_strcat(CommandLine, "\"");
+		xr_strcat(CommandLine, binPathCleared.string().c_str());
+		xr_strcat(CommandLine, "\" ");
+		xr_strcat(CommandLine, TempPath);
+
+		if (!CreateProcess(binPathCleared.string().c_str(), CommandLine, NULL, NULL, FALSE, 0, nullptr, nullptr, &cif, &CrashStackProcessInfo))
+		{
+			goto Fallback;
+		}
+		else
+		{
+			WaitForSingleObject(CrashStackProcessInfo.hProcess, INFINITE);
+
+			DWORD ExitCode = 0;
+			GetExitCodeProcess(CrashStackProcessInfo.hProcess, &ExitCode);
+			DialogResult = !ExitCode;
+			CloseHandle(CrashStackProcessInfo.hThread);
+			CloseHandle(CrashStackProcessInfo.hProcess);
+		}
+	}
+	else
+	{
+		Fallback:
+		// CrashStack.exe not found, fallback to internal dialog
+		static HMODULE hCoreModule = GetModuleHandle("xrCore.dll");
+		DialogResult = DialogBoxA(hCoreModule, MAKEINTRESOURCE(IDD_CRASH2), NULL, (DLGPROC)CrashDialogProc);
+	}
+
 
 #undef WriteToReportMacro
 	// INT_PTR -> bool

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.IO;
 
 namespace CrashStack
 {
@@ -18,9 +19,36 @@ namespace CrashStack
         [STAThread]
         public static int Main(string[] InputText)
         {
+            if (InputText.Length == 0)
+            {
+                MessageBox.Show("REPORT FILE MISSING!");
+                return 1;
+            }
+
             App pApp = new App();
-            MainWindow pWindows = new MainWindow(InputText[0]);
-            pApp.Run(pWindows);
+
+            bool bReadedAllText = true;
+            string CrashContent = "";
+            try
+            {
+                CrashContent = File.ReadAllText(InputText[0]);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                bReadedAllText = false;
+            }
+
+            if (bReadedAllText)
+            {
+                MainWindow pWindows = new MainWindow(CrashContent);
+                pApp.Run(pWindows);
+            }
+            else
+            {
+                MessageBox.Show(InputText[0]);
+                return 1;
+            }
 
             return App.ExitCode;
         }

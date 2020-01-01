@@ -553,11 +553,11 @@ void CSE_ALifeItemWeapon::STATE_Read(NET_Packet	&tNetPacket, u16 size)
 	if (m_wVersion > 122)
 	{
 		a_elapsed_grenades.unpack_from_byte(tNetPacket.r_u8()); //6 b8
-	    tNetPacket.r_u8(m_bZoom); //7 b8 + str
+	    //tNetPacket.r_u8(m_bZoom); //7 b8 + str
 	}
 	
-//    if (m_wVersion > 128)
-//	    tNetPacket.r_u8(m_scope_idx); //8 b8 + str
+	if (m_wVersion > 128)
+	    tNetPacket.r_u8(m_scope_idx); //8 b8 + str
 }
 
 void CSE_ALifeItemWeapon::STATE_Write		(NET_Packet	&tNetPacket)
