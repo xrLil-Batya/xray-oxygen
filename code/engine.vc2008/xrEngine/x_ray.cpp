@@ -68,8 +68,6 @@ void InitEngine()
 	while (!g_bIntroFinished)	
 		Sleep(100);
 	Device.Initialize();
-	//#DELETE_ME: !
-	FATAL("AWDA");
 }
 
 ENGINE_API void InitSettings	()
