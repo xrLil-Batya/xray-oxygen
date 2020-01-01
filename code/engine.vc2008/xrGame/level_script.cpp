@@ -195,23 +195,23 @@ ESingleGameDifficulty get_game_difficulty()
 
 u32 get_time_days()
 {
-	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
-	split_time((g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time(), year, month, day, hours, mins, secs, milisecs);
-	return			day;
+	u64 CurrentTime = (g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time();
+	u32 day = return_time(CurrentTime, TIMETYPE_DAYS);
+	return day;
 }
 
 u32 get_time_hours()
 {
-	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
-	split_time((g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time(), year, month, day, hours, mins, secs, milisecs);
-	return			hours;
+	u64 CurrentTime = (g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time();
+	u32 hours = return_time(CurrentTime, TIMETYPE_HOURS);
+	return hours;
 }
 
 u32 get_time_minutes()
 {
-	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
-	split_time((g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time(), year, month, day, hours, mins, secs, milisecs);
-	return			mins;
+	u64 CurrentTime = (g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time();
+	u32 mins = return_time(CurrentTime, TIMETYPE_MINUTES);
+	return mins;
 }
 
 void change_game_time(u32 days, u32 hours, u32 mins)
@@ -219,8 +219,7 @@ void change_game_time(u32 days, u32 hours, u32 mins)
 	if(Level().Server->game && ai().get_alife())
 	{
 		u32 value		= days*86400+hours*3600+mins*60;
-		float fValue	= static_cast<float> (value);
-		value			*= 1000;//msec		
+		float fValue	= static_cast<float> (value);	
 		Environment().ChangeGameTime(fValue);
 		Level().Server->game->alife().time_manager().change_game_time(value);
 	}
@@ -990,8 +989,7 @@ void CLevel::script_register(lua_State *L)
 		[
 			value("TimeToHours",	int(InventoryUtilities::etpTimeToHours)),
 			value("TimeToMinutes",	int(InventoryUtilities::etpTimeToMinutes)),
-			value("TimeToSeconds",	int(InventoryUtilities::etpTimeToSeconds)),
-			value("TimeToMilisecs",	int(InventoryUtilities::etpTimeToMilisecs))
+			value("TimeToSeconds",	int(InventoryUtilities::etpTimeToSeconds))
 		]
 		.def(						constructor<>()				)
 		.def(						constructor<const xrTime&>())
@@ -1008,17 +1006,14 @@ void CLevel::script_register(lua_State *L)
 		.def("sub"					,&xrTime::sub_script)
 
 		.def("setHMS"				,&xrTime::setHMS)
-		.def("setHMSms"				,&xrTime::setHMSms)
 		.def("set"					,&xrTime::set)
-		.def("get"					,&xrTime::get, out_value<2>() + out_value<3>() + out_value<4>() + out_value<5>() + out_value<6>() + out_value<7>() + out_value<8>())
+		.def("get"					,&xrTime::get, out_value<2>() + out_value<3>() + out_value<4>() + out_value<5>() + out_value<6>() + out_value<7>())
 		.def("dateToString"			,&xrTime::dateToString)
 		.def("timeToString"			,&xrTime::timeToString),
 		// declarations
 		def("time",					get_time),
 		def("get_game_time",		get_time_struct),
-//		def("get_surge_time",	Game::get_surge_time),
-//		def("get_object_by_name",Game::get_object_by_name),
-	
+		
 	    def("start_tutorial",		&start_tutorial),
 	    def("stop_tutorial",		&stop_tutorial),
 	    def("has_active_tutorial",	&has_active_tutotial),

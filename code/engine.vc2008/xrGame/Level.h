@@ -206,9 +206,7 @@ public:
 	virtual u64			GetGameTime				();
 	//возвращает время для энвайронмента в милисекундах относительно начала игры
 	ALife::_TIME_ID		GetEnvironmentGameTime	();
-	//игровое время в отформатированном виде
-	void				GetGameDateTime			(u32& year, u32& month, u32& day, u32& hours, u32& mins, u32& secs, u32& milisecs);
-
+	
 	float				GetGameTimeFactor		();
 	void				SetGameTimeFactor		(const float fTimeFactor);
 	void				SetGameTimeFactor		(ALife::_TIME_ID GameTime, const float fTimeFactor);
@@ -216,7 +214,6 @@ public:
 
 	// gets current daytime [0..23]
 	u8					GetDayTime				();
-	u32					GetGameDayTimeMS		();
 	float				GetGameDayTimeSec		();
 	float				GetEnvironmentGameDayTimeSec();
 

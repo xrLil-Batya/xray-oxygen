@@ -202,8 +202,7 @@ void CAI_Dog::UpdateCL()
 
 bool CAI_Dog::is_night()
 {
-	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
-	split_time(Level().GetGameTime(), year, month, day, hours, mins, secs, milisecs);
+	u32 hours = return_time(GetGameTime(), TIMETYPE_HOURS);
 	if (hours <= 6 || hours >=21 )
 		return true;
 

@@ -28,7 +28,7 @@ void SStaticSound::Load(IReader& F)
 
 #include "..\xrSound\sound.h"
 #include "..\xrSound\SoundRender_Core.h"
-void SStaticSound::Update(u32 game_time, u32 global_time)
+void SStaticSound::Update(const u32 &game_time, const u32 &global_time)
 {
 	Fvector occ[3];
 	float occluder_volume = SoundRender->get_occlusion(m_Position, .2f, occ);
@@ -88,8 +88,7 @@ void SMusicTrack::Load(LPCSTR fn, LPCSTR params)
 	if(m_PauseTime.x==m_PauseTime.y)
 		++m_PauseTime.y;
 
-	m_ActiveTime.mul	(60*60*1000);	// convert hour to ms
-	m_PauseTime.mul		(1000);			// convert sec to ms
+	m_ActiveTime.mul	(60*60);	// convert hour to sec
 }
 
 BOOL SMusicTrack::in(u32 game_time)
@@ -186,7 +185,7 @@ void CLevelSoundManager::Update()
 {
 	if (Device.Paused() || Device.dwPrecacheFrame) return;
 	// static sounds
-	u32 game_time						= Level().GetGameDayTimeMS();
+	u32 game_time						= Level().GetGameDayTimeSec();
 	u32 engine_time						= Device.dwTimeGlobal;
 	
 	for (SStaticSound& s : m_StaticSounds)

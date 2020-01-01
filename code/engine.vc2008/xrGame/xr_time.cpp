@@ -54,19 +54,13 @@ void	xrTime::setHMS			(int h, int m, int s)
 	m_time+=generate_time(1,1,1,h,m,s);
 }
 
-void	xrTime::setHMSms		(int h, int m, int s, int ms)			
+void	xrTime::set				(int y, int mo, int d, int h, int mi, int s)
 { 
 	m_time=0; 
-	m_time+=generate_time(1,1,1,h,m,s,ms);
+	m_time+=generate_time(y,mo,d,h,mi,s);
 }
 
-void	xrTime::set				(int y, int mo, int d, int h, int mi, int s, int ms)
-{ 
-	m_time=0; 
-	m_time+=generate_time(y,mo,d,h,mi,s,ms);
-}
-
-void	xrTime::get				(u32 &y, u32 &mo, u32 &d, u32 &h, u32 &mi, u32 &s, u32 &ms)
+void	xrTime::get				(u32 &y, u32 &mo, u32 &d, u32 &h, u32 &mi, u32 &s)
 {
 	split_time(m_time,y,mo,d,h,mi,s,ms);
 }

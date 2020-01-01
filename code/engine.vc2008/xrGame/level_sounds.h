@@ -16,7 +16,7 @@ struct SStaticSound
 	float			m_Freq;
 public:
 	void 			Load			(IReader& F);
-	void 			Update			(u32 gt, u32 rt);
+	void 			Update			(const u32 &game_time, const u32 &global_time);
 };
 
 // music interface
