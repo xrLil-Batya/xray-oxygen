@@ -79,14 +79,13 @@ void GameTime::split_time(u64 time, u32 &years, u32 &months, u32 &days, u32 &hou
 	days = u32(time);
 }
 
-u32 GameTime::return_time(u64 time, u8 timeType)
+u32 return_time(u64 time, u8 timeType)
 {
 	u32 seconds, minutes, hours, day, months, years;
-	split_time(time, years, months, day, hours, minutes, seconds)
+	split_time(time, years, months, day, hours, minutes, seconds);
 
 	switch (timeType)
 	{
-		case TIMETYPE_MILISECONDS:	return milliseconds; break;
 		case TIMETYPE_SECONDS:		return seconds; break;
 		case TIMETYPE_MINUTES:		return minutes; break;
 		case TIMETYPE_DAYS:			return day; break;
