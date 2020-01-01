@@ -112,9 +112,7 @@ void CUISleepStatic::Draw()
 
 void CUISleepStatic::Update()
 {
-	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
-	split_time(g_pGameLevel->GetGameTime(), year, month, day, hours, mins, secs, milisecs);
-
+	u32 hours = return_time(time, TIMETYPE_HOURS);
 	u32 start_pixel = 0, end_pixel = 0, start_pixel2 = 0, end_pixel2 = 0;
 	hours += psActorSleepTime-1;
 	if(hours>=24)
