@@ -264,9 +264,9 @@ const shared_str InventoryUtilities::GetTimeAsString(ALife::_TIME_ID time, ETime
 
     memset(bufTime, 0, sizeof(bufTime));
 
-	u32 hours = return_time(time, TIMETYPE_HOURS);
-	u32 mins = return_time(time, TIMETYPE_MINUTES);
-	u32 secs = return_time(time, TIMETYPE_SECONDS);
+	u32 hours = return_time(time, ETimeType::eHOURS);
+	u32 mins = return_time(time, ETimeType::eMINUTES);
+	u32 secs = return_time(time, ETimeType::eSECONDS);
 
 	// Time
 	switch (timePrec)
@@ -312,9 +312,9 @@ const shared_str InventoryUtilities::GetDateAsString(ALife::_TIME_ID date, EDate
 
     std::memset(bufDate, 0, sizeof(bufDate));
 
-	u32 year = return_time(date, TIMETYPE_YEARS);
-	u32 month = return_time(date, TIMETYPE_MONTHS);
-	u32 day = return_time(date, TIMETYPE_DAYS);
+	u32 year = return_time(date, ETimeType::eYEARS);
+	u32 month = return_time(date, ETimeType::eMONTHS);
+	u32 day = return_time(date, ETimeType::eDAYS);
 
 	VERIFY( 1 <= month && month <= 12 );
 	LPCSTR month_str = CStringTable().translate( st_months[month-1] ).c_str();
@@ -344,9 +344,9 @@ const shared_str InventoryUtilities::GetNumDateAsString(ALife::_TIME_ID date, ED
 
     std::memset(bufDate, 0, sizeof(bufDate));
 
-	u32 year = return_time(date, TIMETYPE_YEARS);
-	u32 month = return_time(date, TIMETYPE_MONTHS);
-	u32 day = return_time(date, TIMETYPE_DAYS);
+	u32 year = return_time(date, ETimeType::eYEARS);
+	u32 month = return_time(date, ETimeType::eMONTHS);
+	u32 day = return_time(date, ETimeType::eDAYS);
 	
 	VERIFY( 1 <= month && month <= 12 );
 	LPCSTR month_str = CStringTable().translate( st_num_months[month-1] ).c_str();
@@ -372,17 +372,17 @@ const shared_str InventoryUtilities::GetNumDateAsString(ALife::_TIME_ID date, ED
 
 LPCSTR InventoryUtilities::GetTimePeriodAsString(LPSTR _buff, u32 buff_sz, ALife::_TIME_ID _from, ALife::_TIME_ID _to)
 {
-	u32 month1 = return_time(_from, TIMETYPE_MONTHS);
-	u32 day1 = return_time(_from, TIMETYPE_DAYS);
-	u32 hours1 = return_time(_from, TIMETYPE_HOURS);
-	u32 mins1 = return_time(_from, TIMETYPE_MINUTES);
-	u32 secs1 = return_time(_from, TIMETYPE_SECONDS);
+	u32 month1 = return_time(_from, ETimeType::eMONTHS);
+	u32 day1 = return_time(_from, ETimeType::eDAYS);
+	u32 hours1 = return_time(_from, ETimeType::eHOURS);
+	u32 mins1 = return_time(_from, ETimeType::eMINUTES);
+	u32 secs1 = return_time(_from, ETimeType::eSECONDS);
 	
-	u32 month2 = return_time(_to, TIMETYPE_MONTHS);
-	u32 day2 = return_time(_to, TIMETYPE_DAYS);
-	u32 hours2 = return_time(_to, TIMETYPE_HOURS);
-	u32 mins2 = return_time(_to, TIMETYPE_MINUTES);
-	u32 secs2 = return_time(_to, TIMETYPE_SECONDS);
+	u32 month2 = return_time(_to, ETimeType::eMONTHS);
+	u32 day2 = return_time(_to, ETimeType::eDAYS);
+	u32 hours2 = return_time(_to, ETimeType::eHOURS);
+	u32 mins2 = return_time(_to, ETimeType::eMINUTES);
+	u32 secs2 = return_time(_to, ETimeType::eSECONDS);
 	
 	int cnt		= 0;
 	_buff[0]	= 0;

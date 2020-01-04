@@ -31,17 +31,17 @@ void CAgentManagerPlanner::setup	(CAgentManager *object)
 
 void CAgentManagerPlanner::add_evaluators	()
 {
-	add_evaluator			(ePropertyOrders,xr_new<CAgentManagerPropertyEvaluatorConst>(false,"property_order"));
-	add_evaluator			(ePropertyItem	,xr_new<CAgentManagerPropertyEvaluatorItem>(&object(),"property_item"));
-	add_evaluator			(ePropertyEnemy	,xr_new<CAgentManagerPropertyEvaluatorEnemy>(&object(),"property_enemy"));
-	add_evaluator			(ePropertyDanger,xr_new<CAgentManagerPropertyEvaluatorDanger>(&object(),"property_danger"));
+	add_evaluator(ePropertyOrders, new CAgentManagerPropertyEvaluatorConst(false,"property_order"));
+	add_evaluator(ePropertyItem, new CAgentManagerPropertyTemplate(&object(), "property_item", EAgentEvaluatorMngr::eItem));
+	add_evaluator(ePropertyEnemy, new CAgentManagerPropertyTemplate(&object(),"property_enemy", EAgentEvaluatorMngr::eEnemy));
+	add_evaluator(ePropertyDanger, new CAgentManagerPropertyTemplate(&object(),"property_danger", EAgentEvaluatorMngr::eDanger));
 }
 
 void CAgentManagerPlanner::add_actions		()
 {
 	CAgentManagerActionBase	*action;
 
-	action					= xr_new<CAgentManagerActionNoOrders>		(&object(),"no_orders");
+	action					= new CAgentManagerTemplate(&object(), "no_orders", EAgentMngrType::eNoOrders);
 	add_condition			(action,ePropertyOrders,			false);
 	add_condition			(action,ePropertyItem,				false);
 	add_condition			(action,ePropertyDanger,			false);
@@ -49,19 +49,19 @@ void CAgentManagerPlanner::add_actions		()
 	add_effect				(action,ePropertyOrders,			true);
 	add_operator			(eOperatorNoOrders,					action);
 
-	action					= xr_new<CAgentManagerActionGatherItems>	(&object(),"gather_items");
+	action					= new CAgentManagerTemplate(&object(),"gather_items", EAgentMngrType::eGatherItems);
 	add_condition			(action,ePropertyItem,				true);
 	add_condition			(action,ePropertyEnemy,				false);
 	add_condition			(action,ePropertyDanger,			false);
 	add_effect				(action,ePropertyItem,				false);
 	add_operator			(eOperatorGatherItem,				action);
 
-	action					= xr_new<CAgentManagerActionKillEnemy>		(&object(),"kill_enemy");
+	action					= new CAgentManagerTemplate(&object(),"kill_enemy", EAgentMngrType::eKillEnemy);
 	add_condition			(action,ePropertyEnemy,				true);
 	add_effect				(action,ePropertyEnemy,				false);
 	add_operator			(eOperatorKillEnemy,				action);
 
-	action					= xr_new<CAgentManagerActionReactOnDanger>	(&object(),"react_on_danger");
+	action					= new CAgentManagerTemplate(&object(),"react_on_danger", EAgentMngrType::eReactOnDanger);
 	add_condition			(action,ePropertyEnemy,				false);
 	add_condition			(action,ePropertyDanger,			true);
 	add_effect				(action,ePropertyDanger,			false);

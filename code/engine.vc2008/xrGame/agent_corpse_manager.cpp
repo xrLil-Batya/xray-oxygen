@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: agent_corpse_manager.cpp
 //	Created 	: 24.05.2004
-//  Modified 	: 14.01.2005
+//  Modified 	: 04.01.2020
 //	Author		: Dmitriy Iassenev
 //	Description : Agent corpse manager
 ////////////////////////////////////////////////////////////////////////////
@@ -14,27 +14,6 @@
 #include "visual_memory_manager.h"
 #include "agent_manager.h"
 #include "agent_member_manager.h"
-
-struct CRemoveMemberCorpsesPredicate {
-	IC	bool operator()				(CMemberCorpse &corpse) const
-	{
-		return		(!!corpse.reactor());
-	}
-};
-
-struct CRemoveOfflineCorpsesPredicate {
-	CObject		*m_object;
-	IC		 CRemoveOfflineCorpsesPredicate	(CObject *object)
-	{
-		VERIFY		(object);
-		m_object	= object;
-	}
-
-	IC	bool operator()						(CMemberCorpse &corpse) const
-	{
-		return		(corpse.corpse()->ID() == m_object->ID());
-	}
-};
 
 bool CAgentCorpseManager::process_corpse	(CMemberOrder &member)
 {
@@ -90,14 +69,22 @@ void CAgentCorpseManager::react_on_member_death()
 		reaction.m_processing = true;
 	}
 
-	m_corpses.erase(std::remove_if(m_corpses.begin(), m_corpses.end(), CRemoveMemberCorpsesPredicate()), m_corpses.end());
+	m_corpses.erase
+	(
+		std::remove_if(m_corpses.begin(), m_corpses.end(), [](CMemberCorpse &corpse) { return !!corpse.reactor();}, m_corpses.end()
+	);
 }
 
 void CAgentCorpseManager::remove_links	(CObject *object)
 {
-	m_corpses.erase(std::remove_if(m_corpses.begin(), m_corpses.end(), CRemoveOfflineCorpsesPredicate(object)), m_corpses.end());
+	m_corpses.erase(std::remove_if
+	(
+		m_corpses.begin(), m_corpses.end(), 
+		[object](CMemberCorpse &corpse){return corpse.corpse()->ID() == object->ID();},
+		m_corpses.end()
+	));
 }
 
-void CAgentCorpseManager::update		()
+void CAgentCorpseManager::update()
 {
 }

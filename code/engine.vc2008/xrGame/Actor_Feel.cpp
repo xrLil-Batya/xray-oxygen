@@ -13,7 +13,6 @@
 #include "items/Grenade.h"
 #include "items/WeaponRPG7.h"
 #include "Level.h"
-#include "clsid_game.h"
 #include "hudmanager.h"
 #include "ZoneCampfire.h"
 #include "ExplosiveRocket.h"
@@ -68,26 +67,28 @@ BOOL CActor::feel_touch_on_contact	(CObject *O)
 
 ICF static BOOL info_trace_callback(collide::rq_result& result, LPVOID params)
 {
-	BOOL& bOverlaped	= *(BOOL*)params;
+	BOOL& bOverlaped = *(BOOL*)params;
+	
 	if(result.O)
 	{
-		if (Level().CurrentEntity()==result.O)
+		if (Level().CurrentEntity() == result.O)
 		{ //ignore self-actor
-			return			TRUE;
+			return TRUE;
 		}else
 		{ //check obstacle flag
-			if(result.O->spatial.type&STYPE_OBSTACLE)
-				bOverlaped			= TRUE;
+			if(result.O->spatial.type & STYPE_OBSTACLE)
+				bOverlaped = TRUE;
 
 			return			TRUE;
 		}
 	}else
 	{
-		//ïîëó÷èòü òðåóãîëüíèê è óçíàòü åãî ìàòåðèàë
-		CDB::TRI* T		= Level().ObjectSpace.GetStaticTris()+result.element;
+		// Get triangle and check his material
+		CDB::TRI* T = Level().ObjectSpace.GetStaticTris()+result.element;
 		if (GMLib.GetMaterialByIdx(T->material)->Flags.is(SGameMtl::flPassable)) 
 			return TRUE;
 	}	
+	
 	bOverlaped			= TRUE;
 	return				FALSE;
 }
@@ -166,62 +167,65 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 		return;
 	}
 	
-	CFrustum						frustum;
-	frustum.CreateFromMatrix		(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
+	CFrustum frustum;
+	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
-	ISpatialResult.clear	();
-	g_SpatialSpace->q_frustum		(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
+	ISpatialResult.clear();
+	g_SpatialSpace->q_frustum(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
 	Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
-	act_and_cam_pos.y    += CameraHeight();
-	float maxlen					= 1000.0f;
-	CInventoryItem* pNearestItem	= nullptr;
+	act_and_cam_pos.y += CameraHeight();
+	float maxlen = 1000.0f;
+	CInventoryItem* pNearestItem = nullptr;
 
 	for (ISpatial*	spatial : ISpatialResult)
 	{
-		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject        ());
+		CObject* pObject = spatial->dcast_CObject();
+		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*>(pObject);
 
-		if (nullptr == pIItem)										continue;
-		if (pIItem->object().H_Parent() != nullptr)					continue;
-		if (!pIItem->CanTake())										continue;
-		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )	continue;
-
-		CGrenade*	pGrenade	= smart_cast<CGrenade*> (spatial->dcast_CObject        ());
-		if (pGrenade && !pGrenade->Useful())						continue;
-
-		CMissile*	pMissile	= smart_cast<CMissile*> (spatial->dcast_CObject        ());
-		if (pMissile && !pMissile->Useful())						continue;
+		// We take only items without the owner
+		if (!pIItem || pIItem->object().H_Parent() != nullptr || !pIItem->CanTake()) 
+			continue;
 		
+		// We don't catch missiles in the air
+		CMissile* pMissile = smart_cast<CMissile*>(pObject);
+		if ((pMissile && !pMissile->Useful()) || smart_cast<CExplosiveRocket*>(&pIItem->object()))	
+			continue;
+
+		// And grenades...
+		CGrenade* pGrenade = smart_cast<CGrenade*>(pObject);
+		if (pGrenade && !pGrenade->Useful())
+			continue;
+
+		// Check distance to object 
 		Fvector A, B, tmp; 
-		pIItem->object().Center			(A);
-		if (A.distance_to_sqr(Position())>4)						continue;
+		pIItem->object().Center(A);
+		if (A.distance_to_sqr(Position())>4)
+			continue;
 
 		tmp.sub(A, cam_Active()->vPosition);
 		B.mad(cam_Active()->vPosition, cam_Active()->vDirection, tmp.dotproduct(cam_Active()->vDirection));
 		float len = B.distance_to_sqr(A);
-		if (len > 1)												continue;
+		if (len > 1)
+			continue;
 
-		if (maxlen>len && !pIItem->object().getDestroy())
+		if (maxlen > len && !pIItem->object().getDestroy())
 		{
 			maxlen = len;
 			pNearestItem = pIItem;
-		};
+		}
 	}
 
     auto GetNearestPickableItem = [this, &act_and_cam_pos](CInventoryItem* InPickableItem) -> CInventoryItem*
     {
         if (CGameObject* pNearestGameObject = InPickableItem->cast_game_object())
         {
-            CFrustum					frustum;
+            CFrustum frustum;
             frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
             if (!CanPickItem(frustum, act_and_cam_pos, &InPickableItem->object()))
-            {
                 return nullptr;
-            }
 
             if (!pNearestGameObject->getVisible() || Level().m_feel_deny.is_object_denied(pNearestGameObject))
-            {
                 return nullptr;
-            }
 
             return InPickableItem;
         }
@@ -229,24 +233,23 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
         return nullptr;
     };
 
-    CInventoryItem* ValidatedPickableItem = nullptr;
     if (pNearestItem != nullptr)
     {
-        ValidatedPickableItem = GetNearestPickableItem(pNearestItem);
+        pNearestItem = GetNearestPickableItem(pNearestItem);
     }
 
     // Update HUD - show pickable item
-	GameUI()->UIMainIngameWnd->SetPickUpItem(ValidatedPickableItem);
+	GameUI()->UIMainIngameWnd->SetPickUpItem(pNearestItem);
 
     // Do pickup if we allowed and have pickable item (and don't look at person)
-	if (bDoPickup && ValidatedPickableItem && !m_pPersonWeLookingAt)
+	if (bDoPickup && pNearestItem && !m_pPersonWeLookingAt)
 	{
-        CUsableScriptObject*	pUsableObject = smart_cast<CUsableScriptObject*>(ValidatedPickableItem);
+        CUsableScriptObject*	pUsableObject = smart_cast<CUsableScriptObject*>(pNearestItem);
         if (pUsableObject && (!m_pUsableObject))
             pUsableObject->use(this);
 
         //подбирание объекта
-        Game().SendPickUpEvent(ID(), ValidatedPickableItem->object().ID());
+        Game().SendPickUpEvent(ID(), pNearestItem->object().ID());
 
 		if (!g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP))
 		{
@@ -275,10 +278,7 @@ void CActor::PickupInfoDraw(CObject* object)
 	u32 C_FEEL		D3DCOLOR_RGBA(rgb_g.x, rgb_g.y, rgb_g.z, rgb_g.w);
 	
 	draw_str = item->NameItem();
-	//pos.y += size.y / 2;
-	//shift.set(pos);
-	//
-	//res.transform(v_res, shift);
+	
 	Device.mFullTransform.transform(v_res, result);
 	if (v_res.z < 0 || v_res.w < 0)	return;
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f) return;
@@ -287,11 +287,7 @@ void CActor::PickupInfoDraw(CObject* object)
 	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
 
 	UI().Font().GetFont("ui_font_letterica18_russian")->SetAligment(CGameFont::alCenter);
-	if (!psActorFlags.test(AF_COLORED_FEEL))
-		UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(0xFFFFA916);
-	else
-		UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(C_FEEL);
-
+	UI().Font().GetFont("ui_font_letterica18_russian")->SetColor(psActorFlags.test(AF_COLORED_FEEL) ? C_FEEL : 0xFFFFA916);
 	UI().Font().GetFont("ui_font_letterica18_russian")->Out(x, y, draw_str);
 }
 
@@ -313,8 +309,9 @@ void CActor::Feel_Grenade_Update( float rad )
 	// select only grenade
 	for (CObject* it: q_nearest)
 	{
+		// Don't touch candidates for destroy
 		if (it->getDestroy())
-			continue;					// Don't touch candidates for destroy
+			continue;
 
 		CGrenade* grn = smart_cast<CGrenade*>(it);
 		if((!grn || grn->Initiator() == ID() || grn->Useful()) || grn->time_from_begin_throw() < m_fFeelGrenadeTime)

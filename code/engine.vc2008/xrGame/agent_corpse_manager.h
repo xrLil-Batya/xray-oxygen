@@ -13,13 +13,13 @@
 class CAgentManager;
 class CMemberOrder;
 
-class CAgentCorpseManager {
-public:
-	typedef xr_vector<CMemberCorpse> MEMBER_CORPSES;
-
-private:
+class CAgentCorpseManager 
+{
 	MEMBER_CORPSES			m_corpses;
 	CAgentManager			*m_object;
+
+public:
+	using MEMBER_CORPSES = xr_vector<CMemberCorpse>;
 
 protected:
 	IC		CAgentManager	&object					() const;
