@@ -80,7 +80,7 @@ public:
 #endif
 };
 
-IC	Fvector construct_position(u32 level_vertex_id, float x, float z);
+Fvector construct_position(u32 level_vertex_id, float x, float z);
 
 IC CAI_Space &ai()
 {

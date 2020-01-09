@@ -24,4 +24,4 @@ bool trajectory_intersects_geometry	(float							trajectory_time,
 									 xr_vector<Fvector>	* const		out_collide_tris,
 									 Fvector const &				box_size); // can be zero - ray is traced then
 
-inline float trajectory_max_error_time(float t0, float t1);
+float trajectory_max_error_time(float t0, float t1);
