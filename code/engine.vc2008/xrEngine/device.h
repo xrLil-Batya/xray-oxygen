@@ -319,8 +319,6 @@ extern		ENGINE_API		CRenderDevice		Device;
 #endif
 
 
-extern		ENGINE_API		bool				g_bBenchmark;
-
 using LOADING_EVENT = xrDelegate<bool()>;
 extern	ENGINE_API xr_list<LOADING_EVENT>		g_loading_events;
 

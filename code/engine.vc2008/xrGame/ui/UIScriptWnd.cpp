@@ -81,38 +81,77 @@ void CUIDialogWndEx::Update()
 #include "../xrUICore/UIFrameLineWnd.h"
 #include "../xrUICore/UIProgressBar.h"
 #include "../xrUICore/UITabControl.h"
-#include "uiscriptwnd_script.h"
+
+template <typename T>
+struct CUIScriptWndWrapperBase : public T, public luabind::wrap_base {
+	typedef T inherited;
+	typedef CUIScriptWndWrapperBase<T>	self_type;
+
+	virtual bool OnKeyboardAction(u8 dik, EUIMessages keyboard_action)
+	{
+		return call_member<bool>(this, "OnKeyboard", dik, keyboard_action);
+	}
+	static bool OnKeyboard_static(inherited* ptr, u8 dik, EUIMessages keyboard_action)
+	{
+		return ptr->self_type::inherited::OnKeyboardAction(dik, keyboard_action);
+	}
+
+	virtual void Update()
+	{
+		call_member<void>(this, "Update");
+	}
+	static void Update_static(inherited* ptr)
+	{
+		ptr->self_type::inherited::Update();
+	}
+
+	virtual bool Dispatch(int cmd, int param)
+	{
+		return call_member<bool>(this, "Dispatch", cmd, param);
+	}
+	static bool Dispatch_static(inherited* ptr, int cmd, int param)
+	{
+		return ptr->self_type::inherited::Dispatch(cmd, param);
+	}
+
+};
+
+using WrapTypeForScriptWnd = CUIScriptWndWrapperBase<CUIDialogWndEx>;
+using BaseTypeForScriptWnd = CUIDialogWndEx;
+
+using export_class_ForScriptWnd = luabind::class_<CUIDialogWndEx, WrapTypeForScriptWnd, luabind::bases<CUIDialogWnd, DLL_Pure> >;
+
 
 using namespace luabind;
 
-extern export_class script_register_ui_window1(export_class &&);
-extern export_class script_register_ui_window2(export_class &&);
+extern export_class_ForScriptWnd script_register_ui_window1(export_class_ForScriptWnd &&);
+extern export_class_ForScriptWnd script_register_ui_window2(export_class_ForScriptWnd &&);
 
 #pragma optimize("s",on)
 void CUIDialogWndEx::script_register(lua_State *L)
 {
-	export_class				instance("CUIScriptWnd");
+	export_class_ForScriptWnd				instance("CUIScriptWnd");
 
 	module(L)
 		[
 			std::move(script_register_ui_window2(script_register_ui_window1((std::move(instance)))))
-			.def("Load", &BaseType::Load)
+			.def("Load", &BaseTypeForScriptWnd::Load)
 		];
 }
 
-export_class script_register_ui_window1(export_class &&instance)
+export_class_ForScriptWnd script_register_ui_window1(export_class_ForScriptWnd &&instance)
 {
 	return std::move(instance)
 		.def(constructor<>())
-		.def("AddCallback", (void(BaseType::*)(LPCSTR, s16, const luabind::functor<void>&, const luabind::object&))&BaseType::AddCallback)
-		.def("Register", (void (BaseType::*)(CUIWindow*, LPCSTR))&BaseType::Register);
+		.def("AddCallback", (void(BaseTypeForScriptWnd::*)(LPCSTR, s16, const luabind::functor<void>&, const luabind::object&))&BaseTypeForScriptWnd::AddCallback)
+		.def("Register", (void (BaseTypeForScriptWnd::*)(CUIWindow*, LPCSTR))&BaseTypeForScriptWnd::Register);
 }
 
 #pragma optimize("s",on)
-export_class script_register_ui_window2(export_class &&instance)
+export_class_ForScriptWnd script_register_ui_window2(export_class_ForScriptWnd &&instance)
 {
 	return std::move(instance)
-		.def("OnKeyboard", &BaseType::OnKeyboardAction, &WrapType::OnKeyboard_static)
-		.def("Update", &BaseType::Update, &WrapType::Update_static)
-		.def("Dispatch", &BaseType::Dispatch, &WrapType::Dispatch_static);
+		.def("OnKeyboard", &BaseTypeForScriptWnd::OnKeyboardAction, &WrapTypeForScriptWnd::OnKeyboard_static)
+		.def("Update", &BaseTypeForScriptWnd::Update, &WrapTypeForScriptWnd::Update_static)
+		.def("Dispatch", &BaseTypeForScriptWnd::Dispatch, &WrapTypeForScriptWnd::Dispatch_static);
 }

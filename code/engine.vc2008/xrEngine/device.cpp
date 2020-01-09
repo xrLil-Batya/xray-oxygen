@@ -594,8 +594,6 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 #endif
 	static int snd_emitters_ = -1;
 
-	if (g_bBenchmark)	return;
-
 	if(bOn)
 	{
 		if(!Paused())						

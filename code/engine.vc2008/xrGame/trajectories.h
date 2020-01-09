@@ -1,5 +1,4 @@
-#ifndef TRAJECTORIES_H
-#define TRAJECTORIES_H
+#pragma once
 
 struct trajectory_pick
 {
@@ -25,4 +24,4 @@ bool trajectory_intersects_geometry	(float							trajectory_time,
 									 xr_vector<Fvector>	* const		out_collide_tris,
 									 Fvector const &				box_size); // can be zero - ray is traced then
 
-#endif // #ifndef TRAJECTORIES_H
+inline float trajectory_max_error_time(float t0, float t1);

@@ -27,11 +27,9 @@
 #include "../xrEngine/string_table.h"
 #include "UINewsItemWnd.h"
 #include "../../xrEngine/xr_input.h"
-
+#include "../xr_time.h"
 
 #define  PDA_LOGS_XML		"pda_logs.xml"
-
-u64 const day2ms			= u64( 24 * 60 * 60 * 1000 );
 
 CUILogsWnd::CUILogsWnd()
 {

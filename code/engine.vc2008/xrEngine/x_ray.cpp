@@ -52,10 +52,6 @@ struct _SoundProcessor : public pureFrame
 // global variables
 ENGINE_API	CApplication*	pApp			= NULL;
 
-			void			doBenchmark		(LPCSTR name);
-ENGINE_API	bool			g_bBenchmark	= false;
-string512	g_sBenchmarkName;
-
 
 ENGINE_API	string512		g_sLaunchOnExit_params;
 ENGINE_API	string512		g_sLaunchOnExit_app;
