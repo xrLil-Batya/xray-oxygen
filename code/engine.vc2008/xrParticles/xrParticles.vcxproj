@@ -142,7 +142,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrScripts.lib;tbb.lib</AdditionalDependencies>
+      <AdditionalDependencies>xrScripts.lib;tbb.lib;xrEngine.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">
@@ -208,7 +208,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrScripts.lib;tbb.lib</AdditionalDependencies>
+      <AdditionalDependencies>xrScripts.lib;tbb.lib;xrEngine.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -260,7 +260,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrScripts.lib;tbb.lib</AdditionalDependencies>
+      <AdditionalDependencies>xrScripts.lib;tbb.lib;xrEngine.lib;xrEngine.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'">
@@ -312,7 +312,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrScripts.lib;tbb.lib</AdditionalDependencies>
+      <AdditionalDependencies>xrScripts.lib;tbb.lib;xrEngine.lib;xrEngine.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
