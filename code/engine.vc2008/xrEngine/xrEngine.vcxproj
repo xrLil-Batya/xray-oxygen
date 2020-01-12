@@ -156,7 +156,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;Winmm.lib;xgameplatform.lib;xgameruntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -279,7 +279,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;Winmm.lib;xgameplatform.lib;xgameruntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;soft_oal.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
