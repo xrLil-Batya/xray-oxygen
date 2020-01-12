@@ -123,7 +123,7 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 	}
 }
 
-CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
+CActor::CActor() : CEntityAlive()
 {
 	g_actor = this;
 

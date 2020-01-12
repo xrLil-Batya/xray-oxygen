@@ -122,8 +122,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <DisableSpecificWarnings>4996;4353;4577</DisableSpecificWarnings>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <AdditionalOptions>/Zo</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <ResourceCompile>

@@ -342,17 +342,18 @@ void CActor::cam_Update(float dt, float fFOV)
 		camUpdateLadder(dt);
 	on_weapon_shot_update();
 	float y_shift = 0;
-	current_ik_cam_shift = 0;
 
 	// Alex ADD: smooth crouch fix
 	float HeightInterpolationSpeed = 4.f;
 
+	float clampedDelta = std::min(dt, 1.0f);
+
 	if (CurrentHeight != CameraHeight())
 	{
-		CurrentHeight = (CurrentHeight * (1.0f - HeightInterpolationSpeed * dt)) + (CameraHeight() * HeightInterpolationSpeed*dt);
+		CurrentHeight = (CurrentHeight * (1.0f - HeightInterpolationSpeed * clampedDelta)) + (CameraHeight() * HeightInterpolationSpeed * clampedDelta);
 	}
 
-	Fvector point = { 0, CurrentHeight + current_ik_cam_shift, 0 };
+	Fvector point = { 0, CurrentHeight, 0 };
 	Fvector dangle = { 0,0,0 };
 	Fmatrix				xform;
 	xform.setXYZ(0, r_torso.yaw, 0);

@@ -124,8 +124,6 @@ volatile size_t g_threads = 0;
 
 void mtInitGlobals(void *)
 {
-	xrProfilingTask SyncTask("Init Game Info");
-
 	InterlockedIncrement(&g_threads);
 	Log("* Init game globals...");
 	init_game_globals();
@@ -556,6 +554,7 @@ void CGamePersistent::OnFrame	()
 	{
 		Device.Statistic->Engine_PersistanceFrame_Scheduler.Begin();
 		Engine.Sheduler.Update();
+		CParticlesObject::WaitForParticles();
 		Device.Statistic->Engine_PersistanceFrame_Scheduler.End();
 
 		// update weathers ambient

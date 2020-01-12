@@ -249,7 +249,8 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	splashScreen.SetProgressPosition(35, "Initializing engine");
 	InitEngine();
 	splashScreen.SetProgressPosition(40, "Initializing input");
-	pInput = new CInput();
+	//#GIPERION: To ForserX Don't inline call, please. It's needed as separate call for editor
+	InitInput();
 	splashScreen.SetProgressPosition(45, "Initializing console");
 	InitConsole();
 
@@ -439,7 +440,10 @@ void CApplication::LoadEnd()
 	if (0 == dwLoadReference)
 	{
 		g_appLoaded = TRUE;
-		Profiling.ResumeProfiling();
+		if (!Profiling.IsInEngineMode())
+		{
+			Profiling.ResumeProfiling();
+		}
 	}
 }
 

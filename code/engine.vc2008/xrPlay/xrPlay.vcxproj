@@ -99,7 +99,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'">/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/Zc:twoPhase- /Zo %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../../sdk/include/dx;../../sdk/include/;</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Durango'">../../sdk/include/dx;../../sdk/include/;</AdditionalIncludeDirectories>

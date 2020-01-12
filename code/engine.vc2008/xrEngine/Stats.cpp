@@ -322,9 +322,28 @@ void CStats::Show()
 		m_pRender->OutData4(F);
 		//////////////////////////////////////////////////////////////////////////
 		// Renderer specific
-		F.SetHeightI						(f_base_size);
-		F.OutSet						(200,0);
-		Render->Statistics				(&F);
+		//F.SetHeightI						(f_base_size);
+		//F.OutSet						(200,0);
+		//Render->Statistics				(&F);
+
+		//////////////////////////////////////////////////////////////////////////
+		// Game general
+		if (Profiling.IsInitialized() && Profiling.IsInEngineMode())
+		{
+			F.SetHeightI(f_base_size);
+			F.OutSet(200, 0);
+
+			const xr_map<LPCSTR, xrProfiling::StartAndEnd>& ProfilingData = Profiling.GetProfilerResults();
+
+			for (auto& profilerPortion : ProfilingData)
+			{
+				const xrProfiling::StartAndEnd& Data = profilerPortion.second;
+				u64 delta = Data.End - Data.Start;
+
+				float fTime = 1000.f * float(double(delta) / double(CPU::qpc_freq));
+				F.OutNext("Task \"%s\": %2.2fms", profilerPortion.first, fTime);
+			}
+		}
 
 		//////////////////////////////////////////////////////////////////////////
 		// Game specific

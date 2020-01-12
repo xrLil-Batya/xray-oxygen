@@ -206,7 +206,7 @@ void CDetailManager::Unload()
 	dtFS = nullptr;
 
 	// Wait MT_Details
-	while (MTLock.TryLock())
+	while (MTLock.IsLocked())
 	{
 		Sleep(2);
 	}

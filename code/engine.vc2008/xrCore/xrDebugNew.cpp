@@ -526,6 +526,10 @@ void xrDebug::fail(const char *e1, const char *e2, const char *e3, const char *e
 
 void __cdecl xrDebug::fatal(const char *file, int line, const char *function, const char* F, ...)
 {
+	if (IsDebuggerPresent())
+	{
+		DebugBreak();
+	}
 	string1024	buffer;
 
 	va_list		p;

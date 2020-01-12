@@ -135,9 +135,7 @@ void mt_Thread(void *ptr)
 			Device.mt_bMustExit = FALSE; // Important!!!
 			return;
 		}
-		// we has granted permission to execute
-		Device.SecondThreadMarker = Device.dwFrameAsync.load();
- 
+
 		{
 			xrProfilingTask SyncTask("Second Thread");
 			for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
@@ -147,6 +145,8 @@ void mt_Thread(void *ptr)
 			Device.seqFrameMT.Process(rp_Frame);
 		}
 		Device.SecondThreadCS.Leave();
+
+		Device.SecondThreadMarker = Device.dwFrameAsync.load();
 	}
 }
 
@@ -187,6 +187,18 @@ void CRenderDevice::on_idle()
 	}
 
 	g_bEnableStatGather = psDeviceFlags.test(rsStatistic);
+	if (Profiling.IsInEngineMode())
+	{
+		if (g_bEnableStatGather)
+		{
+			Profiling.ResumeProfiling();
+		}
+		else
+		{
+			Profiling.PauseProfiling();
+		}
+	}
+
 
 	if (!g_loading_events.empty())
 	{
@@ -258,19 +270,8 @@ void CRenderDevice::on_idle()
 		Sleep(0);
 	}
 
-	SecondThreadCS.Enter();
-	SecondThreadCS.Leave();
-
-	// Ensure, that second thread gets chance to execute anyway
-// 	if (dwFrame != Device.SecondThreadMarker)
-// 	{
-// 		xrProfilingTask SyncTask("seqParallel");
-// 		for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
-// 			refParallelDelegate();
-// 
-// 		Device.seqParallel.clear();
-// 		seqFrameMT.Process(rp_Frame);
-// 	}
+// 	SecondThreadCS.Enter();
+// 	SecondThreadCS.Leave();
 
 	Profiling.EndFrame(xrProfiling::eEngineFrame::Main);
 
@@ -400,7 +401,11 @@ void CRenderDevice::BeginToWork()
 	// Message cycle
 	seqAppStart.Process(rp_AppStart);
 	m_pRender->ClearTarget();
-	Profiling.ResumeProfiling();
+
+	if (!Profiling.IsInEngineMode())
+	{
+		Profiling.ResumeProfiling();
+	}
 }
 
 void CRenderDevice::GetXrWindowRect(RECT& OutWindowRect, bool bClientRect /*= false*/) const

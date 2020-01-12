@@ -17,8 +17,21 @@ public:
 		Main,
 		MAX
 	};
+
+	enum class eProfilingMode
+	{
+		Engine,
+		IntelProfiler
+	};
 public:
-	void Initialize();
+
+	struct StartAndEnd
+	{
+		u64 Start;
+		u64 End;
+	};
+
+	void Initialize(eProfilingMode InMode);
 
 	// Frame
 	void StartFrame(eEngineFrame Frame);
@@ -44,8 +57,23 @@ public:
 	// Tasks
 	void StartTask(const char* name);
 	void EndTask(const char* name);
+
+	IC bool IsInitialized() const { return bInitialized; }
+	IC bool IsInEngineMode() const { return mode == eProfilingMode::Engine; }
+
+	const xr_map<LPCSTR, StartAndEnd>& GetProfilerResults() const { return *frontBacket; }
 private:
 	bool bInitialized = false;
+
+	bool bEngineProfilingActive = false;
+	eProfilingMode mode;
+
+	xr_map<LPCSTR, StartAndEnd>* frontBacket = nullptr;
+	xr_map<LPCSTR, StartAndEnd>* backBacket = nullptr;
+
+	xr_map<LPCSTR, StartAndEnd> profilingBacket1;
+	xr_map<LPCSTR, StartAndEnd> profilingBacket2;
+	xrCriticalSection profilingBacketGuard;
 };
 
 struct XRCORE_API xrProfilingTask

@@ -7,7 +7,7 @@ namespace XRay
 {
 	ObjectSpace::ObjectSpace()
 	{
-		*pNativeObject = Level().ObjectSpace;
+		pNativeObject = &Level().ObjectSpace;
 		current_object = nullptr;
 	}
 

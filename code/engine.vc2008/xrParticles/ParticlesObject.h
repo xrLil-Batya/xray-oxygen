@@ -18,9 +18,6 @@ protected:
 	DWORD m_lastUpdatedFrame = 0;
 
 protected:
-	u32 mt_dt;
-
-protected:
 	virtual ~CParticlesObject();
 
 public:
@@ -32,7 +29,6 @@ public:
 	virtual	shared_str shedule_Class_Name() const override { return shared_str("particle_object"); };
 	virtual void renderable_Render();
 	void PerformAllTheWork(u32 dt);
-	void	__stdcall	PerformAllTheWork_mt();
 
 	Fvector& Position();
 	void SetXFORM(const Fmatrix& m);
@@ -42,7 +38,6 @@ public:
 	void play_at_pos(const Fvector& pos, BOOL xform = FALSE);
 	virtual void Play(bool bHudMode);
 	void Stop(BOOL bDefferedStop = TRUE);
-	virtual BOOL Locked() { return mt_dt; }
 
 	bool IsLooped() { return m_bLooped; }
 	bool IsAutoRemove();
@@ -53,6 +48,7 @@ public:
 
 	inline	Fmatrix& XFORM() { return renderable.xform; }
 
+	static void WaitForParticles();
 public:
 	static CParticlesObject* Create(LPCSTR p_name, BOOL bAutoRemove = TRUE, bool remove_on_game_load = true)
 	{

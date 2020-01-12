@@ -45,10 +45,14 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 
 		// Mathematics & PSI detection
 		Memory._initialize();
+
+		xrProfiling::eProfilingMode ProfilingMode = xrProfiling::eProfilingMode::Engine;
 		if (strstr(Params, "-vtune") != nullptr)
 		{
-			Profiling.Initialize();
+			ProfilingMode = xrProfiling::eProfilingMode::IntelProfiler;
 		}
+		Profiling.Initialize(ProfilingMode);
+
 		// Immediately pause profiling. We want to get normal list of hotspots
 		Profiling.PauseProfiling();
 

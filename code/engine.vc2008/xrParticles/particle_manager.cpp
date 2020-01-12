@@ -36,6 +36,8 @@ ParticleActions* CParticleManager::GetActionListPtr(int a_list_num)
 // create
 int CParticleManager::CreateEffect(u32 max_particles)
 {
+	xrCriticalSectionGuard guard(m_TransformGuard);
+
 	int eff_id = -1;
 	for (auto i = 0; i < effect_vec.size(); ++i)
 	{
@@ -59,11 +61,15 @@ int CParticleManager::CreateEffect(u32 max_particles)
 }
 void CParticleManager::DestroyEffect(int effect_id)
 {
+	xrCriticalSectionGuard guard(m_TransformGuard);
+
 	R_ASSERT(effect_id >= 0 && effect_id < (int)effect_vec.size());
 	xr_delete(effect_vec[effect_id]);
 }
 int	CParticleManager::CreateActionList()
 {
+	xrCriticalSectionGuard guard(m_TransformGuard);
+
 	int list_id = -1;
 	for (u32 i = 0; i < m_alist_vec.size(); ++i)
 	{
@@ -86,6 +92,7 @@ int	CParticleManager::CreateActionList()
 }
 void CParticleManager::DestroyActionList(int alist_id)
 {
+	xrCriticalSectionGuard guard(m_TransformGuard);
 	R_ASSERT(alist_id >= 0 && alist_id < (int)m_alist_vec.size());
 	xr_delete(m_alist_vec[alist_id]);
 }
@@ -94,6 +101,7 @@ void CParticleManager::DestroyActionList(int alist_id)
 void CParticleManager::PlayEffect(int effect_id, int alist_id)
 {
 	// Execute the specified action list.
+	xrCriticalSectionGuard guard(m_TransformGuard);
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
 
@@ -123,6 +131,8 @@ void CParticleManager::PlayEffect(int effect_id, int alist_id)
 
 void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
 {
+	xrCriticalSectionGuard guard(m_TransformGuard);
+
 	// Execute the specified action list.
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
@@ -156,6 +166,7 @@ void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
 // update&render
 void CParticleManager::Update(int effect_id, int alist_id, float dt)
 {
+	xrCriticalSectionGuard guard(m_TransformGuard);
 	ParticleEffect* pe = GetEffectPtr(effect_id);
 	ParticleActions* pa = GetActionListPtr(alist_id);
 
@@ -179,12 +190,11 @@ void CParticleManager::Update(int effect_id, int alist_id, float dt)
 	}
 	pa->unlock();
 }
-void CParticleManager::Render(int effect_id)
-{
-	//    ParticleEffect* pe	= GetEffectPtr(effect_id);
-}
+
+
 void CParticleManager::Transform(int alist_id, const Fmatrix& full, const Fvector& vel)
 {
+	xrCriticalSectionGuard guard(m_TransformGuard);
 	// Execute the specified action list.
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
@@ -349,6 +359,7 @@ ParticleAction* CParticleManager::CreateAction(PActionEnum type)
 }
 u32 CParticleManager::LoadActions(int alist_id, IReader& R)
 {
+	xrCriticalSectionGuard guard(m_TransformGuard);
 	// Execute the specified action list.
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
@@ -374,6 +385,7 @@ u32 CParticleManager::LoadActions(int alist_id, IReader& R)
 }
 void CParticleManager::SaveActions(int alist_id, IWriter& W)
 {
+	xrCriticalSectionGuard guard(m_TransformGuard);
 	// Execute the specified action list.
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);

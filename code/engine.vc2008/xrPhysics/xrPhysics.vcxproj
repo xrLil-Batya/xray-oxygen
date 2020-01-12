@@ -216,8 +216,7 @@
       </BrowseInformation>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <AdditionalOptions>/Zo</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ConformanceMode>false</ConformanceMode>

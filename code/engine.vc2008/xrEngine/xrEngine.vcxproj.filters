@@ -184,6 +184,9 @@
     <Filter Include="Engine\GPU\NVIDIA">
       <UniqueIdentifier>{2a2026a0-f063-4565-8dbb-0cecec9ee7bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interfaces\Input\NextInputAPI">
+      <UniqueIdentifier>{0c4229d7-2d38-42c7-b15b-2cec41c5118e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -504,6 +507,9 @@
     <ClInclude Include="VisMask.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="NextInputAPI\xrGameInput.h">
+      <Filter>Interfaces\Input\NextInputAPI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -793,6 +799,9 @@
     </ClCompile>
     <ClCompile Include="NvGPUTransferee.cpp">
       <Filter>Engine\GPU\NVIDIA</Filter>
+    </ClCompile>
+    <ClCompile Include="NextInputAPI\xrGameInput.cpp">
+      <Filter>Interfaces\Input\NextInputAPI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -35,7 +35,6 @@ public:
 	IC void					PSI_SetLifeTime		(float life_time)		{	m_iLifeTime=iFloor(life_time*1000);	}
 
 	virtual void			Play				(bool bHudMode)	= 0;
-	virtual BOOL			Locked				()				{ return FALSE; }
 
 	virtual	shared_str		shedule_Name		() const		{ return shared_str("particle_instance"); };
 	virtual	shared_str		shedule_Class_Name	() const		{ return shared_str("particle_instance"); };
