@@ -16,7 +16,7 @@ u32 GameTime::extra_day_count(u32 years)
 
 static u32 days_in_month[12] = { 31u, 28u, 31u, 30u, 31u, 30u, 31u, 31u, 30u, 31u, 30u, 31u };
 
-u64 GameTime::generate_time(u32 years, u32 months, u32 days, u32 hours, u32 minutes, u32 seconds)
+ENGINE_API u64 GameTime::generate_time(u32 years, u32 months, u32 days, u32 hours, u32 minutes, u32 seconds)
 {
 	u64 const years_minus_1 = u64(years - 1);
 	u64	result = years_minus_1 * 365 + years_minus_1 / 4 - years_minus_1 / 100 + years_minus_1 / 400;
@@ -42,7 +42,7 @@ u64 GameTime::generate_time(u32 years, u32 months, u32 days, u32 hours, u32 minu
 	return result;
 }
 
-void GameTime::split_time(u64 time, u32 &years, u32 &months, u32 &days, u32 &hours, u32 &minutes, u32 &seconds)
+ENGINE_API void GameTime::split_time(u64 time, u32 &years, u32 &months, u32 &days, u32 &hours, u32 &minutes, u32 &seconds)
 {
 	seconds = u32(time % 60u);
 	time /= 60;
@@ -79,7 +79,7 @@ void GameTime::split_time(u64 time, u32 &years, u32 &months, u32 &days, u32 &hou
 	days = u32(time);
 }
 
-u32 return_time(u64 time, ETimeType timeType)
+ENGINE_API u32 GameTime::return_time(u64 time, ETimeType timeType)
 {
 	u32 seconds, minutes, hours, day, months, years;
 	split_time(time, years, months, day, hours, minutes, seconds);
