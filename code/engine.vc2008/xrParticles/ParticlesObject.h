@@ -16,6 +16,7 @@ protected:
 	bool m_bLooped;			//флаг, что система зациклена
 	bool m_bStopping;		//вызвана функция Stop()
 	DWORD m_lastUpdatedFrame = 0;
+	static xr_list<CParticlesObject*> AllParticleObjects;
 
 protected:
 	virtual ~CParticlesObject();
@@ -48,7 +49,9 @@ public:
 
 	inline	Fmatrix& XFORM() { return renderable.xform; }
 
+	static void UpdateAllAsync();
 	static void WaitForParticles();
+
 public:
 	static CParticlesObject* Create(LPCSTR p_name, BOOL bAutoRemove = TRUE, bool remove_on_game_load = true)
 	{

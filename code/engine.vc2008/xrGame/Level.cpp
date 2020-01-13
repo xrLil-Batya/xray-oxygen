@@ -487,14 +487,7 @@ void CLevel::OnRender()
 	::Render->BeforeWorldRender();
 	
 	// There is an exception while loading the level.
-	try
-	{
-		inherited::OnRender();
-	}
-	catch (...)
-	{
-		R_ASSERT(game && game->Type() == eGameIDNoGame);
-	}
+	inherited::OnRender();
 	 
 	if(!IGameAnsel::IsActive())
 		HUD().RenderUI();

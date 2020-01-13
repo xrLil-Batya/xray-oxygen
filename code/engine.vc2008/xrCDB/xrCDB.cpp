@@ -88,7 +88,7 @@ void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isC
 	thread_spawn(build_thread, "CDB-construction", 0, &P);
 	while (S_INIT == status)
 	{
-		Sleep(5);
+		Sleep(1);
 	}
 #endif
 }

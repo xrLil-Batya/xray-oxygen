@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "dxRenderDeviceRender.h"
+#include "../../xrParticles/ParticlesObject.h"
 
 #include "ResourceManager.h"
 
@@ -219,6 +220,11 @@ u32 dxRenderDeviceRender::GetCacheStatPolys()
 
 void dxRenderDeviceRender::Begin()
 {
+	// signal to particles to finish their work
+	Device.Statistic->TEST3.Begin();
+	CParticlesObject::WaitForParticles();
+	Device.Statistic->TEST3.End();
+
 	RCache.OnFrameBegin		();
 	RCache.set_CullMode		(CULL_CW);
 	RCache.set_CullMode		(CULL_CCW);

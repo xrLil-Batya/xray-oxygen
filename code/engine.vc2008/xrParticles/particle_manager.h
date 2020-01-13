@@ -4,7 +4,7 @@
 
 namespace PAPI
 {
-	class CParticleManager : public IParticleManager
+	class CParticleManager : public IParticleManager, public pureFrame
 	{
 		// These are static because all threads access the same effects.
 		// All accesses to these should be locked.
@@ -45,6 +45,9 @@ namespace PAPI
 		virtual ParticleAction*	CreateAction(PActionEnum action_id);
 		virtual u32 LoadActions(int alist_id, IReader& R);
 		virtual void SaveActions(int alist_id, IWriter& W);
+
+		void OnFrame(void) override;
+
 	};
 };
 //---------------------------------------------------------------------------

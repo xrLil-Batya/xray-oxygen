@@ -17,6 +17,8 @@
 PARTICLES_API const Fvector zero_vel = { 0.f,0.f,0.f };
 
 tbb::task_group ParticleObjectTasks;
+xr_list<CParticlesObject*> CParticlesObject::AllParticleObjects;
+
 
 CParticlesObject::CParticlesObject(LPCSTR p_name, BOOL bAutoRemove, bool destroy_on_game_load) : inherited(destroy_on_game_load)
 {
@@ -57,6 +59,7 @@ void CParticlesObject::Init(LPCSTR p_name, IRender_Sector* S, BOOL bAutoRemove)
 	shedule.t_min = 20;
 	shedule.t_max = 50;
 	shedule_register();
+	AllParticleObjects.push_back(this);
 
 	dwLastTime = Device.dwTimeGlobal;
 }
@@ -64,6 +67,7 @@ void CParticlesObject::Init(LPCSTR p_name, IRender_Sector* S, BOOL bAutoRemove)
 //----------------------------------------------------
 CParticlesObject::~CParticlesObject()
 {
+	AllParticleObjects.remove(this);
 }
 
 void CParticlesObject::UpdateSpatial()
@@ -105,10 +109,30 @@ const shared_str CParticlesObject::Name()
 	return (V) ? V->Name() : "";
 }
 
+void CParticlesObject::UpdateAllAsync()
+{
+	for (CParticlesObject* particle : AllParticleObjects)
+	{
+		if (particle->m_bDead)
+		{
+			return;
+		}
+		ParticleObjectTasks.run([particle]()
+		{
+			u32 dt = Device.dwTimeGlobal - particle->dwLastTime;
+			IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(particle->renderable.visual); VERIFY(V);
+			V->OnFrame(dt);
+
+			particle->dwLastTime = Device.dwTimeGlobal;
+		});
+	}
+}
+
 void CParticlesObject::WaitForParticles()
 {
 	ParticleObjectTasks.wait();
 }
+
 
 //----------------------------------------------------
 void CParticlesObject::Play(bool bHudMode)
@@ -159,14 +183,6 @@ void CParticlesObject::shedule_Update(u32 _dt)
 
 		dwLastTime = Device.dwTimeGlobal;
 	}
-#else
-	ParticleObjectTasks.run([this, dt]()
-	{
-		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-		V->OnFrame(dt);
-
-		dwLastTime = Device.dwTimeGlobal;
-	});
 #endif
 
 	UpdateSpatial();

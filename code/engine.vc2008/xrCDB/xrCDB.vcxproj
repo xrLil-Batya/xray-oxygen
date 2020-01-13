@@ -372,8 +372,7 @@
     <ClCompile Include="ISpatial_q_ray.cpp" />
     <ClCompile Include="ISpatial_verify.cpp" />
     <ClCompile Include="xr_area.cpp" />
-    <ClCompile Include="xr_area_query.cpp" />
-    <ClCompile Include="xr_area_raypick.cpp" />
+    <ClCompile Include="xr_area_general.cpp" />
     <ClCompile Include="xrXRC.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -497,7 +497,6 @@ void CRender::Render()
         
 		// Lighting, dependant on OCCQ
 		{
-			ScopeStatTimer lightTimer3(Device.Statistic->TEST3);
 			PIX_EVENT(DEFER_LIGHT_OCCQ);
 			render_lights(LP_pending);
 		}

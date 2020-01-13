@@ -554,7 +554,6 @@ void CGamePersistent::OnFrame	()
 	{
 		Device.Statistic->Engine_PersistanceFrame_Scheduler.Begin();
 		Engine.Sheduler.Update();
-		CParticlesObject::WaitForParticles();
 		Device.Statistic->Engine_PersistanceFrame_Scheduler.End();
 
 		// update weathers ambient

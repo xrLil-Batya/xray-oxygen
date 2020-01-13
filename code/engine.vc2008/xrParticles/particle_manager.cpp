@@ -5,6 +5,7 @@
 #include "particle_manager.h"
 #include "particle_effect.h"
 #include "particle_actions_collection.h"
+#include "ParticlesObject.h"
 
 using namespace PAPI;
 
@@ -15,10 +16,12 @@ PARTICLES_API IParticleManager* PAPI::ParticleManager() { return &PM; }
 //
 CParticleManager::CParticleManager()
 {
+	Device.seqFrame.Add(this, REG_PRIORITY_HIGH + 10500);
 }
 
 CParticleManager::~CParticleManager()
 {
+	Device.seqFrame.Remove(this);
 }
 
 ParticleEffect*	CParticleManager::GetEffectPtr(int effect_id)
@@ -396,4 +399,12 @@ void CParticleManager::SaveActions(int alist_id, IWriter& W)
 		(*it)->Save(W);
 
 	pa->unlock();
+}
+
+void CParticleManager::OnFrame(void)
+{
+	if (!Device.Paused())
+	{
+		CParticlesObject::UpdateAllAsync();
+	}
 }

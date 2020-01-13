@@ -48,12 +48,6 @@
     <ClCompile Include="xr_area.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="xr_area_query.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="xr_area_raypick.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="xrXRC.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -62,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="xrCDB_Tree.cpp">
       <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="xr_area_general.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

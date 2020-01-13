@@ -361,7 +361,7 @@ void CDetailManager::Render	()
 	RCache.set_CullMode		(CULL_NONE);
 	RCache.set_xform_world	(Fidentity);
 	if (UseVS())			hw_Render	();
-	else					soft_Render	();
+	else					soft_Render	(); //# XOTTAB_DUTY: soft_Render() can be removed, it's obsolete
 	RCache.set_CullMode		(CULL_CCW);
 	RDEVICE.Statistic->RenderDUMP_DT_Render.End	();
 	m_frame_rendered		= RDEVICE.dwFrame;
