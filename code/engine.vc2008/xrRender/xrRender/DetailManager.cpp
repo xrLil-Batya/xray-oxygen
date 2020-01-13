@@ -204,12 +204,6 @@ void CDetailManager::Unload()
 	m_visibles[2].clear();
 	FS.r_close(dtFS);
 	dtFS = nullptr;
-
-	// Wait MT_Details
-	while (MTLock.IsLocked())
-	{
-		Sleep(2);
-	}
 }
 
 extern ECORE_API float r_ssaDISCARD;
@@ -351,7 +345,7 @@ void CDetailManager::Render	()
 		return;
 
 	// MT
-	MT_SYNC					();
+	//MT_SYNC					();
 
 	RDEVICE.Statistic->RenderDUMP_DT_Render.Begin	();
 	
@@ -373,7 +367,6 @@ void __stdcall	CDetailManager::MT_CALC()
 	if (0 == dtFS)						return;
 	if (!psDeviceFlags.is(rsDetails))	return;
 
-	xrCriticalSectionGuard guard(MTLock);
 	if (m_frame_calc != RDEVICE.dwFrame && (m_frame_rendered + 1) == RDEVICE.dwFrame)
 	{
 		Fvector		EYE = RDEVICE.vCameraPosition_saved;

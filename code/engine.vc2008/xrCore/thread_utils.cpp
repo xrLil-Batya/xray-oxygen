@@ -30,7 +30,7 @@ void xrCriticalSection::Leave()
 
 bool xrCriticalSection::IsLocked()
 {
-	return !LockCounter;
+	return LockCounter;
 }
 
 xrCriticalSectionGuard::xrCriticalSectionGuard(xrCriticalSection& InSection)
