@@ -18,9 +18,9 @@ bool CSpaceRestrictionBase::inside	(u32 level_vertex_id, bool partially_inside)
 	return							(inside(level_vertex_id,partially_inside,DEFAULT_RADIUS));
 }
 
-IC	Fvector construct_position		(u32 level_vertex_id, float x, float z)
+Fvector construct_position(u32 level_vertex_id, float x, float z)
 {
-	return							(Fvector().set(x,ai().level_graph().vertex_plane_y(level_vertex_id,x,z),z));
+	return (Fvector().set(x, ai().level_graph().vertex_plane_y(level_vertex_id, x, z), z));
 }
 
 IC	bool CSpaceRestrictionBase_inside	(CSpaceRestrictionBase *self, const Fvector &position, const float &radius)

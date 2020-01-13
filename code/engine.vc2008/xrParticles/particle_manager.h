@@ -12,6 +12,7 @@ namespace PAPI
 		using ParticleActionsVec = xr_vector<ParticleActions*>;
 		ParticleEffectVec effect_vec;
 		ParticleActionsVec m_alist_vec;
+		xrCriticalSection m_TransformGuard;
 	public:
 		CParticleManager();
 		virtual ~CParticleManager();
@@ -31,7 +32,6 @@ namespace PAPI
 
 		// update&render
 		virtual void Update(int effect_id, int alist_id, float dt);
-		virtual void Render(int effect_id);
 		virtual void Transform(int alist_id, const Fmatrix& m, const Fvector& velocity);
 
 		// effect

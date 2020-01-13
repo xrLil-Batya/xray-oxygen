@@ -11,4 +11,3 @@
 #pragma hdrstop
 
 #pragma comment(lib, "xrCore.lib")
-#pragma comment(lib, "winmm.lib")

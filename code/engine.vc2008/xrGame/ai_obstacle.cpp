@@ -61,11 +61,6 @@ public:
 	}
 };
 
-IC	Fvector construct_position	(u32 level_vertex_id, float x, float z)
-{
-	return						(Fvector().set(x,ai().level_graph().vertex_plane_y(level_vertex_id,x,z),z));
-}
-
 IC	bool ai_obstacle::inside	(const Fvector &position, const float &radius) const
 {
 	for (Fplane plane : m_box.m_planes) {

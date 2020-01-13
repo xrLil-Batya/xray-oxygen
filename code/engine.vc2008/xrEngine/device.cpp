@@ -135,9 +135,7 @@ void mt_Thread(void *ptr)
 			Device.mt_bMustExit = FALSE; // Important!!!
 			return;
 		}
-		// we has granted permission to execute
-		Device.SecondThreadMarker = Device.dwFrameAsync.load();
- 
+
 		{
 			xrProfilingTask SyncTask("Second Thread");
 			for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
@@ -147,6 +145,8 @@ void mt_Thread(void *ptr)
 			Device.seqFrameMT.Process(rp_Frame);
 		}
 		Device.SecondThreadCS.Leave();
+
+		Device.SecondThreadMarker = Device.dwFrameAsync.load();
 	}
 }
 
@@ -187,6 +187,18 @@ void CRenderDevice::on_idle()
 	}
 
 	g_bEnableStatGather = psDeviceFlags.test(rsStatistic);
+	if (Profiling.IsInEngineMode())
+	{
+		if (g_bEnableStatGather)
+		{
+			Profiling.ResumeProfiling();
+		}
+		else
+		{
+			Profiling.PauseProfiling();
+		}
+	}
+
 
 	if (!g_loading_events.empty())
 	{
@@ -258,19 +270,8 @@ void CRenderDevice::on_idle()
 		Sleep(0);
 	}
 
-	SecondThreadCS.Enter();
-	SecondThreadCS.Leave();
-
-	// Ensure, that second thread gets chance to execute anyway
-// 	if (dwFrame != Device.SecondThreadMarker)
-// 	{
-// 		xrProfilingTask SyncTask("seqParallel");
-// 		for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
-// 			refParallelDelegate();
-// 
-// 		Device.seqParallel.clear();
-// 		seqFrameMT.Process(rp_Frame);
-// 	}
+// 	SecondThreadCS.Enter();
+// 	SecondThreadCS.Leave();
 
 	Profiling.EndFrame(xrProfiling::eEngineFrame::Main);
 
@@ -386,13 +387,11 @@ void CRenderDevice::BeginToWork()
 	dwTimeGlobal = 0;
 	Timer_MM_Delta = 0;
 	{
-		u32 time_mm = timeGetTime();
+		u32 time_mm = TimerAsync();
 		// wait for next tick
-		while (timeGetTime() == time_mm);	 //-V529
+		while (TimerAsync() == time_mm);	 //-V529 
 
-		u32 time_system = timeGetTime();
-		u32 time_local = TimerAsync();
-		Timer_MM_Delta = time_system - time_local;
+		Timer_MM_Delta = TimerAsync() - time_mm;
 	}
 
 	// Start all threads
@@ -402,7 +401,11 @@ void CRenderDevice::BeginToWork()
 	// Message cycle
 	seqAppStart.Process(rp_AppStart);
 	m_pRender->ClearTarget();
-	Profiling.ResumeProfiling();
+
+	if (!Profiling.IsInEngineMode())
+	{
+		Profiling.ResumeProfiling();
+	}
 }
 
 void CRenderDevice::GetXrWindowRect(RECT& OutWindowRect, bool bClientRect /*= false*/) const
@@ -595,8 +598,6 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
     Msg("* [MSG] PAUSE bOn[%s], bTimer[%s], bSound[%s], reason: %s", bOn ? "true" : "false", bTimer ? "true" : "false", bSound ? "true" : "false", reason);
 #endif
 	static int snd_emitters_ = -1;
-
-	if (g_bBenchmark)	return;
 
 	if(bOn)
 	{

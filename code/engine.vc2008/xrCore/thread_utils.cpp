@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "thread_utils.h"
 
-xrCriticalSection::xrCriticalSection() : isLocked(false)
+xrCriticalSection::xrCriticalSection()
 {
 	InitializeCriticalSectionAndSpinCount(&Section, 250);
 }
@@ -14,18 +14,23 @@ xrCriticalSection::~xrCriticalSection()
 void xrCriticalSection::Enter()
 {
 	EnterCriticalSection(&Section);
-	isLocked = true;
+	LockCounter++;
 }
 
 void xrCriticalSection::Leave()
 {
-	isLocked = false;
+	if (!LockCounter)
+	{
+		FATAL("Section is not locked");
+		return;
+	}
+	LockCounter--;
 	LeaveCriticalSection(&Section);
 }
 
-bool xrCriticalSection::TryLock()
+bool xrCriticalSection::IsLocked()
 {
-	return isLocked;
+	return !LockCounter;
 }
 
 xrCriticalSectionGuard::xrCriticalSectionGuard(xrCriticalSection& InSection)
@@ -145,5 +150,5 @@ void xrConditionalVariable::WakeAll()
 void xrConditionalVariable::Sleep(xrCriticalSection& AcquiringCS)
 {
 	SleepConditionVariableCS(&Variable, &AcquiringCS.Section, INFINITE);
-	AcquiringCS.isLocked = true;
+	AcquiringCS.LockCounter++;
 }

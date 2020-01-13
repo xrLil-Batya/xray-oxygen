@@ -62,4 +62,6 @@ public:
 			bool			useful_enemy		(const CEntityAlive *enemy, const CAI_Stalker *member) const;
 };
 
+constexpr float wounded_enemy_reached_distance = 3.f;
+
 #include "agent_enemy_manager_inline.h"

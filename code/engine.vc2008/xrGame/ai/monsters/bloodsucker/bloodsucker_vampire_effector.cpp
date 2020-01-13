@@ -19,7 +19,7 @@ CVampirePPEffector::CVampirePPEffector(const SPPInfo &ppi, float life_time) :
 #define DELTA_ANGLE_X	10 * PI / 180
 #define DELTA_ANGLE_Y	DELTA_ANGLE_X
 #define DELTA_ANGLE_Z	DELTA_ANGLE_X
-#define ANGLE_SPEED		0.2f	
+#define BLOODSUCKER_ANGLE_SPEED		0.2f	
 #define BEST_DISTANCE	0.3f
 
 BOOL CVampirePPEffector::Process(SPPInfo& pp)
@@ -109,15 +109,15 @@ BOOL CVampireCameraEffector::ProcessCam(SCamEffectorInfo& info)
 
 	} else {
 		
-		if (angle_lerp(dangle_current.x, dangle_target.x, ANGLE_SPEED, Device.fTimeDelta)) {
+		if (angle_lerp(dangle_current.x, dangle_target.x, BLOODSUCKER_ANGLE_SPEED, Device.fTimeDelta)) {
 			dangle_target.x = Random.randFs(DELTA_ANGLE_X);
 		}
 
-		if (angle_lerp(dangle_current.y, dangle_target.y, ANGLE_SPEED, Device.fTimeDelta)) {
+		if (angle_lerp(dangle_current.y, dangle_target.y, BLOODSUCKER_ANGLE_SPEED, Device.fTimeDelta)) {
 			dangle_target.y = Random.randFs(DELTA_ANGLE_Y);
 		}
 
-		if (angle_lerp(dangle_current.z, dangle_target.z, ANGLE_SPEED, Device.fTimeDelta)) {
+		if (angle_lerp(dangle_current.z, dangle_target.z, BLOODSUCKER_ANGLE_SPEED, Device.fTimeDelta)) {
 			dangle_target.z = Random.randFs(DELTA_ANGLE_Z);
 		}
 	}

@@ -311,7 +311,6 @@ protected:
 
 	// Cameras
 	float					fPrevCamPos;
-	float					current_ik_cam_shift;
 	Fvector					vPrevCamDir;
 	float					fCurAVelocity;
 	CEffectorBobbing*		pCamBobbing;

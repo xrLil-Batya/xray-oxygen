@@ -177,11 +177,6 @@ void IGame_Persistent::OnFrame()
 	while (!ps_destroy.empty())
 	{
 		CPS_Instance* pInstance = ps_destroy.back();
-		if (pInstance->Locked())
-		{
-			Log("--locked");
-			break;
-		}
 		ps_destroy.pop_back();
 		pInstance->PSI_internal_delete();
 	}
@@ -197,7 +192,6 @@ void IGame_Persistent::destroy_particles		(const bool &all_particles)
 	{
 		CPS_Instance*	psi		= ps_destroy.back	();		
 		VERIFY					(psi);
-		VERIFY					(!psi->Locked());
 		ps_destroy.pop_back		();
 		psi->PSI_internal_delete();
 	}

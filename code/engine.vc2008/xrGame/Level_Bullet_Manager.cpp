@@ -15,6 +15,7 @@
 #include "../xrEngine/xr_collide_form.h"
 #include "../xrCDB/xr_collide_defs.h"
 #include "../../3rd-party/IKAN/math3d.h"
+#include "trajectories.h"
 #ifdef DEBUG
 #	include "debug_renderer.h"
 #endif
@@ -307,15 +308,7 @@ static Fvector trajectory_position(
 	return pos;
 }
 
-IC static float trajectory_max_error_time(float const t0, float const t1)
-{
-	return ((t1 + t0)*0.5f);
-	// this is correct even in our case
-	// y(t) = V0y*t - V0y*ar*t^2/2 - g*t^2/2
-	// x(t) = V0x*t - V0x*ar*t^2/2
-}
-
-static float trajectory_pick_error(
+static float trajectory_pick_error_bullet(
 		float const low,
 		float const high,
 		Fvector const& position,
@@ -458,7 +451,7 @@ static float trajectory_select_pick_time(
 	float const epsilon = 0.1f;
 	while (!fsimilar(low, high))
 	{
-		float distance = trajectory_pick_error(start_low, check_time, bullet.start_position, bullet.start_velocity, gravity, air_resistance);
+		float distance = trajectory_pick_error_bullet(start_low, check_time, bullet.start_position, bullet.start_velocity, gravity, air_resistance);
 
 		if (distance < epsilon)
 			low = check_time;

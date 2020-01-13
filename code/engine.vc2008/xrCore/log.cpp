@@ -163,8 +163,6 @@ XRCORE_API bool bStartedThread = false;
 void xrLogger::LogThreadEntry()
 {
 	if (bStartedThread) return;
-	bool isDebug = IsDebuggerPresent();
-
 	auto FlushLogIfRequestedLambda = [this]()
 	{
 		if (bFlushRequested)
@@ -223,7 +221,7 @@ void xrLogger::LogThreadEntry()
 				// line is ready, ready up everything
 
 				// Output to MSVC debug output
-				if (isDebug && !bFastDebugLog)
+				if (IsDebuggerPresent() && !bFastDebugLog)
 				{
 					OutputDebugStringA(finalLineWithLineEnd);
 				}

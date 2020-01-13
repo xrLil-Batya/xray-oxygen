@@ -15,11 +15,11 @@ public:
 	inline void Lock()		{ this->Enter(); }
 	inline void Unlock()	{ this->Leave(); }
 
-	bool TryLock();
+	bool IsLocked();
 
 private:
 	CRITICAL_SECTION Section;
-	volatile bool isLocked;
+	xr_atomic_u32 LockCounter;
 };
 
 

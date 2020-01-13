@@ -14,8 +14,6 @@
 #include "ai/stalker/ai_stalker.h"
 #include "cover_point.h"
 
-const float MIN_SUITABLE_ENEMY_DISTANCE = 3.f;//10.f;
-
 struct CRemoveOldDangerCover {
 	typedef CAgentMemberManager::MEMBER_STORAGE MEMBER_STORAGE;
 

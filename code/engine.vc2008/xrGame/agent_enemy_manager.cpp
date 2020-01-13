@@ -30,8 +30,6 @@
 #include <limits>
 #pragma warning(pop)
 
-const float wounded_enemy_reached_distance = 3.f;
-
 IC size_t population(const squad_mask_type &b)
 {
 	std::bitset<std::numeric_limits<squad_mask_type>::digits> mask(b);

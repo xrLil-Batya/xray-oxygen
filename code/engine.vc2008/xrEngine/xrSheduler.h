@@ -41,7 +41,6 @@ private:
 	void			internal_Registration	();
 public:
 	void			ProcessStep	();
-	void			Process		();
 	void			Update		();
 
 	bool			Registered	(ISheduled *object) const;

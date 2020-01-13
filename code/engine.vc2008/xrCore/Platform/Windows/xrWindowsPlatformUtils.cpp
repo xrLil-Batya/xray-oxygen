@@ -11,7 +11,9 @@
 #include <VersionHelpers.h>
 #include "_math.h"
 
+// Windows specific libraries
 #pragma comment (lib, "PowrProf.lib")
+#pragma comment (lib, "Winmm.lib")
 
 
 XRCORE_API xrWindowsPlatformUtils PlatformUtils;

@@ -26,8 +26,6 @@
 #include "../../stalker_decision_space.h"
 #include "../../items/weapon.h"
 
-extern const float MIN_SUITABLE_ENEMY_DISTANCE = 3.f;
-
 #ifdef _DEBUG
 static int g_advance_search_count		= 0;
 static int g_near_cover_search_count	= 0;

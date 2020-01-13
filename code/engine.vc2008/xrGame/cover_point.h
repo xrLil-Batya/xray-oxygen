@@ -28,4 +28,6 @@ add_to_type_list(CCoverPoint)
 #undef script_type_list
 #define script_type_list save_type_list(CCoverPoint)
 
+constexpr float MIN_SUITABLE_ENEMY_DISTANCE = 3.f;//10.f;
+
 #include "cover_point_inline.h"

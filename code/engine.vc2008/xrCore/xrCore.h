@@ -70,11 +70,11 @@
 #include "_types.h"
 #include "RingBuffer.h"
 #include "thread_utils.h"
-#include "xrProfiling.h"
 #include "xrDebug.h"
 #include "xrMemory.h"
 #include "_std_extensions.h"
 #include "_stl_extensions.h"
+#include "xrProfiling.h"
 #include "vector.h"
 
 #if PLATFORM == _WINDOWS

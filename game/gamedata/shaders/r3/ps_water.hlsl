@@ -97,13 +97,11 @@ float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
 
 	float	alpha = 0.75h + 0.25h * power; // 1=full env, 0=no env
 
+#ifdef	USE_SOFT_WATER
 	//	ForserX: additional depth
 	float2 PosTc = I.tctexgen.xy / I.tctexgen.z;
 	gbuffer_data gbd = gbuffer_load_data(PosTc, pos2d);
 	float4 _P = float4(gbd.P, gbd.mtl);
-
-#ifdef	USE_SOFT_WATER
-
 	float waterDepth = _P.z - I.tctexgen.z;
 	
 	// Water fog

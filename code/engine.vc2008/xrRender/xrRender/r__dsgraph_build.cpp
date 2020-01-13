@@ -44,15 +44,10 @@ R_dsgraph_structure::R_dsgraph_structure()
 	marker = 0;
 	r_pmask(true, true);
 	b_loaded = false;
-
-	InsertStaticCritsect.Unlock();
 }
 
 void R_dsgraph_structure::r_dsgraph_destroy()
 {
-	while (InsertStaticCritsect.TryLock())
-		Sleep(1);
-
 	nrmVS.clear();
 	nrmPS.clear();
 	nrmCS.clear();

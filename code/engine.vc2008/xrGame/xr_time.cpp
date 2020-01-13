@@ -7,11 +7,6 @@
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
 
-#define sec2ms		1000
-#define min2ms		60*sec2ms
-#define hour2ms		60*min2ms
-#define day2ms		24*hour2ms
-
 ALife::_TIME_ID __game_time()
 {
 	return	(ai().get_alife() ? ai().alife().time().game_time() : Level().GetGameTime());

@@ -33,6 +33,10 @@ public:
 	LPCSTR	timeToString	(int mode);
 };
 
+#define sec2ms		1000
+#define min2ms		60*sec2ms
+#define hour2ms		60*min2ms
+#define day2ms		24*hour2ms
 
 extern u32 get_time();
 extern xrTime get_time_struct();

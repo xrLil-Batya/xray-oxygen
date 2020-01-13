@@ -21,9 +21,8 @@
 #include "moving_objects.h"
 #include "doors_manager.h"
 #include "../FrayBuildConfig.hpp"
-#include <memory>
 
-static CAI_Space* g_ai_space = nullptr;
+CAI_Space* g_ai_space = nullptr;
 
 CAI_Space& CAI_Space::GetInstance()
 {

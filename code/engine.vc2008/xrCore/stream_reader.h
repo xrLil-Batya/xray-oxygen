@@ -27,7 +27,7 @@ class XRCORE_API CStreamReader : public IReaderBase<CStreamReader>, public TNonC
 
 public:
     CStreamReader() = default;
-	~CStreamReader()  { close(); }
+	~CStreamReader()  { }
 	
     virtual void construct(const HANDLE file_mapping_handle, const size_t start_offset,
                            const size_t file_size, const size_t archive_size, const size_t window_size);
