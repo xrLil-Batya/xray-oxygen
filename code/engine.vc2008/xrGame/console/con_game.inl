@@ -489,9 +489,9 @@ struct CCC_StartTimeSingle : public IConsole_Command {
 
 	virtual void	Status	(TStatus& S)
 	{
-		u32 year = 1, month = 1, day = 1, hours = 0, mins = 0, secs = 0;
-		split_time	(g_qwStartGameTime, year, month, day, hours, mins, secs);
-		xr_sprintf		(S,"%d.%d.%d %d:%d:%d",year,month,day,hours,mins,secs);
+		u32 year = 1, month = 1, day = 1, hours = 0, mins = 0, secs = 0, milisecs = 0;
+		split_time	(g_qwStartGameTime, year, month, day, hours, mins, secs, milisecs);
+		xr_sprintf		(S,"%d.%d.%d %d:%d:%d.%d",year,month,day,hours,mins,secs,milisecs);
 	}
 };
 

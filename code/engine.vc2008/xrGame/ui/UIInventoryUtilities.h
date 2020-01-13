@@ -49,6 +49,7 @@ enum ETimePrecision
 	etpTimeToHours = 0,
 	etpTimeToMinutes,
 	etpTimeToSeconds,
+	etpTimeToMilisecs,
 	etpTimeToSecondsAndDay
 };
 

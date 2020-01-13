@@ -16,7 +16,7 @@ u32 GameTime::extra_day_count(u32 years)
 
 static u32 days_in_month[12] = { 31u, 28u, 31u, 30u, 31u, 30u, 31u, 31u, 30u, 31u, 30u, 31u };
 
-ENGINE_API u64 GameTime::generate_time(u32 years, u32 months, u32 days, u32 hours, u32 minutes, u32 seconds)
+u64 GameTime::generate_time(u32 years, u32 months, u32 days, u32 hours, u32 minutes, u32 seconds, u32 milliseconds)
 {
 	u64 const years_minus_1 = u64(years - 1);
 	u64	result = years_minus_1 * 365 + years_minus_1 / 4 - years_minus_1 / 100 + years_minus_1 / 400;
@@ -39,11 +39,15 @@ ENGINE_API u64 GameTime::generate_time(u32 years, u32 months, u32 days, u32 hour
 	result += u64(minutes);
 	result *= 60ul;
 	result += u64(seconds);
+	result *= 1000ul;
+	result += u64(milliseconds);
 	return result;
 }
 
-ENGINE_API void GameTime::split_time(u64 time, u32 &years, u32 &months, u32 &days, u32 &hours, u32 &minutes, u32 &seconds)
+void GameTime::split_time(u64 time, u32 &years, u32 &months, u32 &days, u32 &hours, u32 &minutes, u32 &seconds, u32 &milliseconds)
 {
+	milliseconds = u32(time % 1000u);
+	time /= 1000;
 	seconds = u32(time % 60u);
 	time /= 60;
 	minutes = u32(time % 60u);
@@ -79,19 +83,28 @@ ENGINE_API void GameTime::split_time(u64 time, u32 &years, u32 &months, u32 &day
 	days = u32(time);
 }
 
-u32 return_time(u64 time, u8 timeType)
+u32 GameTime::return_time(u64 time, u8 timeType)
 {
-	u32 seconds, minutes, hours, day, months, years;
-	split_time(time, years, months, day, hours, minutes, seconds);
+	u32 milliseconds, seconds, minutes, hours /* weeks, months, years */  ;
+
+	milliseconds = u32(time % 1000u);
+	time /= 1000;
+	seconds = u32(time % 60u);
+	time /= 60;
+	minutes = u32(time % 60u);
+	time /= 60;
+	hours = u32(time % 24u);
+	time /= 24;
 
 	switch (timeType)
 	{
+		case TIMETYPE_MILISECONDS:	return milliseconds; break;
 		case TIMETYPE_SECONDS:		return seconds; break;
 		case TIMETYPE_MINUTES:		return minutes; break;
-		case TIMETYPE_DAYS:			return day; break;
-		case TIMETYPE_MONTHS:		return months; break;
-		case TIMETYPE_YEARS: 		return years; break;
-		
-		default: 					return 0;
+		case TIMETYPE_HOURS:		return hours; break;
+
+	default:
+		return 0;
+		break;
 	}
 }
