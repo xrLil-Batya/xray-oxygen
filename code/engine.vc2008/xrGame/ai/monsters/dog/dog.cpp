@@ -202,7 +202,7 @@ void CAI_Dog::UpdateCL()
 
 bool CAI_Dog::is_night()
 {
-	u32 hours = return_time(GetGameTime(), ETimeType::eHOURS);
+	u32 hours = return_time(GetGameTime(), TIMETYPE_HOURS);
 	if (hours <= 6 || hours >=21 )
 		return true;
 

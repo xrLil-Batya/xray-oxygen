@@ -1,9 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: agent_manager_properties.cpp
-//	Created 	: 04.01.2020
-//	Author		: ForserX
-//	Description : Template for agent manager properties
+//	Created 	: 25.05.2004
+//  Modified 	: 25.05.2004
+//	Author		: Dmitriy Iassenev
+//	Description : Agent manager properties
 ////////////////////////////////////////////////////////////////////////////
+
 #include "stdafx.h"
 #include "agent_manager_properties.h"
 #include "agent_manager.h"
@@ -15,36 +17,50 @@
 #include "enemy_manager.h"
 #include "danger_manager.h"
 
-CAgentManagerPropertyTemplate::CAgentManagerPropertyTemplate(CAgentManager *object, const char* evaluator_name, EAgentEvaluatorMngr eType) :
-	inherited(object, evaluator_name)
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerPropertyEvaluatorGlobal
+//////////////////////////////////////////////////////////////////////////
+
+CAgentManagerPropertyEvaluatorItem::_value_type CAgentManagerPropertyEvaluatorItem::evaluate	()
 {
-	R_ASSERT3(eType != EAgentEvaluatorMngr::eBroken, "Broken evaluator type: %s!", evaluator_name)
-	ManagerType = eType;
+	CAgentMemberManager::iterator	I = m_object->member().members().begin();
+	CAgentMemberManager::iterator	E = m_object->member().members().end();
+	for ( ; I != E; ++I) {
+		VERIFY				(*I);
+		if ((*I)->object().memory().item().selected())
+			return			(true);
+	}
+	return					(false);
 }
 
-CAgentManagerPropertyTemplate::_value_type CAgentManagerPropertyTemplate::evaluate	()
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerPropertyEvaluatorEnemy
+//////////////////////////////////////////////////////////////////////////
+
+CAgentManagerPropertyEvaluatorEnemy::_value_type CAgentManagerPropertyEvaluatorEnemy::evaluate	()
 {
-	if (ManagerType == EAgentEvaluatorMngr::eEnemy)
-	{
-		for (CAgentMemberManager* pObject : m_object->member().combat_members())
-		{
-			VERIFY(pObject);
-			if (pObject->object().memory().enemy().selected())
-				return true;
-		}
+	CAgentMemberManager::iterator	I = m_object->member().combat_members().begin();
+	CAgentMemberManager::iterator	E = m_object->member().combat_members().end();
+	for ( ; I != E; ++I) {
+		VERIFY				(*I);
+		if ((*I)->object().memory().enemy().selected())
+			return			(true);
 	}
-	else
-	{
-		for (CAgentMemberManager* pObject : m_object->member().members())
-		{
-			VERIFY(pObject);
+	return					(false);
+}
 
-			if (ManagerType == EAgentEvaluatorMngr::eItem && pObject->object().memory().item().selected())
-				return true;
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerPropertyEvaluatorDanger
+//////////////////////////////////////////////////////////////////////////
 
-			if (ManagerType == EAgentEvaluatorMngr::eDanger && pObject->object().memory().danger().selected())
-				return true;
-		}
+CAgentManagerPropertyEvaluatorDanger::_value_type CAgentManagerPropertyEvaluatorDanger::evaluate	()
+{
+	CAgentMemberManager::iterator	I = m_object->member().members().begin();
+	CAgentMemberManager::iterator	E = m_object->member().members().end();
+	for ( ; I != E; ++I) {
+		VERIFY				(*I);
+		if ((*I)->object().memory().danger().selected())
+			return			(true);
 	}
-	return false;
+	return					(false);
 }

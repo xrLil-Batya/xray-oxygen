@@ -196,21 +196,21 @@ ESingleGameDifficulty get_game_difficulty()
 u32 get_time_days()
 {
 	u64 CurrentTime = (g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time();
-	u32 day = return_time(CurrentTime, ETimeType::eDAYS);
+	u32 day = return_time(CurrentTime, TIMETYPE_DAYS);
 	return day;
 }
 
 u32 get_time_hours()
 {
 	u64 CurrentTime = (g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time();
-	u32 hours = return_time(CurrentTime, ETimeType::eHOURS);
+	u32 hours = return_time(CurrentTime, TIMETYPE_HOURS);
 	return hours;
 }
 
 u32 get_time_minutes()
 {
 	u64 CurrentTime = (g_pGameLevel && Level().game) ? Level().GetGameTime() : ai().alife().time_manager().game_time();
-	u32 mins = return_time(CurrentTime, ETimeType::eMINUTES);
+	u32 mins = return_time(CurrentTime, TIMETYPE_MINUTES);
 	return mins;
 }
 

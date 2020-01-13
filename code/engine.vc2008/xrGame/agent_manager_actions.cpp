@@ -1,9 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: agent_manager_actions.cpp
-//	Created 	: 04.01.2020
-//	Author		: ForserX
-//	Description : Template Agent mngr action for EAgentMngrType
+//	Created 	: 25.05.2004
+//  Modified 	: 25.05.2004
+//	Author		: Dmitriy Iassenev
+//	Description : Agent manager actions
 ////////////////////////////////////////////////////////////////////////////
+
 #include "stdafx.h"
 #include "agent_manager_actions.h"
 #include "agent_manager.h"
@@ -16,38 +18,82 @@
 #include "sight_action.h"
 #include "inventory.h"
 
-CAgentManagerActionTemplate::CAgentManagerActionTemplate(CAgentManager *object, const char* action_name, EAgentMngrType eType) :
-	inherited(object,action_name)
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerActionNoOrders
+//////////////////////////////////////////////////////////////////////////
+
+CAgentManagerActionNoOrders::CAgentManagerActionNoOrders	(CAgentManager *object, LPCSTR action_name) :
+	inherited		(object,action_name)
 {
-	eActionType = eType;
 }
 
-void CAgentManagerActionTemplate::finalize()
+void CAgentManagerActionNoOrders::finalize			()
 {
-	inherited::finalize();
-
-	if(eActionType == EAgentMngrType::eNoOrders)
-		m_object->corpse().clear();
+	inherited::finalize				();
+	m_object->corpse().clear		();
 }
 
-void CAgentManagerActionTemplate::initialize		()
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerActionGatherItems
+//////////////////////////////////////////////////////////////////////////
+
+CAgentManagerActionGatherItems::CAgentManagerActionGatherItems	(CAgentManager *object, LPCSTR action_name) :
+	inherited		(object,action_name)
 {
-	inherited::initialize();
+}
+
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerActionKillEnemy
+//////////////////////////////////////////////////////////////////////////
+
+CAgentManagerActionKillEnemy::CAgentManagerActionKillEnemy	(CAgentManager *object, LPCSTR action_name) :
+	inherited		(object,action_name)
+{
+}
+
+void CAgentManagerActionKillEnemy::initialize		()
+{
+	inherited::initialize						();
 	
-	if(eActionType == EAgentMngrType::eKillEnemy || eActionType == EAgentMngrType::eReactOnDanger)
-	m_object->location().clear();
+	m_object->location().clear					();
 }
 
-void CAgentManagerActionTemplate::execute()
+void CAgentManagerActionKillEnemy::finalize			()
 {
-	inherited::execute();
-
-	if(eActionType == EAgentMngrType::eKillEnemy)
-		m_object->enemy().distribute_enemies();
+	inherited::finalize							();
 	
-	if(eActionType == EAgentMngrType::eKillEnemy || eActionType == EAgentMngrType::eReactOnDanger)
-	{
-		m_object->explosive().react_on_explosives();
-		m_object->corpse().react_on_member_death();
-	}
+//	m_object->enemy().distribute_enemies		();
+}
+
+void CAgentManagerActionKillEnemy::execute			()
+{
+	inherited::execute							();
+
+	m_object->enemy().distribute_enemies		();
+	m_object->explosive().react_on_explosives	();
+	m_object->corpse().react_on_member_death	();
+}
+
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerActionReactOnDanger
+//////////////////////////////////////////////////////////////////////////
+
+CAgentManagerActionReactOnDanger::CAgentManagerActionReactOnDanger	(CAgentManager *object, LPCSTR action_name) :
+	inherited		(object,action_name)
+{
+}
+
+void CAgentManagerActionReactOnDanger::initialize		()
+{
+	inherited::initialize			();
+
+	m_object->location().clear		();
+}
+
+void CAgentManagerActionReactOnDanger::execute			()
+{
+	inherited::execute							();
+
+	m_object->explosive().react_on_explosives	();
+	m_object->corpse().react_on_member_death	();
 }

@@ -36,6 +36,11 @@ IC size_t population(const squad_mask_type &b)
 	return mask.count();
 }
 
+//IC u32 population(const u64 &b)
+//{
+//	return (population((squad_mask_type)b) + population(u32(b >> 32)));
+//}
+
 struct CEnemyFiller 
 {
 	typedef CAgentEnemyManager::ENEMIES ENEMIES;

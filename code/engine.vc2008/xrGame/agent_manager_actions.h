@@ -5,27 +5,65 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Agent manager actions
 ////////////////////////////////////////////////////////////////////////////
+
 #pragma once
+
 #include "action_base.h"
 
 class CAgentManager;
-using CAgentManagerActionBase = CActionBase<CAgentManager>;
 
-enum EAgentMngrType : u8
-{
-	eNoOrders = 0,
-	eGatherItems,
-	eKillEnemy,
-	eReactOnDanger
-};
+typedef CActionBase<CAgentManager>	CAgentManagerActionBase;
 
-class CAgentManagerActionTemplate : public CAgentManagerActionBase
-{
-	EAgentMngrType eActionType;
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerActionNoOrders
+//////////////////////////////////////////////////////////////////////////
 
+class CAgentManagerActionNoOrders : public CAgentManagerActionBase {
 protected:
-	using inherited = CAgentManagerActionBase;
+	typedef CAgentManagerActionBase inherited;
 
 public:
-	CAgentManagerActionTemplate(CAgentManager *object, LPCSTR action_name = "", EAgentMngrType eType = EAgentMngrType::eNoOrders);
+						CAgentManagerActionNoOrders	(CAgentManager *object, LPCSTR action_name = "");
+	virtual void		finalize					();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerActionGatherItems
+//////////////////////////////////////////////////////////////////////////
+
+class CAgentManagerActionGatherItems : public CAgentManagerActionBase {
+protected:
+	typedef CAgentManagerActionBase inherited;
+
+public:
+						CAgentManagerActionGatherItems	(CAgentManager *object, LPCSTR action_name = "");
+};
+
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerActionKillEnemy
+//////////////////////////////////////////////////////////////////////////
+
+class CAgentManagerActionKillEnemy : public CAgentManagerActionBase {
+protected:
+	typedef CAgentManagerActionBase inherited;
+
+public:
+						CAgentManagerActionKillEnemy(CAgentManager *object, LPCSTR action_name = "");
+	virtual void		initialize					();
+	virtual void		finalize					();
+	virtual void		execute						();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// CAgentManagerActionReactOnDanger
+//////////////////////////////////////////////////////////////////////////
+
+class CAgentManagerActionReactOnDanger : public CAgentManagerActionBase {
+protected:
+	typedef CAgentManagerActionBase inherited;
+
+public:
+						CAgentManagerActionReactOnDanger(CAgentManager *object, LPCSTR action_name = "");
+	virtual void		initialize						();
+	virtual void		execute							();
 };
