@@ -623,10 +623,8 @@ void CWeapon::UpdateAltScope()
 			}
 		}
 	}
-	else
-	{
-		return;
-	}
+	
+	return;
 }
 
 bool CWeapon::bInZoomRightNow() const
@@ -830,6 +828,8 @@ void CWeapon::save(NET_Packet &output_packet)
 
 void CWeapon::load(IReader &input_packet)
 {
+	u8 temp;
+	
 	inherited::load	(input_packet);
 	load_data		(iAmmoElapsed,					 input_packet);
 	load_data       (m_cur_scope,                    input_packet);
@@ -837,18 +837,11 @@ void CWeapon::load(IReader &input_packet)
 	load_data		(m_flagsAddOnState,				 input_packet);
 	load_data		(m_ammoType,					 input_packet);
 	load_data		(m_zoom_params.m_bIsZoomModeNow, input_packet);
-
-	if (m_zoom_params.m_bIsZoomModeNow)	
-		OnZoomIn();
-	else			
-		OnZoomOut();
-
 	load_data		(m_bRememberActorNVisnStatus,	 input_packet);
-
-	u8 temp;
-
 	load_data		(temp,							 input_packet);
 
+	ZoomSwitch(m_zoom_params.m_bIsZoomModeNow);
+	
 	if (temp >= marks.size() && !marks.empty())
 		current_mark = 0;
 	else
@@ -1603,8 +1596,7 @@ void CWeapon::OnZoomIn()
 	if (m_zoom_params.m_bZoomDofEnabled && !IsScopeAttached())
 		GamePersistent().SetEffectorDOF(m_zoom_params.m_ZoomDof);
 
-
-		GamePersistent().SetPickableEffectorDOF(true);
+	GamePersistent().SetPickableEffectorDOF(true);
 
 	if (m_zoom_params.m_sUseBinocularVision.size() && IsScopeAttached() && m_zoom_params.m_pVision == nullptr) 
 		m_zoom_params.m_pVision	= xr_new<CBinocularsVision>(m_zoom_params.m_sUseBinocularVision.c_str());
@@ -1626,9 +1618,7 @@ void CWeapon::OnZoomOut()
 	psActorFlags.set(AF_ZOOM_NEW_FD, false);
 
  	GamePersistent().RestoreEffectorDOF();
-
-
-		GamePersistent().SetPickableEffectorDOF(false);
+	GamePersistent().SetPickableEffectorDOF(false);
 
 	ResetSubStateTime();
 

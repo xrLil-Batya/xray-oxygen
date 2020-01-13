@@ -15,11 +15,12 @@ class CMemberOrder;
 
 class CAgentCorpseManager 
 {
-	MEMBER_CORPSES			m_corpses;
-	CAgentManager			*m_object;
-
 public:
 	using MEMBER_CORPSES = xr_vector<CMemberCorpse>;
+	
+private:
+	MEMBER_CORPSES			m_corpses;
+	CAgentManager			*m_object;
 
 protected:
 	IC		CAgentManager	&object					() const;

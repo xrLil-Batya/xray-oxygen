@@ -59,7 +59,8 @@ void CBaseMonster::Load(LPCSTR section)
 	m_section						= section;
 	// load parameters from ".ltx" file
 	inherited::Load					(section);
-
+	load_friend_community_overrides (section);
+	
 	m_head_bone_name				= READ_IF_EXISTS(pSettings,r_string,section, "bone_head", "bip01_head");
 	m_left_eye_bone_name			= READ_IF_EXISTS(pSettings,r_string,section, "bone_eye_left", 0);
 	m_right_eye_bone_name			= READ_IF_EXISTS(pSettings,r_string,section, "bone_eye_right", 0);
@@ -518,6 +519,43 @@ void CBaseMonster::load_critical_wound_bones()
 		fill_bones_body_parts("critical_wound_bones_legs", critical_wound_type_legs);
 		m_critical_wound_anim_legs = pSettings->r_string(cNameSect(), "critical_wound_anim_legs");
 	}
+}
+
+void CBaseMonster::load_friend_community_overrides(LPCSTR section)
+{
+	LPCSTR src = pSettings->r_string(section,"Friend_Community_Overrides");
+	
+	// parse src
+	int item_count = _GetItemCount(src);
+	m_friend_community_overrides.resize(item_count);
+	for (int i=0; i<item_count; i++) {
+		string128	st;
+		_GetItem	(src,i,st);
+		m_friend_community_overrides[i] = st;
+	}
+}
+
+bool CBaseMonster::is_community_friend_overrides(const CEntityAlive *entity_alive) const
+{
+	const CInventoryOwner	*IO = smart_cast<const CInventoryOwner*>(entity_alive);
+	if (!IO) return false;
+	if (const_cast<CEntityAlive *>(entity_alive)->cast_base_monster()) return false;
+	
+	return (
+		std::find(
+			m_friend_community_overrides.begin(),
+			m_friend_community_overrides.end(),
+			IO->CharacterInfo().Community().id()
+		)
+		!=
+		m_friend_community_overrides.end()
+	);
+}
+
+bool CBaseMonster::is_relation_enemy(const CEntityAlive *tpEntityAlive) const
+{
+	if (is_community_friend_overrides(tpEntityAlive)) return false;
+	return inherited::is_relation_enemy(tpEntityAlive);
 }
 
 void CBaseMonster::fill_bones_body_parts	(LPCSTR body_part, CriticalWoundType wound_type)

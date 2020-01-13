@@ -340,17 +340,12 @@ void CUIDragDropListEx::ReinitScroll()
 	VERIFY(_valid(h1));
 	VERIFY(_valid(h2));
 	float dh = h1 - h2;
-	m_vScrollBar->Show	( (dh > 0) || m_flags.test(flAlwaysShowScroll) );
-	m_vScrollBar->Enable( (dh > 0) || m_flags.test(flAlwaysShowScroll) );
+	
+	const bool bValidDeltaH = (dh > 0);
+	m_vScrollBar->Show	( bValidDeltaH || m_flags.test(flAlwaysShowScroll) );
+	m_vScrollBar->Enable( bValidDeltaH || m_flags.test(flAlwaysShowScroll) );
 
-	if (dh < 0)
-	{
-		m_vScrollBar->SetRange(0, 0);
-	}
-	else
-	{
-		m_vScrollBar->SetRange(0, iFloor(dh));
-	}
+	m_vScrollBar->SetRange(0, !bValidDeltaH ? 0 : iFloor(dh));
 	m_vScrollBar->SetScrollPos(0);
 	m_vScrollBar->SetStepSize(CellSize().y / 3);
 	m_vScrollBar->SetPageSize(1);

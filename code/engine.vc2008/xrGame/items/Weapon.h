@@ -271,6 +271,7 @@ public:
 	virtual void			OnZoomIn			();
 	virtual void			OnZoomOut			();
 	virtual	bool			IsZoomed			()	const		{return m_zoom_params.m_bIsZoomModeNow;};
+	inline	void			ZoomSwitch			(const bool bState) { bState ? OnZoomIn : OnZoomOut; }
 	CUIWindow*				ZoomTexture			();	
 
 
