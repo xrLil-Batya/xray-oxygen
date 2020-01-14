@@ -236,7 +236,7 @@ bool CObjectSpace::_RayQuery3(collide::rq_results& r_dest, const collide::ray_de
 			CObjectSpacePrivate::xrc.ray_query(&Static, s_rd.start, s_rd.dir, s_rd.range);
 
 			if (!CObjectSpacePrivate::xrc.r_empty()) {
-				VERIFY(xrc.r_count() == 1);
+				VERIFY(CObjectSpacePrivate::xrc.r_count() == 1);
 				rq_result		s_res;
 				s_res.set(0, CObjectSpacePrivate::xrc.r_realBegin()->range, CObjectSpacePrivate::xrc.r_realBegin()->id);
 				// update dynamic test range
@@ -353,8 +353,8 @@ bool CObjectSpace::_RayQuery(collide::rq_results& r_dest, const collide::ray_def
 						cform->_RayQuery(d_rd, CObjectSpacePrivate::r_temp);
 					}
 #ifdef DEBUG
-					if (!((r_temp.r_empty()) || (r_temp.r_count() && (fis_zero(r_temp.r_realBegin()->range, EPS) || (r_temp.r_realBegin()->range >= 0.f)))))
-						Debug.fatal(DEBUG_INFO, "Invalid RayQuery dynamic range: %f (%f). /#2/", r_temp.r_realBegin()->range, d_rd.range);
+					if (!((CObjectSpacePrivate::r_temp.r_empty()) || (CObjectSpacePrivate::r_temp.r_count() && (fis_zero(CObjectSpacePrivate::r_temp.r_realBegin()->range, EPS) || (CObjectSpacePrivate::r_temp.r_realBegin()->range >= 0.f)))))
+						Debug.fatal(DEBUG_INFO, "Invalid RayQuery dynamic range: %f (%f). /#2/", CObjectSpacePrivate::r_temp.r_realBegin()->range, d_rd.range);
 #endif
 				}
 			}
