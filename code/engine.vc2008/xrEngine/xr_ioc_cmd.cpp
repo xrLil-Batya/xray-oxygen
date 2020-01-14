@@ -168,30 +168,35 @@ public:
 	virtual void Execute(LPCSTR args) 
 	{
 		string_path			cfg_full_name;
-		xr_strcpy			(cfg_full_name, (xr_strlen(args)>0)?args:Console->ConfigFile);
+		xr_strcpy			(cfg_full_name, (xr_strlen(args) > 0) ? args : Console->ConfigFile);
 
-		bool b_abs_name = xr_strlen(cfg_full_name)>2 && cfg_full_name[1]==':';
+		bool b_abs_name = xr_strlen(cfg_full_name) > 2 && cfg_full_name[1] == ':';
 
-		if(!b_abs_name)
+		if (!b_abs_name)
+		{
 			FS.update_path	(cfg_full_name, "$app_data_root$", cfg_full_name);
+		}
 
-		//if (strext(cfg_full_name))	
-		//*strext(cfg_full_name) = 0;
-		//xr_strcat			(cfg_full_name,".ltx");
-		
 		BOOL b_allow = TRUE;
-		if ( FS.exist(cfg_full_name) )
+		if (FS.exist(cfg_full_name))
+		{
 			b_allow = SetFileAttributes(cfg_full_name,FILE_ATTRIBUTE_NORMAL);
+		}
 
-		if ( b_allow ){
-			IWriter* F			= FS.w_open(cfg_full_name);
-				CConsole::vecCMD_IT it;
-				for (it=Console->Commands.begin(); it!=Console->Commands.end(); it++)
-					it->second->Save(F);
-				FS.w_close			(F);
-				Msg("Config-file [%s] saved successfully",cfg_full_name);
-		}else
+		if ( b_allow )
+		{
+			IWriter* F = FS.w_open(cfg_full_name);
+			for (CConsole::vecCMD_IT it = Console->Commands.begin(); it != Console->Commands.end(); it++)
+			{
+				it->second->Save(F);
+			}
+			FS.w_close(F);
+			Msg("Config-file [%s] saved successfully", cfg_full_name);
+		}
+		else
+		{
 			Msg("!Cannot store config file [%s]", cfg_full_name);
+		}
 	}
 };
 CCC_LoadCFG::CCC_LoadCFG(LPCSTR N) : IConsole_Command(N) 
