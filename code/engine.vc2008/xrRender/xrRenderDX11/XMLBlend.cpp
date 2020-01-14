@@ -204,6 +204,7 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 
 	pCompiler->r_End();
 	ShaderElement* pTryElement = dxRenderDeviceRender::Instance().Resources->_CreateElement(*pCompiler->SH);
+	xr_delete(pCompiler->SH);
 	return pTryElement;
 }
 
