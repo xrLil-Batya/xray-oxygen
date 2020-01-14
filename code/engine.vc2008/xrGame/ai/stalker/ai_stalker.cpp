@@ -841,6 +841,11 @@ void CAI_Stalker::spawn_supplies()
 	CObjectHandler::spawn_supplies();
 }
 
+CAgentManager& CAI_Stalker::agent_manager() const
+{
+	return (Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).agent_manager());
+}
+
 void CAI_Stalker::Think()
 {
 	const u32 update_delta = Device.dwTimeGlobal - m_dwLastUpdateTime;
