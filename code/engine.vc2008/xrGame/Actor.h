@@ -405,7 +405,6 @@ protected:
 	float					m_fWalk_StrafeFactor;
 	float					m_fRun_StrafeFactor;
 
-	Fvector2				m_movementWeight;
 	Fvector2				m_cameraMoveWeight;
 
 public:
@@ -421,7 +420,6 @@ public:
 	virtual void			IR_OnMouseWheel			(int direction);
 	virtual void			IR_OnThumbstickChanged  (GamepadThumbstickType type, const Fvector2& position);
 	virtual	float			GetLookFactor			();
-	virtual void			ResetMovementWeight		();
 
 public:
 	virtual void						g_WeaponBones		(int &L, int &R1, int &R2);

@@ -431,7 +431,6 @@ void CGamePersistent::update_game_loaded()
 {
 	xr_delete				(m_intro);
 	Msg("intro_delete ::update_game_loaded");
-	Actor()->ResetMovementWeight();
 	start_game_intro		();
 }
 

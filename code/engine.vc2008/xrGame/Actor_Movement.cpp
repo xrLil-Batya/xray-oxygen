@@ -176,10 +176,10 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 	else
 	{
 		// update player accel
-		if (mstate_wf&mcFwd)		vControlAccel.z +=  m_movementWeight.y;
-		if (mstate_wf&mcBack)		vControlAccel.z +=	m_movementWeight.y;
-		if (mstate_wf&mcLStrafe)	vControlAccel.x +=	m_movementWeight.x;
-		if (mstate_wf&mcRStrafe)	vControlAccel.x +=	m_movementWeight.x;
+		if (mstate_wf&mcFwd)		vControlAccel.z =  1.0f;
+		if (mstate_wf&mcBack)		vControlAccel.z = -1.0f;
+		if (mstate_wf&mcLStrafe)	vControlAccel.x = -1.0f;
+		if (mstate_wf&mcRStrafe)	vControlAccel.x =  1.0f;
 	}
 
 #if 0
@@ -613,8 +613,6 @@ void CActor::StopAnyMove()
 	mstate_real		&=		~mcAnyMove;
 	
 	pInput->CallResetPressedState();
-	m_movementWeight.x = 0.0f;
-	m_movementWeight.y = 0.0f;
 
 	if (this == Level().CurrentViewEntity())
 	{

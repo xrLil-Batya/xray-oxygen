@@ -119,10 +119,10 @@ void CActor::IR_OnKeyboardPress(u8 cmd)
 		case kPREV_SLOT:	OnPrevWeaponSlot(); break;
 		case kNIGHT_VISION: SwitchNightVision(); break;
 
-		case kFWD:		mstate_wishful |= mcFwd;	 m_movementWeight.y += 1.0f; 	break;
-		case kBACK:		mstate_wishful |= mcBack;	 m_movementWeight.y += -1.0f;	break;
-		case kL_STRAFE:	mstate_wishful |= mcLStrafe; m_movementWeight.x += -1.0f;	break;
-		case kR_STRAFE:	mstate_wishful |= mcRStrafe; m_movementWeight.x += 1.0f; 	break;
+		case kFWD:		mstate_wishful |= mcFwd;	 break;
+		case kBACK:		mstate_wishful |= mcBack;	 break;
+		case kL_STRAFE:	mstate_wishful |= mcLStrafe; break;
+		case kR_STRAFE:	mstate_wishful |= mcRStrafe; break;
 
 		case kJUMP:			 mstate_wishful |= mcJump; break;
 		case kSPRINT_TOGGLE: mstate_wishful ^= mcSprint; break;
@@ -231,10 +231,10 @@ void CActor::IR_OnKeyboardRelease(u8 cmd)
 			case kDROP:		if (GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop(); break;
 			case kUSE:      m_bPickupMode = false;			break;
 
-			case kFWD:		mstate_wishful &= ~mcFwd;	  m_movementWeight.y -= 1.0f;	break;
-			case kBACK:		mstate_wishful &= ~mcBack;	  m_movementWeight.y += 1.0f;	break;
-			case kL_STRAFE:	mstate_wishful &= ~mcLStrafe; m_movementWeight.x += 1.0f;	break;
-			case kR_STRAFE:	mstate_wishful &= ~mcRStrafe; m_movementWeight.x -= 1.0f;	break;
+			case kFWD:		mstate_wishful &= ~mcFwd;	  break;
+			case kBACK:		mstate_wishful &= ~mcBack;	  break;
+			case kL_STRAFE:	mstate_wishful &= ~mcLStrafe; break;
+			case kR_STRAFE:	mstate_wishful &= ~mcRStrafe; break;
 			}
 		}
 
@@ -699,8 +699,6 @@ void CActor::IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& 
 	if (type == GamepadThumbstickType::Left)
 	{
 		// movement!
-		m_movementWeight = position;
-		m_movementWeight.y = -position.y;
 		if (position.y > 0.1f)
 		{
 			mstate_wishful |= mcFwd;
@@ -732,41 +730,9 @@ void CActor::IR_OnThumbstickChanged(GamepadThumbstickType type, const Fvector2& 
 	}
 }
 
-
-void CActor::ResetMovementWeight()
-{
-	m_movementWeight.x = 0.0f;
-	m_movementWeight.y = 0.0f;
-	int forwardKey = get_action_dik(kFWD);
-	int backKey = get_action_dik(kBACK);
-	int LeftStrafeKey = get_action_dik(kL_STRAFE);
-	int RightStrafeKey = get_action_dik(kR_STRAFE);
-	if (pInput->iGetAsyncBtnState(forwardKey))
-	{
-		m_movementWeight.y += 1.0f;
-	}
-
-	if (pInput->iGetAsyncBtnState(backKey))
-	{
-		m_movementWeight.y += -1.0f;
-	}
-
-	if (pInput->iGetAsyncBtnState(LeftStrafeKey))
-	{
-		m_movementWeight.x += -1.0f;
-	}
-
-	if (pInput->iGetAsyncBtnState(RightStrafeKey))
-	{
-		m_movementWeight.x += 1.0f;
-	}
-}
-
 void CActor::StopTalk()
 {
 	pInput->CallResetPressedState();
-	m_movementWeight.x = 0.0f;
-	m_movementWeight.y = 0.0f;
 
 	CInventoryOwner::StopTalk();
 }
