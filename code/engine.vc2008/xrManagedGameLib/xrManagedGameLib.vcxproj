@@ -145,7 +145,6 @@
     <ClInclude Include="API\PhysicalGameObject.h" />
     <ClInclude Include="API\Torch.h" />
     <ClInclude Include="API\WeatherFX.h" />
-    <ClInclude Include="ClientSpawnManager.h" />
     <ClInclude Include="GameClassRegistrator.h" />
     <ClInclude Include="ISpectreGameLib.h" />
     <ClInclude Include="API\MapManager.h" />
@@ -172,7 +171,6 @@
     <ClCompile Include="API\Torch.cpp" />
     <ClCompile Include="API\WeatherFX.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="ClientSpawnManager.cpp" />
     <ClCompile Include="GameClassRegistrator.cpp" />
     <ClCompile Include="ISpectreGameLib.cpp" />
     <ClCompile Include="API\MapManager.cpp" />

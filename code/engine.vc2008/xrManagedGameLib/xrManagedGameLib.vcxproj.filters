@@ -72,9 +72,6 @@
     <ClInclude Include="API\GameInfo.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="ClientSpawnManager.h">
-      <Filter>Header Files\API</Filter>
-    </ClInclude>
     <ClInclude Include="API\PhysicsWorldScripted.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
@@ -144,9 +141,6 @@
       <Filter>Source Files\API</Filter>
     </ClCompile>
     <ClCompile Include="API\GameInfo.cpp">
-      <Filter>Source Files\API</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientSpawnManager.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
     <ClCompile Include="API\PhysicsWorldScripted.cpp">

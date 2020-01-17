@@ -109,10 +109,6 @@ System::String^ XRay::Level::Name::get()
 	return gcnew ::System::String(pNativeLevel->name().c_str());
 }
 
-XRay::ClientSpawnManager^ XRay::Level::ClientSpawnMngr::get()
-{
-	return gcnew ClientSpawnManager(&(::Level().client_spawn_manager()));
-}
 void XRay::Level::AddDialogToRender(UIDialogWnd^ pDialog)
 {
 	((CUIGame*)UIDialogWnd::GetGameUI().ToPointer())->AddDialogToRender((CUIWindow*)pDialog->GetNative().ToPointer());

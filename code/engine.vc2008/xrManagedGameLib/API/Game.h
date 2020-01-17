@@ -92,15 +92,13 @@ namespace XRay
 				void set(u32 value);
 			}
 
-			static void ChangeGameTime(u32 days, u32 hours, u32 mins);
 			//static void ChangeGameTime(float fvalue);
 		};
 
 		/// <summary>Returns current game time</summary>
 		static property SGameTime^ Time
 		{
-			SGameTime^ get(); 
-			void set(SGameTime^ NewTime);
+			SGameTime^ get();
 		}
 
 		static property bool IsDeveloperMode
@@ -140,8 +138,6 @@ namespace XRay
 		}
 
 		static Fbox GetBoundingVolume();
-		static void PrefetchSnd(LPCSTR name);
-		static void IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback);
 
 		static void SpawnSection(LPCSTR sSection, ::System::Numerics::Vector3 vPosition, u32 LevelVertexID, u16 ParentID) { SpawnSection(sSection, vPosition, LevelVertexID, ParentID, false); };
 		static void SpawnSection(LPCSTR sSection, ::System::Numerics::Vector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem);

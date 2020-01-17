@@ -2,7 +2,7 @@
 #include "../xrEngine/igame_level.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrEngine/ClS/net_client.h"
-#include "../xrScripts/export/script_export_space.h"
+//#include "../xrScripts/export/script_export_space.h"
 #include "../xrEngine/StatGraph.h"
 #include "../xrServerEntities/xrMessages.h"
 #include "../xrServerEntities/alife_space.h"
