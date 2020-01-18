@@ -24,6 +24,10 @@
 
 #include <filesystem>
 
+#if PLATFORM == _WINDOWS
+	#include <VersionHelpers.h>
+#endif
+
 /////////////////////////////////////
 XRCORE_API DWORD gMainThreadId = 0xFFFFFFFF;
 XRCORE_API DWORD gSecondaryThreadId = 0xFFFFFFFF;
@@ -346,6 +350,45 @@ bool xrDebug::ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanConti
 	}
 	WriteToReportMacro("Console Params: %s\r\n", Core.Params);
 	WriteToReportMacro("\r\n");
+#if PLATFORM == _WINDOWS
+	using fnGetThreadDescription = HRESULT(*)(HANDLE hThread, PWSTR * ppszThreadDescription);
+	fnGetThreadDescription instGetThreadDescription = nullptr;
+
+	auto TryGetThreadNameLambda = [&instGetThreadDescription](HANDLE hThread, string64& OutThreadName)
+	{
+		if (instGetThreadDescription != nullptr)
+		{
+			string64 AnsiThreadName = { 0 };
+			PWSTR pThreadName = nullptr;
+			if (SUCCEEDED(instGetThreadDescription(hThread, &pThreadName)))
+			{
+				if (pThreadName != nullptr)
+				{
+					size_t StrLen = wcslen(pThreadName);
+					WideCharToMultiByte(CP_OEMCP, 0, pThreadName, StrLen, OutThreadName, sizeof(OutThreadName), 0, 0);
+				}
+			}
+		}
+	};
+
+	if (IsWindows10OrGreater())
+	{
+		HMODULE KernelLib = GetModuleHandle("kernel32.dll");
+		instGetThreadDescription = (fnGetThreadDescription)GetProcAddress(KernelLib, "GetThreadDescription");
+		if (instGetThreadDescription != nullptr)
+		{
+			string64 AnsiThreadName = { 0 };
+			TryGetThreadNameLambda(GetCurrentThread(), AnsiThreadName);
+			u32 LenThreadName = xr_strlen(AnsiThreadName);
+			if (LenThreadName > 0)
+			{
+				WriteToReportMacro("Crashed thread name '%s'\r\n", AnsiThreadName);
+			}
+		}
+	}
+#endif
+
+	WriteToReportMacro("Crashed thread id '%u'\r\n", GetCurrentThreadId());
 	WriteToReportMacro("Crash thread stack\r\n");
 
 	auto WriteStackInfoToReportLambda = [&WriteCursor](void** pStack, u16 framesNum)
@@ -414,6 +457,16 @@ bool xrDebug::ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanConti
 		WinScopeHandle ThreadHandle = OpenThread(THREAD_ALL_ACCESS, FALSE, ThreadIDs[thrIndx]);
 		if (ThreadHandle.IsValid())
 		{
+			if (instGetThreadDescription != nullptr)
+			{
+				string64 AnsiThreadName = { 0 };
+				TryGetThreadNameLambda(ThreadHandle, AnsiThreadName);
+				u32 LenThreadName = xr_strlen(AnsiThreadName);
+				if (LenThreadName > 0)
+				{
+					WriteToReportMacro("Thread name '%s'\r\n", AnsiThreadName);
+				}
+			}
 			WriteToReportMacro("Thread \"%u\"\r\n", ThreadIDs[thrIndx]);
 			u16 ThreadStackSize = DebugSymbols.GetCallStack(ThreadHandle, &pStack[0], StackSize);
 			WriteStackInfoToReportLambda(pStack, ThreadStackSize);

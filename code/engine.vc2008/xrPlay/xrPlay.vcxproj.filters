@@ -43,4 +43,9 @@
       <Filter>Resources</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="XRayManifest.xml">
+      <Filter>Resources</Filter>
+    </Xml>
+  </ItemGroup>
 </Project>

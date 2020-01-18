@@ -231,8 +231,4 @@ void xrDebugSymbols::ResolveFrame(void* Frame, string1024& OutSymbolInfo)
 		_itoa_s(LineInfo.LineNumber, LineNumStr, sizeof(LineNumStr), 10);
 		xr_strconcat(OutSymbolInfo, OutSymbolInfo, " - ", LineInfo.FileName, " : ", LineNumStr);
 	}
-	else
-	{
-		//xr_strconcat(OutSymbolInfo, OutSymbolInfo, " - UNKHOWN : 0");
-	}
 }

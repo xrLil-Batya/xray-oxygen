@@ -213,6 +213,9 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 {
 	gMainThreadId = GetCurrentThreadId();
 
+	string128 primaryThreadName = "X-Ray: Primary thread";
+	PlatformUtils.SetCurrentThreadName(primaryThreadName);
+
 	// Title window
 	HWND logoInsertPos = HWND_TOPMOST;
 	if (IsDebuggerPresent()) 
