@@ -101,9 +101,6 @@ public:
 	CZoneList*					hud_zones_list;
 	CZoneList*					create_hud_zones_list();
 
-	HANDLE						m_mtScriptUpdaterEventStart;
-	HANDLE						m_mtScriptUpdaterEventEnd;
-
 private:
 	// preload sounds registry
     using SoundRegistryMap = xr_map<shared_str, ref_sound>;
@@ -117,7 +114,6 @@ protected:
 	BOOL						net_start_result_total;
 	BOOL						deny_m_spawn;		//only for debug...
 		
-	static void					mtLevelScriptUpdater	(void* pCLevel);
 	void						MakeReconnect();
 	
 	LevelMapSyncData			map_data;
