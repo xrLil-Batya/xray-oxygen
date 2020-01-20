@@ -649,6 +649,19 @@ typedef void          (AL_APIENTRY *LPALDOPPLERVELOCITY)(ALfloat value);
 typedef void          (AL_APIENTRY *LPALSPEEDOFSOUND)(ALfloat value);
 typedef void          (AL_APIENTRY *LPALDISTANCEMODEL)(ALenum distanceModel);
 
+// X-Ray Oxygen extension start
+typedef void* (*OpenAL_XRayOxygen_MallocHook)(size_t alignment, size_t size);
+typedef void* (*OpenAL_XRayOxygen_CallocHook)(size_t alignment, size_t size);
+typedef void (*OpenAL_XRayOxygen_FreeHook)(void* ptr);
+typedef size_t(*OpenAL_XRayOxygen_GetPageSizeHook)(void);
+
+AL_API void alOxygenInitializeMemoryFunction(OpenAL_XRayOxygen_MallocHook mallocFn, OpenAL_XRayOxygen_CallocHook callocFn, OpenAL_XRayOxygen_FreeHook freeFn, OpenAL_XRayOxygen_GetPageSizeHook getPageSizeFn);
+
+AL_API void alc_init(void);
+AL_API void alc_deinit(void);
+AL_API void alc_deinit_safe(void);
+// X-Ray Oxygen extension end
+
 #if defined(__cplusplus)
 }  /* extern "C" */
 #endif

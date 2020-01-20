@@ -27,14 +27,12 @@ namespace PAPI
 	class ParticleActions
 	{
 		PAVec actions;
-		bool m_bLocked;
 	public:
-		ParticleActions() : m_bLocked(false) { actions.reserve(4); }
+		ParticleActions() { actions.reserve(4); }
 		~ParticleActions() { clear(); }
 
 		void clear()
 		{
-			R_ASSERT(!m_bLocked);
 			for (PAPI::ParticleAction* pAction : actions)
 			{
 				xr_delete(pAction);
@@ -43,14 +41,11 @@ namespace PAPI
 			actions.clear();
 		}
 
-		inline void append(ParticleAction* pa) { R_ASSERT(!m_bLocked); actions.push_back(pa); }
+		inline void append(ParticleAction* pa) { actions.push_back(pa); }
 		inline bool empty() { return	actions.empty(); }
 		inline PAVecIt begin() { return	actions.begin(); }
 		inline PAVecIt end() { return actions.end(); }
 		inline int size() { return int(actions.size()); }
-		inline void resize(int cnt) { R_ASSERT(!m_bLocked); actions.resize(cnt); }
-		inline void copy(ParticleActions* src);
-		inline void lock() { R_ASSERT(!m_bLocked); m_bLocked = true; }
-		inline void unlock() { R_ASSERT(m_bLocked); m_bLocked = false; }
+		inline void resize(int cnt) { actions.resize(cnt); }
 	};
 };

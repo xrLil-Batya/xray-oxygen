@@ -37,6 +37,7 @@ public:
 	CStatTimer  Engine_RenderFrame;		 // void CRender::OnFrame()
 	CStatTimer  Engine_ApplicationFrame; // void CApplication::OnFrame()
 	CStatTimer  Engine_InputFrame;		 // void CInput::OnFrame()
+	CStatTimer  Engine_LevelFrame;		 // void CLevel::OnFrame()
 	CStatTimer  Engine_MenuFrame;		 // void CMainMenu::OnFrame()
 	CStatTimer  Engine_PersistanceFrame; // void CGamePersistent::OnFrame()
 	CStatTimer  Engine_PersistanceFrame_Begin; // void CGamePersistent::OnFrame() - Beginning

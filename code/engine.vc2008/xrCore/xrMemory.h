@@ -16,6 +16,7 @@ public:
 	void				mem_compact();
 
 	void*				mem_alloc(size_t size);
+	void*				mem_alloc(size_t size, size_t aligment);
 
 	void*				mem_realloc(void* p, size_t size);
 	void				mem_free(void* p);

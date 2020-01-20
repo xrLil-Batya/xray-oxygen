@@ -73,6 +73,7 @@ void CStats::Show()
 		Engine_RenderFrame.FrameEnd();
 		Engine_ApplicationFrame.FrameEnd();
 		Engine_InputFrame.FrameEnd();
+		Engine_LevelFrame.FrameEnd();
 		Engine_MenuFrame.FrameEnd();
 		Engine_PersistanceFrame.FrameEnd();
 		Engine_PersistanceFrame_Begin.FrameEnd();
@@ -215,6 +216,7 @@ void CStats::Show()
 		F.OutNext	(" -> Render      : %2.2fms, %2.1f%%", Engine_RenderFrame.result,				GetPercentOf(Engine_RenderFrame.result, EngineTOTAL));
 		F.OutNext	(" -> Application : %2.2fms, %2.1f%%", Engine_ApplicationFrame.result,			GetPercentOf(Engine_ApplicationFrame.result, EngineTOTAL));
 		F.OutNext	(" -> Input       : %2.2fms, %2.1f%%", Engine_InputFrame.result,				GetPercentOf(Engine_InputFrame.result, EngineTOTAL));
+		F.OutNext	(" -> Level       : %2.2fms, %2.1f%%", Engine_LevelFrame.result,				GetPercentOf(Engine_LevelFrame.result, EngineTOTAL));
 		F.OutNext	(" -> Menu        : %2.2fms, %2.1f%%", Engine_MenuFrame.result,					GetPercentOf(Engine_MenuFrame.result, EngineTOTAL));
 		F.OutNext	(" -> Persistence : %2.2fms, %2.1f%%", Engine_PersistanceFrame.result,			GetPercentOf(Engine_PersistanceFrame.result, EngineTOTAL));
 		F.OutNext	(" -> -> Begin                : %2.2fms, %2.1f%%", Engine_PersistanceFrame_Begin.result,		   GetPercentOf(Engine_PersistanceFrame_Begin.result, Engine_PersistanceFrame));
@@ -495,6 +497,7 @@ void CStats::Show()
 		Engine_RenderFrame.FrameStart();
 		Engine_ApplicationFrame.FrameStart();
 		Engine_InputFrame.FrameStart();
+		Engine_LevelFrame.FrameStart();
 		Engine_MenuFrame.FrameStart();
 		Engine_PersistanceFrame.FrameStart();
 		Engine_PersistanceFrame_Begin.FrameStart();

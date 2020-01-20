@@ -374,6 +374,7 @@ void CLevel::MakeReconnect()
 #include "Inventory.h"
 void CLevel::OnFrame()
 {
+	ScopeStatTimer OnFrame(Device.Statistic->Engine_LevelFrame);
 	// commit events from bullet manager from prev-frame
 	BulletManager().CommitEvents();
 	ClientReceive();

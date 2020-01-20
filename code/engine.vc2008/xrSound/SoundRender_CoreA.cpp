@@ -14,6 +14,7 @@ CSoundRender_CoreA::CSoundRender_CoreA() :CSoundRender_Core()
 
 CSoundRender_CoreA::~CSoundRender_CoreA()
 {
+	alc_deinit();
 }
 
 void  CSoundRender_CoreA::_restart()
@@ -21,10 +22,44 @@ void  CSoundRender_CoreA::_restart()
 	inherited::_restart();
 }
 
+void* alXRayOxygen_MallocHook(size_t alignment, size_t size)
+{
+	return Memory.mem_alloc(size, alignment);
+}
+
+void* alXRayOxygen_CallocHook(size_t alignment, size_t size)
+{
+	void* memPtr = Memory.mem_alloc(size, alignment);
+	ZeroMemory(memPtr, size);
+	return memPtr;
+}
+
+void alXRayOxygen_FreeHook(void* ptr)
+{
+	Memory.mem_free(ptr);
+}
+
+size_t alXRayOxygen_GetPageSizeHook(void)
+{
+	static size_t psize = 0;
+	if (psize == 0)
+	{
+		SYSTEM_INFO sysinfo;
+		ZeroMemory(&sysinfo, sizeof(sysinfo));
+
+		GetSystemInfo(&sysinfo);
+		psize = sysinfo.dwPageSize;
+	}
+	return psize;
+}
+
 void CSoundRender_CoreA::_initialize(int stage)
 {
 	if (!stage)
 	{
+		alOxygenInitializeMemoryFunction(alXRayOxygen_MallocHook, alXRayOxygen_CallocHook, alXRayOxygen_FreeHook, alXRayOxygen_GetPageSizeHook);
+		alc_init();
+
 		pDeviceList = new ALDeviceList();
 
 		if (0 == pDeviceList->GetNumDevices())
@@ -87,6 +122,7 @@ void CSoundRender_CoreA::_initialize(int stage)
 	{
 		InitAlEFXAPI();
 		bEFX = EFXTestSupport();
+		//bEFX = false;
 		Msg("[OpenAL] EFX: %s", bEFX ? "present" : "absent");
 	}
 
@@ -144,8 +180,14 @@ void CSoundRender_CoreA::update_listener(const Fvector& P, const Fvector& D, con
 {
 	inherited::update_listener(P, D, N, dt);
 
+	Fvector velocity; velocity.set(0.0f, 0.0f, 0.0f);
+
 	if (!Listener.position.similar(P))
 	{
+		Fvector diff = P;
+		diff.sub(Listener.position);
+		diff.mul(dt);
+		velocity.set(diff);
 		Listener.position.set(P);
 		bListenerMoved = true;
 	}
@@ -153,6 +195,6 @@ void CSoundRender_CoreA::update_listener(const Fvector& P, const Fvector& D, con
 	Listener.orientation[1].set(N.x, N.y, -N.z);
 
 	A_CHK(alListener3f(AL_POSITION, Listener.position.x, Listener.position.y, -Listener.position.z));
-	A_CHK(alListener3f(AL_VELOCITY, 0.f, 0.f, 0.f));
+	A_CHK(alListener3f(AL_VELOCITY, velocity.x, velocity.y, velocity.z));
 	A_CHK(alListenerfv(AL_ORIENTATION, &Listener.orientation[0].x));
 }
