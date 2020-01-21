@@ -224,7 +224,8 @@ public:
 	CMapManager&			MapManager					() const 	{return *m_map_manager;}
 	CGameTaskManager&		GameTaskManager				() const	{return *m_game_task_manager;}
 	void					ResetLevel					();
-	
+	bool					CheckTrisIsNotObstacle		(CDB::TRI* pTris) const;
+
 protected:	
 	//работа с пулями
 	CBulletManager*		m_pBulletManager;

@@ -79,28 +79,25 @@ void CHUDTarget::ShowCrosshair(bool b)
 	m_bShowCrosshair = b;
 }
 
-float fCurrentPickPower;
 ICF static BOOL pick_trace_callback(collide::rq_result& result, LPVOID params)
 {
-	SPickParam*	pp			= (SPickParam*)params;
+	SPickParam*	pp = (SPickParam*)params;
 	++pp->pass;
 
 	if(result.O)
 	{	
-		pp->RQ				= result;
+		pp->RQ = result;
 		return FALSE;
-	}else
+	}
+	else
 	{
 		//получить треугольник и узнать его материал
-		CDB::TRI* T		= Level().ObjectSpace.GetStaticTris()+result.element;
-		
-		SGameMtl* mtl = GMLib.GetMaterialByIdx(T->material);
-		pp->power		*= mtl->fVisTransparencyFactor;
-		if(pp->power>0.34f)
+		CDB::TRI* T = Level().ObjectSpace.GetStaticTris()+result.element;
+		if (Level().CheckTrisIsNotObstacle(T))
 			return TRUE;
 	}
-	pp->RQ					= result;
-	return					FALSE;
+	pp->RQ = result;
+	return FALSE;
 }
 
 void CHUDTarget::CursorOnFrame ()

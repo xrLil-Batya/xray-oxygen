@@ -637,6 +637,21 @@ void CLevel::SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTim
 	game->SetEnvironmentGameTimeFactor(GameTime, fTimeFactor);
 }
 
+bool CLevel::CheckTrisIsNotObstacle(CDB::TRI* pTris) const
+{
+	SGameMtl* pMaterial = GMLib.GetMaterialByIdx(T->material);
+	
+	// Object is Passable
+	if (pMaterial->Flags.is(SGameMtl::flPassable))
+		return true;
+	
+	// Object don't have wallmarks
+	if(pMaterial->Flags.is(SGameMtl::flSuppressWallmarks))
+		return fsimilar(pMaterial->fVisTransparencyFactor, 1.0f, EPS) && fsimilar(pMaterial->fShootFactor, 1.0f, EPS);
+	
+	return false;
+}
+
 void CLevel::ResetLevel()
 {
 	MapManager().ResetStorage();
