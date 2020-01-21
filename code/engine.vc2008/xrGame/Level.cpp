@@ -639,7 +639,7 @@ void CLevel::SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTim
 
 bool CLevel::CheckTrisIsNotObstacle(CDB::TRI* pTris) const
 {
-	SGameMtl* pMaterial = GMLib.GetMaterialByIdx(T->material);
+	SGameMtl* pMaterial = GMLib.GetMaterialByIdx(pTris->material);
 	
 	// Object is Passable
 	if (pMaterial->Flags.is(SGameMtl::flPassable))
