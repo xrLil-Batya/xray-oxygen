@@ -85,6 +85,9 @@ m_group_behaviour(true), m_wounded(false), m_registered_in_combat_on_migration(f
 
 CAI_Stalker::~CAI_Stalker()
 {
+	//dctor of m_planner require m_animation_manager sometimes
+	xr_delete(m_planner);
+
 	xr_delete(m_pPhysics_support);
 	xr_delete(m_animation_manager);
 	xr_delete(m_brain);

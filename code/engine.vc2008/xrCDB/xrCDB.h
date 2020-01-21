@@ -113,6 +113,9 @@ namespace CDB
 			S_forcedword		= u32(-1)
 		};
 	private:
+		// for test, can be removed later
+		u64 padding;
+
 		mutable xrCriticalSection lock;
 		CDB_Model*				tree;
 		volatile u32						status;		// 0=ready, 1=init, 2=building

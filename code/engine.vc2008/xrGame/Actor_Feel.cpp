@@ -68,28 +68,31 @@ BOOL CActor::feel_touch_on_contact	(CObject *O)
 
 ICF static BOOL info_trace_callback(collide::rq_result& result, LPVOID params)
 {
-	BOOL& bOverlaped	= *(BOOL*)params;
+	BOOL& bOverlaped = *(BOOL*)params;
+	
 	if(result.O)
 	{
-		if (Level().CurrentEntity()==result.O)
+		if (Level().CurrentEntity() == result.O)
 		{ //ignore self-actor
-			return			TRUE;
+			return TRUE;
 		}else
 		{ //check obstacle flag
-			if(result.O->spatial.type&STYPE_OBSTACLE)
-				bOverlaped			= TRUE;
+			if(result.O->spatial.type & STYPE_OBSTACLE)
+				bOverlaped = TRUE;
 
 			return			TRUE;
 		}
-	}else
+	}
+	else
 	{
-		//ïîëó÷èòü òðåóãîëüíèê è óçíàòü åãî ìàòåðèàë
-		CDB::TRI* T		= Level().ObjectSpace.GetStaticTris()+result.element;
-		if (GMLib.GetMaterialByIdx(T->material)->Flags.is(SGameMtl::flPassable)) 
+		// Get triangle and check his material
+		CDB::TRI* T = Level().ObjectSpace.GetStaticTris()+result.element;
+		if (Level().CheckTrisIsNotObstacle(T))
 			return TRUE;
 	}	
-	bOverlaped			= TRUE;
-	return				FALSE;
+	
+	bOverlaped = TRUE;
+	return FALSE;
 }
 
 BOOL CActor::CanPickItem(const CFrustum& frustum, const Fvector& from, CObject* item)

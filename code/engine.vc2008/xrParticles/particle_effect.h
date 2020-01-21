@@ -42,7 +42,9 @@ namespace PAPI
 				P.flags.assign(flags);
 
 				if (b_cb)
+				{
 					b_cb(owner, param, P, p_count);
+				}
 
 				++p_count;
 

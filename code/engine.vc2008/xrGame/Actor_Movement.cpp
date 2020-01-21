@@ -208,7 +208,8 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 #endif
 
 	CPHMovementControl::EEnvironment curr_env = character_physics_support()->movement()->Environment();
-	if(curr_env==CPHMovementControl::peOnGround || curr_env==CPHMovementControl::peAtWall)
+	if(curr_env == CPHMovementControl::peOnGround || 
+	   curr_env == CPHMovementControl::peAtWall)
 	{
 		// crouch
 		if ((0==(mstate_real&mcCrouch))&&(mstate_wf&mcCrouch))
@@ -590,8 +591,8 @@ bool CActor::CanMove()
 			GameUI()->AddCustomStatic("cant_walk", true);
 		}
 		return false;
-	}else
-	if( conditions().IsCantWalkWeight() )
+	} 
+	else if( conditions().IsCantWalkWeight() )
 	{
 		if(mstate_wishful&mcAnyMove)
 		{
@@ -599,6 +600,13 @@ bool CActor::CanMove()
 		}
 		return false;
 	
+	}
+
+	// check camera effectors for script
+	if (Cameras().IsCamEffectorLockPlayerMovement())
+	{
+		// cutscene playing, we not allowing move
+		return false;
 	}
 
 	if(IsTalking())

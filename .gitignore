@@ -15,7 +15,6 @@
 *.ilk
 *.idb
 *.lnk
-*.obj
 *.aps
 *.db
 *.tmp
@@ -37,7 +36,6 @@ VTune Amplifier Results
 /code/.vs/
 
 /code/utils/.vs/
-/code/utils/.vs/
 /code/utils/xrMaker/obj/
 /code/utils/xrMaker/bin/
 /code/engine.vc2008/.vs/
@@ -55,3 +53,4 @@ VTune Amplifier Results
 /code/editors/.vs/
 
 /code/Setup/Output
+/code/SDK/binaries/x64/ode.dll

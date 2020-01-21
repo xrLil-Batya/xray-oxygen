@@ -1,7 +1,7 @@
 #pragma once
 #pragma warning (disable : 4530 )		// C++ vector(985)
 
-#define ENGINE_VERSION "Preview 2.0"
+#define ENGINE_VERSION "January 2020"
 
 #ifndef DEBUG
 #	define MASTER_GOLD

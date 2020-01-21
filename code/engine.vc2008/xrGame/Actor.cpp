@@ -75,54 +75,6 @@ extern float cammera_into_collision_shift;
 
 string32 ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
 
-void CActor::MtSecondActorUpdate(void* pActorPointer)
-{
-	Flags32 lastActorFlagsState = psActorFlags;
-
-	CActor* pActor = reinterpret_cast<CActor*>(pActorPointer);
-	while (true)
-	{
-		WaitForSingleObject(pActor->MtSecondUpdaterEventStart, INFINITE);
-
-		if (pActor != g_actor) return;
-
-		{
-			xrProfilingTask SyncTask("Second Actor Update");
-
-			pActor->setSVU(true);
-
-			// if player flags changed
-			if (!lastActorFlagsState.equal(psActorFlags))
-			{
-				// Update hardcode mode
-				if (psActorFlags.test(AF_HARDCORE))
-					pActor->cam_Set(eacFirstEye);
-
-				lastActorFlagsState.assign(psActorFlags);
-			}
-
-			// Update inventory
-			pActor->UpdateInventoryOwner(Device.dwTimeDelta);
-
-			// Update holder
-			if (pActor->Holder())
-				pActor->Holder()->UpdateEx(pActor->currentFOV());
-
-			pActor->m_snd_noise -= 0.3f * Device.fTimeDelta;
-			pActor->inherited::UpdateCL();
-
-			// Pickup update
-			if (pActor->g_Alive() && (g_extraFeatures.is(GAME_EXTRA_ALWAYS_PICKUP) || pActor->m_bPickupMode))
-				pActor->PickupModeUpdate();
-
-			// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
-			pActor->PickupModeUpdate_COD(pActor->m_bPickupMode);
-		}
-
-		SetEvent(pActor->MtSecondUpdaterEventEnd);
-	}
-}
-
 CActor::CActor() : CEntityAlive()
 {
 	g_actor = this;
@@ -211,18 +163,11 @@ CActor::CActor() : CEntityAlive()
 	
 	// Alex ADD: for smooth crouch fix
 	CurrentHeight = 0.f;
-
-	MtSecondUpdaterEventStart = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-	MtSecondUpdaterEventEnd = CreateEvent(nullptr, TRUE, FALSE, nullptr);
-
-	thread_spawn(MtSecondActorUpdate, "X-Ray: Second Actor Update", 0, this);
 }
 
 
 CActor::~CActor()
 {
-	SetEvent(MtSecondUpdaterEventStart);
-
 	xr_delete(m_location_manager);
 	xr_delete(m_memory);
 	xr_delete(game_news_registry);
@@ -240,9 +185,6 @@ CActor::~CActor()
 	xr_delete(m_pPhysics_support);
 	xr_delete(m_anims);
 	xr_delete(m_vehicle_anims);
-
-	CloseHandle(MtSecondUpdaterEventStart);
-	CloseHandle(MtSecondUpdaterEventEnd);
 }
 
 void CActor::reinit	()
@@ -703,8 +645,22 @@ float CActor::currentFOV()
 void CActor::UpdateCL()
 {
 	static bool bLook_cam_fp_zoom = false;
-	ResetEvent(MtSecondUpdaterEventEnd);
-	SetEvent(MtSecondUpdaterEventStart);
+
+	setSVU(true);
+
+	// Update hardcode mode
+	if (psActorFlags.test(AF_HARDCORE))
+		cam_Set(eacFirstEye);
+
+	// Update inventory
+	UpdateInventoryOwner(Device.dwTimeDelta);
+
+	// Update holder
+	if (Holder())
+		Holder()->UpdateEx(currentFOV());
+
+	m_snd_noise -= 0.3f * Device.fTimeDelta;
+	inherited::UpdateCL();
 
 	// Update Collision
 	MtFeelTochMutex.Enter();
@@ -834,23 +790,19 @@ void CActor::UpdateCL()
 		}
 	}
 
-	DWORD WaitResult = WAIT_TIMEOUT;
-	do
-	{
-		// update message box with 15 fps
-		WaitResult = WaitForSingleObject(MtSecondUpdaterEventEnd, 66); 
-		if (WaitResult == WAIT_TIMEOUT)
-		{
-			Device.ProcessSingleMessage();
-		}
-	} while (WaitResult == WAIT_TIMEOUT);
-
 	if (psActorFlags.test(AF_NO_CLIP))
 		character_physics_support()->movement()->SetNonInteractive(true);
 	if (!psActorFlags.test(AF_NO_CLIP))
 		character_physics_support()->movement()->SetNonInteractive(false);
 
 	UpdateDefferedMessages();
+
+	// Pickup update
+	if (g_Alive() && (g_extraFeatures.is(GAME_EXTRA_ALWAYS_PICKUP) || m_bPickupMode))
+		PickupModeUpdate();
+
+	// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
+	PickupModeUpdate_COD(m_bPickupMode);
 
 	if (g_Alive())
 		CStepManager::update(this == Level().CurrentViewEntity());

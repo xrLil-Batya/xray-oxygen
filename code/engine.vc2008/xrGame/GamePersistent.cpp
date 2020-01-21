@@ -775,3 +775,24 @@ bool CGamePersistent::IsDeveloperMode() const
 {
     return m_developerMode;
 }
+
+void CGamePersistent::SetTutorialState(LPCSTR Name, bool bStart)
+{
+	if (bStart)
+	{
+		if (g_tutorial) {
+			VERIFY(!g_tutorial2);
+			g_tutorial2 = g_tutorial;
+		};
+
+		g_tutorial = xr_new<CUISequencer>();
+		g_tutorial->Start(Name);
+		if (g_tutorial2)
+			g_tutorial->m_pStoredInputReceiver = g_tutorial2->m_pStoredInputReceiver;
+	}
+	else
+	{
+		if (g_tutorial)
+			g_tutorial->Stop();
+	}
+}

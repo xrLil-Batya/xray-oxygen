@@ -30,9 +30,6 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 
 	++lastUpdateFrame;
 
-	// Get currently rendering emitters
-	targetShouldUpdateLater.clear();
-
 	// Firstly update emitters, which are now being rendered
 	for (CSoundRender_Target* target : targets)
 	{

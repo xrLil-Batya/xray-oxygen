@@ -119,6 +119,8 @@ public:
     void                SetClientOption(const char* str);
 
     bool                IsDeveloperMode() const;
+
+	void				SetTutorialState(LPCSTR Name, bool bStart);
 };
 
 IC CGamePersistent&		GamePersistent()		{ return *((CGamePersistent*) g_pGamePersistent); }

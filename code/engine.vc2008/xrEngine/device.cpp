@@ -380,9 +380,6 @@ void CRenderDevice::BeginToWork()
 
 	Msg("Value of system displays: %d.", GetNumOfDisplays());
 
-	string128 primaryThreadName = "X-Ray: Primary thread";
-	PlatformUtils.SetCurrentThreadName(primaryThreadName);
-
 	// Startup timers and calculate timer delta
 	dwTimeGlobal = 0;
 	Timer_MM_Delta = 0;

@@ -1,5 +1,4 @@
 #pragma once
-#include "ClientSpawnManager.h"
 #include "PhysicsWorldScripted.h"
 #include "API/WeatherFX.h"
 #include "Game.h"
@@ -40,10 +39,6 @@ namespace XRay
 		using CallBack = void(::System::String^);
 
 	public:
-		static property ClientSpawnManager^ ClientSpawnMngr
-		{
-			ClientSpawnManager^ get();
-		}
 
 		/// <summary>Get Name</summary>
 		property ::System::String^ Name

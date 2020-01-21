@@ -76,10 +76,7 @@ class GAME_API CActor:
 	friend class CActorCondition;
 private:
 	using inherited = CEntityAlive;
-	static void							MtSecondActorUpdate(void* pActorPointer);
 public:
-	HANDLE								MtSecondUpdaterEventStart;
-	HANDLE								MtSecondUpdaterEventEnd;
 	xrCriticalSection					MtFeelTochMutex;
 public:
 										CActor				();

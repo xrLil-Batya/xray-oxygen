@@ -36,6 +36,7 @@ public:
     CEffectorCam* AddCamEffector(CEffectorCam* ef);
     CEffectorCam* GetCamEffector(ECamEffectorType type);
     void RemoveCamEffector(ECamEffectorType type);
+    bool IsCamEffectorLockPlayerMovement() const;
 
     ECamEffectorType RequestCamEffectorId();
     EEffectorPPType RequestPPEffectorId();

@@ -84,7 +84,11 @@ extern GAME_API ESingleGameDifficulty g_SingleGameDifficulty;
 xr_token		difficulty_type_token[];
 xr_token		language_type_token[];
 
+#ifndef SPECTRE
 using CScriptGameDifficulty = enum_exporter<ESingleGameDifficulty>;
+#endif
+
+
 add_to_type_list(CScriptGameDifficulty)
 #undef script_type_list
 #define script_type_list save_type_list(CScriptGameDifficulty)

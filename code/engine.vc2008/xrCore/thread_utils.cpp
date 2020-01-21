@@ -3,7 +3,7 @@
 
 xrCriticalSection::xrCriticalSection()
 {
-	InitializeCriticalSectionAndSpinCount(&Section, 250);
+	InitializeCriticalSectionEx(&Section, 250, 0);
 }
 
 xrCriticalSection::~xrCriticalSection()
@@ -19,12 +19,16 @@ void xrCriticalSection::Enter()
 
 void xrCriticalSection::Leave()
 {
-	if (!LockCounter)
+	//if (!LockCounter.load(std::memory_order::memory_order_relaxed))
+	//{
+	//	FATAL("Section is not locked");
+	//	return;
+	//}
+	u32 number = LockCounter--;
+	if (number > 0xFFFFFFFAu)
 	{
-		FATAL("Section is not locked");
-		return;
+		LockCounter = 0;
 	}
-	LockCounter--;
 	LeaveCriticalSection(&Section);
 }
 
