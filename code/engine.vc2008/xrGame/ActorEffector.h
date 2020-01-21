@@ -78,7 +78,7 @@ class GAME_API CAnimatorCamEffectorScriptCB : public CAnimatorCamEffector
 	shared_str			cb_name;
 
 public:
-	CAnimatorCamEffectorScriptCB				(LPCSTR _cb)				{cb_name =_cb;};
+	CAnimatorCamEffectorScriptCB(LPCSTR _cb) { cb_name = _cb; bShouldLockPlayerMovement = true; };
 	virtual	BOOL		Valid					();
 	virtual BOOL		AllowProcessingIfInvalid()							{return m_bAbsolutePositioning;}
 	virtual	void		ProcessIfInvalid		(SCamEffectorInfo& info);
