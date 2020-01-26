@@ -115,7 +115,7 @@ void CParticlesObject::UpdateAllAsync()
 	{
 		if (particle->m_bDead)
 		{
-			return;
+			continue;
 		}
 		ParticleObjectTasks.run([particle]()
 		{
@@ -144,7 +144,7 @@ void CParticlesObject::Play(bool bHudMode)
 
 	V->Play();
 	dwLastTime = Device.dwTimeGlobal - 33ul;
-	PerformAllTheWork(0);
+	PerformAllTheWork();
 	m_bStopping = false;
 }
 
@@ -155,7 +155,7 @@ void CParticlesObject::play_at_pos(const Fvector& pos, BOOL xform)
 	V->UpdateParent(m, zero_vel, xform);
 	V->Play();
 	dwLastTime = Device.dwTimeGlobal - 33ul;
-	PerformAllTheWork(0);
+	PerformAllTheWork();
 	m_bStopping = false;
 }
 
@@ -188,7 +188,7 @@ void CParticlesObject::shedule_Update(u32 _dt)
 	UpdateSpatial();
 }
 
-void CParticlesObject::PerformAllTheWork(u32 _dt)
+void CParticlesObject::PerformAllTheWork()
 {
 	// Update
 	u32 dt = Device.dwTimeGlobal - dwLastTime;

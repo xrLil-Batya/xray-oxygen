@@ -31,6 +31,7 @@ CXMLBlend::~CXMLBlend()
 
 Shader* CXMLBlend::Compile(const char* Texture)
 {
+	Shader* pShader = xr_new<Shader>();
 	XML_NODE* pRoot = Parser.GetRoot();
 	for (u32 Iter = 0; Iter < 16; Iter++)
 	{
@@ -52,20 +53,13 @@ Shader* CXMLBlend::Compile(const char* Texture)
 			pCompiler->iElement = Iter;
 			pCompiler->bDetail = bUseDetail ? dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(pCompiler->L_textures[0], pCompiler->detail_texture, pCompiler->detail_scaler) : false;
 
-			LocShader.E[Iter] = MakeShader(Texture, pElement);
+			pShader->E[Iter] = MakeShader(Texture, pElement);
 		}
 	}
 
-	for (Shader* pShader : dxRenderDeviceRender::Instance().Resources->v_shaders)
-	{
-		if (LocShader.equal(pShader))
-			return pShader;
-	}
-
-	Shader* pShader = xr_new<Shader>(LocShader);
-	pShader->dwFlags |= xr_resource_flagged::RF_REGISTERED;
-	dxRenderDeviceRender::Instance().Resources->v_shaders.push_back(pShader);
-	return pShader;
+	Shader* ResultShader = DEV->_CreateShader(pShader);
+	xr_delete(pShader);
+	return ResultShader;
 }
 
 ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
@@ -203,7 +197,7 @@ ShaderElement* CXMLBlend::MakeShader(const char* Texture, XML_NODE* pElement)
 	}
 
 	pCompiler->r_End();
-	ShaderElement* pTryElement = dxRenderDeviceRender::Instance().Resources->_CreateElement(*pCompiler->SH);
+	ShaderElement* pTryElement = DEV->_CreateElement(*pCompiler->SH);
 	xr_delete(pCompiler->SH);
 	return pTryElement;
 }

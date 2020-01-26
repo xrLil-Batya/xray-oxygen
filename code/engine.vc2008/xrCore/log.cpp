@@ -46,15 +46,17 @@ void xrLogger::Msg(LPCSTR Msg, va_list argList)
 {
 	string4096	formattedMessage;
 	int MsgSize = _vsnprintf(formattedMessage, sizeof(formattedMessage) - 1, Msg, argList);
-	formattedMessage[MsgSize] = 0;
-
-	if (IsDebuggerPresent() && bFastDebugLog)
+	if (MsgSize != -1)
 	{
-		OutputDebugStringA(formattedMessage);
-		OutputDebugStringA("\n");
-	}
+		formattedMessage[MsgSize] = 0;
+		if (IsDebuggerPresent() && bFastDebugLog)
+		{
+			OutputDebugStringA(formattedMessage);
+			OutputDebugStringA("\n");
+		}
 
-	SimpleMessage(formattedMessage, MsgSize);
+		SimpleMessage(formattedMessage, MsgSize);
+	}
 }
 
 void xrLogger::SimpleMessage(LPCSTR Message, u32 MessageSize /*= 0*/)
@@ -91,7 +93,7 @@ void LogThreadEntryStartup(void* nullParam)
 
 void xrLogger::InitLog()
 {
-	thread_spawn(LogThreadEntryStartup, "X-Ray Log Thread", 0, nullptr);
+	theLogger.hLogThread = thread_spawn(LogThreadEntryStartup, "X-Ray Log Thread", 0, nullptr);
 }
 
 void xrLogger::FlushLog()
@@ -114,6 +116,11 @@ void xrLogger::AddLogCallback(LogCallback logCb)
 void xrLogger::RemoveLogCallback(LogCallback logCb)
 {
 	theLogger.logCallbackList.remove(logCb);
+}
+
+bool xrLogger::IsLogThreadWorking()
+{
+	return theLogger.hLogThread != NULL;
 }
 
 void xrLogger::InternalCloseLog()

@@ -524,6 +524,8 @@ bool xrDebug::ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanConti
 		}
 		else
 		{
+			static int DebugShit = 0;
+			static void* TargetPtr = nullptr;
 			WaitForSingleObject(CrashStackProcessInfo.hProcess, INFINITE);
 
 			DWORD ExitCode = 0;
@@ -531,6 +533,15 @@ bool xrDebug::ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanConti
 			DialogResult = !ExitCode;
 			CloseHandle(CrashStackProcessInfo.hThread);
 			CloseHandle(CrashStackProcessInfo.hProcess);
+
+			if (DebugShit == 1)
+			{
+				Memory.PrintAllPointerHistory(TargetPtr);
+
+				char* tmpPtr = (char*)TargetPtr;
+				tmpPtr -= 16;
+				Memory.PrintAllPointerHistory(tmpPtr);
+			}
 		}
 	}
 	else

@@ -7,7 +7,7 @@ namespace PAPI
 	// A effect of particles - Info and an array of Particles
 	struct PARTICLES_API ParticleEffect
 	{
-		u32 p_count;				// Number of particles currently existing.
+		u32 p_count = 0;				// Number of particles currently existing.
 		u32 max_particles;			// Max particles allowed in effect.
 		u32 particles_allocated;	// Actual allocated size.
 		Particle* particles;				// Actually, num_particles in size

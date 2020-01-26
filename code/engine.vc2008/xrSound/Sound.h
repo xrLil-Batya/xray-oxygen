@@ -101,8 +101,15 @@ public:
 	float fTimeTotal;
 
 public:
-	ref_sound_data();
+	ref_sound_data()
+	{
+		handle = 0; feedback = 0;
+		g_type = 0; g_object = 0;
+		s_type = st_Effect;
+	}
 	ref_sound_data(const char* fName, esound_type sound_type, int game_type);
+
+	ref_sound_data& operator=(const ref_sound_data& Other) = delete;
 
 	virtual ~ref_sound_data();
 	float get_length_sec() const { return fTimeTotal; };
@@ -304,12 +311,6 @@ class  CSound_manager_interface;
 extern XRSOUND_API CSound_manager_interface* Sound;
 
 /// ********* Sound ********* (utils, accessors, helpers)
-inline ref_sound_data::ref_sound_data()
-{
-	handle = 0; feedback = 0;
-	g_type = 0; g_object = 0;
-	s_type = st_Effect;
-}
 
 inline ref_sound_data::ref_sound_data(const char* fName, esound_type sound_type, int	game_type)
 {

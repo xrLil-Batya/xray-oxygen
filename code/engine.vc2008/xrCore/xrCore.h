@@ -186,3 +186,17 @@ extern XRCORE_API xrCore Core;
 extern XRCORE_API bool   gModulesLoaded;
 
 #include "XMLCore\xrXMLParser.h"
+
+#ifndef SPECTRE
+	#include "tbb/concurrent_unordered_map.h"
+	#include "tbb/concurrent_vector.h"
+
+	template<typename Key, typename Value>
+	using xr_concurrent_unordered_map = tbb::concurrent_unordered_map < Key, Value, tbb::tbb_hash< Key >, std::equal_to< Key >, xalloc< std::pair< const Key, Value > > >;
+
+	template<typename Key, typename Value>
+	using xr_concurrent_unordered_multimap = tbb::concurrent_unordered_multimap < Key, Value, tbb::tbb_hash< Key >, std::equal_to< Key >, xalloc< std::pair< const Key, Value > > >;
+
+	template<typename ElemType>
+	using xr_concurrent_vector = tbb::concurrent_vector < ElemType, xalloc< ElemType >>;
+#endif

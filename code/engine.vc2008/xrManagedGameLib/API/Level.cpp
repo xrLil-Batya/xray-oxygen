@@ -15,6 +15,7 @@
 #include "../xrGame/patrol_path_storage.h"
 #include "../xrGame/ui/UIMainIngameWnd.h"
 #include "../xrGame/physics_world_scripted.h"
+#include "xrEngine/Environment.h"
 
 System::UInt32 XRay::LevelGraph::LevelID::get()
 {

@@ -74,7 +74,7 @@ void	ISpatial::spatial_register	()
 		// register
 		R_ASSERT				(spatial.space);
 		spatial.space->insert	(this);
-		spatial.sector			=	0;
+		spatial.sector			=	nullptr;
 	}
 }
 

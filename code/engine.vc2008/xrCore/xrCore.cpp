@@ -44,7 +44,6 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 		PlatformUtils.GetComputerName(CompName);
 
 		// Mathematics & PSI detection
-		Memory._initialize();
 
 		xrProfiling::eProfilingMode ProfilingMode = xrProfiling::eProfilingMode::Engine;
 		if (strstr(Params, "-vtune") != nullptr)
@@ -58,6 +57,8 @@ void xrCore::_initialize(const char* _ApplicationName, xrLogger::LogCallback cb,
 
 		xrLogger::InitLog();
 		_initialize_cpu();
+		Memory.PrintVersion();
+
 		XRay::Compress::RT::RtcInitialize();
 
 		xr_FS = new CLocatorAPI();

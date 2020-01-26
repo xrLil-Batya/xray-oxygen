@@ -5,7 +5,7 @@ class	XRCORE_API	xr_resource
 public:
 	enum			{RF_REGISTERED=1<<0 };
 public:
-	u32				dwReference;
+	xr_atomic_s32	  dwReference;
 	xr_resource()	: dwReference(0)		{ }
 };
 
@@ -42,18 +42,51 @@ protected:
 
 	T* p_;
 	// ref-counting
-	void				_inc() { if (0 == p_) return;	p_->dwReference++; }
-	void				_dec() { if (0 == p_) return;	p_->dwReference--; if (0 == p_->dwReference) xr_delete(p_); }
+	void				_inc() 
+	{ 
+		if (0 == p_) return; 
+		s32 NewRef = ++p_->dwReference;
+		R_ASSERT(NewRef != 1);
+	}
+
+	void				_dec() 
+	{ 
+		if (0 == p_) return; 
+		s32 NewRef = --p_->dwReference;
+		if (0 >= NewRef) xr_delete(p_);
+	}
+
 public:
-	ICF		void		_set(T* rhs) { if (0 != rhs) rhs->dwReference++;	_dec(); p_ = rhs; }
+	ICF		void		_set(T* rhs) 
+	{ 
+		if (0 != rhs)
+		{
+			++rhs->dwReference;
+		}
+		_dec(); 
+		p_ = rhs; 
+	}
 	ICF		void		_set(self const& rhs) { T* prhs = rhs._get(); _set(prhs); }
 	ICF		T*			_get() const { return p_; }
 
 			void				_clear() { p_ = 0; }
 						// construction
 						resptr_core		()												{	p_ = nullptr;						}
-						resptr_core		(T * p, bool add_ref = true) 					{	p_ = p;	if(add_ref)	_inc(); }
-						resptr_core		(const self & rhs)								{	p_ = rhs.p_; _inc();		}
+						resptr_core		(T * p, bool add_ref = true) 					
+						{	
+							p_ = p;	
+							if (add_ref && p_ != nullptr)
+							{
+								p_->dwReference++; 
+							}
+						}
+						resptr_core		(const self & rhs)								{	
+							p_ = rhs.p_; 
+							if (p_ != nullptr)
+							{
+								p_->dwReference++;		
+							}
+						}
 						~resptr_core	()												{	_dec();						}
 
 						// assignment

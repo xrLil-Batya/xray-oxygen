@@ -8,7 +8,6 @@ class CXMLBlend
 	CBlender_Compile*	pCompiler;
 	string256			File;
 	CXml				Parser;
-	Shader				LocShader;
 
 public:
 					CXMLBlend	(const char* FileName);

@@ -15,6 +15,8 @@ public:
 	WaveForm		_B;
 	WaveForm		_A;
 
+	CConstant& operator=(const CConstant& Other) = delete;
+
 	CConstant		()
 	{
         std::memset(this,0,sizeof(CConstant));

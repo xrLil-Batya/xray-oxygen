@@ -49,7 +49,16 @@
 #include "device.h"
 #include "../xrcore/fs.h"
 #include "../xrcdb/xrXRC.h"
+
+#ifdef SPECTRE
+#pragma unmanaged
+#endif
+
 #include "../xrSound/sound.h"
+
+#ifdef SPECTRE
+#pragma managed
+#endif
 
 extern ENGINE_API CInifile *pGameIni;
 

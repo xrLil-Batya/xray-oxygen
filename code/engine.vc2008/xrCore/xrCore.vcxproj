@@ -159,7 +159,7 @@
       </DataExecutionPrevention>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc-static.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo ### Parsing git... ###
@@ -263,7 +263,7 @@ start GitParser\GitParser.exe</Command>
       </DataExecutionPrevention>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc-static.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo ### Parsing git... ###
@@ -377,7 +377,7 @@ start GitParser\GitParser.exe</Command>
       </DataExecutionPrevention>
       <AdditionalLibraryDirectories>$(xrLib)..\Release\;</AdditionalLibraryDirectories>
       <ImportLibrary>$(xrLib)..\Release\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc-static.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo ### Parsing git... ###
@@ -508,7 +508,6 @@ start GitParser\GitParser.exe</Command>
     <ClCompile Include="file_stream_reader.cpp" />
     <ClCompile Include="memory_usage.cpp" />
     <ClCompile Include="xrMemory.cpp" />
-    <ClCompile Include="xrMemory_align.cpp" />
     <ClCompile Include="xrMemory_pso_Fill.cpp">
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Durango'">AssemblyAndSourceCode</AssemblerOutput>
@@ -618,7 +617,6 @@ start GitParser\GitParser.exe</Command>
     <ClInclude Include="stream_reader_inline.h" />
     <ClInclude Include="file_stream_reader.h" />
     <ClInclude Include="xrMemory.h" />
-    <ClInclude Include="xrMemory_align.h" />
     <ClInclude Include="xrMemory_subst_msvc.h" />
     <ClInclude Include="xrDebug.h" />
     <ClInclude Include="xrDebug_macros.h" />

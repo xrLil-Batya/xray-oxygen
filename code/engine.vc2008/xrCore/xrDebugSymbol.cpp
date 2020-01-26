@@ -53,14 +53,23 @@ void xrDebugSymbols::Initialize(bool bPDBShouldMatch /*= false*/)
 
 	SymSetOptions(ExistedOptions);
 
-	xr_string CurrentModulePath;
+	char* pCurrentModulePath = nullptr;
 	string_path strCurrentModulePath = { 0 };
 	if (GetModuleFileNameA(GetModuleHandle(NULL), strCurrentModulePath, sizeof(string_path)))
 	{
-		CurrentModulePath.append(strCurrentModulePath);
+		pCurrentModulePath = &strCurrentModulePath[0];
 	}
 
-	if (!SymInitialize(GetCurrentProcess(), CurrentModulePath.c_str(), TRUE))
+	if (pCurrentModulePath != nullptr)
+	{
+		char* pEnd = strstr(pCurrentModulePath, "xrPlay.exe");
+		if (pEnd != nullptr)
+		{
+			*pEnd = '\0';
+		}
+	}
+
+	if (!SymInitialize(GetCurrentProcess(), pCurrentModulePath, TRUE))
 	{
 		LPCSTR ErrorStr = Debug.error2string(GetLastError());
 		Msg("Can't initialize symbol storage: %s", ErrorStr);

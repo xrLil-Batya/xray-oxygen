@@ -12,8 +12,8 @@ namespace PAPI
 		using SharedParticleEffect = std::shared_ptr<ParticleEffect>;
 		using SharedParticleActions = std::shared_ptr<ParticleActions>;
 
-		using ParticleEffectVec = tbb::concurrent_unordered_map<int, SharedParticleEffect>;
-		using ParticleActionsVec = tbb::concurrent_unordered_map<int, SharedParticleActions>;
+		using ParticleEffectVec = xr_concurrent_unordered_map<int, SharedParticleEffect>;
+		using ParticleActionsVec = xr_concurrent_unordered_map<int, SharedParticleActions>;
 		ParticleEffectVec m_effect_map;
 		ParticleActionsVec m_alist_map;
 		xr_atomic_s32 m_effect_counter;

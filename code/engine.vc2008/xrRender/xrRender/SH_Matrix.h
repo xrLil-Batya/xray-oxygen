@@ -29,6 +29,8 @@ public:
         std::memset(this,0,sizeof(CMatrix));
 	}
 
+	CMatrix& operator=(const CMatrix& Other) = delete;
+
 	IC void			tc_trans	(Fmatrix& T, float u, float v)
 	{
 		T.identity	();
@@ -37,7 +39,7 @@ public:
 	}
 	void			Calculate	();
 
-	IC	BOOL		Similar		(CMatrix& M)		// comare by modes and params
+	IC	BOOL		Similar		(CMatrix& M)		// compare by modes and params
 	{
 		if (dwMode!=M.dwMode)				return FALSE;
 		if (tcm!=M.tcm)						return FALSE;

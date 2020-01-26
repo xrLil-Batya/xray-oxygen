@@ -11,6 +11,7 @@ private:
 
 public:
 	Time();
+	Time(time_t InTime);
 
 	// Convert time to string
 	string GetSecondsString() const;

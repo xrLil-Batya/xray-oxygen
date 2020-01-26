@@ -543,6 +543,28 @@ public		:
 	}
 };
 
+class ENGINE_API CCC_PrintMemStat : public IConsole_Command
+{
+public:
+	CCC_PrintMemStat(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = true;
+	}
+
+	virtual void	Execute(LPCSTR args)
+	{
+		Memory.PrintStat();
+	}
+	virtual void	Status(TStatus& S)
+	{
+		S[0] = 0;
+	}
+	virtual void	Info(TInfo& I)
+	{
+		xr_sprintf(I, sizeof(I), "Show memory allocation statistic");
+	}
+};
+
 
 ENGINE_API float psHUD_FOV_def = 0.45f;
 ENGINE_API float psHUD_FOV = psHUD_FOV_def;
@@ -597,11 +619,11 @@ void CCC_Register()
 
 	CMD3(CCC_Mask,		"rs_triple_buffering",	&psDeviceFlags,		rsTripleBuffering		);
 	CMD3(CCC_Mask,		"rs_v_sync",			&psDeviceFlags,		rsVSync					);
-	CMD3(CCC_Token,		"rs_refresh_hz",		&ps_r_RefreshHZ,	RefreshHZ			);
 	CMD3(CCC_Mask,		"rs_stats",				&psDeviceFlags,		rsStatistic				);
 	CMD3(CCC_Mask,		"rs_stats_game",		&psDeviceFlags,		rsGameProfiler			);
 	CMD3(CCC_Mask,		"rs_stats_schedule",    &psDeviceFlags,		rsScheduleProfiler		);
 	CMD3(CCC_Mask,		"rs_cam_pos",			&psDeviceFlags,		rsCameraPos				);
+	CMD3(CCC_Token,		"rs_refresh_hz",		&ps_r_RefreshHZ,	RefreshHZ);
 
 	CMD4(CCC_Float,		"rs_vis_distance",		&psVisDistance,		0.4f,	1.0f			);
 	if (strstr(Core.Params,"-fog_mixer"))
@@ -679,6 +701,7 @@ void CCC_Register()
 #endif
 
 	CMD1(CCC_HideConsole,		"hide");
+	CMD1(CCC_PrintMemStat,		"mem_stat");
 
 #ifdef	DEBUG
 	extern BOOL debug_destroy;

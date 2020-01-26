@@ -171,7 +171,7 @@ struct 	ENGINE_API	motions_value
 	accel_map			m_cycle;			// motion data itself	(shared)
 	accel_map			m_fx;				// motion data itself	(shared)
 	CPartition			m_partition;		// partition
-	u32					m_dwReference;
+	xr_atomic_s32		m_dwReference;
 	BoneMotionMap		m_motions;
     MotionDefVec		m_mdefs;
 

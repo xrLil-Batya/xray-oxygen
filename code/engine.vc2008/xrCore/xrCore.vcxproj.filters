@@ -156,9 +156,6 @@
     <ClCompile Include="xrMemory.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
-    <ClCompile Include="xrMemory_align.cpp">
-      <Filter>Memory manager</Filter>
-    </ClCompile>
     <ClCompile Include="xrMemory_pso_Fill.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
@@ -360,9 +357,6 @@
       <Filter>FS\file_stream_reader</Filter>
     </ClInclude>
     <ClInclude Include="xrMemory.h">
-      <Filter>Memory manager</Filter>
-    </ClInclude>
-    <ClInclude Include="xrMemory_align.h">
       <Filter>Memory manager</Filter>
     </ClInclude>
     <ClInclude Include="xrMemory_subst_msvc.h">

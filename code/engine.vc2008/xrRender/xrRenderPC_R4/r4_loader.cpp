@@ -141,6 +141,8 @@ void CRender::level_Unload()
 	//*** Details
 	Details->Unload			();
 
+	Lights.Unload();
+
 	//*** Sectors
 	// 1.
 	xr_delete				(rmPortals);
@@ -155,7 +157,6 @@ void CRender::level_Unload()
 
 	//*** Lights
 	Glows->Unload();
-	Lights.Unload();
 
 	//*** Visuals
 	for (I=0; I<Visuals.size(); I++)

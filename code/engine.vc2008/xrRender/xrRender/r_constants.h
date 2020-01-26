@@ -99,6 +99,8 @@ struct ECORE_API	R_constant			:public xr_resource
 	R_constant_setup*		handler;
 
 	R_constant() : type(u16(-1)), destination(0), handler(NULL) { };
+
+	R_constant& operator=(const R_constant& Other) = delete;
 	
 	IC R_constant_load& get_load(u32 destination_)
 	{
@@ -152,11 +154,9 @@ public:
 	typedef xr_vector<ref_constant>		c_table;
 	c_table					table;
 
-#ifdef USE_DX11
 	typedef std::pair<u32,ref_cbuffer>	cb_table_record;
 	typedef xr_vector<cb_table_record>	cb_table;
 	cb_table							m_CBTable;
-#endif
 private:
 	void					fatal		(LPCSTR s);
 
@@ -168,6 +168,10 @@ private:
 public:
 	~R_constant_table					();
 
+	R_constant_table();
+	R_constant_table& operator=(const R_constant_table& Other) = delete;
+
+	void					_copy		(const R_constant_table& Other);
 	void					clear		();
 	BOOL					parse		(void* desc, u32 destination);
 	void					merge		(R_constant_table* C);

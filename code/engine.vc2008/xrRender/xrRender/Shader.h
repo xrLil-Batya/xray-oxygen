@@ -39,18 +39,36 @@ struct RENDER_API STextureList : public xr_resource_flagged, public xr_vector<st
 	//	Avoid using this function.
 	//	If possible use precompiled texture list.
 	u32		find_texture_stage(const shared_str &TexName) const;
+
+
+	STextureList();
+	//STextureList(const STextureList& Other);
+	STextureList& operator=(const STextureList& Other) = delete;
+
+	void _copy(const STextureList& Other);
 };
 typedef	resptr_core<STextureList> ref_texture_list;
 //////////////////////////////////////////////////////////////////////////
 struct RENDER_API SMatrixList : public xr_resource_flagged, public svector<ref_matrix, 4>
 {
+	SMatrixList();
+	//SMatrixList(const SMatrixList& Other);
+	SMatrixList& operator=(const SMatrixList& Other) = delete;
 	~SMatrixList	();
+	void _copy(const SMatrixList& Other);
 };
 typedef	resptr_core<SMatrixList> ref_matrix_list;
 //////////////////////////////////////////////////////////////////////////
 struct RENDER_API SConstantList : public xr_resource_flagged, public svector<ref_constant_obsolette, 4>
 {
+	SConstantList();
+
+	//SConstantList(const SConstantList& Other);
+	SConstantList& operator=(const SConstantList& Other) = delete;
+
 	~SConstantList	();
+
+	void _copy(const SConstantList& Other);
 };
 typedef	resptr_core<SConstantList> ref_constant_list;
 
@@ -62,6 +80,7 @@ struct RENDER_API SGeometry : public xr_resource_flagged
 	ID3DIndexBuffer*	ib;
 	u32					vb_stride;
 						~SGeometry		();
+						SConstantList& operator=(const SConstantList& Other) = delete;
 };
 
 struct RENDER_API ref_geom : public resptr_core<SGeometry>
@@ -117,9 +136,15 @@ public:
 	svector<ref_pass, SHADER_PASSES_MAX>	passes;
 
 						ShaderElement	();
-						~ShaderElement	();
+						~ShaderElement();
+
+						//ShaderElement	(const ShaderElement& Other);
+						ShaderElement& operator=(const ShaderElement& Other) = delete;
+
 	BOOL				equal			(ShaderElement& S);
 	BOOL				equal			(ShaderElement* S);
+
+	void _copy(const ShaderElement& Other);
 };
 typedef	resptr_core<ShaderElement> ref_selement;
 
@@ -127,11 +152,16 @@ typedef	resptr_core<ShaderElement> ref_selement;
 struct RENDER_API Shader : public xr_resource_flagged
 {
 public:
+
+	Shader();
+	Shader& operator=(const Shader& Other) = delete;
+
 	ref_selement E[SHADER_ELEMENTS_MAX];// R1 - 0=norm_lod0(det),	1=norm_lod1(normal),	2=L_point,		3=L_spot,	4=L_for_models,	
 										// R2 - 0=deffer,			1=norm_lod1(normal),	2=psm,			3=ssm,		4=dsm
 						~Shader			();
 	BOOL				equal			(Shader& S);
 	BOOL				equal			(Shader* S);
+	void _copy(Shader& Other);
 };
 
 struct RENDER_API ref_shader : public resptr_core<Shader>

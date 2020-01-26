@@ -2,6 +2,8 @@
 
 XRCORE_API u32 mem_usage_impl(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr);
 
+static const size_t AllocationHistorySize = 512 * 1024 * 1024; // 512 MB
+
 class XRCORE_API xrMemory
 {
 public:
@@ -12,7 +14,7 @@ public:
 
 	u32					stat_calls = 0;
 public:
-	IC u32				mem_usage(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr) { return mem_usage_impl(pBlocksUsed, pBlocksFree); }
+	u32					mem_usage();
 	void				mem_compact();
 
 	void*				mem_alloc(size_t size);
@@ -21,12 +23,52 @@ public:
 	void*				mem_realloc(void* p, size_t size);
 	void				mem_free(void* p);
 
+	void				PrintVersion();
+	void				PrintStat();
+
 	void				debug_MarkPointerAsChoosenOne(void* ptr);
 
+	// should be invoked only once per application life.
+	void				PrintAllPointerHistory(void* ptr);
+
 private:
+
+	enum class AllocRecordStatus : u32
+	{
+		Allocated,
+		Freed,
+		Realloc
+	};
+
+	struct AllocRecord
+	{
+		void* ptr;					//  8
+		void* frame;				//  16
+		size_t size;				//  24
+		AllocRecordStatus AllocFlag;//  28
+		time_t time;				//  36
+		DWORD threadID;				//  40
+	}; // 40 total
+
 	HANDLE hHeap = NULL;
 	DWORD dwPageSize = 0;
 	bool bInitialized = false;
+
+	void initializeHardDebug();
+	void WriteAllocation(void* Ptr, size_t size);
+	void WriteReAllocation(void* Ptr, size_t size);
+	void WriteFree(void* Ptr);
+
+	void PrepareAllocEvent(void* Ptr, size_t size, AllocRecordStatus status);
+	void WriteAllocRecord(AllocRecord& record);
+	void FlushAllocEvents();
+	HANDLE hDebugHeap = NULL;
+	char* AllocationHistory = nullptr;
+	size_t AllocationHistoryWriteCursor = 0;
+	FILE* hAllocHistoryFile = NULL;
+	// do not use xrCriticalSection because of early initialization
+	CRITICAL_SECTION allocEventGuard;
+
 };
 
 extern XRCORE_API xrMemory Memory;

@@ -1,12 +1,10 @@
-﻿#ifndef IGame_PersistentH
-#define IGame_PersistentH
-#pragma once
+﻿#pragma once
 
 #include "..\xrServerEntities\gametype_chooser.h"
-#ifndef _EDITOR
+#if !defined(_EDITOR) && !defined(SPECTRE)
 #include "Environment.h"
-#include "IGame_ObjectPool.h"
 #endif
+#include "IGame_ObjectPool.h"
 
 #include "ShadersExternalData.h"
 
@@ -130,5 +128,4 @@ public:
 };
 
 extern ENGINE_API	IGame_Persistent*	g_pGamePersistent;
-#endif //IGame_PersistentH
 

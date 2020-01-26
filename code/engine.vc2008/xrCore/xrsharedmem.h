@@ -6,7 +6,7 @@
 #pragma warning(disable : 4200)
 struct		XRCORE_API	smem_value
 {
-	u32					dwReference		;
+	xr_atomic_s32		dwReference		;
 	u32					dwCRC			;
 	u32					dwLength		;
 	u32					_align_16		;

@@ -3,10 +3,14 @@
 #include "xrMemoryDebug.h"
 #include "../FRayBuildConfig.hpp"
 #include "mimalloc/mimalloc.h"
+#include "tbb/scalable_allocator.h"
 
 #ifdef TBB_ALLOC
-	#include "tbb/scalable_allocator.h"
+#define USED_TBB_ALLOC 1
+#else
+#define USED_TBB_ALLOC 0
 #endif
+
 
 char* DebugAllocate(size_t size, DWORD dwPageSize)
 {
@@ -25,9 +29,7 @@ void* xrMemory::mem_alloc(size_t size)
 	stat_calls++;
 
 	void* ptr = nullptr;
-#ifdef TBB_ALLOC
-	ptr = scalable_malloc(size);
-#else
+
 	if constexpr (MEM_HARD_DEBUG)
 	{
 		ptr = DebugAllocate(size, dwPageSize);
@@ -36,15 +38,23 @@ void* xrMemory::mem_alloc(size_t size)
 	{
 		ptr = HeapAlloc(hHeap, 0, size);
 	}
-	else
+	else if constexpr (USED_TBB_ALLOC)
+	{
+		ptr = scalable_malloc(size);
+	}
+	else if constexpr(MEM_MIMALLOC)
 	{
 		ptr = mi_malloc_aligned(size, 16);
 	}
-#endif
 
 #if defined(DEBUG) && defined(MEM_DEBUG)
 	RegisterPointer(ptr);
 #endif
+
+	if constexpr (MEM_SUPER_HARD_DEBUG)
+	{
+		WriteAllocation(ptr, size);
+	}
 
 	Profiling.EndAlloc(ptr, size);
 	return ptr;
@@ -60,9 +70,6 @@ void* xrMemory::mem_alloc(size_t size, size_t aligment)
 	stat_calls++;
 
 	void* ptr = nullptr;
-#ifdef TBB_ALLOC
-	ptr = scalable_aligned_malloc(size, aligment);
-#else
 	if constexpr (MEM_HARD_DEBUG)
 	{
 		ptr = DebugAllocate(size, dwPageSize);
@@ -72,15 +79,23 @@ void* xrMemory::mem_alloc(size_t size, size_t aligment)
 		// no version with aligment option
 		ptr = HeapAlloc(hHeap, 0, size);
 	}
-	else
+	else if constexpr (USED_TBB_ALLOC)
+	{
+		ptr = scalable_aligned_malloc(size, aligment);
+	}
+	else if constexpr (MEM_MIMALLOC)
 	{
 		ptr = mi_malloc_aligned(size, aligment);
 	}
-#endif
 
 #if defined(DEBUG) && defined(MEM_DEBUG)
 	RegisterPointer(ptr);
 #endif
+
+	if constexpr (MEM_SUPER_HARD_DEBUG)
+	{
+		WriteAllocation(ptr, size);
+	}
 
 	Profiling.EndAlloc(ptr, size);
 	return ptr;
@@ -89,15 +104,16 @@ void* xrMemory::mem_alloc(size_t size, size_t aligment)
 
 void xrMemory::mem_free(void* P)
 {
+	if (P == nullptr)
+	{
+		return;
+	}
 	Profiling.StartFree(P);
 	stat_calls++;
 #if defined(DEBUG) && defined(MEM_DEBUG)
 	UnregisterPointer(P);
 #endif
 
-#ifdef TBB_ALLOC
-	scalable_free(P);
-#else
 	if constexpr (MEM_HARD_DEBUG)
 	{
 		VirtualFree(P, 0, MEM_RELEASE);
@@ -106,11 +122,20 @@ void xrMemory::mem_free(void* P)
 	{
 		HeapFree(hHeap, 0, P);
 	}
-	else
+	else if constexpr (USED_TBB_ALLOC)
+	{
+		scalable_free(P);
+	}
+	else if constexpr (MEM_MIMALLOC)
 	{
 		mi_free(P);
 	}
-#endif
+
+	if constexpr (MEM_SUPER_HARD_DEBUG)
+	{
+		WriteFree(P);
+	}
+
 	Profiling.EndFree(P);
 }
 
@@ -124,9 +149,6 @@ void* xrMemory::mem_realloc(void* P, size_t size)
 	stat_calls++;
 
 	void* ptr = nullptr;
-#ifdef TBB_ALLOC
-	ptr = scalable_realloc(P, size);
-#else
 	if constexpr (MEM_HARD_DEBUG)
 	{
 		ptr = DebugAllocate(size, dwPageSize);
@@ -150,15 +172,34 @@ void* xrMemory::mem_realloc(void* P, size_t size)
 			ptr = HeapReAlloc(hHeap, 0, P, size);
 		}
 	}
-	else
+	else if constexpr (USED_TBB_ALLOC)
+	{
+		ptr = scalable_realloc(P, size);
+	}
+	else if constexpr (MEM_MIMALLOC)
 	{
 		ptr = mi_realloc_aligned(P, size, 16);
 	}
-#endif
 
 #if defined(DEBUG) && defined(MEM_DEBUG)
 	RegisterPointer(ptr);
 #endif
+
+	if constexpr (MEM_SUPER_HARD_DEBUG)
+	{
+		if (P != ptr) // previous pointer was freed
+		{
+			if (P != nullptr)
+			{
+				WriteFree(P);
+			}
+			WriteAllocation(ptr, size);
+		}
+		else // pointer is same, but size if different now
+		{
+			WriteReAllocation(P, size);
+		}
+	}
 
 	Profiling.EndReAlloc(P, &ptr, size);
 	return ptr;

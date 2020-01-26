@@ -26,12 +26,24 @@ CParticleManager::~CParticleManager()
 
 CParticleManager::SharedParticleEffect CParticleManager::GetEffectPtr(int effect_id)
 {
-	return m_effect_map[effect_id];
+	auto effectIter = m_effect_map.find(effect_id);
+	if (effectIter != m_effect_map.end())
+	{
+		return effectIter->second;
+	}
+
+	return CParticleManager::SharedParticleEffect();
 }
 
 CParticleManager::SharedParticleActions CParticleManager::GetActionListPtr(int a_list_num)
 {
-	return m_alist_map[a_list_num];
+	auto actionIter = m_alist_map.find(a_list_num);
+	if (actionIter != m_alist_map.end())
+	{
+		return actionIter->second;
+	}
+
+	return CParticleManager::SharedParticleActions();
 }
 
 // create
@@ -137,7 +149,7 @@ void CParticleManager::Update(int effect_id, int alist_id, float dt)
 	}
 
 	{
-		xrCriticalSectionGuard guard(m_update_guard);
+		//xrCriticalSectionGuard guard(m_update_guard);
 		// Step through all the actions in the action list.
 		float kill_old_time = 1.0f;
 		for (PAPI::ParticleAction* pAction : *pa)
@@ -215,6 +227,8 @@ void CParticleManager::GetParticles(int effect_id, Particle*& particles, u32& cn
 	SharedParticleEffect pe = GetEffectPtr(effect_id);
 	if (!pe)
 	{
+		particles = nullptr;
+		cnt = 0;
 		return;
 	}
 	particles = pe->particles;
