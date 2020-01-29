@@ -1,6 +1,6 @@
 #pragma once
 #include <vcclr.h>
-#include <Windows.h>
+
 template <int Size>
 void ConvertWidecharToAscii(const wchar_t* pData, unsigned int size, char(&OutStr)[Size])
 {
@@ -16,5 +16,5 @@ void ConvertDotNetStringToAscii(::System::String^ InStr, char(&OutStr)[Size])
 
 #define CONVERT_FVECTOR(vector) Utils::FromFvector(IntPtr((void*)&vector))
 #define CONVERT_FMATRIX(matrix) Utils::FromXForm(IntPtr((void*)&matrix))
-#define TO_STRING64(Name, Str) string64 Name = {}; ConvertDotNetStringToAscii(Name, Str)
+#define TO_STRING64(Name, Str) string64 Name = {}; ConvertDotNetStringToAscii(Str, Name)
 #define TO_FVECTOR(Name, Vect) Fvector Name; Name.set(Vect.X, Vect.Y, Vect.Z)
