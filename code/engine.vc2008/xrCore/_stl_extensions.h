@@ -48,7 +48,11 @@ public:
 
     size_type max_size() const {
         constexpr size_type count = std::numeric_limits<size_type>::max() / sizeof(T);
-        return 0 < count ? count : 1;
+		
+		if constexpr(0 < count)
+			return count;
+		else 
+			return 1;
     }
 };
 
