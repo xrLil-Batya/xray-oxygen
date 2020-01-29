@@ -59,33 +59,49 @@ void MapManager::ShowIndicators()
 	}
 }
 
-void MapManager::MapAddObjectSpot(u16 id, LPCSTR spot_type, LPCSTR text)
+void MapManager::MapAddObjectSpot(u16 id, ::System::String^ SpotType, ::System::String^ Text)
 {
+	TO_STRING64(spot_type, SpotType);
+	TO_STRING64(text, Text);
+	
 	CMapLocation* ml = (::Level().MapManager().AddMapLocation(spot_type, id));
-	if (xr_strlen(text))
-	{
+	
+	if (Text->Length > 0)
 		ml->SetHint(text);
-	}
 }
-void MapManager::MapAddObjectSpotSer(u16 id, LPCSTR spot_type, LPCSTR text)
+
+void MapManager::MapAddObjectSpotSer(u16 id, ::System::String^ SpotType, ::System::String^ Text)
 {
+	TO_STRING64(spot_type, SpotType);
+	TO_STRING64(text, Text);
+	
 	CMapLocation* ml = (::Level().MapManager().AddMapLocation(spot_type, id));
-	if (xr_strlen(text))
+	
+	if (Text->Length > 0)
 		ml->SetHint(text);
 
 	ml->SetSerializable(true);
 }
-void MapManager::MapChangeSpotHint(u16 id, LPCSTR spot_type, LPCSTR text)
+
+void MapManager::MapChangeSpotHint(u16 id, ::System::String^ SpotType, ::System::String^ Text)
 {
+	TO_STRING64(spot_type, SpotType);
+	TO_STRING64(text, Text);
+	
 	CMapLocation* ml = (::Level().MapManager().GetMapLocation(spot_type, id));
-	if (!ml)				return;
-	ml->SetHint(text);
+	
+	if (Text->Length > 0)
+		ml->SetHint(text);
 }
-void MapManager::MapRemoveObjectSpot(u16 id, LPCSTR spot_type)
+
+void MapManager::MapRemoveObjectSpot(u16 id, ::System::String^ SpotType)
 {
+	TO_STRING64(spot_type, SpotType);
 	(::Level().MapManager().RemoveMapLocation(spot_type, id));
 }
-bool MapManager::MapHasObjectSpot(u16 id, LPCSTR spot_type)
+
+bool MapManager::MapHasObjectSpot(u16 id, ::System::String^ SpotType)
 {
+	TO_STRING64(spot_type, SpotType);
 	return (::Level().MapManager().HasMapLocation(spot_type, id));
 }

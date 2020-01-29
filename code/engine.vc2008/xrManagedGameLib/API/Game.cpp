@@ -136,7 +136,7 @@ void XRay::Game::setTutorialState(::System::String^ name, eTutorialState tutoria
 		break;
 	}
 
-	GamePersistent().SetTutorialState(name, bStart);
+	GamePersistent().SetTutorialState(NativeString, bStart);
 }
 bool XRay::Game::TutorialState::get()
 {
