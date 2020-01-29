@@ -24,11 +24,10 @@ namespace XRay
 		{
 			::System::UInt32 get();
 		}
-		static ::System::UInt32 GetVertexId(Fvector position);
+		static ::System::UInt32 GetVertexId(::System::Numerics::Vector3 vPosition);
 
-		static void PatrolPathAdd(LPCSTR patrol_path, CPatrolPath* path);
-		static void PatrolPathRemove(LPCSTR patrol_path);
-
+		static void PatrolPathAdd(::System::String^ patrol_path, CPatrolPath* path);
+		static void PatrolPathRemove(::System::String^ patrol_path);
 	};
 
 	public ref class Level abstract
@@ -86,22 +85,22 @@ namespace XRay
 			void set(GameObject^);
 		}
 
-		static float HighCoverInDirection(u32 level_vertex_id, const Fvector &direction);
-		static float LowCoverInDirection(u32 level_vertex_id, const Fvector &direction);
+		static float HighCoverInDirection(u32 level_vertex_id, ::System::Numerics::Vector3 vDirection);
+		static float LowCoverInDirection(u32 level_vertex_id, ::System::Numerics::Vector3 vDirection);
 		static ::System::Numerics::Vector3^ VertexPosition(u32 level_vertex_id);
 
 		/// <summary>Check: Current level vertex be at level</summary>
 		static bool ValidVertex(u32 level_vertex_id);
 
-		static ::System::UInt32 VertexInDirection(u32 level_vertex_id, Fvector direction, float max_distance);
+		static ::System::UInt32 VertexInDirection(u32 level_vertex_id, ::System::Numerics::Vector3 vDirection, float max_distance);
 
-		static bool PatrolPathExists(LPCSTR patrol_path);
+		static bool PatrolPathExists(::System::String^ PatrolPath);
 		static XRay::PhysicsWorldScripted^ physicsWorldScripted();
 		static void AddDialogToRender(XRay::UIDialogWnd^ pDialog);
 		static void RemoveDialogFromRender(XRay::UIDialogWnd^ pDialog);
 
 		//static XRay::MEnvironment^ pEnvironment();
-		static XRay::EnvDescriptor^  CurrentEnvironment(XRay::MEnvironment^ self);
-		static void SpawnPhantom(const Fvector &position);
+		static XRay::EnvDescriptor^ CurrentEnvironment(XRay::MEnvironment^ self);
+		static void SpawnPhantom(::System::Numerics::Vector3 vPosition);
 	};
 }

@@ -122,8 +122,10 @@ void XRay::Game::SndVolume::set(float v)
 extern GAME_API CUISequencer* g_tutorial;
 extern GAME_API CUISequencer* g_tutorial2;
 
-void XRay::Game::setTutorialState(LPCSTR name, eTutorialState tutorialState)
+void XRay::Game::setTutorialState(::System::String^ name, eTutorialState tutorialState)
 {
+	TO_STRING64(NativeString, name);
+	
 	bool bStart = false;
 	switch (tutorialState)
 	{
@@ -151,10 +153,12 @@ void XRay::Game::UserEventGen(NET_Packet& P, u32 _event, u32 _dest)
 	CGameObject::u_EventGen(P, _event, _dest);
 }
 
-::System::String^ XRay::Game::TranslateString(LPCSTR str)
+::System::String^ XRay::Game::TranslateString(::System::String^ str)
 {
-	return gcnew ::System::String(str);
+	TO_STRING64(NativeString, str);
+	return gcnew ::System::String(NativeString);
 }
+
 Fbox XRay::Game::GetBoundingVolume()
 {
 	return ::Level().ObjectSpace.GetBoundingVolume();
@@ -180,10 +184,12 @@ float XRay::Game::GlobalTargetDist()
 	return (0);
 }
 
-void XRay::Game::SpawnSection(LPCSTR sSection, ::System::Numerics::Vector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem)
+void XRay::Game::SpawnSection(::System::String^ sSection, ::System::Numerics::Vector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem)
 {
-	Fvector NativeVect; NativeVect.set(vPosition.X, vPosition.Y, vPosition.Z);
-	::Level().spawn_item(sSection, NativeVect, LevelVertexID, ParentID, bReturnItem);
+	TO_STRING64(NativeString, sSection);
+	TO_FVECTOR(NativeVect, vPosition);
+	
+	::Level().spawn_item(NativeString, NativeVect, LevelVertexID, ParentID, bReturnItem);
 }
 
 ::System::UInt32 XRay::Game::GlobalTargetElement()
