@@ -148,7 +148,7 @@
     <ClInclude Include="GameClassRegistrator.h" />
     <ClInclude Include="ISpectreGameLib.h" />
     <ClInclude Include="API\MapManager.h" />
-    <ClInclude Include="RelationShip.h" />
+    <ClInclude Include="API\RelationShip.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
@@ -174,7 +174,7 @@
     <ClCompile Include="GameClassRegistrator.cpp" />
     <ClCompile Include="ISpectreGameLib.cpp" />
     <ClCompile Include="API\MapManager.cpp" />
-    <ClCompile Include="RelationShip.cpp" />
+    <ClCompile Include="API\RelationShip.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
