@@ -201,12 +201,12 @@ CBloodsuckerAlien::~CBloodsuckerAlien()
 {
 }
 
-void CBloodsuckerAlien::init_external(CAI_Bloodsucker *obj)
+void CBloodsuckerAlien::InitExternal(CAI_Bloodsucker *obj)
 {
 	m_object = obj;
 }
 
-void CBloodsuckerAlien::reinit()
+void CBloodsuckerAlien::Reinit()
 {
 	m_active = false;	
 	m_crosshair_show = false;
