@@ -20,7 +20,7 @@
     <ClCompile>
       <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;_SECURE_SCL=0;TBB_USE_DEBUG=0;TBB_USE_THREADING_TOOLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4996;4577;4315;4828</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(xrIncl)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(xrIncl);../../sdk/include/tbb/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

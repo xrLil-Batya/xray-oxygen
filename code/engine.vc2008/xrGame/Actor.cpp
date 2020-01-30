@@ -78,7 +78,7 @@ string32 ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
 CActor::CActor() : CEntityAlive()
 {
 	g_actor = this;
-
+	
 	game_news_registry = xr_new< CGameNewsRegistryWrapper >();
 	// Cameras
 	cameras[eacFirstEye] = xr_new<CCameraFirstEye>(this, CCameraBase::flKeepPitch);
@@ -125,14 +125,14 @@ CActor::CActor() : CEntityAlive()
 	m_holder				=	nullptr;
 	m_holderID				=	u16(-1);
 
-	m_CapmfireWeLookingAt	= nullptr;
 #ifdef DEBUG
 	Device.seqRender.Add	(this,REG_PRIORITY_LOW);
 #endif
 
 	//разрешить использование пояса в inventory
 	inventory().SetBeltUseful(true);
-
+	
+	m_CapmfireWeLookingAt	= nullptr;
 	m_pPersonWeLookingAt	= nullptr;
 	m_pProjWeLookingAt		= nullptr;
 	m_pVehicleWeLookingAt	= nullptr;

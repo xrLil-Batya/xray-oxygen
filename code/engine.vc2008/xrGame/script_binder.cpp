@@ -62,7 +62,8 @@ void CScriptBinder::reinit			()
         }
         __except (EXCEPTION_EXECUTE_HANDLER)
         {
-            ai().script_engine().dump_state();
+			string4096 DummyInfo;
+            ai().script_engine().dump_state(DummyInfo);
             clear();
         }
     }

@@ -103,7 +103,6 @@ void CRender::render_lights(light_Package& LP)
 			L->svis.begin();
 			PIX_EVENT(SHADOWED_LIGHTS_RENDER_SUBSPACE);
 			{
-				ScopeStatTimer lightTimer(Device.Statistic->TEST0);
 				r_dsgraph_render_subspace(L->spatial.sector, L->X.S.combine, L->position, TRUE);
 			}
 

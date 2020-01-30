@@ -56,6 +56,7 @@ public:
 
 public:
 			void					destroy_particles	(const bool &all_particles);
+			void					UpdateParticles();
 
 public:
 	virtual void					PreStart			(LPCSTR op);

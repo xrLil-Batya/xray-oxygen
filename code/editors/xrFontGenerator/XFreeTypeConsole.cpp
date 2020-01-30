@@ -475,14 +475,15 @@ void XRay::CFontGen::InitFont()
 
 void XRay::CFontGen::CreateFolder()
 {	
-	if (std::filesystem::create_directory(PathSystem.PathOutName))
+	std::filesystem::path PathOut(PathSystem.PathOutName.c_str());
+	if (std::filesystem::create_directory(PathOut))
 	{
 		bSucDir = true;
 	}
 	else
 	{
 		// @ But we must be sure that if the folder exists
-		if (std::filesystem::exists(PathSystem.PathOutName))
+		if (std::filesystem::exists(PathSystem.PathOutName.c_str()))
 		{
 			bSucDir = true;
 		}

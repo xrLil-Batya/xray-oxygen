@@ -143,6 +143,11 @@ void CStats::Show()
 		TEST2.FrameEnd				();
 		TEST3.FrameEnd				();
 
+		MT_TEST0.FrameEnd();
+		MT_TEST1.FrameEnd();
+		MT_TEST2.FrameEnd();
+		MT_TEST3.FrameEnd();
+
 		g_SpatialSpace->stat_insert.FrameEnd		();
 		g_SpatialSpace->stat_remove.FrameEnd		();
 		g_SpatialSpacePhysic->stat_insert.FrameEnd	();
@@ -188,8 +193,8 @@ void CStats::Show()
 	{
 		static float	r_ps		= 0;
 		static float	b_ps		= 0;
-		r_ps						= .99f*r_ps + .01f*(clRAY.count/clRAY.result);
-		b_ps						= .99f*b_ps + .01f*(clBOX.count/clBOX.result);
+		r_ps						= .99f*r_ps + .01f*(clRAY.count / clRAY.result);
+		b_ps						= .99f*b_ps + .01f*(clBOX.count / clBOX.result);
 
 		CSound_stats				snd_stat;
 		::Sound->statistic			(&snd_stat,0);
@@ -241,12 +246,12 @@ void CStats::Show()
 			GetPercentOf(g_SpatialSpacePhysic->stat_remove.result, EngineTOTAL));
 		F.OutNext	("Physics:     %2.2fms, %2.1f%%",Physics.result, GetPercentOf(Physics.result, EngineTOTAL));
 		F.OutNext	("  collider:  %2.2fms", ph_collision.result);	
-		F.OutNext	("  solver:    %2.2fms, %d",ph_core.result,ph_core.count);	
-		F.OutNext	("aiThink:     %2.2fms, %d",AI_Think.result,AI_Think.count);	
+		F.OutNext	("  solver:    %2.2fms, %d",ph_core.result,ph_core.count);
+		F.OutNext	("aiThink:     %2.2fms, %d",AI_Think.result,AI_Think.count);
 		F.OutNext	("  aiRange:   %2.2fms, %d",AI_Range.result,AI_Range.count);
-		F.OutNext	("  aiPath:    %2.2fms, %d",AI_Path.result,AI_Path.count);
-		F.OutNext	("  aiNode:    %2.2fms, %d",AI_Node.result,AI_Node.count);
-		F.OutNext	("aiVision:    %2.2fms, %d",AI_Vis.result,AI_Vis.count);
+		F.OutNext	("  aiPath:    %2.2fms, %d",AI_Path.result,	AI_Path.count);
+		F.OutNext	("  aiNode:    %2.2fms, %d",AI_Node.result,	AI_Node.count);
+		F.OutNext	("aiVision:    %2.2fms, %d",AI_Vis.result,	AI_Vis.count);
 		F.OutNext	("  Query:     %2.2fms",	AI_Vis_Query.result);
 		F.OutNext	("  RayCast:   %2.2fms",	AI_Vis_RayTests.result);
 		F.OutSkip	();
@@ -306,7 +311,7 @@ void CStats::Show()
 		F.OutNext	("Input:       %2.2fms",Input.result);
 		F.OutNext	("clRAY:       %2.2fms, %d, %2.0fK",clRAY.result,		clRAY.count,r_ps);
 		F.OutNext	("clBOX:       %2.2fms, %d, %2.0fK",clBOX.result,		clBOX.count,b_ps);
-		F.OutNext	("clFRUSTUM:   %2.2fms, %d",		clFRUSTUM.result,	clFRUSTUM.count	);
+		F.OutNext	("clFRUSTUM:   %2.2fms, %d",		clFRUSTUM.result,	clFRUSTUM.count);
 		F.OutSkip	();
 		
 		F.OutSkip	();
@@ -316,6 +321,12 @@ void CStats::Show()
 		F.OutNext	("TEST 1:      %2.2fms, %d",TEST1.result,TEST1.count);
 		F.OutNext	("TEST 2:      %2.2fms, %d",TEST2.result,TEST2.count);
 		F.OutNext	("TEST 3:      %2.2fms, %d",TEST3.result,TEST3.count);
+
+		F.OutSkip();
+		F.OutNext("MT_TEST 0:      %2.2fms, %d", MT_TEST0.result, MT_TEST0.count.load());
+		F.OutNext("MT_TEST 1:      %2.2fms, %d", MT_TEST1.result, MT_TEST1.count.load());
+		F.OutNext("MT_TEST 2:      %2.2fms, %d", MT_TEST2.result, MT_TEST2.count.load());
+		F.OutNext("MT_TEST 3:      %2.2fms, %d", MT_TEST3.result, MT_TEST3.count.load());
 
 		F.OutSkip	();
 		F.OutNext	("qpc[%3d]",CPU::qpc_counter);
@@ -566,6 +577,11 @@ void CStats::Show()
 		TEST1.FrameStart			();
 		TEST2.FrameStart			();
 		TEST3.FrameStart			();
+
+		MT_TEST0.FrameStart();
+		MT_TEST1.FrameStart();
+		MT_TEST2.FrameStart();
+		MT_TEST3.FrameStart();
 
 		g_SpatialSpace->stat_insert.FrameStart		();
 		g_SpatialSpace->stat_remove.FrameStart		();

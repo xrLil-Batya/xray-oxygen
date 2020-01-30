@@ -214,6 +214,10 @@ void CRenderDevice::on_idle()
 	Profiling.StartFrame(xrProfiling::eEngineFrame::Main);
 	{
 		xrProfilingTask FrameTask("FrameMove");
+		if (g_pGamePersistent != nullptr)
+		{
+			g_pGamePersistent->UpdateParticles();
+		}
 		FrameMove();
 	}
 

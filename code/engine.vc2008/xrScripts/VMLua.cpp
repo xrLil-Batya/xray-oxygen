@@ -40,9 +40,9 @@ void CVMLua::luabind_onerror(lua_State* lua)
     }
 
     //#HACK: Invoke crash handler manually for now
-    if (crashhandler* CrashHanlderFunc = Debug.get_crashhandler())
+    if (crashhandler* CrashHandlerFunc = Debug.get_crashhandler())
     {
-        CrashHanlderFunc();
+        CrashHandlerFunc(Debug.AdditionalDebugInfo);
     }
 }
 

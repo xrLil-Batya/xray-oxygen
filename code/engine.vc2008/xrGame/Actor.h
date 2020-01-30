@@ -325,9 +325,9 @@ public:
 	CGameObject*			ObjectWeLookingAt			() {return m_pObjectWeLookingAt;}
 	CInventoryOwner*		PersonWeLookingAt			() {return m_pPersonWeLookingAt;}
 	LPCSTR					GetDefaultActionForObject	() {return *m_sDefaultObjAction;}
-	CZoneCampfire*			CapmfireWeLookingAt			() {return m_CapmfireWeLookingAt;}
 	CProjector*				ProjWeLookingAt				() {return m_pProjWeLookingAt;}
-
+	CZoneCampfire*			CapmfireWeLookingAt			() {return m_CapmfireWeLookingAt;}
+	
 protected:
 	CUsableScriptObject*	m_pUsableObject;
 	// Person we're looking at
@@ -335,9 +335,9 @@ protected:
 	CHolderCustom*			m_pVehicleWeLookingAt;
 	CGameObject*			m_pObjectWeLookingAt;
 	CInventoryBox*			m_pInvBoxWeLookingAt;
-	CZoneCampfire*			m_CapmfireWeLookingAt;
 	CProjector*				m_pProjWeLookingAt;
-
+	CZoneCampfire*			m_CapmfireWeLookingAt;
+	
 	// Tip for action for object we're looking at
 	shared_str				m_sDefaultObjAction;
 	shared_str				m_sCharacterUseAction;

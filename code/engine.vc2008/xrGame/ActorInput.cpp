@@ -414,7 +414,21 @@ void CActor::ActorUse()
 			Level().CurrentControlEntity()->Position().distance_to(m_pProjWeLookingAt->Position()) < 2.0f;
 		return;
 	}
-
+	
+	if (m_CapmfireWeLookingAt)
+	{
+		Fvector dir, to;
+		m_CapmfireWeLookingAt->Center(to);
+		dir.sub(to, Device.vCameraPosition);
+		float dist = dir.magnitude();
+		float range = dir.normalize().dotproduct(Device.vCameraDirection);
+		if (dist < 1.6f && range > 0.95f)
+		{
+			m_CapmfireWeLookingAt->is_on() ? m_CapmfireWeLookingAt->turn_off_script() : m_CapmfireWeLookingAt->turn_on_script();
+			return;
+		}
+	}
+	
 	if (!m_pUsableObject || m_pUsableObject->nonscript_usable())
 	{
 		bool bCaptured = false;
@@ -456,23 +470,13 @@ void CActor::ActorUse()
 						GameUI()->StartSearchBody(this, m_pPersonWeLookingAt);
 				}
 			}
-			else if (m_CapmfireWeLookingAt)
-			{
-				Fvector dir, to;
-				camp->Center(to);
-				dir.sub(to, Device.vCameraPosition);
-				float dist = dir.magnitude();
-				float range = dir.normalize().dotproduct(Device.vCameraDirection);
-				if (dist < 1.6f && range > 0.95f)
-				{
-					m_CapmfireWeLookingAt = camp;
-					m_CapmfireWeLookingAt->is_on() ? m_CapmfireWeLookingAt->turn_off_script() : m_CapmfireWeLookingAt->turn_on_script();
-					return;
-				}
-			}
 		}
 	}
-	m_bPickupMode = true;
+
+	if (!IsTalking())
+	{
+		m_bPickupMode = true;
+	}
 }
 
 BOOL CActor::HUDview() const
@@ -578,7 +582,7 @@ void CActor::set_input_external_handler(CActorInputHandler *handler)
 
 	// release fire button
 	if (handler)
-		IR_OnKeyboardRelease(get_action_dik(kWPN_FIRE));
+		IR_OnKeyboardRelease(kWPN_FIRE);
 
 	// set handler
 	m_input_external_handler = handler;

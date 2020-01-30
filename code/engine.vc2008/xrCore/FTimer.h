@@ -160,10 +160,35 @@ struct XRCORE_API CStatTimer
 	inline float GetElapsed_sec		() const { return float(double(GetElapsed_ticks()) / double(CPU::qpc_freq)); }
 };
 
+struct XRCORE_API CThreadSafeStatTimer
+{
+	xr_atomic_u32		count;
+    xr_atomic_u64		accum;
+	double	result;
+
+	constexpr	 CThreadSafeStatTimer() : result(0.0), accum(0), count(0) {}
+	void		 FrameStart();
+	void		 FrameEnd();
+
+	inline u64	 GetElapsed_ticks() const { return accum; }
+
+	inline u32	 GetElapsed_ms() const { return u32(GetElapsed_ticks() * u64(1000) / CPU::qpc_freq); }
+	inline float GetElapsed_sec() const { return float(double(GetElapsed_ticks()) / double(CPU::qpc_freq)); }
+};
+
 class XRCORE_API ScopeStatTimer
 {
 	CStatTimer& _timer;
 public:
 	ScopeStatTimer(CStatTimer& destTimer);
 	~ScopeStatTimer();
+};
+
+class XRCORE_API ScopeThreadSafeStatTimer
+{
+    CThreadSafeStatTimer& _timer;
+    CTimer _localTimer;
+public:
+    ScopeThreadSafeStatTimer(CThreadSafeStatTimer& destTimer);
+	~ScopeThreadSafeStatTimer();
 };

@@ -26,6 +26,7 @@ CParticleManager::~CParticleManager()
 
 CParticleManager::SharedParticleEffect CParticleManager::GetEffectPtr(int effect_id)
 {
+	xrCriticalSectionGuard guard(m_effect_guard);
 	auto effectIter = m_effect_map.find(effect_id);
 	if (effectIter != m_effect_map.end())
 	{
@@ -37,6 +38,7 @@ CParticleManager::SharedParticleEffect CParticleManager::GetEffectPtr(int effect
 
 CParticleManager::SharedParticleActions CParticleManager::GetActionListPtr(int a_list_num)
 {
+	xrCriticalSectionGuard guard(m_action_guard);
 	auto actionIter = m_alist_map.find(a_list_num);
 	if (actionIter != m_alist_map.end())
 	{
@@ -49,6 +51,7 @@ CParticleManager::SharedParticleActions CParticleManager::GetActionListPtr(int a
 // create
 int CParticleManager::CreateEffect(u32 max_particles)
 {
+	xrCriticalSectionGuard guard(m_effect_guard);
 	int effectId = m_effect_counter++;
 
 	auto EffectResultPair = m_effect_map.emplace(std::make_pair(effectId, SharedParticleEffect(new ParticleEffect(max_particles))));
@@ -58,12 +61,13 @@ int CParticleManager::CreateEffect(u32 max_particles)
 }
 void CParticleManager::DestroyEffect(int effect_id)
 {
-	xrCriticalSectionGuard guard(m_effect_destroyer_guard);
-	m_effect_map.unsafe_erase(effect_id);
+	xrCriticalSectionGuard guard(m_effect_guard);
+	m_effect_map.erase(effect_id);
 }
 
 int	CParticleManager::CreateActionList()
 {
+	xrCriticalSectionGuard guard(m_action_guard);
 	int actionId = m_action_counter++;
 
 	auto ActionResultPair = m_alist_map.emplace(std::make_pair(actionId, SharedParticleActions(new ParticleActions())));
@@ -74,8 +78,8 @@ int	CParticleManager::CreateActionList()
 
 void CParticleManager::DestroyActionList(int alist_id)
 {
-	xrCriticalSectionGuard guard(m_action_destroyer_guard);
-	m_alist_map.unsafe_erase(alist_id);
+	xrCriticalSectionGuard guard(m_action_guard);
+	m_alist_map.erase(alist_id);
 }
 
 // control
@@ -140,6 +144,7 @@ void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
 // update&render
 void CParticleManager::Update(int effect_id, int alist_id, float dt)
 {
+	ScopeThreadSafeStatTimer UpdateScopeTimer(Device.Statistic->MT_TEST0);
 	SharedParticleEffect pe = GetEffectPtr(effect_id);
 	SharedParticleActions pa = GetActionListPtr(alist_id);
 
@@ -264,7 +269,7 @@ ParticleAction* CParticleManager::CreateAction(PActionEnum type)
 		break;
 	case PAExplosionID:
 		pa = new PAExplosion();
-		break;
+		break; 
 	case PAFollowID:
 		pa = new PAFollow();
 		break;
