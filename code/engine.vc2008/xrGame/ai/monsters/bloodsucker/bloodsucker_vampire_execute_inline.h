@@ -38,7 +38,7 @@ void CStateBloodsuckerVampireExecuteAbstract::initialize()
 
 	HUD().SetRenderable				(false);
 
-	Actor()->inventory().SetSlotsBlocked(INV_STATE_BLOCK_ALL, true);
+	Actor()->HideAllWeapons(true);
 
 	Actor()->set_inventory_disabled	(true);
 
@@ -110,7 +110,7 @@ TEMPLATE_SPECIALIZATION
 void CStateBloodsuckerVampireExecuteAbstract::show_hud()
 {
 	HUD().SetRenderable(true);
-	Actor()->inventory().SetSlotsBlocked(INV_STATE_BLOCK_ALL, false);
+	Actor()->HideAllWeapons(false);
 }
 
 TEMPLATE_SPECIALIZATION

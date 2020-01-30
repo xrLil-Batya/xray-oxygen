@@ -555,10 +555,8 @@ protected:
 		Fvector							m_AutoPickUp_AABB_Offset;
 
 public:
-		void							SetWeaponHideState				(u16 State, bool bSet);
-		void							SetCantRunState					(bool bSet);
-private:
-	virtual void						HideAllWeapons					(bool v) { SetWeaponHideState(INV_STATE_BLOCK_ALL,v); }	
+			void						SetCantRunState					(bool bSet);
+	virtual void						HideAllWeapons					(bool v);
 private:
 	CActorCondition						*m_entity_condition;
 

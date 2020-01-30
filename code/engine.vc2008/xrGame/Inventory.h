@@ -59,7 +59,7 @@ public:
 	bool 					InRuck				(const CInventoryItem* pIItem) const;
 
 	bool 					CanPutInSlot		(PIItem pIItem, u16 slot_id) const;
-	bool 					CanPutInBelt		(PIItem pIItem);
+	bool 					CanPutInBelt		(PIItem pIItem) const;
 	bool 					CanPutInRuck		(PIItem pIItem) const;
 
 	bool					CanTakeItem			(CInventoryItem *inventory_item) const;
@@ -67,7 +67,7 @@ public:
 
 	void					Activate			(u16 slot, /*EActivationReason reason=eGeneral, */bool bForce=false);
 	
-	static u32 const		qs_priorities_count = 5;
+	static u32 constexpr	qs_priorities_count = 5;
 	PIItem					GetNextItemInActiveSlot		(u8 const priority_value, bool ignore_ammo);
 	bool					ActivateNextItemInActiveSlot();
 	priority_group &		GetPriorityGroup			(u8 const priority_value, u16 slot);
@@ -99,7 +99,7 @@ public:
 	virtual bool			bfCheckForObject	(ALife::_OBJECT_ID tObjectID);	
 	PIItem					get_object_by_id	(ALife::_OBJECT_ID tObjectID);
 
-	u32						dwfGetObjectCount	();
+	u32						dwfGetObjectCount	() const;
 	PIItem					tpfGetObjectByIndex	(int iIndex);
 	PIItem					GetItemFromInventory(LPCSTR caItemName);
 

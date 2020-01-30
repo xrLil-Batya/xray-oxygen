@@ -97,7 +97,7 @@ void CControllerPsyHit::deactivate()
 	m_man->unsubscribe				(this, ControlCom::eventAnimationEnd);
 
 	if (m_blocked) 
-		Actor()->inventory().SetSlotsBlocked(INV_STATE_BLOCK_ALL, false);
+		Actor()->HideAllWeapons(false);
 
 	set_sound_state(eNone);
 }
@@ -237,7 +237,7 @@ void CControllerPsyHit::death_glide_start()
 
 	set_sound_state					(eStart);
 
-	Actor()->inventory().SetSlotsBlocked(INV_STATE_BLOCK_ALL, true);
+	Actor()->HideAllWeapons(true);
 
 	m_blocked			= true;
 

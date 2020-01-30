@@ -4,27 +4,24 @@ class CAI_Bloodsucker;
 class CAlienEffector;
 class CAlienEffectorPP;
 
-class CBloodsuckerAlien {
-	
+class CBloodsuckerAlien
+{
 	CAI_Bloodsucker				*m_object;
-	
-	bool						m_active;
 
 	CAlienEffector				*m_effector;
 	CAlienEffectorPP			*m_effector_pp;
 	
 	bool						m_crosshair_show;
+	bool						m_active;
 
 public:
 			CBloodsuckerAlien	();
 			~CBloodsuckerAlien	();
 	
-	void	init_external		(CAI_Bloodsucker *obj);	
-	void	reinit				();
+	void	InitExternal		(CAI_Bloodsucker *obj);	
+	void	Reinit				();
 
-	void	activate			();
-	void	deactivate			();
-
-	bool	active				() {return m_active;}
+	void	Switch				(bool bActive);
+IC	bool	Active				() const {return m_active;}
 
 };

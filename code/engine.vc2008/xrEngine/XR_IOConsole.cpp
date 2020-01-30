@@ -506,15 +506,9 @@ void CConsole::DrawBackgrounds( bool bGame )
 		VERIFY( rb.y2 - rb.y1 >= 1.0f );
 		float back_height = rb.y2 - rb.y1;
 		float u_height = (back_height * VIEW_TIPS_COUNT)/ float(tips_sz);
-		if ( u_height < 0.5f * font_h )
-		{
-			u_height = 0.5f * font_h;
-		}
 
-		//float u_pos = (back_height - u_height) * float(m_start_tip) / float(tips_sz);
+		u_height = std::max(u_height, 0.5f * font_h);
 		float u_pos = back_height * float(m_start_tip) / float(tips_sz);
-		
-		//clamp( u_pos, 0.0f, back_height - u_height );
 		
 		rs = rb;
 		rs.y1 = pr.y1 + u_pos;
@@ -637,19 +631,12 @@ void CConsole::Show()
 
 }
 
-extern CInput* pInput;
-
 void CConsole::Hide()
 {
 	if ( !bVisible )
 	{
 		return;
 	}
-
-// 	if ( pInput->get_exclusive_mode() )
-// 	{
-// 		SetCursorPos( m_mouse_pos.x, m_mouse_pos.y );
-// 	}
 
 	bVisible = false;
 	reset_selected_tip();

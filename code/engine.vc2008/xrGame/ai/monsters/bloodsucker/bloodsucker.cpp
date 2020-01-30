@@ -53,7 +53,7 @@ u32		CAI_Bloodsucker::m_time_last_vampire	=	0;
 CAI_Bloodsucker::CAI_Bloodsucker()
 {
 	StateMan						=	xr_new<CStateManagerBloodsucker>	(this);
-	m_alien_control.init_external		(this);
+	m_alien_control.InitExternal		(this);
 	m_drag_anim_jump				= 	false;
 	m_animated						= 	false;
 	collision_off					= 	false;
@@ -265,7 +265,7 @@ void CAI_Bloodsucker::reinit()
 	com_man().ta_fill_data(anim_triple_vampire, "vampire_0", "vampire_1", "vampire_2", TA_EXECUTE_LOOPED, TA_DONT_SKIP_PREPARE, 0);//ControlCom::eCapturePath | ControlCom::eCaptureMovement);
 	
 
-	m_alien_control.reinit();
+	m_alien_control.Reinit();
 	
 	state_invisible				= false;
 
@@ -564,7 +564,7 @@ void CAI_Bloodsucker::shedule_Update(u32 dt)
 		}
 	}
 
-	if (m_alien_control.active())	sound().play(eAlien);
+	if (m_alien_control.Active())	sound().play(eAlien);
 }
 
 void CAI_Bloodsucker::Die(CObject* who)
@@ -608,7 +608,7 @@ bool CAI_Bloodsucker::check_start_conditions(ControlCom::EControlType type)
 
 void CAI_Bloodsucker::set_alien_control(bool val)
 {
-	val ? m_alien_control.activate() : m_alien_control.deactivate();
+	m_alien_control.Switch(val);
 }
 
 void CAI_Bloodsucker::set_vis()

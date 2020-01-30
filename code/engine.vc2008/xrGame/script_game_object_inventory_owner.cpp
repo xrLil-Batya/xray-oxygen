@@ -971,12 +971,12 @@ void CScriptGameObject::attachable_item_load_attach(LPCSTR section)
 
 void  CScriptGameObject::RestoreWeapon		()
 {
-	Actor()->SetWeaponHideState(INV_STATE_BLOCK_ALL,false);
+	Actor()->HideAllWeapons(false);
 }
 
 void  CScriptGameObject::HideWeapon			()
 {
-	Actor()->SetWeaponHideState(INV_STATE_BLOCK_ALL,true);
+	Actor()->HideAllWeapons(true);
 }
 
 int CScriptGameObject::Weapon_GrenadeLauncher_Status()
