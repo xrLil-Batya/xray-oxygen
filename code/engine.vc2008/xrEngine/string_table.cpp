@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "string_table.h"
 
 #include "../xrCore/XMLCore/xrXMLParser.h"

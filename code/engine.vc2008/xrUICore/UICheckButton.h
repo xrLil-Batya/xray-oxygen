@@ -6,7 +6,7 @@ class UIHint;
 
 class UI_API CUICheckButton : public CUI3tButton, public CUIOptionsItem
 {
-	typedef CUI3tButton			inherited;
+	using inherited = CUI3tButton;
 
 public:
 					CUICheckButton			();
@@ -30,11 +30,8 @@ public:
 			void InitCheckButton		(Fvector2 pos, Fvector2 size, LPCSTR texture_name);
 
 	//состояние кнопки
-	IC	bool	GetCheck					() const {return GetButtonState() == BUTTON_PUSHED;}
-	IC	void	SetCheck(bool ch)
-	{
-		SetButtonState( ch ? BUTTON_PUSHED : BUTTON_NORMAL);
-	}
+[[nodiscard]] IC bool GetCheck() const  {return GetButtonState() == BUTTON_PUSHED;}
+			  IC void SetCheck(bool ch) { SetButtonState( ch ? BUTTON_PUSHED : BUTTON_NORMAL);}
 
 	void SetDependControl(CUIWindow* pWnd);
 

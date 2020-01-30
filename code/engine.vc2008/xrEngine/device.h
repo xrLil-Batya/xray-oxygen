@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 // Note:
 // ZNear - always 0.0f
 // ZFar  - always 1.0f
@@ -9,7 +9,8 @@
 #include "stats.h"
 #include "DirectXMathExternal.h"
 
-#define VIEWPORT_NEAR  0.05f
+#define VIEWPORT_NEAR  0.2f
+#define VIEWPORT_NEAR_HUD 0.05f
 
 #define DEVICE_RESET_PRECACHE_FRAME_COUNT 10
 
@@ -59,6 +60,7 @@ public:
 
 		// Engine flow-control
 	u32										dwFrame;
+	xr_atomic_u32							dwFrameAsync;
 
 	float									fTimeDelta;
 	float									fTimeGlobal;
@@ -261,9 +263,10 @@ public:
     WindowPropStyle GetCurrentWindowPropStyle() const { return (WindowPropStyle)ps_vid_windowtype; };
 
 	// Multi-threading
-	xrCriticalSection	mt_csEnter;
-	xrCriticalSection	mt_csLeave;
 	volatile BOOL		mt_bMustExit;
+	xrConditionalVariable SecondThreadSync;
+	xrCriticalSection SecondThreadCS;
+	xr_atomic_u32 SecondThreadMarker;
 
 	ICF		void			remove_from_seq_parallel(const xrDelegate<void()> &delegate)
 	{
@@ -315,8 +318,6 @@ extern		ENGINE_API		CRenderDevice		Device;
 #define RDEVICE	EDevice
 #endif
 
-
-extern		ENGINE_API		bool				g_bBenchmark;
 
 using LOADING_EVENT = xrDelegate<bool()>;
 extern	ENGINE_API xr_list<LOADING_EVENT>		g_loading_events;

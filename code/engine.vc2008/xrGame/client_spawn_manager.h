@@ -9,8 +9,11 @@
 #pragma once
 
 #include "alife_space.h"
-#include "script_callback_ex.h"
-#include "../xrScripts/export/script_export_space.h"
+
+#ifndef SPECTRE
+	#include "script_callback_ex.h"
+	#include "../xrScripts/export/script_export_space.h"
+#endif
 
 template <typename _return_type>
 class CScriptCallbackEx;
@@ -56,8 +59,14 @@ public:
 			void		dump					() const;
 			void		dump					(ALife::_OBJECT_ID	requesting_id) const;
 #endif // DEBUG
+
+#ifndef SPECTRE
 	DECLARE_SCRIPT_REGISTER_FUNCTION
+#endif
 };
-add_to_type_list(CClientSpawnManager)
-#undef script_type_list
-#define script_type_list save_type_list(CClientSpawnManager)
+
+#ifndef SPECTRE
+	add_to_type_list(CClientSpawnManager)
+	#undef script_type_list
+	#define script_type_list save_type_list(CClientSpawnManager)
+#endif

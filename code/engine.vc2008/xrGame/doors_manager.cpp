@@ -24,67 +24,37 @@ manager::~manager					( )
 	VERIFY_FORMAT ( m_doors.empty(), "there are %d still registered doors", m_doors.size());
 }
 
-//#include "level.h"
-//#include "script_game_object.h"
-//
-//void manager::check_bug_door		( ) const
-//{
-//	CObject const* const object = Level().Objects.FindObjectByName("shkaf_work_01_door_0000");
-//	if ( !object ) {
-//		Msg					( "there is now object[\"shkaf_work_01_door_0000\"] found" );
-//		return;
-//	}
-//
-//	CGameObject const* const game_object = smart_cast<CGameObject const*>(object);
-//	VERIFY					( game_object );
-//	if ( !game_object->lua_game_object()->m_door ) {
-//		Msg					( "object[\"shkaf_work_01_door_0000\"] has not been registered as a door yet" );
-//		return;
-//	}
-//
-//	door const* const found	= m_doors.find( game_object->lua_game_object()->m_door->position() );
-//	if ( !found ) {
-//		Msg					( "object[\"shkaf_work_01_door_0000\"] has been unregistered already[0x%08x]?", game_object->lua_game_object()->m_door );
-//		return;
-//	}
-//
-//	Msg						( "object[\"shkaf_work_01_door_0000\"] has been registered as a door" );
-//}
-//
-door* manager::register_door		( CPhysicObject& object )
+door* manager::register_door(CPhysicObject& object)
 {
-	door* const result		= xr_new<door>( &object );
-	//if ( !xr_strcmp(result->get_name(),"shkaf_work_01_door_0000") ) {
-	//	Msg					( "registering door[\"shkaf_work_01_door_0000\"][%f][%f][%f]", VPUSH(result->position()) );
-	//}
-	//check_bug_door			( );
-	m_doors.insert			( result );
-	//check_bug_door			( );
-	return					result;
+	door* const result = new door(&object);
+	m_doors.insert(result);
+	return result;
 }
 
-void manager::unregister_door		( door*& door )
+void manager::unregister_door(door*& door)
 {
-	//if ( !xr_strcmp(door->get_name(),"shkaf_work_01_door_0000") ) {
-	//	Msg					( "UNregistering door[\"shkaf_work_01_door_0000\"][%f][%f][%f]", VPUSH(door->position()) );
-	//}
-	//check_bug_door			( );
-	m_doors.remove			( door );
-	//check_bug_door			( );
-	xr_delete				( door );
+	m_doors.remove(door);
+	xr_delete(door);
 }
 
 bool manager::actualize_doors_state	( actor& actor, float const average_speed )
 {
 	float const radius		= average_speed*g_door_open_time + g_door_length;
-	Fvector const& position	= actor.get_position();
-	//check_bug_door			( );
-	m_doors.nearest			( position, radius, m_nearest_doors );
-	//check_bug_door			( );
+	Fvector const& position	= actor.get_position();doors_type nearest_doors;
+	m_doors.nearest( position, radius, nearest_doors );
+	m_nearest_doors.clear();
+	
+	// Use only a suitable height door
+	for (const auto it : nearest_doors) 
+	{
+		if (_abs( it->position().y - position.y ) < 2)
+			m_nearest_doors.push_back(it);
+	}
+	
 	if ( m_nearest_doors.empty() && !actor.need_update() )
-		return				true;
+		return true;
 
-	return					actor.update_doors( m_nearest_doors, average_speed );
+	return actor.update_doors( m_nearest_doors, average_speed );
 }
 
 void manager::on_door_is_open		( door* door )

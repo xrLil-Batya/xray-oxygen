@@ -13,7 +13,7 @@ CSoundRender_Emitter*	CSoundRender_Core::i_play(ref_sound* S, bool _loop, float 
 	CSoundRender_Emitter* E = new CSoundRender_Emitter();
 	S->_p->feedback = E;
 	E->start(S, _loop, delay);
-	s_emitters.push_back(E);
+	emitters.push_back(E);
 
 	return E;
 }
@@ -24,76 +24,77 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 		return;
 
 	bLocked = true;
-	const float new_tm = Timer.GetElapsed_sec();
-	fTimer_Delta = new_tm - fTimer_Value;
-	float dt_sec = fTimer_Delta;
-	fTimer_Value = new_tm;
+	const float freshTimestamp = Timer.GetElapsed_sec();
+	lastDeltaTime = freshTimestamp - lastTimestamp;
+	lastTimestamp = freshTimestamp;
 
-	++s_emitters_u;
+	++lastUpdateFrame;
 
 	// Firstly update emitters, which are now being rendered
-	for (u32 it = 0; it < s_targets.size(); ++it)
+	for (CSoundRender_Target* target : targets)
 	{
-		CSoundRender_Target* T = s_targets[it];
-		CSoundRender_Emitter* E = T->get_emitter();
-		if (E)
+		if (CSoundRender_Emitter* emitter = target->get_emitter())
 		{
-			E->update(dt_sec);
-			E->marker = s_emitters_u;
-			E = T->get_emitter();	// update can stop itself
-			if (E)
+			emitter->update(lastDeltaTime);
+			emitter->lastUpdateFrame = lastUpdateFrame;
+			emitter = target->get_emitter();	// update can stop itself
+			if (emitter != nullptr)
 			{
-				T->priority = E->priority();
+				target->priority = emitter->priority();
 				continue;
 			}
 		}
-		T->priority = -1;
+		target->priority = -1;
 	}
 
 	// Update emitters
-	for (u32 it = 0; it < s_emitters.size(); ++it)
+	for (u32 it = 0; it < emitters.size(); ++it)
 	{
-		CSoundRender_Emitter*	pEmitter = s_emitters[it];
+		CSoundRender_Emitter* emitter = emitters[it];
 
-		if (pEmitter->marker != s_emitters_u)
+		if (emitter->lastUpdateFrame != lastUpdateFrame)
 		{
-			pEmitter->update(dt_sec);
-			pEmitter->marker = s_emitters_u;
+			emitter->update(lastDeltaTime);
+			emitter->lastUpdateFrame = lastUpdateFrame;
 		}
 
-		if (!pEmitter->isPlaying())
+		if (!emitter->isPlaying())
 		{
 			// Stopped
-			xr_delete(pEmitter);
-			s_emitters.erase(s_emitters.begin() + it);
+			xr_delete(emitter);
+			emitters.erase(emitters.begin() + it);
 			it--;
 		}
 	}
 
 	// Get currently rendering emitters
-	s_targets_defer.clear();
-	++s_targets_pu;
+	targetShouldUpdateLater.clear();
 
-	for (CSoundRender_Target* pTarget: s_targets)
+	for (CSoundRender_Target* pTarget : targets)
 	{
 		if (pTarget->get_emitter())
 		{
 			// Has emitter, maybe just not started rendering
-			if (pTarget->get_Rendering())
+			if (pTarget->IsRendering())
 			{
 				pTarget->fill_parameters();
 				pTarget->update();
 			}
-			else s_targets_defer.push_back(pTarget);
+			else
+			{
+				targetShouldUpdateLater.push_back(pTarget);
+			}
 		}
 	}
 
 	// Commit parameters from pending targets
-	if (!s_targets_defer.empty())
+	if (!targetShouldUpdateLater.empty())
 	{
-		s_targets_defer.erase(std::unique(s_targets_defer.begin(), s_targets_defer.end()), s_targets_defer.end());
-		for (u32 it = 0; it < s_targets_defer.size(); ++it)
-			s_targets_defer[it]->fill_parameters();
+		targetShouldUpdateLater.erase(std::unique(targetShouldUpdateLater.begin(), targetShouldUpdateLater.end()), targetShouldUpdateLater.end());
+		for (CSoundRender_Target* target : targetShouldUpdateLater)
+		{
+			target->fill_parameters();
+		}
 	}
 
 	// update EFX
@@ -105,20 +106,19 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 			e_target = *get_environment(P);
 		}
 
-		e_current.lerp(e_current, e_target, dt_sec);
+		e_current.lerp(e_current, e_target, lastDeltaTime);
 		// KRodin: Сделал по аналогии с eax. Некоторые эффекты подошли. Посмотрим, что получится.
 		i_efx_listener_set(&e_current);
 		bEFX = i_efx_commit_setting();
 	}
 
 	// update listener
-	update_listener(P, D, N, dt_sec);
+	update_listener(P, D, N, lastDeltaTime);
 
 	// Start rendering of pending targets
-	if (!s_targets_defer.empty())
+	for (CSoundRender_Target* target : targetShouldUpdateLater)
 	{
-		for (u32 it = 0; it < s_targets_defer.size(); ++it)
-			s_targets_defer[it]->render();
+		target->render();
 	}
 
 	// Events
@@ -147,14 +147,14 @@ void CSoundRender_Core::statistic(CSound_stats*  dest, CSound_stats_ext*  ext)
 	if (dest)
 	{
 		dest->_rendered = 0;
-		for (u32 it = 0; it < s_targets.size(); ++it)
+		for (u32 it = 0; it < targets.size(); ++it)
 		{
-			CSoundRender_Target* T = s_targets[it];
-			if (T->get_emitter() && T->get_Rendering())
+			CSoundRender_Target* T = targets[it];
+			if (T->get_emitter() && T->IsRendering())
 				dest->_rendered++;
 		}
 
-		dest->_simulated = (u32)s_emitters.size();
+		dest->_simulated = (u32)emitters.size();
 		dest->_cache_hits = cache._stat_hit;
 		dest->_cache_misses = cache._stat_miss;
 		dest->_events = g_saved_event_count;
@@ -163,9 +163,9 @@ void CSoundRender_Core::statistic(CSound_stats*  dest, CSound_stats_ext*  ext)
 
 	if (ext)
 	{
-		for (u32 it = 0; it < s_emitters.size(); ++it)
+		for (u32 it = 0; it < emitters.size(); ++it)
 		{
-			CSoundRender_Emitter*	_E = s_emitters[it];
+			CSoundRender_Emitter*	_E = emitters[it];
 			CSound_stats_ext::SItem _I;
 			_I._3D = !_E->b2D;
 			_I._rendered = !!_E->target;

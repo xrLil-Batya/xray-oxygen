@@ -52,10 +52,6 @@ struct _SoundProcessor : public pureFrame
 // global variables
 ENGINE_API	CApplication*	pApp			= NULL;
 
-			void			doBenchmark		(LPCSTR name);
-ENGINE_API	bool			g_bBenchmark	= false;
-string512	g_sBenchmarkName;
-
 
 ENGINE_API	string512		g_sLaunchOnExit_params;
 ENGINE_API	string512		g_sLaunchOnExit_app;
@@ -217,6 +213,9 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 {
 	gMainThreadId = GetCurrentThreadId();
 
+	string128 primaryThreadName = "X-Ray: Primary thread";
+	PlatformUtils.SetCurrentThreadName(primaryThreadName);
+
 	// Title window
 	HWND logoInsertPos = HWND_TOPMOST;
 	if (IsDebuggerPresent()) 
@@ -253,7 +252,8 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	splashScreen.SetProgressPosition(35, "Initializing engine");
 	InitEngine();
 	splashScreen.SetProgressPosition(40, "Initializing input");
-	pInput = new CInput();
+	//#GIPERION: To ForserX Don't inline call, please. It's needed as separate call for editor
+	InitInput();
 	splashScreen.SetProgressPosition(45, "Initializing console");
 	InitConsole();
 
@@ -427,6 +427,7 @@ void CApplication::LoadBegin()
 	dwLoadReference++;
 	if (1==dwLoadReference)	
 	{
+		Profiling.PauseProfiling();
 		g_appLoaded			= FALSE;
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
@@ -440,7 +441,13 @@ void CApplication::LoadEnd()
     VERIFY(dwLoadReference != 0);
 	dwLoadReference--;
 	if (0 == dwLoadReference)
+	{
 		g_appLoaded = TRUE;
+		if (!Profiling.IsInEngineMode())
+		{
+			Profiling.ResumeProfiling();
+		}
+	}
 }
 
 void CApplication::SetLoadingScreen(ILoadingScreen* newScreen)
@@ -463,6 +470,7 @@ ENGINE_API void CApplication::LoadDraw		()
 {
 	if(g_appLoaded)				return;
 	Device.dwFrame				+= 1;
+	Device.dwFrameAsync			+= 1;
 
 	if(!Device.Begin () )		return;
 	load_draw_internal			();

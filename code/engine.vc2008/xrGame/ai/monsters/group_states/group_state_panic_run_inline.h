@@ -6,8 +6,12 @@
 
 #define CStateGroupPanicRunAbstract CStateGroupPanicRun<_Object>
 
-#define MIN_UNSEEN_TIME			15000
-#define MIN_DIST_TO_ENEMY		15.f
+
+namespace GroupStatePanicRunDetails
+{
+	constexpr float MinUnseenTime = 15000.0f;
+	constexpr float MinDistToEnemy = 15.0f;
+}
 
 TEMPLATE_SPECIALIZATION
 void CStateGroupPanicRunAbstract::initialize()
@@ -39,8 +43,8 @@ bool CStateGroupPanicRunAbstract::check_completion()
 	float dist_to_enemy = object->Position().distance_to(object->EnemyMan.get_enemy_position());
 	u32 time_delta	= Device.dwTimeGlobal - object->EnemyMan.get_enemy_time_last_seen();
 
-	if (dist_to_enemy < MIN_DIST_TO_ENEMY)  return false;
-	if (time_delta	  < MIN_UNSEEN_TIME)	return false;
+	if (dist_to_enemy < GroupStatePanicRunDetails::MinDistToEnemy)  return false;
+	if (time_delta	  < GroupStatePanicRunDetails::MinUnseenTime)	return false;
 
 	return true;
 }

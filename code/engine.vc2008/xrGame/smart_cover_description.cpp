@@ -17,13 +17,6 @@
 #include <luabind/luabind.hpp>
 
 using namespace MonsterSpace;
-using smart_cover::description;
-using smart_cover::loophole;
-using smart_cover::detail::parse_float;
-using smart_cover::detail::parse_string;
-using smart_cover::detail::parse_table;
-using smart_cover::detail::parse_fvector;
-using smart_cover::detail::parse_int;
 
 namespace smart_cover {
 	static	LPCSTR				s_enter_loophole_id = "<__ENTER__>";
@@ -44,7 +37,7 @@ namespace smart_cover {
 	{
 		return					(
 			transform_vertex(
-				parse_string(
+				smart_cover::detail::parse_string(
 					table,
 					identifier
 				),
@@ -54,25 +47,9 @@ namespace smart_cover {
 	}
 } // namespace smart_cover
 
-class id_predicate {
-	loophole const				*m_loophole;
-
-public:
-	IC			id_predicate(loophole const &loophole) :
-		m_loophole				(&loophole)
-	{
-	}
-
-	IC	bool	operator()	(loophole * const &loophole) const
-	{
-		VERIFY					(loophole);
-		return					(m_loophole->id()._get() == loophole->id()._get());
-	}
-};
-
 class enterable_predicate {
 public:
-	IC	bool	operator()	(loophole * const &loophole) const
+	IC	bool	operator()	(smart_cover::loophole * const &loophole) const
 	{
 		VERIFY					(loophole);
 		return					(loophole->enterable());
@@ -81,7 +58,7 @@ public:
 
 class exitable_predicate {
 public:
-	IC	bool	operator()	(loophole * const &loophole) const
+	IC	bool	operator()	(smart_cover::loophole * const &loophole) const
 	{
 		VERIFY					(loophole);
 		return					(loophole->exitable());
@@ -90,21 +67,21 @@ public:
 
 class usable_predicate {
 public:
-	IC	bool	operator()	(loophole * const &loophole) const
+	IC	bool	operator()	(smart_cover::loophole * const &loophole) const
 	{
 		VERIFY					(loophole);
 		return					(loophole->usable());
 	}
 };
 
-description::description	(shared_str const &table_id)
+smart_cover::description::description	(shared_str const &table_id)
 {
 	load_loopholes				(table_id);
 	load_transitions			(table_id);
 	process_loopholes			();
 }
 
-void description::load_loopholes	(shared_str const &table_id)
+void smart_cover::description::load_loopholes	(shared_str const &table_id)
 {
 	string256					temp;
 	xr_strcpy					(temp, "smart_covers.descriptions.");
@@ -131,11 +108,16 @@ void description::load_loopholes	(shared_str const &table_id)
 		}
 
 		smart_cover::loophole	*loophole = xr_new<smart_cover::loophole>(table);
-		VERIFY					(
+
+		VERIFY(
 			std::find_if(
 				m_loopholes.begin(),
 				m_loopholes.end(),
-				id_predicate(*loophole)
+				[loophole](smart_cover::loophole* const& InLoophole) -> bool
+				{
+					VERIFY(loophole != nullptr);
+					return loophole->id()._get() == InLoophole->id()._get();
+				}
 			) ==
 			m_loopholes.end()
 		);
@@ -151,13 +133,13 @@ void description::load_loopholes	(shared_str const &table_id)
 		) != m_loopholes.end(),  "smart_cover [%s] doesn't have usable loopholes", m_table_id.c_str());
 }
 
-void description::process_loopholes()
+void smart_cover::description::process_loopholes()
 {
 	Loopholes::iterator			I = m_loopholes.begin();
 	Loopholes::iterator			E = m_loopholes.end();
 	
 	for (; I != E; ++I) {
-		::loophole				*current = *I;
+		::smart_cover::loophole	*current = *I;
 		current->enterable		(m_transitions.edge(transform_vertex("", true), current->id()) != 0);
 		current->exitable		(m_transitions.edge(current->id(), transform_vertex("", false)) != 0);
 	}
@@ -181,7 +163,7 @@ void description::process_loopholes()
 			m_table_id.c_str());
 }
 
-void description::load_transitions	(shared_str const &table_id)
+void smart_cover::description::load_transitions	(shared_str const &table_id)
 {
 	string256					temp;
 	xr_strcpy					(temp, "smart_covers.descriptions.");
@@ -206,9 +188,9 @@ void description::load_transitions	(shared_str const &table_id)
 			continue;
 		}
 
-		shared_str				vertex_0_id	= parse_vertex(table, "vertex0", true);
-		shared_str				vertex_1_id	= parse_vertex(table, "vertex1", false);
-		float					weight = parse_float(table, "weight");
+		shared_str				vertex_0_id	= smart_cover::parse_vertex(table, "vertex0", true);
+		shared_str				vertex_1_id	= smart_cover::parse_vertex(table, "vertex1", false);
+		float					weight = smart_cover::detail::parse_float(table, "weight");
 
 		if (!m_transitions.vertex(vertex_0_id))
 			m_transitions.add_vertex	(imdexlib::empty(), vertex_0_id);
@@ -222,10 +204,10 @@ void description::load_transitions	(shared_str const &table_id)
 	}
 }
 
-void description::load_actions	(luabind::object const &table, description::ActionsList& result)
+void smart_cover::description::load_actions	(luabind::object const &table, description::ActionsList& result)
 {
 	luabind::object				actions;
-	parse_table					(table, "actions", actions);
+	smart_cover::detail::parse_table (table, "actions", actions);
 	luabind::object::iterator	I = actions.begin();
 	luabind::object::iterator	E = actions.end();
 	for ( ; I != E; ++I) {
@@ -264,34 +246,23 @@ IC void delete_data (const CGraphAbstract<_data_type, _edge_weight_type, _vertex
 	}
 }
 
-description::~description		()
+smart_cover::description::~description		()
 {
 	delete_data					(m_loopholes);
 	delete_data					(m_transitions);
 }
 
-loophole const *description::loophole(shared_str const &loophole_id) const
+smart_cover::loophole const * smart_cover::description::loophole(shared_str const &loophole_id) const
 {
-	class id_predicate {
-		shared_str				m_id;
-
-	public:
-		IC	id_predicate		(shared_str const &id) :
-			m_id				(id)
-		{
-		}
-
-		IC	bool	operator()	(smart_cover::loophole const *loophole) const
-		{
-			return				(m_id._get() == loophole->id()._get());
-		}
-	};
-
 	Loopholes::const_iterator	found = std::find_if(
-									m_loopholes.begin(),
-									m_loopholes.end(),
-									id_predicate(loophole_id)
-								);
+		m_loopholes.begin(),
+		m_loopholes.end(),
+		[loophole_id](smart_cover::loophole const* loophole) -> bool
+		{
+			return loophole_id._get() == loophole->id()._get();
+		}
+	);
+
 	if (found != m_loopholes.end())
 		return					(*found);
 

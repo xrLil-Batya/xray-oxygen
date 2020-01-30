@@ -9,6 +9,7 @@
 #include "level.h"
 #include "UIGame.h"
 #include "..\xrEngine\string_table.h"
+#include "..\xrEngine\xr_input.h"
 #include "ActorCondition.h"
 #include "items/WeaponMagazined.h"
 #include "CharacterPhysicsSupport.h"
@@ -175,12 +176,13 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 	else
 	{
 		// update player accel
-		if (mstate_wf&mcFwd)		vControlAccel.z +=  m_movementWeight.y;
-		if (mstate_wf&mcBack)		vControlAccel.z +=	m_movementWeight.y;
-		if (mstate_wf&mcLStrafe)	vControlAccel.x +=	m_movementWeight.x;
-		if (mstate_wf&mcRStrafe)	vControlAccel.x +=	m_movementWeight.x;
+		if (mstate_wf&mcFwd)		vControlAccel.z =  1.0f;
+		if (mstate_wf&mcBack)		vControlAccel.z = -1.0f;
+		if (mstate_wf&mcLStrafe)	vControlAccel.x = -1.0f;
+		if (mstate_wf&mcRStrafe)	vControlAccel.x =  1.0f;
 	}
 
+#if 0
 	if ((Level().CurrentControlEntity() == this) && g_ShowAnimationInfo)
 	{
 		string128 buf;
@@ -203,9 +205,11 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 		StatFont->OutNext("MSTATE WISHFUL:     [%s]", buf);
 		StatFont->OutNext("vControlAccel:     [%f, %f, %f]", vControlAccel.x, vControlAccel.y, vControlAccel.z);
 	};
+#endif
 
 	CPHMovementControl::EEnvironment curr_env = character_physics_support()->movement()->Environment();
-	if(curr_env==CPHMovementControl::peOnGround || curr_env==CPHMovementControl::peAtWall)
+	if(curr_env == CPHMovementControl::peOnGround || 
+	   curr_env == CPHMovementControl::peAtWall)
 	{
 		// crouch
 		if ((0==(mstate_real&mcCrouch))&&(mstate_wf&mcCrouch))
@@ -587,8 +591,8 @@ bool CActor::CanMove()
 			GameUI()->AddCustomStatic("cant_walk", true);
 		}
 		return false;
-	}else
-	if( conditions().IsCantWalkWeight() )
+	} 
+	else if( conditions().IsCantWalkWeight() )
 	{
 		if(mstate_wishful&mcAnyMove)
 		{
@@ -596,6 +600,13 @@ bool CActor::CanMove()
 		}
 		return false;
 	
+	}
+
+	// check camera effectors for script
+	if (Cameras().IsCamEffectorLockPlayerMovement())
+	{
+		// cutscene playing, we not allowing move
+		return false;
 	}
 
 	if(IsTalking())
@@ -608,6 +619,8 @@ void CActor::StopAnyMove()
 {
 	mstate_wishful	&=		~mcAnyMove;
 	mstate_real		&=		~mcAnyMove;
+	
+	pInput->CallResetPressedState();
 
 	if (this == Level().CurrentViewEntity())
 	{

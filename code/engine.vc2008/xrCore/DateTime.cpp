@@ -7,6 +7,12 @@ Time::Time()
 	aTm = *localtime(&t);
 }
 
+Time::Time(time_t InTime)
+	: t(InTime)
+{
+	aTm = *localtime(&t);
+}
+
 int Time::GetSeconds() const
 {
 	return aTm.tm_sec;

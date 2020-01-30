@@ -114,12 +114,19 @@ ShaderElement* CResourceManager::_CreateElement			(ShaderElement& S)
 {
 	if (S.passes.empty())		return	nullptr;
 
+	xrCriticalSectionGuard guard(creationGuard);
 	// Search equal in shaders array
-	for (auto & v_element : v_elements)
-		if (S.equal(*v_element))	return v_element;
+	for (ShaderElement* v_element : v_elements)
+	{
+		if (S.equal(*v_element))
+		{
+			return v_element;
+		}
+	}
 
 	// Create _new_ entry
-	ShaderElement*	N		=	xr_new<ShaderElement>(S);
+	ShaderElement*	N		=	xr_new<ShaderElement>();
+	N->_copy(S);
 	N->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
 	v_elements.push_back	(N);
 	return N;
@@ -128,12 +135,15 @@ ShaderElement* CResourceManager::_CreateElement			(ShaderElement& S)
 void CResourceManager::_DeleteElement(const ShaderElement* S)
 {
 	if (0==(S->dwFlags&xr_resource_flagged::RF_REGISTERED))	return;
+
+	xrCriticalSectionGuard guard(creationGuard);
 	if (reclaim(v_elements,S))						return;
 	Msg	("! ERROR: Failed to find compiled 'shader-element'");
 }
 
 Shader*	CResourceManager::_cpp_Create	(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
+	xrCriticalSectionGuard guard(creationGuard);
 	CBlender_Compile	C;
 	Shader				S;
 
@@ -201,17 +211,8 @@ Shader*	CResourceManager::_cpp_Create	(IBlender* B, LPCSTR s_shader, LPCSTR s_te
 		S.E[5]				= _CreateElement	(E);
 	}
 
-	// Search equal in shaders array
-	for (Shader* it : v_shaders)
-	{
-		if (S.equal(it)) 
-			return it;
-	}
-	// Create _new_ entry
-	Shader*		N			=	xr_new<Shader>(S);
-	N->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
-	v_shaders.push_back		(N);
-	return N;
+	Shader* ResultShader = _CreateShader(&S);
+	return ResultShader;
 }
 
 Shader* CResourceManager::_cpp_Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
@@ -226,22 +227,42 @@ Shader* CResourceManager::Create(IBlender* B, LPCSTR s_shader, LPCSTR s_textures
 	return	_cpp_Create(B, s_shader, s_textures, s_constants, s_matrices);
 }
 
+Shader* CResourceManager::_CreateShader(Shader* InShader)
+{
+	xrCriticalSectionGuard guard(creationGuard);
+	// Search equal in shaders array
+	for (Shader* it : v_shaders)
+	{
+		if (InShader->equal(it))
+			return it;
+	}
+	// Create _new_ entry
+	Shader* N = xr_new<Shader>();
+	N->_copy(*InShader);
+	N->dwFlags |= xr_resource_flagged::RF_REGISTERED;
+	v_shaders.push_back(N);
+	return N;
+}
+
+
 Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 	if (CXMLBlend::Check(s_shader))
 	{
-		CXMLBlend* BlendXML = new CXMLBlend(s_shader);
-		Shader* pShader = BlendXML->Compile(s_textures);
-		xr_delete(BlendXML);
+		CXMLBlend BlendXML(s_shader);
+		Shader* pShader = BlendXML.Compile(s_textures);
 
-		R_ASSERT3(pShader, "XMLBlend error: name = %s", s_shader);
+		R_ASSERT3(pShader != nullptr, "XMLBlend failed to compile shader", s_shader);
 		return pShader;
 	}
 	else
 	{
 		Shader* pShader = _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
+		R_ASSERT2(pShader != nullptr, s_shader);
 		if (pShader)
+		{
 			return pShader;
+		}
 		else
 		{
 			if (CXMLBlend::Check("stub_default"))
@@ -264,6 +285,7 @@ Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_co
 void CResourceManager::Delete(const Shader* S)
 {
 	if (!(S->dwFlags&xr_resource_flagged::RF_REGISTERED))	return;
+	xrCriticalSectionGuard guard(creationGuard);
 	if (reclaim(v_shaders,S))						return;
 	Msg	("! ERROR: Failed to find complete shader");
 }

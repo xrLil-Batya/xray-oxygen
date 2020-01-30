@@ -80,6 +80,7 @@ void CDialogHolder::StartMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
 		{
 			g_actor->IR_OnKeyboardRelease(kWPN_ZOOM);
 			g_actor->IR_OnKeyboardRelease(kWPN_FIRE);
+			g_actor->IR_OnKeyboardRelease(kUSE);
 		}
 	}
 }
@@ -202,7 +203,10 @@ void CDialogHolder::SetMainInputReceiver(CUIDialogWnd* ir, bool _find_remove)
 				}
 			}
 		}
-		else m_input_receivers.pop_back();
+		else
+		{
+			m_input_receivers.pop_back();
+		}
 	}
 	else
 	{
@@ -294,7 +298,10 @@ bool CDialogHolder::IR_UIOnKeyboardPress(u8 dik)
 			{
 				EGameActions action = get_binded_action(dik);
 				if (action != kQUICK_USE_1 && action != kQUICK_USE_2 && action != kQUICK_USE_3 && action != kQUICK_USE_4)
+				{
 					IR->IR_OnKeyboardPress(action);
+					return true;
+				}
 			}
 			return (false);
 		}
@@ -338,7 +345,10 @@ bool CDialogHolder::IR_UIOnKeyboardRelease(u8 vKey)
 			IInputReceiver*		IR = dynamic_cast<IInputReceiver*>(O);
 
 			if (IR)
+			{
 				IR->IR_OnKeyboardRelease(GameAction);
+				return true;
+			}
 
 			return (false);
 		}

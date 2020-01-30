@@ -32,12 +32,44 @@ namespace CPU
 	XRCORE_API u32 qpc_counter = 0;
 	XRCORE_API processor_info Info;
 
+	XRCORE_API u64 clk_per_second = 0;
 	XRCORE_API u64 QPC() noexcept
 	{
 		u64 _dest;
 		QueryPerformanceCounter(PLARGE_INTEGER(&_dest));
 		qpc_counter++;
 		return _dest;
+	}
+
+	void Detect()
+	{
+		// Timers & frequency
+		u64 start,end;
+		
+		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+
+		start = GetCLK();
+		while (GetCLK() - start < 1000);
+		end = GetCLK();
+		clk_per_second = end - start;
+
+		// Detect RDTSC Overhead
+		u64 clk_overhead = 0;
+		for (u32 i = 0; i < 256; i++)
+		{
+			start =	GetCLK();
+			clk_overhead += GetCLK() - start;
+		}
+		clk_overhead /=	256;
+		clk_per_second -= clk_overhead;
+
+		// Detect QPC
+		LARGE_INTEGER Freq;
+		QueryPerformanceFrequency(&Freq);
+		qpc_freq = Freq.QuadPart;
+
+		// Restore normal priority
+		SetPriorityClass(GetCurrentProcess(),NORMAL_PRIORITY_CLASS);
 	}
 };
 
@@ -128,9 +160,8 @@ void _initialize_cpu(void)
 	Msg("* CPU features: %s", features);
 	Msg("* CPU cores/threads: %d/%d \n", CPU::Info.n_cores, CPU::Info.n_threads);
 
-	LARGE_INTEGER Freq;
-	QueryPerformanceFrequency(&Freq);
-	CPU::qpc_freq = Freq.QuadPart;
+	// Per second and QPC, lol 
+	CPU::Detect();
 
 	Fidentity.identity();	// Identity matrix
 	Didentity.identity();	// Identity matrix
@@ -296,20 +327,4 @@ float processor_info::CalcMPCPULoad(DWORD dwCPU)
 		}
 
 	return m_fltCpuUsage[dwCPU];
-}
-
-xr_string xr_string::ToString(const Fvector& Value)
-{
-	string64 buf = { 0 };
-	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
-
-	return xr_string(buf);
-}
-
-xr_string xr_string::ToString(const Dvector& Value)
-{
-	string64 buf = { 0 };
-	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
-
-	return xr_string(buf);
 }

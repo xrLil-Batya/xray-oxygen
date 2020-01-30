@@ -82,6 +82,12 @@
     <Filter Include="Platform\XboxOne">
       <UniqueIdentifier>{d4ae2434-9597-4a21-bed2-86c28438bccb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="containers">
+      <UniqueIdentifier>{f9da55c7-edd6-462d-9740-dae6e53f648b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiling">
+      <UniqueIdentifier>{8a4043d9-ace8-4d6b-b0c3-3f32bdd550bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -148,9 +154,6 @@
       <Filter>Memory manager</Filter>
     </ClCompile>
     <ClCompile Include="xrMemory.cpp">
-      <Filter>Memory manager</Filter>
-    </ClCompile>
-    <ClCompile Include="xrMemory_align.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
     <ClCompile Include="xrMemory_pso_Fill.cpp">
@@ -239,6 +242,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxAdvApi.cpp">
       <Filter>Platform\XboxOne</Filter>
+    </ClCompile>
+    <ClCompile Include="xrDebugSymbol.cpp">
+      <Filter>Debug core</Filter>
+    </ClCompile>
+    <ClCompile Include="ScopeHandle.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="xrProfiling.cpp">
+      <Filter>Profiling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -345,9 +357,6 @@
       <Filter>FS\file_stream_reader</Filter>
     </ClInclude>
     <ClInclude Include="xrMemory.h">
-      <Filter>Memory manager</Filter>
-    </ClInclude>
-    <ClInclude Include="xrMemory_align.h">
       <Filter>Memory manager</Filter>
     </ClInclude>
     <ClInclude Include="xrMemory_subst_msvc.h">
@@ -499,6 +508,18 @@
     </ClInclude>
     <ClInclude Include="..\..\Xbox\engine.vc2008\xrCore\Platform\Xbox\xrXboxAdvApi.h">
       <Filter>Platform\XboxOne</Filter>
+    </ClInclude>
+    <ClInclude Include="xrLazyVector.h">
+      <Filter>containers</Filter>
+    </ClInclude>
+    <ClInclude Include="xrDebugSymbol.h">
+      <Filter>Debug core</Filter>
+    </ClInclude>
+    <ClInclude Include="ScopeHandle.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="xrProfiling.h">
+      <Filter>Profiling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

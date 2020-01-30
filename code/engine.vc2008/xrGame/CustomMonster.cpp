@@ -1,6 +1,9 @@
-// CustomMonster.cpp: implementation of the CCustomMonster class.
-//
 //////////////////////////////////////////////////////////////////////
+// Desc    : implementation of the CCustomMonster class.
+// Authors : GSC 
+// Modifer : ForserX
+//////////////////////////////////////////////////////////////////////
+
 #include "stdafx.h"
 #include "CustomMonster.h"
 #include "ai_space.h"
@@ -41,6 +44,9 @@
 // Lain: added
 #include "../xrEngine/IGame_Level.h"
 #include "../xrPhysics/IPHWorld.h"
+
+// ForserX: added 
+#include "movement_manager.h"
 
 #ifdef DEBUG
 #	include "debug_text_tree.h"
@@ -443,9 +449,9 @@ void CCustomMonster::eye_pp_s1			()
 	if (g_Alive()) 
 	{
 #ifndef USE_STALKER_VISION_FOR_MONSTERS
-		update_range_fov					(new_range, new_fov, human_being() ? memory().visual().current_state().m_max_view_distance*eye_range : eye_range, eye_fov);
+		update_range_fov					(new_range, new_fov, human_being() ? memory().visual().current_state2().m_max_view_distance*eye_range : eye_range, eye_fov);
 #else 
-		update_range_fov					(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
+		update_range_fov					(new_range, new_fov, memory().visual().current_state2().m_max_view_distance*eye_range, eye_fov);
 #endif
 	}
 
@@ -484,7 +490,7 @@ void CCustomMonster::UpdateCamera()
 {
 	float									new_range = eye_range, new_fov = eye_fov;
 	if (g_Alive())
-		update_range_fov					(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
+		update_range_fov					(new_range, new_fov, memory().visual().current_state2().m_max_view_distance*eye_range, eye_fov);
 	g_pGameLevel->Cameras().Update(eye_matrix.c,eye_matrix.k,eye_matrix.j,new_fov,.75f,new_range,0);
 }
 
@@ -956,7 +962,7 @@ void CCustomMonster::OnRender()
 		float					new_range = eye_range, new_fov = eye_fov;
 		
 		if (g_Alive())
-			update_range_fov	(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
+			update_range_fov	(new_range, new_fov, memory().visual().current_state2().m_max_view_distance*eye_range, eye_fov);
 
 		dbg_draw_frustum		(new_fov,new_range,1,eye_matrix.c,eye_matrix.k,eye_matrix.j);
 	}
@@ -1100,10 +1106,48 @@ void CCustomMonster::destroy_anim_mov_ctrl	()
 void CCustomMonster::ForceTransform(const Fmatrix& m)
 {
 	character_physics_support()->ForceTransform( m );
-	const float block_damage_time_seconds = 2.f;
 }
 
 Fvector	CCustomMonster::spatial_sector_point()
 {
 	return inherited::spatial_sector_point().add(Fvector().set(0.f, Radius()*.5f, 0.f));
+}
+
+// VCPU Monsters Functions
+void CCustomMonster::mk_rotation(Fvector &dir, SRotation &R)
+{
+	// parse yaw
+	Fvector DYaw;	
+	DYaw.set(dir.x, 0.f, dir.z); 
+	DYaw.normalize_safe();
+	
+	// Aaarrrrrgdgs, constants...
+	clamp(DYaw.x, -1.f, 1.f);
+	clamp(DYaw.y, -1.f, 1.f);
+	clamp(DYaw.z, -1.f, 1.f);
+
+	R.yaw = DYaw.x >= 0 ? acosf(DYaw.z) : 2*PI-acosf(DYaw.z);
+	
+	// parse pitch
+	dir.normalize_safe();
+	R.pitch = -asinf(dir.y);
+}
+
+void CCustomMonster::Exec_Look( float dt )
+{
+	if (animation_movement_controlled())
+		return;
+
+	movement().m_body.current.yaw		= angle_normalize_signed(movement().m_body.current.yaw);
+	movement().m_body.current.pitch		= angle_normalize_signed(movement().m_body.current.pitch);
+	movement().m_body.target.yaw		= angle_normalize_signed(movement().m_body.target.yaw);
+	movement().m_body.target.pitch		= angle_normalize_signed(movement().m_body.target.pitch);
+	
+	float pitch_speed= get_custom_pitch_speed(movement().m_body.speed);
+	angle_lerp_bounds(movement().m_body.current.yaw,movement().m_body.target.yaw,movement().m_body.speed,dt);
+	angle_lerp_bounds(movement().m_body.current.pitch,movement().m_body.target.pitch,pitch_speed,dt);
+
+	Fvector P = Position();
+	XFORM().setHPB(-NET_Last.o_model,-NET_Last.o_torso.pitch,0);
+	Position() = P;
 }

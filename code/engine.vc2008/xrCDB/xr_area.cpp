@@ -6,16 +6,23 @@
 
 using namespace	collide;
 
+bool bObjectSpaceCreated = false;
 //----------------------------------------------------------------------
 // Class	: CObjectSpace
 // Purpose	: stores space slots
 //----------------------------------------------------------------------
-CObjectSpace::CObjectSpace(): xrc(), m_pRender(nullptr)
+CObjectSpace::CObjectSpace(): m_pRender(nullptr)
 {
+	if (bObjectSpaceCreated)
+	{
+		FATAL("CObjectSpace should be created once. There is a CObjectSpacePrivate things, that are not ready for multiple CObjectSpace");
+	}
+
 	if (RenderFactory)
 		m_pRender = CNEW(FactoryPtr<IObjectSpaceRender>)();
 
 	m_BoundingVolume.invalidate();
+	bObjectSpaceCreated = true;
 }
 //----------------------------------------------------------------------
 CObjectSpace::~CObjectSpace()
@@ -23,6 +30,7 @@ CObjectSpace::~CObjectSpace()
 #ifdef DEBUG
 	CDELETE(m_pRender);
 #endif
+	bObjectSpaceCreated = false;
 }
 //----------------------------------------------------------------------
 #pragma warning(disable: 4267)
@@ -48,18 +56,6 @@ int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<CObject*
 	return q_nearest.size();
 }
 
-//----------------------------------------------------------------------
-IC int	CObjectSpace::GetNearest(xr_vector<CObject*>&	q_nearest, const Fvector &point, float range, CObject* ignore_object)
-{
-	return(GetNearest(r_spatial, q_nearest, point, range, ignore_object));
-}
-
-//----------------------------------------------------------------------
-IC int   CObjectSpace::GetNearest(xr_vector<CObject*>&	q_nearest, ICollisionForm* obj, float range)
-{
-	CObject*	O = obj->Owner();
-	return GetNearest(q_nearest, O->spatial.sphere.P, range + O->spatial.sphere.R, O);
-}
 
 //----------------------------------------------------------------------
 void CObjectSpace::Load(CDB::build_callback build_callback)

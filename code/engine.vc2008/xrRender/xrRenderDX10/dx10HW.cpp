@@ -15,12 +15,6 @@
 #include "StateManager\dx10SamplerStateCache.h"
 #include "StateManager\dx10StateCache.h"
 
-struct DM1024
-{
-	DEVMODE		sys_mode;
-	string1024	sm_buffer;
-} g_dm;
-
 ENGINE_API BOOL isGraphicDebugging;
 
 //////////////////////////////////////////////////////////////////////
@@ -45,12 +39,6 @@ CHW::~CHW()
 //////////////////////////////////////////////////////////////////////
 void CHW::CreateD3D()
 {
-	// Init g_dm
-	std::memset(&g_dm, 0, sizeof(g_dm));
-	g_dm.sys_mode.dmSize = sizeof(g_dm.sys_mode);
-	g_dm.sys_mode.dmDriverExtra = sizeof(g_dm.sm_buffer);
-	EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &g_dm.sys_mode);
-
 	m_bUsePerfhud = false;
 
 	// Init pAdapter
@@ -384,8 +372,11 @@ DXGI_RATIONAL CHW::SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
 					res = desc.RefreshRate;
 				}
 
+				DEVMODE videoMode;
+				ZeroMemory(&videoMode, sizeof(videoMode));
+				EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &videoMode);
 				// Select desktop frequency
-				if (TempFreq == g_dm.sys_mode.dmDisplayFrequency)
+				if (TempFreq == videoMode.dmDisplayFrequency)
 				{
 					res = desc.RefreshRate;
 					break;

@@ -27,6 +27,8 @@ public:
 	static void AddLogCallback(LogCallback logCb);
 	static void RemoveLogCallback(LogCallback logCb);
 
+	static bool IsLogThreadWorking();
+
 	xrLogger();
 	~xrLogger();
 

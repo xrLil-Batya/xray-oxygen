@@ -113,6 +113,9 @@ namespace CDB
 			S_forcedword		= u32(-1)
 		};
 	private:
+		// for test, can be removed later
+		u64 padding;
+
 		mutable xrCriticalSection lock;
 		CDB_Model*				tree;
 		volatile u32						status;		// 0=ready, 1=init, 2=building
@@ -240,18 +243,11 @@ namespace CDB
 		void			clear			()	{ verts.clear(); faces.clear();	}
 	};
 
-	struct non_copyable // C++11 Style: on :))
-	{
-						non_copyable	() {}
-	private:
-						non_copyable	(const non_copyable &) = delete;
-						non_copyable	&operator=		(const non_copyable &) = delete;
-	};
-
 #pragma warning(push)
 #pragma warning(disable:4275)
 	const u32 clpMX = 24, clpMY=16, clpMZ=24;
-	class XRCDB_API CollectorPacked : public non_copyable {
+	class XRCDB_API CollectorPacked : public TNonCopyable 
+	{
 		typedef xr_vector<u32>		DWORDList;
 		typedef DWORDList::iterator	DWORDIt;
 	

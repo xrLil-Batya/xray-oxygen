@@ -312,11 +312,13 @@ void motions_container::dump()
 	auto it	= container.begin();
 	auto _E	= container.end();
 	Log	("--- motion container --- begin:");
-	u32 sz					= sizeof(*this);
+	u32 sz = sizeof(*this);
+
 	for (u32 k=0; it!=_E; k++,it++){
 		sz					+= it->second->mem_usage();
-		Msg("#%3d: [%3d/%5d Kb] - %s",k,it->second->m_dwReference,it->second->mem_usage()/1024,it->first.c_str());
+		Msg("#%3d: [%3d/%5d Kb] - %s", k, it->second->m_dwReference.load(), it->second->mem_usage() / 1024, it->first.c_str());
 	}
+
 	Msg ("--- items: %d, mem usage: %d Kb ",container.size(),sz/1024);
 	Log	("--- motion container --- end.");
 }

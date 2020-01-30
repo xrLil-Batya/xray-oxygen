@@ -15,6 +15,8 @@ public:
 	WaveForm		_B;
 	WaveForm		_A;
 
+	CConstant& operator=(const CConstant& Other) = delete;
+
 	CConstant		()
 	{
         std::memset(this,0,sizeof(CConstant));
@@ -48,5 +50,4 @@ public:
 	void			Save		(IWriter* fs);
 };
 
-typedef	resptr_core<CConstant,resptr_base<CConstant> >	
-	ref_constant_obsolette;
+typedef	resptr_core<CConstant> ref_constant_obsolette;

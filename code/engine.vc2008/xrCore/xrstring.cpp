@@ -103,19 +103,20 @@ struct str_container_impl
 
     void			 verify()
     {
-//         Msg("strings verify started");
-//         for (str_value* value : buffer)
-//         {
-//             while (value)
-//             {
-//                 u32			crc = crc32(value->value, value->dwLength);
-//                 string32	crc_str;
-//                 R_ASSERT3(crc == value->dwCRC, "CorePanic: read-only memory corruption (shared_strings)", itoa(value->dwCRC, crc_str, 16));
-//                 R_ASSERT3(value->dwLength == xr_strlen(value->value), "CorePanic: read-only memory corruption (shared_strings, internal structures)", value->value);
-//                 value = value->next;
-//             }
-//         }
-//         Msg("strings verify completed");
+		Msg("strings verify started");
+		for (auto& pair : buffer)
+		{
+			str_value* pString = pair.second;
+			while (pString)
+			{
+				u32			crc = crc32(pString->value, pString->dwLength);
+				string32	crc_str;
+				R_ASSERT3(crc == pString->dwCRC, "CorePanic: read-only memory corruption (shared_strings)", itoa(pString->dwCRC, crc_str, 16));
+				R_ASSERT3(pString->dwLength == xr_strlen(pString->value), "CorePanic: read-only memory corruption (shared_strings, internal structures)", pString->value);
+				pString = pString->nextNode;
+			}
+		}
+         Msg("strings verify completed");
     }
 
     void			dump(FILE* f) const
@@ -219,7 +220,10 @@ str_value*	str_container::dock(str_c value)
     // it may be the case, string is not found or has "non-exact" match
     if (result == nullptr) 
 	{
-        result = (str_value*)Memory.mem_alloc(sizeof(str_value) + s_len_with_zero);
+		const size_t sizeStringNode = sizeof(str_value) + s_len_with_zero;
+
+        result = (str_value*)Memory.mem_alloc(sizeStringNode);
+		ZeroMemory(result, sizeStringNode);
 
         result->dwReference = 0;
         result->dwLength = sv->dwLength;
@@ -503,6 +507,22 @@ xr_string xr_string::ToString(double Value)
 {
 	string64 buf = { 0 };
 	sprintf(buf, "%f", Value);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::ToString(const Fvector& Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
+
+	return xr_string(buf);
+}
+
+xr_string xr_string::ToString(const Dvector& Value)
+{
+	string64 buf = { 0 };
+	sprintf(buf, "[%f, %f, %f]", Value.x, Value.y, Value.z);
 
 	return xr_string(buf);
 }

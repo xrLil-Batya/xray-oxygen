@@ -60,10 +60,3 @@ void CPHElement::net_Export(NET_Packet& P)
 	get_State(state);
 	state.net_Export(P);
 }
-
-void CPHElement::net_Import(NET_Packet& P)
-{
-	SPHNetState state;
-	state.net_Import(P);
-	set_State(state);
-}

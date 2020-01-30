@@ -497,7 +497,6 @@ void CRender::Render()
         
 		// Lighting, dependant on OCCQ
 		{
-			ScopeStatTimer lightTimer3(Device.Statistic->TEST3);
 			PIX_EVENT(DEFER_LIGHT_OCCQ);
 			render_lights(LP_pending);
 		}
@@ -564,7 +563,7 @@ void CRender::AfterWorldRender()
 }
 
 // 
-void CRender::ChangeMark(pcstr mark)
+void CRender::ChangeMark(LPCSTR mark)
 {
 	if (0 == xr_strcmp(Target->m_MarkTexture.c_str(), mark)) return;
 

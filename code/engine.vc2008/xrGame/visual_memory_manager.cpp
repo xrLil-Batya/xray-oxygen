@@ -158,7 +158,7 @@ void CVisualMemoryManager::reload				(LPCSTR section)
 	}
 }
 
-IC	const CVisionParameters &CVisualMemoryManager::current_state() const
+const CVisionParameters &CVisualMemoryManager::current_state2() const
 {
 	if ( m_stalker ) {
 		return			(m_stalker->movement().mental_state() == eMentalStateDanger) ? m_danger : m_free;
@@ -279,8 +279,8 @@ float CVisualMemoryManager::object_visible_distance(const CGameObject *game_obje
 	clamp								(alpha,0.f,fov);
 
 	float								max_view_distance = object_range, min_view_distance = object_range;
-	max_view_distance					*= current_state().m_max_view_distance;
-	min_view_distance					*= current_state().m_min_view_distance;
+	max_view_distance					*= current_state2().m_max_view_distance;
+	min_view_distance					*= current_state2().m_min_view_distance;
 
 	float								distance = (1.f - alpha/fov)*(max_view_distance - min_view_distance) + min_view_distance;
 
@@ -292,7 +292,7 @@ float CVisualMemoryManager::object_luminocity	(const CGameObject *game_object) c
 	if (!smart_cast<CActor const*>(game_object))
 		return	(1.f);
 	float		luminocity = const_cast<CGameObject*>(game_object)->ROS()->get_luminocity();
-	float		power = log(luminocity > .001f ? luminocity : .001f)*current_state().m_luminocity_factor;
+	float		power = log(luminocity > .001f ? luminocity : .001f)*current_state2().m_luminocity_factor;
 	return		(exp(power));
 }
 
@@ -315,16 +315,16 @@ float CVisualMemoryManager::get_object_velocity	(const CGameObject *game_object,
 
 float CVisualMemoryManager::get_visible_value	(float distance, float object_distance, float time_delta, float object_velocity, float luminocity) const
 {
-	float								always_visible_distance = current_state().m_always_visible_distance;
+	float								always_visible_distance = current_state2().m_always_visible_distance;
 
 	if (distance <= always_visible_distance + EPS_L)
-		return							(current_state().m_visibility_threshold);
+		return							(current_state2().m_visibility_threshold);
 
 	return								(
 		time_delta / 
-		current_state().m_time_quant * 
+		current_state2().m_time_quant * 
 		luminocity *
-		(1.f + current_state().m_velocity_factor*object_velocity) *
+		(1.f + current_state2().m_velocity_factor*object_velocity) *
 		(distance - object_distance) /
 		(distance - always_visible_distance)
 	);
@@ -381,12 +381,12 @@ bool CVisualMemoryManager::visible				(const CGameObject *game_object, float tim
 
 	if (distance < object_distance) {
 		if (object) {
-			object->m_value		-= current_state().m_decrease_value;
+			object->m_value		-= current_state2().m_decrease_value;
 			if (object->m_value < 0.f)
 				object->m_value	= 0.f;
 			else
 				object->m_update_time	= Device.dwTimeGlobal;
-			return				(object->m_value >= current_state().m_visibility_threshold);
+			return				(object->m_value >= current_state2().m_visibility_threshold);
 		}
 		return					(false);
 	}
@@ -396,19 +396,19 @@ bool CVisualMemoryManager::visible				(const CGameObject *game_object, float tim
 		new_object.m_object			= game_object;
 		new_object.m_prev_time		= 0;
 		new_object.m_value			= get_visible_value(distance,object_distance,time_delta,get_object_velocity(game_object,new_object),object_luminocity(game_object));
-		clamp						(new_object.m_value,0.f,current_state().m_visibility_threshold + EPS_L);
+		clamp						(new_object.m_value,0.f,current_state2().m_visibility_threshold + EPS_L);
 		new_object.m_update_time	= Device.dwTimeGlobal;
 		new_object.m_prev_time		= get_prev_time(game_object);
 		add_not_yet_visible_object	(new_object);
-		return						(new_object.m_value >= current_state().m_visibility_threshold);
+		return						(new_object.m_value >= current_state2().m_visibility_threshold);
 	}
 
 	object->m_update_time		= Device.dwTimeGlobal;
 	object->m_value				+= get_visible_value(distance,object_distance,time_delta,get_object_velocity(game_object,*object),object_luminocity(game_object));
-	clamp						(object->m_value,0.f,current_state().m_visibility_threshold + EPS_L);
+	clamp						(object->m_value,0.f,current_state2().m_visibility_threshold + EPS_L);
 	object->m_prev_time			= get_prev_time(game_object);
 
-	return						(object->m_value >= current_state().m_visibility_threshold);
+	return						(object->m_value >= current_state2().m_visibility_threshold);
 }
 
 bool   CVisualMemoryManager::should_ignore_object (CObject const* object) const
@@ -612,7 +612,7 @@ CVisibleObject *CVisualMemoryManager::visible_object	(const CGameObject *game_ob
 	return						(&*I);
 }
 
-IC	squad_mask_type CVisualMemoryManager::mask			() const
+squad_mask_type CVisualMemoryManager::mask			() const
 {
 	if (!m_stalker)
 		return					(squad_mask_type(-1));
@@ -649,7 +649,7 @@ void CVisualMemoryManager::update				(float time_delta)
 		xr_vector<CVisibleObject>::iterator	I = m_objects->begin();
 		xr_vector<CVisibleObject>::iterator	E = m_objects->end();
 		for ( ; I != E; ++I)
-			if ((*I).m_level_time + current_state().m_still_visible_time < Device.dwTimeGlobal)
+			if ((*I).m_level_time + current_state2().m_still_visible_time < Device.dwTimeGlobal)
 				(*I).visible			(mask,false);
 	}
 	STOP_PROFILE

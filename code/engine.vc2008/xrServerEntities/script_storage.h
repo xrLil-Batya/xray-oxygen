@@ -39,7 +39,7 @@ protected:
 			void				reinit						();
 
 public:
-			void				dump_state					();
+			void dump_state (string4096& InOutAdditionalInformation);
 								CScriptStorage				();
 	virtual						~CScriptStorage				();
 	IC		lua_State			*lua						();
@@ -55,8 +55,8 @@ public:
 	static	int		__cdecl		script_log					(ELuaMessageType message,	const char*	caFormat, ...);
 	static	bool				print_output				(lua_State *L, const char*	caScriptName, int iErorCode = 0, const char* caErrorText = "see call_stack for details!");
 	static	void				print_error					(lua_State *L,		int		iErrorCode);
-			void                LogTable                    (lua_State *l, const char* S, int level, int index = -1);
-			void                LogVariable                 (lua_State * l, const char* name, int level, bool bOpenTable, int index = -1);
+			void LogTable (lua_State *l, const char* S, int level, string4096& OutInfo, int index = -1);
+			void LogVariable (lua_State * l, const char* name, int level, bool bOpenTable, string4096& OutInfo, int index = -1);
             void                ClearDumpedObjects          ();
 
 #ifdef DEBUG

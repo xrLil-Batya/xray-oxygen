@@ -57,10 +57,7 @@ public:
 	virtual void			OnH_A_Chield		()				{inherited::OnH_A_Chield();}
 	virtual void			OnH_B_Chield		()				{inherited::OnH_B_Chield();}
 	virtual void			renderable_Render	()				{inherited::renderable_Render();}
-#ifdef DEBUG
-	virtual void			PH_Ch_CrPr			(); // 
-	virtual void			OnRender			();
-#endif
+
 	virtual void			reinit				();
 	virtual void			reload				(LPCSTR section);
 	virtual void			activate_physic_shell	();

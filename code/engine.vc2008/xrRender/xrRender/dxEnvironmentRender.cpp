@@ -86,7 +86,15 @@ void dxEnvDescriptorRender::Copy(IEnvDescriptorRender &_in)
 
 void dxEnvDescriptorMixerRender::Copy(IEnvDescriptorMixerRender &_in)
 {
-	*this = *(dxEnvDescriptorMixerRender*)&_in;
+	dxEnvDescriptorMixerRender* other = (dxEnvDescriptorMixerRender*)&_in;
+	clouds_r_textures.assign(other->clouds_r_textures.begin(), other->clouds_r_textures.end());
+	clouds_r_textures.dwReference++;
+
+	sky_r_textures.assign(other->sky_r_textures.begin(), other->sky_r_textures.end());
+	sky_r_textures.dwReference++;
+
+	sky_r_textures_env.assign(other->sky_r_textures_env.begin(), other->sky_r_textures_env.end());
+	sky_r_textures_env.dwReference++;
 }
 
 void dxEnvironmentRender::Copy(IEnvironmentRender &_in)
@@ -280,7 +288,7 @@ void dxEnvironmentRender::RenderClouds(CEnvironment &env)
 	Fmatrix	mXFORM, mScale;
 	mScale.scale(10, 0.4f, 10);
 
-	mXFORM.rotateY(SkyGodEdition ? env.CurrentEnv->wind_direction : env.CurrentEnv->sky_rotation); // wind_direction
+	mXFORM.rotateY(env.CurrentEnv->wind_direction ); // wind_direction
 	mXFORM.mulB_43(mScale);
 	mXFORM.translate_over(Device.vCameraPosition);
 

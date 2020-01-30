@@ -10,6 +10,7 @@ protected:
 	friend class		CCameraManager;
 	float				fLifeTime;
 	bool				bHudAffect;
+	bool				bShouldLockPlayerMovement = false;
 public:
 						CEffectorCam	(ECamEffectorType type, float tm)	{eType=type; fLifeTime=tm; bHudAffect=true;};
 						CEffectorCam	()									{eType=(ECamEffectorType)0; fLifeTime=0.0f; bHudAffect=true;};

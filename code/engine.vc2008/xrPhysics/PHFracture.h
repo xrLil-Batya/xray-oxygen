@@ -1,7 +1,4 @@
-//
-//
-#ifndef PH_FRACTURE_H
-#define PH_FRACTURE_H
+#pragma once
 
 #include "PHDefs.h"
 #include "PHImpact.h"
@@ -121,5 +118,3 @@ inline	void sub_diapasones(u16 &from1, u16 &to1, const u16 &from0, const u16 &to
 	u16 dip = to0 - from0;
 	to1 = to1 - dip;
 }
-
-#endif  PH_FRACTURE_H

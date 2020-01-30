@@ -81,24 +81,9 @@ bool dx10ConstantBuffer::Similar(dx10ConstantBuffer &_in)
 
 void dx10ConstantBuffer::Flush()
 {
-	if (m_bChanged)
-	{
-		void	*pData = nullptr;
-#ifdef USE_DX11
-		D3D11_MAPPED_SUBRESOURCE	pSubRes;
-		CHK_DX(HW.pContext->Map(m_pBuffer, 0, D3D_MAP_WRITE_DISCARD, 0, &pSubRes));
-		pData = pSubRes.pData;
-#else
-		CHK_DX(m_pBuffer->Map(D3D_MAP_WRITE_DISCARD, 0, &pData));
-#endif
-		VERIFY(pData);
-		VERIFY(m_pBufferData);
-        std::memcpy(pData, m_pBufferData, m_uiBufferSize);
-#ifdef USE_DX11
-		HW.pContext->Unmap(m_pBuffer, 0);
-#else
-		m_pBuffer->Unmap();
-#endif
-		m_bChanged = false;
-	}
+    if (m_bChanged)
+    {
+        HW.pContext->UpdateSubresource(m_pBuffer, 0, NULL, (BYTE*)m_pBufferData, 0, 0);
+        m_bChanged = false;
+    }
 }

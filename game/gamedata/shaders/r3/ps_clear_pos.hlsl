@@ -1,0 +1,16 @@
+///////////////////////////////////////////////////////////////////////
+// Desc  : Cleanup old texture position and normal from the old frame
+// Author: ForserX
+///////////////////////////////////////////////////////////////////////
+// Oxygen Engine 2016-2019
+///////////////////////////////////////////////////////////////////////
+
+#include "common.h"
+
+clear_position_out main(combine_aa In)
+{
+	clear_position_out Out;
+	Out.Pos = float4(0.f, 0.f ,10000.f, 0.f);
+	Out.N = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}

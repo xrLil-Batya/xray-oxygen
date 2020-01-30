@@ -172,12 +172,11 @@ void CHOM::Render_DB			(CFrustum& base)
 
 	// Prepare
 	Fvector			COP			= Device.vCameraPosition;
-	auto lastIter = std::remove_if(xrc.r_realBegin(), xrc.r_realEnd(), [this](auto& element)
+	std::remove_if(xrc.r_realBegin(), xrc.r_realEnd(), [this](auto& element)
 	{
 		occTri& T = m_pTris[element.id];
 		return	T.skip > Device.dwFrame;
 	});
-	(void)lastIter;
 
 	std::sort(xrc.r_realBegin(), xrc.r_realEnd(), [this, COP](auto& first, auto& second)
 	{
@@ -219,7 +218,7 @@ void CHOM::Render_DB			(CFrustum& base)
 
 		// XForm and Rasterize
 #ifdef DEBUG
-		tris_in_frame_visible	++;
+		tris_in_frame_visible++;
 #endif
 		u32		pixels			= 0;
 		int		limit			= int(P->size())-1;

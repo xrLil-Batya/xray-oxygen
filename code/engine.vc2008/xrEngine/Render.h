@@ -55,11 +55,14 @@ public:
 	virtual ~IRender_Light()		;
 };
 
-struct ENGINE_API resptrcode_light : public resptr_base<IRender_Light>
+struct ENGINE_API ref_light : public resptr_core<IRender_Light>
 {
+	using RenderLightCore = resptr_core< IRender_Light>;
+	using RenderLightCore::RenderLightCore;
+
+
 	void destroy() { _set(nullptr); }
 };
-using ref_light = resptr_core<IRender_Light,resptrcode_light>;
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Dynamic Glow)
@@ -77,11 +80,13 @@ public:
 	virtual ~IRender_Glow()			;
 };
 
-struct ENGINE_API resptrcode_glow : public resptr_base<IRender_Glow>
+struct ENGINE_API ref_glow : public resptr_core<IRender_Glow>
 {
+	using RenderGlowCore = resptr_core<IRender_Glow>;
+	using RenderGlowCore::RenderGlowCore;
+
 	void destroy () { _set(nullptr);}
 };
-using ref_glow = resptr_core<IRender_Glow,resptrcode_glow>;
 
 //////////////////////////////////////////////////////////////////////////
 // definition (Per-object render-specific data)
@@ -236,7 +241,7 @@ public:
 	virtual void                    BeforeWorldRender       ()                                          = 0; // Перед рендерингом мира
 	virtual void                    AfterWorldRender        ()											= 0; // После рендеринга мира (до UI)
 
-	virtual void					ChangeMark				(pcstr mark)								= 0; // Каждый кадр проверяем не поменялась ли текстура
+	virtual void					ChangeMark				(LPCSTR mark)								= 0; // Каждый кадр проверяем не поменялась ли текстура
 
 
 	virtual void					Screenshot				(ScreenshotMode mode = SM_NORMAL, LPCSTR name = nullptr) = 0;

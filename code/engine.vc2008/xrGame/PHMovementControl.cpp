@@ -4,19 +4,19 @@
 #include "../xrCDB/cl_intersect.h"
 #include "../xrserverentities/alife_space.h"
 
-#include "../xrphysics/phCharacter.h"
-#include "../xrphysics/IPHCapture.h"
-#include "../xrphysics/iphysicsshellholder.h"
-#include "../xrphysics/ElevatorState.h"
-#include "../xrphysics/CalculateTriangle.h"
-#include "../xrphysics/Icolisiondamageinfo.h"
-#include "../xrphysics/phvalide.h"
-#include "../xrphysics/physicsshell.h"
-#include "../xrphysics/iphworld.h"
+#include "../xrPhysics/phCharacter.h"
+#include "../xrPhysics/IPHCapture.h"
+#include "../xrPhysics/iphysicsshellholder.h"
+#include "../xrPhysics/ElevatorState.h"
+#include "../xrPhysics/CalculateTriangle.h"
+#include "../xrPhysics/Icolisiondamageinfo.h"
+#include "../xrPhysics/phvalide.h"
+#include "../xrPhysics/physicsshell.h"
+#include "../xrPhysics/iphworld.h"
 #include "detail_path_manager.h"
 #include "../xrEngine/gamemtllib.h"
 #include "../xrEngine/xr_object.h"
-#include "../xrphysics/CaptureBoneCallback.h"
+#include "../xrPhysics/CaptureBoneCallback.h"
 #include "Level.h"
 #include "physicsshellholder.h"
 #ifdef DEBUG
@@ -132,8 +132,8 @@ void CPHMovementControl::in_shedule_Update(u32 DT)
 
 void CPHMovementControl::Calculate(Fvector& vAccel, const Fvector& camDir, float /**ang_speed/**/, float jump, float /**dt/**/, bool /**bLight/**/)
 {
-	Fvector previous_position; previous_position.set(vPosition);
-	m_character->IPosition(vPosition);
+	Fvector previous_position{ vPosition };
+	m_character->GetPosition(vPosition);
 
 	if (bExernalImpulse)
 	{

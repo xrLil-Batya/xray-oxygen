@@ -43,7 +43,7 @@ void UpdateTC( inout p_bumped I)
 	if (I.position.z < fParallaxStopFade)
 	{
 		const float maxSamples = 25;
-		const float minSamples = 4; //Reverted: too expensive
+		const float minSamples = 5; //Reverted: too expensive
 		const float fParallaxOffset = -0.013;
 
 		float3	 eye = mul (float3x3(I.M1.x, I.M2.x, I.M3.x,

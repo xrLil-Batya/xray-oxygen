@@ -49,12 +49,12 @@ const char*	file_header = 0;
 #endif
 
 CVMLua* CScriptStorage::luaVM = nullptr;
-void xrScriptCrashHandler()
+void xrScriptCrashHandler(string4096& InOutAdditionalInformation)
 {
 	Msg("Trying dump lua state");
 	try
 	{
-		ai().script_engine().dump_state();
+		ai().script_engine().dump_state(InOutAdditionalInformation);
 	}
 	catch (...)
 	{
@@ -96,44 +96,60 @@ void CScriptStorage::reinit()
 	Debug.set_crashhandler(xrScriptCrashHandler);
 }
 
-void CScriptStorage::dump_state()
+void CScriptStorage::dump_state(string4096& InOutAdditionalInformation)
 {
 	static bool reentrantGuard = false;
 	if (reentrantGuard) return;
 	reentrantGuard = true;
 
+	string256 MsgBuffer;
 	lua_State				*L = lua();
 	lua_Debug				l_tDebugInfo;
 	for (int i = 0; lua_getstack(L, i, &l_tDebugInfo); ++i) {
 		lua_getinfo(L, "nSlu", &l_tDebugInfo);
 		if (!l_tDebugInfo.name)
 		{
-			Msg("%2d : [%s] %s(%d)", i, l_tDebugInfo.what, l_tDebugInfo.short_src, l_tDebugInfo.currentline);
+			xr_sprintf(MsgBuffer, "%2d : [%s] %s(%d)", i, l_tDebugInfo.what, l_tDebugInfo.short_src, l_tDebugInfo.currentline);
+
+			xr_strconcat(InOutAdditionalInformation, InOutAdditionalInformation, MsgBuffer, "\r\n");
+			Msg("%s", MsgBuffer);
 		}
 		else if (!xr_strcmp(l_tDebugInfo.what, "C"))
 		{
-			Msg("%2d : [C  ] %s", i, l_tDebugInfo.name);
+			xr_sprintf(MsgBuffer, "%2d : [C  ] %s", i, l_tDebugInfo.name);
+
+			xr_strconcat(InOutAdditionalInformation, InOutAdditionalInformation, MsgBuffer, "\r\n");
+			Msg("%s", MsgBuffer);
 		}
 		else
 		{
-			Msg("%2d : [%s] %s(%d) : %s", i, l_tDebugInfo.what, l_tDebugInfo.short_src, l_tDebugInfo.currentline, l_tDebugInfo.name);
+			xr_sprintf(MsgBuffer, "%2d : [%s] %s(%d) : %s", i, l_tDebugInfo.what, l_tDebugInfo.short_src, l_tDebugInfo.currentline, l_tDebugInfo.name);
+
+			xr_strconcat(InOutAdditionalInformation, InOutAdditionalInformation, MsgBuffer, "\r\n");
+			Msg("%s", MsgBuffer);
 		}
-		Msg("\tLocals: ");
+		xr_sprintf(MsgBuffer, "\tLocals: ");
+
+		xr_strconcat(InOutAdditionalInformation, InOutAdditionalInformation, MsgBuffer, "\r\n");
+		Msg("%s", MsgBuffer);
 		const char *name = nullptr;
 		int VarID = 1;
 		while ((name = lua_getlocal(L, &l_tDebugInfo, VarID++)) != NULL)
 		{
-			LogVariable(L, name, 1, true);
+			LogVariable(L, name, 1, true, InOutAdditionalInformation);
 
 			lua_pop(L, 1);  /* remove variable value */
 		}
         m_dumpedObjList.clear();
-		Msg("\tEnd");
+		xr_sprintf(MsgBuffer, "\tEnd");
+
+		xr_strconcat(InOutAdditionalInformation, InOutAdditionalInformation, MsgBuffer, "\r\n");
+		Msg("%s", MsgBuffer);
 	}
 	reentrantGuard = false;
 }
 
-void CScriptStorage::LogTable(lua_State *l, const char* S, int level, int index /*= -1*/)
+void CScriptStorage::LogTable(lua_State *l, const char* S, int level, string4096& OutInfo, int index /*= -1*/)
 {
 	if (!lua_istable(l, index))
 		return;
@@ -144,13 +160,13 @@ void CScriptStorage::LogTable(lua_State *l, const char* S, int level, int index 
 		char sFullName[256];
 		xr_sprintf(sname, "%s", lua_tostring(l, index - 1));
 		xr_sprintf(sFullName, "%s.%s", S, sname);
-		LogVariable(l, sFullName, level + 1, false, index);
+		LogVariable(l, sFullName, level + 1, false, OutInfo, index);
 
 		lua_pop(l, 1);  /* removes `value'; keeps `key' for next iteration */
 	}
 }
 
-void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, bool bOpenTable, int index /*= -1*/)
+void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, bool bOpenTable, string4096& OutInfo, int index /*= -1*/)
 {
 	const char * type;
 	int ntype = lua_type(l, index);
@@ -161,6 +177,7 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 
 	char value[128];
 
+	string256 MsgBuffer;
 	switch (ntype)
 	{
 	case LUA_TNUMBER:
@@ -178,8 +195,12 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 	case LUA_TTABLE:
 		if (bOpenTable)
 		{
-			Msg("%s Table: %s", tabBuffer, name);
-			LogTable(l, name, level + 1, index);
+			xr_sprintf(MsgBuffer, "%s Table: %s", tabBuffer, name);
+
+			xr_strconcat(OutInfo, OutInfo, MsgBuffer, "\r\n");
+			Msg("%s", MsgBuffer);
+
+			LogTable(l, name, level + 1, OutInfo, index);
 			return;
 		}
 		else
@@ -199,8 +220,12 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 		if (r.is_valid())
 		{
 			r.get(l);
-			Msg("%s Userdata: %s", tabBuffer, name);
-			LogTable(l, name, level + 1, index);
+			xr_sprintf(MsgBuffer, "%s Userdata: %s", tabBuffer, name);
+
+			xr_strconcat(OutInfo, OutInfo, MsgBuffer, "\r\n");
+			Msg("%s", MsgBuffer);
+
+			LogTable(l, name, level + 1, OutInfo, index);
 			lua_pop(l, 1); //Remove userobject
 			return;
 		}
@@ -224,7 +249,10 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 		break;
 	}
 
-	Msg("%s %s %s : %s", tabBuffer, type, name, value);
+	xr_sprintf(MsgBuffer, "%s %s %s : %s", tabBuffer, type, name, value);
+
+	xr_strconcat(OutInfo, OutInfo, MsgBuffer, "\r\n");
+	Msg("%s", MsgBuffer);
 }
 
 void CScriptStorage::ClearDumpedObjects()

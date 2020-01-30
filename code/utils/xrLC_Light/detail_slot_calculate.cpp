@@ -74,7 +74,7 @@ IC bool RayPick(CDB::COLLIDER& DB, Fvector& P, Fvector& D, float r, R_Light& L)
 		return false;
 	} else {
 		// cache polygon
-		CDB::RESULT&	rpinf	= *DB.r_begin();
+		CDB::RESULT&	rpinf	= *DB.r_realBegin();
 		CDB::TRI&		T		= gl_data.RCAST_Model.get_tris()[rpinf.id];
 		L.tri[0].set	(rpinf.verts[0]);
 		L.tri[1].set	(rpinf.verts[1]);
@@ -93,7 +93,7 @@ float getLastRP_Scale(CDB::COLLIDER* DB, R_Light& L)//, Face* skip)
 	{
 		for (u32 I=0; I<tris_count; I++)
 		{
-			CDB::RESULT& rpinf = DB->r_begin()[I];
+			CDB::RESULT& rpinf = DB->r_realBegin()[I];
 			// Access to texture
 			CDB::TRI& clT								= gl_data.RCAST_Model.get_tris()[rpinf.id];
 			b_rc_face& F								= gl_data.g_rc_faces[rpinf.id];
@@ -312,7 +312,11 @@ bool detail_slot_calculate( u32 _x, u32 _z, DetailSlot&	DS, DWORDVec& box_result
 	DB.box_query		( &gl_data.RCAST_Model, bbC, bbD );
 
 	box_result.clear();
-	for (CDB::RESULT* I = DB.r_begin(); I != DB.r_end(); I++) box_result.push_back(I->id);
+	for (auto iter = DB.r_realBegin(); iter != DB.r_realEnd(); iter++)
+	{
+		box_result.push_back(iter->id);
+	}
+
 	if (box_result.empty())	
 		return false; 
 		//continue;
@@ -327,7 +331,6 @@ bool detail_slot_calculate( u32 _x, u32 _z, DetailSlot&	DS, DWORDVec& box_result
 	base_color		amount;
 	u32				count	= 0;
 	const float coeff = DETAIL_SLOT_SIZE_2 / float(LIGHT_Count);
-	FPU::m64r		();
 	for (int x = -LIGHT_Count; x <= LIGHT_Count; x++)
 	{
 		Fvector		P;

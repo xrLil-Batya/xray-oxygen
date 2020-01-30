@@ -10,6 +10,19 @@
 
 #define EFFECTOR_ID_GEN(type) (type( u32(u64(this) & u32(-1)) ))
 
+namespace BloodsuckerAlienDetails
+{
+	constexpr float PeriodSpeed = 0.3f;
+	constexpr float DeltaAngleX = 10.0f * PI / 180.0f;
+	constexpr float DeltaAngleY = 10.0f * PI / 180.0f;
+	constexpr float DeltaAngleZ = 10.0f * PI / 180.0f;
+	constexpr float AngleSpeed = 0.2f;
+
+	constexpr float MinFov = 70.0f;
+	constexpr float MaxFov = 175.0f;
+	constexpr float FovSpeed = 80.0f;
+	constexpr float MaxCameraDist = 3.5f;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////
 // CAlienEffectorPP
@@ -45,7 +58,7 @@ CAlienEffectorPP::~CAlienEffectorPP()
 {
 }
 
-#define PERIOD_SPEED	0.3f
+
 
 BOOL CAlienEffectorPP::Process(SPPInfo& pp)
 {
@@ -55,7 +68,7 @@ BOOL CAlienEffectorPP::Process(SPPInfo& pp)
 		target_factor = (target_factor > 0.5f) ? .3f : .6f;
 	}
 	
-	def_lerp			(factor,target_factor, PERIOD_SPEED, Device.fTimeDelta);
+	def_lerp			(factor,target_factor, BloodsuckerAlienDetails::PeriodSpeed, Device.fTimeDelta);
 	pp.lerp				(pp_identity,state,factor);
 
 	return TRUE;
@@ -93,21 +106,10 @@ public:
 };
 
 
-#define DELTA_ANGLE_X		10 * PI / 180
-#define DELTA_ANGLE_Y		10 * PI / 180
-#define DELTA_ANGLE_Z		10 * PI / 180
-#define ANGLE_SPEED			0.2f	
-
-#define MIN_FOV				70.f
-#define	MAX_FOV				175.f
-#define FOV_SPEED			80.f
-#define	MAX_CAMERA_DIST		3.5f
-
-
 CAlienEffector::CAlienEffector(ECamEffectorType type, CAI_Bloodsucker *obj) :
 	inherited(type, flt_max)
 {
-	dangle_target.set		(angle_normalize(Random.randFs(DELTA_ANGLE_X)),angle_normalize(Random.randFs(DELTA_ANGLE_Y)),angle_normalize(Random.randFs(DELTA_ANGLE_Z)));
+	dangle_target.set		(angle_normalize(Random.randFs(BloodsuckerAlienDetails::DeltaAngleX)),angle_normalize(Random.randFs(BloodsuckerAlienDetails::DeltaAngleY)),angle_normalize(Random.randFs(BloodsuckerAlienDetails::DeltaAngleZ)));
 	dangle_current.set		(0.f, 0.f, 0.f);
 
 	monster					= obj;
@@ -116,7 +118,7 @@ CAlienEffector::CAlienEffector(ECamEffectorType type, CAI_Bloodsucker *obj) :
 	m_prev_eye_matrix.k		= monster->Direction();
 	Fvector::generate_orthonormal_basis(m_prev_eye_matrix.k,m_prev_eye_matrix.j,m_prev_eye_matrix.i);
 	m_inertion				= 1.f;
-	m_current_fov			= MIN_FOV;
+	m_current_fov			= BloodsuckerAlienDetails::MinFov;
 }
 
 BOOL CAlienEffector::ProcessCam(SCamEffectorInfo& info)
@@ -131,16 +133,16 @@ BOOL CAlienEffector::ProcessCam(SCamEffectorInfo& info)
 
 
 	// set angle 
-	if (angle_lerp(dangle_current.x, dangle_target.x, ANGLE_SPEED, Device.fTimeDelta)) {
-		dangle_target.x = angle_normalize(Random.randFs(DELTA_ANGLE_X));
+	if (angle_lerp(dangle_current.x, dangle_target.x, BloodsuckerAlienDetails::AngleSpeed, Device.fTimeDelta)) {
+		dangle_target.x = angle_normalize(Random.randFs(BloodsuckerAlienDetails::DeltaAngleX));
 	}
 
-	if (angle_lerp(dangle_current.y, dangle_target.y, ANGLE_SPEED, Device.fTimeDelta)) {
-		dangle_target.y = angle_normalize(Random.randFs(DELTA_ANGLE_Y));
+	if (angle_lerp(dangle_current.y, dangle_target.y, BloodsuckerAlienDetails::AngleSpeed, Device.fTimeDelta)) {
+		dangle_target.y = angle_normalize(Random.randFs(BloodsuckerAlienDetails::DeltaAngleY));
 	}
 
-	if (angle_lerp(dangle_current.z, dangle_target.z, ANGLE_SPEED, Device.fTimeDelta)) {
-		dangle_target.z = angle_normalize(Random.randFs(DELTA_ANGLE_Z));
+	if (angle_lerp(dangle_current.z, dangle_target.z, BloodsuckerAlienDetails::AngleSpeed, Device.fTimeDelta)) {
+		dangle_target.z = angle_normalize(Random.randFs(BloodsuckerAlienDetails::DeltaAngleZ));
 	}
 
 	// update inertion
@@ -148,7 +150,7 @@ BOOL CAlienEffector::ProcessCam(SCamEffectorInfo& info)
 	cur_matrix.k = monster->Direction();
 	cur_matrix.c = get_head_position(monster);
 
-	float	rel_dist = m_prev_eye_matrix.c.distance_to(cur_matrix.c) / MAX_CAMERA_DIST;
+	float	rel_dist = m_prev_eye_matrix.c.distance_to(cur_matrix.c) / BloodsuckerAlienDetails::MaxCameraDist;
 	clamp	(rel_dist, 0.f, 1.f);
 
 	def_lerp(m_inertion, 1 - rel_dist, rel_dist, Device.fTimeDelta);
@@ -165,8 +167,8 @@ BOOL CAlienEffector::ProcessCam(SCamEffectorInfo& info)
 	float	rel_speed = monster->m_fCurSpeed / 15.f;
 	clamp	(rel_speed,0.f,1.f);
 
-	float	m_target_fov = MIN_FOV + (MAX_FOV-MIN_FOV) * rel_speed;
-	def_lerp(m_current_fov, m_target_fov, FOV_SPEED, Device.fTimeDelta);
+	float	m_target_fov = BloodsuckerAlienDetails::MinFov + (BloodsuckerAlienDetails::MaxFov - BloodsuckerAlienDetails::MinFov) * rel_speed;
+	def_lerp(m_current_fov, m_target_fov, BloodsuckerAlienDetails::FovSpeed, Device.fTimeDelta);
 	
 	info.fFov = m_current_fov;
 	//////////////////////////////////////////////////////////////////////////

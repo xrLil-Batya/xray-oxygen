@@ -16,21 +16,6 @@ class CSE_ALifeObjectPhysic;
 struct SPHNetState;
 using mask_num_items = CSE_ALifeObjectPhysic::mask_num_items;
 
-struct net_update_PItem
-{
-	u32					dwTimeStamp;
-	SPHNetState			State;
-};
-
-struct net_updatePhData
-{
-	xr_deque<net_update_PItem>	NET_IItem;
-
-	u32				m_dwIStartTime;
-	u32				m_dwIEndTime;
-};
-
-
 class CPhysicObject : 
 	public CPhysicsShellHolder,
 	public CPHSkeleton
@@ -63,7 +48,6 @@ public:
 public:
 			CPhysicObject();
 	virtual ~CPhysicObject();
-			float						interpolate_states(net_update_PItem const & first, net_update_PItem const & last, SPHNetState & current);
 
 	virtual BOOL						net_Spawn						( CSE_Abstract* DC)																	;
 	virtual void						CreatePhysicsShell				(CSE_Abstract* e)																;
@@ -79,18 +63,15 @@ public:
 	virtual	bool						is_ai_obstacle					() const;
 
 	virtual void						net_Export						(NET_Packet& P);
-	virtual void						net_Import						(NET_Packet& P);
 
 protected:
 	virtual void						SpawnInitPhysics				(CSE_Abstract	*D)																;
 	virtual void						RunStartupAnim					(CSE_Abstract	*D)																;
 	virtual CPhysicsShellHolder			*PPhysicsShellHolder			()													{return PhysicsShellHolder();}
-	virtual CPHSkeleton					*PHSkeleton						()																	{return this;}
+	virtual CPHSkeleton					*PHSkeleton						()													{return this;}
 	virtual	void						InitServerObject				(CSE_Abstract	*po)															;
 	virtual void						PHObjectPositionUpdate			()																				;
 
-	net_updatePhData*						m_net_updateData;
-	
 	enum EIIFlags{				Fdrop				=(1<<0),
 		FCanTake			=(1<<1),
 		FCanTrade			=(1<<2),

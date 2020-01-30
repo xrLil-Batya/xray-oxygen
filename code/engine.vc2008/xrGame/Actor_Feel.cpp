@@ -68,28 +68,31 @@ BOOL CActor::feel_touch_on_contact	(CObject *O)
 
 ICF static BOOL info_trace_callback(collide::rq_result& result, LPVOID params)
 {
-	BOOL& bOverlaped	= *(BOOL*)params;
+	BOOL& bOverlaped = *(BOOL*)params;
+	
 	if(result.O)
 	{
-		if (Level().CurrentEntity()==result.O)
+		if (Level().CurrentEntity() == result.O)
 		{ //ignore self-actor
-			return			TRUE;
+			return TRUE;
 		}else
 		{ //check obstacle flag
-			if(result.O->spatial.type&STYPE_OBSTACLE)
-				bOverlaped			= TRUE;
+			if(result.O->spatial.type & STYPE_OBSTACLE)
+				bOverlaped = TRUE;
 
 			return			TRUE;
 		}
-	}else
+	}
+	else
 	{
-		//ïîëó÷èòü òðåóãîëüíèê è óçíàòü åãî ìàòåðèàë
-		CDB::TRI* T		= Level().ObjectSpace.GetStaticTris()+result.element;
-		if (GMLib.GetMaterialByIdx(T->material)->Flags.is(SGameMtl::flPassable)) 
+		// Get triangle and check his material
+		CDB::TRI* T = Level().ObjectSpace.GetStaticTris()+result.element;
+		if (Level().CheckTrisIsNotObstacle(T))
 			return TRUE;
 	}	
-	bOverlaped			= TRUE;
-	return				FALSE;
+	
+	bOverlaped = TRUE;
+	return FALSE;
 }
 
 BOOL CActor::CanPickItem(const CFrustum& frustum, const Fvector& from, CObject* item)
@@ -130,28 +133,6 @@ void CActor::PickupModeUpdate()
         if (CanPickItem(frustum, act_and_cam_pos, obj))
             PickupInfoDraw(obj);
     }
-
-    //#TEMP: !!!
-	m_CapmfireWeLookingAt = nullptr;
-	for (CObject* obj : feel_touch)
-	{
-		CZoneCampfire* camp = smart_cast<CZoneCampfire*>(obj);
-		if (camp)
-		{
-			Fvector dir, to;
-			camp->Center(to);
-			dir.sub(to, Device.vCameraPosition);
-			float dist = dir.magnitude();
-			float range = dir.normalize().dotproduct(Device.vCameraDirection);
-			if (dist < 1.6f && range > 0.95f)
-			{
-				m_CapmfireWeLookingAt = camp;
-				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
-
-				return;
-			}
-		}
-	}
 }
 
 #include "../xrEngine/CameraBase.h"

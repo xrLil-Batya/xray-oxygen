@@ -137,8 +137,8 @@ void CParticleEffect::OnFrame(u32 frame_dt)
 			}
 			ParticleManager()->Update(m_HandleEffect, m_HandleActionList, fDT_STEP);
 
-			PAPI::Particle* particles;
-			u32 p_cnt;
+			PAPI::Particle* particles = nullptr;
+			u32 p_cnt = 0;
 			ParticleManager()->GetParticles(m_HandleEffect, particles, p_cnt);
 
 			// our actions
@@ -573,7 +573,7 @@ void CParticleEffect::Render(float)
 				Fmatrix FTold = Device.mFullTransform;
 				if (GetHudMode())
 				{
-					RDEVICE.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR, Environment().CurrentEnv->far_plane);
+					RDEVICE.mProject.build_projection(deg2rad(psHUD_FOV*Device.fFOV), Device.fASPECT, VIEWPORT_NEAR_HUD, Environment().CurrentEnv->far_plane);
 					
 					Device.mFullTransform.mul(Device.mProject, Device.mView);
 					RCache.set_xform_project(Device.mProject);

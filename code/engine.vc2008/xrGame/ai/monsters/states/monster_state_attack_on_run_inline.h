@@ -10,15 +10,6 @@
 #define	DEBUG_STATE
 #endif
 
-namespace detail {
-namespace monsters {
-		
-	TTime const	max_go_far_time		=	6000;
-	TTime const	update_side_period	=	5000;	
-	
-} // namespace monsters
-} // namespace detail
-
 TEMPLATE_SIGNATURE
 ATTACK_ON_RUN_STATE::CStateMonsterAttackOnRun (_Object *obj) : inherited(obj) 
 {

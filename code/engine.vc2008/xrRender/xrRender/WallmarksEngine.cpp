@@ -106,12 +106,13 @@ void CWallmarksEngine::static_wm_destroy(CWallmarksEngine::static_wallmark* W)
 }
 
 // render
-void CWallmarksEngine::static_wm_render(CWallmarksEngine::static_wallmark*	W, FVF::LIT* &V)
+void CWallmarksEngine::static_wm_render(CWallmarksEngine::static_wallmark* W, FVF::LIT* &V)
 {
-	float		a = 1 - (W->ttl / ps_r_WallmarkTTL);
-	int			aC = iFloor(a * 255.f);	clamp(aC, 0, 255);
-	u32			C = color_rgba(128, 128, 128, aC);
-	for (const FVF::LIT& elem : W->verts) {
+	float a = 1 - (W->ttl / ps_r_WallmarkTTL);
+	int aC = iFloor(a * 255.f);	clamp(aC, 0, 255);
+	u32 C = color_rgba(128, 128, 128, aC);
+	for (FVF::LIT& elem : W->verts) 
+	{
 		V->p.set(elem.p);
 		V->color = C;
 		V->t.set(elem.t);
@@ -119,11 +120,11 @@ void CWallmarksEngine::static_wm_render(CWallmarksEngine::static_wallmark*	W, FV
 }
 
 //--------------------------------------------------------------------------------
-void CWallmarksEngine::RecurseTri(u32 t, Fmatrix &mView, CWallmarksEngine::static_wallmark	&W)
+void CWallmarksEngine::RecurseTri(u32 t, Fmatrix &mView, CWallmarksEngine::static_wallmark &W)
 {
-	CDB::TRI*	T			= sml_collector.getT()+t;
-	if (T->dummy)			return;
-	T->dummy				= 0xffffffff;
+	CDB::TRI* T = sml_collector.getT()+t;
+	if (T->dummy) return;
+	T->dummy = 0xffffffff;
 	
 	// Some vars
 	u32*		v_ids		= T->verts;
@@ -343,11 +344,11 @@ ICF void FlushStream(ref_geom hGeom, ref_shader shader, u32& w_offset, FVF::LIT*
 void CWallmarksEngine::Render()
 {
 	// Projection and xform
-	Fmatrix WallmarksProject = Device.mProject;
+	float _43 = Device.mProject._43;
 
-	WallmarksProject._43			-= ps_r_WallmarkSHIFT;
+	Device.mProject._43			-= ps_r_WallmarkSHIFT;
 	RCache.set_xform_world		(Fidentity);
-	RCache.set_xform_project	(WallmarksProject);
+	RCache.set_xform_project	(Device.mProject);
 
 	Fmatrix mSavedView = Device.mView;
 	Fvector	mViewPos			;
@@ -447,6 +448,7 @@ void CWallmarksEngine::Render()
 
 	// Projection
 	Device.mView				= mSavedView;
+	Device.mProject._43			= _43;
 	RCache.set_xform_view		(Device.mView);
 	RCache.set_xform_project	(Device.mProject);
 }

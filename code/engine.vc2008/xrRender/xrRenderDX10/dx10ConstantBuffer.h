@@ -50,4 +50,4 @@ private:
 	dx10ConstantBuffer& operator=(dx10ConstantBuffer&);
 };
 
-typedef	resptr_core<dx10ConstantBuffer,resptr_base<dx10ConstantBuffer> > ref_cbuffer;
+typedef	resptr_core<dx10ConstantBuffer> ref_cbuffer;

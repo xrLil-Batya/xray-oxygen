@@ -32,7 +32,6 @@ void				OGF_Base::CalcBounds	()
 	V.clear						();
 	V.reserve					(4096);
 	GetGeometry					(V);
-	FPU::m64					();
 	R_ASSERT					(V.size()>=3);
 
 	// 1: calc first variation

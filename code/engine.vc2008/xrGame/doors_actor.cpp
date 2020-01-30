@@ -43,7 +43,7 @@ void actor::on_door_destroy			( door& door )
 	::on_door_destroy				( m_closed_doors, door );
 }
 
-pcstr actor::get_name				( ) const
+LPCSTR actor::get_name				( ) const
 {
 	return							m_object.cName().c_str();
 }

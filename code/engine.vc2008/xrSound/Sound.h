@@ -83,7 +83,7 @@ public:
 	virtual void invalidate() = 0;
 };
 
-typedef resptr_core<CSound_UserData, resptr_base<CSound_UserData> >	CSound_UserDataPtr;
+typedef resptr_core<CSound_UserData>	CSound_UserDataPtr;
 
 class ref_sound_data : public xr_resource
 {
@@ -101,13 +101,20 @@ public:
 	float fTimeTotal;
 
 public:
-	ref_sound_data();
+	ref_sound_data()
+	{
+		handle = 0; feedback = 0;
+		g_type = 0; g_object = 0;
+		s_type = st_Effect;
+	}
 	ref_sound_data(const char* fName, esound_type sound_type, int game_type);
+
+	ref_sound_data& operator=(const ref_sound_data& Other) = delete;
 
 	virtual ~ref_sound_data();
 	float get_length_sec() const { return fTimeTotal; };
 };
-typedef resptr_core<ref_sound_data, resptr_base<ref_sound_data> >	ref_sound_data_ptr;
+typedef resptr_core<ref_sound_data>	ref_sound_data_ptr;
 /*! \class ref_sound
 \brief Sound source + control
 
@@ -304,12 +311,6 @@ class  CSound_manager_interface;
 extern XRSOUND_API CSound_manager_interface* Sound;
 
 /// ********* Sound ********* (utils, accessors, helpers)
-inline ref_sound_data::ref_sound_data()
-{
-	handle = 0; feedback = 0;
-	g_type = 0; g_object = 0;
-	s_type = st_Effect;
-}
 
 inline ref_sound_data::ref_sound_data(const char* fName, esound_type sound_type, int	game_type)
 {

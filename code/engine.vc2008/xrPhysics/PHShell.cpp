@@ -195,7 +195,7 @@ void CPHShell::PhDataUpdate(dReal step)
 	{
 		it->PhDataUpdate(step);
 		dBodyID body = it->get_body();
-		if (body&&disable&&dBodyIsEnabled(body))
+		if (body && disable && dBodyIsEnabled(body))
 			disable = false;
 	}
 
@@ -226,16 +226,6 @@ void CPHShell::Update()
 
 	mXFORM.set((*elements.begin())->mXFORM);
 	VERIFY2(_valid(mXFORM), "invalid position in update");
-}
-
-void CPHShell::Freeze()
-{
-	CPHObject::Freeze();
-}
-
-void CPHShell::UnFreeze()
-{
-	CPHObject::UnFreeze();
 }
 
 void CPHShell::FreezeContent()
@@ -930,7 +920,7 @@ void CPHShell::SetCallbacks()
 
 void CPHShell::SetCallbacksRecursive(u16 id, u16 element)
 {
-	VERIFY(false);
+	//VERIFY(false);
 	CBoneInstance& B = m_pKinematics->LL_GetBoneInstance(u16(id));
 	const IBoneData& bone_data = m_pKinematics->GetBoneData(u16(id));
 	const SJointIKData& joint_data = bone_data.get_IK_data();
@@ -1003,18 +993,12 @@ void CPHShell::UpdateRoot()
 
 }
 
-Fmatrix& CPHShell::get_animation_root_matrix(Fmatrix& m)
-{
-	return m;
-}
-
 void CPHShell::InterpolateGlobalTransform(Fmatrix* m)
 {
 	for (CPHElement* it : elements)
 		it->InterpolateGlobalTransform(&it->mXFORM);
 
 	m->set(root_element().mXFORM);
-
 	m->mulB_43(m_object_in_root);
 
 	mXFORM.set(*m);

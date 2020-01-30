@@ -18,7 +18,7 @@ namespace debug {
 // text_tree output
 //-----------------------------------------------
 
-namespace detail
+namespace DebugTextTreeDetails
 {
 	struct texttree_draw_helper
 	{
@@ -85,21 +85,21 @@ void   draw_text_tree (text_tree& tree,
 					   u32        color1, 
 					   u32        color2)
 {
-	detail::texttree_draw_helper::s_params.color1      = color1;
-	detail::texttree_draw_helper::s_params.color2      = color2;
-	detail::texttree_draw_helper::s_params.column_size = column_size;
-	detail::texttree_draw_helper::s_params.cur_row     = 0;
-	detail::texttree_draw_helper::s_params.ori_x       = ori_x;
-	detail::texttree_draw_helper::s_params.ori_y       = ori_y;
-	detail::texttree_draw_helper::s_params.offs        = offs;
-	detail::texttree_draw_helper::s_params.max_rows    = max_rows;
+	DebugTextTreeDetails::texttree_draw_helper::s_params.color1      = color1;
+	DebugTextTreeDetails::texttree_draw_helper::s_params.color2      = color2;
+	DebugTextTreeDetails::texttree_draw_helper::s_params.column_size = column_size;
+	DebugTextTreeDetails::texttree_draw_helper::s_params.cur_row     = 0;
+	DebugTextTreeDetails::texttree_draw_helper::s_params.ori_x       = ori_x;
+	DebugTextTreeDetails::texttree_draw_helper::s_params.ori_y       = ori_y;
+	DebugTextTreeDetails::texttree_draw_helper::s_params.offs        = offs;
+	DebugTextTreeDetails::texttree_draw_helper::s_params.max_rows    = max_rows;
 
-	tree.output(detail::texttree_draw_helper(), indent);
+	tree.output(DebugTextTreeDetails::texttree_draw_helper(), indent);
 }
 
 void   log_text_tree (text_tree& tree)
 {
-	tree.output(detail::texttree_log_helper(), 2);
+	tree.output(DebugTextTreeDetails::texttree_log_helper(), 2);
 }
 
 //-----------------------------------------------

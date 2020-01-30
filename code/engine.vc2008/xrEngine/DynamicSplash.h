@@ -72,20 +72,14 @@ class ENGINE_API DSplashScreen
 {
 public:
 	DSplashScreen();
-	DSplashScreen(HWND hwnd);
-	DSplashScreen(const DSplashScreen&) {};
 	DSplashScreen& operator=(const DSplashScreen& a) { return *this; };
-	~DSplashScreen() { delete pTask; };
 
-	ICF HWND GetSplashWindow() { return hwndSplash; }
 	void SetBackgroundImage(LPVOID pImage);
 	void ShowSplash();
 	void HideSplash();
 
 	void SetSplashWindowName(xr_string windowName);
-	void SetProgressPosition(DWORD percent);
 	void SetProgressPosition(DWORD percent, xr_string messageString);
-	void SetProgressPosition(DWORD percent, DWORD resourceId, HMODULE hModule);
 	void SetProgressColor(COLORREF refColor);
 
 protected:
@@ -99,11 +93,15 @@ protected:
 	HWND hwndSplash;
 	HWND hwndProgress;	
 	HWND hwndParent;
-	xr_string progressMsg;	
+	xr_string progressMsg;
+	xr_string pendingProgressMsg;
 	UINT_PTR timerID;    
+	COLORREF barColor;
 
-	static LRESULT CALLBACK SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static UINT WINAPI SplashThreadProc(LPVOID pData);
+	LRESULT SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK WrapperSplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static void WINAPI WrapperSplashThreadProc(LPVOID pData);
+	void WINAPI SplashThreadProc();
 };
 
 void WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc);

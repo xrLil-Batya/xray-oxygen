@@ -1,52 +1,31 @@
 #include "stdafx.h"
 #include "Game.h"
-#include "../xrServerEntities/xrServer_Objects_ALife_Monsters.h"
-#include "../xrServerEntities/script_storage.h"
-#include "../xrEngine/date_time.h"
-#include "../xrGame/Level.h"
-#include "../xrGame/Actor.h"
-#include "../xrGame/ai_space.h"
-#include "../xrGame/alife_simulator.h"
-#include "../xrGame/alife_time_manager.h"
-#include "../xrGame/alife_object_registry.h"
-#include "../xrGame/relation_registry.h"
-#include "../xrGame/ui/UIGameTutorial.h"
-#include "../xrGame/HUDManager.h"
-#include "../xrGame/UIGame.h"
-#include "../xrGame/ui/UIMainIngameWnd.h"
-#include "../xrGame/ui/UIMotionIcon.h"
+#include "xrEngine/date_time.h"
+#include "xrGame/Level.h"
+#include "xrGame/Actor.h"
+#include "xrGame/HUDManager.h"
 
 XRay::Game::SGameTime^ XRay::Game::Time::get()
 {
 	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
-	split_time((g_pGameLevel && ::Level().game) ? ::Level().GetGameTime() : ai().alife().time_manager().game_time(), year, month, day, hours, mins, secs, milisecs);
-
 	SGameTime^ CurTime = gcnew SGameTime();
 
-	CurTime->Years = year;
-	CurTime->Months = month;
-	//CurTime->Weeks = week;
-	CurTime->Days = day;
-	CurTime->Hours = hours;
-	CurTime->Minutes = mins;
-	CurTime->Seconds = secs;
-//	CurTime->Miliseconds = milisecs;
+	if (g_pGameLevel != nullptr && ::Level().game != nullptr)
+	{
+		u64 packedTime = ::Level().GetGameTime();
+		split_time(packedTime, year, month, day, hours, mins, secs, milisecs);
+		CurTime->Years = year;
+		CurTime->Months = month;
+		//CurTime->Weeks = week;
+		CurTime->Days = day;
+		CurTime->Hours = hours;
+		CurTime->Minutes = mins;
+		CurTime->Seconds = secs;
+		//	CurTime->Miliseconds = milisecs;
+	}
 
 	return CurTime;
 }
-
-void XRay::Game::Time::set(XRay::Game::SGameTime^ NewTime)
-{
-	if (::Level().Server->game && ai().get_alife())
-	{
-	//	u32 value = NewTime->Days * 86400 + NewTime->Hours * 3600 + NewTime->Minutes * 60;
-	//	float fValue = static_cast<float> (value);
-	//	value *= 1000;//msec		
-	//	Environment().ChangeGameTime(fValue);
-	//	::Level().Server->game->alife().time_manager().change_game_time(value);
-	}
-}
-
 
 void XRay::Game::SGameTime::Years::set(::System::UInt32 value)
 {
@@ -113,18 +92,6 @@ void XRay::Game::SGameTime::Miliseconds::set(::System::UInt32 value)
 	return _miliseconds;
 }
 
-void XRay::Game::SGameTime::ChangeGameTime(u32 days, u32 hours, u32 mins)
-{
-	if (::Level().Server->game && ai().get_alife())
-	{
-		u32 value = days * 86400 + hours * 3600 + mins * 60;
-		float fValue = static_cast<float> (value);
-		value *= 1000; //msec		
-		::Environment().ChangeGameTime(fValue);
-		::Level().Server->game->alife().time_manager().change_game_time(value);
-	}
-}
-
 void XRay::Game::GameDifficulty::set(ESingleGameDifficulty dif)
 {
 	g_SingleGameDifficulty = (::ESingleGameDifficulty)u32(dif);
@@ -155,31 +122,21 @@ void XRay::Game::SndVolume::set(float v)
 extern GAME_API CUISequencer* g_tutorial;
 extern GAME_API CUISequencer* g_tutorial2;
 
-void XRay::Game::setTutorialState(LPCSTR name, eTutorialState tutorialState)
+void XRay::Game::setTutorialState(::System::String^ name, eTutorialState tutorialState)
 {
+	TO_STRING64(NativeString, name);
+	
+	bool bStart = false;
 	switch (tutorialState)
 	{
-		case eTutorialState::eStart : 
-		{
-			if (g_tutorial) {
-				VERIFY(!g_tutorial2);
-				g_tutorial2 = g_tutorial;
-			};
-
-			g_tutorial = xr_new<CUISequencer>();
-			g_tutorial->Start(name);
-			if (g_tutorial2)
-				g_tutorial->m_pStoredInputReceiver = g_tutorial2->m_pStoredInputReceiver;
-
-		}break;
-
-		case eTutorialState::eStop :
-		{
-			if (g_tutorial)
-				g_tutorial->Stop();
-		}break;
+	case XRay::eTutorialState::eStart:
+		bStart = true;
+		break;
+	default:
+		break;
 	}
 
+	GamePersistent().SetTutorialState(NativeString, bStart);
 }
 bool XRay::Game::TutorialState::get()
 {
@@ -196,35 +153,15 @@ void XRay::Game::UserEventGen(NET_Packet& P, u32 _event, u32 _dest)
 	CGameObject::u_EventGen(P, _event, _dest);
 }
 
-::System::String^ XRay::Game::TranslateString(LPCSTR str)
+::System::String^ XRay::Game::TranslateString(::System::String^ str)
 {
-	return gcnew ::System::String(str);
+	TO_STRING64(NativeString, str);
+	return gcnew ::System::String(NativeString);
 }
+
 Fbox XRay::Game::GetBoundingVolume()
 {
 	return ::Level().ObjectSpace.GetBoundingVolume();
-}
-void XRay::Game::IterateSounds(LPCSTR prefix, u32 max_count, CallBack callback)
-{
-	for (int j = 0, N = _GetItemCount(prefix); j < N; ++j) {
-		string_path					fn, s;
-		LPSTR						S = (LPSTR)&s;
-		_GetItem(prefix, j, s);
-		if (FS.exist(fn, "$game_sounds$", S, ".ogg"))
-			callback(gcnew ::System::String(prefix));
-
-		for (u32 i = 0; i < max_count; ++i)
-		{
-			string_path					name;
-			xr_sprintf(name, "%s%d", S, i);
-			if (FS.exist(fn, "$game_sounds$", name, ".ogg"))
-				callback(gcnew ::System::String(name));
-		}
-	}
-}
-void XRay::Game::PrefetchSnd(LPCSTR name)
-{
-	(::Level().PrefetchSound(name));
 }
 
 XRay::GameObject^ XRay::Game::GlobalTargetObject()
@@ -247,10 +184,12 @@ float XRay::Game::GlobalTargetDist()
 	return (0);
 }
 
-void XRay::Game::SpawnSection(LPCSTR sSection, ::System::Numerics::Vector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem)
+void XRay::Game::SpawnSection(::System::String^ sSection, ::System::Numerics::Vector3 vPosition, u32 LevelVertexID, u16 ParentID, bool bReturnItem)
 {
-	Fvector NativeVect; NativeVect.set(vPosition.X, vPosition.Y, vPosition.Z);
-	::Level().spawn_item(sSection, NativeVect, LevelVertexID, ParentID, bReturnItem);
+	TO_STRING64(NativeString, sSection);
+	TO_FVECTOR(NativeVect, vPosition);
+	
+	::Level().spawn_item(NativeString, NativeVect, LevelVertexID, ParentID, bReturnItem);
 }
 
 ::System::UInt32 XRay::Game::GlobalTargetElement()

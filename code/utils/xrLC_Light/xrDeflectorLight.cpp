@@ -362,7 +362,7 @@ float getLastRP_Scale(CDB::COLLIDER* DB, CDB::MODEL* MDL, R_Light& L, Face* skip
     {
         for (u32 I = 0; I<tris_count; I++)
         {
-            CDB::RESULT& rpinf = DB->r_begin()[I];
+            CDB::RESULT& rpinf = DB->r_realBegin()[I];
 
             // Access to texture
             CDB::TRI& clT = MDL->get_tris()[rpinf.id];

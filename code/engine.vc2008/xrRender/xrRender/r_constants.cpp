@@ -18,6 +18,9 @@ R_constant_table::~R_constant_table	()
 }
 
 
+R_constant_table::R_constant_table()
+{}
+
 void	R_constant_table::fatal			(LPCSTR S)
 {
 	FATAL	(S);
@@ -237,6 +240,12 @@ void R_constant_table::merge(R_constant_table* T)
 	for ( u32 i = 0; i < T->m_CBTable.size(); ++i )
 		m_CBTable.push_back(T->m_CBTable[i]);
 #endif
+}
+
+void R_constant_table::_copy(const R_constant_table& Other)
+{
+	table = Other.table;
+	m_CBTable = Other.m_CBTable;
 }
 
 void R_constant_table::clear	()

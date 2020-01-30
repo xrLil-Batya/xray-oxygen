@@ -38,6 +38,14 @@ public:
 				Msg("!Can't write file: '%s'. Error: '%s'.", *fName, Debug.error2string(GetLastError()));
 			}
 		}
+
+		LARGE_INTEGER fileSize;
+		GetFileSizeEx(hf, &fileSize);
+		if (fileSize.QuadPart > 0)
+		{
+			SetFilePointer(hf, 0, nullptr, FILE_BEGIN);
+			SetEndOfFile(hf);
+		}
     }
 
     virtual ~CFileWriter() 
@@ -54,7 +62,7 @@ public:
 			DWORD safeCount = DWORD(count);
 			DWORD totalBytesWritten = 0;
 
-			while (totalBytesWritten < count)
+			while (totalBytesWritten < safeCount)
 			{
 				DWORD bytesWritten = 0;
 				WriteFile(hf, cursor + totalBytesWritten, safeCount - totalBytesWritten, &bytesWritten, NULL);

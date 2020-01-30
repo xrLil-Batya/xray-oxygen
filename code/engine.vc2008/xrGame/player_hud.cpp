@@ -552,8 +552,7 @@ const Fvector& player_hud::attach_rot() const
 {
 	if(m_attached_items[0])
 		return m_attached_items[0]->hands_attach_rot();
-	else
-	if(m_attached_items[1])
+	else if(m_attached_items[1])
 		return m_attached_items[1]->hands_attach_rot();
 	else
 		return Fvector().set(0,0,0);
@@ -563,8 +562,7 @@ const Fvector& player_hud::attach_pos() const
 {
 	if(m_attached_items[0])
 		return m_attached_items[0]->hands_attach_pos();
-	else
-	if(m_attached_items[1])
+	else if(m_attached_items[1])
 		return m_attached_items[1]->hands_attach_pos();
 	else
 		return Fvector().set(0,0,0);
@@ -806,8 +804,8 @@ void player_hud::detach_item_idx(u16 idx)
 				}
 			}
 		}
-	}else
-	if(idx==0 && attached_item(1))
+	}
+	else if(idx==0 && attached_item(1))
 	{
 		OnMovementChanged(mcAnyMove);
 	}

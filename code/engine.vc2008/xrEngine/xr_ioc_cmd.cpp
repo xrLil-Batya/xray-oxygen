@@ -168,30 +168,35 @@ public:
 	virtual void Execute(LPCSTR args) 
 	{
 		string_path			cfg_full_name;
-		xr_strcpy			(cfg_full_name, (xr_strlen(args)>0)?args:Console->ConfigFile);
+		xr_strcpy			(cfg_full_name, (xr_strlen(args) > 0) ? args : Console->ConfigFile);
 
-		bool b_abs_name = xr_strlen(cfg_full_name)>2 && cfg_full_name[1]==':';
+		bool b_abs_name = xr_strlen(cfg_full_name) > 2 && cfg_full_name[1] == ':';
 
-		if(!b_abs_name)
+		if (!b_abs_name)
+		{
 			FS.update_path	(cfg_full_name, "$app_data_root$", cfg_full_name);
+		}
 
-		//if (strext(cfg_full_name))	
-		//*strext(cfg_full_name) = 0;
-		//xr_strcat			(cfg_full_name,".ltx");
-		
 		BOOL b_allow = TRUE;
-		if ( FS.exist(cfg_full_name) )
+		if (FS.exist(cfg_full_name))
+		{
 			b_allow = SetFileAttributes(cfg_full_name,FILE_ATTRIBUTE_NORMAL);
+		}
 
-		if ( b_allow ){
-			IWriter* F			= FS.w_open(cfg_full_name);
-				CConsole::vecCMD_IT it;
-				for (it=Console->Commands.begin(); it!=Console->Commands.end(); it++)
-					it->second->Save(F);
-				FS.w_close			(F);
-				Msg("Config-file [%s] saved successfully",cfg_full_name);
-		}else
+		if ( b_allow )
+		{
+			IWriter* F = FS.w_open(cfg_full_name);
+			for (CConsole::vecCMD_IT it = Console->Commands.begin(); it != Console->Commands.end(); it++)
+			{
+				it->second->Save(F);
+			}
+			FS.w_close(F);
+			Msg("Config-file [%s] saved successfully", cfg_full_name);
+		}
+		else
+		{
 			Msg("!Cannot store config file [%s]", cfg_full_name);
+		}
 	}
 };
 CCC_LoadCFG::CCC_LoadCFG(LPCSTR N) : IConsole_Command(N) 
@@ -248,7 +253,7 @@ class CCC_Start : public IConsole_Command
 protected:
 	xr_string parse(const xr_string &str)
 	{
-		std::regex Reg("\\(([^)]+)\\)");
+		static std::regex Reg("\\(([^)]+)\\)");
 		std::smatch results;
 		R_ASSERT3(std::regex_search(str, results, Reg), "Failed parsing string: [%s]", str.c_str());
 		return results[1].str().c_str();
@@ -538,6 +543,28 @@ public		:
 	}
 };
 
+class ENGINE_API CCC_PrintMemStat : public IConsole_Command
+{
+public:
+	CCC_PrintMemStat(LPCSTR N) : IConsole_Command(N)
+	{
+		bEmptyArgsHandled = true;
+	}
+
+	virtual void	Execute(LPCSTR args)
+	{
+		Memory.PrintStat();
+	}
+	virtual void	Status(TStatus& S)
+	{
+		S[0] = 0;
+	}
+	virtual void	Info(TInfo& I)
+	{
+		xr_sprintf(I, sizeof(I), "Show memory allocation statistic");
+	}
+};
+
 
 ENGINE_API float psHUD_FOV_def = 0.45f;
 ENGINE_API float psHUD_FOV = psHUD_FOV_def;
@@ -592,11 +619,11 @@ void CCC_Register()
 
 	CMD3(CCC_Mask,		"rs_triple_buffering",	&psDeviceFlags,		rsTripleBuffering		);
 	CMD3(CCC_Mask,		"rs_v_sync",			&psDeviceFlags,		rsVSync					);
-	CMD3(CCC_Token,		"rs_refresh_hz",		&ps_r_RefreshHZ,	RefreshHZ			);
 	CMD3(CCC_Mask,		"rs_stats",				&psDeviceFlags,		rsStatistic				);
 	CMD3(CCC_Mask,		"rs_stats_game",		&psDeviceFlags,		rsGameProfiler			);
 	CMD3(CCC_Mask,		"rs_stats_schedule",    &psDeviceFlags,		rsScheduleProfiler		);
 	CMD3(CCC_Mask,		"rs_cam_pos",			&psDeviceFlags,		rsCameraPos				);
+	CMD3(CCC_Token,		"rs_refresh_hz",		&ps_r_RefreshHZ,	RefreshHZ);
 
 	CMD4(CCC_Float,		"rs_vis_distance",		&psVisDistance,		0.4f,	1.0f			);
 	if (strstr(Core.Params,"-fog_mixer"))
@@ -674,6 +701,7 @@ void CCC_Register()
 #endif
 
 	CMD1(CCC_HideConsole,		"hide");
+	CMD1(CCC_PrintMemStat,		"mem_stat");
 
 #ifdef	DEBUG
 	extern BOOL debug_destroy;

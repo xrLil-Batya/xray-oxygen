@@ -45,7 +45,7 @@ const u32	_pmt_psy_attack_delay		= 2000;
 const float	_pmt_psy_attack_min_angle	= deg(5);
 
 
-namespace detail
+namespace controllerDetails
 {
 	namespace controller 
 	{
@@ -193,7 +193,7 @@ void CController::Load(LPCSTR section)
 	LPCSTR tube_condition_min_delay_line    = "tube_condition_min_delay";
 	LPCSTR tube_condition_min_distance_line = "tube_condition_min_distance";
 
-	using namespace detail::controller;
+	using namespace controllerDetails::controller;
 	m_tube_condition_see_duration = pSettings->line_exist(section, tube_see_duration_line) ?
 	                             	pSettings->r_u32(section, tube_see_duration_line) :
 									default_tube_condition_see_duration;
@@ -549,7 +549,7 @@ void CController::tube_fire()
 
 bool CController::can_tube_fire()
 {
-	using namespace detail::controller;
+	using namespace controllerDetails::controller;
 
 	if ( 0 && m_tube_at_once )
 	{

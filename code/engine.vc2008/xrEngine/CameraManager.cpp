@@ -95,6 +95,19 @@ void CCameraManager::RemoveCamEffector(ECamEffectorType type)
         }
 }
 
+bool CCameraManager::IsCamEffectorLockPlayerMovement() const
+{
+    for (CEffectorCam* effector : m_EffectorsCam)
+    {
+        if (effector->bShouldLockPlayerMovement)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 CEffectorPP* CCameraManager::GetPPEffector(EEffectorPPType type)
 {
     for (auto it = m_EffectorsPP.begin(); it != m_EffectorsPP.end(); it++)

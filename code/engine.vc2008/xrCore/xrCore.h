@@ -1,28 +1,21 @@
 #pragma once
 #pragma warning (disable : 4530 )		// C++ vector(985)
 
-#define ENGINE_VERSION "Preview 2.0"
+#define ENGINE_VERSION "January 2020"
 
 #ifndef DEBUG
 #	define MASTER_GOLD
 #endif // DEBUG
 
-#pragma warning(disable:4996)
-#if !defined(_MT)
-	// multithreading disabled
-#error Please enable multi-threaded library...
-#endif
-
 #include "xrCore_platform.h"
-
+#include "xrLang.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
-#include <typeinfo.h>
+#include <typeinfo>
 #include <cinttypes>
-#include <chrono>
 
 // inline control - redefine to use compiler's heuristics ONLY
 // it seems "IC" is misused in many places which cause code-bloat
@@ -32,16 +25,9 @@
 #define IC				inline
 #define ICF				__forceinline			// !!! this should be used only in critical places found by PROFILER
 #define ICN				__declspec(noinline)
-#define xr_interface	__interface
 
 #pragma inline_depth	( 254 )
 #pragma inline_recursion( on )
-#pragma intrinsic	(abs, fabs, fmod, sin, cos, tan, asin, acos, atan, sqrt, exp, log, log10, strcat, pow, strlen, memset)
-
-#include <time.h>
-// work-around dumb borland compiler
-#define ALIGN(a)		__declspec(align(a))
-#include <sys\utime.h>
 
 // Warnings
 #pragma warning (disable : 4251 )		// object needs DLL interface
@@ -67,7 +53,6 @@
 #include <map>
 #include <utility>
 #include <string>
-#include <string_view>
 
 #include <unordered_map>
 #include <unordered_set>
@@ -87,7 +72,9 @@
 #include "thread_utils.h"
 #include "xrDebug.h"
 #include "xrMemory.h"
+#include "_std_extensions.h"
 #include "_stl_extensions.h"
+#include "xrProfiling.h"
 #include "vector.h"
 
 #if PLATFORM == _WINDOWS
@@ -99,11 +86,12 @@
 
 #include "clsid.h"
 
-#include "xrsharedmem.h"
-#include "xrstring.h"
+#include "xrSharedMem.h"
+#include "xrString.h"
 #include "xr_resource.h"
 #include "rt_compressor.h"
 #include "xr_shared.h"
+#include "ScopeHandle.h"
 
 #ifdef DEBUG
 #include "dump_string.h"
@@ -158,19 +146,6 @@ using RTokenVec = xr_vector<xr_rtoken>;
 #include "intrusive_ptr.h"
 #include "net_utils.h"
 
-// Check if user included some files, that a prohibited
-#ifdef _MUTEX_
-#error <mutex> file is prohibited, please use xrCriticalSection and xrCriticalSectionGuard instead
-#endif
-// Ban std::thread also
-#ifdef _THREAD_
-#error <thread> is prohibited, please use TBB Task, or _beginthreadex
-#endif
-
-#ifdef _CHARCONV_
-#error <charconv> is prohibited, it doesn't exist on all supported platforms
-#endif
-
 // destructor
 template <class T>
 class destructor
@@ -203,9 +178,25 @@ struct XRCORE_API xrCore
 	void		_initialize(const char* ApplicationName, xrLogger::LogCallback cb = 0, BOOL init_fs = TRUE, const char* fs_fname = 0);
 	void		_destroy();
 	IC	void	SetPluginMode() { PluginMode = true; }
+
+	HMODULE LoadModule(LPCSTR ModuleName, bool bAllowFail = false);
 };
 
 extern XRCORE_API xrCore Core;
 extern XRCORE_API bool   gModulesLoaded;
 
 #include "XMLCore\xrXMLParser.h"
+
+#ifndef SPECTRE
+	#include "tbb/concurrent_unordered_map.h"
+	#include "tbb/concurrent_vector.h"
+
+	template<typename Key, typename Value>
+	using xr_concurrent_unordered_map = tbb::concurrent_unordered_map < Key, Value, tbb::tbb_hash< Key >, std::equal_to< Key >, xalloc< std::pair< const Key, Value > > >;
+
+	template<typename Key, typename Value>
+	using xr_concurrent_unordered_multimap = tbb::concurrent_unordered_multimap < Key, Value, tbb::tbb_hash< Key >, std::equal_to< Key >, xalloc< std::pair< const Key, Value > > >;
+
+	template<typename ElemType>
+	using xr_concurrent_vector = tbb::concurrent_vector < ElemType, xalloc< ElemType >>;
+#endif

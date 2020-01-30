@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "WeatherFX.h"
 #include "xrGame\Level.h"
+#include "xrEngine/Environment.h"
 
-using namespace System;
 using XRay::WeatherFX;
 
 bool WeatherFX::Enable::get()

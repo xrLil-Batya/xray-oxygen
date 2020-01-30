@@ -448,7 +448,7 @@ public:
 #ifdef DEBUG
 
 	template <class Type>
-	bool					get_debug_var (pcstr var_name, OUT Type& result);
+	bool					get_debug_var (LPCSTR var_name, OUT Type& result);
 
 public:
 	struct SDebugInfo {
@@ -543,7 +543,7 @@ protected:
 
 public:
 	template <class Type>
-	Type							override_if_debug (pcstr var_name, Type value);
+	Type							override_if_debug (LPCSTR var_name, Type value);
 
 //-------------------------------------------------------------------
 // CBaseMonster's  Auras
@@ -573,13 +573,13 @@ protected:
 	float							m_fHitFracMonster;
 
 private:
-	pcstr							m_head_bone_name;
-	pcstr							m_left_eye_bone_name;
-	pcstr							m_right_eye_bone_name;
+	LPCSTR							m_head_bone_name;
+	LPCSTR							m_left_eye_bone_name;
+	LPCSTR							m_right_eye_bone_name;
 	shared_str						m_section;
 
 public:
-	pcstr							get_head_bone_name	()	const { return m_head_bone_name; }
+	LPCSTR							get_head_bone_name	()	const { return m_head_bone_name; }
 	shared_str						get_section			()	const { return m_section; }
 
 	anti_aim_ability*				get_anti_aim		() { return m_anti_aim; }
@@ -614,7 +614,7 @@ public:
 #ifdef DEBUG
 #include "../../../ai_debug_variables.h"
 template <class Type>
-bool   CBaseMonster::get_debug_var (pcstr var_name, OUT Type& result)
+bool   CBaseMonster::get_debug_var (LPCSTR var_name, OUT Type& result)
 {
 	string256					full_var_name;
 	xr_strconcat				(full_var_name, get_monster_class_name(), "_", var_name);
@@ -623,7 +623,7 @@ bool   CBaseMonster::get_debug_var (pcstr var_name, OUT Type& result)
 #endif // DEBUG
 
 template <class Type>
-Type   CBaseMonster::override_if_debug (pcstr var_name, Type value)
+Type   CBaseMonster::override_if_debug (LPCSTR var_name, Type value)
 {
 	#ifdef DEBUG
 		Type		debug_value;	

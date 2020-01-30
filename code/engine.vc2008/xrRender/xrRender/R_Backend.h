@@ -27,7 +27,6 @@ struct	R_statistics
 	R_statistics_element		s_details		;
 	R_statistics_element		s_ui			;
 	R_statistics_element		s_dynamic		;
-	R_statistics_element		s_dynamic_sw	;
 	R_statistics_element		s_dynamic_inst	;
 	R_statistics_element		s_dynamic_1B	;
 	R_statistics_element		s_dynamic_2B	;
@@ -213,7 +212,6 @@ public:
 #endif
 
 	// API
-	IC	void						set_xform			(u32 ID, const Fmatrix& M_);
 	IC	void						set_xform_world		(const Fmatrix& M);
 //	IC void set_xform_world(const Matrix4x4 & fM);
 	IC	void						set_xform_view		(const Fmatrix& M);

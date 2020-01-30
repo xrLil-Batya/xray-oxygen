@@ -76,10 +76,7 @@ class GAME_API CActor:
 	friend class CActorCondition;
 private:
 	using inherited = CEntityAlive;
-	static void							MtSecondActorUpdate(void* pActorPointer);
 public:
-	HANDLE								MtSecondUpdaterEventStart;
-	HANDLE								MtSecondUpdaterEventEnd;
 	xrCriticalSection					MtFeelTochMutex;
 public:
 										CActor				();
@@ -135,6 +132,7 @@ public:
 	void			AddGameNews_deffered	 (GAME_NEWS_DATA& news_data, u32 delay);
 	virtual void	AddGameNews				 (GAME_NEWS_DATA& news_data);
 	virtual void	StartTalk				 (CInventoryOwner* talk_partner, bool bStartTrade = false);
+	virtual void    StopTalk				 ();
 			void	RunTalkDialog			 (CInventoryOwner* talk_partner, bool disable_break);
 
 	CGameNewsRegistryWrapper		*game_news_registry;
@@ -310,7 +308,6 @@ protected:
 
 	// Cameras
 	float					fPrevCamPos;
-	float					current_ik_cam_shift;
 	Fvector					vPrevCamDir;
 	float					fCurAVelocity;
 	CEffectorBobbing*		pCamBobbing;
@@ -328,7 +325,6 @@ public:
 	CGameObject*			ObjectWeLookingAt			() {return m_pObjectWeLookingAt;}
 	CInventoryOwner*		PersonWeLookingAt			() {return m_pPersonWeLookingAt;}
 	LPCSTR					GetDefaultActionForObject	() {return *m_sDefaultObjAction;}
-	CZoneCampfire*			CapmfireWeLookingAt			() {return m_CapmfireWeLookingAt;}
 	CProjector*				ProjWeLookingAt				() {return m_pProjWeLookingAt;}
 
 protected:
@@ -338,7 +334,6 @@ protected:
 	CHolderCustom*			m_pVehicleWeLookingAt;
 	CGameObject*			m_pObjectWeLookingAt;
 	CInventoryBox*			m_pInvBoxWeLookingAt;
-	CZoneCampfire*			m_CapmfireWeLookingAt;
 	CProjector*				m_pProjWeLookingAt;
 
 	// Tip for action for object we're looking at
@@ -382,7 +377,7 @@ public:
 	float					CurrentHeight;	
 	bool					CanSprint				();
 	bool					CanRun					();
-	void					StopAnyMove				();
+	virtual void			StopAnyMove				();
 
 	bool					AnyAction				()	{return (mstate_real & mcAnyAction) != 0;};
 	bool					AnyMove					()	{return (mstate_real & mcAnyMove) != 0;};
@@ -405,7 +400,6 @@ protected:
 	float					m_fWalk_StrafeFactor;
 	float					m_fRun_StrafeFactor;
 
-	Fvector2				m_movementWeight;
 	Fvector2				m_cameraMoveWeight;
 
 public:
@@ -421,12 +415,11 @@ public:
 	virtual void			IR_OnMouseWheel			(int direction);
 	virtual void			IR_OnThumbstickChanged  (GamepadThumbstickType type, const Fvector2& position);
 	virtual	float			GetLookFactor			();
-	virtual void			ResetMovementWeight		();
 
 public:
 	virtual void						g_WeaponBones		(int &L, int &R1, int &R2);
 	virtual void						g_fireParams		(const CHudItem* pHudItem, Fvector& P, Fvector& D);
-	virtual bool						g_stateFire() { return !((mstate_wishful & mcLookout) && false); }
+	virtual bool						g_stateFire			() { return true; }
 
 	virtual BOOL						g_State				(SEntityState& state) const;
 	virtual	float						GetWeaponAccuracy	() const;
@@ -620,7 +613,6 @@ public:
 	IC float					HitProbability					() {return m_hit_probability;}
 	virtual	CVisualMemoryManager*visual_memory					() const;
 
-	virtual	BOOL				BonePassBullet					(int boneID);
 	virtual	void				On_B_NotCurrentEntity			();
 
 private:

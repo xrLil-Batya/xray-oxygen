@@ -74,7 +74,7 @@ void	ISpatial::spatial_register	()
 		// register
 		R_ASSERT				(spatial.space);
 		spatial.space->insert	(this);
-		spatial.sector			=	0;
+		spatial.sector			=	nullptr;
 	}
 }
 
@@ -168,8 +168,6 @@ ISpatial_DB::~ISpatial_DB()
 	allocator_pool.clear();
 }
 
-#pragma todo("FX to Giperion: allocator_pool.reserve(128) --> 256 and allocator --> 256. Мне лень пересобирать сейчас")
-
 void ISpatial_DB::initialize(Fbox& BB)
 {
 	if (!m_root)
@@ -178,7 +176,7 @@ void ISpatial_DB::initialize(Fbox& BB)
 		Fvector bbc, bbd;
 		BB.get_CD(bbc, bbd);
 
-		allocator_pool.reserve(128);
+		allocator_pool.reserve(256);
 		m_center.set(bbc);
 		m_bounds = std::max(std::max(bbd.x, bbd.y), bbd.z);
 		rt_insert_object = nullptr;

@@ -70,14 +70,10 @@ float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
 			Nw = normalize(Nw);
 	float3	v2point = normalize(I.v2point);
 	float3	vreflect = reflect(v2point, Nw);
-
-	float3 vreflectabs    = abs(vreflect);
-	float  vreflectmax    = max(vreflectabs.x, max(vreflectabs.y, vreflectabs.z));
-		   vreflect      /= vreflectmax;
-
-	if (vreflect.y < 0.999)
-			vreflect.y = vreflect.y * 2 - 1;     // fake remapping
-
+	
+		 // fake remapping
+	vreflect.y = vreflect.y * 2 - 1;
+		
 	base.rgb *= I.c0.xyz;
 	
 	float3	env0 = s_env0.Sample(smp_rtlinear, vreflect);
@@ -101,13 +97,11 @@ float4 main( vf I, float4 pos2d : SV_Position ) : SV_Target
 
 	float	alpha = 0.75h + 0.25h * power; // 1=full env, 0=no env
 
+#ifdef	USE_SOFT_WATER
 	//	ForserX: additional depth
 	float2 PosTc = I.tctexgen.xy / I.tctexgen.z;
 	gbuffer_data gbd = gbuffer_load_data(PosTc, pos2d);
 	float4 _P = float4(gbd.P, gbd.mtl);
-
-#ifdef	USE_SOFT_WATER
-
 	float waterDepth = _P.z - I.tctexgen.z;
 	
 	// Water fog

@@ -49,14 +49,22 @@
 #include "device.h"
 #include "../xrcore/fs.h"
 #include "../xrcdb/xrXRC.h"
+
+#ifdef SPECTRE
+#pragma unmanaged
+#endif
+
 #include "../xrSound/sound.h"
+
+#ifdef SPECTRE
+#pragma managed
+#endif
 
 extern ENGINE_API CInifile *pGameIni;
 
 #pragma comment( lib, "xrCore.lib"	)
 #pragma comment( lib, "xrCDB.lib"	)
 #pragma comment( lib, "xrSound.lib"	)
-#pragma comment( lib, "winmm.lib"	)
 #ifndef ENGINE_BUILD
 #pragma comment( lib, "xrScripts.lib")
 #pragma comment( lib, "d3d9.lib"	 )

@@ -10,7 +10,6 @@ void CThread::startup(void* P)
     CThread* T = (CThread*)P;
 
     T->log("* THREAD #%d: Started.", T->thID);
-    FPU::m64r();
     T->Execute();
     T->thCompleted = TRUE;
     T->log("* THREAD #%d: Task Completed.", T->thID);

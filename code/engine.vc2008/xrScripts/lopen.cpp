@@ -32,7 +32,7 @@ void lopen::put_function(lua_State* state, u8 const* buffer, u32 const buffer_si
 }
 #endif
 
-void lopen::open_lib(lua_State *L, pcstr module_name, lua_CFunction function)
+void lopen::open_lib(lua_State *L, LPCSTR module_name, lua_CFunction function)
 {
 	lua_pushcfunction(L, function);
 	lua_pushstring(L, module_name);

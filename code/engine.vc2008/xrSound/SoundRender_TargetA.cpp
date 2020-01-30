@@ -12,6 +12,7 @@ CSoundRender_TargetA::CSoundRender_TargetA() :CSoundRender_Target()
 	cache_gain = 0.f;
 	psSpeedOfSound = 1.f;
 	pSource = 0;
+	buf_block = 0;
 }
 
 CSoundRender_TargetA::~CSoundRender_TargetA()
@@ -161,18 +162,11 @@ void	CSoundRender_TargetA::fill_parameters()
 
 	// 3D params
 	VERIFY2(m_pEmitter, SE->source()->file_name());
-	A_CHK(alSourcef(pSource, AL_REFERENCE_DISTANCE, m_pEmitter->p_source.min_distance));
-
-	VERIFY2(m_pEmitter, SE->source()->file_name());
-	A_CHK(alSourcef(pSource, AL_MAX_DISTANCE, m_pEmitter->p_source.max_distance));
-
-	VERIFY2(m_pEmitter, SE->source()->file_name());
-	A_CHK(alSource3f(pSource, AL_POSITION, m_pEmitter->p_source.position.x, m_pEmitter->p_source.position.y, -m_pEmitter->p_source.position.z));
-
-	VERIFY2(m_pEmitter, SE->source()->file_name());
-	A_CHK(alSourcei(pSource, AL_SOURCE_RELATIVE, m_pEmitter->b2D));
-
-	A_CHK(alSourcef(pSource, AL_ROLLOFF_FACTOR, psSoundRolloff));
+	A_CHK(alSourcef (pSource, AL_REFERENCE_DISTANCE, m_pEmitter->p_source.min_distance));
+	A_CHK(alSourcef (pSource, AL_MAX_DISTANCE,		 m_pEmitter->p_source.max_distance));
+	A_CHK(alSource3f(pSource, AL_POSITION,			 m_pEmitter->p_source.position.x, m_pEmitter->p_source.position.y, -m_pEmitter->p_source.position.z));
+	A_CHK(alSourcei (pSource, AL_SOURCE_RELATIVE,	 m_pEmitter->b2D));
+	A_CHK(alSourcef (pSource, AL_ROLLOFF_FACTOR,	 psSoundRolloff));
 
 	VERIFY2(m_pEmitter, SE->source()->file_name());
 	float	_gain = m_pEmitter->smooth_volume;
@@ -195,8 +189,11 @@ void	CSoundRender_TargetA::fill_parameters()
 
 		if (!fsimilar(_pitch, psSpeedOfSound))
 		{
-			psSpeedOfSound = _pitch;
 			A_CHK(alSourcef(pSource, AL_PITCH, _pitch));
+		}
+		else
+		{
+			A_CHK(alSourcef(pSource, AL_PITCH, 1.0f));
 		}
 	}
 	VERIFY2(m_pEmitter, SE->source()->file_name());

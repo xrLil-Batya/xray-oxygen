@@ -19,7 +19,6 @@ public:
 //////////////////////////////////////////////////////////////////////////
 class RENDER_API R_dsgraph_structure							: public IRender_interface, public pureFrame
 {
-	xrCriticalSection											InsertStaticCritsect;
 public:
 	IRenderable*												val_pObject;
 	Fmatrix*													val_pTransform;
@@ -98,8 +97,6 @@ public:
 	void		r_dsgraph_render_distort						();
 	void		r_dsgraph_render_subspace						(IRender_Sector* _sector, CFrustum* _frustum, Fmatrix& mCombined, Fvector& _cop, BOOL _dynamic, BOOL _precise_portals=false	);
 	void		r_dsgraph_render_subspace						(IRender_Sector* _sector, Fmatrix& mCombined, Fvector& _cop, BOOL _dynamic, BOOL _precise_portals=false	);
-	void		r_dsgraph_render_R1_box							(IRender_Sector* _sector, Fbox& _bb, int _element);
-
 
 public:
 	virtual u32 memory_usage()

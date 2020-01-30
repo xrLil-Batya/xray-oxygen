@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "X-Ray Oxygen"
-#define MyAppVersion "1.7f"
+#define MyAppVersion "January 2020"
 #define MyAppPublisher "Oxygen Team"
 #define MyAppURL "http://xray-oxygen.org"
 #define MyAppExeName "xrPlay.exe"
@@ -20,14 +20,13 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
-PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
 OutputBaseFilename=OxygenSetup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 DisableWelcomePage=False
-AppCopyright=Oxygen Team 2019
+AppCopyright=Oxygen Team 2020
 MinVersion=0,6.1
 SetupIconFile=oxygen_logo_setup.ico
 WizardImageFile=Oxygen_Setup_eng.bmp
@@ -47,14 +46,13 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\..\binaries\x64\Release\*.dll"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\binaries\x64\Release\xrPlay.exe"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
-Source: "..\..\binaries\x64\Release\alsoft.ini"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
-Source: "..\..\game\fsgame.ltx"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: OnFsltxIsAboutToBeCreated
+Source: "..\..\game\oxy_fsgame.ltx"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: OnFsltxIsAboutToBeCreated
 Source: "..\..\game\gamedata\*.*"; DestDir: "{app}\gamedata"; Flags: ignoreversion recursesubdirs
 Source: "vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
-Source: "..\..\game\external\oalinst.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "Splash.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
 Source: "Oxygen_Setup.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
 Source: "Oxygen_Setup_eng.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
+Source: "..\..\binaries\x64\Release\*.pdb"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\Oxygen\{#MyAppExeName}"
@@ -69,7 +67,6 @@ Name: "{app}\gamedata"; BeforeInstall: OnGamedataIsAboutToBeCreated
 
 [Run]
 Filename: "{tmp}\vc_redist.x64.exe"; WorkingDir: "{app}"; Flags: postinstall; Description: "{cm:STR_OXY_MSVS_REDIST}"
-Filename: "{tmp}\oalinst.exe"; WorkingDir: "{app}"; Flags: postinstall; Description: "{cm:STR_OXY_OAL}"
 
 [CustomMessages]
 english.MSG_OXY_AWDA=AWDA
@@ -199,10 +196,10 @@ var
     fsGameFilePath : String;
     fsGameFilePathChanged : String;
 begin
-  fsGameFilePath := ExpandConstant('{app}\fsgame.ltx');
+  fsGameFilePath := ExpandConstant('{app}\oxy_fsgame.ltx');
 	if FileExists(fsGameFilePath) = True then
 	begin
-		fsGameFilePathChanged := ExpandConstant('{app}\fsgame_OLD.ltx');
+		fsGameFilePathChanged := ExpandConstant('{app}\oxy_fsgame_OLD.ltx');
 		RenameFile(fsGameFilePath, fsGameFilePathChanged);
 	end;
 end;
@@ -361,8 +358,8 @@ begin
 		// if so - we should rename it back to "gamedata"
 		gameDataFilePath := ExpandConstant('{app}\gamedata');
 		gameDataFilePathChanged := ExpandConstant('{app}\gamedata_OLD');
-    fsGameFilePath := ExpandConstant('{app}\fsgame.ltx');
-    fsGameFilePathChanged := ExpandConstant('{app}\fsgame_OLD.ltx');
+    fsGameFilePath := ExpandConstant('{app}\oxy_fsgame.ltx');
+    fsGameFilePathChanged := ExpandConstant('{app}\oxy_fsgame_OLD.ltx');
 		if DirExists(gameDataFilePathChanged) = True then
 		begin
 			RenameFile(gameDataFilePathChanged, gameDataFilePath);

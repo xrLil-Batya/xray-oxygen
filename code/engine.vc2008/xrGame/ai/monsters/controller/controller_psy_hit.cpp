@@ -130,7 +130,7 @@ void CControllerPsyHit::play_anim()
 	ctrl_anim->global.actual	= false;
 }
 
-namespace detail
+namespace ControllerPsyHitDetails
 {
 
 bool check_actor_visibility (const Fvector trace_from, 

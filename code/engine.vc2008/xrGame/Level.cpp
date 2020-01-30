@@ -84,28 +84,6 @@ bool CLevel::PostponedSpawn(u16 id)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-void CLevel::mtLevelScriptUpdater(void* pCLevel)
-{
-	CLevel* pLevel = reinterpret_cast<CLevel*>(pCLevel);
-	while (true)
-	{
-		WaitForSingleObject(pLevel->m_mtScriptUpdaterEventStart, INFINITE);
-		if (g_pGameLevel != pLevel) return;
-
-		// Disable objects
-		psDeviceFlags.set(rsDisableObjectsAsCrows, false);
-
-		Fvector temp_vector;
-		pLevel->m_feel_deny.feel_touch_update(temp_vector, 0.f);
-
-		// Call level script
-		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
-		if (levelScript) levelScript->update();
-
-		SetEvent(pLevel->m_mtScriptUpdaterEventEnd);
-	}
-}
-
 CLevel::CLevel() :IPureClient(Device.GetTimerGlobal()), Server(nullptr)
 {
 	g_bDebugEvents = strstr(Core.Params, "-debug_ge") ? TRUE : FALSE;
@@ -152,17 +130,11 @@ CLevel::CLevel() :IPureClient(Device.GetTimerGlobal()), Server(nullptr)
 	g_player_hud->load_default();
 
 	hud_zones_list = nullptr;
-
-	m_mtScriptUpdaterEventStart = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-	m_mtScriptUpdaterEventEnd = CreateEvent(nullptr, TRUE, FALSE, nullptr);
-
-	thread_spawn(mtLevelScriptUpdater, "X-Ray: Level Script Update", 0, this);
 }
 
 CLevel::~CLevel()
 {
 	g_pGameLevel = nullptr;
-	SetEvent(m_mtScriptUpdaterEventStart);
 	xr_delete(g_player_hud);
 	delete_data(hud_zones_list);
 	hud_zones_list = nullptr;
@@ -234,9 +206,6 @@ CLevel::~CLevel()
 
 	if (g_tutorial2 && g_tutorial2->m_pStoredInputReceiver == this)
 		g_tutorial2->m_pStoredInputReceiver = nullptr;
-
-	CloseHandle(m_mtScriptUpdaterEventStart);
-	CloseHandle(m_mtScriptUpdaterEventEnd);
 }
 
 shared_str CLevel::name() const
@@ -405,9 +374,7 @@ void CLevel::MakeReconnect()
 #include "Inventory.h"
 void CLevel::OnFrame()
 {
-	ResetEvent(m_mtScriptUpdaterEventEnd);
-	SetEvent(m_mtScriptUpdaterEventStart);
-
+	ScopeStatTimer OnFrame(Device.Statistic->Engine_LevelFrame);
 	// commit events from bullet manager from prev-frame
 	BulletManager().CommitEvents();
 	ClientReceive();
@@ -450,21 +417,18 @@ void CLevel::OnFrame()
 	// deffer LUA-GC-STEP
 	Device.seqParallel.emplace_back(this, &CLevel::script_gc);
 	//----------------------------------------------------
+	// Disable objects
+	psDeviceFlags.set(rsDisableObjectsAsCrows, false);
 
-	// Level Script Updater thread can issue a exception. But it require to process one message from HWND message queue, otherwise, Level script can't show error message
-	DWORD WaitResult = WAIT_TIMEOUT;
+	Fvector temp_vector;
+	m_feel_deny.feel_touch_update(temp_vector, 0.f);
 
-	do
-	{
-		WaitResult = WaitForSingleObject(m_mtScriptUpdaterEventEnd, 66); // update message box with 15 fps
-		if (WaitResult == WAIT_TIMEOUT)
-		{
-			Device.ProcessSingleMessage();
-		}
-	} while (WaitResult == WAIT_TIMEOUT);
+	// Call level script
+	CScriptProcess* levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
+	if (levelScript) levelScript->update();
 }
 
-int		psLUA_GCSTEP = 10;
+int		psLUA_GCSTEP = 100;
 void	CLevel::script_gc()
 {
 	lua_gc(ai().script_engine().lua(), LUA_GCSTEP, psLUA_GCSTEP);
@@ -478,21 +442,12 @@ void test_precise_path();
 extern	Flags32	dbg_net_Draw_Flags;
 #endif
 
-extern void draw_wnds_rects();
-
 void CLevel::OnRender()
 {
 	::Render->BeforeWorldRender();
 	
 	// There is an exception while loading the level.
-	try
-	{
-		inherited::OnRender();
-	}
-	catch (...)
-	{
-		R_ASSERT(game && game->Type() == eGameIDNoGame);
-	}
+	inherited::OnRender();
 	 
 	if(!IGameAnsel::IsActive())
 		HUD().RenderUI();
@@ -680,6 +635,21 @@ void CLevel::SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTim
 		return;
 
 	game->SetEnvironmentGameTimeFactor(GameTime, fTimeFactor);
+}
+
+bool CLevel::CheckTrisIsNotObstacle(CDB::TRI* pTris) const
+{
+	SGameMtl* pMaterial = GMLib.GetMaterialByIdx(pTris->material);
+	
+	// Object is Passable
+	if (pMaterial->Flags.is(SGameMtl::flPassable))
+		return true;
+	
+	// Object don't have wallmarks
+	if(pMaterial->Flags.is(SGameMtl::flSuppressWallmarks))
+		return fsimilar(pMaterial->fVisTransparencyFactor, 1.0f, EPS) && fsimilar(pMaterial->fShootFactor, 1.0f, EPS);
+	
+	return false;
 }
 
 void CLevel::ResetLevel()

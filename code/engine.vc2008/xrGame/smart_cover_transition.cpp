@@ -14,22 +14,21 @@
 #include "../xrServerEntities/object_broker.h"
 #include <luabind/luabind.hpp>
 
-using smart_cover::detail::parse_table;
-using smart_cover::detail::parse_string;
-using smart_cover::detail::parse_fvector;
-using smart_cover::detail::parse_int;
-using smart_cover::transitions::action;
-using smart_cover::transitions::animation_action;
+namespace smart_cover
+{
+	namespace transitions
+	{
+
 
 action::action					(luabind::object const &table)
 {
 	VERIFY						(table.type() == LUA_TTABLE);
 
-	m_precondition_functor		= parse_string(table, "precondition_functor");
-	m_precondition_params		= parse_string(table, "precondition_params");
+	m_precondition_functor		= smart_cover::detail::parse_string(table, "precondition_functor");
+	m_precondition_params		= smart_cover::detail::parse_string(table, "precondition_params");
 
 	luabind::object				anim_table;
-	parse_table					(table, "actions", anim_table);
+	smart_cover::detail::parse_table (table, "actions", anim_table);
 	load_animations				(anim_table);
 }
 
@@ -54,10 +53,10 @@ void action::load_animations	(luabind::object const &table)
 	luabind::object::iterator	E = table.end();
 	for ( ; I != E; ++I) {
 		luabind::object			tmp = *I;
-		Fvector	const			&pos = parse_fvector(tmp, "position");
-		shared_str				anim_id = parse_string(tmp, "animation");
-		MonsterSpace::EBodyState body_state = (MonsterSpace::EBodyState)parse_int(tmp, "body_state");
-		MonsterSpace::EMovementType movement_type = (MonsterSpace::EMovementType)parse_int(tmp, "movement_type");
+		Fvector	const			&pos = smart_cover::detail::parse_fvector(tmp, "position");
+		shared_str				anim_id = smart_cover::detail::parse_string(tmp, "animation");
+		MonsterSpace::EBodyState body_state = (MonsterSpace::EBodyState)smart_cover::detail::parse_int(tmp, "body_state");
+		MonsterSpace::EMovementType movement_type = (MonsterSpace::EMovementType)smart_cover::detail::parse_int(tmp, "movement_type");
 		animation_action		*animation = xr_new<animation_action>(pos, anim_id, body_state, movement_type);
 		m_animations.push_back	(animation);
 	}
@@ -101,4 +100,8 @@ animation_action const &action::animation	(MonsterSpace::EBodyState const &targe
 animation_action const	&action::animation	() const
 {
 	return						(*m_animations[Random.randI((u32)m_animations.size())]);
+}
+
+
+	}
 }

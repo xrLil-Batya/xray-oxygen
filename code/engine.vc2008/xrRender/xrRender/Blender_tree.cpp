@@ -40,37 +40,6 @@ void	CBlender_Tree::Load		(IReader& fs, u16 version )
 	}
 }
 
-#if RENDER==R_R2
-//////////////////////////////////////////////////////////////////////////
-// R2
-//////////////////////////////////////////////////////////////////////////
-#include "uber_deffer.h"
-void	CBlender_Tree::Compile	(CBlender_Compile& C)
-{
-	IBlender::Compile	(C);
-
-	//*************** codepath is the same, only shaders differ
-	LPCSTR	tvs				= "tree";
-	LPCSTR	tvs_s			= "shadow_direct_tree";
-	if (oNotAnTree.value)	{ tvs="tree_s"; tvs_s="shadow_direct_tree_s"; }
-	switch (C.iElement)
-	{
-	case SE_R2_NORMAL_HQ:	// deffer
-		uber_deffer			(C,true,tvs,"base",oBlend.value);
-		break;
-	case SE_R2_NORMAL_LQ:	// deffer
-		uber_deffer			(C,false,tvs,"base",oBlend.value);
-		break;
-	case SE_R2_SHADOW:		// smap-spot
-//	TODO: DX10: Use dumb shader for shadowmap since shadows are drawn using hardware PCF
-		if (oBlend.value)	C.r_Pass	(tvs_s,"shadow_direct_base_aref",	FALSE,TRUE,TRUE,TRUE,D3D11_BLEND_ZERO,D3D11_BLEND_ONE,TRUE,200);
-		else				C.r_Pass	(tvs_s,"shadow_direct_base",		FALSE);
-		C.r_Sampler			("s_base",	C.L_textures[0]);
-		C.r_End				();
-		break;
-	}
-}
-#else
 //////////////////////////////////////////////////////////////////////////
 // R3
 //////////////////////////////////////////////////////////////////////////
@@ -153,4 +122,3 @@ void	CBlender_Tree::Compile	(CBlender_Compile& C)
 		break;
 	}
 }
-#endif

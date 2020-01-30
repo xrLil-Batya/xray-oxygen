@@ -12,7 +12,13 @@
 #include "../xrEngine/environment.h"
 #include <imdexlib\fast_dynamic_cast.hpp>
 
+#include "tbb/task_group.h"
+
 PARTICLES_API const Fvector zero_vel = { 0.f,0.f,0.f };
+
+tbb::task_group ParticleObjectTasks;
+xr_list<CParticlesObject*> CParticlesObject::AllParticleObjects;
+
 
 CParticlesObject::CParticlesObject(LPCSTR p_name, BOOL bAutoRemove, bool destroy_on_game_load) : inherited(destroy_on_game_load)
 {
@@ -53,18 +59,15 @@ void CParticlesObject::Init(LPCSTR p_name, IRender_Sector* S, BOOL bAutoRemove)
 	shedule.t_min = 20;
 	shedule.t_max = 50;
 	shedule_register();
+	AllParticleObjects.push_back(this);
 
 	dwLastTime = Device.dwTimeGlobal;
-	mt_dt = 0;
 }
 
 //----------------------------------------------------
 CParticlesObject::~CParticlesObject()
 {
-	VERIFY(0 == mt_dt);
-
-	//	we do not need this since CPS_Instance does it
-	//	shedule_unregister		();
+	AllParticleObjects.remove(this);
 }
 
 void CParticlesObject::UpdateSpatial()
@@ -106,6 +109,31 @@ const shared_str CParticlesObject::Name()
 	return (V) ? V->Name() : "";
 }
 
+void CParticlesObject::UpdateAllAsync()
+{
+	for (CParticlesObject* particle : AllParticleObjects)
+	{
+		if (particle->m_bDead)
+		{
+			continue;
+		}
+		ParticleObjectTasks.run([particle]()
+		{
+			u32 dt = Device.dwTimeGlobal - particle->dwLastTime;
+			IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(particle->renderable.visual); VERIFY(V);
+			V->OnFrame(dt);
+
+			particle->dwLastTime = Device.dwTimeGlobal;
+		});
+	}
+}
+
+void CParticlesObject::WaitForParticles()
+{
+	ParticleObjectTasks.wait();
+}
+
+
 //----------------------------------------------------
 void CParticlesObject::Play(bool bHudMode)
 {
@@ -116,8 +144,7 @@ void CParticlesObject::Play(bool bHudMode)
 
 	V->Play();
 	dwLastTime = Device.dwTimeGlobal - 33ul;
-	mt_dt = 0;
-	PerformAllTheWork(0);
+	PerformAllTheWork();
 	m_bStopping = false;
 }
 
@@ -128,8 +155,7 @@ void CParticlesObject::play_at_pos(const Fvector& pos, BOOL xform)
 	V->UpdateParent(m, zero_vel, xform);
 	V->Play();
 	dwLastTime = Device.dwTimeGlobal - 33ul;
-	mt_dt = 0;
-	PerformAllTheWork(0);
+	PerformAllTheWork();
 	m_bStopping = false;
 }
 
@@ -149,18 +175,20 @@ void CParticlesObject::shedule_Update(u32 _dt)
 		return;
 
 	u32 dt = Device.dwTimeGlobal - dwLastTime;
+#if 0
 	if (dt)
 	{
-		mt_dt = 0;
 		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 		V->OnFrame(dt);
 
 		dwLastTime = Device.dwTimeGlobal;
 	}
+#endif
+
 	UpdateSpatial();
 }
 
-void CParticlesObject::PerformAllTheWork(u32 _dt)
+void CParticlesObject::PerformAllTheWork()
 {
 	// Update
 	u32 dt = Device.dwTimeGlobal - dwLastTime;
@@ -171,16 +199,6 @@ void CParticlesObject::PerformAllTheWork(u32 _dt)
 		dwLastTime = Device.dwTimeGlobal;
 	}
 	UpdateSpatial();
-}
-
-void CParticlesObject::PerformAllTheWork_mt()
-{
-	if (0 == mt_dt)
-		return;	//???
-
-	IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-	V->OnFrame(mt_dt);
-	mt_dt = 0;
 }
 
 void CParticlesObject::SetXFORM(const Fmatrix& m)

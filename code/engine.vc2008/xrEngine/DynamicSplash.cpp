@@ -83,19 +83,6 @@ VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
 	splashScreen.SetProgressPosition(0, "Engine entry-point");
 }
 
-DSplashScreen::DSplashScreen(HWND hwnd)
-{
-	pTask = new TaskbarValue(hwnd);
-
-	hThread = nullptr;
-	pMainImage = nullptr;
-	hwndSplash = nullptr;
-	threadId = NULL;
-	hwndProgress = nullptr;
-	hEvent = nullptr;
-	hwndParent = hwnd;
-}
-
 DSplashScreen::DSplashScreen()
 {
 	hThread = nullptr;
@@ -121,13 +108,12 @@ VOID DSplashScreen::ShowSplash()
 	if (!hThread)
 	{
 		// create splash thread
-		UINT threadID = 0;
 		hEvent = CreateEventA(nullptr, FALSE, FALSE, FALSE);	// splash event
 		R_ASSERT(hEvent);
 		if (hEvent != NULL)
 		{
-			hThread = (HANDLE)_beginthreadex(nullptr, 0, SplashThreadProc, static_cast<LPVOID>(this), 0, &threadID);
-			threadId = threadID;
+			hThread = thread_spawn(WrapperSplashThreadProc, "Splash thread", 0, this);
+			threadId = GetThreadId(hThread);
 			R_ASSERT(WaitForSingleObject(hEvent, 5000) != WAIT_TIMEOUT);
 		}
 	}
@@ -141,11 +127,12 @@ VOID DSplashScreen::HideSplash()
 {
 	if (hThread)
 	{
-		TerminateThread(hThread, (DWORD)WAIT_TIMEOUT);
-		CloseHandle(hThread);
-		CloseHandle(hEvent);
+		PostThreadMessage(threadId, WM_QUIT, NULL, NULL);
+		WaitForSingleObject(hThread, INFINITE);
+		hThread = NULL;
+		CloseHandle(hEvent); hEvent = NULL;
+		delete pTask; pTask = nullptr;
 	}
-	hThread = nullptr;
 }
 
 VOID DSplashScreen::SetSplashWindowName(xr_string windowName)
@@ -157,40 +144,25 @@ VOID DSplashScreen::SetProgressPosition(DWORD percent, xr_string messageString)
 {
 	if (hThread)
 	{
-		PostThreadMessage(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(&messageString));
+		pendingProgressMsg = messageString;
+		PostThreadMessage(threadId, PBM_SETPOS, percent, NULL);
 		pTask->SetValue(percent);
 	}
 }
 
-VOID DSplashScreen::SetProgressPosition(DWORD percent, DWORD resourceId, HMODULE hModule)
-{
-	LPSTR lpMessage = nullptr;
-	int len = ::LoadStringA(hModule, resourceId, reinterpret_cast<LPSTR>(&lpMessage), NULL);
-
-	xr_string* tempMsg = new xr_string(lpMessage, len);
-	PostThreadMessage(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(tempMsg));
-	pTask->SetValue(percent);
-}
-
 VOID DSplashScreen::SetProgressColor(COLORREF refColor)
 {
-	PostThreadMessage(threadId, PBM_SETBARCOLOR, NULL, refColor);
+	barColor = refColor;
 }
 
-UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
+void WINAPI DSplashScreen::SplashThreadProc()
 {
-	string128 SplashScreenThreadName = "X-RAY Splashscreen thread";
-	PlatformUtils.SetCurrentThreadName(SplashScreenThreadName);
-
-	DSplashScreen* pSplash = static_cast<DSplashScreen*>(pData);
-	if (!pSplash) { return 0; }
-
-	Gdiplus::Image* pSplashImage = reinterpret_cast<Gdiplus::Image*>(pSplash->pMainImage);
+	Gdiplus::Image* pSplashImage = reinterpret_cast<Gdiplus::Image*>(pMainImage);
 
 	// create splash window class
 	WNDCLASSA windowsClass = { NULL };
 	windowsClass.style = CS_HREDRAW | CS_VREDRAW;
-	windowsClass.lpfnWndProc = SplashWndProc;
+	windowsClass.lpfnWndProc = WrapperSplashWndProc;
 	windowsClass.hInstance = GetModuleHandleA(nullptr);	// process module
 	windowsClass.hCursor = LoadCursorA(nullptr, IDC_APPSTARTING);
 	windowsClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
@@ -202,7 +174,7 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 	// try to find monitor where mouse was last time
 	tagPOINT point = { NULL };
 	tagMONITORINFO monitorInfo = { NULL };
-	monitorInfo.cbSize = sizeof(MONITORINFOEXA);
+	monitorInfo.cbSize = sizeof(tagMONITORINFO);
 	HMONITOR hMonitor = nullptr;
 	RECT areaRect = { NULL };
 
@@ -223,24 +195,23 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 	}
 
 	// create splash window
-	pSplash->hwndSplash = CreateWindowEx(pSplash->splashWindowName.length() ? NULL : WS_EX_TOOLWINDOW,
-		"OxySplashScreen", pSplash->splashWindowName.c_str(), 
+	hwndSplash = CreateWindowEx(splashWindowName.length() ? NULL : WS_EX_TOOLWINDOW,
+		"OxySplashScreen", splashWindowName.c_str(), 
 		WS_CLIPCHILDREN | WS_POPUP,
 		areaRect.left, areaRect.top,
 		pSplashImage->GetWidth(), pSplashImage->GetHeight(),
-		pSplash->hwndParent, nullptr, windowsClass.hInstance, nullptr
+		hwndParent, nullptr, windowsClass.hInstance, nullptr
 	);
 
-	R_ASSERT(pSplash->hwndSplash);
-	if (!pSplash->pTask) { pSplash->pTask = new TaskbarValue(pSplash->hwndSplash); }
+	R_ASSERT(hwndSplash);
+	if (!pTask) { pTask = new TaskbarValue(hwndSplash); }
 
 	// set long pointer
-	SetWindowLongPtr(pSplash->hwndSplash, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pSplash));
-	ShowWindow(pSplash->hwndSplash, SW_SHOWNOACTIVATE);
+	ShowWindow(hwndSplash, SW_SHOWNOACTIVATE);
 
 	MSG msg = { nullptr };
 	LONG timerCount = 0;
-	SetEvent(pSplash->hEvent);
+	SetEvent(hEvent);
 
 	while (true)
 	{
@@ -250,28 +221,28 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 
 			if (msg.message == PBM_SETPOS)
 			{
-				KillTimer(nullptr, pSplash->timerID);
-				SendMessage(pSplash->hwndSplash, PBM_SETPOS, msg.wParam, msg.lParam);
+				KillTimer(nullptr, timerID);
+				SendMessage(hwndSplash, PBM_SETPOS, msg.wParam, msg.lParam);
 				continue;
 			}
 
 			if (msg.message == PBM_SETSTEP)
 			{
-				SendMessage(pSplash->hwndSplash, PBM_SETPOS, LOWORD(msg.wParam), 0); // initiate progress bar creation
-				SendMessage(pSplash->hwndProgress, PBM_SETSTEP, (HIWORD(msg.wParam) - LOWORD(msg.wParam)) / msg.lParam, 0);
+				SendMessage(hwndSplash, PBM_SETPOS, LOWORD(msg.wParam), 0); // initiate progress bar creation
+				SendMessage(hwndProgress, PBM_SETSTEP, (HIWORD(msg.wParam) - LOWORD(msg.wParam)) / msg.lParam, 0);
 				timerCount = static_cast<LONG>(msg.lParam);
-				pSplash->timerID = SetTimer(nullptr, 0, 1000, nullptr);
+				timerID = SetTimer(nullptr, 0, 1000, nullptr);
 				continue;
 			}
 
-			if (msg.message == WM_TIMER && msg.wParam == pSplash->timerID)
+			if (msg.message == WM_TIMER && msg.wParam == timerID)
 			{
-				SendMessage(pSplash->hwndProgress, PBM_STEPIT, 0, 0);
+				SendMessage(hwndProgress, PBM_STEPIT, 0, 0);
 				timerCount--;
 				if (timerCount <= 0)
 				{
 					timerCount = 0;
-					KillTimer(nullptr, pSplash->timerID);
+					KillTimer(nullptr, timerID);
 					Sleep(0);
 				}
 				continue;
@@ -279,11 +250,11 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 
 			if (msg.message == PBM_SETBARCOLOR)
 			{
-				if (!IsWindow(pSplash->hwndProgress))
+				if (!IsWindow(hwndProgress))
 				{
-					SendMessage(pSplash->hwndSplash, PBM_SETPOS, 0, 0); // initiate progress bar creation
+					SendMessage(hwndSplash, PBM_SETPOS, 0, 0); // initiate progress bar creation
 				}
-				SendMessage(pSplash->hwndProgress, PBM_SETBARCOLOR, msg.wParam, msg.lParam);
+				SendMessage(hwndProgress, PBM_SETBARCOLOR, msg.wParam, msg.lParam);
 				continue;
 			}
 
@@ -296,26 +267,39 @@ UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 		}
 	}
 
-	DestroyWindow(pSplash->hwndSplash);
-	return NULL;
+	if (hwndProgress != NULL)
+	{
+		DestroyWindow(hwndProgress);
+		hwndProgress = NULL;
+	}
+	DestroyWindow(hwndSplash);
+	hwndSplash = NULL;
 }
 
-LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK DSplashScreen::WrapperSplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	DSplashScreen* pInstance = reinterpret_cast<DSplashScreen*>(GetWindowLongPtr(hwnd, (-21)));
-	if (!pInstance) { return DefWindowProc(hwnd, uMsg, wParam, lParam); }
-	
-	Gdiplus::Image* pSplashImage = reinterpret_cast<Gdiplus::Image*>(pInstance->pMainImage);
+	return splashScreen.SplashWndProc(hwnd, uMsg, wParam, lParam);
+}
+
+void WINAPI DSplashScreen::WrapperSplashThreadProc(LPVOID pData)
+{
+	UNREFERENCED_PARAMETER(pData);
+	splashScreen.SplashThreadProc();
+}
+
+LRESULT DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	Gdiplus::Image* pSplashImage = reinterpret_cast<Gdiplus::Image*>(pMainImage);
 
 	switch (uMsg)
 	{
 	case WM_PAINT:
-		if (pInstance->pMainImage)
+		if (pMainImage)
 		{
 			Gdiplus::Graphics gdip(hwnd);
 			gdip.DrawImage(pSplashImage, 0, 0, pSplashImage->GetWidth(), pSplashImage->GetHeight());
 
-			if (!pInstance->progressMsg.empty())
+			if (!progressMsg.empty())
 			{
 				// Форсер, заебал шрифт менять. Оставь хотя бы ебучий ариал, ей богу
 				Gdiplus::Font msgFont(L"Arial", 18, Gdiplus::FontStyle::FontStyleRegular, Gdiplus::UnitPixel);
@@ -323,7 +307,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 				Gdiplus::SolidBrush msgBrush(static_cast<DWORD>(Gdiplus::Color::White));
 				//#VERTVER: PLS REWORK IT
 				//////////////////////////////////////
-				xr_string prgress = pInstance->progressMsg.c_str();
+				xr_string prgress = progressMsg.c_str();
 				std::wstring progressName(prgress.begin(), prgress.end());
 				//////////////////////////////////////
 
@@ -335,31 +319,28 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 		break;  
 	case PBM_SETPOS:
 		// if window is not be created - create it 
-		if (!IsWindow(pInstance->hwndProgress))
+		if (!IsWindow(hwndProgress))
 		{
 			RECT clientRect = { NULL };
 			GetClientRect(hwnd, &clientRect);
 
-			pInstance->hwndProgress = CreateWindow(PROGRESS_CLASS, nullptr,
+			hwndProgress = CreateWindow(PROGRESS_CLASS, nullptr,
 				WS_CHILD | WS_VISIBLE | PBS_SMOOTH,
 				4, clientRect.bottom - 20, clientRect.right - 8, 16,
 				hwnd, nullptr, GetModuleHandle(nullptr), nullptr
 			);
 
-			SendMessage(pInstance->hwndProgress, PBM_SETRANGE, 0, MAKELPARAM(0, 100));
-			SendMessage(pInstance->hwndProgress, PBM_SETBKCOLOR, 0, RGB(0x21, 0x1D, 0x1E));
+			SendMessage(hwndProgress, PBM_SETRANGE, 0, MAKELPARAM(0, 100));
+			SendMessage(hwndProgress, PBM_SETBKCOLOR, 0, RGB(0x21, 0x1D, 0x1E));
+			PostThreadMessage(threadId, PBM_SETBARCOLOR, NULL, barColor);
 		}
-		SendMessage(pInstance->hwndProgress, PBM_SETPOS, wParam, NULL);
-
-		xr_string* msgThread = reinterpret_cast<xr_string*>(lParam);
-		if (!msgThread || msgThread->size() > 1000000)
-			return 0;
+		SendMessage(hwndProgress, PBM_SETPOS, wParam, NULL);
 
 		// if our message is not a previos 
-		if (!msgThread->empty() && pInstance->progressMsg != *msgThread) // pInstance->progressMsg
+		if (!pendingProgressMsg.empty() && progressMsg != pendingProgressMsg) // pInstance->progressMsg
 		{
-			pInstance->progressMsg = *msgThread;
-			SendMessage(pInstance->hwndSplash, WM_PAINT, 0, 0);
+			progressMsg = pendingProgressMsg;
+			SendMessage(hwndSplash, WM_PAINT, 0, 0);
 		}
 
 		return NULL;

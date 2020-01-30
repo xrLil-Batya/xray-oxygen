@@ -16,9 +16,7 @@ protected:
 	bool m_bLooped;			//флаг, что система зациклена
 	bool m_bStopping;		//вызвана функция Stop()
 	DWORD m_lastUpdatedFrame = 0;
-
-protected:
-	u32 mt_dt;
+	static xr_list<CParticlesObject*> AllParticleObjects;
 
 protected:
 	virtual ~CParticlesObject();
@@ -31,8 +29,7 @@ public:
 	virtual void shedule_Update(u32 dt);
 	virtual	shared_str shedule_Class_Name() const override { return shared_str("particle_object"); };
 	virtual void renderable_Render();
-	void PerformAllTheWork(u32 dt);
-	void	__stdcall	PerformAllTheWork_mt();
+	void PerformAllTheWork();
 
 	Fvector& Position();
 	void SetXFORM(const Fmatrix& m);
@@ -42,7 +39,6 @@ public:
 	void play_at_pos(const Fvector& pos, BOOL xform = FALSE);
 	virtual void Play(bool bHudMode);
 	void Stop(BOOL bDefferedStop = TRUE);
-	virtual BOOL Locked() { return mt_dt; }
 
 	bool IsLooped() { return m_bLooped; }
 	bool IsAutoRemove();
@@ -52,6 +48,9 @@ public:
 	const shared_str Name();
 
 	inline	Fmatrix& XFORM() { return renderable.xform; }
+
+	static void UpdateAllAsync();
+	static void WaitForParticles();
 
 public:
 	static CParticlesObject* Create(LPCSTR p_name, BOOL bAutoRemove = TRUE, bool remove_on_game_load = true)

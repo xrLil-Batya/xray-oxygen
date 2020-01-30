@@ -16,7 +16,7 @@
 		<sampler name="smp_rtlinear" />
 	</element_0>
 
-  <element_nd_4 ps="water_soft" vs="water_soft" fog="false" zb1="true" zb2="false">
+  <element_nd_4 ps="waterd_soft" vs="waterd_soft" fog="false" zb1="true" zb2="false">
 		<blend status="true" src="srcalpha" dest="invsrcalpha" />
 		<sort status="true" count="2" />
 		<flags dist="true" />

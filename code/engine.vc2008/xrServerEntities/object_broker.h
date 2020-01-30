@@ -16,3 +16,10 @@
 #include "object_destroyer.h"
 #include "object_loader.h"
 #include "object_saver.h"
+
+static inline bool check(const u8& mask, const u8& test)
+{
+	return							(!!(mask & test));
+}
+
+#define time_to_delete 300000

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "dxRenderDeviceRender.h"
+#include "../../xrParticles/ParticlesObject.h"
 
 #include "ResourceManager.h"
 
@@ -219,6 +220,11 @@ u32 dxRenderDeviceRender::GetCacheStatPolys()
 
 void dxRenderDeviceRender::Begin()
 {
+	// signal to particles to finish their work
+	Device.Statistic->TEST3.Begin();
+	CParticlesObject::WaitForParticles();
+	Device.Statistic->TEST3.End();
+
 	RCache.OnFrameBegin		();
 	RCache.set_CullMode		(CULL_CW);
 	RCache.set_CullMode		(CULL_CCW);
@@ -284,6 +290,20 @@ bool dxRenderDeviceRender::HWSupportsShaderYUV2RGB()
 	u32		v_dev	= CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor);
 	u32		v_need	= CAP_VERSION(2,0);
 	return (v_dev>=v_need);
+}
+
+u32 dxRenderDeviceRender::GetGPULoadPercent()
+{
+	if (HW.Caps.IsNvidiaCard())
+	{
+		return HW.Caps.NvidiaSpecific.GetPercentActive();
+	}
+	else if (HW.Caps.IsAMDCard())
+	{
+		return HW.Caps.AMDSpecific.GetPercentActive();
+	}
+
+	return 0;
 }
 
 void  dxRenderDeviceRender::OnAssetsChanged()

@@ -7,7 +7,7 @@ extern LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 #ifdef INGAME_EDITOR
 void CRenderDevice::initialize_editor(engine_impl* pEngine)
 {
-	m_editor_module		= LoadLibrary("editor.dll");
+	m_editor_module		= Core.LoadModule("editor.dll");
 	if (!m_editor_module) {
 		Msg				("! cannot load library \"editor.dll\"");
 		return;

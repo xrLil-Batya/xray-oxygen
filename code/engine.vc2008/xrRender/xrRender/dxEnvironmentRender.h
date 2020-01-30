@@ -45,6 +45,7 @@ public:
 	virtual void Lerp(IEnvDescriptorRender *inA, IEnvDescriptorRender *inB);
 //private:
 public:
+	//#TODO: Make a ref!!
 	STextureList		sky_r_textures;		
 	STextureList		sky_r_textures_env;	
 	STextureList		clouds_r_textures;	

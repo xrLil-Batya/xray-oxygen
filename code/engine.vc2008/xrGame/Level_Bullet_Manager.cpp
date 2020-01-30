@@ -15,6 +15,7 @@
 #include "../xrEngine/xr_collide_form.h"
 #include "../xrCDB/xr_collide_defs.h"
 #include "../../3rd-party/IKAN/math3d.h"
+#include "trajectories.h"
 #ifdef DEBUG
 #	include "debug_renderer.h"
 #endif
@@ -307,15 +308,7 @@ static Fvector trajectory_position(
 	return pos;
 }
 
-IC static float trajectory_max_error_time(float const t0, float const t1)
-{
-	return ((t1 + t0)*0.5f);
-	// this is correct even in our case
-	// y(t) = V0y*t - V0y*ar*t^2/2 - g*t^2/2
-	// x(t) = V0x*t - V0x*ar*t^2/2
-}
-
-static float trajectory_pick_error(
+static float trajectory_pick_error_bullet(
 		float const low,
 		float const high,
 		Fvector const& position,
@@ -458,7 +451,7 @@ static float trajectory_select_pick_time(
 	float const epsilon = 0.1f;
 	while (!fsimilar(low, high))
 	{
-		float distance = trajectory_pick_error(start_low, check_time, bullet.start_position, bullet.start_velocity, gravity, air_resistance);
+		float distance = trajectory_pick_error_bullet(start_low, check_time, bullet.start_position, bullet.start_velocity, gravity, air_resistance);
 
 		if (distance < epsilon)
 			low = check_time;
@@ -983,7 +976,7 @@ BOOL CBulletManager::test_callback(const collide::ray_defs& rd, CObject* object,
 	if ((object->ID() == bullet->parent_id) && (bullet->fly_dist < parent_ignore_distance) && (!bullet->flags.ricochet_was))
 		return FALSE;
 
-	BOOL bRes = TRUE;
+	bool bRes = true;
 	if (object)
 	{
 		CEntity* entity = smart_cast<CEntity*>(object);
@@ -993,10 +986,9 @@ BOOL CBulletManager::test_callback(const collide::ray_defs& rd, CObject* object,
 			if (cform && (cftObject == cform->Type()))
 			{
 				CActor* pActor = smart_cast<CActor*>(entity);
-				CAI_Stalker* pStalker = smart_cast<CAI_Stalker*>(entity);
 
 				// Who was hit?
-				if (pActor || pStalker)
+				if (pActor)
 				{
 					Fsphere S = cform->getSphere();
 					entity->XFORM().transform_tiny(S.P);
@@ -1006,55 +998,45 @@ BOOL CBulletManager::test_callback(const collide::ray_defs& rd, CObject* object,
 					if (Fsphere::rpNone != S.intersect_full(bullet->bullet_pos, bullet->dir, dist))
 					{
 						// Yes. Let's find who shot.
-						bool bPlayWhine = true;
+						bool bPlayWhine = true; // play whine sound
 						CObject* pInitiator = Level().Objects.net_Find(bullet->parent_id);
 
 						// Actor was hit.
-						if (pActor)
+						float hitProbFactor = 1.0f;
+						float actorHitProb = pActor->HitProbability();
+						float gameDifficultyHitProb = pActor->HitProbability();
+
+						CAI_Stalker* pStalkerInitiator = smart_cast<CAI_Stalker*>(pInitiator);
+						if (pStalkerInitiator)
+							hitProbFactor = pStalkerInitiator->SpecificCharacter().hit_probability_factor();
+
+						float distFactor = 1.0f;
+						CObject *pWeaponObj = Level().Objects.net_Find(bullet->weapon_id);
+						if (pWeaponObj)
 						{
-							float hitProbFactor = 1.0f;
-							float actorHitProb = pActor->HitProbability();
-							float gameDifficultyHitProb = pActor->HitProbability();
-
-							CAI_Stalker* pStalkerInitiator = smart_cast<CAI_Stalker*>(pInitiator);
-							if (pStalkerInitiator)
-								hitProbFactor = pStalkerInitiator->SpecificCharacter().hit_probability_factor();
-
-							float distFactor = 1.0f;
-							CObject *pWeaponObj = Level().Objects.net_Find(bullet->weapon_id);
-							if (pWeaponObj)
+							CWeapon *pWeapon = smart_cast<CWeapon*>(pWeaponObj);
+							if (pWeapon)
 							{
-								CWeapon *pWeapon = smart_cast<CWeapon*>(pWeaponObj);
-								if (pWeapon)
-								{
-									gameDifficultyHitProb = pWeapon->hit_probability();
-									float flyDist = bullet->fly_dist + dist;
-									distFactor = std::min(1.0f, flyDist / Level().BulletManager().m_fHPMaxDist);
-								}
+								gameDifficultyHitProb = pWeapon->hit_probability();
+								float flyDist = bullet->fly_dist + dist;
+								distFactor = std::min(1.0f, flyDist / Level().BulletManager().m_fHPMaxDist);
 							}
-							actorHitProb = distFactor * gameDifficultyHitProb + (1.0f - distFactor)*1.0f;
+						}
+						actorHitProb = distFactor * gameDifficultyHitProb + (1.0f - distFactor) * 1.0f;
 
-							if (Random.randF(0.0f, 1.0f) > (actorHitProb*hitProbFactor))
-							{
-								bRes = FALSE;			// don't hit actor
-								bPlayWhine = true;		// play whine sound
-							}
-							else
-							{
-								// Real test actor CFORM
-								Level().BulletManager().m_rq_results.r_clear();
-
-								if (cform->_RayQuery(rd, Level().BulletManager().m_rq_results))
-								{
-									bRes = TRUE;		// hit actor
-									bPlayWhine = false;	// don't play whine sound
-								}
-								else
-								{
-									bRes = FALSE;		// don't hit actor
-									bPlayWhine = true;	// play whine sound
-								}
-							}
+						if (Random.randF(0.0f, 1.0f) > (actorHitProb * hitProbFactor))
+						{
+							// don't hit actor
+							bRes = false; 
+						}
+						else
+						{
+							// Real test actor CFORM
+							Level().BulletManager().m_rq_results.r_clear();
+							// hit actor or not O_0
+							bRes = !!cform->_RayQuery(rd, Level().BulletManager().m_rq_results);
+							// don't play whine sound or not O_0
+							bPlayWhine = !bRes;
 						}
 
 						// Play whine sound
@@ -1068,7 +1050,7 @@ BOOL CBulletManager::test_callback(const collide::ray_defs& rd, CObject* object,
 					else
 					{
 						// Don't test this object again (return FALSE)
-						bRes = FALSE;
+						bRes = false;
 					}
 				}
 			}

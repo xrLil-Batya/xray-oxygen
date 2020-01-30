@@ -59,21 +59,8 @@ dWorldID phWorld;
 dJointGroupID	ContactGroup;
 CBlockAllocator	<dJointFeedback, 128> ContactFeedBacks;
 CBlockAllocator	<CPHContactBodyEffector, 128> ContactEffectors;
-
-///////////////////////////////////////////////////////////
-class SApplyBodyEffectorPred
-{
-public:
-	SApplyBodyEffectorPred()
-	{
-	}
-
-	void	operator	()(CPHContactBodyEffector* pointer) const
-	{
-		pointer->Apply();
-	}
-};
 /////////////////////////////////////////////////////////////////////////////
+
 IC void add_contact_body_effector(dBodyID body, const dContact& c, SGameMtl* material)
 {
 	CPHContactBodyEffector* effector = (CPHContactBodyEffector*)dBodyGetData(body);
@@ -169,7 +156,6 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2, dJointGroupID jointGroup,
 #pragma warning(push)
 #pragma warning(disable:4245)
 			if (material_1->Flags.test(SGameMtl::flSlowDown) && !(usr_data_2->pushing_neg || usr_data_2->pushing_b_neg))
-#pragma warning(pop)
 			{
 				dBodyID body = dGeomGetBody(g2);
 				R_ASSERT2(body, "static - static collision !!!");
@@ -177,12 +163,9 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2, dJointGroupID jointGroup,
 				{
 					add_contact_body_effector(body, c, material_1);
 				}
-				else
+				else if (!usr_data_2 || !usr_data_2->ph_object || !usr_data_2->ph_object->IsRayMotion())
 				{
-					if (!usr_data_2 || !usr_data_2->ph_object || !usr_data_2->ph_object->IsRayMotion())
-					{
-						add_contact_body_effector(body, c, material_1);
-					}
+					add_contact_body_effector(body, c, material_1);
 				}
 			}
 			if (material_1->Flags.test(SGameMtl::flPassable))
@@ -190,10 +173,7 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2, dJointGroupID jointGroup,
 		}
 		if (is_tri_2)
 		{
-#pragma warning(push)
-#pragma warning(disable:4245)
 			if (material_2->Flags.test(SGameMtl::flSlowDown) && !(usr_data_1->pushing_neg || usr_data_1->pushing_b_neg))
-#pragma warning(pop)
 			{
 				dBodyID body = dGeomGetBody(g1);
 				R_ASSERT2(body, "static - static collision !!!");
@@ -213,6 +193,7 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2, dJointGroupID jointGroup,
 				do_collide = false;
 		}
 
+#pragma warning(pop)
 		if (flags_1.test(SGameMtl::flBounceable) && flags_2.test(SGameMtl::flBounceable))
 		{
 			surface.mode |= dContactBounce;
@@ -408,7 +389,7 @@ float E_NlS(dBodyID body, const dReal* norm, float norm_sign)//if body c.geom.g1
 	dMass mass;
 	dBodyGetMass(body, &mass);
 
-	return mass.mass*prg*prg / 2;
+	return mass.mass * prg * prg / 2;
 }
 
 //body - body case

@@ -1,6 +1,6 @@
 #pragma once
 
-typedef	void		crashhandler		(void);
+typedef	void		crashhandler		(string4096& InOutAdditionalInfo);
 typedef	void		on_dialog			(bool before);
 
 extern XRCORE_API DWORD gMainThreadId;
@@ -19,9 +19,11 @@ private:
 public:
 	void			_initialize();
     void            _initializeAfterFS();
-	void			_destroy();
 	
 public:
+	string4096 AdditionalDebugInfo;
+
+
 	crashhandler*	get_crashhandler	()							{ return handler;	};
 	void			set_crashhandler	(crashhandler* _handler)	{ handler=_handler;	};
 
@@ -37,16 +39,19 @@ public:
 		gather_info	( expression, description, argument0, argument1, file, line, function, assertion_info, count);
 	}
 
-	void			fail				(const char *e1, const char *file, int line, const char *function, bool &ignore_always);
-	void			fail				(const char *e1, const char *e2, const char *file, int line, const char *function, bool &ignore_always);
-	void			fail				(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function, bool &ignore_always);
-	void			fail				(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function, bool &ignore_always);
-	void			error				(long  code, const char* e1, const char *file, int line, const char *function, bool &ignore_always);
-	void			error				(long  code, const char* e1, const char* e2, const char *file, int line, const char *function, bool &ignore_always);
+	void			fail				(const char *e1, const char *file, int line, const char *function);
+	void			fail				(const char *e1, const char *e2, const char *file, int line, const char *function);
+	void			fail				(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function);
+	void			fail				(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function);
+	void			error				(long  code, const char* e1, const char *file, int line, const char *function);
+	void			error				(long  code, const char* e1, const char* e2, const char *file, int line, const char *function);
 	void _cdecl		fatal				(const char *file, int line, const char *function, const char* F,...);
 	void			do_exit				(HWND hWnd, LPCSTR message);
-    void			do_exit2			(HWND hwnd, const string4096& message, bool& ignore_always);
-	void			backend				(const char* reason, const char* expression, const char *argument0, const char *argument1, const char* file, int line, const char *function, bool &ignore_always);
+    void do_exit2 (HWND hwnd, const string4096& message);
+
+	bool ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanContinue, const char* message);
+
+	void backend(const char* reason, const char* expression, const char* argument0, const char* argument1, const char* file, int line, const char* function);
 };
 
 LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo);

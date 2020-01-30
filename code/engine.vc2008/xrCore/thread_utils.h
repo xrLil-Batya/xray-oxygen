@@ -1,8 +1,10 @@
 #pragma once
 
+class xrConditionalVariable;
 
 class XRCORE_API xrCriticalSection
 {
+	friend class xrConditionalVariable;
 public:
 	xrCriticalSection();
 	~xrCriticalSection();
@@ -13,11 +15,11 @@ public:
 	inline void Lock()		{ this->Enter(); }
 	inline void Unlock()	{ this->Leave(); }
 
-	bool TryLock();
+	bool IsLocked();
 
 private:
 	CRITICAL_SECTION Section;
-	volatile bool isLocked;
+	xr_atomic_u32 LockCounter;
 };
 
 
@@ -50,4 +52,19 @@ private:
 
 	xr_atomic_u32* pReference;
 	xrCriticalSection* pSection;
+};
+
+class XRCORE_API xrConditionalVariable
+{
+public:
+	xrConditionalVariable();
+	~xrConditionalVariable();
+
+	void WakeOne();
+	void WakeAll();
+
+	void Sleep(xrCriticalSection& AcquiringCS);
+
+private:
+	CONDITION_VARIABLE Variable;
 };

@@ -190,17 +190,9 @@ void CPHWorld::SetGravity(float g)
 
 void CPHWorld::OnFrame()
 {
-#ifdef DEBUG
-	//DBG_DrawFrameStart();
-	//DBG_DrawStatBeforeFrameStep();
-#endif
 	Device().StatPhysics()->Physics.Begin();
 	FrameStep(Device().fTimeDelta);
 	Device().StatPhysics()->Physics.End();
-#ifdef DEBUG
-	//DBG_DrawStatAfterFrameStep();
-
-#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -442,7 +434,6 @@ void CPHWorld::FrameStep(dReal step)
 		return;
 	}
 
-	//for(UINT i=0;i<(m_reduce_delay+1);++i)
 #ifdef DEBUG
 	debug_output().DBG_DrawFrameStart();
 	debug_output().DBG_DrawStatBeforeFrameStep();

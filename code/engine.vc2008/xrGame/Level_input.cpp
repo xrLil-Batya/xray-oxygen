@@ -324,8 +324,14 @@ void CLevel::IR_OnKeyboardRelease(u8 key)
 	if (!bReady || g_bDisableAllInput)								
 		return;
 
-	if (GameUI() && GameUI()->IR_UIOnKeyboardRelease(key)) 
+	if (GameUI() && GameUI()->IR_UIOnKeyboardRelease(key))
+	{
+		if (GameUI()->TopInputReceiver() == nullptr)
+		{
+			g_actor->StopAnyMove();
+		}
 		return;
+	}
 
 	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;

@@ -15,7 +15,7 @@ namespace xrEditor
     {
         protected override void OnStartup(System.Windows.StartupEventArgs e)
         {
-            SpectreEngine.xrCoreInit("Editor", "fs.ltx");
+            SpectreEngine.xrCoreInit("Editor", "oxy_fsgame.ltx");
             SpectreEngine.xrEngineInit();
             SpectreEngine.xrRenderInit();
             base.OnStartup(e);

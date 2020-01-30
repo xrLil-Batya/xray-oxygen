@@ -15,16 +15,21 @@
 //////////////////////////////////////////////////////////////////////
 CPortal::CPortal		()
 {
+#ifdef DEBUG
 	Device.seqRender.Add(this,REG_PRIORITY_LOW-1000);
+#endif
 }
 
 CPortal::~CPortal		()
 {
+#ifdef DEBUG
 	Device.seqRender.Remove(this);
+#endif
 }
 
 void CPortal::OnRender()
 {
+#ifdef DEBUG
 	if (psDeviceFlags.is(rsOcclusionDraw))
 	{
 		VERIFY(poly.size());
@@ -62,6 +67,7 @@ void CPortal::OnRender()
 		else 
 			Device.SetNearer(FALSE);
 	}
+#endif
 }
 //
 void	CPortal::Setup	(Fvector* V, int vcnt, CSector* face, CSector* back)

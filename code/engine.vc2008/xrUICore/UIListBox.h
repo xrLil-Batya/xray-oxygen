@@ -11,14 +11,15 @@ public:
 	CUIListBoxItem* AddTextItem						(LPCSTR text);
 	void			AddExistingItem					(CUIListBoxItem*);
 
-	CUIListBoxItem* GetItemByTAG					(u32 tag_value);
-	int				GetIdxByTAG						(u32 tag_value);
-	CUIListBoxItem* GetItemByIDX					(int idx);
-	CUIListBoxItem* GetItemByText					(LPCSTR text);
-	CUIListBoxItem* GetSelectedItem					();
+[[nodiscard]] CUIListBoxItem* 	GetItemByTAG		(u32 tag_value);
+[[nodiscard]] int				GetIdxByTAG			(u32 tag_value);
+[[nodiscard]] CUIListBoxItem* 	GetItemByIDX		(int idx);
+[[nodiscard]] CUIListBoxItem* 	GetItemByText		(LPCSTR text);
+	
+[[nodiscard]] CUIListBoxItem* 	GetSelectedItem 	();
+[[nodiscard]] LPCSTR 			GetSelectedText		();
+[[nodiscard]] LPCSTR 			GetText				(int idx);
 
-	LPCSTR			GetSelectedText					();
-	LPCSTR			GetText							(int idx);
 	void			MoveSelectedUp					();
 	void			MoveSelectedDown				();
 	void			SetSelectionTexture				(LPCSTR texture);
@@ -26,15 +27,14 @@ public:
 	float			GetItemHeight					();
 	float			GetLongestLength				();
 
-	virtual	void	SetSelected						(CUIWindow* w)	{CUIScrollView::SetSelected(w);};
-		u32			GetSelectedIDX					();
+[[nodiscard]] u32	GetSelectedIDX					();
 		void		SetSelectedIDX					(u32 idx);
 		void		SetSelectedTAG					(u32 tag_val);
 		void		SetSelectedText					(LPCSTR txt);
 		void		SetImmediateSelection			(bool f);
 
-virtual bool		OnMouseAction							(float x, float y, EUIMessages mouse_action);
-virtual void		SendMessageToWnd						(CUIWindow* pWnd, s16 msg, void* pData = 0);
+virtual bool		OnMouseAction					(float x, float y, EUIMessages mouse_action);
+virtual void		SendMessageToWnd				(CUIWindow* pWnd, s16 msg, void* pData = 0);
 
 			void			SetTextColor			(u32 color);
 			u32				GetTextColor			();

@@ -237,9 +237,10 @@ void	generate_jitter(DWORD*	dest, u32 elem_count)
 	for (u32 it = 0; it<elem_count; it++, dest++)
 		*dest = color_rgba(samples[2 * it].x, samples[2 * it].y, samples[2 * it + 1].y, samples[2 * it + 1].x);
 }
-
+extern bool bNeedUpdateGammaLUT;
 CRenderTarget::CRenderTarget()
 {
+	bNeedUpdateGammaLUT = true;
 	CLS_ID = CLSID_RENDER;
 	SpectreObjectId = SpectreEngineClient::CreateProxyObject(this);
 

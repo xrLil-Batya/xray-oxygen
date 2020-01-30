@@ -32,7 +32,7 @@ ENGINE_API BOOL g_bRendering = FALSE;
 /////////////////////////////////////
 BOOL		g_bLoaded		= FALSE;
 bool		g_bL			= false;
-ref_light	precache_light	= nullptr;
+ref_light	precache_light;
 /////////////////////////////////////
 
 BOOL CRenderDevice::Begin	()
@@ -121,7 +121,6 @@ void CRenderDevice::End		()
 
 }
 
-volatile u32 mt_Thread_marker = 0x12345678;
 
 void mt_Thread(void *ptr)	
 {
@@ -129,29 +128,25 @@ void mt_Thread(void *ptr)
 
 	while (true) 
 	{
-		// waiting for Device permission to execute
-		Device.mt_csEnter.Enter	();
+		Device.SecondThreadSync.Sleep(Device.SecondThreadCS);
 
 		if (Device.mt_bMustExit) 
 		{
 			Device.mt_bMustExit = FALSE; // Important!!!
 			return;
 		}
-		// we has granted permission to execute
-		mt_Thread_marker = Device.dwFrame;
- 
-		for (xrDelegate<void()> &refParallelDelegate : Device.seqParallel)
-			refParallelDelegate();
 
-		Device.seqParallel.clear();
-		Device.seqFrameMT.Process(rp_Frame);
+		{
+			xrProfilingTask SyncTask("Second Thread");
+			for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
+				refParallelDelegate();
 
-		// now we give control to device - signals that we are ended our work
-		Device.mt_csEnter.Leave();
-		// waits for device signal to continue - to start again
-		Device.mt_csLeave.Enter();
-		// returns sync signal to device
-		Device.mt_csLeave.Leave();
+			Device.seqParallel.clear();
+			Device.seqFrameMT.Process(rp_Frame);
+		}
+		Device.SecondThreadCS.Leave();
+
+		Device.SecondThreadMarker = Device.dwFrameAsync.load();
 	}
 }
 
@@ -192,6 +187,18 @@ void CRenderDevice::on_idle()
 	}
 
 	g_bEnableStatGather = psDeviceFlags.test(rsStatistic);
+	if (Profiling.IsInEngineMode())
+	{
+		if (g_bEnableStatGather)
+		{
+			Profiling.ResumeProfiling();
+		}
+		else
+		{
+			Profiling.PauseProfiling();
+		}
+	}
+
 
 	if (!g_loading_events.empty())
 	{
@@ -203,8 +210,14 @@ void CRenderDevice::on_idle()
 		pApp->LoadDraw();
 		return;
 	}
-	else
+
+	Profiling.StartFrame(xrProfiling::eEngineFrame::Main);
 	{
+		xrProfilingTask FrameTask("FrameMove");
+		if (g_pGamePersistent != nullptr)
+		{
+			g_pGamePersistent->UpdateParticles();
+		}
 		FrameMove();
 	}
 
@@ -229,16 +242,13 @@ void CRenderDevice::on_idle()
 	mView_saved = mView;
 	mProject_saved = mProject;
 
-	// *** Resume threads
-	// Capture end point - thread must run only ONE cycle
-	// Release start point - allow thread to run
-	mt_csLeave.Enter();
-	mt_csEnter.Leave();
+	SecondThreadSync.WakeOne();
 
 	Statistic->RenderTOTAL_Real.FrameStart();
 	Statistic->RenderTOTAL_Real.Begin();
 	if (b_is_Active)
 	{
+		xrProfilingTask RenderTask("Render");
 		if (Begin())
 		{
 			seqRender.Process(rp_Render);
@@ -259,21 +269,15 @@ void CRenderDevice::on_idle()
 	Statistic->RenderTOTAL_Real.FrameEnd();
 	Statistic->RenderTOTAL.accum = Statistic->RenderTOTAL_Real.accum;
 
-	// *** Suspend threads
-	// Capture startup point
-	// Release end point - allow thread to wait for startup point
-	mt_csEnter.Enter();
-	mt_csLeave.Leave();
-
-	// Ensure, that second thread gets chance to execute anyway
-	if (dwFrame != mt_Thread_marker)
+	while (dwFrameAsync != Device.SecondThreadMarker)
 	{
-		for (xrDelegate<void()>& refParallelDelegate : Device.seqParallel)
-			refParallelDelegate();
-
-		Device.seqParallel.clear();
-		seqFrameMT.Process(rp_Frame);
+		Sleep(0);
 	}
+
+// 	SecondThreadCS.Enter();
+// 	SecondThreadCS.Leave();
+
+	Profiling.EndFrame(xrProfiling::eEngineFrame::Main);
 
 	if (!b_is_Active) 
 	{ 
@@ -368,7 +372,7 @@ void CRenderDevice::Run			()
 
 	// Stop Balance-Thread
 	mt_bMustExit			= TRUE;
-	mt_csEnter.Leave();
+	SecondThreadSync.WakeOne();
 	while (mt_bMustExit)	
 		Sleep(0);
 }
@@ -380,30 +384,29 @@ void CRenderDevice::BeginToWork()
 
 	Msg("Value of system displays: %d.", GetNumOfDisplays());
 
-	string128 primaryThreadName = "X-Ray: Primary thread";
-	PlatformUtils.SetCurrentThreadName(primaryThreadName);
-
 	// Startup timers and calculate timer delta
 	dwTimeGlobal = 0;
 	Timer_MM_Delta = 0;
 	{
-		u32 time_mm = timeGetTime();
+		u32 time_mm = TimerAsync();
 		// wait for next tick
-		while (timeGetTime() == time_mm);	 //-V529
+		while (TimerAsync() == time_mm);	 //-V529 
 
-		u32 time_system = timeGetTime();
-		u32 time_local = TimerAsync();
-		Timer_MM_Delta = time_system - time_local;
+		Timer_MM_Delta = TimerAsync() - time_mm;
 	}
 
 	// Start all threads
-	mt_csEnter.Enter();
 	mt_bMustExit = FALSE;
 	thread_spawn(mt_Thread, "X-RAY Secondary thread", 0, nullptr);
 
 	// Message cycle
 	seqAppStart.Process(rp_AppStart);
 	m_pRender->ClearTarget();
+
+	if (!Profiling.IsInEngineMode())
+	{
+		Profiling.ResumeProfiling();
+	}
 }
 
 void CRenderDevice::GetXrWindowRect(RECT& OutWindowRect, bool bClientRect /*= false*/) const
@@ -539,6 +542,7 @@ void ProcessLoading(RP_FUNC *f);
 void CRenderDevice::FrameMove()
 {
 	dwFrame			++;
+	dwFrameAsync++;
 
 	Core.dwFrame = dwFrame;
 
@@ -595,8 +599,6 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
     Msg("* [MSG] PAUSE bOn[%s], bTimer[%s], bSound[%s], reason: %s", bOn ? "true" : "false", bTimer ? "true" : "false", bSound ? "true" : "false", reason);
 #endif
 	static int snd_emitters_ = -1;
-
-	if (g_bBenchmark)	return;
 
 	if(bOn)
 	{

@@ -6,6 +6,10 @@
 //	Description : XRay Script export space 
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
+
+// Don't corrupt the Spectre with filthy Lua
+#ifndef SPECTRE
+
 #include "../xrScripts.h"
 #include <imdexlib/typelist.hpp>
 struct lua_State;
@@ -31,3 +35,12 @@ template <typename T> struct class_exporter					{DECLARE_SCRIPT_REGISTER_FUNCTIO
 template <typename T> struct enum_exporter_api	{DECLARE_SCRIPT_REGISTER_FUNCTION_API};
 template <typename T> struct class_exporter_api	{DECLARE_SCRIPT_REGISTER_FUNCTION_API};
 
+#else // SPECTRE defined
+#define DECLARE_SCRIPT_REGISTER_FUNCTION
+#define DECLARE_SCRIPT_REGISTER_FUNCTION_STRUCT
+#define DECLARE_SCRIPT_REGISTER_FUNCTION_API
+
+#define	script_type_list		
+#define	add_to_type_list(type)	;
+#define	save_type_list(type)	
+#endif

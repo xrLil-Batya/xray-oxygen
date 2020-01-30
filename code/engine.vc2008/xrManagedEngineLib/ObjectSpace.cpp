@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "ObjectSpace.h"
-#include "../xrGame/xrGame.h"
-#include "../xrGame/Level.h"
+#include "xrEngine/IGame_Level.h"
 
 namespace XRay
 {
 	ObjectSpace::ObjectSpace()
 	{
-		*pNativeObject = Level().ObjectSpace;
+		// We use global object, not need to initialize pNativeObject
+		pNativeObject = nullptr;
 		current_object = nullptr;
 	}
 
@@ -53,7 +53,7 @@ namespace XRay
 
 		collide::rq_result object_status;
 		CObject* obj = (CObject*)ignore_object->GetNativeObject().ToPointer();  
-		bool status = pNativeObject->RayPick(s, d, range, b, object_status, obj);
+		bool status = g_pGameLevel->ObjectSpace.RayPick(s, d, range, b, object_status, obj);
 		if (status)
 		{
 			if (object_status.O)
@@ -84,7 +84,7 @@ namespace XRay
 
 		collide::rq_target b = (collide::rq_target)type;
 		CObject* obj = (CObject*)ignore_object->GetNativeObject().ToPointer();
-		bool status = pNativeObject->RayTest(s, d, range, b, nullptr, obj);
+		bool status = g_pGameLevel->ObjectSpace.RayTest(s, d, range, b, nullptr, obj);
 		
 		return status;
 	}

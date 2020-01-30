@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "thread_utils.h"
 
-xrCriticalSection::xrCriticalSection() : isLocked(false)
+xrCriticalSection::xrCriticalSection()
 {
-	InitializeCriticalSectionAndSpinCount(&Section, 250);
+	InitializeCriticalSectionEx(&Section, 250, 0);
 }
 
 xrCriticalSection::~xrCriticalSection()
@@ -14,18 +14,27 @@ xrCriticalSection::~xrCriticalSection()
 void xrCriticalSection::Enter()
 {
 	EnterCriticalSection(&Section);
-	isLocked = true;
+	LockCounter++;
 }
 
 void xrCriticalSection::Leave()
 {
-	isLocked = false;
+	//if (!LockCounter.load(std::memory_order::memory_order_relaxed))
+	//{
+	//	FATAL("Section is not locked");
+	//	return;
+	//}
+	u32 number = LockCounter--;
+	if (number > 0xFFFFFFFAu)
+	{
+		LockCounter = 0;
+	}
 	LeaveCriticalSection(&Section);
 }
 
-bool xrCriticalSection::TryLock()
+bool xrCriticalSection::IsLocked()
 {
-	return isLocked;
+	return LockCounter;
 }
 
 xrCriticalSectionGuard::xrCriticalSectionGuard(xrCriticalSection& InSection)
@@ -54,6 +63,8 @@ void __cdecl thread_entry(void*	_params)
 	// initialize
 	THREAD_STARTUP* startup = (THREAD_STARTUP*)_params;
 	PlatformUtils.SetCurrentThreadName(startup->name);
+	Profiling.SetCurrentThreadName(startup->name);
+
 	thread_t* entry = startup->entry;
 	void* arglist = startup->args;
 	xr_delete(startup);
@@ -122,3 +133,26 @@ xrSharedCriticalSectionGuard& xrSharedCriticalSectionGuard::operator=(const xrSh
 	return *this;
 }
 
+xrConditionalVariable::xrConditionalVariable()
+{
+	InitializeConditionVariable(&Variable);
+}
+
+xrConditionalVariable::~xrConditionalVariable()
+{}
+
+void xrConditionalVariable::WakeOne()
+{
+	WakeConditionVariable(&Variable);
+}
+
+void xrConditionalVariable::WakeAll()
+{
+	WakeAllConditionVariable(&Variable);
+}
+
+void xrConditionalVariable::Sleep(xrCriticalSection& AcquiringCS)
+{
+	SleepConditionVariableCS(&Variable, &AcquiringCS.Section, INFINITE);
+	AcquiringCS.LockCounter++;
+}

@@ -18,7 +18,7 @@ void	uber_deffer(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BOO
 	if (C.L_textures.size() < 3)	lmap = false;
 	else
 	{
-		pcstr		tex = C.L_textures[2].c_str();
+		LPCSTR		tex = C.L_textures[2].c_str();
 		if (tex[0] == 'l' && tex[1] == 'm' && tex[2] == 'a' && tex[3] == 'p')	lmap = true;
 		else															lmap = false;
 	}
@@ -159,6 +159,10 @@ void	uber_deffer(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BOO
 		C.r_Pass(vs, ps, FALSE);
 
 	C.r_dx10Texture("s_base", C.L_textures[0]);
+
+	if (ps_r4_flags.test(R4_FLAG_WIREFRAME))
+		C.R().SetRS(D3DRS_FILLMODE, D3DFILL_WIREFRAME);											  
+
 	C.r_dx10Texture("s_bumpX", fnameB);	// should be before base bump
 	C.r_dx10Texture("s_bump", fnameA);
 	C.r_dx10Texture("s_bumpD", dt);
@@ -192,7 +196,7 @@ void uber_shadow(CBlender_Compile& C, LPCSTR _vspec)
 	if (C.L_textures.size() < 3)	lmap = false;
 	else
 	{
-		pcstr		tex = C.L_textures[2].c_str();
+		LPCSTR		tex = C.L_textures[2].c_str();
 		if (tex[0] == 'l' && tex[1] == 'm' && tex[2] == 'a' && tex[3] == 'p')	lmap = true;
 		else															lmap = false;
 	}

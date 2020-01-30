@@ -142,7 +142,6 @@ void CPHFracturesHolder::SplitProcess(CPHElement* element, ELEMENT_PAIR_VECTOR &
 	{
 		if (m_fractures[i].Breaked())
 		{
-			//float density = element->getDensity();
 			new_elements.push_back(SplitFromEnd(element, i));
 			//element->ResetMass(density);
 		}
@@ -176,12 +175,8 @@ void CPHFracturesHolder::PhTune(dBodyID body)
 		else
 		{
 			CPHJoint* ph_joint = (CPHJoint*)dJointGetData(joint);
-			if (!(ph_joint&&ph_joint->JointDestroyInfo())) dJointSetFeedback(joint, ContactFeedBacks.add());
-			//if(!dJointGetFeedback(joint))
-			//{
-			//	m_feedbacks.push_back(dJointFeedback());
-			//	dJointSetFeedback(joint,&m_feedbacks.back());
-			//}
+			if (!ph_joint || !ph_joint->JointDestroyInfo()) 
+				dJointSetFeedback(joint, ContactFeedBacks.add());
 		}
 	}
 }

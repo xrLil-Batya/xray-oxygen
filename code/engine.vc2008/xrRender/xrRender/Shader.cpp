@@ -13,29 +13,60 @@
 
 //
 STextureList::~STextureList				()			{	DEV->_DeleteTextureList	(this);			}
+
+SMatrixList::SMatrixList()
+{}
+
 SMatrixList::~SMatrixList				()			{	DEV->_DeleteMatrixList		(this);			}
+
+void SMatrixList::_copy(const SMatrixList& Other)
+{
+	clear();
+	for (size_t i = 0; i < Other.size(); i++)
+	{
+		push_back(Other[i]);
+	}
+}
+
+SConstantList::SConstantList()
+{}
+
 SConstantList::~SConstantList			()			{	DEV->_DeleteConstantList	(this);			}
+
+void SConstantList::_copy(const SConstantList& Other)
+{
+	clear();
+	for (size_t i = 0; i < Other.size(); i++)
+	{
+		push_back(Other[i]);
+	}
+}
+
 SPass::~SPass							()			{	DEV->_DeletePass			(this);			}
 ShaderElement::~ShaderElement			()			{	DEV->_DeleteElement		(this);			}
 SGeometry::~SGeometry					()			{	DEV->DeleteGeom			(this);			}
+
+Shader::Shader()
+{}
+
 Shader::~Shader							()			{	DEV->Delete				(this);			}
 																							 
 //////////////////////////////////////////////////////////////////////////					 
-void	resptrcode_shader::create		(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
+void	ref_shader::create		(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 	_set(DEV->Create		(s_shader,s_textures,s_constants,s_matrices));
 }
-void	resptrcode_shader::create		(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
+void	ref_shader::create		(IBlender* B, LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
 	_set(DEV->Create		(B,s_shader,s_textures,s_constants,s_matrices));
 }
 
 //////////////////////////////////////////////////////////////////////////
-void	resptrcode_geom::create			(u32 FVF , ID3DVertexBuffer* vb, ID3DIndexBuffer* ib)
+void	ref_geom::create			(u32 FVF , ID3DVertexBuffer* vb, ID3DIndexBuffer* ib)
 {
 	_set(DEV->CreateGeom		(FVF,vb,ib));
 }
-void	resptrcode_geom::create			(D3DVERTEXELEMENT9* decl, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib)
+void	ref_geom::create			(D3DVERTEXELEMENT9* decl, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib)
 {
 	_set(DEV->CreateGeom		(decl,vb,ib));
 }
@@ -90,6 +121,7 @@ ShaderElement::ShaderElement()
 	flags.bWmark		= FALSE;
 }
 
+
 BOOL ShaderElement::equal	(ShaderElement& S)
 {
 	if (flags.iPriority	!= S.flags.iPriority)	
@@ -119,6 +151,17 @@ BOOL ShaderElement::equal	(ShaderElement* S)
 	return	equal(*S);	
 }
 
+void ShaderElement::_copy(const ShaderElement& Other)
+{
+	flags = Other.flags;
+
+	passes.clear();
+	for (size_t i = 0; i < Other.passes.size(); i++)
+	{
+		passes.push_back(Other.passes[i]);
+	}
+}
+
 //
 BOOL Shader::equal	(Shader& S)
 {
@@ -131,6 +174,14 @@ BOOL Shader::equal	(Shader& S)
 }
 BOOL Shader::equal	(Shader* S)
 {	return	equal(*S);	}
+
+void Shader::_copy(Shader& Other)
+{
+	for (size_t i = 0; i < SHADER_ELEMENTS_MAX; i++)
+	{
+		E[i] = Other.E[i];
+	}
+}
 
 void STextureList::clear()
 {
@@ -164,4 +215,12 @@ u32 STextureList::find_texture_stage(const shared_str &TexName) const
 	VERIFY(_it!=_end);
 
 	return dwTextureStage;
+}
+
+STextureList::STextureList()
+{}
+
+void STextureList::_copy(const STextureList& Other)
+{
+	assign(Other.begin(), Other.end());
 }

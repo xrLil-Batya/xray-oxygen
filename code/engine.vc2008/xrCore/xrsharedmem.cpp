@@ -61,9 +61,13 @@ void smem_container::clean()
 {
 	xrCriticalSectionGuard guard(cs);
 
-	for (auto &it : container)
+	for (auto& it : container)
+	{
 		if (!it->dwReference)
+		{
 			xr_free(it);
+		}
+	}
 
 	container.erase(remove(container.begin(), container.end(), (smem_value*)0), container.end());
 	if (container.empty())	container.clear();
@@ -75,7 +79,9 @@ void smem_container::dump()
 	FILE* F = fopen("$smem_dump$.txt", "w");
 
 	for (smem_value* it : container)
-		fprintf(F, "%4u : crc[%6x], %d bytes\n", it->dwReference, it->dwCRC, it->dwLength);
+	{
+		fprintf(F, "%4u : crc[%6x], %d bytes\n", it->dwReference.load(), it->dwCRC, it->dwLength);
+	}
 
 	fclose(F);
 }

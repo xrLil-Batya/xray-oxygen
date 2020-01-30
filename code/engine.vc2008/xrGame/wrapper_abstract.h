@@ -9,31 +9,6 @@
 #pragma once
 
 class CScriptGameObject;
-
-template <
-	typename _object_type,
-	template <typename _base_object_type> class ancestor,
-	typename _base_object_type = CScriptGameObject
->
-class CWrapperAbstract : public ancestor<_base_object_type> {
-protected:
-	typedef ancestor<_base_object_type> inherited;
-
-protected:
-	_object_type	*m_object;
-
-public:
-	IC				CWrapperAbstract	();
-	template <typename T1>
-	IC				CWrapperAbstract	(T1 t1);
-	template <typename T1, typename T2, typename T3>
-	IC				CWrapperAbstract	(T1 t1, T2 t2, T3 t3);
-	virtual			~CWrapperAbstract	();
-	virtual void	setup				(_object_type *object);
-	virtual void	setup				(CScriptGameObject *object);
-	IC		_object_type &object		() const;
-};
-
 class CPropertyStorage;
 
 template <

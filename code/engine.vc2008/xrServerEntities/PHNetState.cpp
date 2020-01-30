@@ -101,15 +101,6 @@ void	SPHNetState::read(src&			P)
 	enabled = !!P.r_u8();
 }
 
-void	SPHNetState::net_Import(NET_Packet&	P)
-{
-	read(P);
-}
-void SPHNetState::net_Import(IReader& P)
-{
-	read(P);
-}
-
 void SPHNetState::net_Save(NET_Packet &P)
 {
 	net_Export(P);
@@ -117,14 +108,16 @@ void SPHNetState::net_Save(NET_Packet &P)
 
 void SPHNetState::net_Load(NET_Packet &P)
 {
-	net_Import(P);
+	read(P);
 	previous_position.set(position);
 }
+
 void SPHNetState::net_Load(IReader &P)
 {
-	net_Import(P);
+	read(P);
 	previous_position.set(position);
 }
+
 void SPHNetState::net_Save(NET_Packet &P, const Fvector& min, const Fvector& max)
 {
 	w_vec_q8(P, position, min, max);

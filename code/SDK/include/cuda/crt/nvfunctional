@@ -325,7 +325,7 @@ class function<_RetType(_ArgTypes...)>
           std::is_member_pointer<_F>::value ||
           std::is_convertible<
             _RetType,
-            typename std::result_of<_F(_ArgTypes...)>::type
+            typename std::invoke_result<_F, _ArgTypes...>::type
           >::value
         >
   { };
@@ -339,7 +339,7 @@ class function<_RetType(_ArgTypes...)>
   { };
 #else /* !((__GNUC__ == 4) && (__GNUC_MINOR__ < 8)) _MSC_VER */
   template <class _F,
-            class _T = typename std::result_of<_F(_ArgTypes...)>::type>
+            class _T = typename std::invoke_result<_F, _ArgTypes...>::type>
   struct __check_callability
     : public std::integral_constant<
                bool,

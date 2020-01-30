@@ -67,7 +67,7 @@ public:
 
 	virtual		void			InterpolateGlobalPosition(Fvector* v) = 0;
 
-	virtual		void			net_Import(NET_Packet& P) = 0;
+//	virtual		void			net_Import(NET_Packet& P) = 0;
 	virtual		void			net_Export(NET_Packet& P) = 0;
 	virtual		void			GetGlobalPositionDynamic(Fvector* v) = 0;
 	virtual		bool			isBreakable() = 0;

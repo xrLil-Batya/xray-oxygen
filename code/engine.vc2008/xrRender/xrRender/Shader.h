@@ -39,20 +39,38 @@ struct RENDER_API STextureList : public xr_resource_flagged, public xr_vector<st
 	//	Avoid using this function.
 	//	If possible use precompiled texture list.
 	u32		find_texture_stage(const shared_str &TexName) const;
+
+
+	STextureList();
+	//STextureList(const STextureList& Other);
+	STextureList& operator=(const STextureList& Other) = delete;
+
+	void _copy(const STextureList& Other);
 };
-typedef	resptr_core<STextureList,resptr_base<STextureList>> ref_texture_list;
+typedef	resptr_core<STextureList> ref_texture_list;
 //////////////////////////////////////////////////////////////////////////
 struct RENDER_API SMatrixList : public xr_resource_flagged, public svector<ref_matrix, 4>
 {
+	SMatrixList();
+	//SMatrixList(const SMatrixList& Other);
+	SMatrixList& operator=(const SMatrixList& Other) = delete;
 	~SMatrixList	();
+	void _copy(const SMatrixList& Other);
 };
-typedef	resptr_core<SMatrixList, resptr_base<SMatrixList>> ref_matrix_list;
+typedef	resptr_core<SMatrixList> ref_matrix_list;
 //////////////////////////////////////////////////////////////////////////
 struct RENDER_API SConstantList : public xr_resource_flagged, public svector<ref_constant_obsolette, 4>
 {
+	SConstantList();
+
+	//SConstantList(const SConstantList& Other);
+	SConstantList& operator=(const SConstantList& Other) = delete;
+
 	~SConstantList	();
+
+	void _copy(const SConstantList& Other);
 };
-typedef	resptr_core<SConstantList, resptr_base<SConstantList>> ref_constant_list;
+typedef	resptr_core<SConstantList> ref_constant_list;
 
 //////////////////////////////////////////////////////////////////////////
 struct RENDER_API SGeometry : public xr_resource_flagged
@@ -62,17 +80,19 @@ struct RENDER_API SGeometry : public xr_resource_flagged
 	ID3DIndexBuffer*	ib;
 	u32					vb_stride;
 						~SGeometry		();
+						SConstantList& operator=(const SConstantList& Other) = delete;
 };
 
-struct RENDER_API resptrcode_geom : public resptr_base<SGeometry>
+struct RENDER_API ref_geom : public resptr_core<SGeometry>
 {
+	using GeometryRefCore = resptr_core<SGeometry>;
+	using GeometryRefCore::GeometryRefCore;
+
 	void 				create			(D3DVERTEXELEMENT9* decl, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib);
 	void				create			(u32 FVF				, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib);
 	void				destroy			()			{ _set(nullptr); }
 	u32					stride			()	const	{ return _get()->vb_stride;	}
 };
-
-typedef	resptr_core<SGeometry, resptrcode_geom> ref_geom;
 
 //////////////////////////////////////////////////////////////////////////
 struct ECORE_API SPass : public xr_resource_flagged
@@ -97,7 +117,7 @@ struct ECORE_API SPass : public xr_resource_flagged
 						~SPass			();
 	BOOL				equal			(const SPass& other);
 };
-typedef	resptr_core<SPass, resptr_base<SPass>> ref_pass;
+typedef	resptr_core<SPass> ref_pass;
 
 //////////////////////////////////////////////////////////////////////////
 struct RENDER_API ShaderElement : public xr_resource_flagged
@@ -116,30 +136,43 @@ public:
 	svector<ref_pass, SHADER_PASSES_MAX>	passes;
 
 						ShaderElement	();
-						~ShaderElement	();
+						~ShaderElement();
+
+						//ShaderElement	(const ShaderElement& Other);
+						ShaderElement& operator=(const ShaderElement& Other) = delete;
+
 	BOOL				equal			(ShaderElement& S);
 	BOOL				equal			(ShaderElement* S);
+
+	void _copy(const ShaderElement& Other);
 };
-typedef	resptr_core<ShaderElement, resptr_base<ShaderElement>> ref_selement;
+typedef	resptr_core<ShaderElement> ref_selement;
 
 //////////////////////////////////////////////////////////////////////////
 struct RENDER_API Shader : public xr_resource_flagged
 {
 public:
+
+	Shader();
+	Shader& operator=(const Shader& Other) = delete;
+
 	ref_selement E[SHADER_ELEMENTS_MAX];// R1 - 0=norm_lod0(det),	1=norm_lod1(normal),	2=L_point,		3=L_spot,	4=L_for_models,	
 										// R2 - 0=deffer,			1=norm_lod1(normal),	2=psm,			3=ssm,		4=dsm
 						~Shader			();
 	BOOL				equal			(Shader& S);
 	BOOL				equal			(Shader* S);
+	void _copy(Shader& Other);
 };
 
-struct RENDER_API resptrcode_shader : public resptr_base<Shader>
+struct RENDER_API ref_shader : public resptr_core<Shader>
 {
+	using ShaderRefCore = resptr_core<Shader>;
+	using ShaderRefCore::ShaderRefCore;
+
 	void				create			(LPCSTR s_shader = 0, LPCSTR s_textures = 0, LPCSTR s_constants = 0, LPCSTR s_matrices = 0);
 	void				create			(IBlender*	B, LPCSTR s_shader = 0, LPCSTR s_textures = 0, LPCSTR s_constants = 0, LPCSTR s_matrices = 0);
 	void				destroy			()	{ _set(nullptr); }
 };
-using ref_shader = resptr_core<Shader, resptrcode_shader>;
 
 enum SE_R1
 {

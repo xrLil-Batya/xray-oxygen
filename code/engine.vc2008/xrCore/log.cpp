@@ -46,15 +46,17 @@ void xrLogger::Msg(LPCSTR Msg, va_list argList)
 {
 	string4096	formattedMessage;
 	int MsgSize = _vsnprintf(formattedMessage, sizeof(formattedMessage) - 1, Msg, argList);
-	formattedMessage[MsgSize] = 0;
-
-	if (IsDebuggerPresent() && bFastDebugLog)
+	if (MsgSize != -1)
 	{
-		OutputDebugStringA(formattedMessage);
-		OutputDebugStringA("\n");
-	}
+		formattedMessage[MsgSize] = 0;
+		if (IsDebuggerPresent() && bFastDebugLog)
+		{
+			OutputDebugStringA(formattedMessage);
+			OutputDebugStringA("\n");
+		}
 
-	SimpleMessage(formattedMessage, MsgSize);
+		SimpleMessage(formattedMessage, MsgSize);
+	}
 }
 
 void xrLogger::SimpleMessage(LPCSTR Message, u32 MessageSize /*= 0*/)
@@ -91,7 +93,7 @@ void LogThreadEntryStartup(void* nullParam)
 
 void xrLogger::InitLog()
 {
-	thread_spawn(LogThreadEntryStartup, "X-Ray Log Thread", 0, nullptr);
+	theLogger.hLogThread = thread_spawn(LogThreadEntryStartup, "X-Ray Log Thread", 0, nullptr);
 }
 
 void xrLogger::FlushLog()
@@ -114,6 +116,11 @@ void xrLogger::AddLogCallback(LogCallback logCb)
 void xrLogger::RemoveLogCallback(LogCallback logCb)
 {
 	theLogger.logCallbackList.remove(logCb);
+}
+
+bool xrLogger::IsLogThreadWorking()
+{
+	return theLogger.hLogThread != NULL;
 }
 
 void xrLogger::InternalCloseLog()
@@ -163,8 +170,6 @@ XRCORE_API bool bStartedThread = false;
 void xrLogger::LogThreadEntry()
 {
 	if (bStartedThread) return;
-	bool isDebug = IsDebuggerPresent();
-
 	auto FlushLogIfRequestedLambda = [this]()
 	{
 		if (bFlushRequested)
@@ -177,6 +182,17 @@ void xrLogger::LogThreadEntry()
 		}
 	};
 	bStartedThread = true;
+
+	// check if console opened
+	// if so - redirect output to it
+	bool bConsoleAvailable = false;
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD ConsoleMode = 0;
+	if (GetConsoleMode(hOut, &ConsoleMode))
+	{
+		bConsoleAvailable = true;
+	}
+
 	while (bIsAlive)
 	{
 		bool bHaveMore = true;
@@ -204,24 +220,28 @@ void xrLogger::LogThreadEntry()
 			for (const xr_string& line : LogLines)
 			{
 				string4096 finalLine;
+				string4096 finalLineWithLineEnd;
 				xr_strconcat(finalLine, TimeOfDay, line.c_str());
+				xr_strconcat(finalLineWithLineEnd, finalLine, "\r\n");
 
 				int FinalSize = TimeOfDaySize + (int)line.size();
 				// line is ready, ready up everything
 
 				// Output to MSVC debug output
-				if (isDebug && !bFastDebugLog)
+				if (IsDebuggerPresent() && !bFastDebugLog)
 				{
-					OutputDebugStringA(finalLine);
-					OutputDebugStringA("\n");
+					OutputDebugStringA(finalLineWithLineEnd);
 				}
+
+				// write to standart output
+				DWORD BytesWritten = 0;
+				WriteFile(hOut, finalLineWithLineEnd, FinalSize + 2, &BytesWritten, NULL);
 
 				if (logFile != nullptr)
 				{
 					IWriter* mutableWritter = (IWriter*)logFile;
 					// write to file
-					mutableWritter->w(finalLine, FinalSize);
-					mutableWritter->w("\r\n", 2);
+					mutableWritter->w(finalLineWithLineEnd, FinalSize + 2);
 				}
 
 				for (const LogCallback& FnCallback : logCallbackList)

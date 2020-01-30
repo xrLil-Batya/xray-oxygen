@@ -10,8 +10,6 @@
 #include "smart_cover_description.h"
 #include "object_broker.h"
 
-static u32 const time_to_delete		= 300000;
-
 using smart_cover::storage;
 using smart_cover::cover;
 using smart_cover::description;

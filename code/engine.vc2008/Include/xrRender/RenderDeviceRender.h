@@ -51,6 +51,9 @@ public:
 	//	HWSupport
 	virtual bool	HWSupportsShaderYUV2RGB() = 0;
 
+	// HW stats
+	virtual u32		GetGPULoadPercent() = 0;
+
 	//	Device state
 	virtual DeviceState GetDeviceState() = 0;
 	virtual BOOL	GetForceGPU_REF() = 0;

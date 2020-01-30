@@ -102,11 +102,6 @@ void CSE_ALifeInventoryItem::STATE_Read		(NET_Packet &tNetPacket, u16 size)
 	State.position				= base()->o_Position;
 }
 
-static inline bool check (const u8 &mask, const u8 &test)
-{
-	return							(!!(mask & test));
-}
-
 const	u32		CSE_ALifeInventoryItem::m_freeze_delta_time		= 1000;
 const	u32		CSE_ALifeInventoryItem::random_limit			= 120;		
 
@@ -513,7 +508,7 @@ void CSE_ALifeItemWeapon::clone_addons(CSE_ALifeItemWeapon* parent)
 	m_addon_flags = parent->m_addon_flags;
 }
 
-void CSE_ALifeItemWeapon::UPDATE_Read(NET_Packet	&tNetPacket)
+void CSE_ALifeItemWeapon::UPDATE_Read(NET_Packet &tNetPacket)
 {
     inherited::UPDATE_Read(tNetPacket);
     tNetPacket.r_float_q8(m_fCondition, 0.0f, 1.0f); //1 b1
@@ -523,8 +518,9 @@ void CSE_ALifeItemWeapon::UPDATE_Read(NET_Packet	&tNetPacket)
     tNetPacket.r_u8(ammo_type);                      //5 b6
     tNetPacket.r_u8(wpn_state);                      //6 b7
     tNetPacket.r_u8(m_bZoom);                        //7 b8
-    //if(m_wVersion > 128)
-        //tNetPacket.r_u8(m_scope_idx);                    //8 b9
+    
+//	if(m_wVersion > 128)
+//       tNetPacket.r_u8(m_scope_idx);                //8 b9
 }
 
 void CSE_ALifeItemWeapon::UPDATE_Write(NET_Packet	&tNetPacket)
@@ -538,8 +534,7 @@ void CSE_ALifeItemWeapon::UPDATE_Write(NET_Packet	&tNetPacket)
 	tNetPacket.w_u8(ammo_type);                    //5 b6
 	tNetPacket.w_u8(wpn_state);                    //6 b7
 	tNetPacket.w_u8(m_bZoom);                      //7 b8
-	//tNetPacket.w_u8(m_scope_idx);                  //8 b9
-
+//	tNetPacket.w_u8(m_scope_idx);                  //8 b9
 }
 
 void CSE_ALifeItemWeapon::STATE_Read(NET_Packet	&tNetPacket, u16 size)
@@ -548,6 +543,7 @@ void CSE_ALifeItemWeapon::STATE_Read(NET_Packet	&tNetPacket, u16 size)
 	tNetPacket.r_u16(a_current); //1 b2
 	tNetPacket.r_u16(a_elapsed); //2 b4
 	tNetPacket.r_u8(wpn_state);  //3 b5
+	
 	if (m_wVersion > 40)
 		tNetPacket.r_u8(m_addon_flags.flags); //4 b6
 
@@ -555,10 +551,13 @@ void CSE_ALifeItemWeapon::STATE_Read(NET_Packet	&tNetPacket, u16 size)
 		tNetPacket.r_u8(ammo_type); //5 b7
 	
 	if (m_wVersion > 122)
+	{
 		a_elapsed_grenades.unpack_from_byte(tNetPacket.r_u8()); //6 b8
-
-    if (m_wVersion > 128)
-	    tNetPacket.r_u8(m_scope_idx); //7 b8 + str
+	    //tNetPacket.r_u8(m_bZoom); //7 b8 + str
+	}
+	
+	if (m_wVersion > 128)
+	    tNetPacket.r_u8(m_scope_idx); //8 b8 + str
 }
 
 void CSE_ALifeItemWeapon::STATE_Write		(NET_Packet	&tNetPacket)
@@ -570,52 +569,51 @@ void CSE_ALifeItemWeapon::STATE_Write		(NET_Packet	&tNetPacket)
 	tNetPacket.w_u8(m_addon_flags.get()); //4 b6
 	tNetPacket.w_u8(ammo_type); //5 b7
 	tNetPacket.w_u8(a_elapsed_grenades.pack_to_byte()); //6 b8
-	tNetPacket.w_u8(m_scope_idx); //7 b8 + str
+	tNetPacket.w_u8(m_bZoom); //7 b8 + str
+//	tNetPacket.w_u8(m_scope_idx); //8 b8 + str
 }
 
-void CSE_ALifeItemWeapon::OnEvent			(NET_Packet	&tNetPacket, u16 type, u32 time, ClientID sender )
+void CSE_ALifeItemWeapon::OnEvent(NET_Packet	&tNetPacket, u16 type, u32 time, ClientID sender )
 {
-	inherited::OnEvent			(tNetPacket,type,time,sender);
-	switch (type) {
+	inherited::OnEvent(tNetPacket,type,time,sender);
+	switch (type)
+	{
 		case GE_WPN_STATE_CHANGE:
 			{			
 				tNetPacket.r_u8	(wpn_state);			
 //				u8 sub_state = 
-					tNetPacket.r_u8();		
-//				u8 NewAmmoType = 
-					tNetPacket.r_u8();
-//				u8 AmmoElapsed = 
-					tNetPacket.r_u8();	
+					tNetPacket.r_u8(); // [FX] Skip: Addon flags
+					tNetPacket.r_u8(ammo_type);
+					tNetPacket.r_u8();	// [FX] Skip: Ammo elapsed
+					tNetPacket.r_u8();	// [FX] Skip: m_bZoom mode
 			}break;
 	}
 }
 
 u8	 CSE_ALifeItemWeapon::get_slot			()
 {
-	return						((u8)pSettings->r_u8(s_name,"slot"));
+	return ((u8)pSettings->r_u8(s_name,"slot"));
 }
 
 u16	 CSE_ALifeItemWeapon::get_ammo_limit	()
 {
-	return						(u16) pSettings->r_u16(s_name,"ammo_limit");
+	return (u16) pSettings->r_u16(s_name,"ammo_limit");
 }
 
 u16	 CSE_ALifeItemWeapon::get_ammo_total	()
 {
-	return						((u16)a_current);
+	return ((u16)a_current);
 }
 
 u16	 CSE_ALifeItemWeapon::get_ammo_elapsed	()
 {
-	return						((u16)a_elapsed);
+	return ((u16)a_elapsed);
 }
 
 u16	 CSE_ALifeItemWeapon::get_ammo_magsize	()
 {
-	if (pSettings->line_exist(s_name,"ammo_mag_size"))
-		return					(pSettings->r_u16(s_name,"ammo_mag_size"));
-	else
-		return					0;
+	const bool bHaveMagsize = pSettings->line_exist(s_name,"ammo_mag_size");
+	return bHaveMagsize ? (pSettings->r_u16(s_name,"ammo_mag_size")) : 0;
 }
 
 
@@ -654,11 +652,7 @@ CSE_ALifeItemWeaponShotGun::CSE_ALifeItemWeaponShotGun	(LPCSTR caSection) : CSE_
 	m_AmmoIDs.clear();
 }
 
-CSE_ALifeItemWeaponShotGun::~CSE_ALifeItemWeaponShotGun	()
-{
-}
-
-void CSE_ALifeItemWeaponShotGun::UPDATE_Read		(NET_Packet& P)
+void CSE_ALifeItemWeaponShotGun::UPDATE_Read(NET_Packet& P)
 {
 	inherited::UPDATE_Read(P);
 
@@ -669,7 +663,7 @@ void CSE_ALifeItemWeaponShotGun::UPDATE_Read		(NET_Packet& P)
 		m_AmmoIDs.push_back(P.r_u8());
 	}
 }
-void CSE_ALifeItemWeaponShotGun::UPDATE_Write	(NET_Packet& P)
+void CSE_ALifeItemWeaponShotGun::UPDATE_Write(NET_Packet& P)
 {
 	inherited::UPDATE_Write(P);
 
@@ -679,21 +673,7 @@ void CSE_ALifeItemWeaponShotGun::UPDATE_Write	(NET_Packet& P)
 		P.w_u8(u8(AmmoID));
 	}
 }
-void CSE_ALifeItemWeaponShotGun::STATE_Read		(NET_Packet& P, u16 size)
-{
-	inherited::STATE_Read(P, size);
-}
-void CSE_ALifeItemWeaponShotGun::STATE_Write		(NET_Packet& P)
-{
-	inherited::STATE_Write(P);
-}
 
-#ifndef XRGAME_EXPORTS
-void CSE_ALifeItemWeaponShotGun::FillProps			(LPCSTR pref, PropItemVec& items)
-{
-	inherited::FillProps			(pref, items);
-}
-#endif // #ifndef XRGAME_EXPORTS
 ////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeItemWeaponAutoShotGun
 ////////////////////////////////////////////////////////////////////////////
@@ -701,32 +681,6 @@ CSE_ALifeItemWeaponAutoShotGun::CSE_ALifeItemWeaponAutoShotGun	(LPCSTR caSection
 {
 }
 
-CSE_ALifeItemWeaponAutoShotGun::~CSE_ALifeItemWeaponAutoShotGun	()
-{
-}
-
-void CSE_ALifeItemWeaponAutoShotGun::UPDATE_Read	(NET_Packet& P)
-{
-	inherited::UPDATE_Read(P);
-}
-void CSE_ALifeItemWeaponAutoShotGun::UPDATE_Write	(NET_Packet& P)
-{
-	inherited::UPDATE_Write(P);
-}
-void CSE_ALifeItemWeaponAutoShotGun::STATE_Read		(NET_Packet& P, u16 size)
-{
-	inherited::STATE_Read(P, size);
-}
-void CSE_ALifeItemWeaponAutoShotGun::STATE_Write	(NET_Packet& P)
-{
-	inherited::STATE_Write(P);
-}
-#ifndef XRGAME_EXPORTS
-void CSE_ALifeItemWeaponAutoShotGun::FillProps		(LPCSTR pref, PropItemVec& items)
-{
-	inherited::FillProps(pref, items);
-}
-#endif // #ifndef XRGAME_EXPORTS
 ////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeItemWeaponMagazined
 ////////////////////////////////////////////////////////////////////////////

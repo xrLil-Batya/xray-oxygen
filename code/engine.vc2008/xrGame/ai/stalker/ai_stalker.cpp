@@ -85,6 +85,9 @@ m_group_behaviour(true), m_wounded(false), m_registered_in_combat_on_migration(f
 
 CAI_Stalker::~CAI_Stalker()
 {
+	//dctor of m_planner require m_animation_manager sometimes
+	xr_delete(m_planner);
+
 	xr_delete(m_pPhysics_support);
 	xr_delete(m_animation_manager);
 	xr_delete(m_brain);
@@ -841,6 +844,11 @@ void CAI_Stalker::spawn_supplies()
 	CObjectHandler::spawn_supplies();
 }
 
+CAgentManager& CAI_Stalker::agent_manager() const
+{
+	return (Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).agent_manager());
+}
+
 void CAI_Stalker::Think()
 {
 	const u32 update_delta = Device.dwTimeGlobal - m_dwLastUpdateTime;
@@ -887,7 +895,7 @@ CMovementManager *CAI_Stalker::create_movement_manager()
 
 CSound_UserDataVisitor *CAI_Stalker::create_sound_visitor()
 {
-	return (m_sound_user_data_visitor = xr_new<CStalkerSoundDataVisitor>(this));
+	return (CSound_UserDataVisitor*)(m_sound_user_data_visitor = xr_new<CStalkerSoundDataVisitor>(this));
 }
 
 CMemoryManager *CAI_Stalker::create_memory_manager()

@@ -7,6 +7,7 @@
 #include "../../xrCore/xrpool.h"
 #include "detailformat.h"
 #include "detailmodel.h"
+#include "tbb/task_group.h"
 
 #ifdef _EDITOR
 	const int	dm_max_decompress	= 14;
@@ -186,7 +187,6 @@ public:
 	void							Render			();
 
 	/// MT stuff
-	xrCriticalSection				MTLock;
 	volatile u32					m_frame_calc;
 	volatile u32					m_frame_rendered;
 
@@ -197,6 +197,11 @@ public:
 
 		MT_CALC						(); 
 	}
+
+
+	tbb::task_group m_CalcAsync;
+	void StartCalcAsync();
+	void WaitForCalc();
 
 	CDetailManager					();
 	virtual ~CDetailManager			();

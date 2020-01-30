@@ -69,6 +69,8 @@ private:
 	
 	xr_vector<ref_texture>								m_necessary;
 	// misc
+
+	xrCriticalSection creationGuard;
 public:
 	xr_vector<Shader*>									v_shaders;
 	CTextureDescrMngr									m_textures_description;
@@ -89,8 +91,6 @@ public:
 
 	// Editor cooperation
 	void							ED_UpdateBlender	(LPCSTR Name, IBlender*		data);
-	void							ED_UpdateMatrix		(LPCSTR Name, CMatrix*		data);
-	void							ED_UpdateConstant	(LPCSTR Name, CConstant*	data);
 #ifdef _EDITOR
 	void							ED_UpdateTextures	(AStringVec* names);
 #endif
@@ -183,6 +183,7 @@ public:
 	// Creation/Destroying
 	Shader*			Create					(LPCSTR s_shader=0, LPCSTR s_textures=0,	LPCSTR s_constants=0,	LPCSTR s_matrices=0);
 	Shader*			Create					(IBlender*	B,		LPCSTR s_shader=0,		LPCSTR s_textures=0,	LPCSTR s_constants=0, LPCSTR s_matrices=0);
+	Shader*			_CreateShader			(Shader* InShader);
 	void			Delete					(const Shader*		S	);
 	void			RegisterConstantSetup	(LPCSTR name,		R_constant_setup* s)	{	v_constant_setup.push_back(std::make_pair(shared_str(name),s));	}
 

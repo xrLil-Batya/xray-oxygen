@@ -5978,9 +5978,6 @@
     <ClCompile Include="CustomMonster.cpp">
       <Filter>AI\AMonsters\common\custom</Filter>
     </ClCompile>
-    <ClCompile Include="CustomMonster_VCPU.cpp">
-      <Filter>AI\AMonsters\common\custom</Filter>
-    </ClCompile>
     <ClCompile Include="AI\ai_monsters_misc.cpp">
       <Filter>AI\AMonsters\common\miscellaneous</Filter>
     </ClCompile>

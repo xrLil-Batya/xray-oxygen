@@ -63,8 +63,8 @@ void CUIAchievements::Update()
 }
 bool CUIAchievements::ParentHasMe()
 {
-	WINDOW_LIST::const_iterator it = std::find(m_parent->Items().begin(), m_parent->Items().end(), this);
-	return it != m_parent->Items().end();
+	WINDOW_LIST::const_iterator it = std::find(m_parent->Items().cbegin(), m_parent->Items().cend(), this);
+	return it != m_parent->Items().cend();
 }
 void CUIAchievements::SetName(LPCSTR name)
 {

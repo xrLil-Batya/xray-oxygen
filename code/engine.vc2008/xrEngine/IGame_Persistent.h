@@ -1,12 +1,10 @@
-﻿#ifndef IGame_PersistentH
-#define IGame_PersistentH
-#pragma once
+﻿#pragma once
 
 #include "..\xrServerEntities\gametype_chooser.h"
-#ifndef _EDITOR
+#if !defined(_EDITOR) && !defined(SPECTRE)
 #include "Environment.h"
-#include "IGame_ObjectPool.h"
 #endif
+#include "IGame_ObjectPool.h"
 
 #include "ShadersExternalData.h"
 
@@ -58,6 +56,7 @@ public:
 
 public:
 			void					destroy_particles	(const bool &all_particles);
+			void					UpdateParticles();
 
 public:
 	virtual void					PreStart			(LPCSTR op);
@@ -130,5 +129,4 @@ public:
 };
 
 extern ENGINE_API	IGame_Persistent*	g_pGamePersistent;
-#endif //IGame_PersistentH
 

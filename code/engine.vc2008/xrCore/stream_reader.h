@@ -1,6 +1,6 @@
 #pragma once
 
-class XRCORE_API CStreamReader : public IReaderBase<CStreamReader> 
+class XRCORE_API CStreamReader : public IReaderBase<CStreamReader>, public TNonCopyable
 {
     HANDLE m_file_mapping_handle;
     size_t m_start_offset;
@@ -19,18 +19,16 @@ class XRCORE_API CStreamReader : public IReaderBase<CStreamReader>
         UnmapViewOfFile(m_current_map_view_of_file);
     }
 
-    void remap(const size_t new_offset) {
+    void remap(const size_t new_offset) 
+	{
         unmap();
         map(new_offset);
     }
 
-    // should not be called
-    CStreamReader(const CStreamReader&) = delete;
-    CStreamReader& operator=(const CStreamReader&) = delete;
-
 public:
     CStreamReader() = default;
-
+	~CStreamReader()  { }
+	
     virtual void construct(const HANDLE file_mapping_handle, const size_t start_offset,
                            const size_t file_size, const size_t archive_size, const size_t window_size);
     virtual void destroy() {

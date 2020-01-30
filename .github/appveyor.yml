@@ -24,7 +24,7 @@ after_build:
     
     cd ..\..\..\
     
-    7z a xrOxygen.7z .\game
+    7z a -mx1 xrOxygen.7z .\game
     
     echo appveyor PushArtifact xrOxygen.7z Release
     
