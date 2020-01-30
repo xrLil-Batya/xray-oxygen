@@ -572,7 +572,7 @@ bool CPhysicsShellHolder::IsStalker()
 {
 	return !!cast_stalker();
 }
-//void						SetWeaponHideState( u16 State, bool bSet )
+
 void CPhysicsShellHolder::HideAllWeapons( bool v )	
 {
 
