@@ -907,7 +907,7 @@ bool CInventory::CanPutInSlot(PIItem pIItem, u16 slot_id) const
 
 // Can move item to Belt 
 // Only check, no move 
-bool CInventory::CanPutInBelt(PIItem pIItem) const
+bool CInventory::CanPutInBelt(PIItem pIItem)
 {
 	if(InBelt(pIItem))					return false;
 	if(!m_bBeltUseful)					return false;

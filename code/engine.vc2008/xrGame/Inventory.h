@@ -59,7 +59,7 @@ public:
 	bool 					InRuck				(const CInventoryItem* pIItem) const;
 
 	bool 					CanPutInSlot		(PIItem pIItem, u16 slot_id) const;
-	bool 					CanPutInBelt		(PIItem pIItem) const;
+	bool 					CanPutInBelt		(PIItem pIItem);
 	bool 					CanPutInRuck		(PIItem pIItem) const;
 
 	bool					CanTakeItem			(CInventoryItem *inventory_item) const;
