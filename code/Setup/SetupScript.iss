@@ -46,6 +46,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\..\binaries\x64\Release\*.dll"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\binaries\x64\Release\xrPlay.exe"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
+Source: "..\..\binaries\x64\Release\CrashStack.exe"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\game\oxy_fsgame.ltx"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: OnFsltxIsAboutToBeCreated
 Source: "..\..\game\gamedata\*.*"; DestDir: "{app}\gamedata"; Flags: ignoreversion recursesubdirs
 Source: "vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
