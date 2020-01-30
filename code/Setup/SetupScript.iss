@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "X-Ray Oxygen"
-#define MyAppVersion "1.7f"
+#define MyAppVersion "January 2020"
 #define MyAppPublisher "Oxygen Team"
 #define MyAppURL "http://xray-oxygen.org"
 #define MyAppExeName "xrPlay.exe"
@@ -26,7 +26,7 @@ Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 DisableWelcomePage=False
-AppCopyright=Oxygen Team 2019
+AppCopyright=Oxygen Team 2020
 MinVersion=0,6.1
 SetupIconFile=oxygen_logo_setup.ico
 WizardImageFile=Oxygen_Setup_eng.bmp
@@ -46,11 +46,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\..\binaries\x64\Release\*.dll"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\binaries\x64\Release\xrPlay.exe"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
-Source: "..\..\binaries\x64\Release\alsoft.ini"; DestDir: "{app}\Oxygen"; Flags: ignoreversion
 Source: "..\..\game\oxy_fsgame.ltx"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: OnFsltxIsAboutToBeCreated
 Source: "..\..\game\gamedata\*.*"; DestDir: "{app}\gamedata"; Flags: ignoreversion recursesubdirs
 Source: "vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
-Source: "..\..\game\external\oalinst.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "Splash.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
 Source: "Oxygen_Setup.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
 Source: "Oxygen_Setup_eng.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
@@ -69,7 +67,6 @@ Name: "{app}\gamedata"; BeforeInstall: OnGamedataIsAboutToBeCreated
 
 [Run]
 Filename: "{tmp}\vc_redist.x64.exe"; WorkingDir: "{app}"; Flags: postinstall; Description: "{cm:STR_OXY_MSVS_REDIST}"
-Filename: "{tmp}\oalinst.exe"; WorkingDir: "{app}"; Flags: postinstall; Description: "{cm:STR_OXY_OAL}"
 
 [CustomMessages]
 english.MSG_OXY_AWDA=AWDA
