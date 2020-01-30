@@ -58,6 +58,19 @@ void CDetailManager::SSwingValue::lerp(const SSwingValue& A, const SSwingValue& 
 }
 //---------------------------------------------------
 
+void CDetailManager::StartCalcAsync()
+{
+	m_CalcAsync.run([this]()
+	{
+		MT_CALC();
+	});
+}
+
+void CDetailManager::WaitForCalc()
+{
+	m_CalcAsync.wait();
+}
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -346,6 +359,7 @@ void CDetailManager::Render	()
 
 	// MT
 	//MT_SYNC					();
+	WaitForCalc();
 
 	RDEVICE.Statistic->RenderDUMP_DT_Render.Begin	();
 	

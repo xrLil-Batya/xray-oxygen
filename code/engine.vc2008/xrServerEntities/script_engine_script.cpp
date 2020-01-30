@@ -67,7 +67,8 @@ void Lua_CrashGame()
 void Lua_Object_Info()
 {
     CScriptEngine& scriptEngine = ai().script_engine();
-    scriptEngine.LogVariable(scriptEngine.lua(), "[lua_object_info]", 1, true, 1);
+	string4096 DummyOut;
+    scriptEngine.LogVariable(scriptEngine.lua(), "[lua_object_info]", 1, true, DummyOut, 1);
     scriptEngine.ClearDumpedObjects();
 }
 

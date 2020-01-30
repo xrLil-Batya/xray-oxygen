@@ -294,16 +294,7 @@ void CUIMainIngameWnd::RenderQuickInfos()
 	LPCSTR actor_action					= pActor->GetDefaultActionForObject();
 	UIStaticQuickHelp->Show				(NULL!=actor_action);
 
-	// подсказка для костра
-	static CZoneCampfire* pZone = nullptr;
-	if (pZone != pActor->CapmfireWeLookingAt())
-	{
-		UIStaticQuickHelp->SetTextST(actor_action);
-		UIStaticQuickHelp->ResetColorAnimation();
-		pZone = pActor->CapmfireWeLookingAt();
-	}
-
-	if(NULL!=actor_action)
+	if(actor_action != nullptr)
 	{
 		if(stricmp(actor_action,UIStaticQuickHelp->GetText()))
 			UIStaticQuickHelp->SetTextST				(actor_action);
@@ -579,14 +570,21 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		pStatic->Show(bShow);
 		if (bShow)
 		{
-			if (Koef < DefKoef1)
+			if (Koef > DefKoef1)
+			{
 				pStatic->InitTexture(Sections[0].c_str());
-			else if (Koef < DefKoef2)
+			}
+			else if (Koef > DefKoef2)
+			{
 				pStatic->InitTexture(Sections[1].c_str());
+			}
 			else
+			{
 				pStatic->InitTexture(Sections[2].c_str());
+			}
 		}
 	};
+
 	auto MakeAnmIcon = [this, &flags](bool bShow, CUIStatic * pStatic, float Koef, float DefKoef1, float DefKoef2, const shared_str Sections[6])
 	{
 		pStatic->Show(bShow);
@@ -660,7 +658,6 @@ void CUIMainIngameWnd::UpdateMainIndicators()
     }
 
 	// Armor broken icon
-	m_ind_outfit_broken->Show(false);
 	CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
 	if (pOutfit)
 	{
@@ -670,7 +667,11 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 			"ui_inGame2_circle_Armorbroken_green", "ui_inGame2_circle_Armorbroken_yellow", "ui_inGame2_circle_Armorbroken_red"
 		};
 		MakeIcon(condition < 0.75f, m_ind_outfit_broken, condition, 0.5f, 0.25f, Sects);
-	} m_ind_outfit_broken->Show(false);
+	}
+	else
+	{
+		m_ind_outfit_broken->Show(false);
+	}
 
 	// Helmet broken icon
 	CHelmet* pHelmet = smart_cast<CHelmet*>(pActor->inventory().ItemFromSlot(HELMET_SLOT));

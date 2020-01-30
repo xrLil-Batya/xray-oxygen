@@ -528,7 +528,8 @@ void CBaseMonster::ChangeTeam(int team, int squad, int group)
 
 #ifdef DEBUG
 	if (!g_Alive()) {
-		ai().script_engine().dump_state	();
+		string4096 DummyInfo;
+		ai().script_engine().dump_state	(DummyInfo);
 		VERIFY2								(g_Alive(),"you are trying to change team of a dead entity");
 	}
 #endif // DEBUG

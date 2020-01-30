@@ -320,7 +320,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
                 FailCompileWithReason();
                 return;
             }
-            ExpressionBody.push_back(Lexema("+", OPERATOR, UI_ADD, FunctionStackDepth, FunctionStack.top()));
+            ExpressionBody.emplace_back(Lexema("+", OPERATOR, UI_ADD, FunctionStackDepth, FunctionStack.top()));
             break;
         case '-':
             DeclareVariableOrConstantIfNeccesseryFunc();
@@ -329,7 +329,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
                 FailCompileWithReason();
                 return;
             }
-            ExpressionBody.push_back(Lexema("-", OPERATOR, UI_SUBTRACT, FunctionStackDepth, FunctionStack.top()));
+            ExpressionBody.emplace_back(Lexema("-", OPERATOR, UI_SUBTRACT, FunctionStackDepth, FunctionStack.top()));
             break;
         case '/':
             DeclareVariableOrConstantIfNeccesseryFunc();
@@ -338,7 +338,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
                 FailCompileWithReason();
                 return;
             }
-            ExpressionBody.push_back(Lexema("/", OPERATOR, UI_DIVIDE, FunctionStackDepth, FunctionStack.top()));
+            ExpressionBody.emplace_back(Lexema("/", OPERATOR, UI_DIVIDE, FunctionStackDepth, FunctionStack.top()));
             break;
         case '*':
             DeclareVariableOrConstantIfNeccesseryFunc();
@@ -347,7 +347,7 @@ void CExpression::CompileExpression(xr_string& ExpressionStr)
                 FailCompileWithReason();
                 return;
             }
-            ExpressionBody.push_back(Lexema("*", OPERATOR, UI_MULTIPLE, FunctionStackDepth, FunctionStack.top()));
+            ExpressionBody.emplace_back(Lexema("*", OPERATOR, UI_MULTIPLE, FunctionStackDepth, FunctionStack.top()));
             break;
         case '"':
             WordAccumulator.push_back(ch);

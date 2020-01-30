@@ -92,7 +92,11 @@ void SpectreEngineClient::Shutdown()
 
 DWORD SpectreEngineClient::CreateProxyObject(DLL_Pure* pObject)
 {
-	return EngineLibAPI->CreateProxyObject(pObject);
+	if (EngineLibAPI != nullptr)
+	{
+		return EngineLibAPI->CreateProxyObject(pObject);
+	}
+	return 0;
 }
 
 void SpectreEngineClient::DestroyProxyObject(DLL_Pure* pObject)

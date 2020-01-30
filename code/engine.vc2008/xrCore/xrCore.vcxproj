@@ -375,7 +375,7 @@ start GitParser\GitParser.exe</Command>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <AdditionalLibraryDirectories>$(xrLib)..\Release\;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLib)..\Release\;$(xrSDKLib)</AdditionalLibraryDirectories>
       <ImportLibrary>$(xrLib)..\Release\$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>lzo.lib;dbghelp.lib;tbb.lib;tbbmalloc.lib;mimalloc-static.lib;libittnotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>

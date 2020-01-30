@@ -57,6 +57,9 @@ void* xrMemory::mem_alloc(size_t size)
 	}
 
 	Profiling.EndAlloc(ptr, size);
+
+	R_ASSERT_FORMAT(ptr != nullptr, "Can't allocate pointer with size: %zu", size);
+
 	return ptr;
 }
 
@@ -98,6 +101,9 @@ void* xrMemory::mem_alloc(size_t size, size_t aligment)
 	}
 
 	Profiling.EndAlloc(ptr, size);
+
+	R_ASSERT_FORMAT(ptr != nullptr, "Can't allocate pointer with size: %zu", size);
+
 	return ptr;
 }
 
@@ -202,6 +208,8 @@ void* xrMemory::mem_realloc(void* P, size_t size)
 	}
 
 	Profiling.EndReAlloc(P, &ptr, size);
+
+	R_ASSERT_FORMAT(ptr != nullptr, "Can't allocate pointer with size: %zu", size);
 	return ptr;
 }
 

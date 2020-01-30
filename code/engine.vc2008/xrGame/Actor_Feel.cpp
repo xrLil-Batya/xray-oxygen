@@ -133,28 +133,6 @@ void CActor::PickupModeUpdate()
         if (CanPickItem(frustum, act_and_cam_pos, obj))
             PickupInfoDraw(obj);
     }
-
-    //#TEMP: !!!
-	m_CapmfireWeLookingAt = nullptr;
-	for (CObject* obj : feel_touch)
-	{
-		CZoneCampfire* camp = smart_cast<CZoneCampfire*>(obj);
-		if (camp)
-		{
-			Fvector dir, to;
-			camp->Center(to);
-			dir.sub(to, Device.vCameraPosition);
-			float dist = dir.magnitude();
-			float range = dir.normalize().dotproduct(Device.vCameraDirection);
-			if (dist < 1.6f && range > 0.95f)
-			{
-				m_CapmfireWeLookingAt = camp;
-				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
-
-				return;
-			}
-		}
-	}
 }
 
 #include "../xrEngine/CameraBase.h"

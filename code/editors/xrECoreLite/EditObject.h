@@ -2,7 +2,17 @@
 #include "GameMtlLib.h"
 #if !defined(_LW_PLUGIN) && !defined(NT_PLUGIN)
 #include "xrCDB/xrCDB.h"
+
+#ifdef SPECTRE
+	#pragma unmanaged
+#endif
+
 #include "xrSound/Sound.h"
+
+#ifdef SPECTRE
+#pragma managed
+#endif
+
 #endif
 #include "bone.h"
 #include "motion.h"

@@ -296,8 +296,10 @@ void CRender::reset_end()
 void CRender::OnFrame()
 {
 	ScopeStatTimer frameTimer(Device.Statistic->Engine_RenderFrame);
-	Device.seqParallel.insert(Device.seqParallel.begin(),
-		xrDelegate(BindDelegate(Details, &CDetailManager::MT_CALC)));
+	if (Details != nullptr)
+	{
+		Details->StartCalcAsync();
+	}
 
 	// MT-HOM (@front)
 	Device.seqParallel.insert(Device.seqParallel.begin(),

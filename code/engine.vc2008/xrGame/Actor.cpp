@@ -125,7 +125,6 @@ CActor::CActor() : CEntityAlive()
 	m_holder				=	nullptr;
 	m_holderID				=	u16(-1);
 
-	m_CapmfireWeLookingAt	= nullptr;
 #ifdef DEBUG
 	Device.seqRender.Add	(this,REG_PRIORITY_LOW);
 #endif

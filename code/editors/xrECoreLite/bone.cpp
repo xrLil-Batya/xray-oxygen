@@ -212,7 +212,7 @@ void CBone::CopyData(CBone* bone)
 }
 
 #include "../../engine.vc2008/xrCDB/xrCDB.h"
-#include "../../engine.vc2008/xrSound/Sound.h"
+//#include "../../engine.vc2008/xrSound/Sound.h"
 #include "GameMtlLib.h"
 #include <xrCore\FS_internal.h>
 

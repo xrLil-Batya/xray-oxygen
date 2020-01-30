@@ -115,6 +115,12 @@ public:
 	CStatTimer	TEST2;				// debug counter
 	CStatTimer	TEST3;				// debug counter
 
+	// async counters
+	CThreadSafeStatTimer	MT_TEST0;				// MT debug counter
+	CThreadSafeStatTimer	MT_TEST1;				// MT debug counter
+	CThreadSafeStatTimer	MT_TEST2;				// MT debug counter
+	CThreadSafeStatTimer	MT_TEST3;				// MT debug counter
+
 	u32 GPULoad;
 	float AvailableMem;
 	float AvailablePageFileMem;

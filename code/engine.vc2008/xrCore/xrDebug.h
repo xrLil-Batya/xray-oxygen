@@ -1,6 +1,6 @@
 #pragma once
 
-typedef	void		crashhandler		(void);
+typedef	void		crashhandler		(string4096& InOutAdditionalInfo);
 typedef	void		on_dialog			(bool before);
 
 extern XRCORE_API DWORD gMainThreadId;
@@ -19,9 +19,11 @@ private:
 public:
 	void			_initialize();
     void            _initializeAfterFS();
-	void			_destroy();
 	
 public:
+	string4096 AdditionalDebugInfo;
+
+
 	crashhandler*	get_crashhandler	()							{ return handler;	};
 	void			set_crashhandler	(crashhandler* _handler)	{ handler=_handler;	};
 

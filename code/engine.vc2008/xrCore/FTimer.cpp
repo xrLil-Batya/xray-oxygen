@@ -26,3 +26,32 @@ ScopeStatTimer::~ScopeStatTimer()
 {
 	_timer.End();
 }
+
+void CThreadSafeStatTimer::FrameStart()
+{
+	accum = 0;
+	count = 0;
+}
+
+void CThreadSafeStatTimer::FrameEnd()
+{
+	double Time = 1000.0 * double(accum) / double(CPU::qpc_freq);
+	if (Time > result) result = Time;
+	else result = 0.99 * result + 0.01 * Time;
+}
+
+ScopeThreadSafeStatTimer::ScopeThreadSafeStatTimer(CThreadSafeStatTimer& destTimer)
+	: _timer(destTimer)
+{
+	if (!g_bEnableStatGather) return;
+	_localTimer.Start();
+	_timer.count++;
+}
+
+ScopeThreadSafeStatTimer::~ScopeThreadSafeStatTimer()
+{
+	if (!g_bEnableStatGather) return;
+	u64 TotalTicks = _localTimer.GetElapsed_ticks();
+
+	_timer.accum.fetch_add(TotalTicks);
+}

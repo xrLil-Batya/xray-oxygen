@@ -155,8 +155,6 @@ void xrDebug::backend(const char* reason, const char* expression, const char *ar
 
 	gather_info(reason, expression, argument0, argument1, file, line, function, assertion_info, sizeof(assertion_info));
 
-	if (handler)
-		handler();
 
 	// free cursor from any clipping
 	ClipCursor(NULL);
@@ -171,9 +169,10 @@ void xrDebug::backend(const char* reason, const char* expression, const char *ar
 	}
 	while (PlatformUtils.ShowCursor(true) < 0);
 
+	ZeroMemory(AdditionalDebugInfo, sizeof(AdditionalDebugInfo));
 	if (crashhandler * handlerFuncPtr = Debug.get_crashhandler())
 	{
-		handlerFuncPtr();
+		handlerFuncPtr(AdditionalDebugInfo);
 	}
 	if (!IsDebuggerPresent())
 	{
@@ -389,6 +388,11 @@ bool xrDebug::ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanConti
 #endif
 
 	WriteToReportMacro("Crashed thread id '%u'\r\n", GetCurrentThreadId());
+	u32 lenDebugInfo = xr_strlen(AdditionalDebugInfo);
+	if (lenDebugInfo > 0)
+	{
+		WriteToReportMacro("Additional info: \r\n%s\r\n", AdditionalDebugInfo);
+	}
 	WriteToReportMacro("Crash thread stack\r\n");
 
 	auto WriteStackInfoToReportLambda = [&WriteCursor](void** pStack, u16 framesNum)
@@ -984,13 +988,14 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
 LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
 	Log("[FAIL] Type: UNHANDLED EXCEPTION");
-	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 2.0f");
+	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 2.1f");
 	Log("[FAIL] Report: To https://discord.gg/NAp6ZtX");
 
 	crashhandler* pCrashHandler = Debug.get_crashhandler();
+	ZeroMemory(Debug.AdditionalDebugInfo, sizeof(Debug.AdditionalDebugInfo));
 	if (pCrashHandler != nullptr)
 	{
-		pCrashHandler();
+		pCrashHandler(Debug.AdditionalDebugInfo);
 	}
 
 	Debug.ShowCrashDialog(pExceptionInfo, false, nullptr);

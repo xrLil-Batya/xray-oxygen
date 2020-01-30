@@ -157,30 +157,6 @@ void IGame_Persistent::OnFrame()
 		Environment().OnFrame();
 		SpectreCallback::shedule_update->Invoke(SpectreObjectId, Device.dwTimeDelta);
 	}
-
-	Device.Statistic->Particles_starting = (u32)ps_needtoplay.size();
-	Device.Statistic->Particles_active   = (u32)ps_active.size();
-	Device.Statistic->Particles_destroy  = (u32)ps_destroy.size();
-
-	// Play req particle systems
-	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.Begin();
-	while (!ps_needtoplay.empty())
-	{
-		CPS_Instance* pInstance = ps_needtoplay.back();
-		ps_needtoplay.pop_back();
-		pInstance->Play(false);
-	}
-	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.End();
-
-	// Destroy inactive particle systems
-	Device.Statistic->Engine_PersistanceFrame_ParticleDestroy.Begin();
-	while (!ps_destroy.empty())
-	{
-		CPS_Instance* pInstance = ps_destroy.back();
-		ps_destroy.pop_back();
-		pInstance->PSI_internal_delete();
-	}
-	Device.Statistic->Engine_PersistanceFrame_ParticleDestroy.End();
 }
 
 void IGame_Persistent::destroy_particles		(const bool &all_particles)
@@ -219,6 +195,33 @@ void IGame_Persistent::destroy_particles		(const bool &all_particles)
 
 	VERIFY(ps_needtoplay.empty() && ps_destroy.empty() && (!all_particles || ps_active.empty()));
 #endif
+}
+
+void IGame_Persistent::UpdateParticles()
+{
+	Device.Statistic->Particles_starting = (u32)ps_needtoplay.size();
+	Device.Statistic->Particles_active = (u32)ps_active.size();
+	Device.Statistic->Particles_destroy = (u32)ps_destroy.size();
+
+	// Play req particle systems
+	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.Begin();
+	while (!ps_needtoplay.empty())
+	{
+		CPS_Instance* pInstance = ps_needtoplay.back();
+		ps_needtoplay.pop_back();
+		pInstance->Play(false);
+	}
+	Device.Statistic->Engine_PersistanceFrame_ParticlePlay.End();
+
+	// Destroy inactive particle systems
+	Device.Statistic->Engine_PersistanceFrame_ParticleDestroy.Begin();
+	while (!ps_destroy.empty())
+	{
+		CPS_Instance* pInstance = ps_destroy.back();
+		ps_destroy.pop_back();
+		pInstance->PSI_internal_delete();
+	}
+	Device.Statistic->Engine_PersistanceFrame_ParticleDestroy.End();
 }
 
 void IGame_Persistent::OnAssetsChanged()

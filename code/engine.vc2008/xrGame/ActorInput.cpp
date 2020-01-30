@@ -458,14 +458,11 @@ void CActor::ActorUse()
 			}
 		}
 	}
-	// переключение костра при юзании
-	if (m_CapmfireWeLookingAt)
-	{
-		m_CapmfireWeLookingAt->is_on() ? m_CapmfireWeLookingAt->turn_off_script() : m_CapmfireWeLookingAt->turn_on_script();
-		return;
-	}
 
-	m_bPickupMode = true;
+	if (!IsTalking())
+	{
+		m_bPickupMode = true;
+	}
 }
 
 BOOL CActor::HUDview() const
@@ -571,7 +568,7 @@ void CActor::set_input_external_handler(CActorInputHandler *handler)
 
 	// release fire button
 	if (handler)
-		IR_OnKeyboardRelease(get_action_dik(kWPN_FIRE));
+		IR_OnKeyboardRelease(kWPN_FIRE);
 
 	// set handler
 	m_input_external_handler = handler;
