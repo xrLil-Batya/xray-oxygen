@@ -1,7 +1,7 @@
 # Oxygen Engine
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/024d7b2b5c6745eba5d00301bc250f2c)](https://app.codacy.com/app/sv3nk/xray-oxygen?utm_source=github.com&utm_medium=referral&utm_content=xrOxygen/xray-oxygen&utm_campaign=Badge_Grade_Settings) [![Build status](https://ci.appveyor.com/api/projects/status/dt2q9gjuxi2q9i6v/branch/master?svg=true)](https://ci.appveyor.com/project/xrOxygen/xray-oxygen/branch/master)
-![Logo](https://sun9-45.userapi.com/c850020/v850020464/97b37/sxHUPvLdvjQ.jpg)
+![Logo](https://media.discordapp.net/attachments/400055831468703746/672762258023120906/unknown.png?width=960&height=259)
 
 >  Based on [Im-Dex X-Ray Engine 1.7](https://github.com/Im-dex/xray-162).
 ```lua
