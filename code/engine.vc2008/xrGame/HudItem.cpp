@@ -242,15 +242,16 @@ void CHudItem::on_a_hud_attach()
 u32 CHudItem::PlayHUDMotion(const shared_str& M, BOOL bMixIn, CHudItem*  W, u32 state)
 {
 	u32 anim_time = PlayHUDMotion_noCB(M, bMixIn);
-	if (anim_time>0)
+	
+	m_bStopAtEndAnimIsRunning = anim_time > 0;
+	
+	if (m_bStopAtEndAnimIsRunning)
 	{
-		m_bStopAtEndAnimIsRunning = true;
 		m_dwMotionStartTm = Device.dwTimeGlobal;
 		m_dwMotionCurrTm = m_dwMotionStartTm;
 		m_dwMotionEndTm = m_dwMotionStartTm + anim_time;
 		m_startedMotionState = state;
 	}
-	else m_bStopAtEndAnimIsRunning = false;
 
 	return anim_time;
 }

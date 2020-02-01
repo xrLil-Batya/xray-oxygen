@@ -87,7 +87,6 @@ void CFracture::CheckSpecParams(u32 spec_params)
 
 	if ((spec_params & ASP_STAND_SCARED) == ASP_STAND_SCARED) {
 		anim().SetCurAnim(eAnimLookAround);
-		return;
 	}
 }
 

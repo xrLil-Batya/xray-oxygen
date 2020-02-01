@@ -38,20 +38,6 @@ namespace HUDTargetDetails
 	constexpr float HideInfoSpeed = 10.0f;
 }
 
-
-IC	float	recon_mindist	()		{
-	return 2.f;
-}
-IC	float	recon_maxdist	()		{
-	return 50.f;
-}
-IC	float	recon_minspeed	()		{
-	return 0.5f;
-}
-IC	float	recon_maxspeed	()		{
-	return 10.f;
-}
-
 CHUDTarget::CHUDTarget	()
 {    
 	fuzzyShowInfo		= 0.f;
@@ -67,7 +53,6 @@ CHUDTarget::CHUDTarget	()
 CHUDTarget::~CHUDTarget	()
 {
 }
-
 
 void CHUDTarget::Load		()
 {
@@ -127,13 +112,10 @@ void CHUDTarget::CursorOnFrame ()
 
 }
 
-extern ENGINE_API BOOL g_bRendering; 
 void CHUDTarget::Render()
 {
 	if(!psHUD_Flags.is(HUD_CROSSHAIR|HUD_CROSSHAIR_RT|HUD_CROSSHAIR_RT2))
 		return;
-
-	VERIFY				(g_bRendering);
 
 	CObject*	O		= Level().CurrentEntity();
 	if (!O)			return;
@@ -209,16 +191,6 @@ void CHUDTarget::Render()
 
 					fuzzyShowInfo += HUDTargetDetails::ShowInfoSpeed*Device.fTimeDelta;
 				}
-				//else 
-				//	if (l_pI && our_inv_owner && PP.RQ.range < 2.0f*2.0f)
-				//	{
-				//		if (fuzzyShowInfo>0.5f && l_pI->NameItem())
-				//		{
-				//			F->SetColor	(subst_alpha(C,u8(iFloor(255.f*(fuzzyShowInfo-0.5f)*2.f))));
-				//			F->OutNext	("%s",l_pI->NameItem());
-				//		}
-				//		fuzzyShowInfo += HUDTargetDetails::ShowInfoSpeed *Device.fTimeDelta;
-				//	}
 			}
 
 		}

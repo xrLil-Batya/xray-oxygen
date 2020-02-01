@@ -1188,7 +1188,6 @@
     <ClInclude Include="ai\Monsters\Fracture\fracture_state_manager.h" />
     <ClInclude Include="ai\Monsters\Snork\snork.h" />
     <ClInclude Include="ai\Monsters\Snork\snork_state_manager.h" />
-    <ClInclude Include="ai\Monsters\Snork\snork_jump.h" />
     <ClInclude Include="ai\Monsters\Controller\controller.h" />
     <ClInclude Include="ai\Monsters\Controller\controller_state_manager.h" />
     <ClInclude Include="ai\Monsters\Controller\controller_state_attack.h" />
@@ -2120,7 +2119,6 @@
     <ClCompile Include="ai\Monsters\Fracture\fracture_script.cpp" />
     <ClCompile Include="ai\Monsters\Snork\snork.cpp" />
     <ClCompile Include="ai\Monsters\Snork\snork_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Snork\snork_jump.cpp" />
     <ClCompile Include="ai\Monsters\Snork\snork_script.cpp" />
     <ClCompile Include="ai\Monsters\Controller\controller.cpp" />
     <ClCompile Include="ai\Monsters\Controller\controller_state_manager.cpp" />
