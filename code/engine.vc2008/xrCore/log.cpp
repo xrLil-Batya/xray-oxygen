@@ -154,7 +154,7 @@ void xrLogger::InternalOpenLogFile()
 	string256 CurrentTime;
 	
 	Time time;
-	xr_strconcat(CurrentDate, time.GetDayString().c_str(), "." , time.GetMonthString().c_str(), "." , time.GetDayString().c_str());
+	xr_strconcat(CurrentDate, time.GetDayString().c_str(), "." , time.GetMonthString().c_str(), "." , time.GetYearString().c_str());
 	xr_strconcat(CurrentTime, time.GetHoursString().c_str(), ".", time.GetMinutesString().c_str(), ".", time.GetSecondsString().c_str());
 
 	xr_strconcat(logFileName, "[", CurrentDate, " " , CurrentTime, "]", ".log");
