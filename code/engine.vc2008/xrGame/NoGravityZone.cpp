@@ -1,52 +1,52 @@
 #include "stdafx.h"
 #include "nogravityzone.h"
-#include "../xrphysics/physicsshell.h"
+#include "../xrPhysics/physicsshell.h"
 #include "entity_alive.h"
 #include "PHMovementControl.h"
-//#include "PhWorld.h"
 #include "CharacterPhysicsSupport.h"
-//extern CPHWorld	*ph_world;
-#include "../xrphysics/IPHWorld.h"
+#include "../xrPhysics/IPHWorld.h"
+
 void CNoGravityZone::enter_Zone(SZoneObjectInfo& io)
 {
 	inherited::enter_Zone(io);
 	switchGravity(io,false);
-
 }
+
 void CNoGravityZone::exit_Zone(SZoneObjectInfo& io)
 {
 	switchGravity(io,true);
 	inherited::exit_Zone(io);
-	
 }
+
 void CNoGravityZone::UpdateWorkload(u32 dt)
 {
     auto i=m_ObjectInfoMap.begin(),e=m_ObjectInfoMap.end();
 	for(;e!=i;i++)switchGravity(*i,false);
 }
+
 void CNoGravityZone::switchGravity(SZoneObjectInfo& io, bool val)
 {
-	if(io.object->getDestroy()) return;
+	if (io.object->getDestroy()) return;
+	
 	CPhysicsShellHolder* sh= smart_cast<CPhysicsShellHolder*>(io.object);
-	if(!sh)return;
+	if (!sh) return;
+	
 	IPhysicsShellEx* shell=sh->PPhysicsShell();
-	if(shell&&shell->isActive())
+	
+	if (shell && shell->isActive())
 	{
 		shell->set_ApplyByGravity(val);
 		if(!val&&shell->get_ApplyByGravity())
 		{
 			IPhysicsElementEx* e=shell->get_ElementByStoreOrder(u16(Random.randI(0,shell->get_ElementsNumber())));
-			if(e->isActive()){
+			if(e->isActive())
+			{
 				e->applyImpulseTrace(Fvector().random_point(e->getRadius()),Fvector().random_dir(),shell->getMass()*physics_world()->Gravity()*fixed_step,e->m_SelfID);
-
 			}
 
 		}
-		//shell->SetAirResistance(0.f,0.f);
-		//shell->set_DynamicScales(1.f);
-		return;
 	}
-	if(!io.nonalive_object)
+	else if (!io.nonalive_object)
 	{
 		CEntityAlive* ea=smart_cast<CEntityAlive*>(io.object);
 		CPHMovementControl*mc=ea->character_physics_support()->movement();
@@ -57,7 +57,6 @@ void CNoGravityZone::switchGravity(SZoneObjectInfo& io, bool val)
 			Fvector gn;
 			mc->GroundNormal(gn);
 			mc->ApplyImpulse(gn,mc->GetMass()*physics_world()->Gravity()*fixed_step);
-			
 		}
 	}
 }

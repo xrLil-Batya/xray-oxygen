@@ -326,7 +326,8 @@ public:
 	CInventoryOwner*		PersonWeLookingAt			() {return m_pPersonWeLookingAt;}
 	LPCSTR					GetDefaultActionForObject	() {return *m_sDefaultObjAction;}
 	CProjector*				ProjWeLookingAt				() {return m_pProjWeLookingAt;}
-
+	CZoneCampfire*			CapmfireWeLookingAt			() {return m_CapmfireWeLookingAt;}
+	
 protected:
 	CUsableScriptObject*	m_pUsableObject;
 	// Person we're looking at
@@ -335,7 +336,8 @@ protected:
 	CGameObject*			m_pObjectWeLookingAt;
 	CInventoryBox*			m_pInvBoxWeLookingAt;
 	CProjector*				m_pProjWeLookingAt;
-
+	CZoneCampfire*			m_CapmfireWeLookingAt;
+	
 	// Tip for action for object we're looking at
 	shared_str				m_sDefaultObjAction;
 	shared_str				m_sCharacterUseAction;
@@ -553,10 +555,8 @@ protected:
 		Fvector							m_AutoPickUp_AABB_Offset;
 
 public:
-		void							SetWeaponHideState				(u16 State, bool bSet);
-		void							SetCantRunState					(bool bSet);
-private:
-	virtual void						HideAllWeapons					(bool v) { SetWeaponHideState(INV_STATE_BLOCK_ALL,v); }	
+			void						SetCantRunState					(bool bSet);
+	virtual void						HideAllWeapons					(bool v);
 private:
 	CActorCondition						*m_entity_condition;
 

@@ -967,7 +967,7 @@ void show_indicators();
 CActorDeathEffector::CActorDeathEffector	(CActorCondition* parent, LPCSTR sect)	// -((
 :m_pParent(parent)
 {
-	Actor()->SetWeaponHideState(INV_STATE_BLOCK_ALL,true);
+	Actor()->HideAllWeapons(true);
 	hide_indicators			();
 
 	AddEffector				(Actor(), effActorDeath, sect);

@@ -87,7 +87,7 @@
     <ClInclude Include="API\MapManager.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="RelationShip.h">
+    <ClInclude Include="API\RelationShip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -158,7 +158,7 @@
     <ClCompile Include="API\MapManager.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
-    <ClCompile Include="RelationShip.cpp">
+    <ClCompile Include="API\RelationShip.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>

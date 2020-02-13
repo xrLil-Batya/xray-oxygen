@@ -70,15 +70,7 @@ void CAI_Trader::reload	(LPCSTR section)
 
 bool CAI_Trader::bfAssignSound(CScriptEntityAction *tpEntityAction)
 {
-	if (!CScriptEntity::bfAssignSound(tpEntityAction)) {
-		//m_cur_head_anim_type	= MonsterSpace::eHeadAnimNone;
-		return					(false);
-	}
-
-	//CScriptSoundAction	&l_tAction	= tpEntityAction->m_tSoundAction;
-	//m_cur_head_anim_type = l_tAction.m_tHeadAnimType;
-
-	return				(true);
+	return CScriptEntity::bfAssignSound(tpEntityAction);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -144,10 +136,7 @@ BOOL CAI_Trader::net_Spawn			(CSE_Abstract* DC)
 
 void CAI_Trader::net_Export		(NET_Packet& P)
 {
-	R_ASSERT						(Local());
-
-	//	P.w_float						(inventory().TotalWeight());
-	//	P.w_u32							(m_dwMoney);
+	// Is need. Don't call net_Export for parent class
 }
 
 void CAI_Trader::OnEvent		(NET_Packet& P, u16 type)

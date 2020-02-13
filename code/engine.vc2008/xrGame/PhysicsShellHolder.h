@@ -128,7 +128,7 @@ private://IPhysicsShellHolder
 	virtual	bool										IsInventoryItem						()						;
 	virtual	bool										IsActor								()						;
 	virtual bool										IsStalker							()						;
-	virtual	void										HideAllWeapons						( bool v )				;//(SetWeaponHideState(INV_STATE_BLOCK_ALL,true))
+	virtual	void										HideAllWeapons						( bool v )				;
 	virtual	void										MovementCollisionEnable				( bool enable )			;
 	virtual CPHSoundPlayer*								ObjectPhSoundPlayer() { if (m_pPhysicsShell) return ph_sound_player(); else return nullptr; }
 	virtual	ICollisionDamageReceiver* 					ObjectPhCollisionDamageReceiver		()						;

@@ -173,10 +173,11 @@ CObjectActionReload::CObjectActionReload	(CInventoryItem *item, CAI_Stalker *own
 
 void CObjectActionReload::initialize		()
 {
-	inherited::initialize		();
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	inherited::initialize();
+	
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	
 	if (object().infinite_ammo()) {
 		CWeapon*				weapon = smart_cast<CWeapon*>(&m_item->object());
 		VERIFY					(weapon);
@@ -190,9 +191,8 @@ void CObjectActionReload::execute			()
 {
 	inherited::execute			();
 	
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 	
 	CWeapon						*weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
 	VERIFY						(weapon);
@@ -226,9 +226,8 @@ void CObjectActionFire::initialize		()
 {
 	inherited::inherited::initialize	();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 
 	if (!m_object->can_kill_member())
 		object().inventory().Action	(kWPN_FIRE,	CMD_START);
@@ -240,9 +239,8 @@ void CObjectActionFire::execute			()
 {
 	inherited::execute					();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 
 	if (!m_object->can_kill_member()) {
 		CWeapon					*weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
@@ -270,60 +268,52 @@ CObjectActionFireNoReload::CObjectActionFireNoReload	(CInventoryItem *item, CAI_
 {
 }
 
-void CObjectActionFireNoReload::initialize		()
+void CObjectActionFireNoReload::initialize()
 {
-	inherited::inherited::initialize	();
+	inherited::inherited::initialize();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 
-	if (!m_object->can_kill_member())
-		object().inventory().Action	(kWPN_FIRE,	CMD_START);
-	else
-		object().inventory().Action	(kWPN_FIRE,	CMD_STOP);
+	object().inventory().Action(kWPN_FIRE, !m_object->can_kill_member() ? CMD_START : CMD_STOP);
 
-	CWeapon						*weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
-	if (weapon && (weapon->GetState() == CWeapon::eFire))
-		m_fired					= true;
-	else
-		m_fired					= false;
+	CWeapon *pWeapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
+	m_fired = pWeapon && (pWeapon->GetState() == CWeapon::eFire);
 }
 
 void CObjectActionFireNoReload::execute	()
 {
-	inherited::execute					();
+	inherited::execute();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 
-	if (m_fired) {
+	if (m_fired) 
+	{
 		if (!m_object->can_kill_member())
 			return;
 
 		object().inventory().Action	(kWPN_FIRE,	CMD_STOP);
-//		m_fired					= false;
 		return;
 	}
 
 	if (m_object->can_kill_member())
 		return;
 
-	CWeapon						*weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
+	CWeapon *weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
 	if (!weapon || (weapon->GetState() != CWeapon::eFire))
 		object().inventory().Action	(kWPN_FIRE,	CMD_START);
 
 	if (weapon && (weapon->GetState() == CWeapon::eFire))
-		m_fired					= true;
+		m_fired = true;
 }
 
 void CObjectActionFireNoReload::finalize()
 {
-	inherited::finalize					();
+	inherited::finalize();
 
-	object().inventory().Action	(kWPN_FIRE,	CMD_STOP);
-	m_storage->set_property		(m_type, false);
+	object().inventory().Action(kWPN_FIRE, CMD_STOP);
+	m_storage->set_property(m_type, false);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -333,104 +323,68 @@ void CObjectActionFireNoReload::finalize()
 CObjectActionStrapping::CObjectActionStrapping	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name) :
 	inherited		(item,owner,storage,action_name)
 {
-	m_callback_removed			= true;
+	m_callback_removed = true;
 }
 
 CObjectActionStrapping::~CObjectActionStrapping	()
 {
-	if (m_callback_removed) {
-		VERIFY					(
-			!object().animation().torso().callback(
-				CStalkerAnimationPair::CALLBACK_ID(
-					this,
-					&CObjectActionStrapping::on_animation_end
-				)
-			)
-		);
+	if (m_callback_removed) 
+	{
+		VERIFY(!object().animation().torso().callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrapping::on_animation_end)));
 		return;
 	}
 
-	object().animation().torso().remove_callback(
-		CStalkerAnimationPair::CALLBACK_ID(
-			this,
-			&CObjectActionStrapping::on_animation_end
-		)
-	);
+	object().animation().torso().remove_callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrapping::on_animation_end));
 }
 
-void CObjectActionStrapping::on_animation_end	()
+void CObjectActionStrapping::on_animation_end()
 {
-	VERIFY						(!m_callback_removed);
+	VERIFY(!m_callback_removed);
 
-	m_storage->set_property		(ObjectHandlerSpace::eWorldPropertyStrapped,true);
+	m_storage->set_property(ObjectHandlerSpace::eWorldPropertyStrapped,true);
+	object().animation().torso().remove_callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrapping::on_animation_end));
 
-	object().animation().torso().remove_callback(
-		CStalkerAnimationPair::CALLBACK_ID(
-			this,
-			&CObjectActionStrapping::on_animation_end
-		)
-	);
-
-	m_callback_removed			= true;
+	m_callback_removed = true;
 }
 
 void CObjectActionStrapping::initialize			()
 {
 	inherited::initialize				();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 
-	m_callback_removed			= false;
+	m_callback_removed = false;
 
-	if ( object().inventory().ActiveItem() )
-		stop_hiding_operation_if_any	( );
+	if ( object().inventory().ActiveItem())
+		stop_hiding_operation_if_any();
 
-	m_storage->set_property		(ObjectHandlerSpace::eWorldPropertyStrapped2Idle,true);
-	
-	object().animation().torso().add_callback	(
-		CStalkerAnimationPair::CALLBACK_ID(
-			this,
-			&CObjectActionStrapping::on_animation_end
-		)
-	);
+	m_storage->set_property(ObjectHandlerSpace::eWorldPropertyStrapped2Idle,true);
+	object().animation().torso().add_callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrapping::on_animation_end));
 }
 
 void CObjectActionStrapping::execute			()
 {
 	inherited::execute();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 
-	prevent_weapon_state_switch_ugly	( );
+	prevent_weapon_state_switch_ugly();
 }
 
-void CObjectActionStrapping::finalize		()
+void CObjectActionStrapping::finalize()
 {
-	inherited::finalize					();
+	inherited::finalize();
 
-	if (!m_callback_removed) {
-		object().animation().torso().remove_callback	(
-			CStalkerAnimationPair::CALLBACK_ID(
-				this,
-				&CObjectActionStrapping::on_animation_end
-			)
-		);
-
-		m_callback_removed		= true;
+	if (!m_callback_removed)
+	{
+		object().animation().torso().remove_callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrapping::on_animation_end));
+		m_callback_removed = true;
 	}
-	else {
-		VERIFY					(
-			!object().animation().torso().callback(
-				CStalkerAnimationPair::CALLBACK_ID(
-					this,
-					&CObjectActionStrapping::on_animation_end
-				)
-			)
-		);
+	else 
+	{
+		VERIFY(!object().animation().torso().callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrapping::on_animation_end)));
 	}
 }
 
@@ -441,103 +395,70 @@ void CObjectActionStrapping::finalize		()
 CObjectActionStrappingToIdle::CObjectActionStrappingToIdle	(CInventoryItem *item, CAI_Stalker *owner, CPropertyStorage *storage, LPCSTR action_name) :
 	inherited		(item,owner,storage,action_name)
 {
-	m_callback_removed			= true;
+	m_callback_removed = true;
 }
 
 CObjectActionStrappingToIdle::~CObjectActionStrappingToIdle	()
 {
-	if (m_callback_removed) {
-		VERIFY					(
-			!object().animation().torso().callback(
-				CStalkerAnimationPair::CALLBACK_ID(
-					this,
-					&CObjectActionStrappingToIdle::on_animation_end
-				)
-			)
-		);
+	if (m_callback_removed) 
+	{
+		VERIFY(!object().animation().torso().callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrappingToIdle::on_animation_end)));
 		return;
 	}
 
-	object().animation().torso().remove_callback(
-		CStalkerAnimationPair::CALLBACK_ID(
-			this,
-			&CObjectActionStrappingToIdle::on_animation_end
-		)
-	);
+	object().animation().torso().remove_callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrappingToIdle::on_animation_end));
 }
 
-void CObjectActionStrappingToIdle::on_animation_end	()
+void CObjectActionStrappingToIdle::on_animation_end()
 {
-	VERIFY						(!m_callback_removed);
+	VERIFY(!m_callback_removed);
 
-	m_storage->set_property		(ObjectHandlerSpace::eWorldPropertyStrapped2Idle,false);
+	m_storage->set_property(ObjectHandlerSpace::eWorldPropertyStrapped2Idle,false);
+	object().animation().torso().remove_callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrappingToIdle::on_animation_end));
 
-	object().animation().torso().remove_callback(
-		CStalkerAnimationPair::CALLBACK_ID(
-			this,
-			&CObjectActionStrappingToIdle::on_animation_end
-		)
-	);
-
-	m_callback_removed			= true;
+	m_callback_removed = true;
 }
 
-void CObjectActionStrappingToIdle::initialize		()
+void CObjectActionStrappingToIdle::initialize()
 {
-	inherited::initialize				();
+	inherited::initialize();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 
-	if ( object().inventory().ActiveItem() )
-		stop_hiding_operation_if_any	( );
+	if ( object().inventory().ActiveItem())
+		stop_hiding_operation_if_any();
 
-	m_callback_removed			= false;
+	m_callback_removed = false;
 
-	object().animation().torso().add_callback	(
-		CStalkerAnimationPair::CALLBACK_ID(
-			this,
-			&CObjectActionStrappingToIdle::on_animation_end
-		)
-	);
+	object().animation().torso().add_callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrappingToIdle::on_animation_end));
 }
 
 void CObjectActionStrappingToIdle::execute			()
 {
 	inherited::execute();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 
-	prevent_weapon_state_switch_ugly	( );
+	prevent_weapon_state_switch_ugly();
 }
 
-void CObjectActionStrappingToIdle::finalize		()
+void CObjectActionStrappingToIdle::finalize()
 {
-	inherited::finalize					();
+	inherited::finalize();
 
-	if (!m_callback_removed) {
-		object().animation().torso().remove_callback	(
-			CStalkerAnimationPair::CALLBACK_ID(
-				this,
-				&CObjectActionStrappingToIdle::on_animation_end
-			)
-		);
-
-		m_callback_removed		= true;
+	if (!m_callback_removed) 
+	{
+		object().animation().torso().remove_callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrappingToIdle::on_animation_end));
+		m_callback_removed = true;
 	}
-	else {
-		VERIFY					(
-			!object().animation().torso().callback(
-				CStalkerAnimationPair::CALLBACK_ID(
-					this,
-					&CObjectActionStrappingToIdle::on_animation_end
-				)
-			)
-		);
+#ifdef DEBUG
+	else 
+	{
+		VERIFY(!object().animation().torso().callback(CStalkerAnimationPair::CALLBACK_ID(this, &CObjectActionStrappingToIdle::on_animation_end)));
 	}
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -919,10 +840,9 @@ void CObjectActionIdleMissile::initialize	()
 {
 	inherited::initialize();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
-
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	
 	m_storage->set_property		(
 		object().planner().uid(m_item->object().ID(),ObjectHandlerSpace::eWorldPropertyThrowStarted),
 		false
@@ -950,34 +870,20 @@ void CObjectActionThrowMissile::initialize	()
 {
 	inherited::initialize();
 
-	VERIFY						(m_item);
-	VERIFY						(object().inventory().ActiveItem());
-	VERIFY						(object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
+	VERIFY(m_item);
+	VERIFY(object().inventory().ActiveItem() || object().inventory().ActiveItem()->object().ID() == m_item->object().ID());
 
 	object().inventory().Action	(kWPN_ZOOM,	CMD_START);
 
-	float						distance = object().throw_target().distance_to(object().Position());
-	if (distance > 45) {
-		set_inertia_time		(2500);
-		return;
-	}
-
-	if (distance > 30) {
-		set_inertia_time		(2000);
-		return;
-	}
-
-	if (distance > 15) {
-		set_inertia_time		(1500);
-		return;
-	}
-
-	set_inertia_time			(1000);
+	// FX: distance - 1 -> old code: if (distance > 15/30/45) 
+	float distance = object().throw_target().distance_to(object().Position()) - 1;
+	
+	set_inertia_time(500 * u32(distance / 15) + 1000);
 }
 
 void CObjectActionThrowMissile::execute		()
 {
-	inherited::execute		();
+	inherited::execute();
 	if (completed())
 		object().inventory().Action	(kWPN_ZOOM,CMD_STOP);
 }

@@ -730,8 +730,10 @@ PIItem CInventory::Get(const u16 id, bool bSearchRuck) const
 PIItem CInventory::GetAny(LPCSTR name) const
 {
 	PIItem itm = Get(name, false);
+	
 	if(!itm)
 		itm = Get(name, true);
+	
 	return itm;
 }
 
@@ -739,11 +741,9 @@ PIItem CInventory::item(CLASS_ID cls_id) const
 {
 	const TIItemContainer &list = m_all;
 
-	for(TIItemContainer::const_iterator it = list.begin(); list.end() != it; ++it) 
+	for (PIItem pIItem : list) 
 	{
-		PIItem pIItem = *it;
-		if(pIItem->object().CLS_ID == cls_id && 
-			pIItem->Useful()) 
+		if(pIItem->object().CLS_ID == cls_id && pIItem->Useful()) 
 			return pIItem;
 	}
 	return nullptr;
@@ -751,10 +751,13 @@ PIItem CInventory::item(CLASS_ID cls_id) const
 
 float CInventory::TotalWeight() const
 {
-	VERIFY(m_fTotalWeight>=0.f);
-	return m_fTotalWeight;
+	VERIFY(m_fTotalWeight >= 0.f);
+	
+	if (m_fTotalWeight >= 0.f)
+		return m_fTotalWeight;
+	else 
+		return 0.f;
 }
-
 
 float CInventory::CalcTotalWeight()
 {
@@ -857,6 +860,7 @@ bool CInventory::Eat(PIItem pIItem, bool bIgnoreParent)
 	return			true;
 }
 
+// Item is located in the slot 
 bool CInventory::InSlot(const CInventoryItem* pIItem) const
 {
 	if(pIItem->CurrPlace() != eItemPlaceSlot)	return false;
@@ -864,19 +868,22 @@ bool CInventory::InSlot(const CInventoryItem* pIItem) const
 	return true;
 }
 
+// Item is located in the belt 
 bool CInventory::InBelt(const CInventoryItem* pIItem) const
 {
 	if(Get(pIItem->object().ID(), false)) return true;
 	return false;
 }
 
+// Item is located in the ruck 
 bool CInventory::InRuck(const CInventoryItem* pIItem) const
 {
 	if(Get(pIItem->object().ID(), true)) return true;
 	return false;
 }
 
-
+// Can move item to Slot 
+// Only check, no move 
 bool CInventory::CanPutInSlot(PIItem pIItem, u16 slot_id) const
 {
 	if(!m_bSlotsUseful) return false;
@@ -884,7 +891,7 @@ bool CInventory::CanPutInSlot(PIItem pIItem, u16 slot_id) const
 	if( !GetOwner()->CanPutInSlot(pIItem, slot_id ) ) return false;
 
 
-	if(slot_id==HELMET_SLOT)
+	if(slot_id == HELMET_SLOT)
 	{
 		CCustomOutfit* pOutfit = m_pOwner->GetOutfit();
 		if(pOutfit && !pOutfit->bIsHelmetAvaliable)
@@ -897,8 +904,9 @@ bool CInventory::CanPutInSlot(PIItem pIItem, u16 slot_id) const
 	
 	return false;
 }
-//проверяет можем ли поместить вещь на пояс,
-//при этом реально ничего не меняется
+
+// Can move item to Belt 
+// Only check, no move 
 bool CInventory::CanPutInBelt(PIItem pIItem)
 {
 	if(InBelt(pIItem))					return false;
@@ -908,17 +916,18 @@ bool CInventory::CanPutInBelt(PIItem pIItem)
 
 	return FreeRoom_inBelt(m_belt, pIItem, BeltWidth(), 1);
 }
-//проверяет можем ли поместить вещь в рюкзак,
-//при этом реально ничего не меняется
+
+// Can move item to Ruck 
+// Only check, no move 
 bool CInventory::CanPutInRuck(PIItem pIItem) const
 {
 	if(InRuck(pIItem)) return false;
 	return true;
 }
 
-u32	CInventory::dwfGetObjectCount()
+u32	CInventory::dwfGetObjectCount() const
 {
-	return		u32(m_all.size());
+	return u32(m_all.size());
 }
 
 CInventoryItem	*CInventory::tpfGetObjectByIndex(int iIndex)
@@ -1072,7 +1081,7 @@ void CInventory::Items_SetCurrentEntityHud(bool current_entity)
 	}
 };
 
-//call this only via Actor()->SetWeaponHideState()
+//call this only via Actor()->HideAllWeapons()
 void CInventory::SetSlotsBlocked(u16 mask, bool bBlock)
 {
 	for(u16 i = FirstSlot(), ie = LastSlot(); i <= ie; ++i)

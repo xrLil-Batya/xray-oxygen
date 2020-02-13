@@ -54,7 +54,7 @@ void CActor::attach_Vehicle(CHolderCustom* vehicle)
 	m_holder = vehicle;
 	m_holderID = car->ID();
 
-	SetWeaponHideState(INV_STATE_BLOCK_ALL, true);
+	HideAllWeapons(true);
 
 	CStepManager::on_animation_start(MotionID(), nullptr);
 }
@@ -89,7 +89,7 @@ void CActor::detach_Vehicle()
 	V->PlayCycle		(m_anims->m_normal.m_torso_idle);
 	m_holderID=u16(-1);
 
-	SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
+	HideAllWeapons(false);
 }
 
 bool CActor::use_Vehicle(CHolderCustom* object)

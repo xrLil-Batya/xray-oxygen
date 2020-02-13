@@ -78,7 +78,7 @@ string32 ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
 CActor::CActor() : CEntityAlive()
 {
 	g_actor = this;
-
+	
 	game_news_registry = xr_new< CGameNewsRegistryWrapper >();
 	// Cameras
 	cameras[eacFirstEye] = xr_new<CCameraFirstEye>(this, CCameraBase::flKeepPitch);
@@ -131,7 +131,8 @@ CActor::CActor() : CEntityAlive()
 
 	//разрешить использование пояса в inventory
 	inventory().SetBeltUseful(true);
-
+	
+	m_CapmfireWeLookingAt	= nullptr;
 	m_pPersonWeLookingAt	= nullptr;
 	m_pProjWeLookingAt		= nullptr;
 	m_pVehicleWeLookingAt	= nullptr;
@@ -995,6 +996,8 @@ void CActor::shedule_Update	(u32 DT)
 		m_pVehicleWeLookingAt		 = smart_cast<CHolderCustom*>(game_object);
 		m_pProjWeLookingAt			 = smart_cast<CProjector*>(game_object);
 		CEntityAlive* pEntityAlive   = smart_cast<CEntityAlive*>(game_object);
+		m_CapmfireWeLookingAt 		 = smart_cast<CZoneCampfire*>(game_object);
+		
 		bool b_allow_drag = !!pSettings->line_exist("ph_capture_visuals", game_object->cNameVisual());
 
         if (g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY) && smart_cast<CBaseMonster*>(game_object) && !pEntityAlive->g_Alive())
@@ -1031,6 +1034,8 @@ void CActor::shedule_Update	(u32 DT)
 				m_sDefaultObjAction = m_sInventoryItemUseAction;
 			else if (b_allow_drag)
 				m_sDefaultObjAction = m_sDeadCharacterUseOrDragAction;
+			else if (m_CapmfireWeLookingAt)
+				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
 			else
 				m_sDefaultObjAction = nullptr;
 		}
@@ -1044,6 +1049,7 @@ void CActor::shedule_Update	(u32 DT)
 		m_pVehicleWeLookingAt	= nullptr;
 		m_pProjWeLookingAt		= nullptr;
 		m_pInvBoxWeLookingAt	= nullptr;
+		m_CapmfireWeLookingAt	= nullptr;
 	}
 
 	UpdateArtefactsOnBeltAndOutfit				();

@@ -130,12 +130,11 @@ void CActor::SetCantRunState(bool bDisable)
 		u_EventSend(P);
 	};
 }
-void CActor::SetWeaponHideState(u16 State, bool bSet)
+
+void CActor::HideAllWeapons(bool bSet)
 {
-	if (g_Alive() && this == Level().CurrentControlEntity())
-	{
-		inventory().SetSlotsBlocked(u16(State), bSet);
-	};
+	if (g_Alive() && Actor() == Level().CurrentControlEntity())
+		inventory().SetSlotsBlocked(u16(INV_STATE_BLOCK_ALL), bSet);
 }
 
 void CActor::on_weapon_shot_start(CWeapon *weapon)

@@ -77,7 +77,7 @@ float CEffectRain::GetWorldWetness() const
 	float rainDropTime		= timerWorld->rainDropTime;
 
 	float res = ((rainTimer - lastRainDuration) / rainDropTime + lerp(0.0f, saturate(lastRainDuration / rainDropTime), saturate(lastRainDuration)));
-	return res > 0 ? saturate(res) : 0.f;
+	return !isnan(res) ? saturate(res) : 0.f;
 }
 
 float CEffectRain::GetCurrViewEntityWetness() const
@@ -87,7 +87,7 @@ float CEffectRain::GetCurrViewEntityWetness() const
 	float rainDropTime		= timerCurrViewEntity->rainDropTime;
 
 	float res = ((rainTimer - lastRainDuration) / rainDropTime + lerp(0.0f, saturate(lastRainDuration / rainDropTime), saturate(lastRainDuration)));
-	return res > 0 ? saturate(res) : 0.f;
+	return !isnan(res) ? saturate(res) : 0.f;
 }
 
 // Born
