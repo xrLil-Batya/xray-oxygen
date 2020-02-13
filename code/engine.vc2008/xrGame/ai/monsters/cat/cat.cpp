@@ -100,14 +100,19 @@ void CCat::reinit()
 	//CJumpingAbility::reinit(def1, def2, def3);
 }
 
+void CCat::try_to_jump()
+{
+	CObject *target = const_cast<CEntityAlive *>(EnemyMan.get_enemy());
+	if (!target || !EnemyMan.see_enemy_now()) return;
+}
+
 void CCat::CheckSpecParams(u32 spec_params)
 {
 	if ((spec_params & ASP_CHECK_CORPSE) == ASP_CHECK_CORPSE) {
 		com_man().seq_run(anim().get_motion_id(eAnimCheckCorpse));
 	}
 
-	if ((spec_params & ASP_ROTATION_JUMP) == ASP_ROTATION_JUMP) 
-	{
+	if ((spec_params & ASP_ROTATION_JUMP) == ASP_ROTATION_JUMP) {
 		//float yaw, pitch;
 		//Fvector().sub(EnemyMan.get_enemy()->Position(), Position()).getHP(yaw,pitch);
 		//yaw *= -1;
@@ -135,6 +140,13 @@ void CCat::CheckSpecParams(u32 spec_params)
 
 		//return;
 	}
+
+
+}
+
+void CCat::UpdateCL()
+{
+	inherited::UpdateCL				();
 }
 
 void CCat::HitEntityInJump(const CEntity *pEntity)

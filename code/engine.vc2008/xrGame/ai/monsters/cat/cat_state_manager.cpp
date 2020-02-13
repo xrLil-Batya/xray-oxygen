@@ -38,6 +38,8 @@ CStateManagerCat::~CStateManagerCat()
 {
 }
 
+#define ROTATION_JUMP_DELAY		3000
+
 void CStateManagerCat::execute()
 {
 	u32 state_id = u32(-1);

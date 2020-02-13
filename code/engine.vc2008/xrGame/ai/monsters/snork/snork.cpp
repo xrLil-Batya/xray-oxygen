@@ -12,7 +12,7 @@
 
 CSnork::CSnork() 
 {
-	StateMan = xr_new<CStateManagerSnork>	(this);
+	StateMan		= xr_new<CStateManagerSnork>	(this);
 	com_man().add_ability(ControlCom::eControlJump);
 	com_man().add_ability(ControlCom::eControlThreaten);
 }
@@ -92,11 +92,21 @@ void CSnork::reinit()
 
 	start_threaten = false;
 	com_man().set_threaten_data	("stand_threaten_0", 0.63f);
+
+	// TODO: remove this
+	m_target_node = 0;
 }
 
 void CSnork::UpdateCL()
 {
-	inherited::UpdateCL();
+	inherited::UpdateCL	();
+
+	//////////////////////////////////////////////////////////////////////////
+	//CObject *obj = Level().CurrentEntity();
+	//if (!obj) return;
+	
+	//find_geometry	();
+	//////////////////////////////////////////////////////////////////////////
 	
 #ifdef _DEBUG
 	// test 
@@ -118,6 +128,101 @@ void CSnork::UpdateCL()
 
 }
 
+#define TRACE_RANGE 30.f
+
+float CSnork::trace(const Fvector &dir)
+{
+	float ret_val = flt_max;
+
+	collide::rq_result	l_rq;
+
+	Fvector		trace_from;
+	Center		(trace_from);
+
+	float		trace_dist = Radius() + TRACE_RANGE;
+
+	if (Level().ObjectSpace.RayPick(trace_from, dir, trace_dist, collide::rqtStatic, l_rq, this)) {
+		if ((l_rq.range < trace_dist))
+			ret_val = l_rq.range;
+	}
+	
+	return		ret_val;
+}
+
+#define JUMP_DISTANCE 10.f
+bool CSnork::find_geometry(Fvector &dir)
+{
+	// 1. trace direction
+	dir		= Direction();
+	float	range;
+	
+	if (trace_geometry(dir, range)) {
+		if (range < JUMP_DISTANCE) {
+			return true;	
+		}
+	}
+
+	return false;
+}
+
+bool CSnork::trace_geometry(const Fvector &d, float &range)
+{
+	Fvector				dir;
+	float				h, p;
+
+	Fvector				Pl,Pc,Pr;
+	Fvector				center;
+	Center				(center);
+
+	range				= trace (d);
+	if (range > TRACE_RANGE) return false;
+	
+	float angle			= asin(1.f / range);
+
+	// trace center ray
+	dir					= d;
+
+	dir.getHP			(h,p);
+	p					+= angle;
+	dir.setHP			(h,p);
+	dir.normalize_safe	();
+
+	range				= trace (dir);
+	if (range > TRACE_RANGE) return false;
+
+	Pc.mad				(center, dir, range);
+
+	// trace left ray
+	Fvector				temp_p;
+	temp_p.mad			(Pc, XFORM().i, Radius() / 2);
+	dir.sub				(temp_p, center);
+	dir.normalize_safe	();
+
+	range				= trace (dir);
+	if (range > TRACE_RANGE) return false;
+
+	Pl.mad				(center, dir, range);
+
+	// trace right ray
+	Fvector inv			= XFORM().i; 
+	inv.invert			();
+	temp_p.mad			(Pc, inv, Radius() / 2);
+	dir.sub				(temp_p, center);
+	dir.normalize_safe	();
+
+	range				= trace (dir);
+	if (range > TRACE_RANGE) return false;
+
+	Pr.mad				(center, dir, range);
+
+	float				h1,p1,h2,p2;
+
+	Fvector().sub(Pl, Pc).getHP(h1,p1);
+	Fvector().sub(Pc, Pr).getHP(h2,p2);
+
+	return (fsimilar(h1,h2,0.1f) && fsimilar(p1,p2,0.1f));
+}
+
 void CSnork::CheckSpecParams(u32 spec_params)
 {
 	if ((spec_params & ASP_CHECK_CORPSE) == ASP_CHECK_CORPSE) {
@@ -132,6 +237,7 @@ void CSnork::CheckSpecParams(u32 spec_params)
 
 void CSnork::HitEntityInJump(const CEntity *pEntity)
 {
+	
 	SAAParam &params	= anim().AA_GetParams("stand_attack_2_1");
 	HitEntity			(pEntity, params.hit_power, params.impulse, params.impulse_dir);
 }
@@ -147,7 +253,16 @@ bool CSnork::check_start_conditions(ControlCom::EControlType type)
 {
 	if (!inherited::check_start_conditions(type))	return false;
 
-	return type != ControlCom::eControlThreaten;
+	if (type == ControlCom::eControlThreaten) 
+	{
+		return false;
+// 		if (!start_threaten) return false;
+// 		start_threaten = false;
+// 		if (Random.randI(100) < 50) return false;
+			
+	}
+	
+	return true;
 }
 
 void CSnork::on_activate_control(ControlCom::EControlType type)
@@ -167,6 +282,13 @@ void CSnork::on_activate_control(ControlCom::EControlType type)
 #include "../../../../xrEngine/xr_level_controller.h"
 void CSnork::debug_on_key(u8 key)
 {
+	CActor *actor = Actor();
+	if (!actor) return;
+
+	switch (key){
+	case VK_1:
+		m_target_node = actor->ai_location().level_vertex_id();
+	}
 }
 #endif
 

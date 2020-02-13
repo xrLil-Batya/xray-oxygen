@@ -2,8 +2,7 @@
 #include "../BaseMonster/base_monster.h"
 #include "../../../../xrScripts/export/script_export_space.h"
 
-class CSnork :	public CBaseMonster 
-{
+class CSnork :	public CBaseMonster {
 	typedef		CBaseMonster		inherited;
 
 	SVelocityParam	m_fsVelocityJumpPrepare;
@@ -22,7 +21,10 @@ public:
 	virtual bool	ability_distant_feel		() {return true;}
 	virtual void	HitEntityInJump		(const CEntity *pEntity);
 			
+			bool	find_geometry		(Fvector &dir);
 			float	trace				(const Fvector &dir);
+
+			bool	trace_geometry		(const Fvector &d, float &range);
 
 	virtual bool	check_start_conditions	(ControlCom::EControlType type);
 	virtual void	on_activate_control		(ControlCom::EControlType);
@@ -36,6 +38,8 @@ private:
 #endif
 
 public:
+
+		u32		m_target_node;
 		bool	start_threaten;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
