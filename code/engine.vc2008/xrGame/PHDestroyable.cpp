@@ -73,25 +73,20 @@ void CPHDestroyable::InitServerObject(CSE_Abstract* D)
 	CPhysicsShellHolder	*obj	=PPhysicsShellHolder()		;
 	CSE_ALifeDynamicObjectVisual	*l_tpALifeDynamicObject = smart_cast<CSE_ALifeDynamicObjectVisual*>(D);
 	VERIFY							(l_tpALifeDynamicObject);
-	
 
-	l_tpALifeDynamicObject->m_tGraphID	=obj->ai_location().game_vertex_id();
+	l_tpALifeDynamicObject->m_tGraphID	= obj->ai_location().game_vertex_id();
 	l_tpALifeDynamicObject->m_tNodeID	= obj->ai_location().level_vertex_id();
 
-
-	//	l_tpALifePhysicObject->startup_animation=m_startup_anim;
-	
 	D->set_name_replace	("");
-//.	D->s_gameid			=	u8(GameID());
-	D->s_RP				=	0xff;
-	D->ID				=	0xffff;
-
-	D->ID_Phantom		=	0xffff;
+	D->ID				=	WrongID;
+	D->ID_Phantom		=	WrongID;
 	D->o_Position		=	obj->Position();
+	
 	if (ai().get_alife())
 		l_tpALifeDynamicObject->m_tGraphID = ai().game_graph().current_level_vertex();
 	else
-		l_tpALifeDynamicObject->m_tGraphID = 0xffff;
+		l_tpALifeDynamicObject->m_tGraphID = WrongID;
+	
 	obj->XFORM().getXYZ	(D->o_Angle);
 	D->s_flags.assign	(M_SPAWN_OBJECT_LOCAL);
 	D->RespawnTime		=	0;

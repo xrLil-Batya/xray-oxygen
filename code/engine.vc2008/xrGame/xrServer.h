@@ -31,6 +31,7 @@ public:
 	virtual void Clear();
 };
 
+constexpr u64 WrongID = 0xffff;
 
 // main
 class xrServer

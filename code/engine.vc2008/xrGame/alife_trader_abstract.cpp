@@ -139,7 +139,7 @@ void CSE_ALifeDynamicObject::detach(CSE_ALifeInventoryItem *tpALifeInventoryItem
 	if (!bALifeRequest)
 		return;
 
-	tpALifeInventoryItem->base()->ID_Parent	= 0xffff;
+	tpALifeInventoryItem->base()->ID_Parent	= WrongID;
 
 	if (I) {
 		children.erase			(*I);

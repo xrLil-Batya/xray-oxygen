@@ -316,7 +316,7 @@ void CLevel::ProcessGameEvents()
 			{
 				u16 parent_id;
 				GetSpawnInfo(P, parent_id);
-				if (parent_id < 0xffff)
+				if (parent_id < WrongID)
 				{
 					if (!spawn_events->available(svT))
 						Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());
@@ -566,7 +566,7 @@ void CLevel::OnEvent(EVENT E, u64 P1, u64 /**P2/**/)
 	{
 		char	Name[128];	Name[0] = 0;
 		sscanf(LPCSTR(P1), "%s", Name);
-		Level().g_cl_Spawn(Name, 0xff, M_SPAWN_OBJECT_LOCAL, Fvector().set(0, 0, 0));
+		Level().g_cl_Spawn(Name, M_SPAWN_OBJECT_LOCAL, Fvector().set(0, 0, 0));
 	}
 }
 

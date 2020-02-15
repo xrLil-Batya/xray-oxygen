@@ -12,7 +12,7 @@
 #include "alife_space.h"
 #include "script_entity_space.h"
 #include "movement_manager_space.h"
-#include "pda_space.h"
+#include "PdaMsg.h"
 #include "memory_space.h"
 #include "cover_point.h"
 #include "script_hit.h"

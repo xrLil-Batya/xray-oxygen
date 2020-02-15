@@ -182,7 +182,7 @@ void SArtefactActivation::SpawnAnomaly()
 		CSE_Abstract		*object = Level().spawn_item(	zone_sect,
 															pos,
 															m_af->ai_location().level_vertex_id(),
-															0xffff,
+															WrongID,
 															true
 		);
 		CSE_ALifeAnomalousZone*		AlifeZone = smart_cast<CSE_ALifeAnomalousZone*>(object);

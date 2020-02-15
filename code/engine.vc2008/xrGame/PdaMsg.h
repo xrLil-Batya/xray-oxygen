@@ -6,11 +6,18 @@
 
 #pragma once
 #include "alife_space.h"
-#include "pda_space.h"
+
+//типы сообщений PDA
+enum EPdaMsg 
+{
+	ePdaMsgDialog,				//диалог
+	ePdaMsgInfo,				//сообщение передает некоторую информацию
+	ePdaMsgMax
+};
 
 //структура для описания сообщения PDA,
 //используется для ведения логов
-typedef struct tagSPdaMessage 
+struct SPdaMessage 
 {
 	EPdaMsg			msg;
 	
@@ -28,7 +35,7 @@ typedef struct tagSPdaMessage
 	//время получения/отправки сообщения
 	ALife::_TIME_ID	time;
 		
-} SPdaMessage;
+};
 
 
 //информация о контактах персонажей по PDA и во время диалога

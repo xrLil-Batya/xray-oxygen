@@ -113,7 +113,7 @@ void SHit::Write_Packet_Cont		(NET_Packet	&Packet)
 	Packet.w_vec3		(p_in_bone_space);
 	Packet.w_float		(impulse);	
 	Packet.w_u16		(aim_bullet!=0);
-	Packet.w_u16		(u16(hit_type&0xffff));	
+	Packet.w_u16		(u16(hit_type&WrongID));	
 	if (hit_type == ALife::eHitTypeFireWound)
 	{
 		Packet.w_float(armor_piercing);
@@ -125,8 +125,8 @@ void SHit::Write_Packet			(NET_Packet	&Packet)
 {
 	Packet.w_begin	(M_EVENT);
 	Packet.w_u32		(Time);
-	Packet.w_u16		(u16(PACKET_TYPE&0xffff));
-	Packet.w_u16		(u16(DestID&0xffff));
+	Packet.w_u16		(u16(PACKET_TYPE&WrongID));
+	Packet.w_u16		(u16(DestID&WrongID));
 
 	Write_Packet_Cont (Packet);	
 };

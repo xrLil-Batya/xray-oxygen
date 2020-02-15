@@ -195,7 +195,7 @@ CSE_ALifeDynamicObject *alife_object(const CALifeSimulator *self, ALife::_OBJECT
 bool valid_object_id(const CALifeSimulator *self, ALife::_OBJECT_ID object_id)
 {
 	VERIFY(self);
-	return			(object_id != 0xffff);
+	return			(object_id != WrongID);
 }
 
 #ifdef DEBUG
@@ -392,7 +392,7 @@ CSE_Abstract *CALifeSimulator__spawn_ammo(CALifeSimulator *self, LPCSTR section,
 	F_entity_Destroy(item);
 
 	ClientID							clientID;
-	clientID.set(0xffff);
+	clientID.set(WrongID);
 
 	u16 dummy;
 	packet.r_begin(dummy);

@@ -1,62 +1,48 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: CameraRecoil.h
-//	Created 	: 26.05.2008
-//	Author		: Evgeniy Sokolov
+//	Created 	: 15.02.2020
+//	Author		: ForserX
 //	Description : Camera Recoil struct
 ////////////////////////////////////////////////////////////////////////////
+#pragma once
 
-#ifndef CAMERA_RECOIL_H_INCLUDED
-#define CAMERA_RECOIL_H_INCLUDED
+struct SRecoilData
+{
+	bool		ReturnMode;
+	bool		StopReturn;
+	
+	float		RelaxSpeed;
+	float		RelaxSpeed_AI;
+	float		MaxAngleVert;
+	float		MaxAngleHorz;
+	float		Dispersion;
+	float		DispersionInc;
+	float		DispersionFrac;
+	float		StepAngleHorz;
+};
 
 //отдача при стрельбе 
 struct CameraRecoil
 {
-	float		RelaxSpeed;
-	float		RelaxSpeed_AI;
-	float		Dispersion;
-	float		DispersionInc;
-	float		DispersionFrac;
-	float		MaxAngleVert;
-	float		MaxAngleHorz;
-	float		StepAngleHorz;
-	bool		ReturnMode;
-	bool		StopReturn;
-
-	CameraRecoil():
-		MaxAngleVert	( EPS   ),
-		RelaxSpeed		( EPS_L ),
-		RelaxSpeed_AI	( EPS_L ),
-		Dispersion		( EPS   ),
-		DispersionInc	( 0.0f  ),
-		DispersionFrac	( 1.0f  ),
-		MaxAngleHorz	( EPS   ),
-		StepAngleHorz	( 0.0f  ),
-		ReturnMode		( false ),
-		StopReturn		( false )
-	{};
-
-	CameraRecoil( const CameraRecoil& clone )		{	Clone( clone );	}
-
-	IC void Clone( const CameraRecoil& clone )
+	SRecoilData mData;
+	
+	CameraRecoil()
 	{
-		// *this = clone;
-		RelaxSpeed		= clone.RelaxSpeed;
-		RelaxSpeed_AI	= clone.RelaxSpeed_AI;
-		Dispersion		= clone.Dispersion;
-		DispersionInc	= clone.DispersionInc;
-		DispersionFrac	= clone.DispersionFrac;
-		MaxAngleVert	= clone.MaxAngleVert;
-		MaxAngleHorz	= clone.MaxAngleHorz;
-		StepAngleHorz	= clone.StepAngleHorz;
+		mData = 
+		{
+			false, false,
+			EPS_L, EPS_L, 	// Relax speed
+			EPS, EPS, 		// Max andle
+			EPS, 0.f, 1.f,	// Dispersion
+			0.f				// Step angle
+		}
+	};
 
-		ReturnMode		= clone.ReturnMode;
-		StopReturn		= clone.StopReturn;
-		
-		VERIFY( !fis_zero(RelaxSpeed)    );
-		VERIFY( !fis_zero(RelaxSpeed_AI) );
-		VERIFY( !fis_zero(MaxAngleVert)  );
-		VERIFY( !fis_zero(MaxAngleHorz)  );
+	constexpr CameraRecoil(const CameraRecoil& clone )  { mData = clone.mData;	}
+	constexpr CameraRecoil(SRecoilData clone) 		    { mData = clone;   		}
+
+	IC void Clone(SRecoilData clone)
+	{
+		mData = clone;
 	}
-}; //struct CameraRecoil
-
-#endif // CAMERA_RECOIL_H_INCLUDED
+};

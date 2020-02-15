@@ -240,7 +240,7 @@ void game_sv_GameState::OnCreate(u16 id_who)
 
 	alife_object->m_bOnline = true;
 
-	if (alife_object->ID_Parent != 0xffff)
+	if (alife_object->ID_Parent != WrongID)
 	{
 		CSE_ALifeDynamicObject *parent = ai().alife().objects().object(alife_object->ID_Parent, true);
 		if (parent) 
@@ -328,7 +328,7 @@ void game_sv_GameState::OnDetach(u16 eid_who, u16 eid_what)
 		else if (!refAlifeObj.object(e_what->ID, true))
 		{
 			u16 id = l_tpALifeInventoryItem->base()->ID_Parent;
-			l_tpALifeInventoryItem->base()->ID_Parent = 0xffff;
+			l_tpALifeInventoryItem->base()->ID_Parent = WrongID;
 
 			CSE_ALifeDynamicObject *dynamic_object = smart_cast<CSE_ALifeDynamicObject*>(e_what);
 			VERIFY(dynamic_object);

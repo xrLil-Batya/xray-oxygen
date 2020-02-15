@@ -360,16 +360,18 @@ void CPHSkeleton::InitServerObject(CSE_Abstract * D)
 	l_tpALifePhysicObject->source_id	= u16(obj->ID());
 	l_tpALifePhysicObject->startup_animation=m_startup_anim;
 	D->s_name			= "ph_skeleton_object";
+	
 	D->set_name_replace	("");
-	D->s_RP				=	0xff;
-	D->ID				=	0xffff;
-	D->ID_Parent		=	0xffff;//u16(ID());//
-	D->ID_Phantom		=	0xffff;
+	D->ID				=	WrongID;
+	D->ID_Parent		=	WrongID;//u16(ID());//
+	D->ID_Phantom		=	WrongID;
 	D->o_Position		=	obj->Position();
+	
 	if (ai().get_alife())
 		l_tpALifeDynamicObject->m_tGraphID = ai().game_graph().current_level_vertex();
 	else
-		l_tpALifeDynamicObject->m_tGraphID = 0xffff;
+		l_tpALifeDynamicObject->m_tGraphID = WrongID;
+	
 	obj->XFORM().getHPB	(D->o_Angle);
 	D->s_flags.assign	(M_SPAWN_OBJECT_LOCAL);
 	D->RespawnTime		=	0;

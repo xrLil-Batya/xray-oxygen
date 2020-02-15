@@ -5,7 +5,7 @@
 
 #pragma once
 #include "InfoPortionDefs.h"
-#include "pda_space.h"
+#include "PdaMsg.h"
 #include "attachment_owner.h"
 #include "script_space_forward.h"
 #include "character_info.h"

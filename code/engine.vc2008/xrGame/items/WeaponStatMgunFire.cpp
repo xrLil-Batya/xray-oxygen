@@ -141,12 +141,12 @@ void CWeaponStatMgun::AddShotEffector				()
 	{
 		CCameraShotEffector* S	= smart_cast<CCameraShotEffector*>(OwnerActor()->Cameras().GetCamEffector(eCEShot)); 
 		CameraRecoil		camera_recoil;
-		//( camMaxAngle,camRelaxSpeed, 0.25f, 0.01f, 0.7f )
-		camera_recoil.MaxAngleVert		= camMaxAngle;
-		camera_recoil.RelaxSpeed		= camRelaxSpeed;
-		camera_recoil.MaxAngleHorz		= 0.25f;
-		camera_recoil.StepAngleHorz		= ::Random.randF(-1.0f, 1.0f) * 0.01f;
-		camera_recoil.DispersionFrac	= 0.7f;
+		
+		camera_recoil.mData.MaxAngleVert	= camMaxAngle;
+		camera_recoil.mData.RelaxSpeed		= camRelaxSpeed;
+		camera_recoil.mData.MaxAngleHorz	= 0.25f;
+		camera_recoil.mData.StepAngleHorz	= ::Random.randF(-1.0f, 1.0f) * 0.01f;
+		camera_recoil.mData.DispersionFrac	= 0.7f;
 
 		if (!S)	S			= (CCameraShotEffector*)OwnerActor()->Cameras().AddCamEffector(xr_new<CCameraShotEffector>(camera_recoil) );
 		R_ASSERT			(S);

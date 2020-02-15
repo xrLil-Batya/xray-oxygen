@@ -246,7 +246,7 @@ void CUIMainIngameWnd::Draw()
 	if(!pActor || !pActor->g_Alive()) 
 		return;
 
-	UIMotionIcon->SetNoise((s16)(0xffff&iFloor(pActor->m_snd_noise*100)));
+	UIMotionIcon->SetNoise((s16)(WrongID&iFloor(pActor->m_snd_noise*100)));
 
 	UIMotionIcon->Draw();
 	UIZoneMap->Render();

@@ -56,12 +56,12 @@ void CHARACTER_RANK::InitIdToIndex	()
 }
 
 
-CHARACTER_GOODWILL CHARACTER_RANK::relation		(int to)
+CHARACTER_GOODWILL CHARACTER_RANK::relation		(int to) const
 {
 	return relation(m_current_index, to);
 }
 
-CHARACTER_GOODWILL  CHARACTER_RANK::relation		(int from, int to)
+CHARACTER_GOODWILL  CHARACTER_RANK::relation		(int from, int to) const
 {
 	VERIFY(from >= 0 && from <(int)m_relation_table.table().size());
 	VERIFY(to >= 0 && to <(int)m_relation_table.table().size());
@@ -70,7 +70,7 @@ CHARACTER_GOODWILL  CHARACTER_RANK::relation		(int from, int to)
 }
 
 
-CHARACTER_RANK_VALUE CHARACTER_RANK::rank_kill_points	(int rank_index)
+CHARACTER_RANK_VALUE CHARACTER_RANK::rank_kill_points	(int rank_index) const
 {
 	return m_rank_kill_table.table()[rank_index][0];
 }

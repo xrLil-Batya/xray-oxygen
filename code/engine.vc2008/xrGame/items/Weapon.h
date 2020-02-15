@@ -385,8 +385,8 @@ public:
 	virtual	float			GetConditionToShow				() const;
 
 public:
-	CameraRecoil			cam_recoil;			// simple mode (walk, run)
-	CameraRecoil			zoom_cam_recoil;	// using zoom =(ironsight or scope)
+	SRecoilData			cam_recoil;			// simple mode (walk, run)
+	SRecoilData			zoom_cam_recoil;	// using zoom =(ironsight or scope)
 
 protected:
 	//фактор увеличения дисперсии при максимальной изношености 

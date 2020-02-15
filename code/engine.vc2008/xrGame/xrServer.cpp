@@ -51,7 +51,7 @@ xrServer::~xrServer()
 //--------------------------------------------------------------------
 CSE_Abstract* xrServer::ID_to_entity(u16 ID)
 {
-	if (0xffff != ID)
+	if (WrongID != ID)
 	{
 		xrS_entities::iterator	I = entities.find(ID);
 		if (entities.end() != I)
@@ -185,7 +185,7 @@ bool xrServer::verify_entities() const
 	xrS_entities::const_iterator		I = entities.begin();
 	xrS_entities::const_iterator		E = entities.end();
 	for ( ; I != E; ++I) {
-		VERIFY2							((*I).first != 0xffff,"SERVER : Invalid entity id as a map key - 0xffff");
+		VERIFY2							((*I).first != WrongID,"SERVER : Invalid entity id as a map key - WrongID");
 		VERIFY2							((*I).second,"SERVER : Null entity object in the map");
 		VERIFY3							((*I).first == (*I).second->ID,"SERVER : ID mismatch - map key doesn't correspond to the real entity ID",(*I).second->name_replace());
 		verify_entity					((*I).second);
@@ -197,7 +197,7 @@ bool xrServer::verify_entities() const
 void xrServer::verify_entity				(const CSE_Abstract *entity) const
 {
 	VERIFY(entity->m_wVersion!=0);
-	if (entity->ID_Parent != 0xffff) {
+	if (entity->ID_Parent != WrongID) {
 		xrS_entities::const_iterator	J = entities.find(entity->ID_Parent);
 		VERIFY_FORMAT (J != entities.end(),
 			"SERVER : Cannot find parent in the map [%s][%s]",entity->name_replace(),
@@ -210,7 +210,7 @@ void xrServer::verify_entity				(const CSE_Abstract *entity) const
 	xr_vector<u16>::const_iterator		I = entity->children.begin();
 	xr_vector<u16>::const_iterator		E = entity->children.end();
 	for ( ; I != E; ++I) {
-		VERIFY3							(*I != 0xffff,"SERVER : Invalid entity children id - 0xffff",entity->name_replace());
+		VERIFY3							(*I != WrongID,"SERVER : Invalid entity children id - WrongID",entity->name_replace());
 		xrS_entities::const_iterator	J = entities.find(*I);
 		VERIFY3							(J != entities.end(),"SERVER : Cannot find children in the map",entity->name_replace());
 		VERIFY3							((*J).second,"SERVER : Null entity object in the map",entity->name_replace());
@@ -348,7 +348,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 
 
 	CSE_Abstract *e_parent = nullptr;
-	if (pAbstractE->ID_Parent != 0xffff)
+	if (pAbstractE->ID_Parent != WrongID)
 	{
 		e_parent = ID_to_entity(pAbstractE->ID_Parent);
 		if (!e_parent)
@@ -360,12 +360,12 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 	}
 
 	// check for respawn-capability and create phantom as needed
-	if (pAbstractE->RespawnTime && (0xffff == pAbstractE->ID_Phantom))
+	if (pAbstractE->RespawnTime && (WrongID == pAbstractE->ID_Phantom))
 	{
 		// Create phantom
 		CSE_Abstract* Phantom = entity_Create(pAbstractE->s_name.c_str()); R_ASSERT(Phantom);
 		Phantom->Spawn_Read(P);
-		Phantom->ID = PerformIDgen(0xffff);
+		Phantom->ID = PerformIDgen(WrongID);
 		// Self-linked to avoid phantom-breeding
 		Phantom->ID_Phantom = Phantom->ID;
 		Phantom->owner = nullptr;
@@ -384,7 +384,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 		if (pAbstractE->s_flags.is(M_SPAWN_OBJECT_PHANTOM))
 		{
 			// Clone from Phantom
-			pAbstractE->ID = PerformIDgen(0xffff);
+			pAbstractE->ID = PerformIDgen(WrongID);
 			pAbstractE->owner = SV_Client;
 			pAbstractE->s_flags.set(M_SPAWN_OBJECT_PHANTOM, false);
 			entities.insert(std::make_pair(pAbstractE->ID, pAbstractE));
@@ -410,15 +410,12 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 		SV_Client->owner = pAbstractE;
 	}
 
-	// PROCESS RP;	 3D position/orientation
-	pAbstractE->s_RP = 0xFE;	// Use supplied
-
 	// Parent-Connect
 	if (!tpExistedEntity) 
 	{
 		game->OnCreate(pAbstractE->ID);
 
-		if (0xffff != pAbstractE->ID_Parent)
+		if (WrongID != pAbstractE->ID_Parent)
 		{
 			R_ASSERT(e_parent);
 
@@ -470,7 +467,7 @@ bool xrServer::Process_event_reject(NET_Packet& P, const u32 &time, const u16 id
 		Msg("[ERROR on rejecting]: parent not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
 		return false;
 	}
-	else if (0xffff == e_entity->ID_Parent)
+	else if (WrongID == e_entity->ID_Parent)
 		return false;
 
 	xr_vector<u16>& C = e_parent->children;
@@ -491,7 +488,7 @@ bool xrServer::Process_event_reject(NET_Packet& P, const u32 &time, const u16 id
 
 	game->OnDetach(id_parent, id_entity);
 
-	e_entity->ID_Parent = 0xffff;
+	e_entity->ID_Parent = WrongID;
 	C.erase(c);
 
 	// Signal to everyone (including sender) then is alife started
@@ -552,7 +549,7 @@ void xrServer::Perform_reject(CSE_Abstract* what, CSE_Abstract* from, int delta)
 void xrServer::Perform_destroy(CSE_Abstract* object)
 {
 	R_ASSERT(object);
-	R_ASSERT(object->ID_Parent == 0xffff);
+	R_ASSERT(object->ID_Parent == WrongID);
 
 	while (!object->children.empty())
 	{
@@ -583,7 +580,7 @@ void xrServer::SLS_Clear()
 
 		for (auto &entities_it : entities)
 		{
-			if (entities_it.second->ID_Parent != 0xffff) continue;
+			if (entities_it.second->ID_Parent != WrongID) continue;
 
 			found = true;
 			Perform_destroy(entities_it.second);
@@ -666,7 +663,7 @@ void xrServer::Process_event(NET_Packet& P)
 		if (!e_entity) break;
 
 		// this item already taken
-		if (0xffff != e_entity->ID_Parent) break;
+		if (WrongID != e_entity->ID_Parent) break;
 
 		// Signal to everyone (including sender)
 		SendBroadcast(P);
@@ -811,7 +808,7 @@ void xrServer::Process_event_activate(NET_Packet& P, const u16 id_parent, const 
 
 	xr_delete(e_parent);
 
-	if (0xffff != e_entity->ID_Parent)
+	if (WrongID != e_entity->ID_Parent)
 	{
 		// Signal to everyone (including sender)
 		SendBroadcast(P);
@@ -960,7 +957,7 @@ void xrServer::Process_event_ownership(NET_Packet& P, u16 ID)
 		return;
 	}
 
-	if (0xffff != e_entity->ID_Parent)
+	if (WrongID != e_entity->ID_Parent)
 		return;
 
 	// Game allows ownership of entity
@@ -1000,14 +997,14 @@ void xrServer::Process_event_destroy(NET_Packet& P, const u32 &time, u16 ID, NET
 			Process_event_destroy(P, time, *e_dest->children.begin(), pEventPack);
 	}
 
-	if (0xffff == parent_id && nullptr == pEventPack)
+	if (WrongID == parent_id && nullptr == pEventPack)
 	{
 		SendBroadcast(P);
 	}
 	else
 	{
 		NET_Packet	tmpP;
-		if (0xffff != parent_id && Process_event_reject(P, time, parent_id, ID, false))
+		if (WrongID != parent_id && Process_event_reject(P, time, parent_id, ID, false))
 		{
 			CGameObject::u_EventGen(tmpP, GE_OWNERSHIP_REJECT, parent_id);
 			tmpP.w_u16(id_dest);

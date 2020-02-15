@@ -17,7 +17,7 @@ CWeaponShotEffector::CWeaponShotEffector()
 
 void CWeaponShotEffector::Initialize(const CameraRecoil& cam_recoil)
 {
-	m_cam_recoil.Clone(cam_recoil);
+	m_cam_recoil = cam_recoil.mData;
 	Reset();
 }
 

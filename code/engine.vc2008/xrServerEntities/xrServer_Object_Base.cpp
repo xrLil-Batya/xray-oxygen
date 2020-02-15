@@ -173,14 +173,16 @@ CInifile &CSE_Abstract::spawn_ini			()
 	return						(*m_ini_file);
 }
 	
-void CSE_Abstract::Spawn_Write				(NET_Packet	&tNetPacket, BOOL bLocal)
+void CSE_Abstract::Spawn_Write(NET_Packet	&tNetPacket, BOOL bLocal)
 {
 	// generic
-	tNetPacket.w_begin			(M_SPAWN);
+	tNetPacket.w_begin			(M_SPAWN_OXY);
+	
+	// To all: так проще 
+	tNetPacket.w_u16			(SPAWN_VERSION);
+	
 	tNetPacket.w_stringZ		(s_name			);
 	tNetPacket.w_stringZ		(s_name_replace ?	s_name_replace : "");
-	tNetPacket.w_u8				(0);
-	tNetPacket.w_u8				(s_RP			);
 	tNetPacket.w_vec3			(o_Position		);
 	tNetPacket.w_vec3			(o_Angle		);
 	tNetPacket.w_u16			(RespawnTime	);
@@ -188,18 +190,15 @@ void CSE_Abstract::Spawn_Write				(NET_Packet	&tNetPacket, BOOL bLocal)
 	tNetPacket.w_u16			(ID_Parent		);
 	tNetPacket.w_u16			(ID_Phantom		);
 
-	s_flags.set					(M_SPAWN_VERSION,true);
+	// For player
 	if (bLocal)
 		tNetPacket.w_u16		(u16(s_flags.flags|M_SPAWN_OBJECT_LOCAL) );
 	else
 		tNetPacket.w_u16		(u16(s_flags.flags&~(M_SPAWN_OBJECT_LOCAL|M_SPAWN_OBJECT_ASPLAYER)));
 	
-	tNetPacket.w_u16			(SPAWN_VERSION);
 
 	tNetPacket.w_u16			(m_gameType.m_GameType.get());
-	
 	tNetPacket.w_u16			(script_server_object_version());
-
 
 	//client object custom data serialization SAVE
 	u16 client_data_size		= (u16)client_data.size();
@@ -226,28 +225,32 @@ void CSE_Abstract::Spawn_Write				(NET_Packet	&tNetPacket, BOOL bLocal)
 	tNetPacket.w_seek			(position,&size,sizeof(u16));
 }
 
-enum EGameTypes 
+BOOL CSE_Abstract::Spawn_Read(NET_Packet &tNetPacket)
 {
-	GAME_ANY							= 0,
-	GAME_SINGLE							= 1,
-	//identifiers in range [100...254] are registered for script game type
-	GAME_DUMMY							= 255	// temporary game type
-};
-
-BOOL CSE_Abstract::Spawn_Read				(NET_Packet	&tNetPacket)
-{
-	u16							dummy16;
+	u16 dummy16;
 	// generic
-	tNetPacket.r_begin			(dummy16);	
-	R_ASSERT					(M_SPAWN==dummy16);
-	tNetPacket.r_stringZ		(s_name			);
+	tNetPacket.r_begin(dummy16);
 	
-	string256					temp;
-	tNetPacket.r_stringZ		(temp);
-	set_name_replace			(temp);
-	u8							temp_gt;
-	tNetPacket.r_u8				(temp_gt/*s_gameid*/		);
-	tNetPacket.r_u8				(s_RP			);
+	if(dummy16 == M_SPAWN_OXY)
+		tNetPacket.r_u16(m_wVersion);
+	else
+		R_ASSERT2(dummy16 == M_SPAWN, "Incorrect save/spawn file!")
+	
+	tNetPacket.r_stringZ(s_name);
+	
+	string256 temp;
+	tNetPacket.r_stringZ(temp);
+	set_name_replace(temp);	
+	
+	//  Old spawn data. 
+	if (m_wVersion < 130)
+	{
+		R_ASSERT2(m_wVersion > 120, "Oxygen support minimal m_wVersion: 120. Need rebuild!");
+		
+		tNetPacket.r_u8();
+		tNetPacket.r_u8();
+	}
+	
 	tNetPacket.r_vec3			(o_Position		);
 	tNetPacket.r_vec3			(o_Angle		);
 	tNetPacket.r_u16			(RespawnTime	);
@@ -257,72 +260,35 @@ BOOL CSE_Abstract::Spawn_Read				(NET_Packet	&tNetPacket)
 
 	tNetPacket.r_u16			(s_flags.flags	); 
 	
-	// dangerous!!!!!!!!!
-	if (s_flags.is(M_SPAWN_VERSION))
-		tNetPacket.r_u16		(m_wVersion);
+	//  Old spawn data. 
+	if (m_wVersion < 130)
+		tNetPacket.r_u16(m_wVersion);
 	
-	if(m_wVersion > 120)
-	{
-		u16 gt;
-		tNetPacket.r_u16			(gt);
-		m_gameType.m_GameType.assign(gt);
-	}else
-		m_gameType.SetDefaults		();
-
-	if (0==m_wVersion) {
-		tNetPacket.r_pos		-= sizeof(u16);
-		m_wVersion				= 0;
-        return					FALSE;
-	}
-
-	if (m_wVersion > 69)
-		m_script_version		= tNetPacket.r_u16();
+	m_gameType.m_GameType.assign(tNetPacket.r_u16());
+	m_script_version = tNetPacket.r_u16();
 
 	// read specific data
 
 	//client object custom data serialization LOAD
-	if (m_wVersion > 70) {
-		u16 client_data_size	= (m_wVersion > 93) ? tNetPacket.r_u16() : tNetPacket.r_u8(); //�� ����� ���� ������ 256 ����
-		if (client_data_size > 0) {
-			client_data.resize	(client_data_size);
-			tNetPacket.r		(&*client_data.begin(),client_data_size);
-		}
-		else
-			client_data.clear	();
+	u16 client_data_size = tNetPacket.r_u16();
+	if (client_data_size > 0) 
+	{
+		client_data.resize(client_data_size);
+		tNetPacket.r(&*client_data.begin(), client_data_size);
 	}
 	else
-		client_data.clear		();
+		client_data.clear();
 
-	if (m_wVersion > 79)
-		tNetPacket.r_u16			(m_tSpawnID);
+	tNetPacket.r_u16(m_tSpawnID);
 
-	if (m_wVersion < 112) {
-		if (m_wVersion > 82)
-			tNetPacket.r_float		();//m_spawn_probability);
-
-		if (m_wVersion > 83) {
-			tNetPacket.r_u32		();//m_spawn_flags.assign(tNetPacket.r_u32());
-			xr_string				temp;
-			tNetPacket.r_stringZ	(temp);//tNetPacket.r_stringZ(m_spawn_control);
-			tNetPacket.r_u32		();//m_max_spawn_count);
-			// this stuff we do not need even in case of uncomment
-			tNetPacket.r_u32		();//m_spawn_count);
-			tNetPacket.r_u64		();//m_last_spawn_time);
-		}
-
-		if (m_wVersion > 84) {
-			tNetPacket.r_u64		();//m_min_spawn_interval);
-			tNetPacket.r_u64		();//m_max_spawn_interval);
-		}
-	}
-
-	u16							size;
-	tNetPacket.r_u16			(size);	// size
-	bool b1						= (m_tClassID == CLSID_SPECTATOR);
-	bool b2						= (size > sizeof(size));
-	R_ASSERT3					( (b1 || b2),"cannot read object, which is not successfully saved :(",name_replace());
-	STATE_Read					(tNetPacket,size);
-	return						TRUE;
+	u16 size = tNetPacket.r_u16();
+	
+	bool b1 = (m_tClassID == CLSID_SPECTATOR);
+	bool b2 = (size > sizeof(size));
+	R_ASSERT3((b1 || b2),"cannot read object, which is not successfully saved :(", name_replace());
+	
+	STATE_Read(tNetPacket,size);
+	return TRUE;
 }
 
 void	CSE_Abstract::load			(NET_Packet	&tNetPacket)

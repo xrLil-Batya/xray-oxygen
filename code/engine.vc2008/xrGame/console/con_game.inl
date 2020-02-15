@@ -17,7 +17,7 @@ public:
 		sscanf(args, "%s", Name);
 		Fvector pos = Actor()->Position();
 		pos.y += 3.0f;
-		Level().g_cl_Spawn(Name, 0xff, M_SPAWN_OBJECT_LOCAL, pos);
+		Level().g_cl_Spawn(Name, M_SPAWN_OBJECT_LOCAL, pos);
 	}
 	virtual void	Info(TInfo& I)
 	{

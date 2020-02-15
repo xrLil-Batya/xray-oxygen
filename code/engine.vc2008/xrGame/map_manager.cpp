@@ -132,7 +132,7 @@ CMapLocation* CMapManager::AddMapLocation(const shared_str& spot_type, u16 id)
 
 CMapLocation* CMapManager::AddUserLocation(const shared_str& spot_type, const shared_str& level_name, Fvector position)
 {
-	u16 _id = Level().Server->PerformIDgen(0xffff);
+	u16 _id = Level().Server->PerformIDgen(WrongID);
 	CMapLocation * l = xr_new<CMapLocation>(spot_type.c_str(), _id, true);
 	l->InitUserSpot(level_name, position);
 	Locations().emplace_back(spot_type, _id);

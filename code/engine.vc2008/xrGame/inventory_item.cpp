@@ -234,12 +234,11 @@ bool CInventoryItem::Detach(const char* item_section_name, bool b_spawn_item)
 		// Fill
 		D->s_name			=	item_section_name;
 		D->set_name_replace	("");
-		D->s_RP				=	0xff;
-		D->ID				=	0xffff;
+		D->ID				=	WrongID;
 		
 		D->ID_Parent		=	u16(object().H_Parent()->ID());
 		
-		D->ID_Phantom		=	0xffff;
+		D->ID_Phantom		=	WrongID;
 		D->o_Position		=	object().Position();
 		D->s_flags.assign	(M_SPAWN_OBJECT_LOCAL);
 		D->RespawnTime		=	0;

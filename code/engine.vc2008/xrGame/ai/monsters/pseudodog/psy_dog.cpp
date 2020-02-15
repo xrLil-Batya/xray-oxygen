@@ -99,7 +99,7 @@ bool CPsyDog::spawn_phantom()
 	if (!control().path_builder().get_node_in_radius(ai_location().level_vertex_id(), 4,8,5,node)) return false;
 	
  	// set id to created server object
-	CSE_Abstract			*phantom = Level().spawn_item("psy_dog_phantom", ai().level_graph().vertex_position(node), node, 0xffff, true);
+	CSE_Abstract			*phantom = Level().spawn_item("psy_dog_phantom", ai().level_graph().vertex_position(node), node, WrongID, true);
 	CSE_ALifeMonsterBase	*pSE_Monster = smart_cast<CSE_ALifeMonsterBase*>(phantom);
 	VERIFY(pSE_Monster);
 
@@ -192,7 +192,7 @@ BOOL CPsyDogPhantom::net_Spawn(CSE_Abstract *dc)
 	CSE_ALifeMonsterBase *se_monster	= smart_cast<CSE_ALifeMonsterBase*>(dc);
 	m_parent_id = se_monster->m_spec_object_id;
 	m_parent	= nullptr;
-	VERIFY		(m_parent_id != 0xffff);
+	VERIFY		(m_parent_id != WrongID);
 	
 	try_to_register_to_parent();
 
@@ -290,7 +290,7 @@ void CPsyDogPhantom::net_Destroy()
 	if (m_parent && !is_wait_to_destroy_object()) {
 		m_parent->unregister_phantom	(this);
 		m_parent						= nullptr;
-		m_parent_id						= 0xffff;
+		m_parent_id						= WrongID;
 	}
 
 	inherited::net_Destroy();
@@ -337,7 +337,7 @@ void CPsyDogPhantom::destroy_me()
 
 void CPsyDogPhantom::destroy_from_parent()
 {
-	m_parent_id = 0xffff;
+	m_parent_id = WrongID;
 
 	NET_Packet P;
 	u_EventGen(P, GE_DESTROY, ID());

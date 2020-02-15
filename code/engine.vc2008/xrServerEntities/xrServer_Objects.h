@@ -163,8 +163,10 @@
 // 127	 CSE_ALifeObjectClimable		added material;
 // 128	 CSE_ALifeObjectClimable		added can_fire in smart covers;
 // 129   CSE_ALifeItemWeapon            added m_scope_name string for state and m_scope_idx for update
+// 130    								removed gametype and RP 
+// 131									replaced M_SPAWN to M_SPAWN_OXY, moved SPAWN_VERSION to header, cleanup
 //------------------------------------------------------------------------------
-#define SPAWN_VERSION	u16(129)
+#define SPAWN_VERSION	u16(131)
 
 SERVER_ENTITY_DECLARE_BEGIN2(CSE_Shape,ISE_Shape,CShapeData)
 public:

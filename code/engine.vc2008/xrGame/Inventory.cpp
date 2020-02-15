@@ -25,7 +25,7 @@
 using namespace InventoryUtilities;
 
 // what to block
-u16	INV_STATE_BLOCK_ALL = 0xffff;
+u16	INV_STATE_BLOCK_ALL = WrongID;
 
 CInventorySlot::CInventorySlot()
 {

@@ -84,7 +84,7 @@ BOOL CPhysicItem::net_Spawn			(CSE_Abstract* DC)
 	pK->CalculateBones_Invalidate();
 	pK->CalculateBones(TRUE);
 	CSE_Abstract *abstract = (CSE_Abstract*)DC;
-	if (0xffff == abstract->ID_Parent)
+	if (WrongID == abstract->ID_Parent)
 	{
 		if(!PPhysicsShell())setup_physic_shell	();
 		//else processing_deactivate();//.

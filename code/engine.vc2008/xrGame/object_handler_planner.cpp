@@ -114,7 +114,7 @@ void CObjectHandlerPlanner::set_goal	(MonsterSpace::EObjectAction object_action,
 LPCSTR CObjectHandlerPlanner::action2string(const _action_id_type &id)
 {
 	LPSTR S = m_temp_string;
-	if (action_object_id(id) != 0xffff)
+	if (action_object_id(id) != WrongID)
 		if (Level().Objects.net_Find(action_object_id(id)))
 			xr_strcpy	(m_temp_string,*Level().Objects.net_Find(action_object_id(id))->cName());
 		else
@@ -165,7 +165,7 @@ LPCSTR CObjectHandlerPlanner::action2string(const _action_id_type &id)
 
 LPCSTR CObjectHandlerPlanner::property2string(const _condition_type &id)
 {
-	if (action_object_id(id) != 0xffff)
+	if (action_object_id(id) != WrongID)
 		if (Level().Objects.net_Find(action_object_id(id)))
 			xr_strcpy	(m_temp_string,*Level().Objects.net_Find(action_object_id(id))->cName());
 		else
@@ -267,8 +267,8 @@ void CObjectHandlerPlanner::setup	(CAI_Stalker *object)
 	add_evaluator				(u32(eWorldPropertyNoItems),			xr_new<CObjectPropertyEvaluatorNoItems>(m_object));
 	add_evaluator				(u32(eWorldPropertyNoItemsIdle),		xr_new<CObjectPropertyEvaluatorConst>(false));
 	action						= xr_new<CSObjectActionBase>(m_object,m_object,&m_storage,"no items idle");
-	add_condition				(action,0xffff,eWorldPropertyItemID,true);
-	add_effect					(action,0xffff,eWorldPropertyIdle,	true);
+	add_condition				(action,WrongID,eWorldPropertyItemID,true);
+	add_effect					(action,WrongID,eWorldPropertyIdle,	true);
 	add_operator				(u32(eWorldOperatorNoItemsIdle),action);
 
 	set_goal					(MonsterSpace::eObjectActionIdle,0,0,0,0,0);

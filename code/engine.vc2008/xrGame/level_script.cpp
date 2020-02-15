@@ -764,7 +764,7 @@ CScriptGameObject* get_view_entity_script()
 
 void iterate_online_objects(luabind::functor<bool> functor)
 {
-	for (u16 i=0; i < 0xffff; i++) 
+	for (u16 i=0; i < WrongID; i++) 
 	{
 		CGameObject		*pGameObject = smart_cast<CGameObject*>(Level().Objects.net_Find(i));
 		if (pGameObject && functor(pGameObject->lua_game_object())) return;

@@ -352,7 +352,7 @@ _value_type CStalkerPropertyEvaluatorSmartTerrainTask::evaluate	()
 
 	VERIFY						(stalker);
 	stalker->brain().select_task();
-	return						(stalker->m_smart_terrain_id != 0xffff);
+	return						(stalker->m_smart_terrain_id != WrongID);
 }
 
 

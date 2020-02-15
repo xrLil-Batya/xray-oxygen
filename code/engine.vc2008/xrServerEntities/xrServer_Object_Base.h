@@ -76,7 +76,6 @@ public:
 	shared_str						s_name;
 //.	u8								s_gameid;
 	GameTypeChooser					m_gameType;
-	u8								s_RP;
 	Flags16							s_flags;		// state flags
 	xr_vector<u16>					children;
 

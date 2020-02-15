@@ -1285,15 +1285,14 @@ void CWeapon::SpawnAmmo(u32 boxCurr, LPCSTR ammoSect, u32 ParentID)
 		l_pA->m_boxSize				= (u16)pSettings->r_s32(ammoSect, "box_size");
 		D->s_name					= ammoSect;
 		D->set_name_replace			("");
-		D->s_RP						= 0xff;
-		D->ID						= 0xffff;
+		D->ID						= WrongID;
 
 		if (ParentID == 0xffffffff)	
 			D->ID_Parent			= (u16)H_Parent()->ID();
 		else
 			D->ID_Parent			= (u16)ParentID;
 
-		D->ID_Phantom				= 0xffff;
+		D->ID_Phantom				= WrongID;
 		D->s_flags.assign			(M_SPAWN_OBJECT_LOCAL);
 		D->RespawnTime				= 0;
 		l_pA->m_tNodeID				= ai_location().level_vertex_id();

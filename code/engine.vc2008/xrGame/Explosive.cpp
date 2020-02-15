@@ -55,7 +55,7 @@ CExplosive::CExplosive()
 	m_eHitTypeFrag			= ALife::eHitTypeFireWound;
 
 
-	m_iCurrentParentID		= 0xffff;
+	m_iCurrentParentID		= WrongID;
 
 //	m_bReadyToExplode		= false;
 //	m_bExploding			= false;
@@ -307,7 +307,7 @@ float CExplosive::TestPassEffect(const	Fvector	&source_p,	const	Fvector	&dir,flo
 }
 void CExplosive::Explode()
 {
-	VERIFY(0xffff != Initiator());
+	VERIFY(WrongID != Initiator());
 	VERIFY(m_explosion_flags.test(flReadyToExplode));//m_bReadyToExplode
 	VERIFY(!physics_world()->Processing());
 	//m_bExploding = true;
@@ -577,7 +577,7 @@ void CExplosive::GenExplodeEvent (const Fvector& pos, const Fvector& normal)
 //	if( m_bExplodeEventSent ) 
 //		return;
 	VERIFY(!m_explosion_flags.test(flExplodEventSent));//!m_bExplodeEventSent
-	VERIFY(0xffff != Initiator());
+	VERIFY(WrongID != Initiator());
 
 	NET_Packet		P;
 	cast_game_object()->u_EventGen		(P,GE_GRENADE_EXPLODE,cast_game_object()->ID());	

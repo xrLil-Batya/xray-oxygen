@@ -14,7 +14,7 @@ class CWeapon;
 class CWeaponShotEffector
 {
 protected:
-	CameraRecoil	m_cam_recoil;
+	SRecoilData		m_cam_recoil;
 	
 	float			m_angle_vert;
 	float			m_angle_horz;

@@ -13,6 +13,7 @@ static constexpr u32 days_in_month[12] =
 	31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
 
+// Oxygen started 26.12.2016 
 static constexpr u32 start_day = 26;
 static constexpr u32 start_month = 12;
 static constexpr u32 start_year = 2016;

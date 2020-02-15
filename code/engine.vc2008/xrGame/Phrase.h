@@ -11,7 +11,7 @@ private:
 	friend CPhraseDialog;
 public:
 							CPhrase			();
-	virtual					~CPhrase		();
+	virtual					~CPhrase		() = default;
 
 	void					SetText			(LPCSTR text)			{m_text = text;}
 	LPCSTR					GetText			()	const;

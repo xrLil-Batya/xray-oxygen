@@ -10,7 +10,7 @@
 
 SRelationRegistry::FIGHT_DATA::FIGHT_DATA			()
 {
-	attacker = defender = 0xffff;
+	attacker = defender = WrongID;
 	total_hit = 0;
 	time = 0;
 	time_old = 0;

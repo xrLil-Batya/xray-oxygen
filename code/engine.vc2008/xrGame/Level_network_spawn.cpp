@@ -37,7 +37,7 @@ void CLevel::cl_Process_Spawn(NET_Packet& P)
 	F_entity_Destroy			(E);
 };
 
-void CLevel::g_cl_Spawn		(LPCSTR name, u8 rp, u16 flags, Fvector pos)
+void CLevel::g_cl_Spawn		(LPCSTR name, u16 flags, Fvector pos)
 {
 	// Create
 	CSE_Abstract*		E	= F_entity_Create(name);
@@ -46,11 +46,9 @@ void CLevel::g_cl_Spawn		(LPCSTR name, u8 rp, u16 flags, Fvector pos)
 	// Fill
 	E->s_name			= name;
 	E->set_name_replace	("");
-//.	E->s_gameid			=	u8(GameID());
-	E->s_RP				=	rp;
-	E->ID				=	0xffff;
-	E->ID_Parent		=	0xffff;
-	E->ID_Phantom		=	0xffff;
+	E->ID				=	WrongID;
+	E->ID_Parent		=	WrongID;
+	E->ID_Phantom		=	WrongID;
 	E->s_flags.assign	(flags);
 	E->RespawnTime		=	0;
 	E->o_Position		= pos;
@@ -96,7 +94,7 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 			SetEntity(O);	//do not switch !!!
 		}
 
-		if (0xffff != E->ID_Parent)	
+		if (WrongID != E->ID_Parent)	
 		{
 			NET_Packet	GEN;
 			GEN.write_start();
@@ -128,10 +126,9 @@ CSE_Abstract *CLevel::spawn_item(LPCSTR section, const Fvector &position, u32 le
 	abstract->s_name		= section;
 	abstract->set_name_replace	(section);
 	abstract->o_Position	= position;
-	abstract->s_RP			= 0xff;
-	abstract->ID			= 0xffff;
+	abstract->ID			= WrongID;
 	abstract->ID_Parent		= parent_id;
-	abstract->ID_Phantom	= 0xffff;
+	abstract->ID_Phantom	= WrongID;
 	abstract->s_flags.assign(M_SPAWN_OBJECT_LOCAL);
 	abstract->RespawnTime	= 0;
 
