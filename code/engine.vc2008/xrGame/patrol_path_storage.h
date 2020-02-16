@@ -36,7 +36,7 @@ public:
 
 public:
 			void load_raw (const CLevelGraph *level_graph, const CGameLevelCrossTable *cross, IReader &stream);
-	IC		const CPatrolPath		*path				(shared_str patrol_name, bool no_assert = false) const { return (I == patrol_paths().end()) ? nullptr : ((*I).second); };
+	IC		const CPatrolPath		*path				(shared_str patrol_name, bool no_assert = false) const { const_iterator	I = patrol_paths().find(patrol_name); return (I == patrol_paths().end()) ? nullptr : ((*I).second); };
 	IC		const PATROL_REGISTRY	&patrol_paths		() const { return m_registry; };
 
 			void					add_path(shared_str patrol_name, CPatrolPath *path);

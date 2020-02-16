@@ -35,7 +35,7 @@ struct CameraRecoil
 			EPS, EPS, 		// Max andle
 			EPS, 0.f, 1.f,	// Dispersion
 			0.f				// Step angle
-		}
+		};
 	};
 
 	constexpr CameraRecoil(const CameraRecoil& clone )  { mData = clone.mData;	}

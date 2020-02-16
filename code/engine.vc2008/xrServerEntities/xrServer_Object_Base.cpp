@@ -75,8 +75,6 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 	ID_Phantom					= 0xffff;
 	owner						= nullptr;
 	m_gameType.SetDefaults		();
-//.	s_gameid					= 0;
-	s_RP						= 0xFE;			// Use supplied coords
 	s_flags.assign				(0);
 	s_name						= caSection;
 	s_name_replace				= nullptr;			//xr_strdup("");
@@ -234,7 +232,7 @@ BOOL CSE_Abstract::Spawn_Read(NET_Packet &tNetPacket)
 	if(dummy16 == M_SPAWN_OXY)
 		tNetPacket.r_u16(m_wVersion);
 	else
-		R_ASSERT2(dummy16 == M_SPAWN, "Incorrect save/spawn file!")
+		R_ASSERT2(dummy16 == M_SPAWN, "Incorrect save/spawn file!");
 	
 	tNetPacket.r_stringZ(s_name);
 	

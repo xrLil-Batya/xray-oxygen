@@ -28,7 +28,6 @@
 
 CClient::CClient()
 {
-    flags.bConnected = FALSE;
 	Clear();
 }
 
@@ -128,7 +127,7 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 
 void xrServer::SendBroadcast(NET_Packet& P)
 {
-    if (!SV_Client || !SV_Client->flags.bConnected)
+    if (!SV_Client)
         return;
 
 	if (SV_Client->net_Accepted)
@@ -234,7 +233,6 @@ void xrServer::createClient()
 {
 	SV_Client = xr_new<CClient>();
 	SV_Client->ID.set(1);
-	SV_Client->flags.bConnected = TRUE;
 }
 
 void xrServer::Disconnect()
@@ -365,7 +363,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 		// Create phantom
 		CSE_Abstract* Phantom = entity_Create(pAbstractE->s_name.c_str()); R_ASSERT(Phantom);
 		Phantom->Spawn_Read(P);
-		Phantom->ID = PerformIDgen(WrongID);
+		Phantom->ID = PerformIDgen();
 		// Self-linked to avoid phantom-breeding
 		Phantom->ID_Phantom = Phantom->ID;
 		Phantom->owner = nullptr;
@@ -384,7 +382,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, BOOL bSpawnWithClientsMainE
 		if (pAbstractE->s_flags.is(M_SPAWN_OBJECT_PHANTOM))
 		{
 			// Clone from Phantom
-			pAbstractE->ID = PerformIDgen(WrongID);
+			pAbstractE->ID = PerformIDgen();
 			pAbstractE->owner = SV_Client;
 			pAbstractE->s_flags.set(M_SPAWN_OBJECT_PHANTOM, false);
 			entities.insert(std::make_pair(pAbstractE->ID, pAbstractE));

@@ -105,7 +105,7 @@ CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &po
 	R_ASSERT3					(abstract,"Cannot find item with section",section);
 
 	abstract->s_name			= section;
-	abstract->ID				= server().PerformIDgen(WrongID);
+	abstract->ID				= server().PerformIDgen();
 	abstract->ID_Parent			= parent_id;
 	abstract->ID_Phantom		= WrongID;
 	abstract->o_Position		= position;
@@ -162,7 +162,7 @@ CSE_Abstract *CALifeSimulatorBase::create(CSE_ALifeGroupAbstract *tpALifeGroupAb
 	k->UPDATE_Read				(tNetPacket);
 	k->s_name					= S;
 	k->m_tSpawnID				= j->m_tSpawnID;
-	k->ID						= server().PerformIDgen(WrongID);
+	k->ID						= server().PerformIDgen();
 	k->m_bDirectControl			= false;
 	k->m_bALifeControl			= true;
 	
@@ -206,7 +206,7 @@ void CALifeSimulatorBase::create(CSE_ALifeDynamicObject *&i, CSE_ALifeDynamicObj
 	if (!graph().actor() && smart_cast<CSE_ALifeCreatureActor*>(i))
 		i->ID					= 0;
 	else
-		i->ID					= server().PerformIDgen(WrongID);
+		i->ID					= server().PerformIDgen();
 
 	register_object				(i,true);
 	i->m_bALifeControl			= true;

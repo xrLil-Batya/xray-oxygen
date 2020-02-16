@@ -50,10 +50,10 @@ private:
 	static	void				InitIdToIndex	();
 public:
 	//отношение между рангами
-	static CHARACTER_GOODWILL	relation			(int from, int to) const;
-	CHARACTER_GOODWILL			relation			(int to) const;
+	static CHARACTER_GOODWILL	relation			(int from, int to);
+	CHARACTER_GOODWILL			relation			(int to);
 
-	static CHARACTER_RANK_VALUE	rank_kill_points	(int) const;
+	static CHARACTER_RANK_VALUE	rank_kill_points	(int);
 
 	static void					DeleteIdToIndexData	();
 

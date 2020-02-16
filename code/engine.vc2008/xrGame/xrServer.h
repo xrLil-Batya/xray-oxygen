@@ -12,19 +12,11 @@ const u32 NET_Latency = 50;		// time in (ms)
 // t-defs
 using xrS_entities = xr_hash_map<u16, CSE_Abstract*>;
 
-class CClient
+struct CClient
 {
-public:
-    struct Flags
-    {
-        u32 bConnected : 1;
-    };
-
 	CSE_Abstract* owner;
 	BOOL net_Accepted;
-
     ClientID ID;
-    Flags flags;
 
     CClient();
 	virtual ~CClient() = default;
@@ -77,7 +69,7 @@ public:
 	{
 		m_tID_Generator		= id_generator_type();
 	}
-	IC u16					PerformIDgen			(u16 ID)
+	IC u16					PerformIDgen			(u16 ID = WrongID)
 	{
 		return				(m_tID_Generator.tfGetID(ID));
 	}
