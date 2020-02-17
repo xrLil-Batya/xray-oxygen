@@ -9,7 +9,7 @@
 
 float4 main(p_flat I) : SV_Target
 {
-	float4	D 	= tbase(I.tcdh);
+	float4	D 	= s_base.Sample(smp_linear, I.tcdh);
 			D.w = (D.w - def_aref * 0.5f) / (1.0f - def_aref * 0.5f);
 	return D;
 }
@@ -26,7 +26,7 @@ f_deffer main(p_flat I)
 
 	// 1. Base texture + kill pixels with low alpha
 #if !defined(MSAA_ALPHATEST_DX10_1)
-	float4	D 		= tbase(I.tcdh);
+	float4	D 		= s_base.Sample(smp_linear, I.tcdh);
 
 #if	!(defined(MSAA_ALPHATEST_DX10_1_ATOC) || defined(MSAA_ALPHATEST_DX10_0_ATOC))
 	clip(D.w - def_aref);
@@ -44,7 +44,7 @@ f_deffer main(p_flat I)
 	float2	pixeloffset = MSAAOffsets[0]*(1.0f/16.0f);
 	float2	texeloffset = pixeloffset.x * ddx_base + pixeloffset.y * ddy_base;
       	
-	float4	D 			= tbase(I.tcdh + texeloffset);
+	float4	D 			= s_base.Sample(smp_linear, I.tcdh + texeloffset);
 	
 	if (D.w - def_aref >= 0.0f)
 		mask |= 0x1;
@@ -53,7 +53,7 @@ f_deffer main(p_flat I)
 	{
 		pixeloffset = MSAAOffsets[i]*(1.0f/16.0f);
 		texeloffset = pixeloffset.x * ddx_base + pixeloffset.y * ddy_base;
-		float4 DI 	= tbase(I.tcdh + texeloffset);
+		float4 DI 	= s_base.Sample(smp_linear, I.tcdh + texeloffset);
 		if (DI.w - def_aref >= 0.0f)
 			mask |= (uint(0x1) << i);
 	}
