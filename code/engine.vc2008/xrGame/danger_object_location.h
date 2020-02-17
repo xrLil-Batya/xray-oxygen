@@ -12,15 +12,21 @@
 
 class CGameObject;
 
-class CDangerObjectLocation : public CDangerLocation {
-private:
-	const CGameObject		*m_object;
+class CDangerObjectLocation : public CDangerLocation
+{
+	const CGameObject *m_object;
 
 public:
-	IC						CDangerObjectLocation	(const CGameObject *object, u32 level_time, u32 interval, float radius, const squad_mask_type &mask = squad_mask_type(-1));
-	virtual const Fvector	&position				() const;
-	virtual bool			useful					() const;
-	virtual	bool			operator==				(const CObject *object) const;
+	constexpr CDangerObjectLocation	(const CGameObject *pObj, u32 LevelTime, u32 Interval, float Radius, const squad_mask_type &mask = squad_mask_type(-1))
+	{
+		m_object		= pObj;
+		m_level_time	= LevelTime;
+		m_interval		= Interval;
+		m_radius		= Radius;
+		m_mask.assign	(mask);
+	}
+	
+	virtual const Fvector	&position   () const { return m_object->Position(); }
+	virtual bool			useful	    () const { return (true); }
+	virtual	bool			operator==  (const CObject *object) const { return (m_object->ID() == object->ID()); }
 };
-
-#include "danger_object_location_inline.h"

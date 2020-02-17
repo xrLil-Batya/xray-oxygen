@@ -125,10 +125,7 @@ void CUIZoneMap::ConditionalInitDateWidget()
     }
     else
     {
-        if (m_date_wnd != nullptr)
-        {
-            xr_delete(m_date_wnd);
-        }
+        xr_delete(m_date_wnd);
     }
 }
 

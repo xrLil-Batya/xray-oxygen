@@ -244,9 +244,6 @@ bool CInventoryOwner::OfferTalk(CInventoryOwner* talk_partner)
 	//проверить отношение к собеседнику
 	CEntityAlive* pPartnerEntityAlive = smart_cast<CEntityAlive*>(talk_partner);
 	R_ASSERT(pPartnerEntityAlive);
-	
-//	ALife::ERelationType relation = SRelationRegistry().GetRelationType(this, talk_partner);
-//	if(relation == ALife::eRelationTypeEnemy) return false;
 
 	if(!is_alive() || !pPartnerEntityAlive->g_Alive()) return false;
 

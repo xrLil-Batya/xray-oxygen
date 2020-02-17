@@ -2,13 +2,12 @@
 #include "igame_level.h"
 #include "feel_touch.h"
 #include "xr_object.h"
+
+#include <functional>
+
 using namespace Feel;
 
 Touch::Touch():pure_relcase(&Touch::feel_touch_relcase)
-{
-}
-
-Touch::~Touch()
 {
 }
 
@@ -90,4 +89,33 @@ void Touch::feel_touch_relcase	(CObject* O)
 		}
 	xr_vector<DenyTouch>::iterator Id=feel_touch_disable.begin(),IdE=feel_touch_disable.end();
 	for(;Id!=IdE;++Id)			if((*Id).O==O )	{ feel_touch_disable.erase(Id); break; }
+}
+
+void GlobalFeelTouch::feel_touch_update(Fvector& P, float R) noexcept
+{
+	//we ignore P and R arguments, we need just delete vealed denied objects...
+	auto new_end = std::remove_if(feel_touch_disable.begin(), feel_touch_disable.end(),
+		std::bind([](Feel::Touch::DenyTouch const & left, DWORD const expire_time) const
+		{ 
+			return left.Expire <= expire_time; 
+		}, 
+		std::placeholders::_1, Device.dwTimeGlobal));
+
+	feel_touch_disable.erase(new_end, feel_touch_disable.end());
+}
+
+bool GlobalFeelTouch::is_object_denied(CObject const * O) noexcept
+{
+	if (std::find_if(feel_touch_disable.begin(), feel_touch_disable.end(),
+		std::bind(
+			[](Feel::Touch::DenyTouch const & left, CObject const * const right) const 
+			{ 
+				return left.O == right; 
+			},
+		std::placeholders::_1, O
+		)) == feel_touch_disable.end())
+	{
+		return false;
+	}
+	return true;
 }

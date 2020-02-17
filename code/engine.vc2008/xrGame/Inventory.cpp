@@ -751,12 +751,7 @@ PIItem CInventory::item(CLASS_ID cls_id) const
 
 float CInventory::TotalWeight() const
 {
-	VERIFY(m_fTotalWeight >= 0.f);
-	
-	if (m_fTotalWeight >= 0.f)
-		return m_fTotalWeight;
-	else 
-		return 0.f;
+	return m_fTotalWeight;
 }
 
 float CInventory::CalcTotalWeight()
@@ -988,7 +983,6 @@ bool CInventory::CanTakeItem(CInventoryItem *inventory_item) const
 	return	true;
 }
 
-
 u32  CInventory::BeltWidth() const
 {
 	CActor* pActor = smart_cast<CActor*>( m_pOwner );
@@ -1065,7 +1059,6 @@ bool CInventory::isBeautifulForActiveSlot	(CInventoryItem *pIItem)
 	return				(false);
 }
 
-//.#include "WeaponHUD.h"
 void CInventory::Items_SetCurrentEntityHud(bool current_entity)
 {
 	TIItemContainer::iterator it;
@@ -1087,21 +1080,10 @@ void CInventory::SetSlotsBlocked(u16 mask, bool bBlock)
 	for(u16 i = FirstSlot(), ie = LastSlot(); i <= ie; ++i)
 	{
 		if(mask & (1<<i))
-		{
-			if (bBlock)
-				BlockSlot(i);
-			else
-				UnblockSlot(i);
-		}
+			bBlock ? BlockSlot(i) : UnblockSlot(i);
 	}
 	
-	if (bBlock)
-	{
-		TryDeactivateActiveSlot();	
-	} else
-	{
-		TryActivatePrevSlot();
-	}
+	bBlock ? TryDeactivateActiveSlot() : TryActivatePrevSlot();
 }
 
 void CInventory::TryActivatePrevSlot()
@@ -1109,27 +1091,19 @@ void CInventory::TryActivatePrevSlot()
 	u16 ActiveSlot		= GetActiveSlot();
 	u16 PrevActiveSlot	= GetPrevActiveSlot();
 	u16 NextActiveSlot	= GetNextActiveSlot();
-	if ((
-			(ActiveSlot == NO_ACTIVE_SLOT) ||
-			(NextActiveSlot == NO_ACTIVE_SLOT)
-		) &&
-		(PrevActiveSlot != NO_ACTIVE_SLOT))
+	
+	if ((ActiveSlot == NO_ACTIVE_SLOT || NextActiveSlot == NO_ACTIVE_SLOT) && (PrevActiveSlot != NO_ACTIVE_SLOT))
 	{
 		PIItem prev_active_item = ItemFromSlot(PrevActiveSlot);
-		if (prev_active_item &&
-			!IsSlotBlocked(prev_active_item) &&
-			m_slots[PrevActiveSlot].CanBeActivated())
+		if (prev_active_item && !IsSlotBlocked(prev_active_item) && m_slots[PrevActiveSlot].CanBeActivated())
 		{
-#ifndef MASTER_GOLD
-			Msg("Set slots blocked: activating prev slot [%d], Frame[%d]", PrevActiveSlot, Device.dwFrame);
-#endif // #ifndef MASTER_GOLD
 			Activate(PrevActiveSlot);
 			SetPrevActiveSlot(NO_ACTIVE_SLOT);
 		}
 	}
 }
 
-void CInventory::TryDeactivateActiveSlot	()
+void CInventory::TryDeactivateActiveSlot()
 {
 	u16 ActiveSlot		= GetActiveSlot();
 	u16 NextActiveSlot	= GetNextActiveSlot();
@@ -1137,24 +1111,16 @@ void CInventory::TryDeactivateActiveSlot	()
 	if ((ActiveSlot == NO_ACTIVE_SLOT) && (NextActiveSlot == NO_ACTIVE_SLOT))
 		return;
 	
-	PIItem		active_item = (ActiveSlot != NO_ACTIVE_SLOT) ? 
-		ItemFromSlot(ActiveSlot) : nullptr;
-	PIItem		next_active_item = (NextActiveSlot != NO_ACTIVE_SLOT) ?
-		ItemFromSlot(NextActiveSlot) : nullptr;
+	PIItem active_item = (ActiveSlot != NO_ACTIVE_SLOT) ? ItemFromSlot(ActiveSlot) : nullptr;
+	PIItem next_active_item = (NextActiveSlot != NO_ACTIVE_SLOT) ? ItemFromSlot(NextActiveSlot) : nullptr;
 
-	if (active_item &&
-		(IsSlotBlocked(active_item) || !m_slots[ActiveSlot].CanBeActivated())
-		)
+	if (active_item && (IsSlotBlocked(active_item) || !m_slots[ActiveSlot].CanBeActivated()))
 	{
-#ifndef MASTER_GOLD
-		Msg("Set slots blocked: activating slot [-1], Frame[%d]", Device.dwFrame);
-#endif // #ifndef MASTER_GOLD
 		ItemFromSlot(ActiveSlot)->DiscardState();
 		Activate			(NO_ACTIVE_SLOT);
 		SetPrevActiveSlot	(ActiveSlot);
-	} else if (next_active_item &&
-		(IsSlotBlocked(next_active_item) || !m_slots[NextActiveSlot].CanBeActivated())
-		)
+	} 
+	else if (next_active_item && (IsSlotBlocked(next_active_item) || !m_slots[NextActiveSlot].CanBeActivated()))
 	{
 		Activate			(NO_ACTIVE_SLOT);
 		SetPrevActiveSlot	(NextActiveSlot);
@@ -1167,15 +1133,13 @@ void CInventory::BlockSlot(u16 slot_id)
 	
 	++m_blocked_slots[slot_id];
 	
-	VERIFY_FORMAT(m_blocked_slots[slot_id] < 5,
-		"blocked slot [%d] overflow", slot_id);
+	VERIFY_FORMAT(m_blocked_slots[slot_id] < 5, "blocked slot [%d] overflow", slot_id);
 }
 
 void CInventory::UnblockSlot(u16 slot_id)
 {
 	VERIFY(slot_id <= LAST_SLOT);
-	VERIFY_FORMAT(m_blocked_slots[slot_id] > 0,
-		"blocked slot [%d] underflow", slot_id);	
+	VERIFY_FORMAT(m_blocked_slots[slot_id] > 0, "blocked slot [%d] underflow", slot_id);	
 	
 	--m_blocked_slots[slot_id];	
 }

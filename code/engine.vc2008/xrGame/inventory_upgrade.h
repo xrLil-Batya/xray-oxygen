@@ -5,10 +5,7 @@
 //	Author		: Evgeniy Sokolov
 //	Description : inventory upgrade class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef INVENTORY_UPGRADE_H_INCLUDED
-#define INVENTORY_UPGRADE_H_INCLUDED
-
+#pragma once
 #include "inventory_upgrade_base.h"
 #include "luabind/luabind.hpp"
 
@@ -112,7 +109,7 @@ public:
 	IC			LPCSTR		name() const;
 	IC			LPCSTR		description_text() const;
 
-				LPCSTR		get_prerequisites();
+				LPCSTR		get_prerequisites() const;
 		UpgradeStateResult	get_preconditions();
 	IC			bool		get_highlight() const;
 	IC	shared_str const&	get_property_name(u8 index=0) const;
@@ -166,5 +163,3 @@ protected:
 } // namespace inventory
 
 #include "inventory_upgrade_inline.h"
-
-#endif // INVENTORY_UPGRADE_H_INCLUDED

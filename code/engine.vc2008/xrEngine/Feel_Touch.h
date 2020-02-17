@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include "pure_relcase.h"
 
 class ENGINE_API CObject;
@@ -25,7 +24,7 @@ namespace Feel
 
 	public:
 								Touch						();
-		virtual					~Touch						();
+		virtual					~Touch						() = default;
 
 		virtual BOOL			feel_touch_contact			(CObject* O);
 		virtual void			feel_touch_update			(Fvector& P, float	R);
@@ -33,4 +32,15 @@ namespace Feel
 		virtual void			feel_touch_new				(CObject* O)			{	};
 		virtual void			feel_touch_delete			(CObject* O)			{	};
 	};
+};
+
+//this class implements only denied functionality
+struct ENGINE_API GlobalFeelTouch : public Feel::Touch
+{
+public:
+				GlobalFeelTouch		() = default;
+	virtual		~GlobalFeelTouch	() = default;
+
+	void		feel_touch_update	(Fvector& P, float R) noexcept override;
+	bool		is_object_denied	(CObject const* O) noexcept;
 };

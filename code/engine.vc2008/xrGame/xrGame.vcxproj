@@ -803,7 +803,6 @@
     <ClInclude Include="agent_location_manager.h" />
     <ClInclude Include="agent_location_manager_inline.h" />
     <ClInclude Include="danger_location.h" />
-    <ClInclude Include="danger_location_inline.h" />
     <ClInclude Include="danger_cover_location.h" />
     <ClInclude Include="danger_cover_location_inline.h" />
     <ClInclude Include="danger_object_location.h" />
@@ -1507,7 +1506,6 @@
     <ClInclude Include="level_sounds.h" />
     <ClInclude Include="debug_renderer.h" />
     <ClInclude Include="debug_renderer_inline.h" />
-    <ClInclude Include="GlobalFeelTouch.hpp" />
     <ClInclude Include="Level_network_map_sync.h" />
     <ClInclude Include="level_debug.h" />
     <ClInclude Include="Actor.h" />
@@ -1938,7 +1936,6 @@
     <ClCompile Include="agent_explosive_manager.cpp" />
     <ClCompile Include="danger_explosive.cpp" />
     <ClCompile Include="agent_location_manager.cpp" />
-    <ClCompile Include="danger_location.cpp" />
     <ClCompile Include="danger_cover_location.cpp" />
     <ClCompile Include="danger_object_location.cpp" />
     <ClCompile Include="agent_member_manager.cpp" />
@@ -2382,7 +2379,6 @@
     <ClCompile Include="autosave_manager.cpp" />
     <ClCompile Include="level_sounds.cpp" />
     <ClCompile Include="debug_renderer.cpp" />
-    <ClCompile Include="GlobalFeelTouch.cpp" />
     <ClCompile Include="Level_network_map_sync.cpp" />
     <ClCompile Include="level_debug.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

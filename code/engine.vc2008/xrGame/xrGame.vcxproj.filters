@@ -1345,9 +1345,6 @@
     <Filter Include="Core\Client\Level\Debug Renderer">
       <UniqueIdentifier>{03592f9c-e5c4-456f-ba1b-c309e52e0450}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Level\GlobalFeelTouch">
-      <UniqueIdentifier>{e15b7ba6-bd5f-4a8e-ac60-fda57948eb3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Level\LevelMapSync">
       <UniqueIdentifier>{c89035a2-847f-4cb3-b855-8de19ffa3a56}</UniqueIdentifier>
     </Filter>
@@ -4626,9 +4623,6 @@
     <ClInclude Include="debug_renderer_inline.h">
       <Filter>Core\Client\Level\Debug Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalFeelTouch.hpp">
-      <Filter>Core\Client\Level\GlobalFeelTouch</Filter>
-    </ClInclude>
     <ClInclude Include="Level_network_map_sync.h">
       <Filter>Core\Client\Level\LevelMapSync</Filter>
     </ClInclude>
@@ -6922,9 +6916,6 @@
     </ClCompile>
     <ClCompile Include="debug_renderer.cpp">
       <Filter>Core\Client\Level\Debug Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="GlobalFeelTouch.cpp">
-      <Filter>Core\Client\Level\GlobalFeelTouch</Filter>
     </ClCompile>
     <ClCompile Include="Level_network_map_sync.cpp">
       <Filter>Core\Client\Level\LevelMapSync</Filter>

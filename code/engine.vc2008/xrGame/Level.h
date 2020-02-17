@@ -2,13 +2,13 @@
 #include "../xrEngine/igame_level.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrEngine/ClS/net_client.h"
+#include "../xrEngine/feel_touch.h"
 //#include "../xrScripts/export/script_export_space.h"
 #include "../xrEngine/StatGraph.h"
 #include "../xrServerEntities/xrMessages.h"
 #include "../xrServerEntities/alife_space.h"
 #include "../xrcore/xrDebug.h"
 #include "xrServer.h"
-#include "GlobalFeelTouch.hpp"
 #include "Level_network_map_sync.h"
 
 class	CParticlesObject;

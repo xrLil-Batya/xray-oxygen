@@ -77,15 +77,6 @@ void CInventoryBox::OnEvent(NET_Packet& P, u16 type)
 	};
 }
 
-void CInventoryBox::UpdateCL()
-{
-	inherited::UpdateCL	();
-}
-
-void CInventoryBox::net_Destroy()
-{
-	inherited::net_Destroy	();
-}
 #include "../xrServerEntities/xrServer_Objects_Alife.h"
 BOOL CInventoryBox::net_Spawn(CSE_Abstract* DC)
 {
@@ -103,11 +94,6 @@ BOOL CInventoryBox::net_Spawn(CSE_Abstract* DC)
 	}
 
 	return					TRUE;
-}
-
-void CInventoryBox::net_Relcase(CObject* O)
-{
-	inherited::net_Relcase(O);
 }
 
 #include "inventory_item.h"
@@ -134,13 +120,9 @@ void CInventoryBox::set_closed(bool status, LPCSTR reason)
 	m_closed = status;
 
 	if (reason && xr_strlen(reason))
-	{
 		set_tip_text(reason);
-	}
 	else
-	{
 		set_tip_text("inventory_box_use");
-	}
 
 	SE_update_status();
 }
