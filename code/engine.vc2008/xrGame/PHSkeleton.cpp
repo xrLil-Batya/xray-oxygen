@@ -395,7 +395,7 @@ void CPHSkeleton::SyncNetState()
 		m_flags.set(CSE_PHSkeleton::flActive, obj->PPhysicsShell()->isEnabled());
 
 	auto po = smart_cast<CSE_PHSkeleton*>(se_obj);
-	R_ASSERT4(po, "[%s]: %s is not CSE_PHSkeleton", __FUNCTION__, obj->Name());
+	R_ASSERT_FORMAT(po, "[%s]: %s is not CSE_PHSkeleton", __FUNCTION__, obj->Name());
 	po->_flags.assign(m_flags.get());
 	auto& saved_bones = po->saved_bones;
 	u16 bones_number = obj->PHGetSyncItemsNumber();

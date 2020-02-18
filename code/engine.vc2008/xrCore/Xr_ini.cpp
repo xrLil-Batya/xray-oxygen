@@ -521,7 +521,7 @@ void CInifile::w_string(const char* S, const char* L, const char* V)
 	char sect[256];
 	_parse(sect, S);
 	_strlwr(sect);
-	R_ASSERT4(sect[0], "[%s]: wrong section name [%s]", __FUNCTION__, S);
+	R_ASSERT_FORMAT(sect[0], "[%s]: wrong section name [%s]", __FUNCTION__, S);
 	if (!section_exist(sect)) {
 		// create _new_ section
 		Sect *NEW = xr_new<Sect>();
@@ -532,7 +532,7 @@ void CInifile::w_string(const char* S, const char* L, const char* V)
 	// parse line/value
 	char line[256];
 	_parse(line, L);
-	R_ASSERT4(line[0], "[%s]: wrong param name [%s]", __FUNCTION__, L);
+	R_ASSERT_FORMAT(line[0], "[%s]: wrong param name [%s]", __FUNCTION__, L);
 	char value[256];
 	_parse(value, V);
 

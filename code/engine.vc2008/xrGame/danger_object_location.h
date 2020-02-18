@@ -16,7 +16,7 @@ class CDangerObjectLocation : public CDangerLocation
 	const CGameObject *m_object;
 
 public:
-	constexpr CDangerObjectLocation	(const CGameObject *pObj, u32 LevelTime, u32 Interval, float Radius, const squad_mask_type &mask = squad_mask_type(-1))
+	IC CDangerObjectLocation	(const CGameObject *pObj, u32 LevelTime, u32 Interval, float Radius, const squad_mask_type &mask = squad_mask_type(-1))
 	{
 		m_object		= pObj;
 		m_level_time	= LevelTime;
