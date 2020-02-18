@@ -67,7 +67,7 @@ void __stdcall AttachmentCallback(IKinematics *tpKinematics)
 
 	IKinematics *kinematics = smart_cast<IKinematics*>(game_object->Visual());
 
-	for (CAttachableItem* pItem : m_attached_objects) 
+	for (const CAttachableItem* pItem : attachment_owner->m_attached_objects)
 	{
 		pItem->item().object().XFORM().mul_43	(kinematics->LL_GetBoneInstance(pItem->bone_id()).mTransform, pItem->offset());
 		pItem->item().object().XFORM().mulA_43	(game_object->XFORM());
@@ -161,7 +161,7 @@ void CAttachmentOwner::reattach_items()
 
 CAttachableItem* CAttachmentOwner::attachedItem(CLASS_ID clsid) const
 {
-	for (const CAttachableItem* pItem : m_attached_objects) 
+	for (CAttachableItem* pItem : m_attached_objects) 
 		if (pItem->item().object().CLS_ID == clsid)
 			return (pItem);
 
@@ -170,7 +170,7 @@ CAttachableItem* CAttachmentOwner::attachedItem(CLASS_ID clsid) const
 
 CAttachableItem* CAttachmentOwner::attachedItem(u16 id) const
 {
-	for (const CAttachableItem* pItem : m_attached_objects) 
+	for (CAttachableItem* pItem : m_attached_objects) 
 		if (pItem->item().object().ID() == id)
 			return (pItem);
 
@@ -179,7 +179,7 @@ CAttachableItem* CAttachmentOwner::attachedItem(u16 id) const
 
 CAttachableItem* CAttachmentOwner::attachedItem(shared_str& section) const
 {
-	for (const CAttachableItem* pItem : m_attached_objects) 
+	for (CAttachableItem* pItem : m_attached_objects) 
 		if (!xr_strcmp(pItem->item().object().cNameSect(), section) && !pItem->item().IsInvalid())
 			return pItem;
 
