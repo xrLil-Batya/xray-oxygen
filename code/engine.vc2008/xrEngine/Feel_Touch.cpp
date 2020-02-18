@@ -95,7 +95,7 @@ void GlobalFeelTouch::feel_touch_update(Fvector& P, float R) noexcept
 {
 	//we ignore P and R arguments, we need just delete vealed denied objects...
 	auto new_end = std::remove_if(feel_touch_disable.begin(), feel_touch_disable.end(),
-		std::bind([](Feel::Touch::DenyTouch const & left, DWORD const expire_time) const
+		std::bind([](Feel::Touch::DenyTouch const & left, DWORD const expire_time)
 		{ 
 			return left.Expire <= expire_time; 
 		}, 
@@ -108,7 +108,7 @@ bool GlobalFeelTouch::is_object_denied(CObject const * O) noexcept
 {
 	if (std::find_if(feel_touch_disable.begin(), feel_touch_disable.end(),
 		std::bind(
-			[](Feel::Touch::DenyTouch const & left, CObject const * const right) const 
+			[](Feel::Touch::DenyTouch const & left, CObject const * const right) 
 			{ 
 				return left.O == right; 
 			},
