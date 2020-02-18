@@ -87,7 +87,7 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fSprintK					= pSettings->r_float(section,"sprint_k");
 	
 	//порог силы и здоровья меньше которого актер начинает хромать
-	auto ReadAndCheckBegin2End = [this, section](float &Begin, float &End, xr_string_view ReadName)
+	auto ReadAndCheckBegin2End = [this, section](float &Begin, float &End, xr_string ReadName)
 	{
 		Begin = pSettings->r_float(section, (ReadName + "_begin").c_str());
 		End   = pSettings->r_float(section, (ReadName + "_end").c_str());
