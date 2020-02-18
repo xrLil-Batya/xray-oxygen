@@ -218,8 +218,8 @@ void play_particles(float vel_cret, dxGeomUserData* data, const dContactGeom* c,
 	}
 	else if (play_liquid)
 	{
-		CPHFindLiquidParticlesComparer find(cast_fv(c->pos));
-		if (!Level().ph_commander().has_call(&find, &find))
+		CPHFindLiquidParticlesComparer sFind(cast_fv(c->pos));
+		if (!Level().ph_commander().has_call(&sFind, &sFind))
 			Level().ph_commander().add_call(xr_new<CPHLiquidParticlesCondition>(), xr_new<CPHLiquidParticlesPlayCall>(*c, b_invert_normal, ps_name));
 	}
 }

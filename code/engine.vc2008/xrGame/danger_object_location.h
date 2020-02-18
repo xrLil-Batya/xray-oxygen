@@ -1,13 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: danger_object_location.h
 //	Created 	: 24.05.2004
-//  Modified 	: 14.01.2005
+//  Modified 	: 17.02.2020
 //	Author		: Dmitriy Iassenev
+//  Modifer		: ForserX 
 //	Description : Danger object location
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "danger_location.h"
 
 class CGameObject;

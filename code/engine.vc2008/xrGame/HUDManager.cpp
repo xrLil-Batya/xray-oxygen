@@ -127,7 +127,7 @@ void CHUDManager::Render_Actor_Shadow() // added by KD
 }
 
 #include "player_hud.h"
-bool   CHUDManager::RenderActiveItemUIQuery()
+bool CHUDManager::RenderActiveItemUIQuery()
 {
 	if (!psHUD_Flags.is(HUD_DRAW_RT2))
 		return false;

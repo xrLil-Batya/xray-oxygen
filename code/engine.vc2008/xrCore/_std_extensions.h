@@ -20,6 +20,7 @@
 #endif
 
 #include "string_concatenations.h"
+#include "xrLang.h"
 //#include <charconv>
 
 // конвертирует строку в число, в случае ошибки возвращает 0
@@ -27,7 +28,7 @@
 // UPDATE: charconv is not available on Xbox One (at least in that SDK that we using)
 // so we use good old atoi
 
-inline int atoi_17(const std::string_view str)
+inline int atoi_17(const xr_string_view str)
 {
 	string64 tempStr = {0};
 	VERIFY(str.size() < 64);

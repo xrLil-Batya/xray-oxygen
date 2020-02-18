@@ -22,7 +22,7 @@ DLL_Pure *CExplosiveRocket::_construct()
 {
 	CCustomRocket::_construct();
 	CInventoryItem::_construct();
-	return						(this);
+	return (this);
 }
 
 void CExplosiveRocket::Load(LPCSTR section)

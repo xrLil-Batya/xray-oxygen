@@ -42,8 +42,6 @@ CActorCondition::CActorCondition(CActor *object) :
 	m_fSatiety					= 1.0f;
 	m_fThirst					= 1.0f;
 
-//	m_vecBoosts.clear();
-
 	VERIFY						(object);
 	m_object					= object;
 	m_condition_flags.zero		();
@@ -88,33 +86,28 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fAccelK					= pSettings->r_float(section,"accel_k");
 	m_fSprintK					= pSettings->r_float(section,"sprint_k");
 	
-
 	//порог силы и здоровья меньше которого актер начинает хромать
-	m_fLimpingHealthBegin		= pSettings->r_float(section,	"limping_health_begin");
-	m_fLimpingHealthEnd			= pSettings->r_float(section,	"limping_health_end");
-	R_ASSERT					(m_fLimpingHealthBegin<=m_fLimpingHealthEnd);
-
-	m_fLimpingPowerBegin		= pSettings->r_float(section,	"limping_power_begin");
-	m_fLimpingPowerEnd			= pSettings->r_float(section,	"limping_power_end");
-	R_ASSERT					(m_fLimpingPowerBegin<=m_fLimpingPowerEnd);
-
-	m_fCantWalkPowerBegin		= pSettings->r_float(section,	"cant_walk_power_begin");
-	m_fCantWalkPowerEnd			= pSettings->r_float(section,	"cant_walk_power_end");
-	R_ASSERT					(m_fCantWalkPowerBegin<=m_fCantWalkPowerEnd);
-
-	m_fCantSprintPowerBegin		= pSettings->r_float(section,	"cant_sprint_power_begin");
-	m_fCantSprintPowerEnd		= pSettings->r_float(section,	"cant_sprint_power_end");
-	R_ASSERT					(m_fCantSprintPowerBegin<=m_fCantSprintPowerEnd);
-
-	m_fPowerLeakSpeed			= pSettings->r_float(section,"max_power_leak_speed");
+	auto ReadAndCheckBegin2End - [this, section](float &Begin, float &End, xr_string ReadName)
+	{
+		Begin = pSettings->r_float(section, (ReadName + "_begin").c_str());
+		End   = pSettings->r_float(section, (ReadName + "_end").c_str());
+		R_ASSERT4(Begin <= End, "%s > %s", cEnd, cBegin);
+	};
 	
-	m_fV_Alcohol				= pSettings->r_float(section,"alcohol_v");
+	ReadAndCheckBegin2End(m_fLimpingHealthBegin,   m_fLimpingHealthEnd,   "limping_health");
+	ReadAndCheckBegin2End(m_fLimpingPowerBegin,    m_fLimpingPowerEnd,    "limping_power");
+	ReadAndCheckBegin2End(m_fCantWalkPowerBegin,   m_fCantWalkPowerEnd,   "cant_walk_power");
+	ReadAndCheckBegin2End(m_fCantSprintPowerBegin, m_fCantSprintPowerEnd, "cant_sprint_power");
 
-	m_fSatietyCritical			= pSettings->r_float(section,"satiety_critical");
-	clamp						(m_fSatietyCritical, 0.0f, 1.0f);
-	m_fV_Satiety				= pSettings->r_float(section,"satiety_v");		
-	m_fV_SatietyPower			= pSettings->r_float(section,"satiety_power_v");
-	m_fV_SatietyHealth			= pSettings->r_float(section,"satiety_health_v");
+	m_fPowerLeakSpeed = pSettings->r_float(section,"max_power_leak_speed");
+	
+	m_fV_Alcohol = pSettings->r_float(section,"alcohol_v");
+
+	m_fSatietyCritical = pSettings->r_float(section,"satiety_critical");
+	m_fV_Satiety       = pSettings->r_float(section,"satiety_v");		
+	m_fV_SatietyPower  = pSettings->r_float(section,"satiety_power_v");
+	m_fV_SatietyHealth = pSettings->r_float(section,"satiety_health_v");
+	clamp(m_fSatietyCritical, 0.0f, 1.0f);
 
     if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
@@ -125,8 +118,7 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
         m_fV_ThirstHealth = pSettings->r_float(section, "thirst_health_v");
     }
 
-	
-	m_MaxWalkWeight				= pSettings->r_float(section,"max_walk_weight");
+	m_MaxWalkWeight = pSettings->r_float(section,"max_walk_weight");
 
 	m_zone_max_power[ALife::infl_rad]	= pSettings->r_float(section, "radio_zone_max_power" );
 	m_zone_max_power[ALife::infl_fire]	= pSettings->r_float(section, "fire_zone_max_power" );
@@ -212,7 +204,7 @@ void CActorCondition::UpdateCondition()
 
 		return;
 	}
-
+	
 	if (!object().g_Alive())
 		return;
 
@@ -221,7 +213,7 @@ void CActorCondition::UpdateCondition()
 
 	float base_weight = object().MaxCarryWeight();
 	float cur_weight = object().inventory().TotalWeight();
-
+	
 	if ((object().mstate_real & mcAnyMove) || (object().mstate_real & mcFall))
 	{
 		ConditionWalk(cur_weight / base_weight,
@@ -234,8 +226,6 @@ void CActorCondition::UpdateCondition()
 	float k_max_power = 1.0f + std::min(cur_weight, base_weight) / base_weight + std::max(0.0f, (cur_weight - base_weight) / 10.0f);
 
 	SetMaxPower(GetMaxPower() - m_fPowerLeakSpeed * m_fDeltaTime * k_max_power);
-
-
 
 	m_fAlcohol += m_fV_Alcohol * m_fDeltaTime;
 	clamp(m_fAlcohol, 0.0f, 1.0f);
@@ -251,7 +241,7 @@ void CActorCondition::UpdateCondition()
 		if (ce)
 			RemoveEffector(m_object, effAlcohol);
 	}
-
+	
 	string512 pp_sect_name;
 	shared_str ln = Level().name();
 	if (ln.size())
@@ -281,9 +271,8 @@ void CActorCondition::UpdateCondition()
 		UpdateThirst();
 
 	inherited::UpdateCondition();
-
 	UpdateTutorialThresholds();
-
+	
 	if (GetHealth() < 0.05f && !m_death_effector)
 	{
 		if (pSettings->section_exist("actor_death_effector"))
@@ -303,7 +292,7 @@ void CActorCondition::UpdateCondition()
 
 void CActorCondition::UpdateBoosters()
 {
-	for(u8 i=0;i<eBoostMaxCount;i++)
+	for(u8 i=0; i < eBoostMaxCount; i++)
 	{
 		BOOSTER_MAP::iterator it = m_booster_influences.find((EBoostParams)i);
 		if(it!=m_booster_influences.end())
@@ -370,7 +359,7 @@ void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
 	while ( m_f_time_affected + one < tg )
 	{
 		m_f_time_affected			+=	one;
-
+	
 		for (auto & hit : hits)
 		{
 			float			damage	=	hit.value;
@@ -645,8 +634,6 @@ void CActorCondition::ChangeThirst(float value)
 	m_fThirst += value;
 	clamp(m_fThirst, 0.0f, 1.0f);
 }
-
-
 
 void CActorCondition::BoostParameters(const SBooster& B)
 {

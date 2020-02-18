@@ -168,7 +168,7 @@ void CMapManager::Destroy(CMapLocation* ml)
 void CMapManager::RemoveMapLocation(const shared_str& spot_type, u16 id)
 {
 	FindLocationBySpotID key(spot_type, id);
-    auto it = std::find_if(Locations().begin(),Locations().end(),key);
+    auto it = std::find_if(Locations().begin() ,Locations().end(), key);
 	if (it != Locations().end())
 	{
 		Level().GameTaskManager().MapLocationRelcase((*it).location);

@@ -253,7 +253,7 @@ void CCoverEvaluatorAngle::initialize(const Fvector &start_position, bool fake_c
 
 void CCoverEvaluatorAngle::evaluate_cover(const CCoverPoint *cover_point, float weight)
 {
-	float					enemy_distance = m_enemy_position.distance_to(cover_point->position());
+	float enemy_distance = m_enemy_position.distance_to(cover_point->position());
 
 	if ((enemy_distance <= m_min_distance) && (m_current_distance > enemy_distance))
 		return;
@@ -261,10 +261,11 @@ void CCoverEvaluatorAngle::evaluate_cover(const CCoverPoint *cover_point, float 
 	if ((enemy_distance >= m_max_distance) && (m_current_distance < enemy_distance))
 		return;
 
-	Fvector					direction;
+	Fvector direction;
 	direction.sub(cover_point->position(), m_enemy_position);
 	direction.normalize_safe();
-	float					cos_a = direction.dotproduct(m_best_direction);
+	
+	float cos_a = direction.dotproduct(m_best_direction);
 	if (cos_a < m_best_alpha)
 		return;
 
@@ -285,9 +286,10 @@ void CCoverEvaluatorSafe::evaluate_cover(const CCoverPoint *cover_point, float w
 	if (m_start_position.distance_to(cover_point->position()) <= m_min_distance)
 		return;
 
-	float					high_cover_value = ai().level_graph().vertex_high_cover(cover_point->level_vertex_id());
-	float					low_cover_value = ai().level_graph().vertex_low_cover(cover_point->level_vertex_id());
-	float					cover_value = std::min(high_cover_value, low_cover_value);
+	float high_cover_value = ai().level_graph().vertex_high_cover(cover_point->level_vertex_id());
+	float low_cover_value = ai().level_graph().vertex_low_cover(cover_point->level_vertex_id());
+	float cover_value = std::min(high_cover_value, low_cover_value);
+	
 	if (cover_value >= m_best_value)
 		return;
 

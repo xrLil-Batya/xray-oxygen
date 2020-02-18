@@ -205,7 +205,7 @@ void CSpaceRestriction::merge_free_in_retrictions	()
 		m_free_in_restrictions.push_back	(CFreeInRestriction(bridge,false));
 	}
 
-	RESTRICTIONS					temp_restrictions;
+	RESTRICTIONS temp_restrictions;
 	for (bool ok = false; !ok; ) {
 		ok							= true;
 		temp_restrictions.clear		();
@@ -314,10 +314,7 @@ u32	CSpaceRestriction::accessible_nearest		(const Fvector &position, Fvector &re
 
 bool CSpaceRestriction::affect					(SpaceRestrictionHolder::CBaseRestrictionPtr bridge, const Fsphere &sphere) const
 {
-	if (bridge->inside(sphere))
-		return						(false);
-
-	return							(true);
+	return !bridge->inside(sphere);
 }
 
 bool CSpaceRestriction::affect					(SpaceRestrictionHolder::CBaseRestrictionPtr bridge, u32 start_vertex_id, float radius) const

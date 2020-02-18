@@ -8,9 +8,10 @@
 
 // Maybe use C++11? 
 #if _MSC_VER < 1911
-#define string_view xr_string&
+#define xr_string_view xr_string&
 #else
 #include <string_view>
+using xr_string_view = std::string_view;
 #endif
 
 #ifdef WIN32
