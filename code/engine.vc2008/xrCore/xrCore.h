@@ -8,7 +8,6 @@
 #endif // DEBUG
 
 #include "xrCore_platform.h"
-#include "xrLang.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
