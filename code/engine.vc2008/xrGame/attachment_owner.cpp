@@ -109,7 +109,7 @@ void CAttachmentOwner::detach(CInventoryItem *inventory_item)
 		{
 			m_attached_objects.erase(m_attached_objects.begin() + Iter);
 			Iter++;
-			ai->afterDetach();
+			pItem->afterDetach();
 			if (m_attached_objects.empty()) 
 			{
 				CGameObject *game_object = smart_cast<CGameObject*>(this);
