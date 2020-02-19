@@ -26,7 +26,7 @@ public:
 public:
 	IC		bool			operator==	(const Fvector &position) const;
 	virtual	bool			operator==	(const CObject *object) const;
-	virtual bool			useful		() const;
+IC	virtual bool			useful		() const { (!(Device.dwTimeGlobal > m_level_time + m_interval)); }
 	virtual const Fvector	&position	() const = 0;
 	IC		const flags		&mask		() const;
 };

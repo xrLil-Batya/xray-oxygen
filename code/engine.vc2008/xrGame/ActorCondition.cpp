@@ -496,11 +496,8 @@ void CActorCondition::ConditionStand(float weight)
 
 bool CActorCondition::IsCantWalk() const
 {
-	if(m_fPower< m_fCantWalkPowerBegin)
-		m_bCantWalk		= true;
-	else if(m_fPower > m_fCantWalkPowerEnd)
-		m_bCantWalk		= false;
-	return				m_bCantWalk;
+	m_bCantWalk = m_fPower < m_fCantWalkPowerBegin || m_fPower <= m_fCantWalkPowerEnd;
+	return m_bCantWalk;
 }
 
 bool CActorCondition::IsCantWalkWeight()
@@ -521,11 +518,8 @@ bool CActorCondition::IsCantWalkWeight()
 
 bool CActorCondition::IsCantSprint() const
 {
-	if(m_fPower< m_fCantSprintPowerBegin)
-		m_bCantSprint	= true;
-	else if(m_fPower > m_fCantSprintPowerEnd)
-		m_bCantSprint	= false;
-	return				m_bCantSprint;
+	m_bCantSprint	= m_fPower < m_fCantSprintPowerBegin || m_fPower <= m_fCantSprintPowerEnd;
+	return m_bCantSprint;
 }
 
 bool CActorCondition::IsLimping() const
@@ -883,13 +877,12 @@ bool CActorCondition::PlayHitSound(SHit* pHDS)
 
 float CActorCondition::HitSlowmo(SHit* pHDS)
 {
-	float ret;
-	if(pHDS->hit_type==ALife::eHitTypeWound || pHDS->hit_type==ALife::eHitTypeStrike )
+	float ret = 0.f;
+	if (pHDS->hit_type == ALife::eHitTypeWound || pHDS->hit_type == ALife::eHitTypeStrike)
 	{
-		ret						= pHDS->damage();
-		clamp					(ret,0.0f,1.f);
-	}else
-		ret						= 0.0f;
+		ret = pHDS->damage();
+		clamp(ret, 0.0f, 1.f);
+	}
 
 	return ret;	
 }
@@ -951,8 +944,7 @@ void enable_input();
 void hide_indicators();
 void show_indicators();
 
-CActorDeathEffector::CActorDeathEffector	(CActorCondition* parent, LPCSTR sect)	// -((
-:m_pParent(parent)
+CActorDeathEffector::CActorDeathEffector	(CActorCondition* parent, LPCSTR sect) : m_pParent(parent)
 {
 	Actor()->HideAllWeapons(true);
 	hide_indicators			();
@@ -980,10 +972,8 @@ void CActorDeathEffector::UpdateCL()
 
 void CActorDeathEffector::OnPPEffectorReleased()
 {
-	m_b_actual				= false;	
-	Msg("111");
-	//m_pParent->health()		= -1.0f;
-	m_pParent->SetHealth		(-1.0f);
+	m_b_actual = false;
+	m_pParent->SetHealth(-1.0f);
 }
 
 void CActorDeathEffector::Stop()
