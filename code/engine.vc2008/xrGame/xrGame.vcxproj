@@ -1937,7 +1937,6 @@
     <ClCompile Include="danger_explosive.cpp" />
     <ClCompile Include="agent_location_manager.cpp" />
     <ClCompile Include="danger_cover_location.cpp" />
-    <ClCompile Include="danger_object_location.cpp" />
     <ClCompile Include="agent_member_manager.cpp" />
     <ClCompile Include="agent_memory_manager.cpp" />
     <ClCompile Include="agent_manager_planner.cpp" />

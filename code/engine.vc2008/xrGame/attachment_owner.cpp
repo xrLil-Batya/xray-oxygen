@@ -43,10 +43,12 @@ void CAttachmentOwner::net_Destroy()
 	if (attached_objects().empty())
 		return; 
 	
+	u32 Iter = 0;
 	for (CAttachableItem* pItem : m_attached_objects) 
 	{
-		m_attached_objects.erase(pItem);
+		m_attached_objects.erase(m_attached_objects.begin() + Iter);
 		pItem->afterDetach();
+		Iter++;
 //		pItem->net_Destroy();
 	}
 }
@@ -67,7 +69,7 @@ void __stdcall AttachmentCallback(IKinematics *tpKinematics)
 
 	IKinematics *kinematics = smart_cast<IKinematics*>(game_object->Visual());
 
-	for (const CAttachableItem* pItem : attachment_owner->m_attached_objects)
+	for (const CAttachableItem* pItem : attachment_owner->attached_objects())
 	{
 		pItem->item().object().XFORM().mul_43	(kinematics->LL_GetBoneInstance(pItem->bone_id()).mTransform, pItem->offset());
 		pItem->item().object().XFORM().mulA_43	(game_object->XFORM());
@@ -100,11 +102,13 @@ void CAttachmentOwner::attach(CInventoryItem *inventory_item)
 
 void CAttachmentOwner::detach(CInventoryItem *inventory_item)
 {
+	u32 Iter = 0u;
 	for (CAttachableItem* pItem : m_attached_objects) 
 	{
 		if (pItem->item().object().ID() == inventory_item->object().ID()) 
 		{
-			m_attached_objects.erase(pItem);
+			m_attached_objects.erase(m_attached_objects.begin() + Iter);
+			Iter++;
 			ai->afterDetach();
 			if (m_attached_objects.empty()) 
 			{

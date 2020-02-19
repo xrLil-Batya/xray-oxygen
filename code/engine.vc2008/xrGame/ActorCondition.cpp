@@ -91,7 +91,7 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	{
 		Begin = pSettings->r_float(section, (ReadName + "_begin").c_str());
 		End   = pSettings->r_float(section, (ReadName + "_end").c_str());
-		R_ASSERT3(Begin <= End, "Begin is bigggggggggggggg!", ReadName);
+		R_ASSERT3(Begin <= End, "Begin is bigggggggggggggg!", ReadName.c_str());
 	};
 	
 	ReadAndCheckBegin2End(m_fLimpingHealthBegin,   m_fLimpingHealthEnd,   "limping_health");
