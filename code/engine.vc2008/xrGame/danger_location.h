@@ -5,14 +5,13 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Danger location
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "memory_space.h"
 
 class CObject;
 
-class CDangerLocation : public intrusive_base {
+class CDangerLocation : public intrusive_base
+{
 public:
 	typedef MemorySpace::squad_mask_type		squad_mask_type;
 	typedef _flags<squad_mask_type>				flags;
@@ -26,7 +25,7 @@ public:
 public:
 	IC		bool			operator==	(const Fvector &position) const;
 	virtual	bool			operator==	(const CObject *object) const;
-IC	virtual bool			useful		() const { (!(Device.dwTimeGlobal > m_level_time + m_interval)); }
+IC	virtual bool			useful		() const { return (!(Device.dwTimeGlobal > m_level_time + m_interval)); }
 	virtual const Fvector	&position	() const = 0;
 	IC		const flags		&mask		() const;
 };

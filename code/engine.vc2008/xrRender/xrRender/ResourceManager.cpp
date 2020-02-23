@@ -21,13 +21,20 @@
 void fix_texture_name(LPSTR fn);
 //--------------------------------------------------------------------------------------------------------------
 template <class T>
-BOOL	reclaim		(xr_vector<T*>& vec, const T* ptr)
+BOOL reclaim(xr_vector<T*>& vec, const T* pTypePtr)
 {
-	xr_vector<T*>::iterator it	= vec.begin	();
-	xr_vector<T*>::iterator end	= vec.end	();
-	for (; it!=end; it++)
-		if (*it == ptr)	{ vec.erase	(it); return TRUE; }
-		return FALSE;
+	u32 Iter = 0;
+	for (T* pType: vec)
+	{
+		if (pType == pTypePtr)	
+		{ 
+			vec.erase(vec.begin() + Iter); 
+			return TRUE; 
+		}
+		Iter++;
+	}
+	
+	return FALSE;
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -247,39 +254,30 @@ Shader* CResourceManager::_CreateShader(Shader* InShader)
 
 Shader* CResourceManager::Create(LPCSTR s_shader, LPCSTR s_textures, LPCSTR s_constants, LPCSTR s_matrices)
 {
+	Shader* pShader = nullptr;
+	
 	if (CXMLBlend::Check(s_shader))
 	{
 		CXMLBlend BlendXML(s_shader);
 		Shader* pShader = BlendXML.Compile(s_textures);
 
 		R_ASSERT3(pShader != nullptr, "XMLBlend failed to compile shader", s_shader);
-		return pShader;
 	}
 	else
 	{
-		Shader* pShader = _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
+		pShader = _cpp_Create(s_shader, s_textures, s_constants, s_matrices);
 		R_ASSERT2(pShader != nullptr, s_shader);
-		if (pShader)
+		
+		if (!pShader && CXMLBlend::Check("stub_default"))
 		{
-			return pShader;
+			CXMLBlend BlendXML("stub_default");
+			pShader = BlendXML.Compile(s_textures);
 		}
-		else
-		{
-			if (CXMLBlend::Check("stub_default"))
-			{
-				CXMLBlend* BlendXML = new CXMLBlend("stub_default");
-				Shader* pShader = BlendXML->Compile(s_textures);
-				xr_delete(BlendXML);
-
-				return pShader;
-			}
-			else
-			{
-				FATAL("Can't find stub_default.lua");
-				return nullptr;
-			}
-		}
+		R_ASSERT2(pShader, "Can't find stub_default.xml");
 	}
+	
+	// If all checks is FALSE then return nullptr
+	return pShader;
 }
 
 void CResourceManager::Delete(const Shader* S)
