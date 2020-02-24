@@ -57,16 +57,6 @@ ENGINE_API BOOL isGraphicDebugging;
 
 void fix_texture_name(LPSTR fn);
 
-template <class T>
-BOOL	reclaim		(xr_vector<T*>& vec, const T* ptr)
-{
-	xr_vector<T*>::iterator it	= vec.begin	();
-	xr_vector<T*>::iterator end	= vec.end	();
-	for (; it!=end; it++)
-		if (*it == ptr)	{ vec.erase	(it); return TRUE; }
-		return FALSE;
-}
-
 //--------------------------------------------------------------------------------------------------------------
 SState*		CResourceManager::_CreateState		(SimulatorStates& state_code)
 {
@@ -292,8 +282,8 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR _name)
 		FS.r_close				( file );
 
 		// Select target
-		LPCSTR						c_target	= "ps_2_0";
-		LPCSTR						c_entry		= "main";
+		LPCSTR c_target	= "ps_2_0";
+		LPCSTR c_entry  = "main";
 		if (strstr(data,"main_ps_1_1"))			{ c_target = "ps_1_1"; c_entry = "main_ps_1_1";	}
 		if (strstr(data,"main_ps_1_2"))			{ c_target = "ps_1_2"; c_entry = "main_ps_1_2";	}
 		if (strstr(data,"main_ps_1_3"))			{ c_target = "ps_1_3"; c_entry = "main_ps_1_3";	}
@@ -587,7 +577,7 @@ void	CResourceManager::DBG_VerifyTextures	()
 		R_ASSERT(I->first);
 		R_ASSERT(I->second);
 		R_ASSERT(I->second->cName);
-		R_ASSERT(0==xr_strcmp(I->first,*I->second->cName));
+		R_ASSERT(0==xr_strcmp(I->first, I->second->cName.c_str()));
 	}
 }
 #endif
@@ -690,7 +680,7 @@ SMatrixList*	CResourceManager::_CreateMatrixList(SMatrixList& L)
 	xrCriticalSectionGuard guard(creationGuard);
 	BOOL bEmpty = TRUE;
 	for (u32 i=0; i<L.size(); i++)	if (L[i]) { bEmpty=FALSE; break; }
-	if (bEmpty)	return NULL;
+	if (bEmpty)	return nullptr;
 
 	for (u32 it=0; it<lst_matrices.size(); it++)
 	{

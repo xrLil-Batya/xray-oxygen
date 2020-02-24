@@ -30,7 +30,7 @@ void CRender::render_lights(light_Package& LP)
 
 		auto pred_area = [](light* _1, light* _2)
 		{
-			return	_1->X.S.size > _2->X.S.size;	// reverse -> descending
+			return _1->X.S.size > _2->X.S.size;	// reverse -> descending
 		};
 
 		for (u16 smap_ID = 0; refactored.size() != total; smap_ID++)
@@ -149,7 +149,7 @@ void CRender::render_lights(light_Package& LP)
 		//		if (has_point_unshadowed)	-> 	accum point unshadowed
 		if (!LP.v_point.empty())
 		{
-			light*	pLight = LP.v_point.back();		
+			light* pLight = LP.v_point.back();		
 			LP.v_point.pop_back();
 			pLight->vis_update();
 			if (pLight->vis.visible)
@@ -236,14 +236,14 @@ void	CRender::render_indirect(light* L)
 {
 	if (!ps_r_flags.test(R_FLAG_GI))	return;
 
-	light									LIGEN;
+	light LIGEN;
 	LIGEN.set_type(IRender_Light::REFLECTED);
 	LIGEN.set_shadow(false);
 	LIGEN.set_cone(PI_DIV_2*2.f);
 
 	xr_vector<light_indirect>&	Lvec = L->indirect;
 	if (Lvec.empty())						return;
-	float	LE = L->color.intensity();
+	float LE = L->color.intensity();
 	for (light_indirect& LI : Lvec) 
 	{
 		// energy and color

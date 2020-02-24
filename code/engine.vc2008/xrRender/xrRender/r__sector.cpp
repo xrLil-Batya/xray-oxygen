@@ -37,13 +37,13 @@ void CPortal::OnRender()
 		using LVec = xr_vector<FVF::L>;
 		static LVec	V;		V.resize(poly.size() + 2);
 		Fvector C = { 0,0,0 };
-
+		
 		for (u32 k = 0; k < poly.size(); k++) 
 		{ 
 			C.add(poly[k]); 
 			V[k + 1].set(poly[k], 0x800000FF); 
 		}
-
+	
 		V.back().set(poly[0], 0x800000FF);
 		C.div((float)poly.size());
 		V[0].set(C, 0x800000FF);

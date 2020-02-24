@@ -19,23 +19,6 @@
 
 //	Already defined in Texture.cpp
 void fix_texture_name(LPSTR fn);
-//--------------------------------------------------------------------------------------------------------------
-template <class T>
-BOOL reclaim(xr_vector<T*>& vec, const T* pTypePtr)
-{
-	u32 Iter = 0;
-	for (T* pType: vec)
-	{
-		if (pType == pTypePtr)	
-		{ 
-			vec.erase(vec.begin() + Iter); 
-			return TRUE; 
-		}
-		Iter++;
-	}
-	
-	return FALSE;
-}
 
 //--------------------------------------------------------------------------------------------------------------
 IBlender* CResourceManager::_GetBlender		(LPCSTR Name)

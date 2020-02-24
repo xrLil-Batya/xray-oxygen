@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Created		: 22.05.2009
+//  Updated		: 24.02.2020
 //	Author		: Mykhailo Parfeniuk
-//	Copyright (C) GSC Game World - 2009
+//  Modifer		: ForserX
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "CSCompiler.h"
 #include "ComputeShader.h"
@@ -11,8 +11,7 @@
 
 ENGINE_API BOOL isGraphicDebugging;
 
-CSCompiler::CSCompiler(ComputeShader& target):
-	m_Target(target), m_cs(0)
+CSCompiler::CSCompiler(ComputeShader& target) : m_Target(target), m_cs(0)
 {
 }
 
@@ -26,70 +25,62 @@ CSCompiler& CSCompiler::defSampler(LPCSTR ResourceName)
 {
 	D3D11_SAMPLER_DESC	desc;
     std::memset(&desc,0,sizeof(desc));
-
-	if (0 == xr_strcmp(ResourceName, "smp_nofilter"))
+	
+	bool bDone = false;
+	auto MakeResource = [this, ResourceName, &desc](const char* Sampler, D3D11_TEXTURE_ADDRESS_MODE dAdress, D3D11_FILTER dFilter, u32 dAniso = u32(-1))
 	{
-		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		return defSampler(ResourceName, desc);
-	}
-	else if (0 == xr_strcmp(ResourceName, "smp_rtlinear"))
+		if(!bDone && !xr_strcmp(ResourceName, Sampler))
+		{
+			desc.AddressU = desc.AddressV = desc.AddressW = dAdress;
+			desc.Filter = dFilter;
+			
+			bDone = true;
+		}
+	};
+	
+	MakeResource("smp_nofilter", D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_FILTER_MIN_MAG_MIP_POINT);
+	MakeResource("smp_rtlinear", D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT);
+	MakeResource("smp_linear", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_FILTER_MIN_MAG_MIP_LINEAR);
+	MakeResource("smp_jitter", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_FILTER_MIN_MAG_MIP_POINT);
+	
+	if(!bDone)
 	{
-		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-		desc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
-		return defSampler(ResourceName, desc);
+		if (!xr_strcmp(ResourceName, "smp_material"))
+		{
+			desc.AddressU = desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+			desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+			desc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+		}
+		else if (!xr_strcmp(ResourceName, "smp_smap"))
+		{
+			desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+			desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+			desc.ComparisonFunc = D3D_COMPARISON_LESS_EQUAL;
+		}
+		else if (!xr_strcmp(ResourceName, "smp_base")
+		{
+			desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+			desc.Filter = D3D11_FILTER_ANISOTROPIC;
+			desc.MaxAnisotropy = 8;
+		}
 	}
-	else if (0 == xr_strcmp(ResourceName, "smp_linear"))
-	{
-		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		return defSampler(ResourceName, desc);
-	}
-	else if (0 == xr_strcmp(ResourceName, "smp_base"))
-	{
-		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		desc.Filter = D3D11_FILTER_ANISOTROPIC;
-		desc.MaxAnisotropy = 8;
-		return defSampler(ResourceName, desc);
-	}
-	else if (0 == xr_strcmp(ResourceName, "smp_material"))
-	{
-		desc.AddressU = desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		desc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
-		return defSampler(ResourceName, desc);
-	}
-	else if (0 == xr_strcmp(ResourceName, "smp_smap"))
-	{
-		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-		desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
-		desc.ComparisonFunc = D3D_COMPARISON_LESS_EQUAL;
-		return defSampler(ResourceName, desc);
-	}
-	else if (0 == xr_strcmp(ResourceName, "smp_jitter"))
-	{
-		desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		return defSampler(ResourceName, desc);
-	}
-
-	VERIFY(0);
-
-	return *this;
+	
+	return bDone ? defSampler(ResourceName, desc) : *this;
 }
 
 CSCompiler& CSCompiler::defSampler(LPCSTR ResourceName, const D3D_SAMPLER_DESC& def)
 {
 	VERIFY(ResourceName);
 
-	ref_constant C			= m_constants.get(ResourceName);
-	if (!C)					return	*this;
+	ref_constant C = m_constants.get(ResourceName);
+	if (!C)
+		return *this;
 
-	R_ASSERT				(C->type == RC_sampler);
-	u32 stage				= C->samp.index;
+	R_ASSERT(C->type == RC_sampler);
+	u32 stage = C->samp.index;
 
 	if (stage >= m_Samplers.size())
-		m_Samplers.resize(stage+1);
+		m_Samplers.resize(stage + 1);
 
 	R_CHK(HW.pDevice->CreateSamplerState(&def, &m_Samplers[stage]));
 
@@ -101,16 +92,18 @@ void fix_texture_name(LPSTR);
 CSCompiler& CSCompiler::defOutput(LPCSTR ResourceName,	ref_rt rt)
 {
 	VERIFY(ResourceName);
-	if (!rt) return *this;
+	if (!rt) 
+		return *this;
 
-	ref_constant C			= m_constants.get(ResourceName);
-	if (!C)					return *this;
+	ref_constant C = m_constants.get(ResourceName);
+	if (!C)
+		return *this;
 
-	R_ASSERT				(C->type == RC_dx11UAV);
-	u32 stage				= C->samp.index;
+	R_ASSERT(C->type == RC_dx11UAV);
+	u32 stage = C->samp.index;
 
 	if (stage >= m_Textures.size())
-		m_Textures.resize(stage+1);
+		m_Textures.resize(stage + 1);
 
 	m_Outputs[stage] = rt->pUAView; //!!!dangerous view can be deleted
 
@@ -123,16 +116,18 @@ CSCompiler& CSCompiler::defTexture(LPCSTR ResourceName,	ref_texture texture)
 	if (!texture) return *this;
 
 	// Find index
-	ref_constant C			= m_constants.get(ResourceName);
-	if (!C)					return *this;
+	ref_constant C = m_constants.get(ResourceName);
+	
+	if (!C) 
+		return *this;
 
-	R_ASSERT				(C->type == RC_dx10texture);
-	u32 stage				= C->samp.index;
+	R_ASSERT(C->type == RC_dx10texture);
+	u32 stage = C->samp.index;
 
 	if (stage >= m_Textures.size())
 		m_Textures.resize(stage+1);
 
-	m_Textures[stage] = texture->get_SRView(); //!!!dangerous view can be deleted
+	m_Textures[stage] = texture->get_SRView(); // !!!dangerous view can be deleted
 
 	return *this;
 }
@@ -152,36 +147,32 @@ void CSCompiler::end()
 
 void CSCompiler::compile(const char* name)
 {
-	if (0==stricmp(name, "null"))
+	if (!stricmp(name, "null"))
 	{
 		m_cs = 0;
 		return;
 	}
 
-	string_path					cname;
-	xr_strconcat				(cname, ::Render->getShaderPath(), "cs_", name,".hlsl");
-	FS.update_path				(cname,	"$game_shaders$", cname);
+	string_path cname;
+	xr_strconcat(cname, ::Render->getShaderPath(), "cs_", name,".hlsl");
+	FS.update_path(cname, "$game_shaders$", cname);
 
-	IReader* file				= FS.r_open(cname);
-	R_ASSERT2					( file, cname );
+	IReader* file = FS.r_open(cname);
+	R_ASSERT2(file, cname);
 
 	// Select target
-	LPCSTR						c_target	= "cs_5_0";
-	LPCSTR						c_entry		= "main";
+	const char* c_target = "cs_5_0";
+	const char* c_entry  = "main";
 
     DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
     if (isGraphicDebugging)
     {
         shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
     }
-	HRESULT	const _hr			= ::Render->shader_compile(name,(DWORD const*)file->pointer(),file->length(), c_entry, c_target, shaderCompileFlags, (void*&)m_cs );
+	HRESULT	const _hr = ::Render->shader_compile(name,(DWORD const*)file->pointer(),file->length(), c_entry, c_target, shaderCompileFlags, (void*&)m_cs );
 
-	FS.r_close					( file );
+	FS.r_close(file);
 
 	VERIFY(SUCCEEDED(_hr));
-
-	CHECK_OR_EXIT				(
-		!FAILED(_hr),
-		make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
-	);
+	CHECK_OR_EXIT(!FAILED(_hr), make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings."));
 }

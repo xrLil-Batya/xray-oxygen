@@ -2,7 +2,7 @@
 #include "dxUIRender.h"
 #include "dxUIShader.h"
 
-dxUIRender	UIRenderImpl;
+dxUIRender UIRenderImpl;
 
 void dxUIRender::CreateUIGeom()
 {
@@ -44,10 +44,12 @@ void dxUIRender::GetActiveTextureResolution(Fvector2 &res)
 LPCSTR dxUIRender::UpdateShaderName(LPCSTR tex_name, LPCSTR sh_name)
 {
 	string_path buff;
-	u32		v_dev	= CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor);
-	u32		v_need	= CAP_VERSION(2,0);
-
-	return ((v_dev >= v_need) && FS.exist(buff, "$game_textures$", tex_name, ".ogm")) ? "hud\\movie" : sh_name;
+	u32 v_dev	= CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor);
+	u32 v_need	= CAP_VERSION(2,0);
+	
+	bool bVideo = FS.exist(buff, "$game_textures$", tex_name, ".ogm") || FS.exist(buff, "$game_textures$", tex_name, ".ogv");
+	
+	return ((v_dev >= v_need) && bVideo) ? "hud\\movie" : sh_name;
 }
 void dxUIRender::PushPoint(float x, float y, float z, u32 C, float u, float v)
 {

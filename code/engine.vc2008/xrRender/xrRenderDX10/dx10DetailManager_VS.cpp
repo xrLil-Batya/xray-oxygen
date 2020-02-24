@@ -106,7 +106,7 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 	c_hemi.set				(desc.hemi_color.x, desc.hemi_color.y,	desc.hemi_color.z);
 
 	// Iterate
-	for (u32 O=0; O<objects.size(); O++)
+	for (u32 O=0; O < objects.size(); O++)
 	{
 		CDetail&	Object				= *objects	[O];
 		xr_vector <SlotItemVec* >& vis	= list		[O];
@@ -139,13 +139,12 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 
 				u32 dwBatch	= 0;
 
-				xr_vector <SlotItemVec* >::iterator _vI = vis.begin();
-				xr_vector <SlotItemVec* >::iterator _vE = vis.end();
-				for (; _vI!=_vE; _vI++){
-					SlotItemVec*	items		= *_vI;
-                    auto _iI			= items->begin();
-                    auto _iE			= items->end();
-					for (; _iI!=_iE; _iI++){
+				for (SlotItemVec* pItem : vis)
+				{
+                    auto _iI			= pItem->begin();
+                    auto _iE			= pItem->end();
+					for (; _iI!=_iE; _iI++)
+					{
 						SlotItem&	Instance	= **_iI;
 						u32			base		= dwBatch*4;
 

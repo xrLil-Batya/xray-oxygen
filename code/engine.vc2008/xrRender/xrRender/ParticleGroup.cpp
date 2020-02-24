@@ -64,13 +64,8 @@ BOOL CPGDef::Load(IReader& F)
 	F.r_stringZ		(m_Name);
 
 	F.r_chunk		(PGD_CHUNK_FLAGS,&m_Flags);
-
-    if (F.find_chunk(PGD_CHUNK_TIME_LIMIT))
-   		m_fTimeLimit= F.r_float();
-    else
-		m_fTimeLimit	= 0.0f;
+	m_fTimeLimit= F.find_chunk(PGD_CHUNK_TIME_LIMIT) ? F.r_float() : 0.f;
 	
-	bool dont_calc_timelimit = m_fTimeLimit > 0.0f;
     if (F.find_chunk(PGD_CHUNK_EFFECTS))
 	{
         m_Effects.resize(F.r_u32());
@@ -85,7 +80,7 @@ BOOL CPGDef::Load(IReader& F)
             Effect->m_Time1 	= F.r_float();
             Effect->m_Flags.assign	(F.r_u32());
 			
-			if(!dont_calc_timelimit)
+			if(!m_fTimeLimit > 0.0f)
 				m_fTimeLimit	= std::max(m_fTimeLimit, Effect->m_Time1);
         }
     }
@@ -97,8 +92,8 @@ BOOL CPGDef::Load2(CInifile& ini)
 	m_Flags.assign					(ini.r_u32("_group", "flags"));
     m_Effects.resize				(ini.r_u32("_group", "effects_count"));
 
-	u32 counter						= 0;
-	string256						buff;
+	u32 counter = 0;
+	string256 buff;
     for (auto it=m_Effects.begin(); it!=m_Effects.end(); ++it,++counter)
 	{
     	*it							= xr_new<SEffect>();

@@ -44,17 +44,15 @@ int get_texture_load_lod(LPCSTR fn)
 	{
 		if (strstr(fn, Itm.first.c_str()))
 		{
-			if (psTextureLOD < 1) {
+			if (psTextureLOD < 1) 
+			{
 				if (enough_address_space_available)
 					return 0;
 				else
 					return 1;
 			}
-			else
-				if (psTextureLOD < 3)
-					return 1;
-				else
-					return 2;
+			
+			return psTextureLOD < 3 ? 1 : 2;
 		}
 	}
 

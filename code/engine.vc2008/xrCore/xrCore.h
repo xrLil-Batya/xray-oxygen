@@ -159,6 +159,23 @@ public:
 	}
 };
 
+template <class T>
+bool reclaim(xr_vector<T*>& vec, const T* pTypePtr)
+{
+	u32 Iter = 0;
+	for (T* pType: vec)
+	{
+		if (pType == pTypePtr)	
+		{ 
+			vec.erase(vec.begin() + Iter); 
+			return true; 
+		}
+		Iter++;
+	}
+	
+	return false;
+}
+
 // ********************************************** The Core definition
 struct XRCORE_API xrCore
 {

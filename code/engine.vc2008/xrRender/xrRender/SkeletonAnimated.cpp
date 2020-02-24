@@ -14,61 +14,72 @@
 using namespace animation;
 //////////////////////////////////////////////////////////////////////////
 // BoneInstance methods
-void		CBlendInstance::construct()
+void CBlendInstance::construct()
 {	
     std::memset(this,0,sizeof(*this));
 }
-void		CBlendInstance::blend_add	(CBlend* H)
+
+void CBlendInstance::blend_add(CBlend* H)
 {	
-	if ( Blend.size() == MAX_BLENDED )	{
+	if ( Blend.size() == MAX_BLENDED )	
+	{
 		if(H->fall_at_end)
-						return;
+			return;
+			
 		BlendSVecIt _d	= Blend.begin();
 		for (BlendSVecIt it=Blend.begin()+1; it!=Blend.end(); it++)
 			if ((*it)->blendAmount<(*_d)->blendAmount) _d=it;
-		Blend.erase		(_d);
+			
+		Blend.erase(_d);
 	}
-	VERIFY (Blend.size()<MAX_BLENDED);
+	VERIFY (Blend.size() < MAX_BLENDED);
 	Blend.push_back(H);
 }
-void		CBlendInstance::blend_remove	(CBlend* H)
+
+void CBlendInstance::blend_remove(CBlend* H)
 {
 	CBlend** I = std::find(Blend.begin(),Blend.end(),H);
 	if (I!=Blend.end())	Blend.erase(I);
 }
 
 // Motion control
-void	CKinematicsAnimated::Bone_Motion_Start		(CBoneData* bd, CBlend* handle) 
+void CKinematicsAnimated::Bone_Motion_Start(CBoneData* bd, CBlend* handle) 
 {
 	LL_GetBlendInstance	(bd->GetSelfID()).blend_add	(handle);
 	for (vecBonesIt I=bd->children.begin(); I!=bd->children.end(); I++)                        
 		Bone_Motion_Start	(*I,handle);
 }
-void	CKinematicsAnimated::Bone_Motion_Stop		(CBoneData* bd, CBlend* handle) 
+
+void CKinematicsAnimated::Bone_Motion_Stop(CBoneData* bd, CBlend* handle) 
 {
 	LL_GetBlendInstance	(bd->GetSelfID()).blend_remove	(handle);
 	for (vecBonesIt I=bd->children.begin(); I!=bd->children.end(); I++)
 		Bone_Motion_Stop	(*I,handle);
 }
-void	CKinematicsAnimated::Bone_Motion_Start_IM	(CBoneData* bd,  CBlend* handle) 
+
+void CKinematicsAnimated::Bone_Motion_Start_IM(CBoneData* bd,  CBlend* handle) 
 {
-	LL_GetBlendInstance	(bd->GetSelfID()).blend_add		(handle);
-}
-void	CKinematicsAnimated::Bone_Motion_Stop_IM	(CBoneData* bd, CBlend* handle) 
-{
-	LL_GetBlendInstance	(bd->GetSelfID()).blend_remove	(handle);
+	LL_GetBlendInstance	(bd->GetSelfID()).blend_add(handle);
 }
 
+void CKinematicsAnimated::Bone_Motion_Stop_IM(CBoneData* bd, CBlend* handle) 
+{
+	LL_GetBlendInstance	(bd->GetSelfID()).blend_remove(handle);
+}
 
 std::pair<LPCSTR,LPCSTR> CKinematicsAnimated::LL_MotionDefName_dbg	(MotionID ID)
 {
 	shared_motions& s_mots	= m_Motions[ID.slot].motions;
 	accel_map::iterator _I, _E=s_mots.motion_map()->end();
-	for (_I	= s_mots.motion_map()->begin(); _I!=_E; ++_I)	if (_I->second==ID.idx) return std::make_pair(*_I->first,*s_mots.id());
+	
+	for (_I	= s_mots.motion_map()->begin(); _I!=_E; ++_I)	
+	{
+		if (_I->second==ID.idx) 
+			return std::make_pair(*_I->first,*s_mots.id());
+	}
+	
 	return std::make_pair((LPCSTR)0,(LPCSTR)0);
 }
-
-
 
 static LPCSTR name_bool( BOOL v )
 {
@@ -156,7 +167,7 @@ LPCSTR CKinematicsAnimated::LL_MotionDefName_dbg	(LPVOID ptr)
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-MotionID CKinematicsAnimated::LL_MotionID	(LPCSTR B)
+MotionID CKinematicsAnimated::LL_MotionID(LPCSTR B)
 {
 	MotionID motion_ID;
 	for (int k=int(m_Motions.size())-1; k>=0; --k){
@@ -166,14 +177,18 @@ MotionID CKinematicsAnimated::LL_MotionID	(LPCSTR B)
     }
     return motion_ID;
 }
-u16 CKinematicsAnimated::LL_PartID		(LPCSTR B)
+u16 CKinematicsAnimated::LL_PartID(LPCSTR B)
 {
-	if (0==m_Partition)	return BI_NONE;
-	for (u16 id=0; id<MAX_PARTS; id++) {
-		CPartDef&	P = (*m_Partition)[id];
+	if (0==m_Partition)	
+		return BI_NONE;
+	
+	for (u16 id=0; id < MAX_PARTS; id++) 
+	{
+		CPartDef& P = (*m_Partition)[id];
 		if (0==P.Name)	continue;
 		if (0==stricmp(B,*P.Name)) return id;
 	}
+	
 	return BI_NONE;
 }
 
@@ -181,18 +196,27 @@ u16 CKinematicsAnimated::LL_PartID		(LPCSTR B)
 MotionID CKinematicsAnimated::ID_Cycle_Safe(LPCSTR  N)
 {
 	MotionID motion_ID;
-	for (int k=int(m_Motions.size())-1; k>=0; --k){
+	for (int k=int(m_Motions.size())-1; k>=0; --k)
+	{
     	shared_motions* s_mots			= &m_Motions[k].motions;
 		accel_map::const_iterator I 	= s_mots->cycle()->find(LPSTR(N));
-		if (I!=s_mots->cycle()->end())	{	motion_ID.set(u16(k),I->second); break;}
+		
+		if (I!=s_mots->cycle()->end())	
+		{	
+			motion_ID.set(u16(k),I->second); 
+			break;
+		}
     }
     return motion_ID;
 }
+
 MotionID CKinematicsAnimated::ID_Cycle	(shared_str  N)
 {
-	MotionID motion_ID		= ID_Cycle_Safe	(N);	R_ASSERT3(motion_ID.valid(),"! MODEL: can't find cycle: ", N.c_str());
+	MotionID motion_ID = ID_Cycle_Safe(N);	
+	R_ASSERT3(motion_ID.valid(),"! MODEL: can't find cycle: ", N.c_str());
     return motion_ID;
 }
+
 MotionID CKinematicsAnimated::ID_Cycle_Safe(shared_str  N)
 {
 	MotionID motion_ID;
