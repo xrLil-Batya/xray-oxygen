@@ -27,7 +27,7 @@ CSCompiler& CSCompiler::defSampler(LPCSTR ResourceName)
     std::memset(&desc,0,sizeof(desc));
 	
 	bool bDone = false;
-	auto MakeResource = [this, ResourceName, &desc](const char* Sampler, D3D11_TEXTURE_ADDRESS_MODE dAdress, D3D11_FILTER dFilter, u32 dAniso = u32(-1))
+	auto MakeResource = [this, ResourceName, &desc, &bDone](const char* Sampler, D3D11_TEXTURE_ADDRESS_MODE dAdress, D3D11_FILTER dFilter)
 	{
 		if(!bDone && !xr_strcmp(ResourceName, Sampler))
 		{
