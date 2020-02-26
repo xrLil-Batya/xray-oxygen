@@ -5,7 +5,7 @@
 #include "../FrayBuildConfig.hpp"
 #include "IGame_AnselSDK.h"
 #include "xr_level_controller.h"
-#include <Xinput.h>
+#include "XInput_Private.h"
 
 CInput *	pInput = nullptr;
 

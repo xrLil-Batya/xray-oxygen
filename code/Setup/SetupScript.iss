@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "X-Ray Oxygen"
-#define MyAppVersion "January 2020"
+#define MyAppVersion "February 2020"
 #define MyAppPublisher "Oxygen Team"
 #define MyAppURL "http://xray-oxygen.org"
 #define MyAppExeName "xrPlay.exe"
@@ -35,6 +35,8 @@ DisableDirPage=no
 EnableDirDoesntExistWarning=True
 DirExistsWarning=no
 AppendDefaultDirName=False
+ArchitecturesInstallIn64BitMode=x64
+ArchitecturesAllowed=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -50,6 +52,7 @@ Source: "..\..\binaries\x64\Release\CrashStack.exe"; DestDir: "{app}\Oxygen"; Fl
 Source: "..\..\game\oxy_fsgame.ltx"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: OnFsltxIsAboutToBeCreated
 Source: "..\..\game\gamedata\*.*"; DestDir: "{app}\gamedata"; Flags: ignoreversion recursesubdirs
 Source: "vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
+Source: "directx_Jun2010_redist.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 Source: "Splash.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
 Source: "Oxygen_Setup.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
 Source: "Oxygen_Setup_eng.bmp"; DestDir: "{tmp}"; Flags: ignoreversion dontcopy
@@ -96,6 +99,8 @@ english.STR_OXY_FEATURE_PICKUP=Always show pickup item text
 russian.STR_OXY_FEATURE_PICKUP=Всегда показывать подсказки по предметам вокруг
 english.STR_OXY_SELECTED_WRONG_FOLDER=You must select existing installation of S.T.A.L.K.E.R.: Call of Pripyat
 russian.STR_OXY_SELECTED_WRONG_FOLDER=Вы должны выбрать папку с уже установленной S.T.A.L.K.E.R.: Call of Pripyat
+english.STR_OXY_D3D_REDIST_INSTALL_REQUIRED=Some system components are missing (XInput1_3.dll not found). Setup will run DirectX Redistributable installation
+russian.STR_OXY_D3D_REDIST_INSTALL_REQUIRED=Некоторые необходимые системные компоненты отсутствуют (файл XInput1_3.dll не найден). Установщик запустит установку DirectX Redistributable
 
 [Code]
 // Splash code
@@ -270,6 +275,9 @@ procedure CurStepChanged(CurStep: TSetupStep);
 var
 	gameExtraFilePath : String;
 	gameExtraContent  : String;
+	xinputFilePath    : String;
+	d3dRedistFilePath : String;
+	redistResultCode  : Integer;
 begin
 	if CurStep = ssPostInstall then
 	begin
@@ -342,6 +350,15 @@ begin
 		end;
 		
 		SaveStringToFile(gameExtraFilePath, gameExtraContent, False);
+		//check for xinput1_3.dll existance
+    xinputFilePath := ExpandConstant('{sys}\xinput1_3.dll');
+		if FileExists(xinputFilePath) = False then
+		begin
+			MsgBox(CustomMessage('STR_OXY_D3D_REDIST_INSTALL_REQUIRED'), mbInformation, MB_OK);
+			ExtractTemporaryFile ('directx_Jun2010_redist.exe');
+			d3dRedistFilePath := ExpandConstant('{tmp}\directx_Jun2010_redist.exe');
+			Exec(d3dRedistFilePath, '', '', SW_SHOW, ewWaitUntilTerminated, redistResultCode);
+		end
 	end;
 end;
 

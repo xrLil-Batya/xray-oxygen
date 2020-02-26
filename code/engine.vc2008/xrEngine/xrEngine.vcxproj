@@ -131,7 +131,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;DiscordRichPresense.lib;tbb.lib;Winmm.lib;XInput_Private.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -193,7 +193,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;DiscordRichPresense.lib;tbb.lib;Winmm.lib;XInput_Private.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -260,7 +260,7 @@
       <Culture>0x0422</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;DiscordRichPresense.lib;tbb.lib;Xinput.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Theora.lib;Gdiplus.lib;Psapi.lib;vfw32.lib;DiscordRichPresense.lib;tbb.lib;Winmm.lib;XInput_Private.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmtd;libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
