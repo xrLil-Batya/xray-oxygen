@@ -57,7 +57,7 @@ CSCompiler& CSCompiler::defSampler(LPCSTR ResourceName)
 			desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
 			desc.ComparisonFunc = D3D_COMPARISON_LESS_EQUAL;
 		}
-		else if (!xr_strcmp(ResourceName, "smp_base")
+		else if (!xr_strcmp(ResourceName, "smp_base"))
 		{
 			desc.AddressU = desc.AddressV = desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 			desc.Filter = D3D11_FILTER_ANISOTROPIC;
