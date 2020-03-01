@@ -48,7 +48,7 @@ void CAttachmentOwner::net_Destroy()
 	{
 		m_attached_objects.erase(m_attached_objects.begin() + Iter);
 		pItem->afterDetach();
-		Iter++;
+		++Iter;
 //		pItem->net_Destroy();
 	}
 }
@@ -102,13 +102,13 @@ void CAttachmentOwner::attach(CInventoryItem *inventory_item)
 
 void CAttachmentOwner::detach(CInventoryItem *inventory_item)
 {
-	u32 Iter = 0u;
+	int Iter = -1;
 	for (CAttachableItem* pItem : m_attached_objects) 
 	{
+		++Iter;
 		if (pItem->item().object().ID() == inventory_item->object().ID()) 
 		{
 			m_attached_objects.erase(m_attached_objects.begin() + Iter);
-			Iter++;
 			pItem->afterDetach();
 			if (m_attached_objects.empty()) 
 			{
@@ -117,7 +117,6 @@ void CAttachmentOwner::detach(CInventoryItem *inventory_item)
 				game_object->remove_visual_callback(AttachmentCallback);
 				
 				inventory_item->object().setVisible	(false);
-
 			}
 			break;
 		}

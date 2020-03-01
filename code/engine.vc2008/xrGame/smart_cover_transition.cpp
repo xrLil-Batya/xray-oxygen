@@ -62,11 +62,12 @@ void action::load_animations	(luabind::object const &table)
 	}
 }
 
-class body_state_predicate {
+class body_state_predicate 
+{
 	MonsterSpace::EBodyState	m_body_state;
 
 public:
-	IC	body_state_predicate	(MonsterSpace::EBodyState const &body_state) :
+	IC explicit body_state_predicate	(MonsterSpace::EBodyState const &body_state) :
 		m_body_state			(body_state)
 	{
 	}

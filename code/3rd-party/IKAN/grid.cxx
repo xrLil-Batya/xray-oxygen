@@ -407,7 +407,6 @@ void ClavicleGrid::Interpolate(const float v[3], float val[2])
 
 }
 
-
 void ClavicleGrid::Write(const char *fname)
 {
     FILE *fp = fopen(fname, "w");
@@ -449,62 +448,10 @@ void ClavicleGrid::Entry(int i, int j, float v[2])
 {
     if (i < 0 || i >=  psi_n || j < 0 || j >= theta_n)
     {
-	fprintf(stderr, "bug: bad index %d,%d in entry\n", i, j);
+		fprintf(stderr, "bug: bad index %d,%d in entry\n", i, j);
+		return;
     }
 
     v[0] = vals[i][j][0];
     v[1] = vals[i][j][1];
 }
-
-/*
-int main()
-{
-    ClavicleGrid G;
-    float v[2]; 
-
-#if 0
-    v[0] = 0;
-    v[1] = 0;
-    for (int i = 0; i < 4; i++)
-	for (int j = 0; j < 5; j++)
-	{
-	    G.AddDebug(i,j,v);
-	    v[0] += 1;
-	    v[1] += 1;
-	}
-
-    float dpsi = M_PI/3;
-    float dtheta = M_PI/2;
-    float psi   = 2.5*dpsi;
-    float theta = 3.5*dtheta;
-
-    G.InterpolateDebug(psi, theta, v);
-    printf("[%f,%f]\n", v[0], v[1]);
-
-
-    G.Write("grid.dat");
-
-    ClavicleGrid G2("grid.dat");
-    G2.Write("grid2.dat");
-#else
-    float dpsi = M_PI/3;
-    float dtheta = M_PI/2;
-
-    v[0] = 1;
-    v[1] = 1;
-
-    float p[3]; 
-    float eps = .1;
-
-    spherical_to_xyz(10.0,dpsi + eps, dtheta + eps, p[0],p[1],p[2]);
-    G.Add(p, v);
-    spherical_to_xyz(10.0,dpsi , dtheta , p[0],p[1],p[2]);
-    G.Add(p, v);
-    spherical_to_xyz(10.0,dpsi + eps, dtheta + eps, p[0],p[1],p[2]);
-    G.Add(p, v);
-
-#endif
-}
-
-
-*/

@@ -1274,16 +1274,6 @@ void CActor::OnItemDropUpdate()
 	}
 }
 
-void CActor::OnItemRuck(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
-{
-	CInventoryOwner::OnItemRuck(inventory_item, previous_place);
-}
-
-void CActor::OnItemBelt(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
-{
-	CInventoryOwner::OnItemBelt(inventory_item, previous_place);
-}
-
 static constexpr float ARTEFACTS_UPDATE_TIME = 0.100f;
 
 void CActor::UpdateArtefactsOnBeltAndOutfit()

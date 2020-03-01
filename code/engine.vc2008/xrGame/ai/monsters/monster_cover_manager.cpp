@@ -32,7 +32,7 @@ class CCoverEvaluator : public CCoverEvaluatorBase {
 	CBaseMonster		*m_object;
 
 public:
-				CCoverEvaluator	(CRestrictedObject *object);
+	explicit	CCoverEvaluator	(CRestrictedObject *object);
 
 	// setup by cover_manager
 	void		initialize		(const Fvector &start_position);

@@ -363,10 +363,9 @@ bool CInventory::Belt(PIItem pIItem, bool strict_placement)
 	CalcTotalWeight					();
 	InvalidateState					();
 
-	SInvItemPlace p					= pIItem->m_ItemCurrPlace;
-	pIItem->m_ItemCurrPlace.type	= eItemPlaceBelt;
-	m_pOwner->OnItemBelt			(pIItem, p);
-	pIItem->OnMoveToBelt			(p);
+	SInvItemPlace p = pIItem->m_ItemCurrPlace;
+	pIItem->m_ItemCurrPlace.type = eItemPlaceBelt;
+	pIItem->OnMoveToBelt(p);
 
 	if(in_slot)
 		pIItem->object().processing_deactivate();

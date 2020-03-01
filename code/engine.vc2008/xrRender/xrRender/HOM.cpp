@@ -266,17 +266,17 @@ ICF	BOOL	xform_b1	(Fvector2& min, Fvector2& max, float& minz, Fmatrix& X, float 
 IC	BOOL	_visible	(Fbox& B, Fmatrix& m_xform_01)
 {
 	// Find min/max points of xformed-box
-	Fvector2	min,max;
-	float		z;
-	if (xform_b0(min,max,z,m_xform_01,B.min.x, B.min.y, B.min.z)) return TRUE;
-	if (xform_b1(min,max,z,m_xform_01,B.min.x, B.min.y, B.max.z)) return TRUE;
-	if (xform_b1(min,max,z,m_xform_01,B.max.x, B.min.y, B.max.z)) return TRUE;
-	if (xform_b1(min,max,z,m_xform_01,B.max.x, B.min.y, B.min.z)) return TRUE;
-	if (xform_b1(min,max,z,m_xform_01,B.min.x, B.max.y, B.min.z)) return TRUE;
-	if (xform_b1(min,max,z,m_xform_01,B.min.x, B.max.y, B.max.z)) return TRUE;
-	if (xform_b1(min,max,z,m_xform_01,B.max.x, B.max.y, B.max.z)) return TRUE;
-	if (xform_b1(min,max,z,m_xform_01,B.max.x, B.max.y, B.min.z)) return TRUE;
-	return Raster.test	(min.x,min.y,max.x,max.y,z);
+	Fvector2 fmin, fmax;
+	float z;
+	if (xform_b0(fmin, fmax, z, m_xform_01, B.min.x, B.min.y, B.min.z)) return TRUE;
+	if (xform_b1(fmin, fmax, z, m_xform_01, B.min.x, B.min.y, B.max.z)) return TRUE;
+	if (xform_b1(fmin, fmax, z, m_xform_01, B.max.x, B.min.y, B.max.z)) return TRUE;
+	if (xform_b1(fmin, fmax, z, m_xform_01, B.max.x, B.min.y, B.min.z)) return TRUE;
+	if (xform_b1(fmin, fmax, z, m_xform_01, B.min.x, B.max.y, B.min.z)) return TRUE;
+	if (xform_b1(fmin, fmax, z, m_xform_01, B.min.x, B.max.y, B.max.z)) return TRUE;
+	if (xform_b1(fmin, fmax, z, m_xform_01, B.max.x, B.max.y, B.max.z)) return TRUE;
+	if (xform_b1(fmin, fmax, z, m_xform_01, B.max.x, B.max.y, B.min.z)) return TRUE;
+	return Raster.test	(fmin.x, fmin.y, fmax.x, fmax.y,z);
 }
 
 BOOL CHOM::visible		(Fbox3& B)
@@ -307,15 +307,14 @@ BOOL CHOM::visible		(vis_data& vis)
 #ifdef DEBUG
 	Device.Statistic->RenderCALC_HOM.Begin	();
 #endif
-	BOOL result			= _visible			(vis.box,m_xform_01);
-	u32  delay			= 1;
+	BOOL result = _visible(vis.box,m_xform_01);
+	u32  delay = 1;
+	
+	// visible	- delay next test
+	// else : hidden - shedule to next frame
 	if (result)
-	{
-		// visible	- delay next test
-		delay			= ::Random.randI	(5*2,5*5);
-	} else {
-		// hidden	- shedule to next frame
-	}
+		delay = ::Random.randI	(5*2,5*5);
+	
 	vis.hom_frame			= frame_current + delay;
 	vis.hom_tested			= frame_current	;
 #ifdef DEBUG
@@ -330,23 +329,29 @@ BOOL CHOM::visible		(sPoly& P)
 	if (!bEnabled)		return TRUE;
 
 	// Find min/max points of xformed-box
-	Fvector2	min,max;
-	float		z;
+	Fvector2 fmin, fmax;
+	float z;
 	
-	if (xform_b0(min,max,z,m_xform_01,P.front().x,P.front().y,P.front().z)) return TRUE;
-	for (u32 it=1; it<P.size(); it++)
-		if (xform_b1(min,max,z,m_xform_01,P[it].x,P[it].y,P[it].z)) return TRUE;
-	return Raster.test	(min.x,min.y,max.x,max.y,z);
+	if (xform_b0(fmin, fmax, z, m_xform_01, P.front().x, P.front().y, P.front().z)) 
+		return TRUE;
+		
+	for (u32 it=1; it<P.size(); ++it)
+	{
+		if (xform_b1(fmin, fmax, z, m_xform_01, P[it].x, P[it].y, P[it].z)) 
+			return TRUE;
+	}
+	
+	return Raster.test	(fmin.x,fmin.y,fmax.x,fmax.y,z);
 }
 
-void CHOM::Disable		()
+void CHOM::Disable()
 {
-	bEnabled			= FALSE;
+	bEnabled = FALSE;
 }
 
-void CHOM::Enable		()
+void CHOM::Enable()
 {
-	bEnabled			= m_pModel?TRUE:FALSE;
+	bEnabled = !!m_pModel;
 }
 
 void CHOM::OnRender	()
@@ -361,7 +366,8 @@ void CHOM::OnRender	()
             using LVec = xr_vector<FVF::L>;
 			static LVec	poly;	poly.resize(m_pModel->get_tris_count() * 3);
 			static LVec	line;	line.resize(m_pModel->get_tris_count() * 6);
-			for (u32 it = 0; it < (u32)m_pModel->get_tris_count(); it++)
+			
+			for (u32 it = 0; it < (u32)m_pModel->get_tris_count(); ++it)
 			{
 				CDB::TRI* T		= m_pModel->get_tris()+it;
 				Fvector* verts	= m_pModel->get_verts();
@@ -376,6 +382,7 @@ void CHOM::OnRender	()
 				line[it*6+4].set(*(verts+T->verts[2]),0xFFFFFFFF);
 				line[it*6+5].set(*(verts+T->verts[0]),0xFFFFFFFF);
 			}
+			
 			RCache.set_xform_world(Fidentity);
 			// draw solid
 			Device.SetNearer(TRUE);

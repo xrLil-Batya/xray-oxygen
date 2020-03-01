@@ -154,10 +154,6 @@ public:
 	virtual bool						use_bolts		() const;
 
 	virtual void						OnItemTake		(CInventoryItem *inventory_item);
-	
-	virtual void						OnItemRuck		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
-	virtual void						OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
-	
 	virtual void						OnItemDrop		(CInventoryItem *inventory_item, bool just_before_destroy);
 	virtual void						OnItemDropUpdate();
 
@@ -595,6 +591,7 @@ public:
 	virtual	void				on_weapon_shot_stop				();
 	virtual	void				on_weapon_shot_remove			(CWeapon *weapon);
 	virtual	void				on_weapon_hide					(CWeapon *weapon);
+	
 			Fvector				weapon_recoil_delta_angle		();
 			Fvector				weapon_recoil_last_delta		();
 protected:

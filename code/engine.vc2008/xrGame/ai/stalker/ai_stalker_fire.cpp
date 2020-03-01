@@ -739,43 +739,41 @@ bool CAI_Stalker::fire_make_sense		()
 	// if we do not have an enemy
 	const CEntityAlive		*enemy = memory().enemy().selected();
 	if (!enemy)
-		return				(false);
+		return false;
 
 	if ((pick_distance() + AiStalkerFireDetails::PRECISE_DISTANCE) < Position().distance_to(enemy->Position()))
-		return				(false);
+		return false;
 
 	if (_abs(Position().y - enemy->Position().y) > AiStalkerFireDetails::FLOOR_DISTANCE)
-		return				(false);
+		return false;
 
 	if (pick_distance() < AiStalkerFireDetails::NEAR_DISTANCE)
-		return				(false);
+		return false;
 
 	if (memory().visual().visible_right_now(enemy))
-		return				(true);
+		return true;
 
-	u32						last_time_seen = memory().visual().visible_object_time_last_seen(enemy);
+	u32 last_time_seen = memory().visual().visible_object_time_last_seen(enemy);
 	if (last_time_seen == u32(-1))
-		return				(false);
+		return false;
 
 	if (Device.dwTimeGlobal > last_time_seen + AiStalkerFireDetails::FIRE_MAKE_SENSE_INTERVAL)
-		return				(false);
+		return false;
 
 	// if we do not have a weapon
 	if (!best_weapon())
-		return				(false);
+		return false;
 
 	// if we do not have automatic weapon
-	switch (best_weapon()->object().ef_weapon_type()) {
+	switch (best_weapon()->object().ef_weapon_type()) 
+	{
 		case 6 :
 		case 7 :
 		case 8 :
-		case 10 :
-			break;
-		default:
-			return			(false);
+		case 10 : return true;
 	}
 
-	return					(true);
+	return false;
 }
 
 // shot effector stuff
@@ -785,25 +783,9 @@ void CAI_Stalker::on_weapon_shot_start		(CWeapon *weapon)
 	weapon_shot_effector().Shot			(weapon);
 }
 
-void CAI_Stalker::on_weapon_shot_update		()
-{
-}
-
-void CAI_Stalker::on_weapon_shot_stop		()
-{
-}
-
-void CAI_Stalker::on_weapon_shot_remove		(CWeapon *weapon)
-{
-}
-
-void CAI_Stalker::on_weapon_hide			(CWeapon *weapon)
-{
-}
-
 void CAI_Stalker::notify_on_wounded_or_killed	(CObject *object)
 {
-	CAI_Stalker							*stalker = smart_cast<CAI_Stalker*>(object);
+	CAI_Stalker *stalker = smart_cast<CAI_Stalker*>(object);
 	if (!stalker)
 		return;
 

@@ -411,10 +411,9 @@ void CInventoryOwner::SetCommunity	(int new_community)
 		EA->ChangeTeam(CharacterInfo().Community().team(), EA->g_Squad(), EA->g_Group());
 	}
 
-	CSE_ALifeTraderAbstract* trader		= smart_cast<CSE_ALifeTraderAbstract*>(e_entity);
-	if(!trader) return;
-//	EA->id_Team = CharacterInfo().Community().team();
-	trader->m_community_index  = new_community;
+	CSE_ALifeTraderAbstract* pTrader = smart_cast<CSE_ALifeTraderAbstract*>(e_entity);
+	if(pTrader)
+		pTrader->m_community_index = new_community;
 }
 
 void CInventoryOwner::SetRank			(CHARACTER_RANK_VALUE rank)
@@ -484,42 +483,19 @@ CCustomOutfit* CInventoryOwner::GetOutfit() const
     return smart_cast<CCustomOutfit*>(inventory().ItemFromSlot(OUTFIT_SLOT));
 }
 
-void CInventoryOwner::on_weapon_shot_start		(CWeapon *weapon)
-{
-}
-
-void CInventoryOwner::on_weapon_shot_update		()
-{
-}
-
-void CInventoryOwner::on_weapon_shot_stop		()
-{
-}
-
-void CInventoryOwner::on_weapon_shot_remove		(CWeapon *weapon)
-{
-}
-
-void CInventoryOwner::on_weapon_hide			(CWeapon *weapon)
-{
-}
-
-LPCSTR CInventoryOwner::trade_section			() const
+LPCSTR CInventoryOwner::trade_section() const
 {
 	const CGameObject			*game_object = smart_cast<const CGameObject*>(this);
 	VERIFY						(game_object);
 	return						(READ_IF_EXISTS(pSettings,r_string,game_object->cNameSect(),"trade_section","trade"));
 }
 
-float CInventoryOwner::deficit_factor			(const shared_str &section) const
+float CInventoryOwner::deficit_factor(const shared_str &section) const
 {
-	if (!m_purchase_list)
-		return					(1.f);
-
-	return						(m_purchase_list->deficit(section));
+	return m_purchase_list ? m_purchase_list->deficit(section) : 1.f;
 }
 
-void CInventoryOwner::buy_supplies				(CInifile &ini_file, LPCSTR section)
+void CInventoryOwner::buy_supplies(CInifile &ini_file, LPCSTR section)
 {
 	if (!m_purchase_list)
 		m_purchase_list			= xr_new<CPurchaseList>();
