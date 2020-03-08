@@ -364,7 +364,7 @@ bool xrDebug::ShowCrashDialog(_EXCEPTION_POINTERS* ExceptionInfo, bool bCanConti
 				if (pThreadName != nullptr)
 				{
 					size_t StrLen = wcslen(pThreadName);
-					WideCharToMultiByte(CP_OEMCP, 0, pThreadName, StrLen, OutThreadName, sizeof(OutThreadName), 0, 0);
+					WideCharToMultiByte(CP_OEMCP, 0, pThreadName, (int)StrLen, OutThreadName, sizeof(OutThreadName), 0, 0);
 				}
 			}
 		}

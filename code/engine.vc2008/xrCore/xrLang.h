@@ -2,7 +2,7 @@
 // Author : ForserX
 // Desc   : bases templates for C++ classes
 /////////////////////////////////////////////////
-// Oxygen Engine 2.0 - 2016-2019
+// Oxygen Engine 2.0 - 2016-2020
 /////////////////////////////////////////////////
 #pragma once
 
@@ -47,13 +47,13 @@
 #define xr_interface __interface
 #define ALIGN(a) __declspec(align(a))
 
-class TNonCopyable
+class XRCORE_API TNonCopyable
 {
 public:
     TNonCopyable() = default;
-    ~TNonCopyable() = default;
+    virtual ~TNonCopyable() = default;
 
 private:
-    TNonCopyable(const TNonCopyable&) = delete;
-    TNonCopyable& operator=(const TNonCopyable&) = delete;
+		    TNonCopyable(const TNonCopyable&) = delete;
+    virtual TNonCopyable& operator=(const TNonCopyable&) = delete;
 };

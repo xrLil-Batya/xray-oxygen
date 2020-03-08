@@ -25,9 +25,9 @@ CAMDReader::~CAMDReader()
 {
 	if (bAMDSupportADL)
 	{
-		Main_Control_Destroy();
 		if (hAMDMain != NULL)
 		{
+			Main_Control_Destroy();
 			FreeLibrary(hAMDMain);
 		}
 		if (hAMDAGS != NULL)
@@ -58,7 +58,11 @@ void CAMDReader::Initialize()
 			return true;
 		};
 
-		if (!TryInitializeAMDFunctionLambda((void**)&Main_Control_Create, "ADL_Main_Control_Create"))
+		if (!TryInitializeAMDFunctionLambda((void**)& Main_Control_Create, "ADL_Main_Control_Create"))
+		{
+			return;
+		}
+		if (!TryInitializeAMDFunctionLambda((void**)&GetAdapter_Active, "ADL_Adapter_Active_Get"))
 		{
 			return;
 		}

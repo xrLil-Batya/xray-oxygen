@@ -7,6 +7,13 @@
 #	define MASTER_GOLD
 #endif // DEBUG
 
+// Our headers
+#ifdef XRCORE_EXPORTS
+#	define XRCORE_API __declspec(dllexport)
+#else
+#	define XRCORE_API __declspec(dllimport)
+#endif
+
 #include "xrCore_platform.h"
 #include "xrLang.h"
 #include <stdio.h>
@@ -59,13 +66,6 @@
 
 #pragma warning (pop)
 #pragma warning (disable : 4100 )		// unreferenced formal parameter
-
-// Our headers
-#ifdef XRCORE_EXPORTS
-#	define XRCORE_API __declspec(dllexport)
-#else
-#	define XRCORE_API __declspec(dllimport)
-#endif
 
 #include "_types.h"
 #include "RingBuffer.h"
