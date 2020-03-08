@@ -29,7 +29,7 @@ void	light::vis_prepare			()
 		safe_area	= std::max(std::max(VIEWPORT_NEAR, std::max(x0,x1)),c);
 	}
 
-	bool	skiptest	= true;
+	bool	skiptest	= false;
 	if (ps_r_flags.test(R_FLAG_EXP_DONT_TEST_UNSHADOWED) && !flags.bShadow)	skiptest=true;
 	if (ps_r_flags.test(R_FLAG_EXP_DONT_TEST_SHADOWED) && flags.bShadow)	skiptest=true;
 
