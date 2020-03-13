@@ -58,12 +58,7 @@ protected:
 	BOOL					_PickBoneSoft2W		(IKinematics::pick_result &r, float range, const Fvector& S, const Fvector& D,	u16* indices, CBoneData::FacesVec& faces);
 	BOOL					_PickBoneSoft3W		(IKinematics::pick_result &r, float range, const Fvector& S, const Fvector& D, u16* indices, CBoneData::FacesVec& faces);
 	BOOL					_PickBoneSoft4W		(IKinematics::pick_result &r, float range, const Fvector& S, const Fvector& D,	u16* indices, CBoneData::FacesVec& faces);
-
-	virtual BOOL			_PickBoneHW1W		(IKinematics::pick_result &r, float range, const Fvector& S, const Fvector& D, Fvisual* V, u16* indices, CBoneData::FacesVec& faces)				=0;
-	virtual BOOL			_PickBoneHW2W		(IKinematics::pick_result &r, float range, const Fvector& S, const Fvector& D, Fvisual* V, u16* indices, CBoneData::FacesVec& faces)				=0;
-	virtual BOOL			_PickBoneHW3W		(IKinematics::pick_result &r, float range, const Fvector& S, const Fvector& D, Fvisual* V, u16* indices, CBoneData::FacesVec& faces)				=0;
-	virtual BOOL			_PickBoneHW4W		(IKinematics::pick_result &r, float range, const Fvector& S, const Fvector& D, Fvisual* V, u16* indices, CBoneData::FacesVec& faces)				=0;
-
+	
 	virtual BOOL			_PickBone			(IKinematics::pick_result &r, float range, const Fvector& S, const Fvector& D, Fvisual* V, u16 bone_id, u32 iBase, u32 iCount)						=0;
 public:
 	BOOL					has_visible_bones	();
@@ -75,13 +70,11 @@ public:
 	virtual BOOL			PickBone		(IKinematics::pick_result &r, float dist, const Fvector& start, const Fvector& dir, u16 bone_id)=0;
 	virtual void			FillVertices	(const Fmatrix& view, CSkeletonWallmark& wm, const Fvector& normal, float size, u16 bone_id)=0;
 
-#ifdef USE_DX11
 protected:
 	void			_DuplicateIndices(const char* N, IReader *data);
 
 	//	Index buffer replica since we can't read from index buffer in DX10
 	ref_smem<u16>			m_Indices;
-#endif
 };
 
 template<typename T_vertex, typename T_buffer >
@@ -104,21 +97,9 @@ BOOL pick_bone(T_buffer vertices, CKinematics* Parent, IKinematics::pick_result 
 	return FALSE;
 }
 
-#ifdef USE_DX11
 template<typename T>
 BOOL pick_bone(CKinematics* Parent, IKinematics::pick_result &r, float dist, const Fvector& S, const Fvector& D, Fvisual* V, u16* indices, CBoneData::FacesVec& faces)
 {
 	VERIFY(!"Not implemented");
 	return FALSE;
 }
-#else
-template<typename T>
-BOOL pick_bone(CKinematics* Parent, IKinematics::pick_result &r, float dist, const Fvector& S, const Fvector& D, Fvisual* V, u16* indices, CBoneData::FacesVec& faces)
-{
-	T* vertices;
-	CHK_DX				(V->p_rm_Vertices->Lock(V->vBase,V->vCount,(void**)&vertices,D3DLOCK_READONLY));
-	bool intersect		= !!pick_bone<T,T*>( vertices, Parent, r, dist, S, D, indices, faces);
-	CHK_DX				(V->p_rm_Vertices->Unlock());
-	return intersect;
-}
-#endif
