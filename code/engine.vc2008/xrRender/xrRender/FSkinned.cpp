@@ -69,14 +69,16 @@ static	D3DVERTEXELEMENT9 dwDecl_4W[] =	// 40bytes --#SM+#--
 	D3DDECL_END()
 };
 
-struct SVertBase
+class SVertBase
 {
+protected:
 	float	Pos[4];
 	u32		Normal;
 	u32 	_T;
 	u32 	_B;
-	
-	void base_set(Fvector3& P, Fvector3 N, Fvector3 T, Fvector3 B, [[maybe_unused]] Fvector2& tc, int idx1, int idx2 = 0, int idx3 = 0)
+
+public:
+	void base_set(Fvector3& P, Fvector3 N, Fvector3 T, Fvector3 B, int idx1, int idx2 = 0, int idx3 = 0)
 	{
 		N.normalize_safe();
 		T.normalize_safe();
@@ -88,9 +90,9 @@ struct SVertBase
 			Pos[3] = 1.f;
 		}
 		
-		Normal 	= color_rgba(q_N(N.x), q_N(N.y), q_N(N.z), u8(index));
-		_T 		= color_rgba(q_N(T.x), q_N(T.y), q_N(T.z), idx2);
-		_B 		= color_rgba(q_N(B.x), q_N(B.y), q_N(B.z), idx3);
+		Normal 	= color_rgba(q_N(N.x), q_N(N.y), q_N(N.z), u8(idx1));
+		_T 		= color_rgba(q_N(T.x), q_N(T.y), q_N(T.z), u8(idx2));
+		_B 		= color_rgba(q_N(B.x), q_N(B.y), q_N(B.z), u8(idx3));
 	}
 	
 	virtual u16 get_bone() const
@@ -112,25 +114,27 @@ struct SVertBase
 	}
 }
 
-struct vertHW_1W: public SVertBase
+class vertHW_1W : public SVertBase
 {
 	float _tc[2];
-	
+public:
+
 	void set(Fvector3& P, Fvector3 N, Fvector3 T, Fvector3 B, Fvector2& tc, int index)
 	{
-		SVertBase::base_set(P, N, T, B, tc, index);
+		SVertBase::base_set(P, N, T, B, index);
 		_tc[0] = (tc.x);
 		_tc[1] = (tc.y);
 	}
 };
 
-struct vertHW_2W : public SVertBase
+class vertHW_2W : public SVertBase
 {
 	float _tc_i[4];
+public:
 	
 	void set(Fvector3& P, Fvector3 N, Fvector3 T, Fvector3 B, Fvector2& tc, int index0, int index1, float w)
 	{
-		SVertBase::base_set(P, N, T, B, tc, u8(clampr(iFloor(w * 255.f + .5f), 0, 255)));
+		SVertBase::base_set(P, N, T, B, clampr(iFloor(w * 255.f + .5f), 0, 255));
 		
 		_tc_i[0] = (tc.x);
 		_tc_i[1] = (tc.y);
@@ -160,12 +164,14 @@ struct vertHW_2W : public SVertBase
 };
 
 
-struct vertHW_3W : SVertBase
+class vertHW_3W : SVertBase
 {
 	float _tc_i[4]; //--#SM+#--
+	
+public:
 	void set(Fvector3& P, Fvector3 N, Fvector3 T, Fvector3 B, Fvector2& tc, int index0, int index1, int index2, float w0, float w1)
 	{
-		SVertBase::base_set(P, N, T, B, tc, u8(clampr(iFloor(w0 * 255.f + .5f), 0, 255)), u8(clampr(iFloor(w1 * 255.f + .5f), 0, 255)), index2);
+		SVertBase::base_set(P, N, T, B, clampr(iFloor(w0 * 255.f + .5f), 0, 255), clampr(iFloor(w1 * 255.f + .5f), 0, 255), index2);
 
 		_tc_i[0] = (tc.x);
 		_tc_i[1] = (tc.y);
@@ -214,14 +220,15 @@ struct vertHW_3W : SVertBase
 	}
 };
 
-struct vertHW_4W : SVertBase
+class vertHW_4W : SVertBase
 {
 	float _tc[2];
 	u32   _i;
 	
+public: 
 	void set(Fvector3& P, Fvector3 N, Fvector3 T, Fvector3 B, Fvector2& tc, int index0, int index1, int index2, int index3, float w0, float w1, float w2)
 	{
-		SVertBase::base_set(P, N, T, B, tc, u8(clampr(iFloor(w0 * 255.f + .5f), 0, 255)), u8(clampr(iFloor(w1 * 255.f + .5f), 0, 255)), u8(clampr(iFloor(w2 * 255.f + .5f), 0, 255)));
+		SVertBase::base_set(P, N, T, B, u8(clampr(iFloor(w0 * 255.f + .5f), 0, 255)), u8(clampr(iFloor(w1 * 255.f + .5f), 0, 255)), u8(clampr(iFloor(w2 * 255.f + .5f), 0, 255)));
 
 		_tc[0] = (tc.x);
 		_tc[1] = (tc.y);
