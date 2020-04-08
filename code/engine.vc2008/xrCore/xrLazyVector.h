@@ -69,6 +69,11 @@ struct xrLazyVector
 			return (*source)[index];
 		}
 
+		TypeElement& operator[](const size_t offset) const
+		{
+			return (*source)[index + offset]; // unsafe?
+		}
+
 		iterator& operator++()
 		{
 			index++;
@@ -191,6 +196,11 @@ struct xrLazyVector
 		TypeElement& operator*() const
 		{
 			return (*source)[index];
+		}
+
+		TypeElement& operator[](const size_t offset) const
+		{
+			return (*source)[index - offset]; // unsafe?
 		}
 
 		reverse_iterator& operator++()
