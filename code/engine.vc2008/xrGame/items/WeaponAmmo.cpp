@@ -131,34 +131,20 @@ void CWeaponAmmo::OnH_B_Chield()
 
 void CWeaponAmmo::OnH_B_Independent(bool just_before_destroy) 
 {
-	if(!Useful()) {
-		
-		if (Local()){
-			DestroyObject	();
-		}
+	if(!Useful()) 
+	{
+		DestroyObject();
 		m_ready_to_destroy	= true;
 	}
 	inherited::OnH_B_Independent(just_before_destroy);
 }
-
 
 bool CWeaponAmmo::Useful() const
 {
 	// Åñëè IItem åùå íå ïîëíîñòüþ èñïîëüçîâàíûé, âåðíóòü true
 	return !!m_boxCurr;
 }
-/*
-s32 CWeaponAmmo::Sort(PIItem pIItem) 
-{
-	// Åñëè íóæíî ðàçìåñòèòü IItem ïîñëå this - âåðíóòü 1, åñëè
-	// ïåðåä - -1. Åñëè ïîôèã òî 0.
-	CWeaponAmmo *l_pA = smart_cast<CWeaponAmmo*>(pIItem);
-	if(!l_pA) return 0;
-	if(xr_strcmp(cNameSect(), l_pA->cNameSect())) return 0;
-	if(m_boxCurr <= l_pA->m_boxCurr) return 1;
-	else return -1;
-}
-*/
+
 bool CWeaponAmmo::Get(CCartridge &cartridge) 
 {
 	if(!m_boxCurr) return false;

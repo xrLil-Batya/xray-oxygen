@@ -310,19 +310,15 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 		VERIFY							(pGrenade);
 		pGrenade->SetInitiator			(H_Parent()->ID());
 
-		
-		if (Local())
-		{
-			VERIFY				(m_magazine.size());
-			m_magazine.pop_back	();
-			--iAmmoElapsed;
-			VERIFY((u32)iAmmoElapsed == m_magazine.size());
+		VERIFY (m_magazine.size());
+		m_magazine.pop_back	();
+		--iAmmoElapsed;
+		VERIFY((u32)iAmmoElapsed == m_magazine.size());
 
-			NET_Packet					P;
-			u_EventGen					(P,GE_LAUNCH_ROCKET,ID());
-			P.w_u16						(getCurrentRocket()->ID());
-			u_EventSend					(P);
-		};
+		NET_Packet P;
+		u_EventGen					(P,GE_LAUNCH_ROCKET,ID());
+		P.w_u16						(getCurrentRocket()->ID());
+		u_EventSend					(P);
 	}
 }
 

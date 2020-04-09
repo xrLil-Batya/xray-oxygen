@@ -208,9 +208,6 @@ void CActorCondition::UpdateCondition()
 	if (!object().g_Alive())
 		return;
 
-	if (!object().Local() && m_object != Level().CurrentViewEntity())
-		return;
-
 	float base_weight = object().MaxCarryWeight();
 	float cur_weight = object().inventory().TotalWeight();
 	
@@ -231,16 +228,10 @@ void CActorCondition::UpdateCondition()
 	clamp(m_fAlcohol, 0.0f, 1.0f);
 
 	CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effAlcohol);
-	if (m_fAlcohol > 0.01f)
-	{
-		if (!ce)
+	if (m_fAlcohol > 0.01f && !ce)
 			AddEffector(m_object, effAlcohol, "effector_alcohol", GET_KOEFF_FUNC(this, &CActorCondition::GetAlcohol));
-	}
-	else
-	{
-		if (ce)
+	else if (ce)
 			RemoveEffector(m_object, effAlcohol);
-	}
 	
 	string512 pp_sect_name;
 	shared_str ln = Level().name();
@@ -892,7 +883,7 @@ bool CActorCondition::ApplyInfluence(const SMedicineInfluenceValues& V, const sh
 	if(m_curr_medicine_influence.InProcess())
 		return false;
 
-	if (m_object->Local() && m_object == Level().CurrentViewEntity())
+	if (m_object == Level().CurrentViewEntity())
 	{
 		if(pSettings->line_exist(sect, "use_sound"))
 		{
@@ -916,7 +907,7 @@ bool CActorCondition::ApplyBooster(const SBooster& B, const shared_str& sect)
 {
 	if(B.fBoostValue>0.0f)
 	{
-		if (m_object->Local() && m_object == Level().CurrentViewEntity())
+		if (m_object == Level().CurrentViewEntity())
 		{
 			if(pSettings->line_exist(sect, "use_sound"))
 			{

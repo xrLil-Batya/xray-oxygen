@@ -79,33 +79,23 @@ void CSpecificCharacter::load_shared	(LPCSTR)
 
 
 
-	int norandom = pXML->ReadAttribInt(item_node, "no_random", 0);
-	if (1 == norandom) 
-		data()->m_bNoRandom = true;
-	else
-		data()->m_bNoRandom = false;
+	const int norandom = pXML->ReadAttribInt(item_node, "no_random", 0);
+	data()->m_bNoRandom = (1 == norandom);
 
-	int team_default = pXML->ReadAttribInt(item_node, "team_default", 0);
-	if (1 == team_default) 
-		data()->m_bDefaultForCommunity = true;
-	else
-		data()->m_bDefaultForCommunity = false;
-
+	const int team_default = pXML->ReadAttribInt(item_node, "team_default", 0);
+	data()->m_bDefaultForCommunity = (1 == team_default) ;
+	
 	R_ASSERT3(!(data()->m_bNoRandom && data()->m_bDefaultForCommunity), 
 		"cannot set 'no_random' and 'team_default' flags simultaneously, profile id", *shared_str(item_data.id));
 	
 #ifdef  XRGAME_EXPORTS
 
 	LPCSTR start_dialog = pXML->Read("start_dialog", 0, nullptr);
-	if(start_dialog)
-	{
-		data()->m_StartDialog	= start_dialog;
-	}
-	else
-		data()->m_StartDialog	= nullptr;
+	data()->m_StartDialog = start_dialog;
 
 	int dialogs_num = pXML->GetNodesNum(pXML->GetLocalRoot(), "actor_dialog");
 	data()->m_ActorDialogs.clear();
+	
 	for(int i=0; i<dialogs_num; ++i)
 	{
 		shared_str dialog_name = pXML->Read(pXML->GetLocalRoot(), "actor_dialog", i, "");
@@ -118,7 +108,6 @@ void CSpecificCharacter::load_shared	(LPCSTR)
 	//игровое имя персонажа
 	data()->m_sGameName		= pXML->Read("name", 0, "");
 	data()->m_sBioText		= CStringTable().translate(pXML->Read("bio", 0, ""));
-
 
 	data()->m_fPanic_threshold		= pXML->ReadFlt("panic_threshold",0,0.f);
 	data()->m_fHitProbabilityFactor	= pXML->ReadFlt("hit_probability_factor",0,1.f);

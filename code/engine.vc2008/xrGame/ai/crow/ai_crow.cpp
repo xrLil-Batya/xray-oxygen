@@ -364,10 +364,8 @@ void CAI_Crow::shedule_Update		(u32 DT)
 }
 
 // Core events
-void CAI_Crow::net_Export	(NET_Packet& P)					// export to server
+void CAI_Crow::net_Export	(NET_Packet& P)
 {
-	R_ASSERT			(Local());
-
 	u8					flags = 0;
 	P.w_float			(GetfHealth());
 
@@ -390,18 +388,13 @@ void CAI_Crow::net_Export	(NET_Packet& P)					// export to server
 	P.w_u8				(u8(g_Group()));
 }
 //---------------------------------------------------------------------
-void CAI_Crow::HitSignal	(float /**HitAmount/**/, Fvector& /**local_dir/**/, CObject* who, s16 /**element/**/)
+void CAI_Crow::HitSignal(float /**HitAmount/**/, Fvector& /**local_dir/**/, CObject* who, s16 /**element/**/)
 {
-	//bool				first_time = !!g_Alive(); 
-//	bool				first_time = !PPhysicsShell(); 
-	SetfHealth			(0);
-	//set_death_time		()	;
-	if (eDeathDead!=st_current) 
-	{	
-//		if (first_time)	Die			(who);
-		st_target		= eDeathFall;
-	}
-	else smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(m_Anims.m_death_dead.GetRandom());
+	SetfHealth(0);
+	if (eDeathDead != st_current) 
+		st_target = eDeathFall;
+	else 
+	smart_cast<IKinematicsAnimated*>(Visual())->PlayCycle(m_Anims.m_death_dead.GetRandom());
 }
 //---------------------------------------------------------------------
 void CAI_Crow::HitImpulse	(float	/**amount/**/,		Fvector& /**vWorldDir/**/, Fvector& /**vLocalDir/**/)
@@ -414,11 +407,9 @@ void CAI_Crow::CreateSkeleton()
 	m_pPhysicsShell->SetMaterial(smart_cast<IKinematics*>(Visual())->LL_GetData(smart_cast<IKinematics*>(Visual())->LL_GetBoneRoot()).game_mtl_idx);
 }
 
-//void CAI_Crow::Hit	(float P, Fvector &dir, CObject* who, s16 element,Fvector p_in_object_space, float impulse, ALife::EHitType hit_type)
 void	CAI_Crow::Hit							(SHit* pHDS)
 {
-//	inherited::Hit	(P,dir,who,element,p_in_object_space,impulse/100.f, hit_type);
-	SHit	HDS = *pHDS;
+	SHit HDS = *pHDS;
 	HDS.impulse /= 100.f;
 	inherited::Hit(&HDS);
 

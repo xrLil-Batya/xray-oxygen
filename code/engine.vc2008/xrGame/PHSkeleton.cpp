@@ -154,9 +154,7 @@ void CPHSkeleton::Update(u32 dt)
 
 	if (b_removing && Device.dwTimeGlobal > m_remove_time && m_unsplited_shels.empty())
 	{
-		if (obj->Local())
-			obj->DestroyObject();
-
+		obj->DestroyObject();
 		b_removing = false;
 	}
 }
@@ -214,23 +212,21 @@ void CPHSkeleton::ClearUnsplited()
 
 void CPHSkeleton::SpawnCopy()
 {
-	if(PPhysicsShellHolder()->Local()) {
-		CSE_Abstract*				D	= F_entity_Create("ph_skeleton_object");//*cNameSect()
-		R_ASSERT					(D);
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		CSE_ALifePHSkeletonObject	*l_tpALifePhysicObject = smart_cast<CSE_ALifePHSkeletonObject*>(D);
-		R_ASSERT					(l_tpALifePhysicObject);
-		l_tpALifePhysicObject->_flags.set	(CSE_PHSkeleton::flSpawnCopy,true);
-		//SetNotNeedSave()
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		InitServerObject			(D);
-		// Send
-		NET_Packet			P;
-		D->Spawn_Write		(P,TRUE);
-		Level().Send		(P);
-		// Destroy
-		F_entity_Destroy	(D);
-	}
+	CSE_Abstract*				D	= F_entity_Create("ph_skeleton_object");//*cNameSect()
+	R_ASSERT					(D);
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	CSE_ALifePHSkeletonObject	*l_tpALifePhysicObject = smart_cast<CSE_ALifePHSkeletonObject*>(D);
+	R_ASSERT					(l_tpALifePhysicObject);
+	l_tpALifePhysicObject->_flags.set	(CSE_PHSkeleton::flSpawnCopy,true);
+	//SetNotNeedSave()
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	InitServerObject			(D);
+	// Send
+	NET_Packet			P;
+	D->Spawn_Write		(P,TRUE);
+	Level().Send		(P);
+	// Destroy
+	F_entity_Destroy	(D);
 }
 PHSHELL_PAIR_VECTOR new_shells;
 void CPHSkeleton::PHSplit()

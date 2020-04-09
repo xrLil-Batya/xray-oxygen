@@ -23,15 +23,10 @@ namespace detail
 	const float near_zero = 0.0001f;
 	static vec  zero_vec  = { 0.f, 0.f, 0.f};
 
-	vec   random_vec ()
+	vec random_vec ()
 	{
-		struct local {
-			static float random_component () { return -1.f + 2.f*(rand()/(float)RAND_MAX); }
-		};
-
-		return normalize( cr_fvector3(local::random_component(),
-			                          local::random_component(), 
-			                          local::random_component()) );
+		auto random_component = []() { return -1.f + 2.f*(rand()/(float)RAND_MAX); }
+		return normalize( cr_fvector3(random_component(), random_component(), random_component()) );
 	}
 
 	ICF float min (float a, float b) { return a < b ? a : b; }

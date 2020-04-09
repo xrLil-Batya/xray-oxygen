@@ -326,8 +326,6 @@ void CAI_Rat::net_Destroy()
 
 void CAI_Rat::net_Export(NET_Packet& P)
 {
-	R_ASSERT				(Local());
-
 	// export last known packet
 	R_ASSERT				(!NET.empty());
 	net_update& N			= NET.back();
@@ -346,18 +344,15 @@ void CAI_Rat::net_Export(NET_Packet& P)
 	GameGraph::_GRAPH_ID		l_game_vertex_id = ai_location().game_vertex_id();
 	P.w						(&l_game_vertex_id,			sizeof(l_game_vertex_id));
 	P.w						(&l_game_vertex_id,			sizeof(l_game_vertex_id));
-//	P.w						(&m_fGoingSpeed,			sizeof(m_fGoingSpeed));
-//	P.w						(&m_fGoingSpeed,			sizeof(m_fGoingSpeed));
-	float					f1 = 0;
-	if (ai().game_graph().valid_vertex_id(l_game_vertex_id)) {
-		f1					= Position().distance_to	(ai().game_graph().vertex(l_game_vertex_id)->level_point());
-		P.w					(&f1,						sizeof(f1));
-		P.w					(&f1,						sizeof(f1));
+	
+	float f1 = 0;
+	if (ai().game_graph().valid_vertex_id(l_game_vertex_id)) 
+	{
+		f1 = Position().distance_to	(ai().game_graph().vertex(l_game_vertex_id)->level_point());
 	}
-	else {
-		P.w					(&f1,						sizeof(f1));
-		P.w					(&f1,						sizeof(f1));
-	}
+	
+	P.w(&f1, sizeof(f1));
+	P.w(&f1, sizeof(f1));
 
 	CEatableItem::net_Export(P);
 }
@@ -366,16 +361,13 @@ void CAI_Rat::CreateSkeleton(){
 
 	if (!Visual())
 		return;
+		
 	IPhysicsElementEx* element=P_create_Element();
 	Fobb box;
 	box.m_rotate.identity();
 	box.m_translate.set(0,0.1f,-0.15f);
 	box.m_halfsize.set(0.10f,0.085f,0.25f);
 	element->add_Box(box);
-	//Fsphere sphere;
-	//sphere.P.set(0,0,0);
-	//sphere.R=0.25;
-	//element->add_Sphere(sphere);
 	element->setDensity(m_phMass);
 	element->SetMaterial(smart_cast<IKinematics*>(Visual())->LL_GetData(smart_cast<IKinematics*>(Visual())->LL_GetBoneRoot()).game_mtl_idx);
 	m_pPhysicsShell=P_create_Shell();
@@ -385,34 +377,6 @@ void CAI_Rat::CreateSkeleton(){
 	if(!fsimilar(0.f,m_saved_impulse)){
 		m_pPhysicsShell->applyHit(m_saved_hit_position,m_saved_hit_dir,m_saved_impulse,0,m_saved_hit_type);
 	}
-	/*
-	IKinematics* M		= smart_cast<IKinematics*>(Visual());			VERIFY(M);
-	m_pPhysicsShell		= P_create_Shell();
-
-	//get bone instance
-	int id=M->LL_BoneID("bip01_pelvis");
-	CBoneInstance& instance=M->LL_GetBoneInstance				(id);
-
-	//create root element
-	CPhysicsElement* element=P_create_Element				();
-	element->mXFORM.identity();
-	instance.set_callback(m_pPhysicsShell->GetBonesCallback(),element);
-	Fobb box;
-	box.m_rotate.identity();
-	box.m_translate.set(0,0,0);
-	box.m_halfsize.set(0.10f,0.085f,0.25f);
-	element->add_Box(box);
-
-	element->setDensity(200.f);
-	m_pPhysicsShell->add_Element(element);
-	element->SetMaterial("materials/skel1");
-
-	//set shell start position
-	Fmatrix m;
-	m.set(mRotate);
-	m.c.set(Position());
-	m_pPhysicsShell->mXFORM.set(m);
-	*/
 }
 
 void CAI_Rat::shedule_Update(u32 dt)

@@ -25,9 +25,7 @@
 #	include "ai/monsters/BaseMonster/base_monster.h"
 // Lain: add
 #   include "level_debug.h"
-#endif
 
-#ifdef DEBUG
 	extern void try_change_current_entity();
 	extern void restore_actor();
 #endif

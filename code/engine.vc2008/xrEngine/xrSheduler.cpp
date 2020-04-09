@@ -92,20 +92,20 @@ void CSheduler::internal_Registration()
 			// register
 			// search for paired "unregister"
 			bool bFoundAndErased = false;
-			for (u32 pair = it + 1; pair<Registration.size(); pair++)
+			for (u32 Pair = it + 1; Pair<Registration.size(); Pair++)
 			{
-				ItemReg&	R_pair = Registration[pair];
-				if (!R_pair.OP && R_pair.Object == R.Object) {
+				ItemReg&	R_pair = Registration[Pair];
+				if (!R_pair.OP && R_pair.Object == R.Object) 
+				{
 					bFoundAndErased = true;
-					Registration.erase(Registration.begin() + pair);
+					Registration.erase(Registration.begin() + Pair);
 					break;
 				}
 			}
 
 			// register if non-paired
-			if (!bFoundAndErased) {
+			if (!bFoundAndErased)
 				internal_Register(R.Object, R.RT);
-			}
 		}
 		else
 		{
@@ -119,30 +119,19 @@ void CSheduler::internal_Registration()
 void CSheduler::internal_Register(ISheduled* O, BOOL RT)
 {
 	VERIFY(!O->shedule.b_locked);
+	
+	// Fill item structure
+	Item TNext;
+	TNext.dwTimeForExecute = Device.dwTimeGlobal;
+	TNext.dwTimeOfLastExecute = Device.dwTimeGlobal;
+	TNext.Object = O;
+	TNext.scheduled_name = O->shedule_Name();
+	O->shedule.b_RT = RT;
+	
 	if (RT)
-	{
-		// Fill item structure
-		Item						TNext;
-		TNext.dwTimeForExecute = Device.dwTimeGlobal;
-		TNext.dwTimeOfLastExecute = Device.dwTimeGlobal;
-		TNext.Object = O;
-		TNext.scheduled_name = O->shedule_Name();
-		O->shedule.b_RT = TRUE;
-
 		ItemsRT.push_back(TNext);
-	}
-	else {
-		// Fill item structure
-		Item						TNext;
-		TNext.dwTimeForExecute = Device.dwTimeGlobal;
-		TNext.dwTimeOfLastExecute = Device.dwTimeGlobal;
-		TNext.Object = O;
-		TNext.scheduled_name = O->shedule_Name();
-		O->shedule.b_RT = FALSE;
-
-		// Insert into priority Queue
+	else 
 		Push(TNext);
-	}
 }
 
 bool CSheduler::internal_Unregister(ISheduled* O, BOOL RT, bool warn_on_not_found)

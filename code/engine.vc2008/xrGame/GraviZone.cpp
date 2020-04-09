@@ -144,9 +144,7 @@ void CBaseGraviZone ::Affect(SZoneObjectInfo* O)
 	else 
 		throw_in_dir.set(0.f,1.f,0.f);
 
-	bool CanApplyPhisImpulse = GO->Local() == TRUE;
-
-	if( CheckAffectField(GO,dist_to_radius)&& CanApplyPhisImpulse)
+	if( CheckAffectField(GO,dist_to_radius))
 	{
 		AffectPull(GO,throw_in_dir,dist);
 	}

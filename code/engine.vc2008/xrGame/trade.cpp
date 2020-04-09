@@ -92,11 +92,11 @@ void CTrade::StartTradeEx(CInventoryOwner* pInvOwner)
 
 void CTrade::TradeCB(bool bStart)
 {
-	if(bStart){
-		if (pThis.type == TT_TRADER) smart_cast<CAI_Trader*>(pThis.base)->OnStartTrade();
-	}else
-		if (pThis.type == TT_TRADER) smart_cast<CAI_Trader*>(pThis.base)->OnStopTrade();
-
+	if (pThis.type == TT_TRADER)
+	{
+		CAI_Trader* pTrader = smart_cast<CAI_Trader*>(pThis.base);
+		bStart ? pTrader->OnStartTrade() : pTrader->OnStopTrade();
+	}
 }
 
 void CTrade::OnPerformTrade(u32 money_get, u32 money_put)

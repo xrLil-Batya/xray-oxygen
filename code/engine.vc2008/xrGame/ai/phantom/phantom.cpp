@@ -329,9 +329,6 @@ void CPhantom::load(IReader &input_packet)
 }
 void CPhantom::net_Export	(NET_Packet& P)					// export to server
 {
-	// export 
-	R_ASSERT			(Local());
-
 	u8					flags = 0;
 	P.w_float			(GetfHealth());
 
@@ -344,10 +341,10 @@ void CPhantom::net_Export	(NET_Packet& P)					// export to server
 
 	float				yaw, pitch, bank;
 	XFORM().getHPB		(yaw,pitch,bank);
-	P.w_float /*w_angle8*/			(yaw);
-	P.w_float /*w_angle8*/			(yaw);
-	P.w_float /*w_angle8*/			(pitch);
-	P.w_float /*w_angle8*/			(0);
+	P.w_float 			(yaw);
+	P.w_float 			(yaw);
+	P.w_float 			(pitch);
+	P.w_float 			(0);
 	P.w_u8				(u8(g_Team()));
 	P.w_u8				(u8(g_Squad()));
 	P.w_u8				(u8(g_Group()));

@@ -165,11 +165,8 @@ void CMissile::OnH_B_Independent(bool just_before_destroy)
 		}
 	}
 
-	if(!m_dwDestroyTime && Local()) 
-	{
-		DestroyObject		();
-		return;
-	}
+	if(!m_dwDestroyTime) 
+		DestroyObject();
 }
 
 extern u32 hud_adj_mode;
@@ -447,7 +444,8 @@ void CMissile::Throw()
 	
 	m_fThrowForce						= m_fMinForce;
 
-	if (Local() && H_Parent()) {
+	if (H_Parent()) 
+	{
 		NET_Packet						P;
 		u_EventGen						(P,GE_OWNERSHIP_REJECT,ID());
 		P.w_u16							(u16(m_fake_missile->ID()));
@@ -490,7 +488,7 @@ void CMissile::OnEvent(NET_Packet& P, u16 type)
 
 void CMissile::Destroy() 
 {
-	if (Local())		DestroyObject();
+	DestroyObject();
 }
 
 bool CMissile::Action(u16 cmd, u32 flags) 

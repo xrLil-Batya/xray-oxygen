@@ -362,28 +362,20 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	fog_color.lerp			(A.fog_color,B.fog_color,f);
 	if(Mdf.use_flags.test(eFogColor))
 		fog_color.add(Mdf.fog_color).mul(modif_power);
-	if (strstr(Core.Params,"-fog_mixer"))
-	fog_density				=	(fi*A.fog_density + f*B.fog_density)*psFogDensity;
-	else
-	fog_density				=	(fi*A.fog_density + f*B.fog_density);
+	
+	fog_density = (fi*A.fog_density + f*B.fog_density)*psFogDensity;
+		
 	if(Mdf.use_flags.test(eFogDensity))
 	{
-		fog_density			+= Mdf.fog_density;
-		fog_density			*= modif_power;
+		fog_density += Mdf.fog_density;
+		fog_density *= modif_power;
 	}
-	if (strstr(Core.Params,"-fog_mixer"))
-	{
+	
 	fog_color.set			(psFogColor);
-	fog_distance			=	(fi*A.fog_distance + f*B.fog_distance)*psFogDistance;
-	fog_near				=	(1.0f - fog_density)*0.85f * fog_distance*psFogNear;
-	fog_far					=	0.99f * fog_distance*psFogFar;
-	}
-	else
-	{
-	fog_distance			=	(fi*A.fog_distance + f*B.fog_distance);
-	fog_near				=	(1.0f - fog_density)*0.85f * fog_distance;
-	fog_far					=	0.99f * fog_distance;
-	}
+	fog_distance			=	(fi * A.fog_distance + f * B.fog_distance) * psFogDistance;
+	fog_near				=	(1.0f - fog_density)*0.85f * fog_distance * psFogNear;
+	fog_far					=	0.99f * fog_distance * psFogFar;
+		
 	rain_density			=	fi*A.rain_density + f*B.rain_density;
 	rain_color.lerp			(A.rain_color,B.rain_color,f);
 	bolt_period				=	fi*A.bolt_period + f*B.bolt_period;

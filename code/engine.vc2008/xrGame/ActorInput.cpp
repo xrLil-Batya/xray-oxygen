@@ -198,7 +198,6 @@ void CActor::IR_OnMouseWheel(int direction)
 void CActor::IR_OnKeyboardRelease(u8 cmd)
 {
 	if(hud_adj_mode && pInput->iGetAsyncKeyState(VK_SHIFT))	return;
-	if (Remote())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	//g_loading_events
 	if (g_Alive())	

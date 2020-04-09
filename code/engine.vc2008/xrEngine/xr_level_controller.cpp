@@ -638,23 +638,74 @@ void CCC_RegisterInput()
 };
 
 #define DECLARE_KEY_ENTRY(keyName) { (u8)keyName, xr_string(#keyName)},
+#define DECLARE_KEY_WORD(keyName)  { (u8)VK_##keyName, xr_string(#keyName) },
 
 const xr_map<u8, xr_string> KeyNamesTable =
 {
-	{(u8)VK_LBUTTON,  "LMouse"},
-	{(u8)VK_RBUTTON,  "RMouse"},
-	{(u8)VK_MBUTTON,  "MMouse"},
-	{(u8)VK_XBUTTON1, "Mouse3"},
-	{(u8)VK_XBUTTON2, "Mouse4"},
-	{(u8)VK_TAB,	  "Tab"},
-	{(u8)VK_RETURN,   "Enter"},
-	{(u8)VK_SHIFT,    "Shift"},
-	{(u8)VK_CONTROL,  "Ctrl"},
-	{(u8)VK_CAPITAL,  "Caps Lock"},
-	{(u8)VK_MENU,   "Menu"},
-	{(u8)VK_PAUSE,  "Pause"},
+	// Numbers, words and F** keys
+	DECLARE_KEY_WORD(0)
+	DECLARE_KEY_WORD(1)
+	DECLARE_KEY_WORD(2)
+	DECLARE_KEY_WORD(3)
+	DECLARE_KEY_WORD(4)
+	DECLARE_KEY_WORD(5)
+	DECLARE_KEY_WORD(6)
+	DECLARE_KEY_WORD(7)
+	DECLARE_KEY_WORD(8)
+	DECLARE_KEY_WORD(9)
+	DECLARE_KEY_WORD(A)
+	DECLARE_KEY_WORD(B)
+	DECLARE_KEY_WORD(C)
+	DECLARE_KEY_WORD(D)
+	DECLARE_KEY_WORD(E)
+	DECLARE_KEY_WORD(F)
+	DECLARE_KEY_WORD(G)
+	DECLARE_KEY_WORD(H)
+	DECLARE_KEY_WORD(I)
+	DECLARE_KEY_WORD(J)
+	DECLARE_KEY_WORD(K)
+	DECLARE_KEY_WORD(L)
+	DECLARE_KEY_WORD(M)
+	DECLARE_KEY_WORD(N)
+	DECLARE_KEY_WORD(O)
+	DECLARE_KEY_WORD(P)
+	DECLARE_KEY_WORD(Q)
+	DECLARE_KEY_WORD(R)
+	DECLARE_KEY_WORD(S)
+	DECLARE_KEY_WORD(T)
+	DECLARE_KEY_WORD(U)
+	DECLARE_KEY_WORD(V)
+	DECLARE_KEY_WORD(W)
+	DECLARE_KEY_WORD(X)
+	DECLARE_KEY_WORD(Y)
+	DECLARE_KEY_WORD(Z)
+	DECLARE_KEY_WORD(F1)
+	DECLARE_KEY_WORD(F2)
+	DECLARE_KEY_WORD(F3)
+	DECLARE_KEY_WORD(F4)
+	DECLARE_KEY_WORD(F5)
+	DECLARE_KEY_WORD(F6)
+	DECLARE_KEY_WORD(F7)
+	DECLARE_KEY_WORD(F8)
+	DECLARE_KEY_WORD(F9)
+	DECLARE_KEY_WORD(F10)
+	DECLARE_KEY_WORD(F11)
+	DECLARE_KEY_WORD(F12)
+	DECLARE_KEY_WORD(F13)
+	DECLARE_KEY_WORD(F14)
+	DECLARE_KEY_WORD(F15)
+	DECLARE_KEY_WORD(F16)
+	DECLARE_KEY_WORD(F17)
+	DECLARE_KEY_WORD(F18)
+	DECLARE_KEY_WORD(F19)
+	DECLARE_KEY_WORD(F20)
+	DECLARE_KEY_WORD(F21)
+	DECLARE_KEY_WORD(F22)
+	DECLARE_KEY_WORD(F23)
+	DECLARE_KEY_WORD(F24)
+	
+	// Var == Name
 	DECLARE_KEY_ENTRY(VK_CANCEL)
-	{(u8)VK_BACK,   "Backspace"},
 	DECLARE_KEY_ENTRY(VK_CLEAR)
 	DECLARE_KEY_ENTRY(VK_KANA)
 	DECLARE_KEY_ENTRY(VK_HANGEUL)
@@ -667,115 +718,19 @@ const xr_map<u8, xr_string> KeyNamesTable =
 	DECLARE_KEY_ENTRY(VK_NONCONVERT)
 	DECLARE_KEY_ENTRY(VK_ACCEPT)
 	DECLARE_KEY_ENTRY(VK_MODECHANGE)
-	{(u8)VK_PRIOR,   "Pg Up"},
-	{(u8)VK_NEXT,   "Pg Down"},
 	DECLARE_KEY_ENTRY(VK_END)
-	{(u8)VK_HOME,   "Home"},
-	{(u8)VK_LEFT,	"Left"},
-	{(u8)VK_UP,		"Up"},
-	{(u8)VK_RIGHT,	"Right"},
-	{(u8)VK_DOWN,	"Down"},
-	{(u8)VK_SPACE, "Space"},
-	{(u8)VK_ESCAPE, "Esc"},
 	DECLARE_KEY_ENTRY(VK_SELECT)
 	DECLARE_KEY_ENTRY(VK_PRINT)
 	DECLARE_KEY_ENTRY(VK_EXECUTE)
 	DECLARE_KEY_ENTRY(VK_SNAPSHOT)
-	{(u8)VK_INSERT,   "Insert"},
-	{(u8)VK_DELETE,   "Del"},
 	DECLARE_KEY_ENTRY(VK_HELP)
-	{(u8)VK_0, "0"},
-	{(u8)VK_1, "1"},
-	{(u8)VK_2, "2"},
-	{(u8)VK_3, "3"},
-	{(u8)VK_4, "4"},
-	{(u8)VK_5, "5"},
-	{(u8)VK_6, "6"},
-	{(u8)VK_7, "7"},
-	{(u8)VK_8, "8"},
-	{(u8)VK_9, "9"},
-	{(u8)VK_A, "A"},
-	{(u8)VK_B, "B"},
-	{(u8)VK_C, "C"},
-	{(u8)VK_D, "D"},
-	{(u8)VK_E, "E"},
-	{(u8)VK_F, "F"},
-	{(u8)VK_G, "G"},
-	{(u8)VK_H, "H"},
-	{(u8)VK_I, "I"},
-	{(u8)VK_J, "J"},
-	{(u8)VK_K, "K"},
-	{(u8)VK_L, "L"},
-	{(u8)VK_M, "M"},
-	{(u8)VK_N, "N"},
-	{(u8)VK_O, "O"},
-	{(u8)VK_P, "P"},
-	{(u8)VK_Q, "Q"},
-	{(u8)VK_R, "R"},
-	{(u8)VK_S, "S"},
-	{(u8)VK_T, "T"},
-	{(u8)VK_U, "U"},
-	{(u8)VK_V, "V"},
-	{(u8)VK_W, "W"},
-	{(u8)VK_X, "X"},
-	{(u8)VK_Y, "Y"},
-	{(u8)VK_Z, "Z"},
-	{(u8)VK_LWIN, "lWin"},
-	{(u8)VK_RWIN, "rWin"},
-	{(u8)VK_SLEEP, "Sleep"},
-	{(u8)VK_APPS, "Apps"},
-	{(u8)VK_NUMPAD0,  "NumPad0"},
-	{(u8)VK_NUMPAD1,  "NumPad1"},
-	{(u8)VK_NUMPAD2,  "NumPad2"},
-	{(u8)VK_NUMPAD3,  "NumPad3"},
-	{(u8)VK_NUMPAD4,  "NumPad4"},
-	{(u8)VK_NUMPAD5,  "NumPad5"},
-	{(u8)VK_NUMPAD6,  "NumPad6"},
-	{(u8)VK_NUMPAD7,  "NumPad7"},
-	{(u8)VK_NUMPAD8,  "NumPad8"},
-	{(u8)VK_NUMPAD9,  "NumPad9"},
-	{(u8)VK_MULTIPLY,  "*"},
-	{(u8)VK_ADD,  "+"},
-	{(u8)VK_SUBTRACT,  "-"},
-	{(u8)VK_DIVIDE,  "/"},
 	DECLARE_KEY_ENTRY(VK_SEPARATOR)
-	{(u8)VK_DECIMAL,   "."},
-	{(u8)VK_F1,  "F1"},
-	{(u8)VK_F2,  "F2"},
-	{(u8)VK_F3,  "F3"},
-	{(u8)VK_F4,  "F4"},
-	{(u8)VK_F5,  "F5"},
-	{(u8)VK_F6,  "F6"},
-	{(u8)VK_F7,  "F7"},
-	{(u8)VK_F8,  "F8"},
-	{(u8)VK_F9,  "F9"},
-	{(u8)VK_F10, "F10"},
-	{(u8)VK_F11, "F11"},
-	{(u8)VK_F12, "F12"},
-	{(u8)VK_F13, "F13"},
-	{(u8)VK_F14, "F14"},
-	{(u8)VK_F15, "F15"},
-	{(u8)VK_F16, "F16"},
-	{(u8)VK_F17, "F17"},
-	{(u8)VK_F18, "F18"},
-	{(u8)VK_F19, "F19"},
-	{(u8)VK_F20, "F20"},
-	{(u8)VK_F21, "F21"},
-	{(u8)VK_F22, "F22"},
-	{(u8)VK_F23, "F23"},
-	{(u8)VK_F24, "F24"},
-	{(u8)VK_NUMLOCK, "NumLock"},
-	{(u8)VK_SCROLL, "ScrollLock"},
 	DECLARE_KEY_ENTRY(VK_OEM_NEC_EQUAL)
 	DECLARE_KEY_ENTRY(VK_OEM_FJ_JISHO)
 	DECLARE_KEY_ENTRY(VK_OEM_FJ_MASSHOU)
 	DECLARE_KEY_ENTRY(VK_OEM_FJ_TOUROKU)
 	DECLARE_KEY_ENTRY(VK_OEM_FJ_LOYA)
 	DECLARE_KEY_ENTRY(VK_OEM_FJ_ROYA)
-	{(u8)VK_LSHIFT,   "Left Shift"},
-	{(u8)VK_RSHIFT,   "Right Shift"},
-	{(u8)VK_LCONTROL, "Left Ctrl"},
-	{(u8)VK_RCONTROL, "Right Ctrl"},
 	DECLARE_KEY_ENTRY(VK_LMENU)
 	DECLARE_KEY_ENTRY(VK_RMENU)
 	DECLARE_KEY_ENTRY(VK_BROWSER_BACK)
@@ -796,29 +751,6 @@ const xr_map<u8, xr_string> KeyNamesTable =
 	DECLARE_KEY_ENTRY(VK_LAUNCH_MEDIA_SELECT)
 	DECLARE_KEY_ENTRY(VK_LAUNCH_APP1)
 	DECLARE_KEY_ENTRY(VK_LAUNCH_APP2)
-	{(u8)VK_OEM_1,   ";"},
-	{(u8)VK_OEM_PLUS,   "+"},
-	{(u8)VK_OEM_COMMA,   ","},
-	{(u8)VK_OEM_MINUS,   "-"},
-	{(u8)VK_OEM_2,   "/"},
-	{(u8)VK_OEM_3, "~"},
-	{(u8)VK_OEM_PERIOD, "."},
-	{(u8)VK_GAMEPAD_A, "PAD A"},
-	{(u8)VK_GAMEPAD_B, "PAD B"},
-	{(u8)VK_GAMEPAD_X, "PAD X"},
-	{(u8)VK_GAMEPAD_Y, "PAD Y"},
-	{(u8)VK_GAMEPAD_RIGHT_SHOULDER, "PAD SHLD R"},
-	{(u8)VK_GAMEPAD_LEFT_SHOULDER,  "PAD SHLD L"},
-	{(u8)VK_GAMEPAD_LEFT_TRIGGER, "PAD TRG L"},
-	{(u8)VK_GAMEPAD_RIGHT_TRIGGER,"PAD TRG R"},
-	{(u8)VK_GAMEPAD_DPAD_UP, "PAD DPAD UP"},
-	{(u8)VK_GAMEPAD_DPAD_DOWN, "PAD DPAD DOWN"},
-	{(u8)VK_GAMEPAD_DPAD_LEFT, "PAD DPAD LEFT"},
-	{(u8)VK_GAMEPAD_DPAD_RIGHT, "PAD DPAD RIGHT"},
-	{(u8)VK_GAMEPAD_MENU, "PAD MENU"},
-	{(u8)VK_GAMEPAD_VIEW, "PAD VIEW"},
-	{(u8)VK_GAMEPAD_LEFT_THUMBSTICK_BUTTON, "PAD THUMB LEFT"},
-	{(u8)VK_GAMEPAD_RIGHT_THUMBSTICK_BUTTON, "PAD THUMB RIGHT"},
 	DECLARE_KEY_ENTRY(VK_GAMEPAD_LEFT_THUMBSTICK_UP)
 	DECLARE_KEY_ENTRY(VK_GAMEPAD_LEFT_THUMBSTICK_DOWN)
 	DECLARE_KEY_ENTRY(VK_GAMEPAD_LEFT_THUMBSTICK_RIGHT)
@@ -827,9 +759,6 @@ const xr_map<u8, xr_string> KeyNamesTable =
 	DECLARE_KEY_ENTRY(VK_GAMEPAD_RIGHT_THUMBSTICK_DOWN)
 	DECLARE_KEY_ENTRY(VK_GAMEPAD_RIGHT_THUMBSTICK_RIGHT)
 	DECLARE_KEY_ENTRY(VK_GAMEPAD_RIGHT_THUMBSTICK_LEFT)
-	{(u8)VK_OEM_4,   "["},
-	{(u8)VK_OEM_5,   "\\ "},
-	{(u8)VK_OEM_6,   "]"},
 	DECLARE_KEY_ENTRY(VK_OEM_7)
 	DECLARE_KEY_ENTRY(VK_OEM_8)
 	DECLARE_KEY_ENTRY(VK_OEM_AX)
@@ -861,4 +790,80 @@ const xr_map<u8, xr_string> KeyNamesTable =
 	DECLARE_KEY_ENTRY(VK_NONAME)
 	DECLARE_KEY_ENTRY(VK_PA1)
 	DECLARE_KEY_ENTRY(VK_OEM_CLEAR)
+	
+	// Need special impl
+	{(u8)VK_LBUTTON,  "LMouse"},
+	{(u8)VK_RBUTTON,  "RMouse"},
+	{(u8)VK_MBUTTON,  "MMouse"},
+	{(u8)VK_XBUTTON1, "Mouse3"},
+	{(u8)VK_XBUTTON2, "Mouse4"},
+	{(u8)VK_TAB,	  "Tab"},
+	{(u8)VK_RETURN,   "Enter"},
+	{(u8)VK_SHIFT,    "Shift"},
+	{(u8)VK_CONTROL,  "Ctrl"},
+	{(u8)VK_CAPITAL,  "Caps Lock"},
+	{(u8)VK_MENU,   "Menu"},
+	{(u8)VK_PAUSE,  "Pause"},
+	{(u8)VK_BACK,   "Backspace"},{(u8)VK_PRIOR,   "Pg Up"},
+	{(u8)VK_NEXT,   "Pg Down"},
+	{(u8)VK_HOME,   "Home"},
+	{(u8)VK_LEFT,	"Left"},
+	{(u8)VK_UP,		"Up"},
+	{(u8)VK_RIGHT,	"Right"},
+	{(u8)VK_DOWN,	"Down"},
+	{(u8)VK_SPACE, "Space"},
+	{(u8)VK_ESCAPE, "Esc"},
+	{(u8)VK_INSERT,   "Insert"},
+	{(u8)VK_DELETE,   "Del"},
+	{(u8)VK_LWIN, "lWin"},
+	{(u8)VK_RWIN, "rWin"},
+	{(u8)VK_SLEEP, "Sleep"},
+	{(u8)VK_APPS, "Apps"},
+	{(u8)VK_NUMPAD0,  "NumPad0"},
+	{(u8)VK_NUMPAD1,  "NumPad1"},
+	{(u8)VK_NUMPAD2,  "NumPad2"},
+	{(u8)VK_NUMPAD3,  "NumPad3"},
+	{(u8)VK_NUMPAD4,  "NumPad4"},
+	{(u8)VK_NUMPAD5,  "NumPad5"},
+	{(u8)VK_NUMPAD6,  "NumPad6"},
+	{(u8)VK_NUMPAD7,  "NumPad7"},
+	{(u8)VK_NUMPAD8,  "NumPad8"},
+	{(u8)VK_NUMPAD9,  "NumPad9"},
+	{(u8)VK_MULTIPLY,  "*"},
+	{(u8)VK_ADD,  "+"},
+	{(u8)VK_SUBTRACT,  "-"},
+	{(u8)VK_DIVIDE,  "/"},
+	{(u8)VK_DECIMAL,   "."},
+	{(u8)VK_NUMLOCK, "NumLock"},
+	{(u8)VK_SCROLL, "ScrollLock"},
+	{(u8)VK_LSHIFT,   "Left Shift"},
+	{(u8)VK_RSHIFT,   "Right Shift"},
+	{(u8)VK_LCONTROL, "Left Ctrl"},
+	{(u8)VK_RCONTROL, "Right Ctrl"},
+	{(u8)VK_OEM_1,   ";"},
+	{(u8)VK_OEM_PLUS,   "+"},
+	{(u8)VK_OEM_COMMA,   ","},
+	{(u8)VK_OEM_MINUS,   "-"},
+	{(u8)VK_OEM_2,   "/"},
+	{(u8)VK_OEM_3, "~"},
+	{(u8)VK_OEM_PERIOD, "."},
+	{(u8)VK_GAMEPAD_A, "PAD A"},
+	{(u8)VK_GAMEPAD_B, "PAD B"},
+	{(u8)VK_GAMEPAD_X, "PAD X"},
+	{(u8)VK_GAMEPAD_Y, "PAD Y"},
+	{(u8)VK_GAMEPAD_RIGHT_SHOULDER, "PAD SHLD R"},
+	{(u8)VK_GAMEPAD_LEFT_SHOULDER,  "PAD SHLD L"},
+	{(u8)VK_GAMEPAD_LEFT_TRIGGER, "PAD TRG L"},
+	{(u8)VK_GAMEPAD_RIGHT_TRIGGER,"PAD TRG R"},
+	{(u8)VK_GAMEPAD_DPAD_UP, "PAD DPAD UP"},
+	{(u8)VK_GAMEPAD_DPAD_DOWN, "PAD DPAD DOWN"},
+	{(u8)VK_GAMEPAD_DPAD_LEFT, "PAD DPAD LEFT"},
+	{(u8)VK_GAMEPAD_DPAD_RIGHT, "PAD DPAD RIGHT"},
+	{(u8)VK_GAMEPAD_MENU, "PAD MENU"},
+	{(u8)VK_GAMEPAD_VIEW, "PAD VIEW"},
+	{(u8)VK_GAMEPAD_LEFT_THUMBSTICK_BUTTON, "PAD THUMB LEFT"},
+	{(u8)VK_GAMEPAD_RIGHT_THUMBSTICK_BUTTON, "PAD THUMB RIGHT"},
+	{(u8)VK_OEM_4,   "["},
+	{(u8)VK_OEM_5,   "\\ "},
+	{(u8)VK_OEM_6,   "]"},
 };

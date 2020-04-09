@@ -416,7 +416,7 @@ void CActor::net_Relcase (CObject* Object)
 
 BOOL CActor::net_Relevant()				// relevant for export to server
 { 
-	return getSVU() | getLocal(); 
+	return getSVU(); 
 };
 
 void	CActor::SetCallbacks()

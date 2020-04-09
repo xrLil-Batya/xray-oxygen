@@ -188,8 +188,6 @@ void CCustomMonster::mk_orientation(Fvector &dir, Fmatrix& mR)
 
 void CCustomMonster::net_Export(NET_Packet& P)					// export to server
 {
-	R_ASSERT				(Local());
-
 	// export last known packet
 	R_ASSERT				(!NET.empty());
 	net_update& N			= NET.back();
@@ -332,13 +330,7 @@ void CCustomMonster::UpdateCL	()
 			float					factor = d2 ? (float(d1)/float(d2)) : 1.f;
 			Fvector					l_tOldPosition = Position();
 			NET_Last.lerp			(A,B,factor);
-			if (Local()) {
-				NET_Last.p_pos		= l_tOldPosition;
-			}
-			else {
-				if (!bfScriptAnimation())
-					SelectAnimation	(XFORM().k,movement().detail().direction(),movement().speed());
-			}
+			NET_Last.p_pos		    = l_tOldPosition;
 		}
 	}
 	STOP_PROFILE
@@ -348,9 +340,9 @@ void CCustomMonster::UpdateCL	()
 				animation_movement()->DBG_verify_position_not_chaged();
 #endif
 
-	if (Local() && g_Alive()) {
+	if (g_Alive()) 
+	{
 #pragma todo("Dima to All : this is FAKE, network is not supported here!")
-
 		UpdatePositionAnimation();
 	}
 
@@ -562,24 +554,22 @@ BOOL CCustomMonster::net_Spawn	(CSE_Abstract* DC)
 	}
 
 	// Eyes
-	eye_bone					= smart_cast<IKinematics*>(Visual())->LL_BoneID(pSettings->r_string(cNameSect(),"bone_head"));
+	eye_bone				= smart_cast<IKinematics*>(Visual())->LL_BoneID(pSettings->r_string(cNameSect(),"bone_head"));
 
 	// weapons
-	if (Local()) {
-		net_update				N;
-		N.dwTimeStamp			= Level().timeServer()-NET_Latency;
-		N.o_model				= -E->o_torso.yaw;
-		N.o_torso.yaw			= -E->o_torso.yaw;
-		N.o_torso.pitch			= 0;
-		N.p_pos.set				(Position());
-		NET.push_back			(N);
+	net_update				N;
+	N.dwTimeStamp			= Level().timeServer()-NET_Latency;
+	N.o_model				= -E->o_torso.yaw;
+	N.o_torso.yaw			= -E->o_torso.yaw;
+	N.o_torso.pitch			= 0;
+	N.p_pos.set				(Position());
+	NET.push_back			(N);
 
-		N.dwTimeStamp			+= NET_Latency;
-		NET.push_back			(N);
+	N.dwTimeStamp			+= NET_Latency;
+	NET.push_back			(N);
 
-		setVisible				(TRUE);
-		setEnabled				(TRUE);
-	}
+	setVisible				(TRUE);
+	setEnabled				(TRUE);
 
 	// Sheduler
 	shedule.t_min				= 100;

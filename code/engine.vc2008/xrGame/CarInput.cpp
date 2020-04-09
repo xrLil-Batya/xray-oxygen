@@ -18,8 +18,6 @@
 
 void CCar::OnMouseMove(int dx, int dy)
 {
-	if (Remote()) return;
-
 	CCameraBase* C	= active_camera;
 	float scale		= (C->f_fov/g_fov)*psMouseSens * psMouseSensScale/50.f;
 
@@ -58,6 +56,9 @@ bool CCar::bfAssignMovement(CScriptEntityAction *tpEntityAction)
 	return	(true);
 }
 
+#define MakeTrueAndReturn(var) {var = true; return false;}
+#define MakeTrueByCheckAndReturn(var, check) if (check) {var = true; return false;}
+
 bool CCar::bfAssignObject(CScriptEntityAction *tpEntityAction)
 {
 	CScriptObjectAction	&l_tObjectAction = tpEntityAction->m_tObjectAction;
@@ -65,50 +66,32 @@ bool CCar::bfAssignObject(CScriptEntityAction *tpEntityAction)
 		return((l_tObjectAction.m_bCompleted = true) == false);
 
 	s16	l_sBoneID = smart_cast<IKinematics*>(Visual())->LL_BoneID(l_tObjectAction.m_caBoneName);
-	if (is_Door(l_sBoneID)) {
-		switch(l_tObjectAction.m_tGoalType) {
-			case MonsterSpace::eObjectActionActivate : {
-				if (!DoorOpen(l_sBoneID))
-					return((l_tObjectAction.m_bCompleted = true) == false);
-				break;
-			}
-			case MonsterSpace::eObjectActionDeactivate : {
-				if (!DoorClose(l_sBoneID))
-					return((l_tObjectAction.m_bCompleted = true) == false);
-				break;
-			}
-			case MonsterSpace::eObjectActionUse : {
-				if (!DoorSwitch(l_sBoneID))
-					return((l_tObjectAction.m_bCompleted = true) == false);
-				break;
-			}
-			default : 
-				return	((l_tObjectAction.m_bCompleted = true) == false);
+	if (is_Door(l_sBoneID)) 
+	{
+		switch(l_tObjectAction.m_tGoalType) 
+		{
+			case MonsterSpace::eObjectActionActivate 	: MakeTrueByCheckAndReturn(l_tObjectAction.m_bCompleted, !DoorOpen(l_sBoneID));
+			case MonsterSpace::eObjectActionDeactivate 	: MakeTrueByCheckAndReturn(l_tObjectAction.m_bCompleted, !DoorClose(l_sBoneID)); break;
+			case MonsterSpace::eObjectActionUse 		: MakeTrueByCheckAndReturn(l_tObjectAction.m_bCompleted, !DoorSwitch(l_sBoneID)); break;
+			default 									: MakeTrueAndReturn(l_tObjectAction.m_bCompleted);
 		}
-		return		(false);
+		return false;
 	}
-	SCarLight* light=nullptr;
-	if (m_lights.findLight(l_sBoneID,light)) {
-		switch(l_tObjectAction.m_tGoalType) {
-			case MonsterSpace::eObjectActionActivate : {
-				light->TurnOn();
-				return		((l_tObjectAction.m_bCompleted = true) == false);
-			}
-			case MonsterSpace::eObjectActionDeactivate : {
-				light->TurnOff();
-				return		((l_tObjectAction.m_bCompleted = true) == false);
-			}
-			case MonsterSpace::eObjectActionUse : {
-				light->Switch();
-				return		((l_tObjectAction.m_bCompleted = true) == false);
-			}
-			default : 
-				return	((l_tObjectAction.m_bCompleted = true) == false);
+	
+	SCarLight* pLight = nullptr;
+	if (m_lights.findLight(l_sBoneID, pLight)) 
+	{
+		switch(l_tObjectAction.m_tGoalType) 
+		{
+			case MonsterSpace::eObjectActionActivate 	: pLight->TurnOn(); MakeTrueAndReturn(l_tObjectAction.m_bCompleted);
+			case MonsterSpace::eObjectActionDeactivate 	: pLight->TurnOff(); MakeTrueAndReturn(l_tObjectAction.m_bCompleted);
+			case MonsterSpace::eObjectActionUse 		: pLight->Switch(); MakeTrueAndReturn(l_tObjectAction.m_bCompleted);
+			default 									: MakeTrueAndReturn(l_tObjectAction.m_bCompleted);
 		}
 	
 	}
 	
-	return			(false);
+	return false;
 }
 
 void CCar::vfProcessInputKey	(int iCommand, bool bPressed)
@@ -123,38 +106,21 @@ void CCar::vfProcessInputKey	(int iCommand, bool bPressed)
 
 void CCar::OnKeyboardPress(u8 cmd)
 {
-	if (Remote())								return;
-
 	switch (cmd)	
 	{
-	case kCAM_1:	
-	    OnCameraChange(ectFirst);
-	    break;
-		
-	case kCAM_2:
-	    OnCameraChange(ectChase);
-	    break;
-		
-	case kCAM_3:	
-	    OnCameraChange(ectFree);
-		break;
-		
-	case kACCEL:
-	    TransmissionUp();			
-		break;
-		
-	case kCROUCH:	
-	    TransmissionDown();			
-		break;
-		
-	case kFWD:		
-	    PressForward();				
-		break;
-		
-	case kBACK:	
-	    PressBack();				
-		break;
-		
+	case kCAM_1 : OnCameraChange(ectFirst); break;
+	case kCAM_2 : OnCameraChange(ectChase); break;
+	case kCAM_3 : OnCameraChange(ectFree); break;
+	case kACCEL : TransmissionUp(); break;
+	case kCROUCH: TransmissionDown(); break;
+	case kFWD   : PressForward(); break;
+	case kBACK  : PressBack(); break;
+	case kJUMP  : PressBreaks(); break;
+	case kTORCH : m_lights.SwitchHeadLights(); break;
+	case kUSE   : if (HasWeapon()) (g_fov = base_fov); break;
+	case kWPN_ZOOM: if (HasWeapon()) (g_fov = dest_fov); break;
+	case kSWITCH_HORN: SwitchHorn(); break;
+	
 	case kR_STRAFE:	
 	    PressRight();
 		if (OwnerActor()) 
@@ -167,42 +133,21 @@ void CCar::OnKeyboardPress(u8 cmd)
 			OwnerActor()->steer_Vehicle(-1);
 		break;
 		
-	case kJUMP:		
-	    PressBreaks();				
-		break;
-		
     case kTURN_ENGINE: 
 	    SwitchEngine();
         if (HasWeapon())
             m_car_weapon->Action(CCarWeapon::eWpnActivate, b_engine_on);
         break;
 		
-	case kTORCH:	
-	    m_lights.SwitchHeadLights(); 
-		break;
-		
-	case kUSE:		
-		if (HasWeapon()) (g_fov = base_fov);
-	    break;
-		
-	case kWPN_ZOOM: 
-		if (HasWeapon()) (g_fov = dest_fov);
-		break;
-		
 	case kWPN_FIRE: 
 	    if (HasWeapon()) 
 			m_car_weapon->Action(CCarWeapon::eWpnFire, 1); 
 	    break; 
-		
-	case kSWITCH_HORN: 
-			SwitchHorn(); 
-		break;
 	};
 }
 
-void	CCar::OnKeyboardRelease(u8 cmd)
+void CCar::OnKeyboardRelease(u8 cmd)
 {
-	if (Remote())								return;
 	switch (cmd)	
 	{
 	case kACCEL:
@@ -236,9 +181,6 @@ void	CCar::OnKeyboardRelease(u8 cmd)
 
 void CCar::OnKeyboardHold(u8 cmd)
 {
-	if (Remote())
-		return;
-
 	switch (cmd)
 	{
 		case kCAM_ZOOM_IN:
@@ -274,8 +216,7 @@ bool CCar::WpnCanHit()
 
 float CCar::FireDirDiff()
 {
-	if(m_car_weapon) return m_car_weapon->FireDirDiff();
-	return 0.0f;
+	return m_car_weapon ? m_car_weapon->FireDirDiff(); : 0.0f;
 }
 #include "script_game_object.h"
 #include "car_memory.h"
@@ -286,9 +227,9 @@ bool CCar::isObjectVisible			(CScriptGameObject* O_)
 	if(m_memory)
 	{
 		return m_memory->visual().visible_now(&O_->object());
-	}else
+	}
+	else
 	{
-
 		if(!O_)
 		{
 			Msg("Attempt to call CCar::isObjectVisible method wihth passed NULL parameter");
