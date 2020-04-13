@@ -1,14 +1,18 @@
-﻿////////////////////////////////////////////////////
-// Author: ForserX
-// Task  : Parsing current branch and commit hash
+////////////////////////////////////////////////////
+// Author: ForserX								  //
+// Task  : Parsing current branch and commit hash //
 ////////////////////////////////////////////////////
 // Specital for X-Ray Oxygen Project | 15.07.2018 //
 ////////////////////////////////////////////////////
+// FX: Deque for spliting. | 13.04.2020			  //
+////////////////////////////////////////////////////
 #include <string>
-#include <vector>
+#include <string_view>
 #include <fstream>
 #include <istream>
 #include <sstream>
+#include <deque> 
+#include <utility>
 
 #if __has_include("hack.appveyor")
 #define ITS_CI_BUILD
@@ -17,14 +21,13 @@
 #define xstr(ToStr) NewStr(ToStr)
 #endif 
 
-std::vector<std::string> Split(std::string Str, size_t StrSize, char splitCh) noexcept
+std::deque<std::string> dqSplit(std::string_view Str, char splitCh) noexcept
 {
-	std::vector<std::string> Result;
-	std::string temp_str = Str;
+	std::deque<std::string> Result;
 
 	size_t SubStrBeginCursor = 0;
 	size_t Len = 0;
-	for (size_t StrCursor = 0; StrCursor < StrSize; ++StrCursor)
+	for (size_t StrCursor = 0; StrCursor < Str.size(); ++StrCursor)
 	{
 		if (Str[StrCursor] == splitCh)
 		{
@@ -32,43 +35,39 @@ std::vector<std::string> Split(std::string Str, size_t StrSize, char splitCh) no
 			if ((StrCursor - 1 - SubStrBeginCursor) > 0)
 			{
 				Len = StrCursor - 1 - SubStrBeginCursor;
-				temp_str = Str.substr(SubStrBeginCursor, Len);
-				Result.push_back(temp_str);
+				Result.emplace_back(std::move(Str.substr(SubStrBeginCursor, Len)));
 				SubStrBeginCursor = StrCursor + 1;
 			}
 		}
 	}
 
-	Result.push_back(Str.substr(SubStrBeginCursor, Str.length() - Len));
+	Result.emplace_back(std::move(Str.substr(SubStrBeginCursor, Str.length() - Len)));
 	return Result;
 }
 
 int main()
 {
 #ifndef ITS_CI_BUILD
-	std::ifstream *Reader = nullptr;
 	std::string PathFile = "../../../.git/";
 
 	// Get repo data 
-	std::vector<std::string> Directories;
-	std::string BranchName;
-	Reader = new std::ifstream(PathFile + "HEAD");
-	std::getline(*Reader, BranchName);
-	Directories = Split(BranchName, BranchName.size(), '/');
-	BranchName = Directories[Directories.size() - 1];
+	std::string BranchName = "";
+	std::ifstream Reader(PathFile + "HEAD");
+	Reader >> BranchName;
+	BranchName = dqSplit(BranchName, '/').back();
 
-	// РџРѕР»СѓС‡Р°РµРј С„Р°Р№Р»
+	// Get current branch 
 	PathFile += "refs/heads/" + BranchName;
-	Reader->close();
-	Reader = new std::ifstream(PathFile);
+	Reader.close();
+	Reader.open(PathFile);
 
-	// РџРѕР»СѓС‡Р°РµРј С…РµС€ РєРѕРјРјРёС‚Р°
-	std::string hash;
-	std::getline(*Reader, hash);
-	Reader->close();
-	delete Reader;
+	// Get current hash commit code 
+	std::string hash = "";
+	Reader >> hash;
+	Reader.close();
 #endif
-	// Запишем полученные данные в oxy_version
+
+	// Make oxy_version.h
 	std::stringstream HeaderString;
 	HeaderString << "#pragma once" << std::endl;
 	
